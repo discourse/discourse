@@ -1,5 +1,7 @@
 en:
   js:
+    ace_editor:
+      resize: "Resize code editor"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
@@ -60,6 +62,7 @@ en:
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
         disallowed: "Disallowed"
+        required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -434,6 +437,7 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
     broken_block_alert: "A block configuration error was detected. Check browser console for details."
     broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
+    broken_drag_and_drop_alert: "A drag and drop handler failed. The action may not have completed."
     on_before_category_types_change_error: "An error occurred while changing the category types. Check the browser console for more information."
 
     critical_deprecation:
@@ -560,27 +564,29 @@ en:
       pm_title: "Suggested Messages"
 
     admin_onboarding_banner:
-      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      launch_in_easy_steps: "Set up your community"
+      launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      expand: "Expand setup steps"
+      collapse: "Collapse setup steps"
+      dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme for your community"
-        action: "Select theme"
-        modal_title: "Choose a theme"
-        use_theme: "Use selected theme"
-        enabled: "Selected"
-        applying_theme: "Applying theme..."
-        browse_all: "Manage themes"
+        description: "Choose colors, fonts, and how your site is laid out."
+        action: "See options"
+        completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
-        title: "Invite Collaborators"
-        description: "Early members help bring your community to life"
+        title: "Invite collaborators"
+        description: "Early members bring it to life."
         action: "Create invite"
+        completed: "Invite more"
       start_posting:
-        title: "Start Posting"
-        description: "Give people something to talk about together"
+        title: "Start posting"
+        description: "Give people something to discuss."
         action: "See ideas"
+        completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -600,6 +606,75 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+    design_wizard:
+      title: "Customize your site"
+      subtitle: "Choose colors, fonts, and how your site is laid out."
+      step_label: "Go to step %{index}"
+      save: "Save and finish"
+      back: "Back"
+      next: "Next"
+      launch: "Design wizard"
+      launch_description: "Walk through your site's theme, colors, fonts, and layout again."
+      intro:
+        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
+        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
+        start: "Get started"
+      close:
+        message: "You have already saved some changes to your site's design. Do you want to keep them?"
+        message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
+        keep: "Keep changes"
+        revert: "Revert changes"
+        continue_editing: "Continue editing"
+      sections:
+        theme: "Theme"
+        colors: "Default color"
+        fonts: "Fonts"
+        homepage: "Homepage"
+        welcome_banner: "Welcome banner"
+        search: "Search"
+      theme:
+        selected: "Selected"
+        applying: "Applying…"
+        custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
+      colors:
+        light: "Light"
+        dark: "Dark"
+        dark_only: "%{name} only has a dark mode"
+        both_modes: "Each palette includes a matching light and dark mode"
+        user_selectable: "Let members switch palettes"
+        user_selectable_description: "Show these palettes in a menu members can pick from"
+      fonts:
+        base_font: "Base font"
+        heading_font: "Heading font"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
+        topic_page_type: "Topic page type"
+        topic_pages:
+          latest: "Topics sorted by their most recent activity, newest first."
+          new: "Topics created in the last few days, newest first."
+          hot: "Topics trending right now, blending overall popularity with recent engagement."
+        category_page_style: "Category page style"
+        styles:
+          boxes: "Boxes"
+          with_topics: "Categories with topics"
+          only: "Categories only"
+      welcome_banner:
+        enable: "Show a welcome banner"
+        enable_description: "Greet visitors with your site name and a search box"
+        location: "Banner location"
+        locations:
+          below_site_header: "Below the site header"
+          above_topic_content: "Above the topic list"
+      search:
+        experiences:
+          search_icon:
+            title: "Search icon"
+            description: "A magnifying glass in the header that opens search."
+          search_field:
+            title: "Search field"
+            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -890,6 +965,7 @@ en:
       date_filter: "Posted between"
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
+      no_component_found: "No component found for %{type}"
       unknown:
         title:
           one: "You have pending review queue items from disabled plugin:"
@@ -932,10 +1008,6 @@ en:
       stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
-        required: "You must claim items before you can review them."
-        claimed_by_you: "You've claimed this item and can review it."
-        claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
-        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "Claim this topic"
       unclaim:
@@ -968,6 +1040,7 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        avatar: "Avatar when flagged"
         bio: "Bio"
         website: "Website"
         username: "Username"
@@ -1821,13 +1894,12 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
-      enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       automatically_translate: "Automatically translate topics and posts in other languages"
       content_languages:
         title: "Content languages"
         understood: "Languages I understand"
-        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always included."
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always considered understood."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2424,7 +2496,6 @@ en:
         watch_topic: "Watch topic"
         track_topic: "Track topic"
         do_nothing: "Do nothing"
-      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -2548,9 +2619,8 @@ en:
           sent_title: "Invitation sent"
           member_tab: "Members"
           admin_tab: "Staff"
-          member_description: "Invite people to join this site. Share a link or send an email invitation."
-          admin_description: "Invite people to join your staff team. Admins have full access to this site."
-          moderator_description: "Invite people to join your staff team. Moderators can help manage content and members."
+          admin_description: "Admins have full access to this site, its settings, and data."
+          moderator_description: "Moderators can help manage content and members."
           staff_role_label: "Invite as"
           staff_role_admin: "Admin"
           staff_role_moderator: "Moderator"
@@ -2563,16 +2633,13 @@ en:
           invite_by_email: "Email"
           role_label: "Invite as"
           restrict_domain: "Restrict to domain"
-          restrict_domain_help: "Only people with an email at this domain can accept the link. To invite a specific person, use Email above."
+          restrict_domain_help: "Only people with an email at this domain can accept the link."
           domain_placeholder: "example.com"
           domain_invalid: "Enter a valid domain, e.g. example.com"
           arrive_at_topic_help: "Send people to a specific topic after they accept."
-          create_and_send: "Create & send"
-          create_and_copy: "Create & copy link"
-          more_options: "More options"
-          fewer_options: "Fewer options"
+          create_and_send: "Send"
+          create_and_copy: "Copy link"
           update: "Update"
-          role_locked: "The invite type can't be changed after the invite is created."
           summary:
             sent_to: "An invitation was emailed to %{email}. You can also share this link directly:"
             role: "Role"
@@ -2587,7 +2654,7 @@ en:
             expires: "Expires"
             topic: "Topic"
             groups: "Groups"
-            edit: "Edit invite"
+            edit: "Edit"
             view_invites: "View invites"
           email_sent:
             body: "An invitation was emailed to %{email}."
@@ -3032,6 +3099,7 @@ en:
       account_ready_continue: "Continue"
       username_label: "Username"
       username_placeholder: "Choose a username"
+      regenerate_username: "Suggest a random username"
       change_avatar: "Change avatar"
       username_taken: "That username is taken. Try another."
       username_unavailable: "That username isn't available. Try %{suggestion}."
@@ -3206,6 +3274,36 @@ en:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      command: "Command"
+      option: "Option"
+      control: "Control"
+      arrow_up: "Up arrow"
+      arrow_down: "Down arrow"
+      arrow_left: "Left arrow"
+      arrow_right: "Right arrow"
+      period: "Period"
+      comma: "Comma"
+      slash: "Slash"
+      backslash: "Backslash"
+      question_mark: "Question mark"
+      exclamation_mark: "Exclamation mark"
+      hash: "Hash"
+      equals: "Equals"
+      minus: "Minus"
+      plus: "Plus"
+      semicolon: "Semicolon"
+      apostrophe: "Apostrophe"
+      backquote: "Backquote"
+      left_bracket: "Left bracket"
+      right_bracket: "Right bracket"
+      space: "Space"
+      tab: "Tab"
+      backspace: "Backspace"
+      delete: "Delete"
+      home: "Home"
+      end: "End"
+      page_up: "Page up"
+      page_down: "Page down"
 
     conditional_loading_section:
       loading: Loading…
@@ -3214,6 +3312,7 @@ en:
       subcategory_count:
         one: "+%{count} subcategory"
         other: "+%{count} subcategories"
+      subcategories: "+ Subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -3297,11 +3396,15 @@ en:
 
     d_icon_grid_picker:
       select_icon: "Select icon"
+      search_label: "Search icons"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       results_count:
         one: "%{count} icon found"
         other: "%{count} icons found"
+      results_loaded:
+        one: "%{count} icon loaded, more available"
+        other: "%{count} icons loaded, more available"
       favorites: "Favorites"
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
@@ -3496,7 +3599,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press %{modifier}Enter"
+      submit_shortcut_title: "Or press %{shortcut}"
       save_and_close: "Save and close"
       discard: "Discard"
       cancel_edit: "Cancel edit"
@@ -3525,6 +3628,8 @@ en:
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Switch to standard Markdown editor"
+      switch_to_rich_text_no_shortcut: "Switch to new rich text editor"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -3532,11 +3637,14 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_title: "Headings"
+      text_size_title: "Text sizes"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
       heading_level_paragraph: "Paragraph"
       heading_level_paragraph_title: "Paragraph"
+      heading_level_small: "Small"
+      heading_level_small_title: "Small text"
+      heading_level_small_text: "Small text"
       link_title: "Link"
       link_description: "enter link description here"
       link_dialog_title: "Insert link"
@@ -3762,7 +3870,6 @@ en:
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
       upcoming_changes:
@@ -3917,7 +4024,6 @@ en:
         in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
         status: "filters by topic status"
         full_search: "launches full page search"
-        full_search_key: "%{modifier} + Enter"
         me: "shows only your posts"
 
       advanced:
@@ -4247,7 +4353,7 @@ en:
           missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
-        description: "Permanently delete the selected topics. This action cannot be undone."
+        description: "Delete the selected topics. Deleted topics can be restored."
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
@@ -4874,7 +4980,7 @@ en:
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
       follow_quote: "go to the quoted post"
-      show_full: "Show Full Post"
+      show_more: "Show more…"
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
@@ -5219,7 +5325,6 @@ en:
       preferences:
         title: "Content language preferences"
         login_to_set_languages: "Log in to set more languages"
-        interface_language_mandatory: "Your interface language is always included."
 
     category:
       none: "(no category)"
@@ -5775,13 +5880,10 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} or %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
       search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
@@ -6238,6 +6340,7 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
+          drop_to_add: "Drop here to add a new section"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
@@ -6249,13 +6352,26 @@ en:
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           localizations:
-            title: "Translations"
             locale: "Language"
+            language: "Section language"
+            language_description: "The primary language of this section's title and link names."
             title_label: "Section title"
-            link_label: "Link name"
-            add_section: "Add section title translation"
-            add_link: "Add link name translation"
-            remove: "Remove translation"
+            link_label: "Link names"
+            back: "Section content"
+            add_first: "Add translations"
+            manage:
+              one: "Manage translations (%{count} language)"
+              other: "Manage translations (%{count} languages)"
+            incomplete:
+              one: "%{count} string missing"
+              other: "%{count} strings missing"
+            add_language: "Add language"
+            remove_language: "Remove"
+            remove_language_confirm: "Remove every %{language} translation for this section?"
+            remove_cleared_confirm:
+              one: "You cleared %{count} saved translation. It will be removed. Continue?"
+              other: "You cleared %{count} saved translations. They will be removed. Continue?"
+            untranslated: "Not translated yet"
           links:
             title: "Section links"
             add: "Add another link"
@@ -6277,6 +6393,7 @@ en:
                   other: "Name must be shorter than %{count} characters"
             value:
               label: "Link"
+              duplicate: "Another link in this section already points here"
               validation:
                 blank: "Link cannot be blank"
                 maximum:
@@ -6952,7 +7069,8 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         search_everything:
           title: "Search"
-          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered. To open this search anywhere in the admin interface, press %{shortcutHTML}."
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
+          header_shortcut: "To open this search anywhere in the admin interface, press %{shortcutHTML}."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -7198,6 +7316,93 @@ en:
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
+      site_traffic_explorer:
+        title: "Site Traffic Explorer"
+        loading: "Loading traffic…"
+        errors:
+          timeout: "This traffic query took too long. Choose a shorter date range and try again."
+          unexpected: "Couldn't load site traffic. Try again."
+        empty: "No matching pageviews"
+        metric_information: "About %{metric}"
+        active_filters: "Active traffic filters"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        apply: "Apply"
+        apply_filters: "Apply filters"
+        filter_by:
+          one: "Filter by %{label}, %{count} pageview"
+          other: "Filter by %{label}, %{count} pageviews"
+        remove_filter: "Remove %{filter} filter"
+        # remove_traffic_type_filter: "Remove %{value} traffic filter"
+        view_more: "View more"
+        no_dimension_data: "No data for this breakdown."
+        direct_or_unknown: "Direct / unknown"
+        cards:
+          acquisition: "Acquisition"
+          pages: "Pages"
+          visitors: "Visitors"
+        dimensions:
+          referrers: "Referrers"
+          countries: "Countries"
+          networks: "Networks"
+          top_urls: "Top URLs"
+          entry_urls: "Entry URLs"
+          browsers: "Browsers"
+          ip_addresses: "IP addresses"
+        filters:
+          traffic_type: "Traffic type"
+          top_url: "Top URL"
+          entry_url: "Entry URL"
+          referrer: "Referrer"
+          country: "Country"
+          network: "Network"
+          browser: "Browser"
+          ip: "IP address"
+        headline:
+          one: "%{formatted_count} pageview"
+          other: "%{formatted_count} pageviews"
+        metrics:
+          distinct_sessions:
+            label: "Distinct sessions"
+          logged_in_share:
+            label: "Logged-in share"
+          bounce_rate:
+            label: "Bounce rate"
+          average_session_duration:
+            label: "Average session duration"
+        series:
+          logged_in_human: "Logged in"
+          anonymous_human: "Anonymous"
+          likely_crawler: "Likely crawlers"
+        partial:
+          retention: "Pageview data before %{date} is no longer available, so these results cover only part of the selected date range."
+          pageview_limit: "Results include the most recent %{limit} pageviews, beginning %{date} at %{time}. Earlier pageviews in the selected date range are not included."
+          combined: "Results include the most recent %{limit} pageviews, beginning %{pageviewLimitDate} at %{pageviewLimitTime}. Earlier pageviews in the selected date range are not included; pageview data before %{date} is no longer available."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -7207,7 +7412,6 @@ en:
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
-        critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
@@ -7306,6 +7510,21 @@ en:
               staff: "Staff"
               empty: "No posts in the selected period."
               save_error: "Couldn't save your selection for next time."
+              add_group: "Add group"
+              modal:
+                title: "Compare groups"
+                search_placeholder: "Search groups..."
+                counter: "%{count} of %{max} groups selected"
+                apply: "Save"
+                enable: "Enable %{title}"
+                disable: "Disable %{title}"
+                move_up: "Move %{title} up"
+                move_down: "Move %{title} down"
+                footer_note: "These changes will apply for all users."
+                descriptions:
+                  new_members: "Signed up during the selected period"
+                  returning: "Signed up before the selected period"
+                  staff: "Admins and moderators"
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -7334,24 +7553,81 @@ en:
                 other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
-              healthy_growth:
-                title: "Members are forming a habit of coming back."
-                summary: "Stickiness, daily engagement, and new sign-ups are all up this period."
-              declining:
-                title: "Members are coming back less often."
-                summary: "Stickiness, daily engagement, and new sign-ups are all down this period."
-              engaged_but_shrinking:
-                title: "Members are engaged, but the community is shrinking."
-                summary: "Stickiness is holding up, but daily engagement or new sign-ups have slipped."
-              growing_but_distracted:
-                title: "New members are signing up, but they're not sticking around."
-                summary: "Sign-ups are up, but stickiness has dropped this period."
-              mixed:
-                title: "Engagement trends are mixed this period."
-                summary: "Some metrics are up while others are down — open the tiles below for detail."
-              no_signal:
-                title: "Not enough activity yet to summarise engagement."
-                summary: "Pick a longer date range or come back once your community has more activity."
+              titles:
+                engagement_up: "Engagement is up in the selected period"
+                stickiness_and_daily_engagement_increased: "Stickiness and daily engagement have increased in the selected period"
+                stickiness_and_new_signups_increased: "Stickiness and new signups have increased in the selected period"
+                stickiness_increased: "Stickiness has increased in the selected period"
+                daily_engagement_and_new_signups_increased: "Daily engagement and new signups have increased in the selected period"
+                daily_engagement_increased: "Daily engagement has increased in the selected period"
+                new_signups_increased: "New signups have increased in the selected period"
+                engagement_declined: "Engagement has declined in the selected period"
+                some_engagement_declines: "Some declines in engagement in the selected period"
+                engagement_steady: "Engagement is steady in the selected period"
+                insufficient_activity: "Not enough activity yet to summarise engagement."
+              summaries:
+                all_metrics_improved: "Stickiness, daily engagement, and new signups have all improved, showing that more members are joining and participating in your community."
+                stickiness_and_daily_engagement_up_new_signups_down: "Stickiness and daily engagement are up, but new signups are down."
+                stickiness_and_daily_engagement_up_new_signups_flat: "Stickiness and daily engagement are up, but new signups are flat."
+                stickiness_and_daily_engagement_up: "Stickiness and daily engagement are up."
+                stickiness_and_new_signups_up_daily_engagement_down: "Stickiness and new signups are up, but daily engagement is down."
+                stickiness_up_daily_engagement_and_new_signups_down: "Stickiness is up, but daily engagement and new signups are down."
+                stickiness_up_daily_engagement_down: "Stickiness is up, but daily engagement is down."
+                stickiness_and_new_signups_up_daily_engagement_flat: "Stickiness and new signups are up, but daily engagement is flat."
+                stickiness_up_new_signups_down: "Stickiness is up, but new signups are down."
+                stickiness_up_daily_engagement_and_new_signups_flat: "Stickiness is up, but daily engagement and new signups are flat."
+                stickiness_up_daily_engagement_flat: "Stickiness is up, but daily engagement is flat."
+                stickiness_and_new_signups_up: "Stickiness and new signups are up."
+                stickiness_up_new_signups_flat: "Stickiness is up, but new signups are flat."
+                stickiness_up: "Stickiness is up."
+                daily_engagement_and_new_signups_up_stickiness_down: "Daily engagement and new signups are up, but stickiness is down."
+                daily_engagement_up_stickiness_and_new_signups_down: "Daily engagement is up, but stickiness and new signups are down."
+                daily_engagement_up_stickiness_down: "Daily engagement is up, but stickiness is down."
+                new_signups_up_stickiness_and_daily_engagement_down: "New signups are up, but stickiness and daily engagement are down."
+                all_metrics_down: "Stickiness, daily engagement, and new signups are all down."
+                stickiness_and_daily_engagement_down_new_signups_steady: "Stickiness and daily engagement are down, but new signups are holding steady."
+                stickiness_and_daily_engagement_down: "Stickiness and daily engagement are down."
+                new_signups_up_stickiness_down: "New signups are up, but stickiness is down."
+                stickiness_and_new_signups_down_daily_engagement_steady: "Stickiness and new signups are down, but daily engagement is holding steady."
+                stickiness_down_daily_engagement_and_new_signups_steady: "Stickiness is down, but daily engagement and new signups are holding steady."
+                stickiness_down_daily_engagement_steady: "Stickiness is down, but daily engagement is holding steady."
+                stickiness_and_new_signups_down: "Stickiness and new signups are down."
+                stickiness_down_new_signups_steady: "Stickiness is down, but new signups are holding steady."
+                stickiness_down: "Stickiness is down."
+                daily_engagement_and_new_signups_up_stickiness_flat: "Daily engagement and new signups are up, but stickiness is flat."
+                daily_engagement_up_new_signups_down: "Daily engagement is up, but new signups are down."
+                daily_engagement_up_stickiness_and_new_signups_flat: "Daily engagement is up, but stickiness and new signups are flat."
+                daily_engagement_up_stickiness_flat: "Daily engagement is up, but stickiness is flat."
+                new_signups_up_daily_engagement_down: "New signups are up, but daily engagement is down."
+                daily_engagement_and_new_signups_down_stickiness_steady: "Daily engagement and new signups are down, but stickiness is holding steady."
+                daily_engagement_down_stickiness_and_new_signups_steady: "Daily engagement is down, but stickiness and new signups are holding steady."
+                daily_engagement_down_stickiness_steady: "Daily engagement is down, but stickiness is holding steady."
+                new_signups_up_stickiness_and_daily_engagement_flat: "New signups are up, but stickiness and daily engagement are flat."
+                new_signups_down_stickiness_and_daily_engagement_steady: "New signups are down, but stickiness and daily engagement are holding steady."
+                all_metrics_steady: "No meaningful change in stickiness, daily engagement, or new signups."
+                stickiness_and_daily_engagement_steady: "No meaningful change in stickiness and daily engagement."
+                new_signups_up_stickiness_flat: "New signups are up, but stickiness is flat."
+                new_signups_down_stickiness_steady: "New signups are down, but stickiness is holding steady."
+                stickiness_and_new_signups_steady: "No meaningful change in stickiness and new signups."
+                stickiness_steady: "No meaningful change in stickiness."
+                daily_engagement_and_new_signups_up: "Daily engagement and new signups are up."
+                daily_engagement_up_new_signups_flat: "Daily engagement is up, but new signups are flat."
+                daily_engagement_up: "Daily engagement is up."
+                daily_engagement_and_new_signups_down: "Daily engagement and new signups are down."
+                daily_engagement_down_new_signups_steady: "Daily engagement is down, but new signups are holding steady."
+                daily_engagement_down: "Daily engagement is down."
+                new_signups_up_daily_engagement_flat: "New signups are up, but daily engagement is flat."
+                new_signups_down_daily_engagement_steady: "New signups are down, but daily engagement is holding steady."
+                daily_engagement_and_new_signups_steady: "No meaningful change in daily engagement and new signups."
+                daily_engagement_steady: "No meaningful change in daily engagement."
+                new_signups_up: "New signups are up."
+                new_signups_down: "New signups are down."
+                new_signups_steady: "No meaningful change in new signups."
+                insufficient_activity: "Pick a longer date range or come back once your community has more activity."
+              cta:
+                dau_mau: "Take a look at the activity by category to see which areas of your community may need your attention."
+                daily_engaged_users: "Investigate the decline to see which members have disengaged."
+                new_signups: "Look at your site traffic data to understand how traffic patterns might be influencing your signups this period."
               metrics:
                 new_signups: "New sign-ups"
                 dau_mau: "DAU / MAU stickiness"
@@ -7361,30 +7637,39 @@ en:
             fetch_error: "Couldn't load search data. Try refreshing the page."
             logging_disabled: 'Search logging is disabled, so no search data is being collected. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to start collecting it.'
             logging_disabled_moderator: "Search logging is disabled, so no search data is being collected. Ask an admin to enable log search queries to start collecting it."
-            count_headline:
-              last_7_days:
-                one: "Members ran %{formatted_count} on-site search in the last 7 days"
-                other: "Members ran %{formatted_count} on-site searches in the last 7 days"
-              last_30_days:
-                one: "Members ran %{formatted_count} on-site search in the last 30 days"
-                other: "Members ran %{formatted_count} on-site searches in the last 30 days"
-              last_3_months:
-                one: "Members ran %{formatted_count} on-site search in the last 3 months"
-                other: "Members ran %{formatted_count} on-site searches in the last 3 months"
-              selected_period:
-                one: "Members ran %{formatted_count} on-site search in the selected period"
-                other: "Members ran %{formatted_count} on-site searches in the selected period"
             headline:
-              no_signal_title: "Not enough search activity to summarise yet."
-              no_signal: "Pick a longer date range or come back once members have searched more."
-              content_gaps: "More than 10% of member searches ended without a click this period. Review the content gaps below to see what's missing."
-              rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
-              shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
-              healthy: "Members keep finding what they search for, and search volume is steady or growing."
+              titles:
+                insufficient_activity: "Not enough search activity to summarise yet."
+                searches_increased_no_result_rate_declined: "Searches have increased and the no-result rate has declined in the selected period"
+                searches_increased: "The total number of searches has increased in the selected period"
+                no_result_rate_decreased: "The no-result rate has decreased in the selected period"
+                searches_decreased_no_result_rate_increased: "Searches have decreased and the no-result rate has gone up in the selected period"
+                searches_decreased: "The total number of searches has decreased in the selected period"
+                no_result_rate_increased: "The no-result rate has increased in the selected period"
+                search_steady: "Search is steady in the selected period"
+              summaries:
+                insufficient_activity: "Pick a longer date range or come back once members have searched more."
+                searches_up_results_improved: "Members are conducting more searches in your community and are finding what they're looking for more often."
+                searches_up_no_result_rate_up: "Members are conducting more searches in your community, but the no-result rate has increased."
+                searches_up_no_result_rate_flat: "Members are conducting more searches in your community, but the no-result rate is flat."
+                results_improved_searches_down: "Members are finding what they're looking for, and total search volume has decreased."
+                results_improved_searches_steady: "Members are finding what they're looking for, and total search volume is flat."
+                searches_down_results_worsened: "Members are conducting fewer searches in your community and are not finding what they need as often."
+                searches_down_no_result_rate_flat: "Members are conducting fewer searches in your community, but the no-result rate is flat."
+                results_worsened_searches_steady: "Members are not finding what they need as often, and total search volume is holding steady."
+                searches_and_no_result_rate_steady: "No meaningful change in total searches or the no-result rate."
+                searches_up: "Members are conducting more searches in your community."
+                searches_down: "Members are conducting fewer searches in your community."
+                searches_steady: "No meaningful change in total searches."
+                results_worsened: "Members are not finding what they need as often."
+                results_improved: "Members are finding what they're looking for more often."
+                no_result_rate_steady: "No meaningful change in the no-result rate."
+              cta:
+                content_gaps: "Review the content gaps to see what's missing."
             kpi:
               total_searches:
                 label: "Total searches"
-                tooltip: "The number of searches performed by members in your community."
+                tooltip: "The number of searches performed in your community."
               no_result_rate:
                 label: "No-result rate"
                 tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
@@ -7394,7 +7679,7 @@ en:
               status: "Status"
             trending:
               title: "Trending searches"
-              tooltip: "The most popular search terms among members."
+              tooltip: "The most popular search terms in your community."
               empty: "No searches in this period."
             content_gaps:
               title: "Content gaps"
@@ -7404,12 +7689,33 @@ en:
                 no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
+          system:
+            title: "System"
+            storage: "Storage"
+            status: "Status"
+            fetch_error: "Couldn't load system information. Try refreshing the page."
+            commits:
+              one: "+%{count} commit"
+              other: "+%{count} commits"
+            view_on_github: "View on GitHub"
+            update_check_failed: "Update check failed — ensure Sidekiq is running."
+            update_available: "Update available: %{version}"
+            space_free: "%{size} free"
+            backups_size:
+              one: "%{size} backup (%{count})"
+              other: "%{size} backups (%{count})"
+            uploads_size: "%{size} uploads"
+            latest_backup: "Latest backup %{date}"
+            manage_backups: "Manage backups"
+            discourse_updated: "Discourse updated"
+            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
+          report_error: "Couldn't load this report"
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
@@ -7503,6 +7809,10 @@ en:
             title: "Top referrers"
             empty: "No referrer data for this period."
             error: "Couldn't load top referrers. Try refreshing the page."
+          top_entry_urls:
+            title: "Top entry URLs"
+            empty: "No entry URL data for this period."
+            error: "Couldn't load top entry URLs. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"
@@ -7552,6 +7862,16 @@ en:
           average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              one: "%{count} user"
+              other: "%{count} users"
+            posts_count:
+              one: "%{count} post"
+              other: "%{count} posts"
+            deselect: "Deselect %{name}"
+            fetch_error: "Couldn't load users for this group."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -8903,6 +9223,7 @@ en:
             deleted_tag: "deleted tag"
             update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
+            created_tag: "created tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"
@@ -8930,6 +9251,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"
@@ -9032,6 +9354,7 @@ en:
             full_page: "Full page"
             click_through_only: "All (click through only)"
             non_staff_only: "Non-staff users"
+            human_only: "Excluding staff and crawlers"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

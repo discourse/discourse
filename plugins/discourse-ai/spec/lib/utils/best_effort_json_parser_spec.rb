@@ -165,11 +165,13 @@ RSpec.describe DiscourseAi::Utils::BestEffortJsonParser do
       # regression specs for https://meta.discourse.org/t/407251
       it "extracts the complete value when string values contain real newlines" do
         content = "First line.\n\nA \"quoted\" word 😊 and everything after it."
-        input = { output: content }.to_json.gsub("\\n", "\n")
+        inputs = [{ output: content }.to_json, JSON.pretty_generate(output: content)]
 
-        result = described_class.extract_key(input, "string", :output)
+        inputs.each do |input|
+          result = described_class.extract_key(input.gsub("\\n", "\n"), "string", :output)
 
-        expect(result).to eq(content)
+          expect(result).to eq(content)
+        end
       end
 
       it "completes truncated JSON instead of scraping garbage" do

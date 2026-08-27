@@ -28,7 +28,7 @@ class Report
     storage_stats: :storage_stats,
   }
 
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs top_entry_urls]
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
     consolidated_page_views_browser_detection
@@ -40,12 +40,14 @@ class Report
     admin_logins
     top_uploads
     topic_view_stats
+    top_entry_urls
     top_referrers_by_browser_pageviews
     top_countries_by_browser_pageviews
   ]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
+    top_entry_urls
     top_referrers_by_browser_pageviews
   ]
 
@@ -94,6 +96,8 @@ class Report
     web_hook_events_daily_aggregate
   ]
 
+  INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
+
   include Reports::AssociatedAccountsByProvider
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
@@ -122,6 +126,7 @@ class Report
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
   include Reports::TopCountriesByBrowserPageviews
+  include Reports::TopEntryUrls
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
@@ -220,6 +225,7 @@ class Report
       SCHEMA_VERSION,
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
+      CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -366,7 +372,7 @@ class Report
   end
 
   def self.cache(report)
-    duration = report.error == :exception ? 1.minute : 35.minutes
+    duration = report.error == :exception ? 1.minute : 60.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 

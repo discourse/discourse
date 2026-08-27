@@ -75,7 +75,10 @@ module Chat
     end
 
     def can_view_thread(guardian:, thread:)
-      guardian.user == Discourse.system_user || guardian.can_preview_chat_channel?(thread.channel)
+      return true if guardian.user == Discourse.system_user
+
+      guardian.can_join_chat_channel?(thread.channel) ||
+        guardian.can_preview_anonymous_public_chat_channel?(thread.channel)
     end
 
     def threading_enabled_for_channel(thread:)

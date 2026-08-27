@@ -1,6 +1,11 @@
+import { triggerKeyEvent } from "@ember/test-helpers";
+import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - html block extension",
@@ -37,6 +42,38 @@ module(
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);
       });
+    });
+
+    test("Tab and Shift-Tab indent selected HTML block lines", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        "<div>\n  <p>Hello</p>\n</div>"
+      );
+      const { view } = editor;
+      const htmlBlock = view.state.doc.firstChild;
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, 1, htmlBlock.content.size + 1)
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab");
+
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        "  <div>\n    <p>Hello</p>\n  </div>",
+        "all selected HTML lines are indented"
+      );
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab", {
+        shiftKey: true,
+      });
+
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        "<div>\n  <p>Hello</p>\n</div>",
+        "all selected HTML lines are outdented"
+      );
     });
   }
 );

@@ -750,8 +750,15 @@ module DiscourseTagging
     guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
 
+  def self.visible_tag_ids(tags, guardian = nil)
+    ids = tags.map(&:id).uniq
+    return ids.to_set if ids.empty? || guardian&.is_admin?
+    visible_tags(guardian).where(id: ids).pluck(:id).to_set
+  end
+
   def self.filter_visible_in_accessible_categories(query, guardian = nil)
-    return query if guardian.nil? || guardian.is_admin?
+    guardian ||= Guardian.new
+    return query if guardian.is_admin?
 
     query.where(<<~SQL, ids: guardian.allowed_category_ids)
       tags.id NOT IN (

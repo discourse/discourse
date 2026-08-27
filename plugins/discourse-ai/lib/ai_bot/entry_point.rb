@@ -170,7 +170,7 @@ module DiscourseAi
         ) do |url, route|
           if route[:action] == "show" && share_key = route[:share_key]
             if conversation = SharedAiConversation.find_by(share_key: share_key)
-              conversation.onebox
+              conversation.onebox if conversation.publicly_visible?
             end
           end
         end
@@ -246,7 +246,9 @@ module DiscourseAi
                 {
                   "id" => agent_user[:user_id],
                   "username" => agent_user[:username],
-                  "has_default_llm" => agent_user[:default_llm_id].present?,
+                  "has_default_llm" =>
+                    agent_user[:default_llm_id].present? ||
+                      SiteSetting.ai_default_llm_model.present?,
                   "force_default_llm" => agent_user[:force_default_llm],
                   "is_agent" => true,
                 }
@@ -283,6 +285,15 @@ module DiscourseAi
         end
 
         plugin.register_editable_topic_custom_field(:ai_agent_id)
+        plugin.register_topic_custom_field_type(
+          :ai_agent_id,
+          :string,
+          max_length: TOPIC_AI_AGENT_ID_MAX_LENGTH,
+        )
+
+        plugin.on(:after_validate_topic) do |topic, topic_creator|
+          DiscourseAi::AiBot::TopicAgentValidator.validate(topic, topic_creator)
+        end
 
         plugin.add_api_key_scope(
           :ai,

@@ -74,6 +74,49 @@ RSpec.describe DiscourseAi::Completions::Dialects::OpenAiCompatible do
   end
 
   context "when system prompts are enabled" do
+    it "embeds participant names in user message content" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "System instructions",
+          messages: [{ type: :user, id: "admin", content: "Who am I?" }],
+        )
+      model = Fabricate(:samba_nova_model, provider_params: { disable_system_prompt: false })
+
+      expect(described_class.new(prompt, model).translate).to eq(
+        [
+          { role: "system", content: "System instructions" },
+          { role: "user", content: "admin: Who am I?" },
+        ],
+      )
+    end
+
+    it "does not embed protocol IDs from XML tool messages" do
+      tool_id = "tool-1"
+      model =
+        Fabricate(
+          :samba_nova_model,
+          provider_params: {
+            disable_system_prompt: false,
+            disable_native_tools: true,
+          },
+        )
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "System instructions",
+          tools: [{ name: "echo", description: "Echo the input" }],
+          messages: [
+            { type: :user, id: "admin", content: "Echo this" },
+            { type: :tool_call, id: tool_id, name: "echo", content: "{}" },
+            { type: :tool, id: tool_id, name: "echo", content: '"result"' },
+          ],
+        )
+
+      translated = described_class.new(prompt, model).translate
+
+      expect(translated.second[:content]).to start_with("admin: ")
+      expect(translated.map { |message| message[:content] }.join).not_to include(tool_id)
+    end
+
     it "includes system and user messages separately" do
       system_msg = "This is a system message"
       user_msg = "user message"

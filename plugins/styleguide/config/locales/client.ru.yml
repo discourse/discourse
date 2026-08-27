@@ -13,6 +13,9 @@ ru:
   js:
     styleguide:
       title: "Руководство по стилю"
+      example:
+        kind:
+          component: "компонент"
       categories:
         syntax: Синтаксис
         atoms: Атомы
@@ -39,6 +42,8 @@ ru:
           title: "Цвета"
         dialog:
           title: "Диалог"
+        drag_and_drop:
+          locked: "Заблокировано"
         icons:
           title: "Значки"
           full_list: "См. полный список значков Font Awesome"

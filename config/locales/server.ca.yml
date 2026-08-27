@@ -560,16 +560,15 @@ ca:
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
   email_login:
     title: "Inici de sessió de correu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
       ipad: "iPad"
@@ -587,6 +586,9 @@ ca:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anònim"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
@@ -978,6 +980,9 @@ ca:
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_entry_urls:
       labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
@@ -1390,7 +1395,6 @@ ca:
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
-    min_ban_entries_for_roll_up: "En clicar el botó Agrupa es crearà una nova entrada de prohibició de subxarxa si hi ha almenys (N) entrades."
     max_age_unmatched_emails: "Suprimeix entrades no coincidents de correus sota supervisió després de (N) dies."
     max_age_unmatched_ips: "Suprimeix entrades no coincidents d'entrades IP sota supervisió després de (N) dies."
     num_flaggers_to_close_topic: "Nombre mínim de banderes úniques necessàries per a aturar automàticament un tema per a una intervenció"
@@ -1517,7 +1521,6 @@ ca:
     default_other_notification_level_when_replying: "Nivell de notificació global per defecte quan l'usuari respon a un tema."
     default_other_external_links_in_new_tab: "Obre enllaços externs en una nova pestanya per defecte."
     default_other_enable_quoting: "Per defecte, habilita la resposta amb citació per a text destacat"
-    default_other_enable_defer: "Habilita la funció d'ajornar temes per defecte."
     default_other_dynamic_favicon: "Mostra per defecte el recompte de tema nou/actualitzat en una icona del navegador."
     default_topics_automatic_unpin: "Per defecte desafixa automàticament temes quan l'usuari arriba al capdavall."
     default_categories_watching: "Llista de categories que són vigilades per defecte."
@@ -2313,9 +2316,6 @@ ca:
     user_posted_pm_staged:
       title: "L'usuari ha publicat un missatge personal (MP) fictici"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
@@ -2752,6 +2752,9 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
+  design_wizard:
+    palette_pairs:
+      default: "Per defecte"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2814,6 +2817,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"
@@ -2860,7 +2867,6 @@ ca:
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
-          description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       confirm_spam:
         title: "Sí"
       not_spam:

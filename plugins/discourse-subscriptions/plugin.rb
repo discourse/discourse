@@ -28,11 +28,11 @@ end
 
 extend_content_security_policy(script_src: %w[https://js.stripe.com/v3/ https://hooks.stripe.com])
 
-add_admin_route "discourse_subscriptions.admin_navigation", "discourse-subscriptions.products"
+add_admin_route "discourse_subscriptions.admin_navigation",
+                "discourse-subscriptions",
+                use_new_show_route: true
 
 Discourse::Application.routes.append do
-  get "/admin/plugins/discourse-subscriptions" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products" => "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products/:product_id" => "admin/plugins#index",
@@ -43,10 +43,6 @@ Discourse::Application.routes.append do
         "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/subscriptions" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans/:plan_id" => "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/coupons" => "admin/plugins#index",
       :constraints => AdminConstraint.new
@@ -92,6 +88,12 @@ after_initialize do
       purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
     )
   end
+
+  add_to_serializer(
+    :site,
+    :discourse_subscriptions_stripe_configured,
+    include_condition: -> { scope.is_admin? },
+  ) { DiscourseSubscriptions::Stripe.configured? }
 
   add_to_serializer(:site, :show_campaign_banner) do
     enabled = SiteSetting.discourse_subscriptions_enabled

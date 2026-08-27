@@ -515,6 +515,7 @@ discourse_ai:
   ai_translation_enabled:
     default: false
     client: true
+    refresh: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/translation"
   ai_translation_locale_detector_agent:
@@ -660,7 +661,13 @@ discourse_ai:
     client: false
     hidden: true
 
+  ai_audit_logs_detailed_retention_days:
+    default: 0
+    min: 0
+    max: 36500
+    client: false
   ai_audit_logs_purge_after_days:
     default: 180
     min: 0
+    max: 36500
     client: false

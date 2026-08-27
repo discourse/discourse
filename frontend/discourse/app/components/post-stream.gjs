@@ -88,27 +88,16 @@ export default class PostStream extends Component {
       .filter((num) => !isNaN(num));
   }
 
-  @cached
-  get postTuples() {
-    const posts = this.posts;
+  // Indexed rather than wrapped: a per-render wrapper is a new value each
+  // recompute, invalidating `@post` and rebuilding unchanged cooked HTML.
+  @bind
+  previousPost(index) {
+    return this.posts[index - 1] ?? null;
+  }
 
-    const length = posts.length;
-    const result = [];
-
-    let i = 0;
-    let previousPost = null;
-
-    while (i < length) {
-      const post = posts[i];
-      const nextPost = i < length - 1 ? posts[i + 1] : null;
-
-      result.push({ post, previousPost, nextPost });
-
-      previousPost = post;
-      ++i;
-    }
-
-    return result;
+  @bind
+  nextPost(index) {
+    return this.posts[index + 1] ?? null;
   }
 
   get shouldShowFilteredNotice() {
@@ -316,10 +305,10 @@ export default class PostStream extends Component {
         />
       {{/if}}
 
-      {{#each this.postTuples key="post.id" as |tuple index|}}
+      {{#each this.posts key="id" as |post index|}}
         {{#let
-          tuple.post tuple.previousPost tuple.nextPost
-          as |post previousPost nextPost|
+          (this.previousPost index) (this.nextPost index)
+          as |previousPost nextPost|
         }}
           {{#if (this.isPlaceholder post)}}
             <PostPlaceholder />

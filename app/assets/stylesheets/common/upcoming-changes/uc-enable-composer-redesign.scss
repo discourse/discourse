@@ -20,6 +20,14 @@
       height: auto;
       min-height: 0;
     }
+
+    // structure properly when :where is gone
+    &.hide-preview .d-editor-container {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
   }
 
   .grippie {
@@ -35,15 +43,8 @@
   }
 
   .reply-area {
+    container-type: inline-size;
     padding: 0 !important;
-
-    @include viewport.until(sm) {
-      &:has(.d-editor-textarea-wrapper.in-focus) {
-        .reply-to {
-          pointer-events: none;
-        }
-      }
-    }
   }
 
   .composer-controls {
@@ -52,15 +53,20 @@
     }
   }
 
-  .title-and-category {
+  #reply-control .title-and-category {
     padding: 0 !important;
     width: 100% !important;
     gap: 0 !important;
     border-bottom: 1px solid var(--primary-low);
+    flex-wrap: nowrap !important;
+
+    .user-selector {
+      margin: 0 !important;
+    }
   }
 
   .category-input,
-  .users-input {
+  .user-selector {
     border-right: 1px solid var(--primary-low);
 
     @include viewport.until(sm) {
@@ -69,6 +75,10 @@
   }
 
   .tags-input {
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
+    }
+
     @include viewport.until(sm) {
       flex-grow: 0 !important;
     }
@@ -97,6 +107,12 @@
       .d-icon-tag {
         color: var(--primary-low-mid) !important;
       }
+
+      .multi-select-header__selected-count {
+        @include viewport.from(sm) {
+          display: none;
+        }
+      }
     }
 
     .has-selection {
@@ -114,7 +130,7 @@
 
   .category-input,
   .tags-input,
-  .users-input {
+  .user-selector {
     margin: 0 !important;
     max-width: unset !important;
     width: 50% !important;
@@ -125,7 +141,8 @@
     }
 
     .category-chooser.is-expanded,
-    .mini-tag-chooser.is-expanded {
+    .mini-tag-chooser.is-expanded,
+    .user-chooser.is-expanded {
       .select-kit-header {
         outline: 0 !important;
       }
@@ -135,44 +152,62 @@
     .select-kit.multi-select .multi-select-header {
       border: 0;
       padding: var(--space-3) var(--space-4);
+      border-radius: 0;
 
       &:active {
         border: 0;
         outline: 0;
       }
 
-      .d-icon {
+      .d-icon:not(.badge-category *) {
         font-size: var(--font-down-1-rem);
         color: var(--primary-medium);
       }
     }
   }
 
+  // TODO move to plugin css when UC is removed
+  .showing-ai-suggestions #reply-title {
+    padding-right: calc(var(--space-7) + 27px);
+  }
+
   .title-input {
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-low);
+
     #reply-title {
       border: 0;
       padding: var(--space-4);
-      font-size: var(--font-up-3);
+      font-weight: 600;
       margin-bottom: 0 !important;
-      padding-bottom: var(--space-2) !important;
+      padding-bottom: var(--space-3) !important;
+      padding-right: var(--space-3) !important;
+      flex-basis: unset !important;
 
       &::placeholder {
         color: var(--primary-medium);
-      }
-
-      @include viewport.until(sm) {
-        font-size: var(--font-up-2);
       }
 
       &:focus {
         outline: 0;
       }
     }
+
+    // TODO move to plugin css when UC is removed
+    .suggest-titles-button {
+      position: relative;
+      bottom: unset !important;
+      right: unset !important;
+      transform: none !important;
+      margin-inline-end: var(--space-3);
+    }
   }
 
-  .d-editor-textarea-wrapper {
+  #reply-control .d-editor-textarea-wrapper {
     --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
     border: 0;
+    border-radius: 0; // core overrule
 
     // padding and border-radius must animate in lockstep with margin,
     // otherwise the text counter-jumps when the focus state toggles
@@ -210,12 +245,36 @@
         border-top-left-radius: var(--d-border-radius-large);
         border-top-right-radius: var(--d-border-radius-large);
         padding-top: var(--space-4);
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-block-start: var(--space-2);
+          inset-inline-start: 50%;
+          transform: translateX(-50%);
+          width: 15vw;
+          height: 5px;
+          background: var(--primary-medium);
+          border-radius: var(--d-border-radius-pill);
+        }
       }
+    }
+  }
+
+  @include viewport.until(sm) {
+    #reply-control.has-composer-fields
+      .reply-area:has(.d-editor-textarea-wrapper.in-focus)
+      .reply-to {
+      pointer-events: none;
     }
   }
 
   .d-editor-input {
     padding-inline: var(--space-4) !important;
+
+    &:focus-visible {
+      outline: 0;
+    }
   }
 
   .wmd-controls:not(.toolbar-visible)
@@ -224,14 +283,47 @@
     display: none;
   }
 
-  // clean up selector once the uc- body class is no longer in the way
-  .show-preview .d-editor-container.--markdown-editor-enabled {
+  #reply-control .d-editor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+      "fields fields"
+      "editor preview";
+
+    &.--rich-editor-enabled {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
+
+    .composer-fields {
+      grid-area: fields;
+      min-width: 0;
+
+      @include viewport.until(sm) {
+        max-width: 100vw;
+        box-sizing: border-box;
+      }
+    }
+
     .d-editor-textarea-column {
-      border-right: 1px solid var(--primary-low);
+      grid-area: editor;
+      min-height: 0;
     }
 
     .d-editor-preview-wrapper {
-      margin-top: var(--space-2);
+      grid-area: preview;
+    }
+  }
+
+  // clean up selector once the uc- body class is no longer in the way
+  .show-preview .d-editor-container.--markdown-editor-enabled {
+    .d-editor-preview-wrapper {
+      border-left: 1px solid var(--primary-low);
+      margin: 0;
+      padding: var(--space-2) var(--space-4);
     }
   }
 
@@ -240,34 +332,44 @@
     align-items: center;
     flex-wrap: nowrap;
 
-    @include viewport.from(sm) {
-      padding: var(--space-2) var(--space-4);
-      border-top: 1px solid var(--primary-low);
+    @container (width < 600px) {
+      flex-direction: column;
     }
 
-    @include viewport.until(sm) {
-      flex-direction: column;
+    @container (width > 600px) {
+      border-top: 1px solid var(--primary-low);
+      padding: var(--space-2) var(--space-4);
     }
 
     &__toolbar {
       overflow: hidden;
-      flex-grow: 1;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
 
-      @include viewport.until(sm) {
-        width: 100%;
-        padding-inline: var(--space-2);
-        box-sizing: border-box;
+      @container (width < 600px) {
+        padding: 0 var(--space-4);
         border-top: 1px solid var(--primary-low);
         border-bottom: 1px solid var(--primary-low);
+      }
+
+      @include viewport.until(sm) {
+        padding-inline: var(--space-2);
+        border-top: 1px solid var(--primary-low);
       }
     }
 
     .submit-panel {
       margin: 0 !important;
 
+      @container (width < 600px) {
+        padding: var(--space-2) var(--space-4);
+        align-self: end;
+      }
+
       @include viewport.until(sm) {
         width: 100%;
-        padding-inline: var(--space-2);
+        padding: var(--space-2) var(--space-2) 0; // parent has env safe area padding for bottom
         box-sizing: border-box;
 
         .save-or-cancel {
@@ -331,5 +433,10 @@
     .reply-to {
       padding: var(--space-1) var(--space-3);
     }
+  }
+
+  // PM specific removals/overrules
+  #reply-control.private-message .with-tags .title-input {
+    max-width: unset;
   }
 }

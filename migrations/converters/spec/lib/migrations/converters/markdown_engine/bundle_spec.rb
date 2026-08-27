@@ -8,12 +8,13 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
 
   let(:names) { bundle.entries.map(&:first) }
 
-  it "loads the vendor libraries first" do
-    expect(names.first).to end_with("loader.js")
+  it "loads the host's precompiled pretty-text bundle first" do
+    expect(names.first).to eq("pretty-text.js")
+    expect(bundle.entries.first.last).to include("__PrettyText")
   end
 
-  it "contains the engine and pretty-text modules" do
-    expect(names).to include("discourse-markdown-it/index", "pretty-text/text-replace")
+  it "contains the bundled plugins' vendored libraries" do
+    expect(names).to include(a_string_matching(%r{node_modules/moment/moment\.js\z}))
   end
 
   it "contains the bundled plugins' markdown features" do
@@ -22,8 +23,8 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     )
   end
 
-  it "ends with the host shims and the emoji table" do
-    expect(names.last(2)).to eq([described_class::SHIMS_FILE, "migrations/emoji-data"])
+  it "ends with the emoji table" do
+    expect(names.last).to eq("migrations/emoji-data")
   end
 
   it "caches the built bundle on disk and reuses it" do

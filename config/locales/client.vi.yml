@@ -414,10 +414,28 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Đã chọn"
       start_posting:
         back: "Quay lại"
+    design_wizard:
+      back: "Quay lại"
+      next: "Kế tiếp"
+      sections:
+        theme: "Giao diện"
+        fonts: "Phông chữ"
+        homepage: "Trang chủ"
+      theme:
+        selected: "Đã chọn"
+      colors:
+        light: "Sáng"
+        dark: "Tối"
+      fonts:
+        base_font: "Phông chữ cơ bản"
+        heading_font: "Phông chữ tiêu đề"
+      homepage:
+        topics: "Các chủ đề"
+        categories: "Danh mục"
+        styles:
+          boxes: "Hộp"
     about:
       edit: "Sửa trang này"
       simple_title: "Giới thiệu"
@@ -666,10 +684,6 @@ vi:
         optional: "tùy chọn"
       claim_help:
         optional: "Bạn có thể phàn nàn mục này để tránh những người khác đánh giá nó."
-        required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
-        claimed_by_you: "Bạn đã yêu cầu mặt hàng này và có thể xem xét nó."
-        claimed_by_other: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b> ."
-        automatically_claimed_by: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b>."
       claim:
         title: "Xác nhận chủ đề này"
       unclaim:
@@ -706,6 +720,8 @@ vi:
         email: "Email"
         name: "Tên"
         fields: "Trường tùy biến"
+        silence_reason: "Lý do hạn chế"
+        penalty_forever: "Vĩnh viễn"
         reject_reason: "Lý do"
         scrubbed_by: "Bản ghi đã bị xóa bởi"
         scrubbed_reason: "Lý do"
@@ -1478,7 +1494,6 @@ vi:
       external_links_in_new_tab: "Mở liên kết ngoài trong thẻ mới"
       enable_quoting: "Bật trả lời trích dẫn khi tô đen văn bản"
       enable_smart_lists: "Bật danh sách thông minh khi soạn thảo"
-      enable_defer: "Bật đánh dấu chủ đề là chưa đọc"
       enable_markdown_monospace_font: "Dùng phông chữ monospace trong chế độ Markdown"
       experimental_sidebar:
         enable: "Bật thanh bên"
@@ -2099,9 +2114,6 @@ vi:
           sent_title: "Đã gửi lời mời"
           member_tab: "Thành viên kênh"
           admin_tab: "Nhân viên"
-          member_description: "Mời mọi người tham gia trang web. Chia sẻ liên kết hoặc gửi lời mời qua email."
-          admin_description: "Mời mọi người gia nhập ban quản trị. Quản trị viên có toàn quyền truy cập trang web."
-          moderator_description: "Mời mọi người gia nhập ban quản trị. Điều hành viên giúp quản lý nội dung và thành viên."
           staff_role_label: "Mời làm"
           staff_role_admin: "Quản trị viên"
           staff_role_moderator: "Điều hành"
@@ -2114,16 +2126,12 @@ vi:
           invite_by_email: "Email"
           role_label: "Mời làm"
           restrict_domain: "Hạn chế đối với miền"
-          restrict_domain_help: " Chỉ người dùng có email thuộc tên miền này mới có thể chấp nhận liên kết. Để mời một người cụ thể, vui lòng dùng ô Email ở trên."
           domain_placeholder: "vidu.io.vn"
           domain_invalid: "Nhập tên miền hợp lệ, ví dụ: vidu.io.vn"
           arrive_at_topic_help: "Chuyển hướng người dùng đến một bài viết cụ thể sau khi họ chấp nhận."
-          create_and_send: "Tạo & gửi"
-          create_and_copy: "Tạo & sao chép liên kết"
-          more_options: "Nhiều tùy chọn hơn"
-          fewer_options: "Bớt tùy chọn"
+          create_and_send: "Gửi"
+          create_and_copy: "Sao chép link"
           update: "Cập nhật"
-          role_locked: "Không thể thay đổi loại lời mời sau khi đã tạo."
           summary:
             sent_to: "Đã gửi thư mời đến %{email}. Bạn cũng có thể chia sẻ trực tiếp liên kết này:"
             role: "Vai trò"
@@ -2138,7 +2146,7 @@ vi:
             expires: "Hết hạn"
             topic: "Chủ đề"
             groups: "Nhóm"
-            edit: "Sửa lời mời"
+            edit: "Sửa"
             view_invites: "Xem lời mời"
           email_sent:
             body: "Đã gửi thư mời đến %{email}."
@@ -2652,6 +2660,7 @@ vi:
     category_row:
       subcategory_count:
         other: "+%{count} chuyên mục phụ"
+      subcategories: "+ Chuyên mục phụ"
       topic_count:
         other: "%{count} chủ đề trong chuyên mục này"
       read_only: "chỉ đọc"
@@ -2833,7 +2842,6 @@ vi:
       italic_label: "I"
       italic_title: "In nghiêng"
       italic_text: "in nghiêng văn bản"
-      heading_title: "Tiêu đề"
       heading_level_n: "Tiêu đề %{levelNumber}"
       heading_level_n_title: "Tiêu đề %{levelNumber}"
       heading_level_paragraph: "Đoạn văn"
@@ -3019,7 +3027,6 @@ vi:
         other: "%{count} yêu cầu làm thành viên cho '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - hoàn thành"
       new_features: "Các tính năng mới đã có sẵn!"
       admin_problems: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
       upcoming_changes:
@@ -4913,13 +4920,9 @@ vi:
           always_public: "Nội dung trong phần này luôn công khai"
           more_menu: "Thêm menu"
           localizations:
-            title: "Bản dịch"
             locale: "Ngôn ngữ"
             title_label: "Tên phần"
-            link_label: "Tên liên kết"
-            add_section: "Thêm bản dịch tiêu đề mục"
-            add_link: "Thêm bản dịch tên liên kết"
-            remove: "Xóa bản dịch"
+            remove_language: "Bỏ"
           links:
             title: "Liên kết trong mục"
             add: "Thêm một link khác"
@@ -5773,13 +5776,28 @@ vi:
       new_features:
         title: "Có gì mới?"
         check_for_updates: "Kiểm tra cập nhật"
+      site_traffic_explorer:
+        metric_information: "Giới thiệu về %{metric}"
+        remove_filter_value: "Xóa %{value}"
+        clear_all: "Xóa hết"
+        apply: "Áp dụng"
+        view_more: "Mở rộng"
+        cards:
+          pages: "Trang"
+          visitors: "Khách ghé thăm"
+        filters:
+          ip: "Địa chỉ IP"
+        metrics:
+          bounce_rate:
+            label: "Tỷ lệ thoát (Bounce rate)"
+        series:
+          anonymous_human: "Ẩn danh"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
         discourse_last_updated: "Đã cập nhật website:"
         version: "Phiên bản"
         up_to_date: "Bạn đã cập nhật!"
-        critical_available: "Bản cập nhật quan trọng sẵn sằng."
         updates_available: "Cập nhật đang sẵng sàng"
         please_update: "Vui lòng cập nhật!"
         no_check_performed: "Kiểm tra phiên bản mới đã không được thực hiện, đảm bảo rằng Sidekiq đang chạy."

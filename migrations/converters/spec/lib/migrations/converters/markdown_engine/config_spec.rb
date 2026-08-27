@@ -91,7 +91,11 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       bundle = Migrations::Converters::MarkdownEngine::Bundle
 
       files = []
-      bundle::MODULE_DIRS.each_key { |dir| files.concat(Dir[File.join(root, dir, "**", "*.js")]) }
+      # Only the JavaScript sources — the core-bundle globs also cover build
+      # configs and the lockfile, which read no site settings.
+      bundle::CORE_BUNDLE_GLOBS.each do |pattern|
+        files.concat(Dir.glob(pattern, base: root).grep(/\.js\z/).map { |f| File.join(root, f) })
+      end
       bundle::CORE_MARKDOWN_PLUGINS.each do |plugin|
         files.concat(
           Dir[
@@ -119,7 +123,11 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
               .compact
         end
 
-      expect(keys_read.uniq - described_class::SETTING_KEYS).to be_empty
+      # `avatar_sizes` is covered by the dedicated AVATAR_SIZES_KEY: it rides
+      # the options as `avatar_sizes`, and the processor's helpers shim hands
+      # it back to avatar-utils under a `siteSettings` reading.
+      covered = described_class::SETTING_KEYS + [described_class::AVATAR_SIZES_KEY]
+      expect(keys_read.uniq - covered).to be_empty
     end
 
     it "recognizes every siteSettings mention, so aliases can't hide a read" do

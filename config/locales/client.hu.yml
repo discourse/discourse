@@ -476,17 +476,12 @@ hu:
       pill: "Ajánlott"
       pm_title: "Ajánlott üzenetek"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Indítás %{step_count} egyszerű lépésben"
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
-      select_theme:
-        enabled: "Kiválasztott"
       invite_collaborators:
         title: "Együttműködők meghívása"
-        description: "Az első tagok segítenek életre kelteni a közösségedet."
         action: "Meghívó létrehozása"
       start_posting:
         title: "Kezdj el posztolni!"
-        description: "Adj témát a közös beszélgetéshez!"
         choose_option: "Hogyan szeretnél kezdeni?"
         predefined_topics: "Jégtörő sablonok"
         predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"
@@ -506,6 +501,26 @@ hu:
           what_is_your_favorite_food:
             title: "Mi a kedvenc ételed?"
             body: "Oszd meg kedvenc ételeidet a közösséggel! Kezdjük: Imádom a pizzát, főleg extra sajttal és pepperonival."
+    design_wizard:
+      back: "Vissza"
+      next: "Következő"
+      sections:
+        theme: "Téma"
+        fonts: "Betűkészletek"
+        homepage: "Főoldal"
+      theme:
+        selected: "Kiválasztott"
+      colors:
+        light: "Világos"
+        dark: "Sötét"
+      fonts:
+        base_font: "Alap betűkészlet"
+        heading_font: "Fejléc betűkészlet"
+      homepage:
+        topics: "Témák"
+        categories: "Kategóriák"
+        styles:
+          boxes: "Dobozok"
     about:
       edit: "Lap szerkesztése"
       simple_title: "Névjegy"
@@ -791,10 +806,6 @@ hu:
       stale_help: "Ezt a tételt <b>%{username}</b> megoldotta."
       claim_help:
         optional: "Zárolhatja ezt az elemet, hogy mások ne hagyhassák jóvá."
-        required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
-        claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
-        claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
-        automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
       claim:
         title: "Igényelje ezt a témát"
       unclaim:
@@ -831,6 +842,8 @@ hu:
         email: "E-mail"
         name: "Név"
         fields: "Mezők"
+        silence_reason: "Némítás oka"
+        penalty_forever: "Örökké"
         reject_reason: "Ok"
         scrubbed_by: "Rekordot törölte:"
         scrubbed_reason: "Ok"
@@ -1629,7 +1642,6 @@ hu:
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
       enable_quoting: "A kijelölt szöveg idézése a válaszban"
       enable_smart_lists: "Intelligens listák engedélyezése a szerkesztőben való íráskor"
-      enable_defer: "A témák olvasatlanként való megjelölésének engedélyezése"
       enable_markdown_monospace_font: "Fix szélességű betűkészlet használata a szerkesztő Markdown módjában"
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
@@ -2283,7 +2295,8 @@ hu:
           invite_by_email: "E-mail:"
           restrict_domain: "Domainre korlátozás"
           domain_placeholder: "example.com"
-          more_options: "További lehetőségek"
+          create_and_send: "Küldés"
+          create_and_copy: "Hivatkozás másolása"
           update: "Frissítés"
           summary:
             role_member: "Tag"
@@ -2296,7 +2309,7 @@ hu:
             expires: "Lejár"
             topic: "Téma"
             groups: "Csoportok"
-            edit: "Meghívó szerkesztése"
+            edit: "Szerkesztés"
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2828,6 +2841,7 @@ hu:
       subcategory_count:
         one: "+%{count} alkategória"
         other: "+%{count} alkategória"
+      subcategories: "+ Alkategóriák"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -3021,7 +3035,6 @@ hu:
       italic_label: "I"
       italic_title: "Dőlt"
       italic_text: "dőlt szöveg"
-      heading_title: "Címsorok"
       heading_level_n: "Címsor %{levelNumber}"
       heading_level_n_title: "Címsor %{levelNumber}"
       heading_level_paragraph: "Bekezdés"
@@ -3218,7 +3231,6 @@ hu:
         other: "%{count} nyitott tagsági kérés ennél: „%{group_name}”"
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} – kész"
       new_features: "Új funkciók érhetők el!"
       admin_problems: "Új tanácsok a webhely irányítópultján"
       upcoming_changes:
@@ -5258,9 +5270,9 @@ hu:
           always_public: "Az ebben a részben található tartalom mindig nyilvános"
           more_menu: "További menü"
           localizations:
-            title: "Fordítások"
             locale: "Nyelv"
             title_label: "A szakasz címe"
+            remove_language: "Eltávolítás"
           links:
             add: "Újabb link hozzáadása"
             delete: "Link törlése"
@@ -6125,13 +6137,27 @@ hu:
       new_features:
         title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
+      site_traffic_explorer:
+        metric_information: "A(z) %{metric} névjegye"
+        remove_filter_value: "%{value} eltávolítás"
+        clear_all: "Összes törlése"
+        apply: "Alkalmaz"
+        view_more: "Több megtekintése"
+        cards:
+          pages: "Oldalak"
+          visitors: "Látogatók"
+        filters:
+          country: "Ország"
+          browser: "Böngésző"
+          ip: "ip cím"
+        series:
+          anonymous_human: "Névtelen"
       dashboard:
         title: "Vezérlőpult"
         last_updated: "Az irányítópult frissítve:"
         discourse_last_updated: "Discourse frissítve:"
         version: "Verzió"
         up_to_date: "A rendszer naprakész!"
-        critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
         please_update: "Kérjük, frissítsd!"
         no_check_performed: "A frissítések ellenőrzése nem történt meg. Győződjön meg arról, hogy a Sidekiq fut."

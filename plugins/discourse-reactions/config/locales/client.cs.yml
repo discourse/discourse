@@ -13,8 +13,6 @@ cs:
   js:
     discourse_reactions:
       reactions_title: "Reakce"
-      state_panel:
-        more_users: "%{count} navíc..."
       picker:
         react_with: "Reagovat na tento příspěvek pomocí: %{reaction}"
         cant_remove_reaction: "Svou reakci již nemůžete odstranit"

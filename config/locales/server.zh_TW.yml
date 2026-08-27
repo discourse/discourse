@@ -515,16 +515,15 @@ zh_TW:
     success_unapproved: "你的密碼已成功修改。"
   email_login:
     title: "Email 登入"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "\\b不知名的瀏覽器"
     device:
       android: "安卓裝置"
       chromebook: "Chrome OS"
@@ -544,6 +543,9 @@ zh_TW:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "未知的運作系統"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "匿名"
   change_email:
     error: "修改你的電郵位址時發生錯誤，可能此郵箱已有人使用了。"
     error_staged: "在修改你的電子郵箱地址時出現了錯誤。這個郵箱已經被一個暫存使用者占用了。"
@@ -916,6 +918,9 @@ zh_TW:
         num_topics: "話題"
       description: "透過共用連結的點擊次數列出的使用者"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "造訪"
+    top_entry_urls:
       labels:
         count: "造訪"
     top_referrers_by_browser_pageviews:
@@ -1313,7 +1318,6 @@ zh_TW:
     topic_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄一次新的主題訪問"
     user_profile_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄使用者資料訪問數"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
-    min_ban_entries_for_roll_up: "當點擊折疊按鈕且不少於 (N) 條記錄時，將會創建一個子網禁止記錄。"
     max_age_unmatched_emails: "在 (N) 天後刪除不匹配的電郵地址。"
     max_age_unmatched_ips: "在 (N) 天後刪除不匹配的 IP 記錄。"
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
@@ -2304,9 +2308,6 @@ zh_TW:
     user_posted_pm_staged:
       title: "使用者發表私人訊息後備"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "帳號被停權"
       subject_template: "[%{email_prefix}] 你的帳號已被停權"
@@ -2784,6 +2785,9 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
+  design_wizard:
+    palette_pairs:
+      default: "預設"
   wizard:
     title: "Discourse 安裝"
     step:
@@ -2850,6 +2854,9 @@ zh_TW:
     user_claimed: "該項目已被其他的使用者要求"
     missing_version: "您必須提供版本參數（Version parameter）"
     conflict: "有一個更新衝突阻止您這樣做"
+    reasons:
+      fast_typer_time:
+        other: "%{count} 秒"
     actions:
       agree:
         title: "是"
@@ -2899,7 +2906,6 @@ zh_TW:
           title: "刪除使用者"
         block:
           title: "刪除並阻擋使用者"
-          description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       confirm_spam:
         title: "是"
       not_spam:

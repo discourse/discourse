@@ -154,6 +154,9 @@
         },
         "suggested_edit_accepted": {
           "type": "integer"
+        },
+        "resenha_invitation": {
+          "type": "integer"
         }
       },
       "required": [
@@ -326,6 +329,10 @@
       }
     },
     "filters": {
+      "type": "array",
+      "items": {}
+    },
+    "anonymous_list_filters": {
       "type": "array",
       "items": {}
     },
@@ -1029,6 +1036,7 @@
     "trust_levels",
     "groups",
     "filters",
+    "anonymous_list_filters",
     "homepage_choices",
     "periods",
     "top_menu_items",

@@ -557,6 +557,9 @@ ro:
     title: "Resetează parola"
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimi"
   change_email:
     error: "A apărut o eroare la schimbarea adresei de email. Poate adresa e deja folosită?"
     error_staged: "A apărut o eroare la schimbarea adresei tale de email. Adresa este deja folosită de un utilizator în așteptare."
@@ -846,6 +849,9 @@ ro:
         num_clicks: "Click-uri"
         num_topics: "Discuții"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizite"
+    top_entry_urls:
       labels:
         count: "Vizite"
     top_referrers_by_browser_pageviews:
@@ -1192,7 +1198,6 @@ ro:
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
     user_profile_view_duration_hours: "Contorizează câte vizualizare de profil utilizator o singură dată per IP/Utilizator la fiecare N ore"
     levenshtein_distance_spammer_emails: "Când se face detectarea spam pe bază de potrivire cu un set de criterii, care este diferența de numere de caractere care încă mai permite o potrivire aproximativă (fuzzy match)."
-    min_ban_entries_for_roll_up: "Când apeși pe butonul Consolidare, dacă există cel puțin (N) înregistrări, se va crea o nouă înregistrare de subrețea blocată"
     max_age_unmatched_emails: "șterge înregistrările emailurilor verificate, care nu corespund, după (N) zile."
     max_age_unmatched_ips: "șterge adresele de IP verificate, care nu corespund, după (N) zile."
     num_flaggers_to_close_topic: "Numărul minim de marcaje de avertizare unice care este necesar pentru a suspenda un subiect în vederea intervenției."
@@ -1320,7 +1325,6 @@ ro:
     adobe_analytics_tags_url: "Adresa URL a etichetelor Adobe Analytics (`https://assets.adobedtm.com/...`)"
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
-    content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1903,9 +1907,6 @@ ro:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_deleted:
       title: "Cont șters"
       subject_template: "[%{email_prefix}] Contul tău a fost șters"
@@ -2253,6 +2254,9 @@ ro:
     deprecation_error_description: "Pentru a verifica compatibilitatea cu viitoarele actualizări Discourse, poți face ca deprecierile Javascript să ridice o eroare:"
     deprecation_error_label: Fă ca deprecierile Javascript să ridice o eroare
     enter: "Activează modul sigur"
+  design_wizard:
+    palette_pairs:
+      default: "Implicit"
   wizard:
     title: "Configurare Discourse"
     step:
@@ -2301,6 +2305,10 @@ ro:
       high: "Ridicată"
     reasons:
       group: "Utilizatorii care nu fac parte din grupurile specificate trebuie să aibă răspunsurile aprobate de echipă. Vezi %{link}."
+      fast_typer_time:
+        one: "o secundă"
+        few: "%{count} secunde"
+        other: "%{count} de secunde"
       watched_word:
         one: "Această postare a inclus un cuvânt urmărit, cuvântul semnalat este: %{words}. Verifică %{link} pentru mai multe."
         few: "Această postare a inclus cuvinte urmărite, cuvintele semnalate sunt: %{words}. Verifică %{link} pentru mai multe."
@@ -2402,12 +2410,10 @@ ro:
         bundle_title: "Ce vrei să faci cu utilizatorul?"
       silence_user:
         title: "Redu la tăcere utilizatorul"
-        description: "Împiedică utilizatorul să posteze"
         complete: "Utilizatorul a fost redus la tăcere"
         reason: "Utilizator redus la tăcere prin coada de examinare"
       suspend_user:
         title: "Suspendă utilizatorul"
-        description: "Suspendă contul de utilizator"
         complete: "Utilizatorul a fost suspendat"
         reason: "Utilizator suspendat prin coada de examinare"
       delete_user:

@@ -88,7 +88,7 @@ describe "Admin House Ad" do
         "tr[data-plugin-name='discourse-adplugin'] .admin-plugins-list__enabled .d-toggle-switch__checkbox-slider",
       ).click
 
-      find(".admin-plugin-tab-nav-item[data-plugin-nav-tab-id='discourse-adplugin'] a").click
+      find("tr[data-plugin-name='discourse-adplugin'] .admin-plugins-list__name").click
 
       expect(page).to have_css(".admin-plugin-config-page__top-nav-item", text: "House Ads")
     end

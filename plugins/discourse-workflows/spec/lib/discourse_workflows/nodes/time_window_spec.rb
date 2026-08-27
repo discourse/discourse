@@ -382,7 +382,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TimeWindow::V1 do
       errors = validate("timezone" => "Mars/Olympus")
 
       expect(errors[:base]).to include(
-        I18n.t("discourse_workflows.errors.time_window.invalid_timezone", timezone: "Mars/Olympus"),
+        I18n.t("discourse_workflows.errors.invalid_timezone", timezone: "Mars/Olympus"),
       )
     end
 

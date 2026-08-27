@@ -16,10 +16,9 @@ RSpec.describe DiscourseUpdates do
     end
   end
 
-  def stub_data(latest, missing, critical, updated_at)
+  def stub_data(latest, missing, updated_at)
     DiscourseUpdates.latest_version = latest
     DiscourseUpdates.missing_versions_count = missing
-    DiscourseUpdates.critical_updates_available = critical
     DiscourseUpdates.updated_at = updated_at
   end
 
@@ -47,12 +46,11 @@ RSpec.describe DiscourseUpdates do
     context "when a good version check request happened recently" do
       context "when server is up-to-date" do
         let(:time) { 12.hours.ago }
-        before { stub_data(Discourse::VERSION::STRING, 0, false, time) }
+        before { stub_data(Discourse::VERSION::STRING, 0, time) }
 
         it "returns all the version fields" do
           expect(version.latest_version).to eq(Discourse::VERSION::STRING)
           expect(version.missing_versions_count).to eq(0)
-          expect(version.critical_updates).to eq(false)
           expect(version.installed_version).to eq(Discourse::VERSION::STRING)
           expect(version.stale_data).to eq(false)
         end
@@ -64,12 +62,11 @@ RSpec.describe DiscourseUpdates do
 
       context "when server is not up-to-date" do
         let(:time) { 12.hours.ago }
-        before { stub_data("0.9.0", 2, false, time) }
+        before { stub_data("0.9.0", 2, time) }
 
         it "returns all the version fields" do
           expect(version.latest_version).to eq("0.9.0")
           expect(version.missing_versions_count).to eq(2)
-          expect(version.critical_updates).to eq(false)
           expect(version.installed_version).to eq(Discourse::VERSION::STRING)
         end
 
@@ -80,7 +77,7 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when a version check has never been performed" do
-      before { stub_data(nil, nil, false, nil) }
+      before { stub_data(nil, nil, nil) }
 
       it "returns the installed version" do
         expect(version.installed_version).to eq(Discourse::VERSION::STRING)
@@ -94,7 +91,6 @@ RSpec.describe DiscourseUpdates do
       it "does not return latest version info" do
         expect(version.latest_version).to eq(nil)
         expect(version.missing_versions_count).to eq(nil)
-        expect(version.critical_updates).to eq(nil)
       end
 
       it "queues a version check" do
@@ -120,12 +116,12 @@ RSpec.describe DiscourseUpdates do
       end
 
       context "when installed is latest" do
-        before { stub_data(Discourse::VERSION::STRING, 1, false, 8.hours.ago) }
+        before { stub_data(Discourse::VERSION::STRING, 1, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
 
       context "when installed does not match latest version, but missing_versions_count is 0" do
-        before { stub_data("0.10.10.123", 0, false, 8.hours.ago) }
+        before { stub_data("0.10.10.123", 0, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
     end
@@ -149,12 +145,12 @@ RSpec.describe DiscourseUpdates do
     end
 
     context "when missing_versions_count is 0" do
-      before { stub_data("0.9.7", 0, false, 8.hours.ago) }
+      before { stub_data("0.9.7", 0, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
 
     context "when missing_versions_count is not 0" do
-      before { stub_data("0.9.7", 1, false, 8.hours.ago) }
+      before { stub_data("0.9.7", 1, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
   end
@@ -664,7 +660,7 @@ RSpec.describe DiscourseUpdates do
     end
 
     it "exposes the latest pretty version and sha from the version check" do
-      stub_data(Discourse::VERSION::STRING, 0, false, 12.hours.ago)
+      stub_data(Discourse::VERSION::STRING, 0, 12.hours.ago)
       DiscourseUpdates.latest_pretty_version = "#{Discourse::VERSION::STRING} +444"
       DiscourseUpdates.latest_sha = "abc1234def5678"
 

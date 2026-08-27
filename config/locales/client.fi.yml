@@ -431,10 +431,28 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Valittu"
       start_posting:
         back: "Takaisin"
+    design_wizard:
+      back: "Takaisin"
+      next: "Seuraava"
+      sections:
+        theme: "Värimaailma"
+        fonts: "Fontit"
+        homepage: "Aloitussivu"
+      theme:
+        selected: "Valittu"
+      colors:
+        light: "Vaalea"
+        dark: "Tumma"
+      fonts:
+        base_font: "Perusfontti"
+        heading_font: "Otsikon fontti"
+      homepage:
+        topics: "Aiheet"
+        categories: "Kategoriat"
+        styles:
+          boxes: "Laatikot"
     about:
       edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
@@ -700,10 +718,6 @@ fi:
         optional: "valinnainen"
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
-        required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
-        claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
-        claimed_by_other: "Tämän voi käsitellä vain <b>%{username}</b>."
-        automatically_claimed_by: "Tätä asiaa käsittelee parhaillaan <b>%{username}</b>."
       awaiting_approval: "Odottaa hyväksyntää"
       delete: "Poista"
       settings:
@@ -735,6 +749,8 @@ fi:
         email: "Sähköposti"
         name: "Nimi"
         fields: "Kentät"
+        silence_reason: "Hiljennyksen syy"
+        penalty_forever: "Ikuisesti"
         reject_reason: "Syy"
         scrubbed_by: "Tietueen puhdisti"
         scrubbed_reason: "Syy"
@@ -1480,7 +1496,6 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa"
-      enable_defer: "Ota ketjujen merkitseminen lukemattomiksi käyttöön"
       enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan markdown-tilassa"
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
@@ -2122,7 +2137,8 @@ fi:
           invite_by_email: "Sähköpostiosoite"
           restrict_domain: "Rajoita verkkotunnukseen"
           domain_placeholder: "example.com"
-          more_options: "Lisää vaihtoehtoja"
+          create_and_send: "Lähetä"
+          create_and_copy: "Kopioi linkki"
           update: "Päivitä"
           summary:
             role_member: "Konkari"
@@ -2134,7 +2150,7 @@ fi:
             expires: "Vanhenee"
             topic: "Ketju"
             groups: "Ryhmät"
-            edit: "Muokkaa kutsua"
+            edit: "Muokkaa"
         bulk_invite:
           none: "Ei näytettäviä kutsuja tällä sivulla."
           text: "Joukkokutsu"
@@ -2653,6 +2669,7 @@ fi:
       subcategory_count:
         one: "+%{count} ala-alue"
         other: "+%{count} ala-aluetta"
+      subcategories: "+ Ala-alueet"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
@@ -2831,7 +2848,6 @@ fi:
       italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
-      heading_title: "Otsikot"
       heading_level_n: "Otsikko %{levelNumber}"
       heading_level_n_title: "Otsikko %{levelNumber}"
       heading_level_paragraph: "Kappale"
@@ -3000,7 +3016,6 @@ fi:
         other: "%{count} avointa jäsenhakemusta ryhmään '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} – valmis"
       new_features: "Uusia ominaisuuksia saatavilla!"
       admin_problems: "Uusia suosituksia sivustosi hallintapaneelissa"
       dismiss_confirmation:
@@ -4871,9 +4886,9 @@ fi:
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
           localizations:
-            title: "Käännökset"
             locale: "Kieli"
             title_label: "Osion otsikko"
+            remove_language: "Poista"
           links:
             add: "Lisää toinen linkki"
             delete: "Poista linkki"
@@ -5623,13 +5638,26 @@ fi:
       new_features:
         title: "Mitä uutta?"
         check_for_updates: "Tarkista päivitykset"
+      site_traffic_explorer:
+        metric_information: "Tietoja kohteesta %{metric}"
+        clear_all: "Tyhjennä kaikki"
+        apply: "Käytä"
+        view_more: "Näytä enemmän"
+        cards:
+          pages: "Sivut"
+          visitors: "Vierailijat"
+        filters:
+          country: "Maa"
+          browser: "Selain"
+          ip: "IP-osoite"
+        series:
+          anonymous_human: "Anonyymeja"
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli päivitetty:"
         discourse_last_updated: "Discourse päivitetty:"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
-        critical_available: "Kriittinen päivitys on saatavilla."
         updates_available: "Päivityksiä on saatavilla."
         please_update: "Päivitä!"
         no_check_performed: "Päivityksiä ei ole tarkistettu. Varmista, että sidekiq on käynnissä."

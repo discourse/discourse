@@ -570,7 +570,6 @@ CREATE TABLE user_options
     theme_key_seq                                  INTEGER,
     timezone                                       TEXT,
     title_count_mode_key                           INTEGER,
-    topics_unread_when_closed                      BOOLEAN,
     understood_languages                           TEXT,
     watched_precedence_over_muted                  BOOLEAN
 );

@@ -34,6 +34,10 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "napaka"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -123,6 +127,37 @@ sl:
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
+      logs:
+        short_title: "Dnevniki"
+        apply: "Uporabi"
+        successful: "Uspešno"
+        failed: "Spodletelo"
+        unknown: "Neznano"
+        topic_id: "ID teme"
+        post_id: "ID prispevka"
+        time: "Čas"
+        when: "Kdaj"
+        request: "Zahteva"
+        user: "Uporabnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Prispevek"
+        post_short: "Prispevek %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        filters:
+          title: "Filtri"
+        periods:
+          day: "Zadnjih 24 ur"
+          week: "Zadnjih 7 dni"
+          custom: "Po meri"
+        detail:
+          request: "Zahteva"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Povzetek"
+          deleted_stage: "Izbrisano"
+          save: "Shrani"
       ai_agent:
         name: "Ime"
         edit: "Uredi"
@@ -181,6 +216,9 @@ sl:
           required: "Zahtevano"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Onemogočeno"
         save: "Shrani"
         edit: "Uredi"
         delete: Izbriši
@@ -201,7 +239,6 @@ sl:
         tests:
           success: "Uspeh!"
         providers:
-          google: "Google"
           fake: "Po meri"
         provider_fields:
           region: "Regija"
@@ -229,6 +266,7 @@ sl:
           fake: "Po meri"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zahteva"
           next_log: "Naprej"
           previous_log: "Prejšnja"

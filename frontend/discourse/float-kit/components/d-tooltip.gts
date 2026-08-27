@@ -23,6 +23,9 @@ export interface DTooltipComponentArgs<Data = unknown> {
 
   /** The `@data` passed to the tooltip. */
   data?: Data;
+
+  /** Whether the tooltip is currently open — reflects the live instance state. */
+  expanded: boolean;
 }
 
 // The subset of arguments that mirror a tooltip's option bag. Built as a
@@ -102,9 +105,15 @@ export default class DTooltip<Data = unknown> extends Component<
   }
 
   get componentArgs(): DTooltipComponentArgs<Data> {
+    const instance = this.tooltipInstance;
     return {
       close: this.tooltip.close,
       data: this.options.data as Data,
+      // A getter (not a snapshot) so a consumer reading `expanded` subscribes to the
+      // live tracked state and re-renders on open/close, without churning this object.
+      get expanded() {
+        return instance.expanded;
+      },
     };
   }
 

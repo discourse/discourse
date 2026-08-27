@@ -48,7 +48,7 @@ export default class AiDiscobotDiscoveries extends Component {
         {{#if this.discobotDiscoveries.showDiscoveryTitle}}
           <h3 class="ai-search-discoveries__discoveries-title">
             <span>
-              {{dIcon "discobot"}}
+              {{dIcon "far-discobot"}}
               {{i18n "discourse_ai.discobot_discoveries.main_title"}}
             </span>
 

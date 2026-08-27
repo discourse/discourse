@@ -11,6 +11,7 @@ RSpec.describe TagsController do
   before { SiteSetting.tagging_enabled = true }
 
   describe "#index" do
+    fab!(:group)
     fab!(:test_tag) { Fabricate(:tag, name: "test", description: "some description") }
 
     fab!(:topic_tag) do
@@ -30,7 +31,7 @@ RSpec.describe TagsController do
     fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: topic_tag) }
 
     shared_examples "retrieves the right tags" do
-      it "retrieves all tags as a staff user" do
+      it "retrieves all tags but the synonyms as a staff user" do
         sign_in(admin)
 
         get "/tags.json"
@@ -38,6 +39,12 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tags = response.parsed_body["tags"]
+
+        expect(tags.map { |t| t["name"] }).to contain_exactly(
+          test_tag.name,
+          topic_tag.name,
+          pm_only_tag.name,
+        )
 
         serialized_tag = tags.find { |t| t["name"] == test_tag.name }
 
@@ -104,7 +111,23 @@ RSpec.describe TagsController do
         expect(serialized_tag["pm_only"]).to eq(true)
       end
 
+      it "does not list tags restricted to a category the user can't see" do
+        secret_tag = Fabricate(:tag, name: "secret", public_topic_count: 1, staff_topic_count: 1)
+        CategoryTag.create!(category: Fabricate(:private_category, group:), tag: secret_tag)
+
+        sign_in(moderator)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to_not include(
+          secret_tag.name,
+        )
+      end
+
       it "only retrieve tags that have been used in public topics for non-staff user" do
+        synonym.update_columns(public_topic_count: 2, staff_topic_count: 2)
+
         sign_in(user)
 
         get "/tags.json"
@@ -194,6 +217,18 @@ RSpec.describe TagsController do
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "retrieves the right tags"
+
+      it "does not list tags of a visible group when they are restricted to a category the user can't see" do
+        secret_tag = Fabricate(:tag, name: "secret")
+        CategoryTag.create!(category: Fabricate(:private_category, group:), tag: secret_tag)
+        Fabricate(:tag_group, tags: [topic_tag, secret_tag])
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+        group = response.parsed_body.dig("extras", "tag_groups").first
+        expect(group["tags"].map { |tag| tag["name"] }).to contain_exactly(topic_tag.name)
+      end
 
       it "hides tags only used in personal messages from grouped lists for regular users" do
         Fabricate(:tag_group, tags: [topic_tag, pm_only_tag])
@@ -2660,6 +2695,62 @@ RSpec.describe TagsController do
           "/tags/list.json?offset=2",
         )
       end
+    end
+
+    it "does not return synonyms unless they are requested by name" do
+      synonym = Fabricate(:tag, name: "tag5", target_tag: tag1)
+
+      sign_in(user)
+
+      get "/tags/list.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag2.name, tag3.name],
+      )
+
+      get "/tags/list.json", params: { only_tags: synonym.name }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([synonym.name])
+    end
+
+    it "only returns the tags each user is allowed to browse" do
+      pm_only_tag = Fabricate(:tag, name: "tag5", pm_topic_count: 1)
+      admin_only_tag = Fabricate(:tag, name: "tag6")
+      Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+
+      sign_in(user)
+
+      get "/tags/list.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag2.name, tag3.name],
+      )
+
+      sign_in(moderator)
+
+      get "/tags/list.json"
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag2.name, tag3.name, staff_only_tag.name],
+      )
+
+      sign_in(admin)
+
+      get "/tags/list.json"
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [
+          tag1.name,
+          tag2.name,
+          tag3.name,
+          staff_only_tag.name,
+          pm_only_tag.name,
+          admin_only_tag.name,
+        ],
+      )
     end
 
     it "accepts a `filter` param and filters the tags by tag name" do

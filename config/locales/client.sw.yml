@@ -227,6 +227,20 @@ sw:
     admin_onboarding_banner:
       start_posting:
         back: "Iliyopita"
+    design_wizard:
+      back: "Iliyopita"
+      next: "Ijayo"
+      sections:
+        theme: "Mandhari"
+        homepage: "Ukurasa mkuu"
+      colors:
+        light: "Hafifu"
+        dark: "Nyeusi"
+      homepage:
+        topics: "Mada"
+        categories: "Kategoria"
+        styles:
+          boxes: "Visanduku"
     about:
       edit: "Hariri ukurasa huu"
       simple_title: "Kuhusu "
@@ -320,6 +334,7 @@ sw:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
         name: "Jina"
+        penalty_forever: "Milele"
         reject_reason: "Sababu"
         scrubbed_reason: "Sababu"
         scrub_record:
@@ -994,6 +1009,7 @@ sw:
           staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
+          create_and_send: "Tuma"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
@@ -1001,6 +1017,7 @@ sw:
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"
+            edit: "Hariri"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -1251,6 +1268,8 @@ sw:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+    category_row:
+      subcategories: "+ Kategoria mtoto"
     select_kit:
       delete_item: "Futa %{name}"
       no_content: Hakuna uwiano uliopatikana
@@ -2350,6 +2369,8 @@ sw:
         custom:
           save: "Hifadhi"
           delete: "Futa"
+          localizations:
+            remove_language: "Ondoa"
           links:
             icon:
               label: "ikoni"
@@ -2585,11 +2606,17 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
+      site_traffic_explorer:
+        metric_information: "Kuhusu %{metric}"
+        apply: "Tumia"
+        filters:
+          ip: "Anwani ya Mtandao"
+        series:
+          anonymous_human: "Asiyejulikana"
       dashboard:
         title: "Ubao"
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
-        critical_available: "Sasisho muhimu linapatikana."
         updates_available: "Masashisho yanapatikana."
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."

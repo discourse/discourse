@@ -1,4 +1,4 @@
-import { click, fillIn, findAll, render } from "@ember/test-helpers";
+import { click, fillIn, findAll, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
 import SiteSetting from "discourse/admin/models/site-setting";
@@ -8,6 +8,7 @@ import schemaAndData, {
   SCHEMA_MODES,
 } from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -800,6 +801,68 @@ module(
       await click(TOP_LEVEL_ADD_BTN);
 
       assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
+    });
+
+    test("input fields of type icon", async function (assert) {
+      pretender.get("/svg-sprite/picker-search", () =>
+        response(200, {
+          icons: [
+            { id: "gamepad", name: "gamepad" },
+            { id: "heart", name: "heart" },
+          ],
+          has_more: false,
+        })
+      );
+
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            icon_field: {
+              type: "icon",
+            },
+            required_icon_field: {
+              type: "icon",
+              required: true,
+            },
+          },
+        },
+        value: [{ required_icon_field: "heart" }],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert
+        .dom(
+          `${inputFields.fields.required_icon_field.selector} .d-icon-grid-picker`
+        )
+        .hasAttribute("data-value", "heart");
+
+      assert
+        .dom(`${inputFields.fields.icon_field.selector} .d-icon-grid-picker`)
+        .doesNotHaveAttribute("data-value");
+
+      await click(
+        `${inputFields.fields.icon_field.selector} .d-icon-grid-picker-trigger`
+      );
+      await waitFor("[data-icon-id='gamepad']");
+      await click("[data-icon-id='gamepad']");
+
+      assert
+        .dom(`${inputFields.fields.icon_field.selector} .d-icon-grid-picker`)
+        .hasAttribute("data-value", "gamepad");
     });
 
     test("input fields of type categories that is not required with min and max validations", async function (assert) {

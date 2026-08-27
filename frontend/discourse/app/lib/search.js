@@ -189,7 +189,14 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  let ajaxPromise = ajax("/search/query", { data });
+  const sessionId = document.querySelector(
+    "meta[name=discourse-track-view-session-id]"
+  )?.content;
+  const headers = sessionId
+    ? { "Discourse-Pageview-Session-Id": sessionId }
+    : {};
+
+  let ajaxPromise = ajax("/search/query", { data, headers });
   const promise = ajaxPromise.then((res) => translateResults(res, opts));
   promise.abort = ajaxPromise.abort;
   return promise;

@@ -7,11 +7,39 @@ module DiscourseWorkflows
         OPERATIONS = %w[get edit].freeze
         UPDATE_OPTIONS = [
           { name: "bio_raw", type: :string, required: false, ui: { control: :textarea } },
+          { name: "website", type: :string, required: false },
+          { name: "location", type: :string, required: false },
           { name: "title", type: :string, required: false },
+          { name: "remove_avatar", type: :boolean, required: false },
+          { name: "remove_profile_background", type: :boolean, required: false },
+          { name: "remove_card_background", type: :boolean, required: false },
           { name: "trust_level", type: :options, required: true, options: trust_level_options },
           { name: "trust_level_locked", type: :boolean, required: false },
         ].freeze
         MISSING = DiscourseWorkflows::Executor::NodeExecutionContext::MISSING
+        TEXT_UPDATES = %w[title website location].freeze
+        BACKGROUND_REMOVALS = {
+          "remove_profile_background" => :profile_background_upload_url,
+          "remove_card_background" => :card_background_upload_url,
+        }.freeze
+
+        EXTENSIONS = {
+          "stats" => :stats_extension,
+          "external_ids" => :external_ids_extension,
+          "emails" => :emails_extension,
+          "ips" => :ips_extension,
+        }.freeze
+        STAT_FIELDS = %i[
+          topics_entered
+          posts_read_count
+          time_read
+          days_visited
+          post_count
+          topic_count
+          likes_given
+          likes_received
+          first_post_created_at
+        ].freeze
 
         description(
           name: "action:user",
@@ -24,7 +52,15 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
-          output_contracts: [{ schema: Schema::USER_ACTION_SCHEMA }],
+          output_contracts: [
+            {
+              schema: Schema::USER_ACTION_SCHEMA,
+              extensions:
+                Schema::USER_EXTENSION_SCHEMAS.map do |name, schema|
+                  { schema:, display_options: { show: { include_extensions: [name] } } }
+                end,
+            },
+          ],
           properties: {
             operation: {
               type: :options,
@@ -55,6 +91,12 @@ module DiscourseWorkflows
                 },
               },
             },
+            include_extensions: {
+              type: :multi_options,
+              required: false,
+              options: EXTENSIONS.keys,
+              default: [],
+            },
             actor_username: {
               type: :string,
               required: false,
@@ -83,11 +125,13 @@ module DiscourseWorkflows
         private
 
         def process(exec_ctx, user, actor, operation, item_index)
+          extensions = requested_extensions(exec_ctx, item_index)
+
           case operation
           when "get"
-            get_user(user, actor.guardian)
+            get_user(user, actor.guardian, extensions:)
           when "edit"
-            edit_user(exec_ctx, user, actor, item_index)
+            edit_user(exec_ctx, user, actor, item_index, extensions:)
           else
             raise_node_error!(
               I18n.t("discourse_workflows.errors.user.unknown_operation", operation: operation),
@@ -95,12 +139,30 @@ module DiscourseWorkflows
           end
         end
 
-        def get_user(user, guardian)
-          guardian.ensure_can_see_profile!(user)
-          { user: user_data(user, guardian) }
+        def requested_extensions(exec_ctx, item_index)
+          requested = exec_ctx.get_node_parameter("include_extensions", item_index, default: [])
+          requested = [requested] unless requested.is_a?(Array)
+          requested = requested.compact.map(&:to_s)
+          unknown = requested - EXTENSIONS.keys
+
+          if unknown.any?
+            raise_node_error!(
+              I18n.t(
+                "discourse_workflows.errors.user.unknown_extensions",
+                extensions: unknown.sort.join(", "),
+              ),
+            )
+          end
+
+          requested
         end
 
-        def edit_user(exec_ctx, user, actor, item_index)
+        def get_user(user, guardian, extensions:)
+          guardian.ensure_can_see_profile!(user)
+          { user: user_data(user, guardian, extensions:) }
+        end
+
+        def edit_user(exec_ctx, user, actor, item_index, extensions:)
           guardian = actor.guardian
           updates = update_parameters(exec_ctx, item_index)
           attributes = editable_attributes(updates)
@@ -108,12 +170,13 @@ module DiscourseWorkflows
           trust_level_locked = updates.fetch("trust_level_locked", MISSING)
 
           update_profile_fields(user, actor, guardian, attributes) if attributes.present?
+          remove_avatar(user, actor, guardian) if updates["remove_avatar"]
           change_trust_level(user, actor, guardian, trust_level) unless trust_level.equal?(MISSING)
           unless trust_level_locked.equal?(MISSING)
             update_trust_level_lock(user, actor, guardian, trust_level_locked)
           end
 
-          { user: user_data(user.reload, guardian) }
+          { user: user_data(user.reload, guardian, extensions:) }
         end
 
         def update_parameters(exec_ctx, item_index)
@@ -128,15 +191,28 @@ module DiscourseWorkflows
           UPDATE_OPTIONS.each_with_object({}) do |field, updates|
             name = field[:name]
             value = exec_ctx.get_node_parameter(name, item_index, default: MISSING)
-            updates[name] = value unless value.equal?(MISSING)
+            next if value.equal?(MISSING)
+
+            value = ActiveModel::Type::Boolean.new.cast(value) == true if field[:type] == :boolean
+            updates[name] = value
           end
         end
 
         def editable_attributes(updates)
           {}.tap do |attributes|
             attributes[:bio_raw] = updates["bio_raw"] if updates.key?("bio_raw")
-            attributes[:title] = updates["title"].to_s if updates.key?("title")
+            TEXT_UPDATES.each do |name|
+              attributes[name.to_sym] = updates[name].to_s if updates.key?(name)
+            end
+            BACKGROUND_REMOVALS.each do |flag, attribute|
+              attributes[attribute] = "" if updates[flag]
+            end
           end
+        end
+
+        def remove_avatar(user, actor, guardian)
+          guardian.ensure_can_edit!(user)
+          user.remove_avatar!(actor)
         end
 
         def update_profile_fields(user, actor, guardian, attributes)
@@ -194,24 +270,97 @@ module DiscourseWorkflows
           )
         end
 
-        def user_data(user, guardian)
-          include_profile_details = include_profile_details?(user, guardian)
+        def user_data(user, guardian, extensions:)
+          profile = user.user_profile if include_profile_details?(user, guardian)
 
           serialize_user(user, guardian: guardian).merge(
             title: user.title,
-            bio_raw: include_profile_details ? user.user_profile.bio_raw : nil,
+            bio_raw: profile&.bio_raw,
+            website: profile&.website,
+            profile_background_upload_id: profile&.profile_background_upload_id,
+            card_background_upload_id: profile&.card_background_upload_id,
             manual_locked_trust_level: user.manual_locked_trust_level,
             trust_level_locked: !user.manual_locked_trust_level.nil?,
-            user_fields:
-              (
-                if include_profile_details
-                  user.user_fields(guardian.allowed_user_field_ids(user))
-                else
-                  {}
-                end
-              ),
+            user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
             groups: groups_data(user, guardian),
+          ).merge(extensions_data(user, guardian, extensions))
+        end
+
+        def extensions_data(user, guardian, extensions)
+          extensions.reduce({}) do |data, extension|
+            data.merge(send(EXTENSIONS.fetch(extension), user, guardian))
+          end
+        end
+
+        def external_ids_extension(user, guardian)
+          {
+            external_id: connect_external_id(user, guardian),
+            external_ids: associated_account_ids(user, guardian),
+          }
+        end
+
+        def stats_extension(user, _guardian)
+          stat = user.user_stat
+          return { stats: nil } if stat.blank?
+
+          { stats: STAT_FIELDS.index_with { |field| stat.public_send(field) } }
+        end
+
+        def emails_extension(user, guardian)
+          return { email: nil, secondary_emails: [] } unless guardian.can_check_emails?(user)
+
+          log_email_check(user, guardian)
+
+          { email: user.email, secondary_emails: user.secondary_emails }
+        end
+
+        def log_email_check(user, guardian)
+          return if guardian.user.blank? || guardian.user == user
+
+          StaffActionLogger.new(guardian.user).log_check_email(
+            user,
+            context: I18n.t("discourse_workflows.user.check_email_context"),
           )
+        end
+
+        def ips_extension(user, guardian)
+          return blank_ips unless guardian.can_see_ip?
+
+          {
+            registration_ip_address: user.registration_ip_address&.to_s,
+            registration_location: ip_location(user.registration_ip_address),
+            ip_address: user.ip_address&.to_s,
+            last_location: ip_location(user.ip_address),
+          }
+        end
+
+        def blank_ips
+          {
+            registration_ip_address: nil,
+            registration_location: nil,
+            ip_address: nil,
+            last_location: nil,
+          }
+        end
+
+        def ip_location(ip)
+          return nil if ip.blank?
+
+          DiscourseIpInfo.get(ip.to_s).presence
+        end
+
+        def connect_external_id(user, guardian)
+          return nil unless guardian.can_check_sso_details?(user)
+
+          user.single_sign_on_record&.external_id
+        end
+
+        def associated_account_ids(user, guardian)
+          return {} unless guardian.is_admin?
+
+          user.user_associated_accounts.to_h do |account|
+            [account.provider_name, account.provider_uid]
+          end
         end
 
         def include_profile_details?(user, guardian)

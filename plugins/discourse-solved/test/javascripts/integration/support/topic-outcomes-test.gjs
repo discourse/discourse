@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import SupportTopicOutcomes from "discourse/plugins/discourse-solved/admin/components/dashboard/support/topic-outcomes";
@@ -33,9 +33,15 @@ module(
           `/filter?q=${encodeURIComponent(queries.resolved.q)}`,
           "resolved links to its given query"
         )
-        .hasText("Resolved", "resolved shows its label")
-        .hasAttribute(
-          "title",
+        .hasText("Resolved", "resolved shows its label");
+
+      await triggerEvent(
+        ".db-support-outcomes__row:nth-child(1) .fk-d-tooltip__trigger",
+        "pointermove"
+      );
+      assert
+        .dom(".fk-d-tooltip__content")
+        .hasText(
           "The number of topics that were marked solved.",
           "resolved keeps its tooltip"
         );

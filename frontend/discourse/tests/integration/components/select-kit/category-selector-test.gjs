@@ -45,7 +45,7 @@ module(
         .hasText("Parent Category× 95");
       assert
         .dom(this.subject.rowByIndex(1).el())
-        .hasText("Parent Category× 95+2 subcategories");
+        .hasText("Parent Category× 95+ Subcategories");
     });
   }
 );

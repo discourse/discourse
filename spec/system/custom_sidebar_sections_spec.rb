@@ -455,6 +455,42 @@ describe "Custom sidebar sections" do
     expect(section_modal).to have_no_localization_controls
   end
 
+  it "hides translation controls when no other language is available" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+
+    expect(section_modal).to have_no_source_language_control
+    expect(section_modal).to have_no_localization_controls
+  end
+
+  it "keeps translation controls when only an existing translation needs managing" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "ドキュメント")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+
+    expect(section_modal).to have_translation_language("ja")
+    expect(section_modal).to have_no_add_language
+  end
+
   it "does not offer the default locale as a translation target" do
     SiteSetting.content_localization_enabled = true
     SiteSetting.default_locale = "en"
@@ -468,10 +504,270 @@ describe "Custom sidebar sections" do
     visit("/latest")
 
     sidebar.edit_custom_section("Public section")
-    find(".add-localization").click
+    section_modal.open_translations
+    section_modal.add_language("ja")
 
     expect(section_modal).to have_locale_option("ja")
     expect(section_modal).to have_no_locale_option(SiteSetting.default_locale)
+  end
+
+  it "excludes the section's own source language, not the site default, from translation targets" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    SiteSetting.default_locale = "en"
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "ja")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "ja")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Public section")
+
+    expect(section_modal).to have_source_language("ja")
+
+    section_modal.open_translations
+    section_modal.add_language("en")
+    expect(section_modal).to have_locale_option("en")
+    expect(section_modal).to have_no_locale_option("ja")
+
+    section_modal.close_translations
+    section_modal.select_source_language("en")
+    section_modal.open_translations
+    section_modal.add_language("ja")
+
+    expect(section_modal).to have_locale_option("ja")
+    expect(section_modal).to have_no_locale_option("en")
+  end
+
+  it "hides a link translation that collides with the section's source language" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+    Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "ガイド")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+
+    expect(section_modal).to have_translation_row("ja", "Guide")
+
+    section_modal.close_translations
+    section_modal.select_source_language("ja")
+    section_modal.open_translations
+
+    expect(section_modal).to have_no_translation_language("ja")
+  end
+
+  it "keeps a link's own source language when the section is saved" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "ガイド", value: "/guide", locale: "ja")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+    Fabricate(:sidebar_url_localization, sidebar_url:, locale: "en", name: "Guide")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.fill_name("Documentation")
+    section_modal.save
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(sidebar_url.reload.locale).to eq("ja")
+    expect(sidebar_url.localizations.pluck(:locale, :name)).to eq([%w[en Guide]])
+  end
+
+  it "keeps an existing translation when the source language is toggled away and back" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "fr", title: "Docs FR")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+
+    section_modal.select_source_language("fr")
+    section_modal.select_source_language("en")
+    section_modal.save
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(sidebar_section.reload.localizations.pluck(:locale, :title)).to eq([["fr", "Docs FR"]])
+  end
+
+  it "edits the section title and every link name for one language at a time" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    guide = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    api = Fabricate(:sidebar_url, name: "API", value: "/api", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: api)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+    section_modal.add_language("fr")
+
+    section_modal.fill_translation("fr", "Docs", "Documentation")
+    section_modal.fill_translation("fr", "Guide", "Guide FR")
+    section_modal.save
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(sidebar_section.reload.localizations.pluck(:locale, :title)).to eq(
+      [%w[fr Documentation]],
+    )
+    expect(guide.reload.localizations.pluck(:locale, :name)).to eq([["fr", "Guide FR"]])
+    expect(api.reload.localizations).to be_empty
+  end
+
+  it "labels a group by its own language when a link has a different source" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|hu|ja|fr"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    guide = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    guide_ja = Fabricate(:sidebar_url, name: "ガイド v2", value: "/guide-2", locale: "ja")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide_ja)
+    Fabricate(:sidebar_url_localization, sidebar_url: guide, locale: "ja", name: "ガイド")
+    Fabricate(:sidebar_url_localization, sidebar_url: guide_ja, locale: "en", name: "Guide v2")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+
+    expect(section_modal).to have_translation_language("en")
+    expect(section_modal).to have_selected_translation_language("en")
+    expect(section_modal).to have_translation_row("en", "ガイド v2")
+    expect(section_modal).to have_no_translation_row("en", "Guide")
+  end
+
+  it "stops offering languages once every target is used" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|hu|ja"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    guide = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+    section_modal.add_language("hu")
+    section_modal.add_language("ja")
+
+    expect(section_modal).to have_translation_languages(2)
+    expect(section_modal).to have_no_add_language
+  end
+
+  it "offers link translations in the same session a section is made public" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    SiteSetting.default_locale = "en"
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Drafts", public: false, user: admin, locale: "en")
+    scratch = Fabricate(:sidebar_url, name: "Scratch", value: "/scratch", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: scratch)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Drafts")
+    section_modal.mark_as_public
+    section_modal.open_translations
+    section_modal.add_language("ja")
+
+    expect(section_modal).to have_translation_row("ja", "Scratch")
+
+    section_modal.fill_translation("ja", "Scratch", "スクラッチ")
+    section_modal.save
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(scratch.reload.localizations.pluck(:locale, :name)).to eq([%w[ja スクラッチ]])
+  end
+
+  it "confirms before removing a translation that was cleared" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    guide = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "fr", title: "Documentation")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+    section_modal.fill_translation("fr", "Docs", "")
+    section_modal.save
+
+    expect(page).to have_css(
+      ".dialog-body",
+      text: I18n.t("js.sidebar.sections.custom.localizations.remove_cleared_confirm", count: 1),
+    )
+
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(sidebar_section.reload.localizations).to be_empty
+  end
+
+  it "removes every translation for a language at once" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.default_locale = "en"
+    sidebar_section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+    guide = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "fr", title: "Documentation")
+    Fabricate(:sidebar_url_localization, sidebar_url: guide, locale: "fr", name: "Guide FR")
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Docs")
+    section_modal.open_translations
+
+    expect(section_modal).to have_translation_languages(1)
+
+    section_modal.remove_language("fr")
+    section_modal.confirm_dialog
+
+    expect(section_modal).to have_translation_languages(0)
+
+    section_modal.save
+    section_modal.confirm_update
+
+    expect(section_modal).to be_closed
+    expect(sidebar_section.reload.localizations).to be_empty
+    expect(guide.reload.localizations).to be_empty
   end
 
   it "does not allow duplicate section title translation locales" do
@@ -487,21 +783,14 @@ describe "Custom sidebar sections" do
     visit("/latest")
 
     sidebar.edit_custom_section("Public section")
-    section_modal.add_section_title_translation
-    section_modal.add_section_title_translation
+    section_modal.open_translations
+    section_modal.add_language("zh_CN")
+    section_modal.add_language("ja")
 
-    section_title_translation_locales = section_modal.section_title_translation_locales
-
-    expect(section_title_translation_locales).to contain_exactly("zh_CN", "ja")
-    expect(section_modal).to have_disabled_section_title_translation_locale(
-      0,
-      section_title_translation_locales.second,
-    )
-    expect(section_modal).to have_disabled_section_title_translation_locale(
-      1,
-      section_title_translation_locales.first,
-    )
-    expect(section_modal).to have_no_add_section_title_translation
+    expect(section_modal).to have_translation_languages(2)
+    expect(section_modal).to have_disabled_translation_locale("zh_CN", "ja")
+    expect(section_modal).to have_disabled_translation_locale("ja", "zh_CN")
+    expect(section_modal).to have_no_add_language
   end
 
   it "displays warning when public section is marked as private" do

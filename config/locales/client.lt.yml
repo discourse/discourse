@@ -373,6 +373,22 @@ lt:
     admin_onboarding_banner:
       start_posting:
         back: "Atgal"
+    design_wizard:
+      back: "Atgal"
+      next: "Kitas"
+      sections:
+        theme: "Tema"
+        homepage: "Pagrindinis puslapis"
+      colors:
+        light: "Šviesi"
+        dark: "Tamsi"
+      fonts:
+        heading_font: "Antraštės šriftas"
+      homepage:
+        topics: "Temos"
+        categories: "Kategorijos"
+        styles:
+          boxes: "Dėžutės"
     about:
       edit: "Redaguoti šį puslapį"
       simple_title: "Apie"
@@ -668,10 +684,6 @@ lt:
         optional: "pasirinktinai"
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
-        required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
-        claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
-        claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
-        automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -704,6 +716,7 @@ lt:
         email: "Epaštas"
         name: "Vardas"
         fields: "Laukai"
+        penalty_forever: "Am-inai"
         reject_reason: "Priežastis"
         scrubbed_by: "Įrašas išvalytas pagal"
         scrubbed_reason: "Priežastis"
@@ -1415,7 +1428,6 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       enable_smart_lists: "Įgalinti išmaniuosius sąrašus rašant kompozitoriuje"
-      enable_defer: "Įgalinti temų žymėjimą kaip neskaitytų"
       experimental_sidebar:
         enable: "Įjungti šoninę juostą"
         options: "Nustatymai"
@@ -1927,7 +1939,8 @@ lt:
           email_placeholder: "vardas@example.com"
           invite_by_email: "Epaštas"
           domain_placeholder: "example.com"
-          more_options: "Daugiau parinkčių"
+          create_and_send: "Siųsti"
+          create_and_copy: "Nukopijuoti nuorodą"
           update: "Atnaujinti"
           summary:
             role_member: "Narys"
@@ -1938,7 +1951,7 @@ lt:
             expires: "Galiojimo laikas baigiasi"
             topic: "Tema"
             groups: "Grupės"
-            edit: "Redaguoti kvietimą"
+            edit: "Redaguoti"
         bulk_invite:
           text: "Masinis kvietimas"
           error: "Atsiprašome, failas privalo buti CSV formato."
@@ -2375,6 +2388,7 @@ lt:
         few: "+%{count} subkategorijos"
         many: "+%{count} subkategorijos"
         other: "+%{count} subkategorijos"
+      subcategories: "+ Subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -2601,7 +2615,6 @@ lt:
       membership_request_accepted: "Narystė priimta „%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - baigtas"
       admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
       upcoming_changes:
         available:
@@ -4091,8 +4104,8 @@ lt:
           save: "Išsaugoti"
           delete: "Pašalinti"
           localizations:
-            title: "Vertimai"
             locale: "Kalba"
+            remove_language: "Pašalinti"
           links:
             reset: "Atstatyti numatytuosius nustatymus"
             icon:
@@ -4378,13 +4391,23 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
+      site_traffic_explorer:
+        metric_information: "Apie %{metric}"
+        apply: "Kandidatuoti"
+        view_more: "Žiūrėti daugiau"
+        cards:
+          visitors: "Lankytojai"
+        filters:
+          browser: "Naršyklė"
+          ip: "IP adresas"
+        series:
+          anonymous_human: "Anonimas"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
         discourse_last_updated: "Discourse atnaujinta:"
         version: "Versija"
         up_to_date: "Jūs turite naujausią versiją!"
-        critical_available: "Yra kritinių atnaujinimų."
         updates_available: "Yra atnaujinimų."
         no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia sidekiq."
         stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia sidekiq."

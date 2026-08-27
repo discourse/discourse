@@ -2302,6 +2302,48 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#generate_random_username" do
+    it "returns a generated username" do
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+    end
+
+    it "rate limits requests per IP" do
+      RateLimiter.enable
+
+      20.times { get "/u/random-username.json" }
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(429)
+    end
+
+    it "404s when random usernames are disabled" do
+      SiteSetting.enable_random_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reports an error when the word lists can no longer produce a username" do
+      # Unicode words pass validation while unicode usernames are on, then stop
+      # being usable once the site turns them off.
+      SiteSetting.unicode_usernames = true
+      SiteSetting.random_username_adjectives = "静か"
+      SiteSetting.random_username_nouns = "隼"
+      SiteSetting.unicode_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("random_username.unavailable"),
+      )
+    end
+  end
+
   describe "#check_email" do
     it "returns success if hide_email_address_taken is true" do
       SiteSetting.hide_email_address_taken = true
@@ -2720,7 +2762,7 @@ RSpec.describe UsersController do
             ).pluck(:tag_id),
           ).to contain_exactly(tags[0].id, tags[1].id)
           expect(user.user_option.automatically_translate).to eq(false)
-          expect(user.user_option.understood_languages).to contain_exactly("en", "ja")
+          expect(user.user_option.understood_languages).to contain_exactly("ja")
 
           theme = Fabricate(:theme, user_selectable: true)
 
@@ -3126,7 +3168,7 @@ RSpec.describe UsersController do
             expect(user.reload.sidebar_section_links.count).to eq(0)
           end
 
-          it "should allow user to add tag sidebar section links only for tags that are visible to the user" do
+          it "should allow user to add tag sidebar section links only for tags that the user can browse" do
             SiteSetting.tagging_enabled = true
 
             tag = Fabricate(:tag)
@@ -3135,10 +3177,11 @@ RSpec.describe UsersController do
             hidden_tag = Fabricate(:tag)
             Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
 
-            put "/u/#{user.username}.json",
-                params: {
-                  sidebar_tag_names: [tag.name, "somerandomtag", hidden_tag.name],
-                }
+            synonym = Fabricate(:tag, target_tag: tag)
+
+            sidebar_tag_names = [tag.name, "somerandomtag", hidden_tag.name, synonym.name]
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: }
 
             expect(response.status).to eq(200)
             expect(user.sidebar_section_links.count).to eq(1)
@@ -3151,10 +3194,7 @@ RSpec.describe UsersController do
             user.update!(admin: true)
 
             expect do
-              put "/u/#{user.username}.json",
-                  params: {
-                    sidebar_tag_names: [tag.name, "somerandomtag", hidden_tag.name],
-                  }
+              put "/u/#{user.username}.json", params: { sidebar_tag_names: }
 
               expect(response.status).to eq(200)
             end.to change { user.sidebar_section_links.count }.from(1).to(2)
@@ -4409,6 +4449,15 @@ RSpec.describe UsersController do
         expect(response).to be_forbidden
       end
 
+      it "prevents moderators from checking sso email" do
+        SiteSetting.moderators_view_sso_details = true
+        sign_in(moderator)
+
+        get "/u/#{user1.username}/sso-email.json"
+
+        expect(response).to be_forbidden
+      end
+
       it "returns emails and associated_accounts when you're allowed to see them" do
         user1.single_sign_on_record =
           SingleSignOnRecord.create(
@@ -4439,6 +4488,15 @@ RSpec.describe UsersController do
       it "raises an error when you aren't allowed to check sso payload" do
         sign_in(Fabricate(:user))
         get "/u/#{user1.username}/sso-payload.json"
+        expect(response).to be_forbidden
+      end
+
+      it "prevents moderators from checking sso payload" do
+        SiteSetting.moderators_view_sso_details = true
+        sign_in(moderator)
+
+        get "/u/#{user1.username}/sso-payload.json"
+
         expect(response).to be_forbidden
       end
 
@@ -6115,10 +6173,33 @@ RSpec.describe UsersController do
     end
 
     context "with `include_staged_users`" do
-      it "includes staged users when the param is true" do
+      it "does not include staged users for public callers" do
         get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
-        json = response.parsed_body
-        expect(json["users"].map { |u| u["name"] }).to include(staged_user.name)
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["users"].map { |found_user| found_user["name"] },
+        ).not_to include(staged_user.name)
+      end
+
+      it "includes staged users for staff callers" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |found_user| found_user["name"] }).to include(
+          staged_user.name,
+        )
+      end
+
+      it "does not allow last-seen suggestions when staged users are included" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { include_staged_users: true, last_seen_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"]).to be_empty
       end
 
       it "doesn't include staged users when the param is not passed" do
@@ -7891,14 +7972,14 @@ RSpec.describe UsersController do
   describe "#bookmarks excerpts" do
     fab!(:user)
     let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:topic_post) { Fabricate(:post, topic: topic) }
     let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
 
     it "uses the first post of the topic for the bookmarks excerpt" do
       TopicUser.change(
         user.id,
         bookmark.bookmarkable.id,
-        { last_read_post_number: post.post_number },
+        { last_read_post_number: topic_post.post_number },
       )
 
       sign_in(user)
@@ -7910,19 +7991,13 @@ RSpec.describe UsersController do
       expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
     end
 
-    it "does not expose excerpts for hidden bookmarked posts the user cannot see" do
+    it "does not expose excerpts for hidden post bookmarks the user cannot see" do
       hidden_post_raw = "hidden post bookmark secret " * 20
-      hidden_topic_raw = "hidden topic bookmark secret " * 20
       hidden_post = Fabricate(:post, raw: hidden_post_raw)
-      hidden_topic = Fabricate(:topic)
-      hidden_first_post = Fabricate(:post, topic: hidden_topic, raw: hidden_topic_raw)
       hidden_post_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_post)
-      hidden_topic_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_topic)
 
       TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
-      TopicUser.change(user.id, hidden_topic.id, total_msecs_viewed: 1)
       hidden_post.update!(hidden: true)
-      hidden_first_post.update!(hidden: true)
 
       sign_in(user)
 
@@ -7930,18 +8005,44 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
       hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
-      hidden_topic_response = bookmark_list.find { |item| item["id"] == hidden_topic_bookmark.id }
 
       expect(hidden_post_response).to be_present
       expect(hidden_post_response).not_to have_key("excerpt")
       expect(hidden_post_response).not_to have_key("truncated")
       expect(hidden_post_response).not_to have_key("cooked")
-      expect(hidden_topic_response).to be_present
-      expect(hidden_topic_response).not_to have_key("excerpt")
-      expect(hidden_topic_response).not_to have_key("truncated")
-      expect(hidden_topic_response).not_to have_key("cooked")
-      expect(response.body).not_to include("hidden post bookmark secret")
-      expect(response.body).not_to include("hidden topic bookmark secret")
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "prevents hidden first posts from being listed or searched" do
+      SearchIndexer.enable
+      hidden_topic =
+        Fabricate(:topic, title: "Hidden topic bookmark secret title", user: Fabricate(:user))
+      hidden_first_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          user: hidden_topic.user,
+          raw: "hidden topic bookmark secret body",
+        )
+      hidden_topic_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_topic)
+
+      sign_in(user)
+      hidden_first_post.update!(hidden: true)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body.dig("user_bookmark_list", "bookmarks") || []
+      expect(bookmark_list.map { |bookmark_response| bookmark_response["id"] }).not_to include(
+        hidden_topic_bookmark.id,
+      )
+      expect(response.body).not_to include(hidden_topic.title)
+
+      get "/u/#{user.username}/bookmarks.json", params: { q: "hidden topic bookmark secret body" }
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body.dig("user_bookmark_list", "bookmarks") || []
+      expect(bookmark_list.map { |bookmark_response| bookmark_response["id"] }).not_to include(
+        hidden_topic_bookmark.id,
+      )
     end
 
     describe "bookmarkable_url" do
@@ -7950,7 +8051,7 @@ RSpec.describe UsersController do
           TopicUser.change(
             user.id,
             bookmark.bookmarkable.id,
-            { last_read_post_number: post.post_number },
+            { last_read_post_number: topic_post.post_number },
           )
 
           sign_in(user)
@@ -7960,7 +8061,7 @@ RSpec.describe UsersController do
           bookmark_list = response.parsed_body["bookmarks"]
 
           expect(bookmark_list.first["bookmarkable_url"]).to end_with(
-            "/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}",
+            "/t/#{topic.slug}/#{topic.id}/#{topic_post.post_number + 1}",
           )
         end
 
@@ -7968,7 +8069,7 @@ RSpec.describe UsersController do
           TopicUser.change(
             user.id,
             bookmark.bookmarkable.id,
-            { last_read_post_number: post.post_number },
+            { last_read_post_number: topic_post.post_number },
           )
 
           sign_in(user)

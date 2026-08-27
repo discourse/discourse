@@ -22,8 +22,8 @@ RSpec.describe Migrations::Converters::MarkdownEngine::EmojiData do
   end
 
   describe ".set_unicode_source" do
-    it "produces a __setUnicode call" do
-      expect(described_class.set_unicode_source).to start_with("__setUnicode({")
+    it "produces a setUnicode call" do
+      expect(described_class.set_unicode_source).to start_with("__PrettyText.setUnicode({")
       expect(described_class.set_unicode_source).to end_with("});")
     end
   end

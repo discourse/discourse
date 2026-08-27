@@ -17,9 +17,9 @@ export default class SubCategoryRow extends CategoryListItem {
           <td>
             <CategoryTitleLink @tagName="h4" @category={{this.category}} />
             <div class="subcategories-list">
-              {{#if this.category.subcategories}}
+              {{#if this.displayedSubcategories}}
                 <div class="subcategories">
-                  {{#each this.category.subcategories as |subcategory|}}
+                  {{#each this.displayedSubcategories as |subcategory|}}
                     <SubCategoryItem
                       @category={{subcategory}}
                       @listType={{this.listType}}
@@ -56,9 +56,9 @@ export default class SubCategoryRow extends CategoryListItem {
                 />
               </div>
             {{/if}}
-            {{#if this.category.subcategories}}
+            {{#if this.displayedSubcategories}}
               <div class="subcategories">
-                {{#each this.category.subcategories as |subsubcategory|}}
+                {{#each this.displayedSubcategories as |subsubcategory|}}
                   <SubCategoryItem
                     @category={{subsubcategory}}
                     @hideUnread="true"

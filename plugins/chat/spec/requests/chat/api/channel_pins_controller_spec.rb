@@ -24,6 +24,29 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(response.parsed_body["pinned_messages"][0]["chat_message_id"]).to eq(message.id)
     end
 
+    it "keeps links in the pin excerpt, unlike the message's own excerpt" do
+      linked = Fabricate(:chat_message, chat_channel: channel, message: "see [the docs](/faq)")
+      Fabricate(:chat_pinned_message, chat_message: linked, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"/faq\"")
+      expect(pin["message"]["excerpt"]).not_to include("<a")
+    end
+
+    it "keeps a link for a pin whose message is only a URL" do
+      url_only =
+        Fabricate(:chat_message, chat_channel: channel, message: "https://example.com/docs")
+      Fabricate(:chat_pinned_message, chat_message: url_only, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"https://example.com/docs\"")
+      expect(pin["excerpt"]).to include("rel=\"noopener nofollow ugc\"")
+    end
+
     it "returns an empty list when there are no pinned messages" do
       get "/chat/api/channels/#{channel.id}/pins"
 
@@ -47,6 +70,38 @@ RSpec.describe Chat::Api::ChannelPinsController do
         get "/chat/api/channels/#{channel.id}/pins"
 
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [user]) }
+      fab!(:channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category)
+      end
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          message: "Confidential restricted pinned message",
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "does not expose pinned messages" do
+        Fabricate(:chat_pinned_message, chat_channel: channel, chat_message: message)
+
+        get "/chat/api/channels/#{channel.id}/pins"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(message.message)
       end
     end
   end

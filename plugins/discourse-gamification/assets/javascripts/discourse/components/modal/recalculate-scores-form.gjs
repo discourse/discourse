@@ -197,7 +197,7 @@ export default class RecalculateScoresForm extends Component {
           }}
           @ariaLabel="gamification.cancel"
           id="cancel-section"
-          class="btn-secondary"
+          class="btn-default"
         />
 
         <div class="recalculate-modal__footer-text">{{this.remainingText}}</div>

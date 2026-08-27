@@ -74,8 +74,16 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background: var(--danger);
-    color: var(--primary-very-low);
+
+    &.--remove {
+      background: var(--danger);
+      color: var(--primary-very-low);
+    }
+
+    &.--clear {
+      background: var(--tertiary);
+      color: var(--secondary);
+    }
 
     .d-icon {
       transform-origin: 50% 50%;

@@ -69,6 +69,8 @@ cs:
       starred: "Oblíbené"
       starred_channels: "Oblíbené kanály"
       starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
+      pinned_bar:
+        title: "Připnuto"
       pinned: "Připnuto"
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
@@ -853,4 +855,11 @@ cs:
         message: "Odeslat"
       chat_approval:
         message: "Odeslat"
+        buttons: "Tlačítka"
+        value: "Hodnota"
+        style: "Styl"
+        style_default: "Výchozí"
+        style_primary: "Primární"
+        style_success: "Úspěch"
+        icon: "Ikona"
         channel_id: "Kanál"

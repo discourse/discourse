@@ -60,6 +60,12 @@ export interface PositioningOptions {
     content: HTMLElement,
     result: ComputePositionReturn & { arrowElement?: HTMLElement }
   ) => void;
+
+  /**
+   * Called each time a position has been applied — so once per call, and once per `autoUpdate`
+   * reposition. See `TooltipOptions.onPositioned`.
+   */
+  onPositioned?: ((content: HTMLElement) => void) | null;
 }
 
 interface DetectOverflowOptions {
@@ -110,6 +116,10 @@ export async function updatePosition(
   } else {
     applyComputedPosition(content, result, arrowElement);
   }
+
+  // After the position is applied, so a consumer that renders from its own size measures a
+  // float that already has one.
+  options.onPositioned?.(content);
 }
 
 function buildMiddleware(
@@ -208,6 +218,19 @@ function getPadding(options: PositioningOptions): Padding {
       bottom: 10,
     }
   );
+}
+
+/**
+ * The total horizontal clearance a float keeps from the viewport edges: the left and right
+ * {@link getPadding} sides added together. `shift` can only move a float, never shrink it, so a
+ * float wider than what is left over overflows the document instead of being fitted on screen.
+ */
+export function horizontalViewportInset(options: PositioningOptions): number {
+  const padding = getPadding(options);
+
+  return typeof padding === "number"
+    ? padding * 2
+    : (padding.left ?? 0) + (padding.right ?? 0);
 }
 
 function buildDetectOverflowOptions(

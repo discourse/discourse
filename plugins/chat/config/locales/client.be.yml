@@ -21,6 +21,8 @@ be:
         yesterday: "учора"
       create: "стварыць"
       cancel: "адмяніць"
+      pinned_bar:
+        title: "Замацаваныя"
       pinned: "замацаваныя"
       channel_settings:
         edit: "рэдагаваць"
@@ -142,3 +144,7 @@ be:
         message: "Паведамленне"
       chat_approval:
         message: "Паведамленне"
+        value: "Значэнне"
+        style_default: "Прадвызначаная"
+        style_success: "Поспех"
+        icon: "Значок"

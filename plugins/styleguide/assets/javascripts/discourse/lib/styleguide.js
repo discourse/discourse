@@ -9,10 +9,13 @@ import otp from "../components/sections/atoms/07-otp";
 import dateTimeInputs from "../components/sections/atoms/08-date-time-inputs";
 import dropdowns from "../components/sections/atoms/09-dropdowns";
 import topicLink from "../components/sections/atoms/10-topic-link-status";
+import shortcut from "../components/sections/atoms/11-shortcut";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
+import comboButton from "../components/sections/molecules/combo-button";
 import dialog from "../components/sections/molecules/dialog";
+import dragAndDrop from "../components/sections/molecules/drag-and-drop";
 import emptyState from "../components/sections/molecules/empty-state";
 import menus from "../components/sections/molecules/menus";
 import multiselect from "../components/sections/molecules/multi-select";
@@ -64,6 +67,7 @@ const SECTIONS = [
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
+  { component: shortcut, category: "atoms", id: "shortcut" },
   {
     component: segmentedControl,
     category: "atoms",
@@ -72,6 +76,7 @@ const SECTIONS = [
   { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },
+  { component: comboButton, category: "molecules", id: "combo-button" },
   { component: emptyState, category: "molecules", id: "empty-state" },
   { component: navigationBar, category: "molecules", id: "navigation-bar" },
   {
@@ -85,6 +90,7 @@ const SECTIONS = [
   { component: multiselect, category: "molecules", id: "multi-select" },
   { component: toasts, category: "molecules", id: "toasts" },
   { component: dialog, category: "molecules", id: "dialog" },
+  { component: dragAndDrop, category: "molecules", id: "drag-and-drop" },
   { component: signupCta, category: "molecules", id: "signup-cta" },
   { component: topicListItem, category: "molecules", id: "topic-list-item" },
   {

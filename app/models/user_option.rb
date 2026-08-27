@@ -21,6 +21,15 @@ class UserOption < ActiveRecord::Base
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
     "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
+    "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
+    "topics_unread_when_closed", # TODO: Remove when 20260826124054_drop_topics_unread_when_closed_from_user_options has been promoted to pre-deploy
+  ]
+  # TODO: remove after 20260824051214_drop_ai_search_discovery_preferences_from_user_options has been promoted
+  self.ignored_columns += %w[
+    ai_search_discoveries_mode
+    ai_search_discoveries_show_summary
+    ai_search_discoveries_summary_detail
+    ai_search_discoveries_related_count
   ]
 
   self.primary_key = :user_id
@@ -88,7 +97,6 @@ class UserOption < ActiveRecord::Base
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
-    self.enable_defer = SiteSetting.default_other_enable_defer
     self.enable_markdown_monospace_font = SiteSetting.default_other_enable_markdown_monospace_font
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
@@ -307,7 +315,6 @@ end
 #  email_messages_level                           :integer          default(0), not null
 #  email_previous_replies                         :integer          default(2), not null
 #  enable_allowed_pm_users                        :boolean          default(FALSE), not null
-#  enable_defer                                   :boolean          default(FALSE), not null
 #  enable_markdown_monospace_font                 :boolean          default(TRUE), not null
 #  enable_quoting                                 :boolean          default(TRUE), not null
 #  enable_smart_lists                             :boolean          default(TRUE), not null
@@ -344,7 +351,6 @@ end
 #  theme_key_seq                                  :integer          default(0), not null
 #  timezone                                       :string
 #  title_count_mode_key                           :integer          default(0), not null
-#  topics_unread_when_closed                      :boolean          default(TRUE), not null
 #  understood_languages                           :string           default([]), not null, is an Array
 #  watched_precedence_over_muted                  :boolean          default(FALSE), not null
 #  color_scheme_id                                :integer

@@ -939,16 +939,15 @@ it:
   email_login:
     invalid_token: 'Ops! Il link che hai utilizzato non funziona più. Puoi <a href="%{base_url}/login">Accedere</a> adesso. Se hai dimenticato la password, puoi <a href="%{base_url}/password-reset">richiedere un link</a> per reimpostarla.'
     title: "Accesso via Email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "App DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "App DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "browser sconosciuto"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -968,6 +967,9 @@ it:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimo"
   change_email:
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."
@@ -1424,6 +1426,9 @@ it:
         num_topics: "Argomenti"
       description: "Utenti elencati per numero di clic sui collegamenti che hanno condiviso."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visite"
+    top_entry_urls:
       labels:
         count: "Visite"
     top_referrers_by_browser_pageviews:
@@ -2058,7 +2063,6 @@ it:
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di attendibilità 0 da questo IP (e nessuno è membro dello staff o a livello 2 o superiore), non accettare nuove iscrizioni da questo IP. Impostare a 0 per disabilitare il limite."
-    min_ban_entries_for_roll_up: "Quando si clicca il pulsante Roll up, verrà creato un nuovo elenco di IP interdetti se sono presenti almeno (N) elementi."
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
@@ -2268,7 +2272,6 @@ it:
     default_other_external_links_in_new_tab: "Apri i collegamenti esterni in una nuova scheda di default. "
     default_other_enable_quoting: "Attivazione predefinita di risposta con citazione per il testo evidenziato."
     default_other_enable_smart_lists: "Abilita per impostazione predefinita gli elenchi smart quando digiti nel compositore."
-    default_other_enable_defer: "Abilita la funzionalità di rinvio di lettura dell'argomento per impostazione predefinita."
     default_other_enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore per impostazione predefinita."
     default_other_dynamic_favicon: "Per impostazione predefinita mostra il conteggio degli argomenti nuovi/aggiornati sull'icona del browser."
     default_other_skip_new_user_tips: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti."
@@ -2304,7 +2307,6 @@ it:
     revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
     revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
-    create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
     edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
     max_tags_per_email_subject: "Il numero massimo di tag che possono essere nell'oggetto di un'e-mail"
@@ -3655,9 +3657,6 @@ it:
     user_posted_pm_staged:
       title: "Pubblicazione MP da Utente Temporaneo"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
@@ -4393,6 +4392,10 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  design_wizard:
+    palette_pairs:
+      default: "Predefinito"
+      dracula: "Dracula"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4513,6 +4516,9 @@ it:
       group: "Gli utenti che non appartengono ai gruppi specificati devono avere risposte approvate dallo staff. Vedi %{link}."
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di attendibilità devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo troppo rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      fast_typer_time:
+        one: "%{count} secondo"
+        other: "%{count} secondi"
       auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
       watched_word:
         one: "Questo messaggio include una parola osservata, la parola segnalata è: %{words}. Controlla le %{link} per maggiori informazioni."
@@ -4625,7 +4631,6 @@ it:
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
-          description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
       confirm_spam:
         title: "Sì"

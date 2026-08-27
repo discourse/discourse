@@ -42,6 +42,14 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopieret"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Fejl"
+        response: "Svar"
+      discourse_workflows:
+        ai_agent:
+          mode: "Tilstand"
       ai_tool_approval:
         loading: "Indlæser…"
         tool: "Handling"
@@ -126,6 +134,39 @@ da:
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
+      logs:
+        short_title: "Logs"
+        apply: "Anvend"
+        successful: "Gennemført"
+        failed: "Fejlet"
+        unknown: "Ukendt"
+        topic_id: "Emne ID"
+        post_id: "Indlæg ID"
+        time: "Tidspunkt"
+        when: "Hvorår"
+        model: "Model"
+        request: "Anmod om medlemskab"
+        provider: "Udbyder"
+        user: "Bruger"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Indlæg"
+        post_short: "Indlæg %{id}"
+        duration: "Varighed"
+        actions: "Handlinger"
+        periods:
+          day: "Seneste 24 timer"
+          week: "Seneste 7 dage"
+          custom: "Tilpasset"
+        detail:
+          request: "Anmod om medlemskab"
+          response: "Svar"
+          context: "Kontekst"
+          network_error: "Netværksfejl"
+        retention:
+          summary_stage: "Statistik"
+          deleted_stage: "Slettet"
+          save: "Gem"
       ai_agent:
         name: "Navn"
         edit: "Rediger"
@@ -138,6 +179,7 @@ da:
         mcp_tools_modal:
           clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
+        duplicate: "Dupliker"
         delete: "Slet"
         thinking_effort_options:
           none: "Ingen"
@@ -193,6 +235,9 @@ da:
           required: "Obligatoriske"
       llms:
         display_name: "Navn"
+        vision_modes:
+          disabled:
+            title: "Deaktiveret"
         save: "Gem"
         edit: "Rediger"
         delete: Slet
@@ -216,7 +261,6 @@ da:
           title: "Kør test"
           success: "Succes!"
         providers:
-          google: "Google"
           fake: "Tilpasset"
         provider_fields:
           region: "Område"
@@ -247,6 +291,7 @@ da:
       ai_bot:
         llm: "Model:"
         debug_ai_modal:
+          duration_label: "Varighed:"
           request: "Anmod om medlemskab"
           response: "Svar"
           next_log: "Næste"

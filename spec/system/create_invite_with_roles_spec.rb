@@ -40,6 +40,7 @@ describe "Creating invites with roles" do
       screenshot_marker(label: "invite-admins-advanced", only: :desktop)
       modal.toggle_advanced_options
 
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("future-admin@example.com")
       modal.save_button.click
 
@@ -85,12 +86,33 @@ describe "Creating invites with roles" do
       expect(modal).to be_open
       expect(modal.selected_role).to eq("admin")
 
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("collaborator@example.com")
       modal.save_button.click
       expect(modal).to have_summary
       modal.close
 
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
+    end
+
+    it "can create an admin invite link with a domain restriction" do
+      cdp.allow_clipboard
+
+      open_invite_modal_for(admin)
+
+      modal.select_role("admin")
+      modal.toggle_advanced_options
+      modal.form.field("domain").fill_in("example.com")
+      modal.save_button.click
+
+      expect(modal).to have_summary
+      cdp.clipboard_has_text?(Invite.last.link)
+
+      invite = Invite.last
+      expect(invite.admin).to eq(true)
+      expect(invite.email).to eq(nil)
+      expect(invite.domain).to eq("example.com")
+      expect(invite.max_redemptions_allowed).to eq(1)
     end
 
     it "can create a member link invite with a domain restriction" do
@@ -103,12 +125,13 @@ describe "Creating invites with roles" do
 
       modal.toggle_advanced_options
       screenshot_marker(label: "invite-members-advanced", only: :desktop)
-      modal.toggle_advanced_options
 
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click
 
       expect(modal).to have_summary
+      cdp.clipboard_has_text?(Invite.last.link)
+      expect(page).to have_css(".copy-button.ok")
       screenshot_marker(label: "invite-created", only: :desktop)
 
       invite = Invite.last
@@ -137,14 +160,14 @@ describe "Creating invites with roles" do
       open_invite_modal_for(admin)
 
       modal.select_role("admin")
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("future-admin@example.com")
       modal.save_button.click
       expect(modal).to have_summary
 
       modal.edit_button.click
 
-      expect(modal.selected_role).to eq("admin")
-      expect(modal.role_option_disabled?("member")).to eq(true)
+      expect(modal).to have_no_role_toggle
       expect(modal.save_button).to have_text(I18n.t("js.user.invited.invite_roles.update"))
 
       modal.cancel_button.click

@@ -315,6 +315,20 @@ hy:
     admin_onboarding_banner:
       start_posting:
         back: "Ետ"
+    design_wizard:
+      back: "Ետ"
+      next: "Հաջորդը"
+      sections:
+        theme: "Թեմա"
+        homepage: "Գլխավոր էջ"
+      colors:
+        light: "Բաց"
+        dark: "Մութ"
+      homepage:
+        topics: "Թեմաներ"
+        categories: "Կատեգորիաներ"
+        styles:
+          boxes: "Արկղերը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
@@ -563,9 +577,6 @@ hy:
         optional: "ընտրովի"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
-        required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
-        claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
-        claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
       awaiting_approval: "Հաստատմումը սպասման մեջ է"
       delete: "Ջնջել"
       settings:
@@ -596,6 +607,7 @@ hy:
         email: "Էլ. հասցե"
         name: "Անուն"
         fields: "Դաշտեր"
+        penalty_forever: "Ընդմիշտ"
         reject_reason: "Պատճառ"
         scrubbed_reason: "Պատճառ"
         scrub_record:
@@ -1265,7 +1277,6 @@ hy:
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
       enable_smart_lists: "Միացնել խելացի ցուցակները խմբագրի մեջ գրելիս"
-      enable_defer: "Միացնել` թեմաները որպես չկարդացված նշելու հնարավորությունը"
       experimental_sidebar:
         enable: "Միացնել կողագոտին"
         options: "Տարբերակներ"
@@ -1852,7 +1863,8 @@ hy:
           email_placeholder: "name@example.com"
           invite_by_email: "Էլ. հասցե"
           restrict_domain: "Սահմանափակել դոմենով"
-          more_options: "Ավելի շատ տարբերակներ"
+          create_and_send: "Ուղարկել"
+          create_and_copy: "Պատճենել հղումը"
           update: "Թարմացնել"
           summary:
             role_member: "Անդամ"
@@ -1863,7 +1875,7 @@ hy:
             expires: "Ժամկետը լրանում է"
             topic: "Թեմա"
             groups: "Խմբեր"
-            edit: "Խմբագրել հրավերը"
+            edit: "Խմբագրել"
         bulk_invite:
           none: "Այս էջում ցուցադրելու հրավերներ չկան:"
           text: "Զանգվածային Հրավեր"
@@ -2207,6 +2219,7 @@ hy:
       alt: "Alt"
       enter: "Մուտք"
     category_row:
+      subcategories: "+ Ենթակատեգորիաներ"
       topic_count:
         one: "%{count} թեմա այս կատեգորիայում"
         other: "%{count} թեմա այս կատեգորիայում"
@@ -3737,7 +3750,7 @@ hy:
           save: "Պահպանել"
           delete: "Ջնջել"
           localizations:
-            title: "Թարգմանություններ"
+            remove_language: "Հեռացնել"
           links:
             reset: "Վերականգնել լռելյայն"
             icon:
@@ -4000,13 +4013,23 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
+      site_traffic_explorer:
+        metric_information: " %{metric}-ի մասին"
+        apply: "Կիրառել"
+        view_more: "Դիտել ավելին"
+        cards:
+          visitors: "Այցելուներ"
+        filters:
+          browser: "Բրաուզեր"
+          ip: "IP հասցե"
+        series:
+          anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
         discourse_last_updated: "Discourse վերջին թարմացումը՝"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
-        critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"

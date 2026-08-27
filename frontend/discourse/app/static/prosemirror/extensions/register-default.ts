@@ -24,6 +24,7 @@ import orderedList from "./ordered-list";
 import overrideDragGhost from "./override-drag-ghost";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
+import strong from "./strong";
 import table from "./table";
 import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
@@ -50,6 +51,7 @@ const defaultExtensions: RichEditorExtension[] = [
   hashtag,
   mention,
   strikethrough,
+  strong,
   underline,
   htmlInline,
   htmlBlock,

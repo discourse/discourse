@@ -963,16 +963,15 @@ tr_TR:
   email_login:
     invalid_token: 'Hay aksi! Kullandığınız bağlantı artık çalışmıyor. Şimdi <a href="%{base_url}/login">Giriş</a> yapabilirsiniz. Şifrenizi unuttuysanız sıfırlamak için <a href="%{base_url}/password-reset">bağlantı talep edebilirsiniz</a>.'
     title: "E-posta girişi"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub uygulaması"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub uygulaması"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "bilinmeyen tarayıcı"
     device:
       android: "Android Cihaz"
       chromebook: "Chrome OS"
@@ -992,6 +991,9 @@ tr_TR:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "bilinmeyen işletim sistemi"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
   change_email:
     error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki de adres zaten kullanılıyordur?"
     doesnt_exist: "Bu e-posta adresi hesabınızla ilişkili değil."
@@ -1465,6 +1467,9 @@ tr_TR:
         num_topics: "Konular"
       description: "Kullanıcılar, paylaştıkları bağlantıların tıklanma sayısına göre listelenir."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Ziyaretler"
+    top_entry_urls:
       labels:
         count: "Ziyaretler"
     top_referrers_by_browser_pageviews:
@@ -2132,7 +2137,6 @@ tr_TR:
     user_profile_view_duration_hours: "N saatte bir IP/Kullanıcı başına yeni bir kullanıcı profili görüntülemesi sayma"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirirken, yine de bulanık bir eşleşmeye izin verecek karakter sayısı farkı."
     max_new_accounts_per_registration_ip: "Bu IP'den zaten (n) güven seviyesi 0 hesaplar varsa (ve hiçbiri personel üyesi veya GS2 veya üstü değilse) bu IP'den yeni kayıtları kabul etmeyi durdurun. Limiti devre dışı bırakmak için 0 olarak ayarlayın."
-    min_ban_entries_for_roll_up: "Topla düğmesine tıklandığında, en az (N) giriş varsa yeni bir alt ağ yasağı girdisi oluşturur."
     max_age_unmatched_emails: "Eşleşmeyen taranmış e-posta girdilerini (N) gün sonra silin."
     max_age_unmatched_ips: "Eşleşmeyen taranmış IP girdilerini (N) gün sonra silin."
     num_flaggers_to_close_topic: "Bir konuyu müdahale için otomatik olarak duraklatmak üzere gereken minimum benzersiz bayrak ekleyen kişi sayısı"
@@ -2356,7 +2360,6 @@ tr_TR:
     default_other_external_links_in_new_tab: "Harici bağlantıları varsayılan olarak yeni bir sekmede açın."
     default_other_enable_quoting: "Varsayılan olarak vurgulanan metin için alıntı yanıtını etkinleştirin."
     default_other_enable_smart_lists: "Varsayılan olarak bestecide yazarken akıllı listeleri etkinleştirin."
-    default_other_enable_defer: "Varsayılan olarak konu erteleme işlevini etkinleştirin."
     default_other_enable_markdown_monospace_font: "Varsayılan olarak bestecinin Markdown modunda monospace yazı tipini kullanın."
     default_other_dynamic_favicon: "Varsayılan olarak tarayıcı simgesinde yeni/güncellenmiş konu sayısını gösterin."
     default_other_skip_new_user_tips: "Yeni kullanıcı katılım ipuçlarını ve rozetlerini atlayın."
@@ -2392,7 +2395,6 @@ tr_TR:
     revoke_user_api_keys_unused_days: "Bir kullanıcı API anahtarının otomatik olarak iptal edilmeden önce en son kullanıldığı günden bu yana geçen gün sayısı (hiçbir zaman için 0)"
     revoke_user_api_keys_maxlife_days: "Bir kullanıcı API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
     tagging_enabled: "Konulardaki etiketler etkinleştirilsin mi? Daha fazla bilgi için <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Metadaki etiketler için yönetici kılavuzu</a> bölümüne bakın."
-    create_tag_allowed_groups: "Etiket oluşturmasına izin verilen gruplar. Yöneticiler ve moderatörler her zaman etiket oluşturabilir."
     edit_tags_allowed_groups: "Etiketleri, etiket açıklamalarını ve etiket eş anlamlılarını düzenlemeye izin verilen gruplar."
     max_tags_per_topic: "Bir konuya uygulanabilecek maksimum etiket sayısı."
     max_tags_per_email_subject: "Bir e-postanın konusunda yer alabilecek maksimum etiketler"
@@ -2469,7 +2471,6 @@ tr_TR:
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
     content_localization_use_default_locale_when_unsupported: "Tercih edilen dili “içerik yerelleştirme desteklenen yerel ayarlar” listesinde bulunmayan kullanıcılara, sitenin varsayılan yerel ayarlarında yerelleştirilmiş içerik sunun."
-    content_localization_allow_author_localization: "Yazarların, yazı menüsü aracılığıyla kendi konularının ve yazılarının yerelleştirmelerini güncellemesine izin verin."
     nested_replies_enabled: "Konular için iç içe geçmiş yanıtlar görünümünü etkinleştirin."
     nested_replies_default: "Tüm konular için varsayılan görünüm olarak iç içe geçmiş yanıtları kullan."
     nested_replies_default_sort: "İç içe geçmiş yanıtlar görünümü için varsayılan sıralama algoritması."
@@ -4060,9 +4061,6 @@ tr_TR:
     user_posted_pm_staged:
       title: "Kullanıcı Kişisel Mesaj Gönderdi Aşamalı"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
@@ -4865,6 +4863,10 @@ tr_TR:
     title: "Geliştirici Modu"
     enable_rack_mini_profiler: "Rack Mini Profiler'ın oturum değişiklikleri arasında 1 saat boyunca kalıcı olmasını etkinleştirin"
     enter: "Geliştirici Moduna Gir"
+  design_wizard:
+    palette_pairs:
+      default: "Varsayılan"
+      dracula: "Drakula"
   wizard:
     title: "Discourse Kurulumu"
     step:
@@ -5006,6 +5008,9 @@ tr_TR:
       group: "Belirtilen gruplarda yer almayan kullanıcıların yanıtlarının personel tarafından onaylanması gerekir. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven seviyesindeki kullanıcıların konularının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       fast_typer: "Yeni kullanıcı ilk gönderisini şüpheli bir şekilde hızlı yazdı, bot veya spam davranışından şüpheleniliyor. Bkz. %{link}."
+      fast_typer_time:
+        one: "%{count} saniye"
+        other: "%{count} saniye"
       auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."
       watched_word:
         one: "Bu gönderide bir İzlenen Kelime var, bayrak eklenen kelime: %{words}. Daha fazlası için %{link} bölümüne bakın."
@@ -5124,11 +5129,9 @@ tr_TR:
         title: "Hayır"
         delete:
           title: "Kullanıcıyı Sil"
-          description: "Engellemeden kullanıcıyı sil"
           complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
-          description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
           complete: "Kullanıcı silindi ve engellendi."
       confirm_spam:
         title: "Evet"
@@ -5188,12 +5191,10 @@ tr_TR:
         bundle_title: "Kullanıcıyla ne yapmak istiyorsunuz?"
       silence_user:
         title: "Kullanıcıyı sustur"
-        description: "Kullanıcının gönderi yapmasını engelle"
         complete: "Kullanıcı susturuldu"
         reason: "Kullanıcı inceleme kuyruğu aracılığıyla susturuldu"
       suspend_user:
         title: "Kullanıcıyı askıya al"
-        description: "Kullanıcı hesabını askıya al"
         complete: "Kullanıcı askıya alındı"
         reason: "İnceleme kuyruğu aracılığıyla askıya alınan kullanıcı"
       delete_user:

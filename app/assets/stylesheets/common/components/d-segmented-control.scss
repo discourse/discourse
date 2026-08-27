@@ -54,6 +54,15 @@
     clip-path: inset(50%);
   }
 
+  &.--full-width {
+    display: flex;
+    width: 100%;
+
+    .d-segmented-control__label {
+      flex: 1;
+    }
+  }
+
   &--small {
     gap: 2px;
     padding: 1px;

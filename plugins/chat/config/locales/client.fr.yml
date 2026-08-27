@@ -50,6 +50,9 @@ fr:
         description: "Description"
         actions: "Actions"
         settings: "Paramètres"
+        no_channels: "Aucun canal de chat n'est associé à cette catégorie."
+        no_channels_body: "Vous pouvez associer plusieurs canaux à une même catégorie. Ils seront accessibles aux mêmes membres, selon les paramètres de sécurité de la catégorie. <a href='%{chatBrowseUrl}'>Créer un canal de chat</a>."
+        include_subcategories: "Inclure les canaux des sous-catégories"
       text_copied: Texte copié dans le presse-papiers
       link_copied: Lien copié dans le presse-papiers
       back_to_forum: "Forum"
@@ -64,9 +67,23 @@ fr:
       cancel: "Annuler"
       cancel_reply: "Annuler la réponse"
       chat_channels: "Canaux"
+      starred: "Favoris"
+      starred_channels: "Canaux favoris"
+      starred_channels_empty: "Vous n'avez encore ajouté aucun canal aux favoris. Ajoutez des canaux aux favoris pour y accéder rapidement depuis cet emplacement."
+      pinned_messages:
+        title: "Messages épinglés"
+        close: "Fermer les messages épinglés"
+        pinned_by_you: "Épinglé par vous"
+        pinned_by_user: "Épinglé par %{username}"
+      pinned_bar:
+        title: "Épinglé"
+      no_pinned_messages: "Aucun message épinglé dans ce canal."
+      pin_message: "Épingler le message"
+      unpin_message: "Désépingler le message"
       pinned: "Épinglé"
       browse_all_channels: "Parcourir tous les canaux"
       see_in: "Voir dans"
+      open_channel_menu: "Ouvrir le menu du canal"
       move_to_channel:
         title: "Déplacer les messages vers le canal"
         instructions:
@@ -81,13 +98,18 @@ fr:
         title: "Paramètres du canal"
         edit: "Modifier"
         add: "Ajouter"
+        star_channel: "Ajouter le canal aux favoris"
+        unstar_channel: "Retirer le canal des favoris"
         close_channel: "Fermer le canal"
         open_channel: "Ouvrir le canal"
+        open_channel_disabled_archived: "Les canaux archivés ne peuvent pas être rouverts."
+        open_channel_disabled_read_only: "Les canaux en lecture seule ne peuvent pas être rouverts."
         archive_channel: "Archiver le canal"
         delete_channel: "Supprimer le canal"
         join_channel: "Rejoindre le canal"
         leave_channel: "Quitter le canal"
         leave_groupchat_info: "Si vous quittez cette discussion de groupe, vous n'y aurez plus accès et vous ne recevrez plus de notifications associées. Pour vous inscrire à nouveau, vous devrez être réinvité(e) par un membre de la discussion de groupe."
+        notification_settings: "Paramètres de notification"
         notification_settings_context: "Notifications"
         join: "Rejoindre"
         leave: "Quitter"
@@ -136,6 +158,7 @@ fr:
       email_frequency:
         description: "Nous ne vous enverrons un e-mail que si nous ne vous avons pas vu au cours des 15 dernières minutes."
         never: "Jamais"
+        title: "M'envoyer un e-mail lorsque je reçois un message direct ou de groupe dans le chat"
         when_away: "Seulement en cas d'absence"
       header_indicator_preference:
         title: "Afficher l'indicateur d'activité dans l'en-tête"
@@ -234,14 +257,37 @@ fr:
         header: "En-tête de discussion"
         composer: "Éditeur de discussion"
         channels_list: "Liste des canaux de discussion"
+      screen_reader:
+        new_message: "%{username} : %{message}"
+        new_messages:
+          one: "%{count} nouveau message"
+          other: "%{count} nouveaux messages"
+        new_image:
+          one: "%{username} a envoyé une image"
+          other: "%{username} a envoyé %{count} images"
+        new_attachment:
+          one: "%{username} a envoyé une pièce jointe"
+          other: "%{username} a envoyé %{count} pièces jointes"
+        new_message_with_image:
+          one: "%{username} : %{message} (avec une image)"
+          other: "%{username} : %{message} (avec %{count} images)"
+        new_message_with_attachment:
+          one: "%{username} : %{message} (avec une pièce jointe)"
+          other: "%{username} : %{message} (avec %{count} pièces jointes)"
       no_direct_message_channels: "Vous n'avez encore rejoint aucun message direct !"
       no_direct_message_channels_cta: "Commencer une conversation"
       no_public_channels: "Vous n'avez encore rejoint aucun canal !"
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       chat_notifications_title: "Notifications de discussion"
+      personalization_title: "Personnalisation"
+      accessibility_title: "Accessibilité"
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
+      announce_new_messages:
+        title: "Annoncer les nouveaux messages aux lecteurs d'écran"
+      new_message_sound:
+        title: "Émettre des sons pour les nouveaux messages lorsque la conversation est au premier plan"
       show_thread_title_prompts:
         title: "Afficher les invites relatives au titre du fil de discussion"
         description: "Afficher les invites pour définir un titre pour les nouveaux fils de discussion"
@@ -283,12 +329,24 @@ fr:
         other: "Vous avez %{count} discussions non lues"
       scroll_to_bottom: "Défiler vers le bas"
       scroll_to_new_messages: "Voir les nouveaux messages"
+      new_messages:
+        one: "%{count} nouveau message"
+        other: "%{count} nouveaux messages"
       sound:
         title: "Son de notification de discussion sur ordinateur"
       sounds:
         none: "Aucun"
+        classic: "Classique et épuré"
+        soft: "Marimba doux"
+        retro: "Rétro 8 bits"
+        bubble: "Bulle ludique"
+        ethereal: "Verre éthéré"
       title: "discussion"
       title_capitalized: "Discussion"
+      disabled:
+        title: "Vous avez désactivé le chat."
+        body: "Réactivez-le pour afficher les canaux et les messages."
+        cta: "Mes préférences de chat"
       upload: "Joindre un fichier"
       upload_to_channel: "Téléverser vers %{title}"
       upload_to_thread: "Téléverser dans le fil"
@@ -319,11 +377,16 @@ fr:
         filter_input_placeholder: Rechercher un canal par nom
         filter_joined_all: "Tout"
         filter_joined_joined: "Rejoints"
+        filter_joined_not_joined: "Non rejoints"
       chat_message_separator:
         today: Aujourd'hui
         yesterday: Hier
       search_view:
         filter_placeholder: Rechercher des messages
+        message_result_label: "Message de chat de %{username} : %{preview} %{threadInfo}"
+        in_thread: "dans le fil de discussion %{title}"
+        sr_instructions: "Appuyez sur Entrée ou Espace pour ouvrir le message. Utilisez la touche Tabulation pour parcourir les résultats."
+        results_list_label: "Résultats de recherche dans le chat"
       members_view:
         filter_placeholder: Trouver des membres
         add_member: Ajouter un membre
@@ -365,6 +428,9 @@ fr:
         input_placeholder: Ajouter un nom
         slug_description: Un identifiant de canal est utilisé dans l'URL au lieu du nom du canal
         name: Nom du canal
+        slug: Identifiant du canal
+        emoji: Émoji du canal
+        reset_emoji: Réinitialiser l'émoji
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description
@@ -385,7 +451,21 @@ fr:
         memberships_count:
           one: "%{count} membre"
           other: "%{count} membres"
+        empty_state:
+          title: "Voici le début de %{channelName}"
+          joined_title: "Vous êtes la première personne dans %{channelName}"
+          guest_tip: "Vous consultez ce canal en tant qu'invité. La conversation commencera dès que des membres enverront des messages. Rejoignez-les pour en faire partie."
+          joined_tip: "Envoyez le premier message et lancez la conversation."
+          members_here:
+            one: "<strong>%{count} membre</strong> ici"
+            other: "<strong>%{count} membres</strong> ici"
+          no_other_members: "Aucun autre membre pour le moment"
         preview_card:
+          guest_title: "Rejoignez %{channelName} pour commencer à discuter"
+          guest_body: "Tout le monde peut lire gratuitement. Inscrivez-vous pour envoyer des messages, réagir et répondre. Cela prend environ 30 secondes."
+          join_body: "Vous pourrez envoyer des messages et répondre, et le canal apparaîtra dans votre liste."
+          no_access_title: "Vous ne pouvez pas rejoindre %{channelName}"
+          no_access_body: "Ce canal n'accepte actuellement aucun nouveau membre."
           log_in: "Se connecter"
           sign_up: "S'inscrire"
       create_channel:
@@ -426,11 +506,15 @@ fr:
         create: "Créer un canal"
         description: "Description"
         name: "Nom du canal"
+        slug: "Slug du canal"
         title: "Nouveau canal"
         type: "Type"
         types:
           category: "Catégorie"
           topic: "Sujet"
+        emoji:
+          label: "Émoji du canal"
+          reset: "Réinitialiser l'émoji"
       reviewable:
         type: "Message de discussion"
         message_in_channel: "Canal"
@@ -443,6 +527,10 @@ fr:
           other: "<span>Vous, %{commaSeparatedUsernames} et %{count} autres utilisateurs avez réagi avec </span>:%{emoji}:"
         single_user: "<span>%{username} a réagi avec </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} et %{username} ont réagi avec </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} réaction"
+            other: "%{count} réactions"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} et %{count} autre utilisateur ont réagi avec </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} et %{count} autres utilisateurs ont réagi avec </span>:%{emoji}:"
@@ -473,6 +561,7 @@ fr:
         follow: "Rejoindre"
         followed: "Rejoint"
         mute: "Mettre le canal en sourdine"
+        unmute: "Réactiver les notifications du canal"
         threading_enabled: "Activée"
         threading_disabled: "Désactivé"
         muted_on: "Activé"
@@ -498,6 +587,8 @@ fr:
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       search:
         short_title: Recherche
+        title: Rechercher dans le chat
+        aria_label: "Passer à la recherche dans le chat"
         no_results: "Aucun résultat trouvé"
         sort:
           relevance: "Pertinence"
@@ -578,10 +669,15 @@ fr:
           one: "%{commaSeparatedUsernames} et %{count} autre utilisateur sont en train d'écrire"
           other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs sont en train d'écrire"
       retention_reminders:
+        chat_settings: "Paramètres du chat"
         indefinitely_short: "indéfiniment"
+        indefinitely_long: "%{chatSettingsLink} ont été configurés pour conserver indéfiniment les messages du canal."
         short:
           one: "%{count} jour"
           other: "%{count} jours"
+        long:
+          one: "%{chatSettingsLink} ont été configurés pour conserver les messages du canal pendant %{count} jour."
+          other: "%{chatSettingsLink} ont été configurés pour conserver les messages du canal pendant %{count} jours."
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient un contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire aux <a href=\"%{basePath}/guidelines\">règles de la communauté</a>."
@@ -713,6 +809,7 @@ fr:
           composer_bold: "%{shortcut} Gras (éditeur uniquement)"
           composer_italic: "%{shortcut} Italique (éditeur uniquement)"
           composer_code: "%{shortcut} Code (éditeur uniquement)"
+          drawer_toggle: "%{shortcut} Afficher ou masquer le volet du chat"
           drawer_close: "%{shortcut} Fermer le tiroir de discussion"
           mark_all_channels_read: "%{shortcut} Marquer tous les canaux comme lus"
     topic_statuses:
@@ -739,18 +836,46 @@ fr:
           title: Discussion
     sidebar:
       start_new_dm:
+        text: Nouveau message direct
         title: Créer une conversation personnelle
       panels:
         chat:
           label: "Discussion"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Nécessite l'activation de l'extension Chat"
       nodes:
         "action:send_chat_message": "Envoyer un message de discussion"
+        "action:chat_approval": "Approbation du chat"
+        "trigger:chat_message_created": "Message de chat créé"
+      node_descriptions:
+        "action:send_chat_message": "Envoyer un message à un canal de chat"
+        "action:chat_approval": "Envoyer une demande de validation à un canal de chat et attendre une réponse"
+        "trigger:chat_message_created": "Se déclenche lorsqu'un nouveau message de chat est créé"
       chat_message_created:
         channel_id: "Canal"
+        channel_id_description: "Laissez ce champ vide pour déclencher l'action pour tous les canaux de chat."
       send_chat_message:
         channel_id: "Canal"
         message: "Message"
       chat_approval:
         message: "Message"
+        buttons: "Boutons"
+        value: "Valeur"
+        style: "Style"
+        style_default: "Par défaut"
+        style_primary: "Principal"
+        style_success: "Succès"
+        icon: "Icône"
+        approve_label: "Libellé du bouton « Approuver »"
+        approve_label_description: "Utilise « Approuver » par défaut si le champ est vide."
+        deny_label: "Libellé du bouton « Refuser »"
+        deny_label_description: "Utilise « Refuser » par défaut si le champ est vide."
         channel_id: "Canal"
+        channel_id_description: "Canal de chat auquel envoyer le message de demande de validation."
+        timeout_minutes: "Délai d'expiration (minutes)"
+        timeout_minutes_description: "Laissez ce champ vide pour ne définir aucun délai d'expiration."
+        timeout_action: "En cas d'expiration du délai"
+        timeout_action_description: "Action effectuée lorsque le délai de validation expire."
+        timeout_action_deny: "Reprendre avec le statut « Refusé »"
+        timeout_action_fail: "Faire échouer le flux de travail"

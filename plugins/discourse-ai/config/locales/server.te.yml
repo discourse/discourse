@@ -16,6 +16,8 @@ te:
         image_generation_custom:
           name: "అనురూప"
     ai_bot:
+      read_post:
+        unknown_post: "పోస్ట్"
       tool_summary:
         suspend_user: "సభ్యుడిని సస్పెండు చేయండి"
         silence_user: "సభ్యుని నిశ్శబ్దం చేయండి"

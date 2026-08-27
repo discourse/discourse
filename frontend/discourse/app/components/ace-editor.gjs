@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -9,8 +8,8 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -63,6 +62,9 @@ export default class AceEditor extends Component {
   @service appEvents;
 
   @tracked isLoading = true;
+
+  /** The resized box, handed to the separator once the editor has built it. */
+  @tracked editorContainer = null;
   editor = null;
   ace = null;
   skipChangePropagation = false;
@@ -153,6 +155,7 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
+    this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -270,7 +273,13 @@ export default class AceEditor extends Component {
 
   @bind
   onResizeDrag(size) {
-    this.editor.container.style.height = `${size}px`;
+    this.editorContainer.classList.add("clear-transitions");
+    this.editorContainer.style.height = `${size}px`;
+  }
+
+  @bind
+  onResizeEnd() {
+    this.editorContainer.classList.remove("clear-transitions");
   }
 
   <template>
@@ -288,14 +297,15 @@ export default class AceEditor extends Component {
         >
         </div>
         {{#if @resizable}}
-          <div
+          <DResizeSeparator
             class="grippie"
-            {{grippieDragResize
-              ".ace_editor--resizable"
-              "bottom"
-              (hash onThrottledDrag=this.onResizeDrag)
-            }}
-          ></div>
+            @axis="vertical"
+            @side="start"
+            @measure={{this.editorContainer}}
+            @label={{i18n "ace_editor.resize"}}
+            @onResize={{this.onResizeDrag}}
+            @onResizeEnd={{this.onResizeEnd}}
+          />
         {{/if}}
       </DConditionalLoadingSpinner>
     </div>

@@ -327,6 +327,8 @@ Discourse::Application.routes.draw do
       get "version_check" => "versions#show"
 
       get "dashboard" => "dashboard#index"
+      get "dashboard/site-traffic-explorer" => "dashboard#traffic",
+          :constraints => AdminConstraint.new
       put "dashboard/configuration" => "dashboard#update_configuration",
           :constraints => AdminConstraint.new
       put "dashboard/sections/:section_id/settings/:setting_key" =>
@@ -462,6 +464,8 @@ Discourse::Application.routes.draw do
         get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
+        get "/design-wizard" => "design_wizard#index"
+        put "/design-wizard" => "design_wizard#update"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
         get "upcoming-changes" => "upcoming_changes#index"
@@ -636,6 +640,7 @@ Discourse::Application.routes.draw do
     get "edit-directory-columns" => "edit_directory_columns#index", :format => :json
     put "edit-directory-columns" => "edit_directory_columns#update", :format => :json
     get "access-control/grantees/search" => "access_control_lists#search_grantees"
+    post "access-control/evaluate" => "access_control_lists#evaluate"
 
     %w[users u].each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", :constraints => { format: "html" }
@@ -646,6 +651,8 @@ Discourse::Application.routes.draw do
           get "check_email"
         end
       end
+
+      get "#{root_path}/random-username" => "users#generate_random_username"
 
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
@@ -1401,7 +1408,7 @@ Discourse::Application.routes.draw do
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
     scope path: "c/*category_slug_path_with_id" do
-      get "/none" => "list#category_none_latest"
+      get "/none" => "list#category_none_default", :as => "category_none_default"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}", to: redirect("/none/l/top?period=#{period}", status: 301)
@@ -1979,6 +1986,7 @@ Discourse::Application.routes.draw do
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
+      get "/test_postgres_readonly" => "test_requests#test_postgres_readonly"
     end
 
     # This catch-all route should always be last

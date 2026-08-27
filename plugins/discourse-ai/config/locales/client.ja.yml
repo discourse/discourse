@@ -199,6 +199,15 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      ai_decoded_transcript:
+        thinking: "思考中"
+        tool: "ツール"
+        type: "タイプ"
+        error: "エラー"
+        response: "応答"
+      discourse_workflows:
+        ai_agent:
+          mode: "モード"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -470,6 +479,49 @@ ja:
           last_month: "先月"
           custom: "カスタム..."
         credit_allocations: "クレジットの割り当て"
+      logs:
+        short_title: "ログ"
+        retry: "やり直す"
+        apply: "適用"
+        all_models: "すべてのモデル"
+        all_features: "すべての機能"
+        successful: "成功"
+        failed: "失敗しました"
+        unknown: "不明"
+        topic_id: "トピック ID"
+        post_id: "投稿 ID"
+        time: "時刻"
+        when: "日時"
+        outcome: "結果"
+        feature: "機能"
+        model: "モデル"
+        request: "リクエスト"
+        provider: "プロバイダー"
+        user: "ユーザー"
+        context: "コンテキスト"
+        topic: "トピック"
+        post: "投稿"
+        post_short: "投稿 %{id}"
+        duration: "期間"
+        cost: "料金"
+        actions: "アクション"
+        filters:
+          title: "フィルター"
+        periods:
+          day: "過去 24 時間"
+          week: "過去 7 日間"
+          custom: "カスタム"
+        detail:
+          request: "リクエスト"
+          response: "応答"
+          context: "コンテキスト"
+          copy_request: "リクエストをコピー"
+          copy_response: "返答をコピー"
+          network_error: "ネットワークエラー"
+        retention:
+          summary_stage: "要約"
+          deleted_stage: "削除済み"
+          save: "保存"
       ai_agent:
         ai_tools: "ツール"
         tool_strategies:
@@ -508,6 +560,8 @@ ja:
           clear_all: "すべてクリア"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
+        duplicate: "複製"
+        copy_name: "%{name} のコピー"
         delete: "削除"
         temperature: "Temperature"
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
@@ -645,6 +699,9 @@ ja:
         max_output_tokens: "最大出力トークン"
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
+        vision_modes:
+          disabled:
+            title: "無効"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
         cost_cached_input: "キャッシュ入力コスト"
@@ -693,7 +750,7 @@ ja:
           anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro: "Google の最もインテリジェントなモデル"
+          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -729,7 +786,6 @@ ja:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -896,6 +952,7 @@ ja:
           title: "AI インタラクションを表示"
           copy_request: "リクエストをコピー"
           copy_response: "返答をコピー"
+          duration_label: "期間:"
           request: "リクエスト"
           response: "応答"
           next_log: "次へ"

@@ -129,6 +129,12 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
+      def signups_kpi_value
+        highlights =
+          response.parsed_body["sections"].find { |section| section["id"] == "highlights" }
+        highlights["data"]["kpis"].find { |kpi| kpi["type"] == "new_signups" }["value"]
+      end
+
       context "with highlights_data" do
         let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
@@ -267,6 +273,7 @@ RSpec.describe Admin::DashboardController do
 
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
+          entry_url = "/sensitive-entry"
           event_date = Time.zone.local(2026, 5, 2, 12)
           UpcomingChangeEvent.create!(
             upcoming_change_name: "dashboard_improvements",
@@ -290,6 +297,12 @@ RSpec.describe Admin::DashboardController do
           }
           BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
           BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+          Fabricate(
+            :browser_pageview_entry_url_daily_rollup,
+            date: event_date.to_date,
+            entry_url:,
+            count: 2,
+          )
 
           get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
 
@@ -302,6 +315,7 @@ RSpec.describe Admin::DashboardController do
           expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
             normalized_referrer,
           )
+          expect(admin_traffic_data.dig("top_entry_urls", "rows", 0, "entry_url")).to eq(entry_url)
 
           sign_in(moderator)
 
@@ -312,7 +326,9 @@ RSpec.describe Admin::DashboardController do
             response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
           expect(moderator_traffic_data).not_to have_key("top_countries")
           expect(moderator_traffic_data).not_to have_key("top_referrers")
+          expect(moderator_traffic_data).not_to have_key("top_entry_urls")
           expect(response.body).not_to include(normalized_referrer)
+          expect(response.body).not_to include(entry_url)
         end
       end
 
@@ -330,13 +346,15 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
-            "headline_state" => "healthy",
+            "search_type" => "non_staff_only",
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
+                "previous_value" => 0,
               },
               "no_result_rate" => {
                 "value" => 0,
+                "previous_value" => nil,
                 "exceeds_threshold" => false,
               },
             },
@@ -380,25 +398,6 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_present
       end
 
-      it "is returned with version=alt when the admin is not included" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_present
-        expect(response.parsed_body["configuration"]).to be_present
-      end
-
-      it "is omitted with version=alt when enabled for the admin" do
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_nil
-        expect(response.parsed_body["configuration"]).to be_nil
-      end
-
       it "falls back to default dates when date params are malformed" do
         get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 
@@ -409,6 +408,7 @@ RSpec.describe Admin::DashboardController do
           "traffic",
           "engagement",
           "search",
+          "system",
         )
         expect(section_payloads.dig("highlights", "data")).to be_present
         expect(section_payloads.dig("traffic", "data")).to be_present
@@ -470,7 +470,7 @@ RSpec.describe Admin::DashboardController do
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to include("kpis", "headline")
+        expect(engagement["data"]).to include("kpis")
       end
 
       describe "reports section data" do
@@ -499,6 +499,23 @@ RSpec.describe Admin::DashboardController do
         end
       end
 
+      it "serves the default window from the warmed report cache" do
+        configure_dashboard_sections(%w[highlights])
+        admin.update!(last_seen_at: 1.hour.ago)
+        params = { start_date: 29.days.ago.to_date.to_s, end_date: Time.zone.now.to_date.to_s }
+
+        Jobs::WarmDashboardReports.new.execute({})
+        Fabricate(:user, created_at: 2.days.ago)
+
+        get "/admin/dashboard.json", params: params
+        warmed_signups = signups_kpi_value
+
+        Discourse.cache.clear
+        get "/admin/dashboard.json", params: params
+
+        expect(signups_kpi_value).to eq(warmed_signups + 1)
+      end
+
       it "denies non-staff users" do
         sign_in(user)
 
@@ -522,7 +539,6 @@ RSpec.describe Admin::DashboardController do
 
       it "omits version_check when enabled for the admin" do
         SiteSetting.version_checks = true
-        DiscourseUpdates.expects(:check_version).never
 
         get "/admin/dashboard.json"
 
@@ -621,10 +637,36 @@ RSpec.describe Admin::DashboardController do
         expect(configuration).to be_present
 
         ids = configuration["sections"].map { |s| s["id"] }
-        expect(ids).to match_array(%w[highlights reports traffic engagement search])
+        expect(ids).to match_array(%w[highlights reports traffic engagement search system])
 
         visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
         expect(visible).to eq(%w[highlights reports])
+      end
+
+      it "only exposes the system section when version checks are enabled" do
+        configure_dashboard_sections(["system"])
+        SiteSetting.version_checks = false
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).not_to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).not_to include("system")
+
+        SiteSetting.version_checks = true
+
+        get "/admin/dashboard.json"
+
+        expect(response.parsed_body["sections"].map { |section| section["id"] }).to include(
+          "system",
+        )
+        expect(
+          response.parsed_body.dig("configuration", "sections").map { |section| section["id"] },
+        ).to include("system")
       end
 
       it "is omitted for moderators" do
@@ -666,7 +708,9 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(response.status).to eq(204)
-      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(%w[reports highlights])
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
+        %w[reports highlights system],
+      )
     end
 
     it "keeps a section's position when it is toggled off" do
@@ -698,7 +742,7 @@ RSpec.describe Admin::DashboardController do
 
       expect(response.status).to eq(204)
       expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
-        %w[highlights reports traffic engagement search],
+        %w[highlights reports traffic engagement search system],
       )
     end
 
@@ -717,7 +761,7 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
-        %w[highlights engagement],
+        %w[highlights engagement system],
       )
     end
 
@@ -760,7 +804,7 @@ RSpec.describe Admin::DashboardController do
       get "/admin/dashboard.json"
 
       ids = response.parsed_body["sections"].map { |s| s["id"] }
-      expect(ids).to eq(["highlights"])
+      expect(ids).to eq(%w[highlights system])
     end
   end
 
@@ -1219,11 +1263,23 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    let(:raising_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "raising_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            raise "boom" if id == "broken"
+            h[id.to_s] = { id: id.to_s }
+          end
+        end
+      end
+    end
+
     let(:plugin) { Plugin::Instance.new }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-        entry[:value] == fake_provider
+        entry[:value] == fake_provider || entry[:value] == raising_provider
       end
     end
 
@@ -1280,7 +1336,7 @@ RSpec.describe Admin::DashboardController do
         expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
       end
 
-      it "returns data: nil for items whose source has no registered provider" do
+      it "returns data: nil, error: false for items whose source has no registered provider" do
         post "/admin/dashboard/reports/bulk.json",
              params: {
                items: [{ source: "totally_unregistered", identifier: "x" }],
@@ -1290,7 +1346,25 @@ RSpec.describe Admin::DashboardController do
         items = response.parsed_body["items"]
         expect(items.size).to eq(1)
         expect(items.first["data"]).to be_nil
+        expect(items.first["error"]).to eq(false)
         expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns error: true for an item whose provider raises, without affecting other items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(raising_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "raising_source", identifier: "broken" },
+                 { source: "raising_source", identifier: "ok" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"].index_by { |item| item["identifier"] }
+        expect(items["broken"]).to include("data" => nil, "error" => true)
+        expect(items["ok"]).to include("data" => { "id" => "ok" }, "error" => false)
       end
 
       it "returns data shaped by the dashboard filters" do
@@ -1328,6 +1402,677 @@ RSpec.describe Admin::DashboardController do
         post "/admin/dashboard/reports/bulk.json", params: { items: "not_an_array" }
         expect(response.status).to eq(400)
       end
+    end
+  end
+
+  describe "#traffic" do
+    let(:request_params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
+    let(:series_colors) do
+      {
+        "logged_in_human_pageviews" => "#4B3CE0",
+        "anonymous_human_pageviews" => "#9C8DEC",
+        "likely_crawler_pageviews" => "#B3AAC9",
+      }
+    end
+
+    before do
+      freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.improved_crawler_detection = true
+      SiteSetting.persist_browser_pageview_events = true
+      SiteSetting.use_legacy_pageviews = false
+      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
+      Discourse.stubs(:current_hostname).returns("test.localhost")
+      DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("192.0.2.1", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "US",
+          country: "United States",
+          asn: 64_496,
+          organization: "Example Network",
+        )
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("198.51.100.2", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "GB",
+          country: "United Kingdom",
+          asn: 64_496,
+          organization: "Example Network",
+        )
+    end
+
+    context "with traffic in the selected date range" do
+      fab!(:landing_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "https://test.localhost/landing/?source=newsletter#section",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          user_id: admin.id,
+          session_id: "admin-session",
+          normalized_referrer: "search.example/results?q=discourse",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:00:00",
+        )
+      end
+
+      fab!(:latest_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "https://test.localhost/latest?page=2",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          user_id: admin.id,
+          session_id: "admin-session",
+          normalized_referrer: "test.localhost/landing",
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:01:00",
+        )
+      end
+
+      fab!(:top_pageview) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/top",
+          country_code: "GB",
+          asn: 64_496,
+          ip_address: "198.51.100.2",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "anonymous-session",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-11 10:00:00",
+        )
+      end
+
+      fab!(:admin_session_engagement) do
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: "admin-session",
+          engaged_seconds: 60,
+        )
+      end
+
+      fab!(:anonymous_session_engagement) do
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: "anonymous-session",
+          engaged_seconds: 0,
+        )
+      end
+
+      before { sign_in(admin) }
+
+      it "summarizes every traffic dimension for the selected dates" do
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => nil,
+            "summary" => {
+              "pageviews" => 3,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 67,
+              "bounce_rate" => 50,
+              "average_session_duration_seconds" => 30,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 2,
+                "anonymous_human_pageviews" => 0,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+                { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+              ],
+              "referrers" => [
+                { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
+                {
+                  "value" => "search.example/results?q=discourse",
+                  "label" => "search.example/results?q=discourse",
+                  "pageviews" => 1,
+                },
+              ],
+              "countries" => [
+                { "value" => "US", "label" => "United States", "pageviews" => 2 },
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 3 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+
+      it "matches any selected value within a dimension and every selected dimension" do
+        referrers = ["search.example/results?q=discourse", ""]
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers)
+
+        expect(response.parsed_body.slice("summary", "active_filters")).to eq(
+          "summary" => {
+            "pageviews" => 2,
+            "distinct_sessions" => 2,
+            "logged_in_share" => 50,
+            "bounce_rate" => 50,
+            "average_session_duration_seconds" => 30,
+          },
+          "active_filters" => [
+            {
+              "key" => "referrer",
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+            },
+            { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
+          ],
+        )
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers, country: ["US"])
+
+        expect(response.parsed_body.slice("summary", "active_filters")).to eq(
+          "summary" => {
+            "pageviews" => 1,
+            "distinct_sessions" => 1,
+            "logged_in_share" => 100,
+            "bounce_rate" => 0,
+            "average_session_duration_seconds" => 60,
+          },
+          "active_filters" => [
+            {
+              "key" => "referrer",
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+            },
+            { "key" => "referrer", "value" => "", "label" => "Direct / unknown" },
+            { "key" => "country", "value" => "US", "label" => "United States" },
+          ],
+        )
+        expect(response.parsed_body.fetch("dimensions").slice("referrers", "countries")).to eq(
+          "referrers" => [
+            {
+              "value" => "search.example/results?q=discourse",
+              "label" => "search.example/results?q=discourse",
+              "pageviews" => 1,
+            },
+          ],
+          "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 1 }],
+        )
+      end
+
+      it "rejects object-shaped filter values" do
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(country: { nested: "US" })
+
+        expect(response.status).to eq(400)
+      end
+
+      it "accepts the dimension limit and rejects one more filter value" do
+        referrers = 50.times.map { |index| "referrer-#{index}.example" }
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: referrers)
+
+        expect(response.status).to eq(200)
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: [*referrers, "one-too-many.example"])
+
+        expect(response.status).to eq(400)
+      end
+
+      it "treats same-site referrers as internal navigation" do
+        same_site_pageview =
+          Fabricate(
+            :browser_pageview_event,
+            url: "https://test.localhost/same-site-full-load",
+            normalized_referrer: "test.localhost/previous-page",
+            session_id: "same-site-full-load",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+            created_at: "2026-05-11 11:00:00",
+          )
+
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        dimensions = response.parsed_body.fetch("dimensions")
+        top_url =
+          dimensions
+            .fetch("top_urls")
+            .find { |row| row["value"] == same_site_pageview.normalized_url }
+        entry_url =
+          dimensions
+            .fetch("entry_urls")
+            .find { |row| row["value"] == same_site_pageview.normalized_url }
+        referrer =
+          dimensions
+            .fetch("referrers")
+            .find { |row| row["value"] == same_site_pageview.normalized_referrer }
+
+        expect([response.status, top_url&.fetch("pageviews"), entry_url, referrer]).to eq(
+          [200, 1, nil, nil],
+        )
+      end
+    end
+
+    context "when the selected date range exceeds retention" do
+      it "returns partial retained results and the available start date" do
+        sign_in(admin)
+        chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
+        firefox = "Mozilla/5.0 Firefox/126.0"
+
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-retained",
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: chrome,
+          session_id: "first-retained",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-02-15 09:00:00",
+        )
+        Fabricate(
+          :browser_pageview_event,
+          url: "/latest-retained",
+          country_code: "GB",
+          asn: 64_496,
+          ip_address: "198.51.100.2",
+          user_agent: firefox,
+          session_id: "latest-retained",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: "2026-05-10 10:00:00",
+        )
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention",
+              "available_start_date" => "2026-02-14",
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-02-15",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+                { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    context "when traffic reaches the configured pageview cap" do
+      let(:created_at) { Time.zone.parse("2026-05-10 10:00:00") }
+      let(:chrome) { "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36" }
+      let(:event_attributes) do
+        {
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: chrome,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: created_at,
+        }
+      end
+      let!(:oldest) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/oldest-id",
+          session_id: "oldest-id",
+          **event_attributes,
+        )
+      end
+      let!(:middle) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-id",
+          session_id: "middle-id",
+          **event_attributes,
+        )
+      end
+      let!(:newest) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/newest-id",
+          session_id: "newest-id",
+          **event_attributes,
+        )
+      end
+
+      before do
+        sign_in(admin)
+        SiteSetting.site_traffic_explorer_event_limit = 2
+      end
+
+      it "returns no more than the configured pageview cap" do
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "pageview_limit",
+              "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 2,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "entry_urls" => [
+                { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+                { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 2 }],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [{ "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 }],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    context "when the selected date range exceeds retention and traffic reaches the cap" do
+      let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
+      let!(:first_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "first-retained",
+          created_at: "2026-02-15 09:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:middle_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-retained",
+          country_code: "GB",
+          ip_address: "198.51.100.2",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "middle-retained",
+          created_at: "2026-05-10 10:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:latest_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/latest-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "latest-retained",
+          created_at: "2026-05-11 10:00:00",
+          **event_attributes,
+        )
+      end
+
+      it "returns both partial-data reasons" do
+        sign_in(admin)
+        SiteSetting.site_traffic_explorer_event_limit = 2
+
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
+
+        expect(status: response.status, body: response.parsed_body).to eq(
+          status: 200,
+          body: {
+            "partial_data" => {
+              "reason" => "retention_and_pageview_limit",
+              "available_start_date" => "2026-02-14",
+              "pageview_limit" => 2,
+              "pageview_limit_start_at" => "2026-05-10T10:00:00Z",
+            },
+            "summary" => {
+              "pageviews" => 2,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 0,
+              "bounce_rate" => 100,
+              "average_session_duration_seconds" => 0,
+            },
+            "series" => [
+              {
+                "date" => "2026-05-10",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+              {
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              },
+            ],
+            "series_colors" => series_colors,
+            "dimensions" => {
+              "top_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "entry_urls" => [
+                {
+                  "value" => latest_retained.url,
+                  "label" => latest_retained.url,
+                  "pageviews" => 1,
+                },
+                {
+                  "value" => middle_retained.url,
+                  "label" => middle_retained.url,
+                  "pageviews" => 1,
+                },
+              ],
+              "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+              "countries" => [
+                { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+                { "value" => "US", "label" => "United States", "pageviews" => 1 },
+              ],
+              "networks" => [
+                { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
+              ],
+              "browsers" => [
+                { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
+                { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+              ],
+              "ip_addresses" => [
+                { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+                { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+              ],
+            },
+          },
+        )
+      end
+    end
+
+    it "returns a service unavailable response when the traffic query times out" do
+      sign_in(admin)
+      DB.stubs(:query_hash).raises(ActiveRecord::QueryCanceled, "statement timeout")
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 503,
+        body: {
+          "error_type" => "traffic_query_timeout",
+        },
+      )
+    end
+
+    it "does not allow moderators to read traffic details" do
+      sign_in(moderator)
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow regular users to read traffic details" do
+      sign_in(user)
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow anonymous users to read traffic details" do
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
+    end
+
+    it "does not allow access while dashboard improvements are disabled" do
+      sign_in(admin)
+      SiteSetting.dashboard_improvements = false
+
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
+
+      expect(status: response.status, body: response.parsed_body).to eq(
+        status: 404,
+        body: {
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        },
+      )
     end
   end
 

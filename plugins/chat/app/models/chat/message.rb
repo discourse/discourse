@@ -161,26 +161,38 @@ module Chat
       end
     end
 
-    def build_excerpt
+    def build_excerpt(strip_links: true)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       urls = PrettyText.extract_links(cooked).map(&:url)
       if urls.present?
         regex = %r{^[^:]+://}
         clean_urls = urls.map { |url| url.sub(regex, "") }
         if message.gsub(regex, "").split.sort == clean_urls.sort
-          return PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+          return(
+            if strip_links
+              PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+            else
+              PrettyText.excerpt(urls_as_links(urls), EXCERPT_LENGTH, strip_links: false)
+            end
+          )
         end
       end
 
       # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
+      return upload_filename_excerpt if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links: true, keep_mentions: true)
+      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links:, keep_mentions: true)
+    end
+
+    def excerpt_for_display
+      return upload_filename_excerpt if only_uploads?
+
+      excerpt || build_excerpt
     end
 
     def cooked_for_excerpt
-      (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
+      (cooked.blank? && uploads.present?) ? "<p>#{upload_filename_excerpt}</p>" : cooked
     end
 
     def push_notification_excerpt
@@ -308,6 +320,12 @@ module Chat
       cooked
     end
 
+    def action?
+      SLASH_COMMAND_PATTERNS.any? do |_, command|
+        command[:formatter] == :action && message&.match?(command[:pattern])
+      end
+    end
+
     def self.match_slash_command(message, author_username)
       return if message.blank?
 
@@ -402,6 +420,21 @@ module Chat
     end
 
     private
+
+    def upload_filename_excerpt
+      ERB::Util.html_escape(uploads.first.original_filename.truncate(EXCERPT_LENGTH, omission: ""))
+    end
+
+    def urls_as_links(urls)
+      html =
+        urls.map { |url| "<a href=\"#{CGI.escapeHTML(url)}\">#{CGI.escapeHTML(url)}</a>" }.join(" ")
+      doc = Nokogiri::HTML5.fragment(html)
+      PrettyText.add_rel_attributes_to_user_content(
+        doc,
+        SiteSetting.add_rel_nofollow_to_user_content,
+      )
+      doc.to_html
+    end
 
     def delete_mentions(mention_type, target_ids)
       chat_mentions.where(type: mention_type, target_id: target_ids).destroy_all

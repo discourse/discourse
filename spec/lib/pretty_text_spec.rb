@@ -1463,6 +1463,51 @@ RSpec.describe PrettyText do
             <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
           HTML
         end
+
+        it "leaves a malformed Vimeo source without rendering it as markup" do
+          iframe_source = "https://player.vimeo.com/video/123'></a><img src=x onerror=alert(1)>"
+          html = %(<iframe src="#{iframe_source}"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("img")).to be_empty
+            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+          end
+        end
+
+        it "leaves a non-Vimeo iframe containing the player domain unchanged" do
+          iframe_source =
+            "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
+          html = %(<iframe src="#{iframe_source}"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("a")).to be_empty
+            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+          end
+        end
+
+        it "converts an unlisted Vimeo embed using its hash" do
+          html = %(<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa"></iframe>)
+
+          expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+            <p><a href="https://vimeo.com/508864124/fcbbcc92fa">https://vimeo.com/508864124/fcbbcc92fa</a></p>
+          HTML
+        end
+
+        it "leaves an iframe with a non-http data-original-href unchanged" do
+          html =
+            %(<iframe src="https://player.vimeo.com/video/1" data-original-href="javascript:alert(1)"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("a")).to be_empty
+            expect(fragment.at_css("iframe")["data-original-href"]).to eq("javascript:alert(1)")
+          end
+        end
       end
 
       describe "#strip_secure_uploads" do
@@ -1543,6 +1588,35 @@ RSpec.describe PrettyText do
           expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
           expect(md).to include("data-width=\"20\"")
           expect(md).to include("data-height=\"20\"")
+        end
+
+        it "keeps a crafted secure upload URL as attribute data" do
+          url =
+            %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)
+
+          fragment =
+            Nokogiri::HTML5.fragment(described_class.format_for_email(%(<img src='#{url}'>), post))
+          notice = fragment.at_css("div.secure-upload-notice")
+
+          aggregate_failures do
+            expect(fragment.css("img")).to be_empty
+            expect(notice["data-stripped-secure-upload"]).to eq(url)
+          end
+        end
+
+        it "discards non-numeric secure upload dimensions" do
+          html =
+            %(<img src="/secure-uploads/original/1X/testimage.png" width="20 onmouseover=alert(1) x" height="20">)
+
+          notice =
+            Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).at_css(
+              "div.secure-upload-notice",
+            )
+
+          aggregate_failures do
+            expect(notice.attributes.keys).not_to include("onmouseover", "data-width")
+            expect(notice["data-height"]).to eq("20")
+          end
         end
       end
     end
@@ -2662,6 +2736,34 @@ HTML
     end
   end
 
+  describe "links inside tables" do
+    it "keeps pipes inside complete links and images within their cells" do
+      cooked = PrettyText.cook <<~MD
+        | Kind | Content |
+        | --- | --- |
+        | Link | [x\\]y|z](https://example.com/link) |
+        | Destination | [destination](<https://example.com/a|b> 'title|value') |
+        | Image | ![rocket|large](https://example.com/rocket.png) |
+        | Reference | [ref|label][ref] |
+
+        [ref]: https://example.com/reference
+      MD
+
+      doc = Nokogiri::HTML5.fragment(cooked)
+      expect(doc.css("tbody tr").map { |row| row.css("td").map(&:text) }).to eq(
+        [["Link", "x]y|z"], %w[Destination destination], ["Image", ""], %w[Reference ref|label]],
+      )
+      expect(doc.css("tbody a").map { |link| [link.text, link["href"], link["title"]] }).to eq(
+        [
+          ["x]y|z", "https://example.com/link", nil],
+          %w[destination https://example.com/a%7Cb title|value],
+          ["ref|label", "https://example.com/reference", nil],
+        ],
+      )
+      expect(doc.at_css("tbody img")["alt"]).to eq("rocket|large")
+    end
+  end
+
   describe "upload decoding" do
     it "can decode upload:// for default setup" do
       set_cdn_url("https://cdn.com")
@@ -3059,6 +3161,18 @@ HTML
       described_class.add_video_placeholder_image(doc)
 
       expect(doc.to_html).to eq(html)
+    end
+
+    it "does not link thumbnails from SQL LIKE wildcards" do
+      private_thumbnail = Fabricate(:upload, original_filename: "private-thumbnail.png")
+      html = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="/uploads/%"></div><p></p>
+      HTML
+      doc = Nokogiri::HTML5.fragment(html)
+
+      described_class.add_video_placeholder_image(doc)
+
+      expect(doc.to_html).not_to include(private_thumbnail.url)
     end
 
     it "links to a thumbnail image if the video source is valid" do

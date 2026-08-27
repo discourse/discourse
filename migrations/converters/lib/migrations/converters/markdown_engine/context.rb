@@ -113,12 +113,14 @@ module Migrations
             __PRETTY_TEXT = true;
           JS
 
-          bundle.entries.each { |name, source| @context.eval(source, filename: name) }
-
+          # The pretty-text bundle captures `globalThis.__Ruby` while it
+          # evaluates, so the scan-mode stubs must exist before the entries.
           @context.eval(
             File.read(File.join(__dir__, "runtime.js")),
             filename: "migrations/runtime.js",
           )
+          bundle.entries.each { |name, source| @context.eval(source, filename: name) }
+
           @context.eval(<<~JS, filename: "migrations/scan-config.js")
             __scanConfig = {
               categorySlugs: #{config.category_slugs.to_h { |slug| [slug, true] }.to_json},
@@ -131,35 +133,35 @@ module Migrations
           @context.low_memory_notification
         end
 
-        # Mirrors the `__optInput` construction in `PrettyText.markdown`, with
+        # Mirrors the option construction in `PrettyText.markdown`, with
         # scan-mode values: no watched words (target-site config, unknown at
-        # conversion time), no censoring, callbacks from runtime.js.
+        # conversion time), no censoring, empty paths. `__PrettyText.cook`
+        # installs its callback surface (routed to the `__Ruby` stubs from
+        # runtime.js) and the unicode replacer into the options it is given —
+        # priming it with an empty string reuses that assembly instead of
+        # duplicating it, then the persistent engine is built from the
+        # completed options exactly the way cook builds its own.
         def options_source(config)
           <<~JS
-            __optInput = {};
-            __optInput.siteSettings = #{config.settings.to_json};
-            __optInput.allowedIframes = #{config.settings["allowed_iframes"].to_s.split("|").to_json};
-            __optInput.getURL = __getURL;
-            __optInput.getCurrentUser = __getCurrentUser;
-            __optInput.lookupAvatar = __lookupAvatar;
-            __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
-            __optInput.formatUsername = __formatUsername;
-            __optInput.getTopicInfo = __getTopicInfo;
-            __optInput.hashtagLookup = __hashtagLookup;
-            __optInput.customEmoji = #{config.custom_emoji.to_json};
-            __optInput.customEmojiTranslation = {};
-            __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
-            __optInput.emojiDenyList = [];
-            __optInput.lookupUploadUrls = __lookupUploadUrls;
-            __optInput.censoredRegexp = [];
-            __optInput.watchedWordsReplace = null;
-            __optInput.watchedWordsLink = null;
-            __optInput.additionalOptions = #{config.additional_options.to_json};
-            __optInput.avatar_sizes = #{config.avatar_sizes.to_json};
-            __optInput.hashtagTypesInPriorityOrder = ["category", "tag"];
-            __optInput.hashtagIcons = { category: "folder", tag: "tag" };
-            __pluginFeatures = __loadPluginFeatures();
-            __pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);
+            __optInput = {
+              siteSettings: #{config.settings.to_json},
+              allowedIframes: #{config.settings["allowed_iframes"].to_s.split("|").to_json},
+              paths: { baseUri: "" },
+              customEmoji: #{config.custom_emoji.to_json},
+              customEmojiTranslation: {},
+              emojiDenyList: [],
+              censoredRegexp: [],
+              watchedWordsReplace: null,
+              watchedWordsLink: null,
+              additionalOptions: #{config.additional_options.to_json},
+              avatar_sizes: #{config.avatar_sizes.to_json},
+              hashtagTypesInPriorityOrder: ["category", "tag"],
+              hashtagIcons: { category: "folder", tag: "tag" }
+            };
+            __PrettyText.cook("", __optInput);
+            __pt = require("discourse-markdown-it").default
+              .withCustomFeatures(require("discourse/static/markdown-it/features").default())
+              .withOptions(__optInput);
           JS
         end
       end

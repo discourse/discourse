@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DashboardReportEmptyState from "discourse/admin/components/dashboard/report-empty-state";
+import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
@@ -14,6 +15,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -29,7 +31,6 @@ export default class DashboardReports extends Component {
 
   constructor() {
     super(...arguments);
-    this.cards = this.items.map((item) => ({ ...item, payload: null }));
     this.loadPayloads();
   }
 
@@ -71,17 +72,35 @@ export default class DashboardReports extends Component {
       return;
     }
 
+    this.cards = this.items.map((item) => ({
+      ...item,
+      payload: null,
+      error: false,
+      isLoading: true,
+    }));
+
     this.loading = true;
     try {
-      const payloads = await loadDashboardReports({
+      const results = await loadDashboardReports({
         items: this.layoutItems,
         filters: this.filters,
       });
+      this.cards = this.items.map((item) => {
+        const result = results.get(item.key);
+        return {
+          ...item,
+          payload: result?.payload ?? null,
+          error: result?.error ?? false,
+          isLoading: false,
+        };
+      });
+    } catch (e) {
       this.cards = this.items.map((item) => ({
         ...item,
-        payload: payloads.get(item.key),
+        payload: null,
+        error: true,
+        isLoading: false,
       }));
-    } catch (e) {
       popupAjaxError(e);
     } finally {
       this.loading = false;
@@ -157,10 +176,15 @@ export default class DashboardReports extends Component {
                 {{/if}}
               </div>
               <div class="db-report__chart">
-                {{#if card.payload}}
-                  {{#if card.payload.empty}}
+                <DConditionalLoadingSpinner
+                  @condition={{card.isLoading}}
+                  @size="small"
+                >
+                  {{#if card.error}}
+                    <DashboardReportErrorState />
+                  {{else if card.payload.empty}}
                     <DashboardReportEmptyState />
-                  {{else}}
+                  {{else if card.payload}}
                     {{#let
                       (lookupAdminDashboardReportRenderer card.source)
                       as |Renderer|
@@ -177,7 +201,7 @@ export default class DashboardReports extends Component {
                       {{/if}}
                     {{/let}}
                   {{/if}}
-                {{/if}}
+                </DConditionalLoadingSpinner>
               </div>
             </div>
           {{/each}}

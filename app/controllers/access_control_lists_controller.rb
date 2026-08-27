@@ -23,6 +23,47 @@ class AccessControlListsController < ApplicationController
     end
   end
 
+  def evaluate
+    AccessControlList::EvaluateModification.call(service_params) do |result|
+      on_success { render json: success_json.merge({ current_user_will_lose_permissions: false }) }
+      on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
+      on_model_not_found(:target_type_klass) { raise Discourse::InvalidParameters }
+      on_failed_policy(:user_will_not_lose_permission) do |params:, target_type_klass:|
+        # NOTE: The target type class (e.g. a Kanban::Board, or Category) will need to define
+        # the translation key here in server.en.yml
+        suffix =
+          if params.target_id.present?
+            "user_will_lose_permission"
+          else
+            "user_will_lose_permission_on_create"
+          end
+
+        render_json_error(
+          I18n.t("access_control_list.errors.#{target_type_klass.acl_target_key}_#{suffix}"),
+          {
+            extras: {
+              current_user_will_lose_permission: true,
+              loss_warning_permissions: target_type_klass.loss_warning_permissions,
+            },
+          },
+        )
+      end
+      on_failed_policy(:user_will_have_permission) do |params:|
+        suffix =
+          if params.target_id.present?
+            "user_will_not_have_permission"
+          else
+            "user_will_not_have_permission_on_create"
+          end
+
+        render_json_error(
+          I18n.t("access_control_list.errors.#{suffix}"),
+          { extras: { current_user_will_lose_permission: true } },
+        )
+      end
+    end
+  end
+
   private
 
   def serialize_users(users)

@@ -43,6 +43,10 @@ export default class ChatUserAvatar extends Component {
     return userPath(this.args.user.username);
   }
 
+  get ariaHidden() {
+    return this.args.ariaHidden ?? false;
+  }
+
   get isFullPageActive() {
     return this.chatStateManager.isFullPageActive ? "true" : "false";
   }
@@ -57,11 +61,16 @@ export default class ChatUserAvatar extends Component {
           class="chat-user-avatar__container"
           href={{this.userPath}}
           data-user-card={{@user.username}}
+          aria-hidden={{if this.ariaHidden "true"}}
+          tabindex={{if this.ariaHidden "-1"}}
         >
           {{this.avatar}}
         </a>
       {{else}}
-        <span class="chat-user-avatar__container">
+        <span
+          class="chat-user-avatar__container"
+          aria-hidden={{if this.ariaHidden "true"}}
+        >
           {{this.avatar}}
         </span>
       {{/if}}

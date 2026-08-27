@@ -53,8 +53,8 @@ export default class ChatDrawerRoutesChannel extends Component {
               />
             {{/if}}
 
-            <a.ThreadsListButton @channel={{@model.channel}} />
             <a.PinnedMessagesButton @channel={{@model.channel}} />
+            <a.ThreadsListButton @channel={{@model.channel}} />
             <a.ToggleDrawerButton />
             <a.FullPageButton />
             <a.CloseDrawerButton />

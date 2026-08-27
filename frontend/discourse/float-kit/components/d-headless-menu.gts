@@ -23,9 +23,10 @@ const DHeadlessMenu: TemplateOnlyComponent<DHeadlessMenuSignature> = <template>
   <DInlineFloat
     @instance={{@menu}}
     @trapTab={{@menu.options.trapTab}}
+    @inlineTabOrder={{@menu.options.inlineTabOrder}}
     @mainClass="fk-d-menu"
     @innerClass="fk-d-menu__inner-content"
-    @role="dialog"
+    @role={{@menu.options.contentRole}}
     @inline={{@inline}}
   />
 </template>;

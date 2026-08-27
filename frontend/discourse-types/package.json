@@ -42,6 +42,15 @@
     "./truth-helpers/*": {
       "types": "./declarations/truth-helpers/*.d.ts"
     },
+    "./blocks": {
+      "types": "./declarations/app/blocks/index.d.ts"
+    },
+    "./blocks/conditions": {
+      "types": "./declarations/app/blocks/conditions/index.d.ts"
+    },
+    "./lib/blocks": {
+      "types": "./declarations/app/lib/blocks/index.d.ts"
+    },
     "./*": {
       "types": "./declarations/app/*.d.ts"
     }

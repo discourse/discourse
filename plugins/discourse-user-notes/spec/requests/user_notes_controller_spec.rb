@@ -10,6 +10,28 @@ describe DiscourseUserNotes::UserNotesController do
   before { SiteSetting.user_notes_enabled = true }
 
   describe "#create" do
+    it "rejects notes longer than the maximum post length" do
+      SiteSetting.max_post_length = 10
+      sign_in(moderator)
+
+      post "/user_notes",
+           params: {
+             user_note: {
+               user_id: user.id,
+               raw: "a" * 11,
+             },
+           },
+           headers: {
+             "ACCEPT" => "application/json",
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("user_notes.note_too_long", max: SiteSetting.max_post_length),
+      )
+      expect(DiscourseUserNotes.notes_for(user.id)).to be_empty
+    end
+
     context "when post_id references a PM the moderator cannot see" do
       fab!(:pm_topic) do
         Fabricate(

@@ -247,12 +247,9 @@ export default class AdminPluginsExplorerNew extends Controller {
       this.toasts.success({
         data: { message: i18n("explorer.query_created") },
       });
-      // Run the query straight away — there's nothing new to do on the edit
-      // page first, so save and show the results in one step.
       this.router.transitionTo(
         "adminPlugins.show.explorer.edit",
-        result.target.id,
-        { queryParams: { run: true } }
+        result.target.id
       );
     } catch (error) {
       popupAjaxError(error);

@@ -88,12 +88,20 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      copied: "Đã sao chép"
+      ai_decoded_transcript:
+        type: "Loại"
+        error: "Lỗi"
+        response: "Đáp ứng"
       post_image_captions:
         edit: "Không có tiến trình ngôn ngữ nào."
         title: "Đã dịch %{translated}/%{total} sang %{language}"
         description: "Chú thích"
         save: "Lưu chú thích"
         saved: "Đã lưu chú thích hình ảnh Trí tuệ nhân tạo (AI)"
+      discourse_workflows:
+        ai_agent:
+          mode: "Chế độ"
       ai_tool_approval:
         loading: "Đang tải..."
         load_error: "Không thể tải hành động đang chờ này."
@@ -225,6 +233,43 @@ vi:
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
+      logs:
+        short_title: "Log"
+        retry: "Thử lại"
+        apply: "Áp dụng"
+        successful: "Thành công"
+        failed: "Thất bại"
+        unknown: "Không biết"
+        topic_id: "ID Chủ đề"
+        post_id: "ID Tút"
+        time: "Thời gian"
+        when: "Khi"
+        outcome: "Kết quả"
+        feature: "Tính năng"
+        model: "Mô hình"
+        request: "Yêu cầu"
+        user: "Người dùng"
+        context: "Ngữ cảnh"
+        topic: "Chủ đề"
+        post: "Tút"
+        post_short: "Tút %{id}"
+        duration: "Thời hạn"
+        actions: "Hành động"
+        filters:
+          title: "Bộ lọc"
+          period: "Khoảng thời gian"
+        periods:
+          day: "24 giờ qua"
+          week: "7 ngày qua"
+          custom: "Tùy biến"
+        detail:
+          request: "Yêu cầu"
+          response: "Đáp ứng"
+          context: "Ngữ cảnh"
+        retention:
+          summary_stage: "Tóm tắt"
+          deleted_stage: "Đã xóa"
+          save: "Lưu lại"
       ai_agent:
         name: "Tên"
         edit: "Sửa"
@@ -240,6 +285,8 @@ vi:
         mcp_tools_modal:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
+        duplicate: "Nhân bản"
+        copy_name: "Bản sao của %{name}"
         delete: "Xóa"
         thinking_effort: "Cường độ suy luận (Thinking effort)"
         thinking_effort_help: "Mức độ suy luận mà mô hình nên thực hiện trước khi đưa ra câu trả lời. Giá trị cao hơn giúp xử lý tốt các tác vụ khó nhưng có thể làm tăng độ trễ và chi phí. Các nhà cung cấp không hỗ trợ sẽ bỏ qua cài đặt này."
@@ -301,6 +348,9 @@ vi:
           required: "Bắt buộc"
       llms:
         display_name: "Tên"
+        vision_modes:
+          disabled:
+            title: "Vô hiệu hóa"
         save: "Lưu lại"
         edit: "Sửa"
         delete: Xóa
@@ -328,7 +378,6 @@ vi:
         tests:
           success: "Thành công!"
         providers:
-          google: "G"
           google_vertex_ai: "Google Vertex AI"
           fake: "Tùy biến"
         provider_fields:
@@ -391,6 +440,7 @@ vi:
         llm: "Mô hình (Model):"
         try_again: "Thử lại"
         debug_ai_modal:
+          duration_label: "Thời hạn:"
           request: "Yêu cầu"
           response: "Đáp ứng"
           next_log: "Kế tiếp"

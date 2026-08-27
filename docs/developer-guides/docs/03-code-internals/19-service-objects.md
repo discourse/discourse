@@ -534,6 +534,12 @@ on_failed_contract { |contract, my_model:| do_something(contract, my_model) }
 
 You could do all this by only using the result object, but it’s a bit nicer this way (and will ensure the key you’re trying to access actually exists).
 
+A required keyword argument (`my_model:`) will raise if the service didn’t set that key, which is what you want most of the time. For a key that’s only set on some paths (a model fetched by a step that didn’t run, or steps wrapped in an `only_if` block), give the argument a default value and it will be used as a fallback:
+
+```rb
+on_failure { |my_model: nil| do_something(my_model) }
+```
+
 ### `on_success`
 
 Will execute the provided block if the service succeeds.

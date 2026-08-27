@@ -28,6 +28,25 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response.parsed_body["meta"]["tools"].length).to eq(expected_tool_count)
     end
 
+    it "includes read_post and its configurable options in the tool catalog" do
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      tool = response.parsed_body.dig("meta", "tools").find { |item| item["id"] == "ReadPost" }
+      expect(tool).to include("name" => "Read Post", "help" => "Read one exact post on the forum")
+      expect(tool["options"].keys).to contain_exactly("read_private", "max_invocations")
+    end
+
+    it "serializes configured subagent IDs, including disabled children" do
+      child = Fabricate(:ai_agent, enabled: false)
+      ai_agent.update!(subagent_ids: [child.id])
+
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      serialized = response.parsed_body["ai_agents"].find { |agent| agent["id"] == ai_agent.id }
+      expect(serialized["subagent_ids"]).to eq([child.id])
+      expect(serialized["subagent_tool_token_count"]).to be_positive
+    end
+
     it "includes provider-native tools in the tools list" do
       get "/admin/plugins/discourse-ai/ai-agents.json"
       tools = response.parsed_body["meta"]["tools"]
@@ -78,6 +97,8 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             id: llm_model.id,
             name: llm_model.display_name,
             vision_enabled: llm_model.vision_enabled,
+            vision_mode: "disabled",
+            agent_image_capable: false,
             supported_native_tools: [],
           }.stringify_keys,
         ],
@@ -114,6 +135,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(serializer_agent2["default_llm_id"]).to eq(llm_model.id)
       expect(serializer_agent2).not_to have_key("question_consolidator_llm_id")
       expect(serializer_agent2["user_id"]).to eq(agent2.user_id)
+      expect(serializer_agent2["can_have_bot_user"]).to eq(true)
       expect(serializer_agent2["user"]["id"]).to eq(agent2.user_id)
       expect(serializer_agent2["forced_tool_count"]).to eq(2)
 
@@ -143,6 +165,24 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             "name" => I18n.t("discourse_ai.ai_bot.tool_options.search.search_private.name"),
             "description" =>
               I18n.t("discourse_ai.ai_bot.tool_options.search.search_private.description"),
+          },
+          "ignore_user_filter" => {
+            "type" => "boolean",
+            "name" => I18n.t("discourse_ai.ai_bot.tool_options.search.ignore_user_filter.name"),
+            "description" =>
+              I18n.t("discourse_ai.ai_bot.tool_options.search.ignore_user_filter.description"),
+          },
+          "absolute_urls" => {
+            "type" => "boolean",
+            "name" => I18n.t("discourse_ai.ai_bot.tool_options.search.absolute_urls.name"),
+            "description" =>
+              I18n.t("discourse_ai.ai_bot.tool_options.search.absolute_urls.description"),
+          },
+          "max_invocations" => {
+            "type" => "integer",
+            "name" => I18n.t("discourse_ai.ai_bot.tool_options.search.max_invocations.name"),
+            "description" =>
+              I18n.t("discourse_ai.ai_bot.tool_options.search.max_invocations.description"),
           },
         },
       )
@@ -383,6 +423,16 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to be_successful
       expect(response.parsed_body["user"]["id"]).to eq(ai_agent.user_id)
     end
+
+    it "refuses for system agents that are never talked to" do
+      locale_detector =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
+
+      post "/admin/plugins/discourse-ai/ai-agents/#{locale_detector.id}/create-user.json"
+
+      expect(response.status).to eq(403)
+      expect(locale_detector.reload.user_id).to eq(nil)
+    end
   end
 
   describe "PUT #update" do
@@ -559,6 +609,56 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
     end
 
+    it "supports creating, updating, and removing URL-backed RAG sources" do
+      agent = Fabricate(:ai_agent, name: "url_source_bot")
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [
+                { url: "https://example.com/docs", refresh_interval_hours: 12 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      source = agent.rag_document_sources.find_by!(url: "https://example.com/docs")
+      expect(response.parsed_body.dig("ai_agent", "rag_document_sources", 0)).to include(
+        "id" => source.id,
+        "url" => source.url,
+        "refresh_interval_hours" => 12,
+      )
+
+      source_upload = Fabricate(:upload)
+      source.update_columns(upload_id: source_upload.id)
+      UploadReference.ensure_exist!(target: agent, upload_ids: [source_upload.id])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_uploads: [],
+              rag_document_sources_attributes: [
+                { id: source.id, url: source.url, refresh_interval_hours: 48 },
+              ],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(source.reload.refresh_interval_hours).to eq(48)
+      expect(UploadReference.exists?(target: agent, upload_id: source_upload.id)).to eq(true)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads")).to eq([])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_document_sources_attributes: [{ id: source.id, _destroy: true }],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(RagDocumentSource.exists?(source.id)).to eq(false)
+    end
+
     it "supports updating token budget params" do
       agent = Fabricate(:ai_agent, name: "test_bot2")
 
@@ -696,6 +796,57 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       end
     end
 
+    it "strictly parses, normalizes, and persists subagent IDs" do
+      first_child = Fabricate(:ai_agent)
+      second_child = Fabricate(:ai_agent)
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+          params: {
+            ai_agent: {
+              subagent_ids: [second_child.id.to_s, first_child.id, second_child.id],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(ai_agent.reload.subagent_ids).to eq([second_child.id, first_child.id])
+    end
+
+    it "logs subagent allowlist changes with before and after IDs" do
+      first_child = Fabricate(:ai_agent)
+      second_child = Fabricate(:ai_agent)
+      ai_agent.update!(subagent_ids: [first_child.id])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+          params: {
+            ai_agent: {
+              subagent_ids: [second_child.id],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      history =
+        UserHistory.where(
+          action: UserHistory.actions[:custom_staff],
+          custom_type: "update_ai_agent",
+        ).last
+      expect(history.details).to include("subagent_ids: [#{first_child.id}] → [#{second_child.id}]")
+    end
+
+    it "rejects malformed subagent IDs without changing the agent" do
+      original_name = ai_agent.name
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+          params: {
+            ai_agent: {
+              name: "changed",
+              subagent_ids: ["12x"],
+            },
+          }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(ai_agent.reload.name).to eq(original_name)
+    end
+
     context "with system agents" do
       it "does not allow editing of system prompts" do
         put "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}.json",
@@ -784,6 +935,18 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
     end
   end
 
+  describe "DELETE #destroy" do
+    it "removes the deleted agent from parent subagent IDs" do
+      child = Fabricate(:ai_agent)
+      parent = Fabricate(:ai_agent, subagent_ids: [child.id])
+
+      delete "/admin/plugins/discourse-ai/ai-agents/#{child.id}.json"
+
+      expect(response).to have_http_status(:no_content)
+      expect(parent.reload.subagent_ids).to eq([])
+    end
+  end
+
   describe "GET #export" do
     fab!(:ai_tool) do
       AiTool.create!(
@@ -854,6 +1017,16 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(custom_tool["parameters"]).to eq(
         [{ "name" => "query", "type" => "string", "required" => true }],
       )
+    end
+
+    it "exports subagent names in selection order instead of database IDs" do
+      first_child = Fabricate(:ai_agent, name: "Zebra")
+      second_child = Fabricate(:ai_agent, name: "Alpha")
+      agent_with_tools.update!(subagent_ids: [first_child.id, second_child.id])
+
+      get "/admin/plugins/discourse-ai/ai-agents/#{agent_with_tools.id}/export.json"
+
+      expect(response.parsed_body.dig("agent", "subagents")).to eq(%w[Zebra Alpha])
     end
 
     it "handles agents without custom tools" do
@@ -955,6 +1128,27 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         "SearchCommand",
         ["custom-#{tool.id}", { "param1" => "value1" }, false],
       )
+    end
+
+    it "imports subagents by name" do
+      child = Fabricate(:ai_agent, name: "Imported Child")
+      import_data = valid_import_data.deep_dup
+      import_data[:agent][:subagents] = [child.name]
+
+      post "/admin/plugins/discourse-ai/ai-agents/import.json", params: import_data, as: :json
+
+      expect(response).to have_http_status(:created)
+      expect(AiAgent.find_by!(name: "ImportedAgent").subagent_ids).to eq([child.id])
+    end
+
+    it "returns structured conflicts for missing imported subagents" do
+      import_data = valid_import_data.deep_dup
+      import_data[:agent][:subagents] = ["Missing fact checker"]
+
+      post "/admin/plugins/discourse-ai/ai-agents/import.json", params: import_data, as: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body["conflicts"]["subagents"]).to eq(["Missing fact checker"])
     end
 
     it "prevents importing duplicate agents by default" do
@@ -1272,12 +1466,13 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       # trust level 0
       SiteSetting.ai_bot_allowed_groups = "10"
 
+      SiteSetting.ai_default_llm_model = llm.id
       fake_endpoint.fake_content = ["This is a test! Testing!", "An amazing title"]
 
       ai_agent.create_user!
       ai_agent.update!(
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-        default_llm_id: llm.id,
+        default_llm: nil,
         allow_personal_messages: true,
         system_prompt: "you are a helpful bot",
       )

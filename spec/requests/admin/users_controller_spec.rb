@@ -287,6 +287,28 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["id"]).to eq(user.id)
       end
 
+      it "returns SSO details when moderators can view them" do
+        sso_record =
+          Fabricate(:single_sign_on_record, user: user, external_id: "discourse_connect_user")
+        SiteSetting.moderators_view_sso_details = true
+
+        get "/admin/users/#{user.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("single_sign_on_record", "external_id")).to eq(
+          sso_record.external_id,
+        )
+      end
+
+      it "hides SSO details by default" do
+        Fabricate(:single_sign_on_record, user: user)
+
+        get "/admin/users/#{user.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("single_sign_on_record")
+      end
+
       it "includes count of similar users" do
         Fabricate(:user, ip_address: "88.88.88.88")
         Fabricate(:admin, ip_address: user.ip_address)
@@ -1734,6 +1756,16 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "user deletion possible"
+
+      it "prevents deleting another moderator" do
+        target_moderator = Fabricate(:moderator)
+
+        delete "/admin/users/#{target_moderator.id}.json"
+
+        expect(User.exists?(target_moderator.id)).to eq(true)
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
     end
 
     context "when logged in as a non-staff user" do

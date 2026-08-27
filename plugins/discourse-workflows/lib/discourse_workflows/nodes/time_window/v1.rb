@@ -110,7 +110,7 @@ module DiscourseWorkflows
           if ActiveModel::Type::Boolean.new.cast(config["use_time_range"])
             start_value = config["start_time"]
             end_value = config["end_time"]
-            static_values = [start_value, end_value].reject { |value| expression?(value) }
+            static_values = [start_value, end_value].reject { |value| expression_value?(value) }
 
             if static_values.any? { |value| parse_minutes(value).nil? }
               errors.add(:base, I18n.t("discourse_workflows.errors.time_window.invalid_time_range"))
@@ -119,17 +119,7 @@ module DiscourseWorkflows
             end
           end
 
-          timezone = config["timezone"].presence
-          if timezone && !expression?(timezone) && !WorkflowTimezone.valid?(timezone)
-            errors.add(
-              :base,
-              I18n.t("discourse_workflows.errors.time_window.invalid_timezone", timezone: timezone),
-            )
-          end
-        end
-
-        def self.expression?(value)
-          value.is_a?(String) && value.start_with?("=")
+          validate_timezone_configuration(configuration, errors)
         end
 
         def self.valid_wday?(value)
@@ -223,20 +213,6 @@ module DiscourseWorkflows
           end
 
           minutes
-        end
-
-        def resolve_timezone(exec_ctx, item_index)
-          timezone = exec_ctx.get_node_parameter("timezone", item_index, default: nil).to_s.presence
-          return exec_ctx.get_timezone if timezone.nil?
-
-          if !WorkflowTimezone.valid?(timezone)
-            raise_node_error!(
-              I18n.t("discourse_workflows.errors.time_window.invalid_timezone", timezone: timezone),
-              item_index: item_index,
-            )
-          end
-
-          timezone
         end
       end
     end

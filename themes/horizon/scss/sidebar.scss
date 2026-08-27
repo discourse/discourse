@@ -1,8 +1,6 @@
 @use "lib/viewport";
 
 :root {
-  --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
-    var(--space-4);
   --d-sidebar-active-background: var(--d-selected);
 }
 
@@ -84,10 +82,6 @@ body.has-full-page-chat .sidebar-wrapper,
   .d-icon {
     color: var(--primary);
   }
-}
-
-.sidebar-new-topic-button__wrapper {
-  margin: 0 var(--space-2) var(--space-4) var(--space-4);
 }
 
 // put the draft menu above the slide-out hamburger on small desktop screens

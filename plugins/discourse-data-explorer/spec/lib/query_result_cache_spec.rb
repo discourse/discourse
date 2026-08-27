@@ -36,8 +36,17 @@ describe DiscourseDataExplorer::QueryResultCache do
       expect(described_class.read(query.id, params_hash)).to be_nil
     end
 
+    it "returns nil when the cached result exceeds the maximum age" do
+      now = Time.now
+      freeze_time(now)
+      described_class.write(query.id, params_hash, result_json)
+
+      freeze_time(now + 1.hour + 1.second)
+      expect(described_class.read(query.id, params_hash, max_age: 1.hour)).to be_nil
+    end
+
     it "skips write when result exceeds max size" do
-      large_result = result_json.merge("rows" => [["x" * 200_000]])
+      large_result = result_json.merge("rows" => [["x" * (described_class::MAX_CACHE_SIZE + 1)]])
 
       expect(described_class.write(query.id, params_hash, large_result)).to eq(false)
       expect(described_class.read(query.id, params_hash)).to be_nil

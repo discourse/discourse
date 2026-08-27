@@ -125,6 +125,39 @@ RSpec.describe PostsController do
         expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
       end
 
+      it "rejects a version restored from a hidden revision" do
+        hidden_raw = "hidden moderator-redacted secret"
+        hidden_cooked = "<p>#{hidden_raw}</p>"
+        post_with_hidden_revision =
+          Fabricate(:post, user: user, version: 3, raw: "public current version")
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 2,
+          hidden: true,
+          modifications: {
+            "cooked" => ["<p>public first version</p>", hidden_cooked],
+            "raw" => ["public first version", hidden_raw],
+          },
+        )
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 3,
+          modifications: {
+            "cooked" => [hidden_cooked, "<p>public current version</p>"],
+            "raw" => [hidden_raw, "public current version"],
+          },
+        )
+
+        get "/posts/#{post_with_hidden_revision.id}.json", params: { version: 2 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+      end
+
       context "when the revision is hidden" do
         before { post_revision.update!(hidden: true) }
 
@@ -192,6 +225,47 @@ RSpec.describe PostsController do
   describe "#by_number" do
     include_examples "finding and showing post" do
       let(:url) { "/posts/by_number/#{post.topic_id}/#{post.post_number}.json" }
+    end
+  end
+
+  describe "whisper visibility" do
+    it "blocks removed whisperers from their own whisper", :aggregate_failures do
+      whisper_group = Fabricate(:group)
+      whisper_author = Fabricate(:user, trust_level: TrustLevel[1])
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic)
+      original_raw = "staff-only whisper body"
+      edited_raw = "edited whisper body"
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: whisper_author,
+          post_type: Post.types[:whisper],
+          raw: original_raw,
+        )
+
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+      whisper_group.add(whisper_author)
+      whisper_group.remove(whisper_author)
+      sign_in(User.find(whisper_author.id))
+
+      get "/posts/#{whisper.id}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/posts/by_number/#{topic.id}/#{whisper.post_number}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/raw/#{topic.id}/#{whisper.post_number}"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      put "/posts/#{whisper.id}.json", params: { post: { raw: edited_raw } }
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(edited_raw)
+      expect(whisper.reload.raw).to eq(original_raw)
     end
   end
 
@@ -342,6 +416,19 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "deletes another user's post for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        post = Fabricate(:post, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.deleted_at).to be_present
+      end
+
       it "uses a PostDestroyer" do
         post = Fabricate(:post, topic_id: topic.id, post_number: 3)
         sign_in(moderator)
@@ -481,6 +568,19 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "deletes the posts for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        sign_in(user)
+
+        delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+
+        expect(response.status).to eq(200)
+        expect(post1.reload.deleted_at).to be_present
+        expect(post2.reload.deleted_at).to be_present
+      end
+
       # bookmark
       it "triggers DiscourseEvent with :posts_destroyed and correct params" do
         sign_in(poster)
@@ -599,6 +699,85 @@ RSpec.describe PostsController do
       }
     end
 
+    context "when a trust level 1 user edits a public wiki post" do
+      it "does not publish a hidden new user profile onebox" do
+        author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        editor = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        profile_user = Fabricate(:user, trust_level: TrustLevel[1])
+        profile_user.user_stat.update!(post_count: 0)
+        profile_user.user_profile.update!(
+          bio_raw: "private new user biography",
+          location: "private new user location",
+          website: "https://private-new-user.example.com",
+        )
+        wiki_post = create_post(user: author, raw: "public wiki post")
+        wiki_post.update!(wiki: true)
+        Group[:trust_level_1].add(editor)
+        editor.reload
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        SiteSetting.hide_new_user_profiles = true
+        CookedPostProcessor.any_instance.stubs(:get_size).returns([100, 100])
+        Jobs.run_immediately!
+
+        sign_in(editor)
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              post: {
+                raw: "#{Discourse.base_url}/u/#{profile_user.username}",
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+
+        sign_out
+        get "/posts/#{wiki_post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(profile_user.user_profile.bio_raw)
+        expect(response.body).not_to include(profile_user.user_profile.location)
+        expect(response.body).not_to include(profile_user.user_profile.website)
+      end
+    end
+
+    context "when a wiki editor changes another user's topic title" do
+      fab!(:author) { Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true) }
+      fab!(:editor) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:wiki_post) do
+        create_post(
+          user: author,
+          title: "Original topic title",
+          raw: "Original wiki body",
+        ).tap { |post| post.update!(wiki: true) }
+      end
+
+      before do
+        Group[:trust_level_1].add(editor)
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        sign_in(editor)
+      end
+
+      it "prevents title changes while allowing wiki body edits" do
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              title: "Unauthorized topic title",
+              post: {
+                raw: "Unauthorized wiki body",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+        expect(wiki_post.raw).to eq("Original wiki body")
+
+        put "/posts/#{wiki_post.id}.json", params: { post: { raw: "Authorized wiki body" } }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body.dig("post", "raw")).to eq("Authorized wiki body")
+        expect(wiki_post.reload.topic.title).to eq("Original topic title")
+      end
+    end
+
     describe "when logged in as a regular user" do
       before { sign_in(user) }
 
@@ -699,6 +878,39 @@ RSpec.describe PostsController do
 
     describe "when logged in as staff" do
       before { sign_in(moderator) }
+
+      it "limits edit reasons while allowing staff to edit small action content" do
+        small_action = Fabricate(:small_action, user: user)
+        oversized_edit_reason = "a" * 1001
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: oversized_edit_reason,
+              },
+            }
+
+        aggregate_failures do
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            "Edit reason is too long (maximum is 1000 characters)",
+          )
+          expect(small_action.reload.edit_reason).not_to eq(oversized_edit_reason)
+        end
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: "a" * 1000,
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body["post"]["raw"]).to eq("x")
+        expect(small_action.reload.edit_reason).to eq("a" * 1000)
+      end
 
       it "supports updating posts in deleted topics" do
         first_post = post.topic.ordered_posts.first
@@ -2059,6 +2271,25 @@ RSpec.describe PostsController do
         end
       end
 
+      it "does not persist an iframe whose encoded userinfo points to an unallowlisted host" do
+        iframe_source = "https://www.instagram.com%2f@attacker.example/"
+
+        post "/posts.json",
+             params: {
+               raw: %(User content <iframe src="#{iframe_source}"></iframe>),
+               title: "Iframe allowlist bypass",
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.body).to include(%("id":#{created_post.id}))
+          expect(created_post.cooked).not_to include(iframe_source)
+          expect(Nokogiri::HTML5.fragment(created_post.cooked).at_css("iframe")).to be_nil
+        end
+      end
+
       it "does not persist HTML from an untrusted oEmbed provider" do
         Jobs.run_immediately!
         url = "https://attacker.example.com/onebox"
@@ -2086,6 +2317,35 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
         cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
         expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
+      it "does not persist a backslash-bypassed wildcard iframe origin from oEmbed" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        iframe_origin = "https://evil.example\\@sub.typeform.com/to/abc"
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            html: "<iframe src=\"#{iframe_origin}\"></iframe>",
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Backslash iframe origin" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["id"]).to be_present
+
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css("iframe")).to be_nil
       end
 
       it "creates the topic and post with the right attributes" do
@@ -3982,6 +4242,18 @@ RSpec.describe PostsController do
 
       expect(body).to_not include(private_post.topic.slug)
       expect(body).to include(public_post.topic.slug)
+    end
+
+    it "does not disclose a user's posts when public profiles are hidden" do
+      public_post
+      SiteSetting.hide_user_profiles_from_public = true
+
+      %w[rss json].each do |format|
+        get "/u/#{user.username}/activity.#{format}"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(public_post.raw)
+      end
     end
 
     it "excludes ignored users' likes from JSON like counts" do

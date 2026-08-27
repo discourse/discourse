@@ -58,6 +58,32 @@ RSpec.describe ReviewableScoreSerializer do
         end
     end
 
+    context "with a fast_typer reason" do
+      it "includes the recorded typing duration" do
+        reviewable = Fabricate(:reviewable_queued_post, payload: { "typing_duration_msecs" => 500 })
+        score = ReviewableScore.new(reviewable:, reason: "fast_typer")
+        serialized = described_class.new(score, scope: Guardian.new(admin), root: nil)
+
+        expect(serialized.reason).to include("(0.5 seconds)")
+      end
+
+      it "drops trailing decimals when the duration is a whole number of seconds" do
+        reviewable =
+          Fabricate(:reviewable_queued_post, payload: { "typing_duration_msecs" => 3000 })
+        score = ReviewableScore.new(reviewable:, reason: "fast_typer")
+        serialized = described_class.new(score, scope: Guardian.new(admin), root: nil)
+
+        expect(serialized.reason).to include("(3 seconds)")
+      end
+
+      it "falls back to a message without a typing duration when none was recorded" do
+        serialized = serialized_score("fast_typer")
+
+        expect(serialized.reason).to include("typed their first post suspiciously fast,")
+        expect(serialized.reason).not_to include("second")
+      end
+    end
+
     context "with custom reasons" do
       it "serializes it without doing any translation" do
         custom = "completely custom flag reason"

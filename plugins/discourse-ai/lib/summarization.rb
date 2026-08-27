@@ -133,6 +133,7 @@ module DiscourseAi
         if output_tool
           agent.define_singleton_method(:available_tools) { [output_tool] }
           agent.define_singleton_method(:force_tool_use) { [output_tool] }
+          agent.define_singleton_method(:defer_forced_tool_for_vision?) { true }
           agent.define_singleton_method(:forced_tool_count) { 1 }
           agent.define_singleton_method(:response_format) { nil }
         end

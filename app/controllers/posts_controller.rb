@@ -262,7 +262,10 @@ class PostsController < ApplicationController
 
     # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
-      changes[:title] = params[:title] if params[:title]
+      if params[:title]
+        guardian.ensure_can_edit_topic!(post.topic) if params[:title] != post.topic.title
+        changes[:title] = params[:title]
+      end
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
@@ -1103,6 +1106,7 @@ class PostsController < ApplicationController
       post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
       if post_revision
         guardian.ensure_can_see!(post_revision)
+        guardian.ensure_can_view_post_version!(post, version)
         post.revert_to(version)
       end
     end

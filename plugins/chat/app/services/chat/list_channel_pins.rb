@@ -22,7 +22,8 @@ module Chat
     end
 
     def can_view_channel(guardian:, channel:)
-      guardian.can_preview_chat_channel?(channel)
+      guardian.can_join_chat_channel?(channel) ||
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
     end
 
     def fetch_membership(channel:, guardian:)
@@ -37,19 +38,23 @@ module Chat
           %i[user_option primary_group]
         end
 
-      Chat::PinnedMessage.for_channel(channel).includes(
-        chat_message: [
-          :revisions,
-          :bookmarks,
-          { uploads: { optimized_videos: :optimized_upload } },
-          { chat_channel: :chatable },
-          :thread,
-          { user: user_includes },
-          { user_mentions: { user: user_includes } },
-          { reactions: :user },
-          { in_reply_to: [:user] },
-        ],
-      )
+      # timeline order (oldest message first), so the list reads like the channel
+      Chat::PinnedMessage
+        .for_channel(channel)
+        .reorder(chat_message_id: :asc)
+        .includes(
+          chat_message: [
+            :revisions,
+            :bookmarks,
+            { uploads: { optimized_videos: :optimized_upload } },
+            { chat_channel: :chatable },
+            :thread,
+            { user: user_includes },
+            { user_mentions: { user: user_includes } },
+            { reactions: :user },
+            { in_reply_to: [:user] },
+          ],
+        )
     end
   end
 end

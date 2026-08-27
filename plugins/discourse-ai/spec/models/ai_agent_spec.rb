@@ -16,6 +16,116 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  it "defaults subagent_ids to an empty array and exposes them on class instances" do
+    agent = Fabricate(:ai_agent)
+
+    expect(agent.subagent_ids).to eq([])
+    expect(agent.class_instance.subagent_ids).to eq([])
+  end
+
+  it "normalizes subagent IDs while preserving order and removing duplicates" do
+    first_child = Fabricate(:ai_agent)
+    second_child = Fabricate(:ai_agent)
+    agent =
+      Fabricate.build(
+        :ai_agent,
+        subagent_ids: [first_child.id.to_s, second_child.id, first_child.id],
+      )
+
+    expect(agent.save).to eq(true)
+    expect(agent.subagent_ids).to eq([first_child.id, second_child.id])
+  end
+
+  it "rejects invalid, missing, self-referencing, and over-limit subagent IDs" do
+    child = Fabricate(:ai_agent)
+    agent = Fabricate.build(:ai_agent, subagent_ids: ["not-an-id"])
+    expect(agent).not_to be_valid
+
+    agent.subagent_ids = [child.id.to_f]
+    expect(agent).not_to be_valid
+    expect(agent.errors[:subagent_ids]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.invalid_subagent_ids"),
+    )
+
+    agent.subagent_ids = [child.id, 999_999]
+    expect(agent).not_to be_valid
+
+    agent.save!(validate: false)
+    agent.subagent_ids = [agent.id]
+    expect(agent).not_to be_valid
+
+    agent.subagent_ids = (1..(AiAgent::MAX_SUBAGENTS + 1)).to_a
+    expect(agent).not_to be_valid
+  end
+
+  it "allows at most 100 URL-backed RAG sources" do
+    agent = Fabricate.build(:ai_agent)
+    AiAgent::MAX_RAG_DOCUMENT_SOURCES.times do |index|
+      agent.rag_document_sources.build(url: "https://example.com/knowledge/#{index}")
+    end
+
+    expect(agent).to be_valid
+
+    agent.rag_document_sources.build(url: "https://example.com/knowledge/over-limit")
+
+    expect(agent).not_to be_valid
+    expect(agent.errors[:base]).to include(
+      I18n.t(
+        "discourse_ai.ai_bot.agents.too_many_rag_document_sources",
+        max: AiAgent::MAX_RAG_DOCUMENT_SOURCES,
+      ),
+    )
+  end
+
+  it "does not allow system agents to change subagent IDs" do
+    child = Fabricate(:ai_agent)
+    system_agent = Fabricate(:ai_agent, system: true)
+
+    system_agent.subagent_ids = [child.id]
+
+    expect(system_agent).not_to be_valid
+    expect(system_agent.errors[:base]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.cannot_edit_system_agent"),
+    )
+  end
+
+  it "flushes the agent cache when subagent IDs change" do
+    child = Fabricate(:ai_agent)
+    parent = Fabricate(:ai_agent)
+    AiAgent.all_agents(enabled_only: false)
+
+    parent.update!(subagent_ids: [child.id])
+
+    expect(AiAgent.agent_cache[:value]).to be_nil
+  end
+
+  it "removes a destroyed agent from parent allowlists and flushes the cache" do
+    child = Fabricate(:ai_agent)
+    parent = Fabricate(:ai_agent, subagent_ids: [child.id])
+    AiAgent.all_agents(enabled_only: false)
+
+    child.destroy!
+
+    expect(parent.reload.subagent_ids).to eq([])
+    expect(AiAgent.agent_cache[:value]).to be_nil
+  end
+
+  it "rejects a spawn_agent tool when subagents are configured" do
+    custom_tool = Fabricate(:ai_tool, tool_name: "spawn_agent")
+    child = Fabricate(:ai_agent)
+    agent =
+      Fabricate.build(
+        :ai_agent,
+        tools: [["custom-#{custom_tool.id}", nil, false]],
+        subagent_ids: [child.id],
+      )
+
+    expect(agent).not_to be_valid
+    expect(agent.errors[:tools]).to include(
+      I18n.t("discourse_ai.ai_bot.agents.subagent_tool_collision"),
+    )
+  end
+
   it "exposes system agent thinking effort on class instances" do
     agent_record =
       AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative])
@@ -157,7 +267,89 @@ RSpec.describe AiAgent do
     expect(user.username).to eq("test_bot")
     expect(user.name).to eq("Test")
     expect(user.bot?).to be(true)
-    expect(user.id).to be <= AiAgent::FIRST_AGENT_USER_ID
+    expect(user.id).to be < DiscourseAi::BotUser::FIRST_ID
+  end
+
+  it "does not recycle an id another agent still points at" do
+    other = Fabricate(:ai_agent, name: "other")
+    stale_user = other.create_user!
+    stale_user.destroy!
+    other.update_columns(user_id: stale_user.id)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to be < stale_user.id
+  end
+
+  it "does not recycle an id an llm model still points at" do
+    llm_model.update!(user_id: -5000)
+    PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to eq(-5001)
+  end
+
+  it "does not recycle the id of a bot user that was deleted" do
+    agent = Fabricate(:ai_agent, name: "deleted")
+    deleted_id = agent.create_user!.id
+    UserDestroyer.new(Discourse.system_user).destroy(agent.reload.user)
+
+    user = basic_agent.create_user!
+
+    expect(user.id).to be < deleted_id
+  end
+
+  it "clears the reference when the bot user is destroyed" do
+    agent = Fabricate(:ai_agent, name: "destroyed")
+    user = agent.create_user!
+
+    UserDestroyer.new(Discourse.system_user).destroy(user)
+
+    expect(agent.reload.user_id).to eq(nil)
+  end
+
+  describe "#can_have_bot_user?" do
+    def system_agent(klass)
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[klass])
+    end
+
+    it "is true for custom agents" do
+      expect(Fabricate(:ai_agent).can_have_bot_user?).to eq(true)
+    end
+
+    it "is true for an internal agent that already owns one" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.update_columns(user_id: Fabricate(:user).id)
+
+      expect(agent.can_have_bot_user?).to eq(true)
+      expect(agent.supports_bot_user?).to eq(false)
+    end
+
+    it "is false when the reference dangles, so the UI matches the endpoint" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.update_columns(user_id: -123_456)
+
+      expect(agent.can_have_bot_user?).to eq(false)
+    end
+
+    it "refuses to assign a bot user to an agent that has no use for one" do
+      agent = system_agent(DiscourseAi::Agents::LocaleDetector)
+      agent.user_id = Fabricate(:user).id
+
+      expect(agent).not_to be_valid
+    end
+
+    it "is true for agents users talk to" do
+      expect(system_agent(DiscourseAi::Agents::General).can_have_bot_user?).to eq(true)
+      expect(system_agent(DiscourseAi::Agents::Discover).can_have_bot_user?).to eq(true)
+    end
+
+    it "is false for agents a feature invokes internally" do
+      expect(system_agent(DiscourseAi::Agents::LocaleDetector).can_have_bot_user?).to eq(false)
+      expect(system_agent(DiscourseAi::Agents::Summarizer).can_have_bot_user?).to eq(false)
+    end
   end
 
   it "removes all rag embeddings when rag params change" do
@@ -240,6 +432,21 @@ RSpec.describe AiAgent do
     expect(klass.allow_chat_direct_messages).to eq(true)
   end
 
+  it "resolves the users tool shorthand" do
+    agent =
+      AiAgent.create!(
+        name: "users_tool_agent",
+        description: "test",
+        system_prompt: "test",
+        tools: ["Users"],
+        allowed_group_ids: [],
+        default_llm_id: llm_model.id,
+        user_id: 1,
+      )
+
+    expect(agent.class_instance.new.tools).to contain_exactly(DiscourseAi::Agents::Tools::ListUsers)
+  end
+
   it "attaches mcp tool classes for assigned servers" do
     ai_mcp_server = Fabricate(:ai_mcp_server, name: "Jira")
     agent =
@@ -297,51 +504,33 @@ RSpec.describe AiAgent do
     agent.class_instance
   end
 
-  it "does not allow setting allowing chat without a default_llm" do
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_chat_channel_mentions: true,
-      )
+  it "allows mention modalities without a per-agent LLM" do
+    assign_fake_provider_to(:ai_default_llm_model)
 
-    expect(agent.valid?).to eq(false)
+    %i[
+      allow_chat_channel_mentions
+      allow_chat_direct_messages
+      allow_topic_mentions
+    ].each do |modality|
+      agent = Fabricate.build(:ai_agent, name: "test_#{modality}", default_llm: nil)
+      agent.public_send("#{modality}=", true)
+
+      expect(agent).to be_valid,
+      "expected #{modality} to be valid without a per-agent language model"
+    end
+  end
+
+  it "requires a per-agent default LLM when it is forced" do
+    agent = Fabricate.build(:ai_agent, default_llm: nil, force_default_llm: true)
+
+    expect(agent).not_to be_valid
     expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
+      I18n.t("discourse_ai.ai_bot.agents.forced_default_llm_required"),
     )
 
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_chat_direct_messages: true,
-      )
+    agent.default_llm = llm_model
 
-    expect(agent.valid?).to eq(false)
-    expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
-    )
-
-    agent =
-      AiAgent.create(
-        name: "test",
-        description: "test",
-        system_prompt: "test",
-        allowed_group_ids: [],
-        default_llm: nil,
-        allow_topic_mentions: true,
-      )
-
-    expect(agent.valid?).to eq(false)
-    expect(agent.errors[:base]).to include(
-      I18n.t("discourse_ai.ai_bot.agents.default_llm_required"),
-    )
+    expect(agent).to be_valid
   end
 
   it "does not leak caches between sites" do

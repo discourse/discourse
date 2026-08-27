@@ -285,6 +285,16 @@ bs_BA:
     admin_onboarding_banner:
       start_posting:
         back: "Prethodno"
+    design_wizard:
+      back: "Prethodno"
+      next: "Iduće"
+      sections:
+        theme: "Izgled"
+      homepage:
+        topics: "Topics"
+        categories: "Kategorije"
+        styles:
+          boxes: "Kutije"
     about:
       edit: "Edit this page"
       simple_title: "O nama"
@@ -428,9 +438,6 @@ bs_BA:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti ova da sprijećite ostale da ga pregledaju"
-        required: "VI morate tvrditi stavari prije ih morate cijeniti"
-        claimed_by_you: "Vi ste tvrdili ovu stvar i sad ju možete pregledati "
-        claimed_by_other: "Ovu stavku može revidirati samo korisnik<b>%{username}</b>"
       awaiting_approval: "čekanje odobrenje"
       delete: "Delete"
       settings:
@@ -461,6 +468,7 @@ bs_BA:
         email: "Email"
         name: "Ime"
         fields: "Polja"
+        penalty_forever: "Zauvijek"
         reject_reason: "Reason"
         scrubbed_reason: "Reason"
         scrub_record:
@@ -1376,6 +1384,7 @@ bs_BA:
           staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
+          create_and_send: "Pošalji"
           summary:
             role_member: "Član"
             role_admin: "Admin"
@@ -1384,6 +1393,7 @@ bs_BA:
             expires: "Ističe"
             topic: "Topic"
             groups: "Grupa"
+            edit: "Izmijeni"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1666,6 +1676,8 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Izbriši %{name}"
       no_content: Nije pronađen traženi pojam
@@ -3084,7 +3096,7 @@ bs_BA:
           save: "Save"
           delete: "Delete"
           localizations:
-            title: "Prevodi"
+            remove_language: "Ukloni"
           links:
             icon:
               label: "Icon"
@@ -3341,13 +3353,19 @@ bs_BA:
         default_value: "Uobičajen"
       search:
         title: "Pretraži"
+      site_traffic_explorer:
+        metric_information: "O Nama %{metric}"
+        apply: "Snimi"
+        filters:
+          ip: "IP address"
+        series:
+          anonymous_human: "Anoniman"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
         discourse_last_updated: "Diskurs ažuriran:"
         version: "Version"
         up_to_date: "You're up to date!"
-        critical_available: "A critical update is available."
         updates_available: "Updates are available."
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."

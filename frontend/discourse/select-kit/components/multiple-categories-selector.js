@@ -74,20 +74,20 @@ export default class MultipleCategoriesSelector extends MultiSelectComponent {
       categories = categories.slice(0, MAX_UNSELECTED_RESULTS);
     }
 
-    if (
-      (categories.length === 1 ||
-        (categories.length > 0 &&
-          categories[0].name.localeCompare(filter || "") === 0)) &&
-      categories[0]?.subcategory_count > 0
-    ) {
-      categories.splice(
-        1,
-        0,
-        EmberObject.create({
-          id: `${categories[0].id}+subcategories`,
-          category: categories[0],
-        })
-      );
+    if (filter && filter.length >= 2) {
+      categories = categories.flatMap((category) => {
+        if (!category.has_children) {
+          return [category];
+        }
+
+        return [
+          category,
+          EmberObject.create({
+            id: `${category.id}+subcategories`,
+            category,
+          }),
+        ];
+      });
     }
 
     if (uncappedTotal) {

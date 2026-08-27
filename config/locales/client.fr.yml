@@ -62,6 +62,7 @@ fr:
         add_group: "Ajouter un utilisateur ou un groupe"
         mandatory_acl_tooltip: "Cette permission est obligatoire pour %{name} et ne peut pas être supprimée."
         mandatory: "Obligatoire"
+        disallowed: "Interdit"
     carousel:
       go_to_slide: "Accéder à la diapositive %{index}"
       previous: "Diapositive précédente"
@@ -517,26 +518,16 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Lancement en %{step_count} étapes simples"
       congrats_onboarding_complete: "Félicitations pour avoir terminé le processus d'intégration !"
       select_theme:
         title: "Personnalisez votre site"
-        description: "Choisissez un thème de départ pour votre communauté"
-        action: "Sélectionner un thème"
-        modal_title: "Choisissez un thème"
-        use_theme: "Utiliser le thème sélectionné"
-        enabled: "Sélectionné"
-        applying_theme: "Application du thème..."
-        browse_all: "Gérer les thèmes"
         show_light_screenshot: "Afficher une capture d'écran claire"
         show_dark_screenshot: "Afficher une capture d'écran sombre"
       invite_collaborators:
         title: "Inviter des collaborateurs"
-        description: "Les premiers membres contribuent à donner vie à votre communauté."
         action: "Créer une invitation"
       start_posting:
         title: "Commencer à publier"
-        description: "Donnez aux participants un sujet de conversation."
         action: "Découvrir des idées"
         choose_option: "Comment souhaitez-vous commencer ?"
         predefined_topics: "Modèles d'activités pour briser la glace"
@@ -557,6 +548,27 @@ fr:
           what_is_your_favorite_food:
             title: "Quel est votre plat préféré ?"
             body: "Partagez vos plats préférés avec la communauté ! Je commence : j'adore la pizza, surtout avec un supplément de fromage et de pepperoni."
+    design_wizard:
+      title: "Personnalisez votre site"
+      back: "Retour"
+      next: "Suivant"
+      sections:
+        theme: "Thème"
+        fonts: "Polices"
+        homepage: "Page d'accueil"
+      theme:
+        selected: "Sélectionné"
+      colors:
+        light: "Clair"
+        dark: "Sombre"
+      fonts:
+        base_font: "Police de base"
+        heading_font: "Police de titre"
+      homepage:
+        topics: "Sujets"
+        categories: "Catégories"
+        styles:
+          boxes: "Boîtes"
     about:
       edit: "Modifier cette page"
       simple_title: "À propos"
@@ -782,7 +794,7 @@ fr:
     save: "Enregistrer les modifications"
     saving: "Enregistrement…"
     saved: "Enregistré avec succès !"
-    upload: "Joindre un fichier"
+    upload: "Téléverser"
     uploading: "Téléversement…"
     processing: "Traitement…"
     uploading_filename: "Téléversement : %{filename}…"
@@ -863,10 +875,6 @@ fr:
       stale_help: "Cet élément a été résolu par <b>%{username}</b>."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
-        required: "Vous devez réserver un élément avant de l'examiner."
-        claimed_by_you: "Vous avez réservé cet élément et pouvez donc l'examiner."
-        claimed_by_other: "Cet élément ne peut être examiné que par <b>%{username}</b>."
-        automatically_claimed_by: "Cet élément est actuellement en cours d'examen par <b>%{username}</b>."
       claim:
         title: "Réserver ce sujet"
       unclaim:
@@ -904,6 +912,8 @@ fr:
         email: "E-mail"
         name: "Nom"
         fields: "Champs"
+        silence_reason: "Raison de la mise en sourdine"
+        penalty_forever: "Toujours"
         reject_reason: "Raison"
         scrubbed_by: "Enregistrement effacé par"
         scrubbed_reason: "Raison"
@@ -1574,9 +1584,9 @@ fr:
       private_message: "Message direct"
       private_messages: "Messages directs"
       upcoming_changes:
-        title: "Changements à venir"
+        title: "Modifications à venir"
         for_user:
-          upcoming_change: "Changement à venir"
+          upcoming_change: "Modifications à venir"
           enabled: "Activé ?"
           why: "Pourquoi ?"
         why_reasons:
@@ -1717,7 +1727,6 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_smart_lists: "Activer les listes intelligentes lors de la rédaction dans l'éditeur"
-      enable_defer: "Activer le marquage des sujets comme non lus"
       enable_markdown_monospace_font: "Utiliser une police à chasse fixe dans le mode Markdown de l'éditeur"
       experimental_sidebar:
         enable: "Activer la barre latérale"
@@ -1920,7 +1929,7 @@ fr:
         interface: "Interface"
         apps: "Applications"
         navigation_menu: "Menu de navigation"
-        upcoming_changes: "Changements à venir"
+        upcoming_changes: "Modifications à venir"
         calendar_subscriptions: "Calendrier"
       calendar_subscriptions:
         description: "Générez des URL d'abonnement pour synchroniser votre application de calendrier préférée (Google Agenda, Apple Agenda, Outlook, etc.). Ces URL sont des liens privés vers les événements de votre calendrier (rappels, événements, etc.). Vous pouvez à tout moment révoquer ou renouveler ces URL d'abonnement."
@@ -2086,7 +2095,7 @@ fr:
         upload_title: "Envoyer votre photo"
         image_is_not_a_square: "Attention : nous avons découpé votre image. La largeur et la hauteur n'étaient pas égales."
         logo_small: "Logo du site en petit format. Sera utilisé par défaut."
-        use_custom: "Ou importez un avatar personnalisé :"
+        use_custom: "Ou téléversez un avatar personnalisé :"
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
@@ -2382,9 +2391,6 @@ fr:
           sent_title: "Invitation envoyée"
           member_tab: "Membres"
           admin_tab: "Responsables"
-          member_description: "Invitez des personnes à rejoindre ce site. Partagez un lien ou envoyez une invitation par e-mail."
-          admin_description: "Invitez des personnes à rejoindre votre équipe. Les administrateurs ont un accès complet à ce site."
-          moderator_description: "Invitez des personnes à rejoindre votre équipe. Les modérateurs peuvent aider à gérer le contenu et les membres."
           staff_role_label: "Inviter en tant que"
           staff_role_admin: "Administrateur"
           staff_role_moderator: "Modérateur"
@@ -2397,16 +2403,12 @@ fr:
           invite_by_email: "E-mail"
           role_label: "Inviter en tant que"
           restrict_domain: "Restreindre au domaine"
-          restrict_domain_help: "Seules les personnes possédant une adresse e-mail de ce domaine peuvent accepter le lien. Pour inviter une personne en particulier, utilisez l'adresse e-mail ci-dessus."
           domain_placeholder: "exemple.com"
           domain_invalid: "Saisissez un domaine valide, par exemple exemple.com"
           arrive_at_topic_help: "Orientez les personnes vers un sujet spécifique une fois qu'elles ont accepté."
-          create_and_send: "Créer et envoyer"
-          create_and_copy: "Créer et copier le lien"
-          more_options: "Plus d'options"
-          fewer_options: "Moins d'options"
+          create_and_send: "Envoyer"
+          create_and_copy: "Copier le lien"
           update: "Mettre à jour"
-          role_locked: "Le type d'invitation ne peut pas être modifié une fois l'invitation créée."
           summary:
             sent_to: "Une invitation a été envoyée par e-mail à %{email}. Vous pouvez également partager ce lien directement :"
             role: "Rôle"
@@ -2421,7 +2423,7 @@ fr:
             expires: "Expire le"
             topic: "Sujet"
             groups: "Groupes"
-            edit: "Modifier l'invitation"
+            edit: "Modifier"
             view_invites: "Voir les invitations"
           email_sent:
             body: "Une invitation a été envoyée par e-mail à %{email}."
@@ -2433,7 +2435,7 @@ fr:
             <pre>jean@dupont.fr,nom_dun_groupe;nom_dun_autre_groupe,identifiant_numérique_du_sujet</pre>
             <p>Un e-mail d'invitation sera envoyé à chaque adresse reprise dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
           progress: "Téléversement : %{progress} %…"
-          success: "Le fichier a été envoyé avec succès. Vous recevrez un message de notification lorsque le processus sera terminé."
+          success: "Le fichier a été téléversé avec succès. Vous recevrez un message de notification lorsque le processus sera terminé."
           error: "Nous sommes désolés, le fichier doit être au format CSV."
       confirm_access:
         title: "Confirmation de l'accès"
@@ -2985,6 +2987,7 @@ fr:
       subcategory_count:
         one: "+%{count} sous-catégorie"
         other: "+%{count} sous-catégories"
+      subcategories: "+ Sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -3057,6 +3060,7 @@ fr:
       toggle: "Afficher/masquer les filtres déroulants"
     d_icon_grid_picker:
       select_icon: "Sélectionner l'icône"
+      search_label: "Rechercher des icônes"
       search_placeholder: "Rechercher des icônes..."
       no_results: "Aucune icône n'a été trouvée"
       results_count:
@@ -3280,7 +3284,6 @@ fr:
       italic_label: "I"
       italic_title: "Italique"
       italic_text: "texte en italique"
-      heading_title: "Titres"
       heading_level_n: "Titre %{levelNumber}"
       heading_level_n_title: "Titre %{levelNumber}"
       heading_level_paragraph: "Paragraphe"
@@ -3498,17 +3501,16 @@ fr:
         other: "%{count} demandes d'adhésion ouvertes pour « %{group_name} »"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - terminé"
       new_features: "Nouvelles fonctionnalités disponibles !"
       admin_problems: "De nouveaux conseils sur votre tableau de bord"
       upcoming_changes:
         available:
-          title: "Changements à venir"
+          title: "Modifications à venir"
           description: "« %{changeName} » est disponible pour l'aperçu"
           description_two: "« %{changeName1} » et « %{changeName2} » sont disponibles pour l'aperçu"
           description_many: "« %{changeName} » et « %{otherChangeCount} » autres modifications sont disponibles pour l'aperçu"
         automatically_promoted:
-          title: "Changements à venir"
+          title: "Modifications à venir"
           description: "« %{changeName} » a été automatiquement activé"
           description_two: "« %{changeName1} » et « %{changeName2} » ont été activés automatiquement"
           description_many: "« %{changeName} » et « %{otherChangeCount} » autres modifications ont été activées automatiquement"
@@ -3969,7 +3971,6 @@ fr:
           missing_to: "Une étiquette de remplacement est requise"
       delete_topics:
         name: "Supprimer"
-        description: "Supprimer définitivement les sujets sélectionnés. Cette action est irréversible."
       update_category:
         name: "Mettre à jour la catégorie"
         description: "Déplacer tous les sujets sélectionnés vers la catégorie suivante :"
@@ -4654,7 +4655,7 @@ fr:
         upload: "Nous sommes désolés, une erreur s'est produite lors du téléversement de %{file_name}. Veuillez réessayer."
         backup_too_large: "Nous sommes désolés, ce fichier de sauvegarde est trop volumineux."
         file_too_large: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
-        file_size_zero: "Un problème semble être survenu, la taille du fichier que vous tentez d'importer est de 0 octet. Veuillez réessayer."
+        file_size_zero: "Un problème semble être survenu, la taille du fichier que vous tentez d'téléverser est de 0 octet. Veuillez réessayer."
         file_too_large_humanized: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale est de %{max_size}). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
         too_many_uploads: "Nous sommes désolés, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files:
@@ -5485,6 +5486,8 @@ fr:
         delete: "Supprimer le signet"
       actions:
         title: "Actions"
+        bookmark_topic: "Activer/désactiver le signet du sujet"
+        pin_unpin_topic: "Épingler/désépingler le sujet"
         share_topic: "Partager le sujet"
         share_post: "Partager la publication"
         reply_as_new_topic: "Répondre via un sujet lié"
@@ -5844,13 +5847,9 @@ fr:
           always_public: "Le contenu de cette section est toujours public"
           more_menu: "Plus de menus"
           localizations:
-            title: "Traductions"
             locale: "Langue "
             title_label: "Titre de la section"
-            link_label: "Nom du lien"
-            add_section: "Ajouter la traduction du titre de la section"
-            add_link: "Ajouter la traduction du nom du lien"
-            remove: "Supprimer la traduction"
+            remove_language: "Supprimer"
           links:
             title: "Liens de section"
             add: "Ajouter un autre lien"
@@ -5911,6 +5910,7 @@ fr:
           header_action_title: "Modifier les catégories de votre barre latérale"
           header_action_new: "Nouvelle catégorie"
           header_action_edit_sidebar: "Modifier les catégories de la barre latérale"
+          header_action_edit_header_dropdown: "Modifier les catégories de navigation"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
           edit_section:
@@ -5982,6 +5982,8 @@ fr:
           light: "Clair"
           dark: "Sombre"
           auto: "Auto"
+          title: "Mode couleur"
+          aria_label: "Mode couleur, actuellement %{mode}"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
@@ -6157,6 +6159,8 @@ fr:
             bookmarks: "Sujets dans %{category} sans étiquette que vous avez ajouté à vos favoris"
             default: "%{filter} sujets dans %{category} sans étiquette"
         categories: "Toutes les catégories"
+    language_switcher:
+      title: "Changer la langue du site"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
@@ -6174,10 +6178,17 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        back_to_dashboard: "Retour au tableau de bord"
         all_groups: "Tous les groupes"
+        group_engagement: "Interactions"
         group_traffic: "Trafic"
         group_members: "Membres"
+        group_content: "Contenu et santé"
+        group_moderation_and_security: "Modération et sécurité"
         group_other: "Autre"
+        legacy_warning: "Ce rapport est obsolète et sera bientôt retiré. Si vous avez besoin d'aide pour trouver le rapport de remplacement, veuillez contacter l'assistance."
+        chart:
+          total: "Total : %{count}"
       config_sections:
         account:
           title: "Compte"
@@ -6197,36 +6208,93 @@ fr:
           title: "Avancé"
       upcoming_changes:
         name: "Nom"
+        plugin: "Extension"
+        metadata: "Métadonnées"
         enabled: "Activé"
+        enabled_for: "Activé pour..."
+        show_image: "Afficher l'image"
+        edit_groups: "Modifier les groupes participants"
+        groups_updated: "Groupes mis à jour !"
+        save_groups: "Enregistrer les groupes"
+        add_groups_to_enable: "Ajouter des groupes pour activer cette fonctionnalité"
+        no_changes_to_save: "Aucune modification à enregistrer"
         select_groups: "Sélectionnez des groupes…"
+        opt_in_groups: "Groupes participants"
+        show_related_settings: "Afficher les paramètres associés..."
+        opt_in_groups_instructions: "Les groupes participants permettent à un ensemble d'utilisateurs de tester un changement avant son déploiement général. Notez que ces groupes ne seront plus pris en compte une fois que le changement aura atteint le statut « Stable »."
+        enabled_for_throttle: "Vous avez modifié trop rapidement les personnes autorisées à bénéficier de cette modification. Veuillez patienter quelques secondes avant de réessayer."
+        change_enabled_for_success: "Vous avez activé cette modification pour %{enabledFor}"
+        change_disabled: "Vous ne participez plus à cette modification"
+        depends_on_notice: "Cette modification nécessite l'activation de %{dependencyLinks}."
+        permanent_notice: "Cette modification est désormais permanente et disparaîtra bientôt de cette liste. Vous ne pouvez plus vous en retirer."
+        permanent_soon_notice: "Cette modification deviendra bientôt permanente. Vous ne pourrez plus vous en retirer."
+        permanent_no_group_selection: "Sans objet. Des modifications permanentes s'appliquent à tous les groupes."
+        no_changes: "Aucun changement n'est prévu pour le moment."
         preview: "Aperçu"
+        default_warning: "La valeur par défaut de ce paramètre est passée de %{oldDefaultValue} à %{newDefaultValue} en raison d'une <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>modification à venir</a>."
+        default_warning_short: "La valeur par défaut de ce paramètre a changé, lisez plus d'informations à ce sujet dans la page des <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>modifications à venir</a>."
         enabled_for_options:
+          no_one: "Personne"
           everyone: "Tout le monde"
+          staff: "%{staffGroupName} uniquement"
+          specific_groups: "Groupe(s) spécifique(s)"
+          specific_groups_with_group_names:
+            one: "le groupe %{groupNames}"
+            other: "les groupes %{groupNames}"
         statuses:
           experimental: "Expérimental"
+          alpha: "Alpha"
+          beta: "Bêta"
+          stable: "Stable"
+          permanent: "Permanente"
+        status_descriptions:
+          experimental: "Cette fonctionnalité est encore en développement et pourrait subir des modifications importantes, voire être abandonnée. Elle pourrait ne pas être entièrement compatible avec d'autres fonctionnalités."
+          alpha: "Cette fonctionnalité est en cours de développement et d'amélioration. Ses fonctionnalités peuvent évoluer et elle n'est peut-être pas encore totalement au point, mais elle est suffisamment stable pour être testée."
+          beta: "Cette fonctionnalité est presque finalisée et disponible pour une adoption anticipée. Des modifications mineures restent possibles."
+          stable: "Cette fonctionnalité est terminée et bénéficie d'une excellente prise en charge. Elle sera bientôt disponible sur tous les sites Discourse."
         impact_roles:
           admins: "Administrateurs "
           moderators: "Modérateurs"
           staff: "Responsables"
+          all_members: "Tous les membres"
+          developers: "Développeurs"
         impact_types:
           feature_type: "Fonctionnalité"
           other_type: "Autre"
+          site_setting_default_type: "Paramétrage par défaut"
         filter:
+          search_placeholder: "Filtrer par nom, description ou extension..."
+          no_results: "Aucune modification à venir ne correspond à votre filtre"
           all: "Tout"
+          enabled_all: "Tous les états activés"
           enabled: "Activé"
+          enabled_for_staff: "Activé pour %{staffGroupName}"
+          enabled_for_specific_groups: "Activé pour des groupes spécifiques"
           disabled: "Désactivé"
+          impact_type_all: "Tous les types d'impact"
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
+          impact_type_site_setting_default: "Paramétrage par défaut"
+          status_all: "Tous les statuts"
+          status_conceptual: "Conceptuelle"
           status_experimental: "Expérimental"
+          status_alpha: "Alpha"
+          status_beta: "Bêta"
+          status_stable: "Stable"
+          status_permanent: "Permanente"
+          impact_role_all: "Tous les rôles d'impact"
           impact_role_admins: "Administrateurs "
           impact_role_moderators: "Modérateurs"
           impact_role_staff: "Responsables"
+          impact_role_all_members: "Tous les membres"
+          impact_role_developers: "Développeurs"
       config:
         about:
           title: "À propos de votre site"
           header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui la soutient et comment vous contacter en cas de problème. Ce contenu est affiché sur la page <a href='%{basePath}/about'>À propos</a> de votre site."
         developer:
           title: "Développeur"
+          header_description: "Paramètres des développeurs permettant de contrôler le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
@@ -6250,17 +6318,32 @@ fr:
           title: "Localisation"
           header_description: "Configurez la langue de l'interface de votre communauté et d'autres options de localisation pour vos membres"
           keywords: "paramètre régional|langue|fuseau horaire|Unicode|gauche à droite"
+        upcoming_changes:
+          title: "Modifications à venir"
+          header_description: "Liste des modifications à venir de Discourse susceptibles d'affecter votre site, et des fonctionnalités expérimentales auxquelles vous pouvez participer. Vous pouvez filtrer par impact, type et statut.\n\nLes groupes participants permettent à un groupe d'utilisateurs spécifique de tester une modification avant son déploiement général. Toutefois, ces groupes ne seront plus pertinents une fois la modification déployée de façon permanente."
         login:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
           sub_pages:
             common_settings:
               title: "Paramètres"
+            authenticators:
+              title: "Connexions via les réseaux sociaux"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
+          stats:
+            total_users: "Nombre total d'utilisateurs"
+            signups_30_days: "Inscriptions (30 jours)"
+            logins_30_days: "Connexions (30 jours)"
+          regenerate_credentials: "Renouveler les identifiants"
+          regenerate_confirm: "Voulez-vous vraiment renouveler vos identifiants Discourse ? Cela générera un nouveau secret client. Le renouvellement des identifiants n'est généralement pas nécessaire, mais peut s'avérer utile pour offrir une sécurité renforcée."
+          description: "Discourse ID est un service d'authentification unique qui permet aux utilisateurs de se connecter à plusieurs sites Discourse avec un seul compte. Les principaux fournisseurs d'authentification via les réseaux sociaux, tels que Google, Facebook, Apple et GitHub, sont pris en charge sans configuration supplémentaire."
           learn_more: "En savoir plus"
+          regenerate_success: "Les identifiants ont été renouvelés."
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -6276,6 +6359,7 @@ fr:
               help_text: "La taille recommandée est de 600 x 80 pixels."
             large_icon:
               title: "Icône carrée"
+              description: "Une version carrée du logo apparaît en haut du site et sert également de logo pour l'application mobile."
               help_text: "La taille recommandée est de 512 x 512 pixels."
             square_icon_dark:
               required: "Utiliser une icône carrée différente pour le mode sombre ?"
@@ -6309,20 +6393,34 @@ fr:
               help_text: "La taille recommandée est de 512 x 512 pixels."
             manifest_screenshots:
               title: "Captures d'écran du manifeste"
-              description: "Captures d'écran présentant les fonctionnalités de votre instance sur la page d'installation. Toutes les images doivent être importées localement et avoir les mêmes dimensions."
+              description: "Captures d'écran présentant les fonctionnalités de votre instance sur la page d'installation. Toutes les images doivent être téléversées localement et avoir les mêmes dimensions."
             apple_touch_icon:
               title: "Icône Apple Touch"
               description: "Icône utilisée pour les appareils Apple Touch. Si ce champ est laissé vide, large_icon sera utilisé."
+              help_text: "La taille recommandée est de 180 x 180 pixels. N'utilisez pas d'image SVG. Un fond transparent est déconseillé."
             digest_logo:
               title: "Logo Digest"
               description: "L'image de logo alternative utilisée en haut du résumé des e-mails de votre site. Si ce champ est laissé vide, l'image du paramètre « logo » sera utilisée."
               help_text: "Utilisez une image rectangulaire large. N'utilisez pas d'image SVG."
+            og_image_source:
+              title: "Source de l'image OpenGraph"
+              description: "Choisissez comment les images d'aperçu OpenGraph sont fournies pour les sujets qui n'ont pas leur propre image."
+              uploaded: "Utiliser une image téléversée"
+              generated: "Générer une image par sujet"
             opengraph_image:
               title: "Image OpenGraph"
               description: "Image OpenGraph par défaut, utilisée lorsque la page ne contient aucune autre image appropriée. Si ce champ est laissé vide, l'icône large_icon sera utilisée."
+            generate_topic_og_image:
+              title: "Générer des images OG du sujet"
+              description: "Génère automatiquement des images d'aperçu OpenGraph pour les sujets qui n'en possèdent pas. Utilise le titre du sujet, sa catégorie et les couleurs du site."
             og_image_preview:
+              title: "Aperçu de l'image OG générée"
+              description: "Aperçu des images OpenGraph générées automatiquement pour les sujets sans image. Saisissez un identifiant de sujet pour effectuer un test."
               generate: "Générer"
               topic_id_label: "ID du sujet"
+              topic_id_placeholder: "p. ex., 123"
+              placeholder: "Saisissez un identifiant de sujet et cliquez sur Générer pour prévisualiser."
+              error: "Impossible de générer l'aperçu. Vérifiez l'identifiant du sujet et réessayez."
             x_summary_large_image:
               title: "Résumé X « summary large image »"
               description: "Carte X « summary large image ». Si ce champ est laissé vide, les métadonnées de carte normales sont générées à partir d'OpenGraph_image, à condition qu'il ne s'agisse pas non plus d'un fichier .svg."
@@ -6349,30 +6447,70 @@ fr:
             modal_yes: "Oui"
             modal_no: "Non, appliquer à partir de maintenant"
         welcome_banner:
+          title: "Bannière de bienvenue"
+          header_description: "Configurez la bannière contenant la barre de recherche affichée aux visiteurs de votre site."
+          saved: "Les paramètres de la bannière de bienvenue ont été enregistrés avec succès."
           form:
+            enabled_themes:
+              label: "Activé sur les thèmes..."
+              description: "Sélectionnez les thèmes qui doivent afficher la bannière. Seuls les thèmes actifs sont affichés."
+              select_label: "Sélectionnez des thèmes"
+            background_image:
+              label: "Image d'arrière-plan"
+              description: "Cette image sera affichée derrière le texte de la bannière."
             text_color:
               label: "Couleur du texte"
+              description: "Lorsque vous téléchargez une image d'arrière-plan, utilisez ce paramètre pour modifier la couleur du texte de la bannière et garantir sa lisibilité. Si ce champ est laissé vide ou si aucune image d'arrière-plan n'est téléversée, la couleur sera déterminée par le thème actif."
             page_visibility:
+              label: "Visibilité de la page"
+              description: "Choisissez l'emplacement où la bannière doit être affichée."
               options:
                 top_menu_pages: "Pages du menu principal"
+                homepage: "Page d'accueil uniquement"
+                discovery: "Pages de découverte"
                 all_pages: "Toutes les pages"
             location:
               label: "Emplacement"
+              description: "Choisissez l'emplacement où la bannière doit apparaître sur la page."
               options:
                 above_topic_content: "Au-dessus du contenu du sujet"
                 below_site_header: "Sous l'en-tête du site"
             text_section:
+              title: "Texte personnalisable"
               locale_label: "Langue "
+            header_new_members:
+              label: "En-tête pour les nouveaux membres"
+              description: "Variables disponibles : <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
+              placeholder: "Bienvenue, %{preferred_display_name} !"
             header_logged_in:
+              label: "En-tête pour les membres connectés"
+              description: "Variables disponibles : <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Bienvenue, %{preferred_display_name} !"
             header_anonymous:
+              label: "En-tête pour les visiteurs anonymes"
+              description: "Variables disponibles : <code>&percnt;{site_name}</code>"
               placeholder: "Bienvenue sur %{site_name} !"
+            subheader_logged_in:
+              label: "Sous-titre pour les membres connectés"
+              description: "Texte secondaire affiché sous l'en-tête pour les utilisateurs connectés."
+              placeholder: "Découvrez les nouveautés de la communauté"
+            subheader_anonymous:
+              label: "Sous-titre pour les visiteurs anonymes"
+              description: "Texte secondaire affiché sous l'en-tête pour les visiteurs anonymes."
+              placeholder: "Rejoignez notre communauté pour participer aux discussions"
+            search_placeholder:
+              label: "Espace réservé à la recherche"
+              description: "Texte d'espace réservé pour le champ de recherche dans la bannière de bienvenue."
+              placeholder: "Rechercher des sujets..."
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
         notifications:
           title: "Notifications"
           header_description: "Configurez la manière dont les notifications sont gérées et envoyées aux utilisateurs, y compris les préférences de courrier électronique, les notifications push, les limites de mentions et la consolidation des notifications"
+        gifs:
+          title: "GIF"
+          header_description: "Configurez le sélecteur de GIF permettant aux utilisateurs de rechercher et d'insérer des GIF dans les publications et les messages de discussion. Les textes du site pour la fenêtre modale peuvent être personnalisés dans customize/site_texts."
         onebox:
           title: "Onebox"
           header_description: "Configurez la manière dont les aperçus Onebox sont générés et affichés pour votre site"
@@ -6424,10 +6562,17 @@ fr:
               title: "Journaux"
               header_description: "Affichez et gérez les journaux pour les sauvegardes, les restaurations et les téléversements"
         problem_checks:
+          title: "Vérifications des problèmes"
+          header_description: "Consultez tous les contrôles de problèmes enregistrés et leur statut actuel."
+          identifier: "Vérifier"
+          target: "Cible"
           priority: "Priorité"
           status: "Statut"
+          passing: "Succès"
+          failing: "Échec"
           last_run_at: "Dernière exécution"
           ignore: "Ignorer"
+          watch: "Surveiller"
           more_options:
             title: "Plus d'options"
         reports:
@@ -6461,21 +6606,31 @@ fr:
             stats_and_thresholds:
               title: "Statistiques et seuils"
         category_management:
+          title: "Gestion des catégories"
+          header_description: "Passez en revue les types de catégories, la hiérarchie et les catégories actuellement attribuées à chaque type."
+          keywords: "catégories|types de catégories|discussion|gestion des catégories"
           create_category: "Créer une catégorie"
           tabs:
             settings: "Paramètres"
           types:
+            unavailable: "Le type de catégorie %{categoryType} n'est pas disponible."
             all:
               title: "Toutes les catégories"
+              description: "Toutes les catégories, pour chaque type de catégorie configuré."
           filter_placeholder: "Filtrer les catégories"
+          no_results: "Aucune catégorie « %{type} » n'a été trouvée."
+          open_settings: "Ouvrir les paramètres"
           table:
             category: "Catégorie"
             visibility: "Visibilité"
             topics: "Sujets"
           visibility:
             public: "Public"
+            restricted: "Limité"
           visibility_filter:
             all: "Toutes les catégories"
+            public: "Catégories publiques"
+            restricted: "Catégories restreintes"
         permalinks:
           title: "Permaliens"
           header_description: "Redirections à appliquer pour les URL non connues par le forum"
@@ -6584,6 +6739,9 @@ fr:
         embedding:
           title: "Intégration"
           header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+        form_templates:
+          title: "Modèles de formulaires"
+          header_description: "Les modèles de formulaires vous permettent d'imposer un formulaire structuré avec validation des données dans le cadre du processus de création de sujet."
       theme_site_settings:
         setting: "Paramètre"
         overridden_by: "Remplacé par"
@@ -6592,6 +6750,9 @@ fr:
         select_setting: "Sélectionnez un paramètre de site pour voir les valeurs de thème actuelles"
         add: "Accéder aux paramètres de thème du site"
         help: "Le thème que vous utilisez actuellement est <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Accédez à la page de configuration du thème <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> pour modifier les paramètres de thème de site ou cliquez sur un thème lié dans le tableau ci-dessous pour modifier ses paramètres."
+        filter: "Filtrer les paramètres du site du thème par nom de paramètre, description ou nom du thème..."
+        filter_no_results: "Aucun paramètre de site de thème ne correspond à votre filtre"
+        site_setting_warning: 'Ce paramètre est géré par le thème par défaut de votre site (%{defaultThemeName}). Vous pouvez le modifier depuis <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">la page d''édition du thème</a>.'
       search:
         modal_title: "Rechercher tout dans l'interface d'administration"
         title: "Recherche"
@@ -6604,25 +6765,61 @@ fr:
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
+      site_traffic_explorer:
+        metric_information: "À propos du site %{metric}"
+        remove_filter_value: "Supprimer %{value}"
+        clear_all: "Tout effacer"
+        apply: "Appliquer"
+        view_more: "Voir plus"
+        cards:
+          pages: "Pages"
+          visitors: "Visiteurs"
+        filters:
+          referrer: "Source de trafic"
+          country: "Pays"
+          browser: "Navigateur"
+          ip: "Adresse IP"
+        metrics:
+          logged_in_share:
+            label: "Part des pages vues par des utilisateurs connectés"
+          bounce_rate:
+            label: "Taux de rebond"
+        series:
+          logged_in_human: "Utilisateurs connectés"
+          anonymous_human: "Anonymes"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
         discourse_last_updated: "Dernière mise à jour de Discourse :"
         version: "Version"
         up_to_date: "À jour !"
-        critical_available: "Une mise à jour critique est disponible."
+        up_to_date_newer_commits:
+          one: "Vous utilisez la version la plus récente, mais %{count} nouvelle modification est disponible."
+          other: "Vous utilisez la version la plus récente, mais %{count} nouvelles modifications sont disponibles."
         updates_available: "Des mises à jour sont disponibles."
         please_update: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
+        latest_version: "Disponible"
         github: "GitHub"
+        commit_on_github: "Voir le commit %{sha} sur GitHub"
+        changelog: "Journal des modifications"
+        commits_ahead:
+          one: "Exécution de %{count} modification supplémentaire depuis le début de cette série de versions"
+          other: "Exécution de %{count} modifications supplémentaires depuis le début de cette série de versions"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Ignorer"
+        site_advice:
+          title:
+            one: "%{count} problème nécessite votre attention en fonction de la configuration de votre site"
+            other: "%{count} problèmes nécessitent votre attention en fonction de la configuration de votre site"
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
+          no_new_features_found: "Il n'y a aucun élément dans le flux ou le filtre que vous avez sélectionné n'a renvoyé aucun résultat. Vous pouvez consulter les précédentes annonces de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>le site Discourse Releases</a>."
+          no_new_features_error: "Une erreur s'est produite lors du chargement du flux. Vous pouvez consulter les annonces de nouvelles fonctionnalités précédentes sur le site <a href='%{url}' target='_blank'>de Discourse Releases</a>."
           learn_more: "En savoir plus…"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
@@ -6663,49 +6860,213 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        loading: "Chargement du tableau de bord…"
+        fetch_error: "Impossible de charger le tableau de bord. Veuillez actualiser la page."
+        stable: "stable"
         sections:
+          highlights:
+            title: "Chiffres clés"
           reports:
             title: "Rapports"
+            fetch_error: "Impossible de charger les rapports. Veuillez actualiser la page."
           traffic:
             title: "Trafic du site"
           engagement:
+            title: "Interactions"
+            fetch_error: "Impossible de charger les interactions. Veuillez actualiser la page."
             activity_by_category:
+              title: "Activité par catégorie"
+              description: "Sujets, publications et participation des membres par catégorie."
               category: "Catégorie"
               topics: "Sujets"
               posts: "Publications"
+              page_views: "Pages vues"
               share: "Partager"
+              vs_prior: "Variation"
+              empty: "Aucune activité pendant la période sélectionnée."
+              save_error: "Impossible d'enregistrer votre sélection pour la prochaine fois."
             whos_posting:
+              title: "Qui publie ?"
+              new_members: "Nouveaux membres"
+              returning: "Membres existants"
               staff: "Responsables"
+              empty: "Aucune publication pendant la période sélectionnée."
+              save_error: "Impossible d'enregistrer votre sélection pour la prochaine fois."
             trust_level_pipeline:
+              title: "Évolution des niveaux de confiance"
               trust_levels:
                 "0": "Nouveau"
                 "1": "Basique"
                 "2": "Membre"
                 "3": "Normal"
                 "4": "Leader"
+              trend:
+                climbing:
+                  one: "+%{count} en progression"
+                  other: "+%{count} en progression"
+                dropping:
+                  one: "-%{count} en recul"
+                  other: "-%{count} en recul"
+              signups:
+                one: "+ %{formattedCount} inscription"
+                other: "+ %{formattedCount} inscriptions"
+              signups_title: "Nombre de nouvelles inscriptions atteignant ce niveau de confiance"
+              count_title: "Nombre total de membres à ce niveau de confiance"
+              arrivals_aria:
+                one: "%{count} membre a été promu à ce niveau de confiance"
+                other: "%{count} membres ont été promus à ce niveau de confiance"
+              demotions_in_aria:
+                one: "%{count} membre a été rétrogradé à ce niveau de confiance"
+                other: "%{count} membres ont été rétrogradés à ce niveau de confiance"
+              stable_aria: "aucun mouvement"
+            headline:
+              titles:
+                insufficient_activity: "L'activité est encore insuffisante pour résumer les interactions."
+              summaries:
+                insufficient_activity: "Choisissez une période plus longue ou revenez une fois que votre communauté sera plus active."
+              metrics:
+                new_signups: "Nouvelles inscriptions"
+                dau_mau: "Fidélisation des utilisateurs quotidiens (DAU) et mensuels (MAU)"
+                daily_engaged_users: "Interactions quotidiennes"
           search:
             title: "Recherche"
+            fetch_error: "Impossible de charger les données de recherche. Veuillez actualiser la page."
+            logging_disabled: 'La journalisation des recherches est désactivée. Aucune donnée de recherche n''est donc collectée. Activez <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">la journalisation des requêtes de recherche</a> pour commencer à les collecter.'
+            logging_disabled_moderator: "L'enregistrement des recherches est désactivé. Aucune donnée de recherche n'est donc collectée. Veuillez demander à un administrateur d'activer l'enregistrement des requêtes de recherche pour lancer la collecte des données."
+            headline:
+              titles:
+                insufficient_activity: "L'activité de recherche n'est pas encore suffisante pour être résumée."
+              summaries:
+                insufficient_activity: "Choisissez une période plus longue ou revenez une fois que les membres auront effectué davantage de recherches."
+            kpi:
+              total_searches:
+                label: "Nombre total de recherches"
+              no_result_rate:
+                label: "Taux d'absence de résultats"
+                tooltip: "Le pourcentage de recherches pour lesquelles les membres n'ont cliqué sur aucun résultat (0 % de taux de clics) indique que les membres recherchent peut-être du contenu que votre communauté ne propose pas."
             table:
+              term: "Terme de recherche"
               searches: "Recherches"
               status: "Statut"
+            trending:
+              title: "Recherches populaires"
+              empty: "Aucune recherche n'a été effectuée durant cette période."
+            content_gaps:
+              title: "Lacunes en matière de contenu"
+              empty: "Aucune lacune de contenu pendant cette période."
+              badge:
+                no_match: "Aucun résultat"
+                no_match_tooltip: "Termes de recherche avec un taux de clic (CTR) de 0 %."
+                poor_match: "Mauvaise correspondance"
+                poor_match_tooltip: "Termes de recherche avec un taux de clic (CTR) compris entre 1 et 20 %."
         reports_section:
           header_action: "Gérer"
+          description: "Épinglez des rapports standard ou des requêtes Data Explorer pour suivre ce qui compte pour votre communauté."
+          add: "Ajouter un rapport"
+          remove: "Supprimer le rapport"
           no_data: "Aucune donnée à afficher"
           modal:
+            title: "Gérer les rapports"
+            search_placeholder: "Rechercher des rapports"
+            counter: "Rapports ajoutés : %{count}/%{max}"
             enabled_heading: "Activé"
             all_heading: "Tous les rapports"
             apply: "Appliquer"
+            enable: "Activer %{title}"
+            disable: "Désactiver %{title}"
+            move_up: "Déplacer %{title} vers le haut"
+            move_down: "Déplacer %{title} vers le bas"
+            footer_note: "Ces modifications s'appliqueront à tous les utilisateurs."
         configure:
           button: "Configurer"
+          tooltip: "Configurez la façon dont ce tableau de bord s'affiche pour tous les utilisateurs de ce site."
+          menu_title: "Configurer le tableau de bord"
+          reorder_up: "Déplacer %{label} vers le haut"
+          reorder_down: "Déplacer %{label} vers le bas"
+          drag_handle: "Faites glisser pour réorganiser %{label}"
+          toggle_visibility: "Afficher « %{label} » sur le tableau de bord"
+          empty_state_admin: "Aucune section à afficher. Ouvrez la section Configurer pour en activer une."
+          empty_state_moderator: "Aucune section n'est activée. Veuillez demander à un administrateur d'en activer une."
+        highlights:
+          fetch_error: "Impossible de charger les faits marquants. Essayez d'actualiser la page."
+          kpi:
+            new_signups:
+              label: "Nouvelles inscriptions"
+              tooltip: "Comptes créés, y compris les comptes non activés et les comptes en attente."
+            dau_mau:
+              label: "Fidélisation des utilisateurs quotidiens (DAU) et mensuels (MAU)"
+              tooltip: 'Le pourcentage d''utilisateurs actifs mensuels qui reviennent dans la communauté. Cela indique la fidélisation de votre communauté en fonction de la fréquence à laquelle les membres y reviennent.'
+            new_contributors:
+              label: "Nouveaux contributeurs"
+              tooltip: "Le nombre de membres ayant publié leur premier message."
+            daily_engaged_users:
+              label: "Interactions quotidiennes"
+              tooltip: "Le nombre moyen de membres ayant aimé ou publié dans la communauté chaque jour."
+          comparison:
+            last_7_days: "par rapport aux 7 derniers jours"
+            last_30_days: "par rapport aux 30 derniers jours"
+            last_3_months: "par rapport aux 3 derniers mois"
+            previous_period: "par rapport à la période précédente"
         site_traffic:
+          fetch_error: "Impossible de charger le trafic du site. Veuillez actualiser la page."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} page vue au cours des 7 derniers jours"
+              other: "%{formatted_count} pages vues au cours des 7 derniers jours"
+            last_30_days:
+              one: "%{formatted_count} page vue au cours des 30 derniers jours"
+              other: "%{formatted_count} pages vues au cours des 30 derniers jours"
+            last_3_months:
+              one: "%{formatted_count} page vue au cours des 3 derniers mois"
+              other: "%{formatted_count} pages vues au cours des 3 derniers mois"
+            selected_period:
+              one: "%{formatted_count} page vue au cours de la période sélectionnée"
+              other: "%{formatted_count} pages vues au cours de la période sélectionnée"
+          trend:
+            up: "en hausse de %{percent}"
+            down: "en baisse de %{percent}"
+          comparison_tooltip:
+            previous_7_days: "Par rapport aux 7 jours précédents (%{start} – %{end})"
+            previous_30_days: "Par rapport aux 30 jours précédents (%{start} – %{end})"
+            previous_3_months: "Par rapport aux 3 jours mois (%{start} – %{end})"
+            previous_days:
+              one: "Par rapport à la veille (%{start} – %{end})"
+              other: "Comparé aux %{count} jours précédents (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "Part des pages vues par des utilisateurs connectés"
+              tooltip: "La part des pages vues provenant des membres connectés."
+            direct_traffic:
+              label: "Trafic direct"
+              tooltip: "La part des pages vues qui sont arrivées directement sur votre site, par exemple en saisissant votre URL ou en utilisant un signet de navigateur."
+            bounce_rate:
+              label: "Taux de rebond"
+              tooltip: "La part des sessions avec une seule page vue et moins de 10 secondes de temps d'interaction."
+            average_session_duration:
+              label: "Durée moyenne de la session"
+              tooltip: "Le temps moyen que les visiteurs ont passé dans votre communauté pendant la période sélectionnée."
+            session_metrics:
+              empty_tooltip: "Affiché une fois que les visites sont enregistrées pour cette période."
+          top_countries:
+            title: "Principaux pays"
+            empty: "Aucune donnée par pays pour cette période."
+            error: "Impossible de charger les pays les plus populaires. Veuillez actualiser la page."
+          top_referrers:
+            title: "Principales sources de trafic"
+            empty: "Aucune donnée sur les sources de trafic pour cette période."
+            error: "Impossible de charger les principales sources de trafic. Veuillez actualiser la page."
           series:
+            logged_in: "Utilisateurs connectés"
             anonymous: "Anonyme"
+            embedded: "Pages vues intégrées"
             crawlers: "Robots d'indexation"
+          see_details: "Voir les détails"
         period:
           last_7_days: "Ces 7 derniers jours"
           last_30_days: "30 derniers jours"
           last_3_months: "3 derniers mois"
           custom: "Personnalisé"
+          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
@@ -6733,6 +7094,8 @@ fr:
           daily: Quotidien
           monthly: Mensuel
           weekly: Hebdomadaire
+          chart_group_period: "Sélectionnez une période"
+          value_so_far: "%{value} (jusqu'à présent)"
           dates: "Dates (UTC)"
           groups: "Tous les groupes"
           disabled: "Ce rapport est désactivé"
@@ -6743,7 +7106,9 @@ fr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
+          average_chart_label: Afficher les moyennes, pas les totaux
           sort_button: "Trier par %{column}"
+          sort_button_current: "Trié par %{column}, %{direction}"
           sort_ascending: "croissant"
           sort_descending: "décroissant"
           filters:
@@ -6801,6 +7166,7 @@ fr:
             effects: Effets
             trust_levels_none: "Aucun"
             automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine de messagerie qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
+            automatic_membership_email_domains_instructions: "Saisissez chaque domaine individuellement, par exemple discourse.org."
             automatic_membership_user_count:
               one: "%{count} utilisateur a les nouveaux domaines de messagerie et sera ajouté au groupe."
               other: "%{count} utilisateurs ont les nouveaux domaines de messagerie et seront ajoutés au groupe."
@@ -6848,6 +7214,7 @@ fr:
         cancel: "Annuler"
         continue: "Continuer"
         copy_key: "Copie"
+        key_copied_to_clipboard: "Clé API copiée dans le presse-papiers"
         back: "Retour aux clés d'API"
         revoke: "Révoquer"
         undo_revoke: "Annuler la révocation"
@@ -6915,6 +7282,7 @@ fr:
               recover: Récupérer un sujet.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
               status: "Mettre à jour le statut d'un sujet. Statut : fermé, archivé, visible, épinglé. Activé : vrai, faux. Spécifiez une category_id ici et dans la charge utile de la demande pour autoriser uniquement les changements de statut sur les sujets de cette catégorie."
+              change_owner: Modifiez la propriété des publications d'un sujet.
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
               delete: Supprimez un message.
@@ -6947,6 +7315,7 @@ fr:
               suspend: Suspendre les comptes d'utilisateurs.
               delete: Supprimer les comptes utilisateurs.
               list: Obtenir une liste d'utilisateurs.
+              create: Créez un nouvel utilisateur.
             user_status:
               read: Lire le statut de l'utilisateur.
               update: Mettre à jour le statut de l'utilisateur.
@@ -6955,6 +7324,7 @@ fr:
             invites:
               create: Envoyez des invitations par e-mail ou générez des liens d'invitation.
             badges:
+              list: Obtenez une liste des badges.
               create: Créer un nouveau badge.
               show: Obtenir des informations sur un badge.
               update: Mettre à jour un badge.
@@ -7050,6 +7420,7 @@ fr:
           user_destroyed: "L'utilisateur est supprimé"
           user_suspended: "L'utilisateur est suspendu"
           user_unsuspended: "L'utilisateur n'est pas suspendu"
+          user_anonymized: "L'utilisateur est anonymisé"
         reviewable_event:
           group_name: "Événements révisables"
           reviewable_created: "L'élément révisable est prêt"
@@ -7206,6 +7577,7 @@ fr:
           your_organization: "Votre organisation"
           your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
+          company_name_placeholder: "ExempleCo"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
           company_url: "Site Web"
@@ -7228,6 +7600,7 @@ fr:
             show_description: "Inclure une description"
           locale_selector:
             title: "Langue "
+            description: "Seuls les champs traduisibles de la page À propos sont affichés."
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -7285,8 +7658,10 @@ fr:
           install: "Installer"
           theme_site_settings:
             title: "Paramètres de thème du site"
+            description: "Paramètres permettant aux thèmes d'exercer un contrôle plus étendu sur l'expérience globale du site en remplaçant un petit sous-ensemble de paramètres de base du site."
           themes:
             title: "Thèmes"
+            description: "Thèmes globaux qui modifient l'apparence générale de votre site pour tous les utilisateurs."
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
             new_theme: "Nouveau thème"
             back: "Retour aux thèmes"
@@ -7352,6 +7727,8 @@ fr:
             title: "Options de couleur"
             toggle: "Sélectionnable par l'utilisateur"
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
+            toggle_default_light_on_theme: "La palette de couleurs est la palette claire par défaut du thème par défaut (%{themeName})"
+            toggle_default_dark_on_theme: "La palette de couleurs est la palette sombre par défaut du thème par défaut (%{themeName})"
           colors:
             title: "Couleurs"
           save_changes: "Enregistrer les modifications"
@@ -7391,7 +7768,11 @@ fr:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
         legacy: "Héritage"
+      homepage:
+        top_menu_default: "Premier élément du menu principal"
       duplicate_topic_titles:
+        disallowed: "Interdit"
+        allowed_across_categories: "Autorisé dans toutes les catégories"
         allowed: "Autorisés"
       backups:
         title: "Sauvegardes"
@@ -7444,6 +7825,7 @@ fr:
             confirm: "Voulez-vous vraiment supprimer cette sauvegarde ?"
           restore:
             is_disabled: "La restauration est actuellement désactivée. Pour l'activer, consultez les <a href='%{url}'>paramètres du site</a>."
+            is_disabled_title: "La restauration est actuellement désactivée. Pour l'activer, recherchez « autoriser la restauration » dans les paramètres du site."
             label: "Restaurer"
             title: "Restaurer la sauvegarde"
             confirm: "Voulez-vous vraiment restaurer cette sauvegarde ?"
@@ -7486,20 +7868,27 @@ fr:
         delete: "Supprimer"
         delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         bulk_delete: "Voulez-vous continuer ?"
+        bulk_themes_delete_confirm: "Cette opération désinstallera les thèmes suivants, qui ne seront plus utilisables par les utilisateurs de votre site :"
+        bulk_components_delete_confirm: "Cette opération désinstallera les composants suivants, qui ne seront plus utilisables par les utilisateurs de votre site :"
         color: "Couleur"
         opacity: "Opacité"
         copy: "Dupliquer"
         copy_to_clipboard: "Copier dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
+        theme_owner: "Appartenant à :"
         email_templates:
           title: "E-mail"
           subject: "Objet"
           multiple_subjects: "Ce modèle d'e-mail a plusieurs objets."
+          multiple_bodies: "Ce modèle d'e-mail comporte plusieurs corps de message."
           body: "Corps"
           revert: "Annuler les changements"
           revert_confirm: "Voulez-vous vraiment annuler vos changements ?"
+          search_templates: "Filtrer par nom de modèle..."
+          no_templates_found: "Aucun modèle ne correspond à vos filtres."
           edit: "Modifier"
+          back: "Retour aux modèles"
         component:
           all_filter: "Tout"
           used_filter: "Utilisé"
@@ -7525,6 +7914,8 @@ fr:
           beginners_guide_title: "Guide d'utilisation des thèmes de Discourse pour débutants"
           developers_guide_title: "Guide de développement de thèmes pour Discourse"
           browse_themes: "Parcourir les thèmes de la communauté"
+          install_more_themes: "Installer plus de thèmes"
+          install_more_themes_description: "Parcourez les thèmes populaires de la communauté ou installez-en un à partir d'un fichier ou d'un dépôt git."
           customize_desc: "Personnaliser :"
           title: "Thèmes"
           description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
@@ -7534,6 +7925,8 @@ fr:
           create_name: "Nom"
           save: "Enregistrer"
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
+          dark_mode: "Mode sombre de %{themeName}"
+          light_mode: "Mode clair de %{themeName}"
           edit: "Modifier"
           edit_confirm: "Ceci est un thème distant. Si vous modifiez le CSS/HTML, vos modifications seront écrasées la prochaine fois que vous le mettrez à jour."
           update_confirm: "Ces modifications locales seront supprimées par la mise à jour. Voulez-vous vraiment continuer ?"
@@ -7548,6 +7941,8 @@ fr:
           default: "Thème par défaut"
           settings_editor: "Éditeur de paramètres"
           show_advanced: "Afficher les paramètres avancés"
+          maximize_editor: "Optimiser l'éditeur"
+          minimize_editor: "Minimiser l'éditeur"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
           user_selectable_badge_label: "Sélectionnable par l'utilisateur"
@@ -7560,7 +7955,9 @@ fr:
           dark_color_scheme: "Palette de couleurs sombres"
           default_light_scheme: "Clair (par défaut)"
           color_scheme_select: "Sélectionnez les couleurs à utiliser par thème."
+          only_theme_color_schemes: "Ce thème limite les palettes de couleurs utilisables."
           dark_color_scheme_select: "Sélectionnez les couleurs à utiliser par thème en mode sombre."
+          edit_colors: "Modifier les couleurs"
           custom_sections: "Sections personnalisées :"
           theme_components: "Composants du thème :"
           add_all_themes: "Ajouter tous les thèmes"
@@ -7572,10 +7969,12 @@ fr:
           convert_theme_alert_generic: "Voulez-vous vraiment convertir ce thème en composant ?"
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
+          set_default_theme: "Définir comme valeur par défaut"
           default_theme: "Thème par défaut"
           set_default_success: "Thème par défaut défini sur %{theme}"
           setting_was_saved: "Le paramètre du thème a été enregistré"
           install_success: "%{theme} installé avec succès !"
+          delete_success: "%{theme} supprimé !"
           inactive_components: "Composants non utilisés :"
           selected:
             one: "Sélection : %{count}"
@@ -7617,12 +8016,19 @@ fr:
           import_web_tip: "Dépôt contenant le thème"
           direct_install_tip: "Voulez-vous vraiment installer <strong>%{name}</strong> depuis le dépôt indiqué ci-dessous ?"
           import_web_advanced: "Avancé…"
+          import_file_tip: "Fichier .tar.gz ou .zip contenant le thème"
           is_private: "Le thème est dans un dépôt Git privé"
           finish_install: "Terminer l'installation du thème"
+          placeholder_description: "Il s'agit d'un thème privé nécessitant l'installation d'une clé de déploiement dans la configuration du dépôt. Une fois cette étape effectuée, cliquez sur le bouton ci-dessous pour terminer l'installation."
           last_attempt: "Le processus d'installation ne s'est pas terminé, dernière tentative :"
           remote_branch: "Nom de branche (optionnel)"
+          remote_branch_placeholder: "Choisissez une branche spécifique ou laissez ce champ vide."
+          public_key: "Accordez l'accès en lecture seule à ce dépôt à l'aide de la clé publique suivante :"
+          public_key_github: "Accordez à la clé publique suivante un accès en lecture seule au dépôt. Consultez %{link} pour obtenir des instructions."
+          deploy_key_instructions: "Instructions pour la clé de déploiement GitHub"
           install: "Installer"
           installed: "Installé"
+          screenshot: "Capture d'écran %{name}"
           install_popular: "Populaire"
           install_upload: "À partir de votre appareil"
           install_git_repo: "Depuis un dépôt Git"
@@ -7651,7 +8057,18 @@ fr:
           updating: "Mise à jour…"
           update_success: "%{theme} Mise à jour terminée"
           up_to_date: "Thème à jour, dernière vérification :"
+          up_to_date_branch: "Le thème est à jour avec %{branch}, dernière vérification :"
           has_overwritten_history: "La version actuelle du thème n'existe plus car l'historique Git a été écrasé par une mise à jour forcée."
+          change_source:
+            button: "Changer la source"
+            title: "Changer la source du thème"
+            repository_url: "URL du dépôt"
+            branch: "Branche"
+            updating: "Mise à jour de la source du thème…"
+            update: "Mettre à jour la source"
+            has_existing_key: "Une clé SSH existante est configurée pour ce thème."
+            generate_new_key: "Générer une nouvelle clé SSH"
+            keep_existing_key: "Conserver la clé SSH existante"
           add: "Ajouter"
           theme_settings: "Paramètres de thème personnalisés"
           theme_site_settings: "Paramètres que le thème peut remplacer"
@@ -7664,11 +8081,14 @@ fr:
           commits_behind:
             one: "Le thème est en retard de %{count} commit !"
             other: "Le thème est en retard de %{count} commits !"
+          commits_behind_branch:
+            one: "Le thème a %{count} commit de retard sur la branche %{branch}"
+            other: "Le thème a %{count} commits de retard sur la branche %{branch}"
           compare_commits: "(Voir les nouveaux changements)"
           remote_theme_edits: "Pour modifier ce thème, vous devrez <a href='%{repoURL}' target='_blank'>proposer des changements dans son dépôt de développement</a>"
           repo_unreachable: "Le dépôt Git de ce thème est inaccessible. Message d'erreur :"
           built_in_description: "Ce thème est préinstallé et ne peut pas être supprimé ou personnalisé"
-          imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
+          imported_from_archive: "Ce thème a été téléversé depuis un fichier .zip"
           scss:
             text: "CSS"
             title: "Règles CSS personnalisées avec prise en charge de la syntaxe SCSS"
@@ -7746,12 +8166,16 @@ fr:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
+          non_default_theme_warning: "Vos <a href='%{link}'>préférences personnelles de thème</a> diffèrent des paramètres par défaut. Les modifications apportées ici peuvent ne pas s'appliquer à votre compte, mais s'appliqueront à tous les utilisateurs du thème par défaut (%{themeName})."
+          custom_schemes_warning: "Vos <a href='%{link}'>préférences personnelles</a> pour la palette de couleurs %{colorModes} diffèrent des paramètres par défaut. Les modifications apportées à la palette %{colorModes} peuvent ne pas s'appliquer à votre compte, mais s'appliqueront à tous les utilisateurs de la palette par défaut."
           light: "clair"
           dark: "sombre"
           title: "Couleurs"
           edit: "Modifier"
+          view: "Afficher"
           set_default_light: "Définir comme palette claire sur le thème par défaut (%{theme})"
           set_default_dark: "Définir comme palette sombre sur le thème par défaut (%{theme})"
+          set_default_success: "%{schemeName} défini comme palette par défaut pour %{themeName}"
           saved_refreshing: "Enregistré ! Actualisation des couleurs..."
           from_theme: "Du thème : %{name}"
           filters:
@@ -7761,7 +8185,12 @@ fr:
             from_theme: "Du thème"
             no_results: "Aucune palette de couleurs n'a été trouvée"
           default_light_badge:
+            text: "Mode clair par défaut"
+            title: "Palette de couleurs claires par défaut"
             reset: "Réinitialiser les filtres"
+          default_dark_badge:
+            text: "Mode sombre par défaut"
+            title: "Palette de couleurs sombres par défaut"
           system_palette: "Il s'agit d'une palette de couleurs intégrée, elle ne peut être ni modifiée ni supprimée."
           back_to_colors: "Retour aux palettes de couleurs"
           long_title: "Palettes de couleurs"
@@ -7984,6 +8413,7 @@ fr:
             delete_topic: "supprimer le sujet"
             recover_topic: "annuler la suppression du sujet"
             delete_post: "supprimer le message"
+            recover_post: "rétablir la publication supprimée"
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
             roll_up: "consolider des blocs d'IP"
@@ -8082,6 +8512,17 @@ fr:
             tag_group_change: "modifier le groupe d'étiquettes"
             delete_associated_accounts: "supprimer les comptes associés"
             change_theme_site_setting: "modifier les paramètres du thème de site"
+            stop_impersonating: "cesser d'endosser l'identité"
+            upcoming_change_toggled: "modification à venir activée"
+            upcoming_change_available: "modification à venir disponible"
+            change_site_setting_groups: "groupes de paramètres de site modifiés"
+            discourse_id_regenerate_credentials: "renouveler les identifiants Discourse ID"
+            configure_category_type: "configurer le type de catégorie"
+            unconfigure_category_type: "annuler la configuration du type de catégorie"
+            change_access_control_list_permissions: "modifier les permissions de la liste de contrôle d'accès"
+            admin_onboarding_step_completed: "étape complète d'intégration de l'administrateur"
+            admin_onboarding_completed: "intégration complète de l'administrateur"
+            admin_onboarding_dismissed: "rejeter l'intégration de l'administrateur"
         screened_emails:
           title: "E-mails filtrés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses e-mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -8119,6 +8560,7 @@ fr:
             header: "En-tête"
             full_page: "Page complète"
             click_through_only: "Tous (clics uniquement)"
+            non_staff_only: "Utilisateurs autres que les responsables"
           header_search_results: "Résultats de recherche d'en-tête"
         logster:
           title: "Journaux d'erreurs"
@@ -8136,6 +8578,7 @@ fr:
         clear_all: Tout effacer
         clear_all_confirm: "Voulez-vous vraiment effacer l'ensemble des mots surveillés en rapport à l'action %{action} ?"
         invalid_regex: 'Le mot surveillé « %{word} » n''est pas une expression régulière valide.'
+        invalid_regex_multiple: "Expressions régulières invalides :"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Les mots surveillés sont des expressions régulières</a> et ils n''incluent pas automatiquement les limites des mots. Si vous voulez que l''expression régulière corresponde à des mots entiers, ajoutez <code>\b</code> au début et à la fin de votre expression régulière.'
         actions:
           block: "Bloquer"
@@ -8168,6 +8611,7 @@ fr:
           success: "Succès"
           exists: "Existe déjà"
           upload: "Ajouter à partir d'un fichier"
+          upload_successful: "Téléversement réussi. Le traitement des données commencera d'ici peu."
           case_sensitivity_label: "Est sensible à la casse"
           case_sensitivity_description: "Seulement les mots dont la casse des caractères correspond"
           html_label: "HTML"
@@ -8218,6 +8662,7 @@ fr:
           upload: "Téléverser un fichier"
           multiselect: "Choix multiple"
           tagchooser: "Sélecteur de groupe d'étiquettes"
+          composer: "Réponse Markdown"
         validations_modal:
           button_title: "Validations"
           modal_title: "Options de validation"
@@ -8259,7 +8704,10 @@ fr:
             second: "Option 2"
             third: "Option 3"
         edit_category:
+          toggle_freeform: "Modèle de formulaire désactivé"
+          toggle_form_template: "Modèle de formulaire activé"
           select_template: "Sélectionner des modèles de formulaire"
+          select_template_help: "Ajouter/modifier des modèles de formulaire"
         errors:
           multiple_tags_not_allowed: 'Vous ne pouvez pas sélectionner plus d''étiquettes depuis « %{tag_name} ». Pour éviter tout problème, utilisez le modèle de formulaire.'
       impersonate:
@@ -8267,6 +8715,7 @@ fr:
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
         not_found: "Cet utilisateur n'a pas été trouvé."
         invalid: "Nous sommes désolés, vous ne pouvez pas vous faire passer pour cet utilisateur."
+        error: "Oups. Une erreur inattendue s'est produite."
       users:
         title: "Utilisateurs"
         description: "Afficher et gérer les utilisateurs."
@@ -8279,14 +8728,33 @@ fr:
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
         silence_reason: "Raison de la mise en sourdine"
+        suspend_reason: "Raison de la suspension"
         bulk_actions:
           title: "Actions groupées"
           select_all: "Tout sélectionner"
           clear_all: "Tout effacer"
+          staff_cant_be_actioned: "Cet utilisateur ne peut être ni supprimé ni suspendu, car il fait partie des responsables"
+          no_users_can_be_deleted: "Aucun des utilisateurs sélectionnés ne peut être supprimé."
+          no_users_can_be_suspended: "Aucun des utilisateurs sélectionnés ne peut être suspendu."
+          too_many_selected_users:
+            one: "Vous avez atteint la limite de %{count} utilisateur pour les actions groupées"
+            other: "Vous avez atteint la limite de %{count} utilisateurs pour les actions groupées"
           suspend:
+            label: "Suspendre les utilisateurs…"
             confirmation_modal:
+              prompt_text:
+                one: "Vous êtes sur le point de suspendre %{count} utilisateur. Veuillez indiquer la durée et le motif ci-dessous :"
+                other: "Vous êtes sur le point de suspendre %{count} utilisateurs. Veuillez indiquer la durée et le motif ci-dessous :"
               close: "Fermer"
               confirm: "Suspendre"
+              title:
+                one: "Suspendre %{count} utilisateur"
+                other: "Suspendre %{count} utilisateurs"
+              bulk_suspend_starting: "Démarrage de la suspension groupée…"
+              user_suspend_succeeded: "[%{position}/%{total}] Suspension réussie de @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Échec de la suspension de @%{username} - %{error}"
+              bulk_suspend_finished: "L'opération de suspension groupée est terminée."
+              failed_to_suspend_users: "Les utilisateurs suivants n'ont pas pu être suspendus :"
           delete:
             label: "Supprimer les utilisateurs…"
             confirmation_modal:
@@ -8315,8 +8783,10 @@ fr:
           silenced: "En sourdine"
           staged: "Provisoires"
         activation_filter:
+          label: "Statut d'activation"
           all: "Tous les utilisateurs"
           activated: "Activé"
+          not_activated: "Non activé"
         approved: "Approuvé ?"
         titles:
           active: "Utilisateurs actifs"
@@ -8379,6 +8849,17 @@ fr:
         penalty_post_actions: "Que souhaitez-vous faire du message associé ?"
         penalty_post_delete: "Supprimer le message"
         penalty_post_delete_replies: "Supprimer le message et les réponses éventuelles"
+        penalty_post_delete_all: "Supprimer tous les sujets de cet utilisateur + toutes les réponses"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Cette opération supprimera
+          { TOPICS, plural,
+              one {# sujet}
+            other {# sujets}
+          } et
+          { REPLIES, plural,
+              one {# réponse}
+            other {# réponses}
+          }. <b>Cette action est irréversible !</b> Voulez-vous vraiment continuer ?</span>
         penalty_post_edit: "Modifier le message"
         penalty_post_none: "Ne rien faire"
         penalty_count: "Nombre de pénalités"
@@ -8436,6 +8917,12 @@ fr:
         approve_bulk_success: "Bravo ! Tous les utilisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
         post_edits_count: "Modifications de message"
+        upcoming_changes:
+          title: "Modifications à venir pour l'utilisateur"
+          view_modal: "Afficher les modifications activées"
+          description: "Pour modifier les groupes ou pour activer ou désactiver les modifications à venir, rendez-vous sur la <a href='%{basePath}/admin/config/upcoming-changes'>page de configuration des modifications à venir</a>."
+          filter_placeholder: "Filtrer les modifications à venir par nom ou description"
+          filter_no_results: "Aucune modification à venir n'a été trouvée"
         exports:
           title: Exportations d'utilisateurs
           download:
@@ -8460,6 +8947,9 @@ fr:
           button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
+            description:
+              one: "Suppression de %{count} publication de @%{username}..."
+              other: "Suppression de %{count} publications de @%{username}..."
           confirmation:
             title: "Supprimer tous les messages de @%{username}"
             description: |
@@ -8471,6 +8961,7 @@ fr:
             text: "supprimer les messages de @%{username}"
             delete: "Supprimer les messages de @%{username}"
             cancel: "Annuler"
+          all_enqueued: "Toutes les publications de @%{username} ont été mises en file d'attente pour la suppression"
         merge:
           button: "Fusionner"
           prompt:
@@ -8497,6 +8988,8 @@ fr:
             cancel: "Annuler"
         merging_user: "Fusion de l'utilisateur…"
         merge_failed: "Une erreur s'est produite lors de la fusion des utilisateurs."
+        delete_forbidden_because_admin: "Les administrateurs ne peuvent pas être supprimés."
+        delete_posts_forbidden_because_admin: "Impossible de supprimer toutes les publications des administrateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jour ne peuvent pas être supprimés.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jours ne peuvent pas être supprimés.)"
@@ -8508,7 +9001,12 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
+        delete_and_block: "Supprimer et bloquer les adresses e-mail et IP"
+        delete_and_block_description: "Supprimez l'utilisateur et bloquez son adresse e-mail et son adresse IP."
+        delete_and_block_email: "Supprimer et bloquer l'adresse e-mail"
+        delete_and_block_email_description: "Supprimez l'utilisateur et bloquez son adresse e-mail, mais autorisez la réutilisation de son adresse IP."
         delete_dont_block: "Supprimer l'utilisateur"
+        delete_dont_block_description: "Supprimez l'utilisateur sans bloquer son adresse e-mail ou son adresse IP."
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Une erreur s'est produite lors de la suppression de cet utilisateur. Assurez-vous que tous les messages sont supprimés avant d'essayer de supprimer l'utilisateur."
@@ -8642,8 +9140,13 @@ fr:
           title: "Afficher sur la carte de l'utilisateur "
           enabled: "Affiché sur la carte de l'utilisateur"
           disabled: "Non affiché sur la carte de l'utilisateur"
+        show_on_signup:
+          title: "Afficher sur le formulaire d'inscription"
+          enabled: "Formulaire d'inscription affiché"
+          disabled: "Non affiché sur le formulaire d'inscription"
         searchable:
           title: "Indexable"
+          tooltip: "Une fois activée, cette option permet à quiconque de trouver des membres en fonction de la valeur de ce champ et de la voir dans les résultats de recherche, même si elle n'est pas affichée sur leur profil ou leur fiche utilisateur."
           enabled: "Indexable"
           disabled: "Non indexable"
         field_types:
@@ -8670,6 +9173,9 @@ fr:
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
         no_results: "Aucun texte de site correspondant n'a été trouvé"
         interpolation_keys: "Clés d'interpolation disponibles :"
+        interpolation_key_insert: "Cliquez pour insérer"
+        interpolation_key_used: "Déjà utilisé"
+        interpolation_key_invalid: "Clé inconnue : elle ne sera pas interpolée"
         outdated:
           title: "Cette traduction est obsolète"
           description: "La traduction par défaut de cette clé a changé depuis la création de ce remplacement. Veuillez vérifier ci-dessous que votre traduction correspond à toutes les modifications apportées à l'intention d'origine."
@@ -8688,6 +9194,12 @@ fr:
       site_settings:
         title: "Paramètres du site"
         description: "Configurez les paramètres de votre site Discourse pour personnaliser son apparence, ses fonctionnalités et son expérience utilisateur."
+        depends_on_notice:
+          one: "Ce paramètre n'est appliqué que lorsque %{dependencyLinks} est activé."
+          other: "Ce paramètre n'est appliqué que lorsque %{dependencyLinks} sont activés."
+        depends_on_values_notice:
+          one: "Ce paramètre s'applique uniquement lorsque %{dependencyLinks} est défini sur une valeur compatible."
+          other: "Ce paramètre s'applique uniquement lorsque %{dependencyLinks} est défini sur des valeurs compatibles."
         discard:
           one: "Annuler la modification"
           other: "Annuler les modifications"
@@ -8717,6 +9229,9 @@ fr:
             label: "Envoyer"
             title: "Téléverser des images"
         download_file: "Télécharger"
+        upload_restrictions:
+          extensions: "Accepté : %{extensions}"
+          max_size: "Max : %{size}"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
         table_column_heading:
@@ -8752,9 +9267,11 @@ fr:
           groups: "Groupes"
           dashboard: "Tableau de bord"
           navigation: "Navigation"
+          nested_replies: "Réponses imbriquées"
           experimental: "Expérimental"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
+          already_exists: "L'entrée pour %{key} existe déjà."
         default_categories:
           modal_description:
             one: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateur existant."
@@ -8779,13 +9296,29 @@ fr:
             prompt: "La modification de ce paramètre peut avoir des conséquences importantes ou inattendues pour votre site. Voulez-vous vraiment continuer ?"
             confirm: "Oui, continuer"
           min_password_length:
+            prompt: "Vous êtes sur le point de modifier votre politique relative aux mots de passe. Cette modification s'appliquera à tous les utilisateurs qui changeront leur mot de passe à partir de maintenant. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           min_admin_password_length:
+            prompt: "Vous êtes sur le point de modifier votre politique relative aux mots de passe. Cette modification s'appliquera à tous les administrateurs qui changeront leur mot de passe à partir de maintenant. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           password_unique_characters:
+            prompt: "Vous êtes sur le point de modifier votre politique relative aux mots de passe. Cette modification s'appliquera à tous les utilisateurs qui changeront leur mot de passe à partir de maintenant. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           block_common_passwords:
+            prompt: "Vous êtes sur le point de modifier votre politique relative aux mots de passe. Cette modification s'appliquera à tous les utilisateurs qui changeront leur mot de passe à partir de maintenant. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
+          clean_up_inactive_users_after_days:
+            prompt: "Si vous définissez cette valeur sur une valeur autre que 0, les utilisateurs qui ne sont plus actifs depuis autant de jours seront définitivement supprimés. Voulez-vous vraiment continuer ?"
+            confirm: "Oui, je comprends que les utilisateurs inactifs seront supprimés définitivement sauf si je définis cette valeur sur 0."
+          can_permanently_delete:
+            prompt: "L'activation de cette option permet aux administrateurs de supprimer définitivement les publications, les sujets et les versions de publications. Les données supprimées définitivement ne peuvent pas être récupérées. Cela peut également affecter l'intégrité des données et rompre les liens existants."
+            confirm: "Je comprends"
+          content_security_policy:
+            prompt: "La désactivation de la politique de sécurité du contenu (CSP) supprime une protection essentielle contre les attaques XSS (Cross-Site Scripting) et autres injections de contenu. Votre site sera alors vulnérable et cette action ne doit être effectuée qu'à des fins de débogage ou de test. La désactivation de la CSP ne résoudra jamais les problèmes CORS. Voulez-vous vraiment continuer ?"
+            confirm: "Oui, désactiver la politique de sécurité du contenu"
+        job_status:
+          completed: "Mise à jour terminée"
+          enqueued: "Mise à jour en cours"
       badges:
         status: Statut
         title: Badges
@@ -8819,7 +9352,10 @@ fr:
         no_user_badges: "%{name} ne s'est vu attribuer aucun badge."
         no_badges: Il n'y a aucun badge à attribuer.
         none_selected: "Sélectionnez un badge pour commencer"
+        filter_placeholder: "Filtrer les badges..."
+        no_badges_found: "Aucun badge trouvé"
         sections:
+          design: Conception
           query: Requête
           settings: Paramètres
         usage_heading: Utilisation
@@ -8900,15 +9436,38 @@ fr:
         name: "Nom"
         group: "Groupe"
         all_groups: "Tous les groupes"
+        filter_placeholder: "Rechercher des émojis par nom"
+        no_results: "Aucun émoji n'a été trouvé."
         created_by: "Créé par "
         image: "Image"
         alt: "aperçu de l'émoji personnalisé"
         delete_confirm: "Voulez-vous vraiment supprimer l'émoji :%{name}: ?"
         settings: "Paramètres"
         export: "Exporter"
-        import: "Importer"
+        export_count: "Exporter (sélection : %{count})"
+        export_failed: "L'exportation a échoué. Veuillez réessayer."
+        select_to_export: "Sélectionnez pour exporter"
+        import: "Téléverser"
+        import_heading: "Importer des émojis"
+        import_description: "Téléversez un fichier ZIP contenant un manifeste emojis.csv et des fichiers image."
+        import_download_sample: "Téléchargez un exemple de modèle."
+        import_preview_heading: "Examiner l'importation"
+        import_summary: "%{new} nouveau(x) · %{conflicts} conflit(s) · %{unchanged} inchangé(s) · %{invalid} erreur(s)"
+        import_confirm: "Confirmer l'importation"
+        import_unchanged_count: "%{count} inchangé(s)"
+        import_will_skip: "Inchangé : sera ignoré"
+        import_excluded: "Exclu de l'importation"
+        import_incoming_alt: "Émoji à importer : %{name}"
+        import_existing_alt: "Émoji existant : %{name}"
+        import_existing_group_alt: "Groupe existant"
+        import_use_incoming: "Utiliser le nouveau"
+        import_keep_existing: "Conserver l'existant"
         import_category:
           new: "Nouveau"
+          conflict: "Conflits"
+          invalid: "Erreurs"
+        select_all: "Sélectionnez tous les émojis"
+        select: "Sélectionner %{name}"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         delete: "Supprimer"
@@ -8927,6 +9486,7 @@ fr:
         category: "Publier dans la catégorie"
         tags: "Étiquettes de sujet"
         post_author: "Auteur de la publication"
+        post_author_description: "Auteur de tous les sujets intégrés provenant de cet hébergeur, remplaçant les balises méta de la page de blog. Laissez l'espace vide pour lire l'auteur à partir des balises <meta name='discourse-username'> ou <meta name='author'> de la page."
         post_author_with_default: "Auteur de la publication (par défaut %{author})"
         add_host: "Ajouter un hôte"
         posts_and_topics: "Configuration des publications et des sujets"
@@ -8945,6 +9505,8 @@ fr:
         crawler_settings_saved: "Paramètres du robot d'indexation enregistrés"
         back: "Retour à l'intégration"
         configuration_snippet: "Extrait de configuration"
+        full_app_mode: "Mode application complet"
+        full_app_mode_description: "Chargez l'application Discourse complète dans l'iframe intégrée. Cela permet aux utilisateurs de répondre, d'aimer, de citer et d'interagir directement avec les sujets"
         host_form:
           add_header: "Ajouter un hôte"
           edit_header: "Modifier l'hôte"

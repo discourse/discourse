@@ -31,6 +31,7 @@ import MultiSelectHeader from "./multi-select/multi-select-header";
   caretDownIcon: "caretIcon",
   caretUpIcon: "caretIcon",
   useHeaderFilter: false,
+  useHeaderSelectedCount: false,
 })
 @pluginApiIdentifiers(["multi-select"])
 export default class MultiSelect extends SelectKitComponent {

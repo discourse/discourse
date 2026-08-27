@@ -409,11 +409,8 @@ class User < ActiveRecord::Base
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
 
-    DiscourseTagging.filter_visible(
-      Tag.where(
-        id: SidebarSectionLink.where(user_id: id, linkable_type: "Tag").select(:linkable_id),
-      ),
-      user_guardian,
+    Tag.browsable(user_guardian).where(
+      id: sidebar_section_links.where(linkable_type: "Tag").select(:linkable_id),
     )
   end
 
@@ -1305,6 +1302,17 @@ class User < ActiveRecord::Base
     else
       self.class.avatar_template(username, uploaded_avatar_id)
     end
+  end
+
+  def remove_avatar!(actor)
+    return if uploaded_avatar_id.blank?
+
+    self.class.transaction do
+      update!(uploaded_avatar_id: nil)
+      user_avatar&.update!(custom_upload_id: nil, gravatar_upload_id: nil)
+    end
+
+    StaffActionLogger.new(actor).log_removed_avatar(self)
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -2352,7 +2360,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_updated_event
-    DiscourseEvent.trigger(:user_updated, self)
+    DiscourseEvent.trigger(:user_updated, self, %w[uploaded_avatar_id])
     true
   end
 

@@ -41,6 +41,7 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       json = response.parsed_body
       expect(json["data_tables"].length).to eq(1)
       expect(json["data_tables"][0]["name"]).to eq(data_table.name)
+      expect(json["data_tables"][0]["size"]).to be > 0
     end
 
     it "returns shared pagination meta" do

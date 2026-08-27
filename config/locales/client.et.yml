@@ -263,6 +263,18 @@ et:
     admin_onboarding_banner:
       start_posting:
         back: "Tagasi"
+    design_wizard:
+      back: "Tagasi"
+      next: "Järgmine"
+      sections:
+        theme: "Kujundusteema"
+        homepage: "Avaleht"
+      colors:
+        light: "Hele"
+        dark: "Tume"
+      homepage:
+        topics: "Teemasid"
+        categories: "Liigid"
     about:
       edit: "Muuda seda lehekülge"
       simple_title: "Teave"
@@ -413,6 +425,7 @@ et:
         email: "E-post"
         name: "Nimi"
         fields: "Väljad"
+        penalty_forever: "Igavesti"
         reject_reason: "Põhjus"
         scrubbed_reason: "Põhjus"
         scrub_record:
@@ -1211,6 +1224,7 @@ et:
           staff_role_moderator: "Moderaator"
           email_placeholder: "nimi@näide.ee"
           invite_by_email: "E-post"
+          create_and_send: "Saada"
           summary:
             role_member: "Liige"
             role_admin: "Adminn"
@@ -1218,6 +1232,7 @@ et:
             method_email: "E-post"
             topic: "Teema"
             groups: "Rühmad"
+            edit: "Muuda"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
       password:
@@ -1457,6 +1472,8 @@ et:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+    category_row:
+      subcategories: "+ Alamkategooriad"
     select_kit:
       delete_item: "Kustuta üksus %{name}"
       default_header_text: Vali...
@@ -2674,6 +2691,8 @@ et:
         custom:
           save: "Salvesta"
           delete: "Kustuta"
+          localizations:
+            remove_language: "Eemalda"
           links:
             icon:
               label: "Ikoon"
@@ -2923,12 +2942,18 @@ et:
         default_value: "Vaikimisi"
       search:
         title: "Otsi"
+      site_traffic_explorer:
+        metric_information: "Teave %{metric} kohta"
+        apply: "Rakenda"
+        filters:
+          ip: "IP-aadress"
+        series:
+          anonymous_human: "Anonüümne"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
         version: "Versioon"
         up_to_date: "Oled ajakohane!"
-        critical_available: "Kriitiline uuendus on saadaval."
         updates_available: "Uuendused on saadaval."
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."

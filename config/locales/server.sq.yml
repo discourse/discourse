@@ -347,6 +347,9 @@ sq:
     title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
   change_email:
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
     already_done: "Na vjen keq, ky link nuk vlen më. Mbase adresa juaj email u ndryshua para pak kohësh?"
@@ -583,6 +586,9 @@ sq:
     top_countries_by_browser_pageviews:
       labels:
         count: "Vizita"
+    top_entry_urls:
+      labels:
+        count: "Vizita"
     top_referrers_by_browser_pageviews:
       labels:
         count: "Vizita"
@@ -817,7 +823,6 @@ sq:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
@@ -1174,9 +1179,6 @@ sq:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     digest:
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
@@ -1422,6 +1424,9 @@ sq:
       title: "Konfirmoni emailin tuaj"
     resend_email:
       title: "Dërgo përsëri emailin e aktivizimit"
+  design_wizard:
+    palette_pairs:
+      default: "Paracaktuar"
   wizard:
     step:
       setup:
@@ -1451,6 +1456,10 @@ sq:
   staff_action_logs:
     unknown: "i panjohur"
   reviewables:
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekondë"
+        other: "%{count} sekonda"
     actions:
       agree:
         title: "Po"

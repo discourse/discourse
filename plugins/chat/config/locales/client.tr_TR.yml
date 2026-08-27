@@ -75,6 +75,8 @@ tr_TR:
         close: "Sabitlenmiş mesajları kapat"
         pinned_by_you: "Sizin tarafınızdan sabitlendi"
         pinned_by_user: "%{username} tarafından sabitlendi"
+      pinned_bar:
+        title: "Sabitlendi"
       no_pinned_messages: "Bu kanalda sabitlenmiş mesaj yok."
       pin_message: "Mesajı sabitle"
       unpin_message: "Mesajı sabitlemeyi kaldır"
@@ -804,4 +806,11 @@ tr_TR:
         message: "Mesaj"
       chat_approval:
         message: "Mesaj"
+        buttons: "Düğmeler"
+        value: "Değer"
+        style: "Stil"
+        style_default: "Varsayılan"
+        style_primary: "Birincil"
+        style_success: "Başarılı"
+        icon: "Simge"
         channel_id: "Kanal"

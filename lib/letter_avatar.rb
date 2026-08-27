@@ -97,7 +97,11 @@ class LetterAvatar
         #{filename}
       ]
 
-      ImageMagick.magick(*instructions, write: [File.dirname(filename)])
+      ImageMagick.magick(
+        *instructions,
+        operation: :letter_avatar_render,
+        write: [File.dirname(filename)],
+      )
 
       ## do not optimize image, it will end up larger than original
       filename
@@ -110,15 +114,13 @@ class LetterAvatar
 
     def image_magick_version
       @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(
-            ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
-          )
-        end
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
+            "-list",
+            "font",
+            operation: :letter_avatar_font_list,
+          ),
+        )
     end
 
     def cleanup_old

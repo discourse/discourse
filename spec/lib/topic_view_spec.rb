@@ -1181,6 +1181,21 @@ RSpec.describe TopicView do
       expect(topic_view.show_read_indicator?).to be_truthy
     end
 
+    it "does not show read indicator if current_user cannot see members of the read state group" do
+      user = Fabricate(:user)
+      group =
+        Fabricate(
+          :group,
+          users: [user],
+          publish_read_state: true,
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+      pm_topic.topic_allowed_groups = [Fabricate.build(:topic_allowed_group, group: group)]
+
+      topic_view = TopicView.new(pm_topic.id, user)
+      expect(topic_view.show_read_indicator?).to be_falsey
+    end
+
     it "does not show read indicator if groups do not have read indicator enabled" do
       topic_view = TopicView.new(pm_topic.id, admin)
       expect(topic_view.show_read_indicator?).to be_falsey

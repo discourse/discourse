@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -72,15 +73,23 @@ export default class AdminPluginsListItem extends Component {
 
     if (this.args.plugin.useNewShowRoute) {
       return this.router.urlFor("adminPlugins.show", this.args.plugin);
-    } else {
-      return this.router.urlFor(
-        "adminSiteSettingsCategory",
-        this.args.plugin.settingCategoryName,
-        {
-          queryParams: { filter: `plugin:${this.args.plugin.name}` },
-        }
-      );
     }
+
+    // Plugins that predate the show route keep their config UI on their own
+    // route, so the settings category is only a fallback for plugins that have
+    // no config UI at all.
+    const { adminRoute } = this.args.plugin;
+    if (adminRoute && adminRouteValid(this.router, adminRoute)) {
+      return this.router.urlFor(adminRoute.full_location);
+    }
+
+    return this.router.urlFor(
+      "adminSiteSettingsCategory",
+      this.args.plugin.settingCategoryName,
+      {
+        queryParams: { filter: `plugin:${this.args.plugin.name}` },
+      }
+    );
   }
 
   <template>

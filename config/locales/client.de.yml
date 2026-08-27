@@ -58,6 +58,11 @@ de:
         access_permission_viewer: "Lesezugriff"
         access_permission_viewer_description: "Kann Inhalte zu dieser Entität anzeigen"
         access_permission_remove: "Entfernen"
+        access_permission_remove_description: "Berechtigung für diesen Berechtigten entfernen"
+        add_group: "Benutzer oder Gruppe hinzufügen"
+        mandatory_acl_tooltip: "Diese Berechtigung ist für %{name} zwingend erforderlich und kann nicht entfernt werden"
+        mandatory: "Erforderlich"
+        disallowed: "Nicht erlaubt"
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
       previous: "Vorherige Folie"
@@ -114,6 +119,7 @@ de:
         x_minutes:
           one: "%{count} min"
           other: "%{count} min"
+        x_minutes_seconds: "%{minutes} Min. %{seconds} Sek."
         about_x_hours:
           one: "%{count} h"
           other: "%{count} h"
@@ -512,26 +518,16 @@ de:
       pill: "Empfohlen"
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
         title: "Passe deine Website an"
-        description: "Wähle ein Starttheme für deine Community"
-        action: "Theme auswählen"
-        modal_title: "Wähle ein Theme aus"
-        use_theme: "Ausgewähltes Theme verwenden"
-        enabled: "Ausgewählt"
-        applying_theme: "Theme wird angewendet …"
-        browse_all: "Themes verwalten"
         show_light_screenshot: "Hellen Screenshot anzeigen"
         show_dark_screenshot: "Dunklen Screenshot anzeigen"
       invite_collaborators:
         title: "Mitwirkende einladen"
-        description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
         action: "Einladung erstellen"
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
-        description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
         action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
@@ -552,6 +548,27 @@ de:
           what_is_your_favorite_food:
             title: "Was ist dein Lieblingsessen?"
             body: "Teile dein Lieblingsessen mit der Community! Ich fange an: Ich liebe Pizza, besonders mit extra viel Käse und Peperoni."
+    design_wizard:
+      title: "Passe deine Website an"
+      back: "Zurück"
+      next: "Weiter"
+      sections:
+        theme: "Theme"
+        fonts: "Schriftarten"
+        homepage: "Homepage"
+      theme:
+        selected: "Ausgewählt"
+      colors:
+        light: "Hell"
+        dark: "Dunkel"
+      fonts:
+        base_font: "Basisschriftart"
+        heading_font: "Überschrift-Schriftart"
+      homepage:
+        topics: "Themen"
+        categories: "Kategorien"
+        styles:
+          boxes: "Boxen"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -858,16 +875,13 @@ de:
       stale_help: "Dieses Element wurde durch <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
-        required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
-        claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
-        claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
-        automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
         title: "Dieses Thema übernehmen"
       unclaim:
         help: "Diese Übernahme entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
+      delete_confirm: "Möchtest du dieses Element aus der Warteschlange zur Überprüfung löschen?"
       settings:
         saved: "Gespeichert"
         save_changes: "Änderungen speichern"
@@ -898,6 +912,8 @@ de:
         email: "E-Mail"
         name: "Name"
         fields: "Felder"
+        silence_reason: "Grund der Stummschaltung"
+        penalty_forever: "Für immer"
         reject_reason: "Grund"
         scrubbed_by: "Datensatz bereinigt von"
         scrubbed_reason: "Grund"
@@ -1647,14 +1663,17 @@ de:
       desktop_notifications:
         label: "Live-Benachrichtigungen"
         push_level:
+          title: "Push-Benachrichtigungen sind…"
           none: "Deaktiviert"
           all: "Aktiviert"
+          chat_only: "Nur für Chat aktiviert"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen aktivieren"
         perm_denied_btn: "Berechtigung verweigert"
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
+        enable_failed: "Benachrichtigungen konnten nicht aktiviert werden. Dein Browser hat die Anfrage blockiert oder der Push-Service ist nicht verfügbar."
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
@@ -1708,7 +1727,6 @@ de:
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
-      enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
@@ -2203,7 +2221,8 @@ de:
       bookmark_after_notification:
         title: "Nachdem eine Lesezeichen-Erinnerungsbenachrichtigung gesendet wurde:"
       send_shortcut:
-        enter: "Enter"
+        title: "Nachrichten in Chat-ähnlichen Eingabefeldern senden mit:"
+        enter: "Eingabetaste"
         meta_enter: "%{meta_key} + Eingabetaste"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene „Gefällt mir“ anzeigen"
@@ -2367,30 +2386,48 @@ de:
           invite_saved_with_sending_email: "Die Einladungs-E-Mail wurde verschickt. Du kannst auch den Link unten kopieren und teilen, um sofort Zugang zu dieser Website zu gewähren."
         invite_roles:
           member_title: "Mitglieder einladen"
+          admin_title: "Team einladen"
+          edit_title: "Einladung bearbeiten"
+          created_title: "Einladung erstellt"
           sent_title: "Einladung gesendet"
           member_tab: "Mitglieder"
           admin_tab: "Team"
-          staff_role_admin: "Admin"
+          staff_role_label: "Einladen als"
+          staff_role_admin: "Administrator"
           staff_role_moderator: "Moderator"
           admin_email_label: "E-Mail-Adresse"
+          member_email_label: "Senden an"
+          member_email_help: "Wir werden einen Einladungslink an diese E-Mail-Adresse senden."
           email_placeholder: "name@example.com"
+          invite_by: "Eingeladen von"
+          invite_by_link: "Teilbarer Link"
           invite_by_email: "E-Mail"
+          role_label: "Einladen als"
           restrict_domain: "Auf Domain beschränken"
           domain_placeholder: "example.com"
-          more_options: "Mehr Optionen"
+          domain_invalid: "Gib eine gültige Domain ein, z. B. beispiel.com"
+          arrive_at_topic_help: "Leite Personen nach dem Annehmen zu einem bestimmten Thema weiter."
+          create_and_send: "Senden"
+          create_and_copy: "Link kopieren"
           update: "Aktualisieren"
           summary:
+            sent_to: "Eine Einladung wurde per E-Mail an %{email} gesendet. Du kannst diesen Link auch direkt teilen:"
+            role: "Rolle"
             role_member: "Mitglied"
-            role_admin: "Admin"
+            role_admin: "Administrator"
             role_moderator: "Moderator"
             method: "Teilen"
+            method_link: "Teilbarer Link"
             method_email: "E-Mail"
             restriction: "Beschränkt auf"
             uses: "Max. Verwendungen"
             expires: "Gültig bis"
             topic: "Thema"
             groups: "Gruppen"
-            edit: "Einladung bearbeiten"
+            edit: "Bearbeiten"
+            view_invites: "Einladungen anzeigen"
+          email_sent:
+            body: "Eine Einladung wurde per E-Mail an %{email} gesendet."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2713,6 +2750,7 @@ de:
     created: "Erstellt"
     created_lowercase: "erstellt"
     trust_level: "Vertrauensstufe"
+    search_hint: "Benutzernamen oder E-Mail-Adressen (durch Komma oder Leerzeichen getrennt) oder eine IP-Adresse"
     create_account:
       header_title: "Willkommen!"
       disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
@@ -2920,6 +2958,13 @@ de:
       disabled: "Nicht anzeigen"
       sidebar_footer: "In der Fußzeile der Seitenleiste anzeigen"
       header: "In der Kopfzeile anzeigen"
+    category_scope:
+      all: "Alle öffentlichen und privaten Kategorien"
+      public: "Öffentliche Kategorien"
+      include: "Ausgewählte Kategorien (mit Unterkategorien) einbeziehen"
+      include_strict: "Ausgewählte Kategorien (ohne Unterkategorien) einbeziehen"
+      exclude: "Ausgewählte Kategorien (mit Unterkategorien) ausschließen"
+      exclude_strict: "Ausgewählte Kategorien (ohne Unterkategorien) ausschließen"
     welcome_banner_location:
       above_topic_content: "Über dem Themeninhalt"
       below_site_header: "Unter der Kopfzeile"
@@ -2943,6 +2988,7 @@ de:
       subcategory_count:
         one: "+%{count} Unterkategorie"
         other: "+%{count} Unterkategorien"
+      subcategories: "+ Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -3015,6 +3061,7 @@ de:
       toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
+      search_label: "Symbole durchsuchen"
       search_placeholder: "Symbole durchsuchen..."
       no_results: "Keine Symbole gefunden"
       results_count:
@@ -3033,6 +3080,8 @@ de:
     gifs:
       modal_title: "GIF suchen"
       composer_title: "GIF einfügen"
+      placeholder: "KLIPY suchen"
+      powered_by: "Powered by Klipy"
       no_results: "Gib oben ein Stichwort ein, um nach GIFs zu suchen."
       browse_categories: "Nach Kategorien durchsuchen"
       bad_api_key: "Der Klipy-API-Schlüssel fehlt oder ist ungültig. Bitte überprüfe die Einstellungen für den GIF-API-Schlüssel."
@@ -3236,7 +3285,6 @@ de:
       italic_label: "K"
       italic_title: "Betonung"
       italic_text: "betonter Text"
-      heading_title: "Überschriften"
       heading_level_n: "Überschrift %{levelNumber}"
       heading_level_n_title: "Überschrift %{levelNumber}"
       heading_level_paragraph: "Absatz"
@@ -3454,7 +3502,6 @@ de:
         other: "%{count} offene Mitgliedschaftsanfragen für „%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
       admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
       upcoming_changes:
@@ -3925,7 +3972,6 @@ de:
           missing_to: "Ein Ersatzschlagwort ist erforderlich"
       delete_topics:
         name: "Löschen"
-        description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
       update_category:
         name: "Kategorie aktualisieren"
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
@@ -3960,7 +4006,7 @@ de:
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
-        hot: "Angesagt"
+        hot: "Heiß"
         new: "Neue"
         old: "Alt"
       load_more_children:
@@ -3982,6 +4028,11 @@ de:
       all_replies: "Alle Antworten"
       category_settings:
         default_nested_view: "Verschachtelte Ansicht als Standard für Themen dieser Kategorie verwenden"
+        convert_existing: "Vorhandene Themen umwandeln"
+        convert_existing_description: "Vorhandene Themen dieser Kategorie verwenden erst dann verschachtelte Antworten, wenn du sie umwandelst. Führe diesen Befehl einmal aus, um die verschachtelte Ansicht zu aktivieren."
+        convert_existing_confirm: "Alle bestehenden Themen in dieser Kategorie in verschachtelte Antworten umwandeln?"
+        convert_existing_complete: "Bestehende Themen wurden in verschachtelte Antworten umgewandelt."
+        save_first: "Speichere diese Kategorie-Einstellungen, bevor du bestehende Themen umwandelst."
       no_replies: "Noch keine Antworten."
       deleted_post_placeholder: "[gelöscht]"
       ignored_post_placeholder: "[ignoriert]"
@@ -4582,8 +4633,14 @@ de:
         modal:
           title: "Übersetzungen"
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
+          language_notice: "Lege die Originalsprache des Beitrags fest, damit den Lesern die Übersetzungen angezeigt werden können."
           post_language: "Sprache des Beitrags"
+          topic_language: "Sprache des Thementitels"
+          save_post_language: "Sprache des Beitrags speichern"
+          save_topic_language: "Sprache des Thementitels speichern"
           discard_language_change: "Änderung verwerfen"
+          post_language_updated: "Sprache des Beitrags aktualisiert"
+          topic_language_updated: "Sprache des Thementitels aktualisiert"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
           title: "Sprache des Beitrags"
@@ -4727,6 +4784,8 @@ de:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
           other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
+        diff_too_complex: "Diese Bearbeitung hat zu viel vom Beitrag auf einmal verändert, daher kann sie nicht angezeigt werden."
+        diff_hidden: "Ein Teil des Bearbeitungsverlaufs dieses Beitrags wurde ausgeblendet, daher kann diese Bearbeitung nicht angezeigt werden."
         locale:
           no_locale_set: "Keine Sprache eingestellt"
           locale_removed: "Sprache entfernt"
@@ -4878,6 +4937,7 @@ de:
       unsaved_changes: "Du hast ungespeicherte Änderungen"
       slug: "Sprechender Name für URL der Kategorie"
       parent: "Übergeordnete Kategorie"
+      slug_placeholder: "Automatisch generiert, falls leer gelassen"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       errors:
@@ -5515,6 +5575,7 @@ de:
       selector_no_tags: "keine Schlagwörter"
       selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
+      choose_for_topic: "Optionale Schlagwörter…"
       choose_for_topic_required:
         one: "mindestens %{count} Schlagwort auswählen …"
         other: "mindestens %{count} Schlagwörter auswählen …"
@@ -5787,10 +5848,11 @@ de:
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
           localizations:
-            title: "Übersetzungen"
             locale: "Sprache"
             title_label: "Titel des Abschnitts"
+            remove_language: "Entfernen"
           links:
+            title: "Abschnittslinks"
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"
             reset: "Auf Standard zurücksetzen"
@@ -6117,6 +6179,7 @@ de:
         title: "Verfügbare Berichte"
         sidebar_title: "Berichte"
         back: "Zurück zu alle Berichte"
+        back_to_dashboard: "Zurück zum Dashboard"
         all_groups: "Alle Gruppen"
         group_engagement: "Aktivität & Wachstum"
         group_traffic: "Traffic"
@@ -6163,6 +6226,7 @@ de:
         enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
+        depends_on_notice: "Diese Änderung erfordert, dass %{dependencyLinks} aktiviert wird."
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
         permanent_soon_notice: "Diese Änderung wird bald dauerhaft. Du wirst keine Möglichkeit mehr haben, sie zu deaktivieren."
         permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
@@ -6334,6 +6398,7 @@ de:
             apple_touch_icon:
               title: "Apple-Touch-Symbol"
               description: "Dieses Symbol wird für Apple-Touch-Geräte verwendet. Wenn es leer bleibt, wird large_icon verwendet."
+              help_text: "Die empfohlene Größe ist 180 x 180 Pixel. Verwende kein SVG-Bild. Ein transparenter Hintergrund wird nicht empfohlen."
             digest_logo:
               title: "Digest-Logo"
               description: "Das alternative Logobild, das oben in der E-Mail-Zusammenfassung deiner Website verwendet wird. Wenn du nichts angibst, wird das Bild aus der Einstellung „Logo“ verwendet."
@@ -6542,21 +6607,31 @@ de:
             stats_and_thresholds:
               title: "Statistiken & Schwellenwerte"
         category_management:
+          title: "Kategorienverwaltung"
+          header_description: "Überprüfe Kategorietypen, Hierarchie und die Kategorien, die derzeit jedem Typ zugeordnet sind."
+          keywords: "Kategorien|Kategorietypen|Diskussion|Kategorienverwaltung"
           create_category: "Kategorie erstellen"
           tabs:
             settings: "Einstellungen"
           types:
+            unavailable: "Der Kategorietyp %{categoryType} ist nicht verfügbar."
             all:
               title: "Alle Kategorien"
+              description: "Alle Kategorien über alle konfigurierten Kategorietypen hinweg."
           filter_placeholder: "Kategorien filtern"
+          no_results: "Keine Kategorien vom Typ %{type} gefunden."
+          open_settings: "Einstellungen öffnen"
           table:
             category: "Kategorie"
             visibility: "Sichtbarkeit"
             topics: "Themen"
           visibility:
             public: "Öffentlich"
+            restricted: "Eingeschränkt"
           visibility_filter:
             all: "Alle Kategorien"
+            public: "Öffentliche Kategorien"
+            restricted: "Eingeschränkte Kategorien"
         permalinks:
           title: "Permalinks"
           header_description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind"
@@ -6691,6 +6766,28 @@ de:
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
+      site_traffic_explorer:
+        metric_information: "Über %{metric}"
+        remove_filter_value: "%{value} entfernen"
+        clear_all: "Alle löschen"
+        apply: "Anwenden"
+        view_more: "Mehr anzeigen"
+        cards:
+          pages: "Seiten"
+          visitors: "Besucher"
+        filters:
+          referrer: "Referrer"
+          country: "Land"
+          browser: "Browser"
+          ip: "IP-Adresse"
+        metrics:
+          logged_in_share:
+            label: "Anteil angemeldeter Mitglieder"
+          bounce_rate:
+            label: "Absprungrate"
+        series:
+          logged_in_human: "Angemeldet"
+          anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"
@@ -6700,7 +6797,6 @@ de:
         up_to_date_newer_commits:
           one: "Du verwendest bereits den aktuellsten Release, aber es gibt %{count} neue Änderung."
           other: "Du verwendest bereits den aktuellsten Release, aber es gibt %{count} neue Änderungen."
-        critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
         please_update: "Bitte Update durchführen!"
         no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
@@ -6766,12 +6862,14 @@ de:
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
         loading: "Dashboard wird geladen …"
+        fetch_error: "Das Dashboard konnte nicht geladen werden. Bitte aktualisiere die Seite."
         stable: "stabil"
         sections:
           highlights:
             title: "Highlights"
           reports:
             title: "Berichte"
+            fetch_error: "Die Berichte konnten nicht geladen werden. Bitte aktualisiere die Seite."
           traffic:
             title: "Website-Traffic"
           engagement:
@@ -6787,12 +6885,14 @@ de:
               share: "Teilen"
               vs_prior: "Im Vergleich zu vorher"
               empty: "Keine Aktivität im ausgewählten Zeitraum."
+              save_error: "Deine Auswahl konnte nicht für das nächste Mal gespeichert werden."
             whos_posting:
               title: "Wer postet Beiträge?"
               new_members: "Neue Mitglieder"
               returning: "Zurückkehrende"
               staff: "Team"
               empty: "Keine Beiträge im ausgewählten Zeitraum."
+              save_error: "Deine Auswahl konnte nicht für das nächste Mal gespeichert werden."
             trust_level_pipeline:
               title: "Verlauf der Vertrauensstufen"
               trust_levels:
@@ -6808,26 +6908,23 @@ de:
                 dropping:
                   one: "-%{count} fallend"
                   other: "-%{count} fallend"
+              signups:
+                one: "+ %{formattedCount} Anmeldung"
+                other: "+ %{formattedCount} Anmeldungen"
+              signups_title: "Anzahl der Neuanmeldungen, die diese Vertrauensstufe erreicht haben"
+              count_title: "Gesamtzahl der Mitglieder auf dieser Vertrauensstufe"
+              arrivals_aria:
+                one: "%{count} Mitglied wurde auf diese Vertrauensstufe befördert"
+                other: "%{count} Mitglieder wurden auf diese Vertrauensstufe befördert"
+              demotions_in_aria:
+                one: "%{count} Mitglied wurde auf diese Vertrauensstufe herabgestuft"
+                other: "%{count} Mitglieder wurden auf diese Vertrauensstufe herabgestuft"
               stable_aria: "keine Bewegung"
             headline:
-              healthy_growth:
-                title: "Die Mitglieder bilden die Gewohnheit, wiederzukommen."
-                summary: "Die Bindung, die tägliche Aktivität und die Anzahl neuer Mitglieder sind in diesem Zeitraum allesamt gestiegen."
-              declining:
-                title: "Die Mitglieder kommen seltener wieder."
-                summary: "Die Bindung, die tägliche Aktivität und die Anzahl neuer Mitglieder sind in diesem Zeitraum allesamt gefallen."
-              engaged_but_shrinking:
-                title: "Die Mitglieder sind engagiert, aber die Community schrumpft."
-                summary: "Die Bindung hält an, aber die tägliche Aktivität oder die Anzahl neuer Mitglieder sind gesunken."
-              growing_but_distracted:
-                title: "Neue Mitglieder registrieren sich zwar, bleiben aber nicht lange."
-                summary: "Die Anzahl der neuen Mitglieder ist gestiegen, aber die Bindung ist in diesem Zeitraum gesunken."
-              mixed:
-                title: "Die Aktivitätstrends sind in diesem Zeitraum gemischt."
-                summary: "Einige Metriken sind gestiegen, während andere gesunken sind. Weitere Informationen findest du in den Kacheln unten."
-              no_signal:
-                title: "Noch nicht genügend Aktivitäten für eine Engagement-Übersicht."
-                summary: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn in deiner Community mehr los ist."
+              titles:
+                insufficient_activity: "Noch nicht genügend Aktivitäten für eine Engagement-Übersicht."
+              summaries:
+                insufficient_activity: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn in deiner Community mehr los ist."
               metrics:
                 new_signups: "Neue Mitglieder"
                 dau_mau: "DAU/MAU-Bindung"
@@ -6837,30 +6934,14 @@ de:
             fetch_error: "Suchdaten konnten nicht geladen werden. Versuche, die Seite zu aktualisieren."
             logging_disabled: 'Die Suchprotokollierung ist deaktiviert, daher werden keine Suchdaten erfasst. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um mit der Erfassung zu beginnen.'
             logging_disabled_moderator: "Die Suchprotokollierung ist deaktiviert, daher werden keine Suchdaten erfasst. Bitte einen Administrator darum, das Protokollieren von Suchanfragen zu aktivieren, um mit der Erfassung zu beginnen."
-            count_headline:
-              last_7_days:
-                one: "Die Mitglieder haben in den letzten 7 Tagen %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 7 Tagen %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              last_30_days:
-                one: "Die Mitglieder haben in den letzten 30 Tagen %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 30 Tagen %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              last_3_months:
-                one: "Die Mitglieder haben in den letzten 3 Monaten %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben in den letzten 3 Monaten %{formatted_count} Suchanfragen auf der Website durchgeführt."
-              selected_period:
-                one: "Die Mitglieder haben im ausgewählten Zeitraum %{formatted_count} Suchanfrage auf der Website durchgeführt."
-                other: "Die Mitglieder haben im ausgewählten Zeitraum %{formatted_count} Suchanfragen auf der Website durchgeführt."
             headline:
-              no_signal_title: "Noch nicht genügend Suchaktivität für eine Übersicht."
-              no_signal: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn die Mitglieder mehr gesucht haben."
-              content_gaps: "Mehr als 10 % der Suchanfragen von Mitgliedern endeten in diesem Zeitraum ohne Klick. Schau dir die unten aufgeführten Inhaltslücken an, um zu sehen, was fehlt."
-              rate_climbing: "Die Quote der Suchergebnisse ohne Treffer steigt im Vergleich zum vorherigen Zeitraum. Behalte die unten aufgeführten Inhaltslücken im Auge."
-              shrinking: "Das Suchvolumen ist im Vergleich zum Vorzeitraum zurückgegangen, doch die meisten Suchanfragen führen nach wie vor zu Inhalten."
-              healthy: "Die Mitglieder finden immer wieder, wonach sie suchen, und das Suchvolumen bleibt stabil oder steigt."
+              titles:
+                insufficient_activity: "Noch nicht genügend Suchaktivität für eine Übersicht."
+              summaries:
+                insufficient_activity: "Wähle einen längeren Zeitraum aus oder schau später wieder vorbei, wenn die Mitglieder mehr gesucht haben."
             kpi:
               total_searches:
                 label: "Gesamtzahl der Suchanfragen"
-                tooltip: "Die Anzahl der Suchanfragen, die von Mitgliedern in deiner Community durchgeführt wurden."
               no_result_rate:
                 label: "Anteil ohne Ergebnis"
                 tooltip: "Der Prozentsatz der Suchanfragen, bei denen Mitglieder kein Ergebnis angeklickt haben (0 % CTR). Das deutet darauf hin, dass Mitglieder möglicherweise nach Inhalten suchen, die deine Community nicht bietet."
@@ -6870,7 +6951,6 @@ de:
               status: "Status"
             trending:
               title: "Angesagte Suchbegriffe"
-              tooltip: "Die beliebtesten Suchbegriffe unter den Mitgliedern."
               empty: "Keine Suchanfragen in diesem Zeitraum."
             content_gaps:
               title: "Inhaltslücken"
@@ -6960,6 +7040,14 @@ de:
             direct_traffic:
               label: "Direkter Traffic"
               tooltip: "Der Anteil der Seitenaufrufe, die direkt auf deine Community gelangten, beispielsweise durch Eingabe deiner URL oder über ein Browser-Lesezeichen."
+            bounce_rate:
+              label: "Absprungrate"
+              tooltip: "Der Anteil der Sitzungen mit nur einem Seitenaufruf und einer Verweildauer von weniger als 10 Sekunden."
+            average_session_duration:
+              label: "Durchschnittliche Sitzungsdauer"
+              tooltip: "Die durchschnittliche Verweildauer der Besucher in deiner Community im ausgewählten Zeitraum."
+            session_metrics:
+              empty_tooltip: "Wird angezeigt, sobald die Besuche für diesen Zeitraum erfasst wurden."
           top_countries:
             title: "Top-Länder"
             empty: "Für diesen Zeitraum liegen keine Länderdaten vor."
@@ -7079,6 +7167,7 @@ de:
             effects: Effekte
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
+            automatic_membership_email_domains_instructions: "Gib jede Domain einzeln ein, zum Beispiel discourse.org."
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
@@ -7680,7 +7769,11 @@ de:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"
         legacy: "Legacy"
+      homepage:
+        top_menu_default: "Erster Eintrag im oberen Menü"
       duplicate_topic_titles:
+        disallowed: "Nicht erlaubt"
+        allowed_across_categories: "Kategorienübergreifend zulässig"
         allowed: "Erlaubt"
       backups:
         title: "Backups"
@@ -7849,6 +7942,8 @@ de:
           default: "Standard-Theme"
           settings_editor: "Einstellungseditor"
           show_advanced: "Erweiterte anzeigen"
+          maximize_editor: "Editor maximieren"
+          minimize_editor: "Editor minimieren"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
           user_selectable_badge_label: "Vom Benutzer wählbar"
@@ -7925,9 +8020,13 @@ de:
           import_file_tip: ".tar.gz- oder .zip-Datei, die das Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
           finish_install: "Theme-Installation beenden"
+          placeholder_description: "Dies ist ein privates Theme, für dessen Installation ein Deploy-Schlüssel in der Repository-Konfiguration erforderlich ist. Klicke anschließend auf den Button unten, um die Installation abzuschließen."
           last_attempt: "Der Installationsvorgang wurde nicht abgeschlossen, letzter Versuch:"
           remote_branch: "Branch-Name (optional)"
           remote_branch_placeholder: "Wähle einen bestimmten Branch aus oder lass das Feld leer"
+          public_key: "Gewähre dem folgenden öffentlichen Schlüssel schreibgeschützten Zugriff auf das Repository:"
+          public_key_github: "Gewähre dem folgenden öffentlichen Schlüssel schreibgeschützten Zugriff auf das Repository. Anweisungen findest du hier: %{link}."
+          deploy_key_instructions: "Anweisungen für den Deploy-Schlüssel von GitHub"
           install: "Installieren"
           installed: "Installiert"
           screenshot: "Screenshot zu %{name}"
@@ -8422,6 +8521,9 @@ de:
             configure_category_type: "Kategorietyp konfigurieren"
             unconfigure_category_type: "Kategorietyp dekonfigurieren"
             change_access_control_list_permissions: "Berechtigungen der Zugriffskontrollliste ändern"
+            admin_onboarding_step_completed: "Admin-Onboarding-Schritt abschließen"
+            admin_onboarding_completed: "Admin-Onboarding abschließen"
+            admin_onboarding_dismissed: "Admin-Onboarding schließen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -8459,6 +8561,7 @@ de:
             header: "Überschrift"
             full_page: "Ganze Seite"
             click_through_only: "Alle (nur durcklicken)"
+            non_staff_only: "Benutzer außerhalb des Teams"
           header_search_results: "Suchergebnis (Kopfzeile)"
         logster:
           title: "Fehlerprotokolle"
@@ -8899,7 +9002,12 @@ de:
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
         delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
+        delete_and_block: "Löschen und E-Mail-Adresse und IP-Adresse blockieren"
+        delete_and_block_description: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren."
+        delete_and_block_email: "Löschen und E-Mail-Adresse blockieren"
+        delete_and_block_email_description: "Benutzer löschen und seine E-Mail-Adresse blockieren, aber die Wiederverwendung seiner IP-Adresse zulassen."
         delete_dont_block: "Benutzer löschen"
+        delete_dont_block_description: "Benutzer löschen, ohne seine E-Mail- und IP-Adresse zu blockieren."
         deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
@@ -9090,6 +9198,9 @@ de:
         depends_on_notice:
           one: "Diese Einstellung wird nur angewendet, wenn %{dependencyLinks} aktiviert ist."
           other: "Diese Einstellung wird nur angewendet, wenn %{dependencyLinks} aktiviert sind."
+        depends_on_values_notice:
+          one: "Diese Einstellung gilt nur, wenn %{dependencyLinks} auf einen kompatiblen Wert gesetzt ist."
+          other: "Diese Einstellung gilt nur, wenn %{dependencyLinks} auf einen kompatiblen Wert gesetzt sind."
         discard:
           one: "Änderung verwerfen"
           other: "Änderungen verwerfen"
@@ -9326,15 +9437,38 @@ de:
         name: "Name"
         group: "Gruppe"
         all_groups: "Alle Gruppen"
+        filter_placeholder: "Emojis nach Namen suchen"
+        no_results: "Keine Emojis gefunden."
         created_by: "Erstellt von"
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
         settings: "Einstellungen"
         export: "Exportieren"
+        export_count: "Exportieren (%{count} ausgewählt)"
+        export_failed: "Export fehlgeschlagen. Bitte erneut versuchen."
+        select_to_export: "Zum Exportieren auswählen"
         import: "Importieren"
+        import_heading: "Emojis importieren"
+        import_description: "Lade eine ZIP-Datei hoch, die eine emojis.csv-Manifestdatei und Bilddateien enthält."
+        import_download_sample: "Lade eine Beispielvorlage herunter."
+        import_preview_heading: "Import überprüfen"
+        import_summary: "%{new} neu · %{conflicts} Konflikte · %{unchanged} unverändert · %{invalid} Fehler"
+        import_confirm: "Import bestätigen"
+        import_unchanged_count: "%{count} unverändert"
+        import_will_skip: "Unverändert – wird übersprungen"
+        import_excluded: "Vom Import ausgeschlossen"
+        import_incoming_alt: "Zu importieren: %{name}"
+        import_existing_alt: "Vorhanden: %{name}"
+        import_existing_group_alt: "Vorhandene Gruppe"
+        import_use_incoming: "Neues verwenden"
+        import_keep_existing: "Vorhandenes behalten"
         import_category:
           new: "Neue"
+          conflict: "Konflikte"
+          invalid: "Fehler"
+        select_all: "Alle Emojis auswählen"
+        select: "%{name} auswählen"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         delete: "Löschen"

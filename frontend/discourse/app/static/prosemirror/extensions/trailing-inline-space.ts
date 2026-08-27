@@ -105,7 +105,12 @@ const extension: RichEditorExtension = {
           }
           const lastChild = node.lastChild;
           if (lastChild && isInlineContainer(lastChild)) {
-            tr.insert(pos + node.nodeSize - 1, newState.schema.text(" "));
+            // pos is a new-doc position, so it has to be mapped through the
+            // spaces already inserted for earlier nodes.
+            tr.insert(
+              tr.mapping.map(pos + node.nodeSize - 1),
+              newState.schema.text(" ")
+            );
           }
         });
 

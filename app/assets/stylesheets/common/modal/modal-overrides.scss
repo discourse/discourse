@@ -267,6 +267,12 @@
 }
 
 .d-modal.group-add-members-modal {
+  @include viewport.until(sm) {
+    .d-modal__body {
+      overflow-y: visible;
+    }
+  }
+
   .input-group {
     margin-bottom: 0.5em;
 

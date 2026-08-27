@@ -8,55 +8,60 @@ require "open3"
 module Migrations
   module Converters
     module MarkdownEngine
-      # The ordered JavaScript a `Context` evaluates: vendor libraries verbatim,
-      # the pretty-text and discourse-markdown-it modules (plus the fixed list
-      # of application helpers and the bundled plugins' markdown features)
-      # transpiled through the host application's `AssetProcessor`, the host's
-      # `shims.js`, and the generated emoji replacement table.
+      # The ordered JavaScript a `Context` evaluates: the host application's
+      # precompiled pretty-text bundle (pretty-text, discourse-markdown-it,
+      # and the allowlisted application modules, built out of process by
+      # `frontend/pretty-text-processor`), the bundled plugins' vendored
+      # libraries and markdown features (the latter transpiled through the
+      # host's `AssetProcessor`), and the generated emoji replacement table.
       #
       # Cached on disk keyed by a digest of every input. On a cache miss the
-      # build runs in a SUBPROCESS that writes the cache and exits: transpiling
-      # boots `AssetProcessor`'s own V8, and V8 initialized multithreaded is
-      # not fork-safe — the converter parent forks workers, so it must never
-      # hold V8 state (nor the Rails/Discourse stand-ins `AssetProcessor`
-      # needs, which would otherwise contaminate the process; see {HostShims}).
-      # The parent only computes the digest and reads JSON; workers only
-      # evaluate. A warm cache needs neither node nor pnpm.
+      # build runs in a SUBPROCESS that writes the cache and exits: the
+      # pretty-text bundle is built by an external node command, but
+      # transpiling the plugin features boots `AssetProcessor`'s own V8, and
+      # V8 initialized multithreaded is not fork-safe — the converter parent
+      # forks workers, so it must never hold V8 state (nor the Rails/Discourse
+      # stand-ins the host build code needs, which would otherwise contaminate
+      # the process; see {HostShims}). The parent only computes the digest and
+      # reads JSON; workers only evaluate. A warm cache needs neither node nor
+      # pnpm.
       class Bundle
         class BuildError < StandardError
         end
+
         # Bump when the entry list or generation logic changes in a way the
         # input files cannot express.
-        VERSION = 1
+        VERSION = 2
 
         CACHE_DIR = "tmp/migrations"
 
-        # Load order mirrors `PrettyText.create_es6_context`.
-        VENDOR_FILES = %w[
-          frontend/discourse/node_modules/loader.js/dist/loader/loader.js
-          frontend/discourse-markdown-it/node_modules/markdown-it/dist/markdown-it.js
-          frontend/discourse-markdown-it/node_modules/xss/dist/xss.js
-          lib/pretty_text/vendor-shims.js
+        # Mirrors `PrettyText::BUNDLED_DISCOURSE_MODULES` and the dependency
+        # globs of `PrettyText::CORE_BUNDLE`. Inside a booted application the
+        # host bundle is used directly; standalone, an identical twin is built
+        # under the host stand-ins — `PrettyText` itself cannot load there
+        # (it requires gems the converter doesn't carry). The rails parity job
+        # asserts the mirror matches the host definition, and the parity spec
+        # surfaces any drift in the produced context regardless.
+        BUNDLED_DISCOURSE_MODULES = %w[
+          deprecation-workflow
+          lib/avatar-utils
+          lib/case-converter
+          lib/escape
+          lib/get-url
+          lib/object
+          loader
+          static/markdown-it/features
         ].freeze
 
-        MODULE_DIRS = {
-          "frontend/pretty-text/addon" => "pretty-text/",
-          "frontend/discourse-markdown-it/src" => "discourse-markdown-it/",
-        }.freeze
-
-        APP_FILES = %w[
-          discourse/app/deprecation-workflow
-          discourse/app/lib/get-url
-          discourse/app/lib/object
-          discourse/app/lib/deprecated
-          discourse/app/lib/escape
-          discourse/app/lib/avatar-utils
-          discourse/app/lib/case-converter
-          discourse/app/lib/to-markdown
-          discourse/app/static/markdown-it/features
-        ].freeze
-
-        SHIMS_FILE = "lib/pretty_text/shims.js"
+        CORE_BUNDLE_GLOBS =
+          (
+            %w[
+              node_modules/.pnpm/lock.yaml
+              frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
+              frontend/pretty-text/addon/**/*.js
+              frontend/discourse-markdown-it/src/**/*.js
+            ] + BUNDLED_DISCOURSE_MODULES.map { |m| "frontend/discourse/app/#{m}.js" }
+          ).freeze
 
         # What the bundled plugins register as `:vendored_pretty_text` /
         # `:vendored_core_pretty_text` assets (see each plugin.rb and
@@ -85,19 +90,14 @@ module Migrations
           spoiler-alert
         ].freeze
 
-        # AssetProcessor resolves its own cache and inputs with cwd-relative
-        # globs, so digesting (and, in the build subprocess, building) must
-        # happen at the application root — the same constraint PrettyText's
-        # context creation has. Requiring `asset_processor` here is safe: the
-        # digest only reads its constants and file globs; V8 boots only on a
-        # transpile, which never happens in this process.
+        # Digesting reads the host constants and file globs only; V8 boots on
+        # a transpile, which never happens in this process, and the host
+        # classes are Rails-free until their build/transpile methods run.
         def self.load_or_build(root: MarkdownEngine.discourse_root, cache_dir: nil)
           cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
-            unless Object.const_defined?(:AssetProcessor)
-              require File.join(root, "lib", "asset_processor")
-            end
+            require_host_build_classes(root)
 
             digest = input_digest(root)
             cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
@@ -136,9 +136,7 @@ module Migrations
           HostShims.install!(root)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
-            unless Object.const_defined?(:AssetProcessor)
-              require File.join(root, "lib", "asset_processor")
-            end
+            require_host_build_classes(root)
 
             entries = build_entries(root)
             FileUtils.mkdir_p(File.dirname(cache_file))
@@ -176,11 +174,21 @@ module Migrations
           @entries = entries
         end
 
+        # `AssetProcessor` references `PrecompiledBundle` in its class body,
+        # so the load order matters; a booted application has both already.
+        def self.require_host_build_classes(root)
+          return if Object.const_defined?(:AssetProcessor)
+
+          require File.join(root, "lib", "precompiled_bundle")
+          require File.join(root, "lib", "asset_processor")
+        end
+
         def self.input_digest(root)
           digest = Digest::MD5.new
           digest.update("v#{VERSION}")
           digest.update("compiler-v#{AssetProcessor::BASE_COMPILER_VERSION}")
-          digest.update(AssetProcessor.inputs_digest)
+          digest_globs(digest, root, AssetProcessor::BUNDLE.dependency_globs)
+          digest_globs(digest, root, CORE_BUNDLE_GLOBS)
 
           (input_files(root) + EmojiData.data_files).each do |path|
             digest.update(path)
@@ -189,12 +197,20 @@ module Migrations
           digest.hexdigest
         end
 
+        def self.digest_globs(digest, root, globs)
+          globs.each do |pattern|
+            Dir
+              .glob(pattern, base: root)
+              .sort
+              .each do |file|
+                digest.update(file)
+                digest.update(File.read(File.join(root, file)))
+              end
+          end
+        end
+
         def self.input_files(root)
-          files = VENDOR_FILES.map { |path| File.join(root, path) }
-          MODULE_DIRS.each_key { |dir| files.concat(Dir[File.join(root, dir, "**", "*.js")].sort) }
-          APP_FILES.each { |path| files << File.join(root, "frontend", "#{path}.js") }
-          PLUGIN_VENDOR_FILES.each { |path| files << File.join(root, path) }
-          files << File.join(root, SHIMS_FILE)
+          files = PLUGIN_VENDOR_FILES.map { |path| File.join(root, path) }
           CORE_MARKDOWN_PLUGINS.each { |plugin| files.concat(plugin_files(root, plugin)) }
           files
         end
@@ -210,22 +226,36 @@ module Migrations
           Dir[pattern].sort.filter { |path| File.file?(path) }
         end
 
+        # In a booted application the host's own bundle is reused (same cache,
+        # same build); standalone — only ever the build subprocess — the
+        # mirror builds an identical file under the host stand-ins.
+        def self.core_bundle_source(root)
+          if Object.const_defined?(:PrettyText)
+            ::PrettyText.load_or_build_core_bundle
+          else
+            core_bundle_mirror.load_or_build
+          end
+        end
+
+        def self.core_bundle_mirror
+          PrecompiledBundle.new(
+            dir: "tmp/pretty-text-processor",
+            filename_prefix: "pretty-text",
+            dependency_globs: CORE_BUNDLE_GLOBS,
+          ) do
+            Discourse::Utils.execute_command(
+              "pnpm",
+              "-C=frontend/pretty-text-processor",
+              "node",
+              "build.mjs",
+              "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
+              chdir: Rails.root.to_s,
+            )
+          end
+        end
+
         def self.build_entries(root)
-          entries = []
-          VENDOR_FILES.each { |path| entries << [path, File.read(File.join(root, path))] }
-
-          MODULE_DIRS.each do |dir, module_prefix|
-            base_path = File.join(root, dir)
-            Dir["**/*.js", base: base_path].sort.each do |relative|
-              module_name = "#{module_prefix}#{relative.delete_suffix(".js")}"
-              entries << transpiled_entry(File.join(base_path, relative), module_name)
-            end
-          end
-
-          APP_FILES.each do |path|
-            module_name = path.sub("/app/", "/")
-            entries << transpiled_entry(File.join(root, "frontend", "#{path}.js"), module_name)
-          end
+          entries = [["pretty-text.js", core_bundle_source(root)]]
 
           PLUGIN_VENDOR_FILES.each { |path| entries << [path, File.read(File.join(root, path))] }
 
@@ -243,7 +273,6 @@ module Migrations
             end
           end
 
-          entries << [SHIMS_FILE, File.read(File.join(root, SHIMS_FILE))]
           entries << ["migrations/emoji-data", EmojiData.set_unicode_source]
           entries
         end
@@ -262,13 +291,17 @@ module Migrations
         end
 
         private_class_method :input_digest,
+                             :digest_globs,
                              :input_files,
                              :plugin_files,
+                             :core_bundle_source,
+                             :core_bundle_mirror,
                              :build_entries,
                              :transpiled_entry,
                              :cleanup_stale_caches,
                              :read_cache,
-                             :build_in_subprocess
+                             :build_in_subprocess,
+                             :require_host_build_classes
       end
     end
   end

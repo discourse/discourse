@@ -10,9 +10,15 @@ ar:
       site_settings:
         categories:
           poll: "استطلاع رأي Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "تم إغلاق استطلاع الرأي"
+            poll_opened: "تم فتح استطلاع الرأي"
   js:
     poll:
       title: "استطلاع رأي"
+      closed_by: "تم الإغلاق من قِبل %{username}"
       dynamic:
         enabled_hint: "يمكن إضافة الخيارات أو إزالتها."
       voters:
@@ -78,6 +84,8 @@ ar:
       cast-votes:
         title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"
+      keep-vote:
+        label: "رجوع"
       show-results:
         title: "عرض نتائج استطلاع الرأي"
         label: "النتائج"

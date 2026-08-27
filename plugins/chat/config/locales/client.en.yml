@@ -68,8 +68,14 @@ en:
       pinned_messages:
         title: "Pinned messages"
         close: "Close pinned messages"
+        dismiss: "Dismiss pinned banner for me"
+        show: "Show pinned banner"
         pinned_by_you: "Pinned by you"
         pinned_by_user: "Pinned by %{username}"
+        message_unpinned: "Message unpinned"
+      pinned_bar:
+        title: "Pinned"
+        jump_to_pinned: "Jump to pinned message"
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"
@@ -308,6 +314,8 @@ en:
       remove_upload: "Remove file"
       react: "React with emoji"
       reply: "Reply"
+      message_actions: "Message actions"
+      more_message_actions: "More message actions"
       edit: "Edit"
       copy_link: "Copy link"
       copy_text: "Copy text"
@@ -334,6 +342,7 @@ en:
         other: "%{count} new messages"
       sound:
         title: "Desktop chat notification sound"
+        preview: "Play a preview of the selected sound"
       sounds:
         none: "None"
         classic: "Classic and clean"
@@ -353,6 +362,7 @@ en:
       uploaded_files:
         one: "%{count} file"
         other: "%{count} files"
+      youtube: "YouTube"
       you_flagged: "You flagged this message"
       exit: "exit chat"
       channel_status:
@@ -465,6 +475,7 @@ en:
         empty_state:
           title: "This is the start of %{channelName}"
           joined_title: "You're the first in %{channelName}"
+          direct_message_title: "Start the conversation with %{name}"
           guest_tip: "You're reading along as a guest. The conversation starts the moment members post — join in to be one of them."
           joined_tip: "Be the first to post and start the conversation."
           members_here:
@@ -533,6 +544,11 @@ en:
         message_in_channel: "Channel"
 
       reactions:
+        add: "React with %{emoji}"
+        remove: "Remove your %{emoji} reaction"
+        counted:
+          one: "%{emoji} reaction, %{count} person"
+          other: "%{emoji} reaction, %{count} people"
         only_you: "<span>You reacted with </span>:%{emoji}:"
         you_and_single_user: "<span>You and %{username} reacted with </span>:%{emoji}:"
         you_and_multiple_users: "<span>You, %{commaSeparatedUsernames} and %{username} reacted with </span>:%{emoji}:"
@@ -901,6 +917,26 @@ en:
         message: "Message"
       chat_approval:
         message: "Message"
+        buttons: "Buttons"
+        buttons_description: "Add between one and ten response buttons."
+        add_button: "Add button"
+        label: "Label"
+        label_description: "The text shown on the button."
+        label_placeholder: "Button label"
+        value: "Value"
+        value_description: "The value returned by the workflow when this button is clicked."
+        value_placeholder: "Returned value"
+        style: "Style"
+        style_description: "Choose a button style or leave blank to preserve the standard chat button appearance."
+        style_none: "No style"
+        style_default: "Default"
+        style_primary: "Primary"
+        style_danger: "Danger"
+        style_success: "Success"
+        style_flat: "Flat"
+        style_transparent: "Transparent"
+        icon: "Icon"
+        icon_description: "Choose an icon to show before the button label."
         approve_label: "Approve button label"
         approve_label_description: "Defaults to \"Approve\" if left blank."
         deny_label: "Deny button label"
@@ -911,5 +947,6 @@ en:
         timeout_minutes_description: "Leave blank for no timeout."
         timeout_action: "On timeout"
         timeout_action_description: "What happens when the approval times out."
+        timeout_action_continue: "Continue the workflow"
         timeout_action_deny: "Resume as denied"
         timeout_action_fail: "Fail the workflow"

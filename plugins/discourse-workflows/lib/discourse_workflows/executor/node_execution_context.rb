@@ -15,7 +15,7 @@ module DiscourseWorkflows
       JAVASCRIPT_UNDEFINED = CodeRunner::JAVASCRIPT_UNDEFINED
       JobResult = Data.define(:ok, :result, :error)
       WaitRequest =
-        Data.define(:waiting_until, :kind, :payload) do
+        Data.define(:waiting_until, :kind, :payload, :timeout_action) do
           def workflow_call?
             kind == "workflow_call"
           end
@@ -72,8 +72,9 @@ module DiscourseWorkflows
           @wait_request = nil
         end
 
-        def request_wait(waiting_until, kind: "default", payload: {})
-          @wait_request = WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys)
+        def request_wait(waiting_until, kind: "default", payload: {}, timeout_action: nil)
+          @wait_request =
+            WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys, timeout_action)
         end
 
         def add_condition_details(details)
@@ -406,8 +407,18 @@ module DiscourseWorkflows
         self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
-      def put_execution_to_wait(waiting_until = nil, kind: "default", payload: {})
-        @runtime_state.request_wait(waiting_until, kind: kind, payload: payload)
+      def put_execution_to_wait(
+        waiting_until = nil,
+        kind: "default",
+        payload: {},
+        timeout_action: nil
+      )
+        @runtime_state.request_wait(
+          waiting_until,
+          kind: kind,
+          payload: payload,
+          timeout_action: timeout_action,
+        )
       end
 
       def resume_action_id(action, target_user_id: nil)
@@ -524,7 +535,7 @@ module DiscourseWorkflows
 
         raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
         return :default if raw_value.nil?
-        return :expression if raw_value.is_a?(String) && raw_value.start_with?("=")
+        return :expression if Schema.expression_value?(raw_value)
 
         :static_config
       end

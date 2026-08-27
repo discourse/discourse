@@ -93,6 +93,7 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
+             :user_locale,
              :user_status,
              :mentioned_users,
              :post_url,
@@ -654,6 +655,14 @@ class PostSerializer < BasicPostSerializer
     object.user&.suspended?
   end
 
+  def user_locale
+    object.user&.locale
+  end
+
+  def include_user_locale?
+    SiteSetting.allow_user_locale && scope.is_admin? && user_locale.present?
+  end
+
   def include_user_status?
     SiteSetting.enable_user_status && object.user&.has_status? &&
       scope&.can_see_user_status?(object.user)
@@ -738,7 +747,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+    @reviewable ||=
+      Reviewable
+        .where(target: object, type: Reviewable.sti_names)
+        .includes(:reviewable_scores)
+        .first
   end
 
   def reviewable_scores

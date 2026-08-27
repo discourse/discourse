@@ -2,6 +2,7 @@
 
 class EmbeddableHost < ActiveRecord::Base
   validate :host_must_be_valid
+  validate :allowed_paths_must_be_valid
   belongs_to :category
   belongs_to :user, optional: true
   has_many :embeddable_host_tags
@@ -35,8 +36,12 @@ class EmbeddableHost < ActiveRecord::Base
     where("lower(host) = ?", host).each do |eh|
       return eh if eh.allowed_paths.blank?
 
-      path_regexp = Regexp.new(eh.allowed_paths)
-      return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+      begin
+        path_regexp = Regexp.new(eh.allowed_paths)
+        return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+      rescue RegexpError
+        next
+      end
     end
 
     nil
@@ -60,6 +65,14 @@ class EmbeddableHost < ActiveRecord::Base
     unless EmbeddableHost.exists?
       Embedding.settings.each { |s| SiteSetting.set(s.to_s, SiteSetting.defaults[s]) }
     end
+  end
+
+  def allowed_paths_must_be_valid
+    return if allowed_paths.blank?
+
+    Regexp.new(allowed_paths)
+  rescue RegexpError
+    errors.add(:allowed_paths, I18n.t("errors.messages.invalid"))
   end
 
   def host_must_be_valid

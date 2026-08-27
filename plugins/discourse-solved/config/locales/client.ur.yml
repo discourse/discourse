@@ -7,31 +7,79 @@
 ur:
   admin_js:
     admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse حل شدہ"
       dashboard:
         highlights:
           kpi:
             accepted_solutions:
               label: "قبول شدہ حل"
+              tooltip: "ان موضوعات کی تعداد جن پر ایک جواب کو حل کے طور پر تسلیم کیا گیا تھا۔"
         sections:
           support:
+            title: "تعاون"
+            fetch_error: "تعاون کا مواد لوڈ نہیں کیا جاسکا۔"
+            save_error: "آپ کا انتخاب اگلی بار کے لیے محفوظ نہیں کیا جا سکا۔"
+            headline:
+              titles:
+                insufficient_activity: "ابھی تک کافی تعاون میں سرگرمی نہیں ہے۔"
+              summaries:
+                insufficient_activity: "اس عرصے میں ابھی تک کوئی تعاون کی سرگرمی نہیں ہے۔ عنوانات کے آنے کے بعد، آپ دیکھیں گے کہ آپ کی کمیونٹی انہیں کیسے حل کرتی ہے۔"
+            kpi:
+              resolution_rate:
+                label: "حل کیے جانے کی شرح"
+                tooltip: "کھلے تعاون کے موضوعات کی فیصدی تعداد جو حل ہو چکے ہیں۔"
+              staff_involvement:
+                label: "عملے کی شمولیت"
+                tooltip: "کھلے تعاون کے موضوعات کی فیصدی تعداد جہاں عملے نے پہلا جواب دیا۔"
+              avg_first_reply:
+                label: "اوسطاً پہلا جواب"
+                tooltip: "تعاون کا موضوع شائع کیے جانے اور اس کا پہلا جواب موصول ہونے کے درمیان اوسطاً وقت۔"
+            outcomes:
+              title: "موضوع کے نتائج"
+              resolved:
+                label: "حل ہو گیا"
+                tooltip: "عنوانات کی تعداد جن پر \"حل\" کا نشان لگایا گیا ہے۔"
+              in_progress:
+                label: "جاری ہے"
+                tooltip: "کم از کم ایک جواب موصول ہونے والے عنوانات کی تعداد۔"
+              unanswered:
+                label: "کوئی جواب نہیں"
+                tooltip: "ایسے عنوانات کی تعداد جن کے جوابات موصول نہیں ہوئے۔"
             answerers:
+              title: "کون جواب دے رہا ہے؟"
+              empty: "اس مدت میں کوئی جواب نہیں ہے۔"
               staff: "عملہ"
+              leader: "مقتدر"
+              regular: "معتبر"
               member: "ممبران"
               basic: "بنیادی"
             response_time:
+              title: "جوابی وقت کی تقسیم"
               buckets:
                 lt_1h: "< 1 گھنٹہ"
+                "1_4h": "1—4 گھنٹے"
+                "4_24h": "4—24 گھنٹے"
                 gt_24h: "> 24 گھنٹے"
+              trend:
+                faster: "%{duration} سے تیز"
+                slower: "%{duration} سے آہستہ"
+                tooltip: "جوابی وقت کا اوسط رجحان"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "منظور"
           topic_solved_notification: "حل شدہ"
+    solutions: "حل"
     solved:
       title: "حل شدہ"
+      notify_on_solved: "جب کوئی موضوع جس کو میں ٹریک کر رہا ہوں یا دیکھ رہا ہوں، حل ہوجائے تو مجھے مطلع کریں۔ صرف ان زمروں کے موضوعات پر لاگو ہوگا جو حل کیے جانے کی اجازت دیتے ہیں"
       allow_accepted_answers: "ٹاپک کے مالک اور اسٹاف کو حل کے طور پر ایک جواب کو نشان زد کرنے کی اجازت دیں"
       solved_topics_auto_close_hours: "ایک بار ٹاپک کو حل شدہ کے طور پر نشان زد کر دیا جائے تو آخری جواب کے (ن) گھنٹوں بعد خود کار انداز سے ٹاپک بند کر دیا جائے."
+      notify_on_staff_accept_solved: "جب عملہ بطور حل شدہ کے نشان زد کرے تو موضوع کے تخلیق کار کو مطلع کریں"
+      empty_box_on_unsolved: "معاون تھیمز کے موضوعات کی فہرست میں موضوع کی حیثیت کو \"غیر حل شدہ\" کے طور پر دکھائیں"
       accept_answer: "منتخب کریں اگر یہ جواب مسئلہ کو حل کردیتا ہے"
       accepted_description: "یہ اِس ٹاپک کا قبول شدہ حل ہے"
       has_no_accepted_answer: "اِس ٹاپک کا کوئی حل نہیں ہے"
@@ -41,6 +89,7 @@ ur:
       solution_summary:
         one: "حل"
         other: "حل"
+      accepted_answer_solver_info: "%{post} میں %{user} سے"
       accepted_answer_post_number: "پوسٹ %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -48,19 +97,72 @@ ur:
         solved: "حل شدہ"
         unsolved: "غیر حل شدہ"
       no_solved_topics_title: "آپ نے ابھی تک کسی موضوع کو حل نہیں کیا ہے"
+      no_solved_topics_title_others: "%{username} نے ابھی تک کوئی موضوع حل نہیں کیا ہے"
       no_solved_topics_body: "جب آپ کسی موضوع پر مددگار جواب فراہم کرتے ہیں، تو آپ کے جواب کو حاملِ موضوع یا عملے کی طرف سے حل کے طور پر منتخب کیا جا سکتا ہے۔"
+      marked_solved_by: "%{user} نے قبول کیا"
+      confirm_move_solution_title: "حل کو منتقل کریں"
+      confirm_move_solution:
+        one: "آپ کی منتخب کردہ دھاگہ کو اس موضوع کے حل کے طور پر منظور کیا گیا ہے۔ اگر آپ اسے منتقل کرتے ہیں تو موضوع کو غیر حل شدہ تصور کیا جائے گا۔"
+        other: "آپ کی منتخب کردہ دھاگوں میں ایک کو اس موضوع کے حل کے طور پر منظور کیا گیا ہے۔ اگر آپ انہیں منتقل کرتے ہیں تو موضوع کو غیر حل شدہ تصور کیا جائے گا۔"
+      move_post_confirm:
+        one: "دھاگہ منتقل کریں"
+        other: "دھاگوں کو منتقل کریں"
       move_post_cancel: "منسوخ کریں"
+      dont_show_again: "ٹھیک ہے، مجھے دوبارہ مت دکھائیں"
+      confirm_solved_removal_title: "حل حذف ہو جائے گا"
+      confirm_solved_removal: "یہ تبدیلی اس موضوع کے حل کو غیر فعال کر دے گی اور قبول شدہ حل کو ہٹا دے گی۔"
       confirm_solved_removal_confirm: "تصدیق کریں"
       confirm_solved_removal_cancel: "منسوخ کریں"
       shared_issue:
+        label: "میں بھی"
         label_with_count: "%{label} (%{count})"
+        title: "میں بھی اس مسئلے کا سامنا کر رہا ہوں"
+        author_title: "آپ نے یہ موضوع شروع کیا"
+        closed_title: "یہ موضوع بند ہے"
+        archived_title: "یہ موضوع محفوظ شدہ ہے"
+      no_answer:
+        title: کیا آپ کے سوال کا جواب دیا گیا ہے؟
+        description: "جواب کو نمایاں کریں اور صحیح جواب کے نیچے حل کے بٹن کا استعمال کرکے دوسروں کی مدد کریں۔"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
+      notification:
+        title: "آپ کے دھاگہ کو حل کے طور پر تسلیم کیا گیا تھا"
+        topic_solved_title: "موضوع حل ہوا"
+      topic_notifications:
+        tracking:
+          description: "اگر کوئی آپ کے @name کا ذکر کرتا ہے، آپ کو جواب دیتا ہے، یا جب موضوع حل ہوجاتا ہے تو آپ کو مطلع کیا جائے گا۔ اس موضوع کے لیے نئے جوابات کی تعداد دکھائی جائے گی۔"
+        watching:
+          description: "آپ کو اس موضوع میں آنے والے ہر نئے جواب اور موضوع حل ہونے پر مطلع کیا جائے گا۔ اس موضوع کے لیے نئے جوابات کی تعداد دکھائی جائے گی۔"
+      category_type_support:
+        title: "تعاون"
     topic_statuses:
       solved:
         help: "اِس ٹاپک کا حل ہے"
+    search:
+      advanced:
+        statuses:
+          solved: "حل ہو گئے"
+          unsolved: "حل نہیں ہوئے"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "حل ہونے کا واقعہ"
+          accepted_solution: "جب کوئی صارف کسی دھاگے کو قابل قبول جواب کے طور پر تسلیم کرتا ہے"
+          unaccepted_solution: "جب کوئی صارف کسی دھاگے کو ناقابل قبول جواب کے طور پر تسلیم کرتا ہے"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: حل کو قبول/ناقبول کریں
     discourse_automation:
       triggerables:
         first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: کوئی بھی
           fields:
             maximum_trust_level:
               label: ٹرسٹ لَیول
+              description: فعالیت کے اس درجے سے نیچے کے صارفین اس آٹومیشن کو چلائیں گے

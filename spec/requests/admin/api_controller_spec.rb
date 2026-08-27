@@ -245,6 +245,21 @@ RSpec.describe Admin::ApiController do
         expect(UserHistory.last.subject).to eq(key.truncated_key)
       end
 
+      it "rejects read-only keys without scopes" do
+        expect {
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "read-only key description",
+                   scope_mode: "read_only",
+                 },
+               }
+        }.not_to change(ApiKey, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      end
+
       it "can create a user-specific key" do
         user = Fabricate(:user)
         post "/admin/api/keys.json",

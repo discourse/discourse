@@ -1,12 +1,13 @@
 /* eslint-disable no-undef, no-unused-vars */
-// Scan-mode replacements for the Ruby-attached helpers PrettyText installs
-// (`__helpers.*` consumed by the host's shims.js). Render-oriented lookups are
-// inert; the hashtag lookup — which decides whether a `#slug` produces a token
-// at all — answers from source-site data injected as `__scanConfig`.
+// Scan-mode replacements for the Ruby helper methods PrettyText attaches as
+// `__Ruby.*`. The pretty-text bundle captures `globalThis.__Ruby` when it is
+// evaluated, so this must run first. Render-oriented lookups are inert; the
+// hashtag lookup — which decides whether a `#slug` produces a token at all —
+// answers from source-site data injected as `__scanConfig`.
 
-__paths = { baseUri: "" };
-
-__helpers = {
+__Ruby = {
+  // The processor's i18n shim routes translations here; the key is
+  // deterministic and never reaches the token data the scan extracts.
   t(key) {
     return key;
   },

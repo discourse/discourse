@@ -9,7 +9,6 @@ describe "Topic bulk select" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
-  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   def open_bulk_actions_modal(topics_to_select = nil, action)
     topic_list_header.click_bulk_select_button
@@ -356,7 +355,6 @@ describe "Topic bulk select" do
         topic_list.click_topic_checkbox(topics.third)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_notify
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.third)
       end
@@ -365,32 +363,6 @@ describe "Topic bulk select" do
       # unread, so the watching user does not get a new post notification badge.
       visit("/latest")
       expect(topic_list).to have_no_unread_badge(topics.third)
-    end
-
-    it "closes topics silently" do
-      # Watch the topic as a user
-      sign_in(user)
-      topic = topics.first
-      visit("/t/#{topic.slug}/#{topic.id}")
-      expect(topic_view).to have_read_post(topic.posts.first)
-      topic_page.watch_topic
-
-      # Bulk close the topic as an admin
-      using_session(:admin) do
-        sign_in(admin)
-        visit("/latest")
-        topic_list_header.click_bulk_select_button
-        topic_list.click_topic_checkbox(topics.first)
-        topic_list_header.click_bulk_select_topics_dropdown
-        topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_bulk_topics_confirm
-        expect(topic_list).to have_closed_status(topics.first)
-      end
-
-      # Check that the user didn't receive a new post notification badge
-      sign_in(user)
-      visit("/latest")
-      expect(topic_list).to have_no_unread_badge(topics.first)
     end
 
     it "closes topics with message" do
@@ -450,6 +422,19 @@ describe "Topic bulk select" do
     end
   end
 
+  context "when deleting" do
+    it "removes the deleted topics from the list" do
+      sign_in(admin)
+      visit("/latest")
+
+      open_bulk_actions_modal([topics.first, topics.second], "delete-topics")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(topic_list).to have_no_topic(topics.first)
+      expect(topic_list).to have_no_topic(topics.second)
+    end
+  end
+
   context "when working with private messages" do
     fab!(:private_message_1) do
       Fabricate(:private_message_topic, user: admin, recipient: user, participant_count: 2)
@@ -506,6 +491,43 @@ describe "Topic bulk select" do
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
       visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
       expect(page).to have_content(group_private_message.title)
+    end
+
+    it "removes archived group messages from the current inbox after infinite-scroll pagination" do
+      # Regression test: when the paginated topic list is cached in the
+      # session, refreshing the route after a bulk archive reused the
+      # stale cached list and left archived messages visible until the
+      # user manually reloaded.
+      other_group_messages =
+        Array.new(2) do
+          Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+        end
+      all_group_messages = [group_private_message, *other_group_messages]
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+        sign_in(admin)
+        visit("/u/#{admin.username}/messages/group/#{group.name}")
+
+        expect(topic_list).to have_topics(count: 2)
+        page.execute_script(
+          "document.querySelector('.paginated-topics-list .load-more-sentinel').scrollIntoView()",
+        )
+        expect(topic_list).to have_topics(count: all_group_messages.size)
+
+        topic_list_header.click_bulk_select_button
+        all_group_messages.each { |topic| topic_list.click_topic_checkbox(topic) }
+
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("archive-messages")
+        expect(topic_bulk_actions_modal).to be_open
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+
+        expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+        all_group_messages.each do |topic|
+          expect(topic_list).to have_no_topic(topic)
+          expect(GroupArchivedMessage.exists?(group_id: group.id, topic_id: topic.id)).to eq(true)
+        end
+      end
     end
 
     it "allows archiving group private messages from the group inbox page" do

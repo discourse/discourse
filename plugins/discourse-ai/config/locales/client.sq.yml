@@ -34,6 +34,10 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      copied: "Kopjuar"
+      ai_decoded_transcript:
+        type: "Lloji"
+        error: "Gabim"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -110,6 +114,31 @@ sq:
         total: "Total"
         periods:
           custom: "Me porosi..."
+      logs:
+        short_title: "Ditari"
+        apply: "Apliko"
+        failed: "Dështoi"
+        unknown: "I panjohur"
+        topic_id: "ID e temës"
+        post_id: "ID e postimit"
+        time: "Koha"
+        when: "Kur"
+        request: "Kërkesë"
+        user: "User"
+        context: "Konteksti"
+        topic: "Topic"
+        post: "Postim"
+        post_short: "Postimi %{id}"
+        duration: "Kohëzgjatja"
+        actions: "Veprimet"
+        periods:
+          custom: "Grupet e krijuara"
+        detail:
+          request: "Kërkesë"
+          context: "Konteksti"
+        retention:
+          summary_stage: "Përmbledhja"
+          save: "Ruani"
       ai_agent:
         name: "Emri"
         edit: "Redaktoni"
@@ -166,6 +195,9 @@ sq:
           required: "E nevojshme"
       llms:
         display_name: "Emri"
+        vision_modes:
+          disabled:
+            title: "E çaktivizuar"
         save: "Ruani"
         edit: "Redaktoni"
         delete: Fshij
@@ -186,7 +218,6 @@ sq:
         next:
           title: "Vazhdo përpara"
         providers:
-          google: "Google"
           fake: "Grupet e krijuara"
       ai_helper:
         context_menu:
@@ -211,6 +242,7 @@ sq:
           fake: "Grupet e krijuara"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Kohëzgjatja:"
           request: "Kërkesë"
           next_log: "Vazhdo përpara"
           previous_log: "I kaluar"

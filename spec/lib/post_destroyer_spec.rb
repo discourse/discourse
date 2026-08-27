@@ -525,6 +525,23 @@ RSpec.describe PostDestroyer do
       expect(history.created_by).to eq(Discourse.system_user)
     end
 
+    it "resolves reviewables whose type is no longer defined when the author deletes their post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin")
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+
+      reviewable = Reviewable.find(reviewable.id)
+      expect(reviewable).to be_a(Reviewable::UnknownType)
+      expect(reviewable).to be_ignored
+      expect(reviewable.type_source).to eq("some-plugin")
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
+      expect(reviewable.reviewable_histories.last.reviewable_history_type).to eq("transitioned")
+    end
+
     it "does not restore reviewable when manually ignored by moderator" do
       reply = create_post(topic: post.topic)
       result = PostActionCreator.spam(coding_horror, reply)
@@ -1562,5 +1579,67 @@ RSpec.describe PostDestroyer do
         end
       end
     end
+  end
+
+  describe "members of delete_all_posts_and_topics_allowed_groups" do
+    fab!(:group)
+    fab!(:group_member, :user)
+
+    before do
+      group.add(group_member)
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+    end
+
+    it "deletes another user's reply" do
+      reply = create_post(topic: post.topic, user: coding_horror)
+
+      PostDestroyer.new(group_member, reply).destroy
+
+      expect(reply.reload.deleted_at).to be_present
+      expect(reply.user_deleted).to eq(false)
+    end
+
+    it "deletes the topic along with the first post" do
+      PostDestroyer.new(group_member, post).destroy
+
+      expect(post.reload.deleted_at).to be_present
+      expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+    end
+
+    it "recovers another user's deleted reply" do
+      reply = create_post(topic: post.topic, user: coding_horror)
+      PostDestroyer.new(moderator, reply).destroy
+
+      PostDestroyer.new(group_member, reply.reload).recover
+
+      expect(reply.reload.deleted_at).to eq(nil)
+    end
+
+    it "recovers the topic along with the first post" do
+      PostDestroyer.new(moderator, post).destroy
+
+      PostDestroyer.new(group_member, post.reload).recover
+
+      expect(post.reload.deleted_at).to eq(nil)
+      expect(post.topic.deleted_at).to eq(nil)
+    end
+  end
+
+  it "leaves the topic deleted when recovering a first post the user cannot recover" do
+    PostDestroyer.new(moderator, post).destroy
+
+    PostDestroyer.new(coding_horror, post.reload).recover
+
+    expect(post.reload.deleted_at).to be_present
+    expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+  end
+
+  it "leaves the topic deleted when its author recovers a first post staff trashed" do
+    PostDestroyer.new(moderator, post).destroy
+
+    PostDestroyer.new(post.user, post.reload).recover
+
+    expect(post.reload.deleted_at).to be_present
+    expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
   end
 end

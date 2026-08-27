@@ -38,6 +38,15 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      copied: "Zkopírováno"
+      ai_decoded_transcript:
+        tool: "Nástroj"
+        type: "Typ"
+        error: "Chyba"
+        response: "Odpověď"
+      discourse_workflows:
+        ai_agent:
+          mode: "Režim"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -141,6 +150,46 @@ cs:
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
+      logs:
+        short_title: "Protokoly"
+        retry: "Zkusit znovu"
+        apply: "Použít"
+        successful: "Úspěšný"
+        failed: "Neúspěšný"
+        unknown: "Neznámá"
+        topic_id: "ID tématu"
+        post_id: "ID příspěvku"
+        time: "Čas"
+        when: "Kdy"
+        outcome: "Výsledky"
+        feature: "Funkce"
+        model: "Model"
+        request: "Požadavek"
+        user: "Uživatel"
+        context: "Kontext"
+        topic: "Témata"
+        post: "Příspěvek"
+        post_short: "Příspěvek č. %{id}"
+        duration: "Doba trvání"
+        actions: "Akce"
+        filters:
+          title: "Filtry"
+        periods:
+          hour: "Poslední hodina"
+          day: "Posledních 24 hodin"
+          week: "Posledních 7 dní"
+          custom: "Přizpůsobené"
+        detail:
+          request: "Požadavek"
+          response: "Odpověď"
+          context: "Kontext"
+          copy_request: "Kopírovat požadavek"
+          copy_response: "Kopírovat odpověď"
+          network_error: "Chyba sítě"
+        retention:
+          summary_stage: "Souhrn"
+          deleted_stage: "Smazáno"
+          save: "Uložit"
       ai_agent:
         name: "Jméno"
         edit: "Upravit"
@@ -153,6 +202,8 @@ cs:
         mcp_tools_modal:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
+        duplicate: "Duplikovat"
+        copy_name: "Kopie %{name}"
         delete: "Smazat"
         thinking_effort_options:
           none: "Žádný"
@@ -213,6 +264,9 @@ cs:
           required: "Povinné"
       llms:
         display_name: "Název"
+        vision_modes:
+          disabled:
+            title: "Vypnuto"
         save: "Uložit"
         edit: "Upravit"
         delete: Smazat
@@ -245,7 +299,6 @@ cs:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -338,6 +391,7 @@ cs:
           title: "Zobrazit interakci s umělou inteligencí"
           copy_request: "Kopírovat požadavek"
           copy_response: "Kopírovat odpověď"
+          duration_label: "Doba trvání:"
           request: "Požadavek"
           response: "Odpověď"
           next_log: "Další"

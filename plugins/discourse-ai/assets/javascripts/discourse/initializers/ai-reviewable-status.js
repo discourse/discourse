@@ -10,6 +10,21 @@ export default {
         "approved_tool_action",
         "rejected_tool_action"
       );
+
+      api.registerReviewableComponent(
+        "ReviewableAiChatMessage",
+        async () =>
+          (await import("../components/reviewable/ai-chat-message")).default
+      );
+      api.registerReviewableComponent(
+        "ReviewableAiPost",
+        async () => (await import("../components/reviewable/ai-post")).default
+      );
+      api.registerReviewableComponent(
+        "ReviewableAiToolAction",
+        async () =>
+          (await import("../components/reviewable/ai-tool-action")).default
+      );
     });
   },
 };

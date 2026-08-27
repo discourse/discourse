@@ -954,16 +954,15 @@ hu:
   email_login:
     invalid_token: 'Hoppá! A használt link már nem működik. <a href="%{base_url}/login">Bejelentkezés</a> most. Ha elfelejtette jelszavát, <a href="%{base_url}/password-reset">kérhet hivatkozást</a> a visszaállításhoz.'
     title: "Bejelentkezés e-maillel"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub alkalmazás"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub alkalmazás"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "ismeretlen böngésző"
     device:
       android: "Android eszköz"
       chromebook: "Chrome OS"
@@ -983,6 +982,9 @@ hu:
       macos: "MacOS"
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Névtelen"
   change_email:
     error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
     doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."
@@ -1447,6 +1449,9 @@ hu:
         num_topics: "Témák"
       description: "A felhasználók az általuk megosztott linkekre leadott kattintások száma szerint listázva."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Látogatás"
+    top_entry_urls:
       labels:
         count: "Látogatás"
     top_referrers_by_browser_pageviews:
@@ -2109,7 +2114,6 @@ hu:
     user_profile_view_duration_hours: "Új téma megtekintés számlálása IP-címenként/felhasználónként N óránként egyszer"
     levenshtein_distance_spammer_emails: "Spammer e-mailek egyeztetésekor az a karakterkülönbség, ami még mindig lehetővé teszi a hozzávetőleges egyezést."
     max_new_accounts_per_registration_ip: "Ha már (n) darab 0-ás bizalmi szintű fiók van erről az IP-címről (és egyik sem stábtag vagy 2-es vagy magasabb bizalmi szintű), ne fogadjon el több új regisztrációt erről az IP-címről. Állítsa 0-ra a korlátozás kikapcsolásához."
-    min_ban_entries_for_roll_up: "A Felgöngyölítés gombra kattintáskor új alhálózati tiltás bejegyzést hoz létre, ha legalább (N) bejegyzés van."
     max_age_unmatched_emails: "A nem egyező szűrt e-mail bejegyzések törlése (N) nap után."
     max_age_unmatched_ips: "A nem egyező szűrt IP bejegyzések törlése (N) nap után."
     num_flaggers_to_close_topic: "A téma beavatkozás céljából történő automatikus szüneteltetéséhez szükséges egyedi megjelölők minimális száma"
@@ -2331,7 +2335,6 @@ hu:
     default_other_external_links_in_new_tab: "Alapértelmezés szerint nyissa meg a külső hivatkozásokat egy új lapon."
     default_other_enable_quoting: "Alapértelmezés szerint a kijelölt szöveg idézése a válaszban."
     default_other_enable_smart_lists: "Az intelligens listák alapértelmezés szerinti engedélyezése a szerkesztőbe íráskor."
-    default_other_enable_defer: "Alapértelmezés szerint engedélyezze a téma elhalasztása funkciót."
     default_other_enable_markdown_monospace_font: "Alapértelmezés szerint monospace betűtípust használ a szerkesztő Markdown módjában."
     default_other_dynamic_favicon: "Alapértelmezés szerint az új/frissített témák számának megjelenítése a böngésző ikonján."
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
@@ -2365,7 +2368,6 @@ hu:
     revoke_user_api_keys_unused_days: "A felhasználói API kulcs utolsó használata óta eltelt napok száma, mielőtt automatikusan visszavonásra kerül (0 esetén soha)"
     revoke_user_api_keys_maxlife_days: "A felhasználói API kulcs automatikus visszavonása előtti napok száma (0 esetén soha)"
     tagging_enabled: "Engedélyezi a címkéket a témákhoz? További információért tekintse meg az <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Adminisztrátori útmutató a címkékhez</a> című cikket a Meta oldalon."
-    create_tag_allowed_groups: "Címkék létrehozására jogosult csoportok. Az adminisztrátorok és a moderátorok mindig létrehozhatnak címkéket."
     edit_tags_allowed_groups: "Csoportok, amelyek jogosultak címkék, címkeleírások és címkeszinonimák szerkesztésére."
     max_tags_per_topic: "A témához maximálisan hozzárendelhető címkék száma."
     max_tags_per_email_subject: "Az e-mail tárgyában található címkék maximális száma"
@@ -2438,7 +2440,6 @@ hu:
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
-    content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
@@ -3851,9 +3852,6 @@ hu:
     user_posted_pm_staged:
       title: "Ideiglenes felhasználó meghívva PÜ-be"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
@@ -4659,6 +4657,10 @@ hu:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
     enter: "Belépés a Fejlesztői módba"
+  design_wizard:
+    palette_pairs:
+      default: "Alapértelmezett"
+      dracula: "Drakula"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -4800,6 +4802,9 @@ hu:
       group: "A megadott csoportokba nem tartozó felhasználóknak a stábtagok által jóváhagyott válaszokkal kell rendelkezniük. Lásd: %{link}."
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
+      fast_typer_time:
+        one: "%{count} másodperc"
+        other: "%{count} másodperc"
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
       watched_word:
         one: "Ez a bejegyzés tartalmaz egy Figyelt szó, a megjelölt szó: %{words}. További információkért nézze meg a %{link} oldalt."
@@ -4918,11 +4923,9 @@ hu:
         title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "Felhasználó törlése blokkolás nélkül"
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
-          description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
       confirm_spam:
         title: "Igen"
@@ -4982,12 +4985,10 @@ hu:
         bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
-        description: "Felhasználó letiltása a posztolásról"
         complete: "Felhasználó elnémítva"
         reason: "Felhasználó elnémítva a felülvizsgálati soron keresztül"
       suspend_user:
         title: "Felhasználó felfüggesztése"
-        description: "Felhasználói fiók felfüggesztése"
         complete: "Felhasználó felfüggesztve"
         reason: "Felhasználó felfüggesztve a felülvizsgálati sor miatt"
       delete_user:

@@ -75,6 +75,8 @@ de:
         close: "Angeheftete Nachrichten schließen"
         pinned_by_you: "Angeheftet von dir"
         pinned_by_user: "Angeheftet von %{username}"
+      pinned_bar:
+        title: "Angeheftet"
       no_pinned_messages: "Keine angehefteten Nachrichten in diesem Kanal."
       pin_message: "Nachricht anheften"
       unpin_message: "Nachricht loslösen"
@@ -256,9 +258,22 @@ de:
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
       screen_reader:
+        new_message: "%{username}: %{message}"
         new_messages:
           one: "%{count} neue Nachricht"
           other: "%{count} neue Nachrichten"
+        new_image:
+          one: "%{username} hat ein Bild gesendet"
+          other: "%{username} hat %{count} Bilder gesendet"
+        new_attachment:
+          one: "%{username} hat einen Anhang gesendet"
+          other: "%{username} hat %{count} Anhänge gesendet"
+        new_message_with_image:
+          one: "%{username}: %{message} (mit einem Bild)"
+          other: "%{username}: %{message} (mit %{count} Bildern)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (mit einem Anhang)"
+          other: "%{username}: %{message} (mit %{count} Anhängen)"
       no_direct_message_channels: "Du bist noch keiner Unterhaltung per Direktnachricht beigetreten!"
       no_direct_message_channels_cta: "Eine Unterhaltung starten"
       no_public_channels: "Du bist noch keinem Kanal beigetreten!"
@@ -266,8 +281,13 @@ de:
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       chat_notifications_title: "Chat-Benachrichtigungen"
       personalization_title: "Personalisierung"
+      accessibility_title: "Barrierefreiheit"
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
+      announce_new_messages:
+        title: "Neue Nachrichten an Bildschirmleser ankündigen"
+      new_message_sound:
+        title: "Töne für neue Nachrichten abspielen, während der Chat im Vordergrund ist"
       show_thread_title_prompts:
         title: "Eingabeaufforderungen für Thread-Titel anzeigen"
         description: "Eingabeaufforderungen zum Festlegen eines Titels für neue Threads anzeigen"
@@ -323,6 +343,10 @@ de:
         ethereal: "Luftiges Glas"
       title: "Chat"
       title_capitalized: "Chat"
+      disabled:
+        title: "Du hast den Chat deaktiviert"
+        body: "Aktiviere ihn erneut, um Kanäle und Nachrichten anzuzeigen."
+        cta: "Meine Chat-Einstellungen"
       upload: "Datei anhängen"
       upload_to_channel: "In %{title} hochladen"
       upload_to_thread: "In Thread hochladen"
@@ -353,6 +377,7 @@ de:
         filter_input_placeholder: Kanal nach Namen suchen
         filter_joined_all: "Alle"
         filter_joined_joined: "Beigetreten"
+        filter_joined_not_joined: "Nicht beigetreten"
       chat_message_separator:
         today: Heute
         yesterday: Gestern
@@ -426,7 +451,21 @@ de:
         memberships_count:
           one: "%{count} Mitglied"
           other: "%{count} Mitglieder"
+        empty_state:
+          title: "Dies ist der Anfang von %{channelName}"
+          joined_title: "Du bist der Erste in %{channelName}"
+          guest_tip: "Du liest als Gast mit. Die Unterhaltung beginnt in dem Moment, in dem Mitglieder Beiträge posten — mach mit, um einer von ihnen zu sein."
+          joined_tip: "Sei der Erste, der einen Beitrag veröffentlicht und die Unterhaltung startet."
+          members_here:
+            one: "<strong>%{count} Mitglied</strong> hier"
+            other: "<strong>%{count} Mitglieder</strong> hier"
+          no_other_members: "Noch keine anderen Mitglieder"
         preview_card:
+          guest_title: "Tritt %{channelName} bei, um zu chatten"
+          guest_body: "Jeder darf kostenlos mitlesen. Registriere dich, um Beiträge zu verfassen, zu reagieren und zu antworten – es dauert nur etwa 30 Sekunden."
+          join_body: "Du kannst Beiträge verfassen und beantworten, und diese werden in deiner Kanalliste angezeigt."
+          no_access_title: "Du kannst %{channelName} nicht beitreten"
+          no_access_body: "Dieser Kanal ist derzeit nicht für neue Mitglieder geöffnet."
           log_in: "Anmelden"
           sign_up: "Registrierung"
       create_channel:
@@ -821,6 +860,13 @@ de:
         message: "Nachricht"
       chat_approval:
         message: "Nachricht"
+        buttons: "Buttons"
+        value: "Wert"
+        style: "Stil"
+        style_default: "Standard"
+        style_primary: "Primär"
+        style_success: "Erfolg"
+        icon: "Symbol"
         approve_label: "Bezeichnung der Schaltfläche „Genehmigen“"
         approve_label_description: "Wird standardmäßig auf „Genehmigen“ gesetzt, wenn das Feld leer bleibt."
         deny_label: "Bezeichnung der Schaltfläche „Ablehnen“"

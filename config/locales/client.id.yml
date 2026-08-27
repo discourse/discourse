@@ -274,10 +274,17 @@ id:
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Dipilih"
       start_posting:
         back: "Kembali"
+    design_wizard:
+      back: "Kembali"
+      sections:
+        theme: "Tema"
+      theme:
+        selected: "Dipilih"
+      homepage:
+        topics: "Topik"
+        categories: "Kategori"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -458,9 +465,6 @@ id:
         optional: "opsional"
       claim_help:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
-        required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
-        claimed_by_you: "Anda telah mengklaim item ini dan dapat meninjaunya."
-        claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>%{username}</b> ."
       awaiting_approval: "Menunggu Persetujuan"
       delete: "Hapus"
       settings:
@@ -490,6 +494,7 @@ id:
         email: "Email"
         name: "Nama"
         fields: "bidang"
+        penalty_forever: "Selamanya"
         reject_reason: "Alasan"
         scrubbed_reason: "Alasan"
         scrub_record:
@@ -1068,7 +1073,6 @@ id:
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
-      enable_defer: "Mengaktifkan tandai topik sebagai belum dibaca"
       experimental_sidebar:
         enable: "Aktifkan bilah sisi"
         options: "Pilihan"
@@ -1403,6 +1407,7 @@ id:
             method_email: "Email"
             topic: "Topik"
             groups: "Grup"
+            edit: "Ubah"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1631,6 +1636,7 @@ id:
     category_row:
       subcategory_count:
         other: "+%{count} subkategori"
+      subcategories: "+ Subkategori"
       topic_count:
         other: "%{count} topik dalam kategori ini"
     select_kit:
@@ -2306,6 +2312,8 @@ id:
           reset_confirm: "Yakin ingin menyetel ulang bagian ini ke bawaan?"
           always_public: "Konten di bagian ini selalu bersifat publik"
           more_menu: "Lebih banyak menu"
+          localizations:
+            remove_language: "Hapus"
           links:
             reset: "Setel ulang ke bawaan"
             name:
@@ -2512,6 +2520,14 @@ id:
         default_value: "Asal"
       search:
         title: "Cari"
+      site_traffic_explorer:
+        metric_information: "Tentang %{metric}"
+        apply: "menerapkan"
+        filters:
+          browser: "Peramban"
+          ip: "Alamat IP"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"

@@ -8,16 +8,19 @@ end
 #
 # Table name: browser_pageview_event_scores
 #
-#  id                  :bigint           not null, primary key
-#  automation_ua_score :integer          default(0), not null
-#  churn_score         :integer          default(0), not null
-#  engagement_score    :integer          default(0), not null
-#  ip_rotation_score   :integer          default(0), not null
-#  known_asn_score     :integer          default(0), not null
-#  rapid_nav_score     :integer          default(0), not null
-#  referrer_score      :integer          default(0), not null
-#  velocity_score      :integer          default(0), not null
-#  event_id            :bigint           not null
+#  id                               :bigint           not null, primary key
+#  automation_ua_score              :integer          default(0), not null
+#  churn_score                      :integer          default(0), not null
+#  datacenter_asn_score             :integer          default(0), not null
+#  engagement_score                 :integer          default(0), not null
+#  ip_rotation_score                :integer          default(0), not null
+#  known_asn_score                  :integer          default(0), not null
+#  rapid_nav_score                  :integer          default(0), not null
+#  referrer_score                   :integer          default(0), not null
+#  single_request_no_referrer_score :integer          default(0), not null
+#  stale_browser_score              :integer          default(0), not null
+#  velocity_score                   :integer          default(0), not null
+#  event_id                         :bigint           not null
 #
 # Indexes
 #

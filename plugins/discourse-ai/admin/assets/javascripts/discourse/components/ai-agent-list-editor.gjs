@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -12,8 +12,10 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { gt } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -40,8 +42,11 @@ export default class AiAgentListEditor extends Component {
   @service keyValueStore;
   @service capabilities;
   @service dialog;
+  @service router;
+  @service site;
 
   @tracked currentLayout = LAYOUT_BUTTONS[0];
+  @tracked duplicateFilter = "";
 
   constructor() {
     super(...arguments);
@@ -56,6 +61,31 @@ export default class AiAgentListEditor extends Component {
 
   get searchableProps() {
     return ["name", "description"];
+  }
+
+  get hasAgents() {
+    return (this.args.agents?.content?.length || 0) > 0;
+  }
+
+  get filteredDuplicateAgents() {
+    const filter = this.duplicateFilter.trim().toLocaleLowerCase();
+    const agents = [...(this.args.agents?.content || [])].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
+    if (!filter) {
+      return agents;
+    }
+
+    return agents.filter((agent) =>
+      agent.name.toLocaleLowerCase().includes(filter)
+    );
+  }
+
+  get newAgentButtonClasses() {
+    return this.site.mobileView
+      ? "btn-transparent"
+      : "btn-primary btn-small d-page-action-button";
   }
 
   get dropdownOptions() {
@@ -118,6 +148,36 @@ export default class AiAgentListEditor extends Component {
   }
 
   @action
+  newAgent() {
+    this.router.transitionTo("adminPlugins.show.discourse-ai-agents.new", {
+      queryParams: { copyFrom: null },
+    });
+  }
+
+  @action
+  registerDuplicateMenu(api) {
+    this.duplicateMenu = api;
+  }
+
+  @action
+  filterDuplicateAgents(event) {
+    this.duplicateFilter = event.target.value;
+  }
+
+  @action
+  clearDuplicateFilter() {
+    this.duplicateFilter = "";
+  }
+
+  @action
+  async duplicateAgent(agent) {
+    await this.duplicateMenu.close();
+    this.router.transitionTo("adminPlugins.show.discourse-ai-agents.new", {
+      queryParams: { copyFrom: agent.id },
+    });
+  }
+
+  @action
   importAgent() {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -173,6 +233,17 @@ export default class AiAgentListEditor extends Component {
       })
       .catch((error) => {
         if (error.jqXHR?.status === 422) {
+          const missingSubagents =
+            error.jqXHR.responseJSON?.conflicts?.subagents;
+          if (missingSubagents?.length) {
+            this.dialog.alert(
+              i18n("discourse_ai.ai_agent.import_error_missing_subagents", {
+                names: missingSubagents.join(", "),
+              })
+            );
+            return;
+          }
+
           this.dialog.confirm({
             message:
               i18n("discourse_ai.ai_agent.import_error_conflict", {
@@ -210,12 +281,73 @@ export default class AiAgentListEditor extends Component {
               @icon="upload"
               class="ai-agent-list-editor__import-button"
             />
-            <actions.Primary
-              @label="discourse_ai.ai_agent.new"
-              @route="adminPlugins.show.discourse-ai-agents.new"
-              @icon="plus"
-              class="ai-agent-list-editor__new-button"
-            />
+            <actions.Wrapped>
+              <DComboButton
+                @hasMenu={{this.hasAgents}}
+                @btnTypeClass={{this.newAgentButtonClasses}}
+                class="ai-agent-list-editor__new-combo"
+                aria-label={{i18n "discourse_ai.ai_agent.new_group"}}
+                as |combo|
+              >
+                <combo.Button
+                  @label="discourse_ai.ai_agent.new"
+                  @ariaLabel="discourse_ai.ai_agent.new"
+                  @action={{this.newAgent}}
+                  @icon="plus"
+                  class="ai-agent-list-editor__new-button"
+                />
+                <combo.Menu
+                  @identifier="duplicate-agent-menu"
+                  @title={{i18n "discourse_ai.ai_agent.duplicate"}}
+                  @modalForMobile={{true}}
+                  @autofocus={{true}}
+                  @onRegisterApi={{this.registerDuplicateMenu}}
+                  @onClose={{this.clearDuplicateFilter}}
+                  @triggerClass="ai-agent-list-editor__duplicate-menu"
+                  aria-label={{i18n "discourse_ai.ai_agent.duplicate"}}
+                >
+                  <div class="ai-agent-list-editor__duplicate-picker">
+                    <DFilterInput
+                      @value={{this.duplicateFilter}}
+                      @filterAction={{this.filterDuplicateAgents}}
+                      @onClearInput={{this.clearDuplicateFilter}}
+                      @icons={{hash left="magnifying-glass"}}
+                      placeholder={{i18n
+                        "discourse_ai.ai_agent.duplicate_search"
+                      }}
+                      aria-label={{i18n
+                        "discourse_ai.ai_agent.duplicate_search"
+                      }}
+                      data-test-duplicate-agent-filter
+                      autofocus
+                    />
+                    <DDropdownMenu
+                      class="ai-agent-list-editor__duplicate-results"
+                      as |dropdown|
+                    >
+                      {{#each this.filteredDuplicateAgents as |agent|}}
+                        <dropdown.item>
+                          <DButton
+                            @action={{fn this.duplicateAgent agent}}
+                            @translatedLabel={{agent.name}}
+                            @icon="copy"
+                            class="btn-transparent"
+                            data-test-duplicate-agent-option
+                          />
+                        </dropdown.item>
+                      {{else}}
+                        <li
+                          class="ai-agent-list-editor__duplicate-empty"
+                          role="status"
+                        >
+                          {{i18n "discourse_ai.ai_agent.filters.no_results"}}
+                        </li>
+                      {{/each}}
+                    </DDropdownMenu>
+                  </div>
+                </combo.Menu>
+              </DComboButton>
+            </actions.Wrapped>
           </:actions>
         </DPageSubheader>
         {{#if @agents.content}}
@@ -350,7 +482,7 @@ export default class AiAgentListEditor extends Component {
         {{else}}
           <AdminConfigAreaEmptyList
             @ctaLabel="discourse_ai.ai_agent.new"
-            @ctaRoute="adminPlugins.show.discourse-ai-agents.new"
+            @ctaAction={{this.newAgent}}
             @ctaClass="ai-agent-list-editor__empty-new-button"
             @emptyLabel="discourse_ai.ai_agent.no_agents"
           />

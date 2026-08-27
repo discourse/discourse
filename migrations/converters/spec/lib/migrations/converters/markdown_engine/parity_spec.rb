@@ -58,9 +58,22 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
   end
 
   def pretty_text_scan(posts)
-    # `PrettyText.markdown` leaves its engine as `__pt` in the context; the
-    # scan function reuses it exactly like the standalone context does.
+    # `__PrettyText.cook` builds its engine locally, so a hook captures the
+    # completed options of a real cook and rebuilds the identical engine as
+    # `__pt` for the scan function — the exact configuration the site cooks
+    # with, not a re-assembly that could drift.
+    PrettyText.v8.eval(<<~JS)
+      __parityOriginalCook = __PrettyText.cook;
+      __PrettyText.cook = function (text, optInput) {
+        const result = __parityOriginalCook.call(this, text, optInput);
+        __pt = require("discourse-markdown-it").default
+          .withCustomFeatures(require("discourse/static/markdown-it/features").default())
+          .withOptions(optInput);
+        return result;
+      };
+    JS
     PrettyText.markdown("warm up")
+    PrettyText.v8.eval("__PrettyText.cook = __parityOriginalCook;")
     scan_js =
       File.read(
         File.join(
@@ -127,5 +140,14 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
     expect(Migrations::Converters::MarkdownEngine::EmojiData.unicode_replacements).to eq(
       JSON.parse(Emoji.unicode_replacements_json),
     )
+  end
+
+  # The standalone build subprocess mirrors the host's core-bundle definition
+  # because `PrettyText` itself cannot load there; this pins the mirror to the
+  # host constants so a change on either side fails here instead of drifting.
+  it "mirrors the host's core bundle definition" do
+    bundle = Migrations::Converters::MarkdownEngine::Bundle
+    expect(bundle::BUNDLED_DISCOURSE_MODULES).to eq(PrettyText::BUNDLED_DISCOURSE_MODULES)
+    expect(bundle::CORE_BUNDLE_GLOBS).to eq(PrettyText::CORE_BUNDLE.dependency_globs)
   end
 end

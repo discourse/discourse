@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
-import { currentThemeId, HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -26,20 +27,25 @@ export default class OnboardingStep extends Component {
     return this.constructor.name;
   }
 
-  get icon() {
-    throw new Error("Icon is required for OnboardingStep");
+  get checkboxIcon() {
+    return this.completed ? "circle-check" : "far-circle";
   }
 
-  get btnClass() {
-    return currentThemeId() === HORIZON_THEME_ID
-      ? "btn-default"
-      : "btn-primary";
+  get buttonLabel() {
+    return this.completed
+      ? `admin_onboarding_banner.${this.name}.completed`
+      : `admin_onboarding_banner.${this.name}.action`;
   }
 
   @action
   performAction() {
     throw new Error("performAction is required for OnboardingStep");
   }
+
+  // Steps whose action needs slow-to-arrive data can warm it up here, so the
+  // work overlaps with the admin reaching for the button.
+  @action
+  prefetch() {}
 
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
@@ -66,25 +72,32 @@ export default class OnboardingStep extends Component {
     <div class="onboarding-step" id={{this.name}}>
       <div class="onboarding-step__checkbox">
         {{~dIcon
-          (if this.completed "square-check" "far-square")
-          class=(if this.completed "checked")
+          this.checkboxIcon
+          class=(dConcatClass
+            "onboarding-step__checkbox-icon" (if this.completed "--completed")
+          )
         }}
-        <span>{{i18n (concat this.i18nKey this.name ".title")}}</span>
+        <span class="onboarding-step__title">{{i18n
+            (concat this.i18nKey this.name ".title")
+          }}</span>
+
       </div>
 
       <div class="onboarding-step__description">
-        <div class="onboarding-step__text">
-          {{i18n (concat this.i18nKey this.name ".description")}}
-        </div>
+        {{i18n (concat this.i18nKey this.name ".description")}}
       </div>
-
       <div class="onboarding-step__action">
         <DButton
-          @icon={{this.icon}}
-          @label={{concat this.i18nKey this.name ".action"}}
+          @label={{this.buttonLabel}}
           @action={{this.performAction}}
-          class={{this.btnClass}}
+          class={{dConcatClass
+            "btn-transparent btn-small btn-link"
+            (if this.completed "--completed")
+          }}
+          {{on "pointerenter" this.prefetch}}
+          {{on "focus" this.prefetch}}
         />
+
       </div>
     </div>
   </template>

@@ -13,6 +13,10 @@ ar:
   js:
     styleguide:
       title: "دليل الأنماط"
+      welcome: "للبدء، اختر قسمًا من قائمة التنقل."
+      example:
+        kind:
+          component: "المكوِّن"
       categories:
         syntax: بناء الجملة
         atoms: الذرّات (Atoms)
@@ -39,6 +43,8 @@ ar:
           title: "الألوان"
         dialog:
           title: "حوار"
+        drag_and_drop:
+          locked: "مغلق"
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
@@ -97,9 +103,10 @@ ar:
         docked_composer:
           title: "أداة إنشاء مثبتة"
         modal:
-          title: "النافذة المشروطة"
-          header: "العنوان المشروط"
-          footer: "التذييل المشروط"
+          title: "النافذة المنبثقة"
+          header: "عنوان النافذة المنبثقة"
+          footer: "تذييل النافذة المنبثقة"
+          open: "فتح النافذة المشروطة"
         user_about:
           title: "مربع \"نبذة عن المستخدم\""
         header_icons:

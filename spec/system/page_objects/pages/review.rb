@@ -12,6 +12,17 @@ module PageObjects
         self
       end
 
+      # Reaching a reviewable through the user menu keeps the app running, which
+      # is the only way to exercise the state a reviewable item carries over from
+      # the previously displayed one. `visit_reviewable` always starts afresh.
+      def visit_reviewable_from_user_menu(reviewable)
+        PageObjects::Components::UserMenu.new.open.click_review_queue_tab.click_reviewable(
+          reviewable,
+        )
+        reviewable_by_id(reviewable.id)
+        self
+      end
+
       def select_bundled_action(reviewable, value, bundle_index: nil)
         within(reviewable_by_id(reviewable.id)) do
           dropdown =
@@ -32,8 +43,11 @@ module PageObjects
         end
       end
 
-      def delete_user_from_reviewable(reviewable, action)
+      # Pass confirm: false for reviewables that require a rejection reason, as
+      # those open a modal instead of the confirmation dialog.
+      def delete_user_from_reviewable(reviewable, action, confirm: true)
         select_bundled_action(reviewable, action, bundle_index: 1)
+        PageObjects::Components::Dialog.new.click_danger if confirm
       end
 
       def click_post_body_toggle

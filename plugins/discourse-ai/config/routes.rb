@@ -153,6 +153,10 @@ Discourse::Application.routes.draw do
 
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
+    get "/ai-logs", to: "discourse_ai/admin/ai_logs#index"
+    get "/ai-logs/new", to: "discourse_ai/admin/ai_logs#new_logs"
+    put "/ai-logs/retention", to: "discourse_ai/admin/ai_logs#update_retention"
+    get "/ai-logs/:id", to: "discourse_ai/admin/ai_logs#show", constraints: { id: /\d+/ }
     get "/ai-spam", to: "discourse_ai/admin/ai_spam#show"
     put "/ai-spam", to: "discourse_ai/admin/ai_spam#update"
     post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"

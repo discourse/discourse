@@ -96,6 +96,7 @@ plugins:
       - model_accuracies
       - post_custom_prompts
       - rag_document_fragments
+      - rag_document_sources
       - shared_ai_conversations
     columns:
       user_options:
@@ -110,7 +111,13 @@ plugins:
         - assignable_level
       user_options:
         - notification_level_when_assigned
-  discourse-calendar:
+  discourse-data-explorer:
+    tables:
+      - data_explorer_queries
+      - data_explorer_query_groups
+      - data_explorer_query_stats
+    columns: {}
+  discourse-events:
     tables:
       - calendar_events
       - discourse_calendar_disabled_holidays
@@ -118,12 +125,6 @@ plugins:
       - discourse_post_event_events
       - discourse_post_event_invitees
       - livestream_topic_chat_channels
-    columns: {}
-  discourse-data-explorer:
-    tables:
-      - data_explorer_queries
-      - data_explorer_query_groups
-      - data_explorer_query_stats
     columns: {}
   discourse-gamification:
     tables:
@@ -227,13 +228,13 @@ plugin_checksums:
   chat: 43ee047298d56af4fad013d534155812
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: f3e0c451ef373568a8624f16c3dc9281
+  discourse-ai: 1f822d2a3a76bca4e6ab60a6f0d702c0
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
-  discourse-calendar: 748c5adeb1bd85ee316a044e306cb28d
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
+  discourse-events: 29f470be77cc937093576f548b7d0cb4
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
@@ -248,7 +249,7 @@ plugin_checksums:
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
   discourse-rss-polling: 526db84c3d2ade0fa03497031fea2333
-  discourse-solved: 67743e14f4c5c2fae4487193c374e429
+  discourse-solved: 795e49ad397ee639af63bfb993cb07c3
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21

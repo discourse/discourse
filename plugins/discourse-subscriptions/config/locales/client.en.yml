@@ -400,8 +400,8 @@ en:
         confirm_payment: Confirm payment
         success: Go back
       admin:
-        unconfigured: 'Stripe is not configured correctly. Please see Discourse Meta for information.'
-        on_meta: Discourse Subscriptions on Meta
+        unconfigured: "Stripe is not configured correctly. Please see <a href='%{url}' target='_blank'>the documentation on Discourse Meta</a> for details."
+        configure_stripe: Go to settings
         dashboard:
           title: Dashboard
           table:

@@ -239,7 +239,26 @@ class LefthookLinter
     end
 
     # Check if file extension is lintable
-    lintable_extensions = %w[rb rake js gjs cjs mjs ts gts mts cts hbs scss css yml yaml thor]
+    lintable_extensions = %w[
+      rb
+      rake
+      js
+      gjs
+      cjs
+      mjs
+      ts
+      gts
+      mts
+      cts
+      hbs
+      scss
+      css
+      yml
+      yaml
+      thor
+      md
+      json
+    ]
     lintable_extensions.include?(ext)
   end
 

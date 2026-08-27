@@ -14,7 +14,7 @@ class Admin::GroupsController < Admin::StaffController
         dynamic_attributes: group_params.slice(*DiscoursePluginRegistry.group_params),
       },
     ) do |result|
-      on_success { |group:| render_serialized(group, BasicGroupSerializer) }
+      on_success { |group:| render_serialized(group.reload, BasicGroupSerializer) }
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
       on_failed_policy(:can_request_access) do
         render json:

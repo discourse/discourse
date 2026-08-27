@@ -468,8 +468,6 @@ class GroupsController < ApplicationController
       group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
     end
 
-    group.restore_user_count!
-
     render json: success_json.merge!(usernames: users.pluck(:username))
   end
 
@@ -853,6 +851,19 @@ class GroupsController < ApplicationController
     if !automatic && current_user.staff?
       attributes.push(
         :incoming_email,
+        :title,
+        :primary_group,
+        :name,
+        :grant_trust_level,
+        :publish_read_state,
+      )
+
+      custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
+      attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
+
+    if !automatic && current_user.admin
+      attributes.push(
         :smtp_server,
         :smtp_port,
         :smtp_ssl_mode,
@@ -862,16 +873,8 @@ class GroupsController < ApplicationController
         :email_username,
         :email_password,
         :email_from_alias,
-        :title,
-        :primary_group,
-        :name,
-        :grant_trust_level,
-        :publish_read_state,
         :allow_unknown_sender_topic_replies,
       )
-
-      custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
-      attributes << { custom_fields: custom_fields } if custom_fields.present?
     end
 
     if !automatic && group && guardian.can_admin_group?(group)

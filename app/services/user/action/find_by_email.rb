@@ -16,10 +16,9 @@ class User::Action::FindByEmail < Service::ActionBase
   def normalized_email_match
     return if !SiteSetting.normalize_emails
 
-    local_part, domain = email.split("@", 2)
-    return if local_part.blank? || domain.blank?
+    normalized_email = UserEmail.normalize(email)
+    return if normalized_email.blank?
 
-    normalized_email = "#{local_part.gsub(".", "").gsub(/\+.*/, "")}@#{domain}"
     users.joins(:user_emails).where(user_emails: { normalized_email: normalized_email }).first
   end
 end

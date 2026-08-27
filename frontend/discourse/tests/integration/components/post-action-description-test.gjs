@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostActionDescription from "discourse/components/post-action-description";
+import { setPrefix } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | PostActionDescription", function (hooks) {
@@ -24,5 +25,23 @@ module("Integration | Component | PostActionDescription", function (hooks) {
     assert
       .dom(".excerpt .mention")
       .hasText(`@${this.username}`, "shows the actor name as text");
+  });
+
+  test("prefixes mention links with the subfolder base path", async function (assert) {
+    setPrefix("/forum");
+    this.username = "discourse";
+
+    await render(
+      <template>
+        <PostActionDescription
+          @actionCode="invited_group"
+          @username={{this.username}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".excerpt .mention-group")
+      .hasAttribute("href", "/forum/g/discourse");
   });
 });

@@ -110,3 +110,10 @@ uk:
         title: "Гейміфікація"
         name: "Імʼя"
         period: "Період"
+    discourse_workflows:
+      node_unavailable:
+        requires_gamification: "Потрібно ввімкнути плагін Gamification"
+      gamification_score:
+        username: "Користувач"
+        date: "Дата"
+        description: "Опис"

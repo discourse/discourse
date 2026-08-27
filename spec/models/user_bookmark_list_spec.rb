@@ -15,7 +15,7 @@ RSpec.describe UserBookmarkList do
   after { DiscoursePluginRegistry.reset! }
 
   let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
-  let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
+  let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic_with_op)) }
   let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
   it "returns all types of bookmarks" do

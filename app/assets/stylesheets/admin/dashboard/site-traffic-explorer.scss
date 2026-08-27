@@ -1,0 +1,351 @@
+@use "lib/viewport";
+
+.site-traffic-explorer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
+
+  .db-section__subheader {
+    justify-content: flex-end;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-width: 0;
+    gap: var(--space-2);
+  }
+
+  &__filter-dropdown {
+    .d-button-label {
+      @include ellipsis;
+    }
+  }
+
+  &__filter-controls {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__filter-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-start: auto;
+
+    .btn {
+      padding-block: var(--space-1);
+    }
+  }
+
+  &__filter-apply {
+    gap: var(--space-2);
+  }
+
+  &__filter-apply-pending-count {
+    color: var(--tertiary);
+    background: var(--secondary);
+    padding: 0.21em 0.42em;
+    min-width: 0.6em;
+    border-radius: 1em;
+    font-size: var(--font-down-2-rem);
+    font-weight: 600;
+  }
+
+  &__filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    padding-inline-start: var(--space-3);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-pill);
+    background: var(--primary-very-low);
+    font-size: var(--font-down-1-rem);
+
+    &.is-pending {
+      border-color: var(--tertiary);
+      border-style: dashed;
+      background: var(--tertiary-very-low);
+    }
+
+    .site-traffic-explorer__filter-pill-remaining,
+    .d-icon-angle-down {
+      color: var(--primary-medium);
+    }
+
+    .fk-d-menu__trigger {
+      min-width: 0;
+      gap: var(--space-1);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+
+      &:hover,
+      &.-expanded {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+
+        .site-traffic-explorer__filter-pill-remaining,
+        .d-icon-angle-down {
+          color: var(--primary);
+        }
+      }
+
+      &.-expanded .d-icon-angle-down {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__filter-remove {
+    color: var(--primary-medium);
+    border-top-right-radius: var(--d-border-radius-pill);
+    border-bottom-right-radius: var(--d-border-radius-pill);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid var(--primary-low);
+  }
+
+  &__filter-pill-values {
+    @include ellipsis;
+    display: inline-flex;
+  }
+
+  &__filter-pill-value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+  }
+
+  &__partial-warning {
+    margin: 0;
+  }
+
+  &__empty {
+    border-radius: var(--d-border-radius);
+    padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--content-border-color);
+    background: var(--primary-very-low);
+    text-align: center;
+  }
+
+  &__skeleton {
+    .db-skeleton__section-wrapper {
+      overflow: hidden;
+      padding-bottom: 0;
+    }
+
+    .db-skeleton__heading-line {
+      width: min(24rem, 100%);
+      height: 1.625rem;
+    }
+
+    .db-skeleton__metric {
+      gap: var(--space-1);
+    }
+
+    .db-skeleton__metric-number {
+      height: 2.125rem;
+    }
+
+    .db-skeleton__metric-label {
+      height: 1.22rem;
+    }
+
+    .db-skeleton__chart {
+      height: 360px;
+      min-height: 260px;
+    }
+
+    .db-skeleton__row-block-title {
+      height: 2.4rem;
+    }
+
+    .db-skeleton__list {
+      gap: 0;
+    }
+
+    .db-skeleton__list-row {
+      min-height: 1.72rem;
+    }
+
+    @include viewport.until(md) {
+      .db-skeleton__subheader {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      .db-skeleton__metric-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .db-skeleton__row {
+        flex-direction: column;
+      }
+
+      .db-skeleton__row-block:not(:last-child) {
+        border-right: 0;
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+
+    @include viewport.until(sm) {
+      .db-skeleton__chart {
+        height: 18rem;
+      }
+    }
+  }
+
+  .db-section__metrics {
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+  }
+
+  .db-section__metric-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    .db-section__info {
+      font-size: inherit;
+    }
+  }
+
+  .db-section__row-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
+    min-width: 0;
+    border-bottom: 1px solid var(--content-border-color);
+
+    button {
+      border: 0;
+      border-bottom: 2px solid transparent;
+      padding-bottom: var(--space-2);
+      padding-inline: 0;
+      background: transparent;
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+      white-space: nowrap;
+
+      &.is-active {
+        border-bottom-color: var(--tertiary);
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  &__breakdown-list {
+    @include unstyled-list;
+    font-size: var(--font-down-1-rem);
+    margin-block-end: var(--space-2);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline: calc(-1 * var(--space-2));
+    border-radius: var(--d-border-radius);
+    padding-inline: var(--space-2);
+    cursor: pointer;
+
+    html.discourse-no-touch &:hover:not(:has(a:hover)) {
+      background: var(--token-color-surface-hovered);
+    }
+  }
+
+  &__row-count {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    color: var(--primary-medium);
+  }
+
+  &__row-link {
+    @include ellipsis;
+    flex: 0 1 auto;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+    margin: 0;
+    margin-right: var(
+      --space-4
+    ); // leave extra space on purpose to click the row not the link
+
+    &:hover {
+      .discourse-no-touch & {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
+
+    &:visited {
+      color: inherit;
+    }
+
+    &:focus-visible {
+      color: var(--tertiary);
+      text-decoration: underline;
+    }
+  }
+
+  &__dimension-label {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-width: 0;
+    gap: var(--space-2);
+    padding-block: var(--space-1);
+  }
+
+  &__dimension-text {
+    @include ellipsis;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__card-empty {
+    padding-block: var(--space-3);
+    color: var(--primary-medium);
+  }
+}
+
+// The global `label` rule in common/base/discourse.scss wins on specificity
+// over the block class, so these resets have to match it at element level.
+label.site-traffic-explorer__row {
+  margin-block: 0;
+  font-weight: inherit;
+}
+
+.site-traffic-breakdown-modal {
+  .site-traffic-explorer__breakdown-list {
+    font-size: var(--font-0);
+  }
+
+  .site-traffic-explorer__dimension-label {
+    padding-block: var(--space-2);
+  }
+}

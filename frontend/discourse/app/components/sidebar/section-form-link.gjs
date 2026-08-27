@@ -9,9 +9,9 @@ import withEventValue from "discourse/helpers/with-event-value";
 import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
-import DSelect from "discourse/ui-kit/d-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
@@ -78,22 +78,6 @@ export default class SectionFormLink extends Component {
     this.dragCssClass = null;
   }
 
-  get activeLocalizations() {
-    return this.args.link.localizations.filter(
-      (localization) => !localization._destroy
-    );
-  }
-
-  get canAddLocalization() {
-    const selectedLocales = this.activeLocalizations.map(
-      (localization) => localization.locale
-    );
-
-    return this.args.localeOptions.some(
-      (locale) => !selectedLocales.includes(locale.value)
-    );
-  }
-
   <template>
     <div class="sidebar-section-form-link-wrapper" role="rowgroup">
       <div
@@ -140,6 +124,7 @@ export default class SectionFormLink extends Component {
         <div class="input-group" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
+            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
             {{on "input" (withEventValue (fn (mut @link.name)))}}
             @type="text"
             @value={{@link.name}}
@@ -171,6 +156,12 @@ export default class SectionFormLink extends Component {
             <div role="alert" aria-live="assertive" class="value warning">
               {{@link.invalidValueMessage}}
             </div>
+          {{else if @duplicateValue}}
+            {{! Not announced assertively: nothing is wrong yet, and the row
+                still saves. }}
+            <div class="value warning duplicate-link">
+              {{i18n "sidebar.sections.custom.links.value.duplicate"}}
+            </div>
           {{/if}}
         </div>
 
@@ -182,72 +173,6 @@ export default class SectionFormLink extends Component {
           class="btn-flat delete-link"
         />
       </div>
-
-      {{#if @showLocalizations}}
-        <div class="sidebar-section-form-link__localizations">
-          {{#each this.activeLocalizations as |localization|}}
-            <div class="sidebar-section-form__localization-row">
-              <DSelect
-                @value={{localization.locale}}
-                @onChange={{fn @setLocalizationLocale @link localization}}
-                @includeNone={{false}}
-                class="sidebar-section-form__localization-locale"
-                aria-label={{i18n
-                  "sidebar.sections.custom.localizations.locale"
-                }}
-                as |select|
-              >
-                {{#each @localeOptions as |locale|}}
-                  <select.Option
-                    @value={{locale.value}}
-                    disabled={{@isLocalizationLocaleDisabled
-                      @link
-                      localization
-                      locale.value
-                    }}
-                  >{{locale.name}}</select.Option>
-                {{/each}}
-              </DSelect>
-
-              <Input
-                @type="text"
-                @value={{localization.name}}
-                class="sidebar-section-form__localization-value"
-                placeholder={{i18n
-                  "sidebar.sections.custom.localizations.link_label"
-                }}
-                aria-label={{i18n
-                  "sidebar.sections.custom.localizations.link_label"
-                }}
-                {{on "input" (withEventValue (fn (mut localization.name)))}}
-              />
-
-              <DButton
-                @icon="trash-can"
-                @action={{fn @deleteLocalization @link localization}}
-                @title="sidebar.sections.custom.localizations.remove"
-                class="btn-flat delete-link remove-localization"
-              />
-            </div>
-
-            {{#if localization.invalidNameMessage}}
-              <div role="alert" aria-live="assertive" class="name warning">
-                {{localization.invalidNameMessage}}
-              </div>
-            {{/if}}
-          {{/each}}
-
-          {{#if this.canAddLocalization}}
-            <DButton
-              @action={{fn @addLocalization @link}}
-              @title="sidebar.sections.custom.localizations.add_link"
-              @icon="plus"
-              @label="sidebar.sections.custom.localizations.add_link"
-              class="btn-flat btn-text add-link-localization"
-            />
-          {{/if}}
-        </div>
-      {{/if}}
     </div>
   </template>
 }

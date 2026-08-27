@@ -195,13 +195,8 @@ module DiscourseDataExplorer
               req_params[param["name"].to_sym] = param["value"] if param["name"].present?
             end
 
-          if req_params.present?
-            sql =
-              MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
-                sql,
-                req_params,
-              )
-          end
+          sql = DiscourseDataExplorer::DataExplorer.strip_comments(sql)
+          sql = DiscourseDataExplorer::DataExplorer.interpolate_params(sql, req_params)
 
           query = DiscourseDataExplorer::Query.new(name: "workflow", sql: sql)
           result =

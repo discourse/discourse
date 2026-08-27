@@ -515,11 +515,28 @@ cs:
       pill: "Navrhované"
       pm_title: "Doporučené zprávy"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Odstartujte v %{step_count} snadných krocích"
-      select_theme:
-        enabled: "Zaškrtnuté"
       start_posting:
         back: "Zpět"
+    design_wizard:
+      back: "Zpět"
+      next: "Další"
+      sections:
+        theme: "Téma"
+        fonts: "Písma"
+        homepage: "Domovská stránka"
+      theme:
+        selected: "Zaškrtnuté"
+      colors:
+        light: "Světlá"
+        dark: "Tmavá"
+      fonts:
+        base_font: "Základní písmo"
+        heading_font: "Písmo nadpisů"
+      homepage:
+        topics: "Témata"
+        categories: "Kategorie"
+        styles:
+          boxes: "Boxy "
     about:
       edit: "Upravit tuto stránku"
       simple_title: "O tomto webu"
@@ -843,10 +860,6 @@ cs:
         optional: "volitelné"
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
-        required: "Než budete moci položky revidovat, musíte si je nárokovat."
-        claimed_by_you: "Tuto položku jste si nárokovali a můžete ji zkontrolovat."
-        claimed_by_other: "Tuto položku může revidovat pouze <b>%{username}</b>."
-        automatically_claimed_by: "Tuto položku aktuálně reviduje <b>%{username}</b>."
       claim:
         title: "Nárokovat toto téma"
       unclaim:
@@ -885,6 +898,8 @@ cs:
         email: "Email"
         name: "Jméno"
         fields: "Pole"
+        silence_reason: "Důvod ztišení"
+        penalty_forever: "Navždy"
         reject_reason: "Důvod"
         scrubbed_by: "Záznam očistil/a"
         scrubbed_reason: "Reason"
@@ -1737,7 +1752,6 @@ cs:
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
       enable_smart_lists: "Povolit chytré seznamy při psaní v editoru příspěvků"
-      enable_defer: "Povolit označení témat jako nepřečtených"
       enable_markdown_monospace_font: "V Markdown módu použít písmo s pevným rozestupem (monospace)"
       experimental_sidebar:
         enable: "Povolit postranní panel"
@@ -2424,7 +2438,8 @@ cs:
           invite_by_email: "Email"
           restrict_domain: "Omezit na doménu"
           domain_placeholder: "example.com"
-          more_options: "Více možností"
+          create_and_send: "Odeslat"
+          create_and_copy: "Kopírovat odkaz"
           update: "Aktualizovat"
           summary:
             role_member: "Člen"
@@ -2436,7 +2451,7 @@ cs:
             expires: "Vyprší"
             topic: "Témata"
             groups: "Skupiny"
-            edit: "Upravit pozvánku"
+            edit: "Upravit"
         bulk_invite:
           none: "Na této stránce nejsou k zobrazení žádné pozvánky."
           text: "Hromadné pozvání"
@@ -3020,6 +3035,7 @@ cs:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorií"
         other: "+%{count} podkategorií"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} téma v této kategorii"
         few: "%{count} témata v této kategorii"
@@ -3237,7 +3253,6 @@ cs:
       italic_label: "I"
       italic_title: "Kurzíva"
       italic_text: "text kurzívou"
-      heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
       heading_level_paragraph: "Odstavec"
@@ -3453,7 +3468,6 @@ cs:
         other: "%{count} otevřených žádostí o členství v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - dokončeno"
       new_features: "Jsou k dispozici nové funkce!"
       admin_problems: "Na administrační nástěnce vašeho webu jsou nová doporučení"
       upcoming_changes:
@@ -5663,9 +5677,9 @@ cs:
           always_public: "Obsah v této sekci je vždy veřejný"
           more_menu: "Další menu"
           localizations:
-            title: "Překlady"
             locale: "Jazyk"
             title_label: "Název sekce"
+            remove_language: "Smazat"
           links:
             add: "Přidat další odkaz"
             delete: "Odstranit odkaz"
@@ -6543,13 +6557,26 @@ cs:
       new_features:
         title: "Co je nového?"
         check_for_updates: "Aktualizovat"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        remove_filter_value: "Odstranit %{value}"
+        clear_all: "Zrušit vše"
+        apply: "Použít"
+        view_more: "Zobrazit více"
+        cards:
+          pages: "Stránek"
+          visitors: "Návštěvníci"
+        filters:
+          browser: "Prohlížeč"
+          ip: "IP adresa"
+        series:
+          anonymous_human: "Anonymní"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
         discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
-        critical_available: "K dispozici je důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_update: "Prosím, aktualizujte!"
         no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."

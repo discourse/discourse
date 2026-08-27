@@ -201,6 +201,23 @@
     }
   }
 
+  &__collection-order-controls {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: var(--space-2);
+    transform: translateY(-50%);
+    display: flex;
+    gap: var(--space-half);
+  }
+
+  &__collection-move {
+    padding: var(--space-half);
+    border-radius: 6px;
+    font-size: var(--font-down-1-rem);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+  }
+
   &__collection-fields {
     flex: 1;
     min-width: 0;
@@ -310,6 +327,140 @@
     > .form-kit__container-content {
       width: 100%;
       min-width: 0;
+    }
+  }
+}
+
+.workflows-field-path {
+  width: 100%;
+}
+
+// Each aggregation is its own short stack of lines, so the generic repeatable-row
+// card is stripped back and a rule is used to tell one aggregation from the next.
+.workflows-property-engine__collection-row:has(.workflows-summarize-row) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  border: 0;
+  background: transparent;
+  padding-block: var(--space-2);
+  padding-inline: 0;
+
+  + .workflows-property-engine__collection-row:has(.workflows-summarize-row) {
+    border-block-start: 1px solid var(--primary-low);
+  }
+
+  .workflows-property-engine__collection-delete {
+    position: static;
+    transform: none;
+    order: 2;
+    border: 0;
+    background: transparent;
+
+    // Match the control height so the delete sits on the first line's centre.
+    height: var(--space-9);
+    display: flex;
+    align-items: center;
+  }
+
+  .workflows-property-engine__collection-fields {
+    order: 1;
+    min-width: 0;
+  }
+}
+
+.workflows-summarize-row {
+  // Shared by every lead, which is what keeps the controls of one row - and of all
+  // the rows below it - on a single vertical rule. Wide enough for the longest
+  // aggregation name, since a truncated one reads as a different calculation.
+  --summarize-lead-width: 11.5rem;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--space-1);
+  width: 100%;
+
+  &__line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  &__lead {
+    flex: 0 0 var(--summarize-lead-width);
+    min-width: 0;
+
+    &--label {
+      text-align: end;
+      color: var(--primary-medium);
+    }
+  }
+
+  &__control {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    &--derived input::placeholder {
+      font-style: italic;
+    }
+  }
+
+  // A line is a lead and its control, so the form fields inside must not reserve
+  // vertical space for labels or impose a width of their own.
+  .form-kit__field {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .form-kit__container-content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  // Every control shares the height form-kit gives its inputs, otherwise the selects,
+  // the text inputs and the combo boxes each sit on a different baseline.
+  .form-kit__control-select,
+  .form-kit__control-input,
+  .select-kit-header {
+    height: var(--space-9);
+    margin: 0;
+  }
+
+  .form-kit__control-select,
+  .form-kit__control-input {
+    width: 100%;
+  }
+}
+
+.workflows-node-preview {
+  margin-block-end: var(--space-3);
+
+  &__truncated {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__table {
+    width: 100%;
+    margin: 0;
+    font-size: var(--font-down-1);
+
+    th,
+    td {
+      padding: var(--space-1) var(--space-2);
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    th {
+      font-family: var(--d-font-family--monospace);
+      font-weight: 500;
     }
   }
 }

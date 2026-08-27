@@ -24,12 +24,17 @@ ar:
     data_explorer:
       admin_dashboard_card:
         no_results: "لا توجد نتائج"
+      manage_reports_hint:
+        title: "إنشاء استعلام مستكشف البيانات"
+        description: "اكتب استعلام SQL مخصصًا لعرض أي شيء خاص بمجتمعك."
     explorer:
       default_query: "افتراضي"
       default_query_notice: "هذا استعلام افتراضي، ولا يمكن تعديل SQL. لتعديل SQL، أنشئ استعلامًا جديدًا."
       queries: "الاستعلامات"
       query_created: "تم إنشاء الاستعلام!"
       mode:
+        label: "وضع كتابة الاستعلام"
+        manual: "كتابة SQL"
         ai: "إنشاء باستخدام الذكاء الاصطناعي"
       or: "أو"
       admins_only: "مستكشف البيانات متاح للمسؤولين فقط."
@@ -42,6 +47,8 @@ ar:
         description_title: "إنشاء باستخدام الذكاء الاصطناعي"
         description_hint: "صف ما تريد بلغة بسيطة، وسيتم إنشاء استعلام SQL والاسم والوصف تلقائيًا."
         description_placeholder: "مثال: عرض عمليات التسجيل عبر الزمن"
+        regenerate_placeholder: "مثال: قم بتحديث الاستعلام لتقييد النتائج إلى 50 نتيجة"
+        prompt_label: "الأمر"
         generate: "إنشاء"
         generating: "جاري إنشاء الاستعلام باستخدام الذكاء الاصطناعي…"
         generation_timeout: "انتهت مهلة إنشاء الاستعلام بالذكاء الاصطناعي. يمكنك كتابة SQL يدويًا."
@@ -64,6 +71,9 @@ ar:
       schema:
         title: "مخطط قاعدة البيانات"
         filter: "بحث..."
+        search_tables: "البحث في الجداول"
+        hide: "إخفاء المخطط"
+        show: "إظهار المخطط"
         sensitive: "قد تتضمَّن محتويات هذا العمود معلومات حساسة أو سرية بشكلٍ خاص. يُرجى توخي الحذر عند استخدام محتويات هذا العمود."
       types:
         bool:
@@ -78,9 +88,31 @@ ar:
       delete: "حذف"
       recover: "إلغاء حذف الاستعلام"
       sql_label: "SQL"
+      run_with_explain: "التشغيل مع خطة الاستعلام"
+      run_options: "المزيد من خيارات التشغيل"
+      view:
+        label: "عرض النتائج"
       chart:
         form:
+          label: "نوع الرسم البياني"
+          line: "خطي"
           bar: "شريط"
+          stacked: "أعمدة مكدَّسة"
+          dual_axis: "محور مزدوج"
+        tooltip:
+          total: "الإجمالي: %{count}"
+      chart_empty:
+        no_rows: "لا توجد صفوف لعرضها في الرسم البياني."
+        no_numeric: "لا يحتوي هذا الاستعلام على أعمدة عددية لعرضها في الرسم البياني."
+        no_numeric_with_columns: "لا يحتوي هذا الاستعلام على أعمدة عددية لعرضها في الرسم البيانات (تم تجاهل: %{columns})."
+        view_as_table: "العرض كجدول"
+      chart_footnote:
+        ignored: "الأعمدة غير المعروضة في الرسم البياني: %{columns}"
+      export_as:
+        label: "التصدير بصيغة…"
+        results_json: "النتائج (JSON)"
+        results_csv: "النتائج (CSV)"
+        query_json: "تعريف الاستعلام (JSON)"
       others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
       cached_result_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
@@ -126,12 +158,24 @@ ar:
             data_explorer:
               run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "يتطلَّب تفعيل المكوِّن الإضافي \"مستكشف البيانات\""
       nodes:
         "action:sql": "مستكشف البيانات"
+      node_descriptions:
+        "action:sql": "شغِّل استعلام SQL للقراءة فقط على قاعدة البيانات"
       sql:
-        queries: "الاستعلامات"
+        operation: "العملية"
+        operation_description: "كيفية تشغيل الاستعلام"
         query_id: "استعلام"
+        query_id_description: "حدِّد استعلامًا محفوظًا لتشغيله"
+        query_params: "معلمات الاستعلام"
+        query_params_description: "املأ المعلمات للاستعلام المحدَّد"
+        query: "استعلام SQL"
+        params: "معلمات الاستعلام"
+        params_description: "يمكن استخدام المعلمات بصيغة :my_param في استعلام SQL."
         add_param: "إضافة معلمة"
+        param_name: "المعلمة"
         param_value: "القيمة"
         output:
           results: "النتائج"

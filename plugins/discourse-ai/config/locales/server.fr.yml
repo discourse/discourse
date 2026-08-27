@@ -8,23 +8,60 @@ fr:
   activerecord:
     attributes:
       llm_model:
+        name: "ID du modèle"
         max_prompt_tokens: "Fenêtre contextuelle"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> nécessite votre attention. Au cours de la dernière heure, il n'a pas répondu %{failed_calls} fois sur %{total_calls}."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> nécessite votre attention. Au cours des %{count} dernières heures, il n'a pas répondu %{failed_calls} fois sur %{total_calls}."
+      ai_credit_soft_limit: "Il ne reste que %{percentage_remaining} % de crédits pour %{model_name}. Les crédits seront réinitialisés le %{reset_date}. <a href='%{url}'>Voir les modèles d'IA</a>"
+      ai_credit_hard_limit: "Vous avez épuisé les crédits d'IA pour %{model_name}. Les fonctionnalités d'IA seront indisponibles jusqu'au %{reset_date}. <a href='%{url}'>Voir les modèles d'IA</a>"
+      ai_image_caption_agent: "Les légendes d'image générées par l'IA sont activées, mais l'agent de légende d'image sélectionné n'est pas prêt : %{reason}. <a href='%{url}'>Vérifier l'agent de légende d'image</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "l'agent sélectionné n'existe pas"
+        agent_vision_disabled: "l'agent ne peut pas inclure d'images téléversées"
+        llm_missing: "l'agent ne correspond à aucun LLM"
+        llm_vision_disabled: "le LLM obtenu ne prend pas en charge les images en entrée"
   discourse_automation:
     ai:
       flag_types:
         review: "Ajouter une publication à la file d'attente de révision"
         review_hide: "Ajouter une publication à la file d'attente de révision et masquer la publication"
+        review_delete: "Ajouter la publication à la file d'attente de vérification et la supprimer"
+        review_delete_silence: "Ajouter la publication à la file d'attente de vérification, la supprimer et empêcher l'utilisateur de publier"
         spam: "Signaler comme contenu indésirable et masquer la publication"
         spam_silence: "Signaler comme contenu indésirable, masquer la publication et désactiver l'utilisateur"
     scriptables:
+      ai_tool_action:
+        title: Action d'un outil d'IA
+        description: Exécuter un outil d'IA lorsque l'automatisation se déclenche
+      llm_agent_triage:
+        title: Trier les publications à l'aide d'un agent d'IA
+        description: "Répondre aux publications à l'aide d'un agent d'IA spécifique"
       llm_triage:
         title: Trier les publications à l'aide de l'IA
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
+        flagged_post: |
+          %{score_reason}
+          %{response}
+        notify_author_pm:
+          subject: "Votre publication a été temporairement retirée pour vérification"
+          body: |
+            Bonjour @%{username},
+
+            Votre publication dans « %{topic_title} » a été temporairement retirée et placée dans notre file d'attente de vérification afin d'être examinée par l'équipe de modération. Si elle est approuvée, elle sera automatiquement restaurée.
+
+            Référence : %{post_url}
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"
+      llm_tagger:
+        title: Étiqueter les sujets à l'aide de l'IA
+        description: "Étiqueter automatiquement les sujets à l'aide de l'IA"
   site_settings:
     discourse_ai_enabled: "Activez l'extension IA de Discourse."
+    enable_ai_bot_starred_conversations: "Autoriser les utilisateurs à ajouter les conversations avec le bot d'IA aux favoris et à les afficher dans une section « Favoris » de la barre latérale."
     ai_default_llm_model: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA"
     ai_artifact_security: "Le système d'artefacts d'IA génère des iFrames avec du code exécutable. Le mode strict force un clic supplémentaire pour exécuter le code. Le mode Lax exécute le code immédiatement. Le mode hybride permet à l'utilisateur de fournir des data-ai-artifact-autorun à afficher immédiatement. Le mode désactivé désactive le système d'artefacts."
     ai_toxicity_enabled: "Activez le module de toxicité."
@@ -43,6 +80,12 @@ fr:
     ai_sentiment_enabled: "Activez le module de sentiment."
     ai_sentiment_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de sentiment"
     ai_sentiment_inference_service_api_key: "Clé d'API pour l'API de sentiment"
+    ai_sentiment_model_configs: "Points de terminaison des modèles de classification à utiliser pour l'inférence. Le sentiment classe les publications comme positives, neutres ou négatives. L'émotion classe les publications selon les étiquettes d'émotion prises en charge."
+    ai_sentiment_models: "Points de terminaison des modèles de classification à utiliser pour l'inférence. Le sentiment classe les publications comme positives, neutres ou négatives. L'émotion classe les publications selon les étiquettes d'émotion prises en charge."
+    ai_sentiment_sentiment_classification_strategy: "Moteur de classification des sentiments."
+    ai_sentiment_sentiment_agent: "Agent à utiliser pour la classification des sentiments lorsque le moteur de classification des sentiments est un agent."
+    ai_sentiment_emotion_classification_strategy: "Moteur de classification des émotions."
+    ai_sentiment_emotion_agent: "Agent à utiliser pour la classification des émotions lorsque le moteur de classification des émotions est un agent."
     ai_nsfw_detection_enabled: "Activez le module NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adresse URL où l'API s'exécute pour le module NSFW"
     ai_nsfw_inference_service_api_key: "Clé d'API pour l'API NSFW"
@@ -54,14 +97,22 @@ fr:
     ai_nsfw_flag_threshold_sexy: "Seuil pour qu'une image classée comme sexy soit considérée comme NSFW."
     ai_nsfw_models: "Modèles à utiliser pour l'inférence NSFW."
     ai_spam_detection_enabled: "Activez le module de détection de contenu indésirable par IA"
+    ai_spam_detection_max_post_count: "Nombre maximal de publications d'un utilisateur au-delà duquel celles-ci ne sont plus analysées pour détecter les contenus indésirables"
+    ai_spam_detection_max_trust_level: "Niveau de confiance maximal des utilisateurs dont les publications sont analysées pour détecter les contenus indésirables"
     ai_openai_api_key: "Clé d'API pour l'API OpenAI. Utilisé UNIQUEMENT pour la création et la modification d'images. Pour GPT, utilisez l'onglet de configuration LLM"
     ai_helper_enabled: "Activer l'assistant IA."
     composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans l'éditeur."
     ai_helper_allowed_in_pm: "Activez l'assistant IA de l'éditeur dans les messages privés."
     ai_helper_automatic_chat_thread_title_delay: "Délai en minutes avant que l'assistant IA définisse automatiquement le titre du fil de discussion."
     ai_helper_automatic_chat_thread_title: "Définissez automatiquement les titres des fils de discussion en fonction du contenu du fil."
-    ai_helper_enabled_features: "Sélectionnez les fonctionnalités à activer dans l’assistant IA."
+    ai_image_caption_agent: "Agent à utiliser pour les légendes d'image générées par l'IA. Les agents personnalisés doivent autoriser les images téléversées et utiliser un LLM capable de traiter les images."
+    ai_post_image_captions_enabled: "Activer les légendes générées par l'IA pour les images des publications. La génération des légendes manquantes nécessite la configuration de {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Nombre maximal d'images de publication à légender par publication."
+    ai_post_image_captions_backfill_hourly_rate: "Nombre maximal de publications par heure à traiter rétroactivement avec des légendes d'image générées par l'IA. Définissez cette valeur sur 0 pour désactiver le traitement rétroactif."
+    ai_post_image_captions_backfill_max_age_days: "Âge maximal, en jours, des publications à traiter rétroactivement avec des légendes d'image générées par l'IA."
     post_ai_helper_allowed_groups: "Les groupes d'utilisateurs autorisés à accéder aux fonctionnalités d'AI Helper dans les publications"
+    ai_helper_post_illustrator_agent: "Agent à utiliser pour la fonctionnalité « Illustrer la publication » de l'assistant IA. Remarque : vous devez également créer un outil de génération d'images (Administration > Extensions > Discourse AI > Outils) pour que cette fonctionnalité fonctionne."
+    ai_helper_chat_thread_title_agent: "Agent à utiliser pour générer les titres des fils de chat."
     ai_embeddings_selected_model: "Utilisez le modèle sélectionné pour générer des intégrations."
     ai_embeddings_generate_for_pms: "Générez des intégrations pour les messages privés."
     ai_embeddings_semantic_related_topics_enabled: "Utilisez la recherche sémantique pour les sujets connexes."
@@ -71,22 +122,48 @@ fr:
     ai_embeddings_semantic_search_use_hyde: "Utilisez HyDE pour effectuer une recherche sémantique sur toute la page. Utilise un LLM pour créer une publication hypothétique à partir du terme de recherche de l'utilisateur afin de faciliter les correspondances."
     ai_embeddings_semantic_quick_search_enabled: "Activez l'option de recherche sémantique dans la fenêtre contextuelle du menu de recherche."
     ai_embeddings_semantic_related_include_closed_topics: "Inclure des sujets fermés dans les résultats de recherche sémantique"
+    ai_embeddings_semantic_related_age_penalty: "Applique une pénalité exponentielle liée à l'ancienneté aux sujets dans les résultats de recherche sémantique. 0.0 = aucune pénalité, 0.3 = légère préférence pour le contenu récemment actif, 1.0+ = forte préférence pour le contenu récent."
+    ai_embeddings_semantic_related_age_time_scale: "Échelle de temps, en jours, utilisée pour calculer la pénalité liée à l'ancienneté. Les sujets inactifs depuis ce nombre de jours reçoivent une pénalité d'environ 50 % lorsque penalty=1.0. Utilisez 365 pour une échelle annuelle et 90 pour une échelle trimestrielle."
     ai_embeddings_per_post_enabled: Générer des intégrations pour chaque publication
+    ai_admin_dashboard_enabled: "Activer les fonctionnalités d'IA dans le tableau de bord d'administration"
+    ai_admin_dashboard_highlights_agent: "Agent qui explique les évolutions notables de la communauté dans le tableau de bord d'administration."
+    ai_admin_dashboard_highlights_category_scope: "Choisissez les catégories que les faits marquants générés par l'IA peuvent utiliser. Les options d'inclusion et d'exclusion utilisent {{setting:ai_admin_dashboard_highlights_categories}}. Les messages personnels sont toujours exclus."
+    ai_admin_dashboard_highlights_categories: "Catégories utilisées lorsque l'étendue des catégories des faits marquants générés par l'IA est définie sur <strong>inclure</strong> ou <strong>exclure</strong>."
     ai_summarization_enabled: "Activer la fonction de synthèse"
+    ai_summarization_agent: "Agent à utiliser pour la fonctionnalité de résumé"
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
+    ai_summary_gists_agent: "Agent utilisé pour générer de courts résumés de sujets. La génération de synthèses utilise toujours l'outil final-summary intégré ; les autres outils et les formats de réponse structurés configurés sur l'agent sont ignorés."
+    ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à traiter rétroactivement par heure. Chaque synthèse localisée est comptabilisée dans cette limite."
     ai_bot_enabled: "Activez le module du robot IA."
+    ai_bot_enabled_llms: "LLM pouvant être sélectionnés pour les conversations avec le bot d'IA"
+    ai_bot_enable_chat_warning: "Afficher un avertissement lorsqu'un chat par message personnel est lancé. Cet avertissement peut être remplacé en modifiant la chaîne de traduction suivante : discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
     ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
+    ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer un message personnel avec un bot d'IA"
+    ai_bot_add_to_community_section: "Afficher un lien dans la section Communauté de la barre latérale pour démarrer un message personnel avec un bot d'IA"
     ai_bot_github_access_token: "Jeton d'accès GitHub à utiliser avec les outils GitHub AI (requis pour la prise en charge de la recherche)"
+    ai_bot_enable_docked_composer: "Activer l'éditeur ancré de type chat pour les conversations avec le bot d'IA à la place de l'éditeur flottant standard."
+    ai_discover_enabled: "Activer la fonctionnalité de recherche de découverte"
+    ai_discover_agent: "Agent à utiliser pour la fonctionnalité de recherche de découverte"
     ai_google_custom_search_api_key: "Clé d'API pour l'API Google Custom Search, voir : https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX pour l'API de recherche personnalisée Google"
     ai_discord_search_enabled: "Active la fonction de recherche Discord"
     ai_discord_app_id: "L'identifiant de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_app_public_key: "La clé publique de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
+    ai_discord_search_agent: "Agent à utiliser pour la recherche Discord."
     ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
+    ai_translation_enabled: "Activer la fonctionnalité de traduction par l'IA"
+    ai_translation_category_scope: "Choisissez les catégories que la traduction par l'IA peut utiliser. Les options d'inclusion et d'exclusion utilisent {{setting:ai_translation_categories}}. Les messages personnels sont contrôlés par {{setting:ai_translation_personal_messages}}."
+    ai_translation_categories: "Catégories utilisées lorsque l'étendue des catégories de la traduction par l'IA est définie sur <strong>inclure</strong> ou <strong>exclure</strong>."
+    ai_translation_personal_messages: "Contrôle les messages personnels qui sont traduits. 'none' désactive la traduction des messages personnels. 'group' traduit uniquement les messages personnels de groupe. 'all' traduit tous les messages personnels."
+    ai_translation_include_bot_content: "Lorsque ce paramètre est activé, le contenu rédigé par des bots (les ID d'utilisateur inférieurs à 0) est également envoyé pour traduction."
+    ai_translation_backfill_start_date: "Date UTC à partir de laquelle les publications et sujets historiques seront envoyés pour traitement rétroactif de la traduction. Laissez ce champ vide pour désactiver le traitement rétroactif. Le nouveau contenu continuera d'être traduit."
+    ai_translation_backfill_hourly_rate: "Nombre de publications et de sujets à traduire par heure pendant les opérations de traitement rétroactif. Définissez cette valeur sur 0 pour désactiver le traitement rétroactif automatique des traductions du contenu existant."
+    ai_translation_backfill_parallel_jobs: "Nombre de tâches parallèles de localisation des publications à exécuter à chaque cycle de traitement rétroactif. Des valeurs plus élevées augmentent le débit, mais consomment davantage de ressources."
+    ai_usage_rollup_after_days: "Nombre de jours pendant lesquels conserver les statistiques d'utilisation de l'IA par requête avant de les regrouper dans des agrégats quotidiens. Définissez cette valeur sur 0 pour désactiver le regroupement."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
@@ -97,6 +174,7 @@ fr:
       description: "Ce rapport fournit une analyse du sentiment pour les publications, regroupées par catégorie, avec des scores positifs, négatifs et neutres pour chaque publication et catégorie."
     overall_sentiment:
       title: "Sentiment général"
+      description: "Le graphique compare le nombre de publications classées comme positives ou négatives. Elles sont calculées lorsque les scores positifs ou négatifs sont supérieurs au seuil défini. Les publications neutres ne sont donc pas affichées. Les messages personnels sont également exclus. Selon la méthode de classification des sentiments sélectionnée, les publications sont classées soit avec le modèle de classification des sentiments configuré (cardiffnlp/twitter-roberta-base-sentiment-latest), soit avec l'agent de classification des sentiments configuré."
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
@@ -196,6 +274,12 @@ fr:
       change_description: "Modifier la description"
       copied: "Copié dans le presse-papiers"
     unknown_model: "Modèle d'IA inconnu"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "L'agent '%{agent}' est verrouillé sur son LLM par défaut, mais aucun LLM par défaut valide n'est configuré"
+          llm_not_found: "Modèle LLM avec l'ID %{llm_model_id} introuvable"
+          no_llm_configured: "Aucun LLM n'est configuré pour l'agent '%{agent}'. Sélectionnez un modèle LLM ou configurez un LLM par défaut pour l'agent ou le site."
     tools:
       custom_name: "%{name} (personnalisé)"
       presets:
@@ -205,26 +289,99 @@ fr:
           name: "Taux de change"
         stock_quote:
           name: "Cotation boursière (AlphaVantage)"
+        image_generation_category:
+          name: "Génération d'image..."
         image_generation_custom:
           name: "Personnalisé"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Repartir de zéro..."
       name:
         characters: "doit uniquement inclure des chiffres, des lettres et des traits de soulignement"
+      secret_contracts:
+        invalid_payload: "Les contrats de secrets doivent être un tableau."
+        invalid_contract: "Le contrat de secret à l'index %{index} n'est pas valide."
+        alias_required: "Le contrat de secret à l'index %{index} doit comporter un alias."
+        alias_too_long: "L'alias de secret `%{alias}` est trop long."
+        alias_invalid: "L'alias de secret `%{alias}` ne doit contenir que des chiffres, des lettres et des traits de soulignement."
+        alias_not_unique: "L'alias de secret `%{alias}` est dupliqué."
+      secret_bindings:
+        invalid_payload: "Les liaisons d'identifiants doivent être un tableau."
+        secret_not_found: "L'identifiant sélectionné n'existe pas."
+        alias_not_declared: "L'alias `%{alias}` n'est pas déclaré dans cet outil."
+      secret_runtime:
+        alias_not_declared: "L'alias d'identifiant `%{alias}` n'est pas déclaré pour cet outil."
+        missing_binding: "L'alias d'identifiant `%{alias}` est requis, mais n'est pas lié."
+        missing_required_aliases: "Liaisons d'identifiants requises manquantes pour les alias : %{aliases}."
+        secret_not_found: "L'alias d'identifiant `%{alias}` est lié à un identifiant inexistant."
+        unknown_error: "Impossible de résoudre l'identifiant demandé."
+    mcp_servers:
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
+      invalid_url_not_https: "doit être une URL HTTPS valide"
+      invalid_url_not_reachable: "doit correspondre à une adresse accessible publiquement"
+      oauth_client_id_required: "Un ID client OAuth est requis pour l'enregistrement manuel du client."
+      errors:
+        invalid_response: "Le serveur MCP a renvoyé une réponse non valide."
+        request_failed: "La requête adressée au serveur MCP a échoué avec le statut %{status}."
+        session_expired: "La session MCP a expiré."
+        timeout: "La requête adressée au serveur MCP a expiré."
+        oauth_authorization_required: "Une autorisation OAuth est requise avant de pouvoir utiliser ce serveur MCP. Connectez-le à %{issuer} depuis l'interface d'administration."
+        oauth_discovery_failed: "Impossible de récupérer les informations d'autorisation OAuth de ce serveur MCP."
+        oauth_discovery_failed_with_status: "La découverte OAuth a échoué avec le statut %{status}."
+        oauth_not_configured: "OAuth n'est pas configuré pour ce serveur MCP."
+        oauth_refresh_token_missing: "Le jeton d'actualisation OAuth est manquant. Reconnectez ce serveur MCP."
+        oauth_save_before_connect: "Enregistrez le serveur MCP avant de tester la connexion OAuth."
+        oauth_state_invalid: "L'état d'autorisation OAuth n'est pas valide ou a expiré. Relancez la connexion."
+        oauth_token_exchange_failed: "L'échange de jetons OAuth a échoué avec le statut %{status}."
+        oauth_https_required: "OAuth nécessite que votre site soit accessible via HTTPS."
+        oauth_callback_failed: "Échec de la connexion OAuth : %{message}"
+        oauth_refresh_token_required: "Le serveur d'autorisation OAuth n'a pas renvoyé de jeton d'actualisation. Modifiez les options OAuth avancées et reconnectez ce serveur MCP."
+        oauth_client_metadata_public_https_required: "L'enregistrement à l'aide d'un document de métadonnées client nécessite une URL de site HTTPS publique. URL actuelle des métadonnées client : %{url}"
+        oauth_registration_endpoint_missing: "Le serveur d'autorisation OAuth ne fournit aucun point de terminaison d'enregistrement."
+        oauth_manual_client_registration_required: "Le serveur d'autorisation OAuth %{issuer} ne propose pas l'enregistrement dynamique des clients. Configurez ce serveur MCP avec des identifiants client manuels et fournissez un ID client OAuth enregistré."
+        oauth_client_secret_required: "Le serveur d'autorisation OAuth %{issuer} exige une authentification du client auprès du point de terminaison de jeton (%{methods}). Configurez manuellement les identifiants client avec un secret client."
+        oauth_token_endpoint_auth_method_unsupported: "Le serveur d'autorisation OAuth %{issuer} fournit uniquement des méthodes d'authentification du client auprès du point de terminaison de jeton qui ne sont pas prises en charge (%{methods}). Ce serveur MCP prend actuellement en charge none, client_secret_basic et client_secret_post."
+        oauth_client_registration_failed: "L'enregistrement dynamique du client a échoué avec le statut %{status}."
+        oauth_client_registration_failed_no_id: "L'enregistrement dynamique du client a réussi, mais aucun client_id n'a été renvoyé."
+      oauth_authorization_params_invalid: "Les paramètres d'autorisation OAuth doivent être un objet JSON."
+      oauth_token_params_invalid: "Les paramètres de jeton OAuth doivent être un objet JSON."
     ai_helper:
       errors:
         completion_request_failed: "Une erreur s'est produite lors de la tentative de fournir des suggestions. Veuillez réessayer."
+        no_illustrator_agent: "L'agent d'illustration des publications n'est pas configuré. Vérifiez les paramètres de votre site."
+        no_image_generation_tool: "L'agent d'illustration des publications doit être associé à un outil de génération d'images. Configurez un outil de génération d'images pour cet agent dans le panneau d'administration."
+        no_image_generated: "Impossible de générer l'image. Réessayez ou vérifiez la configuration de l'outil."
+        llm_model_not_configured: "Aucun modèle de langage n'est configuré pour la génération d'images. Configurez un modèle de langage par défaut dans les paramètres de votre site."
+        unknown_error: "Une erreur inattendue s'est produite lors de la génération des miniatures. Réessayez."
       prompts:
         translate: Traduire en %{language}
-        generate_titles: Suggérer des titres de sujets
         proofread: Relire le texte
         markdown_table: Générer un tableau Markdown
         custom_prompt: "Invite personnalisée"
         explain: "Expliquer"
         illustrate_post: "Illustrer la publication"
         replace_dates: "Dates intelligentes"
+      image_caption:
+        aria_description: "%{description} (légendé par l'IA)"
+    image_caption:
+      configuration:
+        agent_missing: "Sélectionnez un agent existant pour les légendes d'image générées par l'IA."
+        agent_vision_disabled: "L'agent de légende d'image générée par l'IA doit autoriser les images téléversées."
+        llm_missing: "L'agent de légende d'image générée par l'IA doit utiliser un LLM."
+        llm_vision_disabled: "L'agent de légende d'image générée par l'IA doit utiliser un LLM capable de traiter les images."
+    post_image_captions:
+      errors:
+        description_blank: "La légende ne peut pas être vide."
+        description_too_long:
+          one: "La légende doit comporter au maximum %{count} caractère."
+          other: "La légende doit comporter au maximum %{count} caractères."
     share_ai:
       read_more: "Lire la transcription complète"
       onebox_title: "Conversation IA avec %{llm_name}"
@@ -240,15 +397,32 @@ fr:
       flag_reason: "Signalé comme contenu indésirable par <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Utilisateur mis en sourdine automatiquement par <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Le type d'erreur fourni n'est pas valide"
+      unexpected: "Une erreur inattendue s'est produite"
       bot_user_update_failed: "Échec de la mise à jour de l'utilisateur du robot de détection des contenus indésirables"
       configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
       logging_subject: "Détection des contenus indésirables"
     ai_bot:
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de robot IA sans titre]"
+      thinking: "Raisonnement"
+      tool_pending_approval: "Cette action doit être approuvée par un modérateur avant de pouvoir être exécutée."
+      read_post:
+        unknown_post: "publication"
+      chat_tool_approval:
+        approved: "Approuvé par @%{username}."
+        rejected: "Rejeté par @%{username}."
+        failed: "Impossible d'exécuter l'action : %{error}"
+        unexpected_error: "une erreur inattendue s'est produite"
       agents:
         default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
+        cannot_delete_system_agent: "Les agents système ne peuvent pas être supprimés. Désactivez-les à la place."
+        cannot_edit_system_agent: "Les agents système peuvent uniquement être renommés. Vous ne pouvez pas modifier leurs outils ni leur instruction système. Désactivez-les et créez-en une copie à la place."
         cannot_have_duplicate_tools: "Impossible d'avoir des outils en double"
+        native_tool_requires_forced_llm: "Les outils natifs du fournisseur nécessitent un LLM par défaut avec l'option « Forcer le LLM par défaut » activée."
+        native_tool_unsupported_by_llm: "Le LLM par défaut sélectionné ne prend pas en charge l'un des outils natifs du fournisseur activés."
+        admin_dashboard_highlights:
+          name: "Faits marquants du tableau de bord d'administration"
+          description: "Génère le bref compte rendu affiché en haut du tableau de bord d'administration, qui explique les changements survenus et les éléments qui méritent votre attention pendant cette période."
         github_helper:
           name: "Assistant GitHub"
           description: "Robot IA spécialisé dans l'assistance aux tâches et questions liées à GitHub"
@@ -282,13 +456,18 @@ fr:
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
+        discourse_admin_assistant:
+          name: "Assistant d'administration Discourse"
+          description: "Bot d'IA qui répond aux questions sur Discourse et aide les administrateurs à gérer les paramètres du site"
         web_artifact_creator:
           name: "Créateur d'artefacts Web"
           description: "Robot IA spécialisé dans la création d'artefacts Web interactifs"
         summarizer:
           name: "Agent de synthèse"
+          description: "Agent par défaut utilisé pour générer les résumés par l'IA"
         short_summarizer:
           name: "Agent de synthèse (forme courte)"
+          description: "Agent par défaut utilisé pour générer les résumés courts par l'IA dans les listes de sujets"
         concept_finder:
           name: "Chercheur de concepts"
           description: "Robot IA spécialisé dans l'identification de concepts et de thèmes dans le contenu"
@@ -300,22 +479,31 @@ fr:
           description: "Robot IA spécialisé dans la déduplication de concepts"
         custom_prompt:
           name: "Invite personnalisée"
+          description: "Agent par défaut utilisé pour la fonctionnalité d'instruction personnalisée de l'assistant IA"
         smart_dates:
           name: "Dates intelligentes"
+          description: "Agent par défaut utilisé pour la fonctionnalité de dates intelligentes de l'assistant IA"
         markdown_table_generator:
           name: "Générateur de tableaux Markdown"
+          description: "Agent par défaut utilisé pour la fonctionnalité de génération de tableaux Markdown de l'assistant IA"
         post_illustrator:
           name: "Illustrateur de publications"
+          description: "Génère des images pour illustrer les publications à l'aide des outils de génération d'images disponibles"
         proofreader:
           name: "Relecteur"
+          description: "Agent par défaut utilisé pour la fonctionnalité de relecture de texte de l'assistant IA"
         titles_generator:
           name: "Générateur de titres"
+          description: "Agent par défaut utilisé pour la fonctionnalité de suggestion de titres de sujets de l'assistant IA"
         tutor:
           name: "Tuteur"
+          description: "Agent par défaut utilisé pour la fonctionnalité d'explication de l'assistant IA"
         translator:
           name: "Traducteur"
+          description: "Agent par défaut utilisé pour la fonctionnalité de traduction de l'assistant IA"
         image_captioner:
           name: "Légendes des images"
+          description: "Agent par défaut utilisé pour la fonctionnalité de légende d'image"
         locale_detector:
           name: "Détecteur de paramètre régional"
           description: "Active la fonction de traduction en détectant les paramètres régionaux d'un texte donné (publications, titres, etc.)"
@@ -330,10 +518,25 @@ fr:
           description: "Alimente la fonction de traduction en tant que traducteur de texte générique, utilisé pour les textes courts tels que les noms de catégories ou les étiquettes"
         spam_detector:
           name: "Détecteur de contenus indésirables"
+          description: "Agent par défaut utilisé pour notre fonctionnalité de détection du contenu indésirable"
         content_creator:
           name: "Créateur de contenu"
+          description: "Agent par défaut utilisé pour la recherche HyDE"
         report_runner:
           name: "Exécuteur de rapports"
+          description: "Agent par défaut utilisé dans le script d'automatisation des rapports"
+        discover:
+          name: "Découverte"
+          description: "Agent par défaut utilisé pour la fonctionnalité de découverte (recherche complémentaire)"
+        chat_thread_titler:
+          name: "Générateur de titres de fils de chat"
+          description: "Agent par défaut utilisé pour générer automatiquement les titres des fils de chat"
+        sentiment_classifier:
+          name: "Classificateur de sentiments"
+          description: "Agent par défaut utilisé pour la classification des sentiments"
+        emotion_classifier:
+          name: "Classificateur d'émotions"
+          description: "Agent par défaut utilisé pour la classification des émotions"
       topic_not_found: "Résumé indisponible, sujet introuvable !"
       summarizing: "Synthèse du sujet"
       searching: "Recherche de : '%{query}'"
@@ -341,6 +544,7 @@ fr:
         researcher:
           researcher_llm:
             name: "LLM "
+            description: "Modèle de langage à utiliser pour la recherche (par défaut, le LLM de l'agent actuel)"
           max_tokens_per_batch:
             name: "Nombre maximal de jetons par lot"
             description: "Nombre maximal de jetons à utiliser pour chaque lot dans la recherche"
@@ -385,29 +589,61 @@ fr:
           base_query:
             name: "Requête de recherche de base"
             description: "Requête de base à utiliser lors de la recherche. Exemple : « #urgent » ajoutera « #urgent » à la requête de recherche et inclura uniquement les sujets avec la catégorie ou l'étiquette correspondante."
+        flag_post:
+          flag_type:
+            name: "Type de signalement"
+            description: "Détermine si la publication est vérifiée, masquée, supprimée ou traitée comme contenu indésirable."
+      native_tools:
+        web_search:
+          name: "Recherche Web (native)"
+          help: "Permet au modèle d'effectuer des recherches sur le Web à l'aide de la fonction de recherche intégrée du fournisseur lorsqu'un LLM compatible est imposé à l'agent."
+        web_fetch:
+          name: "Récupération Web (native)"
+          help: "Permet au modèle d'ouvrir et de lire des pages Web à l'aide de l'accès Web intégré du fournisseur lorsqu'un LLM compatible est imposé à l'agent."
       tool_summary:
         read_artifact: "Lire un artefact Web"
+        search_uploaded_documents: "Rechercher dans les documents téléversés"
         update_artifact: "Mettre à jour un artefact Web"
         create_artifact: "Créer un artefact Web"
         web_browser: "Parcourir le Web"
         github_search_files: "Fichiers de recherche GitHub"
         github_search_code: "Recherche de code GitHub"
         github_file_content: "Contenu du fichier GitHub"
+        github_diff: "Diff GitHub"
         random_picker: "Sélecteur aléatoire"
         categories: "Répertorier les catégories"
         flag_post: "Signaler cette publication"
+        close_topic: "Fermer le sujet"
         suspend_user: "Suspendre l'utilisateur"
         silence_user: "Désactiver l'utilisateur"
+        unlist_topic: "Retirer le sujet des listes"
+        lock_post: "Verrouiller la publication"
+        delete_topic: "Supprimer le sujet"
+        edit_post: "Modifier la publication"
+        edit_tags: "Modifier les étiquettes"
+        edit_category: "Modifier la catégorie"
+        set_topic_timer: "Définir le minuteur du sujet"
+        set_slow_mode: "Définir le mode lent"
+        move_posts: "Déplacer les publications"
+        grant_badge: "Attribuer un badge"
+        list_reviewables: "Afficher la file d'attente de vérification"
+        perform_reviewable_action: "Action de la file d'attente de vérification"
+        add_reviewable_note: "Ajouter une note à la file d'attente de vérification"
+        assign: "Attribuer le sujet"
+        mark_as_solved: "Marquer comme résolu"
         search: "Rechercher"
         tags: "Répertorier les étiquettes"
         time: "Heure"
         summarize: "Résumer"
+        set_topic_summary: "Définir le résumé du sujet"
         image: "Générer une image"
         google: "Rechercher sur Google"
         read: "Lire le sujet"
         setting_context: "Rechercher le contexte de configuration du site"
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Recherche des paramètres du site"
+        read_site_setting: "Lire un paramètre du site"
+        change_site_setting: "Modifier un paramètre du site"
         dall_e: "Générer une image"
         search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
@@ -417,19 +653,40 @@ fr:
         researcher_dry_run: "Préparation de la recherche"
       tool_help:
         read_artifact: "Lire un artefact Web à l'aide du robot IA"
+        search_uploaded_documents: "Rechercher dans les documents téléversés associés à cet agent"
         update_artifact: "Mettre à jour un artefact Web à l'aide du robot IA"
         create_artifact: "Créer un artefact Web à l'aide du robot IA"
         web_browser: "Parcourir la page Web à l'aide du robot IA"
         github_search_code: "Rechercher du code dans un dépôt GitHub"
         github_search_files: "Rechercher des fichiers dans un dépôt GitHub"
         github_file_content: "Récupérer le contenu des fichiers depuis un dépôt GitHub"
+        github_diff: "Récupérer le diff d'une demande de tirage GitHub ou d'un commit"
         random_picker: "Choisissez un nombre aléatoire ou un élément aléatoire d'une liste"
         categories: "Répertorier toutes les catégories visibles publiquement sur le forum"
+        flag_post: "Signaler la publication actuelle pour qu'elle soit examinée par les responsables"
+        close_topic: "Fermer ou ouvrir un sujet"
+        suspend_user: "Suspendre un utilisateur, ce qui l'empêche de se connecter ou de publier"
+        silence_user: "Empêcher un utilisateur de publier tout en lui permettant de continuer à lire"
+        unlist_topic: "Afficher ou retirer un sujet des listes"
+        lock_post: "Verrouiller ou déverrouiller une publication"
         delete_topic: "Supprimer un sujet"
+        edit_post: "Modifier le contenu d'une publication"
+        edit_tags: "Modifier les étiquettes d'un sujet"
+        edit_category: "Déplacer un sujet vers une autre catégorie"
+        set_topic_timer: "Définir un minuteur sur un sujet pour le fermer, l'ouvrir, le supprimer ou le remonter"
+        set_slow_mode: "Activer ou désactiver le mode lent sur un sujet"
+        move_posts: "Déplacer des publications vers un sujet nouveau ou existant"
+        grant_badge: "Attribuer un badge à un utilisateur"
+        list_reviewables: "Afficher les éléments en attente dans la file d'attente de vérification, avec filtrage facultatif"
+        perform_reviewable_action: "Effectuer une action sur un élément de la file d'attente de vérification"
+        add_reviewable_note: "Ajouter une note à un élément de la file d'attente de vérification"
+        assign: "Attribuer un sujet à un utilisateur ou à un groupe, ou annuler son attribution"
+        mark_as_solved: "Marquer une publication comme solution acceptée ou annuler ce marquage"
         search: "Rechercher dans tous les sujets publics sur le forum"
         tags: "Répertorier toutes les étiquettes du forum"
         time: "Trouver l'heure dans différents fuseaux horaires"
         summary: "Résumer un sujet"
+        set_topic_summary: "Définir le résumé court final du sujet"
         image: "Générer une image à l'aide de Stable Diffusion"
         create_image: "Générer une image à l'aide du modèle d'image OpenAI GPT"
         edit_image: "Modifier l'image à l'aide du modèle d'image OpenAI GPT"
@@ -438,12 +695,17 @@ fr:
         setting_context: "Rechercher le contexte de configuration du site"
         schema: "Rechercher le schéma de la base de données"
         search_settings: "Paramètres du site de recherche"
+        read_site_setting: "Lire la valeur actuelle d'un paramètre du site"
+        change_site_setting: "Modifier la valeur d'un paramètre du site"
         dall_e: "Générer une image à l'aide de DALL-E 3"
         search_meta_discourse: "Rechercher sur Meta Discourse"
         javascript_evaluator: "Évaluer JavaScript"
         researcher: "Rechercher des informations sur le forum à l'aide du robot IA"
       tool_description:
         read_artifact: "Lire un artefact Web à l'aide du robot IA"
+        search_uploaded_documents:
+          one: "%{count} extrait de document téléversé trouvé pour « %{query} »"
+          other: "%{count} extraits de documents téléversés trouvés pour « %{query} »"
         update_artifact: "Mise à jour d'un artefact Web à l'aide du robot IA"
         create_artifact: "Création d'un artefact Web : %{name} - %{specification}"
         web_browser: "Lecture : <a href='%{url}'>%{url}</a>"
@@ -452,9 +714,29 @@ fr:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Contenu récupéré de %{file_paths} de %{repo_name}@%{branch}"
         random_picker: "Choix parmi %{options}, sélection : %{result}"
+        flag_post: "Signalement de la publication %{post_id} (flag_post : %{flag_post})"
+        close_topic: "Fermeture du sujet %{topic_id} (fermé : %{closed})"
+        suspend_user: "Suspension de %{username} pendant %{duration_days} jour(s)"
+        silence_user: "Restriction de publication de %{username} pendant %{duration_days} jour(s)"
+        unlist_topic: "Retrait du sujet %{topic_id} des listes (retiré des listes : %{unlisted})"
+        lock_post: "Verrouillage de la publication %{post_id} (verrouillée : %{locked})"
+        delete_topic: "Suppression du sujet %{topic_id} (supprimé : %{deleted})"
+        edit_post: "Modification de la publication %{post_id}"
+        edit_tags: "Modification des étiquettes du sujet %{topic_id} : %{tags}"
+        edit_category: "Déplacement du sujet %{topic_id} vers la catégorie %{category_id}"
+        set_topic_timer: "Définition du minuteur %{timer_type} sur le sujet %{topic_id} (%{duration_hours} h)"
+        set_slow_mode: "Définition du mode lent sur le sujet %{topic_id} (%{slow_mode_seconds} s)"
+        move_posts: "Déplacement des publications %{post_ids} depuis le sujet %{topic_id}"
+        grant_badge: "Attribution du badge « %{badge_name} » à %{username}"
+        list_reviewables: "Affichage des éléments de la file d'attente de vérification (type : %{type})"
+        perform_reviewable_action: "Exécution de l'action %{action} sur l'élément à vérifier %{reviewable_id}"
+        add_reviewable_note: "Ajout d'une note à l'élément à vérifier %{reviewable_id}"
+        assign: "Attribution du sujet %{topic_id} (attribution : %{assigned})"
+        mark_as_solved: "Marquage de la publication %{post_id} comme solution (solution : %{solved})"
         read: "Lecture : <a href='%{url}'>%{title}</a>"
         time: "L'heure (%{timezone}) est %{time}"
         summarize: "Résumé de <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "Définir le résumé court final du sujet"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
@@ -485,44 +767,192 @@ fr:
         search_settings:
           one: "%{count} résultat trouvé pour « %{query} »"
           other: "%{count} résultats trouvés pour « %{query} »"
+        read_site_setting: "Lecture du paramètre du site « %{setting_name} »"
+        change_site_setting: "Modification du paramètre du site %{setting_name} avec la valeur « %{value} »"
       discoveries:
         continue_conversation:
           title: "Conversation de découverte : recherchez %{query}"
           raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
+      flag_post:
+        errors:
+          no_context: "Aucun contexte de publication disponible pour le signalement."
+          no_reason: "Un motif est requis pour signaler une publication."
+          invalid_flag_type: "Type de signalement non valide."
+        skipped: "Le verdict était négatif. Aucun signalement n'a été créé."
+        already_flagged: "Cette publication est déjà signalée pour vérification."
+        flagged: "Publication signalée pour vérification."
+        reason: "Le bot d'IA a signalé cette publication.\n\nMotif : %{reason}"
+        score_reason: "Le bot d'IA a signalé cette publication."
       close_topic:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de fermer ou d'ouvrir ce sujet."
+          no_reason: "Un motif est requis pour fermer ou ouvrir un sujet."
+        success: "Sujet mis à jour."
+      suspend_user:
+        errors:
+          not_found: "Utilisateur introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de suspendre cet utilisateur."
+          no_reason: "Un motif est requis pour suspendre un utilisateur."
+          invalid_duration: "La durée doit être un nombre entier positif de jours, jusqu'à %{max}."
+          failed: "Échec de la suspension de l'utilisateur."
+        success: "L'utilisateur %{username} a été suspendu."
+      silence_user:
+        errors:
+          not_found: "Utilisateur introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation d'empêcher cet utilisateur de publier."
+          no_reason: "Un motif est requis pour empêcher un utilisateur de publier."
+          invalid_duration: "La durée doit être un nombre entier positif de jours, jusqu'à %{max}."
+          failed: "Impossible d'empêcher l'utilisateur de publier."
+        success: "L'utilisateur %{username} ne peut plus publier."
       unlist_topic:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de retirer ce sujet des listes ou de l'y réintégrer."
+          no_reason: "Un motif est requis pour retirer un sujet des listes ou l'y réintégrer."
+        success: "Sujet mis à jour."
+      lock_post:
+        errors:
+          not_found: "Publication introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de verrouiller ou déverrouiller cette publication."
+          no_reason: "Un motif est requis pour verrouiller ou déverrouiller une publication."
+        success: "Publication mise à jour."
       delete_topic:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de supprimer ou restaurer ce sujet."
+          no_reason: "Un motif est requis pour supprimer ou restaurer un sujet."
+        success: "Sujet mis à jour."
+      edit_post:
+        errors:
+          not_found: "Publication introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de modifier cette publication."
+          nothing_to_edit: "Le contenu brut ou le titre doit être fourni."
+          no_reason: "Un motif de modification est requis."
+          revision_failed: "Échec de la révision de la publication."
+        success: "Publication modifiée."
       edit_tags:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de modifier les étiquettes de ce sujet."
+          no_reason: "Un motif est requis pour modifier les étiquettes."
+          tagging_disabled: "L'étiquetage n'est pas activé sur ce site."
+        success: "Étiquettes mises à jour."
       edit_category:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de déplacer ce sujet."
           category_not_found: "Catégorie introuvable."
+          no_reason: "Un motif est requis pour déplacer un sujet."
+          revision_failed: "Échec du déplacement du sujet."
+        success: "Sujet déplacé."
       set_topic_timer:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de définir un minuteur sur ce sujet."
+          no_reason: "Un motif est requis pour définir un minuteur sur un sujet."
+          invalid_timer_type: "Type de minuteur non valide. Valeurs possibles : close, open, delete, silent_close, bump."
+        success: "Minuteur du sujet mis à jour."
       set_slow_mode:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation d'activer le mode lent sur ce sujet."
+          no_reason: "Un motif est requis pour définir le mode lent."
+        success: "Mode lent mis à jour."
       move_posts:
         errors:
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation de déplacer des publications dans ce sujet."
+          no_reason: "Un motif est requis pour déplacer des publications."
+          no_posts: "Aucun ID de publication fourni."
+          no_destination: "destination_topic_id ou new_title doit être fourni."
+          move_failed: "Échec du déplacement des publications."
+        success: "Publications déplacées."
+      grant_badge:
+        errors:
+          user_not_found: "Utilisateur introuvable."
+          badge_not_found: "Badge introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation d'attribuer des badges."
+          no_reason: "Un motif est requis pour attribuer un badge."
+          badge_disabled: "Le badge n'est pas activé."
+          grant_failed: "Échec de l'attribution du badge."
+        success: "Badge attribué."
       assign:
         errors:
+          plugin_not_installed: "L'extension discourse-assign n'est pas installée."
           not_found: "Sujet introuvable."
+          not_allowed: "Vous n'avez pas l'autorisation d'attribuer ce sujet."
+          no_reason: "Un motif est requis pour attribuer un sujet ou annuler son attribution."
+          assignee_not_found: "Utilisateur ou groupe introuvable."
+          assign_failed: "Échec de l'attribution du sujet."
+        success: "Attribution du sujet mise à jour."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "L'extension discourse-solved n'est pas installée."
+          no_reason: "Un motif est requis pour marquer une publication comme résolue ou annuler ce marquage."
+          action_failed: "Échec de la mise à jour du statut de résolution."
+        success: "Statut de résolution mis à jour."
+      list_reviewables:
+        errors:
+          not_allowed: "Vous n'avez pas l'autorisation d'afficher la file d'attente de vérification."
+          invalid_type: "Type d'élément à vérifier non valide."
+          invalid_status: "Statut non valide. Valeurs possibles : pending, approved, rejected, ignored, deleted, reviewed, all."
+        empty: "Aucun élément de la file d'attente de vérification ne correspond aux filtres indiqués."
+        found:
+          one: "%{count} élément trouvé dans la file d'attente de vérification"
+          other: "%{count} éléments trouvés dans la file d'attente de vérification"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "Vous n'avez pas l'autorisation d'accéder à la file d'attente de vérification."
+          not_found: "Élément à vérifier introuvable."
+          no_reason: "Un motif est requis pour effectuer une action sur un élément à vérifier."
+          invalid_action: "Action « %{action} » non valide. Actions disponibles : %{available}"
+          conflict: "Cet élément à vérifier a été mis à jour par quelqu'un d'autre. Réessayez."
+          action_failed: "Échec de l'exécution de l'action."
+        success: "Action « %{action} » exécutée sur l'élément à vérifier %{reviewable_id}."
+      add_reviewable_note:
+        errors:
+          not_allowed: "Vous n'avez pas l'autorisation d'accéder à la file d'attente de vérification."
+          not_found: "Élément à vérifier introuvable."
+          no_note: "Une note est requise pour ajouter une note à un élément à vérifier."
+          failed: "Échec de l'ajout de la note."
+        success: "Note ajoutée à l'élément à vérifier %{reviewable_id}."
+      change_site_setting:
+        errors:
+          no_reason: "Un motif est requis pour modifier un paramètre du site."
+          not_found: "Le paramètre du site « %{setting_name} » n'existe pas."
+          not_allowed: "Vous n'avez pas l'autorisation de modifier les paramètres du site."
+          hidden: "Le paramètre du site « %{setting_name} » est masqué et ne peut pas être modifié ici."
+          secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être modifié ici."
+          themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être modifié ici."
+          deprecated: "Le paramètre du site « %{setting_name} » est obsolète. Utilisez plutôt « %{new_name} »."
+          shadowed: "Le paramètre du site « %{setting_name} » est remplacé globalement et ne peut pas être modifié."
+          unconfigurable: "Le paramètre du site « %{setting_name} » appartient à une extension qui ne peut pas être configurée."
+          unsupported_type: "Les paramètres du site de type « %{type} » ne peuvent pas être modifiés par le bot d'IA."
+          invalid_value: "Valeur non valide : %{error}"
+          failed: "Échec de la modification du paramètre du site."
+        success: "Le paramètre du site « %{setting_name} » a été remplacé par « %{value} »."
+      read_site_setting:
+        errors:
+          not_allowed: "Vous n'avez pas l'autorisation de lire les paramètres du site."
+          not_found: "Le paramètre du site « %{setting_name} » n'existe pas."
+          hidden: "Le paramètre du site « %{setting_name} » est masqué et ne peut pas être lu ici."
+          secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être lu ici."
+          themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être lu ici."
     reviewables:
       ai_tool_action:
+        title: "Action d'un outil d'IA"
         approve:
           title: "Approuver"
         reject:
           title: "Rejeter"
+        target_missing: "La cible de l'action de l'outil n'existe plus."
+        tool_not_found: "L'outil « %{tool_name} » n'est plus disponible."
+        bot_user_missing: "L'utilisateur du bot n'existe plus."
+        performer_not_human: "Cette action doit être approuvée ou rejetée par une personne réelle, et non par un bot."
+        post_mismatch: "Cette carte d'approbation n'appartient pas à cette publication."
+        execution_error: "Échec de l'exécution de l'outil : %{error}"
+        execution_error_unknown: "une erreur inattendue s'est produite"
     summarization:
       configuration_hint:
         one: "Configurez d'abord le paramètre « %{setting} »."
@@ -544,14 +974,20 @@ fr:
           positive: "Positif"
           negative: "Négatif"
           neutral: "Neutre"
+    discord:
+      configuration:
+        agent_user_required: "L'agent de recherche Discord doit être associé à un utilisateur avant que le mode agent Discord puisse être activé."
     llm:
       configuration:
         create_llm: "Vous devez configurer un LLM avant d'activer cette fonctionnalité"
         disable_modules_first: "Vous devez d'abord désactiver ces modules : %{settings}"
         set_llm_first: "Réglez %{setting} en premier"
         model_unreachable: "Nous n'avons pas pu obtenir de réponse de ce modèle. Vérifiez d'abord vos paramètres."
+        empty_response: "Le modèle a renvoyé une réponse vide."
         invalid_seeded_model: "Vous ne pouvez pas utiliser ce modèle avec cette fonctionnalité"
+        invalid_agent_response_format: "L'agent sélectionné doit avoir un format de réponse comprenant un champ booléen nommé « spam »."
         must_select_model: "Vous devez d'abord sélectionner un LLM"
+        invalid_llm_id: "Le modèle LLM sélectionné n'est pas valide."
       endpoints:
         not_configured: "%{display_name} (non configuré)"
         configuration_hint:
@@ -566,23 +1002,68 @@ fr:
     embeddings:
       delete_failed: "Ce modèle est actuellement utilisé. Mettez d'abord à jour `ai embeddings selected model`."
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
+      secret_required: "Un identifiant doit être sélectionné."
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
       configuration:
         disable_embeddings: "Vous devez d'abord désactiver « l'intégration de l'IA activée »."
         choose_model: "Définissez d'abord 'ai embeddings selected model'."
+        model_test_failed: "Impossible de générer une intégration de test avec ce modèle. Vérifiez qu'il est correctement configuré."
+    secrets:
+      delete_failed_in_use: "Cet identifiant est actuellement utilisé par un ou plusieurs LLM, intégrations ou outils et ne peut pas être supprimé."
     llm_models:
       missing_provider_param: "%{param} ne peut pas être vide"
+      invalid_provider_param: "Le format de %{param} n'est pas valide."
+      reasoning_mode_requirements: "Le mode de raisonnement Pro nécessite l'API Responses."
+      secret_required: "Un identifiant doit être sélectionné."
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
       bedrock_invalid_url: "Veuillez remplir tous les champs pour utiliser ce modèle."
+      bedrock_missing_auth: "AWS Bedrock nécessite la configuration d'un ID de clé d'accès ou d'un ARN de rôle."
     ai_staff_action_logger:
       updated: "mis à jour"
       set: "défini"
       removed: "supprimé"
+    translation:
+      errors:
+        disabled: "La fonctionnalité de traduction par IA n'est pas entièrement configurée."
+        all_posts_translated: "Toutes les publications de ce sujet sont déjà traduites."
+    llm_credit_allocation:
+      limit_exceeded_user: "Cette communauté a atteint sa limite de crédits IA pour aujourd'hui. Veuillez réessayer dans %{reset_time} ou contactez l'administrateur de votre site pour obtenir plus d'informations."
+      limit_exceeded_admin: "Vous avez atteint votre limite de crédit IA. Veuillez réessayer après %{reset_time}."
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
+      quota_required: "Vous devez spécifier le nombre maximal de jetons, d'utilisations ou le coût pour ce modèle."
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
+      no_user_for_agent: Aucun utilisateur n'est associé à l'agent spécifié.
+      agent_not_found: "L'agent spécifié n'existe pas. Vérifiez les paramètres agent_name ou agent_id (anciens : persona_name ou persona_id)."
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
+      agent_disabled: "L'agent spécifié est désactivé. Vérifiez les paramètres agent_name ou agent_id (anciennement : persona_name ou persona_id)."
+      no_default_llm: L'agent doit avoir un default_llm défini.
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
+      invalid_stream_resume_token: Le resume_token n'est pas valide ou a expiré.
+      no_tool_results_specified: Le paramètre tool_results est requis lors de la reprise d'un flux.
+      invalid_custom_tools: "Le paramètre custom_tools n'est pas valide : %{details}"
+      duplicate_custom_tools: "Le paramètre custom_tools contient des noms d'outils en double : %{names}"
+      too_many_custom_tools: "Le paramètre custom_tools peut contenir au maximum %{max} outils."
+      custom_tool_definition_too_large: "La définition de chaque outil personnalisé doit être limitée à %{max} octets."
+      invalid_stream_param: "Le paramètre %{key} n'est pas valide : %{details}"
+      expected_array: "un tableau était attendu"
+      expected_object: "un objet était attendu"
+      ambiguous_tool_results: "Spécifiez soit tool_results, soit tool_result, mais pas les deux."
+      invalid_tool_results: "Le paramètre tool_results n'est pas valide : %{details}"
+      too_many_tool_results: "Le paramètre tool_results peut inclure au maximum %{max} éléments."
+      no_pending_tool_calls: Aucun appel d'outil n'est en attente pour ce jeton de reprise.
+      missing_tool_results: "Résultats d'outils manquants pour les tool_call_id suivants : %{ids}"
+      unexpected_tool_results: "Résultats d'outils inattendus pour les tool_call_id suivants : %{ids}"
+      invalid_tool_result_content: "Le résultat de l'outil pour %{id} doit inclure du contenu."
+      tool_result_content_too_large: "Le contenu de chaque résultat d'outil doit être limité à %{max} octets."
+      stream_reply_max_resume_rounds_reached: Le nombre maximal de cycles de reprise des outils personnalisés a été atteint (%{max}).
+      stream_reply_state_too_large: "L'état du flux est trop volumineux pour être conservé (maximum : %{max} octets)."
+      stream_reply_unexpected_error: Une erreur inattendue s'est produite lors de la diffusion en continu de la réponse.
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
+      agent_already_exists: Un agent nommé %{name} existe déjà.
       custom_tool_exists:
         one: "L'outil personnalisé portant le nom %{names} existe déjà."
         other: "Des outils personnalisés portant le nom %{names} existent déjà."
+      mcp_server_missing: "Les serveurs MCP suivants ne sont pas configurés sur ce site : %{names}."
+      mcp_server_tools_not_found: "Aucun outil correspondant du serveur MCP %{name} n'est disponible sur ce site."

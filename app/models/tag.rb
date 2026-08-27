@@ -27,12 +27,13 @@ class Tag < ActiveRecord::Base
           where("lower(tags.name) IN (?)", name)
         end
 
-  # tags that have never been used and don't belong to a tag group
+  # base tags that have never been used and don't belong to a tag group
   scope :unused,
         -> do
-          where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
-            "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
-          ).where("tgm.tag_id IS NULL")
+          base_tags
+            .where(staff_topic_count: 0, pm_topic_count: 0)
+            .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
+            .where("tgm.tag_id IS NULL")
         end
 
   scope :used_tags_in_regular_topics,
@@ -40,6 +41,14 @@ class Tag < ActiveRecord::Base
 
   scope :base_tags, -> { where(target_tag_id: nil) }
   scope :visible, ->(guardian = nil) { merge(DiscourseTagging.visible_tags(guardian)) }
+
+  scope :without_pm_only_tags,
+        ->(guardian) do
+          next all if guardian.can_tag_pms?
+          where("NOT (tags.pm_topic_count > 0 AND tags.#{Tag.topic_count_column(guardian)} = 0)")
+        end
+
+  scope :browsable, ->(guardian) { base_tags.visible(guardian) }
 
   has_many :tag_users, dependent: :destroy # notification settings
 
@@ -144,14 +153,10 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
-    filter_sql =
-      (
-        if guardian.is_staff?
-          ""
-        else
-          " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
-        end
-      )
+    filter_sql = +" AND tags.target_tag_id IS NULL"
+    if !guardian.is_admin?
+      filter_sql << " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+    end
 
     tag_data = DB.query <<~SQL
       SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count

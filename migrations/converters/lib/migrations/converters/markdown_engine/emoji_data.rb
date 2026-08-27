@@ -6,7 +6,7 @@ require "json"
 module Migrations
   module Converters
     module MarkdownEngine
-      # The unicode-emoji-to-name replacement table the engine's `__setUnicode`
+      # The unicode-emoji-to-name replacement table `__PrettyText.setUnicode`
       # expects. This mirrors `Emoji.unicode_replacements` in the host
       # application, which cannot be required here because the `Emoji` model
       # drags in site caches and settings; both read the same static
@@ -55,7 +55,7 @@ module Migrations
         end
 
         def self.set_unicode_source
-          "__setUnicode(#{unicode_replacements.to_json});"
+          "__PrettyText.setUnicode(#{unicode_replacements.to_json});"
         end
 
         def self.data_files

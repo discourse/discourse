@@ -58,6 +58,7 @@ RSpec.describe Chat::UnpinMessage do
         expect(unpin_event).to be_present
         expect(unpin_event.channel).to eq("/chat/#{channel.id}")
         expect(unpin_event.data["chat_message_id"]).to eq(message.id)
+        expect(unpin_event.data["pinned_message_count"]).to eq(0)
       end
     end
   end

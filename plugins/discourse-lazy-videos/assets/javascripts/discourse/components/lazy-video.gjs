@@ -39,6 +39,7 @@ export default class LazyVideo extends Component {
       data-video-id={{@videoAttributes.id}}
       data-video-title={{@videoAttributes.title}}
       data-video-start-time={{@videoAttributes.startTime}}
+      data-video-list-id={{@videoAttributes.listId}}
       data-provider-name={{@videoAttributes.providerName}}
       class={{dConcatClass
         "lazy-video-container"
@@ -52,6 +53,7 @@ export default class LazyVideo extends Component {
           @title={{@videoAttributes.title}}
           @videoId={{@videoAttributes.id}}
           @startTime={{@videoAttributes.startTime}}
+          @listId={{@videoAttributes.listId}}
         />
       {{else}}
         <div

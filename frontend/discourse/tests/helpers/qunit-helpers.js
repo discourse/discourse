@@ -40,15 +40,18 @@ import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/us
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-drop/native-drag-adoption";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetElementClassLeasesForTesting } from "discourse/lib/element-class-lease";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -93,8 +96,8 @@ import Site from "discourse/models/site";
 import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
-import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -111,8 +114,11 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetDragAndDropForTesting } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
+import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -212,6 +218,7 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  noteKeyboardEvidence();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
   resetAdminDashboardSections();
@@ -234,7 +241,7 @@ export function testCleanup(container, app) {
   clearNavItems();
   setTopicList(null);
   container?.lookup?.("service:composer-action-state")?.clear();
-  _clearComposerActionsSnapshotsOld();
+  _clearRegisteredActions();
   cleanUpComposerUploadHandler();
   cleanUpComposerUploadMarkdownResolver();
   cleanUpComposerUploadPreProcessor();
@@ -288,6 +295,14 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetDragAndDropForTesting();
+  // Run after the drag reset so any active drag releases its own adoption. This
+  // only has to force-release a registration for a drag that never started.
+  resetDragAdoptionForTesting();
+  resetDragSourcesForTesting();
+  resetPointerDragForTesting();
+  resetElementClassLeasesForTesting();
+  clearBacklog();
 }
 
 function cleanupCssGeneratorTags() {

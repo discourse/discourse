@@ -404,8 +404,6 @@ it:
         confirm_payment: Conferma il pagamento
         success: Torna Indietro
       admin:
-        unconfigured: 'Stripe non è configurato correttamente. Consulta Discourse Meta per altre informazioni.'
-        on_meta: Abbonamenti a Discourse su Meta
         dashboard:
           title: Dashboard
           table:

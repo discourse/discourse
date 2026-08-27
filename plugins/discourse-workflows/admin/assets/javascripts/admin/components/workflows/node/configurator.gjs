@@ -40,6 +40,8 @@ import CredentialControl from "../configurators/credential";
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
 import OutputContext from "../context/output";
+import { takenNodeNames } from "../editor/node-factory";
+import LivePreview from "./live-preview";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");
@@ -213,8 +215,22 @@ export default class NodeConfigurator extends Component {
     return this.nodeName.trim();
   }
 
+  get nodeNameError() {
+    if (this.trimmedNodeName.length === 0) {
+      return null;
+    }
+
+    const otherNodes = this.args.model.nodes.filter(
+      (node) => node.clientId !== this.args.model.node.clientId
+    );
+
+    return takenNodeNames(otherNodes).has(this.trimmedNodeName)
+      ? i18n("discourse_workflows.node_name_taken")
+      : null;
+  }
+
   get canSaveNodeName() {
-    return this.trimmedNodeName.length > 0;
+    return this.trimmedNodeName.length > 0 && !this.nodeNameError;
   }
 
   @action
@@ -519,6 +535,12 @@ export default class NodeConfigurator extends Component {
                 class="btn-flat workflows-configurator-modal__cancel-name"
               />
             </div>
+            {{#if this.nodeNameError}}
+              <div
+                class="workflows-configurator-modal__name-error"
+                role="alert"
+              >{{this.nodeNameError}}</div>
+            {{/if}}
           {{else}}
             {{! eslint-disable ember/template-no-invalid-interactive }}
             <div
@@ -744,6 +766,12 @@ export default class NodeConfigurator extends Component {
 
             {{#if this.showsOutputContext}}
               <div class="workflows-configurator-modal__column --right">
+                <LivePreview
+                  @node={{@model.node}}
+                  @nodeTypes={{this.nodeTypes}}
+                  @session={{@model.session}}
+                  @configuration={{this.configuration}}
+                />
                 <OutputContext
                   @node={{@model.node}}
                   @nodes={{@model.nodes}}

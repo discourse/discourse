@@ -6,9 +6,26 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
+  MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
+  BROWSER_UNKNOWN = 0
+  BROWSERS = {
+    unknown: BROWSER_UNKNOWN,
+    chrome: 1,
+    edge: 2,
+    safari: 3,
+    firefox: 4,
+    opera: 5,
+    ie: 6,
+    samsung_browser: 7,
+    uc_browser: 8,
+    android_browser: 9,
+    qq_browser: 10,
+    baidu_browser: 11,
+    kaios_browser: 12,
+  }.freeze
   REDIS_QUEUE_KEY = "browser_pageview_events:pending"
   REDIS_FLUSH_LOCK_KEY = "browser_pageview_events:flush"
   REDIS_FLUSH_BATCH_SIZE = 1000
@@ -16,6 +33,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   REDIS_QUEUE_TTL = 1.day
 
   enum :source, { piggyback: SOURCE_PIGGYBACK, beacon: SOURCE_BEACON }, scopes: false
+  enum :browser, BROWSERS, prefix: true, scopes: false
 
   class << self
     def enqueue_for_later(payload)
@@ -168,17 +186,22 @@ class BrowserPageviewEvent < ActiveRecord::Base
     end
 
     def attributes_from_payload(payload)
-      normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
+      normalized_referrer = BrowserPageviewEventUrlNormalizer.normalize_referrer(payload[:referrer])
+      normalized_url = BrowserPageviewEventUrlNormalizer.normalize_site_path(payload[:url])
+      user_agent = payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH)
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        normalized_url: normalized_url&.slice(0, MAX_NORMALIZED_URL_LENGTH),
+        normalized_url_version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
-        user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        user_agent: user_agent,
+        browser: BROWSERS.fetch(BrowserDetection.browser(user_agent), BROWSER_UNKNOWN),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
         topic_id: payload[:topic_id],
@@ -212,10 +235,12 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
-  def self.rollup_source_condition(table: nil)
+  def self.rollup_source_condition(table: nil, start_date: nil, end_date: nil)
     prefix = table ? "#{table}." : ""
     cutover_date = beacon_cutover_date
     return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
+    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
+    return "#{prefix}source = #{SOURCE_BEACON}" if start_date && start_date.to_date >= cutover_date
 
     sanitize_sql_array(
       [
@@ -225,6 +250,15 @@ class BrowserPageviewEvent < ActiveRecord::Base
         cutover_date,
       ],
     )
+  end
+
+  def self.rollup_count_sql
+    logged_in_only = SiteSetting.login_required
+    count_column = logged_in_only ? "logged_in_count" : "count"
+    return count_column if !CrawlerScorer.enabled?
+
+    crawler_column = logged_in_only ? "likely_crawler_logged_in_count" : "likely_crawler_count"
+    "GREATEST(#{count_column} - #{crawler_column}, 0)"
   end
 
   before_save :truncate_fields
@@ -239,6 +273,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
     end
+    if normalized_url.present?
+      self.normalized_url = normalized_url.slice(0, MAX_NORMALIZED_URL_LENGTH)
+    end
   end
 end
 
@@ -248,10 +285,13 @@ end
 #
 #  id                          :bigint           not null, primary key
 #  asn                         :integer
+#  browser                     :integer
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
+#  normalized_url              :string(2000)
+#  normalized_url_version      :integer
 #  referrer                    :string(2000)
 #  score                       :integer
 #  source                      :integer          default("piggyback"), not null
@@ -264,10 +304,13 @@ end
 #
 # Indexes
 #
+#  idx_bpe_beacon_created_at_id                 (created_at,id) WHERE (source = 2)
+#  idx_bpe_browser_backfill                     (source,created_at DESC,id DESC) WHERE (browser IS NULL)
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
+#  idx_bpe_normalized_url_version               (normalized_url_version)
 #  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)

@@ -27,6 +27,8 @@ ro:
         yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulează"
+      pinned_bar:
+        title: "Fixat"
       pinned: "Fixat"
       move_to_channel:
         instructions:
@@ -278,4 +280,10 @@ ro:
         message: "Mesaj"
       chat_approval:
         message: "Mesaj"
+        buttons: "Butoane"
+        value: "Valoare"
+        style: "Stil"
+        style_default: "Implicit"
+        style_success: "Succes"
+        icon: "Icon"
         channel_id: "Canal"

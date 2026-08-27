@@ -324,8 +324,8 @@ class UsersController < ApplicationController
   def check_sso_email
     user = fetch_user_from_params(include_inactive: true)
 
-    unless user == current_user
-      guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_email!(user)
+    if user != current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   def check_sso_payload
     user = fetch_user_from_params(include_inactive: true)
 
-    guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_payload!(user)
     unless user == current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
@@ -375,7 +375,7 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, user, %w[email])
 
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
@@ -399,7 +399,7 @@ class UsersController < ApplicationController
       if change_requests = user.email_change_requests.where(new_email: params[:email]).presence
         change_requests.destroy_all
       elsif user.user_emails.where(email: params[:email], primary: false).destroy_all.present?
-        DiscourseEvent.trigger(:user_updated, user)
+        DiscourseEvent.trigger(:user_updated, user, %w[email])
       else
         return render json: failed_json, status: :precondition_required
       end
@@ -626,6 +626,24 @@ class UsersController < ApplicationController
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
+  end
+
+  def generate_random_username
+    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
+
+    RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
+
+    username = RandomUsernameGenerator.generate
+    # The word lists are admin-editable, so they can end up unusable (e.g. once
+    # unicode usernames are turned back off) while the feature is still on.
+    if username.blank?
+      return(
+        render json: failed_json.merge(errors: [I18n.t("random_username.unavailable")]),
+               status: :unprocessable_entity
+      )
+    end
+
+    render json: { username: }
   end
 
   def check_email

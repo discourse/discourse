@@ -4,6 +4,30 @@
   margin-top: 0;
 }
 
+.ai-agent-list-editor__duplicate-picker {
+  inline-size: min(24em, calc(100vw - var(--space-8)));
+  padding: var(--space-2);
+
+  .filter-input-container {
+    margin-block-end: var(--space-2);
+  }
+}
+
+.ai-agent-list-editor__duplicate-results {
+  max-block-size: min(24em, 50vh);
+  overflow-y: auto;
+
+  .btn {
+    inline-size: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.ai-agent-list-editor__duplicate-empty {
+  padding: var(--space-3);
+  color: var(--primary-medium);
+}
+
 .ai-agent-list-editor {
   @include viewport.until(md) {
     td {
@@ -215,6 +239,24 @@
 .ai-agent-editor {
   padding-left: 0.5em;
 
+  .form-kit {
+    --ai-agent-actions-offset: var(--space-3);
+    padding-block-end: var(--space-8);
+
+    &.has-floating-actions {
+      padding-block-end: calc(
+        var(--ai-agent-actions-height, 4em) + var(--ai-agent-actions-offset) +
+          var(--space-4)
+      );
+    }
+
+    .footer-nav-visible & {
+      --ai-agent-actions-offset: calc(
+        var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-4)
+      );
+    }
+  }
+
   .select-kit.multi-select.is-disabled {
     height: auto;
 
@@ -415,6 +457,7 @@
     max-width: 480px;
   }
 
+  &__subagent-summary,
   &__mcp-server-help {
     margin: 0 0 var(--space-3);
     max-width: 480px;
@@ -465,6 +508,19 @@
     &.--unhealthy {
       color: var(--danger);
     }
+  }
+
+  .form-kit__actions.is-floating {
+    box-sizing: border-box;
+    position: fixed;
+    inset-block-end: var(--ai-agent-actions-offset);
+    z-index: 1;
+    flex-wrap: wrap;
+    padding: var(--space-3);
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-300);
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-card);
   }
 }
 
@@ -554,6 +610,32 @@
     margin-top: 1em;
     margin-bottom: 1em;
   }
+}
+
+.rag-document-sources {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+
+  &__count,
+  &__remaining,
+  &__empty {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
+  &__list {
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+
+  &__url {
+    overflow-wrap: anywhere;
+  }
+}
+
+.rag-document-sources-modal__urls {
+  width: 100%;
 }
 
 .rag-uploader {

@@ -66,7 +66,10 @@ RSpec.describe Chat::ListChannelMessages do
     let(:params) { { channel_id:, **optional_params } }
     let(:dependencies) { { guardian: } }
 
-    before { channel.add(user) }
+    before do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      channel.add(user)
+    end
 
     context "when data is not valid" do
       let(:channel_id) { nil }

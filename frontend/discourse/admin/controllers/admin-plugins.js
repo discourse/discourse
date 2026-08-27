@@ -6,20 +6,12 @@ export default class AdminPluginsController extends Controller {
   @service adminPluginNavManager;
   @service router;
 
-  get adminRoutes() {
-    return this.allAdminRoutes.filter((route) =>
-      adminRouteValid(this.router, route)
-    );
-  }
-
   get brokenAdminRoutes() {
     return this.allAdminRoutes.filter(
       (route) => !adminRouteValid(this.router, route)
     );
   }
 
-  // NOTE: See also AdminPluginsIndexController, there is some duplication here
-  // while we convert plugins to use_new_show_route
   get allAdminRoutes() {
     return this.model
       .filter(
@@ -33,10 +25,35 @@ export default class AdminPluginsController extends Controller {
       });
   }
 
-  get showTopNav() {
+  get showBreadcrumbs() {
     return (
       !this.adminPluginNavManager.viewingPluginsList &&
       !this.adminPluginNavManager.currentPlugin
     );
+  }
+
+  // Plugins on the show route get their name breadcrumb from
+  // AdminPluginConfigPage. Ones still routing to their own admin templates
+  // have to be matched against the route they registered.
+  get currentLegacyPlugin() {
+    const currentRouteName = this.router.currentRouteName;
+
+    if (!currentRouteName) {
+      return null;
+    }
+
+    return this.model.find((plugin) => {
+      const route = plugin.adminRoute;
+
+      if (!route || route.use_new_show_route) {
+        return false;
+      }
+
+      const namespace = `adminPlugins.${route.location.split(".")[0]}`;
+      return (
+        currentRouteName === namespace ||
+        currentRouteName.startsWith(`${namespace}.`)
+      );
+    });
   }
 }

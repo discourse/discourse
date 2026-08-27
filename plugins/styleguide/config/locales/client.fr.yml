@@ -13,6 +13,10 @@ fr:
   js:
     styleguide:
       title: "Guide de style"
+      welcome: "Pour commencer, choisissez une section dans le menu de navigation."
+      example:
+        kind:
+          component: "Composant"
       categories:
         syntax: Syntaxe
         atoms: Atomes
@@ -37,6 +41,8 @@ fr:
           title: "Système de polices"
         colors:
           title: "Couleurs"
+        dialog:
+          title: "Boîte de dialogue"
         icons:
           title: "Icônes"
           full_list: "Voir la liste complète des icônes Font Awesome"
@@ -58,6 +64,8 @@ fr:
           title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
+        topic_link:
+          title: "Lien et statut du sujet"
         topic_list_item:
           title: "Élément de liste de sujets"
         topic_statuses:
@@ -80,6 +88,8 @@ fr:
           title: "Liste des publications"
           empty_example: "<PostList /> état vide"
           populated_example: "<PostList /> état rempli"
+        post_oneboxes:
+          title: "Oneboxes des publications"
         topic_map:
           title: "Carte des sujets"
         site_header:
@@ -88,16 +98,21 @@ fr:
           title: "Plus de sujets"
         post_menu:
           title: "Menu du message"
+        docked_composer:
+          title: "Panneau d'édition ancré"
         modal:
           title: "Modale"
           header: "Titre de la modale"
           footer: "Pied de la modale"
+          open: "Ouvrir la fenêtre modale"
         user_about:
           title: "Boîte « à propos » de l'utilisateur"
         header_icons:
           title: "Icônes d'en-tête"
         spinners:
           title: "Icônes de chargement"
+        otp:
+          title: "OTP"
         empty_state:
           title: "État vide"
         tooltips:
@@ -108,3 +123,5 @@ fr:
         char_counter:
           title: "Compteur de caractères"
           placeholder: "Saisissez votre texte ici..."
+        segmented_control:
+          title: "Contrôle segmenté (groupe de boutons à bascule)"

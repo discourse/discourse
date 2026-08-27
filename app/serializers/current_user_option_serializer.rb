@@ -13,7 +13,6 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :hide_profile,
              :hide_presence,
              :title_count_mode,
-             :enable_defer,
              :timezone,
              :skip_new_user_tips,
              :default_calendar,

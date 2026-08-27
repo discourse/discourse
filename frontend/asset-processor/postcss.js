@@ -14,34 +14,16 @@ const postCssProcessor = postcss([
   postcssNesting, // Un-nests the native css nesting from postcssLightDark
   postcssVariablePrefixer(),
 ]);
-let lastPostcssError, lastPostcssResult;
-
 globalThis.postCss = async function (css, map, sourcemapFile) {
-  try {
-    const rawResult = await postCssProcessor.process(css, {
-      from: "input.css",
-      to: "output.css",
-      map: {
-        prev: map,
-        inline: false,
-        absolute: false,
-        annotation: sourcemapFile,
-      },
-    });
-    lastPostcssResult = [rawResult.css, rawResult.map?.toString()];
-  } catch (e) {
-    lastPostcssError = e;
-  }
-};
-
-globalThis.getPostCssResult = function () {
-  const error = lastPostcssError;
-  const result = lastPostcssResult;
-
-  lastPostcssError = lastPostcssResult = null;
-
-  if (error) {
-    throw error;
-  }
-  return result;
+  const rawResult = await postCssProcessor.process(css, {
+    from: "input.css",
+    to: "output.css",
+    map: {
+      prev: map,
+      inline: false,
+      absolute: false,
+      annotation: sourcemapFile,
+    },
+  });
+  return [rawResult.css, rawResult.map?.toString()];
 };

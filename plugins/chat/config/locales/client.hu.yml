@@ -75,6 +75,8 @@ hu:
         close: "Rögzített üzenetek bezárása"
         pinned_by_you: "Általad rögzített"
         pinned_by_user: "%{username} által rögzítve"
+      pinned_bar:
+        title: "Kiemelt"
       no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
       pin_message: "Üzenet rögzítése"
       unpin_message: "Üzenet rögzítésének feloldása"
@@ -739,4 +741,11 @@ hu:
         message: "Üzenet"
       chat_approval:
         message: "Üzenet"
+        buttons: "Gombok"
+        value: "Érték"
+        style: "Stílus"
+        style_default: "Alapértelmezett"
+        style_primary: "Elsődleges"
+        style_success: "Sikeres"
+        icon: "Ikon"
         channel_id: "Csatorna"

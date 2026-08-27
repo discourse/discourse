@@ -23,7 +23,7 @@ module DiscourseWorkflows
 
     model :executions, optional: true
     model :has_more, :compute_has_more, optional: true
-    only_if(:has_more) { model :load_more_url, :compute_load_more_url, optional: true }
+    model :load_more_url, :compute_load_more_url, optional: true
 
     private
 
@@ -49,6 +49,8 @@ module DiscourseWorkflows
     end
 
     def compute_load_more_url(params:, executions:)
+      return if !has_more || executions.blank?
+
       path =
         if params.workflow_id
           "/admin/plugins/discourse-workflows/workflows/#{params.workflow_id}/executions.json"

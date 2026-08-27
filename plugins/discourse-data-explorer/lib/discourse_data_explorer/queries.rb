@@ -1541,6 +1541,9 @@ module DiscourseDataExplorer
           COUNT(*) AS pageviews,
           MAX(s.automation_ua_score) AS automation_ua,
           MAX(s.known_asn_score) AS known_asn,
+          MAX(s.datacenter_asn_score) AS datacenter_asn,
+          MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
+          MAX(s.stale_browser_score) AS stale_browser,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
@@ -1551,6 +1554,14 @@ module DiscourseDataExplorer
               CONCAT_WS(', ',
                   CASE WHEN MAX(s.automation_ua_score) > 0 THEN 'automation UA' END,
                   CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
+                  CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
+                  CASE
+                    WHEN MAX(s.single_request_no_referrer_score) = #{CrawlerScorer::SINGLE_REQUEST_NO_REFERRER_SCORE + CrawlerScorer::SINGLE_REQUEST_LOCALE_PARAM_BONUS}
+                      THEN 'single direct locale request (+' || MAX(s.single_request_no_referrer_score) || ')'
+                    WHEN MAX(s.single_request_no_referrer_score) > 0
+                      THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
+                  END,
+                  CASE WHEN MAX(s.stale_browser_score) > 0 THEN 'stale Chromium (+' || MAX(s.stale_browser_score) || ')' END,
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,

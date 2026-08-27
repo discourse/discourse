@@ -124,6 +124,50 @@ RSpec.describe DiscourseWorkflows::NodeIssues do
         expect(issues.size).to eq(1)
       end
     end
+
+    context "when the controlling parameter is an expression" do
+      let(:configuration) { { "page_type" => "={{ $json.kind }}" } }
+
+      it "does not report the blank required field" do
+        expect(issues).to be_empty
+      end
+    end
+  end
+
+  context "with a collection behind an expression-valued anchor" do
+    let(:schema) do
+      {
+        mode: {
+          type: :options,
+        },
+        columns: {
+          type: :fixed_collection,
+          display_options: {
+            show: {
+              mode: %w[manual],
+            },
+          },
+          options: [{ name: "values", values: { header: { type: :string, required: true } } }],
+        },
+      }
+    end
+    let(:configuration) do
+      { "mode" => "={{ $json.mode }}", "columns" => { "values" => [{ "header" => "" }] } }
+    end
+
+    it "suppresses issues for the whole subtree" do
+      expect(issues).to be_empty
+    end
+
+    context "when the anchor is a literal" do
+      let(:configuration) do
+        { "mode" => "manual", "columns" => { "values" => [{ "header" => "" }] } }
+      end
+
+      it "still reports the nested blank required field" do
+        expect(issues.map { |issue| issue[:path] }).to eq(["columns.values.0.header"])
+      end
+    end
   end
 
   context "when a required field has a default" do

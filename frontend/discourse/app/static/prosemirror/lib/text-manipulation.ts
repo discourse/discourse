@@ -388,6 +388,8 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   applyHeading(_selection: SelectedText, level: number): void {
+    this.commands.removeSmall?.();
+
     let command;
     if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);

@@ -297,7 +297,10 @@ class TopicView
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
-    topic.allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
+    allowed_groups = topic.allowed_groups
+
+    allowed_groups.all? { |group| @guardian.can_see_group_members?(group) } &&
+      allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
   end
 
   def canonical_path
@@ -744,6 +747,7 @@ class TopicView
         WHERE
           r.target_id IN (:post_ids) AND
           r.target_type = 'Post' AND
+          r.type IN (:known_types) AND
           COALESCE(s.reason, '') != 'category'
         GROUP BY
           target_id
@@ -752,7 +756,12 @@ class TopicView
         counts = {}
 
         DB
-          .query(sql, pending: ReviewableScore.statuses[:pending], post_ids: @posts.map(&:id))
+          .query(
+            sql,
+            pending: ReviewableScore.statuses[:pending],
+            post_ids: @posts.map(&:id),
+            known_types: Reviewable.sti_names,
+          )
           .each do |row|
             counts[row.target_id] = {
               total: row.total,

@@ -17,3 +17,6 @@ en_GB:
         italic_text: "emphasised text"
       incoming_webhooks:
         description: "Description"
+    discourse_workflows:
+      chat_approval:
+        buttons: "Buttons"

@@ -404,8 +404,6 @@ he:
         confirm_payment: אישור תשלום
         success: חזרה
       admin:
-        unconfigured: 'Stripe לא מוגדר נכון. נא לעיין ב־Discourse Meta למידע נוסף.'
-        on_meta: מינויי Discourse ב־Meta
         dashboard:
           title: לוח בקרה
           table:
