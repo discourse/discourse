@@ -7,6 +7,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         custom_emoji_names: %w[parrot +1],
@@ -112,7 +113,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "skips emoji detection entirely when the source has no custom emoji" do
-      plain_extractor = described_class.new(embeds: buffer, mention_names:, hashtag_names:)
+      plain_extractor =
+        described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
       raw = "a :parrot: and :smile:"
 
       expect(plain_extractor.extract(raw)).to eq(raw)

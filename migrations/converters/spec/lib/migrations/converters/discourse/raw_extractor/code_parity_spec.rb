@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-# Cross-checks {MarkdownScanner::BlockTracker} against what core actually treats
-# as code. Every row plants a sentinel embed — a mention, or an upload where the
+# Cross-checks the extractor's code handling — the tier gate's routing plus the
+# engine tier's certification — against what core actually treats as code.
+# Every row plants a sentinel embed — a mention, or an upload where the
 # construct swallows an `@` for other reasons — inside or around one construct,
 # and asserts the extractor defers exactly when `PrettyText.cook` renders the
 # sentinel. Cooked HTML has no notion of "is byte X code", but a sentinel that
 # survives cooking is proof the engine parsed that spot as content, which is the
-# oracle the tracker needs.
+# oracle extraction must agree with.
 #
 # CommonMark's own `spec.txt` is deliberately not vendored: it asserts HTML, and
 # Discourse's engine diverges from it anyway (`[code]`, `<pre>`, bbcode paragraph
@@ -25,6 +26,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   def hashtag_names
     Migrations::CompactStringSet.new([])
+  end
+
+  def markdown_engine
+    MarkdownEngineHelper.context_for_names(hashtag_names: [])
   end
 
   # The sentinels the rows plant. A mention is the cheap one; an upload is
@@ -217,6 +222,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       ["upload indented under a bullet", "- item\n\n      #{upload}"],
       ["upload as a lazy continuation", "Intro\n    #{upload}"],
       ["upload after a closed [code] block", "[code]\nx\n[/code]\n\n#{upload}"],
+      # --- spans over constructs the line-oriented walk once resolved wrong ---
+      # An unregistered bbcode tag, an unknown HTML tag, a closing HTML tag,
+      # and a table interrupting a paragraph were documented divergences of the
+      # deleted line-oriented walk; the engine tier reads them exactly as core.
+      ["backtick span across an unregistered bbcode tag", "`x\n[foo]\n#{mention}`"],
+      ["backtick span across an unknown HTML tag", "`x\n<pretty>\n#{mention}`"],
+      ["backtick span across a closing HTML tag", "`x\n</pre>\n#{mention}`"],
+      [
+        "indented line below a table interrupting a paragraph",
+        "Intro\na|b\n-|-\nc|d\n    #{mention}",
+      ],
     ]
   end
 
@@ -226,7 +242,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+      raw,
+    )
     raw.include?(upload) ? buffer.uploads.empty? : buffer.mentions.empty?
   end
 
@@ -250,35 +268,5 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       end
 
     expect(deviations).to be_empty, -> { deviations.join("\n") }
-  end
-
-  # The tracker cannot know which bbcode tags a source's plugins registered, nor
-  # tell CommonMark's HTML block type 6 (a known block tag, which interrupts a
-  # paragraph) from type 7 (any other tag, which does not). Both are resolved
-  # toward ending the paragraph, so an inline span opened before such a line does
-  # not form and everything after it stays detectable. Core keeps the span; we
-  # extract. That costs a rewrite inside a code sample, never a lost embed.
-  describe "the deliberate divergences" do
-    [
-      ["an unregistered bbcode tag", "`x\n[foo]\n@alice`"],
-      ["an unknown HTML tag", "`x\n<pretty>\n@alice`"],
-      ["a closing HTML tag", "`x\n</pre>\n@alice`"],
-    ].each do |label, raw|
-      it "extracts across #{label}, where core keeps the span as code" do
-        expect(detector_treats_as_code?(raw)).to be false
-        expect(core_treats_as_code?(raw)).to be true
-      end
-    end
-
-    # Tables are not modelled in the block phase — a delimiter row only bounds
-    # inline spans. A table interrupting a paragraph therefore leaves the
-    # paragraph open, and an indented line right below the table reads as
-    # prose rather than code.
-    it "extracts from an indented line below a table that interrupts a paragraph" do
-      raw = "Intro\na|b\n-|-\nc|d\n    @alice"
-
-      expect(detector_treats_as_code?(raw)).to be false
-      expect(core_treats_as_code?(raw)).to be true
-    end
   end
 end

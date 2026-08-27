@@ -3,17 +3,19 @@
 module Migrations
   module Converters
     module Discourse
-      # Single-pass scanner for Discourse Markdown that extracts specific constructs
-      # (uploads, internal links, quote references, mentions, hashtags, custom
-      # emoji) while leaving everything else untouched — including anything inside
-      # code, whether fenced, indented, inline, a `[code]` block or a `<pre>` block.
+      # Extraction of specific constructs (uploads, internal links, quote
+      # references, mentions, hashtags, custom emoji) from Discourse Markdown,
+      # leaving everything else untouched — including anything inside code,
+      # whether fenced, indented, inline, a `[code]` block or a `<pre>` block.
       #
-      # {Scanner} walks the input; on a successful match it asks the supplied block
-      # for the replacement text (a placeholder token) and skips past the matched
-      # span. The pieces live in `markdown_scanner/`: {Scanner}, the {BlockTracker}
-      # (with its {LineClassifier}) that decides what is code, and the {Detectors}.
-      # The knowingly accepted divergences from core are listed in
-      # `markdown_scanner/LIMITATIONS.md`.
+      # The pieces live in `markdown_scanner/`: the {TierGate} classifies each
+      # body, the {ProseScanner} walks bodies proven free of context-sensitive
+      # syntax with plain detector matches, and the {EngineScanner} handles the
+      # rest by parsing with the real discourse-markdown-it engine and locating
+      # every reported construct through count certification (escalating to
+      # per-occurrence trial substitution). The {Detectors} carry the construct
+      # grammars all walks share. What extraction knowingly leaves undone is
+      # listed in `markdown_scanner/LIMITATIONS.md`.
       module MarkdownScanner
       end
     end

@@ -177,14 +177,32 @@ end
 mention_names =
   load_names(corpus, "SELECT username FROM users") + load_names(corpus, "SELECT name FROM groups") +
     %w[here all]
-hashtag_names =
-  load_names(corpus, "SELECT slug FROM categories") + load_names(corpus, "SELECT name FROM tags")
+category_slugs = load_names(corpus, "SELECT slug FROM categories")
+tag_names = load_names(corpus, "SELECT name FROM tags")
+hashtag_names = category_slugs + tag_names
 custom_emoji_names = load_names(corpus, "SELECT name FROM custom_emojis")
 
 normalize = ->(names) { names.map { |name| Migrations::NameNormalizer.normalize(name) } }
 internal_link_hosts = options[:forum_hosts].to_h { |host| [host.downcase, nil] }
 
 EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
+
+# The extractor's engine tier runs this context; unlike the `parse` arms below
+# (which reuse PrettyText's booted context) it is the converter's own
+# self-contained one, so the ruby-scanner arm measures the production path.
+markdown_engine =
+  Migrations::Converters::MarkdownEngine::Context.new(
+    bundle: Migrations::Converters::MarkdownEngine::Bundle.load_or_build,
+    config:
+      Migrations::Converters::MarkdownEngine::Config.new(
+        source_settings: {
+          "unicode_usernames" => SiteSetting.unicode_usernames,
+        },
+        category_slugs:,
+        tag_names:,
+        custom_emoji_names:,
+      ),
+  )
 
 extractor =
   Migrations::Converters::Discourse::RawExtractor.new(
@@ -193,6 +211,7 @@ extractor =
     hashtag_names: Migrations::CompactStringSet.new(normalize.call(hashtag_names)),
     custom_emoji_names: custom_emoji_names.empty? ? nil : custom_emoji_names,
     internal_link_hosts:,
+    markdown_engine:,
   )
 # One buffer per extractor for the whole run: buffer rows just accumulate, and
 # per-post allocation is not what this benchmark compares.

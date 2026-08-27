@@ -26,6 +26,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def hashtag_names
     Migrations::CompactStringSet.new([])
   end
+
+  def markdown_engine
+    MarkdownEngineHelper.context_for_names(hashtag_names: [])
+  end
   before { SiteSetting.enable_markdown_linkify = true }
 
   # The detector treats an absolute URL as internal only when its host is one it
@@ -76,6 +80,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       )
     described_class.new(
       embeds: buffer,
+      markdown_engine:,
       mention_names:,
       hashtag_names:,
       internal_link_hosts: {
@@ -135,6 +140,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       )
     described_class.new(
       embeds: buffer,
+      markdown_engine:,
       mention_names:,
       hashtag_names:,
       internal_link_hosts: {

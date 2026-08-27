@@ -15,30 +15,28 @@ module Migrations
         # every occurrence is the real thing, and none of them sits inside code
         # or a link label the engine skipped. A value that fails its block
         # region gets one more chance against the whole body (reference-link
-        # definitions live outside every block map). Anything still unequal
-        # refuses the whole body: it stays verbatim and the caller records the
-        # cause. Certification can refuse, but it cannot corrupt.
+        # definitions live outside every block map).
+        #
+        # A body the counting cannot certify — ambiguous duplicate values, a
+        # construct-capable character entity, CR line endings — escalates to a
+        # {TrialPass}, which proves occurrences one by one through marker
+        # substitution and re-parsing. Whatever even that cannot prove stays
+        # verbatim, and the body is reported with its cause: certification and
+        # trial can leave references stale, but they cannot corrupt.
         #
         # Certified occurrences are turned into nodes by the same detectors the
         # other scanners run, anchored at the certified offsets — so the embeds
         # recorded here have exactly the shape the rest of the pipeline
         # expects.
-        #
-        # Preconditions, both fail-closed:
-        # - CR line endings refuse outright: markdown-it normalizes them away
-        #   before tokenizing, so its line maps would not match our line index.
-        # - A construct-capable character entity in any construct-bearing
-        #   region refuses: entities decode before the engine's text rules run,
-        #   so a token's value no longer has to equal a literal raw substring.
         class EngineScanner
-          # `output` is the body with certified constructs replaced (nil when
-          # refused); `cause` names the refusal (nil on success); `unanchored`
-          # counts certified link occurrences no detector grammar could turn
-          # into a node — those stay verbatim without refusing the body, the
-          # same way the line-oriented scanners leave unsupported link forms
-          # alone.
+          # `output` is the body with every proven construct replaced (equal to
+          # the input when nothing was); `cause` names why at least one
+          # construct stayed unproven (nil when everything was placed);
+          # `unanchored` counts proven link occurrences no detector grammar
+          # could turn into a node; `unproven` counts construct instances that
+          # remain verbatim with stale references.
           Result =
-            Data.define(:output, :cause, :unanchored) do
+            Data.define(:output, :cause, :unanchored, :unproven) do
               def refused?
                 !cause.nil?
               end
@@ -73,6 +71,8 @@ module Migrations
             @hashtag_detector = detectors.find { |detector| detector.is_a?(Detectors::Hashtag) }
             @emoji_detector = detectors.find { |detector| detector.is_a?(Detectors::Emoji) }
             @quote_detector = detectors.find { |detector| detector.is_a?(Detectors::Quote) }
+            @internal_link_detector =
+              detectors.find { |detector| detector.is_a?(Detectors::InternalLink) }
 
             # URL-shaped constructs are matched from their syntax anchor (`[`,
             # `!`, or the URL itself for a bare link), so anchor resolution
@@ -91,16 +91,24 @@ module Migrations
           # @param input [String]
           # @return [Result]
           def scan(input)
-            if input.include?("\r")
-              return Result.new(output: nil, cause: :cr_line_endings, unanchored: 0)
+            data = @engine.scan([{ id: nil, raw: input }]).first
+
+            # Count certification indexes the body by the engine's line maps,
+            # which refer to lines after markdown-it normalized CR endings
+            # away — a CR body goes straight to the map-free trial.
+            cause = :cr_line_endings
+            unless input.include?("\r")
+              result = Pass.new(self, input, data).result
+              return result unless result.refused?
+              cause = result.cause
             end
 
-            data = @engine.scan([{ id: nil, raw: input }]).first
-            Pass.new(self, input, data).result
+            TrialPass.new(self, input, data, cause).result
           end
 
-          # The pieces a {Pass} shares with its scanner.
-          attr_reader :mention_detector,
+          # The pieces a {Pass} or {TrialPass} shares with its scanner.
+          attr_reader :engine,
+                      :mention_detector,
                       :hashtag_detector,
                       :emoji_detector,
                       :quote_detector,
@@ -134,7 +142,12 @@ module Migrations
 
             if (match = %r{\A(?:https?:)?//(?<host>[^/?#]+)}i.match(value))
               host = match[:host].sub(/:(?:80|443)\z/, "").downcase
-              return @hosts.key?(host)
+              return true if @hosts.key?(host)
+
+              # Untracked, but an internal-looking URL on an unconfigured host
+              # is the forgotten-former-domain signal (once per host).
+              @internal_link_detector&.note_foreign_url(value)
+              return false
             end
 
             return false unless value.start_with?("/")
@@ -145,13 +158,10 @@ module Migrations
             Detectors::InternalLink::RouteParser.parse(path) ? true : false
           end
 
-          # The per-body state of one scan; the scanner itself stays reusable
-          # across bodies like the other scanners.
+          # The per-body count-certification pass; the scanner itself stays
+          # reusable across bodies like the other scanners.
           class Pass
-            # A certified raw occurrence: where it starts and how many bytes
-            # the certified reading spans there (an alternate URL reading can
-            # differ in length from the engine's value).
-            Occurrence = Data.define(:offset, :length)
+            include Locating
 
             def initialize(scanner, input, data)
               @scanner = scanner
@@ -174,22 +184,13 @@ module Migrations
               ordered = spans.values.sort_by(&:start_pos)
               return refusal(:overlap) if overlapping?(ordered)
 
-              Result.new(output: splice(ordered), cause: nil, unanchored: @unanchored)
+              Result.new(output: splice(ordered), cause: nil, unanchored: @unanchored, unproven: 0)
             end
 
             private
 
             def refusal(cause)
-              Result.new(output: nil, cause:, unanchored: @unanchored)
-            end
-
-            def build_line_index
-              @line_starts = [0]
-              offset = 0
-              while (offset = @input.byteindex("\n", offset))
-                offset += 1
-                @line_starts << offset
-              end
+              Result.new(output: @input, cause:, unanchored: @unanchored, unproven: 0)
             end
 
             def region_range(map)
@@ -212,8 +213,11 @@ module Migrations
               regions_with_constructs = []
 
               @data["blocks"].each do |block|
-                range = region_range(block["map"])
-                next if range.nil?
+                # Not every inline block carries a line map (table cells don't);
+                # a mapless block's constructs are counted against the whole
+                # body — the same certification the global fallback applies,
+                # with the entity precondition widening accordingly.
+                range = region_range(block["map"]) || (0...@input.bytesize)
 
                 had = false
                 block["mentions"].each do |content|
@@ -324,101 +328,10 @@ module Migrations
               nil
             end
 
-            def occurrence_offsets(kind, reading, range)
-              occurrences = []
-              length = reading.bytesize
-              pos = range.begin
-              limit = range.end - length
-
-              while pos <= limit && (index = @input.byteindex(reading, pos))
-                break if index > limit
-
-                valid =
-                  if kind == :url
-                    url_occurrence?(index, length)
-                  else
-                    !probe_match(kind, reading, index).nil?
-                  end
-                occurrences << Occurrence.new(offset: index, length:) if valid
-                pos = index + 1
-              end
-
-              occurrences
-            end
-
-            # For the probed kinds the detector itself validates an occurrence
-            # — boundaries, name sets, everything — so an occurrence here IS a
-            # detector match with exactly this value. A longer name matching at
-            # the same offset (`@sam` inside `@samuel`) is a different
-            # construct, not an occurrence of this one.
-            def probe_match(kind, value, index)
-              detector =
-                case kind
-                when :mention
-                  @scanner.mention_detector
-                when :hashtag
-                  @scanner.hashtag_detector
-                when :emoji
-                  @scanner.emoji_detector
-                end
-              match = detector.detect(@input, index, @input.getbyte(index))
-              match if match && match.end_pos == index + value.bytesize
-            end
-
-            # A URL occurrence must not be extendable into a longer URL: a
-            # following URL character — or trailing punctuation with a URL
-            # character after it, mirroring linkify's trailing-punctuation
-            # stripping — means the raw spells a different, longer value. A
-            # reading must also not sit right after `//`: that occurrence is
-            # the tail of the scheme-ful spelling of some other value.
-            def url_occurrence?(index, length)
-              tail = index + length
-              next_byte = @input.getbyte(tail)
-
-              if next_byte
-                return false if URL_BYTES.include?(next_byte)
-                if TRAILING_PUNCTUATION.include?(next_byte)
-                  after = @input.getbyte(tail + 1)
-                  return false if after && URL_BYTES.include?(after)
-                end
-              end
-
-              index < 2 || @input.byteslice(index - 2, 2) != "//"
-            end
-
-            URL_BYTES = [*"a".."z", *"A".."Z", *"0".."9", "/"].to_set(&:ord).freeze
-            TRAILING_PUNCTUATION = ".?#&=%~_-".bytes.to_set.freeze
-            private_constant :URL_BYTES, :TRAILING_PUNCTUATION
-
             def reference_definition?(value)
               url_readings(value).any? do |reading|
                 @input.match?(/^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?#{Regexp.escape(reading)}>?(?:\s|\z)/)
               end
-            end
-
-            def url_readings(value)
-              readings = [value]
-              decoded = percent_decode(value)
-              readings << decoded if decoded && decoded != value
-              bare = value.sub(%r{\Ahttps?://}i, "")
-              if bare != value
-                readings << bare
-                bare_decoded = percent_decode(bare)
-                readings << bare_decoded if bare_decoded && !readings.include?(bare_decoded)
-              end
-              readings
-            end
-
-            # Percent-decoding only — `CGI.unescape` would also turn `+` into a
-            # space, which is form encoding, not URL encoding.
-            def percent_decode(value)
-              return value unless value.include?("%")
-
-              decoded =
-                value
-                  .gsub(/%\h\h/) { |encoded| [encoded[1, 2]].pack("H2") }
-                  .force_encoding(Encoding::UTF_8)
-              decoded.valid_encoding? ? decoded : nil
             end
 
             # Turns certified URL occurrences into whole-construct detector
@@ -445,44 +358,6 @@ module Migrations
               nil
             end
 
-            # Try, nearest first, every possible syntax anchor between the
-            # occurrence and the start of the previous line (a link's
-            # destination may sit one line below its `[` — see
-            # `Base::LINK_GAP`), then the occurrence itself as a bare URL.
-            def anchor_match(occurrence)
-              offset = occurrence.offset
-              line = @line_starts.bsearch_index { |start| start > offset } || @line_starts.size
-              from = @line_starts[[line - 2, 0].max]
-
-              anchors = []
-              pos = from
-              while pos < offset
-                byte = @input.getbyte(pos)
-                anchors << pos if byte == 0x21 || byte == 0x5b # `!` `[`
-                pos += 1
-              end
-
-              anchors.reverse_each do |anchor|
-                match = detector_match_at(anchor, occurrence)
-                return match if match
-              end
-
-              detector_match_at(offset, occurrence)
-            end
-
-            def detector_match_at(anchor, occurrence)
-              byte = @input.getbyte(anchor)
-              @scanner.url_dispatch[byte]&.each do |detector|
-                match = detector.detect(@input, anchor, byte)
-                next if match.nil?
-                if match.start_pos <= occurrence.offset &&
-                     match.end_pos >= occurrence.offset + occurrence.length
-                  return match
-                end
-              end
-              nil
-            end
-
             # Mentions, hashtags and emoji: their certified occurrences came
             # out of the detectors, so re-probing yields the node directly.
             def resolve_probed(spans)
@@ -505,7 +380,7 @@ module Migrations
             # quote's line range directly, so no counting is needed — the
             # header on the opening line is parsed in place. This includes the
             # single-line `[quote=…]body[/quote]` form the line-oriented
-            # scanners cannot take: block context is certified by the engine,
+            # walks cannot take: block context is certified by the engine,
             # so the forward spaces-only check does not apply.
             def resolve_quotes(spans)
               @data["blockTokens"].each do |token|
@@ -525,25 +400,6 @@ module Migrations
               end
 
               nil
-            end
-
-            def overlapping?(ordered)
-              ordered.each_cons(2).any? { |left, right| right.start_pos < left.end_pos }
-            end
-
-            def splice(ordered)
-              result = +""
-              pos = 0
-
-              ordered.each do |match|
-                result << @input.byteslice(pos...match.start_pos) if match.start_pos > pos
-                source = @input.byteslice(match.start_pos...match.end_pos)
-                result << (@scanner.on_node.call(match.node, source) || source)
-                pos = match.end_pos
-              end
-              result << @input.byteslice(pos..) if pos < @input.bytesize
-
-              result
             end
           end
         end

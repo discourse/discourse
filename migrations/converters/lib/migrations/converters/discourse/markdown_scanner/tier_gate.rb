@@ -129,8 +129,6 @@ module Migrations
 
           # @param detectors [Array<Detectors::Base>] the same list the scanners
           #   run — the gate derives its checks from what is actually wired.
-          #   {Detectors::LinkSpan} never produces an embed, so it plays no part
-          #   in candidacy.
           def initialize(detectors:)
             @presence = Regexp.union(BASE_PRESENCE, *detectors.filter_map(&:presence_pattern))
 

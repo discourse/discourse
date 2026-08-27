@@ -408,6 +408,11 @@ module Migrations
       # Builds the opening `[quote="…"]` tag only; the quoted text and `[/quote]` are
       # plain text in the raw (see EmbedBuffer#quote). So an orphaned quote token,
       # once stripped, leaves its `[/quote]` behind.
+      #
+      # A rebuild is canonical: straight quotes, the known fields, nothing else.
+      # That is only warranted when something actually resolved; a full miss
+      # restores the verbatim source tag, which may carry syntax the reference
+      # columns don't model (casing, spacing, parameters core ignores).
       def render_quote(row)
         user = row[:quoted_user_id] ? @maps.user(row[:quoted_user_id]) : nil
         username = user&.dig(:username) || row[:quoted_username]
@@ -417,6 +422,8 @@ module Migrations
           topic_id = post[:topic_id]
           post_number = post[:post_number]
         end
+
+        return row[:original_markdown] if user.nil? && post.nil? && row[:original_markdown].present?
 
         return "[quote]" if username.blank? && name.blank?
 
@@ -461,9 +468,23 @@ module Migrations
         render_link_markup(row, "#{@maps.base_url}#{row[:target_suffix]}")
       end
 
-      # `presence`: a converter may have recorded an empty text; treat it as a
-      # bare URL rather than rendering `[](url)`.
+      # Rewrites only the destination inside the verbatim source construct, so
+      # titles, angle brackets, padding — syntax the reference columns don't
+      # model — survive a rewrite, and an unchanged URL (an external link, or
+      # any miss falling back to the source URL) round-trips byte-exact. Every
+      # spelling of the source URL inside the construct is a destination
+      # spelling (a `[URL](URL)` self-link shows it twice), so all of them are
+      # rewritten. Rebuilding `[text](url)` from the columns remains only for
+      # rows without a verbatim source.
       def render_link_markup(row, url)
+        original = row[:original_markdown]
+        if original.present?
+          return original if url == row[:url]
+          return original.gsub(row[:url], url) if row[:url].present? && original.include?(row[:url])
+        end
+
+        # `presence`: a converter may have recorded an empty text; treat it as
+        # a bare URL rather than rendering `[](url)`.
         text = row[:text].presence
         text ? "[#{text}](#{url})" : url.to_s
       end
@@ -541,15 +562,16 @@ module Migrations
         # already intact — rendering verbatim keeps the source spacing.
         return "@#{name}" if name.present?
 
-        # Nearly unreachable: the converter always records a name. But an embed may
-        # only vanish with a report, so record one before dropping it.
+        # Nearly unreachable: the converter always records a name. But an embed
+        # may only vanish with a report, so record one — and restore the
+        # verbatim source when the row carries it, rather than dropping text.
         @unresolved_embeds << UnresolvedEmbed.new(
           kind: :mention,
           entity_id: row[:target_id] || row[:name],
           owner_id: row[:owner_id],
           owner_url: owner_url_for(row[:owner_id]),
         )
-        ""
+        row[:original_markdown].to_s
       end
 
       # A resolved category renders as `#<slug path>`, honoring any rename or merge
@@ -570,12 +592,15 @@ module Migrations
           end
         end
 
-        rebuild_hashtag(row)
+        # The verbatim source restores exactly what the author wrote — in
+        # particular a bare `#name` stays bare even when the import resolved a
+        # type it then couldn't render (the mutated `hashtag_type` must not
+        # leak a `::category`/`::tag` suffix the source never had).
+        row[:original_markdown].presence || rebuild_hashtag(row)
       end
 
-      # Rebuilds the source `#name`, re-adding the `::tag`/`::category` suffix the
-      # `hashtag_type` implies (present only when the source forced it or the import
-      # resolved a type it then couldn't render).
+      # Rebuilds the source `#name` for a row without a verbatim source,
+      # re-adding the `::tag`/`::category` suffix the `hashtag_type` implies.
       def rebuild_hashtag(row)
         suffix =
           case row[:hashtag_type]

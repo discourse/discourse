@@ -272,6 +272,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     let(:link_extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         internal_link_hosts: {
@@ -393,10 +394,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     let(:hashtag_names) do
       Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
-    let(:hashtag_extractor) { described_class.new(embeds: buffer, mention_names:, hashtag_names:) }
+    let(:hashtag_extractor) do
+      described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
+    end
     let(:emoji_extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         custom_emoji_names: %w[parrot],
@@ -465,7 +469,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     seam =
       Class
         .new(described_class) { public :defer }
-        .new(embeds: buffer, mention_names:, hashtag_names:)
+        .new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
 
     expect { seam.defer(Object.new, "@x") }.to raise_error(NotImplementedError, /Object/)
   end
@@ -577,6 +581,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         host_extractor =
           described_class.new(
             embeds: buffer,
+            markdown_engine:,
             mention_names:,
             hashtag_names:,
             internal_link_hosts: {
@@ -592,6 +597,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         emoji_extractor =
           described_class.new(
             embeds: buffer,
+            markdown_engine:,
             mention_names:,
             hashtag_names:,
             custom_emoji_names: %w[parrot],

@@ -7,6 +7,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         internal_link_hosts: {
@@ -591,7 +592,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "detects a relative link only in link form when no host set is given" do
-      plain_extractor = described_class.new(embeds: buffer, mention_names:, hashtag_names:)
+      plain_extractor =
+        described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
 
       result = plain_extractor.extract("bare /t/slug/12 and linked [x](/t/slug/34)")
 

@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with raw extractor" do
-  subject(:extractor) { described_class.new(embeds: buffer, mention_names:, hashtag_names:) }
+  subject(:extractor) do
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:)
+  end
+
+  # Memoized per configuration for the whole run; specs that need different
+  # engine-side names override this with another helper call.
+  let(:markdown_engine) do
+    MarkdownEngineHelper.context_for_names(hashtag_names: raw_hashtag_name_list)
+  end
 
   # The extractor defers a mention only when the source has that name, so the
   # names a spec mentions have to exist. Override for a spec about the gate
@@ -34,11 +42,15 @@ RSpec.shared_context "with raw extractor" do
 
   # Same for hashtags: the source has to have the category or tag. `unknown` is
   # deliberately absent — specs use it for the name that resolves to nothing.
+  # The plain list also feeds the engine context's lookup sets, which decide
+  # whether a `#slug` produces a token at all.
+  let(:raw_hashtag_name_list) do
+    %w[announcements general news release reply support support:billing team v2.0]
+  end
+
   let(:hashtag_names) do
     Migrations::CompactStringSet.new(
-      %w[announcements general news release reply support support:billing team v2.0].map do |name|
-        Migrations::NameNormalizer.normalize(name)
-      end,
+      raw_hashtag_name_list.map { |name| Migrations::NameNormalizer.normalize(name) },
     )
   end
 

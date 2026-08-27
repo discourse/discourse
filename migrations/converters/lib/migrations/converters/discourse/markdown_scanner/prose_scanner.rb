@@ -7,18 +7,18 @@ module Migrations
         # Walks Markdown the {TierGate} classified as all-prose: no code fences,
         # no indented, `[code]` or `<pre>` blocks, no inline code, no CR line
         # endings, no link syntax, no entity that could spell a construct — the
-        # gate's danger checks exclude every one of them. On such input the code
-        # machinery {Scanner} carries is provably a no-op, so this walk skips it:
-        # jump from trigger to trigger, ask the detectors, splice. Output equals
-        # {Scanner}'s for any input in that class (asserted by spec); classifying
-        # first just avoids paying for block tracking the input cannot need.
+        # gate's danger checks exclude every one of them. On such input no code
+        # machinery is needed: jump from trigger to trigger, ask the detectors,
+        # splice. The {EngineScanner} extracts the same constructs from such
+        # input (asserted by spec, against the real engine); classifying first
+        # just avoids paying an engine parse the input cannot need.
         #
-        # Positions are byte offsets throughout, for the same O(1)-positioning
-        # reasons documented on {Scanner}.
+        # Positions are byte offsets: `byteindex`/`byteslice` position in O(1),
+        # where character indexing would rescan the string per lookup.
         class ProseScanner
           # @param detectors [Array<Detectors::Base>] detector instances in
-          #   priority order — the same list a {Scanner} would take, so the two
-          #   walks cannot disagree about a construct's shape.
+          #   priority order — the same list the {EngineScanner} anchors with,
+          #   so the two walks cannot disagree about a construct's shape.
           # @yieldparam node the detected AST node.
           # @yieldparam source [String] the verbatim matched slice. The block
           #   returns the node's replacement, or nil to decline the match.

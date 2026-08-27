@@ -10,6 +10,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         internal_link_hosts: {
@@ -116,6 +117,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       extractor =
         described_class.new(
           embeds: buffer,
+          markdown_engine:,
           mention_names:,
           hashtag_names:,
           internal_link_hosts: {

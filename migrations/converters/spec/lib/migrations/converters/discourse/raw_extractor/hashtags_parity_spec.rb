@@ -25,6 +25,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("general")])
   end
 
+  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: %w[general]) }
+
   # The 32 ASCII punctuation characters (CommonMark), which already include the
   # ASCII symbols `$ + < = > ^ \` | ~`, plus the letters, whitespace, and Unicode
   # punctuation/symbol characters that exercise the boundary from both sides.
@@ -56,7 +58,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+      raw,
+    )
     buffer.hashtags.any?
   end
 

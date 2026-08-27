@@ -19,6 +19,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def hashtag_names
     Migrations::CompactStringSet.new([])
   end
+
+  def markdown_engine
+    MarkdownEngineHelper.context_for_names(hashtag_names: [])
+  end
   before { SiteSetting.enable_markdown_linkify = true }
 
   def url
@@ -60,7 +64,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+      raw,
+    )
     buffer.uploads.any?
   end
 

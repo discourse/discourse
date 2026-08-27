@@ -19,6 +19,7 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       scanner::Detectors::Upload.new,
       scanner::Detectors::UploadUrl.new,
       scanner::Detectors::Quote.new,
+      scanner::Detectors::LinkSpan.new,
       scanner::Detectors::InternalLink.new(
         hosts: {
           "forum.example.com" => nil,
@@ -26,7 +27,6 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
         base_prefix: nil,
         on_foreign_host: nil,
       ),
-      scanner::Detectors::LinkSpan.new,
       scanner::Detectors::Mention.new(names: mention_names),
       scanner::Detectors::Hashtag.new(names: hashtag_names),
       scanner::Detectors::Emoji.new(names: %w[parrot]),

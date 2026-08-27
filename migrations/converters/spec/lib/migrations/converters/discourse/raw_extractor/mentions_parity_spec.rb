@@ -31,6 +31,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
   # This spec is not about hashtags; the extractor requires the set anyway.
   let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
+  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: []) }
 
   # The 32 ASCII punctuation characters (CommonMark), which already include the
   # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
@@ -69,7 +70,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+      raw,
+    )
     buffer.mentions.any?
   end
 
@@ -118,7 +121,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
           owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
         )
       names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(name)])
-      described_class.new(embeds: buffer, mention_names: names, hashtag_names:).extract(raw)
+      described_class.new(
+        embeds: buffer,
+        mention_names: names,
+        hashtag_names:,
+        markdown_engine:,
+      ).extract(raw)
       buffer.mentions.first&.[](:name)
     end
 
@@ -156,9 +164,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names: names, hashtag_names:).extract(
-      "hi @#{long} x",
-    )
+    described_class.new(
+      embeds: buffer,
+      mention_names: names,
+      hashtag_names:,
+      markdown_engine:,
+    ).extract("hi @#{long} x")
 
     expect(buffer.mentions.first[:name]).to eq(long)
     expect(core_cooks?("hi @#{long} x")).to be(false)

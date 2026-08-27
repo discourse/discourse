@@ -1,64 +1,51 @@
 # Known limitations
 
-What extraction knowingly leaves undone, per tier. Since the engine tier
-exists, no listed case edits text core treats as code the other way around:
-the engine path proves positions before rewriting and otherwise leaves the
-body verbatim, and the line-oriented walks only run on bodies the gate proved
-free of context-sensitive syntax.
+What extraction knowingly leaves undone. Nothing listed here edits text core
+treats as code: the engine tier proves positions before rewriting and
+otherwise leaves text verbatim, and the prose walk only runs on bodies the
+gate proved free of context-sensitive syntax. The old line-oriented walk and
+its divergence list are gone — every body they applied to now takes the
+engine tier.
 
-## Engine tier (context-sensitive bodies, with an engine context)
+## Engine tier (context-sensitive bodies)
 
-The `EngineScanner` parses with the real discourse-markdown-it engine, so the
-divergences listed for the line-oriented walk below do not apply here. What it
-gives up instead, all fail-closed:
+The `EngineScanner` parses with the real discourse-markdown-it engine.
+Constructs it cannot place stay verbatim with stale references, all
+fail-closed:
 
-- **Refused bodies stay verbatim.** A body whose constructs cannot be
-  count-certified — the same tracked value ambiguously present in prose and
-  code, a construct-capable character entity near a construct, CR line
-  endings, a reference definition shared by several links — is left unchanged
-  and the refusal cause is recorded (`RawExtractor#engine_refusals`). Its
-  references stay stale until a later exact pass takes it. Measured on a real
-  corpus, this is well under 1% of engine-tier bodies.
-- **Unanchored link forms stay verbatim, without refusing the body.** A
-  certified destination whose surrounding syntax the detector grammar cannot
-  take whole (a label with an escaped `]`, a destination beyond the pattern
-  caps) keeps its source text; other constructs in the same body are still
-  extracted.
+- **Unproven constructs stay verbatim and are reported.** Count certification
+  refuses ambiguity; the trial pass then proves occurrences one by one by
+  marker substitution and re-parsing, which also covers CR line endings and
+  most entity-bearing bodies. What survives both — chiefly a construct the
+  engine decoded out of a character entity (`&#64;bob` spells a mention no
+  literal bytes can prove), or duplicate values whose every trial fails — is
+  left unchanged, and the body is counted with its cause on
+  `RawExtractor#engine_refusals`: the conversion's must-resolve list.
+  Measured on a real corpus, certification alone already left well under 1%
+  of engine-tier bodies; the trial pass reduces that further.
+- **Unanchored link forms stay verbatim, without a refusal.** A proven
+  destination whose surrounding syntax the detector grammar cannot take whole
+  (a label with an escaped `]`, a destination beyond the pattern caps) keeps
+  its source text; other constructs in the same body are still extracted.
 - **Bare schemeless-domain links** (`forum.example.com/t/5`, which linkify
   links in core) are recognized by the engine but have no syntax anchor a
   detector can take, so they stay verbatim.
+- **Trial budget** — a body gets at most 48 trial parses; occurrences beyond
+  the budget stay unproven. Only a generated body full of duplicated tracked
+  values can reach it.
 
-## Line-oriented walk (no engine context, or `:prose`-classified bodies)
+## Prose walk (`:prose`-classified bodies)
 
-A `:prose` body contains none of the syntax below by the gate's definition,
-so these apply only when extraction runs without an engine context. Every
-entry falls back toward NOT code: the affected embed is still extracted and
-rewritten, which at worst edits text inside something core shows as code.
-Each is pinned as a spec in `code_parity_spec.rb`'s "deliberate divergences"
-section.
-
-- **Unregistered bbcode tags** — plugins can register block bbcode tags the
-  scanner cannot know about. A line opening any `[foo]`-shaped tag is read as
-  ending the paragraph, so an inline code span opened above it does not form
-  and everything after it stays detectable. Core may keep such a span as code.
-
-- **HTML blocks other than `<pre>`** — the scanner cannot tell CommonMark's
-  HTML block type 6 (a known block tag, which interrupts a paragraph) from
-  type 7 (any other tag, which does not). A line opening any tag is read as
-  ending the paragraph, with the same span effect as above.
-
-- **Closing HTML tags** — the same, for a line starting with a `</…>` tag.
-
-- **Tables** — not modelled in the block phase; a delimiter row only bounds
-  inline spans. A table interrupting a paragraph leaves the paragraph open, so
-  an indented line directly below the table reads as prose where core reads
-  indented code.
+By the gate's definition these bodies contain no code syntax, no link syntax,
+no CR endings, and no construct-capable entities, so plain detector matches
+are exact — the equivalence with the engine tier on this class is asserted by
+spec against the real engine. What remains:
 
 - **Pattern caps** — the detector and link-shield patterns cap their runs
   (link labels at CommonMark's 999 characters, destinations and bare URLs at
   2 KiB, quote headers at 512 bytes) so a body full of malformed openers
   scans in linear time. A construct beyond a cap is not matched — and for the
-  link shield that means a longer destination is not skipped whole, so a
+  bare-URL shield that means a longer URL is not skipped whole, so a
   construct-shaped string beyond 2 KiB inside one could be extracted. Real
   content does not approach the caps.
 
@@ -68,3 +55,12 @@ section.
   not consider a possible subdirectory prefix on the foreign host — a
   forgotten former domain that served the forum under `/forum` parses no
   route and stays unreported.
+
+## Resolution (importer side)
+
+- **A resolution miss restores the verbatim source.** Every embed row carries
+  its exact matched substring; links additionally rewrite only the
+  destination span inside it on a hit, so titles, angle brackets and padding
+  survive. A canonical rebuild happens only when something actually resolved
+  (a renamed quoted user produces a canonical `[quote="…"]` header) or for
+  rows without a verbatim source.

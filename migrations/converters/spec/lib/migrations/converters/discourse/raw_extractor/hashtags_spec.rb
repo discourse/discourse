@@ -160,6 +160,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       dotted =
         described_class.new(
           embeds: buffer,
+          markdown_engine:,
           mention_names:,
           hashtag_names: Migrations::CompactStringSet.new(%w[v2.0]),
         )
@@ -172,6 +173,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       dotted =
         described_class.new(
           embeds: buffer,
+          markdown_engine:,
           mention_names:,
           hashtag_names: Migrations::CompactStringSet.new(%w[v2]),
         )

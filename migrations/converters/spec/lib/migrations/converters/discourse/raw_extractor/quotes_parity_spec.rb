@@ -28,12 +28,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   def hashtag_names
     Migrations::CompactStringSet.new([])
   end
+
+  def markdown_engine
+    MarkdownEngineHelper.context_for_names(hashtag_names: [])
+  end
   def detector_quote(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+      raw,
+    )
     buffer.quotes.first
   end
 
@@ -193,12 +199,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       expect(core_renders_quote?(raw)).to be(false)
     end
 
-    it "under-extracts core's single-line inline form (forward check cost)" do
-      # The body is not spaces-only, so the forward check declines; core renders
-      # it inline. Leaving it literal only means the header isn't remapped — the
-      # importer re-cooks the raw, which still renders.
+    it "extracts core's single-line inline form through the engine tier" do
+      # The line-oriented walk's forward check had to decline this shape; the
+      # engine tier certifies block context from the parsed quote token, so
+      # the header is remapped exactly where core renders it.
       raw = %([quote="bob"]body[/quote])
-      expect(detector_extracts?(raw)).to be(false)
+      expect(detector_extracts?(raw)).to be(true)
       expect(core_renders_quote?(raw)).to be(true)
     end
 

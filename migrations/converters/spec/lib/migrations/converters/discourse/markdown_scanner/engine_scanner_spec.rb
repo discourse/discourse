@@ -14,17 +14,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   let(:refusals) { [] }
 
   let(:engine) do
-    Migrations::Converters::MarkdownEngine::Context.new(
-      bundle: Migrations::Converters::MarkdownEngine::Bundle.load_or_build,
-      config:
-        Migrations::Converters::MarkdownEngine::Config.new(
-          source_settings: {
-            "unicode_usernames" => true,
-          },
-          category_slugs:,
-          tag_names:,
-          custom_emoji_names:,
-        ),
+    MarkdownEngineHelper.context_for(
+      category_slugs:,
+      tag_names:,
+      custom_emoji_names:,
+      settings: {
+        "unicode_usernames" => true,
+      },
     )
   end
 
@@ -39,8 +35,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       on_engine_refusal: ->(cause) { refusals << cause },
     )
   end
-
-  after { engine.close }
 
   describe "code shielding through the real parse" do
     it "replaces the prose mention and leaves the code-span one alone" do
@@ -59,14 +53,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to start_with(buffer.mentions.first[:placeholder])
     end
 
-    it "refuses when the same name sits ambiguously in one block" do
-      raw = "`@alice` and @alice"
-      output = extract(raw)
+    it "proves the prose copy by trial when the same name also sits in a code span" do
+      output = extract("`@alice` and @alice")
 
-      expect(output).to eq(raw)
-      expect(buffer.mentions).to be_empty
-      expect(refusals).to eq(%i[count_mismatch])
-      expect(extractor.engine_refusals).to eq(count_mismatch: 1)
+      # Count certification cannot split the pair, but the trial pass proves
+      # the prose occurrence positionally: substituting it removes a mention
+      # from the parse, substituting the code-span copy removes nothing.
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to eq("`@alice` and #{buffer.mentions.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "proves every prose copy when several are mixed with a code-span copy" do
+      # Three raw occurrences against two engine mentions: certification
+      # refuses, trial proves exactly the two prose ones, and every construct
+      # the engine reported is then placed — nothing stays on the tally.
+      output = extract("@alice, `@alice` and @alice")
+
+      expect(buffer.mentions.size).to eq(2)
+      expect(output).to include("`@alice`")
+      expect(refusals).to be_empty
+      expect(extractor.engine_refusals).to be_empty
     end
   end
 
@@ -177,20 +184,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
-    it "refuses a body with a construct-capable entity near a construct" do
-      raw = "@alice and &#64;bob `x`"
-      output = extract(raw)
+    it "extracts the literal mention and keeps the entity-spelled one on the tally" do
+      output = extract("@alice and &#64;bob `x`")
 
-      expect(output).to eq(raw)
+      # The engine decodes `&#64;bob` into a mention no literal byte sequence
+      # spells, so no trial can prove it — it stays verbatim and keeps the
+      # body's cause. The literal mention next to it is proven by trial and
+      # extracted anyway.
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include("&#64;bob")
+      expect(output).to start_with(buffer.mentions.first[:placeholder])
       expect(refusals).to eq(%i[entity])
     end
 
-    it "refuses CR line endings" do
-      raw = "@alice\r\nhello `x`"
-      output = extract(raw)
+    it "extracts from CR line endings through the map-free trial" do
+      output = extract("@alice\r\nhello `x`")
 
-      expect(output).to eq(raw)
-      expect(refusals).to eq(%i[cr_line_endings])
+      # Count certification cannot index a CR body (markdown-it normalizes CR
+      # away before its line maps), but the trial's token-delta proof needs no
+      # maps at all.
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to eq("#{buffer.mentions.first[:placeholder]}\r\nhello `x`")
+      expect(refusals).to be_empty
     end
   end
 end

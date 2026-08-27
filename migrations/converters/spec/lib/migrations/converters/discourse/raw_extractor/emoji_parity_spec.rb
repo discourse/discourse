@@ -79,6 +79,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     }.merge(ascii_punctuation)
   end
 
+  def markdown_engine_for(name)
+    MarkdownEngineHelper.context_for_names(hashtag_names: [], custom_emoji_names: [name])
+  end
+
   def detector_extracts?(raw, name = "parrot")
     buffer =
       Migrations::Converters::EmbedBuffer.new(
@@ -86,6 +90,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       )
     described_class.new(
       embeds: buffer,
+      markdown_engine: markdown_engine_for(name),
       mention_names:,
       hashtag_names:,
       custom_emoji_names: [name],

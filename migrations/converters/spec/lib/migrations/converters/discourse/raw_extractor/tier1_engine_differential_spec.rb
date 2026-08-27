@@ -15,7 +15,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   # custom emoji, so the detector needs its names. Defined after the include
   # so this definition is the one in effect.
   let(:extractor) do
-    described_class.new(embeds: buffer, mention_names:, hashtag_names:, custom_emoji_names:)
+    described_class.new(
+      embeds: buffer,
+      mention_names:,
+      hashtag_names:,
+      custom_emoji_names:,
+      markdown_engine:,
+    )
   end
 
   let(:custom_emoji_names) { %w[parrot] }
@@ -23,21 +29,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   let(:tag_names) { %w[release] }
 
   let(:engine) do
-    Migrations::Converters::MarkdownEngine::Context.new(
-      bundle: Migrations::Converters::MarkdownEngine::Bundle.load_or_build,
-      config:
-        Migrations::Converters::MarkdownEngine::Config.new(
-          source_settings: {
-            "unicode_usernames" => true,
-          },
-          category_slugs:,
-          tag_names:,
-          custom_emoji_names:,
-        ),
+    MarkdownEngineHelper.context_for(
+      category_slugs:,
+      tag_names:,
+      custom_emoji_names:,
+      settings: {
+        "unicode_usernames" => true,
+      },
     )
   end
-
-  after { engine.close }
 
   # Bodies must stay inside tier 1: no code, no escapes, no HTML, no link
   # syntax, no CR, no construct-capable entity. A case that drifts out of the

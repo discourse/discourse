@@ -1,0 +1,208 @@
+# frozen_string_literal: true
+
+# The round-trip contract for embeds that carry their verbatim source: a
+# resolution hit rewrites only what resolution changed (a link's destination),
+# and any miss restores the exact source substring — never a canonical
+# approximation that drops titles, spacing, or a suffix the author didn't
+# write.
+RSpec.describe Migrations::Importer::PlaceholderResolver do
+  include_context "with placeholder resolver"
+
+  describe "links with a verbatim source" do
+    def create_link(placeholder_token, original:, **attributes)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        original_markdown: original,
+        **attributes,
+      )
+    end
+
+    it "restores a titled link byte-exact when the target is unmapped" do
+      token = placeholder.mint(:link)
+      original = %{[See](https://old.example.com/t/x/300 "why this matters")}
+      create_link(
+        token,
+        original:,
+        url: "https://old.example.com/t/x/300",
+        text: "See",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{token} y" }])
+
+      expect(resolved[1]).to eq("x #{original} y")
+    end
+
+    it "rewrites only the destination inside a titled link on a hit" do
+      token = placeholder.mint(:link)
+      create_link(
+        token,
+        original: %{[See](https://old.example.com/t/x/300 "why this matters")},
+        url: "https://old.example.com/t/x/300",
+        text: "See",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "x #{token} y" }],
+        )
+
+      expect(resolved[1]).to eq(%{x [See](https://dest.example.com/t/12 "why this matters") y})
+    end
+
+    it "keeps angle brackets and padding around a rewritten destination" do
+      token = placeholder.mint(:link)
+      create_link(
+        token,
+        original: "[x](  <https://old.example.com/t/x/300>  )",
+        url: "https://old.example.com/t/x/300",
+        text: "x",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      expect(resolved[1]).to eq("[x](  <https://dest.example.com/t/12>  )")
+    end
+
+    it "rewrites both spellings of a self-link" do
+      token = placeholder.mint(:link)
+      url = "https://old.example.com/t/x/300"
+      create_link(
+        token,
+        original: "[#{url}](#{url})",
+        url:,
+        text: url,
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      expect(resolved[1]).to eq("[https://dest.example.com/t/12](https://dest.example.com/t/12)")
+    end
+
+    it "restores an external link byte-exact" do
+      token = placeholder.mint(:link)
+      original = %{[docs](https://elsewhere.example.org/page "docs")}
+      create_link(token, original:, url: "https://elsewhere.example.org/page", text: "docs")
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "#{token}" }])
+
+      expect(resolved[1]).to eq(original)
+    end
+  end
+
+  describe "hashtags with a verbatim source" do
+    def create_hashtag(placeholder_token, original:, **attributes)
+      Migrations::Database::IntermediateDB::EmbedHashtag.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        original_markdown: original,
+        **attributes,
+      )
+    end
+
+    it "keeps a bare hashtag bare when the resolved category cannot be rendered" do
+      token = placeholder.mint(:hashtag)
+      # The import resolved a type (mutating hashtag_type) but the destination
+      # map misses: the source never wrote `::category`, so none may appear.
+      create_hashtag(
+        token,
+        original: "#support",
+        name: "support",
+        hashtag_type: hashtag_type::CATEGORY,
+        target_id: 7,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "see #{token}" }])
+
+      expect(resolved[1]).to eq("see #support")
+    end
+
+    it "restores a source-written suffix exactly on a miss" do
+      token = placeholder.mint(:hashtag)
+      create_hashtag(
+        token,
+        original: "#support::tag",
+        name: "support",
+        hashtag_type: hashtag_type::TAG,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "#{token}" }])
+
+      expect(resolved[1]).to eq("#support::tag")
+    end
+  end
+
+  describe "quotes with a verbatim source" do
+    def create_quote(placeholder_token, original:, **attributes)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        original_markdown: original,
+        **attributes,
+      )
+    end
+
+    it "restores the exact opening tag when nothing resolved" do
+      token = placeholder.mint(:quote)
+      # Header parameters the reference columns don't model survive a miss.
+      original = "[quote=bob, custom:keep-me]"
+      create_quote(token, original:, quoted_username: "bob")
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "#{token}\ntext\n[/quote]" }])
+
+      expect(resolved[1]).to eq("#{original}\ntext\n[/quote]")
+    end
+
+    it "rebuilds canonically once the quoted user resolved" do
+      token = placeholder.mint(:quote)
+      create_quote(token, original: %{[QUOTE="bob"]}, quoted_user_id: 5, quoted_username: "bob")
+
+      maps = FakePlaceholderMaps.new(user: { 5 => { username: "robert" } })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      expect(resolved[1]).to eq(%{[quote="robert"]})
+    end
+  end
+
+  describe "uploads with a verbatim source" do
+    it "restores the exact source markup when the upload is unmapped" do
+      token = placeholder.mint(:upload)
+      original = "![shot|690x388](upload://abcdef.png)"
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: token,
+        upload_id: "abcdef",
+        original_markdown: original,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "#{token}" }])
+
+      expect(resolved[1]).to eq(original)
+      expect(resolver.unresolved_embeds.map(&:kind)).to eq(%i[upload])
+    end
+  end
+end

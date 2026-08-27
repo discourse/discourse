@@ -7,6 +7,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        markdown_engine:,
         mention_names:,
         hashtag_names:,
         internal_link_hosts: {
@@ -66,6 +67,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       no_host =
         described_class.new(
           embeds: buffer,
+          markdown_engine:,
           mention_names:,
           hashtag_names:,
           on_foreign_host: ->(host) { foreign_hosts << host },
@@ -79,6 +81,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       plain =
         described_class.new(
           embeds: buffer,
+          markdown_engine:,
           mention_names:,
           hashtag_names:,
           internal_link_hosts: {

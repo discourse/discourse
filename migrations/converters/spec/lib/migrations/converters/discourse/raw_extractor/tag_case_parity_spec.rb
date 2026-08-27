@@ -24,6 +24,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   end
 
   let(:hashtag_names) { Migrations::CompactStringSet.new([]) }
+  let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: []) }
 
   # Constructs whose content core treats as code: the sentinel mention must
   # survive cooking as plain text, and we must leave the body alone.
@@ -65,7 +66,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    result = described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
+    result =
+      described_class.new(embeds: buffer, mention_names:, hashtag_names:, markdown_engine:).extract(
+        raw,
+      )
     [buffer, result]
   end
 

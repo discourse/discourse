@@ -238,6 +238,16 @@ module Migrations
               )
             end
 
+            # For the engine tier, which filters URL values before any detector
+            # runs and so never reaches `build` for a foreign link: the same
+            # once-per-host signal for an absolute URL whose host isn't
+            # configured.
+            def note_foreign_url(url)
+              host, rest = split_host(url)
+              note_foreign_host(host, rest) if host && rest && !@hosts.key?(host)
+            end
+            public :note_foreign_url
+
             def build(pos, match, url:, text:, allow_relative:)
               host, rest = split_host(url)
               return nil unless rest
