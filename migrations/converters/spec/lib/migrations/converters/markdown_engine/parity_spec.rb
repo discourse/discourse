@@ -150,4 +150,30 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
     expect(bundle::BUNDLED_DISCOURSE_MODULES).to eq(PrettyText::BUNDLED_DISCOURSE_MODULES)
     expect(bundle::CORE_BUNDLE_GLOBS).to eq(PrettyText::CORE_BUNDLE.dependency_globs)
   end
+
+  # `Bundle` still transpiles plugin markdown features per file through
+  # `AssetProcessor`, which is the only reason a cold build boots in-process
+  # V8 and therefore runs in a throwaway subprocess. The day the host
+  # precompiles plugin features itself, all of that can be deleted — this
+  # canary exists because nothing else would fail on that day: our per-file
+  # path would keep producing identical output indefinitely.
+  it "still has to transpile plugin markdown features itself" do
+    plugin_bundles =
+      PrettyText.constants.filter_map do |name|
+        constant = PrettyText.const_get(name)
+        constant if constant.is_a?(PrecompiledBundle)
+      end
+
+    # Plugin markdown features live under `plugins/*/…/discourse-markdown/`;
+    # the core `discourse-markdown-it` sources deliberately don't match.
+    plugin_globs =
+      plugin_bundles
+        .flat_map(&:dependency_globs)
+        .select { |glob| glob.include?("/discourse-markdown/") || glob.start_with?("plugins/") }
+
+    expect(plugin_globs).to be_empty,
+    "a PrettyText bundle now covers plugin markdown (#{plugin_globs.inspect}) — " \
+      "the engine Bundle's per-file plugin transpiles, build_in_subprocess, and " \
+      "the V8 half of HostShims can likely be deleted in favor of it"
+  end
 end
