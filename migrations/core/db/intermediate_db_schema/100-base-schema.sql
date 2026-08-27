@@ -153,6 +153,7 @@ CREATE INDEX idx_embed_hashtags_owner_type_owner_id ON embed_hashtags (owner_typ
 
 CREATE TABLE embed_links
 (
+    label_url_offset   INTEGER,
     original_markdown  TEXT,
     owner_id           NUMERIC      NOT NULL,
     owner_type         ENUM_INTEGER NOT NULL,
@@ -164,7 +165,8 @@ CREATE TABLE embed_links
     target_topic_id    NUMERIC,
     target_type        ENUM_INTEGER,
     text               TEXT,
-    url                TEXT
+    url                TEXT,
+    url_offset         INTEGER
 );
 
 CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, owner_id);

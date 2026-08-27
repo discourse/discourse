@@ -56,6 +56,13 @@ Migrations::Tooling::Schema.table :embed_links do
   # The verbatim source snippet, restored unchanged when the importer cannot
   # map the embed to a destination record (the round-trip fallback).
   add_column :original_markdown, :text
+  # The destination's byte offset within `original_markdown` (the span is
+  # `url`'s byte length): on a hit the importer rewrites exactly that span, so
+  # the same URL repeated in a link title stays the author's text. A self-link
+  # whose label spells the destination too records the label's spelling at
+  # `label_url_offset`, rewritten alongside.
+  add_column :url_offset, :integer
+  add_column :label_url_offset, :integer
 
   index :owner_type, :owner_id
 end

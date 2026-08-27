@@ -12,6 +12,8 @@ module Migrations
           # Everything reads `@input`, `@line_starts` and `@scanner`, which the
           # including pass sets up.
           module Locating
+            include Detectors::Boundaries
+
             # A certified raw occurrence: where it starts and how many bytes
             # the certified reading spans there (an alternate URL reading can
             # differ in length from the engine's value).
@@ -171,6 +173,28 @@ module Migrations
               # odd byte literal, the way core will re-linkify both after
               # resolution.
               detector_match_at(offset, occurrence, allow_prefix: true)
+            end
+
+            # A proven occurrence that is its own whole construct: a bare
+            # schemeless domain (linkify links it, but no detector grammar has
+            # a byte to trigger on) or a reference definition's destination.
+            # The engine's href carries the scheme the route parses from; the
+            # span replaced is exactly the raw spelling. The proof came from
+            # certification or a trial, so "is this really a link here?" is
+            # already answered — only the linkify opening boundary is
+            # re-checked, mirroring what core requires ahead of a bare URL.
+            def bare_value_match(value, occurrence)
+              return nil unless bare_url_boundary_before?(@input, occurrence.offset)
+
+              raw_spelling = @input.byteslice(occurrence.offset, occurrence.length)
+              node = @scanner.bare_url_node(route_url: value, url: raw_spelling)
+              return nil if node.nil?
+
+              Detectors::Match.new(
+                start_pos: occurrence.offset,
+                end_pos: occurrence.offset + occurrence.length,
+                node:,
+              )
             end
 
             def detector_match_at(anchor, occurrence, allow_prefix: false)

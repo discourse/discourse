@@ -18,6 +18,15 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
     context.scan([{ id: 1, raw: }]).first
   end
 
+  it "rebuilds lazily after a reset" do
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+
+    context.reset!
+    # The engine failure that triggered the reset cost its body; the next
+    # body gets a fresh context transparently.
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+  end
+
   it "extracts mentions with the block's line map" do
     result = scan_one("a paragraph\n\nwith @sam here")
     expect(result["blocks"]).to contain_exactly(

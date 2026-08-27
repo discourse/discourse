@@ -33,6 +33,13 @@ module Migrations
             # keeps its tail unproven rather than buying hundreds of parses.
             MAX_TRIALS = 48
 
+            # Elapsed ceiling across a body's trials. The parse count alone
+            # does not bound work — one adversarial body can drive every parse
+            # toward the context timeout — so the wall clock cuts in first and
+            # the tail stays unproven. A normal trial parses in well under a
+            # millisecond; only a body that is already pathological gets here.
+            TRIAL_SECONDS_BUDGET = 10.0
+
             Candidate = Data.define(:kind, :key, :text, :occurrence)
             private_constant :Candidate
 
@@ -42,6 +49,8 @@ module Migrations
               @data = data
               @cause = cause
               @trials = 0
+              @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+              @limit_hit = nil
               build_line_index
             end
 
@@ -54,19 +63,19 @@ module Migrations
               proven = 0
               expected.each do |entry|
                 candidates_for(entry).each do |candidate|
-                  next unless prove(base, candidate, marker)
+                  next unless prove(base, candidate, marker) == :proven
                   proven += 1 if place(candidate, spans)
                 end
               end
-              prove_quotes(base, marker, spans)
+              unproven_quotes = prove_quotes(base, marker, spans)
 
               ordered, dropped = without_overlaps(spans.values.sort_by(&:start_pos))
               proven -= dropped
-              unproven = expected.sum { |entry| entry[:count] } - proven
+              unproven = expected.sum { |entry| entry[:count] } - proven + unproven_quotes
 
               Result.new(
                 output: ordered.empty? ? @input : splice(ordered),
-                cause: unproven > 0 ? @cause : nil,
+                cause: unproven > 0 ? (@limit_hit || @cause) : nil,
               )
             end
 
@@ -145,8 +154,23 @@ module Migrations
             # word). Anything else — a block appearing or vanishing, a
             # previously suppressed construct surfacing, the code-span count
             # moving — fails the proof.
+            #
+            # The outcome distinguishes why: `:not_construct` (the delta was
+            # empty — the occurrence provably is not a live construct here, so
+            # skipping it is exact, not a failure), `:mismatch` (the delta was
+            # wrong in some other way), and `:limit`/`:budget` when no trial
+            # ran at all. The distinction is what lets a caller count real
+            # unproven constructs without counting shielded look-alikes.
             def prove(base, candidate, marker)
-              return false if (@trials += 1) > MAX_TRIALS
+              elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
+              if elapsed > TRIAL_SECONDS_BUDGET
+                @limit_hit = :trial_budget
+                return :budget
+              end
+              if (@trials += 1) > MAX_TRIALS
+                @limit_hit ||= :trial_limit
+                return :limit
+              end
 
               occurrence = candidate.occurrence
               trial_body =
@@ -155,12 +179,14 @@ module Migrations
               trial = construct_multiset(@scanner.engine.scan([{ id: nil, raw: trial_body }]).first)
 
               removed = diff(base, trial)
-              return false if removed != { candidate.key => 1 }
+              added = diff(trial, base)
+              return :not_construct if removed.empty? && added.empty?
+              return :mismatch if removed != { candidate.key => 1 }
 
-              diff(trial, base).each_key do |key|
-                return false unless key.is_a?(Array) && key[1].to_s.include?(marker)
+              added.each_key do |key|
+                return :mismatch unless key.is_a?(Array) && key[1].to_s.include?(marker)
               end
-              true
+              :proven
             end
 
             def diff(left, right)
@@ -173,35 +199,41 @@ module Migrations
             def place(candidate, spans)
               match =
                 if candidate.kind == :url
-                  anchor_match(candidate.occurrence)
+                  anchor_match(candidate.occurrence) ||
+                    bare_value_match(candidate.key[1], candidate.occurrence)
                 else
                   probe_match(candidate.kind, candidate.text, candidate.occurrence.offset)
                 end
 
-              if match.nil?
-                # Position proven but no detector grammar takes the construct
-                # whole — verbatim like the certification pass's unanchored
-                # links, and still counted as handled: its value cannot be
-                # remapped by any pass.
-                candidate.kind == :url
-              else
-                spans[[match.start_pos, match.end_pos]] ||= match
-                true
-              end
+              # Position proven but nothing can take the construct whole (an
+              # escaped-bracket label, a form beyond the pattern caps): it
+              # stays verbatim AND unproven — a stale reference the caller
+              # must hear about, not a silent success.
+              return false if match.nil?
+
+              spans[[match.start_pos, match.end_pos]] ||= match
+              true
             end
 
             # Quote openers: the target delta is one `blockquote` bbcode block
             # disappearing. The opener's span comes from the header grammar
-            # itself; a header that parses to nothing remappable is skipped —
-            # nothing to extract, nothing to count.
+            # itself. Returns how many openers stay unproven-but-remappable: a
+            # header the grammar cannot take, a failed or budgeted trial. A
+            # header that parses but carries no username has nothing to remap
+            # and a trial proving "not a live construct" (a `[quote=` inside a
+            # code fence) is an exact skip — neither counts.
             def prove_quotes(base, marker, spans)
-              return if base.fetch([:block, "bbcode_open", "blockquote"], 0) == 0
+              return 0 if base.fetch([:block, "bbcode_open", "blockquote"], 0) == 0
 
+              unproven = 0
               pos = 0
               while (offset = @input.byteindex(/\[quote=/i, pos))
                 pos = offset + 1
                 match = @scanner.quote_detector.detect_block_opener(@input, offset)
-                next if match.nil?
+                if match.nil?
+                  unproven += 1 unless @scanner.quote_detector.parseable_opener?(@input, offset)
+                  next
+                end
 
                 candidate =
                   Candidate.new(
@@ -214,8 +246,16 @@ module Migrations
                         length: match.end_pos - match.start_pos,
                       ),
                   )
-                spans[[match.start_pos, match.end_pos]] ||= match if prove(base, candidate, marker)
+
+                outcome = prove(base, candidate, marker)
+                if outcome == :proven
+                  spans[[match.start_pos, match.end_pos]] ||= match
+                elsif outcome != :not_construct
+                  unproven += 1
+                end
               end
+
+              unproven
             end
 
             # Distinct proven spans that overlap (two anchors claiming the same

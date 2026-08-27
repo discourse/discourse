@@ -75,11 +75,15 @@ inside.
   constants are absent, so a booted application (the parity specs) is
   untouched. One ordering constraint: `discourse-emojis` gates its railtie on
   `defined?(Rails)`, so the gem must load before the `Rails` stand-in exists.
-- The bundle is built **once in the parent process** before workers fork and
-  cached on disk under `tmp/` keyed by a digest of the input files (same
-  pattern as `AssetProcessor`'s own cache). Workers never transpile; they only
-  `eval` cached sources. Cold builds therefore need node once per checkout
-  state; warm runs need nothing.
+- The bundle is cached on disk under `tmp/` keyed by a digest of the input
+  files (same pattern as `AssetProcessor`'s own cache), written via lock +
+  temp file + atomic rename, and a cold build runs in a **throwaway
+  subprocess**: transpiling boots `AssetProcessor`'s V8, and multithreaded V8
+  is not fork-safe — the converter parent forks workers, so it must never
+  hold V8 state (nor the host stand-ins the transpiler needs). The parent
+  only computes the digest and reads JSON; workers only `eval` cached
+  sources. Cold builds therefore need node once per checkout state; warm
+  runs need nothing.
 - Plugin features: the bundle includes the markdown features of the
   **core-bundled plugins** — the explicit list is `chat`, `checklist`,
   `discourse-details`, `discourse-local-dates`, `footnote`, `poll`,

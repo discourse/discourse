@@ -163,16 +163,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
-    it "leaves a link form no detector grammar takes verbatim without refusing the body" do
+    it "refuses a recognized link no grammar can take, instead of calling it handled" do
       # CommonMark allows an escaped `]` inside a label; the detector grammar
       # does not, so the certified destination cannot be anchored to a node.
+      # The reference is real and stays stale — that must land on the
+      # must-resolve tally, never report as success. The mention beside it is
+      # still extracted.
       raw = "@alice sees [a \\] b](https://forum.example.com/t/slug/5) `y`"
       output = extract(raw)
 
       expect(buffer.links).to be_empty
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include("[a \\] b](https://forum.example.com/t/slug/5)")
-      expect(refusals).to be_empty
+      expect(refusals).to eq(%i[unanchored])
     end
 
     it "leaves an external link untouched" do
@@ -206,6 +209,136 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to eq("#{buffer.mentions.first[:placeholder]}\r\nhello `x`")
       expect(refusals).to be_empty
+    end
+  end
+
+  describe "soundness regressions" do
+    it "rewrites the prose spelling, not an equivalent spelling inside code" do
+      # The engine links the schemeless prose URL and normalizes its href to
+      # the scheme-ful form — which happens to sit inside the code span. A
+      # per-reading count would certify the code span and corrupt it; the
+      # span union counts both spellings and the trial proves only the prose
+      # one is live.
+      raw = "`http://forum.example.com/t/slug/5` and forum.example.com/t/slug/5"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(
+        url: "forum.example.com/t/slug/5",
+        target_id: 5,
+        original_markdown: "forum.example.com/t/slug/5",
+      )
+      expect(output).to start_with("`http://forum.example.com/t/slug/5` and ")
+      expect(output).to end_with(buffer.links.first[:placeholder])
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites a relative reference definition" do
+      raw = "see [old topic][1] `x`\n\n[1]: /t/slug/5\n"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(url: "/t/slug/5", target_id: 5)
+      expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "reports quote headers beyond the trial budget instead of calling them handled" do
+      # CR endings force every quote onto the trial path; two more quotes
+      # than MAX_TRIALS leaves two headers stale, which must show up on the
+      # tally rather than reading as a fully handled body.
+      quotes = (1..50).map { |i| "[quote=\"alice, post:#{i}, topic:9\"]\r\nbody #{i}\r\n[/quote]" }
+      output = extract(quotes.join("\r\n"))
+
+      expect(buffer.quotes.size).to eq(48)
+      expect(output.scan(/\[quote=/).size).to eq(2)
+      expect(refusals).to eq(%i[trial_limit])
+    end
+
+    it "keeps a non-default port as part of the host identity, scheme-aware" do
+      raw = [
+        "on `x`:",
+        "https://forum.example.com:80/t/slug/5",
+        "http://forum.example.com:443/t/slug/5",
+        "//forum.example.com:8443/t/slug/5 done",
+      ].join("\n")
+      output = extract(raw)
+
+      # `:80` is only default for http and `:443` only for https; a
+      # protocol-relative URL has no scheme to default from. None of these
+      # origins is the configured host, so none is a construct — and none is
+      # a refusal either, external links never are.
+      expect(buffer.links).to be_empty
+      expect(output).to eq(raw)
+      expect(refusals).to be_empty
+    end
+
+    context "with a subdirectory install" do
+      let(:internal_link_hosts) { { "forum.example.com" => "/forum" } }
+
+      it "tracks only paths inside the host's prefix" do
+        raw =
+          "`x` [a](https://forum.example.com/other/page) " \
+            "and https://forum.example.com/forum/t/slug/5"
+        output = extract(raw)
+
+        # The sibling app's path is not the forum's; it must neither be
+        # rewritten nor refused, while the in-prefix URL resolves normally.
+        expect(buffer.links.size).to eq(1)
+        expect(buffer.links.first).to include(target_id: 5)
+        expect(output).to include("[a](https://forum.example.com/other/page)")
+        expect(refusals).to be_empty
+      end
+    end
+
+    it "scrubs invalid bytes instead of raising, once, at the top" do
+      raw = "\xFF @alice `x`".dup.force_encoding(Encoding::UTF_8)
+      output = extract(raw)
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to start_with("� ")
+      expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+
+    it "records the destination span so resolution never touches a title" do
+      extract(
+        %{[docs](https://forum.example.com/t/slug/5 "see https://forum.example.com/t/slug/5") `x`},
+      )
+
+      row = buffer.links.first
+      # The span points at the destination; the same URL inside the title is
+      # outside it, so the importer's span rewrite cannot reach it.
+      expect(row[:url_offset]).to eq("[docs](".bytesize)
+      expect(row[:label_url_offset]).to be_nil
+    end
+
+    it "records the label span of a self-link" do
+      extract("[https://forum.example.com/t/slug/5](https://forum.example.com/t/slug/5) `x`")
+
+      row = buffer.links.first
+      expect(row[:label_url_offset]).to eq(1)
+      expect(row[:url_offset]).to eq("[https://forum.example.com/t/slug/5](".bytesize)
+    end
+
+    it "costs a per-input engine failure one body, not the conversion" do
+      failing_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(failing_engine).to receive(:scan).and_raise(
+        MiniRacer::ScriptTerminatedError,
+        "JavaScript was terminated",
+      )
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: failing_engine,
+          on_engine_refusal: ->(cause) { refusals << cause },
+        )
+
+      raw = "@alice `x`"
+      expect(extractor.extract(raw)).to eq(raw)
+      expect(refusals).to eq(%i[engine_error])
+      expect(failing_engine).to have_received(:reset!)
     end
   end
 end

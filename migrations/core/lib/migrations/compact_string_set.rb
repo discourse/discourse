@@ -65,8 +65,13 @@ module Migrations
       table = empty_table(@capacity)
 
       names.each do |name|
+        # Membership before growth: a duplicate arriving exactly at the
+        # threshold must not double the table for nothing (growth rehashes
+        # every slot, so it can only happen before the new member's probe).
+        next if build_member?(table, buffer, offsets, name)
+
         table = grow(table, buffer, offsets) if @count >= @capacity * MAX_LOAD
-        insert(table, buffer, offsets, name)
+        claim_absent(table, buffer, offsets, name)
       end
 
       @table = exact_copy(table, Encoding::BINARY)
@@ -129,27 +134,33 @@ module Migrations
         (string.getbyte(byte_offset + 2) << 16) | (string.getbyte(byte_offset + 3) << 24)
     end
 
-    def insert(table, buffer, offsets, name)
+    def build_member?(table, buffer, offsets, name)
       hash = name.hash
       fingerprint = fingerprint_for(hash)
       index = hash & @mask
 
       loop do
         stored, member = slot(table, index)
-
-        if stored == EMPTY
-          claim(table, index, fingerprint, buffer, offsets, name)
-          return
-        end
+        return false if stored == EMPTY
 
         if stored == fingerprint
           start = offsets.unpack1("V", offset: member * 4)
           finish = offsets.unpack1("V", offset: (member + 1) * 4)
-          return if buffer.byteslice(start, finish - start) == name
+          return true if buffer.byteslice(start, finish - start) == name
         end
 
         index = (index + 1) & @mask
       end
+    end
+
+    # Probes to the first empty slot and claims it; the caller established the
+    # name is absent, so no equality checks are needed on the way.
+    def claim_absent(table, buffer, offsets, name)
+      hash = name.hash
+      index = hash & @mask
+      index = (index + 1) & @mask while slot(table, index).first != EMPTY
+
+      claim(table, index, fingerprint_for(hash), buffer, offsets, name)
     end
 
     def claim(table, index, fingerprint, buffer, offsets, name)

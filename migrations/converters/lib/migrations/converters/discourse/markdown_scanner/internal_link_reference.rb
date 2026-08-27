@@ -26,6 +26,13 @@ module Migrations
         # route (a real page like `/faq`, or junk). None of the addressing fields are
         # filled; `target_suffix` carries the whole path/query/fragment (after any host
         # prefix), and the importer renders the destination base URL plus that suffix.
+        #
+        # `url_offset` is the destination's byte offset within the verbatim source
+        # snippet, and `label_url_offset` the offset of a self-link label spelling
+        # the same destination (nil otherwise); both spans are `url.bytesize` long.
+        # The importer rewrites exactly these spans — inferring them at import by
+        # value search would also rewrite the URL wherever else the author typed it
+        # (a link title, for one).
         InternalLinkReference =
           Data.define(
             :url,
@@ -36,6 +43,8 @@ module Migrations
             :target_topic_id,
             :target_post_number,
             :target_suffix,
+            :url_offset,
+            :label_url_offset,
           )
       end
     end

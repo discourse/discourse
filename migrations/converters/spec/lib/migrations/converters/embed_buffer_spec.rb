@@ -51,6 +51,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::TOPIC,
           target_id: 9,
           original_markdown: "[here](https://example.com)",
+          url_offset: 7,
         )
 
       expect(buffer.links).to contain_exactly(
@@ -65,6 +66,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           target_post_number: nil,
           target_suffix: nil,
           original_markdown: "[here](https://example.com)",
+          url_offset: 7,
+          label_url_offset: nil,
         },
       )
     end

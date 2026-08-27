@@ -21,16 +21,24 @@ fail-closed:
   `RawExtractor#engine_refusals`: the conversion's must-resolve list.
   Measured on a real corpus, certification alone already left well under 1%
   of engine-tier bodies; the trial pass reduces that further.
-- **Unanchored link forms stay verbatim, without a refusal.** A proven
-  destination whose surrounding syntax the detector grammar cannot take whole
-  (a label with an escaped `]`, a destination beyond the pattern caps) keeps
-  its source text; other constructs in the same body are still extracted.
-- **Bare schemeless-domain links** (`forum.example.com/t/5`, which linkify
-  links in core) are recognized by the engine but have no syntax anchor a
-  detector can take, so they stay verbatim.
-- **Trial budget** — a body gets at most 48 trial parses; occurrences beyond
-  the budget stay unproven. Only a generated body full of duplicated tracked
-  values can reach it.
+- **Unanchored link forms stay verbatim and count as refusals.** A proven
+  destination whose surrounding syntax no grammar can take whole (a label
+  with an escaped `]`, a construct beyond the pattern caps) keeps its source
+  text and puts the body on the tally (`:unanchored`); other constructs in
+  the same body are still extracted. A destination that is its own syntax —
+  a bare schemeless domain linkify links, a reference definition's URL — is
+  rewritten in place, not refused.
+- **A quote header the grammar cannot parse** (beyond the header cap,
+  malformed) counts as a refusal too; a header that parses but carries no
+  username has nothing to remap and is skipped exactly.
+- **Trial budgets** — a body gets at most 48 trial parses and a bounded
+  amount of trial wall-clock; occurrences beyond either stay unproven and
+  the body reports `:trial_limit` / `:trial_budget`. Only a body full of
+  duplicated tracked values (or one that is already pathological to parse)
+  can reach them.
+- **A per-body engine failure** (a parse timeout, a JS exception some body
+  triggers) leaves that body verbatim on the tally (`:engine_error`) and the
+  engine context is rebuilt for the next body.
 - **Pattern caps** — the detector patterns that parse a proven construct's
   syntax cap their runs (link labels at CommonMark's 999 characters,
   destinations and bare URLs at 2 KiB, quote headers at 512 bytes) so a body

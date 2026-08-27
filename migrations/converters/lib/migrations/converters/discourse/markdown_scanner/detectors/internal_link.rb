@@ -126,22 +126,6 @@ module Migrations
             BARE = /\G(?<url>#{ABSOLUTE}|#{RELATIVE})/
             private_constant :BARE
 
-            # Splits a URL into its host (nil when relative) and the rest — the path,
-            # query and fragment, starting at whichever of `/`, `?` or `#` comes
-            # first. A protocol-relative `//host` and an explicit `http(s)://host`
-            # both yield the host; a leading `/` (but not `//`) is relative. The host
-            # stops at `?` and `#` so `https://host?ref=x` is the site root with a
-            # query, not a host with a `?` in its name. Anything the pattern can't
-            # take whole (`mailto:…`, a bare word) isn't an internal link.
-            SPLIT = %r{\A(?:(?i:https?:)?//(?<host>[^/?\#]+))?(?<rest>[/?\#]\S*)?\z}
-            private_constant :SPLIT
-
-            # A real segment boundary right after a host prefix: the remainder begins a
-            # new path segment (`/`), the query (`?`) or the fragment (`#`). This keeps
-            # `/forum` from matching inside `/forumxyz`.
-            PREFIX_BOUNDARY = %r{\A[/?#]}
-            private_constant :PREFIX_BOUNDARY
-
             # @param hosts [Hash{String => (String, nil)}] the source's own hosts (base
             #   URL plus former domains), each downcased and mapped to its path prefix
             #   (`"/forum"` for a subfolder install, `nil` for a root install). An
@@ -211,6 +195,28 @@ module Migrations
               build(pos, match, url: match[:url], text: match[:text], allow_relative: true)
             end
 
+            # The destination's byte offset within the matched construct, and —
+            # when the label spells the destination too (a self-link written as
+            # `[url](url)`) — that spelling's offset. The importer rewrites
+            # exactly these spans inside the verbatim source, so a URL the
+            # author repeated in a link title stays the author's text. An
+            # ambiguous label (the destination appearing twice) records no
+            # label span: better to leave a label untouched than guess.
+            def destination_spans(pos, match, url)
+              url_offset = match.byteoffset(:url).first - pos
+
+              label_offset = nil
+              # The bare pattern has no text group at all, so guard by name.
+              if match.names.include?("text") && (text = match[:text])
+                index = text.byteindex(url)
+                if index && text.byteindex(url, index + 1).nil?
+                  label_offset = (match.byteoffset(:text).first - pos) + index
+                end
+              end
+
+              [url_offset, label_offset]
+            end
+
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
             # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
             # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
@@ -270,28 +276,57 @@ module Migrations
               path = strip_prefix(rest, prefix)
               return nil if path.nil?
 
-              node = route_or_site_node(url:, text:, path:, host:)
+              url_offset, label_url_offset = destination_spans(pos, match, url)
+              node = route_or_site_node(url:, text:, path:, host:, url_offset:, label_url_offset:)
               return nil unless node
 
               Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
 
+            # A reference for a URL whose position the engine tier already
+            # proved but whose surrounding bytes are the URL itself (a bare
+            # schemeless domain linkify links, a reference definition's
+            # destination). `route_url` is the engine's href — the spelling the
+            # route parses from; `url` is the raw spelling, stored as the
+            # fallback and the whole construct (so its destination span is the
+            # entire snippet). The value was tracked before this is called, so
+            # no foreign-host signal fires here.
+            def reference_for(route_url:, url:, text: nil)
+              host, rest = split_host(route_url)
+              return nil unless rest
+              prefix = host ? @hosts[host] : @base_prefix
+              return nil if host && !@hosts.key?(host)
+
+              path = strip_prefix(rest, prefix)
+              return nil if path.nil?
+
+              route_or_site_node(url:, text:, path:, host:, url_offset: 0, label_url_offset: nil)
+            end
+            public :reference_for
+
             # A resolved route builds a typed target; an absolute internal URL with no
             # route builds a `:site` target (origin-only rewrite). A relative route-less
             # URL is domain-free and already correct on the destination, so it stays
             # literal (nil node).
-            def route_or_site_node(url:, text:, path:, host:)
+            def route_or_site_node(url:, text:, path:, host:, url_offset:, label_url_offset:)
               if (target = RouteParser.parse(path))
                 # `path` is the extracted URL's own string (character domain), so the
                 # suffix is a plain character slice — only the input-domain positions
                 # in the `Match` are byte offsets.
-                target_reference(url:, text:, target:, suffix: path[target[:route_length]..])
+                target_reference(
+                  url:,
+                  text:,
+                  target:,
+                  suffix: path[target[:route_length]..],
+                  url_offset:,
+                  label_url_offset:,
+                )
               elsif host
-                site_reference(url:, text:, suffix: path)
+                site_reference(url:, text:, suffix: path, url_offset:, label_url_offset:)
               end
             end
 
-            def target_reference(url:, text:, target:, suffix:)
+            def target_reference(url:, text:, target:, suffix:, url_offset:, label_url_offset:)
               InternalLinkReference.new(
                 url:,
                 text:,
@@ -301,10 +336,12 @@ module Migrations
                 target_topic_id: target[:target_topic_id],
                 target_post_number: target[:target_post_number],
                 target_suffix: suffix.presence,
+                url_offset:,
+                label_url_offset:,
               )
             end
 
-            def site_reference(url:, text:, suffix:)
+            def site_reference(url:, text:, suffix:, url_offset:, label_url_offset:)
               InternalLinkReference.new(
                 url:,
                 text:,
@@ -314,21 +351,13 @@ module Migrations
                 target_topic_id: nil,
                 target_post_number: nil,
                 target_suffix: suffix.presence,
+                url_offset:,
+                label_url_offset:,
               )
             end
 
-            # The path remainder after the host's prefix, or nil when the URL falls
-            # outside the prefix (it belongs to another app on the same host). A nil
-            # prefix (root install) owns every path, so the whole path is returned. The
-            # prefix must end on a real segment boundary — `/forum/t/…` and `/forum`
-            # itself match, `/forumxyz` does not.
             def strip_prefix(rest, prefix)
-              return rest if prefix.nil?
-              return "" if rest == prefix
-              return nil unless rest.start_with?(prefix)
-
-              remainder = rest[prefix.length..]
-              PREFIX_BOUNDARY.match?(remainder) ? remainder : nil
+              UrlOrigin.path_within_prefix(rest, prefix)
             end
 
             # A foreign host is rejected before routing (the cheap check). Only when
@@ -345,23 +374,8 @@ module Migrations
               @on_foreign_host.call(host)
             end
 
-            # @return [Array(String, String), nil] `[host, rest]` for an internal URL
-            #   shape, else nil. `host` is nil for a relative URL. Only a default
-            #   port is dropped: `example.com:8443` can be a different application
-            #   than `example.com`, so a non-default port stays part of the host
-            #   identity and must appear in the configured host set to match.
             def split_host(url)
-              match = SPLIT.match(url)
-              return nil unless match
-
-              host = match[:host]&.sub(/:(?:80|443)\z/, "")&.downcase
-              rest = match[:rest]
-              # A host with no path at all is the site's front page, and its origin
-              # needs rewriting like any other. Without a host there is nothing to
-              # rewrite, so a URL that is neither stays literal.
-              return nil if host.nil? && rest.nil?
-
-              [host, rest || ""]
+              UrlOrigin.split(url)
             end
           end
         end

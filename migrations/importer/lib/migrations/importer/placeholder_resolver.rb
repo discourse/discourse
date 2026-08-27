@@ -480,13 +480,44 @@ module Migrations
         original = row[:original_markdown]
         if original.present?
           return original if url == row[:url]
-          return original.gsub(row[:url], url) if row[:url].present? && original.include?(row[:url])
+
+          spans = destination_spans(row, original)
+          return splice_url_spans(original, spans, url) if spans
         end
 
         # `presence`: a converter may have recorded an empty text; treat it as
-        # a bare URL rather than rendering `[](url)`.
+        # a bare URL rather than rendering `[](url)`. Also the path for a row
+        # that carries a verbatim snippet but no destination span (a converter
+        # that never recorded one): a value search over the snippet would also
+        # rewrite the URL wherever else the author typed it — a link title,
+        # for one — so the construct is rebuilt canonically instead.
         text = row[:text].presence
         text ? "[#{text}](#{url})" : url.to_s
+      end
+
+      # The destination's recorded byte span(s) inside the verbatim snippet —
+      # the span itself plus a self-link label's spelling when one was
+      # recorded — or nil when the row carries none or a span doesn't fit the
+      # snippet (defensive: a mismatched span must not splice mid-construct).
+      def destination_spans(row, original)
+        offset = row[:url_offset]
+        return nil if offset.nil? || row[:url].blank?
+
+        length = row[:url].bytesize
+        return nil if offset < 0 || offset + length > original.bytesize
+
+        spans = [offset]
+        label = row[:label_url_offset]
+        if label && label != offset && label >= 0 && label + length <= original.bytesize
+          spans << label
+        end
+        spans.sort.map { |span_offset| [span_offset, length] }
+      end
+
+      def splice_url_spans(original, spans, url)
+        result = original.dup
+        spans.reverse_each { |offset, length| result.bytesplice(offset, length, url) }
+        result
       end
 
       # The destination URL for a resolved internal link, or nil on a maps miss (an

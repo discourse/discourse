@@ -13,19 +13,27 @@ module Migrations
         class DiscardedError < StandardError
         end
 
-        # Mirrors PrettyText's context limits.
-        EVAL_TIMEOUT_MS = 25_000
+        # PrettyText allows 25s because it renders; a scan only parses, which
+        # the benchmarks put ~40x cheaper, so a body still running after this
+        # long is a runaway that should cost a refusal, not a half-minute.
+        EVAL_TIMEOUT_MS = 10_000
 
-        def initialize(bundle:, config:)
-          @context = MiniRacer::Context.new(timeout: EVAL_TIMEOUT_MS, ensure_gc_after_idle: 2000)
+        def initialize(bundle:, config:, timeout_ms: EVAL_TIMEOUT_MS)
+          @bundle = bundle
+          @config = config
+          @timeout_ms = timeout_ms
+          @needs_rebuild = false
           @fork_hook = ForkManager.after_fork_child { discard! }
-          evaluate_all(bundle, config)
+          build_context
         end
 
         # @param posts [Array<Hash>] `{ id:, raw: }` per post
         # @return [Array<Hash>] per-post block/construct data from scan.js
         def scan(posts)
-          raise DiscardedError if @context.nil?
+          if @context.nil?
+            raise DiscardedError unless @needs_rebuild
+            build_context
+          end
 
           payload =
             posts.map do |post|
@@ -36,9 +44,20 @@ module Migrations
           @context.call("__scanPosts", payload)
         end
 
+        # Throws the V8 state away after a per-input engine failure (a timeout
+        # can leave arbitrary JS state behind) and rebuilds lazily on the next
+        # scan — the caller keeps one healthy engine without knowing when it
+        # was last replaced.
+        def reset!
+          @context&.dispose
+          @context = nil
+          @needs_rebuild = true
+        end
+
         def close
           @context&.dispose
           @context = nil
+          @needs_rebuild = false
 
           if @fork_hook
             ForkManager.remove_after_fork_child(@fork_hook)
@@ -48,13 +67,21 @@ module Migrations
 
         # Runs in a freshly forked child: the inherited isolate belongs to the
         # parent and must not be used or disposed from here, so only the
-        # reference is dropped. The hook stays registered process-wide and is
-        # cleaned up by `close`.
+        # reference is dropped — no lazy rebuild either, a worker builds its
+        # own context deliberately. The hook stays registered process-wide and
+        # is cleaned up by `close`.
         def discard!
           @context = nil
+          @needs_rebuild = false
         end
 
         private
+
+        def build_context
+          @context = MiniRacer::Context.new(timeout: @timeout_ms, ensure_gc_after_idle: 2000)
+          @needs_rebuild = false
+          evaluate_all(@bundle, @config)
+        end
 
         def evaluate_all(bundle, config)
           # Environment expected by the loaded modules; console output has no

@@ -117,6 +117,12 @@ module Migrations
       #   is rebuilt.
       # @param original_markdown [String, nil] the verbatim source snippet,
       #   restored unchanged when the importer cannot map the embed.
+      # @param url_offset [Integer, nil] the destination's byte offset within
+      #   `original_markdown` (its span is `url.bytesize` long) — the importer
+      #   rewrites exactly that span on a hit, never a value search over the
+      #   snippet (a URL repeated in a link title must stay the author's text).
+      # @param label_url_offset [Integer, nil] the offset of a self-link label
+      #   spelling the destination too, rewritten alongside it; nil otherwise.
       def link(
         url: nil,
         text: nil,
@@ -126,7 +132,9 @@ module Migrations
         target_topic_id: nil,
         target_post_number: nil,
         target_suffix: nil,
-        original_markdown: nil
+        original_markdown: nil,
+        url_offset: nil,
+        label_url_offset: nil
       )
         record(
           @links,
@@ -140,6 +148,8 @@ module Migrations
           target_post_number:,
           target_suffix:,
           original_markdown:,
+          url_offset:,
+          label_url_offset:,
         )
       end
 

@@ -10,6 +10,7 @@ module Migrations
       module EmbedLink
         SQL = <<~SQL
           INSERT INTO embed_links (
+            label_url_offset,
             original_markdown,
             owner_id,
             owner_type,
@@ -21,16 +22,18 @@ module Migrations
             target_topic_id,
             target_type,
             text,
-            url
+            url,
+            url_offset
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_links` record in the IntermediateDB.
         #
+        # @param label_url_offset     [Integer, nil]
         # @param original_markdown    [String, nil]
         # @param owner_id             [Integer, String]
         # @param owner_type           [Integer]
@@ -45,12 +48,14 @@ module Migrations
         #   Any constant from LinkTarget (e.g. LinkTarget::TOPIC)
         # @param text                 [String, nil]
         # @param url                  [String, nil]
+        # @param url_offset           [Integer, nil]
         #
         # @return [void]
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         # @see Migrations::Database::IntermediateDB::Enums::LinkTarget
         def self.create(
+          label_url_offset: nil,
           original_markdown: nil,
           owner_id:,
           owner_type:,
@@ -62,10 +67,12 @@ module Migrations
           target_topic_id: nil,
           target_type: nil,
           text: nil,
-          url: nil
+          url: nil,
+          url_offset: nil
         )
           Migrations::Database::IntermediateDB.insert(
             SQL,
+            label_url_offset,
             original_markdown,
             owner_id,
             owner_type,
@@ -78,6 +85,7 @@ module Migrations
             target_type,
             text,
             url,
+            url_offset,
           )
         end
       end

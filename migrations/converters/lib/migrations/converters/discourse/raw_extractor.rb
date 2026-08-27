@@ -163,15 +163,28 @@ module Migrations
         #   used to complete a quote reference that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
+        #   Invalid bytes are scrubbed first (and non-UTF-8 encodings converted), and
+        #   the returned body is built from that normalized string: the gate, the
+        #   engine and every byte offset must all read the same bytes, so exactly one
+        #   normalization happens, here at the top.
         def extract(raw, topic_id: nil)
           return raw if raw.nil?
 
           @topic_id = topic_id
+          raw = normalize_input(raw)
 
           @gate.classify(raw) == :none ? raw : extract_engine(raw)
         end
 
         private
+
+        def normalize_input(raw)
+          if raw.encoding == Encoding::UTF_8
+            raw.valid_encoding? ? raw : raw.scrub
+          else
+            raw.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
+          end
+        end
 
         # An unproven construct stays verbatim — certification and trial
         # substitution can prove themselves unable to place it, and a wrong
@@ -215,6 +228,8 @@ module Migrations
               target_post_number: node.target_post_number,
               target_suffix: node.target_suffix,
               original_markdown: source,
+              url_offset: node.url_offset,
+              label_url_offset: node.label_url_offset,
             )
           when MarkdownScanner::HashtagReference
             @embeds.hashtag(

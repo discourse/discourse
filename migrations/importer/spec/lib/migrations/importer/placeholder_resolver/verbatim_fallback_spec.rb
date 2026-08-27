@@ -42,6 +42,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         token,
         original: %{[See](https://old.example.com/t/x/300 "why this matters")},
         url: "https://old.example.com/t/x/300",
+        url_offset: "[See](".bytesize,
         text: "See",
         target_type: link_target::TOPIC,
         target_id: 300,
@@ -62,6 +63,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         token,
         original: "[x](  <https://old.example.com/t/x/300>  )",
         url: "https://old.example.com/t/x/300",
+        url_offset: "[x](  <".bytesize,
         text: "x",
         target_type: link_target::TOPIC,
         target_id: 300,
@@ -83,6 +85,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         token,
         original: "[#{url}](#{url})",
         url:,
+        url_offset: url.bytesize + 3,
+        label_url_offset: 1,
         text: url,
         target_type: link_target::TOPIC,
         target_id: 300,
@@ -95,6 +99,55 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         )
 
       expect(resolved[1]).to eq("[https://dest.example.com/t/12](https://dest.example.com/t/12)")
+    end
+
+    it "leaves a URL the author repeated in the title untouched on a hit" do
+      token = placeholder.mint(:link)
+      url = "https://old.example.com/t/x/300"
+      create_link(
+        token,
+        original: %{[docs](#{url} "mirror of #{url}")},
+        url:,
+        url_offset: "[docs](".bytesize,
+        text: "docs",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      # Only the recorded destination span changes; the title is the author's
+      # text even when it happens to spell the same URL.
+      expect(resolved[1]).to eq(
+        %{[docs](https://dest.example.com/t/12 "mirror of https://old.example.com/t/x/300")},
+      )
+    end
+
+    it "rebuilds canonically on a hit when no destination span was recorded" do
+      token = placeholder.mint(:link)
+      create_link(
+        token,
+        original: %{[See](https://old.example.com/t/x/300 "why this matters")},
+        url: "https://old.example.com/t/x/300",
+        text: "See",
+        target_type: link_target::TOPIC,
+        target_id: 300,
+      )
+
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 12 })
+      resolved =
+        described_class.new(intermediate_db, maps, owner_type:).resolve_all(
+          [{ id: 1, raw: "#{token}" }],
+        )
+
+      # Without a span, a value search over the snippet could hit a title, so
+      # the construct is rebuilt from its parts instead (losing the title, but
+      # never rewriting the author's prose).
+      expect(resolved[1]).to eq("[See](https://dest.example.com/t/12)")
     end
 
     it "restores an external link byte-exact" do

@@ -3,7 +3,7 @@
 require "digest"
 require "fileutils"
 require "json"
-require "mini_racer"
+require "open3"
 
 module Migrations
   module Converters
@@ -14,10 +14,17 @@ module Migrations
       # transpiled through the host application's `AssetProcessor`, the host's
       # `shims.js`, and the generated emoji replacement table.
       #
-      # Built once, in the parent process, and cached on disk keyed by a digest
-      # of every input — workers only evaluate, they never transpile, so a warm
-      # cache needs neither node nor pnpm.
+      # Cached on disk keyed by a digest of every input. On a cache miss the
+      # build runs in a SUBPROCESS that writes the cache and exits: transpiling
+      # boots `AssetProcessor`'s own V8, and V8 initialized multithreaded is
+      # not fork-safe — the converter parent forks workers, so it must never
+      # hold V8 state (nor the Rails/Discourse stand-ins `AssetProcessor`
+      # needs, which would otherwise contaminate the process; see {HostShims}).
+      # The parent only computes the digest and reads JSON; workers only
+      # evaluate. A warm cache needs neither node nor pnpm.
       class Bundle
+        class BuildError < StandardError
+        end
         # Bump when the entry list or generation logic changes in a way the
         # input files cannot express.
         VERSION = 1
@@ -75,13 +82,13 @@ module Migrations
         ].freeze
 
         # AssetProcessor resolves its own cache and inputs with cwd-relative
-        # globs, so building (and digesting) must happen at the application
-        # root — the same constraint PrettyText's context creation has.
-        def self.load_or_build(root: MarkdownEngine.discourse_root)
-          # discourse-emojis decides whether to load its railtie by checking for
-          # `Rails`, so it must load before the Rails stand-in exists.
-          require "discourse_emojis"
-          HostShims.install!(root)
+        # globs, so digesting (and, in the build subprocess, building) must
+        # happen at the application root — the same constraint PrettyText's
+        # context creation has. Requiring `asset_processor` here is safe: the
+        # digest only reads its constants and file globs; V8 boots only on a
+        # transpile, which never happens in this process.
+        def self.load_or_build(root: MarkdownEngine.discourse_root, cache_dir: nil)
+          cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
             unless Object.const_defined?(:AssetProcessor)
@@ -89,16 +96,73 @@ module Migrations
             end
 
             digest = input_digest(root)
-            cache_file = File.join(root, CACHE_DIR, "markdown-engine-bundle-#{digest}.json")
-            return new(JSON.parse(File.read(cache_file))["entries"]) if File.exist?(cache_file)
+            cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
+            entries = read_cache(cache_file)
+            return new(entries) if entries
 
-            entries = build_entries(root)
-            FileUtils.mkdir_p(File.dirname(cache_file))
-            File.write(cache_file, JSON.generate({ "entries" => entries }))
-            cleanup_stale_caches(root, cache_file)
+            FileUtils.mkdir_p(cache_dir)
+            File.open(File.join(cache_dir, "bundle.lock"), File::CREAT | File::RDWR) do |lock|
+              lock.flock(File::LOCK_EX)
+              # Another process may have built while this one waited.
+              entries = read_cache(cache_file)
+              unless entries
+                build_in_subprocess(root, cache_file)
+                entries = read_cache(cache_file)
+                if entries.nil?
+                  raise BuildError, "bundle build subprocess produced no readable cache"
+                end
+              end
+              cleanup_stale_caches(cache_dir, cache_file)
+            end
             new(entries)
           end
           # rubocop:enable Discourse/NoChdir
+        end
+
+        # The build itself — run this only in a throwaway process (the
+        # subprocess `load_or_build` spawns): it initializes V8 and installs
+        # the host stand-ins, both of which must never live in the forking
+        # converter parent. Writes via temp file + atomic rename so a crashed
+        # build can never leave a truncated cache another run would trust.
+        def self.build_and_write(root, cache_file)
+          # discourse-emojis decides whether to load its railtie by checking
+          # for `Rails`, so it must load before the Rails stand-in exists.
+          require "discourse_emojis"
+          require "mini_racer"
+          HostShims.install!(root)
+          # rubocop:disable Discourse/NoChdir
+          Dir.chdir(root) do
+            unless Object.const_defined?(:AssetProcessor)
+              require File.join(root, "lib", "asset_processor")
+            end
+
+            entries = build_entries(root)
+            FileUtils.mkdir_p(File.dirname(cache_file))
+            temp_file = "#{cache_file}.#{Process.pid}.tmp"
+            File.write(temp_file, JSON.generate({ "entries" => entries }))
+            File.rename(temp_file, cache_file)
+          end
+          # rubocop:enable Discourse/NoChdir
+        end
+
+        # A missing file and a truncated/corrupt one (a writer killed before
+        # the atomic-rename discipline existed, a partial copy) are both just
+        # cache misses.
+        def self.read_cache(cache_file)
+          JSON.parse(File.read(cache_file))["entries"]
+        rescue Errno::ENOENT, JSON::ParserError
+          nil
+        end
+
+        def self.build_in_subprocess(root, cache_file)
+          program =
+            "require \"migrations-converters\"; " \
+              "Migrations::Converters::MarkdownEngine::Bundle.build_and_write(ARGV[0], ARGV[1])"
+          _stdout, stderr, status =
+            Open3.capture3(RbConfig.ruby, "-e", program, root, cache_file, chdir: root)
+          return if status.success?
+
+          raise BuildError, "bundle build subprocess failed: #{stderr.strip}"
         end
 
         # @return [Array<Array(String, String)>] `[module_name, source]` pairs
@@ -185,8 +249,10 @@ module Migrations
           [module_name, AssetProcessor.new.perform(source, nil, module_name)]
         end
 
-        def self.cleanup_stale_caches(root, current_file)
-          Dir[File.join(root, CACHE_DIR, "markdown-engine-bundle-*.json")].each do |path|
+        # Runs under the build lock, so no concurrent starter can be reading a
+        # stale file while it disappears.
+        def self.cleanup_stale_caches(cache_dir, current_file)
+          Dir[File.join(cache_dir, "markdown-engine-bundle-*.json")].each do |path|
             File.delete(path) if path != current_file
           end
         end
@@ -196,7 +262,9 @@ module Migrations
                              :plugin_files,
                              :build_entries,
                              :transpiled_entry,
-                             :cleanup_stale_caches
+                             :cleanup_stale_caches,
+                             :read_cache,
+                             :build_in_subprocess
       end
     end
   end

@@ -101,6 +101,14 @@ module Migrations
             end
 
             TrialPass.new(self, input, data, cause).result
+          rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
+            # A per-input engine failure (a parse timeout, a JS exception some
+            # body triggers) must cost that body, not the conversion: the body
+            # stays verbatim on the tally and the context is rebuilt so the
+            # next body gets a healthy engine. Process/resource failures are
+            # deliberately not rescued.
+            @engine.reset!
+            Result.new(output: input, cause: :engine_error)
           end
 
           # The pieces a {Pass} or {TrialPass} shares with its scanner.
@@ -131,15 +139,21 @@ module Migrations
 
           # A link/image value the migration remaps: an `upload://` short URL,
           # a full upload URL, an absolute URL on one of the source's own
-          # hosts, or a site-relative path that parses as a route. External
-          # links are not constructs — they can never refuse a body.
+          # hosts (inside that host's configured path prefix), or a
+          # site-relative path inside the base prefix that parses as a route.
+          # External links are not constructs — they can never refuse a body.
+          # The host/port/prefix reading is {UrlOrigin}, the same one the
+          # detector grammar applies, so this filter and the anchoring
+          # detectors cannot disagree about what is internal.
           def url_tracked?(value)
             return true if value.start_with?("upload://")
             return true if value.include?("/uploads/") || value.include?("/secure-uploads/")
 
-            if (match = %r{\A(?:https?:)?//(?<host>[^/?#]+)}i.match(value))
-              host = match[:host].sub(/:(?:80|443)\z/, "").downcase
-              return true if @hosts.key?(host)
+            host, rest = UrlOrigin.split(value)
+            return false if rest.nil?
+
+            if host
+              return !UrlOrigin.path_within_prefix(rest, @hosts[host]).nil? if @hosts.key?(host)
 
               # Untracked, but an internal-looking URL on an unconfigured host
               # is the forgotten-former-domain signal (once per host).
@@ -147,12 +161,20 @@ module Migrations
               return false
             end
 
-            return false unless value.start_with?("/")
+            return false unless rest.start_with?("/")
 
-            path = value
-            path = path.delete_prefix(@base_prefix) if @base_prefix &&
-              path.start_with?(@base_prefix)
+            path = UrlOrigin.path_within_prefix(rest, @base_prefix)
+            return false if path.nil?
+
             Detectors::InternalLink::RouteParser.parse(path) ? true : false
+          end
+
+          # A whole-construct reference for a proven URL occurrence that is its
+          # own syntax — a bare schemeless domain linkify links, a reference
+          # definition's destination. `route_url` is the engine's (normalized,
+          # scheme-ful) href; `url` the raw spelling at the occurrence.
+          def bare_url_node(route_url:, url:)
+            @internal_link_detector&.reference_for(route_url:, url:)
           end
 
           # The per-body count-certification pass; the scanner itself stays
@@ -180,7 +202,9 @@ module Migrations
               ordered = spans.values.sort_by(&:start_pos)
               return refusal(:overlap) if overlapping?(ordered)
 
-              Result.new(output: splice(ordered), cause: nil)
+              # A body whose tracked constructs all turned out untracked or
+              # placeholder-free needs no new string at all.
+              Result.new(output: ordered.empty? ? @input : splice(ordered), cause: nil)
             end
 
             private
@@ -313,19 +337,40 @@ module Migrations
             end
 
             # The occurrences of a value in a range, when their number equals
-            # what the engine saw — else nil. A URL value is also tried in its
+            # what the engine saw — else nil. A URL value can be spelled in
             # alternate readings (the engine normalizes URLs: percent-encoding,
-            # linkify adding a scheme to a bare-domain autolink); the first
-            # reading whose count matches is the one spliced.
+            # linkify adding a scheme to a bare-domain autolink), and the
+            # readings must be counted as ONE union of spans, never
+            # independently: with `` `http://host/t/5` `` in code and the
+            # schemeless spelling in prose, the scheme-ful reading alone counts
+            # 1 and would certify the code span — the union counts 2 against
+            # the engine's 1 and refuses, so the trial pass can prove which
+            # span is live.
             def certify(kind, value, range, expected)
-              readings = kind == :url ? url_readings(value) : [value]
+              occurrences =
+                if kind == :url
+                  url_occurrence_union(value, range)
+                else
+                  occurrence_offsets(kind, value, range)
+                end
 
-              readings.each do |reading|
-                occurrences = occurrence_offsets(kind, reading, range)
-                return occurrences if occurrences.size == expected
+              occurrences if occurrences && occurrences.size == expected
+            end
+
+            # Every reading's spans, deduplicated; nil when two distinct spans
+            # overlap — no counting can attribute overlapping spellings, so
+            # that ambiguity goes to the trial pass.
+            def url_occurrence_union(value, range)
+              spans = []
+              url_readings(value).each do |reading|
+                spans.concat(occurrence_offsets(:url, reading, range))
               end
-
-              nil
+              spans.uniq!
+              spans.sort_by!(&:offset)
+              spans.each_cons(2) do |left, right|
+                return nil if right.offset < left.offset + left.length
+              end
+              spans
             end
 
             def reference_definition?(value)
@@ -338,16 +383,20 @@ module Migrations
             # matches. A destination inside `[text](…)` must be replaced
             # together with its syntax; the detectors match from the `[`/`!`
             # anchor, which also naturally covers both occurrences of a
-            # `[URL](same URL)` self-link with a single node. An occurrence no
-            # detector grammar can take stays verbatim without refusing the
-            # body — no pass could remap its value either way.
+            # `[URL](same URL)` self-link with a single node. An occurrence
+            # that is its own syntax (a bare schemeless domain, a reference
+            # definition's destination) resolves through the engine's href
+            # instead. One neither can take refuses the body: the trial pass
+            # partial-extracts what it can, and the rest lands on the caller's
+            # must-resolve tally rather than silently staying stale.
             def resolve_urls(spans)
-              @certified.each do |(kind, _value), occurrences|
+              @certified.each do |(kind, value), occurrences|
                 next unless kind == :url
 
                 occurrences.each do |occurrence|
-                  match = anchor_match(occurrence)
-                  spans[[match.start_pos, match.end_pos]] ||= match if match
+                  match = anchor_match(occurrence) || bare_value_match(value, occurrence)
+                  return :unanchored if match.nil?
+                  spans[[match.start_pos, match.end_pos]] ||= match
                 end
               end
 
@@ -388,10 +437,17 @@ module Migrations
                 opener = @input.byteindex(/\[quote=/i, range.begin)
                 next if opener.nil? || opener >= line_end
 
+                # A header that parses but carries no username has nothing to
+                # remap (core renders it without coordinates) and is skipped;
+                # one the grammar could not take at all (beyond the pattern
+                # caps, malformed) may hold remappable fields the pass failed
+                # to reach, so it refuses instead of silently staying stale.
                 match = @scanner.quote_detector.detect_block_opener(@input, opener)
-                # A header core renders without coordinates (`[quote="post:5"]`)
-                # carries nothing to remap; leaving it is not a refusal.
-                spans[[match.start_pos, match.end_pos]] ||= match if match
+                if match
+                  spans[[match.start_pos, match.end_pos]] ||= match
+                elsif !@scanner.quote_detector.parseable_opener?(@input, opener)
+                  return :unanchored
+                end
               end
 
               nil

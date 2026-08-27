@@ -116,7 +116,7 @@ module Migrations
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
-                node: UploadUrlReference.new(sha1: match[:sha1], original_markdown: match[0]),
+                node: UploadUrlReference.new(sha1: match[:sha1]),
               )
             end
 

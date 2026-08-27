@@ -35,6 +35,15 @@ module Migrations
             OPENING = /\G\[quote=(?<header>[^\]\n]{0,512})\]/i
             private_constant :OPENING
 
+            # Whether the `[quote=` opener at `pos` parses as a header shape at
+            # all. Separates "parsed, but carries nothing remappable" (skipped
+            # like core rendering it without coordinates) from "the grammar
+            # could not take it" — the engine tier reports the latter, since an
+            # unparseable header may still hold remappable fields.
+            def parseable_opener?(input, pos)
+              match_at(OPENING, input, pos) ? true : false
+            end
+
             def detect_block_opener(input, pos)
               match = match_at(OPENING, input, pos)
               return nil unless match
