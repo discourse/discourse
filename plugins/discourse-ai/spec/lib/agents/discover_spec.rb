@@ -12,6 +12,9 @@ describe DiscourseAi::Agents::Discover do
         { "key" => "source_refs", "type" => "array", "array_type" => "string", "max_items" => 4 },
         { "key" => "title", "type" => "string" },
         { "key" => "answer", "type" => "string" },
+        # last so the answer streams before it, rather than the reader waiting
+        # on a suggestion to see the answer at all
+        { "key" => "follow_up", "type" => "string" },
       ],
     )
   end

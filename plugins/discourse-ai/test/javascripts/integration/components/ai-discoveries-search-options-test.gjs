@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { translateModKey } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import AiDiscoveriesSearchOptions from "discourse/plugins/discourse-ai/discourse/components/ai-discoveries-search-options";
@@ -75,10 +76,13 @@ module(
         .exists("and asking sits beside it");
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
-        .hasClass("is-active", "Ask AI is selected by default");
+        .doesNotHaveClass(
+          "is-active",
+          "nothing is marked before an option has produced anything"
+        );
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .doesNotExist("advanced search is hidden for Ask AI");
+        .exists("advanced search stands apart from which option is in effect");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .hasText(
@@ -214,7 +218,10 @@ module(
 
       assert
         .dom(".ai-discoveries-search-options__option.--search")
-        .hasClass("is-active", "Search stays selected for the next query");
+        .hasClass(
+          "is-active",
+          "the indexed results still stand until the term is resubmitted"
+        );
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
         .exists("advanced search remains available for the next query");
@@ -229,7 +236,7 @@ module(
         .doesNotHaveClass("is-active", "and the other option steps back");
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .doesNotExist("advanced search is hidden while asking AI");
+        .exists("advanced search is still offered while asking AI");
     });
 
     test("a user page offers that user's posts", async function (assert) {
@@ -423,6 +430,62 @@ module(
         .doesNotHaveClass(
           "is-active",
           "and the wider reach does not light up with it"
+        );
+    });
+
+    test("the options that have a shortcut say so", async function (assert) {
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTopics={{true}}
+          />
+        </template>
+      );
+
+      const shortcut = (...keys) =>
+        keys
+          .map((key) =>
+            key === "meta"
+              ? translateModKey("Meta")
+              : i18n(`shortcut_modifier_key.${key}`)
+          )
+          .join(" + ");
+
+      const hint = (...keys) =>
+        i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+          shortcut: shortcut(...keys),
+        });
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasAttribute(
+          "title",
+          hint("enter"),
+          "the indexed search names the key that runs it"
+        );
+      assert.dom(".ai-discoveries-search-options__option.--ask").hasAttribute(
+        "title",
+        // spelled out rather than composed, so the format itself is pinned:
+        // nothing here depends on the platform
+        "or Shift + Enter",
+        "and asking names its own"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .hasAttribute(
+          "title",
+          i18n("discourse_ai.discobot_discoveries.advanced_with_shortcut", {
+            shortcut: hint("meta", "enter"),
+          }),
+          "advanced search keeps its purpose, having no label of its own"
+        );
+      assert
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .doesNotExist(
+          "and a scope, which has no keybinding, is not offered here"
         );
     });
 

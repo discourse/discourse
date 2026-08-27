@@ -1,14 +1,17 @@
 import { getOwner } from "@ember/owner";
 import {
   click,
+  currentURL,
   fillIn,
   find,
+  settled,
   visit,
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import { removeDefaultQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
@@ -74,6 +77,13 @@ acceptance("AI Discoveries - header search", function (needs) {
       })
     );
 
+    server.delete("/discourse-ai/discoveries/recent", () =>
+      helper.response({})
+    );
+    server.delete("/u/recent-searches", () =>
+      helper.response({ success: "OK" })
+    );
+
     server.get("/u/recent-searches", () =>
       helper.response({
         success: "OK",
@@ -108,6 +118,25 @@ acceptance("AI Discoveries - header search", function (needs) {
   needs.hooks.beforeEach(() => {
     discoveryRequests = 0;
     submittedRequestId = undefined;
+  });
+
+  test("teaches the shortcut that asks", async function (assert) {
+    // the menu shows one tip at random, so the assertion is about what is
+    // available to show rather than what a given render happened to pick
+    removeDefaultQuickSearchRandomTips();
+
+    await visit("/");
+    await click("#search-button");
+
+    assert
+      .dom(".search-random-quick-tip .tip-label")
+      .hasText(
+        "Shift + Enter",
+        "the keys are named the way the help names them"
+      );
+    assert
+      .dom(".search-random-quick-tip #tip-description")
+      .hasText(i18n("discourse_ai.discobot_discoveries.tip_ask"));
   });
 
   test("marks the search wrapper so it can be styled", async function (assert) {
@@ -147,10 +176,13 @@ acceptance("AI Discoveries - header search", function (needs) {
       .exists("and asking sits beside it");
     assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .hasClass("is-active", "Ask AI follows the configured default");
+      .doesNotHaveClass(
+        "is-active",
+        "nothing is marked until an option has produced something"
+      );
     assert
       .dom(".ai-discoveries-search-options__option.--advanced")
-      .doesNotExist("advanced search stays with indexed search");
+      .exists("advanced search is offered alongside them");
     assert
       .dom(".search-input .show-advanced-search")
       .doesNotExist("and not in the input any more");
@@ -232,7 +264,22 @@ acceptance("AI Discoveries - header search", function (needs) {
     );
   });
 
-  test("a recent indexed search restores Search mode", async function (assert) {
+  test("clearing the history empties both kinds at once", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    assert
+      .dom(".search-menu-recent .search-menu-assistant-item")
+      .exists("asked and searched terms are both listed");
+
+    await click(".clear-recent-searches");
+
+    assert
+      .dom(".search-menu-recent")
+      .doesNotExist("the whole history goes, without needing a reload");
+  });
+
+  test("a recent indexed search repeats as a search", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "searched");
@@ -256,11 +303,8 @@ acceptance("AI Discoveries - header search", function (needs) {
     );
 
     assert
-      .dom(".ai-discoveries-search-options__option.--search")
-      .hasClass("is-active", "the magnifying-glass item selects Search");
-    assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .doesNotHaveClass("is-active", "Ask AI is no longer selected");
+      .doesNotHaveClass("is-active", "the answer no longer owns the term");
     assert
       .dom(".ai-discobot-discoveries")
       .doesNotExist("the earlier answer is dismissed");
@@ -275,7 +319,10 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     assert
       .dom(".ai-discoveries-search-options__option.--search")
-      .hasClass("is-active", "Search remains selected for a new term");
+      .doesNotHaveClass(
+        "is-active",
+        "a new term has produced nothing yet, so nothing is marked"
+      );
   });
 
   test("scoping to a topic leaves the input alone", async function (assert) {
@@ -344,22 +391,248 @@ acceptance("AI Discoveries - header search", function (needs) {
       );
   });
 
-  test("enter uses the configured Ask AI default", async function (assert) {
+  test("enter searches, shift+enter asks", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
+
     find("#icon-search-input").dispatchEvent(
       new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
     );
+    await waitFor(".search-result-topic");
+
+    assert.strictEqual(
+      discoveryRequests,
+      0,
+      "enter runs the indexed search, whatever was picked before"
+    );
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".ai-discobot-discoveries");
     await waitUntil(() => submittedRequestId);
+
+    assert.strictEqual(discoveryRequests, 1, "shift+enter asks instead");
+
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+  });
+
+  test("an answer on screen carries through to the full page", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+
+    await click(".ai-discoveries-search-options__option.--advanced");
+
+    assert.strictEqual(
+      currentURL(),
+      "/search?expanded=true&q=dev&search_type=ai_discoveries",
+      "the full page opens on the type that produced what was showing"
+    );
+  });
+
+  test("an indexed search carries through to the full page unchanged", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+    );
+    await waitFor(".search-result-topic");
+
+    await click(".ai-discoveries-search-options__option.--advanced");
+
+    assert.strictEqual(
+      currentURL(),
+      "/search?expanded=true&q=dev",
+      "nothing is added when the menu was showing indexed results"
+    );
+  });
+
+  test("an answer does not come back when its term is typed a second time", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+
+    assert.dom(".ai-discobot-discoveries").exists("the answer is showing");
+
+    await fillIn("#icon-search-input", "");
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "Backspace", bubbles: true })
+    );
+    await settled();
+
+    await fillIn("#icon-search-input", "dev");
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "v", bubbles: true })
+    );
+    await settled();
 
     assert
       .dom(".ai-discobot-discoveries")
-      .exists("the AI result opens without another choice");
+      .doesNotExist("retyping the same term does not bring it back");
+    assert
+      .dom(".ai-discoveries-search-options__option.--ask")
+      .doesNotHaveClass(
+        "is-active",
+        "and the option that produced it is no longer marked"
+      );
     assert.strictEqual(
       discoveryRequests,
       1,
-      "Ask AI starts from the configured default"
+      "and nothing was asked again on its own"
+    );
+  });
+});
+
+acceptance("AI Discoveries - full page search", function (needs) {
+  let discoveryRequests;
+  let submittedRequestId;
+
+  needs.user({
+    can_use_ai_discover_agent: true,
+    user_option: { ai_search_discoveries: true },
+  });
+
+  needs.settings({
+    discourse_ai_enabled: true,
+    ai_discover_enabled: true,
+    ai_discover_agent: -34,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/discourse-ai/credits/status", () => helper.response({}));
+    server.get("/discourse-ai/discoveries/recent", () =>
+      helper.response({ recent_asks: [] })
+    );
+    server.get("/search", () =>
+      helper.response(searchFixtures["search/query"])
+    );
+    server.post("/discourse-ai/discoveries/reply", (request) => {
+      discoveryRequests += 1;
+      submittedRequestId = helper.parsePostData(request.requestBody).request_id;
+      return helper.response({ request_id: submittedRequestId });
+    });
+  });
+
+  needs.hooks.beforeEach(() => {
+    discoveryRequests = 0;
+    submittedRequestId = undefined;
+  });
+
+  test("switches type with augmented results already on the page", async function (assert) {
+    await visit("/search?q=dev");
+
+    // what the semantic-search toggle leaves behind: a ranked list held beside
+    // the model, which the stock getter merges with the model's own posts
+    const controller = getOwner(this).lookup("controller:full-page-search");
+    controller.set("additionalSearchResults", {
+      list: [controller.model.posts[0]],
+      identifier: "id",
+    });
+    await settled();
+
+    assert
+      .dom(".search-results .fps-result")
+      .exists("the augmented results are on the page to begin with");
+
+    await click('.search-types__type[data-search-type="ai_discoveries"]');
+
+    assert
+      .dom(".ai-search-discoveries")
+      .exists("the switch completes rather than throwing mid-render");
+    assert
+      .dom(".search-results .fps-result")
+      .doesNotExist(
+        "and the results it held are not ranked in under the answer"
+      );
+  });
+
+  test("asking is a search type of its own", async function (assert) {
+    await visit("/search?q=dev");
+
+    assert
+      .dom(".full-page-discoveries")
+      .doesNotExist("the indexed search is untouched by default");
+    assert.deepEqual(
+      [...document.querySelectorAll(".search-types__type")].map(
+        (pill) => pill.dataset.searchType
+      ),
+      ["topics_posts", "ai_discoveries", "categories_tags", "users"],
+      "asking follows the posts it is an alternative to, rather than trailing the list"
+    );
+
+    assert
+      .dom(".search-cta")
+      .hasText(
+        i18n("search.search_button"),
+        "the button is labelled for the type in effect"
+      );
+
+    await click('.search-types__type[data-search-type="ai_discoveries"]');
+
+    assert
+      .dom(".search-cta")
+      .hasText(
+        i18n("discourse_ai.discobot_discoveries.ask_button"),
+        "and asking relabels it, since it submits a question"
+      );
+    assert
+      .dom(".search-cta .d-icon-far-discobot")
+      .exists("and the icon follows the label");
+
+    await waitUntil(() => submittedRequestId);
+
+    assert.strictEqual(
+      discoveryRequests,
+      1,
+      "picking the type asks, without a second submission"
     );
 
     await publishToMessageBus("/discourse-ai/discoveries", {
@@ -369,6 +642,19 @@ acceptance("AI Discoveries - header search", function (needs) {
       answerable: true,
       done: true,
     });
+
+    await waitFor(".full-page-discoveries");
+    await settled();
+
+    assert
+      .dom(".full-page-discoveries")
+      .exists("and the answer owns the results area");
+    assert
+      .dom(".search-results .fps-result")
+      .doesNotExist("the indexed results step aside for it");
+    assert
+      .dom(".no-results-container")
+      .doesNotExist("and the stock empty state does not contradict the answer");
   });
 });
 

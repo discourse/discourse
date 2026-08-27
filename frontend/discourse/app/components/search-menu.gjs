@@ -217,6 +217,11 @@ export default class SearchMenu extends Component {
     if (opts?.expanded) {
       params.set("expanded", "true");
     }
+
+    params = applyValueTransformer("search-menu-full-search-params", params, {
+      location: this.args.location,
+    });
+
     if (params.toString() !== "") {
       url = `${url}?${params}`;
     }

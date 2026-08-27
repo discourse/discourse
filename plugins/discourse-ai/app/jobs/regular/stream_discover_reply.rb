@@ -159,6 +159,7 @@ module Jobs
           answer: result.answer,
           sources: selected_sources,
           agent_id: ai_agent.id,
+          follow_up: result.follow_up,
         )
         publish_update(
           user,
@@ -168,6 +169,7 @@ module Jobs
             answerable: true,
             ai_discover_title: result.title,
             ai_discover_reply: result.answer,
+            ai_discover_follow_up: result.follow_up,
             sources: serialize_sources(selected_sources),
             candidate_topic_ids:,
           ),

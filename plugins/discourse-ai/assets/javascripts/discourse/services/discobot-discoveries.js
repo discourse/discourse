@@ -42,6 +42,7 @@ export default class DiscobotDiscoveries extends Service {
   @tracked answerable = null;
   @tracked errorMessage = "";
   @tracked discoveryTitle = "";
+  @tracked suggestedFollowUp = "";
   @tracked recentAsks = [];
 
   @tracked
@@ -61,6 +62,12 @@ export default class DiscobotDiscoveries extends Service {
       this.siteSettings.ai_discover_default_mode === "search"
         ? "search"
         : "ask";
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.cancelDiscoveryTimeout();
+    this.smoothStreamer.resetStreaming();
   }
 
   async onDiscoveryUpdate(update) {
@@ -84,6 +91,10 @@ export default class DiscobotDiscoveries extends Service {
 
     if (update.answerable !== undefined) {
       this.answerable = update.answerable;
+    }
+
+    if (update.ai_discover_follow_up !== undefined) {
+      this.suggestedFollowUp = update.ai_discover_follow_up;
     }
 
     if (update.ai_discover_title !== undefined) {
@@ -129,6 +140,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = "";
     this.discoveryTitle = "";
+    this.suggestedFollowUp = "";
     this.smoothStreamer.resetStreaming();
   }
 
@@ -264,6 +276,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = message;
     this.discoveryTitle = "";
+    this.suggestedFollowUp = "";
     this.discoveryTimedOut = false;
     this.lastQuery = "";
     this.activeRequestId = "";
@@ -280,6 +293,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = "";
     this.discoveryTitle = "";
+    this.suggestedFollowUp = "";
     this.discoveryTimedOut = true;
     this.lastQuery = "";
     this.activeRequestId = "";

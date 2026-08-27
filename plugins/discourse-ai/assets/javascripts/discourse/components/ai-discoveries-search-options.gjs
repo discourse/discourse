@@ -5,6 +5,13 @@ import { service } from "@ember/service";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import shortcutLabel from "../lib/shortcut-label";
+
+function shortcutHint(...keys) {
+  return i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+    shortcut: shortcutLabel(...keys),
+  });
+}
 
 export default class AiDiscoveriesSearchOptions extends Component {
   @service discobotDiscoveries;
@@ -87,9 +94,12 @@ export default class AiDiscoveriesSearchOptions extends Component {
     return this.search.inTopicContext && this.scopedTerm === this.query;
   }
 
-  // The configured or most recently selected mode applies when the term is submitted.
+  // A receipt rather than an armed mode: enter always runs the indexed search,
+  // so the only thing worth marking is which option produced what is showing.
   get askedActive() {
-    return Boolean(this.query) && this.discobotDiscoveries.mode === "ask";
+    return (
+      Boolean(this.query) && this.discobotDiscoveries.lastQuery === this.query
+    );
   }
 
   // The widest reach, so it only holds when nothing narrower does — every other
@@ -104,12 +114,28 @@ export default class AiDiscoveriesSearchOptions extends Component {
       return false;
     }
 
-    return this.discobotDiscoveries.mode === "search";
+    return Boolean(this.args.searchTopics);
+  }
+
+  // Only the options that have one: scope has never had a keybinding, so the
+  // three that map to enter, shift+enter and ctrl/cmd+enter say so and the rest
+  // stay quiet rather than inventing hints.
+  get allTopicsTitle() {
+    return shortcutHint("enter");
+  }
+
+  get askTitle() {
+    return shortcutHint("shift", "enter");
+  }
+
+  get advancedTitle() {
+    return i18n("discourse_ai.discobot_discoveries.advanced_with_shortcut", {
+      shortcut: shortcutHint("meta", "enter"),
+    });
   }
 
   @action
   searchAllTopics() {
-    this.discobotDiscoveries.setMode("search");
     // choosing the indexed results means the answer is no longer what was asked for
     this.discobotDiscoveries.dismissDiscovery();
     // the input no longer carries a chip to step back out of a scope, so the
@@ -131,7 +157,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchUserPosts() {
-    this.discobotDiscoveries.setMode("search");
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -145,7 +170,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchMessages() {
-    this.discobotDiscoveries.setMode("search");
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.searchTermChanged?.(this.query, {
@@ -156,7 +180,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchThisTopic() {
-    this.discobotDiscoveries.setMode("search");
     this.scopedTerm = this.query;
     this.discobotDiscoveries.dismissDiscovery();
     this.args.searchTermChanged?.(this.query, {
@@ -167,7 +190,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   ask() {
-    this.discobotDiscoveries.setMode("ask");
     // asking never honours a scope, so picking it leaves any behind
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -205,11 +227,14 @@ export default class AiDiscoveriesSearchOptions extends Component {
             @action={{this.searchMessages}}
           />
         {{/if}}
+        {{! only the options with a keybinding say so; the scopes have none to
+            report, and an invented hint is worse than none }}
         <DButton
           class="btn-default btn-small ai-discoveries-search-options__option --search
             {{if this.allTopicsActive 'is-active'}}"
           @icon="magnifying-glass"
           @label="discourse_ai.discobot_discoveries.search_all_topics"
+          @translatedTitle={{this.allTopicsTitle}}
           @action={{this.searchAllTopics}}
         />
         <DButton
@@ -217,17 +242,16 @@ export default class AiDiscoveriesSearchOptions extends Component {
             {{if this.askedActive 'is-active'}}"
           @icon="far-discobot"
           @label="discourse_ai.discobot_discoveries.ask_ai"
+          @translatedTitle={{this.askTitle}}
           @action={{this.ask}}
         />
-        {{#if this.allTopicsActive}}
-          <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --advanced"
-            @icon="sliders"
-            @title="search.open_advanced"
-            @ariaLabel="search.open_advanced"
-            @action={{@openAdvancedSearch}}
-          />
-        {{/if}}
+        <DButton
+          class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+          @icon="sliders"
+          @translatedTitle={{this.advancedTitle}}
+          @ariaLabel="search.open_advanced"
+          @action={{@openAdvancedSearch}}
+        />
       </div>
     {{/if}}
   </template>

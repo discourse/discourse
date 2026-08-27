@@ -68,7 +68,7 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     assert.strictEqual(requestsCount, 2);
     assert.strictEqual(
       service.errorMessage,
-      "Discoveries could not start this search. Try again or use Search."
+      "Ask AI could not start this search. Try again or use Search."
     );
     assert.false(
       service.discoveryTimedOut,
@@ -194,14 +194,14 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     await service.onDiscoveryUpdate({
       request_id: "active-request",
       error: true,
-      message: "Discoveries could not complete this search.",
+      message: "Ask AI could not complete this search.",
       ai_discover_reply: "",
       done: true,
     });
 
     assert.strictEqual(
       service.errorMessage,
-      "Discoveries could not complete this search."
+      "Ask AI could not complete this search."
     );
     assert.true(service.showDiscoveryTitle);
     assert.false(service.loadingDiscoveries);
@@ -219,7 +219,7 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
       announcements,
       [
         {
-          message: "Discoveries could not complete this search.",
+          message: "Ask AI could not complete this search.",
           priority: "assertive",
         },
       ],
@@ -249,7 +249,7 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
 
     assert.deepEqual(
       announcements,
-      [{ message: "Discoveries answer ready.", priority: "polite" }],
+      [{ message: "Ask AI answer ready.", priority: "polite" }],
       "the completed answer is announced"
     );
   });

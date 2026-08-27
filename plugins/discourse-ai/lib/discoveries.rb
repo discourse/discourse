@@ -149,7 +149,7 @@ module DiscourseAi
         Discourse.redis.zrem(in_flight_key, work_token(user_id, request_id))
       end
 
-      def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:)
+      def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:, follow_up: "")
         return if !valid_request_id?(request_id) || query.blank? || sources.blank?
 
         posts =
@@ -173,7 +173,7 @@ module DiscourseAi
           end
         return if stored_sources.length != sources.length
 
-        payload = { query:, answer:, sources: stored_sources, agent_id: }.to_json
+        payload = { query:, answer:, sources: stored_sources, agent_id:, follow_up: }.to_json
         Discourse.redis.set(result_key(user_id, request_id), payload, ex: REQUEST_TTL)
       end
 

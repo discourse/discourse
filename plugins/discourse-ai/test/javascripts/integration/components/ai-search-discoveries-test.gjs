@@ -1,6 +1,14 @@
 /* eslint-disable qunit/no-conditional-assertions */
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
-import { click, fillIn, find, render } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -131,6 +139,170 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
+  // The waiting animation is deliberately not exercised here: it schedules
+  // itself with `later`, so `settled` never resolves while it is on screen.
+  test("offers the suggested follow-up until the reader wants their own", async function (assert) {
+    let submittedBody;
+
+    this.currentUser.ai_enabled_agents = [
+      {
+        id: -1,
+        username: "forum_helper",
+        allow_personal_messages: true,
+      },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_bot_enabled = true;
+    this.siteSettings.ai_discover_agent = "-34";
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
+
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        suggestedFollowUp = "How do I migrate the old settings?";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        activeRequestId = "13e16948-6a2a-42f4-80b4-5acac1f74713";
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+    pretender.post("/discourse-ai/discoveries/continue-convo", (request) => {
+      submittedBody = new URLSearchParams(request.requestBody);
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { success: "OK", topic_id: 321 },
+      ];
+    });
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries__follow-up-input")
+      .hasValue(
+        "How do I migrate the old settings?",
+        "the answer's own suggestion is ready to send"
+      );
+
+    await click(".ai-search-discoveries__follow-up-submit");
+
+    assert.strictEqual(
+      submittedBody.get("question"),
+      "How do I migrate the old settings?",
+      "and submitting sends it as offered"
+    );
+  });
+
+  test("a suggested follow-up steps aside when the field is focused", async function (assert) {
+    this.currentUser.ai_enabled_agents = [
+      { id: -1, username: "forum_helper", allow_personal_messages: true },
+    ];
+    this.currentUser.ai_enabled_chat_bots = [
+      { id: -1200, username: "ai_bot", llm_model_id: 1 },
+    ];
+    this.siteSettings.ai_bot_enabled = true;
+    this.siteSettings.ai_discover_agent = "-34";
+    this.siteSettings.ai_discover_follow_up_agent = "-1";
+
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        @tracked suggestedFollowUp = "How do I migrate the old settings?";
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        activeRequestId = "13e16948-6a2a-42f4-80b4-5acac1f74713";
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+    await triggerEvent(".ai-search-discoveries__follow-up-input", "focus");
+
+    assert
+      .dom(".ai-search-discoveries__follow-up-input")
+      .hasValue("", "the field is theirs once they reach for it");
+    assert
+      .dom(".ai-search-discoveries__follow-up-submit")
+      .isDisabled("with nothing to send until they type");
+
+    // the touch belongs to that answer: a later one still offers its own
+    this.owner.lookup("service:discobot-discoveries").suggestedFollowUp =
+      "What changed in the latest release?";
+    await settled();
+
+    assert
+      .dom(".ai-search-discoveries__follow-up-input")
+      .hasValue(
+        "What changed in the latest release?",
+        "and the next answer brings a suggestion of its own"
+      );
+  });
+
+  test("marks itself empty until something is on screen", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        @tracked streamedText = "";
+        @tracked answerable = null;
+
+        discoveryTitle = "";
+        sources = [];
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+        errorMessage = "";
+        showDiscoveryTitle = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+    const discoveries = this.owner.lookup("service:discobot-discoveries");
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="miyazaki" /></template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries")
+      .hasClass("--empty", "nothing has been rendered yet");
+
+    discoveries.streamedText = "A useful answer.";
+    await settled();
+
+    assert
+      .dom(".ai-search-discoveries")
+      .doesNotHaveClass("--empty", "an answer is something");
+
+    discoveries.streamedText = "";
+    discoveries.answerable = false;
+    await settled();
+
+    assert
+      .dom(".ai-search-discoveries")
+      .doesNotHaveClass(
+        "--empty",
+        "and so is saying there is no answer to give"
+      );
+  });
+
   test("a theme can opt into showing source authors", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",
@@ -238,7 +410,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
     assert
       .dom(".ai-discovery-sources__title")
-      .hasText("Related discussions", "the source group is clearly labelled");
+      .hasText("Related topics", "the source group is clearly labelled");
     assert
       .dom(".ai-discovery-sources__item")
       .exists({ count: 3 }, "the configured number of discussions is shown");

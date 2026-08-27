@@ -631,6 +631,23 @@ acceptance("Search - Authenticated", function (needs) {
       .doesNotExist("search dropdown is collapsed after second Enter hit");
   });
 
+  // macOS delivers no keyup for other keys while command is held, so this has to
+  // work from keydown alone — keyup is deliberately not fired here
+  test("Cmd+Enter in the search input goes to full page search", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    await triggerKeyEvent("#icon-search-input", "keydown", "Enter", {
+      metaKey: true,
+    });
+
+    assert
+      .dom(".search-container")
+      .exists("the full page search opens without a keyup");
+    assert.dom(".search-menu").doesNotExist("and the dropdown closes");
+  });
+
   test("search menu keyboard navigation - while composer is open", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".reply");

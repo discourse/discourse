@@ -45,7 +45,7 @@
 
   &__completion {
     margin: 0;
-    padding: var(--space-2) var(--space-4) var(--space-4);
+    padding: var(--space-4);
   }
 
   &__discovery {
@@ -219,41 +219,50 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--secondary);
 
   &__option {
+    &.--advanced {
+      margin-inline-start: auto;
+    }
+
     .d-button-label {
       max-width: 150px;
 
       @include ellipsis;
     }
 
-    &.--advanced {
-      margin-inline-start: auto;
-    }
-
     &.is-active {
-      border-color: var(--tertiary);
+      background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
   }
 
   .panel & {
-    padding-top: 0;
     padding-inline: var(--space-4);
+  }
+}
+
+.search-menu-container:has(.ai-discoveries-search-options) {
+  .search-input-wrapper {
+    padding-bottom: 0;
   }
 }
 
 .full-page-discoveries {
   padding: var(--space-4) 10% 0;
 
-  @include viewport.until(lg) {
-    padding-inline: var(--space-4);
-  }
-
   .ai-search-discoveries {
     overflow: hidden;
-    border: 1px solid var(--token-color-border-default);
-    border-radius: var(--token-radius-normal);
     background: var(--token-color-surface);
+
+    &:not(.--empty) {
+      border: 1px solid var(--token-color-border-default);
+      border-radius: var(--token-radius-normal);
+    }
   }
 
   .ai-search-discoveries__header,
@@ -263,8 +272,8 @@
     padding-inline: var(--space-5);
   }
 
-  @include viewport.until(sm) {
-    padding-inline: var(--space-2);
+  @include viewport.until(lg) {
+    padding-inline: 0;
 
     .ai-search-discoveries__header,
     .ai-search-discoveries__answer-title,
@@ -313,4 +322,10 @@
 
 .search-icon-wrapper {
   width: 1em;
+}
+
+.search-cta {
+  .d-icon-far-discobot {
+    font-size: var(--font-up-1);
+  }
 }

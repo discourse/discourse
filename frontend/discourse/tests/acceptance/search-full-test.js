@@ -545,14 +545,11 @@ acceptance("Search - Full Page", function (needs) {
   test("search for users", async function (assert) {
     await visit("/search");
 
-    const typeSelector = selectKit(".search-bar .select-kit#search-type");
-
     await fillIn(".search-query", "admin");
     assert.dom(".fps-user-item").doesNotExist("has no user results");
 
     await click(".advanced-filters__toggle");
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
 
     assert.dom(".search-filters").doesNotExist("has no filters");
 
@@ -560,8 +557,9 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.dom(".fps-user-item").exists({ count: 1 }, "has one user result");
 
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
 
     assert
       .dom(".search-filters")
@@ -573,25 +571,46 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search");
 
     await fillIn(".search-query", "none");
-    const typeSelector = selectKit(".search-bar .select-kit#search-type");
-
     assert.dom(".fps-tag-item").doesNotExist("has no category/tag results");
 
     await click(".advanced-filters__toggle");
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_CATS_TAGS}"]`
+    );
     await click(".search-cta");
 
     assert.dom(".search-filters").doesNotExist("has no filters");
     assert.dom(".fps-tag-item").exists({ count: 4 }, "has four tag results");
 
-    await typeSelector.expand();
-    await typeSelector.selectRowByValue(SEARCH_TYPE_DEFAULT);
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
 
     assert
       .dom(".search-filters")
       .exists("returning to topic/posts shows filters");
     assert.dom(".fps-tag-item").doesNotExist("has no tag results");
+  });
+
+  test("picking a type with an empty field puts the caret in it", async function (assert) {
+    await visit("/search");
+
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
+
+    assert
+      .dom("input.search-query")
+      .isFocused("with nothing typed, the type is the start of a search");
+
+    await fillIn(".search-query", "admin");
+    await click(
+      `.search-types__type[data-search-type="${SEARCH_TYPE_DEFAULT}"]`
+    );
+
+    assert
+      .dom("input.search-query")
+      .isNotFocused(
+        "but a term already typed is not interrupted by the choice"
+      );
   });
 
   test("filters expand/collapse as expected", async function (assert) {

@@ -7,25 +7,31 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    // Rendering the connector directly would bypass `shouldRender`, which the
-    // outlet is what consults — and it is the whole point here: declining to
-    // render is what keeps the component from being constructed, so neither its
-    // credit check nor its discovery request is ever sent.
-    test("stays out of full-page search entirely", function (assert) {
+    // `shouldRender` is what the outlet consults, and declining there is what
+    // keeps the component from being constructed at all — so neither its credit
+    // check nor a discovery request is sent for a user who cannot ask.
+    test("renders for a user who can ask", function (assert) {
       this.siteSettings.ai_discover_enabled = true;
       this.siteSettings.ai_discover_agent = "-34";
       this.currentUser.can_use_ai_discover_agent = true;
       this.currentUser.user_option.ai_search_discoveries = true;
 
+      assert.true(
+        AiFullPageDiscobotDiscoveries.shouldRender(
+          {},
+          { siteSettings: this.siteSettings, currentUser: this.currentUser }
+        ),
+        "asking is offered on full-page search"
+      );
+
+      this.currentUser.user_option.ai_search_discoveries = false;
+
       assert.false(
         AiFullPageDiscobotDiscoveries.shouldRender(
           {},
-          {
-            siteSettings: this.siteSettings,
-            currentUser: this.currentUser,
-          }
+          { siteSettings: this.siteSettings, currentUser: this.currentUser }
         ),
-        "even with the feature fully enabled for the user"
+        "and stays out entirely for a user who turned it off"
       );
     });
   }

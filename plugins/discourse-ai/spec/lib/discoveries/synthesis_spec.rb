@@ -14,6 +14,7 @@ describe DiscourseAi::Discoveries::Synthesis do
         { "key" => "source_refs", "type" => "array", "array_type" => "string", "max_items" => 4 },
         { "key" => "title", "type" => "string" },
         { "key" => "answer", "type" => "string" },
+        { "key" => "follow_up", "type" => "string" },
       ],
       temperature: 0.3,
       top_p: 0.8,
@@ -178,7 +179,13 @@ describe DiscourseAi::Discoveries::Synthesis do
           synthesis.call(query: "how do I create a plugin", candidates:, summary_detail: :quiet)
 
         properties = prompt_options.first.dig(:response_format, :json_schema, :schema, :properties)
-        expect(properties.keys).to contain_exactly(:answerable, :source_refs, :title, :answer)
+        expect(properties.keys).to contain_exactly(
+          :answerable,
+          :source_refs,
+          :title,
+          :answer,
+          :follow_up,
+        )
         response
       end
 
@@ -269,6 +276,60 @@ describe DiscourseAi::Discoveries::Synthesis do
       ) { synthesis.call(query: "how do I create a plugin", candidates:) }
 
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "returns the suggested follow-up question alongside the answer" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_1],
+            title: "Plugin guide",
+            answer: "Use the plugin skeleton.",
+            follow_up: "How do I publish a plugin?",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:) }
+
+    expect(result).to have_attributes(
+      answerable: true,
+      answer: "Use the plugin skeleton.",
+      follow_up: "How do I publish a plugin?",
+    )
+  end
+
+  it "drops a suggested follow-up returned with an abstention" do
+    candidates = [
+      {
+        "source_ref" => "source_1",
+        "title" => "Create a Discourse plugin",
+        "excerpt" => "Start with the plugin skeleton.",
+      },
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: false,
+            source_refs: [],
+            title: "",
+            answer: "",
+            follow_up: "How do I publish a plugin?",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:) }
+
+    expect(result).to have_attributes(answerable: false, follow_up: "")
   end
 
   it "clears fields returned with an abstention" do

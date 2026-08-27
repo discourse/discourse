@@ -110,6 +110,7 @@ export default class AiSearchDiscoveries extends Component {
 
   @tracked loadingConversationTopic = false;
   @tracked followUpQuestion = "";
+  @tracked followUpTouched = null;
 
   constructor() {
     super(...arguments);
@@ -178,6 +179,21 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.answerable === false;
   }
 
+  // Every branch of the completion puts something on screen except the last,
+  // which is an empty article until the first text streams in. Marking that
+  // gap lets it be styled away rather than showing as blank space.
+  get hasNoContent() {
+    const discoveries = this.discobotDiscoveries;
+
+    return (
+      !discoveries.loadingDiscoveries &&
+      !discoveries.errorMessage &&
+      !discoveries.discoveryTimedOut &&
+      !this.noAnswer &&
+      !discoveries.streamedText
+    );
+  }
+
   get showAnswerTitle() {
     return this.siteSettings.ai_discover_summary_detail !== "quiet";
   }
@@ -241,8 +257,19 @@ export default class AiSearchDiscoveries extends Component {
     );
   }
 
+  get followUpValue() {
+    // The touch belongs to the answer it was made against: a later answer
+    // brings its own suggestion, which should be offered rather than suppressed
+    // because the reader once typed over an earlier one.
+    if (this.followUpTouched === this.discobotDiscoveries.suggestedFollowUp) {
+      return this.followUpQuestion;
+    }
+
+    return this.discobotDiscoveries.suggestedFollowUp || "";
+  }
+
   get canSubmitFollowUp() {
-    return this.followUpQuestion.trim().length > 0;
+    return this.followUpValue.trim().length > 0;
   }
 
   get continueConvoBtnLabel() {
@@ -288,13 +315,27 @@ export default class AiSearchDiscoveries extends Component {
 
   @action
   updateFollowUpQuestion(event) {
+    this.followUpTouched = this.discobotDiscoveries.suggestedFollowUp;
     this.followUpQuestion = event.target.value;
+  }
+
+  // Focus is the point at which the reader has decided to ask something of
+  // their own, so the offered question gets out of the way rather than being
+  // text they have to delete.
+  @action
+  clearSuggestedFollowUp() {
+    if (this.followUpTouched === this.discobotDiscoveries.suggestedFollowUp) {
+      return;
+    }
+
+    this.followUpTouched = this.discobotDiscoveries.suggestedFollowUp;
+    this.followUpQuestion = "";
   }
 
   @action
   async continueConversation(event) {
     event?.preventDefault();
-    const question = this.followUpQuestion.trim();
+    const question = this.followUpValue.trim();
     if (!question || this.loadingConversationTopic) {
       return;
     }
@@ -359,6 +400,7 @@ export default class AiSearchDiscoveries extends Component {
       class={{dConcatClass
         "ai-search-discoveries"
         (if @fullPage "--full-page")
+        (if this.hasNoContent "--empty")
       }}
       {{didInsert this.subscribe this.query}}
       {{didUpdate this.subscribe this.query}}
@@ -495,7 +537,7 @@ export default class AiSearchDiscoveries extends Component {
           <input
             class="ai-search-discoveries__follow-up-input"
             type="text"
-            value={{this.followUpQuestion}}
+            value={{this.followUpValue}}
             maxlength="1000"
             placeholder={{i18n
               "discourse_ai.discobot_discoveries.follow_up.placeholder"
@@ -504,6 +546,7 @@ export default class AiSearchDiscoveries extends Component {
               "discourse_ai.discobot_discoveries.follow_up.label"
             }}
             disabled={{this.loadingConversationTopic}}
+            {{on "focus" this.clearSuggestedFollowUp}}
             {{on "input" this.updateFollowUpQuestion}}
           />
           <DButton

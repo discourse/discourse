@@ -3,7 +3,8 @@
 module DiscourseAi
   module Discoveries
     class Synthesis
-      Result = Struct.new(:answerable, :source_refs, :title, :answer, keyword_init: true)
+      Result =
+        Struct.new(:answerable, :source_refs, :title, :answer, :follow_up, keyword_init: true)
       PLACEHOLDER_ANSWERS = %w[true false null undefined none].freeze
       SOURCE_REFERENCE_PATTERN =
         /[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\))(?:[ \t]*,[ \t]*(?:\[\[source_\d+\]\]|\[source_\d+\](?:\([^)]+\))?|\(source_\d+\)))*/i
@@ -26,7 +27,9 @@ module DiscourseAi
         related_count: DiscourseAi::Discoveries::MIN_RELATED_DISCUSSIONS
       )
         if candidates.empty?
-          return Result.new(answerable: false, source_refs: [], title: "", answer: "")
+          return(
+            Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
+          )
         end
         related_count = normalized_related_count(related_count)
         original_query_locale = normalized_original_query_locale(original_query_locale)
@@ -58,7 +61,7 @@ module DiscourseAi
             agent: @ai_agent.class_instance.new,
             model: @llm_model,
           )
-        values = { answerable: nil, source_refs: nil, title: +"", answer: +"" }
+        values = { answerable: nil, source_refs: nil, title: +"", answer: +"", follow_up: +"" }
 
         bot.reply(context) do |partial, _, type|
           next if type != :structured_output
@@ -75,6 +78,9 @@ module DiscourseAi
           answer_delta = partial.read_buffered_property(:answer)
           values[:answer] << answer_delta if !answer_delta.nil?
 
+          follow_up = partial.read_buffered_property(:follow_up)
+          values[:follow_up] << follow_up if follow_up.present?
+
           if block_given?
             update = values.deep_dup
             update[:answer] = answer_without_source_references(update[:answer])
@@ -88,6 +94,7 @@ module DiscourseAi
             source_refs: Array(values[:source_refs]),
             title: values[:title].to_s.strip,
             answer: answer_without_source_references(values[:answer]),
+            follow_up: values[:follow_up].to_s.strip,
           )
         return empty_result if !result.answerable
 
@@ -118,7 +125,7 @@ module DiscourseAi
       end
 
       def empty_result
-        Result.new(answerable: false, source_refs: [], title: "", answer: "")
+        Result.new(answerable: false, source_refs: [], title: "", answer: "", follow_up: "")
       end
 
       def answer_without_source_references(answer)

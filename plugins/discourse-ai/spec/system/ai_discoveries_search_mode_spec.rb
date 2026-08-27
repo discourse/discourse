@@ -17,7 +17,6 @@ describe "AI Discoveries search modes" do
 
     SiteSetting.discourse_ai_enabled = true
     SiteSetting.ai_discover_enabled = true
-    SiteSetting.ai_discover_default_mode = "ask"
     SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
@@ -31,11 +30,11 @@ describe "AI Discoveries search modes" do
 
   after { SearchIndexer.disable }
 
-  it "keeps Search selected after the user repeats an indexed search from history" do
+  it "marks whichever option produced what is showing, and nothing before that" do
     visit "/"
     discoveries_search.open.fill_query("miyazaki")
 
-    expect(discoveries_search).to have_ask_selected
+    expect(discoveries_search).to have_no_selection
 
     discoveries_search.select_search
 
@@ -55,7 +54,7 @@ describe "AI Discoveries search modes" do
 
     discoveries_search.fill_query("Hayao")
 
-    expect(discoveries_search).to have_search_selected
+    expect(discoveries_search).to have_no_selection
 
     discoveries_search.submit
 

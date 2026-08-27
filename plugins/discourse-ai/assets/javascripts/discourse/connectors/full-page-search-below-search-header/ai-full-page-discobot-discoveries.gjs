@@ -4,15 +4,16 @@ import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
+import { SEARCH_TYPE_ASK_AI } from "../../lib/full-page-search-types";
 
 export default class AiFullPageDiscobotDiscoveries extends Component {
-  // Parked: the search menu offers asking as one of several options now, and
-  // full-page search has no equivalent yet. Its only gate was the mode the
-  // toggle used to set, so leaving it on would mean asking on every full-page
-  // search with no way to decline. Returning false here keeps the component
-  // unmounted, so neither the credit check nor the discovery request is sent.
-  static shouldRender() {
-    return false;
+  static shouldRender(args, { siteSettings, currentUser }) {
+    return (
+      siteSettings.ai_discover_enabled &&
+      siteSettings.ai_discover_agent &&
+      currentUser?.can_use_ai_discover_agent &&
+      currentUser?.user_option?.ai_search_discoveries
+    );
   }
 
   @service aiCredits;
@@ -36,11 +37,13 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
     this.creditCheckComplete = true;
   }
 
+  // Asking is a search type here rather than a mode, so the answer belongs on
+  // screen exactly while that type is the one selected.
   get shouldShow() {
     return (
       this.creditCheckComplete &&
       this.creditsAvailable &&
-      this.discobotDiscoveries.mode === "ask"
+      this.args.outletArgs.type === SEARCH_TYPE_ASK_AI
     );
   }
 
@@ -63,7 +66,11 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
           <AiSearchDiscoveries
             @searchTerm={{@outletArgs.search}}
             @showHeading={{true}}
+            @showSources={{true}}
             @fullPage={{true}}
+            {{! the search type runs the discovery when the search is submitted,
+                so mounting must not run a second one }}
+            @triggerOnInsert={{false}}
           />
         </div>
       </div>

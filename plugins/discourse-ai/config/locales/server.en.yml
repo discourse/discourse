@@ -159,14 +159,14 @@ en:
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
     ai_bot_enable_docked_composer: "Enable the docked chat-style composer for AI bot conversations instead of the standard floating composer."
 
-    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_enabled: "Enable Ask AI in search"
     ai_discover_default_mode: "Choose whether eligible users use Ask AI or indexed Search by default. Users can switch modes until the page is reloaded."
-    ai_discover_summary_detail: "Choose how much detail to include in Discoveries summaries."
-    ai_discover_related_count: "Set the maximum number of related discussions Discoveries selects and shows with each answer."
-    ai_discover_agent: "Agent to use for discovery search feature"
-    ai_discover_query_rewrite_agent: "Agent used to prepare separate keyword and semantic queries for Discoveries. If this agent or its model is unavailable, Discoveries searches with the user's original query."
-    ai_discover_follow_up_agent: "Agent used when a user wants to follow up a Discoveries result. The selected agent must be enabled, allow personal messages, and be available to the user."
-    ai_discover_allowed_groups: "Groups allowed to use Discoveries and its follow-up handoff. The Discovery agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
+    ai_discover_summary_detail: "Choose how much detail to include in Ask AI summaries."
+    ai_discover_related_count: "Set the maximum number of related discussions Ask AI selects and shows with each answer."
+    ai_discover_agent: "Agent to use for Ask AI"
+    ai_discover_query_rewrite_agent: "Agent used to prepare separate keyword and semantic queries for Ask AI. If this agent or its model is unavailable, Ask AI searches with the user's original query."
+    ai_discover_follow_up_agent: "Agent used when a user wants to follow up an Ask AI result. The selected agent must be enabled, allow personal messages, and be available to the user."
+    ai_discover_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
@@ -412,10 +412,10 @@ en:
         llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."
     discoveries:
       configuration:
-        agent_missing: "Select an existing agent for Discoveries follow-ups."
-        agent_disabled: "The Discoveries follow-up agent must be enabled."
-        personal_messages_disabled: "The Discoveries follow-up agent must allow personal messages."
-        allowed_groups_missing: "The Discoveries follow-up agent must allow at least one group."
+        agent_missing: "Select an existing agent for Ask AI follow-ups."
+        agent_disabled: "The Ask AI follow-up agent must be enabled."
+        personal_messages_disabled: "The Ask AI follow-up agent must allow personal messages."
+        allowed_groups_missing: "The Ask AI follow-up agent must allow at least one group."
     post_image_captions:
       errors:
         description_blank: "Caption can't be blank."
@@ -603,10 +603,10 @@ en:
           description: "Default agent used in the report automation script"
         discover:
           name: "Discover"
-          description: "Default agent used in the discoveries feature (complimentary search)"
+          description: "Default agent used by Ask AI (complimentary search)"
         discover_query_rewriter:
           name: "Discover query rewriter"
-          description: "Prepares keyword and semantic search queries for Discoveries"
+          description: "Prepares keyword and semantic search queries for Ask AI"
         chat_thread_titler:
           name: "Chat Thread Titler"
           description: "Default agent powering automatic chat thread title generation"
@@ -887,14 +887,14 @@ en:
           invalid_query: "Enter a search query between 1 and %{max} characters."
           invalid_request_id: "The discovery request ID is invalid."
           request_conflict: "This discovery request ID is already being used for another query."
-          processing_failed: "Discoveries could not complete this search."
-          temporarily_unavailable: "Discoveries is busy right now. Try again shortly."
-          credits_unavailable: "Discoveries is unavailable until AI credits reset."
+          processing_failed: "Ask AI could not complete this search."
+          temporarily_unavailable: "Ask AI is busy right now. Try again shortly."
+          credits_unavailable: "Ask AI is unavailable until AI credits reset."
           follow_up_failed: "The follow-up conversation could not be created."
           invalid_follow_up: "Enter a follow-up question with no more than %{max} characters."
           result_expired: "This discovery is no longer available. Search again to ask a follow-up."
         continue_conversation:
-          title: "Discovery conversation: Search for %{query}"
+          title: "Ask AI conversation: Search for %{query}"
           sources: "Selected discussions:\n%{sources}"
           source: "- [%{title}](%{url})"
 

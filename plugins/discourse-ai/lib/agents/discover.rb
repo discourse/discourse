@@ -18,6 +18,7 @@ module DiscourseAi
           },
           { "key" => "title", "type" => "string" },
           { "key" => "answer", "type" => "string" },
+          { "key" => "follow_up", "type" => "string" },
         ]
       end
 
@@ -77,6 +78,16 @@ module DiscourseAi
           ### Title
 
           When requested, return a plain-text title of no more than 10 words.
+
+          ### Follow-up
+
+          Return one follow-up question the reader is most likely to ask after
+          this answer, phrased as they would type it into search.
+
+          - Keep it under 12 words, plain text, ending in a question mark.
+          - Ask about something this answer left open, not something it already stated.
+          - Ask about the forum's own subject matter, so the question stands a chance of being answerable from other discussions.
+          - Leave it empty when answerable is false, or when nothing worth asking remains.
         PROMPT
       end
     end

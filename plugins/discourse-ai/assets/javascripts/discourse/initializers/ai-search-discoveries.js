@@ -1,4 +1,9 @@
+import { getOwner } from "@ember/owner";
+import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
+import { i18n } from "discourse-i18n";
+import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types";
+import shortcutLabel from "../lib/shortcut-label";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
@@ -20,6 +25,76 @@ export default apiInitializer((api) => {
   const search = api.container.lookup("service:search");
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"
+  );
+
+  // The row of options names this shortcut too, but the tip reaches people who
+  // never hover one, alongside the shortcut the menu already teaches.
+  api.addQuickSearchRandomTip({
+    label: shortcutLabel("shift", "enter"),
+    description: i18n("discourse_ai.discobot_discoveries.tip_ask"),
+  });
+
+  // Asking is offered on /search the way users and categories are: a type of
+  // its own, which owns the results area while it is selected.
+  api.addFullPageSearchType(
+    "discourse_ai.discobot_discoveries.search_type",
+    SEARCH_TYPE_ASK_AI,
+    (controller) => {
+      controller.setProperties({
+        model: { posts: [], topics: [], categories: [], tags: [], users: [] },
+        additionalSearchResults: [],
+        resultCount: 0,
+        searching: false,
+        loading: false,
+      });
+
+      getOwner(controller)
+        .lookup("service:discobot-discoveries")
+        .triggerDiscovery(controller.searchTerm?.trim());
+    },
+    { after: SEARCH_TYPE_DEFAULT }
+  );
+
+  // An answer already on screen is what the reader is looking at, so opening
+  // the full page continues it rather than dropping them into an indexed
+  // search for the same words.
+  api.registerValueTransformer(
+    "search-menu-full-search-params",
+    ({ value, context }) => {
+      if (!offersDiscoveries(context?.location)) {
+        return value;
+      }
+
+      const query = search.activeGlobalSearchTerm?.trim();
+      if (query && discobotDiscoveries.lastQuery === query) {
+        value.set("search_type", SEARCH_TYPE_ASK_AI);
+      }
+
+      return value;
+    }
+  );
+
+  // the field submits a question rather than a query while asking
+  api.registerValueTransformer(
+    "full-page-search-button-icon",
+    ({ value, context }) =>
+      context?.searchType === SEARCH_TYPE_ASK_AI ? "far-discobot" : value
+  );
+
+  api.registerValueTransformer(
+    "full-page-search-button-label",
+    ({ value, context }) =>
+      context?.searchType === SEARCH_TYPE_ASK_AI
+        ? "discourse_ai.discobot_discoveries.ask_button"
+        : value
+  );
+
+  // the answer and its sources are the results, so the stock empty state has
+  // nothing left to report
+  api.registerValueTransformer(
+    "full-page-search-no-results-enabled",
+    ({ value, context }) =>
+      context?.searchType === SEARCH_TYPE_ASK_AI ? false : value
   );
 
   // Scope used to disqualify the menu entirely, back when it could only be
@@ -95,10 +170,9 @@ export default apiInitializer((api) => {
     }
   );
 
-  // each remembered item repeats using the mode shown by its icon
+  // each remembered item repeats as the kind of search its icon shows
   api.addSearchMenuAssistantSelectCallback((args) => {
     if (args.usage === "recent-search") {
-      discobotDiscoveries.setMode("search");
       discobotDiscoveries.dismissDiscovery();
       return true;
     }
@@ -108,12 +182,13 @@ export default apiInitializer((api) => {
     }
 
     args.searchTermChanged(args.updatedTerm);
-    discobotDiscoveries.setMode("ask");
     discobotDiscoveries.triggerDiscovery(args.updatedTerm);
     return false;
   });
 
-  // enter uses the configured or most recently selected option
+  // Enter always runs the indexed search, so nothing has to be remembered
+  // between submissions. Shift+Enter is the one that asks: Ctrl/Cmd+Enter is
+  // already advanced search, and a second Enter already means the same.
   api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
     if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
@@ -122,7 +197,8 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
-      if (discobotDiscoveries.mode === "ask" && query) {
+      if (event.shiftKey && query) {
+        // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
         searchTerm.args.clearPMInboxContext();
         discobotDiscoveries.triggerDiscovery(query);
@@ -138,6 +214,17 @@ export default apiInitializer((api) => {
     // to offering all three.
     if (search.inTopicContext) {
       searchTerm.args.clearTopicContext();
+    }
+
+    // An answer belongs to the submission that asked for it, not to the text.
+    // Dropping it the moment the box stops matching is what stops it coming
+    // back when the same term is typed a second time, since by then the answer
+    // it would be matched against is already gone.
+    if (
+      discobotDiscoveries.lastQuery &&
+      discobotDiscoveries.lastQuery !== search.activeGlobalSearchTerm?.trim()
+    ) {
+      discobotDiscoveries.dismissDiscovery();
     }
 
     return true;

@@ -58,6 +58,7 @@ export default class RecentSearches extends Component {
         const result = await User.resetRecentSearches();
         if (result.success) {
           this.currentUser.set("recent_searches", []);
+          this.currentUser.set("recent_searches_detailed", []);
         }
       },
       { location: this.args.location }
