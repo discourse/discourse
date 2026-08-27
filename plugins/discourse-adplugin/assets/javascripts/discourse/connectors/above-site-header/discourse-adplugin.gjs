@@ -1,12 +1,12 @@
 import AdSlot from "../../components/ad-slot";
 
 const DiscourseAdplugin = <template>
-  <span class="discovery-list-container-top-outlet discourse-adplugin">
+  <div class="above-site-header-outlet discourse-adplugin">
     <AdSlot
-      @placement="topic-list-top"
+      @placement="above-site-header"
       @category={{@outletArgs.category.slug}}
     />
-  </span>
+  </div>
 </template>;
 
 export default DiscourseAdplugin;
