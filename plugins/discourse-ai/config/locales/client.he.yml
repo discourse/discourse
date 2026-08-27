@@ -219,7 +219,6 @@ he:
         llm:
           one: "LLM/מש״ג:"
           two: "LLMים:"
-          many: "LLMים:"
           other: "LLMים:"
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
@@ -228,7 +227,6 @@ he:
         expand_list:
           one: "(עוד %{count})"
           two: "(עוד %{count})"
-          many: "(עוד %{count})"
           other: "(עוד %{count})"
         collapse_list: "(להציג פחות)"
         bot:
@@ -292,7 +290,6 @@ he:
           schedule_topic_success:
             one: "תזמון תרגום לפוסט שלא תורגם."
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
-            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
         spam:
           name: "ספאם"
@@ -335,17 +332,14 @@ he:
           eta_minutes:
             one: "דקה"
             two: "שתי דקות"
-            many: "%{count} דקות"
             other: "%{count} דקות"
           eta_hours:
             one: "שעה"
             two: "שעתיים"
-            many: "%{count} שעות"
             other: "%{count} שעות"
           eta_days:
             one: "יום"
             two: "יומיים"
-            many: "%{count} יום"
             other: "%{count} ימים"
         progress_chart:
           title: "התקדמות התרגום"
@@ -353,7 +347,6 @@ he:
           bar_done:
             one: "פוסט"
             two: "שני פוסטים"
-            many: "שני פוסטים"
             other: "שני פוסטים"
         theme_translations:
           translate:
@@ -490,7 +483,6 @@ he:
           replies:
             one: "החלה על התגובה הראשונה בלבד"
             two: "החלה על שתי התגובות הראשונות בלבד"
-            many: "החלה על שתי התגובות הראשונות בלבד"
             other: "החלה על שתי התגובות הראשונות בלבד"
         name: "שם"
         edit: "עריכה"
@@ -564,7 +556,6 @@ he:
         features_list:
           one: "תכונה:"
           two: "תכונות:"
-          many: "תכונות:"
           other: "תכונות:"
         llms_list: "LLM/מש״ג:"
       rag:
@@ -710,7 +701,6 @@ he:
         in_use_warning:
           one: "המודל הזה משמש את %{settings}. אם לא מוגדר כראוי, היכולת לא תעבוד כמצופה."
           two: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
-          many: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
@@ -948,7 +938,6 @@ he:
           min_input_length_message:
             one: "אורך ההודעה חייב להיות באורך של תו ומעלה"
             two: "אורך ההודעה חייב להיות באורך של שני תווים ומעלה"
-            many: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
             other: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
           messages_sidebar_title: "שיחות"
           today: "היום"
@@ -984,7 +973,6 @@ he:
           since:
             one: "השעה האחרונה"
             two: "השעתיים האחרונות"
-            many: "%{count} השעות האחרונות"
             other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
@@ -993,7 +981,6 @@ he:
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
-            many: "יצירת %{count} תקצירים מחדש נכשלה"
             other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:

@@ -52,6 +52,10 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另一个话题中"
+  access_control_list:
+    errors:
+      user_will_not_have_permission: "如果您删除此 ACL 条目，您将失去对该实体的访问权限。"
+      user_will_not_have_permission_on_create: "如果您使用这些权限创建此实体，您将无法访问它。是否继续？"
   topic_category_changed: "从 %{from} 到 %{to}"
   topic_tag_changed:
     added_and_removed: "%{added}添加，%{removed}移除"
@@ -196,6 +200,8 @@ zh_CN:
           other: "最多必须有 %{count} 个标记名称"
         humanize_not_valid_upload_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是有效的上传 id。"
         not_valid_upload_value: "必须是有效的上传 id"
+        humanize_not_valid_icon_value: "JSON 指针 '%{property_json_pointer}' 处的属性必须是图标名称。"
+        not_valid_icon_value: "必须是图标名称"
         humanize_string_value_not_valid_min:
           other: "JSON 指针 '%{property_json_pointer}' 处属性的长度必须至少为 %{count} 个字符。"
         string_value_not_valid_min:
@@ -926,13 +932,20 @@ zh_CN:
   email_login_code:
     invalid_code: "该验证码错误或已过期。请申请新的验证码并重试。"
   browsers:
+    android_browser: "Android浏览器"
+    baidu_browser: "百度浏览器"
     chrome: "Google Chrome"
     discoursehub: "DiscourseHub 应用"
     edge: "Microsoft Edge"
     firefox: "Firefox"
     ie: "Internet Explorer"
+    kaios_browser: "KaiOS浏览器"
     opera: "Opera"
+    qq_browser: "QQ浏览器"
     safari: "Safari"
+    samsung_browser: "三星浏览器"
+    uc_browser: "UC浏览器"
+    unknown: "未知浏览器"
   user_auth_tokens:
     device:
       android: "Android 设备"
@@ -1469,6 +1482,8 @@ zh_CN:
         country_code: "国家/地区代码"
         count: "访问量"
     top_entry_urls:
+      title: "热门条目网址"
+      description: "在选定的时间段内，获得最多直接或外部浏览器访问的页面。"
       labels:
         entry_url: "入口网址"
         count: "访问量"
@@ -1973,6 +1988,7 @@ zh_CN:
     discourse_connect_url: "DiscourseConnect 端点的 URL（必须包含 http:// 或 https://，并且不得包含末尾的斜杠）"
     discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，确保长度至少为 10 个字符"
     discourse_connect_provider_secrets: "使用 DiscourseConnect 的网域-密钥对列表。确保 DiscourseConnect 密钥长度至少为 10 个字符。通配符 * 可用于匹配任何网域或仅匹配其中的一部分（例如 *.example.com）。"
+    discourse_connect_provider_claims: "启用 {{setting:enable_discourse_connect_provider}} 后，可以选择在提供商响应中包含哪些可选用户声明。有效负载已签名但未加密。稳定的外部 ID 和用户名始终包含在内。为保证兼容性，默认情况下会选中所有声明；移除声明可能会导致依赖这些声明进行帐户链接、授权或个人资料同步的网站出现故障。"
     discourse_connect_overrides_bio: "替换用户个人资料中的用户个人简介，并阻止用户对其进行更改"
     discourse_connect_overrides_groups: "将所有手动群组成员资格与群组特性中指定的群组同步（警告：如果您不指定群组，将为用户清除所有手动群组成员资格）"
     auth_overrides_email: "在每次登录时使用外部网站电子邮件替换本地电子邮件，并禁止进行本地更改。适用于所有身份验证服务提供商。（警告：由于本地电子邮件的规范化，可能会出现差异）"
@@ -2041,6 +2057,7 @@ zh_CN:
     top_topics_formula_first_post_likes_multiplier: "热门话题中第一个帖子点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门话题中每个帖子的最少点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
+    instrument_image_processing: "记录图像处理操作的实际耗时和成功情况。默认情况下禁用。"
     rate_limit_create_topic: "创建话题后，用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_create_post: "发帖后，用户必须等待 (n) 秒才能创建另一个帖子。"
     rate_limit_new_user_create_post: "发帖后，新用户必须等待 (n) 秒才能创建另一个帖子。"
@@ -2218,6 +2235,7 @@ zh_CN:
     user_profile_view_duration_hours: "每个 IP/用户每 N 小时计算一次新用户个人资料浏览"
     levenshtein_distance_spammer_emails: "在匹配垃圾信息发布者电子邮件时，仍然允许模糊匹配的字符数差异。"
     max_new_accounts_per_registration_ip: "如果已经有 (n) 个来自此 IP 的信任级别 0 帐户（并且没有一个是管理人员或者是 TL2 或更高级别），则停止接受来自该 IP 的新注册。设为 0 将禁用限制。"
+    min_ban_entries_for_roll_up: "当同一子网内至少有 (N) 个被阻止的 IP 地址时， <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> 作业将每天创建一个新的子网禁止条目。"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的已屏蔽电子邮件条目。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的已屏蔽 IP 条目。"
     num_flaggers_to_close_topic: "自动暂停话题以进行干预所需的最小唯一举报次数"
@@ -2259,6 +2277,7 @@ zh_CN:
     auto_generated_allowlist: "不会检查自动生成内容的电子邮件地址列表。示例：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止识别为自动生成的传入电子邮件。"
     ignore_by_title: "根据标题忽略传入电子邮件。"
+    ignore_by_title_regex: "使用正则表达式根据邮件标题忽略收到的邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
     sendgrid_verification_key: "用于验证网络钩子消息的 Sendgrid 验证密钥。"
     aws_sns_topic_arn_allowlist: "SNS 话题 ARN 允许发送Amazon SES 退回网络钩子通知。"
@@ -2549,6 +2568,7 @@ zh_CN:
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
+    site_traffic_explorer_event_limit: "控制网站流量分析器处理的近期页面浏览量上限。更高的限制可以覆盖更多流量，但在资源较低的数据库服务器上，加载时间可能会更长，甚至可能超时。"
     gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服务制作用户头像。禁用将阻止用户改用 Gravatar 制作头像，但不会影响已使用 Gravatar 的用户。"
     gravatar_name: "指定 Gravatar 服务提供商的名称。此名称通常用于标识向网站提供 Gravatar 头像的来源。"
     gravatar_base_url: "指定用于访问 Gravatar 提供商的 API 的 URL。此设置对于将电子邮件地址转换为存储头像图片的 Gravatar URL 至关重要。"
@@ -2718,6 +2738,7 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 站点设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
+      content_localization_language_switcher_requirements: "语言切换器需要启用 {{setting:allow_user_locale}} ，并且 {{setting:content_localization_supported_locales}} 至少包含一种语言。 {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "在启用此设置之前，您必须先启用 'set locale from param'。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
       mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录为必选项。"
@@ -4282,6 +4303,11 @@ zh_CN:
     user_posted_pm_staged:
       title: "暂存用户发布私信"
       subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        %{respond_instructions}
     account_suspended:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
@@ -4783,6 +4809,8 @@ zh_CN:
     title: "隐私政策"
     body: "## [论坛管理员，下面是一个您应该为您的网站定制的隐私政策的示例起始模板。]\n\n<a name=\"collect\"></a>\n\n## [我们收集哪些信息？](#collect)\n\n当您在我们的网站上注册时，我们会收集您的信息，当您通过阅读、撰写和评价本论坛上分享的内容参与本论坛时，我们会收集您的数据。\n\n在我们的网站上注册时，您可能会被要求输入您的姓名和电子邮件地址。不过，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果访问了该链接，我们便知道您对该电子邮件地址有控制权。 \n\n在注册和发帖时，我们会记录帖子所来自的 IP 地址。我们还可能保留服务器日志，其中包含向我们的服务器发送的每个请求的 IP 地址。 \n\n<a name=\"use\"></a>\n\n## [我们使用您的信息做什么](#use)\n\n我们从您处收集的任何信息都可能通过下列一种方式使用：\n\n* 个性化设置您的体验 &mdash; 您的信息可以帮助我们更好地满足您的个人需求。\n* 改进我们的网站 &mdash; 我们根据您提供给我们的信息和反馈，不断努力改进我们的网站。 \n* 改进客户服务 &mdash; 您的信息可以帮助我们更高效地回应您的客户服务请求和支持需求。\n* 定期发送电子邮件 &mdash; 您提供的电子邮件地址可能被用于向您发送信息、您请求的关于话题变更的通知、回应您的用户名、回复查询和/或其他请求或问题。\n\n<a name=\"protect\"></a>\n\n## [我们如何保护您的信息？](#protect)\n\n我们采取各种安全措施，确保在您输入、提交或访问您的个人信息时您个人信息的安全。\n\n<a name=\"data-retention\"></a>\n\n## [数据保留策略是什么？](#data-retention)\n\n我们会尽最大努力：\n\n* 将服务器日志保留不超过 [天数] 天。\n\n<a name=\"cookies\"></a>\n\n## [我们使用 Cookie 吗？](#cookies)\n\n是的。Cookie 是在您允许的情况下，网站或其服务提供商通过您的 Web 浏览器传输到您计算机硬盘上的小文件。这些 Cookie 使网站能够识别您的浏览器，并且如果您有注册帐户，将其与您的注册帐户相关联。\n\n我们使用 Cookie 来了解和保存您的偏好以便将来访问，并收集关于网站流量和网站互动的汇总数据，以便将来可以提供更好的网站体验和工具。我们可能与第三方服务提供商签订合同，以帮助我们更好地了解我们的网站访客。这些服务提供商不允许使用代表我们收集的信息，除非为了帮助我们开展和改进业务。\n\n<a name=\"disclose\"></a>\n\n## [我们是否向外界披露任何信息？](#disclose)\n\n我们不向外界出售、交易或以其他方式转让您的个人身份信息。这不包括协助我们运营网站、经营业务或为您提供服务的可信第三方，前提是这些第三方同意对这些信息保密。当我们认为为了遵守法律、执行我们的网站政策或保护我们或他人的权利、财产或安全而适合发布时，我们也可能发布您的信息。不过，无法识别个人身份的访客信息可能被提供给其他方，用于营销、广告或其他用途。\n\n<a name=\"third-party\"></a>\n\n## [第三方链接](#third-party)\n\n有时，我们可能自行决定在我们的网站上包含或提供第三方产品或服务。这些第三方网站具有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担责任和义务。尽管如此，我们仍努力保护我们网站的完整性并欢迎对这些网站提供任何反馈。\n\n<a name=\"coppa\"></a>\n\n## [美国《儿童在线隐私保护法》合规性](#coppa)\n\n我们的网站、产品和服务全部面向 18 岁或以上人群。如果此服务器在美国，而且您未满 18 岁，根据 COPPA（[儿童在线隐私保护法](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），请勿使用本网站。\n\n<a name=\"online\"></a>\n\n## [仅在线隐私政策](#online)\n\n本在线隐私政策仅适用于通过我们的网站收集的信息，不适用于离线收集的信息。\n\n<a name=\"consent\"></a>\n\n## [您的同意](#consent)\n\n使用本网站，即表示您同意我们网站的隐私政策。\n\n<a name=\"changes\"></a>\n\n## [我们隐私政策的变更](#changes)\n\n如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。 \n\n本文档为 CC-BY-SA。它的最后更新日期为 [在此处插入最后更新日期]。\n"
   badges:
+    errors:
+      cant_delete_system_badge: 系统徽章无法删除。
     mass_award:
       errors:
         invalid_csv: 我们在第 %{line_number} 行遇到错误。请确认 CSV 每行有一个电子邮件。
@@ -5272,6 +5300,7 @@ zh_CN:
       group: "不在指定群组中的用户的回复必须经过管理人员批准。请参阅%{link}。"
       new_topics_unless_trust_level: "低信任级别的用户的话题必须由管理人员批准。请参阅%{link}。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅%{link}。"
+      fast_typer_with_time: "新用户发布的第一条帖子速度异常快（%{typing_time}），怀疑是机器人或垃圾邮件发送者的行为。参见 %{link}。"
       fast_typer_time:
         other: "%{count} 秒"
       auto_silence_regex: "第一个帖子与%{link}设置匹配的新用户。"
@@ -5390,6 +5419,10 @@ zh_CN:
       reject_post:
         title: "拒绝帖子"
         complete: "帖子被拒绝。"
+      remove_avatar:
+        title: "移除头像"
+        description: "将此用户的个人资料图片重置为系统默认图片"
+        complete: "头像已移除。"
       approve_user:
         title: "是"
         complete: "用户已被批准。"
@@ -5398,10 +5431,12 @@ zh_CN:
         delete:
           title: "删除用户"
           description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址"
+          confirm: "您确定要删除 @%{username} 吗？"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
+          confirm: "您确定要删除并屏蔽 @%{username} 吗？"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:
         title: "是"

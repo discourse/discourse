@@ -344,7 +344,6 @@ he:
       participants:
         one: "משתמש %{count} השתתף."
         two: "%{count} משתמשים השתתפו."
-        many: "%{count} משתמשים השתתפו."
         other: "%{count} משתמשים השתתפו."
       invite: "הודעה למשתמש"
       add_to_calendar: "הוספה ללוח השנה"
@@ -407,22 +406,18 @@ he:
             going_count:
               one: "%{count} מגיעים/ות"
               two: "%{count} מגיעים/ות"
-              many: "%{count} מגיעים/ות"
               other: "%{count} מגיעים/ות"
             not_going_count:
               one: "%{count} לא מגיעים/ות"
               two: "%{count} לא מגיעים/ות"
-              many: "%{count} לא מגיעים/ות"
               other: "%{count} לא מגיעים/ות"
             interested_count:
               one: "%{count} מתעניינים/ות"
               two: "%{count} מתעניינים/ות"
-              many: "%{count} מתעניינים/ות"
               other: "%{count} מתעניינים/ות"
             invited_count:
               one: "משתמש/ת %{count} הוזמן/ה"
               two: "%{count} משתמשים/ות הוזמנו"
-              many: "%{count} משתמשים/ות הוזמנו"
               other: "%{count} משתמשים/ות הוזמנו"
         event:
           expired: "לא בתוקף"
@@ -448,22 +443,18 @@ he:
             minutes:
               one: "דקה"
               two: "דקות"
-              many: "דקות"
               other: "דקות"
             hours:
               one: "שעה"
               two: "שעות"
-              many: "שעתיים"
               other: "שעתיים"
             days:
               one: "יום"
               two: "יום"
-              many: "יום"
               other: "יום"
             weeks:
               one: "שבוע"
               two: "שבועות"
-              many: "שבועות"
               other: "שבועות"
       composer_actions:
         create_event:

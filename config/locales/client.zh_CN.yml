@@ -490,7 +490,7 @@ zh_CN:
       pm_title: "建议的消息"
     admin_onboarding_banner:
       launch_in_easy_steps: "设置您的社区"
-      launch_in_easy_steps_subtitle: "已完成 %{completed_steps} 步（共 %{step_count} 步）"
+      launch_in_easy_steps_subtitle: "已完成 %{step_count} 中的 %{completed_steps} 步"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
       expand: "展开设置步骤"
       collapse: "收起设置步骤"
@@ -3810,6 +3810,7 @@ zh_CN:
           missing_to: "替换标签为必选项"
       delete_topics:
         name: "删除"
+        description: "删除所选主题。已删除的主题可以恢复。"
       update_category:
         name: "更新类别"
         description: "将所有所选话题移至以下类别："
@@ -4365,6 +4366,7 @@ zh_CN:
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
       continue_discussion: "从%{postLink}继续讨论："
       follow_quote: "转到引用的帖子"
+      show_more: "显示更多…"
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
@@ -5593,6 +5595,7 @@ zh_CN:
         custom:
           add: "添加自定义版块"
           edit: "编辑自定义版块"
+          drop_to_add: "将内容拖放到此处以添加新章节"
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
@@ -5640,6 +5643,7 @@ zh_CN:
                   other: "名称必须短于 %{count} 个字符"
             value:
               label: "链接"
+              duplicate: "本节中的另一个链接已经指向这里。"
               validation:
                 blank: "链接不能为空"
                 maximum:
@@ -6532,9 +6536,27 @@ zh_CN:
         empty: "没有匹配的页面浏览量"
         metric_information: "关于%{metric}"
         active_filters: "活跃的流量过滤器"
+        filtering_to:
+          traffic_type:
+            other: "筛选 %{count} 流量类型"
+          top_url:
+            other: "筛选出 %{count} 个热门网址"
+          entry_url:
+            other: "筛选出 %{count} 条目 URL"
+          referrer:
+            other: "筛选出 %{count} 引荐来源"
+          country:
+            other: "筛选出 %{count} 个国家/地区"
+          network:
+            other: "筛选出 %{count} 网络"
+          browser:
+            other: "筛选出 %{count} 浏览器"
+          ip:
+            other: "筛选出 %{count} IP 地址"
         remove_filter_value: "移除 %{value}"
         clear_all: "全部清除"
         apply: "应用"
+        apply_filters: "应用筛选条件"
         filter_by:
           other: "按 %{label}, %{count} 网页浏览量筛选"
         remove_filter: "移除 %{filter} 过滤器"
@@ -6562,6 +6584,8 @@ zh_CN:
           network: "网络"
           browser: "浏览器"
           ip: "IP 地址"
+        headline:
+          other: "%{formatted_count} 页面浏览量"
         metrics:
           distinct_sessions:
             label: "不同的会话"
@@ -6575,6 +6599,10 @@ zh_CN:
           logged_in_human: "登录成员"
           anonymous_human: "匿名"
           likely_crawler: "疑似爬虫"
+        partial:
+          retention: "%{date} 之前的页面浏览量数据已不再可用，因此这些结果仅涵盖所选日期范围的一部分。"
+          pageview_limit: "结果包含最近 %{limit} 次页面浏览量，从 %{date} 到 %{time}。所选日期范围内更早的页面浏览量不包含在内。"
+          combined: "结果包含最近 %{limit} 次页面浏览量，从 %{pageviewLimitDate} 到 %{pageviewLimitTime}。所选日期范围内的早期页面浏览量不包含在内； %{date} 之前的页面浏览量数据不再可用。"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -6728,7 +6756,52 @@ zh_CN:
                 stickiness_up: "用户粘性增强了。"
                 daily_engagement_and_new_signups_up_stickiness_down: "每日参与度和新注册用户数有所上升，但用户粘性下降了。"
                 daily_engagement_up_stickiness_and_new_signups_down: "每日参与度上升，但用户粘性和新注册用户数下降。"
+                daily_engagement_up_stickiness_down: "每日互动量上升，但用户粘性下降。"
+                new_signups_up_stickiness_and_daily_engagement_down: "新用户注册量上升，但用户粘性和每日活跃度下降。"
+                all_metrics_down: "用户粘性、每日互动量和新注册用户数均下降。"
+                stickiness_and_daily_engagement_down_new_signups_steady: "用户粘性和每日活跃度有所下降，但新注册用户数量保持稳定。"
+                stickiness_and_daily_engagement_down: "用户粘性和每日活跃度均有所下降。"
+                new_signups_up_stickiness_down: "新用户注册量上升了，但用户粘性下降了。"
+                stickiness_and_new_signups_down_daily_engagement_steady: "用户粘性和新注册用户数量有所下降，但每日活跃用户数量保持稳定。"
+                stickiness_down_daily_engagement_and_new_signups_steady: "用户粘性有所下降，但每日互动量和新注册用户数保持稳定。"
+                stickiness_down_daily_engagement_steady: "用户粘性有所下降，但每日活跃度保持稳定。"
+                stickiness_and_new_signups_down: "用户粘性和新注册用户数量均下降。"
+                stickiness_down_new_signups_steady: "用户粘性有所下降，但新注册用户数量保持稳定。"
+                stickiness_down: "粘性降低了。"
+                daily_engagement_and_new_signups_up_stickiness_flat: "每日互动量和新注册用户数都在上升，但用户粘性却停滞不前。"
+                daily_engagement_up_new_signups_down: "每日用户互动量上升，但新注册用户数下降。"
+                daily_engagement_up_stickiness_and_new_signups_flat: "每日用户参与度有所上升，但用户粘性和新注册用户数量持平。"
+                daily_engagement_up_stickiness_flat: "日活跃用户数上升，但用户粘性保持平稳。"
+                new_signups_up_daily_engagement_down: "新用户注册量上升，但每日活跃用户量下降。"
+                daily_engagement_and_new_signups_down_stickiness_steady: "每日互动量和新注册用户数有所下降，但用户粘性保持稳定。"
+                daily_engagement_down_stickiness_and_new_signups_steady: "每日用户活跃度有所下降，但用户粘性和新注册用户数量保持稳定。"
+                daily_engagement_down_stickiness_steady: "日活跃用户数下降，但用户粘性保持稳定。"
+                new_signups_up_stickiness_and_daily_engagement_flat: "新用户注册量有所上升，但用户粘性和每日活跃度却保持平稳。"
+                new_signups_down_stickiness_and_daily_engagement_steady: "新用户注册量有所下降，但用户粘性和每日活跃度保持稳定。"
+                all_metrics_steady: "用户粘性、每日活跃度或新注册用户数均未发生实质性变化。"
+                stickiness_and_daily_engagement_steady: "用户粘性和日常参与度没有显著变化。"
+                new_signups_up_stickiness_flat: "新用户注册量上升，但用户粘性保持平稳。"
+                new_signups_down_stickiness_steady: "新用户注册量下降，但用户粘性保持稳定。"
+                stickiness_and_new_signups_steady: "用户粘性和新注册用户数量没有显著变化。"
+                stickiness_steady: "粘性没有明显变化。"
+                daily_engagement_and_new_signups_up: "每日互动量和新注册用户数均有所上升。"
+                daily_engagement_up_new_signups_flat: "每日用户互动量上升，但新注册用户数持平。"
+                daily_engagement_up: "每日互动量上升。"
+                daily_engagement_and_new_signups_down: "每日互动量和新用户注册量均有所下降。"
+                daily_engagement_down_new_signups_steady: "每日用户活跃度有所下降，但新注册用户数量保持稳定。"
+                daily_engagement_down: "每日互动量下降。"
+                new_signups_up_daily_engagement_flat: "新用户注册量有所上升，但每日活跃用户量持平。"
+                new_signups_down_daily_engagement_steady: "新用户注册量下降，但每日活跃用户数保持稳定。"
+                daily_engagement_and_new_signups_steady: "每日用户参与度和新用户注册量没有显著变化。"
+                daily_engagement_steady: "日常参与度没有实质性变化。"
+                new_signups_up: "新注册用户数量有所增长。"
+                new_signups_down: "新用户注册量下降了。"
+                new_signups_steady: "新注册用户数量没有显著变化。"
                 insufficient_activity: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
+              cta:
+                dau_mau: "按类别查看活动，看看您所在社区的哪些领域可能需要您的关注。"
+                daily_engaged_users: "调查下降原因，找出哪些成员脱离了组织。"
+                new_signups: "查看您的网站流量数据，了解流量模式在本时期可能如何影响您的注册量。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "DAU / MAU 粘性"
@@ -6741,11 +6814,36 @@ zh_CN:
             headline:
               titles:
                 insufficient_activity: "搜索活动量不足，暂时无法总结。"
+                searches_increased_no_result_rate_declined: "在选定的时间段内，搜索次数有所增加，无结果率有所下降。"
+                searches_increased: "在选定的时间段内，搜索总次数有所增加。"
+                no_result_rate_decreased: "在选定的时间段内，无结果率有所下降。"
+                searches_decreased_no_result_rate_increased: "在选定的时间段内，搜索次数减少，无结果率上升。"
+                searches_decreased: "在选定的时间段内，搜索总次数有所下降。"
+                no_result_rate_increased: "在选定的时间段内，无结果率有所上升。"
+                search_steady: "在选定的时间段内，搜索稳定进行。"
               summaries:
                 insufficient_activity: "请选择更长的日期范围，或者等成员搜索更多内容后再回来。"
+                searches_up_results_improved: "社区成员的搜索量增加，他们也更频繁地找到了自己想要的内容。"
+                searches_up_no_result_rate_up: "社区成员的搜索量有所增加，但无结果率却有所上升。"
+                searches_up_no_result_rate_flat: "社区成员的搜索量有所增加，但无结果率保持不变。"
+                results_improved_searches_down: "会员们都能找到他们想要的东西，搜索总量有所下降。"
+                results_improved_searches_steady: "会员们都能找到他们想要的内容，总搜索量保持稳定。"
+                searches_down_results_worsened: "用户在您所在的社区进行搜索的次数减少了，他们找到所需内容的频率也降低了。"
+                searches_down_no_result_rate_flat: "社区成员的搜索次数减少了，但无结果率保持不变。"
+                results_worsened_searches_steady: "会员们发现他们找到所需内容的频率不如以前，而总搜索量则保持稳定。"
+                searches_and_no_result_rate_steady: "总搜索量或无结果率均无显著变化。"
+                searches_up: "会员们正在您所在的社区进行更多搜索。"
+                searches_down: "您所在社区的搜索次数正在减少。"
+                searches_steady: "总搜索量没有显著变化。"
+                results_worsened: "会员们越来越难找到他们需要的东西。"
+                results_improved: "会员们越来越容易找到他们想要的东西。"
+                no_result_rate_steady: "无结果率没有显著变化。"
+              cta:
+                content_gaps: "检查内容缺口，看看缺少哪些内容。"
             kpi:
               total_searches:
                 label: "总搜索次数"
+                tooltip: "您所在社区的搜索次数。"
               no_result_rate:
                 label: "无结果率"
                 tooltip: "成员未点击任何结果的搜索百分比 (0% CTR)。这表示成员可能正在搜索您的社区中没有的内容。"
@@ -6755,6 +6853,7 @@ zh_CN:
               status: "状态"
             trending:
               title: "热门搜索"
+              tooltip: "您所在社区最热门的搜索词。"
               empty: "此期间没有任何搜索。"
             content_gaps:
               title: "内容差距"
@@ -6856,6 +6955,10 @@ zh_CN:
             title: "热门推荐人"
             empty: "此期间没有推荐人数据。"
             error: "无法加载热门推荐人。请尝试刷新页面。"
+          top_entry_urls:
+            title: "热门条目网址"
+            empty: "本期间无条目 URL 数据。"
+            error: "无法加载热门条目网址。请尝试刷新页面。"
           series:
             logged_in: "登录成员"
             anonymous: "匿名"
@@ -8242,6 +8345,7 @@ zh_CN:
             change_name: "更改名称"
             topic_timestamps_changed: "已更改话题时间戳"
             approve_user: "批准的用户"
+            removed_avatar: "已移除头像"
             web_hook_create: "创建网络钩子"
             web_hook_update: "更新网络钩子"
             web_hook_destroy: "销毁网络钩子"
@@ -8344,6 +8448,7 @@ zh_CN:
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
             non_staff_only: "非工作人员用户"
+            human_only: "不包括工作人员和爬行者"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"
