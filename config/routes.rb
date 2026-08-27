@@ -1975,6 +1975,8 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+    put "/sidebar_sections/:id/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/:id/move_link" => "sidebar_sections#move_link"
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
