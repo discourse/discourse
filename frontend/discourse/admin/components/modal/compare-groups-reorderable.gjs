@@ -3,12 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ManageableRowListItem from "discourse/admin/components/manageable-row-list-item";
+import ManageableRowListItemReorderable from "discourse/admin/components/manageable-row-list-item-reorderable";
 import ToggleableOrderedList from "discourse/admin/lib/toggleable-ordered-list";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DModal from "discourse/ui-kit/d-modal";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
 export const VISIBLE_CAP = 10;
@@ -22,8 +23,13 @@ export function groupToken(groupId) {
   return `group:${groupId}`;
 }
 
-// TODO (ui-kit-reorderable-list-cleanup) delete this file once
-// `enable_new_reordering_controls` ships; `compare-groups-reorderable.gjs` replaces it.
+/**
+ * The reordering surface behind `enable_new_reordering_controls`. Mirrors
+ * `modal/compare-groups.gjs`, over the shared reorderable list.
+ *
+ * TODO (ui-kit-reorderable-list-cleanup) rename this over `modal/compare-groups.gjs`
+ * and drop the branch in whos-posting.gjs and report-filters/groups.gjs.
+ */
 export default class CompareGroups extends Component {
   @service site;
 
@@ -34,6 +40,18 @@ export default class CompareGroups extends Component {
   rowsByKey = new Map();
 
   toggleDisabled = (row) => this.list.toggleDisabled(row.key);
+
+  /** Only an enabled row takes part in the order; the rest keep their slots. */
+  isMovable = (row) => row.enabled;
+
+  /** Keeps the row's own class and its enabled modifier on the row element. */
+  rowClass = (row) =>
+    row.enabled
+      ? "manageable-row-list__row --reorderable --enabled"
+      : "manageable-row-list__row --reorderable";
+
+  /** Names a row wherever the list speaks about it: the handle, the menu, the announcement. */
+  rowLabel = (row) => row.title;
 
   constructor() {
     super(...arguments);
@@ -107,28 +125,10 @@ export default class CompareGroups extends Component {
   }
 
   @action
-  moveUp(row) {
-    this.list.moveUp(row.key);
-  }
-
-  @action
-  moveDown(row) {
-    this.list.moveDown(row.key);
-  }
-
-  @action
-  onDragStart(key) {
-    this.list.onDragStart(key);
-  }
-
-  @action
-  onDrop(targetKey, dropAbove) {
-    this.list.onDrop(targetKey, dropAbove);
-  }
-
-  @action
-  onDragEnd() {
-    this.list.onDragEnd();
+  handleMove({ proposedToItems }) {
+    this.list.reorderVisible(
+      proposedToItems.filter((row) => row.enabled).map((row) => row.key)
+    );
   }
 
   @action
@@ -172,30 +172,28 @@ export default class CompareGroups extends Component {
       </:belowHeader>
 
       <:body>
-        <ul
-          class={{dConcatClass
-            "manageable-row-list__list"
-            (if this.list.draggedId "--dragging")
-            (if this.list.reorderable "--reorderable")
+        <DReorderableList
+          class="manageable-row-list__list --reorderable"
+          @disabled={{not this.list.reorderable}}
+          @items={{this.visibleRows}}
+          @key="key"
+          @label={{this.rowLabel}}
+          @listLabel={{i18n
+            "admin.dashboard.sections.engagement.whos_posting.modal.title"
           }}
+          @movable={{this.isMovable}}
+          @onMove={{this.handleMove}}
+          @rowClass={{this.rowClass}}
         >
-          {{#each this.visibleRows key="key" as |row index|}}
-            <ManageableRowListItem
+          <:row as |row|>
+            <ManageableRowListItemReorderable
               @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
               @row={{row}}
-              @index={{index}}
-              @lastEnabledIndex={{this.lastEnabledIndex}}
-              @reorderable={{this.list.reorderable}}
               @toggleDisabled={{this.toggleDisabled row}}
               @onToggle={{this.toggle}}
-              @onMoveUp={{this.moveUp}}
-              @onMoveDown={{this.moveDown}}
-              @onDragStart={{this.onDragStart}}
-              @onDrop={{this.onDrop}}
-              @onDragEnd={{this.onDragEnd}}
             />
-          {{/each}}
-        </ul>
+          </:row>
+        </DReorderableList>
       </:body>
 
       <:footer>

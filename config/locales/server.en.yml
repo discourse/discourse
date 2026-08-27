@@ -2969,6 +2969,7 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_new_reordering_controls: "Use the shared reordering controls on every list that can be reordered, giving each one the same drag handle, move menu and keyboard support."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."

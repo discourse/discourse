@@ -6,6 +6,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import SimpleList from "discourse/admin/components/simple-list";
+import SimpleListReorderable from "discourse/admin/components/simple-list-reorderable";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
@@ -307,13 +308,25 @@ export default class AdminLogoForm extends Component {
               as |field|
             >
               <field.Control>
-                <SimpleList
-                  @onChange={{fn this.updateManifestScreenshots field}}
-                  @inputDelimiter="|"
-                  @values={{field.value}}
-                  @allowAny={{true}}
-                  id={{field.id}}
-                />
+                {{! TODO (ui-kit-reorderable-list-cleanup) drop the branch and the
+                    legacy component once the change ships. }}
+                {{#if this.siteSettings.enable_new_reordering_controls}}
+                  <SimpleListReorderable
+                    @onChange={{fn this.updateManifestScreenshots field}}
+                    @inputDelimiter="|"
+                    @values={{field.value}}
+                    @allowAny={{true}}
+                    id={{field.id}}
+                  />
+                {{else}}
+                  <SimpleList
+                    @onChange={{fn this.updateManifestScreenshots field}}
+                    @inputDelimiter="|"
+                    @values={{field.value}}
+                    @allowAny={{true}}
+                    id={{field.id}}
+                  />
+                {{/if}}
               </field.Control>
             </form.Field>
             <form.Field
