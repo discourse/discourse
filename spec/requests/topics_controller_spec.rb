@@ -2811,9 +2811,7 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}/#{topic.id}.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
-        public_tag.name,
-      )
+      expect(response.parsed_body["tags"]).to contain_exactly(public_tag.name)
       expect(response.parsed_body["tags_descriptions"]).to eq(
         { public_tag.name => public_tag.description },
       )
@@ -2822,10 +2820,7 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}/#{topic.id}.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
-        public_tag.name,
-        restricted_tag.name,
-      )
+      expect(response.parsed_body["tags"]).to contain_exactly(public_tag.name, restricted_tag.name)
       expect(response.parsed_body["tags_descriptions"]).to eq(
         public_tag.name => public_tag.description,
         restricted_tag.name => restricted_tag.description,
