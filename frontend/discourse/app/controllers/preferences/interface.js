@@ -16,6 +16,7 @@ import {
 } from "discourse/lib/constants";
 import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
 import { deepEqual } from "discourse/lib/object";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import {
   currentThemeId,
   listThemes,
@@ -25,10 +26,8 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   setDefaultHomepage,
   siteDefaultHomepage,
-  translateModKey,
 } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
@@ -174,7 +173,7 @@ export default class InterfaceController extends Controller {
       },
       {
         name: i18n("user.send_shortcut.meta_enter", {
-          meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
+          meta_key: formatShortcut("mod").label,
         }),
         value: SEND_SHORTCUT_META_ENTER,
       },
