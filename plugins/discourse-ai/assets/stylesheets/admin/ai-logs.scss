@@ -3,128 +3,77 @@
 .ai-logs {
   padding: var(--space-4);
 
-  > .d-filter-controls {
+  &__table-wrap {
+    position: relative;
+  }
+
+  &__filters {
     margin-bottom: var(--space-4);
-  }
 
-  &__filters-title {
-    margin-block: var(--space-4) var(--space-2);
-    font-size: var(--font-up-1);
-  }
+    // the drawer's contents are hidden while collapsed, so tint the toggle to
+    // signal that filters are still narrowing the list
+    &.ai-logs__filters--drawer-active
+      .d-filter-controls:not(:has(.d-filter-controls__dropdowns))
+      .d-filter-controls__toggle-filters {
+      --d-button-default-icon-color: var(--tertiary);
+      --d-button-default-icon-color--hover: var(--tertiary-hover);
+    }
 
-  .d-filter-controls__dropdowns {
-    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
-  }
+    // the row mixes selects with switches, so it sizes to its contents rather
+    // than forcing every filter into an equal column
+    .d-filter-controls__dropdowns {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
-  .d-filter-controls__additional-filters {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-
-    @include viewport.from(md) {
-      grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    .d-filter-controls__dropdown,
+    .ai-logs__feature-filter {
+      flex: 1 1 12rem;
     }
   }
 
-  &__date-range-filter,
-  &__feature-filter,
-  &__user-filter {
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
-
-  &__date-range-filter {
+  &__periods {
     display: flex;
-    grid-column: 1 / -1;
     flex-wrap: wrap;
-    align-items: end;
+    align-items: center;
     gap: var(--space-2);
 
-    legend {
-      flex-basis: 100%;
+    > button:last-of-type {
+      margin-right: auto;
     }
   }
 
-  &__feature-filter,
-  &__user-filter {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-
-    // a rendered legend sits outside flex layout, so gap does not apply to it
-    legend {
-      margin-bottom: var(--space-1);
-    }
-
-    .select-kit {
-      width: 100%;
-    }
+  // select-kit bolds its header; the plain selects beside it do not
+  &__feature-filter.select-kit .select-kit-header {
+    font-weight: normal;
   }
 
-  &__id-filter {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
-    align-items: end;
-    gap: var(--space-2);
-    margin: 0;
-  }
-
-  &__id-type,
-  &__id-value {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-    margin: 0;
-
-    select,
-    input {
-      width: 100%;
-      min-height: 2.375rem;
-      margin: 0;
-    }
-  }
-
+  // the switches read as one control, so they stay together and keep their
+  // own width instead of stretching with the selects
   &__toggles {
     display: flex;
-    grid-column: 1 / -1;
+    flex: none;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-3);
   }
 
-  @include viewport.until(sm) {
-    &__date-range-filter .d-date-time-input-range {
-      flex-basis: 100%;
-    }
-
-    &__id-filter {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    &__find {
-      justify-self: start;
-    }
+  &__date-range {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
   }
 
-  &__table-wrapper {
-    border-block: 1px solid var(--content-border-color);
-  }
+  .d-date-time-input-range {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
 
-  &__table {
-    width: 100%;
-    table-layout: fixed;
-
-    th,
-    td {
-      vertical-align: middle;
-    }
-
-    th {
-      color: var(--primary-high);
-      font-size: var(--font-down-1);
-      font-weight: 600;
+    .from,
+    .to {
+      margin: 0;
     }
   }
 
@@ -142,30 +91,16 @@
     }
   }
 
-  &__col-time {
-    width: 6rem;
-  }
-
-  td.ai-logs__col-time {
+  .ai-logs__col-time {
     color: var(--primary-high);
     white-space: nowrap;
   }
 
   &__col-outcome {
-    width: 2rem;
     text-align: center;
   }
 
-  &__col-user {
-    width: 7rem;
-  }
-
-  &__col-request {
-    width: 15rem;
-  }
-
   &__col-duration {
-    width: 10rem;
     text-align: end;
     font-variant-numeric: tabular-nums;
   }
@@ -198,10 +133,6 @@
   &__col-actions {
     width: 3rem;
     text-align: end;
-
-    .btn-flat {
-      color: var(--primary-high);
-    }
   }
 
   &__model,
@@ -215,24 +146,20 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
     gap: var(--space-1);
+
+    @include viewport.from(md) {
+      justify-content: center;
+    }
   }
 
-  &__status-dot {
-    display: inline-block;
-    width: 0.65rem;
-    height: 0.65rem;
-    flex: 0 0 0.65rem;
-    border-radius: 50%;
-    cursor: help;
-
+  &__status-icon {
     &.--success {
-      background: var(--success);
+      color: var(--success);
     }
 
     &.--failed {
-      background: var(--danger);
+      color: var(--danger);
     }
   }
 
@@ -284,44 +211,20 @@
     text-align: center;
   }
 
-  @include viewport.until(xl) {
-    &__col-context {
-      display: none;
-    }
-  }
-
   @include viewport.until(lg) {
     padding: var(--space-2);
 
-    &__col-outcome {
-      width: 4rem;
-    }
-
-    &__col-user {
-      width: 7.5rem;
-    }
-
-    &__col-duration {
-      width: 9.5rem;
-    }
-
-    &__model {
-      display: none;
-    }
-  }
-
-  @include viewport.until(lg) {
-    &__table {
+    .d-table {
       display: block;
       margin-bottom: 0;
       table-layout: auto;
 
-      thead,
-      tbody {
+      .d-table__header,
+      .d-table__body {
         display: block;
       }
 
-      thead {
+      .d-table__header {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -342,42 +245,51 @@
       align-items: center;
       padding-block: var(--space-1);
 
-      > .d-table__cell {
+      .d-table__cell {
         width: auto;
         padding: var(--space-1) var(--space-2);
         border-top: 0;
       }
 
-      > .ai-logs__col-time {
+      .ai-logs__col-time {
         grid-area: time;
       }
 
-      > .ai-logs__col-outcome {
+      .ai-logs__col-outcome {
         grid-area: outcome;
       }
 
-      > .ai-logs__col-request {
+      .ai-logs__col-request {
         grid-area: request;
       }
 
-      > .ai-logs__col-user {
+      .ai-logs__col-user {
         grid-area: user;
         min-width: 0;
+        display: flex;
       }
 
-      > .ai-logs__col-duration {
+      .ai-logs__col-duration {
         grid-area: duration;
         text-align: end;
       }
 
-      > .ai-logs__col-actions {
+      .ai-logs__col-actions {
         position: static;
         grid-area: actions;
+      }
+
+      .ai-logs__col-context {
+        grid-column: 1 / -1;
       }
     }
 
     &__status-cell {
       justify-content: start;
+    }
+
+    &__model {
+      display: none;
     }
   }
 }
@@ -443,7 +355,7 @@
   }
 
   &__error {
-    padding: var(--space-6);
+    margin: var(--space-6);
     text-align: center;
   }
 }

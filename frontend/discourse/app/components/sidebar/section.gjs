@@ -337,6 +337,7 @@ export default class SidebarSection extends Component {
             "sidebar-section--expanded"
             "sidebar-section--collapsed"
           )
+          (if @persistentActions "sidebar-section--persistent-actions")
         }}
         data-section-name={{@sectionName}}
         ...attributes
@@ -412,6 +413,7 @@ export default class SidebarSection extends Component {
                   {{on "click" headerAction.action}}
                   type="button"
                   title={{headerAction.title}}
+                  aria-label={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
                 >
                   {{dIcon @headerActionsIcon}}

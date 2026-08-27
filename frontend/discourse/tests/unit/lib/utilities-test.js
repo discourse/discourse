@@ -607,7 +607,7 @@ module("Unit | Utilities | table-builder", function (hooks) {
     );
   });
 
-  test("arrayToTable should escape `|`", function (assert) {
+  test("arrayToTable escapes `|` in headings and cells", function (assert) {
     const tableData = [
       {
         col0: "`a|b`",
@@ -618,8 +618,8 @@ module("Unit | Utilities | table-builder", function (hooks) {
       { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
     ];
     assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2", "Col 3", "Col 4"]),
-      "|Col 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
+      arrayToTable(tableData, ["Col | 1", "Col 2", "Col 3", "Col 4"]),
+      "|Col \\| 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
       "it creates a valid table"
     );
   });

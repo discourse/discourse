@@ -859,9 +859,6 @@ RSpec.describe SessionController do
         # UserSerializer. (Its value depends on automatic group membership,
         # added on commit, so only assert the flag is present here.)
         expect(body).to have_key("can_upload_avatar")
-        # Off by default, so the client makes the user pick rather than
-        # prefilling a generic username.
-        expect(body["prefill_username"]).to eq(false)
       end
 
       it "defers a pending DiscourseConnect provider handoff to the account-ready step" do
@@ -876,12 +873,81 @@ RSpec.describe SessionController do
         expect(cookies[:sso_payload]).to be_blank
       end
 
-      it "flags the username for prefill when email-based suggestions are on" do
-        SiteSetting.use_email_for_username_and_name_suggestions = true
+      it "does not derive the username from the email when email-based suggestions are off" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user.username).not_to include("newuser")
+        expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      end
+
+      it "falls back to the generic username when random usernames are disabled" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        SiteSetting.enable_random_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        # A generic placeholder isn't worth prefilling, so the client makes the
+        # user pick a username instead.
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
+      it "flags a randomly generated username for prefill" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         expect(response.parsed_body["prefill_username"]).to eq(true)
+      end
+
+      it "does not flag the fallback for prefill when generation is on but yields nothing" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        # Unicode words pass validation while unicode usernames are on, then
+        # stop being usable once the site turns them off.
+        SiteSetting.unicode_usernames = true
+        SiteSetting.random_username_adjectives = "静か"
+        SiteSetting.random_username_nouns = "隼"
+        SiteSetting.unicode_usernames = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
+        expect(response.parsed_body["prefill_username"]).to eq(false)
+      end
+
+      it "derives the username from the email when email-based suggestions are on" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to eq("newuser")
+      end
+
+      it "appends a numeric suffix when the email-derived name is taken" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+        Fabricate(:user, username: "newuser")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(User.find_by_email("newuser@example.com").username).to eq("newuser1")
+      end
+
+      context "when the email can't produce a username suggestion" do
+        let(:login_code) { EmailLoginCode.generate!(email: "----@example.com") }
+
+        it "assigns a random username instead of the generic fallback" do
+          SiteSetting.use_email_for_username_and_name_suggestions = true
+
+          post "/session/login-code/verify.json", params: { email: "----@example.com", code: }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("----@example.com").username).to match(
+            /\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/,
+          )
+        end
       end
 
       it "renders an error when registrations are disabled" do

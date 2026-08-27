@@ -4446,7 +4446,7 @@ pl_PL:
           missing_to: "Wymagany jest tag zastępczy"
       delete_topics:
         name: "Usuń"
-        description: "Trwale usuń wybrane tematy. Tej czynności nie można cofnąć."
+        description: "Usuń wybrane tematy. Usunięte tematy można przywrócić."
       update_category:
         name: "Aktualizuj kategorię"
         description: "Przenieś wszystkie wybrane tematy do następującej kategorii:"
@@ -7482,9 +7482,51 @@ pl_PL:
         empty: "Brak pasujących wyświetleń stron"
         metric_information: "O %{metric}"
         active_filters: "Aktywne filtry ruchu"
+        filtering_to:
+          traffic_type:
+            one: "Filtrowanie do %{count} typu ruchu"
+            few: "Filtrowanie do %{count} typów ruchu"
+            many: "Filtrowanie do %{count} typów ruchu"
+            other: "Filtrowanie do %{count} typów ruchu"
+          top_url:
+            one: "Filtrowanie do %{count} najpopularniejszego adresu URL"
+            few: "Filtrowanie do %{count} najpopularniejszych adresów URL"
+            many: "Filtrowanie do %{count} najpopularniejszych adresów URL"
+            other: "Filtrowanie do %{count} najpopularniejszych adresów URL"
+          entry_url:
+            one: "Filtrowanie do %{count} wejściowego adresu URL"
+            few: "Filtrowanie do %{count} wejściowych adresów URL"
+            many: "Filtrowanie do %{count} wejściowych adresów URL"
+            other: "Filtrowanie do %{count} wejściowych adresów URL"
+          referrer:
+            one: "Filtrowanie do %{count} odsyłacza"
+            few: "Filtrowanie do %{count} odsyłaczy"
+            many: "Filtrowanie do %{count} odsyłaczy"
+            other: "Filtrowanie do %{count} odsyłaczy"
+          country:
+            one: "Filtrowanie do %{count} kraju"
+            few: "Filtrowanie do %{count} krajów"
+            many: "Filtrowanie do %{count} krajów"
+            other: "Filtrowanie do %{count} krajów"
+          network:
+            one: "Filtrowanie do %{count} sieci"
+            few: "Filtrowanie do %{count} sieci"
+            many: "Filtrowanie do %{count} sieci"
+            other: "Filtrowanie do %{count} sieci"
+          browser:
+            one: "Filtrowanie do %{count} przeglądarki"
+            few: "Filtrowanie do %{count} przeglądarek"
+            many: "Filtrowanie do %{count} przeglądarek"
+            other: "Filtrowanie do %{count} przeglądarek"
+          ip:
+            one: "Filtrowanie do %{count} adresu IP"
+            few: "Filtrowanie do %{count} adresów IP"
+            many: "Filtrowanie do %{count} adresów IP"
+            other: "Filtrowanie do %{count} adresów IP"
         remove_filter_value: "Usuń %{value}"
         clear_all: "Wyczyść wszystkie"
         apply: "Zastosuj"
+        apply_filters: "Zastosuj filtry"
         filter_by:
           one: "Filtruj według %{label}, %{count} odsłona strony"
           few: "Filtruj według %{label}, %{count} odsłony strony"
@@ -7515,6 +7557,11 @@ pl_PL:
           network: "Sieć"
           browser: "Przeglądarka"
           ip: "Adres IP"
+        headline:
+          one: "%{formatted_count} odsłona"
+          few: "%{formatted_count} odsłony"
+          many: "%{formatted_count} odsłon"
+          other: "%{formatted_count} odsłon"
         metrics:
           distinct_sessions:
             label: "Różne sesje"

@@ -99,6 +99,51 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Average session duration", value: "10s")
   end
 
+  it "lets an admin preview traffic type filters before applying them",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    sign_in(admin)
+
+    Fabricate(
+      :browser_pageview_event,
+      user_id: admin.id,
+      session_id: "logged-in-session",
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-10 10:00:00",
+    )
+    Fabricate(
+      :browser_pageview_event,
+      session_id: "anonymous-session",
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-11 10:00:00",
+    )
+    Fabricate(
+      :browser_pageview_event,
+      session_id: "crawler-session",
+      score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
+      source: BrowserPageviewEvent::SOURCE_BEACON,
+      created_at: "2026-05-12 10:00:00",
+    )
+
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
+    expect(traffic).to have_selected_legend_item(label: "Likely crawlers")
+
+    traffic.toggle_chart_legend(label: "Likely crawlers")
+
+    expect(traffic).to have_deselected_legend_item(label: "Likely crawlers")
+    expect(traffic).to have_apply_filters(count: 2)
+
+    traffic.toggle_chart_legend(label: "Likely crawlers")
+
+    expect(traffic).to have_selected_legend_item(label: "Likely crawlers")
+    expect(traffic).to have_no_apply_filters
+
+    traffic.toggle_chart_legend(label: "Likely crawlers")
+    traffic.apply_filters
+
+    expect(traffic).to have_deselected_legend_item(label: "Likely crawlers")
+    expect(traffic).to have_series_total(label: "likely-crawler", value: "0")
+  end
+
   it "lets an admin investigate traffic with dates and filters",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
@@ -474,6 +519,21 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&range=custom&referrer=%5B%22one.example%22%2C%22two.example%22%2C%22three.example%22%5D&start_date=2026-05-01",
     )
+    expect(traffic).to have_rows(
+      card: "acquisition",
+      rows: [
+        { label: "one.example", count: "1" },
+        { label: "two.example", count: "1" },
+        { label: "three.example", count: "1" },
+      ],
+    )
+
+    traffic.select_tab(card: "acquisition", tab: "Countries")
+
+    expect(traffic).to have_rows(
+      card: "acquisition",
+      rows: [{ label: "United States", count: "3" }],
+    )
 
     page.refresh
 
@@ -492,15 +552,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
-     timezone: "UTC" do
+     time: Time.zone.local(2026, 8, 20, 12, 0, 0),
+     timezone: "Asia/Singapore" do
     sign_in(admin)
     SiteSetting.site_traffic_explorer_event_limit = 2
 
     [
-      ["/first-retained", "2026-02-15 09:00:00"],
-      ["/middle-retained", "2026-05-10 10:00:00"],
-      ["/latest-retained", "2026-05-12 10:00:00"],
+      ["/first-retained", "2026-08-17 21:00:00"],
+      ["/middle-retained", "2026-08-17 22:27:00"],
+      ["/latest-retained", "2026-08-17 23:00:00"],
     ].each do |url, created_at|
       Fabricate(
         :browser_pageview_event,
@@ -511,11 +571,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       )
     end
 
-    traffic.visit(start_date: "2026-01-01", end_date: "2026-05-12")
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-08-17")
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included; pageview data before Feb 14, 2026 is no longer available.",
+        "Results include the most recent 2 pageviews, beginning Aug 17, 2026 at 10:27 PM. Earlier pageviews in the selected date range are not included; pageview data before May 20, 2026 is no longer available.",
     )
   end
 

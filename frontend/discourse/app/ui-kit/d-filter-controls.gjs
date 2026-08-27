@@ -58,7 +58,10 @@ const ResetButton = <template>
  *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
- * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active
+ * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
+ *                                               closed, receiving the new expanded state as a boolean
+ * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active.
+ *                                                     The block renders alongside the dropdowns, sharing the drawer
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
  *                                           if minItemsForFilter is set and the array is empty
@@ -172,6 +175,12 @@ export default class DFilterControls extends Component {
       (this.hasMultipleDropdowns && this.showFilterDropdowns) ||
       (this.args.forceShowDropdownFilterToggle && this.showFilterDropdowns)
     );
+  }
+
+  // additional filters share the dropdown row, so they follow the drawer's
+  // state; with no drawer to hide behind they render on their own
+  get showStandaloneAdditionalFilters() {
+    return !this.showDropdownFilterToggle;
   }
 
   get showFilterResetButton() {
@@ -459,6 +468,7 @@ export default class DFilterControls extends Component {
   @action
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
+    this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
   <template>
@@ -561,10 +571,14 @@ export default class DFilterControls extends Component {
                 {{/each}}
               </DSelect>
             {{/if}}
-          </div>
-        {{/if}}
 
-        {{#if (has-block "additionalFilters")}}
+            {{yield to="additionalFilters"}}
+          </div>
+        {{else if
+          (and
+            this.showStandaloneAdditionalFilters (has-block "additionalFilters")
+          )
+        }}
           <div class="d-filter-controls__additional-filters">
             {{yield to="additionalFilters"}}
           </div>

@@ -3705,7 +3705,6 @@ es:
           title: "Reemplazar etiquetas"
       delete_topics:
         name: "Eliminar"
-        description: "Elimina permanentemente los temas seleccionados. Esta acción no se puede deshacer."
       update_category:
         name: "Actualizar Categoría"
         description: "Mueve todos los temas seleccionados a la siguiente categoría:"

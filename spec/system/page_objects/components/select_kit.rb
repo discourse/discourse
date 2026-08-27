@@ -113,6 +113,10 @@ module PageObjects
         has_no_css?("#{@context}.is-expanded .select-kit-filter .filter-input")
       end
 
+      def press_enter_in_filter
+        expanded_component.locator(".select-kit-filter .filter-input").press("Enter")
+      end
+
       def search(value = nil)
         expanded_component.locator(".select-kit-filter .filter-input").fill(value.to_s)
         wait_for_loaded

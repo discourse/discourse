@@ -105,7 +105,8 @@ module Chat
     end
 
     def can_edit_message(guardian:, message:)
-      guardian.can_edit_chat?(message)
+      guardian.can_post_in_chatable?(message.chat_channel.chatable) &&
+        guardian.can_edit_chat?(message)
     end
 
     def modify_message(params:, message:, guardian:, uploads:)

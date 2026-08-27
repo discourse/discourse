@@ -706,6 +706,7 @@ pl_PL:
         apply: "Zastosuj"
         find: "Znajdź"
         clear_filters: "Wyczyść wszystkie filtry"
+        all_periods: "Wszystkie okresy"
         all_outcomes: "Wszystkie wyniki"
         all_models: "Wszystkie modele"
         all_features: "Wszystkie funkcje"

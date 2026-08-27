@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
@@ -47,16 +48,27 @@ export default class ActivityByCategory extends Component {
 
   get rows() {
     const rows = this.activity?.rows ?? [];
-    const decorated = rows.map((row) => ({
-      ...row,
-      category: Category.findById(row.category_id),
-      topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
-      postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
-      pageViewsFormatted: number(row.page_views),
-      changeClass:
-        row.share_change > 0 ? "--pos" : row.share_change < 0 ? "--neg" : "",
-      swatchStyle: trustHTML(`background-color: #${this.#safeHex(row.color)}`),
-    }));
+    const decorated = rows.map((row) => {
+      const category = Category.findById(row.category_id);
+      const categorySlug = category
+        ? Category.slugFor(category, ":")
+        : row.slug;
+
+      return {
+        ...row,
+        category,
+        topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
+        postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
+        pageViewsFormatted: number(row.page_views),
+        topicsQuery: this.#topicQuery(categorySlug, "created"),
+        postsQuery: this.#topicQuery(categorySlug, "activity"),
+        changeClass:
+          row.share_change > 0 ? "--pos" : row.share_change < 0 ? "--neg" : "",
+        swatchStyle: trustHTML(
+          `background-color: #${this.#safeHex(row.color)}`
+        ),
+      };
+    });
 
     const direction = this.sortDir === "asc" ? 1 : -1;
     return decorated.sort((a, b) => {
@@ -72,6 +84,26 @@ export default class ActivityByCategory extends Component {
 
   #safeHex(color) {
     return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
+  }
+
+  #topicQuery(categorySlug, dateFilter) {
+    const terms = [];
+
+    if (this.args.startDate) {
+      terms.push(
+        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      terms.push(
+        `${dateFilter}-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    terms.push(`=category:${categorySlug}`);
+
+    return { q: terms.join(" ") };
   }
 
   @action
@@ -314,12 +346,19 @@ export default class ActivityByCategory extends Component {
                       {{row.name}}
                     {{/if}}
                   </td>
-                  <td
-                    class="db-activity-table__cell-number"
-                  >{{row.topicsFormatted}}</td>
-                  <td
-                    class="db-activity-table__cell-number"
-                  >{{row.postsFormatted}}</td>
+                  <td class="db-activity-table__cell-number">
+                    <LinkTo
+                      @route="discovery.filter"
+                      @query={{row.topicsQuery}}
+                    >
+                      {{row.topicsFormatted}}
+                    </LinkTo>
+                  </td>
+                  <td class="db-activity-table__cell-number">
+                    <LinkTo @route="discovery.filter" @query={{row.postsQuery}}>
+                      {{row.postsFormatted}}
+                    </LinkTo>
+                  </td>
                   <td
                     class="db-activity-table__cell-number"
                   >{{row.pageViewsFormatted}}</td>

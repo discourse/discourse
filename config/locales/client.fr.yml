@@ -3971,7 +3971,6 @@ fr:
           missing_to: "Une étiquette de remplacement est requise"
       delete_topics:
         name: "Supprimer"
-        description: "Supprimer définitivement les sujets sélectionnés. Cette action est irréversible."
       update_category:
         name: "Mettre à jour la catégorie"
         description: "Déplacer tous les sujets sélectionnés vers la catégorie suivante :"

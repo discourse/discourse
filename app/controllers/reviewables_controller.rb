@@ -16,7 +16,9 @@ class ReviewablesController < ApplicationController
     offset = params[:offset].to_i
 
     if params[:type].present?
-      raise Discourse::InvalidParameters.new(:type) unless Reviewable.valid_type?(params[:type])
+      unless Reviewable.valid_filter_type?(params[:type])
+        raise Discourse::InvalidParameters.new(:type)
+      end
     end
 
     status = (params[:status] || "pending").to_sym
@@ -74,13 +76,17 @@ class ReviewablesController < ApplicationController
         filters.merge(
           total_rows_reviewables: total_rows,
           types: meta_types,
-          reviewable_types: Reviewable.types,
+          reviewable_types:
+            Reviewable.types + Reviewable.custom_filter_type_options.map { |option| option[:id] },
           unknown_reviewable_types_and_sources: Reviewable.unknown_types_and_sources,
           score_types:
             ReviewableScore
               .types
               .filter { |k, v| k != :notify_user }
-              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
+              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } }
+              .concat(
+                Reviewable.custom_reason_filter_options.map { |option| option.slice(:id, :name) },
+              ),
           reviewable_count: current_user.reviewable_count,
           unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
         ),

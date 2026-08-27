@@ -19,6 +19,16 @@ import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
 
+// Section headers can only render links, so anything that is an action rather
+// than a destination is resolved here by the id the nav map declares.
+const SECTION_HEADER_ACTIONS = {
+  design_wizard: {
+    available: ({ currentUser }) => currentUser?.can_run_design_wizard,
+    action: ({ designWizard, router }) =>
+      designWizard.launch({ returnUrl: router.currentURL }),
+  },
+};
+
 // For testing.
 export function clearAdditionalAdminSidebarSectionLinks() {
   additionalAdminSidebarSectionLinks = {};
@@ -153,7 +163,8 @@ function defineAdminSection(
   adminNavSectionData,
   adminSidebarStateManager,
   router,
-  currentUser
+  currentUser,
+  headerActionContext
 ) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
@@ -199,6 +210,37 @@ function defineAdminSection(
 
     get collapsedByDefault() {
       return this.adminNavSectionData.name !== "root";
+    }
+
+    get actionsIcon() {
+      return this.#headerActions.length > 1
+        ? "ellipsis-vertical"
+        : this.#headerActions[0]?.icon;
+    }
+
+    @cached
+    get actions() {
+      return this.#headerActions.map((headerAction) => ({
+        id: headerAction.id,
+        title: i18n(headerAction.label),
+        action: () =>
+          SECTION_HEADER_ACTIONS[headerAction.id].action(headerActionContext),
+      }));
+    }
+
+    // a header action is how its section's own feature is reached, so unlike
+    // the personal sidebar's editing controls it cannot wait for a hover
+    get persistentActions() {
+      return this.#headerActions.length > 0;
+    }
+
+    get #headerActions() {
+      return (this.adminNavSectionData.headerActions ?? []).filter(
+        (headerAction) =>
+          SECTION_HEADER_ACTIONS[headerAction.id]?.available(
+            headerActionContext
+          )
+      );
     }
   };
 
@@ -350,6 +392,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
+    const designWizard = getOwnerWithFallback(this).lookup(
+      "service:design-wizard"
+    );
 
     this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-state-manager"
@@ -463,7 +508,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         section,
         this.adminSidebarStateManager,
         router,
-        currentUser
+        currentUser,
+        { currentUser, designWizard, router }
       );
     });
   }

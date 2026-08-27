@@ -21,8 +21,6 @@ const FILTER_KEYS = [
   "ip",
 ];
 
-const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
-
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
 
@@ -56,7 +54,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
           ...traffic,
           chart_start_date: requestParams.start_date,
           chart_end_date: requestParams.end_date,
-          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
         },
         fetchError: null,
       }))
@@ -144,17 +141,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     }
 
     return requestParams;
-  }
-
-  #selectedTrafficTypes(value) {
-    if (!value) {
-      return TRAFFIC_TYPES;
-    }
-
-    const selected = this.#filterValues("traffic_type", value);
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
-    );
   }
 
   #filterValues(key, value) {

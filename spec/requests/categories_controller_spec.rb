@@ -25,6 +25,18 @@ RSpec.describe CategoriesController do
       end
     end
 
+    it "does not build a topic list for crawlers" do
+      SiteSetting.categories_topics = 5
+      SiteSetting.categories_topics.times { Fabricate(:topic) }
+
+      CategoriesController.any_instance.expects(:fetch_topic_list).never
+
+      get "/categories", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("body.crawler")
+    end
+
     it "Shows correct title if category list is set for homepage" do
       SiteSetting.top_menu = "categories|latest"
       get "/"

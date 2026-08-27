@@ -9,6 +9,11 @@ module PageObjects
         self
       end
 
+      def select_period(label)
+        find(".ai-logs__periods .btn", text: label).click
+        self
+      end
+
       def select_outcome(label)
         select_filter(:outcome, label)
       end
@@ -28,12 +33,15 @@ module PageObjects
         feature_filter.value
       end
 
-      def select_period(label)
-        select_filter(:period, label)
-      end
-
       def clear_filters
         find(".d-filter-controls__reset").click
+        self
+      end
+
+      def search(value)
+        find("input[placeholder='#{I18n.t("js.discourse_ai.logs.search_placeholder")}']").fill_in(
+          with: value,
+        )
         self
       end
 
@@ -41,12 +49,33 @@ module PageObjects
         find(".d-filter-controls__dropdown--#{key}").value
       end
 
-      def has_filter_value?(key, value)
-        find(".d-filter-controls__dropdown--#{key}").value == value
+      def has_tinted_filter_toggle?
+        page.evaluate_script(<<~JS)
+          (() => {
+            const icon = document.querySelector(
+              ".ai-logs .d-filter-controls__toggle-filters .d-icon"
+            );
+            const probe = (color) => {
+              const el = document.createElement("span");
+              el.style.color = `var(${color})`;
+              document.body.appendChild(el);
+              const result = getComputedStyle(el).color;
+              el.remove();
+              return result;
+            };
+            return [probe("--tertiary"), probe("--tertiary-hover")].includes(
+              getComputedStyle(icon).color
+            );
+          })()
+        JS
+      end
+
+      def has_no_tinted_filter_toggle?
+        !has_tinted_filter_toggle?
       end
 
       def has_expanded_filter_dropdowns?
-        page.has_css?(".d-filter-controls__dropdown", count: 3)
+        page.has_css?(".d-filter-controls__dropdown", count: 2)
       end
 
       def open_log(log)
@@ -81,7 +110,7 @@ module PageObjects
       private
 
       def feature_filter
-        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter .combo-box")
+        PageObjects::Components::SelectKit.new(".ai-logs__feature-filter")
       end
 
       def select_filter(key, label)
