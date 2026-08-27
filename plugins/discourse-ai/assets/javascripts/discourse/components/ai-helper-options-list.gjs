@@ -6,7 +6,7 @@ import AiHelperCustomPrompt from "../components/ai-helper-custom-prompt";
 
 const AiHelperOptionsList = <template>
   <ul class="ai-helper-options">
-    {{#each @options as |option|}}
+    {{#each @options key="name" as |option|}}
       {{#if (eq option.name "custom_prompt")}}
         <AiHelperCustomPrompt
           @value={{@customPromptValue}}

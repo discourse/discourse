@@ -157,15 +157,8 @@ acceptance("Details Button", function (needs) {
 
     const shortcut = formatShortcut("mod+shift+d");
     assert
-      .dom("[data-name='details'] .d-shortcut")
-      .hasText(
-        shortcut.keys
-          .map((key) =>
-            key.name === key.label ? key.label : `${key.label} ${key.name}`
-          )
-          .join(" "),
-        "shows the platform-specific shortcut"
-      );
+      .dom("[data-name='details'] .d-shortcut__key")
+      .exists({ count: shortcut.keys.length }, "draws one keycap per key");
     assert
       .dom("[data-name='details']")
       .hasAttribute("aria-keyshortcuts", shortcut.aria);

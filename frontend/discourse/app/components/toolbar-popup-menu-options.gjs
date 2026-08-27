@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DShortcut from "discourse/ui-kit/d-shortcut";
@@ -11,6 +13,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ToolbarPopupMenuOptions extends Component {
+  @service capabilities;
+
   trackScrollability = modifier((element) => {
     const innerContent = element.closest(".fk-d-menu__inner-content");
     const menuElement = innerContent?.parentElement;
@@ -64,7 +68,7 @@ export default class ToolbarPopupMenuOptions extends Component {
         ? `mod+${content.shortcut}`
         : undefined;
       const labelText = this.#calculateLabelText(content);
-      const title = this.#calculateTitle(content, labelText);
+      const title = this.#calculateTitle(content, labelText, shortcutKeys);
 
       return Object.defineProperties(
         {},
@@ -88,13 +92,21 @@ export default class ToolbarPopupMenuOptions extends Component {
       : i18n(content.label);
   }
 
-  /** The row draws its shortcut and announces it, so the title carries none. */
-  #calculateTitle(content, labelText) {
-    if (content.translatedTitle) {
-      return content.translatedTitle;
-    }
+  /**
+   * A labelled row draws its shortcut, so its title carries none; an
+   * icon-only row has nowhere else to show it.
+   */
+  #calculateTitle(content, labelText, shortcutKeys) {
+    const title = content.translatedTitle
+      ? content.translatedTitle
+      : content.title
+        ? i18n(content.title)
+        : labelText;
 
-    return content.title ? i18n(content.title) : labelText;
+    if (labelText || !shortcutKeys || !this.capabilities.hasKeyboard) {
+      return title;
+    }
+    return `${title} (${formatShortcut(shortcutKeys).label})`;
   }
 
   get convertedContent() {

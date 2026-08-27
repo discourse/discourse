@@ -55,7 +55,7 @@ RSpec.describe "Keyboard shortcut display" do
     expect(composer).to be_opened
 
     find(".toolbar-menu__options-trigger").click
-    icon = find(".toolbar-menu__options-content .dropdown-menu .btn .d-icon", match: :first)
+    icon = find(".toolbar-menu__options-content [data-name='toggle-spreadsheet'] .d-icon")
     margin = page.evaluate_script("getComputedStyle(arguments[0]).marginRight", icon)
 
     expect(margin).not_to eq("0px")
