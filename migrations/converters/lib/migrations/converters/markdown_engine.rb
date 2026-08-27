@@ -8,9 +8,11 @@ module Migrations
     # database. Parse-only — it never renders, sanitizes, or resolves
     # render-time data.
     #
-    # `Bundle` prepares all checkout-derived JavaScript once, in the parent
-    # process; `Context` is the per-worker V8 wrapper built from a bundle and a
-    # `Config` of source-site inputs.
+    # {Migrations::Converters::MarkdownEngine::Bundle} prepares all
+    # checkout-derived JavaScript once, in the parent process;
+    # {Migrations::Converters::MarkdownEngine::Context} is the per-worker V8
+    # wrapper built from a bundle and a
+    # {Migrations::Converters::MarkdownEngine::Config} of source-site inputs.
     module MarkdownEngine
       def self.discourse_root
         Migrations.host_app_root
