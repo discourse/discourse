@@ -86,10 +86,26 @@ export interface RowClassContext {
  */
 export interface ReorderableGroupMember {
   listId: string;
-  listLabel?: string;
+
+  /**
+   * The member's current translated name. A closure like everything else
+   * beside it: a list whose name the reader can edit would otherwise stand in
+   * its siblings' menus under whatever it was called when it registered.
+   */
+  listLabel: () => string | undefined;
 
   /** The member's current visible items. */
   getItems: () => readonly unknown[];
+
+  /**
+   * The member's root element, for resolving which member sits next to which.
+   * Undefined before the member has rendered.
+   *
+   * Document position rather than registration order, because the two stop
+   * agreeing the moment members are reordered: the DOM node moves while the
+   * component instance, and so its place in the registry, stays put.
+   */
+  element: () => HTMLElement | undefined;
 
   /**
    * The source half of a cross-list move: resolves the dragged key against
@@ -114,8 +130,15 @@ export interface ReorderableGroupMember {
    * @param sourceListId - The member the item is leaving.
    * @param key - The moved row's key in that member.
    * @param toIndex - The visible landing index in this member.
+   * @param method - Which input method asked, carried across so a spilled
+   *   accelerator is not reported to the consumer as a menu choice.
    */
-  acceptMove: (sourceListId: string, key: string, toIndex: number) => void;
+  acceptMove: (
+    sourceListId: string,
+    key: string,
+    toIndex: number,
+    method: "menu" | "keyboard"
+  ) => void;
 }
 
 /**
@@ -137,12 +160,35 @@ export interface ReorderableGroupApi {
   lookupMember: (listId: string) => ReorderableGroupMember | undefined;
 
   /**
-   * The other members registered right now, in registration order, as the
-   * move menu's cross-list destinations. Only members carrying a `listLabel`
-   * are returned: an unnamed destination has nothing to put in the menu item,
-   * so it stays pointer-only rather than offering "Move to undefined".
+   * The other members registered right now, in document order, as the move
+   * menu's cross-list destinations. Only members carrying a `listLabel` are
+   * returned: an unnamed destination has nothing to put in the menu item, so
+   * it stays pointer-only rather than offering "Move to undefined".
    */
   siblings: (listId: string) => { listId: string; listLabel: string }[];
+
+  /**
+   * The member immediately before or after another **in reading order**, which
+   * is what a row spilling past its own list's end travels into.
+   *
+   * Reading order, not screen position: a group is free to lay its members out
+   * however it likes, and a flex-wrapped one is side by side at one width and
+   * stacked at another. Nothing here can turn that into "above" and "below",
+   * so this answers the only question it can — which member the document puts
+   * next — and `@spill` is opt-in because saying that also means "next on
+   * screen" is the consumer's claim to make.
+   *
+   * Registration order will not do either: it is the order members were
+   * constructed, and stops matching the document as soon as the members
+   * themselves are reordered.
+   *
+   * @param listId - The member to look out from.
+   * @param direction - Which way along the document to look.
+   */
+  neighbour: (
+    listId: string,
+    direction: "previous" | "next"
+  ) => ReorderableGroupMember | undefined;
 
   /** The group's single move callback, shared by every member. */
   onMove: (move: ReorderableMove) => void | false;
@@ -259,6 +305,31 @@ export interface DReorderableListSignature<T> {
     listLabel?: string;
 
     /**
+     * Whether a row refused at this list's own end carries on into the
+     * adjacent group member instead. Requires `@group`; ignored without one.
+     *
+     * For members that read as one continuous run — the stacked sections of a
+     * document — where stopping dead at an internal edge is an artefact of how
+     * the surface is built rather than anything the reader can see. Moving
+     * down enters the next member at the top and moving up enters the previous
+     * one at the bottom, so the row keeps travelling the way it was pushed.
+     * The ends of the outermost members still refuse and still announce it.
+     *
+     * **Setting this asserts that the group runs top to bottom in reading
+     * order**, because that is the only order the group can resolve: it does
+     * not lay its members out and cannot see where they landed. A group whose
+     * members sit side by side — or a flex-wrapped one, which is side by side
+     * at one width and stacked at another — breaks that assertion, and Down
+     * would carry a row into the list beside it.
+     *
+     * Off by default, and not only for that reason: members that are genuinely
+     * separate lists (a picker's chosen and available columns) should stop at
+     * their own edges, with "Move to …" in the menu as the deliberate way
+     * across.
+     */
+    spill?: boolean;
+
+    /**
      * Rows failing this predicate are frozen: they render no controls, are
      * not drag sources, refuse drops, and keep their exact visible index in
      * every proposed order. Arrow moves hop over them. Defaults to every row
@@ -334,8 +405,14 @@ export interface DReorderableListSignature<T> {
      *
      * The list announces the removal and puts focus somewhere sensible
      * afterwards; the handler's only job is to drop the item from its store.
+     *
+     * Return a promise to hold both back until the removal has actually
+     * happened — what a confirmation in front of it needs, since the handler
+     * is otherwise back long before the reader has answered. Either way the
+     * list checks that an item really went before speaking, so a handler that
+     * declines is not reported as a removal.
      */
-    onRemove?: (item: T, index: number) => void;
+    onRemove?: (item: T, index: number) => void | Promise<void>;
 
     /**
      * Whether an item may be removed, defaulting to all of them.

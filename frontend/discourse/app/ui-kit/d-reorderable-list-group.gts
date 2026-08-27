@@ -9,6 +9,29 @@ import type {
   ReorderableMove,
 } from "discourse/ui-kit/d-reorderable-list";
 
+/**
+ * Aliased to keep the masked expression below on one line. Spelled out it wraps,
+ * which puts the `&` a line further down than the disable directive reaches, and
+ * an unused directive is deleted by `--fix` while the error it covered stays.
+ */
+const FOLLOWING = Node.DOCUMENT_POSITION_FOLLOWING;
+
+/**
+ * Whether one element comes after another in the document.
+ *
+ * `compareDocumentPosition` answers with a bitmask and several of its bits can
+ * be set at once — a node that follows another may also be contained by it — so
+ * the one bit being asked about is masked out rather than compared against the
+ * whole result.
+ *
+ * @param left - The element to look out from.
+ * @param right - The element to place relative to it.
+ */
+function follows(left: HTMLElement, right: HTMLElement): boolean {
+  // eslint-disable-next-line no-bitwise
+  return Boolean(left.compareDocumentPosition(right) & FOLLOWING);
+}
+
 interface DReorderableListGroupSignature {
   Args: {
     /**
@@ -79,14 +102,23 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
     },
     lookupMember: (listId: string) => this.#members.get(listId),
     siblings: (listId: string) =>
-      [...this.#members.values()]
+      this.#ordered()
         .filter(
-          (member) => member.listId !== listId && member.listLabel !== undefined
+          (member) =>
+            member.listId !== listId && member.listLabel() !== undefined
         )
         .map((member) => ({
           listId: member.listId,
-          listLabel: member.listLabel!,
+          listLabel: member.listLabel()!,
         })),
+    neighbour: (listId: string, direction: "previous" | "next") => {
+      const ordered = this.#ordered();
+      const index = ordered.findIndex((member) => member.listId === listId);
+      if (index === -1) {
+        return undefined;
+      }
+      return ordered[direction === "next" ? index + 1 : index - 1];
+    },
     onMove: (move: ReorderableMove) => this.args.onMove(move),
   };
   /**
@@ -100,6 +132,22 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
    * every member has long since registered.
    */
   #members = new Map<string, ReorderableGroupMember>();
+
+  /**
+   * The registered members in the order they appear on the page.
+   *
+   * Registration order is the order members were constructed, which stops
+   * matching what the reader sees the moment the members themselves are
+   * reordered: the DOM node moves and the component instance does not. Members
+   * that have not rendered yet are dropped, having no position to sort on.
+   */
+  #ordered(): ReorderableGroupMember[] {
+    return [...this.#members.values()]
+      .filter((member) => member.element())
+      .sort((left, right) =>
+        follows(left.element()!, right.element()!) ? -1 : 1
+      );
+  }
 
   <template>{{yield this.api}}</template>
 }

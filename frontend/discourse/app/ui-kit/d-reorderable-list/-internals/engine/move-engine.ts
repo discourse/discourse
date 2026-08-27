@@ -2,6 +2,7 @@ import type ReorderAnnouncer from "discourse/ui-kit/d-reorderable-list/-internal
 import type {
   MoveTarget,
   ReorderableGroupApi,
+  ReorderableGroupMember,
   ReorderableMove,
   Row,
 } from "discourse/ui-kit/d-reorderable-list/types";
@@ -12,6 +13,7 @@ interface MoveEngineArgs<T> {
   group?: ReorderableGroupApi;
   onMove?: (move: ReorderableMove<T>) => void | false;
   listLabel?: string;
+  spill?: boolean;
 }
 
 interface MoveEngineOptions<T> {
@@ -102,7 +104,9 @@ export default class MoveEngine<T> {
     }[target];
 
     if (to < 0 || to >= seq.length || to === from) {
-      this.#announcer.announceBoundary(row, target);
+      if (!this.#spill(key, target, method)) {
+        this.#announcer.announceBoundary(row, target);
+      }
       return;
     }
 
@@ -115,6 +119,58 @@ export default class MoveEngine<T> {
     if (committed) {
       this.#refocusIndex(committed.toIndex);
     }
+  }
+
+  /**
+   * The member a row leaving this list in a direction would travel into, if
+   * this list spills at all and there is a member that way.
+   *
+   * Read by the menu as well as by the move, so the destination it offers and
+   * the destination a chord reaches are the same question asked once.
+   *
+   * @param target - Where the row was asked to go.
+   */
+  spillTarget(target: MoveTarget): ReorderableGroupMember | undefined {
+    const { group, spill } = this.#args();
+    // Only the two steps spill. "To top" and "to bottom" name this list's own
+    // ends by definition, so there is no sense in which they overshoot.
+    if (!spill || !group || (target !== "up" && target !== "down")) {
+      return undefined;
+    }
+    // Up and down are true of a row inside its own list, where the axis is
+    // fixed. Between members they are not: the group is laid out by its
+    // consumer and may not be a column at all, so the crossing is asked for in
+    // reading order and `@spill` is what says the two coincide here.
+    return group.neighbour(
+      this.#listId(),
+      target === "down" ? "next" : "previous"
+    );
+  }
+
+  /**
+   * Hands a row refused at this list's end to the adjacent member.
+   *
+   * @param key - The row that ran out of room.
+   * @param target - The direction it was pushed.
+   * @param method - Which input method asked, carried across so the consumer
+   *   is told what the reader actually did.
+   * @returns Whether it went, which is what decides whether the refusal is
+   *   spoken instead.
+   */
+  #spill(
+    key: string,
+    target: MoveTarget,
+    method: "menu" | "keyboard"
+  ): boolean {
+    const member = this.spillTarget(target);
+    if (!member) {
+      return false;
+    }
+    // Entering from above lands first and entering from below lands last, so a
+    // row keeps travelling the way it was pushed once it has crossed.
+    const toIndex = target === "down" ? 0 : member.getItems().length;
+    member.acceptMove(this.#listId(), key, toIndex, method);
+    return true;
   }
 
   /**

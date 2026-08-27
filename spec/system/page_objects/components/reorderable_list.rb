@@ -13,12 +13,17 @@ module PageObjects
       HANDLE = ".d-reorderable-list__handle"
 
       # @param row_selector [String] CSS reaching the row to operate on.
-      def initialize(row_selector)
+      # @param handle [String] CSS reaching that row's own handle, relative to
+      #   it. The default descendant selector is ambiguous for a row hosting a
+      #   list of its own, whose rows carry handles of the same class; pass
+      #   "> #{HANDLE}" there, or whatever names the row's own.
+      def initialize(row_selector, handle: HANDLE)
         @row_selector = row_selector
+        @handle = handle
       end
 
       def open_menu
-        find("#{@row_selector} #{HANDLE}").click
+        find("#{@row_selector} #{@handle}").click
         self
       end
 
@@ -46,7 +51,7 @@ module PageObjects
       end
 
       def has_handle?
-        has_css?("#{@row_selector} #{HANDLE}")
+        has_css?("#{@row_selector} #{@handle}")
       end
 
       private

@@ -70,6 +70,16 @@
       margin: 0;
       color: var(--primary-low-mid);
     }
+
+    /* A real ring, where the button family indicates focus with a background
+       colour. At the size this renders that background is indistinguishable,
+       and on most rows the handle is the only control there is to find. */
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -1px;
+      border-radius: var(--d-border-radius);
+    }
   }
 
   /* The list's other control, sized to match the handle rather than to a
@@ -101,10 +111,16 @@
     }
   }
 
-  /* Drawn on the row rather than the handle: the handle's own focus ring is
-     indistinguishable at that size, and the row is what a move acts on. */
+  /* Drawn on the row only when the row ITSELF is what focus landed on, which
+     is a frozen row the arrow cursor stepped onto: it renders no handle, so it
+     has nothing else to carry a ring.
 
-  &__row:focus-within {
+     `:focus` rather than `:focus-within` deliberately. The latter matches every
+     ancestor, so a row hosting a list of its own framed the whole of itself
+     whenever anything inside took focus — a second outline around the first,
+     and a frame the height of a section around a grip. */
+
+  &__row:focus {
     outline: 2px solid var(--d-input-focused-color);
     outline-offset: -2px;
   }

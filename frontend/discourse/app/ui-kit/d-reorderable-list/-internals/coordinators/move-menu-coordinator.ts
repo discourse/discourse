@@ -43,6 +43,14 @@ interface MoveMenuCoordinatorOptions {
 
   /** Commits an in-list move chosen from the menu. */
   move: (key: string, target: MoveTarget) => void;
+
+  /**
+   * Whether a step in this direction, refused at the list's own end, would
+   * carry the row into the adjacent group member instead. The menu offers the
+   * direction when it would, so what it shows and what the accelerator does
+   * stay the same answer.
+   */
+  canSpill: (target: MoveTarget) => boolean;
 }
 
 /**
@@ -71,6 +79,7 @@ export default class MoveMenuCoordinator {
   #rowFor: (key: string) => Row<unknown> | undefined;
   #siblings: () => { listId: string; listLabel: string }[];
   #move: (key: string, target: MoveTarget) => void;
+  #canSpill: (target: MoveTarget) => boolean;
 
   /**
    * The menu the service last opened for this list, held only so a close can
@@ -87,6 +96,7 @@ export default class MoveMenuCoordinator {
     rowFor,
     siblings,
     move,
+    canSpill,
   }: MoveMenuCoordinatorOptions) {
     this.#menuService = menu;
     this.#args = args;
@@ -95,6 +105,7 @@ export default class MoveMenuCoordinator {
     this.#rowFor = rowFor;
     this.#siblings = siblings;
     this.#move = move;
+    this.#canSpill = canSpill;
 
     // The content is rendered by the app-root host, not by this list, so a
     // list torn down while open would otherwise leave a menu anchored to a
@@ -222,7 +233,7 @@ export default class MoveMenuCoordinator {
     }
     // The destination lands the item, exactly as it does for a drop, because
     // the projections it needs are its own. This list only supplies the key.
-    member.acceptMove(this.#listId(), key, member.getItems().length);
+    member.acceptMove(this.#listId(), key, member.getItems().length, "menu");
   }
 
   /**
@@ -237,6 +248,7 @@ export default class MoveMenuCoordinator {
     return {
       rowFor: (key: string) => this.#rowFor(key),
       siblings: () => this.#siblings(),
+      canSpill: (target: MoveTarget) => this.#canSpill(target),
       onMenuMove: (key: string, target: MoveTarget) =>
         this.onMenuMove(key, target),
       onMenuMoveToList: (key: string, listId: string, close: () => void) =>

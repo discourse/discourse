@@ -92,6 +92,7 @@ interface MoveMenuData {
   list: {
     rowFor: (key: string) => Row<unknown> | undefined;
     siblings: () => { listId: string; listLabel: string }[];
+    canSpill: (target: MoveTarget) => boolean;
     onMenuMove: (key: string, target: MoveTarget) => void;
     onMenuMoveToList: (key: string, listId: string, close: () => void) => void;
   };
@@ -126,9 +127,22 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
     return this.args.data?.list.rowFor(this.args.data.key);
   }
 
-  /** Whether any in-list direction survived, which is what a divider divides. */
+  /**
+   * Whether a step is offered at all, which is not the same question as
+   * whether it stays inside this list: a row at its own end still moves when
+   * the list spills, and the destination is simply the next member.
+   */
+  get canMoveUp(): boolean {
+    return !!this.row?.canMoveUp || this.#canSpill("up");
+  }
+
+  get canMoveDown(): boolean {
+    return !!this.row?.canMoveDown || this.#canSpill("down");
+  }
+
+  /** Whether any direction survived, which is what a divider divides. */
   get hasDirections(): boolean {
-    return !!(this.row?.canMoveUp || this.row?.canMoveDown);
+    return this.canMoveUp || this.canMoveDown;
   }
 
   get siblings(): { listId: string; listLabel: string }[] {
@@ -172,6 +186,15 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
     data?.list.onMenuMoveToList(data.key, listId, close ?? (() => {}));
   }
 
+  /**
+   * Whether the list would carry a row off its own end in this direction.
+   *
+   * @param target - The step being considered.
+   */
+  #canSpill(target: MoveTarget): boolean {
+    return this.args.data?.list.canSpill(target) ?? false;
+  }
+
   <template>
     <DDropdownMenu
       role="menu"
@@ -186,6 +209,9 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
       }}
       as |dropdown|
     >
+      {{! The ends are this list's own by definition, so they are offered only
+          while there is somewhere inside it left to go. The steps are offered
+          more widely, since a spilling list answers them past its own edge. }}
       {{#if this.row.canMoveUp}}
         <dropdown.item role="none">
           <MoveItem
@@ -195,6 +221,8 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
             @move={{fn this.move "top"}}
           />
         </dropdown.item>
+      {{/if}}
+      {{#if this.canMoveUp}}
         <dropdown.item role="none">
           <MoveItem
             @target="up"
@@ -204,7 +232,7 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
           />
         </dropdown.item>
       {{/if}}
-      {{#if this.row.canMoveDown}}
+      {{#if this.canMoveDown}}
         <dropdown.item role="none">
           <MoveItem
             @target="down"
@@ -213,6 +241,8 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
             @move={{fn this.move "down"}}
           />
         </dropdown.item>
+      {{/if}}
+      {{#if this.row.canMoveDown}}
         <dropdown.item role="none">
           <MoveItem
             @target="bottom"

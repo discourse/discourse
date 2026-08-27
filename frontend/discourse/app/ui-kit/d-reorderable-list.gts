@@ -117,6 +117,17 @@ export type {
 const CURSOR_TARGET = ".d-reorderable-list__handle, [data-reorderable-cursor]";
 
 /**
+ * The list root, for telling this list's own rows and controls from those of a
+ * list nested inside one of them.
+ *
+ * Lists nest wherever the things being ordered do: a section holding rows, a
+ * board holding columns. Every DOM lookup below therefore has to say which list
+ * it means, because a bare `querySelector` from the outer root reaches straight
+ * through the inner one and answers with its rows.
+ */
+const LIST_ROOT = ".d-reorderable-list";
+
+/**
  * Controls that demonstrably do nothing with Up and Down, so a press on one
  * can step the cursor from the row it sits in rather than dying there.
  *
@@ -244,6 +255,14 @@ export default class DReorderableList<T> extends Component<
       if (!onCursorTarget && !onInertControl) {
         return;
       }
+      // The listener is registered for the capture phase, so an outer list sees
+      // a nested list's keys first. Without this it would answer for them:
+      // every handle matches the cursor selector regardless of which list it
+      // belongs to, and the chord path below stops propagation, so the list the
+      // reader is actually in would never receive the key at all.
+      if (target.closest(LIST_ROOT) !== element) {
+        return;
+      }
       if (!altKey) {
         const delta = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
         if (!delta) {
@@ -254,7 +273,12 @@ export default class DReorderableList<T> extends Component<
           CURSOR_TARGET,
           "skip"
         );
-        const targets = scope.all();
+        // Filtered to this list's own targets: the scope is a plain query from
+        // the root, so a nested list's handles are inside it and the cursor
+        // would otherwise walk into rows belonging to another list.
+        const targets = scope
+          .all()
+          .filter((candidate) => candidate.closest(LIST_ROOT) === element);
         // Resolved through the owning row rather than by querying it for a
         // handle, so a manual placement nested anywhere in the row still
         // resolves, and a nested list's target can never be mistaken for this
@@ -313,10 +337,11 @@ export default class DReorderableList<T> extends Component<
         return;
       }
       // Any focus inside the row counts as being on the row, since its own
-      // controls are part of it.
-      const key = event.target
-        .closest("[data-reorderable-key]")
-        ?.getAttribute("data-reorderable-key");
+      // controls are part of it — including a nested list, which is why this
+      // walks out to the row this list owns rather than taking the innermost.
+      const key = this.#ownRowFor(event.target)?.getAttribute(
+        "data-reorderable-key"
+      );
       if (this.#focusedKey !== (key ?? null)) {
         this.#focusedKey = key ?? null;
         // The menu is anchored to one row, so focus that has moved on would
@@ -365,10 +390,12 @@ export default class DReorderableList<T> extends Component<
         return;
       }
       const row = event.target.closest("[data-reorderable-key]");
-      if (!row || !element.contains(row)) {
+      // Ownership rather than containment: a nested list's row is contained by
+      // this one too, and its dead space belongs to the list it is in.
+      if (!row || row.closest(LIST_ROOT) !== element) {
         return;
       }
-      row.querySelector<HTMLElement>(".d-reorderable-list__handle")?.focus();
+      this.handleFor(row.getAttribute("data-reorderable-key") ?? "")?.focus();
     };
 
     element.addEventListener("keydown", onKeydown, { capture: true });
@@ -459,6 +486,7 @@ export default class DReorderableList<T> extends Component<
       siblings: () => this.siblings(),
       move: (key: string, target: MoveTarget) =>
         this.#engine.move(key, target, "menu"),
+      canSpill: (target: MoveTarget) => !!this.#engine.spillTarget(target),
     });
     // Without this the coordinator is never destroyed, so a menu left open at
     // teardown stays registered with the service for the app's lifetime.
@@ -480,10 +508,16 @@ export default class DReorderableList<T> extends Component<
     } else if (group) {
       const unregister = group.registerMember({
         listId: this.args.listId!,
-        listLabel: this.args.listLabel,
+        listLabel: () => this.args.listLabel,
         getItems: () => this.args.items,
-        acceptMove: (sourceListId: string, key: string, toIndex: number) => {
-          this.#engine.commitCrossMove(sourceListId, key, toIndex, "menu");
+        element: () => (this.#listElement as HTMLElement | null) ?? undefined,
+        acceptMove: (
+          sourceListId: string,
+          key: string,
+          toIndex: number,
+          method: "menu" | "keyboard"
+        ) => {
+          this.#engine.commitCrossMove(sourceListId, key, toIndex, method);
           // Focus follows the item across: the row is destroyed in the source
           // list's iteration and rebuilt in this one, so only the destination
           // can put focus back on it. By landing slot, since the source's key
@@ -630,24 +664,37 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * Removes a row on the reader's behalf: hand the item to the consumer, say
-   * so, and leave focus somewhere it can act again.
+   * Removes a row on the reader's behalf: hand the item to the consumer, wait
+   * for the removal to actually happen, then say so and leave focus somewhere
+   * the reader can act again.
    *
    * Focus is the part a consumer cannot reasonably get right on its own. The
    * control that was just pressed is gone with its row, so focus would fall to
    * the document without help, and a reader clearing several entries would be
    * thrown to the top of the page after each one.
    *
+   * Awaited and then verified, rather than assumed. A consumer that puts a
+   * confirmation in front of the removal is back before the reader has
+   * answered, so announcing there speaks over a row still on screen and says
+   * something untrue when they cancel, while the scheduled focus fires into
+   * the dialog's own trap. Returning a promise defers both until the outcome
+   * is known, and checking the count covers the rest: a handler that simply
+   * declined never removed anything and there is nothing to report.
+   *
    * @param key - The row to remove.
    */
   @action
-  onRemove(key: string) {
+  async onRemove(key: string) {
     const row = this.rows.find((candidate) => candidate.key === key);
     if (!row?.removable) {
       return;
     }
     const index = row.index;
-    this.args.onRemove?.(row.item, index);
+    const before = this.args.items.length;
+    await this.args.onRemove?.(row.item, index);
+    if (isDestroying(this) || this.args.items.length === before) {
+      return;
+    }
     this.a11y.announce(i18n("reorder.removed", { label: row.label }));
     schedule("afterRender", () => {
       if (isDestroying(this)) {
@@ -657,7 +704,7 @@ export default class DReorderableList<T> extends Component<
         this.#listElement?.querySelectorAll<HTMLElement>(
           ".d-reorderable-list__remove"
         ) ?? []
-      );
+      ).filter((control) => control.closest(LIST_ROOT) === this.#listElement);
       // The slot the removed row occupied, which now holds the row that
       // followed it; at the end of the list, the one before it instead.
       const successor = controls[index] ?? controls.at(-1);
@@ -793,13 +840,30 @@ export default class DReorderableList<T> extends Component<
       if (!row) {
         return;
       }
-      const root = this.#listElement ?? document;
-      root
-        .querySelector<HTMLElement>(
-          `[data-reorderable-key="${CSS.escape(row.key)}"] .d-reorderable-list__handle`
-        )
-        ?.focus();
+      // The registry rather than a query: the handles this list registered are
+      // its own by construction, where a descendant selector from the root
+      // reaches a nested list's handles as readily as this row's.
+      this.handleFor(row.key)?.focus();
     });
+  }
+
+  /**
+   * The row THIS list owns that contains an element, if any.
+   *
+   * Rows nest: a list rendered inside a row puts its own rows inside that one,
+   * so the innermost `[data-reorderable-key]` above an element frequently
+   * belongs to a different list. Walking outwards past those is what makes the
+   * answer this list's own row.
+   *
+   * @param element - Anything inside the list.
+   */
+  #ownRowFor(element: Element): Element | null {
+    let candidate = element.closest("[data-reorderable-key]");
+    while (candidate && candidate.closest(LIST_ROOT) !== this.#listElement) {
+      candidate =
+        candidate.parentElement?.closest("[data-reorderable-key]") ?? null;
+    }
+    return candidate;
   }
 
   <template>

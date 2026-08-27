@@ -15,6 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import DMenus from "discourse/float-kit/components/d-menus";
 import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -3067,6 +3068,349 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
       "duplicate listId registration triggers a development assertion"
     );
   });
+
+  test("a member's list label is read live rather than captured at registration", async function (assert) {
+    const primary = trackedArray(objectItems());
+    const secondary = trackedArray([
+      { id: "secondary-alpha", name: "Secondary Alpha" },
+    ]);
+    const state = new (class {
+      @tracked secondaryLabel = "Secondary";
+    })();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{noop}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="primary"
+            @listLabel="Primary"
+            @items={{primary}}
+            @key="id"
+            @label={{label}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="secondary"
+            @listLabel={{state.secondaryLabel}}
+            @items={{secondary}}
+            @key="id"
+            @label={{label}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    state.secondaryLabel = "Renamed";
+    await settled();
+
+    await openMoveMenu("alpha");
+
+    assert
+      .dom(moveItemSelector("list"))
+      .hasText(
+        "Move to Renamed",
+        "a destination is named by what the list is called now, not by what it was called when it registered"
+      );
+  });
+
+  /**
+   * Two members that read as one run, which is the arrangement `@spill` is
+   * for. The applier is the same shape a real consumer writes: the component
+   * proposes an order and the store is the consumer's to update.
+   */
+  function spillFixture() {
+    const first = trackedArray([
+      { id: "alpha", name: "Alpha" },
+      { id: "bravo", name: "Bravo" },
+    ]);
+    const second = trackedArray([{ id: "charlie", name: "Charlie" }]);
+    const moves = [];
+    const applyMove = (move) => {
+      moves.push(move);
+      const listFor = (id) => (id === "first" ? first : second);
+      const from = listFor(move.fromList);
+      from.splice(0, from.length, ...move.proposedFromItems);
+      if (move.toList !== move.fromList) {
+        const to = listFor(move.toList);
+        to.splice(0, to.length, ...move.proposedToItems);
+      }
+    };
+    return { first, second, moves, applyMove };
+  }
+
+  test("a spilling list carries a row past its own end into the next member", async function (assert) {
+    const { first, second, moves, applyMove } = spillFixture();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{applyMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
+            @items={{first}}
+            @key="id"
+            @label={{label}}
+            class="spill-first"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
+            @items={{second}}
+            @key="id"
+            @label={{label}}
+            class="spill-second"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await moveViaChord("bravo", "down", ".spill-first");
+
+    assert.deepEqual(
+      renderedItemOrder(".spill-first"),
+      ["alpha"],
+      "the row left the list it had run out of room in"
+    );
+    assert.deepEqual(
+      renderedItemOrder(".spill-second"),
+      ["bravo", "charlie"],
+      "and entered the next one at the top, still travelling downwards"
+    );
+    assert.strictEqual(
+      moves.at(-1).method,
+      "keyboard",
+      "the consumer is told what the reader actually did, not that a menu was used"
+    );
+    assert
+      .dom(handleSelector("bravo", ".spill-second"))
+      .isFocused("focus follows the row across, so a second press is possible");
+  });
+
+  test("a spilling list carries a row backwards onto the previous member's tail", async function (assert) {
+    const { first, second, applyMove } = spillFixture();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{applyMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
+            @items={{first}}
+            @key="id"
+            @label={{label}}
+            class="spill-first"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
+            @items={{second}}
+            @key="id"
+            @label={{label}}
+            class="spill-second"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await moveViaChord("charlie", "up", ".spill-second");
+
+    assert.deepEqual(
+      renderedItemOrder(".spill-first"),
+      ["alpha", "bravo", "charlie"],
+      "entering from below lands last, so the row keeps travelling upwards"
+    );
+    assert.deepEqual(
+      renderedItemOrder(".spill-second"),
+      [],
+      "and the member it left is empty"
+    );
+  });
+
+  test("the outermost end still refuses even when the list spills", async function (assert) {
+    const { first, second, moves, applyMove } = spillFixture();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{applyMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
+            @items={{first}}
+            @key="id"
+            @label={{label}}
+            class="spill-first"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
+            @items={{second}}
+            @key="id"
+            @label={{label}}
+            class="spill-second"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await moveViaChord("charlie", "down", ".spill-second");
+
+    assert.strictEqual(moves.length, 0, "there is nowhere further to go");
+    assert.strictEqual(
+      announce.lastCall.args[0],
+      "Charlie is already last",
+      "and reaching the end of the whole run is still spoken"
+    );
+  });
+
+  test("without spill a member's boundary refuses as it always did", async function (assert) {
+    const { first, second, moves, applyMove } = spillFixture();
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{applyMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="first"
+            @listLabel="First"
+            @items={{first}}
+            @key="id"
+            @label={{label}}
+            class="spill-first"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="second"
+            @listLabel="Second"
+            @items={{second}}
+            @key="id"
+            @label={{label}}
+            class="spill-second"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await moveViaChord("bravo", "down", ".spill-first");
+
+    assert.strictEqual(moves.length, 0, "a member keeps to its own edges");
+    assert.strictEqual(
+      announce.lastCall.args[0],
+      "Bravo is already last",
+      "and says so"
+    );
+    assert.deepEqual(renderedItemOrder(".spill-second"), ["charlie"]);
+  });
+
+  test("a spillable row is offered the step in its menu", async function (assert) {
+    const { first, second, applyMove } = spillFixture();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableListGroup @onMove={{applyMove}} as |group|>
+          <DReorderableList
+            @group={{group}}
+            @listId="first"
+            @listLabel="First"
+            @spill={{true}}
+            @items={{first}}
+            @key="id"
+            @label={{label}}
+            class="spill-first"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+          <DReorderableList
+            @group={{group}}
+            @listId="second"
+            @listLabel="Second"
+            @spill={{true}}
+            @items={{second}}
+            @key="id"
+            @label={{label}}
+            class="spill-second"
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </DReorderableListGroup>
+      </template>
+    );
+
+    await openMoveMenu("bravo", ".spill-first");
+
+    assert
+      .dom(moveItemSelector("down"))
+      .exists(
+        "the last row of a spilling member can still step down, so the menu says so"
+      );
+    assert
+      .dom(moveItemSelector("bottom"))
+      .doesNotExist("but the end of this list is somewhere it already is");
+  });
 });
 
 module(
@@ -4709,5 +5053,361 @@ module(
         "a position-keyed list reorders without a held key to invalidate"
       );
     });
+
+    test("a removal that defers is not spoken for until it completes", async function (assert) {
+      const state = new (class {
+        @tracked items = objectItems();
+      })();
+      let release;
+      const confirmed = new Promise((resolve) => (release = resolve));
+      // What a consumer putting a confirmation in front of the removal returns:
+      // the handler is back long before the reader has answered.
+      const onRemove = (item) =>
+        confirmed.then(() => {
+          state.items = state.items.filter((candidate) => candidate !== item);
+        });
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{state.items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector("bravo")} .d-reorderable-list__remove`);
+
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "nothing is announced while the row is still on screen"
+      );
+      assert.dom(rowSelector("bravo")).exists("and the row is still there");
+
+      release();
+      await settled();
+
+      assert.dom(rowSelector("bravo")).doesNotExist("the row went");
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "and the announcement lands once it has"
+      );
+    });
+
+    test("a removal behind a confirmation lands focus once the dialog has gone", async function (assert) {
+      const state = new (class {
+        @tracked items = objectItems();
+      })();
+      const dialog = this.owner.lookup("service:dialog");
+      // Exactly the shape a consumer with a confirmation writes: the promise is
+      // returned so the list waits, and the store is only touched on confirm.
+      const onRemove = (item) =>
+        dialog.yesNoConfirm({
+          message: "Remove it?",
+          didConfirm: () => {
+            state.items = state.items.filter((candidate) => candidate !== item);
+          },
+        });
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DialogHolder />
+          <DReorderableList
+            @items={{state.items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector("bravo")} .d-reorderable-list__remove`);
+
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "nothing is said while the reader is still being asked"
+      );
+      assert.dom(rowSelector("bravo")).exists("and the row is still there");
+
+      await click(".dialog-footer .btn-primary");
+
+      assert.dom(rowSelector("bravo")).doesNotExist("the row went");
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "and the removal is announced once it actually happened"
+      );
+      assert
+        .dom(`${rowSelector("charlie")} .d-reorderable-list__remove`)
+        .isFocused(
+          "focus survives the dialog's teardown, so a reader clearing several rows is not thrown to the top of the page after each one"
+        );
+    });
+
+    test("a removal the consumer declines is neither announced nor refocused", async function (assert) {
+      const items = objectItems();
+      // A handler that takes no action, which is every cancelled confirmation
+      // and every refusal a consumer makes on its own terms.
+      const onRemove = () => {};
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      const control = `${rowSelector("bravo")} .d-reorderable-list__remove`;
+      await click(control);
+
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "the list reports what happened, not what it asked for"
+      );
+      assert
+        .dom(control)
+        .isFocused("and leaves focus on the control that was pressed");
+    });
   }
 );
+
+module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const INNER = ".nested-inner";
+
+  /**
+   * An outer list whose first row hosts a list of its own, which is the shape
+   * any tree of reorderable things takes: sections holding rows, groups holding
+   * members. Only the first outer row nests one, so a selector naming an inner
+   * key can never also name an outer one.
+   */
+  function nestedItems() {
+    return trackedArray([
+      {
+        id: "outer-a",
+        name: "Outer A",
+        children: trackedArray([
+          { id: "one", name: "One" },
+          { id: "two", name: "Two" },
+        ]),
+      },
+      { id: "outer-b", name: "Outer B", children: null },
+    ]);
+  }
+
+  test("an accelerator on a nested handle moves the nested row, not the outer one", async function (assert) {
+    const outer = nestedItems();
+    const inner = outer[0].children;
+    const outerMove = sinon.spy();
+    // A real handler, not a spy: the component never mutates `@items`, so a
+    // spy alone would leave the rendered order unchanged whether the move
+    // reached the right list or no list at all.
+    const innerMove = sinon.spy(({ proposedFromItems }) =>
+      inner.splice(0, inner.length, ...proposedFromItems)
+    );
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{outer}}
+          @key="id"
+          @label={{label}}
+          @onMove={{outerMove}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+            {{#if item.children}}
+              <DReorderableList
+                @items={{inner}}
+                @key="id"
+                @label={{label}}
+                @onMove={{innerMove}}
+                class="nested-inner"
+              >
+                <:row as |child|>
+                  <span data-test-item={{child.id}}>{{child.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/if}}
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    await moveViaChord("one", "down", INNER);
+
+    assert.true(
+      innerMove.calledOnce,
+      "the list the handle belongs to is the list that moves"
+    );
+    assert.false(
+      outerMove.called,
+      "and the list it is nested in never sees a key it does not own"
+    );
+    assert.deepEqual(
+      renderedItemOrder(INNER),
+      ["two", "one"],
+      "the nested row moved"
+    );
+  });
+
+  test("an accelerator on an outer handle still moves the outer row", async function (assert) {
+    const outer = nestedItems();
+    const inner = outer[0].children;
+    const outerMove = sinon.spy();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{outer}}
+          @key="id"
+          @label={{label}}
+          @onMove={{outerMove}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+            {{#if item.children}}
+              <DReorderableList
+                @items={{inner}}
+                @key="id"
+                @label={{label}}
+                @onMove={{noop}}
+                class="nested-inner"
+              >
+                <:row as |child|>
+                  <span data-test-item={{child.id}}>{{child.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/if}}
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    await moveViaChord("outer-a", "down");
+
+    assert.true(outerMove.calledOnce, "the outer list moves its own row");
+  });
+
+  test("the outer cursor steps over a nested list's handles", async function (assert) {
+    const outer = nestedItems();
+    const inner = outer[0].children;
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{outer}}
+          @key="id"
+          @label={{label}}
+          @onMove={{noop}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+            {{#if item.children}}
+              <DReorderableList
+                @items={{inner}}
+                @key="id"
+                @label={{label}}
+                @onMove={{noop}}
+                class="nested-inner"
+              >
+                <:row as |child|>
+                  <span data-test-item={{child.id}}>{{child.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/if}}
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    const handle = find(handleSelector("outer-a"));
+    handle.focus();
+    await triggerKeyEvent(handle, "keydown", "ArrowDown");
+
+    assert
+      .dom(handleSelector("outer-b"))
+      .isFocused(
+        "the cursor walks the rows of the list it belongs to, not every handle beneath it"
+      );
+  });
+
+  test("the nested cursor stops at its own end rather than escaping outwards", async function (assert) {
+    const outer = nestedItems();
+    const inner = outer[0].children;
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{outer}}
+          @key="id"
+          @label={{label}}
+          @onMove={{noop}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+            {{#if item.children}}
+              <DReorderableList
+                @items={{inner}}
+                @key="id"
+                @label={{label}}
+                @onMove={{noop}}
+                class="nested-inner"
+              >
+                <:row as |child|>
+                  <span data-test-item={{child.id}}>{{child.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/if}}
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    const handle = find(handleSelector("two", INNER));
+    handle.focus();
+    await triggerKeyEvent(handle, "keydown", "ArrowDown");
+
+    assert
+      .dom(handleSelector("two", INNER))
+      .isFocused(
+        "the last row of a nested list has nowhere further to go inside it"
+      );
+  });
+});
