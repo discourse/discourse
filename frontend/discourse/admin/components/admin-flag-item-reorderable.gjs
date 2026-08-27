@@ -1,0 +1,186 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
+import DMenu from "discourse/float-kit/components/d-menu";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import { i18n } from "discourse-i18n";
+
+/**
+ * The reordering surface behind `enable_new_reordering_controls`. Mirrors
+ * `admin-flag-item.gjs`, over the shared reorderable list.
+ *
+ * TODO (ui-kit-reorderable-list-cleanup) rename this over `admin-flag-item.gjs`
+ * and drop the branch in flags-reorderable.gjs.
+ */
+export default class AdminFlagItem extends Component {
+  @service dialog;
+  @service router;
+
+  @tracked enabled = this.args.flag.enabled;
+
+  get canMove() {
+    return this.args.flag.id !== SYSTEM_FLAG_IDS.notify_user;
+  }
+
+  get canEdit() {
+    return !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id);
+  }
+
+  get canDelete() {
+    return this.canEdit && !this.args.flag.is_used;
+  }
+
+  get editTitle() {
+    return this.canEdit
+      ? "admin.config_areas.flags.form.edit_flag"
+      : "admin.config_areas.flags.form.non_editable";
+  }
+
+  get deleteTitle() {
+    return this.canDelete
+      ? "admin.config_areas.flags.form.delete_flag"
+      : "admin.config_areas.flags.form.non_deletable";
+  }
+
+  @action
+  toggleFlagEnabled(flag) {
+    this.enabled = !this.enabled;
+    this.args.setPending(flag, true);
+
+    return ajax(`/admin/config/flags/${flag.id}/toggle`, {
+      type: "PUT",
+    })
+      .then(() => {
+        this.args.flag.enabled = this.enabled;
+      })
+      .catch((error) => {
+        this.enabled = !this.enabled;
+        return popupAjaxError(error);
+      })
+      .finally(() => {
+        this.args.setPending(flag, false);
+      });
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  edit() {
+    this.router.transitionTo("adminConfig.flags.edit", this.args.flag);
+  }
+
+  @action
+  delete() {
+    this.args.setPending(this.args.flag, true);
+    this.dialog.yesNoConfirm({
+      message: i18n("admin.config_areas.flags.delete_confirm", {
+        name: this.args.flag.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await this.args.deleteFlagCallback(this.args.flag);
+          this.args.setPending(this.args.flag, false);
+          this.dMenu.close();
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+      didCancel: () => {
+        this.args.setPending(this.args.flag, false);
+        this.dMenu.close();
+      },
+    });
+  }
+
+  <template>
+    <td class="d-table__cell --reorder">
+      {{#if @controls.handle}}<@controls.handle />{{/if}}
+    </td>
+    <td class="d-table__cell --overview">
+      {{#if this.canEdit}}
+        <LinkTo
+          @route="adminConfig.flags.edit"
+          @model={{@flag}}
+          class="d-table__overview-link"
+        >
+          <div
+            class="d-table__overview-name admin-flag-item__name"
+          >{{@flag.name}}</div>
+          <div class="d-table__overview-about">{{trustHTML
+              @flag.description
+            }}</div>
+        </LinkTo>
+      {{else}}
+        <div
+          class="d-table__overview-name admin-flag-item__name"
+        >{{@flag.name}}</div>
+        <div class="d-table__overview-about">{{trustHTML
+            @flag.description
+          }}</div>
+      {{/if}}
+    </td>
+    <td class="d-table__cell --detail">
+      <div class="d-table__mobile-label">
+        {{i18n "admin.config_areas.flags.enabled"}}
+      </div>
+      <DToggleSwitch
+        @state={{this.enabled}}
+        class="admin-flag-item__toggle {{@flag.name_key}}"
+        {{on "click" (fn this.toggleFlagEnabled @flag)}}
+      />
+    </td>
+    <td class="d-table__cell --controls">
+      <div class="d-table__cell-actions">
+
+        <DButton
+          class="btn-default btn-small admin-flag-item__edit"
+          @action={{this.edit}}
+          @label="admin.config_areas.flags.edit"
+          @disabled={{not this.canEdit}}
+          @title={{this.editTitle}}
+        />
+
+        {{#if this.canMove}}
+          <DMenu
+            @identifier="flag-menu"
+            @title={{i18n "admin.config_areas.flags.more_options.title"}}
+            @icon="ellipsis-vertical"
+            @onRegisterApi={{this.onRegisterApi}}
+            @triggerClass="btn-default"
+          >
+            <:content>
+              <DDropdownMenu as |dropdown|>
+
+                <dropdown.item>
+                  <DButton
+                    @label="admin.config_areas.flags.delete"
+                    @icon="trash-can"
+                    class="btn-transparent --danger admin-flag-item__delete"
+                    @action={{this.delete}}
+                    @disabled={{not this.canDelete}}
+                    @title={{this.deleteTitle}}
+                  />
+                </dropdown.item>
+              </DDropdownMenu>
+            </:content>
+          </DMenu>
+        {{/if}}
+      </div>
+    </td>
+  </template>
+}

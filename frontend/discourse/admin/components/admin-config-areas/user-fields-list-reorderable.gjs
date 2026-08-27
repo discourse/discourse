@@ -2,14 +2,20 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import AdminUserFieldItem from "discourse/admin/components/admin-user-field-item";
+import AdminUserFieldItemReorderable from "discourse/admin/components/admin-user-field-item-reorderable";
 import UserField from "discourse/admin/models/user-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
-// TODO (ui-kit-reorderable-list-cleanup) delete this file once
-// `enable_new_reordering_controls` ships; `user-fields-list-reorderable.gjs` replaces it.
+/**
+ * The reordering surface behind `enable_new_reordering_controls`. Mirrors
+ * `admin-config-areas/user-fields-list.gjs`, over the shared reorderable list.
+ *
+ * TODO (ui-kit-reorderable-list-cleanup) rename this over `admin-config-areas/user-fields-list.gjs`
+ * and drop the branch in the user-fields template.
+ */
 export default class AdminConfigAreasUserFieldsList extends Component {
   @service dialog;
   @service toasts;
@@ -17,6 +23,8 @@ export default class AdminConfigAreasUserFieldsList extends Component {
 
   /** @type {any} */
   fieldTypes = UserField.fieldTypes();
+
+  fieldLabel = (field) => field.name;
 
   get fields() {
     return this.adminUserFields.userFields;
@@ -26,27 +34,27 @@ export default class AdminConfigAreasUserFieldsList extends Component {
     return this.adminUserFields.sortedUserFields;
   }
 
+  /**
+   * Applies a committed move by renumbering every displaced field from its
+   * new slot — a drag can jump several rows, which the old adjacent-swap
+   * persistence could not express.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  moveUp(field) {
-    const idx = this.sortedFields.indexOf(field);
-    if (idx) {
-      const prev = this.sortedFields[idx - 1];
-      const prevPos = prev.get("position");
-
-      prev.update({ position: field.get("position") });
-      field.update({ position: prevPos });
-    }
-  }
-
-  @action
-  moveDown(field) {
-    const idx = this.sortedFields.indexOf(field);
-    if (idx > -1) {
-      const next = this.sortedFields[idx + 1];
-      const nextPos = next.get("position");
-
-      next.update({ position: field.get("position") });
-      field.update({ position: nextPos });
+  async handleMove(move) {
+    try {
+      await Promise.all(
+        move.proposedToItems.map((field, index) => {
+          const position = index + 1;
+          if (field.get("position") === position) {
+            return null;
+          }
+          return field.update({ position });
+        })
+      );
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
@@ -78,9 +86,13 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   <template>
     <div class="container admin-user_fields">
       {{#if this.fields}}
+        {{! The reorderable list renders the tbody itself, which the static
+            table-group rule cannot see from here. }}
+        {{! eslint-disable-next-line ember/template-table-groups }}
         <table class="d-table user-fields">
           <thead class="d-table__header">
             <tr class="d-table__row">
+              <th class="d-table__header-cell --reorder"></th>
               <th class="d-table__header-cell">{{i18n
                   "admin.config_areas.user_fields.field"
                 }}</th>
@@ -89,17 +101,26 @@ export default class AdminConfigAreasUserFieldsList extends Component {
                 }}</th>
             </tr>
           </thead>
-          <tbody class="d-table__body">
-            {{#each this.sortedFields as |field|}}
-              <AdminUserFieldItem
+          <DReorderableList
+            @items={{this.sortedFields}}
+            @key="id"
+            @label={{this.fieldLabel}}
+            @onMove={{this.handleMove}}
+            @controls="manual"
+            @tag="tbody"
+            @itemTag="tr"
+            @rowClass="d-table__row admin-user_field-item --reorderable"
+            class="d-table__body"
+          >
+            <:row as |field controls|>
+              <AdminUserFieldItemReorderable
+                @controls={{controls}}
                 @userField={{field}}
                 @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}
-                @moveUpAction={{this.moveUp}}
-                @moveDownAction={{this.moveDown}}
               />
-            {{/each}}
-          </tbody>
+            </:row>
+          </DReorderableList>
         </table>
       {{else}}
         <AdminConfigAreaEmptyList

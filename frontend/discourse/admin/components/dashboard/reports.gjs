@@ -9,6 +9,7 @@ import DashboardReportEmptyState from "discourse/admin/components/dashboard/repo
 import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
+import ManageReportsReorderable from "discourse/admin/components/modal/manage-reports-reorderable";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -25,6 +26,7 @@ const VISIBLE_CAP = 10;
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
+  @service siteSettings;
 
   @tracked cards = [];
   @tracked loading = false;
@@ -109,7 +111,13 @@ export default class DashboardReports extends Component {
 
   @action
   openReportsConfig() {
-    this.modal.show(ManageReports, {
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? ManageReportsReorderable
+      : ManageReports;
+
+    this.modal.show(Modal, {
       model: { onApplied: this.onLayoutChanged },
     });
   }

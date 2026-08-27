@@ -6,15 +6,25 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { gt, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
+const INDEX_KEY = "@index";
+
 // args: onChange, inputDelimiter, values, allowAny, choices
-// TODO (ui-kit-reorderable-list-cleanup) delete this file once
-// `enable_new_reordering_controls` ships; `simple-list-reorderable.gjs` replaces it.
+/**
+ * The reordering surface behind `enable_new_reordering_controls`. Mirrors
+ * `simple-list.gjs`, over the shared reorderable list.
+ *
+ * TODO (ui-kit-reorderable-list-cleanup) rename this over `simple-list.gjs`
+ * and drop the branch in the site-settings and logo-form call sites.
+ */
 export default class SimpleList extends Component {
   @tracked newValue = "";
+
+  valueLabel = (value) => value;
 
   @cached
   get collection() {
@@ -58,64 +68,55 @@ export default class SimpleList extends Component {
   }
 
   @action
-  removeItem(index) {
+  removeValue(value, index) {
     this.collection.splice(index, 1);
     this.args.onChange?.(this.collection);
   }
 
+  /**
+   * Applies a committed move onto the delimited collection and reports the
+   * new order. Wrapping and announcements are the list's own.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
   @action
-  shift(index, offset) {
-    let futureIndex = index + offset;
-
-    if (futureIndex > this.collection.length - 1) {
-      futureIndex = 0;
-    } else if (futureIndex < 0) {
-      futureIndex = this.collection.length - 1;
-    }
-
-    const shiftedValue = this.collection[index];
-    this.collection.splice(index, 1);
-    this.collection.splice(futureIndex, 0, shiftedValue);
-
+  handleMove(move) {
+    this.collection.splice(0, this.collection.length, ...move.proposedToItems);
     this.args.onChange?.(this.collection);
   }
 
   <template>
     <div class="simple-list value-list" ...attributes>
-      {{#if this.collection}}
-        <div class="values">
-          {{#each this.collection as |value index|}}
-            <div data-index={{index}} class="value">
-              <DButton
-                @action={{fn this.removeItem index}}
-                @icon="xmark"
-                class="btn-default remove-value-btn btn-small"
-              />
-
-              <input
-                {{on "focusout" (fn this.changeValue index)}}
-                value={{value}}
-                title={{value}}
-                type="text"
-                class="value-input"
-              />
-
-              {{#if (gt this.collection.length 1)}}
-                <DButton
-                  @action={{fn this.shift index -1}}
-                  @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
-                />
-                <DButton
-                  @action={{fn this.shift index 1}}
-                  @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
-                />
-              {{/if}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
+      <DReorderableList
+        @items={{this.collection}}
+        @key={{INDEX_KEY}}
+        @label={{this.valueLabel}}
+        @onMove={{this.handleMove}}
+        @onRemove={{this.removeValue}}
+        @tag="div"
+        @itemTag="div"
+        @rowClass="value --reorderable"
+        class="values --reorderable"
+      >
+        <:row as |value controls|>
+          {{#if this.isPredefinedList}}
+            {{! A closed set has nothing to type: the value came from the
+              choices and can only be reordered or removed. }}
+            <span
+              class="value-input --readonly"
+              title={{value}}
+            >{{value}}</span>
+          {{else}}
+            <input
+              {{on "focusout" (fn this.changeValue controls.index)}}
+              value={{value}}
+              title={{value}}
+              type="text"
+              class="value-input"
+            />
+          {{/if}}
+        </:row>
+      </DReorderableList>
 
       <div class="simple-list-input">
         {{#if this.isPredefinedList}}
@@ -126,7 +127,14 @@ export default class SimpleList extends Component {
               @onChange={{this.addValue}}
               @valueProperty={{@setting.computedValueProperty}}
               @nameProperty={{@setting.computedNameProperty}}
-              @options={{hash castInteger=true allowAny=false}}
+              {{! Without a `none` label the closed-set picker renders as an
+                empty box under the list. The free-text branch below shows the
+                same string as its placeholder. }}
+              @options={{hash
+                castInteger=true
+                allowAny=false
+                none="admin.site_settings.simple_list.add_item"
+              }}
               class="add-value-input"
             />
           {{/if}}

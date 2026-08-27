@@ -1264,3 +1264,37 @@ a.inline-editable-field {
 @import "admin/discourse_id";
 @import "admin/admin_new_category_setup";
 @import "admin/admin_emoji";
+
+/* The reordering surface behind `enable_new_reordering_controls`. These class
+   names exist only in the new markup, so the rules are inert while the legacy
+   value lists render and the legacy rules above stay untouched.
+
+   TODO (ui-kit-reorderable-list-cleanup) fold back into the `.value-list` block
+   above once the change ships. */
+
+.value-list .value {
+  .d-reorderable-list__remove {
+    margin-left: 0.25em;
+    flex: 0 0 auto;
+
+    @include value-btn;
+  }
+
+  /* A closed set is reordered and removed, never typed into. It keeps the
+     field's footprint so rows line up with the free-text variant, but reads as
+     filled rather than editable. */
+
+  .value-input.--readonly {
+    display: flex;
+    align-items: center;
+    min-height: 2em;
+    padding: 0 0.5em;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    color: var(--primary);
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
