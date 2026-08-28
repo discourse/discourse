@@ -159,7 +159,6 @@ class DiscourseVipsWorker
     @socket_path = server.local_address.unix_path
     @socket_identity = File.stat(@socket_path).then { |stat| [stat.dev, stat.ino] }
     @owner_reader = owner_reader
-    @landlock_supported = Landlock.supported?
   end
 
   def run
@@ -211,7 +210,7 @@ class DiscourseVipsWorker
     request = MessagePack.unpack(connection.read)
     operation = Operations.build(request.fetch("command"))
     response =
-      if @landlock_supported
+      if LINUX_PLATFORM
         run_sandboxed(request:, operation:)
       else
         run_direct(operation)
@@ -241,6 +240,7 @@ class DiscourseVipsWorker
           unsetenv_others: true,
           rlimits: RLIMITS,
           seccomp_deny_network: true,
+          on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)
           stdout.write(MessagePack.pack(operation_response(operation)))
