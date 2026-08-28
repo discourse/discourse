@@ -665,6 +665,11 @@
      and the picker shows its icon. */
 
   .d-reorderable-list .row-wrapper.header {
+    /* The tracks live on the wrapper, so the header has to reach them the same
+       way a row does or its labels stop sitting over the columns they name. */
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+
     @include viewport.until(sm) {
       display: none;
     }
