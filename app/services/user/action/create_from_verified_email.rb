@@ -36,8 +36,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user.save!
-    user
+    user.tap(&:save)
   end
 
   private

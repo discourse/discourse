@@ -38,7 +38,7 @@ class NestedTopic::TogglePin
   end
 
   def find_or_create_nested_topic(topic:)
-    topic.nested_topic || NestedTopic.find_or_create_by!(topic: topic)
+    topic.nested_topic || NestedTopic.find_or_create_by(topic:)
   end
 
   def within_pin_limit(nested_topic:, post:)
