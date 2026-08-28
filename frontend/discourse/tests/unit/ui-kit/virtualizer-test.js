@@ -5,7 +5,7 @@ import {
   pushScrollOffset,
   rangeExtractorWithPins,
   stableKeyFor,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 
 // A deterministic virtualizer over a fake 500px-tall viewport with fixed-height
 // rows, so the windowing math can be asserted without a real layout.

@@ -54,7 +54,7 @@ import {
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 
 const REPORT_MEMORY = false;
 let cancelled = false;

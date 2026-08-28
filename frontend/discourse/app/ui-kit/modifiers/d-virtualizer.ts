@@ -4,7 +4,6 @@ import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 import {
   createElementVirtualizer,
   isVirtualizationEnabled,
@@ -13,7 +12,8 @@ import {
   rangeExtractorWithPins,
   remeasureViewport,
   updateElementVirtualizer,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 
 type VirtualKey = number | string | bigint;
 

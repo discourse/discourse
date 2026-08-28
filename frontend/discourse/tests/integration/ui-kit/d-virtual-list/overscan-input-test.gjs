@@ -1,11 +1,11 @@
 import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import DVirtualList from "discourse/ui-kit/d-virtual-list";
 
 const ROW_PX = 40;
 const VIEWPORT_PX = 400;

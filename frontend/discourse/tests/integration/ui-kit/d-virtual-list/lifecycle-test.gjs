@@ -2,11 +2,11 @@ import { tracked } from "@glimmer/tracking";
 import { find, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 
 const ROW_PX = 40;

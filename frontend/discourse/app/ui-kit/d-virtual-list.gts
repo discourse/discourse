@@ -4,12 +4,12 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dElement from "discourse/ui-kit/helpers/d-element";
 import {
   isVirtualizationEnabled,
   keyFor,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
 import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 
 /** A single measured/positioned row as published by the engine. */

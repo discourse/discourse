@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 
 const ROW_PX = 40;
