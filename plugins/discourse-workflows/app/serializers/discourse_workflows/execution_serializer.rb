@@ -6,6 +6,7 @@ module DiscourseWorkflows
                :workflow_id,
                :workflow_name,
                :status,
+               :warned,
                :trigger_data,
                :error,
                :run_time_ms,
@@ -37,6 +38,7 @@ module DiscourseWorkflows
       node_type
       position
       status
+      warned
       input
       output
       error

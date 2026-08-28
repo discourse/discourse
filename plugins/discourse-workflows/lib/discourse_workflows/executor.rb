@@ -450,6 +450,7 @@ module DiscourseWorkflows
     def attach_step_log(step, step_log)
       return if step_log.nil? || step_log.empty?
 
+      step.warned = step_log.warnings?
       step.add_metadata("logs", step_log.as_json)
     end
 

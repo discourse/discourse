@@ -6,6 +6,7 @@ module DiscourseWorkflows
                :workflow_id,
                :workflow_name,
                :status,
+               :warned,
                :error,
                :run_time_ms,
                :started_at,

@@ -17,6 +17,10 @@ export default <template>
         @formattedValue={{@stats.failed}}
       />
       <tiles.Tile
+        @label={{i18n "discourse_workflows.stats.warnings"}}
+        @formattedValue={{@stats.warned}}
+      />
+      <tiles.Tile
         @label={{i18n "discourse_workflows.stats.failure_rate"}}
         @formattedValue={{@stats.failure_rate}}
       />

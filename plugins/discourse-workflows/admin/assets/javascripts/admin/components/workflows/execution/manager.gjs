@@ -26,8 +26,11 @@ const STATUS_ICONS = {
   waiting: "clock",
 };
 
-function statusIcon(status) {
-  return STATUS_ICONS[status] || "circle";
+function statusIcon(execution) {
+  if (execution.warned) {
+    return "triangle-exclamation";
+  }
+  return STATUS_ICONS[execution.status] || "circle";
 }
 
 function formatTime(timestamp) {
@@ -334,12 +337,13 @@ export default class ExecutionsManager extends Component {
               {{i18n "discourse_workflows.executions.status"}}
             </div>
             <span
-              class="workflows-executions-manager__status --{{execution.status}}"
+              class="workflows-executions-manager__status --{{execution.status}}
+                {{if execution.warned '--warned'}}"
             >
               {{#if (isRunning execution)}}
                 {{dLoadingSpinner size="small"}}
               {{else}}
-                {{dIcon (statusIcon execution.status)}}
+                {{dIcon (statusIcon execution)}}
               {{/if}}
               {{i18n
                 (concat
@@ -359,12 +363,13 @@ export default class ExecutionsManager extends Component {
               {{i18n "discourse_workflows.executions.status"}}
             </div>
             <span
-              class="workflows-executions-manager__status --{{execution.status}}"
+              class="workflows-executions-manager__status --{{execution.status}}
+                {{if execution.warned '--warned'}}"
             >
               {{#if (isRunning execution)}}
                 {{dLoadingSpinner size="small"}}
               {{else}}
-                {{dIcon (statusIcon execution.status)}}
+                {{dIcon (statusIcon execution)}}
               {{/if}}
               {{i18n
                 (concat

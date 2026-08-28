@@ -21,6 +21,10 @@
       color: var(--workflow-status-error);
     }
 
+    &.--warned .d-icon {
+      color: var(--workflow-status-warning);
+    }
+
     &.--running .d-icon {
       color: var(--workflow-status-running);
     }

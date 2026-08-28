@@ -35,6 +35,11 @@
       border-color: var(--workflow-status-error);
     }
 
+    &.--warned {
+      border-color: var(--workflow-status-warning);
+      background: var(--workflow-status-warning-low);
+    }
+
     &.--running {
       border-color: var(--workflow-status-running);
     }
@@ -169,6 +174,11 @@
     &.--error {
       background: var(--workflow-status-error-low);
       color: var(--workflow-status-error);
+    }
+
+    &.--warned {
+      background: var(--workflow-status-warning-low);
+      color: var(--workflow-status-warning);
     }
 
     &.--running {
@@ -366,5 +376,36 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  &__step-warning,
+  &__progress-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    color: var(--workflow-status-warning);
+
+    .d-icon {
+      color: var(--workflow-status-warning);
+    }
+  }
+
+  &__console {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__log {
+    &.--warn {
+      color: var(--workflow-status-warning);
+      font-weight: bold;
+    }
+
+    &.--error {
+      color: var(--workflow-status-error);
+      font-weight: bold;
+    }
   }
 }

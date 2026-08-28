@@ -356,6 +356,17 @@ export default class WorkflowsIndex extends Component {
                   >
                     {{dIcon "triangle-exclamation"}}
                   </span>
+                {{else if workflow.lastExecutionWarned}}
+                  <span
+                    class="workflows-index__warned"
+                    role="img"
+                    aria-label={{i18n
+                      "discourse_workflows.last_execution_warned"
+                    }}
+                    title={{i18n "discourse_workflows.last_execution_warned"}}
+                  >
+                    {{dIcon "triangle-exclamation"}}
+                  </span>
                 {{/if}}
               </LinkTo>
               {{#if workflow.tags.length}}

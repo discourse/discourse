@@ -6,7 +6,7 @@ module DiscourseWorkflows
 
     LATEST_EXECUTION_JOIN = <<~SQL
       LEFT JOIN LATERAL (
-        SELECT status, discourse_workflows_executions.created_at AS executed_at
+        SELECT status, warned, discourse_workflows_executions.created_at AS executed_at
         FROM discourse_workflows_executions
         WHERE discourse_workflows_executions.workflow_id = discourse_workflows_workflows.id
         ORDER BY discourse_workflows_executions.created_at DESC, discourse_workflows_executions.id DESC
@@ -63,6 +63,7 @@ module DiscourseWorkflows
           .select(
             "discourse_workflows_workflows.*",
             "latest_execution.status AS last_execution_status_value",
+            "latest_execution.warned AS last_execution_warned",
             "latest_execution.executed_at AS last_execution_at",
           )
           .order(id: :desc)

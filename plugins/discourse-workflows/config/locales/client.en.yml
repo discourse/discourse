@@ -126,6 +126,7 @@ en:
       status: "Status"
       last_execution_never: "Never"
       last_execution_failed: "Last execution failed"
+      last_execution_warned: "Last execution completed with warnings"
       create_first_workflow: "Create your first workflow"
       empty_title: "%{username}, let's set up a workflow"
       empty_description: "Workflows automate tasks by connecting triggers, conditions, and actions into a visual flow"
@@ -1251,6 +1252,9 @@ en:
           original_bytes: "%{count} bytes before truncation"
           original_size: "%{count} items before truncation"
           max_bytes: "%{count} byte limit"
+        warnings_count:
+          one: "%{count} warning"
+          other: "%{count} warnings"
         statuses:
           pending: "Pending"
           running: "Running"
@@ -1271,6 +1275,7 @@ en:
       stats:
         executions: "Executions"
         failures: "Failures"
+        warnings: "Warnings"
         failure_rate: "Failure rate"
         avg_run_time: "Avg. run time"
         period: "Last 7 days"

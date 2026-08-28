@@ -20,10 +20,11 @@ module DiscourseWorkflows
     end
 
     def compute_stats(recent_executions:)
-      total, failed, avg_seconds =
+      total, failed, warned, avg_seconds =
         recent_executions.pick(
           Arel.sql("COUNT(*)"),
           Arel.sql("COUNT(*) FILTER (WHERE status = #{Execution.statuses["error"]})"),
+          Arel.sql("COUNT(*) FILTER (WHERE warned)"),
           Arel.sql(
             "ROUND(AVG(EXTRACT(EPOCH FROM (finished_at - started_at))) FILTER (" \
               "WHERE finished_at IS NOT NULL AND started_at IS NOT NULL " \
@@ -36,7 +37,13 @@ module DiscourseWorkflows
       failure_rate = total > 0 ? (failed.to_f / total * 100).round(1) : 0
       avg_duration = avg_seconds < 1 ? "#{(avg_seconds * 1000).round}ms" : "#{avg_seconds}s"
 
-      { total: total, failed: failed, failure_rate: "#{failure_rate}%", avg_duration: avg_duration }
+      {
+        total: total,
+        failed: failed,
+        warned: warned,
+        failure_rate: "#{failure_rate}%",
+        avg_duration: avg_duration,
+      }
     end
   end
 end

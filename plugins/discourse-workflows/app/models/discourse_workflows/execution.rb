@@ -280,6 +280,7 @@ end
 #  timeout_action      :string(32)
 #  trigger_data        :jsonb
 #  waiting_until       :datetime
+#  warned              :boolean          default(FALSE), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  trigger_node_id     :string(100)

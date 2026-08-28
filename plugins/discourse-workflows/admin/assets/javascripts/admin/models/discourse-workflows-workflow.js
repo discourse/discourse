@@ -29,6 +29,9 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
     if (Object.hasOwn(json, "last_execution_status")) {
       result.lastExecutionStatus = json.last_execution_status;
     }
+    if (Object.hasOwn(json, "last_execution_warned")) {
+      result.lastExecutionWarned = json.last_execution_warned;
+    }
     if (Object.hasOwn(json, "last_execution_at")) {
       result.lastExecutionAt = json.last_execution_at;
     }

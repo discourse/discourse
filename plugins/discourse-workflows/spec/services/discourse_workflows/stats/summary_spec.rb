@@ -22,7 +22,13 @@ RSpec.describe DiscourseWorkflows::Stats::Summary do
       it { is_expected.to run_successfully }
 
       it "returns zeroed stats" do
-        expect(result[:stats]).to eq(total: 0, failed: 0, failure_rate: "0%", avg_duration: "0ms")
+        expect(result[:stats]).to eq(
+          total: 0,
+          failed: 0,
+          warned: 0,
+          failure_rate: "0%",
+          avg_duration: "0ms",
+        )
       end
     end
 
@@ -78,7 +84,13 @@ RSpec.describe DiscourseWorkflows::Stats::Summary do
       it { is_expected.to run_successfully }
 
       it "does not count old executions" do
-        expect(result[:stats]).to eq(total: 0, failed: 0, failure_rate: "0%", avg_duration: "0ms")
+        expect(result[:stats]).to eq(
+          total: 0,
+          failed: 0,
+          warned: 0,
+          failure_rate: "0%",
+          avg_duration: "0ms",
+        )
       end
     end
 

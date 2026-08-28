@@ -10,6 +10,7 @@ module DiscourseWorkflows
       def initialize
         @entries = []
         @has_errors = false
+        @has_warnings = false
         @truncated = false
       end
 
@@ -22,17 +23,19 @@ module DiscourseWorkflows
       end
 
       def error(message)
-        @has_errors = true
         append("error", message: message)
       end
 
       def kv(key, value, level: "info")
-        @has_errors = true if level == "error"
         append(level, key: key, value: value.to_s)
       end
 
       def errors?
         @has_errors
+      end
+
+      def warnings?
+        @has_warnings
       end
 
       def empty?
@@ -57,8 +60,7 @@ module DiscourseWorkflows
             end
             break
           end
-          @has_errors = true if entry["level"] == "error"
-          @entries << entry
+          record(entry)
         end
       end
 
@@ -87,9 +89,17 @@ module DiscourseWorkflows
           end
           return
         end
-        @entries << { "level" => level, "at" => Time.current.utc.iso8601 }.merge(
-          fields.transform_keys(&:to_s),
+        record(
+          { "level" => level, "at" => Time.current.utc.iso8601 }.merge(
+            fields.transform_keys(&:to_s),
+          ),
         )
+      end
+
+      def record(entry)
+        @has_errors = true if entry["level"] == "error"
+        @has_warnings = true if entry["level"] == "warn"
+        @entries << entry
       end
     end
   end

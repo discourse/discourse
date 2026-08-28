@@ -21,6 +21,7 @@ module DiscourseWorkflows
                   :error,
                   :finished_at
       attr_accessor :metadata
+      attr_writer :warned
 
       def initialize(
         node_id:,
@@ -49,6 +50,7 @@ module DiscourseWorkflows
       end
 
       def success? = status == SUCCESS
+      def warned? = @warned == true
       def error? = status == ERROR
       def waiting? = status == WAITING
       def filtered? = status == FILTERED
@@ -106,6 +108,7 @@ module DiscourseWorkflows
           "input" => input,
           "started_at" => started_at,
         }
+        h["warned"] = true if warned?
         h["output"] = output if output
         h["finished_at"] = finished_at if finished_at
         h["error"] = error if error

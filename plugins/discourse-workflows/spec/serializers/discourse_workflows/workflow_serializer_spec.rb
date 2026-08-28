@@ -19,6 +19,27 @@ RSpec.describe DiscourseWorkflows::WorkflowSerializer do
       execution
     end
 
+    it "flags a workflow whose latest execution warned" do
+      Fabricate(
+        :discourse_workflows_execution,
+        workflow: workflow,
+        status: :success,
+        warned: true,
+        created_at: Time.current,
+      )
+
+      listed =
+        DiscourseWorkflows::Workflow::List
+          .call(params: { limit: 10 }, guardian: Discourse.system_user.guardian)
+          .workflows
+          .find { |w| w.id == workflow.id }
+
+      serialized = described_class.new(listed, root: false).as_json
+
+      expect(serialized[:last_execution_status]).to eq("success")
+      expect(serialized[:last_execution_warned]).to eq(true)
+    end
+
     it "returns run data from the latest execution when it failed" do
       successful_run_data = { "SQL" => [{ "outputs" => [{ "items" => [] }] }] }
       fabricate_execution_with_run_data(

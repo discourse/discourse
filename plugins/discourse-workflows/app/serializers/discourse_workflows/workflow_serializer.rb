@@ -18,6 +18,7 @@ module DiscourseWorkflows
                :created_at,
                :updated_at,
                :last_execution_status,
+               :last_execution_warned,
                :last_execution_at,
                :last_execution_run_data,
                :pin_data,
@@ -90,6 +91,14 @@ module DiscourseWorkflows
     def last_execution_at
       return unless object.attributes.key?("last_execution_at")
       object.attributes["last_execution_at"]
+    end
+
+    def last_execution_warned
+      object.attributes["last_execution_warned"] == true
+    end
+
+    def include_last_execution_warned?
+      object.attributes.key?("last_execution_warned")
     end
 
     def last_execution_status

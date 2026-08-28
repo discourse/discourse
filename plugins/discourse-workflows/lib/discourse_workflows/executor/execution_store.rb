@@ -53,6 +53,7 @@ module DiscourseWorkflows
         save!(steps)
         execution.update!(
           status: :success,
+          warned: steps.any?(&:warned?),
           finished_at: Time.current,
           run_time_ms: Execution.compute_run_time_ms(steps),
           resume_token: nil,

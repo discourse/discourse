@@ -146,24 +146,20 @@ function conditionOperatorLabel(operator) {
   return i18n(`discourse_workflows.if.operators.${localeKeyPart(operator)}`);
 }
 
-function formatLogs(logs) {
-  return logs
-    .map((entry) => {
-      if (typeof entry === "string") {
-        return entry;
-      }
-      const prefix =
-        entry.level === "error"
-          ? "[error] "
-          : entry.level === "warn"
-            ? "[warn] "
-            : "";
-      if (entry.key !== undefined) {
-        return `${prefix}${entry.key}: ${entry.value}`;
-      }
-      return `${prefix}${entry.message}`;
-    })
-    .join("\n");
+function warningCount(step) {
+  return (step.metadata?.logs || []).filter((entry) => entry?.level === "warn")
+    .length;
+}
+
+function logEntries(logs) {
+  return logs.map((entry) => {
+    if (typeof entry === "string") {
+      return { level: "info", text: entry };
+    }
+    const text =
+      entry.key === undefined ? entry.message : `${entry.key}: ${entry.value}`;
+    return { level: entry.level || "info", text };
+  });
 }
 
 function nodeKind(nodeType) {
@@ -276,6 +272,13 @@ export default class ExecutionDetail extends Component {
 
   get isRunning() {
     return isRunning(this.execution);
+  }
+
+  get warningCount() {
+    return (this.execution?.steps || []).reduce(
+      (total, step) => total + warningCount(step),
+      0
+    );
   }
 
   get isActive() {
@@ -461,9 +464,10 @@ export default class ExecutionDetail extends Component {
       if (step.metadata?.logs?.length) {
         lines.push("  Console:");
         lines.push(
-          ...formatLogs(step.metadata.logs)
-            .split("\n")
-            .map((l) => `    ${l}`)
+          ...logEntries(step.metadata.logs).map(
+            ({ level, text }) =>
+              `    ${level === "info" ? text : `[${level}] ${text}`}`
+          )
         );
       }
 
@@ -517,6 +521,15 @@ export default class ExecutionDetail extends Component {
               )
             }}
           </span>
+          {{#if this.execution.warned}}
+            <span class="workflows-execution-detail__progress-warning">
+              {{dIcon "triangle-exclamation"}}
+              {{i18n
+                "discourse_workflows.executions.warnings_count"
+                count=this.warningCount
+              }}
+            </span>
+          {{/if}}
           <span class="workflows-execution-detail__progress-time">
             {{formatDuration
               this.execution.started_at
@@ -564,6 +577,7 @@ export default class ExecutionDetail extends Component {
         {{#each this.execution.steps as |step|}}
           <div
             class="workflows-execution-detail__step --{{step.status}}
+              {{if step.warned '--warned'}}
               --kind-{{nodeKind step.node_type}}"
           >
             <div class="workflows-execution-detail__step-header">
@@ -593,7 +607,8 @@ export default class ExecutionDetail extends Component {
                 }}
               </span>
               <span
-                class="workflows-execution-detail__step-badge --{{step.status}}"
+                class="workflows-execution-detail__step-badge --{{step.status}}
+                  {{if step.warned '--warned'}}"
               >
                 {{#if (isFilterStep step)}}
                   {{if
@@ -615,6 +630,15 @@ export default class ExecutionDetail extends Component {
                   }}
                 {{/if}}
               </span>
+              {{#if step.warned}}
+                <span class="workflows-execution-detail__step-warning">
+                  {{dIcon "triangle-exclamation"}}
+                  {{i18n
+                    "discourse_workflows.executions.warnings_count"
+                    count=(warningCount step)
+                  }}
+                </span>
+              {{/if}}
               <span class="workflows-execution-detail__step-time">
                 {{stepDuration step this.currentTime}}
                 {{#if step.metadata.js_elapsed_ms}}
@@ -685,7 +709,12 @@ export default class ExecutionDetail extends Component {
                   <summary>{{i18n
                       "discourse_workflows.executions.logs"
                     }}</summary>
-                  <pre>{{formatLogs step.metadata.logs}}</pre>
+                  <pre class="workflows-execution-detail__console">{{#each
+                      (logEntries step.metadata.logs)
+                      as |entry|
+                    }}<span
+                        class="workflows-execution-detail__log --{{entry.level}}"
+                      >{{entry.text}}</span>{{/each}}</pre>
                 </details>
               {{/if}}
 

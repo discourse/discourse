@@ -42,11 +42,19 @@
     gap: var(--space-1);
   }
 
-  &__warning {
+  &__warning,
+  &__warned {
     display: inline-flex;
     align-items: center;
-    color: var(--workflow-status-error);
     line-height: 1;
+  }
+
+  &__warning {
+    color: var(--workflow-status-error);
+  }
+
+  &__warned {
+    color: var(--workflow-status-warning);
   }
 
   &__empty {

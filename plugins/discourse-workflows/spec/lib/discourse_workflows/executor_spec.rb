@@ -933,6 +933,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
 
           expect(execution.status).to eq("success")
+          expect(execution.warned).to eq(true)
 
           oversized_step = execution.execution_data.find_step(node_id: "oversized-1")
           expect(oversized_step["output"]).to eq([])
