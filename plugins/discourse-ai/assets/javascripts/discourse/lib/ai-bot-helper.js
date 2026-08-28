@@ -57,3 +57,17 @@ export function showShareConversationModal(modal, topicId) {
     })
     .catch(popupAjaxError);
 }
+
+export function isAiBotRecipient(recipients, currentUser) {
+  if (!recipients) {
+    return false;
+  }
+
+  const usernames = recipients
+    .split(",")
+    .map((username) => username.trim().toLowerCase());
+
+  return !!currentUser?.ai_enabled_chat_bots?.some((bot) =>
+    usernames.includes(bot.username.toLowerCase())
+  );
+}
