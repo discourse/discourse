@@ -122,7 +122,7 @@ export default class AdminUser extends User {
       data: { group_id: added.id },
     });
 
-    this.visibleGroups.push(added);
+    this.groups.push(added);
   }
 
   groupRemoved(groupId) {
