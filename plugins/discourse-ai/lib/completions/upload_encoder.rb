@@ -20,8 +20,10 @@ module DiscourseAi
       )
         uploads = []
         allowed_attachment_types = normalize_attachment_types(allowed_attachment_types)
+        uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+
         upload_ids.each do |upload_id|
-          upload = Upload.find(upload_id)
+          upload = uploads_by_id[upload_id]
           next if upload.blank?
 
           extension = upload.extension&.downcase
