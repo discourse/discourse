@@ -17,11 +17,13 @@ RSpec.describe "Zendesk API token deprecation warning" do
     SiteSetting.zendesk_enabled = true
     SiteSetting.zendesk_jobs_email = "zendesk@example.com"
     SiteSetting.zendesk_jobs_api_token = "legacy-token"
+    Fabricate(:admin_notice, identifier: "host_names")
     sign_in(admin)
   end
 
   it "warns the administrator to configure OAuth before API tokens stop working" do
     dashboard.visit
+    dashboard.refresh_site_advice
 
     expect(dashboard).to have_site_advice_problem(
       "The Discourse Zendesk plugin uses deprecated API token authentication. Configure the Zendesk OAuth client ID and client secret settings before April 30, 2027.",
