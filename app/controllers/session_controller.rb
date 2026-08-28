@@ -923,11 +923,26 @@ class SessionController < ApplicationController
       on_failed_policy(:required_full_name_provided) do
         render json: { error: I18n.t("login.missing_full_name") }
       end
+      # `ModelStep` turns any exception raised while building the model into an
+      # ordinary "not found" failure, so a rate limit tripped during account
+      # creation would otherwise be reported as an invalid code.
+      on_model_not_found(:user) { |model| render json: login_code_account_failure(model) }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_failure { render json: invalid_login_code }
     end
+  end
+
+  def login_code_account_failure(model)
+    exception = model.try(:exception)
+    return invalid_login_code if !exception.is_a?(RateLimiter::LimitExceeded)
+
+    Rails.logger.warn(
+      "Email login code signup was rate limited on #{RailsMultisite::ConnectionManagement.current_db}: " \
+        "type=#{exception.type.inspect}, retry in #{exception.available_in}s",
+    )
+    { error: I18n.t("email_login_code.rate_limited") }
   end
 
   # Required signup details are only collected once the code has proven

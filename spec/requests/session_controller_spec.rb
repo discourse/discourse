@@ -849,6 +849,49 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(new_user.id)
       end
 
+      context "when account creation trips a rate limit" do
+        let(:fake_logger) { FakeLogger.new }
+
+        before do
+          Rails.logger.broadcast_to(fake_logger)
+          User::Action::CreateFromVerifiedEmail.stubs(:call).raises(
+            RateLimiter::LimitExceeded.new(42, "create-user"),
+          )
+        end
+
+        after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+        it "reports the rate limit rather than an invalid code" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.rate_limited"))
+        end
+
+        it "logs the site the limit was hit on" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(fake_logger.warnings.join("\n")).to include(
+            "Email login code signup was rate limited on #{RailsMultisite::ConnectionManagement.current_db}",
+          )
+        end
+
+        it "leaves the code unconsumed so a later attempt can still use it" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(login_code.reload.consumed_at).to be_nil
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+        end
+      end
+
+      it "still reports an invalid code for other account creation failures" do
+        User::Action::CreateFromVerifiedEmail.stubs(:call).raises(ActiveRecord::RecordInvalid)
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+      end
+
       it "returns the flags the account-ready step needs" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 

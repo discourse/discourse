@@ -1098,6 +1098,7 @@ en:
 
   email_login_code:
     invalid_code: "That code is incorrect or has expired. Request a new code and try again."
+    rate_limited: "Too many attempts, please try again later."
 
   browsers:
     android_browser: "Android Browser"
