@@ -42,7 +42,7 @@ module Migrations
           # Named entities that decode to a character no construct can
           # contain — the common typographic and HTML-escape names. An
           # ordinary pasted `&amp;` or `&hellip;` therefore makes no candidate
-          # here and refuses no count certification in the {EngineScanner}.
+          # here and refuses no count matching in the {EngineScanner}.
           # markdown-it ships its full name table only as an encoded trie, so
           # this is an explicit allowlist; a spec decodes each name through
           # the real engine and fails if one of them can form a construct
@@ -172,7 +172,7 @@ module Migrations
 
           # Whether `text` holds a character reference that can decode into a
           # construct-relevant character. Public because the engine tier's
-          # count certification has the same blind spot as the presence check:
+          # count matching has the same blind spot as the presence check:
           # entities decode before the engine's text rules run, so a token's
           # value no longer has to exist as literal bytes.
           def construct_capable_entity?(text)

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Cross-checks the extractor's code handling — the tier gate's routing plus the
-# engine tier's certification — against what core actually treats as code.
+# engine tier's count matching — against what core actually treats as code.
 # Every row plants a sentinel embed — a mention, or an upload where the
 # construct swallows an `@` for other reasons — inside or around one construct,
 # and asserts the extractor defers exactly when `PrettyText.cook` renders the
 # sentinel. Cooked HTML has no notion of "is byte X code", but a sentinel that
-# survives cooking is proof the engine parsed that spot as content, which is the
+# survives cooking shows that the engine parsed that spot as content, which is the
 # oracle extraction must agree with.
 #
 # CommonMark's own `spec.txt` is deliberately not vendored: it asserts HTML, and

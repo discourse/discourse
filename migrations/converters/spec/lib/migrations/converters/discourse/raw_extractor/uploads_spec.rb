@@ -195,7 +195,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # Core links a pipe-less `[label](upload://…)` the same way, so the upload
-    # is recorded. The engine tier proves the occurrence before the replace,
+    # is recorded. The engine tier confirms the occurrence before the replace,
     # and a resolution miss restores the verbatim label.
     it "defers a pipe-less link" do
       body = "[plain label](upload://Zm9vYmFy.png)"

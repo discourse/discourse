@@ -198,7 +198,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
 
     it "extracts core's single-line inline form through the engine tier" do
       # The line-oriented walk's forward check had to decline this shape; the
-      # engine tier certifies block context from the parsed quote token, so
+      # engine tier takes block context from the parsed quote token, so
       # the header is remapped exactly where core renders it.
       raw = %([quote="bob"]body[/quote])
       expect(construct_extracts?(raw)).to be(true)

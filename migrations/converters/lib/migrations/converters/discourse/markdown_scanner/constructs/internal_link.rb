@@ -38,7 +38,7 @@ module Migrations
           # URL with no scheme at all (`forum.example.com/t/5`), which core's linkify
           # also links, is never detected here: it contains no character a construct
           # can trigger on.
-          # The engine tier rewrites that form in place once the parse proves it
+          # The engine tier rewrites that form in place once the parse confirms it
           # (see {EngineScanner}).
           #
           # An absolute internal URL whose path parses no known route — a real site
@@ -293,7 +293,7 @@ module Migrations
             end
 
             # A reference for a URL whose position the engine tier already
-            # proved but whose surrounding bytes are the URL itself (a bare
+            # confirmed but whose surrounding bytes are the URL itself (a bare
             # schemeless domain linkify links, a reference definition's
             # destination). `route_url` is the engine's href — the spelling the
             # route parses from; `url` is the raw spelling, stored as the

@@ -5,7 +5,7 @@ module Migrations
     module Discourse
       module MarkdownScanner
         class EngineScanner
-          # The byte-domain machinery a certification pass and a trial pass
+          # The byte-domain machinery the count-matching pass and the substitution pass
           # share: finding a value's occurrences in the raw, validating an
           # occurrence's boundaries, turning an occurrence into a
           # match that covers the whole construct, and splicing the accepted matches.
@@ -18,8 +18,8 @@ module Migrations
           module Locating
             include Constructs::Boundaries
 
-            # A certified raw occurrence: where it starts and how many bytes
-            # the certified reading spans there (an alternate URL reading can
+            # A matched raw occurrence: where it starts and how many bytes
+            # the matched reading spans there (an alternate URL reading can
             # differ in length from the engine's value).
             Occurrence = Data.define(:offset, :length)
 
@@ -92,20 +92,20 @@ module Migrations
             # scheme to a bare-domain autolink) unioned and deduplicated. The
             # readings must be counted as ONE union, never independently: with
             # `` `http://host/t/5` `` in code and the schemeless spelling in
-            # prose, the scheme-ful reading alone counts 1 and would certify
+            # prose, the scheme-ful reading alone counts 1 and would match
             # the code span — the union counts 2 against the engine's 1 and
-            # refuses, so the trial pass can prove which span is live.
+            # refuses, so the substitution pass can confirm which span is live.
             #
             # Memoized per (value, range): a mapless block, the global
-            # fallback and the trial pass all ask for the same whole-body
+            # fallback and the substitution pass all ask for the same whole-body
             # range and share one walk. The search itself is still one scan
             # per value — `EngineScanner::MAX_URL_VALUES` bounds how many
             # distinct URL values a body may bring here.
             #
             # @return [Array(Array<Occurrence>, Boolean)] the sorted spans and
             #   whether two distinct spans overlap — overlapping spellings
-            #   cannot be attributed by counting, so certification refuses them
-            #   (the trial pass still probes each span individually).
+            #   cannot be attributed by counting, so count matching refuses them
+            #   (the substitution pass still probes each span individually).
             def url_spans(value, range)
               @url_spans ||= {}
               @url_spans[[value, range]] ||= begin
@@ -141,8 +141,8 @@ module Migrations
             # The `[offset, length]` pairs of every spelling of `value` that
             # sits in destination position on a reference-definition line
             # (`[label]: <url>`). Memoized per value; both passes ask for it —
-            # certification to accept a definition serving several links, a
-            # trial to accept the matching token delta.
+            # count matching to accept a definition serving several links, a
+            # substitution check to accept the matching token delta.
             def definition_offsets(value)
               @definition_offsets ||= {}
               @definition_offsets[value] ||= begin
@@ -275,7 +275,7 @@ module Migrations
 
               # The occurrence itself, as a bare URL. Linkify can include a
               # trailing byte no URL grammar accepts (`` ` ``, `\`) and
-              # percent-encode it into the href, so the certified occurrence
+              # percent-encode it into the href, so the matched occurrence
               # may run past what any construct can take; a construct match over
               # a prefix still rewrites the reference correctly and leaves the
               # odd byte literal, the way core will re-linkify both after
@@ -283,12 +283,12 @@ module Migrations
               construct_match_at(offset, occurrence, allow_prefix: true)
             end
 
-            # A proven occurrence that is its own whole construct: a bare
+            # A confirmed occurrence that is its own whole construct: a bare
             # schemeless domain (linkify links it, but no construct grammar has
             # a byte to trigger on) or a reference definition's destination.
             # The engine's href carries the scheme the route parses from; the
-            # span replaced is exactly the raw spelling. The proof came from
-            # certification or a trial, so "is this really a link here?" is
+            # span replaced is exactly the raw spelling. The confirmation came from
+            # count matching or a substitution check, so "is this really a link here?" is
             # already answered — only the linkify opening boundary is
             # re-checked, mirroring what core requires ahead of a bare URL.
             def bare_value_match(value, occurrence)

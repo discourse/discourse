@@ -43,7 +43,7 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
   describe "real candidates" do
     it "routes only metadata-bearing quote openers to :engine" do
       # A plain [quote] block holds no user/post/topic fields — nothing any
-      # extraction path defers (proven in the engine-scanner spec) — while an
+      # extraction path defers (shown in the engine-scanner spec) — while an
       # opener with metadata does, whatever core's tag casing.
       expect(gate.classify("[quote]\njust quoted text\n[/quote]")).to eq(:none)
       expect(gate.classify("[quote=alice]\nx\n[/quote]")).to eq(:engine)

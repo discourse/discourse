@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Adversarial bodies: repeated malformed construct openers. With unbounded
+# Generated worst-case bodies: repeated malformed construct openers. With unbounded
 # construct patterns, each opener re-scans the whole remaining input, and a
 # single generated post can occupy a conversion worker for minutes. The
 # construct patterns are bounded (line-bounded classes, atomic groups, length

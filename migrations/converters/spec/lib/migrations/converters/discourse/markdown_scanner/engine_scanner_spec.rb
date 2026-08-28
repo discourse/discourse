@@ -2,7 +2,7 @@
 
 # The engine tier end to end: RawExtractor with a real MarkdownEngine::Context,
 # so the constructs come out of the actual discourse-markdown-it parse and the
-# positions out of count certification. The engine context needs no Rails, so
+# positions out of count matching. The engine context needs no Rails, so
 # this runs in the isolated suite.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
@@ -43,10 +43,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to start_with(buffer.mentions.first[:placeholder])
     end
 
-    it "proves the prose copy by trial when the same name also sits in a code span" do
+    it "confirms the prose copy by substitution when the same name also sits in a code span" do
       output = extract("`@alice` and @alice")
 
-      # Count certification cannot split the pair, but the trial pass proves
+      # Count matching cannot split the pair, but the substitution pass confirms
       # the prose occurrence positionally: substituting it removes a mention
       # from the parse, substituting the code-span copy removes nothing.
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
@@ -54,9 +54,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
-    it "proves every prose copy when several are mixed with a code-span copy" do
-      # Three raw occurrences against two engine mentions: certification
-      # refuses, trial proves exactly the two prose ones, and every construct
+    it "confirms every prose copy when several are mixed with a code-span copy" do
+      # Three raw occurrences against two engine mentions: count matching
+      # refuses, substitution confirms exactly the two prose ones, and every construct
       # the engine reported is then placed — nothing stays on the tally.
       output = extract("@alice, `@alice` and @alice")
 
@@ -80,7 +80,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_bound?("[quote]\nquoted prose\n[/quote]")).to be(false)
     end
 
-    it "certifies a decomposed hashtag spelling against its composed name" do
+    it "matches a decomposed hashtag spelling against its composed name" do
       composed = "café"
       engine =
         MarkdownEngineHelper.context_for(
@@ -195,7 +195,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "refuses a recognized link no grammar can take, instead of calling it handled" do
       # CommonMark allows an escaped `]` inside a label; the construct grammar
-      # does not, so the certified destination cannot be anchored to a node.
+      # does not, so the matched destination cannot be anchored to a node.
       # The reference is real and stays stale — that must land on the
       # must-resolve tally, never report as success. The mention beside it is
       # still extracted.
@@ -221,8 +221,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       output = extract("@alice and &#64;bob `x`")
 
       # The engine decodes `&#64;bob` into a mention no literal byte sequence
-      # spells, so no trial can prove it — it stays verbatim and keeps the
-      # body's cause. The literal mention next to it is proven by trial and
+      # spells, so no substitution check can confirm it — it stays verbatim and keeps the
+      # body's cause. The literal mention next to it is confirmed by substitution and
       # extracted anyway.
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include("&#64;bob")
@@ -230,11 +230,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to eq(%i[entity])
     end
 
-    it "extracts from CR line endings through the map-free trial" do
+    it "extracts from CR line endings through the map-free substitution pass" do
       output = extract("@alice\r\nhello `x`")
 
-      # Count certification cannot index a CR body (markdown-it normalizes CR
-      # away before its line maps), but the trial's token-delta proof needs no
+      # Count matching cannot index a CR body (markdown-it normalizes CR
+      # away before its line maps), but the substitution check's token delta needs no
       # maps at all.
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to eq("#{buffer.mentions.first[:placeholder]}\r\nhello `x`")
@@ -246,8 +246,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites the prose spelling, not an equivalent spelling inside code" do
       # The engine links the schemeless prose URL and normalizes its href to
       # the scheme-ful form — which happens to sit inside the code span. A
-      # per-reading count would certify the code span and corrupt it; the
-      # span union counts both spellings and the trial proves only the prose
+      # per-reading count would match the code span and corrupt it; the
+      # span union counts both spellings and the substitution check confirms only the prose
       # one is live.
       raw = "`http://forum.example.com/t/slug/5` and forum.example.com/t/slug/5"
       output = extract(raw)
@@ -301,8 +301,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites a shared definition but not a copy of its URL inside code" do
       # The code-span copy makes the raw count two against two link tokens —
       # a bare count equality would attribute the code span to the
-      # definition's reuse. The definition rule refuses that, and the trials
-      # prove the definition (both tokens vanish) and skip the code copy
+      # definition's reuse. The definition rule refuses that; the substitution
+      # checks confirm the definition (both tokens vanish) and skip the code copy
       # (nothing changes).
       raw =
         "see [a][1] and [b][1] and `https://forum.example.com/t/slug/5`\n\n" \
@@ -325,16 +325,16 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to eq(%i[url_volume])
     end
 
-    it "reports quote headers beyond the trial budget instead of calling them handled" do
-      # CR endings force every quote onto the trial path; two more quotes
-      # than MAX_TRIALS leaves two headers stale, which must show up on the
+    it "reports quote headers beyond the substitution limit instead of calling them handled" do
+      # CR endings force every quote onto the substitution path; two more quotes
+      # than MAX_SUBSTITUTIONS leaves two headers stale, which must show up on the
       # tally rather than reading as a fully handled body.
       quotes = (1..50).map { |i| "[quote=\"alice, post:#{i}, topic:9\"]\r\nbody #{i}\r\n[/quote]" }
       output = extract(quotes.join("\r\n"))
 
       expect(buffer.quotes.size).to eq(48)
       expect(output.scan(/\[quote=/).size).to eq(2)
-      expect(refusals).to eq(%i[trial_limit])
+      expect(refusals).to eq(%i[substitution_limit])
     end
 
     it "keeps a non-default port as part of the host identity, scheme-aware" do
@@ -488,9 +488,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(failing_engine).to have_received(:scan).once
     end
 
-    it "runs a slow-path body's trials under the scaled budget" do
+    it "runs a slow-path body's substitution checks under the scaled budget" do
       engine_scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
-      allow(engine_scanner::TrialPass).to receive(:new).and_call_original
+      allow(engine_scanner::SubstitutionPass).to receive(:new).and_call_original
       calls = 0
       retrying_engine =
         instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
@@ -508,7 +508,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           on_engine_refusal: ->(cause, _detail) { refusals << cause },
         )
 
-      # Certification cannot split this pair, so the body needs its trial —
+      # Count matching cannot split this pair, so the body needs its check —
       # which must run with the slow ceiling's budget: the default budget is
       # smaller than what a single legitimate slow parse may already take.
       output = extractor.extract("`@alice` and @alice")
@@ -517,7 +517,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to eq("`@alice` and #{buffer.mentions.first[:placeholder]}")
       expect(refusals).to be_empty
       expect(extractor.slow_parses).to eq(1)
-      expect(engine_scanner::TrialPass).to have_received(:new).with(
+      expect(engine_scanner::SubstitutionPass).to have_received(:new).with(
         anything,
         anything,
         anything,

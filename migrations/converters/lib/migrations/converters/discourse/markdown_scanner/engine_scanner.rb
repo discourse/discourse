@@ -19,21 +19,21 @@ module Migrations
         # post, because reference-link definitions are outside of all block
         # maps.
         #
-        # When counting cannot certify a post (duplicate values in mixed
+        # When counting cannot match a post's occurrence counts (duplicate values in mixed
         # contexts, a character entity that could form a construct, CR line
-        # endings), a {TrialPass} proves the occurrences one by one: it
+        # endings), a {SubstitutionPass} confirms the occurrences one by one: it
         # replaces one occurrence with a marker, parses again, and checks the
-        # difference. What even that cannot prove stays unchanged, and the
+        # difference. What even that cannot confirm stays unchanged, and the
         # post is reported with a cause. This can refuse a post, but it can
         # never corrupt one.
         #
-        # Certified occurrences are turned into nodes by the {Constructs},
-        # anchored at the certified offsets, so the recorded embeds have the
+        # Matched occurrences are turned into nodes by the {Constructs},
+        # anchored at the matched offsets, so the recorded embeds have the
         # same shape as everywhere else in the pipeline.
         class EngineScanner
-          # `output` is the post with every proven construct replaced; it is
+          # `output` is the post with every confirmed construct replaced; it is
           # the input itself when nothing was replaced. `cause` says why at
-          # least one construct stayed unproven; nil when everything was
+          # least one construct stayed unconfirmed; nil when everything was
           # placed. `detail` carries extra data for a cause, currently the
           # exception class name for `:engine_error`. `slow_parse` marks a
           # post that only parsed on the retry with the slow ceiling — it was
@@ -133,7 +133,7 @@ module Migrations
           # @param scan_data [Hash, nil] a precomputed
           #   `MarkdownEngine::Context#scan` element for exactly this input's
           #   bytes. A batching caller scans many bodies in one engine call
-          #   and passes each result in here; trial substitution parses live
+          #   and passes each result in here; marker substitution parses live
           #   either way.
           # @return [Result]
           def scan(input, scan_data: nil)
@@ -144,7 +144,7 @@ module Migrations
               raise if @slow_timeout_ms.nil?
 
               # One retry with the slow ceiling. The whole attempt re-runs,
-              # trial parses included. A deterministic JS exception fails
+              # substitution parses included. A deterministic JS exception fails
               # again quickly, so the single retry stays cheap.
               @engine.reset!
               @scan_timeout_ms = @slow_timeout_ms
@@ -162,7 +162,7 @@ module Migrations
           end
 
           # Every engine parse for the current body goes through here, so a
-          # body on the slow path keeps its ceiling for the trial parses too.
+          # body on the slow path keeps its ceiling for the substitution parses too.
           def engine_scan(posts)
             @engine.scan(posts, timeout_ms: @scan_timeout_ms)
           end
@@ -172,25 +172,31 @@ module Migrations
 
             # The line index follows the engine's maps, and those count lines
             # after markdown-it normalized CR endings away. A CR body goes
-            # straight to the map-free trial pass.
+            # straight to the map-free substitution pass.
             cause = :cr_line_endings
             unless input.include?("\r")
               result = Pass.new(self, input, data).result
               return result unless result.refused?
-              # Trials would pay the same per-value cost the cap avoids.
+              # Substitution checks would pay the same per-value cost the cap avoids.
               return result if result.cause == :url_volume
               cause = result.cause
             end
 
-            TrialPass.new(self, input, data, cause, seconds_budget: trial_seconds_budget).result
+            SubstitutionPass.new(
+              self,
+              input,
+              data,
+              cause,
+              seconds_budget: substitution_seconds_budget,
+            ).result
           end
 
           # On the slow path a single parse may take tens of seconds. The
-          # default trial budget would not allow even one trial, and the
-          # retry would be pointless for a trial-eligible body. So the budget
-          # follows the ceiling; the trial count cap still limits the total.
-          def trial_seconds_budget
-            return TrialPass::TRIAL_SECONDS_BUDGET if @scan_timeout_ms.nil?
+          # default substitution budget would not allow even one check, and the
+          # retry would be pointless for such a body. So the budget
+          # follows the ceiling; the substitution count cap still limits the total.
+          def substitution_seconds_budget
+            return SubstitutionPass::SUBSTITUTION_SECONDS_BUDGET if @scan_timeout_ms.nil?
 
             @scan_timeout_ms / 1000.0
           end
@@ -215,10 +221,10 @@ module Migrations
             !@emoji_construct.nil? && @emoji_construct.tracked_name?(name)
           end
 
-          # The certified text for an engine hashtag slug; nil when the name
+          # The text to match for an engine hashtag slug; nil when the name
           # is not tracked. Core's matcher lets trailing colons into the slug
           # and its lookup drops them, while the construct grammar keeps a
-          # dangling `:` outside the construct — the certified text must do
+          # dangling `:` outside the construct — the matched text must do
           # the same. A `::type` suffix takes no part in the name check.
           def hashtag_text(slug)
             ref = slug.sub(/:+\z/, "")
@@ -271,7 +277,7 @@ module Migrations
           # path that starts a coordinate route family but parses no route
           # (`/t//209`, `/u/bob!!!`) is a broken link in the source data;
           # rewriting only its origin would carry the stale coordinates onto
-          # the new host. Everything else is `:unanchored`: the engine proved
+          # the new host. Everything else is `:unanchored`: the engine recognized
           # a tracked occurrence and the construct grammar has a real gap.
           def unplaced_url_cause(value)
             host, rest = UrlOrigin.split(value)
@@ -290,7 +296,7 @@ module Migrations
             end
           end
 
-          # A whole-construct reference for a proven URL occurrence that is
+          # A whole-construct reference for a confirmed URL occurrence that is
           # its own syntax (a bare schemeless domain, a reference
           # definition's destination). `route_url` is the engine's normalized
           # href; `url` is the raw spelling at the occurrence.
@@ -298,7 +304,7 @@ module Migrations
             @internal_link_construct&.reference_for(route_url:, url:)
           end
 
-          # The per-body count-certification pass; the scanner itself stays
+          # The per-body count-matching pass; the scanner itself stays
           # reusable across bodies.
           class Pass
             include Locating
@@ -314,7 +320,7 @@ module Migrations
               spans = {}
 
               cause = collect_expected
-              cause ||= certify_all
+              cause ||= match_all_counts
               cause ||= resolve_urls(spans)
               cause ||= resolve_probed(spans)
               cause ||= resolve_quotes(spans)
@@ -345,7 +351,7 @@ module Migrations
             # Groups the engine's construct values: per (kind, value) the
             # expected count in each block region and in total. Values the
             # migration does not remap (external links, unknown names,
-            # standard emoji) never enter certification.
+            # standard emoji) never enter count matching.
             def collect_expected
               @expected = {}
               regions_with_constructs = []
@@ -405,30 +411,30 @@ module Migrations
               entry[:total] += count
             end
 
-            # Two-stage certification per value. A region-certified value
-            # replaces only its in-region occurrences; the same value inside
-            # a code fence elsewhere stays untouched. A globally certified
-            # value replaces every occurrence, and the entity check widens to
+            # Two-stage count matching per value. A value matched inside its regions
+            # replaces only those occurrences; the same value inside
+            # a code fence elsewhere stays untouched. A value matched against the whole
+            # body replaces every occurrence, and the entity check widens to
             # the whole body.
             #
             # A value with a reference-definition line has its own rule. One
             # definition can serve several `[text][label]` links, so the
             # engine may see more tokens than there are raw occurrences.
             # When every raw occurrence lies on a definition line, replacing
-            # them rewrites all those links, and certification accepts that.
+            # them rewrites all those links, and that counts as a match.
             # When some occurrences sit elsewhere, a plain count equality
             # could assign a copy inside code to the definition's reuse — so
-            # the value refuses and the trial pass proves each occurrence on
+            # the value refuses and the substitution pass confirms each occurrence on
             # its own.
-            def certify_all
+            def match_all_counts
               whole = 0...@input.bytesize
-              @certified = {}
+              @matched = {}
 
               @expected.each do |(kind, value), entry|
-                occurrences = certify_regions(kind, value, entry)
+                occurrences = match_region_counts(kind, value, entry)
 
                 if occurrences
-                  @certified[[kind, value]] = occurrences
+                  @matched[[kind, value]] = occurrences
                   next
                 end
 
@@ -438,14 +444,14 @@ module Migrations
                   definitions = definition_only_spans(value, entry[:total])
                   return :reference_definition if definitions.nil?
 
-                  @certified[[kind, value]] = definitions
+                  @matched[[kind, value]] = definitions
                   next
                 end
 
-                global = certify_in(kind, value, whole, entry[:total])
+                global = match_counts_in(kind, value, whole, entry[:total])
                 return :count_mismatch if global.nil?
 
-                @certified[[kind, value]] = global
+                @matched[[kind, value]] = global
               end
 
               nil
@@ -462,12 +468,12 @@ module Migrations
               spans if spans.all? { |span| definitions.include?([span.offset, span.length]) }
             end
 
-            # All regions certified and concatenated; nil when any region's
+            # All regions matched and concatenated; nil when any region's
             # count does not match.
-            def certify_regions(kind, value, entry)
+            def match_region_counts(kind, value, entry)
               occurrences = []
               entry[:regions].each do |range, expected|
-                in_region = certify_in(kind, value, range, expected)
+                in_region = match_counts_in(kind, value, range, expected)
                 return nil if in_region.nil?
 
                 occurrences.concat(in_region)
@@ -477,7 +483,7 @@ module Migrations
 
             # The occurrences of a value in a range, when their number equals
             # what the engine saw; nil otherwise.
-            def certify_in(kind, value, range, expected)
+            def match_counts_in(kind, value, range, expected)
               if kind == :url
                 spans, overlapping = url_spans(value, range)
                 return nil if overlapping
@@ -488,17 +494,17 @@ module Migrations
               spans if spans.size == expected
             end
 
-            # Turns certified URL occurrences into matches that cover the
+            # Turns matched URL occurrences into node matches that cover the
             # whole construct. A destination inside `[text](…)` must be
             # replaced together with its syntax, so the classes match from the `[`
             # or `!` anchor; that also covers both occurrences of a
             # `[URL](same URL)` self-link with one node. An occurrence that
             # is its own syntax (a bare schemeless domain, a reference
             # definition's destination) resolves through the engine's href.
-            # One that neither can take refuses the body; the trial pass then
+            # One that neither can take refuses the body; the substitution pass then
             # extracts what it can and the rest is reported.
             def resolve_urls(spans)
-              @certified.each do |(kind, value), occurrences|
+              @matched.each do |(kind, value), occurrences|
                 next unless kind == :url
 
                 occurrences.each do |occurrence|
@@ -511,10 +517,10 @@ module Migrations
               nil
             end
 
-            # Mentions, hashtags and emoji: their certified occurrences came
+            # Mentions, hashtags and emoji: their matched occurrences came
             # from the constructs, so probing again returns the node directly.
             def resolve_probed(spans)
-              @certified.each do |(kind, _value), occurrences|
+              @matched.each do |(kind, _value), occurrences|
                 next if kind == :url
 
                 occurrences.each do |occurrence|

@@ -8,7 +8,7 @@ module Migrations
           # Parses the opening tag of a Discourse quote (`[quote=…]`); the body
           # and `[/quote]` stay in place, and any embeds inside the body are
           # still extracted. The {EngineScanner} calls this only where a parsed
-          # quote block token certifies that core actually renders the tag, so
+          # quote block token shows that core actually renders the tag, so
           # no block-position or forward checks live here.
           #
           # The header is read the way core's bbcode-block.js does: it can be

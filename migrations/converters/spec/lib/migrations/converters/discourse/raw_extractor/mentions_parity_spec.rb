@@ -159,7 +159,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
   # simpler capless construct.
   it "leaves an over-long name literal, matching core's 60-character cap" do
     # The construct grammar itself has no length cap, but the engine's mention
-    # rule does — and no token means nothing certifies, so extraction inherits
+    # rule does — and no token means nothing matches, so extraction inherits
     # core's cap without duplicating it.
     long = "u#{"a" * 60}" # 61 characters
     names = Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize(long)])

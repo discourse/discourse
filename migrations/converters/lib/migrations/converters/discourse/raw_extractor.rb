@@ -92,14 +92,14 @@ module Migrations
         #   host is reported once per extractor. Nil (the default) skips the signal.
         # @param markdown_engine [MarkdownEngine::Context] the engine context for
         #   `:engine`-classified bodies: extraction from context-sensitive bodies
-        #   is certified against the real discourse-markdown-it parse, escalating
-        #   to per-occurrence trial substitution, and whatever stays unproven is
+        #   is checked by count matching against the real discourse-markdown-it parse, escalating
+        #   to per-occurrence marker substitution, and whatever stays unconfirmed is
         #   left verbatim (see {MarkdownScanner::EngineScanner}). Build it after
         #   the worker forks — V8 contexts do not survive forking.
         # @param on_engine_refusal [#call, nil] called with the cause (a Symbol)
         #   and its diagnostic detail (the exception class name for
         #   `:engine_error`, else nil) whenever an `:engine` body keeps at least
-        #   one unproven construct; the tallies are also kept on
+        #   one unconfirmed construct; the tallies are also kept on
         #   {#engine_refusals}. The caller knows which
         #   post it is extracting, so post identity stays on its side of the
         #   callback.
@@ -174,12 +174,12 @@ module Migrations
         end
 
         # Cause tallies (`cause => count`) for `:engine` bodies that kept at
-        # least one unproven construct. Those constructs stayed verbatim, so
+        # least one unconfirmed construct. Those constructs stayed verbatim, so
         # their references are stale until someone resolves them. The causes
         # fall into four groups, and only the first should read as a problem
         # with the extraction itself:
         #
-        #   * unexpected failure — `:unanchored` (the engine proved a tracked
+        #   * unexpected failure — `:unanchored` (the engine recognized a tracked
         #     occurrence, but no construct grammar could place it),
         #     `:engine_error`, `:overlap`, `:probe_desync`;
         #   * known unsupported source content — `:invalid_internal_route` (a
@@ -187,9 +187,9 @@ module Migrations
         #     was already broken on the source), `:reference_definition`,
         #     `:count_mismatch`, `:entity`, `:cr_line_endings` (genuinely
         #     ambiguous spellings the passes refuse rather than guess);
-        #   * budget — `:trial_limit`, `:trial_budget`, `:url_volume`
+        #   * budget — `:substitution_limit`, `:substitution_budget`, `:url_volume`
         #     (bounded work on pathological bodies);
-        #   * the rest of a partially extracted body (the proven constructs
+        #   * the rest of a partially extracted body (the confirmed constructs
         #     were still replaced).
         attr_reader :engine_refusals
 
@@ -261,10 +261,10 @@ module Migrations
           end
         end
 
-        # An unproven construct stays verbatim — certification and trial
-        # substitution can prove themselves unable to place it, and a wrong
+        # An unconfirmed construct stays verbatim — count matching and marker
+        # substitution may fail to place it, and a wrong
         # placement would corrupt the post while verbatim only leaves its
-        # reference stale. The proven constructs in the same body are still
+        # reference stale. The confirmed constructs in the same body are still
         # extracted; the cause is counted and reported so a conversion
         # surfaces how many posts (and why) still need resolution.
         def extract_engine(raw, scan_data)

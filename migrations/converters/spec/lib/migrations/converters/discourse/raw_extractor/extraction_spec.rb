@@ -34,7 +34,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to include("not a @mention and ![x](upload://nope.png)")
     end
 
-    # Inline code spans are covered from the certification angle in
+    # Inline code spans are covered from the count-matching angle in
     # engine_scanner_spec, placeholder positions included.
   end
 

@@ -21,7 +21,7 @@ function __scanCountOccurrences(haystack, needle) {
 
 // How often the link's destination also appears in its label text — a
 // `[URL](same URL)` self-link writes the value twice in the raw, so count
-// certification must expect both occurrences. The schemeless reading covers
+// count matching must expect both occurrences. The schemeless reading covers
 // a label spelling the bare domain of a linkified destination. Empty-
 // destination links (`[text]()`, `[](https://)` whose schemeless reading is
 // empty) can never be self-links.

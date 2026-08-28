@@ -31,7 +31,7 @@ module Migrations
           #
           # The grammar here carries no length cap, unlike core's 60-character
           # name regex: extraction inherits the cap anyway, because an
-          # over-long name produces no engine token and nothing certifies.
+          # over-long name produces no engine token and nothing matches.
           class Mention < Base
             TRIGGERS = ["@"].freeze
 

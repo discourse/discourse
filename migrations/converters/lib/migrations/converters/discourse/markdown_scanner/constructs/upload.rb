@@ -73,7 +73,7 @@ module Migrations
             # A plain `[label](upload://sha1.ext)` link, which core links the
             # same way. Only the sha1 and the verbatim source reach the embed
             # row: a miss restores the label untouched, and the engine tier
-            # proves each occurrence before it is replaced, so taking this
+            # confirms each occurrence before it is replaced, so taking this
             # form cannot rewrite a look-alike inside code.
             PLAIN_LINK_PATTERN =
               %r{
