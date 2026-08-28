@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "fileutils"
-require "msgpack"
 require "rbconfig"
 require "socket"
 require "tmpdir"
@@ -14,11 +13,16 @@ module DiscourseVips
   end
 
   class WorkerProcess
+    SOCKET_PATH_ENV = "DISCOURSE_VIPS_WORKER_SOCKET_PATH"
+
     WORKER_GRACE_SECONDS = 2
     private_constant :WORKER_GRACE_SECONDS
 
-    def initialize
+    attr_reader :pid, :socket_path
+
+    def initialize(socket_path: nil)
       @state_mutex = Mutex.new
+      @socket_path = socket_path
       start
     end
 
@@ -26,49 +30,26 @@ module DiscourseVips
       @state_mutex.synchronize do
         return false if @closed
 
-        Process.waitpid(@worker_pid, Process::WNOHANG).nil?
+        Process.waitpid(@pid, Process::WNOHANG).nil?
       rescue Errno::ECHILD
         false
       end
     end
 
-    def send_command(request, timeout:)
-      socket = UNIXSocket.new(@socket_path)
-      socket.write(MessagePack.pack(request))
-      socket.close_write
-
-      if !IO.select([socket], nil, nil, timeout + WORKER_GRACE_SECONDS)
-        raise WorkerUnavailable, "libvips worker did not respond"
-      end
-
-      payload = socket.read.to_s
-      raise WorkerUnavailable, "libvips worker returned no response" if payload.empty?
-
-      MessagePack.unpack(payload)
-    rescue WorkerUnavailable
-      shutdown
-      raise
-    rescue MessagePack::UnpackError, IOError, SystemCallError => error
-      shutdown
-      raise WorkerUnavailable, "libvips worker request failed: #{error.message}"
-    ensure
-      socket&.close unless socket&.closed?
-    end
-
     def shutdown
-      worker_pid, owner_writer, socket_directory =
+      worker_pid, owner_writer =
         @state_mutex.synchronize do
           return if @closed
 
           @closed = true
-          [@worker_pid, @owner_writer, @socket_directory]
+          [@pid, @owner_writer]
         end
 
       owner_writer.close unless owner_writer.closed?
       wait_for_worker(worker_pid)
     rescue IOError, Errno::ECHILD
     ensure
-      remove_socket_directory(socket_directory)
+      remove_socket
     end
 
     def discard
@@ -84,12 +65,13 @@ module DiscourseVips
     private
 
     def start
-      @socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
-      @socket_path = File.join(@socket_directory, "socket")
+      prepare_socket_path
       server = UNIXServer.new(@socket_path)
+      File.chmod(0o600, @socket_path)
+      @socket_identity = File.stat(@socket_path).then { |stat| [stat.dev, stat.ino] }
       owner_reader, @owner_writer = IO.pipe
 
-      @worker_pid =
+      @pid =
         Process.spawn(
           worker_environment,
           *worker_command,
@@ -106,11 +88,23 @@ module DiscourseVips
       @closed = false
     rescue Exception
       @owner_writer&.close
-      remove_socket_directory(@socket_directory)
+      remove_socket
       raise
     ensure
       server&.close
       owner_reader&.close
+    end
+
+    def prepare_socket_path
+      if @socket_path
+        socket_directory = File.dirname(@socket_path)
+        FileUtils.mkdir_p(socket_directory, mode: 0o700)
+        File.chmod(0o700, socket_directory)
+        FileUtils.rm_f(@socket_path)
+      else
+        socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
+        @socket_path = File.join(socket_directory, "socket")
+      end
     end
 
     def worker_command
@@ -157,8 +151,14 @@ module DiscourseVips
     rescue Errno::ESRCH
     end
 
-    def remove_socket_directory(directory)
-      FileUtils.remove_entry(directory) if directory && File.exist?(directory)
+    def remove_socket
+      if File.exist?(@socket_path)
+        stat = File.stat(@socket_path)
+        return if [stat.dev, stat.ino] != @socket_identity
+
+        File.unlink(@socket_path)
+      end
+      Dir.rmdir(File.dirname(@socket_path))
     rescue SystemCallError
     end
   end

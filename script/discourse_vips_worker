@@ -142,6 +142,10 @@ class DiscourseVipsWorker
   private_constant :RLIMITS
 
   def self.run(server_fd:, owner_fd:)
+    parent_pid = Process.ppid
+    Landlock::Native.set_parent_death_signal! if RUBY_PLATFORM.include?("linux")
+    exit! 1 if Process.ppid != parent_pid
+
     Process.setproctitle("discourse vips worker")
     new(server: UNIXServer.for_fd(server_fd), owner_reader: IO.for_fd(owner_fd)).run
   end
@@ -149,6 +153,7 @@ class DiscourseVipsWorker
   def initialize(server:, owner_reader:)
     @server = server
     @socket_path = server.local_address.unix_path
+    @socket_identity = File.stat(@socket_path).then { |stat| [stat.dev, stat.ino] }
     @owner_reader = owner_reader
     @landlock_supported = Landlock.supported?
   end
@@ -256,6 +261,9 @@ class DiscourseVipsWorker
   end
 
   def remove_socket_directory
+    stat = File.stat(@socket_path)
+    return if [stat.dev, stat.ino] != @socket_identity
+
     File.unlink(@socket_path)
     Dir.rmdir(File.dirname(@socket_path))
   rescue SystemCallError
