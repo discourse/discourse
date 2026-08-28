@@ -193,10 +193,10 @@ module DiscourseMcp
     def initialize_result(params)
       requested_version = params["protocolVersion"]
       negotiated_version =
-        if SUPPORTED_PROTOCOL_VERSIONS.include?(requested_version)
+        if requested_version == LEGACY_PROTOCOL_VERSION
           requested_version
         else
-          PROTOCOL_VERSION
+          LEGACY_PROTOCOL_VERSION
         end
       result = {
         protocolVersion: negotiated_version,

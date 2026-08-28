@@ -126,10 +126,26 @@ describe "MCP transport" do
          headers: classic_headers.except("HTTP_MCP_PROTOCOL_VERSION")
 
     expect(response.status).to eq(200)
-    expect(response.parsed_body.dig("result", "protocolVersion")).to eq("2025-11-25")
+    expect(response.parsed_body.dig("result", "protocolVersion")).to eq(
+      DiscourseMcp::LEGACY_PROTOCOL_VERSION,
+    )
     expect(response.parsed_body.dig("result", "serverInfo", "name")).to eq("discourse")
     expect(response.parsed_body.dig("result", "capabilities", "tools")).to eq(
       "listChanged" => false,
+    )
+  end
+
+  it "keeps legacy initialization on the classic protocol for an unsupported version" do
+    unsupported_initialize_payload =
+      initialize_payload.deep_merge(params: { protocolVersion: "2025-06-18" })
+
+    post "/mcp",
+         params: unsupported_initialize_payload.to_json,
+         headers: classic_headers.except("HTTP_MCP_PROTOCOL_VERSION")
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "protocolVersion")).to eq(
+      DiscourseMcp::LEGACY_PROTOCOL_VERSION,
     )
   end
 
