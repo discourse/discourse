@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { assert } from "@ember/debug";
-import { isDestroyed, isDestroying } from "@ember/destroyable";
+import { isDestroying } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import { schedule } from "@ember/runloop";
 import type {
@@ -78,23 +79,33 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
   api: ReorderableGroupApi = {
     token: `d-reorderable-list-group:${guidFor(this)}`,
     registerMember: (member: ReorderableGroupMember) => {
-      if (this.#members.has(member.listId)) {
-        // Reported after render rather than thrown here: registration happens
-        // during a member's construction, and an exception unwinding a
-        // half-built render corrupts it. The duplicate is refused either way.
+      const displaced = this.#members.get(member.listId);
+      this.#members.set(member.listId, member);
+
+      // A re-render builds the replacement before tearing down what it
+      // replaces, so the two overlap and a collision here is usually churn
+      // rather than an authoring error. What separates them is whether the
+      // displaced member is still on the page once the render settles: churn
+      // leaves a detached element behind, two genuinely distinct lists do not.
+      // Checked after render for that reason, and because an exception
+      // unwinding a half-built render corrupts it. The whole check is
+      // development-only: `assert` compiles away in production, and without the
+      // guard the scheduling around it would not.
+      if (DEBUG && displaced && displaced !== member) {
         schedule("afterRender", () => {
-          if (isDestroying(this) || isDestroyed(this)) {
+          if (isDestroying(this)) {
             return;
           }
           assert(
             `d-reorderable-list-group: duplicate listId "${member.listId}" — every member needs a unique listId`,
-            false
+            !displaced.element()?.isConnected
           );
         });
-        return () => {};
       }
-      this.#members.set(member.listId, member);
+
       return () => {
+        // Identity-checked so a departing member cannot evict the one that took
+        // its place.
         if (this.#members.get(member.listId) === member) {
           this.#members.delete(member.listId);
         }

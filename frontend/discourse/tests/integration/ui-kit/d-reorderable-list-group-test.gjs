@@ -145,6 +145,73 @@ module("Integration | ui-kit | DReorderableList | group", function (hooks) {
     );
   });
 
+  test("a member re-registering during a re-render keeps its place in the group", async function (assert) {
+    const outer = objectItems().slice(0, 1);
+    const inner = objectItems().slice(0, 2);
+    const state = new (class {
+      @tracked frozen = false;
+    })();
+    let raised;
+
+    setupOnerror((error) => {
+      raised = error;
+    });
+
+    try {
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            {{! The member sits inside another list's row, which is what makes
+                this reachable: freezing the outer list swaps its row branch, so
+                the replacement member is constructed before the old one is torn
+                down and both briefly claim the same listId. }}
+            <DReorderableList
+              @items={{outer}}
+              @key="id"
+              @label={{label}}
+              @onMove={{noop}}
+              @disabled={{state.frozen}}
+            >
+              <:row as |section|>
+                <DReorderableList
+                  @group={{group}}
+                  @listId={{section.id}}
+                  @items={{inner}}
+                  @key="id"
+                  @label={{label}}
+                >
+                  <:row as |item|>
+                    <span data-test-item={{item.id}}>{{item.name}}</span>
+                  </:row>
+                </DReorderableList>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      state.frozen = true;
+      await settled();
+      state.frozen = false;
+      await settled();
+    } finally {
+      resetOnerror();
+    }
+
+    assert.strictEqual(
+      raised,
+      undefined,
+      "re-registering the same listId is churn, not a duplicate, so it raises nothing"
+    );
+    assert
+      .dom("[data-test-item]")
+      .exists(
+        { count: 2 },
+        "and the member is still rendering its rows afterwards"
+      );
+  });
+
   test("DReorderableList routes an in-list menu move through the group", async function (assert) {
     const primaryItems = objectItems();
     const secondaryItems = [{ id: "secondary-alpha", name: "Secondary Alpha" }];
