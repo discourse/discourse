@@ -520,19 +520,32 @@ export default class ProsemirrorTextManipulation {
             placeholderNodes.push({ node, pos, filename: match[1] });
           }
         }
+      } else if (
+        node.type === this.schema.nodes.upload_placeholder &&
+        imagesToWrapGrid.has(node.attrs.filename)
+      ) {
+        placeholderNodes.push({
+          node,
+          pos,
+          filename: node.attrs.filename,
+        });
       }
     });
 
-    if (placeholderNodes.length !== consecutiveImages.length) {
+    this.#wrapNodesInGrid(placeholderNodes, consecutiveImages.length);
+  }
+
+  #wrapNodesInGrid(nodes, expectedCount) {
+    if (nodes.length !== expectedCount) {
       return;
     }
 
-    placeholderNodes.sort((a, b) => a.pos - b.pos);
+    nodes.sort((a, b) => a.pos - b.pos);
 
     let areConsecutive = true;
-    for (let i = 1; i < placeholderNodes.length; i++) {
-      const prevNode = placeholderNodes[i - 1];
-      const currNode = placeholderNodes[i];
+    for (let i = 1; i < nodes.length; i++) {
+      const prevNode = nodes[i - 1];
+      const currNode = nodes[i];
       if (currNode.pos > prevNode.pos + prevNode.node.nodeSize + 2) {
         areConsecutive = false;
         break;
@@ -543,8 +556,8 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const firstNode = placeholderNodes[0];
-    const lastNode = placeholderNodes[placeholderNodes.length - 1];
+    const firstNode = nodes[0];
+    const lastNode = nodes[nodes.length - 1];
     const startPos = firstNode.pos;
     const endPos = lastNode.pos + lastNode.node.nodeSize;
 
@@ -809,24 +822,22 @@ class ProsemirrorPlaceholderHandler {
 
     // resolve transparent.png placeholders using the upload URL cache,
     // which was populated before success() was called
-    if (found.node.type === this.schema.nodes.image) {
-      tr.doc.nodesBetween(
-        found.pos,
-        found.pos + replacement.size,
-        (node, pos) => {
-          if (
-            node.type.name === "image" &&
-            node.attrs.originalSrc &&
-            node.attrs.src?.includes("transparent.png")
-          ) {
-            const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
-            if (cached?.url) {
-              tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
-            }
+    tr.doc.nodesBetween(
+      found.pos,
+      found.pos + replacement.size,
+      (node, pos) => {
+        if (
+          node.type.name === "image" &&
+          node.attrs.originalSrc &&
+          node.attrs.src?.includes("transparent.png")
+        ) {
+          const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
+          if (cached?.url) {
+            tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
           }
         }
-      );
-    }
+      }
+    );
 
     if (wasSelected) {
       const resolved = tr.doc.resolve(found.pos);
