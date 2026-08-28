@@ -24,6 +24,7 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
               },
             ],
           },
+          related_items_totals: { users: 3 },
         },
       })
     );
@@ -34,7 +35,6 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
           @date="2026-08-18"
           @formattedValue="3"
           @reportType="signups"
-          @total={{3}}
         />
       </template>
     );

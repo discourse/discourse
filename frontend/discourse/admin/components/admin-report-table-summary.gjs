@@ -15,6 +15,7 @@ const SUMMARY_LIMIT = 5;
 
 export default class AdminReportTableSummary extends Component {
   @tracked items = null;
+  @tracked total = null;
   @tracked isLoading = false;
   @tracked hasError = false;
 
@@ -45,7 +46,7 @@ export default class AdminReportTableSummary extends Component {
   }
 
   get itemsAreTruncated() {
-    return this.items.length < this.args.total;
+    return this.items.length < this.total;
   }
 
   userProfilePath(user) {
@@ -76,9 +77,12 @@ export default class AdminReportTableSummary extends Component {
         data,
       });
       this.items = response.report.related_items?.users || [];
+      this.total =
+        response.report.related_items_totals?.users ?? this.items.length;
     } catch {
       this.hasError = true;
       this.items = null;
+      this.total = null;
     } finally {
       this.isLoading = false;
     }
@@ -116,7 +120,7 @@ export default class AdminReportTableSummary extends Component {
                 {{i18n
                   "admin.reports.related_items.showing"
                   shown=this.items.length
-                  total=@total
+                  total=this.total
                 }}
               </p>
             {{/if}}

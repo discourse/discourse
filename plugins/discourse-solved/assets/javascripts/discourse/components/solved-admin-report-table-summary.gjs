@@ -16,6 +16,7 @@ const SUMMARY_LIMIT = 5;
 
 export default class SolvedAdminReportTableSummary extends Component {
   @tracked items = null;
+  @tracked total = null;
   @tracked isLoading = false;
   @tracked hasError = false;
 
@@ -47,7 +48,7 @@ export default class SolvedAdminReportTableSummary extends Component {
   }
 
   get itemsAreTruncated() {
-    return this.items.length < this.args.total;
+    return this.items.length < this.total;
   }
 
   userProfilePath(user) {
@@ -82,9 +83,13 @@ export default class SolvedAdminReportTableSummary extends Component {
         data,
       });
       this.items = response.report.related_items?.solved_topics || [];
+      this.total =
+        response.report.related_items_totals?.solved_topics ??
+        this.items.length;
     } catch {
       this.hasError = true;
       this.items = null;
+      this.total = null;
     } finally {
       this.isLoading = false;
     }
@@ -122,7 +127,7 @@ export default class SolvedAdminReportTableSummary extends Component {
                 {{i18n
                   "admin.reports.related_items.showing"
                   shown=this.items.length
-                  total=@total
+                  total=this.total
                 }}
               </p>
             {{/if}}

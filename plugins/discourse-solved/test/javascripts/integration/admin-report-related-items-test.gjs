@@ -152,6 +152,7 @@ module(
                 },
               ],
             },
+            related_items_totals: { solved_topics: 3 },
           },
         })
       );
@@ -166,7 +167,6 @@ module(
             this.tableSummaryComponent
             date="2026-08-18"
             formattedValue="1"
-            total=3
           }}
         </template>
       );
