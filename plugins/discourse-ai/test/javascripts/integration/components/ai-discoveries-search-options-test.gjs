@@ -23,14 +23,8 @@ module(
         "service:discobot-discoveries",
         class extends Service {
           @tracked lastQuery = "";
-          @tracked searchMode = "ask";
-
-          selectSearchMode(mode) {
-            this.searchMode = mode;
-          }
 
           triggerDiscovery(query) {
-            this.searchMode = "ask";
             this.lastQuery = query;
             testContext.triggeredQueries.push(query);
           }
@@ -59,6 +53,69 @@ module(
       };
     });
 
+    test("asking leads even where the page has a scope of its own", async function (assert) {
+      this.currentUser.user_option.ai_ask_ai_default = true;
+      const searchService = this.owner.lookup("service:search");
+      searchService.searchContext = { type: "topic", id: 280 };
+      searchService.inTopicContext = true;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert.deepEqual(
+        [
+          ...document.querySelectorAll(
+            ".ai-discoveries-search-options__option"
+          ),
+        ].map((option) => option.className.match(/--[a-z]+/)[0]),
+        ["--ask", "--topic", "--search", "--advanced"],
+        "asking comes before the topic the page is about"
+      );
+    });
+
+    test("the preferred option leads and owns Enter", async function (assert) {
+      this.currentUser.user_option.ai_ask_ai_default = true;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".ai-discoveries-search-options__option:first-child")
+        .hasClass("--ask", "asking leads once it is what enter runs");
+      assert.dom(".ai-discoveries-search-options__option.--ask").hasAttribute(
+        "title",
+        i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+          shortcut: i18n("shortcut_modifier_key.enter"),
+        }),
+        "and claims Enter"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasAttribute(
+          "title",
+          i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+            shortcut: "Shift + Enter",
+          }),
+          "while the indexed search takes the modifier"
+        );
+    });
+
     test("offers both ways to resolve the term, without repeating it", async function (assert) {
       await render(
         <template>
@@ -79,23 +136,29 @@ module(
         .exists("and asking sits beside it");
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
-        .hasClass("is-active", "Ask AI is the first-use default");
+        .doesNotHaveClass(
+          "is-active",
+          "nothing is marked before an option has produced anything"
+        );
       assert
         .dom(".ai-discoveries-search-options__option.--search")
-        .doesNotHaveAttribute(
+        .hasAttribute(
           "title",
-          "Search does not claim Enter while Ask AI is selected"
+          i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+            shortcut: i18n("shortcut_modifier_key.enter"),
+          }),
+          "enter always belongs to the indexed search"
         );
       assert.dom(".ai-discoveries-search-options__option.--ask").hasAttribute(
         "title",
         i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
-          shortcut: i18n("shortcut_modifier_key.enter"),
+          shortcut: "Shift + Enter",
         }),
-        "the selected mode owns Enter"
+        "and asking keeps its own key"
       );
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .doesNotExist("advanced search waits until Search is selected");
+        .exists("advanced search stands apart from which option is in effect");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .hasText(
@@ -202,8 +265,6 @@ module(
     });
 
     test("marks whichever option is in effect", async function (assert) {
-      this.owner.lookup("service:discobot-discoveries").searchMode = "search";
-
       await render(
         <template>
           <AiDiscoveriesSearchOptions
@@ -249,7 +310,7 @@ module(
         .doesNotHaveClass("is-active", "and the other option steps back");
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .doesNotExist("advanced search is hidden while asking AI");
+        .exists("advanced search is still offered while asking AI");
     });
 
     test("a user page offers that user's posts", async function (assert) {
@@ -643,6 +704,45 @@ module(
         .doesNotExist("@eviltrout is not @evil");
     });
 
+    test("a group inbox narrows to that group rather than every message", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      searchService.searchContext = {
+        type: "private_messages",
+        user: this.currentUser,
+        group: { name: "support" },
+      };
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @inPMInboxContext={{true}}
+          />
+        </template>
+      );
+
+      assert.dom(".ai-discoveries-search-options__option.--messages").hasText(
+        i18n("discourse_ai.discobot_discoveries.search_group_messages", {
+          group: "support",
+        }),
+        "the option names the inbox it would search"
+      );
+
+      await click(".ai-discoveries-search-options__option.--messages");
+
+      assert.strictEqual(
+        this.termChanges.at(-1)?.term,
+        "miyazaki group_messages:support",
+        "and scopes the term to that group"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--messages")
+        .hasClass("is-active", "reading as the one in effect");
+    });
+
     test("a message inbox offers its messages", async function (assert) {
       const searchService = this.owner.lookup("service:search");
       searchService.searchContext = { type: "private_messages" };
@@ -708,8 +808,6 @@ module(
     });
 
     test("the options that have a shortcut say so", async function (assert) {
-      this.owner.lookup("service:discobot-discoveries").searchMode = "search";
-
       await render(
         <template>
           <AiDiscoveriesSearchOptions

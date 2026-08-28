@@ -14,9 +14,11 @@ import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { removeDefaultQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -169,10 +171,13 @@ acceptance("AI Discoveries - header search", function (needs) {
       .exists("and asking sits beside it");
     assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .hasClass("is-active", "Ask AI is the first-use default");
+      .doesNotHaveClass(
+        "is-active",
+        "nothing is marked until an option has produced something"
+      );
     assert
       .dom(".ai-discoveries-search-options__option.--advanced")
-      .doesNotExist("advanced search belongs to the indexed search mode");
+      .exists("advanced search is offered alongside them");
     assert
       .dom(".search-input .show-advanced-search")
       .doesNotExist("and not in the input any more");
@@ -302,6 +307,19 @@ acceptance("AI Discoveries - header search", function (needs) {
       .doesNotExist("the whole history goes, without needing a reload");
   });
 
+  test("history from both sources orders by when it happened", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".search-menu-recent .search-item-slug")]
+        .map((item) => item.textContent.trim())
+        .filter(Boolean),
+      ["asked last", "searched", "asked first"],
+      "newest first, whichever list an entry came from"
+    );
+  });
+
   test("a recent indexed search repeats as a search", async function (assert) {
     await visit("/");
     await click("#search-button");
@@ -337,12 +355,6 @@ acceptance("AI Discoveries - header search", function (needs) {
       1,
       "the history item does not start another Ask AI request"
     );
-
-    await fillIn("#icon-search-input", "dev");
-
-    assert
-      .dom(".ai-discoveries-search-options__option.--search")
-      .hasClass("is-active", "the recent search also selects Search mode");
   });
 
   test("scoping to a topic leaves the input alone", async function (assert) {
@@ -411,7 +423,89 @@ acceptance("AI Discoveries - header search", function (needs) {
       );
   });
 
-  test("enter uses the selected mode", async function (assert) {
+  test("enter searches, shift+enter asks", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+    );
+    await waitFor(".search-result-topic");
+
+    assert.strictEqual(
+      discoveryRequests,
+      0,
+      "enter runs the indexed search, whatever was picked before"
+    );
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+
+    assert.strictEqual(discoveryRequests, 1, "shift+enter asks instead");
+
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+  });
+
+  test("the toggle beside an answer saves the preference on the spot", async function (assert) {
+    let saved;
+    pretender.put("/u/eviltrout.json", (request) => {
+      saved = new URLSearchParams(request.requestBody);
+      return response({ user: {} });
+    });
+
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      answerable: true,
+      done: true,
+    });
+
+    await click(".ai-search-discoveries__default-toggle");
+
+    assert.strictEqual(
+      saved?.get("ai_ask_ai_default"),
+      "true",
+      "the choice is sent without waiting for a page to be submitted"
+    );
+    assert
+      .dom(".ai-search-discoveries__default-toggle")
+      .hasAria("checked", "true", "and the toggle answers the click");
+    assert
+      .dom(".ai-discoveries-search-options__option:first-child")
+      .hasClass("--ask", "with the row reordered to match");
+  });
+
+  test("the preference swaps which key asks", async function (assert) {
+    updateCurrentUser({ user_option: { ai_ask_ai_default: true } });
+
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
@@ -425,25 +519,8 @@ acceptance("AI Discoveries - header search", function (needs) {
     assert.strictEqual(
       discoveryRequests,
       1,
-      "enter asks when Ask AI is selected"
+      "enter asks once asking is the default"
     );
-
-    await click(".ai-discoveries-search-options__option.--search");
-    await fillIn("#icon-search-input", "themes");
-
-    find("#icon-search-input").dispatchEvent(
-      new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
-    );
-    await waitFor(".search-result-topic");
-
-    assert.strictEqual(
-      discoveryRequests,
-      1,
-      "enter searches when Search is selected"
-    );
-    assert
-      .dom(".ai-discoveries-search-options__option.--search")
-      .hasClass("is-active");
 
     await publishToMessageBus("/discourse-ai/discoveries", {
       request_id: submittedRequestId,
@@ -452,6 +529,22 @@ acceptance("AI Discoveries - header search", function (needs) {
       answerable: true,
       done: true,
     });
+
+    await fillIn("#icon-search-input", "themes");
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", {
+        key: "Enter",
+        shiftKey: true,
+        bubbles: true,
+      })
+    );
+    await waitFor(".search-result-topic");
+
+    assert.strictEqual(
+      discoveryRequests,
+      1,
+      "and shift+enter runs the indexed search instead"
+    );
   });
 
   test("an answer on screen carries through to the full page", async function (assert) {
@@ -548,11 +641,61 @@ acceptance("AI Discoveries - header search", function (needs) {
       .doesNotExist("retyping the same term does not bring it back");
     assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .hasClass("is-active", "the saved mode remains selected");
+      .doesNotHaveClass(
+        "is-active",
+        "and the option that produced it is no longer marked"
+      );
     assert.strictEqual(
       discoveryRequests,
       1,
       "and nothing was asked again on its own"
+    );
+  });
+});
+
+acceptance("AI Discoveries - preferences", function (needs) {
+  let saved;
+
+  needs.user({
+    can_use_ask_ai: true,
+    user_option: { ai_ask_ai_default: false },
+  });
+
+  needs.settings({
+    discourse_ai_enabled: true,
+    ai_ask_ai_enabled: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.put("/u/eviltrout.json", (request) => {
+      saved = new URLSearchParams(request.requestBody);
+      return helper.response({ user: {} });
+    });
+  });
+
+  needs.hooks.beforeEach(() => (saved = undefined));
+
+  test("the same setting is offered on the preferences page", async function (assert) {
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert
+      .dom(".pref-ai-ask-ai-default")
+      .exists("the preference is offered alongside the others");
+
+    await click(".pref-ai-ask-ai-default input[type=checkbox]");
+
+    assert.strictEqual(
+      saved,
+      undefined,
+      "nothing is sent until the page is saved"
+    );
+
+    await click(".save-changes");
+
+    assert.strictEqual(
+      saved?.get("ai_ask_ai_default"),
+      "true",
+      "and saving the page sends it with the rest"
     );
   });
 });
@@ -617,6 +760,25 @@ acceptance("AI Discoveries - full page search", function (needs) {
       .doesNotExist(
         "and the results it held are not ranked in under the answer"
       );
+  });
+
+  test("the preference reorders the types without a reload", async function (assert) {
+    await visit("/search?q=dev");
+
+    assert.strictEqual(
+      document.querySelector(".search-types__type").dataset.searchType,
+      "topics_posts",
+      "posts lead while the indexed search is what enter runs"
+    );
+
+    updateCurrentUser({ user_option: { ai_ask_ai_default: true } });
+    await settled();
+
+    assert.strictEqual(
+      document.querySelector(".search-types__type").dataset.searchType,
+      "ai_discoveries",
+      "and asking leads the moment the preference changes"
+    );
   });
 
   test("asking is a search type of its own", async function (assert) {

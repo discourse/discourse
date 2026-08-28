@@ -255,6 +255,53 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
+  test("the default toggle can be dismissed for this browser", async function (assert) {
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    const keyValueStore = this.owner.lookup("service:key-value-store");
+    const dismissKey = `ask-ai-default-dismissed-${this.currentUser.id}`;
+    keyValueStore.remove(dismissKey);
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries__default-toggle")
+      .hasAria("checked", "false", "off until it is asked for");
+
+    await click(".ai-search-discoveries__dismiss-default");
+
+    assert
+      .dom(".ai-search-discoveries__default-preference")
+      .doesNotExist("dismissing takes it off screen");
+    // asserted on the service rather than the DOM: the host that renders toasts
+    // is mounted by the application, not by a rendering test
+    assert.strictEqual(
+      this.owner.lookup("service:toasts").activeToasts.at(-1)?.options.data
+        .message,
+      i18n("discourse_ai.discobot_discoveries.default_preference_dismissed"),
+      "and says where the setting still lives"
+    );
+    assert.strictEqual(
+      keyValueStore.get(dismissKey),
+      "true",
+      "so it stays dismissed in this browser"
+    );
+  });
+
   test("marks itself empty until something is on screen", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",

@@ -43,10 +43,13 @@ export default class RecentSearches extends Component {
       { location: this.args.location }
     );
 
-    // one history, so entries order by when they happened rather than by which
-    // list they came from; entries without a time keep to the back
+    const at = (entry) => {
+      const parsed = entry.at ? Date.parse(entry.at) : NaN;
+      return isNaN(parsed) ? -Infinity : parsed;
+    };
+
     return [...merged]
-      .sort((a, b) => (b.at || "").localeCompare(a.at || ""))
+      .sort((first, second) => at(second) - at(first))
       .slice(0, MAX_RECENT_SEARCHES);
   }
 

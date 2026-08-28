@@ -53,7 +53,29 @@
     align-items: stretch;
     gap: 0.5em 1em;
 
+    &__field {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input.search-query {
+        width: 100%;
+        padding-inline-end: 2em;
+      }
+
+      .clear-search {
+        position: absolute;
+        inset-inline-end: 0.5em;
+        display: flex;
+        color: var(--primary-medium);
+      }
+    }
+
     @include viewport.from(sm) {
+      &__field {
+        flex: 1 1 60%;
+      }
+
       input.search-query {
         width: auto;
         flex: 1 1 60%;

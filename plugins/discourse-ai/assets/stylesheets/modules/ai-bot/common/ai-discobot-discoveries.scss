@@ -44,8 +44,12 @@
   }
 
   &__completion {
+    min-height: 7.5rem;
     margin: 0;
     padding: var(--space-4);
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
   }
 
   &__discovery {
@@ -90,9 +94,11 @@
 
   &__no-answer {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
     gap: var(--space-3);
+    margin-top: var(--space-4);
+    width: 100%;
   }
 
   &__error,
@@ -218,20 +224,26 @@
   display: flex;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  overflow-x: auto;
   position: sticky;
   top: 0;
   z-index: 1;
   background: var(--secondary);
+  overflow: hidden;
+  min-width: 0;
 
   &__option {
+    min-width: 0;
+
+    &.--search,
+    &.--ask {
+      flex: 0 0 auto;
+    }
+
     &.--advanced {
       margin-inline-start: auto;
     }
 
     .d-button-label {
-      max-width: 150px;
-
       @include ellipsis;
     }
 
@@ -257,6 +269,24 @@
 .search-menu-container:has(.ai-discoveries-search-options) {
   .search-input-wrapper {
     padding-bottom: 0;
+  }
+}
+
+.ai-search-discoveries__default-preference {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+  border-top: 1px solid var(--token-color-border-default);
+  font-size: var(--font-down-1);
+
+  .ai-search-discoveries__dismiss-default {
+    margin-inline-start: auto;
+  }
+
+  .d-toggle-switch {
+    --toggle-switch-width: 30px;
+    --toggle-switch-height: 16px;
   }
 }
 

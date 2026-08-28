@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -16,6 +16,7 @@ import DiscourseURL from "discourse/lib/url";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -104,6 +105,8 @@ export default class AiSearchDiscoveries extends Component {
   @service discobotDiscoveries;
   @service appEvents;
   @service currentUser;
+  @service keyValueStore;
+  @service toasts;
   @service site;
   @service siteSettings;
   @service composer;
@@ -111,6 +114,7 @@ export default class AiSearchDiscoveries extends Component {
   @tracked loadingConversationTopic = false;
   @tracked followUpQuestion = "";
   @tracked followUpTouched = null;
+  @tracked dismissedAskAiDefault = false;
 
   constructor() {
     super(...arguments);
@@ -267,6 +271,18 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.suggestedFollowUp || "";
   }
 
+  get showAskAiDefaultToggle() {
+    return (
+      Boolean(this.currentUser) &&
+      !this.hasNoContent &&
+      !this.askAiDefaultDismissed
+    );
+  }
+
+  get askAiIsDefault() {
+    return Boolean(get(this.currentUser, "user_option.ai_ask_ai_default"));
+  }
+
   get canSubmitFollowUp() {
     return this.followUpValue.trim().length > 0;
   }
@@ -309,6 +325,49 @@ export default class AiSearchDiscoveries extends Component {
 
     if (this.args.closeSearchMenu) {
       this.args.closeSearchMenu();
+    }
+  }
+
+  get askAiDefaultDismissKey() {
+    return `ask-ai-default-dismissed-${this.currentUser?.id}`;
+  }
+
+  get askAiDefaultDismissed() {
+    // the stored value is not tracked, so the dismissal this session is what
+    // takes the control off screen without waiting for a reload
+    return (
+      this.dismissedAskAiDefault ||
+      Boolean(this.keyValueStore.get(this.askAiDefaultDismissKey))
+    );
+  }
+
+  @action
+  dismissAskAiDefaultToggle() {
+    this.keyValueStore.setItem(this.askAiDefaultDismissKey, "true");
+    this.dismissedAskAiDefault = true;
+
+    this.toasts.success({
+      data: {
+        message: i18n(
+          "discourse_ai.discobot_discoveries.default_preference_dismissed"
+        ),
+      },
+    });
+  }
+
+  @action
+  async toggleAskAiDefault() {
+    const wanted = !this.askAiIsDefault;
+    this.currentUser.set("user_option.ai_ask_ai_default", wanted);
+
+    try {
+      await ajax(`/u/${this.currentUser.username}.json`, {
+        type: "PUT",
+        data: { ai_ask_ai_default: wanted },
+      });
+    } catch (error) {
+      this.currentUser.set("user_option.ai_ask_ai_default", !wanted);
+      popupAjaxError(error);
     }
   }
 
@@ -560,6 +619,23 @@ export default class AiSearchDiscoveries extends Component {
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>
         </form>
+      {{/if}}
+
+      {{#if this.showAskAiDefaultToggle}}
+        <div class="ai-search-discoveries__default-preference">
+          <DToggleSwitch
+            @state={{this.askAiIsDefault}}
+            @label="discourse_ai.discobot_discoveries.make_default"
+            {{on "click" this.toggleAskAiDefault}}
+            class="ai-search-discoveries__default-toggle"
+          />
+          <DButton
+            @icon="xmark"
+            @title="discourse_ai.discobot_discoveries.dismiss_default_preference"
+            @action={{this.dismissAskAiDefaultToggle}}
+            class="btn-transparent ai-search-discoveries__dismiss-default"
+          />
+        </div>
       {{/if}}
     </div>
   </template>

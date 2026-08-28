@@ -28,36 +28,37 @@ describe "AI Discoveries search modes" do
 
   after { SearchIndexer.disable }
 
-  it "starts with Ask AI and keeps the selected mode" do
+  it "marks whichever option produced what is on screen" do
     visit "/"
     discoveries_search.open.fill_query("miyazaki")
 
-    expect(discoveries_search).to have_ask_selected
+    expect(discoveries_search).to have_nothing_in_effect
 
     discoveries_search.select_search
 
-    expect(discoveries_search).to have_search_selected
+    expect(discoveries_search).to have_search_in_effect
     expect(discoveries_search).to have_topic_result(miyazaki_topic)
 
     discoveries_search.select_ask
 
-    expect(discoveries_search).to have_ask_selected
+    expect(discoveries_search).to have_ask_in_effect
     expect(discoveries_search).to have_discovery
 
     discoveries_search.clear_query.select_recent_search("miyazaki")
 
-    expect(discoveries_search).to have_search_selected
+    expect(discoveries_search).to have_search_in_effect
     expect(discoveries_search).to have_no_discovery
     expect(discoveries_search).to have_topic_result(miyazaki_topic)
 
+    # a different term has to be resubmitted, so nothing answers for it yet
     discoveries_search.fill_query("Hayao")
 
-    expect(discoveries_search).to have_search_selected
+    expect(discoveries_search).to have_nothing_in_effect
 
     discoveries_search.submit
 
     expect(discoveries_search).to have_topic_result(hayao_topic)
-    expect(discoveries_search).to have_search_selected
+    expect(discoveries_search).to have_search_in_effect
     expect(discoveries_search).to have_no_discovery
   end
 end

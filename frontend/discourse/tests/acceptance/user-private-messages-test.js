@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { click, currentURL, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
@@ -320,6 +321,28 @@ acceptance(
       assert
         .dom(".show-mores")
         .doesNotExist(`does not display the topic incoming info`);
+    });
+
+    test("the search context carries the group whose inbox is shown", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group");
+
+      const searchContext =
+        getOwner(this).lookup("service:search").searchContext;
+
+      assert.strictEqual(searchContext.type, "private_messages");
+      assert.strictEqual(
+        searchContext.group?.name,
+        "awesome_group",
+        "so a consumer can scope to this inbox rather than every message"
+      );
+
+      await visit("/u/charlie/messages");
+
+      assert.strictEqual(
+        getOwner(this).lookup("service:search").searchContext.group,
+        undefined,
+        "and the personal inbox names no group"
+      );
     });
 
     test("incoming group archive message on inbox and archive filter", async function (assert) {

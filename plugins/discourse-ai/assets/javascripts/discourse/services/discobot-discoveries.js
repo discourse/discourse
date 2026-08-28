@@ -7,11 +7,6 @@ import { i18n } from "discourse-i18n";
 import SmoothStreamer from "../lib/smooth-streamer";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
-const ASK_MODE = "ask";
-const SEARCH_MODE = "search";
-const SEARCH_MODES = [ASK_MODE, SEARCH_MODE];
-
-export { ASK_MODE, SEARCH_MODE };
 
 function buildRequestId(cryptoProvider = globalThis.crypto) {
   if (cryptoProvider.randomUUID) {
@@ -33,8 +28,6 @@ export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
   // Similar to discourse/discourse#25504
   @service a11y;
-  @service currentUser;
-  @service keyValueStore;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
@@ -58,34 +51,11 @@ export default class DiscobotDiscoveries extends Service {
   );
   discoveryTimeout = null;
   #recentAsksLoaded = false;
-  @tracked _searchMode = this.#loadSearchMode();
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.cancelDiscoveryTimeout();
     this.smoothStreamer.resetStreaming();
-  }
-
-  get searchMode() {
-    return this._searchMode;
-  }
-
-  #loadSearchMode() {
-    const savedMode = this.keyValueStore.get(this.searchModeStorageKey);
-    return SEARCH_MODES.includes(savedMode) ? savedMode : ASK_MODE;
-  }
-
-  get searchModeStorageKey() {
-    return `ask-ai-search-mode-${this.currentUser.id}`;
-  }
-
-  selectSearchMode(mode) {
-    if (!SEARCH_MODES.includes(mode)) {
-      return;
-    }
-
-    this._searchMode = mode;
-    this.keyValueStore.setItem(this.searchModeStorageKey, mode);
   }
 
   async onDiscoveryUpdate(update) {
@@ -229,8 +199,8 @@ export default class DiscobotDiscoveries extends Service {
   async triggerDiscovery(query) {
     const normalizedQuery = query?.trim();
 
-    this.selectSearchMode(ASK_MODE);
-
+    // an answer that failed or timed out is worth asking again, even though the
+    // query has not changed
     if (
       this.lastQuery === normalizedQuery &&
       !this.errorMessage &&

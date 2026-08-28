@@ -17,36 +17,11 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
         instantiate: false,
       }
     );
-    this.keyValueStore = this.owner.lookup("service:key-value-store");
-    this.keyValueStore.remove("ask-ai-search-mode-42");
   });
 
   hooks.afterEach(function () {
     const service = getOwner(this).lookup("service:discobot-discoveries");
     cancel(service.discoveryTimeout);
-    this.keyValueStore.remove("ask-ai-search-mode-42");
-  });
-
-  test("defaults to Ask AI and saves an explicit search choice", function (assert) {
-    const service = getOwner(this).lookup("service:discobot-discoveries");
-
-    assert.strictEqual(service.searchMode, "ask");
-
-    service.selectSearchMode("search");
-
-    assert.strictEqual(service.searchMode, "search");
-    assert.strictEqual(
-      this.keyValueStore.get("ask-ai-search-mode-42"),
-      "search"
-    );
-  });
-
-  test("loads the user's saved search choice", function (assert) {
-    this.keyValueStore.setItem("ask-ai-search-mode-42", "search");
-
-    const service = getOwner(this).lookup("service:discobot-discoveries");
-
-    assert.strictEqual(service.searchMode, "search");
   });
 
   test("does not send duplicate requests for the same successful query", async function (assert) {

@@ -6,6 +6,7 @@ import GoogleSearch from "discourse/components/google-search";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import SearchBulkSelectDropdown from "discourse/components/search-bulk-select-dropdown";
+import ClearButton from "discourse/components/search-menu/clear-button";
 import SearchResultEntries from "discourse/components/search-result-entries";
 import SearchTextField from "discourse/components/search-text-field";
 import bodyClass from "discourse/helpers/body-class";
@@ -66,14 +67,20 @@ export default <template>
       </DHorizontalOverflowNav>
 
       <div class="search-bar">
-        <SearchTextField
-          @value={{@controller.searchTerm}}
-          @aria-label={{i18n "search.search_term_label"}}
-          @enter={{fn @controller.search (hash collapseFilters=true)}}
-          @hasAutofocus={{@controller.hasAutofocus}}
-          type="search"
-          class="full-page-search search no-blur search-query"
-        />
+        <div class="search-bar__field">
+          <SearchTextField
+            @value={{@controller.searchTerm}}
+            @aria-label={{i18n "search.search_term_label"}}
+            @enter={{fn @controller.search (hash collapseFilters=true)}}
+            @hasAutofocus={{@controller.hasAutofocus}}
+            type="search"
+            class="full-page-search search no-blur search-query"
+          />
+
+          {{#if @controller.searchTerm}}
+            <ClearButton @clearSearch={{@controller.clearSearchTerm}} />
+          {{/if}}
+        </div>
         <DButton
           @action={{fn @controller.search (hash collapseFilters=true)}}
           @icon={{@controller.searchButtonIcon}}

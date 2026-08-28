@@ -45,12 +45,17 @@ module PageObjects
         self
       end
 
-      def has_search_selected?
+      def has_search_in_effect?
         has_css?("#{SEARCH_OPTION_SELECTOR}.is-active")
       end
 
-      def has_ask_selected?
+      def has_ask_in_effect?
         has_css?("#{ASK_OPTION_SELECTOR}.is-active")
+      end
+
+      def has_nothing_in_effect?
+        has_no_css?("#{SEARCH_OPTION_SELECTOR}.is-active") &&
+          has_no_css?("#{ASK_OPTION_SELECTOR}.is-active")
       end
 
       def has_discovery?

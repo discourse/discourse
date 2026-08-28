@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
@@ -5,7 +6,6 @@ import { i18n } from "discourse-i18n";
 import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types";
 import { isScopedSearch } from "../lib/search-discoveries-context";
 import shortcutLabel from "../lib/shortcut-label";
-import { ASK_MODE, SEARCH_MODE } from "../services/discobot-discoveries";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
@@ -27,16 +27,26 @@ export default apiInitializer((api) => {
     return;
   }
 
+  // listed as saveable so the preferences page sends it with the rest
+  api.addSaveableUserOption("ai_ask_ai_default", { page: "interface" });
+
   const search = api.container.lookup("service:search");
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"
   );
 
-  // The row of options names this shortcut too, but the tip reaches people who
-  // never hover one, alongside the shortcut the menu already teaches.
+  const asksByDefault = () =>
+    Boolean(get(currentUser, "user_option.ai_ask_ai_default"));
+
   api.addQuickSearchRandomTip({
     label: shortcutLabel("shift", "enter"),
-    description: i18n("discourse_ai.discobot_discoveries.tip_ask"),
+    get description() {
+      return i18n(
+        asksByDefault()
+          ? "discourse_ai.discobot_discoveries.tip_search"
+          : "discourse_ai.discobot_discoveries.tip_ask"
+      );
+    },
   });
 
   // Asking is offered on /search the way users and categories are: a type of
@@ -59,6 +69,21 @@ export default apiInitializer((api) => {
     },
     { after: SEARCH_TYPE_DEFAULT }
   );
+
+  // Leading the list when it is what enter runs, so the page opens on the same
+  // order the menu offers.
+  api.registerValueTransformer("full-page-search-types", ({ value }) => {
+    if (!asksByDefault()) {
+      return value;
+    }
+
+    const ask = value.find(({ id }) => id === SEARCH_TYPE_ASK_AI);
+    if (!ask) {
+      return value;
+    }
+
+    return [ask, ...value.filter((type) => type !== ask)];
+  });
 
   // An answer already on screen is what the reader is looking at, so opening
   // the full page continues it rather than dropping them into an indexed
@@ -178,7 +203,6 @@ export default apiInitializer((api) => {
   // each remembered item repeats as the kind of search its icon shows
   api.addSearchMenuAssistantSelectCallback((args) => {
     if (args.usage === "recent-search") {
-      discobotDiscoveries.selectSearchMode(SEARCH_MODE);
       discobotDiscoveries.dismissDiscovery();
       return true;
     }
@@ -192,8 +216,9 @@ export default apiInitializer((api) => {
     return false;
   });
 
-  // Enter uses the last explicit choice. Shift+Enter remains a direct way to
-  // ask, and Ctrl/Cmd+Enter remains advanced search.
+  // Enter always runs the indexed search, so nothing has to be remembered
+  // between submissions. Shift+Enter is the one that asks: Ctrl/Cmd+Enter is
+  // already advanced search, and a second Enter already means the same.
   api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
     if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
@@ -202,10 +227,9 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
-      if (
-        query &&
-        (event.shiftKey || discobotDiscoveries.searchMode === ASK_MODE)
-      ) {
+      // The preference decides which key asks; the other one does the opposite,
+      // so both remain reachable whichever way round it is.
+      if (event.shiftKey !== asksByDefault() && query) {
         // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
         searchTerm.args.clearPMInboxContext();
@@ -213,7 +237,6 @@ export default apiInitializer((api) => {
         return false;
       }
 
-      discobotDiscoveries.selectSearchMode(SEARCH_MODE);
       discobotDiscoveries.dismissDiscovery();
       return true;
     }

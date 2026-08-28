@@ -195,7 +195,7 @@ export default class FullPageSearchController extends Controller {
       }
     });
 
-    return searchTypes;
+    return applyValueTransformer("full-page-search-types", searchTypes);
   }
 
   @computed("search_type")
@@ -639,6 +639,20 @@ export default class FullPageSearchController extends Controller {
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
       topicCategory,
+    });
+  }
+
+  @action
+  clearSearchTerm(event) {
+    event?.preventDefault();
+    this.set("searchTerm", "");
+
+    schedule("afterRender", () => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      document.querySelector("input.search-query")?.focus();
     });
   }
 

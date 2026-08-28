@@ -603,6 +603,22 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".fps-tag-item").doesNotExist("has no tag results");
   });
 
+  test("the field can be cleared without leaving the page", async function (assert) {
+    await visit("/search?q=dev");
+
+    assert
+      .dom(".search-bar .clear-search")
+      .exists("the field offers a way out");
+
+    await click(".search-bar .clear-search");
+
+    assert.dom("input.search-query").hasValue("", "the term is cleared");
+    assert.dom("input.search-query").isFocused("with the caret back in it");
+    assert
+      .dom(".search-bar .clear-search")
+      .doesNotExist("and nothing left to clear");
+  });
+
   test("picking a type with an empty field puts the caret in it", async function (assert) {
     await visit("/search");
 

@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import shortcutLabel from "../lib/shortcut-label";
-import { ASK_MODE, SEARCH_MODE } from "../services/discobot-discoveries";
 
 function shortcutHint(...keys) {
   return i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
@@ -30,6 +29,7 @@ function categoryOperator(category) {
 }
 
 export default class AiDiscoveriesSearchOptions extends Component {
+  @service currentUser;
   @service discobotDiscoveries;
   @service search;
 
@@ -55,7 +55,9 @@ export default class AiDiscoveriesSearchOptions extends Component {
   // narrow by putting operators in the term, where the reader can see them.
   // A tag page inside a category contributes two, so this is always a list.
   get contextKind() {
-    switch (this.search.searchContext?.type) {
+    const context = this.search.searchContext;
+
+    switch (context?.type) {
       case "user":
         return "user";
       case "category":
@@ -63,6 +65,8 @@ export default class AiDiscoveriesSearchOptions extends Component {
       case "tag":
       case "tagIntersection":
         return "tag";
+      case "private_messages":
+        return context.group ? "messages" : null;
       default:
         return null;
     }
@@ -78,6 +82,10 @@ export default class AiDiscoveriesSearchOptions extends Component {
         return [categoryOperator(context.category)].filter(Boolean);
       case "tag":
         return context.name ? [`#${context.name}`] : [];
+      case "private_messages":
+        return context.group?.name
+          ? [`group_messages:${context.group.name}`]
+          : [];
       case "tagIntersection": {
         // several tags intersect with `tags:`, a single one keeps the `#` form
         const tags = context.additionalTags?.length
@@ -99,6 +107,12 @@ export default class AiDiscoveriesSearchOptions extends Component {
     if (this.contextKind === "user") {
       return i18n("discourse_ai.discobot_discoveries.search_user_posts", {
         username: this.search.searchContext.user?.username,
+      });
+    }
+
+    if (this.contextKind === "messages") {
+      return i18n("discourse_ai.discobot_discoveries.search_group_messages", {
+        group: this.search.searchContext.group.name,
       });
     }
 
@@ -154,12 +168,11 @@ export default class AiDiscoveriesSearchOptions extends Component {
     return this.search.inTopicContext && this.scopedTerm === this.query;
   }
 
+  // A receipt rather than an armed mode: enter always runs the indexed search,
+  // so the only thing worth marking is which option produced what is showing.
   get askedActive() {
     return (
-      !this.scopedToTopic &&
-      !this.contextActive &&
-      !this.messagesActive &&
-      this.discobotDiscoveries.searchMode === ASK_MODE
+      Boolean(this.query) && this.discobotDiscoveries.lastQuery === this.query
     );
   }
 
@@ -175,18 +188,87 @@ export default class AiDiscoveriesSearchOptions extends Component {
       return false;
     }
 
-    return this.discobotDiscoveries.searchMode === SEARCH_MODE;
+    return Boolean(this.args.searchTopics);
   }
 
   // Only the options that have one: scope has never had a keybinding, so the
   // three that map to enter, shift+enter and ctrl/cmd+enter say so and the rest
   // stay quiet rather than inventing hints.
+  // `get` rather than a native read: the option lives on a classic object, so
+  // the row would not reorder or relabel when it changes.
+  get asksByDefault() {
+    return Boolean(get(this.currentUser, "user_option.ai_ask_ai_default"));
+  }
+
+  get options() {
+    const scopes = [];
+
+    if (this.inTopic) {
+      scopes.push({
+        kind: "topic",
+        icon: "magnifying-glass",
+        label: "discourse_ai.discobot_discoveries.search_this_topic",
+        active: this.scopedToTopic,
+        action: this.searchThisTopic,
+      });
+    }
+
+    if (this.showContextOption) {
+      scopes.push({
+        kind: this.contextKind,
+        icon: "magnifying-glass",
+        translatedLabel: this.contextLabel,
+        active: this.contextActive,
+        action: this.searchInContext,
+      });
+    }
+
+    if (this.inPMInbox && this.contextKind !== "messages") {
+      scopes.push({
+        kind: "messages",
+        icon: "magnifying-glass",
+        label: "discourse_ai.discobot_discoveries.search_messages",
+        active: this.messagesActive,
+        action: this.searchMessages,
+      });
+    }
+
+    const { search, ask } = this.resolveOptions;
+
+    return this.asksByDefault
+      ? [ask, ...scopes, search]
+      : [...scopes, search, ask];
+  }
+
+  get resolveOptions() {
+    const search = {
+      kind: "search",
+      icon: "magnifying-glass",
+      label: "discourse_ai.discobot_discoveries.search_all_topics",
+      title: this.allTopicsTitle,
+      active: this.allTopicsActive,
+      action: this.searchAllTopics,
+    };
+    const ask = {
+      kind: "ask",
+      icon: "far-discobot",
+      label: "discourse_ai.discobot_discoveries.ask_ai",
+      title: this.askTitle,
+      active: this.askedActive,
+      action: this.ask,
+    };
+
+    return { search, ask };
+  }
+
   get allTopicsTitle() {
-    return this.allTopicsActive ? shortcutHint("enter") : null;
+    return this.asksByDefault
+      ? shortcutHint("shift", "enter")
+      : shortcutHint("enter");
   }
 
   get askTitle() {
-    return this.askedActive
+    return this.asksByDefault
       ? shortcutHint("enter")
       : shortcutHint("shift", "enter");
   }
@@ -199,7 +281,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchAllTopics() {
-    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     // choosing the indexed results means the answer is no longer what was asked for
     this.discobotDiscoveries.dismissDiscovery();
     // the input no longer carries a chip to step back out of a scope, so the
@@ -221,7 +302,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchInContext() {
-    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -240,7 +320,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchMessages() {
-    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.searchTermChanged?.(this.query, {
@@ -251,7 +330,6 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchThisTopic() {
-    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.scopedTerm = this.query;
     this.discobotDiscoveries.dismissDiscovery();
     this.args.searchTermChanged?.(this.query, {
@@ -279,61 +357,24 @@ export default class AiDiscoveriesSearchOptions extends Component {
   <template>
     {{#if this.query}}
       <div class="ai-discoveries-search-options">
-        {{! the narrowest scope leads, since it is the one the page is about }}
-        {{#if this.inTopic}}
+        {{#each this.options key="kind" as |option|}}
           <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --topic
-              {{if this.scopedToTopic 'is-active'}}"
-            @icon="magnifying-glass"
-            @label="discourse_ai.discobot_discoveries.search_this_topic"
-            @action={{this.searchThisTopic}}
+            class="btn-default btn-small ai-discoveries-search-options__option --{{option.kind}}
+              {{if option.active 'is-active'}}"
+            @icon={{option.icon}}
+            @label={{option.label}}
+            @translatedLabel={{option.translatedLabel}}
+            @translatedTitle={{option.title}}
+            @action={{option.action}}
           />
-        {{/if}}
-        {{#if this.showContextOption}}
-          <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --{{this.contextKind}}
-              {{if this.contextActive 'is-active'}}"
-            @icon="magnifying-glass"
-            @translatedLabel={{this.contextLabel}}
-            @action={{this.searchInContext}}
-          />
-        {{/if}}
-        {{#if this.inPMInbox}}
-          <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --messages
-              {{if this.messagesActive 'is-active'}}"
-            @icon="magnifying-glass"
-            @label="discourse_ai.discobot_discoveries.search_messages"
-            @action={{this.searchMessages}}
-          />
-        {{/if}}
-        {{! only the options with a keybinding say so; the scopes have none to
-            report, and an invented hint is worse than none }}
+        {{/each}}
         <DButton
-          class="btn-default btn-small ai-discoveries-search-options__option --search
-            {{if this.allTopicsActive 'is-active'}}"
-          @icon="magnifying-glass"
-          @label="discourse_ai.discobot_discoveries.search_all_topics"
-          @translatedTitle={{this.allTopicsTitle}}
-          @action={{this.searchAllTopics}}
+          class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+          @icon="sliders"
+          @translatedTitle={{this.advancedTitle}}
+          @ariaLabel="search.open_advanced"
+          @action={{@openAdvancedSearch}}
         />
-        <DButton
-          class="btn-default btn-small ai-discoveries-search-options__option --ask
-            {{if this.askedActive 'is-active'}}"
-          @icon="far-discobot"
-          @label="discourse_ai.discobot_discoveries.ask_ai"
-          @translatedTitle={{this.askTitle}}
-          @action={{this.ask}}
-        />
-        {{#if this.allTopicsActive}}
-          <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --advanced"
-            @icon="sliders"
-            @translatedTitle={{this.advancedTitle}}
-            @ariaLabel="search.open_advanced"
-            @action={{@openAdvancedSearch}}
-          />
-        {{/if}}
       </div>
     {{/if}}
   </template>

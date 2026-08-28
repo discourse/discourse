@@ -87,6 +87,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "full-page-search-button-icon",
   "full-page-search-button-label",
   "full-page-search-no-results-enabled",
+  "full-page-search-types",
   "group-members-request",
   "hamburger-dropdown-click-outside-exceptions",
   "header-notifications-avatar-size",
