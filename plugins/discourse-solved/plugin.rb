@@ -212,6 +212,9 @@ after_initialize do
 
     guardian = report.guardian
     solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
+    if !guardian.can_see_shared_draft?
+      solved_topics = solved_topics.where.not(topic_id: SharedDraft.select(:topic_id))
+    end
 
     report.related_items_totals = { solved_topics: solved_topics.count }
 
@@ -221,8 +224,6 @@ after_initialize do
         .order(created_at: :desc)
         .limit(report.limit || Report::RELATED_ITEMS_LIMIT)
         .to_a
-    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: solved_topics.map(&:topic_id))
-    solved_topics.select! { |solved_topic| visible_topic_ids.include?(solved_topic.topic_id) }
 
     report.related_items = {
       solved_topics:
