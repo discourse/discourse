@@ -360,7 +360,7 @@ module DiscourseAi
           MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
             "application/octet-stream"
         attachment_type =
-          DiscourseAi::Completions::UploadEncoder.attachment_type_for(upload.extension, mime_type)
+          DiscourseAi::Completions::DocumentEncoder.attachment_type_for(upload.extension, mime_type)
         allowed_attachment_types.include?(attachment_type)
       end
 
