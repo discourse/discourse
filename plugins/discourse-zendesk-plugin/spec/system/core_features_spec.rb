@@ -30,3 +30,28 @@ RSpec.describe "Zendesk API token deprecation warning" do
     )
   end
 end
+
+RSpec.describe "Zendesk OAuth settings" do
+  fab!(:admin)
+
+  let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+  before do
+    enable_current_plugin
+    sign_in(admin)
+  end
+
+  it "explains how to configure the OAuth client credentials" do
+    settings_page.visit_filtered_plugin_setting("zendesk_oauth")
+
+    client_id_setting = settings_page.find_setting("zendesk_oauth_client_id")
+    expect(client_id_setting).to have_text("confidential Zendesk OAuth client")
+    expect(client_id_setting).to have_text(
+      "tickets:read, tickets:write, users:read, and users:write",
+    )
+
+    client_secret_setting = settings_page.find_setting("zendesk_oauth_client_secret")
+    expect(client_secret_setting).to have_text("secret shown once")
+    expect(settings_page.secret_setting_input("zendesk_oauth_client_secret")).to be_present
+  end
+end

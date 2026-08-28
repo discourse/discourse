@@ -29,6 +29,19 @@ RSpec.describe "Discourse Zendesk Plugin" do
         expect(SiteSetting.zendesk_url).to eq(zendesk_url_default)
         expect(SiteSetting.zendesk_enabled).to eq(zendesk_enabled_default)
       end
+
+      it "keeps the OAuth client secret server-only" do
+        expect(SiteSetting.secret_settings).to include(:zendesk_oauth_client_secret)
+      end
+
+      it "reports OAuth-only credentials as configured to staff" do
+        SiteSetting.zendesk_enabled = true
+        SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
+        SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
+        serializer = CurrentUserSerializer.new(staff, scope: Guardian.new(staff), root: false)
+
+        expect(serializer.as_json[:discourse_zendesk_plugin_status]).to eq(zendesk_url_default)
+      end
     end
 
     describe "zendesk_job_push_only_author_posts?" do

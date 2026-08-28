@@ -2,13 +2,53 @@
 
 module DiscourseZendeskPlugin
   module Helper
-    def zendesk_client
-      ::ZendeskAPI::Client.new do |config|
-        config.url = SiteSetting.zendesk_url
-        config.username = SiteSetting.zendesk_jobs_email
-        config.token = SiteSetting.zendesk_jobs_api_token
-      end
+    def self.oauth_configured?
+      SiteSetting.zendesk_oauth_client_id.present? &&
+        SiteSetting.zendesk_oauth_client_secret.present?
     end
+
+    def self.api_token_configured?
+      SiteSetting.zendesk_jobs_email.present? && SiteSetting.zendesk_jobs_api_token.present?
+    end
+
+    def self.configured?
+      oauth_configured? || api_token_configured?
+    end
+
+    def zendesk_client
+      oauth_token = DiscourseZendeskPlugin::OAuthToken.new if Helper.oauth_configured?
+
+      client =
+        ::ZendeskAPI::Client.new do |config|
+          config.url = SiteSetting.zendesk_url
+
+          if oauth_token
+            config.access_token = oauth_token.access_token
+          else
+            config.username = SiteSetting.zendesk_jobs_email
+            config.token = SiteSetting.zendesk_jobs_api_token
+          end
+        end
+
+      if oauth_token
+        client.insert_callback do |environment|
+          oauth_token.invalidate if invalid_oauth_token_response?(environment)
+        end
+      end
+
+      client
+    end
+
+    def invalid_oauth_token_response?(environment)
+      return false if environment[:status] != 401
+
+      body = environment[:body]
+      body = JSON.parse(body) if body.is_a?(String)
+      body.is_a?(Hash) && body["error"] == "invalid_token"
+    rescue JSON::ParserError
+      false
+    end
+    private :invalid_oauth_token_response?
 
     def self.autogeneration_category?(category_id)
       return false if category_id.blank?
