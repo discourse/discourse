@@ -90,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_modifier(:site_setting_result) do |setting_result|
+    if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
+      setting_result[:disabled] = true
+    end
+    setting_result
+  end
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end

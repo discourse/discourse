@@ -443,6 +443,7 @@ discourse_ai:
   ai_discover_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::DiscoverEnabledValidator"
     area: "ai-features/search"
   ai_discover_agent:
     default: "-34"

@@ -111,7 +111,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
     end
 
     before do
-      SiteSetting.ai_discover_enabled = true
+      enable_legacy_discover
       SiteSetting.ai_discover_agent = ai_agent.id
       group.add(user)
     end

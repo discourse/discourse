@@ -192,7 +192,7 @@ describe DiscourseAi::AiBot::EntryPoint do
       group.add(user)
       llm_model = Fabricate(:llm_model)
       agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
-      SiteSetting.ai_discover_enabled = true
+      enable_legacy_discover
       SiteSetting.ai_discover_agent = agent.id
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true

@@ -417,6 +417,9 @@ en:
         agent_disabled: "The Ask AI follow-up agent must be enabled."
         personal_messages_disabled: "The Ask AI follow-up agent must allow personal messages."
         allowed_groups_missing: "The Ask AI follow-up agent must allow at least one group."
+    discover:
+      configuration:
+        cannot_enable: "Discover is deprecated and cannot be enabled after it has been disabled. Enable Ask AI instead."
     post_image_captions:
       errors:
         description_blank: "Caption can't be blank."

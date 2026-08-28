@@ -60,7 +60,7 @@ RSpec.describe "Admin AI features configuration" do
         allow_personal_messages: true,
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
       )
-    SiteSetting.ai_discover_enabled = true
+    enable_legacy_discover
     SiteSetting.ai_discover_agent = summarization_agent.id
     SiteSetting.ai_ask_ai_enabled = true
     SiteSetting.ai_ask_ai_agent = ask_ai_agent.id
@@ -76,6 +76,24 @@ RSpec.describe "Admin AI features configuration" do
     expect(ai_features_page).to have_feature_agent("ask_ai", ask_ai_agent.name)
     expect(ai_features_page).to have_feature_agent("ask_ai", query_rewriter.name)
     expect(ai_features_page).to have_feature_agent("ask_ai", follow_up_agent.name)
+  end
+
+  it "only allows existing enabled sites to configure Discover" do
+    enable_legacy_discover
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SEARCH_ID}/edit",
+    )
+
+    expect(form.field("ai_discover_enabled")).to be_enabled
+
+    SiteSetting.ai_discover_enabled = false
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SEARCH_ID}/edit",
+    )
+
+    expect(page).to have_no_css(".form-kit__field[data-name='ai_discover_enabled']")
   end
 
   it "shows edit page with grouped settings" do

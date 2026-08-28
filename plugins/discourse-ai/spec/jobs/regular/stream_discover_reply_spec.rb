@@ -95,7 +95,7 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "keeps the deprecated Discover pipeline available" do
-    SiteSetting.ai_discover_enabled = true
+    enable_legacy_discover
     SiteSetting.ai_discover_agent = ai_agent.id
 
     messages =

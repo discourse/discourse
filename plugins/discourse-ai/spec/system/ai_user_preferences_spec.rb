@@ -18,7 +18,7 @@ describe "User AI preferences" do
 
   describe "search discoveries setting" do
     context "when discoveries are enabled" do
-      before { SiteSetting.ai_discover_enabled = true }
+      before { enable_legacy_discover }
 
       it "should have the setting present in the user preferences page" do
         user_preferences_ai_page.visit(user)
