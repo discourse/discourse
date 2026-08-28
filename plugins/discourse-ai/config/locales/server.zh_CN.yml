@@ -22,6 +22,13 @@ zh_CN:
         agent_vision_disabled: "该智能体不能包含图片上传"
         llm_missing: "该智能体无法解析为 LLM"
         llm_vision_disabled: "解析的 LLM 不支持图片输入"
+      ai_llm_vision_delegation: "%{model_name} 无法使用其配置的视觉模型： %{reason}。 <a href='%{url}'>请检查 AI 模型</a>。"
+      ai_llm_vision_delegation_reasons:
+        missing: "视觉模型已不复存在"
+        native_and_delegated: "原生图像输入和委托视觉均已配置"
+        self_reference: "模型不能利用自身进行视觉"
+        delegated: "视觉模型委托给另一个模型"
+        not_native: "该视觉模型不支持原生图像输入"
   discourse_automation:
     ai:
       flag_types:
@@ -45,6 +52,8 @@ zh_CN:
           %{score_reason}
           %{response}
         flagged_post_response: "模型回答：%{llm_response}"
+        flagged_post_score_reason: |
+          <b>由 <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -105,6 +114,7 @@ zh_CN:
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天消息串标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据消息串内容自动设置聊天消息串标题。"
+    ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。作曲器中的标题建议通过 AI 助手菜单提供，并且还需要启用上下文菜单功能。"
     ai_image_caption_agent: "用于 AI 图片说明的智能体。自定义智能体必须启用图片上传功能，并使用具备视觉功能的 LLM。"
     ai_post_image_captions_enabled: "为帖子图片启用 AI 说明。生成缺失的说明需要配置 {{setting:ai_image_caption_agent}}。"
     ai_post_image_captions_per_post_limit: "每个帖子可以添加图片说明的数量上限。"
@@ -164,6 +174,8 @@ zh_CN:
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
     ai_translation_backfill_parallel_jobs: "每个回填周期中并行运行的后置本地化任务数量。数值越高吞吐量越大，但会占用更多资源。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
+    ai_audit_logs_detailed_retention_days: "保留原始 AI 请求和响应有效负载的天数。设置为 0 则有效负载将保留至摘要日志被删除。原始有效负载可能包含私人或敏感内容。即使 AI 插件已禁用，清理工作仍将继续。"
+    ai_audit_logs_purge_after_days: "保留 AI API 审计日志摘要若干天后，将删除整个日志。设置为 0 则永久保留摘要。AI 插件禁用期间，清理工作将继续进行。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -362,6 +374,7 @@ zh_CN:
         unknown_error: "生成缩略图时发生意外错误。请重试。"
       prompts:
         translate: 翻译为%{language}
+        generate_titles: 建议话题标题
         proofread: 审校文本
         markdown_table: 生成 Markdown 表
         custom_prompt: "自定义提示"
@@ -408,8 +421,32 @@ zh_CN:
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
       tool_pending_approval: "此操作需要版主批准，然后才能执行。"
+      spawn_agent:
+        description: "将一个独立的提示委托给一个允许的代理，并返回其响应。"
+        prompt_description: "发送给选定代理并在思考框中显示的完整独立提示。"
+        summary: "咨询 %{agent}"
+        failed: "委托的任务未能完成。"
+        unknown_agent: "子代理"
       read_post:
         unknown_post: "帖子"
+      tool_errors:
+        invocation_limit_reached: "此工具已达到配置的调用次数上限。请使用已收集的证据。"
+      subagent_errors:
+        invalid_agent: "请求的子代理无效。"
+        invalid_prompt: "必须提供委托提示。"
+        prompt_too_long: "委托的提示过长。"
+        missing_user: "委托操作需要发起用户。"
+        depth_limit: "已达到最大委托深度。"
+        unavailable_parent: "父代理已不再可用。"
+        agent_not_allowed: "请求的子代理不被允许。"
+        unavailable_agent: "请求的子代理不可用或无法访问。"
+        missing_model: "请求的子代理没有可用的语言模型。"
+        call_limit: "已达到委托调用次数上限。"
+        completion_limit: "委托完成次数已达上限。"
+        token_limit: "委托代币预算已用完。"
+        cancelled: "委托的任务已取消。"
+        execution_failed: "委托任务失败。"
+        approval_unavailable: "委托运行中无法使用需要审批的工具。"
       chat_tool_approval:
         approved: "由 @%{username} 批准。"
         rejected: "由 @%{username} 拒绝。"
@@ -417,11 +454,18 @@ zh_CN:
         unexpected_error: "发生意外错误"
       agents:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
+        bot_user_unsupported: "此代理仅供内部功能使用，不能由机器人用户使用。"
         cannot_delete_system_agent: "系统智能体无法删除，请改为将其禁用。"
         cannot_edit_system_agent: "系统智能体只能重命名，无法编辑工具或系统提示，只能禁用并复制。"
         cannot_have_duplicate_tools: "不能有重复的工具"
         native_tool_requires_forced_llm: "提供商原生工具需要启用“强制默认 LLM”的默认 LLM。"
         native_tool_unsupported_by_llm: "所选的默认 LLM 不支持已启用的提供商原生工具之一"
+        invalid_subagent_ids: "子代理 ID 必须是一个整数列表。"
+        too_many_subagents: "一个代理最多可以拥有 %{max} 个子代理"
+        too_many_rag_document_sources: "一个代理最多可以拥有 %{max} 个 URL 源"
+        subagent_self: "一个代理不能将自身选为子代理"
+        subagents_not_found: "所选子代理 ID 不存在： %{ids}"
+        subagent_tool_collision: "拥有子代理的代理无法配置名为 spawn_agent 的工具。"
         admin_dashboard_highlights:
           name: "管理员信息中心亮点"
           description: "撰写在管理信息中心顶部显示的简要报告，解释此期间的变化和需要关注的事项"
@@ -581,6 +625,13 @@ zh_CN:
           read_private:
             name: "阅读不公开话题"
             description: "允许访问用户可以访问的所有话题（默认情况下仅包含公开话题）"
+        read_post:
+          read_private:
+            name: "阅读私信"
+            description: "允许访问请求用户可见的帖子（默认情况下仅包含公开帖子）"
+          max_invocations:
+            name: "最大调用次数"
+            description: "此工具在一次代理回合中可运行的最大次数；留空则无限制。"
         search:
           search_private:
             name: "搜索不公开话题"
@@ -591,6 +642,15 @@ zh_CN:
           base_query:
             name: "基本搜索查询"
             description: "搜索时要使用的基本查询。示例：'#urgent' 会在搜索查询前面加上 '#urgent'，并且仅包含具有紧急类别或标签的话题。"
+          max_invocations:
+            name: "最大调用次数"
+            description: "此工具在一次代理回合中可运行的最大次数；留空则无限制。"
+          ignore_user_filter:
+            name: "忽略用户筛选器"
+            description: "忽略模型提供的用户名，以便搜索结果能够找到错误归属的内容。"
+          absolute_urls:
+            name: "绝对网址"
+            description: "返回完整的源 URL，而不是论坛相对路径。"
         flag_post:
           flag_type:
             name: "标记类型"
@@ -611,6 +671,7 @@ zh_CN:
       tool_summary:
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"
+        view_image: "检查图像"
         update_artifact: "更新 Web 工件"
         create_artifact: "创建 Web 工件"
         web_browser: "浏览网页"
@@ -648,6 +709,7 @@ zh_CN:
         image: "生成图片"
         google: "搜索 Google"
         read: "阅读话题"
+        read_post: "阅读帖子"
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "正在搜索站点设置"
@@ -663,6 +725,7 @@ zh_CN:
       tool_help:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
         search_uploaded_documents: "搜索上传至此智能体的文档"
+        view_image: "检查此任务期间可用的图像"
         update_artifact: "使用 AI 机器人更新 Web 工件"
         create_artifact: "使用 AI 机器人创建 Web 工件"
         web_browser: "使用 AI 机器人浏览网页"
@@ -702,6 +765,7 @@ zh_CN:
         edit_image: "使用 Open AI GPT 图片模型编辑图片"
         google: "在 Google 中搜索查询"
         read: "在论坛上阅读公开话题"
+        read_post: "在论坛上找到一篇帖子，并逐字逐句地阅读。"
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "搜索站点设置"
@@ -713,6 +777,7 @@ zh_CN:
         researcher: "使用 AI 机器人研究论坛信息"
       tool_description:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
+        view_image: "检查了此任务期间可用的图像"
         search_uploaded_documents:
           other: "找到 '%{query}' 的 %{count} 个上传的文档摘录"
         update_artifact: "已使用 AI 机器人更新 Web 工件"
@@ -743,6 +808,7 @@ zh_CN:
         assign: "指定话题 %{topic_id}（已指定：%{assigned}）"
         mark_as_solved: "将帖子 %{post_id} 标记为已解决（已解决：%{solved}）"
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
+        read_post: "阅读帖子： <a href='%{url}'>%{title}</a>"
         time: "%{timezone} 的时间为 %{time}"
         summarize: "已总结 <a href='%{url}'>%{title}</a>"
         set_topic_summary: "设置最终的简短话题摘要"
@@ -1017,6 +1083,12 @@ zh_CN:
       secret_not_found: "所选凭据不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
       bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
+      native_vision_cannot_delegate: "原生图像输入无法使用其他视觉模型"
+      vision_model_required: "必须选择一种视觉模型。"
+      vision_model_not_found: "所选视觉模型不存在"
+      vision_model_cannot_be_self: "模型不能使用自身作为其视觉模型"
+      vision_model_must_be_native: "所选视觉模型必须支持原生图像输入"
+      vision_model_has_dependents: "此模型为以下模型提供视觉： %{models}。请先重新配置这些模型。"
     ai_staff_action_logger:
       updated: "已更新"
       set: "已设置"
@@ -1064,4 +1136,5 @@ zh_CN:
       custom_tool_exists:
         other: "名称为“%{names}”的自定义工具已存在。"
       mcp_server_missing: "以下 MCP 服务器未在此站点上配置：%{names}。"
+      subagents_missing: "此站点未配置以下子代理： %{names}。"
       mcp_server_tools_not_found: "此站点没有来自 MCP 服务器 %{name} 的匹配工具。"

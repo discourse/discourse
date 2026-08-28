@@ -95,17 +95,17 @@ ur:
       time_with_zone: "HH:mm (z)"
       time_short_day: "dddd، HH:mm"
       timeline_date: "MMMM YYYY"
-      long_no_year: "D MMMM، HH:mm"
-      long_no_year_no_time: "D ‏MMMM"
-      full_no_year_no_time: "Do ‏MMMM"
+      long_no_year: "HH:mm D MMMM"
+      long_no_year_no_time: "D MMMM"
+      full_no_year_no_time: "D MMMM"
       long_with_year: "D MMMM، YYYY HH:mm"
-      long_with_year_no_time: "D MMMM، YYYY"
-      full_with_year_no_time: "Do MMMM، YYYY"
-      long_date_with_year: "MMM D, YYYY LT"
-      long_date_without_year: "MMM D, LT"
+      long_with_year_no_time: "D MMMM, YYYY"
+      full_with_year_no_time: "D MMMM، YYYY"
+      long_date_with_year: "D MMMM, YYYY LT"
+      long_date_without_year: "D MMMM, LT"
       long_date_with_year_without_time: "D MMMM، YYYY"
-      long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D، YYYY <br/>LT"
+      long_date_without_year_with_linebreak: "D MMMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMMM, YYYY <br/>LT"
       wrap_ago: "%{date} قبل"
       wrap_on: "%{date} پر"
       tiny:
@@ -141,8 +141,8 @@ ur:
         almost_x_years:
           one: "%{count} سال"
           other: "%{count} سال"
-        date_month: "MMM D"
-        date_year: "MMM YYYY"
+        date_month: "D MMMM"
+        date_year: "MMMM YYYY"
       medium:
         less_than_x_minutes:
           one: "%{count} منٹ سے کم"
@@ -171,7 +171,7 @@ ur:
         almost_x_years:
           one: "تقریباً %{count} سال"
           other: "تقریباً %{count} سال"
-        date_year: "D MMMM، YYYY"
+        date_year: "D MMMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} منٹ قبل"
@@ -1852,7 +1852,7 @@ ur:
         unread_with_count:
           one: "بغیر پڑھا (%{count})"
           other: "بغیر پڑھا (%{count})"
-        new: "نیا"
+        new: "نئے"
         new_with_count:
           one: "نیا (%{count})"
           other: "نئے (%{count})"
@@ -2406,7 +2406,7 @@ ur:
             role_member: "معتمد"
             role_admin: "منتظم"
             role_moderator: "نگران"
-            method: "شیئرنگ"
+            method: "شراکت"
             method_link: "قابل اشتراک رابطہ"
             method_email: "ای میل"
             restriction: "تک محدود"
@@ -3464,7 +3464,7 @@ ur:
         replied: "نیا جواب"
         quoted: "اقتباس کردہ"
         edited: "ترمیم کردہ"
-        liked: "نیا لائیک"
+        liked: "نئی پسندیدگی"
         private_message: "نیا ذاتی پیغام"
         invited_to_private_message: "ذاتی پیغام میں مدعو کیا"
         invitee_accepted: "دعوت قبول کر لی گئی"
@@ -3739,9 +3739,9 @@ ur:
           other: "برخاست (%{count})"
         dismiss_new_menu: "اختیارات کو منسوخ کریں"
         dismiss_and_stop_tracking: "نظر انداز کریں اور ٹریک کرنا بند کریں"
-        dismiss_new: "نیا برخاست کریں"
+        dismiss_new: "نئے کو برخاست کریں"
         dismiss_new_modal:
-          title: "نیا برخاست کریں"
+          title: "نئے کو برخاست کریں"
           topics: "نئے موضوعات کو برخاست"
           posts: "نئے جوابات کو برخاست"
           topics_with_count:
@@ -3753,8 +3753,8 @@ ur:
           replies: "نئے جوابات کو برخاست"
           untrack: "ان موضوعات کو نہ ڈھونڈیں تاکہ وہ میری نئی فہرست میں ظاہر ہونا بند کر دیں"
         dismiss_new_with_selected:
-          one: "نیا (%{count}) برخاست"
-          other: "نیا (%{count}) برخاست"
+          one: "(%{count}) نئے کو برخاست کریں"
+          other: "(%{count}) نئے کو برخاست کریں"
         toggle: "موضوعات کے حجمی انتخاب کو ٹوگل کریں"
         actions: "حجمی عوامل"
         change_category: "زمرہ اپ ڈیٹ کریں"
@@ -5126,7 +5126,7 @@ ur:
           one: "%{count} نیا"
           other: "%{count} نئے"
         lower_title: "نئے"
-        title: "نیا"
+        title: "نئے"
         title_with_count:
           one: "نیا (%{count})"
           other: "نئے (%{count})"
@@ -5215,7 +5215,7 @@ ur:
         title: "پر جائیں"
         home: "ہَوم"
         latest: "تازہ ترین"
-        new: "نیا"
+        new: "نئے"
         unread: "بغیر پڑھے"
         unseen: "ان دیکھا"
         categories: "زمرہ جات"
@@ -5604,7 +5604,7 @@ ur:
           links:
             inbox: "اِن باکس"
             sent: "بھیج دیا"
-            new: "نیا"
+            new: "نئے"
             new_with_count: "نیا (%{count})"
             unread: "بغیر پڑھے"
             unread_with_count: "بغیر پڑھا (%{count})"

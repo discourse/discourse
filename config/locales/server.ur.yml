@@ -6,9 +6,9 @@
 
 ur:
   dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    short_date_no_year: "D MMMM"
+    short_date: "D MMMM, YYYY"
+    long_date: "HH:mm D MMMM, YYYY"
   datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"

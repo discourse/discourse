@@ -1152,7 +1152,7 @@ zh_CN:
           ai_embeddings_semantic_search: "AI 搜索"
           ai_spam: "垃圾信息"
           automation: "自动化 (%{agent})"
-          vision_delegate: "视觉模型（%{agent}）"
+          vision_delegate: "模型视觉（%{agent}）"
         in_use_warning:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:

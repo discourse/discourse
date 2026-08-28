@@ -36,6 +36,7 @@ zh_CN:
       livestream:
         zoom:
           join: "加入 Zoom"
+          frame_title: "Zoom网络研讨会"
           open_in_zoom: "在 Zoom 中打开"
           load_error: "您已离开网络研讨会，或者我们无法在此页面加载 Zoom。"
           too_early: "您可以在临近活动开始时间加入网络研讨会"
@@ -46,7 +47,9 @@ zh_CN:
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
       invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
+        all_events: "Discourse 事件 - 所有事件"
         all_events_description: "所有论坛事件"
+        my_events: "Discourse 事件 - 我的事件"
         my_events_description: "您将要参加或感兴趣的事件"
       on_holiday: "休假"
       disable_holiday: "禁用"
@@ -454,6 +457,7 @@ zh_CN:
         name_placeholder: "活动名称"
         end_date_placeholder: "结束日期"
         location_or_url_placeholder: "添加位置或网址"
+        location_placeholder: "添加位置"
         url_placeholder: "添加 URL"
         max_attendees_placeholder: "参与人数不限"
         max_attendees_display:
