@@ -78,15 +78,6 @@ after_mold_fork do |server, mold|
     end
   end
 
-  if Rails.env.production?
-    ENV[DiscourseVips::WorkerProcess::SOCKET_PATH_ENV] = File.join(
-      discourse_path,
-      "tmp",
-      "discourse-vips-worker",
-      "socket",
-    )
-  end
-
   Discourse.redis.close
   Discourse.before_fork
 end
@@ -111,10 +102,8 @@ end
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
-  if Rails.env.production?
-    require "demon/discourse_vips"
-    Demon::DiscourseVips.start(logger: server.logger)
-  end
+  require "demon/discourse_vips"
+  Demon::DiscourseVips.start(logger: server.logger)
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -172,7 +161,7 @@ before_service_worker_ready do |server, service_worker|
           Demon::Sidekiq.rss_memory_check
         end
 
-        Demon::DiscourseVips.ensure_running if Rails.env.production?
+        Demon::DiscourseVips.ensure_running
 
         DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
       rescue => e
@@ -182,10 +171,6 @@ before_service_worker_ready do |server, service_worker|
       end
     end
   end
-end
-
-before_service_worker_exit do |_server, _service_worker|
-  Demon::DiscourseVips.stop if Rails.env.production?
 end
 
 after_worker_timeout do |server, worker, timeout_info|

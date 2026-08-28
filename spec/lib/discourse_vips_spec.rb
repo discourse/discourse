@@ -43,20 +43,18 @@ RSpec.describe DiscourseVips do
     end
   end
 
-  describe ".dominant_color" do
-    it "records image-processing instrumentation" do
-      SiteSetting.instrument_image_processing = true
-      input_path = file_from_fixtures("cropped.png").path
+  it "records image-processing instrumentation" do
+    SiteSetting.instrument_image_processing = true
+    input_path = file_from_fixtures("cropped.png").path
 
-      events =
-        DiscourseEvent.track_events(:image_processing_finished) do
-          described_class.dominant_color(input_path:, timeout: 5)
-        end
+    events =
+      DiscourseEvent.track_events(:image_processing_finished) do
+        described_class.dominant_color(input_path:, timeout: 5)
+      end
 
-      expect(events.first[:params].first.except(:duration_seconds)).to eq(
-        operation: "upload_dominant_color",
-        success: true,
-      )
-    end
+    expect(events.first[:params].first.except(:duration_seconds)).to eq(
+      operation: "upload_dominant_color",
+      success: true,
+    )
   end
 end

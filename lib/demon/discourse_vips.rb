@@ -20,7 +20,7 @@ class Demon::DiscourseVips < Demon::Base
     @worker_process&.discard
     @worker_process =
       ::DiscourseVips::WorkerProcess.new(
-        socket_path: ENV.fetch(::DiscourseVips::WorkerProcess::SOCKET_PATH_ENV),
+        socket_path: ::DiscourseVips::WorkerProcess.shared_socket_path,
       )
     @pid = @worker_process.pid
     write_pid_file

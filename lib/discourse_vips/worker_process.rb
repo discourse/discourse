@@ -13,12 +13,14 @@ module DiscourseVips
   end
 
   class WorkerProcess
-    SOCKET_PATH_ENV = "DISCOURSE_VIPS_WORKER_SOCKET_PATH"
-
     WORKER_GRACE_SECONDS = 2
     private_constant :WORKER_GRACE_SECONDS
 
     attr_reader :pid, :socket_path
+
+    def self.shared_socket_path
+      Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
+    end
 
     def initialize(socket_path: nil)
       @state_mutex = Mutex.new

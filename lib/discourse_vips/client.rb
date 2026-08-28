@@ -38,9 +38,20 @@ module DiscourseVips
     end
 
     def self.send_command(request, timeout:)
-      shared_socket_path = ENV[WorkerProcess::SOCKET_PATH_ENV].presence
-      socket_path = shared_socket_path || worker_process.socket_path
-      socket = connect(socket_path, wait: shared_socket_path.present?)
+      shared_socket_path = WorkerProcess.shared_socket_path
+      shared_worker_running = File.socket?(shared_socket_path)
+      if shared_worker_running
+        begin
+          socket = UNIXSocket.new(shared_socket_path)
+        rescue Errno::ECONNREFUSED, Errno::ENOENT
+          shared_worker_running = false
+        end
+      end
+      if shared_worker_running
+        reset_worker_process
+      else
+        socket = UNIXSocket.new(worker_process.socket_path)
+      end
       socket.write(MessagePack.pack(request))
       socket.close_write
 
@@ -53,29 +64,16 @@ module DiscourseVips
 
       MessagePack.unpack(payload)
     rescue WorkerUnavailable
-      reset_worker_process if !shared_socket_path
+      reset_worker_process if !shared_worker_running
       raise
     rescue MessagePack::UnpackError, IOError, SystemCallError => error
-      reset_worker_process if !shared_socket_path
+      reset_worker_process if !shared_worker_running
 
       raise WorkerUnavailable, "libvips worker request failed: #{error.message}"
     ensure
       socket&.close unless socket&.closed?
     end
     private_class_method :send_command
-
-    def self.connect(socket_path, wait:)
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + WORKER_GRACE_SECONDS
-
-      loop do
-        return UNIXSocket.new(socket_path)
-      rescue Errno::ECONNREFUSED, Errno::ENOENT
-        raise if !wait || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-
-        sleep 0.01
-      end
-    end
-    private_class_method :connect
 
     def self.worker_process
       reset_after_fork if @owner_pid != Process.pid
