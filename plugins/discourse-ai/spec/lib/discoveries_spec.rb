@@ -11,9 +11,9 @@ describe DiscourseAi::Discoveries do
 
   before do
     enable_current_plugin
-    SiteSetting.ai_discover_enabled = true
-    SiteSetting.ai_discover_agent = ai_agent.id
-    SiteSetting.ai_discover_allowed_groups = allowed_group.id.to_s
+    SiteSetting.ai_ask_ai_enabled = true
+    SiteSetting.ai_ask_ai_agent = ai_agent.id
+    SiteSetting.ai_ask_ai_allowed_groups = allowed_group.id.to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
     allowed_group.add(user)
@@ -21,21 +21,20 @@ describe DiscourseAi::Discoveries do
   end
 
   describe ".enabled_for_user?" do
-    it "allows a user who satisfies the site, agent, model, retrieval, and user-option policies" do
+    it "allows a user who satisfies the site, agent, model, and retrieval policies" do
       expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
-    it "checks the site allowed-groups policy independently of the user option" do
-      SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
-      user.user_option.update!(ai_search_discoveries: true)
+    it "checks the site allowed-groups policy" do
+      SiteSetting.ai_ask_ai_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
 
       expect(described_class.enabled_for_user?(user)).to eq(false)
     end
 
-    it "rejects a user who disabled Discoveries" do
+    it "does not use the deprecated Discoveries preference" do
       user.user_option.update!(ai_search_discoveries: false)
 
-      expect(described_class.enabled_for_user?(user)).to eq(false)
+      expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
     it "requires the configured agent to be enabled" do
@@ -45,7 +44,7 @@ describe DiscourseAi::Discoveries do
     end
 
     it "does not require the optional query rewrite agent" do
-      SiteSetting.ai_discover_query_rewrite_agent = 99_999
+      SiteSetting.ai_ask_ai_query_rewriter_agent = 99_999
 
       expect(described_class.enabled_for_user?(user)).to eq(true)
     end
@@ -58,9 +57,9 @@ describe DiscourseAi::Discoveries do
   end
 
   describe ".result_settings" do
-    it "returns the configured Discoveries presentation settings" do
-      SiteSetting.ai_discover_summary_detail = "detailed"
-      SiteSetting.ai_discover_related_count = 5
+    it "returns the configured Ask AI presentation settings" do
+      SiteSetting.ai_ask_ai_summary_detail = "detailed"
+      SiteSetting.ai_ask_ai_related_count = 5
 
       expect(described_class.result_settings).to eq(summary_detail: :detailed, related_count: 5)
     end

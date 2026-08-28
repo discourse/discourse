@@ -45,13 +45,13 @@ module DiscourseAi
 
     class << self
       def enabled_for_user?(user)
-        eligible_for_user?(user) && user.user_option&.ai_search_discoveries != false
+        eligible_for_user?(user)
       end
 
       def eligible_for_user?(user)
         return false if user.nil?
-        return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_discover_enabled
-        return false if !user.in_any_groups?(SiteSetting.ai_discover_allowed_groups_map)
+        return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_ask_ai_enabled
+        return false if !user.in_any_groups?(SiteSetting.ai_ask_ai_allowed_groups_map)
         return false if Guardian.new(user).is_silenced?
         return false if !retrieval_configured?
 
@@ -105,8 +105,8 @@ module DiscourseAi
 
       def result_settings
         {
-          summary_detail: SiteSetting.ai_discover_summary_detail.to_sym,
-          related_count: SiteSetting.ai_discover_related_count,
+          summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
+          related_count: SiteSetting.ai_ask_ai_related_count,
         }
       end
 
@@ -219,7 +219,7 @@ module DiscourseAi
       private
 
       def discover_agent
-        AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
+        AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)
       end
 
       def request_key(user_id, request_id)

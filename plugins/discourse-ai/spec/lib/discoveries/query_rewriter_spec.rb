@@ -71,7 +71,7 @@ describe DiscourseAi::Discoveries::QueryRewriter do
       semantic_query: "how to remove a bot account with administrator permissions",
       original_query_locale: "zh_CN",
     )
-    expect(feature_name).to eq("discover_query_rewrite")
+    expect(feature_name).to eq("ask_ai_query_rewriter")
   end
 
   it "falls back to the original query when the agent returns unusable values" do

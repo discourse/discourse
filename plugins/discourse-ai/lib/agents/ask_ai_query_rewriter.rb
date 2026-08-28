@@ -2,7 +2,7 @@
 
 module DiscourseAi
   module Agents
-    class DiscoverQueryRewriter < Agent
+    class AskAiQueryRewriter < Agent
       def thinking_effort
         "none"
       end

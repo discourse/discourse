@@ -195,11 +195,11 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get showAnswerTitle() {
-    return this.siteSettings.ai_discover_summary_detail !== "quiet";
+    return this.siteSettings.ai_ask_ai_summary_detail !== "quiet";
   }
 
   get relatedCount() {
-    return this.siteSettings.ai_discover_related_count;
+    return this.siteSettings.ai_ask_ai_related_count;
   }
 
   get visibleSources() {
@@ -238,8 +238,7 @@ export default class AiSearchDiscoveries extends Component {
 
     const followUpAgent = agents.find(
       (agent) =>
-        agent.id ===
-        parseInt(this.siteSettings?.ai_discover_follow_up_agent, 10)
+        agent.id === parseInt(this.siteSettings?.ai_ask_ai_follow_up_agent, 10)
     );
     const hasEnabledLlmBot = this.currentUser.ai_enabled_chat_bots?.some(
       (bot) => !bot.is_agent && bot.username

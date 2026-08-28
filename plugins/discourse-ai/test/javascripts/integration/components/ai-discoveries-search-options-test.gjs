@@ -23,13 +23,14 @@ module(
         "service:discobot-discoveries",
         class extends Service {
           @tracked lastQuery = "";
-          @tracked mode = "ask";
+          @tracked searchMode = "ask";
 
-          setMode(mode) {
-            this.mode = mode;
+          selectSearchMode(mode) {
+            this.searchMode = mode;
           }
 
           triggerDiscovery(query) {
+            this.searchMode = "ask";
             this.lastQuery = query;
             testContext.triggeredQueries.push(query);
           }
@@ -78,13 +79,23 @@ module(
         .exists("and asking sits beside it");
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
-        .doesNotHaveClass(
-          "is-active",
-          "nothing is marked before an option has produced anything"
+        .hasClass("is-active", "Ask AI is the first-use default");
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .doesNotHaveAttribute(
+          "title",
+          "Search does not claim Enter while Ask AI is selected"
         );
+      assert.dom(".ai-discoveries-search-options__option.--ask").hasAttribute(
+        "title",
+        i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
+          shortcut: i18n("shortcut_modifier_key.enter"),
+        }),
+        "the selected mode owns Enter"
+      );
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .exists("advanced search stands apart from which option is in effect");
+        .doesNotExist("advanced search waits until Search is selected");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .hasText(
@@ -191,7 +202,7 @@ module(
     });
 
     test("marks whichever option is in effect", async function (assert) {
-      this.owner.lookup("service:discobot-discoveries").setMode("search");
+      this.owner.lookup("service:discobot-discoveries").searchMode = "search";
 
       await render(
         <template>
@@ -238,7 +249,7 @@ module(
         .doesNotHaveClass("is-active", "and the other option steps back");
       assert
         .dom(".ai-discoveries-search-options__option.--advanced")
-        .exists("advanced search is still offered while asking AI");
+        .doesNotExist("advanced search is hidden while asking AI");
     });
 
     test("a user page offers that user's posts", async function (assert) {
@@ -697,6 +708,8 @@ module(
     });
 
     test("the options that have a shortcut say so", async function (assert) {
+      this.owner.lookup("service:discobot-discoveries").searchMode = "search";
+
       await render(
         <template>
           <AiDiscoveriesSearchOptions

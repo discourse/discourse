@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Agents::DiscoverQueryRewriter do
+describe DiscourseAi::Agents::AskAiQueryRewriter do
   subject(:agent) { described_class.new }
 
   it "prepares separate PostgreSQL and semantic search queries without changing intent" do
     expect(DiscourseAi::Agents::Agent.system_agents.fetch(described_class)).to eq(-40)
-    expect(SiteSetting.ai_discover_query_rewrite_agent).to eq("-40")
+    expect(SiteSetting.ai_ask_ai_query_rewriter_agent).to eq("-40")
     expect(agent.response_format).to eq(
       [
         { "key" => "keyword_query", "type" => "string" },

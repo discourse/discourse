@@ -5,6 +5,7 @@ import {
   fillIn,
   find,
   settled,
+  triggerKeyEvent,
   visit,
   waitFor,
   waitUntil,
@@ -21,17 +22,13 @@ import { i18n } from "discourse-i18n";
 
 acceptance("AI Discoveries - welcome search", function (needs) {
   needs.user({
-    can_use_ai_discover_agent: true,
-    user_option: {
-      ai_search_discoveries: true,
-    },
+    can_use_ask_ai: true,
   });
 
   needs.settings({
     discourse_ai_enabled: true,
-    ai_discover_enabled: true,
-    ai_discover_agent: -34,
-    ai_discover_default_mode: "ask",
+    ai_ask_ai_enabled: true,
+    ai_ask_ai_agent: -41,
   });
 
   test("the placeholder offers both ways to resolve a term", async function (assert) {
@@ -51,17 +48,13 @@ acceptance("AI Discoveries - header search", function (needs) {
   let submittedRequestId;
 
   needs.user({
-    can_use_ai_discover_agent: true,
-    user_option: {
-      ai_search_discoveries: true,
-    },
+    can_use_ask_ai: true,
   });
 
   needs.settings({
     discourse_ai_enabled: true,
-    ai_discover_enabled: true,
-    ai_discover_agent: -34,
-    ai_discover_default_mode: "ask",
+    ai_ask_ai_enabled: true,
+    ai_ask_ai_agent: -41,
     enable_welcome_banner: false,
   });
 
@@ -176,13 +169,10 @@ acceptance("AI Discoveries - header search", function (needs) {
       .exists("and asking sits beside it");
     assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .doesNotHaveClass(
-        "is-active",
-        "nothing is marked until an option has produced something"
-      );
+      .hasClass("is-active", "Ask AI is the first-use default");
     assert
       .dom(".ai-discoveries-search-options__option.--advanced")
-      .exists("advanced search is offered alongside them");
+      .doesNotExist("advanced search belongs to the indexed search mode");
     assert
       .dom(".search-input .show-advanced-search")
       .doesNotExist("and not in the input any more");
@@ -325,10 +315,7 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     assert
       .dom(".ai-discoveries-search-options__option.--search")
-      .doesNotHaveClass(
-        "is-active",
-        "a new term has produced nothing yet, so nothing is marked"
-      );
+      .hasClass("is-active", "the recent search also selects Search mode");
   });
 
   test("scoping to a topic leaves the input alone", async function (assert) {
@@ -397,10 +384,25 @@ acceptance("AI Discoveries - header search", function (needs) {
       );
   });
 
-  test("enter searches, shift+enter asks", async function (assert) {
+  test("enter uses the selected mode", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
+
+    find("#icon-search-input").dispatchEvent(
+      new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+
+    assert.strictEqual(
+      discoveryRequests,
+      1,
+      "enter asks when Ask AI is selected"
+    );
+
+    await click(".ai-discoveries-search-options__option.--search");
+    await fillIn("#icon-search-input", "themes");
 
     find("#icon-search-input").dispatchEvent(
       new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
@@ -409,21 +411,12 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     assert.strictEqual(
       discoveryRequests,
-      0,
-      "enter runs the indexed search, whatever was picked before"
+      1,
+      "enter searches when Search is selected"
     );
-
-    find("#icon-search-input").dispatchEvent(
-      new KeyboardEvent("keyup", {
-        key: "Enter",
-        shiftKey: true,
-        bubbles: true,
-      })
-    );
-    await waitFor(".ai-discobot-discoveries");
-    await waitUntil(() => submittedRequestId);
-
-    assert.strictEqual(discoveryRequests, 1, "shift+enter asks instead");
+    assert
+      .dom(".ai-discoveries-search-options__option.--search")
+      .hasClass("is-active");
 
     await publishToMessageBus("/discourse-ai/discoveries", {
       request_id: submittedRequestId,
@@ -456,11 +449,13 @@ acceptance("AI Discoveries - header search", function (needs) {
       done: true,
     });
 
-    await click(".ai-discoveries-search-options__option.--advanced");
+    await triggerKeyEvent("#icon-search-input", "keydown", "Enter", {
+      metaKey: true,
+    });
 
     assert.strictEqual(
       currentURL(),
-      "/search?expanded=true&q=dev&search_type=ai_discoveries",
+      "/search?q=dev&search_type=ai_discoveries",
       "the full page opens on the type that produced what was showing"
     );
   });
@@ -469,6 +464,7 @@ acceptance("AI Discoveries - header search", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
+    await click(".ai-discoveries-search-options__option.--search");
 
     find("#icon-search-input").dispatchEvent(
       new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
@@ -525,10 +521,7 @@ acceptance("AI Discoveries - header search", function (needs) {
       .doesNotExist("retyping the same term does not bring it back");
     assert
       .dom(".ai-discoveries-search-options__option.--ask")
-      .doesNotHaveClass(
-        "is-active",
-        "and the option that produced it is no longer marked"
-      );
+      .hasClass("is-active", "the saved mode remains selected");
     assert.strictEqual(
       discoveryRequests,
       1,
@@ -542,14 +535,13 @@ acceptance("AI Discoveries - full page search", function (needs) {
   let submittedRequestId;
 
   needs.user({
-    can_use_ai_discover_agent: true,
-    user_option: { ai_search_discoveries: true },
+    can_use_ask_ai: true,
   });
 
   needs.settings({
     discourse_ai_enabled: true,
-    ai_discover_enabled: true,
-    ai_discover_agent: -34,
+    ai_ask_ai_enabled: true,
+    ai_ask_ai_agent: -41,
   });
 
   needs.pretender((server, helper) => {
@@ -664,11 +656,11 @@ acceptance("AI Discoveries - full page search", function (needs) {
   });
 });
 
-acceptance("AI Discoveries - user disabled", function (needs) {
+acceptance("Ask AI - deprecated user preference", function (needs) {
   let discoveryRequests;
 
   needs.user({
-    can_use_ai_discover_agent: true,
+    can_use_ask_ai: true,
     user_option: {
       ai_search_discoveries: false,
     },
@@ -676,11 +668,15 @@ acceptance("AI Discoveries - user disabled", function (needs) {
 
   needs.settings({
     discourse_ai_enabled: true,
-    ai_discover_enabled: true,
-    ai_discover_agent: -34,
+    ai_ask_ai_enabled: true,
+    ai_ask_ai_agent: -41,
   });
 
   needs.pretender((server, helper) => {
+    server.get("/discourse-ai/credits/status", () => helper.response({}));
+    server.get("/discourse-ai/discoveries/recent", () =>
+      helper.response({ recent_asks: [] })
+    );
     server.post("/discourse-ai/discoveries/reply", () => {
       discoveryRequests += 1;
       return helper.response({ request_id: "unused" });
@@ -689,17 +685,78 @@ acceptance("AI Discoveries - user disabled", function (needs) {
 
   needs.hooks.beforeEach(() => (discoveryRequests = 0));
 
-  test("does not offer asking from the welcome search", async function (assert) {
+  test("does not let the old preference disable Ask AI", async function (assert) {
     await visit("/");
     await fillIn("#welcome-banner-search-input", "miyazaki");
 
     assert
       .dom(".ai-discoveries-search-options")
-      .doesNotExist("the options stay hidden");
+      .exists("Ask AI remains available");
+
+    await click(".ai-discoveries-search-options__option.--ask");
+
     assert.strictEqual(
       discoveryRequests,
-      0,
-      "the disabled user option prevents a Discoveries request"
+      1,
+      "the old Discoveries preference does not prevent an Ask AI request"
     );
+  });
+});
+
+acceptance("Deprecated Discoveries", function (needs) {
+  let discoveryRequests;
+
+  needs.user({
+    can_use_ai_discover_agent: true,
+    can_use_ask_ai: false,
+    user_option: { ai_search_discoveries: true },
+  });
+
+  needs.settings({
+    discourse_ai_enabled: true,
+    ai_discover_enabled: true,
+    ai_discover_agent: -34,
+    ai_ask_ai_enabled: false,
+    enable_welcome_banner: false,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/discourse-ai/credits/status", () => helper.response({}));
+    server.get("/search/query", () =>
+      helper.response(searchFixtures["search/query"])
+    );
+    server.post("/discourse-ai/discoveries/reply", () => {
+      discoveryRequests += 1;
+      return helper.response({});
+    });
+  });
+
+  needs.hooks.beforeEach(() => (discoveryRequests = 0));
+
+  test("keeps the original Discover search behavior", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "miyazaki");
+
+    assert
+      .dom(".ai-discoveries-search-options")
+      .doesNotExist("Ask AI options are not added to deprecated Discoveries");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+    await waitUntil(() => discoveryRequests === 1);
+    await waitFor(".ai-search-discoveries");
+
+    const legacyDiscoveries = getOwner(this).lookup(
+      "service:legacy-discobot-discoveries"
+    );
+    legacyDiscoveries.onDiscoveryUpdate({
+      query: "miyazaki",
+      model_used: "Test model",
+      ai_discover_reply: "Legacy answer",
+      done: true,
+    });
+
+    assert.strictEqual(legacyDiscoveries.discovery, "Legacy answer");
+    assert.strictEqual(legacyDiscoveries.modelUsed, "Test model");
   });
 });

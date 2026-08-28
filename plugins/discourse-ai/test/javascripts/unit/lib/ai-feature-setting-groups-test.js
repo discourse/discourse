@@ -77,16 +77,17 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     );
     assert.deepEqual(groups[0].settings, [
       "ai_discover_enabled",
-      "ai_discover_default_mode",
-      "ai_discover_summary_detail",
-      "ai_discover_related_count",
+      "ai_ask_ai_enabled",
+      "ai_ask_ai_summary_detail",
+      "ai_ask_ai_related_count",
     ]);
     assert.deepEqual(groups[1].settings, [
       "ai_discover_agent",
-      "ai_discover_query_rewrite_agent",
-      "ai_discover_follow_up_agent",
+      "ai_ask_ai_agent",
+      "ai_ask_ai_query_rewriter_agent",
+      "ai_ask_ai_follow_up_agent",
     ]);
-    assert.deepEqual(groups[2].settings, ["ai_discover_allowed_groups"]);
+    assert.deepEqual(groups[2].settings, ["ai_ask_ai_allowed_groups"]);
   });
 
   test("returns correct groups for translation", function (assert) {

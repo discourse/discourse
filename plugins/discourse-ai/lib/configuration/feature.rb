@@ -33,7 +33,15 @@ module DiscourseAi
               "ai_discover_agent",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
-              agent_ids_lookup: -> { lookup_discoveries_agent_ids },
+              enabled_by_setting: "ai_discover_enabled",
+            ),
+            new(
+              "ask_ai",
+              "ai_ask_ai_agent",
+              DiscourseAi::Configuration::Module::SEARCH_ID,
+              DiscourseAi::Configuration::Module::SEARCH,
+              enabled_by_setting: "ai_ask_ai_enabled",
+              agent_ids_lookup: -> { lookup_ask_ai_agent_ids },
             ),
           ]
         end
@@ -203,11 +211,11 @@ module DiscourseAi
             .pluck(:id)
         end
 
-        def lookup_discoveries_agent_ids
+        def lookup_ask_ai_agent_ids
           [
-            SiteSetting.ai_discover_agent,
-            SiteSetting.ai_discover_query_rewrite_agent,
-            SiteSetting.ai_discover_follow_up_agent,
+            SiteSetting.ai_ask_ai_agent,
+            SiteSetting.ai_ask_ai_query_rewriter_agent,
+            SiteSetting.ai_ask_ai_follow_up_agent,
           ].map(&:to_i).reject(&:zero?).uniq
         end
 

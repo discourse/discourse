@@ -194,13 +194,30 @@ describe DiscourseAi::AiBot::EntryPoint do
       agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
       SiteSetting.ai_discover_enabled = true
       SiteSetting.ai_discover_agent = agent.id
-      SiteSetting.ai_discover_allowed_groups = group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
       user.user_option.update!(ai_search_discoveries: true)
       serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
       serializer = serializer.as_json
       expect(serializer[:current_user][:user_option]).to include(ai_search_discoveries: true)
+    end
+
+    it "allows Ask AI independently of the deprecated Discoveries preference" do
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      llm_model = Fabricate(:llm_model)
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      SiteSetting.ai_ask_ai_enabled = true
+      SiteSetting.ai_ask_ai_agent = agent.id
+      SiteSetting.ai_ask_ai_allowed_groups = group.id.to_s
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_semantic_search_enabled = true
+      user.user_option.update!(ai_search_discoveries: false)
+
+      serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user)).as_json
+
+      expect(serializer[:current_user]).to include(can_use_ask_ai: true)
     end
   end
 end

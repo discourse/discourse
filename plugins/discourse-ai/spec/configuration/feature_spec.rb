@@ -231,16 +231,28 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
     fab!(:query_rewrite_agent, :ai_agent)
 
-    it "includes the discovery, query rewrite, and follow-up agents" do
+    it "keeps Discoveries separate from Ask AI" do
       SiteSetting.ai_discover_agent = ai_agent.id
-      SiteSetting.ai_discover_query_rewrite_agent = query_rewrite_agent.id
-      SiteSetting.ai_discover_follow_up_agent = follow_up_agent.id
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_query_rewriter_agent = query_rewrite_agent.id
+      SiteSetting.ai_ask_ai_follow_up_agent = follow_up_agent.id
 
-      expect(described_class.search_features.first.agent_ids).to contain_exactly(
+      discoveries, ask_ai = described_class.search_features
+
+      expect(discoveries.name).to eq("discoveries")
+      expect(discoveries.agent_ids).to eq([ai_agent.id])
+      expect(ask_ai.name).to eq("ask_ai")
+      expect(ask_ai.agent_ids).to contain_exactly(
         ai_agent.id,
         query_rewrite_agent.id,
         follow_up_agent.id,
       )
+
+      SiteSetting.ai_discover_enabled = false
+      SiteSetting.ai_ask_ai_enabled = true
+
+      expect(discoveries).not_to be_enabled
+      expect(ask_ai).to be_enabled
     end
   end
 

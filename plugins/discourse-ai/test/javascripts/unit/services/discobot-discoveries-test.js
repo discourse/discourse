@@ -8,19 +8,45 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 module("Unit | Service | discobot-discoveries", function (hooks) {
   setupTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.owner.unregister("service:current-user");
+    this.owner.register(
+      "service:current-user",
+      { id: 42 },
+      {
+        instantiate: false,
+      }
+    );
+    this.keyValueStore = this.owner.lookup("service:key-value-store");
+    this.keyValueStore.remove("ask-ai-search-mode-42");
+  });
+
   hooks.afterEach(function () {
     const service = getOwner(this).lookup("service:discobot-discoveries");
     cancel(service.discoveryTimeout);
+    this.keyValueStore.remove("ask-ai-search-mode-42");
   });
 
-  test("uses the configured default mode and allows local mode changes", function (assert) {
-    const siteSettings = getOwner(this).lookup("service:site-settings");
-    siteSettings.ai_discover_default_mode = "search";
+  test("defaults to Ask AI and saves an explicit search choice", function (assert) {
     const service = getOwner(this).lookup("service:discobot-discoveries");
 
-    assert.strictEqual(service.mode, "search");
-    service.setMode("ask");
-    assert.strictEqual(service.mode, "ask");
+    assert.strictEqual(service.searchMode, "ask");
+
+    service.selectSearchMode("search");
+
+    assert.strictEqual(service.searchMode, "search");
+    assert.strictEqual(
+      this.keyValueStore.get("ask-ai-search-mode-42"),
+      "search"
+    );
+  });
+
+  test("loads the user's saved search choice", function (assert) {
+    this.keyValueStore.setItem("ask-ai-search-mode-42", "search");
+
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+
+    assert.strictEqual(service.searchMode, "search");
   });
 
   test("does not send duplicate requests for the same successful query", async function (assert) {

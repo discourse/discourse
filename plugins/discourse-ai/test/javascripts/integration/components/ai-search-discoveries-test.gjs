@@ -23,9 +23,9 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.ai_discover_enabled = true;
-    this.siteSettings.ai_discover_summary_detail = "balanced";
-    this.siteSettings.ai_discover_related_count = 2;
-    this.currentUser.can_use_ai_discover_agent = true;
+    this.siteSettings.ai_ask_ai_summary_detail = "balanced";
+    this.siteSettings.ai_ask_ai_related_count = 2;
+    this.currentUser.can_use_ask_ai = true;
 
     this.closeSearchMenuCalled = false;
     this.closeSearchMenu = () => {
@@ -70,7 +70,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   });
 
   test("hides the structured answer title in Quiet mode", async function (assert) {
-    this.siteSettings.ai_discover_summary_detail = "quiet";
+    this.siteSettings.ai_ask_ai_summary_detail = "quiet";
     this.owner.register(
       "service:discobot-discoveries",
       class extends Service {
@@ -156,7 +156,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
+    this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",
@@ -211,7 +211,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
+    this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",
@@ -344,7 +344,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   });
 
   test("shows the requested discussions and links to all matching topics", async function (assert) {
-    this.siteSettings.ai_discover_related_count = 3;
+    this.siteSettings.ai_ask_ai_related_count = 3;
     const sources = [
       {
         title: "Recurring ideas across Hayao Miyazaki’s films",
@@ -742,7 +742,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
+    this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",
@@ -804,7 +804,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       { id: -1200, username: "ai_bot", llm_model_id: 1 },
     ];
     this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
+    this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",
@@ -851,7 +851,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     ];
     this.siteSettings.ai_bot_enabled = true;
     this.siteSettings.ai_discover_agent = "-34";
-    this.siteSettings.ai_discover_follow_up_agent = "-1";
+    this.siteSettings.ai_ask_ai_follow_up_agent = "-1";
 
     this.owner.register(
       "service:discobot-discoveries",

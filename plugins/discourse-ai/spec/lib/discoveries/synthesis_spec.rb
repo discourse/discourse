@@ -24,7 +24,7 @@ describe DiscourseAi::Discoveries::Synthesis do
   before { enable_current_plugin }
 
   it "uses one tool-free structured call to select sources and stream an answer" do
-    SiteSetting.ai_discover_related_count = 4
+    SiteSetting.ai_ask_ai_related_count = 4
     feature_name = nil
     allow(DiscourseAi::Agents::BotContext).to receive(:new).and_wrap_original do |original, **args|
       feature_name = args[:feature_name]
@@ -152,7 +152,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       title: "Create a Discourse plugin",
       answer: "Use the plugin skeleton.",
     )
-    expect(feature_name).to eq("discover")
+    expect(feature_name).to eq("ask_ai")
   end
 
   it "keeps the fixed response contract for quiet summaries" do

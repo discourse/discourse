@@ -52,7 +52,7 @@ module DiscourseAi
               },
             ],
             skip_show_thinking: true,
-            feature_name: "discover",
+            feature_name: "ask_ai",
             cancel_manager: @cancel_manager,
           )
         bot =

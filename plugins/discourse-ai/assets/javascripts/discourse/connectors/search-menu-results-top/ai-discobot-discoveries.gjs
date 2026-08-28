@@ -10,10 +10,9 @@ export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
       ["header", "welcome-banner"].includes(args?.location) &&
-      siteSettings.ai_discover_enabled &&
-      siteSettings.ai_discover_agent &&
-      currentUser?.can_use_ai_discover_agent &&
-      currentUser?.user_option?.ai_search_discoveries
+      siteSettings.ai_ask_ai_enabled &&
+      siteSettings.ai_ask_ai_agent &&
+      currentUser?.can_use_ask_ai
     );
   }
 
@@ -31,7 +30,7 @@ export default class AiDiscobotDiscoveries extends Component {
   async _checkCredits() {
     try {
       this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("discoveries");
+        await this.aiCredits.isFeatureCreditAvailable("ask_ai");
     } catch {
       this.creditsAvailable = true;
     }

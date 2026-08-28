@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Configuration::DiscoveriesSummaryDetailEnumerator do
+describe DiscourseAi::Configuration::AskAiSummaryDetailEnumerator do
   describe ".values" do
     it "provides translated labels for the supported detail levels" do
       expect(described_class.values).to eq(
         [
-          { name: "admin.site_settings.ai_discover_summary_detail.quiet", value: "quiet" },
-          { name: "admin.site_settings.ai_discover_summary_detail.balanced", value: "balanced" },
-          { name: "admin.site_settings.ai_discover_summary_detail.detailed", value: "detailed" },
+          { name: "admin.site_settings.ai_ask_ai_summary_detail.quiet", value: "quiet" },
+          { name: "admin.site_settings.ai_ask_ai_summary_detail.balanced", value: "balanced" },
+          { name: "admin.site_settings.ai_ask_ai_summary_detail.detailed", value: "detailed" },
         ],
       )
       expect(described_class.translate_names?).to eq(true)

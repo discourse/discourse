@@ -11,10 +11,9 @@ module(
     // keeps the component from being constructed at all — so neither its credit
     // check nor a discovery request is sent for a user who cannot ask.
     test("renders for a user who can ask", function (assert) {
-      this.siteSettings.ai_discover_enabled = true;
-      this.siteSettings.ai_discover_agent = "-34";
-      this.currentUser.can_use_ai_discover_agent = true;
-      this.currentUser.user_option.ai_search_discoveries = true;
+      this.siteSettings.ai_ask_ai_enabled = true;
+      this.siteSettings.ai_ask_ai_agent = "-41";
+      this.currentUser.can_use_ask_ai = true;
 
       assert.true(
         AiFullPageDiscobotDiscoveries.shouldRender(
@@ -26,12 +25,12 @@ module(
 
       this.currentUser.user_option.ai_search_discoveries = false;
 
-      assert.false(
+      assert.true(
         AiFullPageDiscobotDiscoveries.shouldRender(
           {},
           { siteSettings: this.siteSettings, currentUser: this.currentUser }
         ),
-        "and stays out entirely for a user who turned it off"
+        "the deprecated Discoveries preference does not disable Ask AI"
       );
     });
   }

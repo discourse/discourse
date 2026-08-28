@@ -41,10 +41,10 @@ describe Jobs::StreamDiscoverReply do
 
   before do
     enable_current_plugin
-    SiteSetting.ai_discover_enabled = true
-    SiteSetting.ai_discover_agent = ai_agent.id
-    SiteSetting.ai_discover_query_rewrite_agent = query_rewrite_agent.id
-    SiteSetting.ai_discover_allowed_groups = group.id.to_s
+    SiteSetting.ai_ask_ai_enabled = true
+    SiteSetting.ai_ask_ai_agent = ai_agent.id
+    SiteSetting.ai_ask_ai_query_rewriter_agent = query_rewrite_agent.id
+    SiteSetting.ai_ask_ai_allowed_groups = group.id.to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
     group.add(user)
@@ -92,6 +92,27 @@ describe Jobs::StreamDiscoverReply do
         answer: "Use the plugin skeleton.",
       )
     end
+  end
+
+  it "keeps the deprecated Discover pipeline available" do
+    SiteSetting.ai_discover_enabled = true
+    SiteSetting.ai_discover_agent = ai_agent.id
+
+    messages =
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Legacy answer"]) do
+        MessageBus.track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:)
+        end
+      end
+
+    expect(messages.map(&:data)).to include(
+      include(
+        query:,
+        done: true,
+        model_used: llm_model.display_name,
+        ai_discover_reply: "Legacy answer",
+      ),
+    )
   end
 
   it "publishes searching, validated sources, streamed answer, and completion events" do
@@ -215,7 +236,7 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "uses the original query when the configured rewrite agent is unavailable" do
-    SiteSetting.ai_discover_query_rewrite_agent = 99_999
+    SiteSetting.ai_ask_ai_query_rewriter_agent = 99_999
 
     job.execute(user_id: user.id, query:, request_id:)
 
@@ -266,11 +287,11 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "uses the result settings captured when the search was submitted" do
-    SiteSetting.ai_discover_summary_detail = "quiet"
-    SiteSetting.ai_discover_related_count = 5
+    SiteSetting.ai_ask_ai_summary_detail = "quiet"
+    SiteSetting.ai_ask_ai_related_count = 5
     submitted_settings = DiscourseAi::Discoveries.result_settings
-    SiteSetting.ai_discover_summary_detail = "detailed"
-    SiteSetting.ai_discover_related_count = 2
+    SiteSetting.ai_ask_ai_summary_detail = "detailed"
+    SiteSetting.ai_ask_ai_related_count = 2
     allow(synthesis).to receive(
       :call,
     ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|

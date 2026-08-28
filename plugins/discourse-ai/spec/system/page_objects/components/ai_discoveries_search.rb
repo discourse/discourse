@@ -53,10 +53,6 @@ module PageObjects
         has_css?("#{ASK_OPTION_SELECTOR}.is-active")
       end
 
-      def has_no_selection?
-        has_no_css?("#{ROOT_SELECTOR} .ai-discoveries-search-options__option.is-active")
-      end
-
       def has_discovery?
         has_css?("#{ROOT_SELECTOR} .ai-discobot-discoveries")
       end

@@ -7,6 +7,11 @@ import { i18n } from "discourse-i18n";
 import SmoothStreamer from "../lib/smooth-streamer";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
+const ASK_MODE = "ask";
+const SEARCH_MODE = "search";
+const SEARCH_MODES = [ASK_MODE, SEARCH_MODE];
+
+export { ASK_MODE, SEARCH_MODE };
 
 function buildRequestId(cryptoProvider = globalThis.crypto) {
   if (cryptoProvider.randomUUID) {
@@ -29,13 +34,12 @@ export default class DiscobotDiscoveries extends Service {
   // Similar to discourse/discourse#25504
   @service a11y;
   @service currentUser;
-  @service siteSettings;
+  @service keyValueStore;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
   @tracked discoveryTimedOut = false;
   @tracked loadingDiscoveries = false;
-  @tracked mode = "ask";
   @tracked sources = [];
   @tracked candidateTopicIds = [];
   @tracked activeRequestId = "";
@@ -54,20 +58,34 @@ export default class DiscobotDiscoveries extends Service {
   );
   discoveryTimeout = null;
   #recentAsksLoaded = false;
-
-  constructor() {
-    super(...arguments);
-
-    this.mode =
-      this.siteSettings.ai_discover_default_mode === "search"
-        ? "search"
-        : "ask";
-  }
+  @tracked _searchMode = this.#loadSearchMode();
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.cancelDiscoveryTimeout();
     this.smoothStreamer.resetStreaming();
+  }
+
+  get searchMode() {
+    return this._searchMode;
+  }
+
+  #loadSearchMode() {
+    const savedMode = this.keyValueStore.get(this.searchModeStorageKey);
+    return SEARCH_MODES.includes(savedMode) ? savedMode : ASK_MODE;
+  }
+
+  get searchModeStorageKey() {
+    return `ask-ai-search-mode-${this.currentUser.id}`;
+  }
+
+  selectSearchMode(mode) {
+    if (!SEARCH_MODES.includes(mode)) {
+      return;
+    }
+
+    this._searchMode = mode;
+    this.keyValueStore.setItem(this.searchModeStorageKey, mode);
   }
 
   async onDiscoveryUpdate(update) {
@@ -207,21 +225,11 @@ export default class DiscobotDiscoveries extends Service {
     return this.smoothStreamer?.renderedText;
   }
 
-  setMode(mode) {
-    if (!["search", "ask"].includes(mode)) {
-      return;
-    }
-
-    this.mode = mode;
-  }
-
   @action
   async triggerDiscovery(query) {
-    if (this.currentUser?.user_option?.ai_search_discoveries === false) {
-      return;
-    }
-
     const normalizedQuery = query?.trim();
+
+    this.selectSearchMode(ASK_MODE);
 
     if (this.lastQuery === normalizedQuery) {
       return;

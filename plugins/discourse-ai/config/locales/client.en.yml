@@ -48,7 +48,7 @@ en:
   js:
     admin:
       site_settings:
-        ai_discover_summary_detail:
+        ai_ask_ai_summary_detail:
           quiet: "Quiet (one sentence, no heading)"
           balanced: "Balanced (one short paragraph)"
           detailed: "Detailed (two or three short paragraphs)"
@@ -353,7 +353,8 @@ en:
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
-          discoveries: "Ask AI"
+          discoveries: "Discover (deprecated)"
+          ask_ai: "Ask AI"
           setting_groups:
             settings: "Basic Settings"
             agents: "Agents"
@@ -1649,19 +1650,33 @@ en:
         no_answer: "AI couldn’t find a clear answer. Ask the community."
         create_topic: "Create topic"
         answer_ready: "Ask AI answer ready."
-        user_setting: "Enable Ask AI in search"
+        user_setting: "Enable AI search discoveries"
+        legacy:
+          main_title: "Discobot discoveries"
+          regular_results: "Topics"
+          tell_me_more: "Tell me more..."
+          continue_convo: "Continue conversation..."
+          loading_convo: "Loading conversation"
+          collapse: "Collapse"
+          timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+          tooltip:
+            header: "AI powered search"
+            content: "Natural language search powered by %{model}"
+            actions:
+              info: "How does it work?"
+              disable: "Disable"
         search_placeholder: "Search or Ask AI"
         search_type: "AI"
         ask_button: "Ask"
         tip_ask: "asks AI instead of searching"
         shortcut_hint: "or %{shortcut}"
         advanced_with_shortcut: "Open advanced search (%{shortcut})"
-        search_all_topics: "All posts"
+        search_all_topics: "All topics"
         search_this_topic: "This topic"
         search_in_context: "In %{name}"
         search_user_posts: "Posts by %{username}"
         search_messages: "Messages"
-        ask_ai: "AI"
+        ask_ai: "Ask AI"
         sources:
           related_discussions: "Related topics"
           show_all_matching: "Show all matching topics"

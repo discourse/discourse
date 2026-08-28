@@ -9,10 +9,9 @@ import { SEARCH_TYPE_ASK_AI } from "../../lib/full-page-search-types";
 export default class AiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
     return (
-      siteSettings.ai_discover_enabled &&
-      siteSettings.ai_discover_agent &&
-      currentUser?.can_use_ai_discover_agent &&
-      currentUser?.user_option?.ai_search_discoveries
+      siteSettings.ai_ask_ai_enabled &&
+      siteSettings.ai_ask_ai_agent &&
+      currentUser?.can_use_ask_ai
     );
   }
 
@@ -30,7 +29,7 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
   async #checkCredits() {
     try {
       this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("discoveries");
+        await this.aiCredits.isFeatureCreditAvailable("ask_ai");
     } catch {
       this.creditsAvailable = true;
     }

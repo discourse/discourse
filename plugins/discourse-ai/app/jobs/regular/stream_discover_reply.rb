@@ -9,6 +9,8 @@ module Jobs
     REQUEST_DEADLINE = 20.seconds
 
     def execute(args)
+      return execute_legacy(args) if args[:request_id].blank?
+
       return if (user = User.find_by(id: args[:user_id])).nil?
       return if (query = args[:query]).blank?
       return if !DiscourseAi::Discoveries.enabled_for_user?(user)
@@ -218,6 +220,69 @@ module Jobs
 
     private
 
+    def execute_legacy(args)
+      return if !SiteSetting.ai_discover_enabled
+      return if (user = User.find_by(id: args[:user_id])).nil?
+      return if (query = args[:query]).blank?
+
+      ai_agent_class =
+        AiAgent
+          .all_agents(enabled_only: false)
+          .find { |agent| agent.id == SiteSetting.ai_discover_agent.to_i }
+      return if ai_agent_class.nil? || !user.in_any_groups?(ai_agent_class.allowed_group_ids.to_a)
+
+      llm_model_id = ai_agent_class.default_llm_id || SiteSetting.ai_default_llm_model
+      return if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
+
+      bot =
+        DiscourseAi::Agents::Bot.as(
+          Discourse.system_user,
+          agent: ai_agent_class.new,
+          model: llm_model,
+        )
+      streamed_reply = +""
+      last_streamed_at = Time.now
+      base = { query:, model_used: llm_model.display_name }
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user:,
+          messages: [{ type: :user, content: query }],
+          skip_show_thinking: true,
+          feature_name: "discover",
+        )
+
+      bot.reply(context) do |partial|
+        streamed_reply << partial
+        if Time.now - last_streamed_at > STREAM_INTERVAL || Rails.env.test?
+          publish_update(user, base.merge(done: false, ai_discover_reply: streamed_reply))
+          last_streamed_at = Time.now
+        end
+      end
+
+      publish_update(user, base.merge(done: true, ai_discover_reply: streamed_reply))
+    rescue LlmCreditAllocation::CreditLimitExceeded => e
+      publish_legacy_error_update(user, e)
+    end
+
+    def publish_legacy_error_update(user, exception)
+      details = {}
+      if (allocation = exception.allocation)
+        details[:reset_time_relative] = allocation.relative_reset_time
+        details[:reset_time_absolute] = allocation.formatted_reset_time
+      end
+
+      publish_update(
+        user,
+        {
+          error: true,
+          error_type: "credit_limit_exceeded",
+          message: exception.message,
+          details:,
+          done: true,
+        },
+      )
+    end
+
     def request_result_settings(args)
       configured_settings = DiscourseAi::Discoveries.result_settings
       summary_detail = args[:summary_detail].to_s.to_sym
@@ -236,7 +301,7 @@ module Jobs
     end
 
     def configured_agent(user)
-      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
+      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)
       agent if agent && user.in_any_groups?(agent.allowed_group_ids.to_a)
     end
 
@@ -250,7 +315,7 @@ module Jobs
       return fallback if DiscourseAi::Discoveries.private_message_query?(query)
       return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)
 
-      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_query_rewrite_agent)
+      agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_query_rewriter_agent)
       return fallback if agent.nil? || !agent.enabled?
       return fallback if !user.in_any_groups?(agent.allowed_group_ids.to_a)
 

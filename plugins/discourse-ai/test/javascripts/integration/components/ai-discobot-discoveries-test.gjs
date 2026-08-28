@@ -30,7 +30,6 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
         @tracked sources = [];
         @tracked answerable = null;
 
-        mode = "ask";
         streamedText = "";
         discoveryTimedOut = false;
         showDiscoveryTitle = true;

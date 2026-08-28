@@ -236,8 +236,16 @@
     }
 
     &.is-active {
+      border-color: var(--tertiary);
       background: var(--d-selected);
       color: var(--d-selected-text-color);
+
+      &:hover,
+      &:focus-visible {
+        border-color: var(--tertiary);
+        background: var(--d-selected);
+        color: var(--d-selected-text-color);
+      }
     }
   }
 

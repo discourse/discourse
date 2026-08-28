@@ -12,6 +12,8 @@ module DiscourseAi
       before_action :check_permissions!
 
       def reply
+        return legacy_reply if params[:request_id].blank?
+
         query = normalized_query
         request_id = params[:request_id].to_s
         if !DiscourseAi::Discoveries.valid_request_id?(request_id)
@@ -62,11 +64,13 @@ module DiscourseAi
       end
 
       def continue_convo
+        return legacy_continue_convo if params[:request_id].blank?
+
         topic_id =
           DiscourseAi::Discoveries::ContinueConversation.new(
             user: current_user,
-            discovery_agent: ai_discover_agent,
-            follow_up_agent: ai_discover_follow_up_agent,
+            discovery_agent: ask_ai_agent,
+            follow_up_agent: ask_ai_follow_up_agent,
           ).call(request_id: params[:request_id].to_s, question: params[:question])
 
         render json: success_json.merge(topic_id:)
@@ -87,17 +91,85 @@ module DiscourseAi
 
       private
 
-      def ai_discover_agent
-        @discover_agent ||= AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
+      def legacy_reply
+        if ai_discover_agent.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
+          render_json_error "Discover agent is missing a default LLM model.", status: 503
+          return
+        end
+
+        query = normalized_query
+        RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
+        Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query:)
+        render json: {}, status: :ok
       end
 
-      def ai_discover_follow_up_agent
-        @discover_follow_up_agent ||=
-          AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_follow_up_agent)
+      def legacy_continue_convo
+        raise Discourse::InvalidParameters.new("query") if !params[:query]
+        raise Discourse::InvalidParameters.new("context") if !params[:context]
+
+        bot_username = User.find_by(id: ai_discover_agent.user_id).username
+        RateLimiter.new(
+          current_user,
+          "ai_discover_#{current_user.id}_continue_convo",
+          3,
+          1.minute,
+        ).performed!
+
+        post =
+          PostCreator.create!(
+            current_user,
+            title:
+              I18n.t(
+                "discourse_ai.ai_bot.discoveries.continue_conversation.title",
+                query: params[:query],
+              ),
+            raw:
+              I18n.t(
+                "discourse_ai.ai_bot.discoveries.continue_conversation.raw",
+                query: params[:query],
+                context: "[quote]\n#{params[:context]}\n[/quote]",
+              ),
+            archetype: Archetype.private_message,
+            target_usernames: bot_username,
+            skip_validations: true,
+          )
+
+        render json: success_json.merge(topic_id: post.topic_id)
+      rescue StandardError => e
+        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
+      end
+
+      def ai_discover_agent
+        @ai_discover_agent ||= AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
+      end
+
+      def ask_ai_agent
+        @ask_ai_agent ||= AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)
+      end
+
+      def ask_ai_follow_up_agent
+        @ask_ai_follow_up_agent ||=
+          AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_follow_up_agent)
       end
 
       def check_permissions!
-        raise Discourse::InvalidAccess if !DiscourseAi::Discoveries.enabled_for_user?(current_user)
+        if ask_ai_action?
+          if !DiscourseAi::Discoveries.enabled_for_user?(current_user)
+            raise Discourse::InvalidAccess
+          end
+          return
+        end
+
+        raise Discourse::InvalidAccess if !SiteSetting.ai_discover_enabled
+        raise Discourse::InvalidAccess if ai_discover_agent.nil?
+        if !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
+          raise Discourse::InvalidAccess
+        end
+        raise Discourse::InvalidAccess if guardian.is_silenced?
+      end
+
+      def ask_ai_action?
+        %w[recent clear_recent].include?(action_name) || params[:request_id].present?
       end
 
       def normalized_query

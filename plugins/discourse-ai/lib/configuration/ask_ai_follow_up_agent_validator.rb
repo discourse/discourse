@@ -2,7 +2,7 @@
 
 module DiscourseAi
   module Configuration
-    class DiscoveriesFollowUpAgentValidator
+    class AskAiFollowUpAgentValidator
       def initialize(opts = {})
         @opts = opts
       end
@@ -18,7 +18,7 @@ module DiscourseAi
       end
 
       def error_message
-        I18n.t("discourse_ai.discoveries.configuration.#{@error_key}")
+        I18n.t("discourse_ai.ask_ai.configuration.#{@error_key}")
       end
 
       private

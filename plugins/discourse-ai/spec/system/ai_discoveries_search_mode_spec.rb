@@ -13,15 +13,13 @@ describe "AI Discoveries search modes" do
     enable_current_plugin
     Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
     assign_fake_provider_to(:ai_default_llm_model)
-    assign_agent_to(:ai_discover_agent, [Group::AUTO_GROUPS[:admins]])
+    assign_agent_to(:ai_ask_ai_agent, [Group::AUTO_GROUPS[:admins]])
 
     SiteSetting.discourse_ai_enabled = true
-    SiteSetting.ai_discover_enabled = true
-    SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+    SiteSetting.ai_ask_ai_enabled = true
+    SiteSetting.ai_ask_ai_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
-    user.user_option.update!(ai_search_discoveries: true)
-
     SearchIndexer.enable
     SearchIndexer.index(miyazaki_topic, force: true)
     SearchIndexer.index(hayao_topic, force: true)
@@ -30,11 +28,11 @@ describe "AI Discoveries search modes" do
 
   after { SearchIndexer.disable }
 
-  it "marks whichever option produced what is showing, and nothing before that" do
+  it "starts with Ask AI and keeps the selected mode" do
     visit "/"
     discoveries_search.open.fill_query("miyazaki")
 
-    expect(discoveries_search).to have_no_selection
+    expect(discoveries_search).to have_ask_selected
 
     discoveries_search.select_search
 
@@ -54,7 +52,7 @@ describe "AI Discoveries search modes" do
 
     discoveries_search.fill_query("Hayao")
 
-    expect(discoveries_search).to have_no_selection
+    expect(discoveries_search).to have_search_selected
 
     discoveries_search.submit
 

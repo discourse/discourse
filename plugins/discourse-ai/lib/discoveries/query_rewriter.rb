@@ -37,7 +37,7 @@ module DiscourseAi
               },
             ],
             skip_show_thinking: true,
-            feature_name: "discover_query_rewrite",
+            feature_name: "ask_ai_query_rewriter",
             cancel_manager: @cancel_manager,
           )
         bot =

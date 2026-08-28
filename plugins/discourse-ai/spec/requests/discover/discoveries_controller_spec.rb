@@ -6,8 +6,8 @@ describe DiscourseAi::Discover::DiscoveriesController do
   before do
     enable_current_plugin
     sign_in(user)
-    SiteSetting.ai_discover_enabled = true
-    SiteSetting.ai_discover_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+    SiteSetting.ai_ask_ai_enabled = true
+    SiteSetting.ai_ask_ai_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
     SiteSetting.ai_embeddings_enabled = true
     SiteSetting.ai_embeddings_semantic_search_enabled = true
   end
@@ -22,8 +22,8 @@ describe DiscourseAi::Discover::DiscoveriesController do
     let(:request_id) { SecureRandom.uuid }
 
     before do
-      SiteSetting.ai_discover_agent = ai_agent.id
-      SiteSetting.ai_discover_allowed_groups = allowed_group.id.to_s
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_allowed_groups = allowed_group.id.to_s
       SiteSetting.ai_embeddings_enabled = true
       SiteSetting.ai_embeddings_semantic_search_enabled = true
       allowed_group.add(user)
@@ -39,13 +39,13 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
     context "when the user is allowed to use discover" do
       before do
-        SiteSetting.ai_discover_agent = ai_agent.id
+        SiteSetting.ai_ask_ai_agent = ai_agent.id
         group.add(user)
       end
 
       it "returns a 200 and queues a job to reply" do
-        SiteSetting.ai_discover_summary_detail = "detailed"
-        SiteSetting.ai_discover_related_count = 5
+        SiteSetting.ai_ask_ai_summary_detail = "detailed"
+        SiteSetting.ai_ask_ai_related_count = 5
         allow(Jobs).to receive(:enqueue).and_call_original
 
         expect {
@@ -70,10 +70,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.status).to eq(400)
       end
 
-      it "returns a 400 if the request ID is missing or invalid" do
-        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
-        expect(response.status).to eq(400)
-
+      it "returns a 400 if the request ID is invalid" do
         post "/discourse-ai/discoveries/reply",
              params: {
                query: "What is Discourse?",
@@ -106,6 +103,35 @@ describe DiscourseAi::Discover::DiscoveriesController do
     end
   end
 
+  describe "#reply with deprecated Discover" do
+    fab!(:group)
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+    end
+
+    before do
+      SiteSetting.ai_discover_enabled = true
+      SiteSetting.ai_discover_agent = ai_agent.id
+      group.add(user)
+    end
+
+    it "queues an answer using the original Discover feature" do
+      allow(Jobs).to receive(:enqueue).and_call_original
+
+      expect {
+        post "/discourse-ai/discoveries/reply", params: { query: "What is Discourse?" }
+      }.to change(Jobs::StreamDiscoverReply.jobs, :size).by(1)
+
+      expect(response.status).to eq(200)
+      expect(Jobs).to have_received(:enqueue).with(
+        :stream_discover_reply,
+        user_id: user.id,
+        query: "What is Discourse?",
+      )
+    end
+  end
+
   describe "#continue_convo" do
     fab!(:group)
     fab!(:llm_model)
@@ -128,9 +154,9 @@ describe DiscourseAi::Discover::DiscoveriesController do
       before do
         SiteSetting.ai_bot_enabled = true
         SiteSetting.ai_bot_allowed_groups = group.id.to_s
-        SiteSetting.ai_discover_agent = ai_agent.id
-        SiteSetting.ai_discover_follow_up_agent = follow_up_agent.id
-        SiteSetting.ai_discover_allowed_groups = group.id.to_s
+        SiteSetting.ai_ask_ai_agent = ai_agent.id
+        SiteSetting.ai_ask_ai_follow_up_agent = follow_up_agent.id
+        SiteSetting.ai_ask_ai_allowed_groups = group.id.to_s
         group.add(user)
         DiscourseAi::Discoveries.store_result(
           user_id: user.id,
@@ -427,8 +453,8 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
     context "when discovery is disabled" do
       before do
-        SiteSetting.ai_discover_agent = ai_agent.id
-        SiteSetting.ai_discover_enabled = false
+        SiteSetting.ai_ask_ai_agent = ai_agent.id
+        SiteSetting.ai_ask_ai_enabled = false
         group.add(user)
       end
 

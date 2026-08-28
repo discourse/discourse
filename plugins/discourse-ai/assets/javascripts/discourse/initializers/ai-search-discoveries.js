@@ -3,22 +3,27 @@ import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
 import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types";
+import { isScopedSearch } from "../lib/search-discoveries-context";
 import shortcutLabel from "../lib/shortcut-label";
+import { ASK_MODE, SEARCH_MODE } from "../services/discobot-discoveries";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
   const settings = api.container.lookup("service:site-settings");
 
-  if (
-    !settings.ai_discover_enabled ||
-    !currentUser?.can_use_ai_discover_agent
-  ) {
-    return;
+  const legacyDiscoveriesAvailable =
+    settings.ai_discover_enabled &&
+    currentUser?.can_use_ai_discover_agent &&
+    currentUser.user_option?.ai_search_discoveries !== false;
+
+  if (settings.ai_discover_enabled && currentUser?.can_use_ai_discover_agent) {
+    api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
   }
 
-  api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
-
-  if (currentUser.user_option?.ai_search_discoveries === false) {
+  if (!settings.ai_ask_ai_enabled || !currentUser?.can_use_ask_ai) {
+    if (legacyDiscoveriesAvailable) {
+      initializeLegacyDiscoveries(api);
+    }
     return;
   }
 
@@ -173,6 +178,7 @@ export default apiInitializer((api) => {
   // each remembered item repeats as the kind of search its icon shows
   api.addSearchMenuAssistantSelectCallback((args) => {
     if (args.usage === "recent-search") {
+      discobotDiscoveries.selectSearchMode(SEARCH_MODE);
       discobotDiscoveries.dismissDiscovery();
       return true;
     }
@@ -186,9 +192,8 @@ export default apiInitializer((api) => {
     return false;
   });
 
-  // Enter always runs the indexed search, so nothing has to be remembered
-  // between submissions. Shift+Enter is the one that asks: Ctrl/Cmd+Enter is
-  // already advanced search, and a second Enter already means the same.
+  // Enter uses the last explicit choice. Shift+Enter remains a direct way to
+  // ask, and Ctrl/Cmd+Enter remains advanced search.
   api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
     if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
@@ -197,7 +202,10 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
-      if (event.shiftKey && query) {
+      if (
+        query &&
+        (event.shiftKey || discobotDiscoveries.searchMode === ASK_MODE)
+      ) {
         // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
         searchTerm.args.clearPMInboxContext();
@@ -205,6 +213,7 @@ export default apiInitializer((api) => {
         return false;
       }
 
+      discobotDiscoveries.selectSearchMode(SEARCH_MODE);
       discobotDiscoveries.dismissDiscovery();
       return true;
     }
@@ -258,3 +267,49 @@ export default apiInitializer((api) => {
       offersDiscoveries(context?.location) ? false : value
   );
 });
+
+function initializeLegacyDiscoveries(api) {
+  const legacyDiscoveries = api.container.lookup(
+    "service:legacy-discobot-discoveries"
+  );
+  const search = api.container.lookup("service:search");
+
+  api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
+    if (!searchMenu) {
+      return;
+    }
+
+    const query = searchMenu.search.activeGlobalSearchTerm;
+    if (
+      isScopedSearch(searchMenu.search) ||
+      legacyDiscoveries.lastQuery === query
+    ) {
+      return true;
+    }
+
+    if (event.key === "Enter" && query?.length > 0) {
+      legacyDiscoveries.triggerDiscovery(query);
+    }
+
+    return true;
+  });
+
+  api.addSearchMenuAssistantSelectCallback((args) => {
+    if (
+      args.updatedTerm === legacyDiscoveries.lastQuery &&
+      legacyDiscoveries.discovery
+    ) {
+      return true;
+    }
+
+    if (isScopedSearch(search)) {
+      return true;
+    }
+
+    if (args.updatedTerm) {
+      legacyDiscoveries.triggerDiscovery(args.updatedTerm);
+    }
+
+    return true;
+  });
+}

@@ -7,6 +7,7 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import shortcutLabel from "../lib/shortcut-label";
+import { ASK_MODE, SEARCH_MODE } from "../services/discobot-discoveries";
 
 function shortcutHint(...keys) {
   return i18n("discourse_ai.discobot_discoveries.shortcut_hint", {
@@ -149,18 +150,16 @@ export default class AiDiscoveriesSearchOptions extends Component {
     return Boolean(this.args.inPMInboxContext);
   }
 
-  // Compared against the term it was chosen for: a changed term has to be
-  // resubmitted, so the option that answered the old one stops reading as active
-
   get scopedToTopic() {
     return this.search.inTopicContext && this.scopedTerm === this.query;
   }
 
-  // A receipt rather than an armed mode: enter always runs the indexed search,
-  // so the only thing worth marking is which option produced what is showing.
   get askedActive() {
     return (
-      Boolean(this.query) && this.discobotDiscoveries.lastQuery === this.query
+      !this.scopedToTopic &&
+      !this.contextActive &&
+      !this.messagesActive &&
+      this.discobotDiscoveries.searchMode === ASK_MODE
     );
   }
 
@@ -176,18 +175,20 @@ export default class AiDiscoveriesSearchOptions extends Component {
       return false;
     }
 
-    return Boolean(this.args.searchTopics);
+    return this.discobotDiscoveries.searchMode === SEARCH_MODE;
   }
 
   // Only the options that have one: scope has never had a keybinding, so the
   // three that map to enter, shift+enter and ctrl/cmd+enter say so and the rest
   // stay quiet rather than inventing hints.
   get allTopicsTitle() {
-    return shortcutHint("enter");
+    return this.allTopicsActive ? shortcutHint("enter") : null;
   }
 
   get askTitle() {
-    return shortcutHint("shift", "enter");
+    return this.askedActive
+      ? shortcutHint("enter")
+      : shortcutHint("shift", "enter");
   }
 
   get advancedTitle() {
@@ -198,6 +199,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchAllTopics() {
+    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     // choosing the indexed results means the answer is no longer what was asked for
     this.discobotDiscoveries.dismissDiscovery();
     // the input no longer carries a chip to step back out of a scope, so the
@@ -219,6 +221,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchInContext() {
+    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
@@ -237,6 +240,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchMessages() {
+    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.searchTermChanged?.(this.query, {
@@ -247,6 +251,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   searchThisTopic() {
+    this.discobotDiscoveries.selectSearchMode(SEARCH_MODE);
     this.scopedTerm = this.query;
     this.discobotDiscoveries.dismissDiscovery();
     this.args.searchTermChanged?.(this.query, {
@@ -320,13 +325,15 @@ export default class AiDiscoveriesSearchOptions extends Component {
           @translatedTitle={{this.askTitle}}
           @action={{this.ask}}
         />
-        <DButton
-          class="btn-default btn-small ai-discoveries-search-options__option --advanced"
-          @icon="sliders"
-          @translatedTitle={{this.advancedTitle}}
-          @ariaLabel="search.open_advanced"
-          @action={{@openAdvancedSearch}}
-        />
+        {{#if this.allTopicsActive}}
+          <DButton
+            class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+            @icon="sliders"
+            @translatedTitle={{this.advancedTitle}}
+            @ariaLabel="search.open_advanced"
+            @action={{@openAdvancedSearch}}
+          />
+        {{/if}}
       </div>
     {{/if}}
   </template>
