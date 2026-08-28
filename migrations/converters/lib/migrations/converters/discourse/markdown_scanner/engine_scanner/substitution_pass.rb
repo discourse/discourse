@@ -67,13 +67,9 @@ module Migrations
                 return Result.new(output: @input, cause: :url_volume)
               end
 
-              # The occurrence indexes already exist per value; they are
-              # iterated in place, and the loops stop once the limit or the
-              # budget is hit — {MAX_SUBSTITUTIONS} bounds the checks and the
-              # allocations alike, so a body repeating one value thousands of
-              # times costs its index, not a wrapper object per occurrence.
-              # The tail past the stop stays unconfirmed through the expected
-              # totals below.
+              # The loops stop once the limit or the budget is hit; the tail
+              # past the stop stays unconfirmed through the expected totals
+              # below.
               spans = {}
               confirmed = 0
               expected.each do |entry|

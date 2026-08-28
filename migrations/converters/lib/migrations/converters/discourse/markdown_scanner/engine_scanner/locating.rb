@@ -274,14 +274,11 @@ module Migrations
               end
 
               # The occurrence itself, as a bare URL. Linkify can take
-              # trailing bytes no URL grammar accepts (a stray backtick or
-              # backslash, punctuation, non-ASCII text glued to the URL) into
-              # the href, so the matched occurrence may run past what a
-              # construct can take. Leaving exactly those bytes literal is
-              # correct — core will re-linkify both after resolution. A word
-              # byte in the uncovered tail disqualifies the match: there the
-              # match stopped inside the URL proper, and replacing a prefix
-              # of a longer URL would leave its tail behind as text.
+              # trailing bytes into the href that no URL grammar accepts, so
+              # the matched occurrence may run past what a construct can take;
+              # leaving exactly those bytes literal is correct — core will
+              # re-linkify both after resolution. `allow_prefix` bounds what
+              # may stay uncovered ({Constructs::Base.swallowed_tail?}).
               construct_match_at(offset, occurrence, allow_prefix: true)
             end
 
@@ -324,21 +321,10 @@ module Migrations
               nil
             end
 
-            # Whether the occurrence bytes past the construct match are a
-            # short wordless linkify tail — the only tail a match may leave
-            # uncovered (see `anchor_match` and
-            # `Constructs::Base::MAX_SWALLOWED_TAIL_BYTES`). Length matters as
-            # much as content: linkify swallows a few bytes of punctuation,
-            # never hundreds, and a long tail means the match stopped inside
-            # the URL proper.
+            # The only tail a match may leave uncovered; see
+            # {Constructs::Base.swallowed_tail?}.
             def swallowed_tail?(from, to)
-              return false if to - from > Constructs::Base::MAX_SWALLOWED_TAIL_BYTES
-
-              (from...to).none? do |pos|
-                byte = @input.getbyte(pos)
-                byte == 0x5f || (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||
-                  (byte >= 0x61 && byte <= 0x7a)
-              end
+              Constructs::Base.swallowed_tail?(@input.byteslice(from, to - from))
             end
 
             def overlapping?(ordered)

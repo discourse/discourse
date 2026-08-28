@@ -10,8 +10,8 @@ module Migrations
       #
       # The division of labor: the discourse-markdown-it engine decides what
       # the markdown means — what is code, what is a live mention or link.
-      # The {EngineScanner}'s count-matching and substitution passes confirm which raw
-      # bytes produced each engine token. The {Constructs} do not parse
+      # The {EngineScanner}'s count-matching and substitution passes confirm
+      # which raw bytes produced each engine token. The {Constructs} do not parse
       # markdown context; they locate candidate byte spans, parse the
       # migration-specific syntax (quote headers, upload ids, internal
       # routes), and build the reference objects the importer resolves. The
@@ -19,8 +19,8 @@ module Migrations
       # runs.
       #
       # The contract throughout: extraction can refuse a construct it cannot
-      # confirm, but it cannot corrupt one. Anything unconfirmed stays unchanged,
-      # and the body is counted with its cause on
+      # confirm, but it cannot corrupt one. Anything unconfirmed stays
+      # unchanged, and the body is counted with its cause on
       # `RawExtractor#engine_refusals` — the conversion's must-resolve list.
       module MarkdownScanner
       end

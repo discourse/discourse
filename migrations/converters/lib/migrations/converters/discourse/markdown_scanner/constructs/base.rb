@@ -102,6 +102,18 @@ module Migrations
             # literal text.
             MAX_SWALLOWED_TAIL_BYTES = 16
 
+            # An ASCII word byte, for {swallowed_tail?}.
+            TRAILING_WORD = /[0-9A-Za-z_]/
+            private_constant :TRAILING_WORD
+
+            # Whether the bytes a match leaves uncovered are such a linkify
+            # tail: within the cap and without a word byte. A word byte means
+            # the value's URL runs past what the grammar takes (a longer
+            # basename or query), not linkify junk.
+            def self.swallowed_tail?(tail)
+              tail.bytesize <= MAX_SWALLOWED_TAIL_BYTES && !tail.match?(TRAILING_WORD)
+            end
+
             # Link text, with the one level of balanced brackets CommonMark allows
             # (`[see [1]](/t/5)` links with text `see [1]`). The nested bracket
             # must not itself open a link or image — the `(?!\()` — so the `[` of a

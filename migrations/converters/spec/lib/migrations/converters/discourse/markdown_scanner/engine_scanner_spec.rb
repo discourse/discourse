@@ -410,11 +410,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       # burns the first check, the confirmed tail ends at the limit.
       output = extractor.extract("`@alice` #{(["@alice"] * 200).join(" ")}")
 
-      # One initial parse, then one parse per check up to the limit. The
-      # occurrences past the limit cost no engine call and no
-      # candidate-wrapper allocation — the loop stops instead of walking a
-      # wrapper list. (The occurrence index itself was already built for
-      # count matching; that part this example does not measure.)
+      # One initial parse, then one parse per check up to the limit; the
+      # occurrences past the limit cost no engine call.
       expect(engine_calls).to eq(1 + max)
       expect(buffer.mentions.size).to eq(max - 1)
       expect(output).to start_with("`@alice` ")

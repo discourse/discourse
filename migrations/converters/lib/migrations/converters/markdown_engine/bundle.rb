@@ -78,11 +78,11 @@ module Migrations
         # the destination will see them, or text inside e.g. a `[poll]` would
         # be scanned as ordinary prose. This list is an allowlist, not open
         # configuration: `Config::SETTING_KEYS` covers exactly these plugins'
-        # parse-relevant settings (a spec checks that per plugin), so a
-        # caller passing a plugin outside the list gets its markdown rules
-        # running with absent settings — unsupported. A source that relied on
-        # a plugin outside the list is scanned without that plugin's rules;
-        # that is the engine's accuracy boundary.
+        # parse-relevant settings (a spec checks that per plugin), so a name
+        # outside the list would run its markdown rules with absent settings —
+        # `validate_plugins!` rejects it instead. A source that relied on such
+        # a plugin is scanned without its rules; that is the engine's
+        # accuracy boundary.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
@@ -97,9 +97,8 @@ module Migrations
         # a transpile, which never happens in this process, and the host
         # classes are Rails-free until their build/transpile methods run.
         #
-        # @param plugins [Array<String>] a subset of {CORE_MARKDOWN_PLUGINS}.
-        #   A name outside the supported list is unsupported: its markdown
-        #   rules would run without their settings (see the list's comment).
+        # @param plugins [Array<String>] a subset of {CORE_MARKDOWN_PLUGINS};
+        #   any other name raises `ArgumentError` (see the list's comment).
         def self.load_or_build(
           root: MarkdownEngine.discourse_root,
           cache_dir: nil,
@@ -333,9 +332,9 @@ module Migrations
           end
         end
 
-        # A plugin outside the supported list would run its markdown rules
-        # with absent settings and tokenize differently from the source site,
-        # so it is rejected before any building.
+        # Called from both public entry points: `build_and_write` runs in its
+        # own subprocess and can be invoked directly, so it cannot rely on
+        # `load_or_build` having validated.
         def self.validate_plugins!(plugins)
           unknown = plugins - CORE_MARKDOWN_PLUGINS
           return if unknown.empty?

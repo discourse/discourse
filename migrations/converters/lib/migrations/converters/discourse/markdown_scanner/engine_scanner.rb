@@ -19,7 +19,7 @@ module Migrations
         # whole post — the same exact equality, just without relying on the
         # engine's line attribution.
         #
-        # When counting cannot match a post's occurrence counts (duplicate values in mixed
+        # When the counts cannot be matched (duplicate values in mixed
         # contexts, a character entity that could form a construct, CR line
         # endings), a {SubstitutionPass} confirms the occurrences one by one: it
         # replaces one occurrence with a marker, parses again, and checks the
@@ -52,17 +52,12 @@ module Migrations
 
           # A post whose parse runs into the fast ceiling gets one retry
           # before `:engine_error`. This is a deadline for the whole retry of
-          # that one post: every engine call on the retry gets at most the
-          # time left until the deadline, and a call with no time left is not
-          # made — it counts as the substitution budget running out. A
-          # conversion runs once, so spending up to 30 seconds on one post
-          # is acceptable. Core's PrettyText allows 25 seconds for a full
-          # cook; the slowest legitimate parse we measured took 435 ms, and a
-          # corpus run with a 60-second ceiling recovered no additional posts.
-          #
-          # The deadline is a close bound, not an exact wall: each call's
-          # ceiling is rounded up to the step below, and the isolate rebuild
-          # for a changed ceiling runs outside the engine's own timeout.
+          # that one post, enforced per engine call in {#engine_scan}, not a
+          # fresh ceiling per call. A conversion runs once, so spending up to
+          # 30 seconds on one post is acceptable. Core's PrettyText allows
+          # 25 seconds for a full cook; the slowest legitimate parse we
+          # measured took 435 ms, and a corpus run with a 60-second ceiling
+          # recovered no additional posts.
           SLOW_TIMEOUT_MS = 30_000
 
           # The ceiling shrinks in these steps. The engine rebuilds its
@@ -204,8 +199,9 @@ module Migrations
 
               # Rounded up to the step (see SLOW_TIMEOUT_STEP_MS), so the
               # ceiling takes few distinct values and the engine rebuilds its
-              # isolate at most once per step. A call may overrun the
-              # deadline by up to one step.
+              # isolate at most once per step. The deadline is a close bound,
+              # not an exact wall: a call may overrun it by up to one step,
+              # and an isolate rebuild runs outside the engine's own timeout.
               steps = (remaining_ms + SLOW_TIMEOUT_STEP_MS - 1) / SLOW_TIMEOUT_STEP_MS
               stepped_ms = steps * SLOW_TIMEOUT_STEP_MS
               timeout = timeout.nil? ? stepped_ms : [timeout, stepped_ms].min

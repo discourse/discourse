@@ -53,9 +53,7 @@ module Migrations
             MAX_SHORT_TOKEN_LENGTH = 27
 
             # One path segment: a URL-body character (see
-            # `Base::URL_TERMINATORS`) that is also none of `/`, `?` and `#` —
-            # the storage shape must sit in the URL's path, and the path ends
-            # where the query or the fragment begins.
+            # `Base::URL_TERMINATORS`) that is also none of `/`, `?` and `#`.
             SEGMENT = /[^\/?##{Base::URL_TERMINATORS}]{1,255}/
             private_constant :SEGMENT
 
@@ -72,10 +70,9 @@ module Migrations
 
             # An optional query and fragment, taken whole or not at all. The
             # lookahead after each part requires that nothing of it is left
-            # over except sentence punctuation at a URL boundary: a query
-            # longer than the cap must not match partially, because replacing
-            # a URL up to a mid-query cut would leave the rest behind as
-            # literal text. A bare `?` or `#` with nothing after it is part
+            # over except sentence punctuation at a URL boundary, so an
+            # over-cap query fails the whole URL instead of matching up to a
+            # mid-query cut. A bare `?` or `#` with nothing after it is part
             # of the URL too — a markdown destination like `(…21.png?)` keeps
             # it, and so does the engine. The final guard backs sentence
             # punctuation out of the end of the match, except when that end
@@ -104,12 +101,11 @@ module Migrations
             # it: partition segments, the sha1, the extension or `_WxH` suffix
             # ending on a word character (a sentence's `.` after a bare URL
             # stays out), then an optional query and fragment. The caps take a
-            # signed CDN URL whole; a URL beyond them matches nothing at all —
-            # a match over part of a URL would replace that part and leave the
-            # tail behind as literal text. The repeated groups
-            # are atomic with a lookahead deciding where they stop, so a
-            # failing candidate is scanned once and never backtracked into;
-            # the segment-count and length caps bound a single candidate.
+            # signed CDN URL whole; beyond them the URL matches no shape at
+            # all (see the class comment). The repeated groups are atomic with
+            # a lookahead deciding where they stop, so a failing candidate is
+            # scanned once and never backtracked into; the segment-count and
+            # length caps bound a single candidate.
             STORAGE_TAIL =
               %r{
                 #{STORAGE}
@@ -186,18 +182,6 @@ module Migrations
             ANCHORED_URL = /\A#{URL}/
             private_constant :ANCHORED_URL
 
-            # An ASCII word byte. Linkify takes trailing bytes into a bare
-            # URL's href that no URL grammar accepts (a stray `-`, `#`,
-            # punctuation, non-ASCII text glued to the URL); both sides drop
-            # those at replacement, so a value may end in such a tail. A word
-            # character in the tail, or a tail longer than
-            # `Base::MAX_SWALLOWED_TAIL_BYTES`, is different: there the
-            # value's URL runs past what the grammar takes (a longer basename
-            # or query), and replacing only a prefix of it would leave the
-            # rest behind.
-            TRAILING_WORD = /[0-9A-Za-z_]/
-            private_constant :TRAILING_WORD
-
             # Whether `raw` can contain a supported upload URL at all. This is
             # the cheap presence check for the {TierGate}: every supported
             # shape carries one of these markers, and a body with only
@@ -219,15 +203,14 @@ module Migrations
             # The match must start at the value's first byte — a substring
             # match would track a URL that merely contains an upload path, the
             # redirect case again, one level up — and may leave only wordless
-            # linkify junk uncovered (see {TRAILING_WORD}).
+            # linkify junk uncovered ({Base.swallowed_tail?}).
             def self.tracked_value?(value)
               return false unless candidate?(value)
 
               match = ANCHORED_URL.match(value)
               return false if match.nil?
 
-              tail = value.byteslice(match.byteoffset(0).last..)
-              tail.bytesize <= Base::MAX_SWALLOWED_TAIL_BYTES && !tail.match?(TRAILING_WORD)
+              swallowed_tail?(value.byteslice(match.byteoffset(0).last..))
             end
 
             # The 40-hex sha1 for a short-URL token, or nil when the token is

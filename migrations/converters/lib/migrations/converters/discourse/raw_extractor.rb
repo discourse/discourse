@@ -91,18 +91,18 @@ module Migrations
         #   that a former domain may be missing from the source_site settings. Each
         #   host is reported once per extractor. Nil (the default) skips the signal.
         # @param markdown_engine [MarkdownEngine::Context] the engine context for
-        #   `:engine`-classified bodies: extraction from context-sensitive bodies
-        #   is checked by count matching against the real discourse-markdown-it parse, escalating
-        #   to per-occurrence marker substitution, and whatever stays unconfirmed is
-        #   left verbatim (see {MarkdownScanner::EngineScanner}). Build it after
-        #   the worker forks — V8 contexts do not survive forking.
+        #   `:engine`-classified bodies: extraction from context-sensitive
+        #   bodies is checked by count matching against the real
+        #   discourse-markdown-it parse, escalating to per-occurrence marker
+        #   substitution, and whatever stays unconfirmed is left verbatim (see
+        #   {MarkdownScanner::EngineScanner}). Build it after the worker
+        #   forks — V8 contexts do not survive forking.
         # @param on_engine_refusal [#call, nil] called with the cause (a Symbol)
         #   and its diagnostic detail (the exception class name for
         #   `:engine_error`, else nil) whenever an `:engine` body keeps at least
         #   one unconfirmed construct; the tallies are also kept on
-        #   {#engine_refusals}. The caller knows which
-        #   post it is extracting, so post identity stays on its side of the
-        #   callback.
+        #   {#engine_refusals}. The caller knows which post it is extracting,
+        #   so post identity stays on its side of the callback.
         # @param slow_timeout_ms [Integer, nil] the retry ceiling for a body
         #   whose parse the engine terminated at the fast default: the body is
         #   parsed once more with this ceiling before `:engine_error` is
@@ -268,9 +268,9 @@ module Migrations
         end
 
         # An unconfirmed construct stays verbatim — count matching and marker
-        # substitution may fail to place it, and a wrong
-        # placement would corrupt the post while verbatim only leaves its
-        # reference stale. The confirmed constructs in the same body are still
+        # substitution may fail to place it, and a wrong placement would
+        # corrupt the post while verbatim only leaves its reference stale.
+        # The confirmed constructs in the same body are still
         # extracted; the cause is counted and reported so a conversion
         # surfaces how many posts (and why) still need resolution.
         def extract_engine(raw, scan_data)
