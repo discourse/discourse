@@ -8,26 +8,16 @@ import {
 
 acceptance("draft-icon transformer", function (needs) {
   needs.user();
+
   needs.pretender((server, helper) => {
     server.get("/drafts.json", () =>
       helper.response({
         drafts: [
           {
             draft_key: "new_private_message",
-            sequence: 0,
-            draft_username: "eviltrout",
-            username: "eviltrout",
-            user_id: 1,
-            data: '{"reply":"hello","action":"privateMessage","title":"A message draft","recipients":"charlie","archetypeId":"private_message"}',
+            data: '{"title":"A message draft"}',
           },
-          {
-            draft_key: "new_topic",
-            sequence: 0,
-            draft_username: "eviltrout",
-            username: "eviltrout",
-            user_id: 1,
-            data: '{"reply":"hello","action":"createTopic","title":"A topic draft","archetypeId":"regular"}',
-          },
+          { draft_key: "new_topic", data: '{"title":"A topic draft"}' },
         ],
       })
     );
@@ -48,18 +38,7 @@ acceptance("draft-icon transformer", function (needs) {
     assert.dom(".topic-drafts-item:last-child svg.d-icon-layer-group").exists();
   });
 
-  test("uses the icon returned by the transformer", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer("draft-icon", () => "star");
-    });
-
-    await openDraftsMenu();
-
-    assert.dom(".topic-drafts-item:first-child svg.d-icon-star").exists();
-    assert.dom(".topic-drafts-item:last-child svg.d-icon-star").exists();
-  });
-
-  test("the transformer receives the draft as context", async function (assert) {
+  test("uses the icon returned by the transformer for the draft it receives", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer("draft-icon", ({ value, context }) => {
         return context.draft.draft_key === "new_private_message"
