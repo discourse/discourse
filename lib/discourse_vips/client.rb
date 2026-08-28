@@ -44,13 +44,11 @@ module DiscourseVips
       if shared_worker_running
         begin
           socket = UNIXSocket.new(shared_socket_path)
+          reset_worker_process
         rescue Errno::ECONNREFUSED, Errno::ENOENT
           shared_worker_running = false
+          socket = UNIXSocket.new(worker_process.socket_path)
         end
-      end
-
-      if shared_worker_running
-        reset_worker_process
       else
         socket = UNIXSocket.new(worker_process.socket_path)
       end
