@@ -897,9 +897,10 @@ export default class DVirtualizer<T> extends Modifier<
   /**
    * Fires `onReachStart`/`onReachEnd` once per entry into an edge band, re-arming
    * after the range retreats past the band plus hysteresis OR when the list gains
-   * a new edge (see `#rearmEdgesForItemChange`). An empty list resets both
-   * latches so a refill re-fires; a null range holds the current state (nothing
-   * measured yet) but still tracks the edges.
+   * a new edge (see `#rearmEdgesForItemChange`). An empty list returns both
+   * latches to their MOUNT state, so a refill behaves like a fresh mount: the end
+   * edge can fire again and the start edge stays suppressed. A null range holds
+   * the current state (nothing measured yet) but still tracks the edges.
    *
    * @param range - The visible range, or null before anything has been measured.
    * @param count - The total number of items.

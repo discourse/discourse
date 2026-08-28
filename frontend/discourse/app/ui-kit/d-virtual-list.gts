@@ -147,8 +147,8 @@ export interface DVirtualListApi {
    *
    * A frozen snapshot, never the engine's own range object: the committed value of that
    * object is what the engine's change memo compares against, so a consumer writing
-   * through it could silently stop the window updating. Successive calls return equal
-   * values while the range holds, and a fresh object once it moves.
+   * through it could silently stop the window updating. Every call builds a new
+   * object, so compare the indices rather than the identity.
    */
   visibleRange():
     | Readonly<{ startIndex: number; endIndex: number }>

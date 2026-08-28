@@ -287,9 +287,8 @@ export function rangeExtractorWithPins(pins) {
 }
 
 /**
- * Construct an element-backed virtualizer. Callers supply `count`,
- * `getScrollElement`, `estimateSize`, `getItemKey`, `overscan`, and `onChange`;
- * the element-observer plumbing is filled in here.
+ * Construct an element-backed virtualizer, filling in the element-observer
+ * plumbing the caller does not supply. See {@link ELEMENT_ADAPTER}.
  *
  * @param {object} options
  * @returns {object} An element-backed virtualizer instance.

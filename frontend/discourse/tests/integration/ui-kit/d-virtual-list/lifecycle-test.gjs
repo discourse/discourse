@@ -44,8 +44,9 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
   });
 
   // Emptying a list mid-scroll takes two engine-live branches nothing else
-  // reaches: the sizer's height is dropped entirely, and both edge latches plus
-  // the remembered boundary keys reset so a refill can fire its edges again.
+  // reaches: the sizer's height is dropped entirely, and the edge latches plus
+  // the remembered boundary keys return to their mount state, so a refill can
+  // fire its end edge again.
   test("lifecycle pin: emptying and refilling a list clears its height and re-arms its edges", async function (assert) {
     const state = new State();
     let endFires = 0;
