@@ -57,7 +57,8 @@ gem "discourse_math_bundle"
 
 gem "message_bus"
 
-gem "rails_multisite"
+# 9.0.0 raises on an unknown db or host by default. That change needs its own work.
+gem "rails_multisite", "< 9"
 
 gem "fastimage"
 
