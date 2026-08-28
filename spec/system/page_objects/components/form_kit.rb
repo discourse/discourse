@@ -312,6 +312,10 @@ module PageObjects
         has_no_css?(".form-kit__field[data-name='#{name}']")
       end
 
+      def has_no_enabled_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']:not([data-disabled])")
+      end
+
       def container(name)
         within component do
           FormKitContainer.new(find(".form-kit__container[data-name='#{name}']"))
