@@ -13,11 +13,31 @@ module("Unit | Utility | download-strategy", function (hooks) {
     assert.strictEqual(attachmentDownloadStrategy(), "native");
   });
 
-  test("returns 'bridge' in an app webview", function (assert) {
+  test("returns 'bridge' on iOS once the Hub app confirms bridge support", function (assert) {
     sinon.stub(capabilities, "isAppWebview").value(true);
+    sinon.stub(capabilities, "isIOS").value(true);
+    sinon.stub(capabilities, "hubDownloadBridgeSupported").value(true);
     sinon.stub(capabilities, "isPwa").value(false);
 
     assert.strictEqual(attachmentDownloadStrategy(), "bridge");
+  });
+
+  test("returns 'native' in an Android app webview", function (assert) {
+    sinon.stub(capabilities, "isAppWebview").value(true);
+    sinon.stub(capabilities, "isIOS").value(false);
+    sinon.stub(capabilities, "hubDownloadBridgeSupported").value(true);
+    sinon.stub(capabilities, "isPwa").value(false);
+
+    assert.strictEqual(attachmentDownloadStrategy(), "native");
+  });
+
+  test("returns 'native' on iOS when the Hub app hasn't shipped bridge support yet", function (assert) {
+    sinon.stub(capabilities, "isAppWebview").value(true);
+    sinon.stub(capabilities, "isIOS").value(true);
+    sinon.stub(capabilities, "hubDownloadBridgeSupported").value(false);
+    sinon.stub(capabilities, "isPwa").value(false);
+
+    assert.strictEqual(attachmentDownloadStrategy(), "native");
   });
 
   test("returns 'blob' in a PWA", function (assert) {

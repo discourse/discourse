@@ -1,4 +1,4 @@
-import { capabilities } from "discourse/services/capabilities";
+import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 
 const REVOKE_AFTER = 20_000;
 export const MAX_BRIDGED_DOWNLOAD_BYTES = 25 * 1024 * 1024;
@@ -56,17 +56,14 @@ export async function bridgeBlobDownload(
   window.ReactNativeWebView.postMessage(
     JSON.stringify({
       type: "download",
-      version: 1,
-      encoding: "base64",
       filename,
       mimeType: blob.type || "application/octet-stream",
-      byteLength: blob.size,
       data,
     })
   );
 }
 
-export function triggerBlobDownload(
+function triggerBlobDownload(
   blob,
   { fallbackFilename, contentDisposition } = {}
 ) {
@@ -85,7 +82,7 @@ export function triggerBlobDownload(
 }
 
 export async function deliverBlobDownload(blob, options = {}) {
-  if (capabilities.isAppWebview) {
+  if (attachmentDownloadStrategy() === "bridge") {
     await bridgeBlobDownload(blob, options);
   } else {
     triggerBlobDownload(blob, options);

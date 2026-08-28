@@ -3,9 +3,10 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import downloadBlob, {
   bridgeBlobDownload,
+  deliverBlobDownload,
   MAX_BRIDGED_DOWNLOAD_BYTES,
-  triggerBlobDownload,
 } from "discourse/lib/download-blob";
+import { capabilities } from "discourse/services/capabilities";
 
 function captureAnchor() {
   const original = document.createElement.bind(document);
@@ -29,16 +30,18 @@ module("Unit | Utility | download-blob", function (hooks) {
   hooks.beforeEach(function () {
     sinon.stub(URL, "createObjectURL").returns("blob:mock");
     sinon.stub(URL, "revokeObjectURL");
+    sinon.stub(capabilities, "isAppWebview").value(false);
+    sinon.stub(capabilities, "isPwa").value(false);
   });
 
   hooks.afterEach(function () {
     delete window.ReactNativeWebView;
   });
 
-  test("triggerBlobDownload uses fallbackFilename when no Content-Disposition", function (assert) {
+  test("deliverBlobDownload uses fallbackFilename when no Content-Disposition", function (assert) {
     const { created } = captureAnchor();
 
-    triggerBlobDownload(new Blob(["x"]), { fallbackFilename: "fallback.zip" });
+    deliverBlobDownload(new Blob(["x"]), { fallbackFilename: "fallback.zip" });
 
     assert.strictEqual(created.length, 1);
     assert.strictEqual(created[0].getAttribute("download"), "fallback.zip");
@@ -46,10 +49,10 @@ module("Unit | Utility | download-blob", function (hooks) {
     assert.true(created[0].click.calledOnce);
   });
 
-  test("triggerBlobDownload prefers the filename from Content-Disposition", function (assert) {
+  test("deliverBlobDownload prefers the filename from Content-Disposition", function (assert) {
     const { created } = captureAnchor();
 
-    triggerBlobDownload(new Blob(["x"]), {
+    deliverBlobDownload(new Blob(["x"]), {
       fallbackFilename: "fallback.zip",
       contentDisposition: 'attachment; filename="server-name.zip"',
     });
@@ -57,10 +60,10 @@ module("Unit | Utility | download-blob", function (hooks) {
     assert.strictEqual(created[0].getAttribute("download"), "server-name.zip");
   });
 
-  test("triggerBlobDownload parses RFC 5987 UTF-8 filename*", function (assert) {
+  test("deliverBlobDownload parses RFC 5987 UTF-8 filename*", function (assert) {
     const { created } = captureAnchor();
 
-    triggerBlobDownload(new Blob(["x"]), {
+    deliverBlobDownload(new Blob(["x"]), {
       contentDisposition:
         "attachment; filename=\"ascii-fallback.zip\"; filename*=UTF-8''caf%C3%A9.zip",
     });
@@ -68,10 +71,10 @@ module("Unit | Utility | download-blob", function (hooks) {
     assert.strictEqual(created[0].getAttribute("download"), "café.zip");
   });
 
-  test("triggerBlobDownload falls back to ASCII match when UTF-8 form is malformed", function (assert) {
+  test("deliverBlobDownload falls back to ASCII match when UTF-8 form is malformed", function (assert) {
     const { created } = captureAnchor();
 
-    triggerBlobDownload(new Blob(["x"]), {
+    deliverBlobDownload(new Blob(["x"]), {
       contentDisposition:
         "attachment; filename=\"ascii-only.zip\"; filename*=UTF-8''%E0%A4%A",
     });
@@ -79,15 +82,15 @@ module("Unit | Utility | download-blob", function (hooks) {
     assert.strictEqual(created[0].getAttribute("download"), "ascii-only.zip");
   });
 
-  test("triggerBlobDownload omits the download attribute when no filename is available", function (assert) {
+  test("deliverBlobDownload omits the download attribute when no filename is available", function (assert) {
     const { created } = captureAnchor();
 
-    triggerBlobDownload(new Blob(["x"]));
+    deliverBlobDownload(new Blob(["x"]));
 
     assert.false(created[0].hasAttribute("download"));
   });
 
-  test("bridgeBlobDownload sends a versioned, bounded message to Hub", async function (assert) {
+  test("bridgeBlobDownload posts a download message to Hub", async function (assert) {
     const postMessage = sinon.stub();
     window.ReactNativeWebView = { postMessage };
     sinon.stub(window, "FileReader").value(
@@ -106,11 +109,8 @@ module("Unit | Utility | download-blob", function (hooks) {
     const message = JSON.parse(postMessage.firstCall.args[0]);
     assert.deepEqual(message, {
       type: "download",
-      version: 1,
-      encoding: "base64",
       filename: "theme.zip",
       mimeType: "application/zip",
-      byteLength: 1,
       data: "eA==",
     });
     delete window.ReactNativeWebView;

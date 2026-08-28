@@ -12,8 +12,16 @@ import { capabilities } from "discourse/services/capabilities";
 //              and trigger a client-side blob download instead.
 //   "bridge" — Discourse Hub receives a bounded Blob over its web/native
 //              bridge, writes a temporary file, and opens native save/share UI.
+//              Restricted to iOS: Android's WebView already downloads via
+//              the system DownloadManager (react-native-webview >=2.15), and
+//              requires the Hub app to confirm it understands the bridge
+//              protocol before we rely on it (see hubDownloadBridgeSupported).
 export function attachmentDownloadStrategy() {
-  if (capabilities.isAppWebview) {
+  if (
+    capabilities.isAppWebview &&
+    capabilities.isIOS &&
+    capabilities.hubDownloadBridgeSupported
+  ) {
     return "bridge";
   }
   if (capabilities.isPwa) {
