@@ -434,6 +434,7 @@ export default class User extends RestModel.extend(Evented) {
       {
         id: "discourse.user.groups",
         since: "2026.8.0-latest.1",
+        url: "https://meta.discourse.org/t/-/411124",
       }
     );
     return this.visibleGroups;

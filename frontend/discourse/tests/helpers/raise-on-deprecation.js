@@ -51,11 +51,6 @@ function raiseDeprecationError(message, options) {
     ? ""
     : ` FROM ${prefix.substring(1, prefix.length - 1)}`;
 
-  // if (from.includes("DEPRECATION FROM BROWSER EXTENSION")) {
-  //   console.log(message);
-  //   return;
-  // }
-
   message = `DEPRECATION${from}: ${message} (deprecation id: ${options.id})\n\nCore and all the preinstalled plugins tests runs must be deprecation-free. Use ember-deprecation-workflow to silence unresolved deprecations.`;
 
   if (QUnit.config.current && !disabledQUnitResult) {

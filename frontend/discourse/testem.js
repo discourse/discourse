@@ -3,7 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
-const { buildReport } = require("./lib/deprecation-report");
+const {
+  buildReport,
+  renderReportSummary,
+} = require("./lib/deprecation-report");
 
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
@@ -16,10 +19,6 @@ const sandboxDisabled =
   );
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
-
-// Number of detailed rows included in the GitHub job summary. The full set
-// always goes to the JSON report artifact.
-const SUMMARY_DETAIL_LIMIT = 25;
 
 /**
  * Label identifying which CI run group produced a report, so the artifacts of a
@@ -167,97 +166,34 @@ class Reporter extends TapReporter {
     }
   }
 
-  generateDeprecationTable() {
-    const maxIdLength = Math.max(
-      ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
-    );
-
-    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
-
-    for (const [id, count] of this.deprecationCounts.entries()) {
-      const countString = count.toString();
-      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
-    }
-
-    return msg;
-  }
-
-  generateDeprecationsByOriginTable() {
-    const allDeprecationIds = this.collectAllDeprecationIds();
-    const maxIdLength = Math.max(
-      ...Array.from(allDeprecationIds).map((id) => id.length)
-    );
-    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
-    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
-
-    let msg = this.buildTableHeader(
-      ["origin", "id", "count"],
-      [maxOriginLength, maxIdLength, 5]
-    );
-
-    for (const origin of origins) {
-      const originMap = this.deprecationCountsByOrigin.get(origin);
-      const sortedIds = Array.from(originMap.keys()).sort();
-
-      for (const id of sortedIds) {
-        const count = originMap.get(id);
-        const countString = count.toString();
-        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
-      }
-    }
-
-    return msg;
-  }
-
-  collectAllDeprecationIds() {
-    const allIds = new Set();
-    for (const originMap of this.deprecationCountsByOrigin.values()) {
-      for (const id of originMap.keys()) {
-        allIds.add(id);
-      }
-    }
-    return allIds;
-  }
-
-  buildTableHeader(columnNames, columnWidths) {
-    let header = "| ";
-    let separator = "| ";
-
-    for (let i = 0; i < columnNames.length; i++) {
-      const name = columnNames[i];
-      const width = columnWidths[i];
-      header += `${name.padEnd(width)} | `;
-      separator += `${"".padEnd(width, "-")} | `;
-    }
-
-    return header + "\n" + separator + "\n";
-  }
-
   reportDeprecations() {
-    if (this.deprecationCounts.size === 0) {
+    if (
+      this.deprecationCounts.size === 0 &&
+      this.deprecationDetails.size === 0
+    ) {
       this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
-      this.writeDeprecationReport();
       return;
     }
 
-    const table = this.generateDeprecationTable();
-    let deprecationMessage =
-      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
-
-    let originTable = null;
-    if (this.deprecationCountsByOrigin.size > 0) {
-      originTable = this.generateDeprecationsByOriginTable();
-      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
-    }
-
     const report = this.writeDeprecationReport();
-
-    if (report) {
-      deprecationMessage += `\nDetailed report: ${report.path}\n`;
+    if (!report) {
+      return;
     }
 
-    this.writeGitHubSummary(table, originTable, report);
-    this.out.write(`\n${deprecationMessage}\n\n`);
+    this.out.write(
+      `\n${renderReportSummary(report.document, {
+        reportLocation: `\`${report.path}\``,
+      })}\n`
+    );
+
+    if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
+      fs.appendFileSync(
+        process.env.GITHUB_STEP_SUMMARY,
+        `${renderReportSummary(report.document, {
+          reportLocation: "the `js-deprecation-report` artifact",
+        })}\n`
+      );
+    }
   }
 
   /**
@@ -267,10 +203,6 @@ class Reporter extends TapReporter {
    * @returns {?{path: string, document: Object}}
    */
   writeDeprecationReport() {
-    if (this.deprecationDetails.size === 0) {
-      return null;
-    }
-
     const group = deprecationReportGroup();
     const dir =
       process.env.DEPRECATION_REPORT_DIR ||
@@ -281,6 +213,13 @@ class Reporter extends TapReporter {
       document = buildReport({
         group,
         entries: Array.from(this.deprecationDetails.values()),
+        totals: Object.fromEntries(this.deprecationCounts),
+        totalsByOrigin: Object.fromEntries(
+          Array.from(this.deprecationCountsByOrigin, ([origin, counts]) => [
+            origin,
+            Object.fromEntries(counts),
+          ])
+        ),
       });
     } catch (error) {
       this.out.write(
@@ -292,44 +231,9 @@ class Reporter extends TapReporter {
     fs.mkdirSync(dir, { recursive: true });
 
     const file = path.join(dir, `${group}-${process.pid}.json`);
-    fs.writeFileSync(file, JSON.stringify(document, null, 2));
+    fs.writeFileSync(file, `${JSON.stringify(document, null, 2)}\n`);
 
     return { path: path.relative(REPO_ROOT, file), document };
-  }
-
-  generateDeprecationDetailTable(document) {
-    let table = "| id | call site | count | specs |\n";
-    table += "| -- | --------- | ----- | ----- |\n";
-
-    for (const site of document.sites.slice(0, SUMMARY_DETAIL_LIMIT)) {
-      const location = `${site.file}:${site.line}`;
-      table += `| ${site.id} | ${location} | ${site.count} | ${site.specCount} |\n`;
-    }
-
-    return table;
-  }
-
-  writeGitHubSummary(table, originTable, report) {
-    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
-      return;
-    }
-
-    let jobSummary =
-      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
-    jobSummary += table;
-
-    if (originTable) {
-      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
-    }
-
-    if (report) {
-      jobSummary += `\n\nTop ${SUMMARY_DETAIL_LIMIT} deprecated call sites (full details in the \`deprecation-reports\` artifact):\n\n`;
-      jobSummary += this.generateDeprecationDetailTable(report.document);
-    }
-
-    jobSummary += "\n\n";
-
-    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
   }
 
   finish() {

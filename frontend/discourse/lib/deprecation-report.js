@@ -1,24 +1,19 @@
 "use strict";
 
-// Turns raw browser stack traces collected alongside JS deprecations into
-// original source locations, using the sourcemaps emitted next to the built
-// bundles. Used by the testem reporter to produce the deprecation report
-// artifact.
-
 const fs = require("fs");
 const path = require("path");
+const { SourceMapConsumer } = require("source-map-js");
+const {
+  ReportAccumulator,
+  mergeReports,
+  renderReportSummary,
+} = require("./deprecation-report-format");
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
-
-// Directories which may contain `*.js.map` files for anything loaded by the
-// test page. Missing directories are ignored.
 const MAP_ROOTS = [
   path.join(REPO_ROOT, "frontend", "discourse", "dist", "assets", "map"),
   path.join(REPO_ROOT, "app", "assets", "generated"),
 ];
-
-// Frames belonging to the deprecation machinery itself: they are always on top
-// of the stack and never point at the code which needs fixing.
 const PLUMBING_PATTERNS = [
   /\/app\/lib\/deprecated\.js$/,
   /\/app\/lib\/source-identifier\.js$/,
@@ -27,183 +22,100 @@ const PLUMBING_PATTERNS = [
   /\/ember-source\/.*\/deprecate\.js$/,
   /\/@ember\/debug\//,
 ];
-
-// A stack going through this wrapper means the innermost owned frame is the
-// deprecated API, not the code calling it.
 const DEPRECATION_WRAPPER_PATTERN = /(^|\/)app\/lib\/deprecated\.js$/;
-
-const TEST_FILE_PATTERN = /\/(tests|spec)\/.*-test\.(js|gjs|ts|gts)$/;
-
-// Raw frames to resolve per stack, and owned frames to keep in the report.
+const TEST_FILE_PATTERN = /\/(tests?|spec)\/.*-test\.(js|gjs|ts|gts)$/;
 const MAX_RESOLVED_FRAMES = 60;
-const MAX_REPORTED_FRAMES = 15;
 
-const BASE64 =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-const BASE64_LOOKUP = new Map(
-  Array.from(BASE64).map((char, index) => [char, index])
-);
-
-/**
- * Decodes a sourcemap `mappings` string into one array of segments per
- * generated line. Each segment is `[generatedColumn, sourceIndex, sourceLine,
- * sourceColumn]` (0-based), matching the sourcemap spec's delta encoding.
- *
- * @param {string} mappings
- * @returns {number[][][]}
- */
-function decodeMappings(mappings) {
-  const lines = [];
-  let sourceIndex = 0;
-  let sourceLine = 0;
-  let sourceColumn = 0;
-
-  for (const rawLine of mappings.split(";")) {
-    const segments = [];
-    let generatedColumn = 0;
-
-    if (rawLine.length > 0) {
-      for (const rawSegment of rawLine.split(",")) {
-        const values = decodeVlq(rawSegment);
-        if (values.length === 0) {
-          continue;
-        }
-
-        generatedColumn += values[0];
-
-        if (values.length >= 4) {
-          sourceIndex += values[1];
-          sourceLine += values[2];
-          sourceColumn += values[3];
-          segments.push([
-            generatedColumn,
-            sourceIndex,
-            sourceLine,
-            sourceColumn,
-          ]);
-        }
-      }
-    }
-
-    lines.push(segments);
+function normalizeFile(file) {
+  if (!file) {
+    return null;
   }
 
-  return lines;
+  const normalized = file.replaceAll("\\", "/").replace(/^\.\//, "");
+  const pluginMatch = normalized.match(
+    /(?:^|\/)discourse\/plugins\/([^/]+)\/(.+)$/
+  );
+
+  if (pluginMatch) {
+    const [, plugin, rest] = pluginMatch;
+    const candidates = [
+      `plugins/${plugin}/assets/javascripts/${rest}`,
+      `plugins/${plugin}/test/javascripts/${rest}`,
+    ];
+
+    return (
+      candidates.find((candidate) =>
+        fs.existsSync(path.join(REPO_ROOT, candidate))
+      ) || candidates[0]
+    );
+  }
+
+  return normalized;
 }
 
-function decodeVlq(segment) {
-  /* eslint-disable no-bitwise -- base64 VLQ decoding is inherently bitwise */
-  const values = [];
-  let value = 0;
-  let shift = 0;
+function normalizeMappedSource(source, mapPath) {
+  const normalized = source
+    .replace(/^webpack:\/\/[^/]*\//, "")
+    .replaceAll("\\", "/");
+  const absolute = path.isAbsolute(normalized)
+    ? normalized
+    : path.resolve(path.dirname(mapPath), normalized);
+  const relative = path.relative(REPO_ROOT, absolute);
 
-  for (const char of segment) {
-    const digit = BASE64_LOOKUP.get(char);
-    if (digit === undefined) {
-      return [];
-    }
-
-    value += (digit & 31) << shift;
-
-    if (digit & 32) {
-      shift += 5;
-    } else {
-      const negative = value & 1;
-      value >>>= 1;
-      values.push(negative ? (value === 0 ? -0x80000000 : -value) : value);
-      value = 0;
-      shift = 0;
-    }
-  }
-  /* eslint-enable no-bitwise */
-
-  return values;
+  return normalizeFile(relative.startsWith("..") ? absolute : relative);
 }
 
 class SourceMap {
-  #json;
-  #decoded;
+  #consumer;
+  #mapPath;
 
   constructor(json, mapPath) {
-    this.#json = json;
-    this.mapPath = mapPath;
+    this.#consumer = new SourceMapConsumer(json);
+    this.#mapPath = mapPath;
   }
 
-  get #lines() {
-    this.#decoded ||= decodeMappings(this.#json.mappings || "");
-    return this.#decoded;
-  }
-
-  /**
-   * @param {number} line 1-based generated line
-   * @param {number} column 1-based generated column
-   * @returns {?{file: string, line: number, column: number, code: ?string}}
-   */
   originalPositionFor(line, column) {
-    let segments = this.#lines[line - 1];
+    let original;
     let approximate = false;
 
-    // Blank lines and comments carry no mappings; the nearest preceding mapped
-    // line still lands in the right function.
-    for (let back = 1; back <= 10 && !segments?.length; back++) {
-      segments = this.#lines[line - 1 - back];
-      approximate = true;
-    }
+    for (let back = 0; back <= 10 && line - back >= 1; back++) {
+      original = this.#consumer.originalPositionFor({
+        line: line - back,
+        column: back === 0 ? column - 1 : Number.MAX_SAFE_INTEGER,
+        bias: SourceMapConsumer.GREATEST_LOWER_BOUND,
+      });
 
-    if (!segments || segments.length === 0) {
-      return null;
-    }
-
-    const target = column - 1;
-    let match = null;
-
-    // Segments are sorted by generated column; take the last one at or before
-    // the target.
-    for (const segment of segments) {
-      if (segment[0] > target) {
+      if (original.source) {
+        approximate = back > 0;
         break;
       }
-      match = segment;
     }
-    match ||= segments[0];
 
-    const source = this.#json.sources?.[match[1]];
-    if (!source) {
+    if (!original?.source) {
       return null;
     }
+
+    const source = this.#consumer.sourceContentFor(original.source, true);
+    const code = source?.split("\n")[original.line - 1];
 
     return {
-      file: this.#normalizeSource(source),
-      line: match[2] + 1,
-      column: match[3] + 1,
-      code: this.#sourceLine(match[1], match[2]),
+      file: normalizeMappedSource(original.source, this.#mapPath),
+      line: original.line,
+      column: original.column + 1,
+      code: code === undefined ? null : code.trim().slice(0, 200),
       approximate,
     };
-  }
-
-  #normalizeSource(source) {
-    const withoutRoot = this.#json.sourceRoot
-      ? path.join(this.#json.sourceRoot, source)
-      : source;
-    const absolute = path.resolve(path.dirname(this.mapPath), withoutRoot);
-    const relative = path.relative(REPO_ROOT, absolute);
-    return relative.startsWith("..") ? absolute : relative;
-  }
-
-  #sourceLine(sourceIndex, zeroBasedLine) {
-    const content = this.#json.sourcesContent?.[sourceIndex];
-    if (!content) {
-      return null;
-    }
-
-    const line = content.split("\n")[zeroBasedLine];
-    return line === undefined ? null : line.trim().slice(0, 200);
   }
 }
 
 class SourceMapIndex {
-  #byBasename = null;
+  #byBasename;
   #cache = new Map();
+  #mapRoots;
+
+  constructor(mapRoots = MAP_ROOTS) {
+    this.#mapRoots = mapRoots;
+  }
 
   #index() {
     if (this.#byBasename) {
@@ -211,38 +123,34 @@ class SourceMapIndex {
     }
 
     this.#byBasename = new Map();
-    for (const root of MAP_ROOTS) {
+    for (const root of this.#mapRoots) {
       this.#walk(root);
     }
     return this.#byBasename;
   }
 
-  #walk(dir, depth = 0) {
+  #walk(directory, depth = 0) {
     if (depth > 6) {
       return;
     }
 
     let entries;
     try {
-      entries = fs.readdirSync(dir, { withFileTypes: true });
+      entries = fs.readdirSync(directory, { withFileTypes: true });
     } catch {
       return;
     }
 
     for (const entry of entries) {
-      const full = path.join(dir, entry.name);
+      const fullPath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
-        this.#walk(full, depth + 1);
+        this.#walk(fullPath, depth + 1);
       } else if (entry.name.endsWith(".map")) {
-        this.#byBasename.set(entry.name, full);
+        this.#byBasename.set(entry.name, fullPath);
       }
     }
   }
 
-  /**
-   * @param {string} scriptBasename e.g. "discourse-abc123.digested.js"
-   * @returns {?SourceMap}
-   */
   forScript(scriptBasename) {
     if (this.#cache.has(scriptBasename)) {
       return this.#cache.get(scriptBasename);
@@ -268,11 +176,8 @@ class SourceMapIndex {
 }
 
 const STACK_FRAME_PATTERNS = [
-  // Chrome: "    at fnName (url:line:col)"
   /^\s*at\s+(?<fn>.*?)\s+\((?<url>.*?):(?<line>\d+):(?<column>\d+)\)$/,
-  // Chrome: "    at url:line:col"
   /^\s*at\s+(?<url>.*?):(?<line>\d+):(?<column>\d+)$/,
-  // Firefox: "fnName@url:line:col"
   /^(?<fn>.*?)@(?<url>.*?):(?<line>\d+):(?<column>\d+)$/,
 ];
 
@@ -318,42 +223,22 @@ function isPlumbing(file) {
   return PLUMBING_PATTERNS.some((pattern) => pattern.test(`/${file}`));
 }
 
-function isVendored(file) {
-  return file.includes("node_modules/");
-}
-
-function toLocation(frame) {
-  return {
-    function: frame.function || null,
-    file: frame.file,
-    line: frame.line,
-    column: frame.column,
-    code: frame.code || null,
-  };
-}
-
-/**
- * Frames in code we own: everything the report is actually about. Framework and
- * reporting frames are dropped, since a deprecation raised through a computed
- * property or the runloop buries the interesting frames under dozens of them.
- *
- * @param {Object[]} frames resolved frames, innermost first
- * @returns {Object[]}
- */
 function ownFrames(frames) {
   return frames.filter(
     (frame) =>
-      frame.resolved && !isPlumbing(frame.file) && !isVendored(frame.file)
+      frame.resolved &&
+      !isPlumbing(frame.file) &&
+      !frame.file.includes("node_modules/")
   );
 }
 
 class DeprecationStackResolver {
-  #index = new SourceMapIndex();
+  #index;
 
-  /**
-   * Resolves one raw frame to its original source location, falling back to the
-   * built asset when no sourcemap is available.
-   */
+  constructor({ mapRoots = MAP_ROOTS } = {}) {
+    this.#index = new SourceMapIndex(mapRoots);
+  }
+
   resolveFrame(frame) {
     const sourceMap = this.#index.forScript(scriptBasenameFor(frame.url));
     const original = sourceMap?.originalPositionFor(frame.line, frame.column);
@@ -370,12 +255,8 @@ class DeprecationStackResolver {
 
     return {
       function: frame.fn,
-      file: original.file,
-      line: original.line,
-      column: original.column,
-      code: original.code,
+      ...original,
       resolved: true,
-      ...(original.approximate ? { approximate: true } : {}),
     };
   }
 
@@ -385,82 +266,64 @@ class DeprecationStackResolver {
       .map((frame) => this.resolveFrame(frame));
   }
 
-  /**
-   * Expands one collected deprecation occurrence into a report entry with the
-   * spec location, the code that must be fixed, and the frames in between.
-   *
-   * @param {Object} entry as emitted by the browser-side deprecation counter
-   * @returns {Object}
-   */
-  buildEntry(entry) {
+  resolve(entry) {
     const frames = this.resolveStack(entry.stack);
-    const own = ownFrames(frames);
-
-    // With a Discourse `deprecated()` call the innermost owned frame is the
-    // deprecated API itself, and its caller is what needs changing. Ember's own
-    // deprecations have no such wrapper, so the innermost owned frame is already
-    // the caller.
+    const owned = ownFrames(frames);
     const viaWrapper = frames.some(
       (frame) => frame.resolved && DEPRECATION_WRAPPER_PATTERN.test(frame.file)
     );
-    const deprecatedApi = viaWrapper ? own[0] || null : null;
-    const callers = viaWrapper ? own.slice(1) : own;
-
-    const deprecationSite = callers[0] || own[0] || frames[0] || null;
-    const specCallSite =
-      callers.find((f) => TEST_FILE_PATTERN.test(`/${f.file}`)) || null;
-    const specFile = this.resolveStack(entry.testStack, { maxFrames: 1 })[0];
+    const callers = viaWrapper ? owned.slice(1) : owned;
+    const site = callers[0] || null;
+    const stackTestFrame = callers.find((frame) =>
+      TEST_FILE_PATTERN.test(`/${frame.file}`)
+    );
+    const declaredTestFrame = this.resolveStack(entry.testStack, {
+      maxFrames: 20,
+    }).find(
+      (frame) => frame.resolved && TEST_FILE_PATTERN.test(`/${frame.file}`)
+    );
+    const suppliedTest = entry.test || {};
+    const testFile = suppliedTest.file
+      ? normalizeFile(suppliedTest.file)
+      : declaredTestFrame?.file || stackTestFrame?.file || null;
+    const testLine =
+      suppliedTest.callSiteLine ||
+      suppliedTest.declarationLine ||
+      stackTestFrame?.line ||
+      declaredTestFrame?.line ||
+      null;
 
     return {
       id: entry.id,
-      count: entry.count,
-      origin: entry.origin || null,
-      test: {
-        module: entry.module || null,
-        name: entry.testName || null,
-        file: specFile?.file || null,
-        // Line where `test(...)` is declared.
-        declarationLine: specFile?.line || null,
-        // Line inside the test which actually triggered the deprecation.
-        callSiteLine: specCallSite?.line || null,
-        callSiteCode: specCallSite?.code || null,
-        // Callers which already know the spec (e.g. RSpec system specs) pass it
-        // through directly rather than recovering it from a JS stack.
-        ...entry.test,
-      },
-      // The code to change: what called the deprecated API.
-      deprecationSite: deprecationSite && toLocation(deprecationSite),
-      // The deprecated API itself, for context.
-      deprecatedApi: deprecatedApi && toLocation(deprecatedApi),
-      // Framework and reporting frames are dropped; they are the same for every
-      // occurrence and bury the frames that matter.
-      stack: callers.slice(0, MAX_REPORTED_FRAMES).map(toLocation),
+      count: entry.count || 1,
+      origin: entry.origin || "unknown",
+      site,
+      spec: testFile
+        ? `${testFile}${testLine ? `:${testLine}` : ""}`
+        : suppliedTest.name || entry.testName || null,
     };
   }
 }
 
-/**
- * Collapses identical occurrences reported by different browsers (or different
- * parallel spec processes) into one entry.
- *
- * @param {Object[]} entries
- * @returns {Object[]}
- */
-function mergeEntries(entries) {
+function rawEntryKey(entry) {
+  return [
+    entry.id,
+    entry.origin,
+    entry.module,
+    entry.testName,
+    entry.test?.file,
+    entry.test?.name,
+    entry.stack,
+  ].join("\u0000");
+}
+
+function mergeRawEntries(entries) {
   const merged = new Map();
 
   for (const entry of entries) {
-    const key = [
-      entry.id,
-      entry.origin,
-      entry.module,
-      entry.testName,
-      entry.test?.file,
-      entry.test?.name,
-      entry.stack,
-    ].join(" ");
-
+    const key = rawEntryKey(entry);
     const existing = merged.get(key);
+
     if (existing) {
       existing.count += entry.count || 1;
     } else {
@@ -468,99 +331,30 @@ function mergeEntries(entries) {
     }
   }
 
-  return Array.from(merged.values());
+  return merged.values();
 }
 
-/**
- * Builds the full report document written to disk.
- *
- * @param {Object} options
- * @param {string} options.group run group label, e.g. "frontend-core"
- * @param {Object[]} options.entries raw entries collected from the browsers
- * @returns {Object}
- */
-function buildReport({ group, entries }) {
-  const resolver = new DeprecationStackResolver();
-  const deprecations = mergeEntries(entries).map((entry) =>
-    resolver.buildEntry(entry)
-  );
+function buildReport({
+  group,
+  entries,
+  totals = {},
+  totalsByOrigin = {},
+  resolver = new DeprecationStackResolver(),
+}) {
+  const accumulator = new ReportAccumulator();
 
-  const totals = {};
-  for (const deprecation of deprecations) {
-    totals[deprecation.id] = (totals[deprecation.id] || 0) + deprecation.count;
+  for (const entry of mergeRawEntries(entries)) {
+    accumulator.addOccurrence(resolver.resolve(entry), group);
   }
 
-  deprecations.sort(
-    (a, b) =>
-      a.id.localeCompare(b.id) ||
-      (a.test.file || "").localeCompare(b.test.file || "") ||
-      (a.test.callSiteLine || 0) - (b.test.callSiteLine || 0)
-  );
-
-  return {
-    group,
-    generatedAt: new Date().toISOString(),
-    totals,
-    sites: aggregateSites(deprecations),
-    deprecations,
-  };
-}
-
-// Specs listed per call site before the list is truncated.
-const MAX_SITE_SPECS = 10;
-
-/**
- * The work list: every distinct place that calls a deprecated API, ranked by how
- * often it fires, with a sample of the specs which exercise it.
- *
- * @param {Object[]} deprecations
- * @returns {Object[]}
- */
-function aggregateSites(deprecations) {
-  const sites = new Map();
-
-  for (const deprecation of deprecations) {
-    const site = deprecation.deprecationSite;
-    if (!site) {
-      continue;
-    }
-
-    const key = `${deprecation.id} ${site.file}:${site.line}`;
-    let entry = sites.get(key);
-
-    if (!entry) {
-      entry = {
-        id: deprecation.id,
-        file: site.file,
-        line: site.line,
-        code: site.code,
-        count: 0,
-        specCount: 0,
-        specs: [],
-      };
-      sites.set(key, entry);
-    }
-
-    entry.count += deprecation.count;
-
-    const spec = deprecation.test.file
-      ? `${deprecation.test.file}${deprecation.test.callSiteLine ? `:${deprecation.test.callSiteLine}` : ""}`
-      : deprecation.test.name;
-
-    if (spec && !entry.specs.includes(spec)) {
-      entry.specCount++;
-      if (entry.specs.length < MAX_SITE_SPECS) {
-        entry.specs.push(spec);
-      }
-    }
-  }
-
-  return Array.from(sites.values()).sort((a, b) => b.count - a.count);
+  accumulator.reconcileTotals(group, totals, totalsByOrigin);
+  return accumulator.toReport();
 }
 
 module.exports = {
   DeprecationStackResolver,
   buildReport,
+  mergeReports,
   parseStack,
-  decodeMappings,
+  renderReportSummary,
 };
