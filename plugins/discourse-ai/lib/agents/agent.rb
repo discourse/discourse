@@ -533,7 +533,10 @@ module DiscourseAi
           content.filter_map do |part|
             if part.is_a?(Hash) && part.key?(:upload_id)
               upload = uploads_by_id[part[:upload_id].to_i]
-              next part if upload.blank? || !image_upload?(upload)
+              if upload.blank? ||
+                   !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+                next part
+              end
               next if seen_upload_ids.include?(upload.id)
 
               delegated_image_handle(upload, context, seen_upload_ids)
@@ -552,7 +555,10 @@ module DiscourseAi
         content.gsub(DELEGATED_IMAGE_PATTERN) do |markdown|
           sha1 = Upload.sha1_from_short_url(Regexp.last_match(1))
           upload = uploads_by_sha1[sha1]
-          next markdown if upload.blank? || !image_upload?(upload)
+          if upload.blank? ||
+               !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+            next markdown
+          end
           next "" if seen_upload_ids.include?(upload.id)
 
           delegated_image_handle(upload, context, seen_upload_ids) || "[Image unavailable]"
@@ -569,10 +575,6 @@ module DiscourseAi
 
       def prompt_guardian(context)
         context.image_guardian
-      end
-
-      def image_upload?(upload)
-        DiscourseAi::Completions::UploadEncoder.image_upload?(upload)
       end
 
       def replace_placeholders(content, context)

@@ -5,13 +5,21 @@ module DiscourseAi
     class UploadEncoder
       extend UploadEncoding
 
-      def self.image_upload?(upload)
-        mime_type = MiniMime.lookup_by_filename(upload.original_filename)&.content_type
-        mime_type&.start_with?("image/") == true
-      end
+      JPEG_EXTENSIONS = %w[jpg jpeg].freeze
+      SUPPORTED_IMAGE_EXTENSIONS = (JPEG_EXTENSIONS + %w[png gif webp avif]).freeze
 
       def self.supported_image_upload?(upload)
-        image_upload?(upload) && %w[jpg jpeg png gif webp].include?(upload.extension&.downcase)
+        image_extension?(upload.extension&.downcase)
+      end
+
+      def self.image?(upload)
+        extension = upload.extension.to_s.delete_prefix(".").downcase
+        return true if FileHelper.supported_images.include?(extension)
+
+        filename = upload.original_filename.to_s
+        filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
+
+        MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
       end
 
       def self.encode(
@@ -30,6 +38,14 @@ module DiscourseAi
           extension = upload.extension&.downcase
           kind = image_extension?(extension) ? :image : :document
 
+          if kind == :document && image?(upload)
+            log_image_upload_skip(
+              upload,
+              "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_EXTENSIONS.join(", ")}",
+            )
+            next
+          end
+
           next if allowed_kinds.exclude?(kind)
 
           if kind == :document
@@ -43,17 +59,12 @@ module DiscourseAi
             next DocumentEncoder.encode(upload, mime_type, attachment_type)
           end
 
-          next if upload.width.to_i == 0 || upload.height.to_i == 0
+          if upload.width.to_i == 0 || upload.height.to_i == 0
+            log_image_upload_skip(upload, "image dimensions are unknown")
+            next
+          end
 
-          desired_extension = upload.extension
-          desired_extension = "png" if upload.extension == "gif"
-          desired_extension = "png" if upload.extension == "webp"
-          desired_extension = "jpeg" if upload.extension == "jpg"
-
-          # this keeps it very simple format wise given everyone supports png and jpg
-          next if !%w[jpeg png].include?(desired_extension)
-
-          encode_image(upload, desired_extension, max_pixels)
+          encode_image(upload, transcode_format(extension), max_pixels)
         end
       end
 
@@ -67,7 +78,18 @@ module DiscourseAi
         end
 
         def image_extension?(ext)
-          %w[jpg jpeg png gif webp].include?(ext)
+          SUPPORTED_IMAGE_EXTENSIONS.include?(ext)
+        end
+
+        def transcode_format(extension)
+          JPEG_EXTENSIONS.include?(extension) ? "jpeg" : "png"
+        end
+
+        def log_image_upload_skip(upload, message)
+          Rails.logger.warn(
+            "Discourse AI: Skipping image upload " \
+              "(upload_id=#{upload.id}, filename=#{upload.original_filename.inspect}): #{message}",
+          )
         end
 
         def encode_image(upload, desired_extension, max_pixels)
@@ -82,17 +104,24 @@ module DiscourseAi
             new_height = (ratio * upload.height).to_i
 
             image = upload.get_optimized_image(new_width, new_height, format: desired_extension)
-          elsif upload.extension != desired_extension
+          elsif upload.extension&.downcase != desired_extension
             image =
               upload.get_optimized_image(upload.width, upload.height, format: desired_extension)
           end
 
-          return if !image
+          if !image
+            log_image_upload_skip(upload, "could not be converted to #{desired_extension}")
+            return
+          end
 
           mime_type = MiniMime.lookup_by_filename("test.#{desired_extension}").content_type
 
           path = fetch_path(image)
-          return if path.blank?
+
+          if path.blank?
+            log_image_upload_skip(upload, "file is not available in the store")
+            return
+          end
 
           encoded = Base64.strict_encode64(File.binread(path))
 
