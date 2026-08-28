@@ -10,6 +10,9 @@ require "vips"
 raise LoadError, "libvips 8.13 or newer is required" if !Vips.at_least_libvips?(8, 13)
 
 class DiscourseVipsWorker
+  LINUX_PLATFORM = RUBY_PLATFORM.include?("linux")
+  private_constant :LINUX_PLATFORM
+
   class Operations
     DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
     private_constant :DEFAULT_READ_PATHS
@@ -144,7 +147,7 @@ class DiscourseVipsWorker
 
   def self.run(server_fd:, owner_fd:)
     parent_pid = Process.ppid
-    Landlock::Native.set_parent_death_signal! if RUBY_PLATFORM.include?("linux")
+    Landlock::Native.set_parent_death_signal! if LINUX_PLATFORM
     exit! 1 if Process.ppid != parent_pid
 
     Process.setproctitle("discourse vips worker")
@@ -181,7 +184,7 @@ class DiscourseVipsWorker
   def fork_connection_process(connection)
     parent_pid = Process.pid
     fork do
-      Landlock::Native.set_parent_death_signal! if RUBY_PLATFORM.include?("linux")
+      Landlock::Native.set_parent_death_signal! if LINUX_PLATFORM
       exit! 1 if Process.ppid != parent_pid
       Signal.trap("CHLD", "DEFAULT")
       @server.close
