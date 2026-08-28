@@ -2,8 +2,18 @@
 
 class Admin::McpClientsController < Admin::AdminController
   def index
-    clients = McpOauthClient.includes(:authorizations).order(updated_at: :desc).limit(200)
-    render json: { clients: clients.map { |client| serialize(client) } }
+    page =
+      McpOauthClientsPage.new(
+        limit: fetch_limit_from_params(default: 50, max: 100),
+        cursor: fetch_int_from_params(:cursor, default: nil, min: 1),
+        filter: params[:filter],
+      ).call
+    render json: {
+             clients: page.records.map { |client| serialize(client) },
+             meta: {
+               next_cursor: page.next_cursor,
+             },
+           }
   end
 
   def show
@@ -52,21 +62,26 @@ class Admin::McpClientsController < Admin::AdminController
   end
 
   def serialize(value)
-    client_uri = URI.parse(value.client_id) if value.client_id.start_with?("https://")
     {
       id: value.id,
       client_id: value.client_id,
       name: value.name,
-      domain: client_uri&.host,
+      domain: uri_host(value.client_id),
       registration_type: value.registration_type,
       trust_state: value.trust_state,
       blocked: value.blocked?,
       redirect_uris: value.redirect_uris,
-      redirect_hosts: value.redirect_uris.filter_map { |uri| URI.parse(uri).host }.uniq,
+      redirect_hosts: value.redirect_uris.filter_map { |uri| uri_host(uri) }.uniq,
       metadata_uri: value.metadata_uri,
       first_seen_at: value.created_at,
       last_seen_at: value.last_seen_at,
       authorization_count: value.authorizations.size,
     }
+  end
+
+  def uri_host(value)
+    URI.parse(value).host
+  rescue URI::InvalidURIError
+    nil
   end
 end

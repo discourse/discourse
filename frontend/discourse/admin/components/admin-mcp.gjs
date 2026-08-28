@@ -68,9 +68,13 @@ export default class AdminMcp extends Component {
   @tracked saving = false;
   @tracked clients;
   @tracked clientRecord;
+  @tracked clientNextCursor;
+  @tracked clientLoading = false;
   @tracked primitiveRecords;
   @tracked updatingPrimitiveId;
   @tracked authorizations;
+  @tracked authorizationNextCursor;
+  @tracked authorizationLoading = false;
   @tracked activity;
   @tracked activityMetrics;
   @tracked activityNextCursor;
@@ -88,12 +92,15 @@ export default class AdminMcp extends Component {
   clientFilterFormData = { clientFilter: "" };
   authorizationFilterFormData = { authorizationFilter: "" };
   activityFilterFormData = { activityFilter: "", activityOutcome: "all" };
+  clientRequestId = 0;
+  authorizationRequestId = 0;
   activityRequestId = 0;
 
   constructor() {
     super(...arguments);
     const model = this.args.model || {};
     this.clients = model.clients || model.oauth_clients;
+    this.clientNextCursor = model.meta?.next_cursor;
     this.clientRecord = model.client;
     this.primitiveRecords = model.primitives;
     this.primitiveEnabledStates = new Map(
@@ -103,6 +110,7 @@ export default class AdminMcp extends Component {
       ])
     );
     this.authorizations = model.authorizations;
+    this.authorizationNextCursor = model.meta?.next_cursor;
     this.activity = model.activity || model.events;
     this.activityMetrics = model.metrics;
     this.activityNextCursor = model.meta?.next_cursor;
@@ -347,48 +355,23 @@ export default class AdminMcp extends Component {
   }
 
   get hasClients() {
-    return this.clientRecords.length > 0;
+    return this.clientRecords.length > 0 || this.clientFilter.trim().length > 0;
   }
 
   get filteredClients() {
-    const filter = this.clientFilter.trim().toLowerCase();
-    return this.clientRecords.filter((client) => {
-      if (!filter) {
-        return true;
-      }
-      return [
-        client.name,
-        client.client_id,
-        client.domain,
-        client.registration_type,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(filter);
-    });
+    return this.clientRecords;
   }
 
   get filteredAuthorizations() {
-    const filter = this.authorizationFilter.trim().toLowerCase();
-    const authorizations =
-      this.authorizations || this.model.authorizations || [];
-    return authorizations.filter((authorization) => {
-      if (!filter) {
-        return true;
-      }
-      return [
-        authorization.client_name,
-        authorization.client_id,
-        authorization.username,
-        authorization.status,
-        ...(authorization.scopes || []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(filter);
-    });
+    return this.authorizations || this.model.authorizations || [];
+  }
+
+  get canLoadMoreClients() {
+    return Boolean(this.clientNextCursor);
+  }
+
+  get canLoadMoreAuthorizations() {
+    return Boolean(this.authorizationNextCursor);
   }
 
   get activityOutcomes() {
@@ -460,10 +443,12 @@ export default class AdminMcp extends Component {
         this.announcePrimitiveResults();
         break;
       case "clientFilter":
-        this.clientFilter = value;
+        this.clientFilter = value || "";
+        discourseDebounce(this, this.reloadClients, INPUT_DELAY);
         break;
       case "authorizationFilter":
-        this.authorizationFilter = value;
+        this.authorizationFilter = value || "";
+        discourseDebounce(this, this.reloadAuthorizations, INPUT_DELAY);
         break;
       case "activityFilter":
         this.activityFilter = value || "";
@@ -766,6 +751,106 @@ export default class AdminMcp extends Component {
         }
       },
     });
+  }
+
+  @action
+  reloadClients() {
+    return this.loadClients({ append: false });
+  }
+
+  @action
+  loadMoreClients() {
+    if (!this.canLoadMoreClients || this.clientLoading) {
+      return;
+    }
+
+    return this.loadClients({ append: true });
+  }
+
+  async loadClients({ append }) {
+    const cursor = append ? this.clientNextCursor : null;
+    const requestId = this.clientRequestId + 1;
+    this.clientRequestId = requestId;
+    this.clientLoading = true;
+
+    try {
+      const result = await ajax("/admin/mcp/clients.json", {
+        data: this.recordRequestData(this.clientFilter, cursor),
+      });
+      if (requestId !== this.clientRequestId) {
+        return;
+      }
+
+      const clients = result.clients || [];
+      this.clients = append ? [...this.clientRecords, ...clients] : clients;
+      this.clientNextCursor =
+        result.meta?.next_cursor || result.next_cursor || null;
+    } catch (error) {
+      if (requestId === this.clientRequestId) {
+        popupAjaxError(error);
+      }
+    } finally {
+      if (requestId === this.clientRequestId) {
+        this.clientLoading = false;
+      }
+    }
+  }
+
+  @action
+  reloadAuthorizations() {
+    return this.loadAuthorizations({ append: false });
+  }
+
+  @action
+  loadMoreAuthorizations() {
+    if (!this.canLoadMoreAuthorizations || this.authorizationLoading) {
+      return;
+    }
+
+    return this.loadAuthorizations({ append: true });
+  }
+
+  async loadAuthorizations({ append }) {
+    const cursor = append ? this.authorizationNextCursor : null;
+    const requestId = this.authorizationRequestId + 1;
+    this.authorizationRequestId = requestId;
+    this.authorizationLoading = true;
+
+    try {
+      const result = await ajax("/admin/mcp/authorizations.json", {
+        data: this.recordRequestData(this.authorizationFilter, cursor),
+      });
+      if (requestId !== this.authorizationRequestId) {
+        return;
+      }
+
+      const authorizations = result.authorizations || [];
+      this.authorizations = append
+        ? [...this.filteredAuthorizations, ...authorizations]
+        : authorizations;
+      this.authorizationNextCursor =
+        result.meta?.next_cursor || result.next_cursor || null;
+    } catch (error) {
+      if (requestId === this.authorizationRequestId) {
+        popupAjaxError(error);
+      }
+    } finally {
+      if (requestId === this.authorizationRequestId) {
+        this.authorizationLoading = false;
+      }
+    }
+  }
+
+  recordRequestData(filter, cursor) {
+    const data = {};
+    const normalizedFilter = filter.trim();
+    if (normalizedFilter) {
+      data.filter = normalizedFilter;
+    }
+    if (cursor) {
+      data.cursor = cursor;
+    }
+    return data;
   }
 
   @action
@@ -1387,80 +1472,89 @@ export default class AdminMcp extends Component {
             />
           </form.Field>
         </Form>
-        <table class="d-table admin-mcp__table">
-          <thead class="d-table__header"><tr class="d-table__row"><th
-                class="d-table__cell --overview"
-              >{{i18n "admin.config.mcp.clients.client"}}</th><th
-                class="d-table__cell --detail"
-              >{{i18n "admin.config.mcp.clients.trust"}}</th><th
-                class="d-table__cell --detail"
-              >{{i18n "admin.config.mcp.clients.last_seen"}}</th><th
-                class="d-table__cell --detail"
-              >{{i18n "admin.config.mcp.clients.authorizations"}}</th><th
-                class="d-table__cell --controls"
-              ><span class="sr-only">{{i18n
-                    "admin.config.mcp.clients.actions"
-                  }}</span></th></tr></thead>
-          <tbody class="d-table__body">
-            {{#each this.filteredClients as |client|}}
-              <tr class="d-table__row">
-                <td class="d-table__cell --overview"><LinkTo
-                    @route="adminConfig.mcp.clients.show"
-                    @model={{client.id}}
-                    class="d-table__overview-link"
-                  ><span
-                      class="d-table__overview-name"
-                    >{{client.name}}</span><small
-                    >{{client.client_id}}</small></LinkTo></td>
-                <td class="d-table__cell --detail"><div
-                    class="d-table__mobile-label"
-                  >{{i18n "admin.config.mcp.clients.trust"}}</div><span
-                    class="admin-mcp__status"
-                    data-state={{client.trust_state}}
-                  >{{mcpValue "client_trust" client.trust_state}}</span></td>
-                <td class="d-table__cell --detail"><div
-                    class="d-table__mobile-label"
-                  >{{i18n "admin.config.mcp.clients.last_seen"}}</div>{{#if
-                    client.last_seen_at
-                  }}{{dAgeWithTooltip
+        <DLoadMore
+          @action={{this.loadMoreClients}}
+          @enabled={{this.canLoadMoreClients}}
+          @isLoading={{this.clientLoading}}
+          @rootMargin="0px 0px 250px 0px"
+          class="admin-mcp__load-more"
+        >
+          <table class="d-table admin-mcp__table">
+            <thead class="d-table__header"><tr class="d-table__row"><th
+                  class="d-table__cell --overview"
+                >{{i18n "admin.config.mcp.clients.client"}}</th><th
+                  class="d-table__cell --detail"
+                >{{i18n "admin.config.mcp.clients.trust"}}</th><th
+                  class="d-table__cell --detail"
+                >{{i18n "admin.config.mcp.clients.last_seen"}}</th><th
+                  class="d-table__cell --detail"
+                >{{i18n "admin.config.mcp.clients.authorizations"}}</th><th
+                  class="d-table__cell --controls"
+                ><span class="sr-only">{{i18n
+                      "admin.config.mcp.clients.actions"
+                    }}</span></th></tr></thead>
+            <tbody class="d-table__body">
+              {{#each this.filteredClients as |client|}}
+                <tr class="d-table__row">
+                  <td class="d-table__cell --overview"><LinkTo
+                      @route="adminConfig.mcp.clients.show"
+                      @model={{client.id}}
+                      class="d-table__overview-link"
+                    ><span
+                        class="d-table__overview-name"
+                      >{{client.name}}</span><small
+                      >{{client.client_id}}</small></LinkTo></td>
+                  <td class="d-table__cell --detail"><div
+                      class="d-table__mobile-label"
+                    >{{i18n "admin.config.mcp.clients.trust"}}</div><span
+                      class="admin-mcp__status"
+                      data-state={{client.trust_state}}
+                    >{{mcpValue "client_trust" client.trust_state}}</span></td>
+                  <td class="d-table__cell --detail"><div
+                      class="d-table__mobile-label"
+                    >{{i18n "admin.config.mcp.clients.last_seen"}}</div>{{#if
                       client.last_seen_at
-                      format="medium"
-                    }}{{else}}{{i18n "admin.config.mcp.never"}}{{/if}}</td>
-                <td class="d-table__cell --detail"><div
-                    class="d-table__mobile-label"
-                  >{{i18n
-                      "admin.config.mcp.clients.authorizations"
-                    }}</div>{{client.authorization_count}}</td>
-                <td class="d-table__cell --controls"><div
-                    class="d-table__mobile-label"
-                  >{{i18n "admin.config.mcp.clients.actions"}}</div><div
-                    class="d-table__cell-actions"
-                  >{{#if (eq client.registration_type "cimd")}}<DButton
-                        @action={{fn this.refreshClient client}}
-                        @label="admin.config.mcp.actions.refresh_metadata"
-                        class="btn-small btn-transparent --primary admin-mcp__refresh-client"
-                      />{{/if}}<DButton
-                      @action={{fn this.toggleClientBlock client}}
-                      @label={{if
-                        client.blocked
-                        "admin.config.mcp.clients.unblock"
-                        "admin.config.mcp.clients.block"
-                      }}
-                      class={{if
-                        client.blocked
-                        "btn-small btn-default admin-mcp__toggle-client-block"
-                        "btn-small btn-danger admin-mcp__toggle-client-block"
-                      }}
-                    /></div></td>
-              </tr>
-            {{else}}
-              <tr class="d-table__row"><td
-                  class="d-table__cell"
-                  colspan="5"
-                >{{i18n "admin.config.mcp.clients.no_results"}}</td></tr>
-            {{/each}}
-          </tbody>
-        </table>
+                    }}{{dAgeWithTooltip
+                        client.last_seen_at
+                        format="medium"
+                      }}{{else}}{{i18n "admin.config.mcp.never"}}{{/if}}</td>
+                  <td class="d-table__cell --detail"><div
+                      class="d-table__mobile-label"
+                    >{{i18n
+                        "admin.config.mcp.clients.authorizations"
+                      }}</div>{{client.authorization_count}}</td>
+                  <td class="d-table__cell --controls"><div
+                      class="d-table__mobile-label"
+                    >{{i18n "admin.config.mcp.clients.actions"}}</div><div
+                      class="d-table__cell-actions"
+                    >{{#if (eq client.registration_type "cimd")}}<DButton
+                          @action={{fn this.refreshClient client}}
+                          @label="admin.config.mcp.actions.refresh_metadata"
+                          class="btn-small btn-transparent --primary admin-mcp__refresh-client"
+                        />{{/if}}<DButton
+                        @action={{fn this.toggleClientBlock client}}
+                        @label={{if
+                          client.blocked
+                          "admin.config.mcp.clients.unblock"
+                          "admin.config.mcp.clients.block"
+                        }}
+                        class={{if
+                          client.blocked
+                          "btn-small btn-default admin-mcp__toggle-client-block"
+                          "btn-small btn-danger admin-mcp__toggle-client-block"
+                        }}
+                      /></div></td>
+                </tr>
+              {{else}}
+                <tr class="d-table__row"><td
+                    class="d-table__cell"
+                    colspan="5"
+                  >{{i18n "admin.config.mcp.clients.no_results"}}</td></tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </DLoadMore>
+        <DConditionalLoadingSpinner @condition={{this.clientLoading}} />
       {{else}}
         <AdminConfigAreaEmptyList
           @emptyLabel="admin.config.mcp.clients.empty"
@@ -1606,78 +1700,87 @@ export default class AdminMcp extends Component {
           />
         </form.Field>
       </Form>
-      <table class="d-table admin-mcp__table admin-mcp__authorizations-table">
-        <colgroup>
-          <col class="admin-mcp__authorizations-client-column" />
-          <col class="admin-mcp__authorizations-user-column" />
-          <col class="admin-mcp__authorizations-scopes-column" />
-          <col class="admin-mcp__authorizations-last-used-column" />
-          <col class="admin-mcp__authorizations-status-column" />
-          <col class="admin-mcp__authorizations-actions-column" />
-        </colgroup>
-        <thead class="d-table__header"><tr class="d-table__row"><th
-              class="d-table__cell --overview"
-            >{{i18n "admin.config.mcp.authorizations.client"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.authorizations.user"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.authorizations.scopes"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.authorizations.last_used"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.authorizations.status"}}</th><th
-              class="d-table__cell --controls"
-            ><span class="sr-only">{{i18n
-                  "admin.config.mcp.authorizations.actions"
-                }}</span></th></tr></thead>
-        <tbody class="d-table__body">
-          {{#each this.filteredAuthorizations as |authorization|}}
-            <tr class="d-table__row">
-              <td class="d-table__cell --overview"><span
-                  class="d-table__overview-name"
-                >{{authorization.client_name}}</span></td>
-              <td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n
-                    "admin.config.mcp.authorizations.user"
-                  }}</div>{{authorization.username}}</td>
-              <td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.authorizations.scopes"}}</div><code
-                >{{listValue authorization.scopes}}</code></td>
-              <td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.authorizations.last_used"}}</div>{{#if
-                  authorization.last_used_at
-                }}{{dAgeWithTooltip
-                    authorization.last_used_at
-                    format="medium"
-                  }}{{else}}{{i18n "admin.config.mcp.never"}}{{/if}}</td>
-              <td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.authorizations.status"}}</div><span
-                  class="admin-mcp__status"
-                  data-state={{authorization.status}}
-                >{{mcpValue
-                    "authorization_status"
-                    authorization.status
-                  }}</span></td>
-              <td class="d-table__cell --controls">{{#if
-                  (notEq authorization.status "revoked")
-                }}<DButton
-                    @action={{fn this.revokeAuthorization authorization}}
-                    @label="admin.config.mcp.actions.revoke"
-                    class="btn-small btn-danger"
-                  />{{/if}}</td>
-            </tr>
-          {{else}}
-            <tr class="d-table__row"><td
-                class="d-table__cell"
-                colspan="6"
-              >{{i18n "admin.config.mcp.authorizations.empty"}}</td></tr>
-          {{/each}}
-        </tbody>
-      </table>
+      <DLoadMore
+        @action={{this.loadMoreAuthorizations}}
+        @enabled={{this.canLoadMoreAuthorizations}}
+        @isLoading={{this.authorizationLoading}}
+        @rootMargin="0px 0px 250px 0px"
+        class="admin-mcp__load-more"
+      >
+        <table class="d-table admin-mcp__table admin-mcp__authorizations-table">
+          <colgroup>
+            <col class="admin-mcp__authorizations-client-column" />
+            <col class="admin-mcp__authorizations-user-column" />
+            <col class="admin-mcp__authorizations-scopes-column" />
+            <col class="admin-mcp__authorizations-last-used-column" />
+            <col class="admin-mcp__authorizations-status-column" />
+            <col class="admin-mcp__authorizations-actions-column" />
+          </colgroup>
+          <thead class="d-table__header"><tr class="d-table__row"><th
+                class="d-table__cell --overview"
+              >{{i18n "admin.config.mcp.authorizations.client"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.authorizations.user"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.authorizations.scopes"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.authorizations.last_used"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.authorizations.status"}}</th><th
+                class="d-table__cell --controls"
+              ><span class="sr-only">{{i18n
+                    "admin.config.mcp.authorizations.actions"
+                  }}</span></th></tr></thead>
+          <tbody class="d-table__body">
+            {{#each this.filteredAuthorizations as |authorization|}}
+              <tr class="d-table__row">
+                <td class="d-table__cell --overview"><span
+                    class="d-table__overview-name"
+                  >{{authorization.client_name}}</span></td>
+                <td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n
+                      "admin.config.mcp.authorizations.user"
+                    }}</div>{{authorization.username}}</td>
+                <td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n "admin.config.mcp.authorizations.scopes"}}</div><code
+                  >{{listValue authorization.scopes}}</code></td>
+                <td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n
+                      "admin.config.mcp.authorizations.last_used"
+                    }}</div>{{#if authorization.last_used_at}}{{dAgeWithTooltip
+                      authorization.last_used_at
+                      format="medium"
+                    }}{{else}}{{i18n "admin.config.mcp.never"}}{{/if}}</td>
+                <td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n "admin.config.mcp.authorizations.status"}}</div><span
+                    class="admin-mcp__status"
+                    data-state={{authorization.status}}
+                  >{{mcpValue
+                      "authorization_status"
+                      authorization.status
+                    }}</span></td>
+                <td class="d-table__cell --controls">{{#if
+                    (notEq authorization.status "revoked")
+                  }}<DButton
+                      @action={{fn this.revokeAuthorization authorization}}
+                      @label="admin.config.mcp.actions.revoke"
+                      class="btn-small btn-danger"
+                    />{{/if}}</td>
+              </tr>
+            {{else}}
+              <tr class="d-table__row"><td
+                  class="d-table__cell"
+                  colspan="6"
+                >{{i18n "admin.config.mcp.authorizations.empty"}}</td></tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </DLoadMore>
+      <DConditionalLoadingSpinner @condition={{this.authorizationLoading}} />
     {{else if (eq @section "activity")}}
       <DPageSubheader
         @titleLabel={{i18n "admin.config.mcp.activity.title"}}

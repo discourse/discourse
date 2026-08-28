@@ -3,6 +3,8 @@
 class McpOauthClient < ActiveRecord::Base
   REGISTRATION_TYPES = %w[pre_registered cimd].freeze
   TRUST_STATES = %w[pending approved blocked].freeze
+  LOOPBACK_IP_HOSTS = %w[127.0.0.1 ::1].freeze
+  LOCAL_REDIRECT_HOSTS = ["localhost", *LOOPBACK_IP_HOSTS].freeze
 
   has_many :authorizations, class_name: "McpOauthAuthorization", dependent: :destroy
 
@@ -21,6 +23,21 @@ class McpOauthClient < ActiveRecord::Base
     trust_state == "blocked"
   end
 
+  def allows_redirect_uri?(value)
+    return true if redirect_uris.include?(value)
+
+    requested_uri = URI.parse(value)
+    return false if !loopback_ip_redirect_uri?(requested_uri)
+
+    redirect_uris.any? do |registered_value|
+      registered_uri = URI.parse(registered_value)
+      loopback_ip_redirect_uri?(registered_uri) &&
+        redirect_uris_match_except_port?(registered_uri, requested_uri)
+    end
+  rescue URI::InvalidURIError
+    false
+  end
+
   def self.valid_redirect_uri?(value)
     uri = URI.parse(value)
     if !uri.absolute? || uri.host.blank? || uri.userinfo.present? || uri.fragment.present?
@@ -28,12 +45,22 @@ class McpOauthClient < ActiveRecord::Base
     end
     return true if uri.scheme == "https"
 
-    uri.scheme == "http" && %w[localhost 127.0.0.1 ::1].include?(uri.host.downcase)
+    uri.scheme == "http" && LOCAL_REDIRECT_HOSTS.include?(uri.hostname.downcase)
   rescue URI::InvalidURIError
     false
   end
 
   private
+
+  def loopback_ip_redirect_uri?(uri)
+    uri.scheme == "http" && LOOPBACK_IP_HOSTS.include?(uri.hostname&.downcase)
+  end
+
+  def redirect_uris_match_except_port?(registered_uri, requested_uri)
+    %i[scheme userinfo hostname path query fragment].all? do |component|
+      registered_uri.public_send(component) == requested_uri.public_send(component)
+    end
+  end
 
   def redirect_uris_are_absolute
     return if redirect_uris.blank?

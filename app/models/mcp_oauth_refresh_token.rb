@@ -27,7 +27,7 @@ class McpOauthRefreshToken < ActiveRecord::Base
         parent_id: parent&.id,
         scopes: scopes,
         grant_version: authorization.grant_version,
-        expires_at: SiteSetting.mcp_refresh_token_lifetime_days.days.from_now,
+        expires_at: parent&.expires_at || SiteSetting.mcp_refresh_token_lifetime_days.days.from_now,
       )
     parent&.update!(replacement_id: token.id, consumed_at: Time.zone.now)
     [raw, token]

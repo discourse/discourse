@@ -139,7 +139,7 @@ module DiscourseMcp
         if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(user)
           raise Discourse::InvalidAccess
         end
-        if !client.approved? || !client.redirect_uris.include?(redirect_uri)
+        if !client.approved? || !client.allows_redirect_uri?(redirect_uri)
           raise Discourse::InvalidAccess
         end
 

@@ -179,8 +179,10 @@ export default class UserMcpAuthorizations extends Component {
           await ajax(`${this.endpoint}/${authorization.id}.json`, {
             type: "DELETE",
           });
-          this.authorizations = this.authorizations.filter(
-            (item) => item.id !== authorization.id
+          this.authorizations = this.authorizations.map((item) =>
+            item.id === authorization.id
+              ? { ...item, status: "revoked", token_count: 0 }
+              : item
           );
           this.a11y.announce(i18n("user.mcp_authorizations.revoked"));
           this.toasts.success({

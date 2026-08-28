@@ -13,17 +13,21 @@ module DiscourseMcp
     end
 
     def user
-      loaded = User.find_by(id: user_id)
-      return if loaded.blank? || !loaded.active? || loaded.suspended? || loaded.staged?
+      return @user if defined?(@user)
 
-      loaded
+      @user = User.find_by(id: user_id)
+      @user = nil if @user.blank? || !@user.active? || @user.suspended? || @user.staged?
+
+      @user
     end
 
     def guardian
+      return @guardian if defined?(@guardian)
+
       current_user = user
       raise Discourse::InvalidAccess if current_user.blank?
 
-      current_user.guardian
+      @guardian = current_user.guardian
     end
 
     def client

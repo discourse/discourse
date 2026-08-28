@@ -60,7 +60,7 @@ class McpOauthAuthorizationsController < ApplicationController
   end
 
   def validate_redirect!(client)
-    raise Discourse::InvalidAccess if !client.redirect_uris.include?(params[:redirect_uri])
+    raise Discourse::InvalidAccess if !client.allows_redirect_uri?(params[:redirect_uri])
   end
 
   def requested_scopes

@@ -57,4 +57,30 @@ describe McpOauthAuthorizationsController do
 
     expect(response.status).to eq(403)
   end
+
+  it "authorizes a loopback redirect using the client's active port" do
+    client =
+      McpOauthClient.create!(
+        client_id: "loopback-client",
+        name: "Loopback client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: ["http://127.0.0.1/callback"],
+      )
+    redirect_uri = "http://127.0.0.1:49152/callback"
+
+    post "/oauth2/mcp/authorize",
+         params: {
+           client_id: client.client_id,
+           redirect_uri: redirect_uri,
+           response_type: "code",
+           code_challenge: "a" * 43,
+           code_challenge_method: "S256",
+           resource: DiscourseMcp.resource_url,
+           scope: "mcp:profile:read",
+           decision: "approve",
+         }
+
+    expect(response).to redirect_to(/\A#{Regexp.escape(redirect_uri)}\?code=/)
+  end
 end

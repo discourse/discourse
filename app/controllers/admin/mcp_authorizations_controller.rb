@@ -2,18 +2,21 @@
 
 class Admin::McpAuthorizationsController < Admin::AdminController
   def index
-    authorizations =
-      McpOauthAuthorization
-        .includes(:user, :client, :scope_records, :access_tokens)
-        .order(updated_at: :desc)
-        .limit(200)
-        .to_a
-    statuses = DiscourseMcp::AuthorizationStatus.for(authorizations)
+    page =
+      McpOauthAuthorizationsPage.new(
+        limit: fetch_limit_from_params(default: 50, max: 100),
+        cursor: fetch_int_from_params(:cursor, default: nil, min: 1),
+        filter: params[:filter],
+      ).call
+    statuses = DiscourseMcp::AuthorizationStatus.for(page.records)
     render json: {
              authorizations:
-               authorizations.map do |authorization|
+               page.records.map do |authorization|
                  serialize(authorization, status: statuses.fetch(authorization.id))
                end,
+             meta: {
+               next_cursor: page.next_cursor,
+             },
            }
   end
 

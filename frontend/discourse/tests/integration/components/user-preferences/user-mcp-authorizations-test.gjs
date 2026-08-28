@@ -1,4 +1,4 @@
-import { click, find, render } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import UserMcpAuthorizations from "discourse/components/user-preferences/user-mcp-authorizations";
@@ -289,5 +289,45 @@ module("Integration | Component | UserMcpAuthorizations", function (hooks) {
       }),
       "the application name is clearly delimited"
     );
+  });
+
+  test("keeps revoked authorization history visible", async function (assert) {
+    const confirm = sinon.stub(this.owner.lookup("service:dialog"), "confirm");
+    pretender.get("/u/mcp-user/preferences/mcp-authorizations.json", () =>
+      response({
+        authorizations: [
+          {
+            id: 42,
+            client_name: "Example assistant",
+            resource: "https://forum.example.com/mcp",
+            scopes: ["mcp:content:read"],
+            consented_at: "2026-08-01T10:00:00Z",
+            last_used_at: null,
+            token_count: 1,
+            status: "active",
+          },
+        ],
+      })
+    );
+    pretender.delete("/u/mcp-user/preferences/mcp-authorizations/42.json", () =>
+      response(204)
+    );
+
+    await render(
+      <template><UserMcpAuthorizations @model={{this.model}} /></template>
+    );
+    await click(".user-mcp-authorization__status-cell .btn-default");
+    await confirm.firstCall.args[0].didConfirm();
+    await settled();
+
+    assert
+      .dom('.user-mcp-authorization__status[data-state="revoked"]')
+      .hasText(
+        i18n("user.mcp_authorizations.statuses.revoked"),
+        "the revoked authorization remains in the history"
+      );
+    assert
+      .dom(".user-mcp-authorization__status-cell .btn-default")
+      .doesNotExist("the revoked authorization has no available action");
   });
 });

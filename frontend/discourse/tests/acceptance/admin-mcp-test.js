@@ -24,6 +24,8 @@ acceptance("Admin - MCP", function (needs) {
   let refreshClientRequests;
   let setupComplete;
   let activityRequests;
+  let authorizationRequests;
+  let clientRequests;
   let savedPrimitiveIds;
 
   needs.user({ admin: true });
@@ -33,6 +35,8 @@ acceptance("Admin - MCP", function (needs) {
     refreshClientRequests = [];
     setupComplete = true;
     activityRequests = [];
+    authorizationRequests = [];
+    clientRequests = [];
     savedPrimitiveIds = null;
   });
 
@@ -159,8 +163,41 @@ acceptance("Admin - MCP", function (needs) {
       savedPrimitiveIds = body.getAll("primitive_ids[]");
       return helper.response({ success: true });
     });
-    server.get("/admin/mcp/authorizations.json", () =>
-      helper.response({
+    server.get("/admin/mcp/authorizations.json", (request) => {
+      authorizationRequests.push(request.queryParams);
+      if (request.queryParams.filter === "former") {
+        return helper.response({
+          authorizations: [
+            {
+              id: 18,
+              username: "alex",
+              client_name: "Former assistant",
+              client_id: "former-client",
+              scopes: ["mcp:content:read"],
+              status: "revoked",
+              last_used_at: null,
+            },
+          ],
+          meta: {},
+        });
+      }
+      if (request.queryParams.cursor) {
+        return helper.response({
+          authorizations: [
+            {
+              id: 18,
+              username: "alex",
+              client_name: "Former assistant",
+              client_id: "former-client",
+              scopes: ["mcp:content:read"],
+              status: "revoked",
+              last_used_at: null,
+            },
+          ],
+          meta: {},
+        });
+      }
+      return helper.response({
         authorizations: [
           {
             id: 19,
@@ -172,10 +209,46 @@ acceptance("Admin - MCP", function (needs) {
             last_used_at: null,
           },
         ],
-      })
-    );
-    server.get("/admin/mcp/clients.json", () =>
-      helper.response({
+        meta: { next_cursor: 19 },
+      });
+    });
+    server.get("/admin/mcp/clients.json", (request) => {
+      clientRequests.push(request.queryParams);
+      if (request.queryParams.filter === "older") {
+        return helper.response({
+          clients: [
+            {
+              id: 6,
+              client_id: "older-client",
+              name: "Older client",
+              registration_type: "pre_registered",
+              trust_state: "approved",
+              blocked: false,
+              last_seen_at: null,
+              authorization_count: 0,
+            },
+          ],
+          meta: {},
+        });
+      }
+      if (request.queryParams.cursor) {
+        return helper.response({
+          clients: [
+            {
+              id: 6,
+              client_id: "older-client",
+              name: "Older client",
+              registration_type: "pre_registered",
+              trust_state: "approved",
+              blocked: false,
+              last_seen_at: null,
+              authorization_count: 0,
+            },
+          ],
+          meta: {},
+        });
+      }
+      return helper.response({
         clients: [
           {
             id: 7,
@@ -198,8 +271,9 @@ acceptance("Admin - MCP", function (needs) {
             authorization_count: 0,
           },
         ],
-      })
-    );
+        meta: { next_cursor: 7 },
+      });
+    });
     server.post("/admin/mcp/clients/7/refresh.json", () => {
       refreshClientRequests.push(7);
       return helper.response({
@@ -580,6 +654,70 @@ acceptance("Admin - MCP", function (needs) {
     assert
       .dom(".admin-mcp__table tbody .d-table__overview-name")
       .hasText(refreshedClientName, "the refreshed metadata updates the row");
+  });
+
+  test("filters clients and authorizations on the server", async function (assert) {
+    await visit("/admin/config/mcp/clients");
+    await fillIn(".admin-mcp__table-filter input", "older");
+    await waitUntil(() =>
+      clientRequests.some((request) => request.filter === "older")
+    );
+
+    assert
+      .dom(".admin-mcp__table tbody tr")
+      .exists({ count: 1 }, "the server-filtered client replaces the table");
+    assert
+      .dom(".admin-mcp__table")
+      .includesText("Older client", "the matching client is shown");
+
+    await visit("/admin/config/mcp/authorizations");
+    await fillIn(".admin-mcp__table-filter input", "former");
+    await waitUntil(() =>
+      authorizationRequests.some((request) => request.filter === "former")
+    );
+
+    assert
+      .dom(".admin-mcp__authorizations-table tbody tr")
+      .exists(
+        { count: 1 },
+        "the server-filtered authorization replaces the table"
+      );
+    assert
+      .dom(".admin-mcp__authorizations-table")
+      .includesText("Former assistant", "the matching authorization is shown");
+  });
+
+  test("loads older clients and authorizations", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+
+    try {
+      await visit("/admin/config/mcp/clients");
+      await observations
+        .find(({ element }) => element.closest(".admin-mcp__load-more"))
+        .trigger();
+      await waitUntil(() =>
+        clientRequests.some((request) => request.cursor === "7")
+      );
+
+      assert
+        .dom(".admin-mcp__table tbody tr")
+        .exists({ count: 3 }, "the older client is appended");
+
+      await visit("/admin/config/mcp/authorizations");
+      await observations
+        .findLast(({ element }) => element.closest(".admin-mcp__load-more"))
+        .trigger();
+      await waitUntil(() =>
+        authorizationRequests.some((request) => request.cursor === "19")
+      );
+
+      assert
+        .dom(".admin-mcp__authorizations-table tbody tr")
+        .exists({ count: 2 }, "the older authorization is appended");
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 
   test("labels audited calls as tool calls", async function (assert) {
