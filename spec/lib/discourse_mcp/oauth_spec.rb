@@ -35,6 +35,24 @@ describe DiscourseMcp::OAuth do
     McpGroupScope.create!(group: other_group, scope: "mcp:content:read")
   end
 
+  it "rejects an unapproved metadata domain before registering the client" do
+    client_id = "https://unapproved.example.com/oauth/client.json"
+    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
+    SiteSetting.mcp_oauth_approved_domains = "approved.example.com"
+    allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Unapproved client",
+        "redirect_uris" => ["https://unapproved.example.com/callback"],
+      },
+    )
+
+    expect { described_class::ClientResolver.resolve!(client_id) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+    expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
   it "authorizes scopes combined from all of the user's groups" do
     expect(authorization.scopes).to contain_exactly(*granted_scopes)
   end

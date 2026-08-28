@@ -20,6 +20,10 @@ module DiscourseMcp
              uri.fragment.present? || uri.path.blank? || uri.path == "/"
           raise Discourse::InvalidAccess
         end
+        if SiteSetting.mcp_oauth_client_trust_policy == "approved_domains" &&
+             !existing&.approved? && !approved_domain?(uri.host)
+          raise Discourse::InvalidAccess
+        end
 
         metadata = fetch_metadata(uri)
         validate_metadata!(metadata, client_id)
@@ -119,19 +123,17 @@ module DiscourseMcp
         when "any_cimd"
           "approved"
         when "approved_domains"
-          if SiteSetting
-               .mcp_oauth_approved_domains
-               .split("|")
-               .any? { |domain| domain.casecmp?(host) }
-            "approved"
-          else
-            "pending"
-          end
+          approved_domain?(host) ? "approved" : "pending"
         else
           "pending"
         end
       end
       private_class_method :trust_state_for
+
+      def self.approved_domain?(host)
+        SiteSetting.mcp_oauth_approved_domains.split("|").any? { |domain| domain.casecmp?(host) }
+      end
+      private_class_method :approved_domain?
     end
 
     class AuthorizationGrant

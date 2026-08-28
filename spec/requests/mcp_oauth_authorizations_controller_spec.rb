@@ -2,6 +2,7 @@
 
 describe McpOauthAuthorizationsController do
   fab!(:admin)
+  fab!(:user)
 
   before do
     sign_in(admin)
@@ -82,5 +83,34 @@ describe McpOauthAuthorizationsController do
          }
 
     expect(response).to redirect_to(/\A#{Regexp.escape(redirect_uri)}\?code=/)
+  end
+
+  it "rejects users without MCP access before registering a metadata client" do
+    sign_in(user)
+    client_id = "https://client.example.com/oauth/client.json"
+    redirect_uri = "https://client.example.com/callback"
+    SiteSetting.mcp_oauth_client_trust_policy = "approved_domains"
+    SiteSetting.mcp_oauth_approved_domains = "client.example.com"
+    allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Metadata client",
+        "redirect_uris" => [redirect_uri],
+      },
+    )
+
+    get "/oauth2/mcp/authorize",
+        params: {
+          client_id:,
+          redirect_uri:,
+          response_type: "code",
+          code_challenge: "a" * 43,
+          code_challenge_method: "S256",
+          resource: DiscourseMcp.resource_url,
+          scope: "mcp:profile:read",
+        }
+
+    expect(response.status).to eq(403)
+    expect(McpOauthClient.find_by(client_id:)).to eq(nil)
   end
 end

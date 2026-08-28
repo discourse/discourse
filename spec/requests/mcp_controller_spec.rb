@@ -192,4 +192,14 @@ describe "MCP transport" do
     )
     expect(response.parsed_body.dig("result", "resultType")).to eq("complete")
   end
+
+  it "records at most one rate-limit audit event per client each minute" do
+    SiteSetting.mcp_global_rate_limit_per_minute = 10
+    RateLimiter.enable
+
+    12.times { post "/mcp", params: payload.to_json, headers: headers }
+
+    expect(response.status).to eq(429)
+    expect(McpAuditLog.where(outcome: "rate_limited").count).to eq(1)
+  end
 end

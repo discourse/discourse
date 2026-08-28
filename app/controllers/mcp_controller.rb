@@ -91,8 +91,14 @@ class McpController < ApplicationController
   end
 
   def record_rate_limited_audit(request_context)
+    bucket_at = Time.zone.now.beginning_of_minute
+    audit_key =
+      "mcp-rate-limit-audit:#{request_context&.user_id}:#{request_context&.oauth_client_id}:#{bucket_at.to_i}"
+    return if !Discourse.redis.set(audit_key, "1", nx: true, ex: 2.minutes.to_i)
+
     McpAuditLog.create!(
       occurred_at: Time.zone.now,
+      bucket_at:,
       user_id: request_context&.user_id,
       mcp_oauth_client_id: request_context&.oauth_client_id,
       outcome: "rate_limited",

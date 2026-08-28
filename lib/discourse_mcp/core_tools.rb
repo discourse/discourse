@@ -151,15 +151,14 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, "User not found"
         end
 
-        ToolHelpers.text_and_structured(
-          user: {
-            id: user.id,
-            username: user.username,
-            name: user.name,
-            trust_level: user.trust_level,
-            created_at: user.created_at.iso8601,
-          },
-        )
+        details = {
+          id: user.id,
+          username: user.username,
+          trust_level: user.trust_level,
+          created_at: user.created_at.iso8601,
+        }
+        details[:name] = user.name if SiteSetting.enable_names?
+        ToolHelpers.text_and_structured(user: details)
       end
     end
 

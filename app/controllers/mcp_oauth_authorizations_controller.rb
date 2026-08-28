@@ -5,15 +5,13 @@ class McpOauthAuthorizationsController < ApplicationController
   requires_login
   skip_before_action :check_xhr, :preload_json
   before_action :validate_request
+  before_action :ensure_mcp_access
 
   def show
     raise Discourse::InvalidAccess if current_user.is_impersonating
     @client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id])
     validate_redirect!(@client)
     @requested_scopes = requested_scopes
-    if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(current_user)
-      raise Discourse::InvalidAccess
-    end
     if !@requested_scopes.include?(DiscourseMcp::INITIAL_SCOPE) ||
          (@requested_scopes - DiscourseMcp::Access.eligible_scopes(current_user)).present?
       raise Discourse::InvalidAccess
@@ -45,6 +43,12 @@ class McpOauthAuthorizationsController < ApplicationController
   end
 
   private
+
+  def ensure_mcp_access
+    if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(current_user)
+      raise Discourse::InvalidAccess
+    end
+  end
 
   def validate_request
     raise Discourse::InvalidParameters if params[:response_type] != "code"
