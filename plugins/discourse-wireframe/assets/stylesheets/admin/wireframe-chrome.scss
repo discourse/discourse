@@ -1508,6 +1508,37 @@ body.wireframe-active {
   }
 }
 
+/* One preview serves the whole grid: it enters from the tile's side, and once
+   warm it slides to the next tile with its content swapped in place. The
+   slide is gated on the warm mark because a fresh float is first laid out at
+   the corner before it is placed, and easing that would read as an entrance
+   from the top. */
+
+@keyframes wireframe-block-preview-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--wf-preview-enter-from));
+  }
+}
+
+.fk-d-tooltip__content[data-identifier="wireframe-block-preview"] {
+  --wf-preview-enter-from: -8px;
+
+  &[data-placement^="left"] {
+    --wf-preview-enter-from: 8px;
+  }
+
+  &.-animated {
+    animation: wireframe-block-preview-in 150ms ease-out;
+  }
+
+  &[data-wf-warm] {
+    transition:
+      left 120ms ease-out,
+      top 120ms ease-out;
+  }
+}
+
 .wireframe-block-preview {
   display: flex;
   flex-direction: column;
@@ -2951,6 +2982,11 @@ body.wireframe-active
 @media (prefers-reduced-motion: reduce) {
   body.wireframe-active .wireframe-block-chrome.--just-selected {
     animation: none;
+  }
+
+  .fk-d-tooltip__content[data-identifier="wireframe-block-preview"] {
+    animation: none;
+    transition: none;
   }
 }
 

@@ -12,6 +12,7 @@ import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import blockPreview from "discourse/plugins/discourse-wireframe/discourse/modifiers/block-preview";
 import type WireframeDropAuthorityService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 
@@ -89,6 +90,10 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
 
   /** The search input element — the combobox controller `dRovingFocus` drives. */
   @tracked searchInput: HTMLInputElement | null = null;
+
+  /** Resolves a tile back to its entry, for the shared hover preview. */
+  entryFor = (blockName: string): BlockPaletteEntry | undefined =>
+    this.results.find((entry) => entry.name === blockName);
 
   /**
    * Stable id linking the input's `aria-controls` to the results listbox.
@@ -206,6 +211,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
           activeClass="--active"
           onActivate=this.activate
         }}
+        {{blockPreview entryFor=this.entryFor}}
       >
         {{#each this.results as |entry|}}
           <BlockTile @entry={{entry}} @onActivate={{this.pick}} />

@@ -16,6 +16,7 @@ import {
   type BlockPaletteEntry,
   buildBlockPalette,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import blockPreview from "discourse/plugins/discourse-wireframe/discourse/modifiers/block-preview";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import WireframeDragSessionService, {
   type PaletteDragPayload,
@@ -65,6 +66,9 @@ export default class PalettePanel extends Component {
   /** Current palette search query. */
   @tracked searchTerm: string = "";
 
+  /** Resolves a tile back to its palette entry, for the shared hover preview. */
+  entryFor = (blockName: string): BlockPaletteEntry | undefined =>
+    this.rows.find((row) => row.name === blockName);
   /**
    * The selected block key at the moment the hint was shown. The hint is about
    * that selection, so once the selection changes the hint is stale (see
@@ -328,6 +332,7 @@ export default class PalettePanel extends Component {
             itemSelector=".wireframe-block-tile"
             onActivate=this.activateTile
           }}
+          {{blockPreview entryFor=this.entryFor}}
         >
           {{#each this.filteredRowsByCategory as |section|}}
             <div class="wireframe-palette__section-header">

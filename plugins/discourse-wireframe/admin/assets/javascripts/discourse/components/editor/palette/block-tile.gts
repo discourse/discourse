@@ -2,11 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
-import type TooltipService from "discourse/float-kit/services/tooltip";
-import { isTesting } from "discourse/lib/environment";
-import BlockPreviewCard from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-preview-card";
 import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
@@ -51,31 +46,6 @@ interface BlockTileSignature {
  * keyboard users — the visual description lives only in the hover preview.
  */
 export default class BlockTile extends Component<BlockTileSignature> {
-  /** Registers the tile's read-only hover preview. */
-  @service declare tooltip: TooltipService;
-
-  /**
-   * Registers the read-only hover preview tooltip on the tile. Hover-only (not
-   * focus) so arrowing through the grid doesn't spam previews; non-interactive so
-   * it never steals focus. Suppressed in tests, where FloatKit timing would make
-   * assertions flaky and the preview adds no coverage.
-   */
-  registerPreview = modifier((element: HTMLElement) => {
-    if (isTesting()) {
-      return undefined;
-    }
-    const instance = this.tooltip.register(element, {
-      component: BlockPreviewCard,
-      data: { entry: this.args.entry },
-      interactive: false,
-      triggers: ["hover"],
-      placement: "right",
-      fallbackPlacements: ["left", "top", "bottom"],
-      animated: false,
-    });
-    return () => instance.destroy();
-  });
-
   /**
    * The pointer event that activates the tile (see `@activateOn`).
    */
@@ -105,7 +75,6 @@ export default class BlockTile extends Component<BlockTileSignature> {
       aria-describedby={{this.descriptionId}}
       data-block-name={{@entry.name}}
       {{on this.activateOn this.activate}}
-      {{this.registerPreview}}
       ...attributes
     >
       <BlockThumbnail
