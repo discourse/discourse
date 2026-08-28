@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import Category from "discourse/models/category";
 import Tag from "discourse/models/tag";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -823,7 +823,7 @@ module(
         keys
           .map((key) =>
             key === "meta"
-              ? translateModKey("Meta")
+              ? formatShortcut("mod").label
               : i18n(`shortcut_modifier_key.${key}`)
           )
           .join(" + ");
