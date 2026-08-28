@@ -13,6 +13,7 @@ module DiscourseAi
         "odt" => OdtToText,
         "ods" => OdsToText,
         "rtf" => RtfToText,
+        "html" => HtmlToText,
       }.freeze
 
       PLAIN_TEXT_ATTACHMENT_TYPES = %w[csv md txt].freeze
