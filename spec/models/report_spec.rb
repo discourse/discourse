@@ -2045,6 +2045,28 @@ RSpec.describe Report do
 
       expect(Report.cache_key(report)).not_to eq(disabled_key)
     end
+
+    it "does not reuse a cache entry after category access changes" do
+      group = Fabricate(:group)
+      Fabricate(:private_category, group: group)
+
+      Report.cache(Report._get("signups", guardian: user.guardian))
+
+      Fabricate(:group_user, group: group, user: user)
+
+      expect(Report.find_cached("signups", guardian: User.find(user.id).guardian)).to be_nil
+    end
+
+    it "does not reuse a cache entry after shared draft access changes" do
+      group = Fabricate(:group)
+      SiteSetting.shared_drafts_allowed_groups = group.id.to_s
+
+      Report.cache(Report._get("signups", guardian: user.guardian))
+
+      Fabricate(:group_user, group: group, user: user)
+
+      expect(Report.find_cached("signups", guardian: User.find(user.id).guardian)).to be_nil
+    end
   end
 
   describe "top_uploads" do

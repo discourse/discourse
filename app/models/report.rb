@@ -229,6 +229,8 @@ class Report
       SCHEMA_VERSION,
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
+      guardian&.secure_category_ids&.join(","),
+      guardian&.can_see_shared_draft?,
       CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
   end
