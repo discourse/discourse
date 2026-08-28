@@ -43,16 +43,21 @@ module DiscourseAi
       MAX_TEXT_FILE_BYTES = 1 * 1024 * 1024
       MAX_RAW_DOCUMENT_BYTES = 10 * 1024 * 1024
 
-      def self.encode(upload, mime_type, attachment_type)
+      def self.encode(upload, mime_type, attachment_type, skips)
         path = fetch_path(upload)
 
         if path.blank?
-          log_document_upload_skip(upload, attachment_type, "file is not available in the store")
+          log_document_upload_skip(
+            skips,
+            upload,
+            attachment_type,
+            "file is not available in the store",
+          )
           return
         end
 
-        extract_text_payload(upload, path, attachment_type) ||
-          raw_document_payload(upload, path, mime_type, attachment_type)
+        extract_text_payload(upload, path, attachment_type, skips) ||
+          raw_document_payload(upload, path, mime_type, attachment_type, skips)
       end
 
       def self.attachment_type_for(extension, mime_type)
@@ -68,7 +73,7 @@ module DiscourseAi
       class << self
         private
 
-        def extract_text_payload(upload, path, attachment_type)
+        def extract_text_payload(upload, path, attachment_type, skips)
           converter = TEXT_CONVERTERS[attachment_type]
           return if converter.nil? && PLAIN_TEXT_ATTACHMENT_TYPES.exclude?(attachment_type)
 
@@ -77,6 +82,7 @@ module DiscourseAi
 
           if text.blank?
             log_document_conversion_failure(
+              skips,
               upload,
               attachment_type,
               "#{attachment_type.upcase} converter returned blank output",
@@ -86,13 +92,19 @@ module DiscourseAi
 
           text_document_payload(upload, path, text, converted_from: attachment_type)
         rescue StandardError => e
-          log_document_conversion_failure(upload, attachment_type, "#{e.class}: #{e.message}")
+          log_document_conversion_failure(
+            skips,
+            upload,
+            attachment_type,
+            "#{e.class}: #{e.message}",
+          )
           nil
         end
 
-        def raw_document_payload(upload, path, mime_type, attachment_type)
+        def raw_document_payload(upload, path, mime_type, attachment_type, skips)
           if RAW_DOCUMENT_ATTACHMENT_TYPES.exclude?(attachment_type)
             log_document_upload_skip(
+              skips,
               upload,
               attachment_type,
               "raw upload is not supported for this attachment type; it must be converted to text",
@@ -103,6 +115,7 @@ module DiscourseAi
           bytesize = File.size(path)
           if bytesize > MAX_RAW_DOCUMENT_BYTES
             log_document_upload_skip(
+              skips,
               upload,
               attachment_type,
               "raw upload size #{ActiveSupport::NumberHelper.number_to_human_size(bytesize)} " \
@@ -118,7 +131,7 @@ module DiscourseAi
             filename: upload.original_filename,
           }
         rescue SystemCallError => e
-          log_document_upload_skip(upload, attachment_type, "#{e.class}: #{e.message}")
+          log_document_upload_skip(skips, upload, attachment_type, "#{e.class}: #{e.message}")
           nil
         end
 
@@ -161,14 +174,18 @@ module DiscourseAi
           "Uploaded document: #{filename} (#{ActiveSupport::NumberHelper.number_to_human_size(filesize)})\n\n"
         end
 
-        def log_document_conversion_failure(upload, extension, message)
+        def log_document_conversion_failure(skips, upload, extension, message)
+          record_skip(skips, upload, message)
+
           Rails.logger.warn(
             "Discourse AI: Failed to convert .#{extension} upload to text " \
               "(upload_id=#{upload.id}, filename=#{upload.original_filename.inspect}): #{message}",
           )
         end
 
-        def log_document_upload_skip(upload, extension, message)
+        def log_document_upload_skip(skips, upload, extension, message)
+          record_skip(skips, upload, message)
+
           Rails.logger.warn(
             "Discourse AI: Skipping .#{extension} upload " \
               "(upload_id=#{upload.id}, filename=#{upload.original_filename.inspect}): #{message}",
