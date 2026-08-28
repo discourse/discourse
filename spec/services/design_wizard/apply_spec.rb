@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe DesignWizard::Apply do
+  # the service reaches these through SiteSetting.public_send(name, theme_id:),
+  # which only exists while they are themeable
+  it "only treats genuinely themeable settings as themeable" do
+    expect(described_class::THEMEABLE_SETTINGS.select { |name| SiteSetting.themeable[name] }).to eq(
+      described_class::THEMEABLE_SETTINGS,
+    )
+  end
+
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
     it { is_expected.to validate_inclusion_of(:theme_id).in_array(Theme::CORE_THEMES.values) }
@@ -22,6 +30,16 @@ RSpec.describe DesignWizard::Apply do
     it do
       is_expected.to validate_inclusion_of(:category_page_style).in_array(
         CategoryPageStyle.values.map { |style| style[:value] },
+      ).allow_nil
+    end
+    it do
+      is_expected.to validate_inclusion_of(:welcome_banner_location).in_array(
+        WelcomeBannerLocation.values.map { |location| location[:value] },
+      ).allow_nil
+    end
+    it do
+      is_expected.to validate_inclusion_of(:search_experience).in_array(
+        SearchExperienceSiteSetting.values.map { |experience| experience[:value] },
       ).allow_nil
     end
 
@@ -283,6 +301,51 @@ RSpec.describe DesignWizard::Apply do
         expect { described_class.call(params:, **dependencies) }.not_to change {
           ColorScheme.where(via_wizard: true).count
         }
+      end
+    end
+
+    context "with welcome banner and search choices" do
+      let(:theme_id) { Theme::CORE_THEMES["horizon"] }
+      let(:params) do
+        {
+          theme_id:,
+          enable_welcome_banner: false,
+          search_experience: "search_field",
+          welcome_banner_location: "below_site_header",
+        }
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "scopes the themeable settings to the chosen theme and leaves the others alone" do
+        result
+
+        expect(SiteSetting.enable_welcome_banner(theme_id: horizon_theme.id)).to eq(false)
+        expect(SiteSetting.search_experience(theme_id: horizon_theme.id)).to eq("search_field")
+        expect(SiteSetting.enable_welcome_banner(theme_id: foundation_theme.id)).to eq(true)
+        expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
+      end
+
+      it "audits each themeable change once" do
+        expect { result }.to change {
+          UserHistory.where(action: UserHistory.actions[:change_theme_site_setting]).count
+        }.by(2)
+      end
+
+      # the wizard resends every selection on each step, so an unchanged value
+      # must not be written back and audited again
+      it "does not re-audit settings that are already at the chosen value" do
+        result
+
+        expect { described_class.call(params:, **dependencies) }.not_to change {
+          UserHistory.where(action: UserHistory.actions[:change_theme_site_setting]).count
+        }
+      end
+
+      context "when a themeable setting cannot be written" do
+        before { SiteSetting.stubs(:themeable).returns({}) }
+
+        it { is_expected.to fail_a_step(:update_themeable_site_settings) }
       end
     end
 

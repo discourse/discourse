@@ -1493,6 +1493,11 @@ en:
         new_members: "New members"
         returning: "Returning"
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Posts"
+        share: "Share"
     trust_level_pipeline:
       title: "Trust level pipeline"
       description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups."
@@ -1929,6 +1934,9 @@ en:
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
+  random_username:
+    unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
+
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -2233,6 +2241,9 @@ en:
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
+    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2518,7 +2529,7 @@ en:
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    min_ban_entries_for_roll_up: "A new subnet ban entry will be created daily by the <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> job when there are at least (N) blocked IP addresses within the same subnet."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -2951,7 +2962,6 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
-    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
     site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
@@ -3092,6 +3102,7 @@ en:
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
+      invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -3214,6 +3225,8 @@ en:
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
+      topic: "Show specific topics by ID"
+      topic_any: "Show topics in the specified order (comma-separated IDs)"
       exclude_category: "Exclude topics from a specific category"
       category_without_subcategories: "Show topics only in the parent category, excluding subcategories"
       exclude_category_without_subcategories: "Exclude topics only from the parent category, not subcategories"
@@ -6330,6 +6343,10 @@ en:
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
+      remove_avatar:
+        title: "Remove avatar"
+        description: "Reset this user's profile picture to the system default"
+        complete: "Avatar removed."
       approve_user:
         title: "Yes"
         complete: "User approved."

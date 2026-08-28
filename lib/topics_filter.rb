@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsFilter
-  attr_reader :topic_notification_levels
+  attr_reader :topic_ids, :topic_notification_levels
 
   def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
     @loaded_topic_users_reference = loaded_topic_users_reference
@@ -104,6 +104,8 @@ class TopicsFilter
         filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
+      when "topic"
+        filter_topics(values: filter_values)
       when "locale"
         filter_locale(values: key_prefixes.zip(filter_values))
       when "views-min"
@@ -198,6 +200,12 @@ class TopicsFilter
             description: I18n.t("filter.description.exclude_category_without_subcategories"),
           },
         ],
+      },
+      {
+        name: "topic:",
+        description: I18n.t("filter.description.topic"),
+        type: "text",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.topic_any") }],
       },
       {
         name: "activity-before:",
@@ -400,6 +408,17 @@ class TopicsFilter
   end
 
   private
+
+  def filter_topics(values:)
+    @topic_ids =
+      values
+        .flat_map { |value| value.split(",") }
+        .filter_map { |value| Integer(value, 10, exception: false) }
+        .select(&:positive?)
+        .uniq
+
+    @scope = @scope.in_order_of(:id, @topic_ids)
+  end
 
   YYYY_MM_DD_REGEXP =
     /\A(?<year>[12][0-9]{3})-(?<month>0?[1-9]|1[0-2])-(?<day>0?[1-9]|[12]\d|3[01])\z/

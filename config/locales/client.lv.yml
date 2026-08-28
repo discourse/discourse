@@ -3073,15 +3073,10 @@ lv:
       search:
         title: "Meklēt"
       site_traffic_explorer:
-        pageviews: "Lapu skatījumi"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP adrese"
+        metric_information: "Par %{metric}"
+        apply: "Pielietot"
         filters:
           ip: "IP adrese"
-        metrics:
-          pageviews:
-            label: "Lapu skatījumi"
         series:
           anonymous_human: "Anonīmi"
       dashboard:

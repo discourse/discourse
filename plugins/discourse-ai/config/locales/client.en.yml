@@ -674,7 +674,6 @@ en:
         refresh: "Refresh logs"
         retry: "Try again"
         apply: "Apply"
-        find: "Find"
         clear_filters: "Clear all filters"
         all_outcomes: "All outcomes"
         all_models: "All models"
@@ -685,11 +684,8 @@ en:
         has_retries: "Has retries"
         retried: "Retried"
         unattributed: "Unattributed"
-        user_placeholder: "Filter by user"
-        id_placeholder: "Enter an ID"
-        log_id: "Log ID"
-        topic_id: "Topic ID"
-        post_id: "Post ID"
+        search_placeholder: "Search by @username or ID (e.g. @user1 topic:123 log:45)"
+        feature_placeholder: "Feature name"
         time: "Time"
         when: "When"
         outcome: "Outcome"
@@ -715,15 +711,12 @@ en:
         cost: "Cost"
         actions: "Actions"
         table_caption: "AI requests sent to language models and their outcomes"
-        view_details: "View details"
+        view_details: "Details"
         no_results: "No AI logs match these filters."
         no_logs: "No retained AI logs were found."
-        filters:
-          title: "Filters"
-          period: "Time period"
-          date_range: "Date range"
-          id_type: "ID type"
-          id_value: "ID value"
+        new_logs_count:
+          one: "See %{count} new log"
+          other: "See %{count} new logs"
         periods:
           hour: "Last hour"
           day: "Last 24 hours"
@@ -836,7 +829,7 @@ en:
         create_user: Create user
         create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
+        default_llm_help: The default language model to use for this agent. When blank, the site default language model is used.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
@@ -1661,6 +1654,8 @@ en:
         rejected_tool_action:
           title: "Tool rejected"
       types:
+        discourse_ai_triage:
+          title: "AI triage"
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:

@@ -154,7 +154,6 @@ let userOptionFields = [
   "theme_ids",
   "timezone",
   "title_count_mode",
-  "topics_unread_when_closed",
   "understood_languages",
   "watched_precedence_over_muted",
 ];

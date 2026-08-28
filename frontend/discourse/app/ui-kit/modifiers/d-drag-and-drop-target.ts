@@ -40,7 +40,7 @@ export {
  */
 export type DropTargetSource = NormalizedDragSource;
 
-/** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
+/** What a synchronous gate (`canDrop`, a `dropEffect` function) is asked about. */
 export type DropTargetFeedback = DropTargetKernelFeedback<DropTargetSource>;
 
 /** What a lifecycle callback is told. */

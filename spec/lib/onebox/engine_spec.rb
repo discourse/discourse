@@ -85,6 +85,7 @@ RSpec.describe Onebox::Engine do
         https://attacker.example/path.example.com/player
         https://attacker.example?.example.com/
         https://attacker.example#.example.com/
+        https://attacker.example\\@embed.example.com/player
         https://embed.example.com.attacker.example/player
       ].each { |url| expect(url).not_to match(regex) }
     end

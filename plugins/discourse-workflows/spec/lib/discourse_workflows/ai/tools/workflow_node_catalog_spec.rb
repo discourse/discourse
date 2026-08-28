@@ -61,6 +61,28 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
   end
 
+  it "finds the moderation action by unlist keywords", :aggregate_failures do
+    result = invoke_tool(query: "unlist topic", include_examples: true)
+    node = result[:nodes].find { |candidate| candidate[:type] == "action:topic_moderation" }
+
+    expect(node[:examples]).to contain_exactly(
+      include(
+        name: "Unlist the trigger topic",
+        parameters:
+          include(
+            operation: "unlist_topic",
+            topic_id: "={{ $json.topic.id }}",
+            actor_username: "system",
+          ),
+      ),
+    )
+    expect(node.dig(:output_contracts, 0, :fields)).to include(
+      "topic.id" => "integer",
+      "topic.visible" => "boolean",
+      "topic.visibility_reason_id" => "integer",
+    )
+  end
+
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(result[:status]).to eq("success")
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(

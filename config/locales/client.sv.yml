@@ -4596,17 +4596,11 @@ sv:
       search:
         title: "Sök"
       site_traffic_explorer:
-        pageviews: "Sidvisningar"
-        columns:
-          top_urls: "URL"
-          browsers: "Webbläsare"
-          ip_addresses: "IP-adress"
+        metric_information: "Om %{metric}"
+        apply: "Tillämpa"
         filters:
           browser: "Webbläsare"
           ip: "IP-adress"
-        metrics:
-          pageviews:
-            label: "Sidvisningar"
         series:
           anonymous_human: "Anonym"
       dashboard:

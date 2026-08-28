@@ -701,6 +701,7 @@ uk:
         has_retries: "Має повторні спроби"
         retried: "Повторна спроба"
         unattributed: "Без посилання"
+        feature_placeholder: "Назва функції"
         user_placeholder: "Фільтрувати за іменем користувача"
         id_placeholder: "Введіть ідентифікатор"
         log_id: "Ідентифікатор журналу"
