@@ -63,7 +63,8 @@ module PageObjects
 
       def toggle_for(identifier)
         PageObjects::Components::DToggleSwitch.new(
-          "#{@modal} #{ROW}[data-identifier='#{identifier}'], #{@modal} #{ROW}[data-reorderable-key='#{identifier}'] .d-toggle-switch__checkbox",
+          "#{@modal} #{ROW}[data-identifier='#{identifier}'] .d-toggle-switch__checkbox, " \
+            "#{@modal} #{ROW}[data-reorderable-key='#{identifier}'] .d-toggle-switch__checkbox",
         )
       end
 
