@@ -189,28 +189,16 @@ module PageObjects
       end
 
       def move_section_down(id)
-        within(configure_row_selector(id)) { find(configure_arrow_selector("down")).click }
+        within(".db-configure__row[data-section-id='#{id}']") do
+          find(".db-configure__arrow:last-child").click
+        end
         self
       end
 
       def move_section_up(id)
-        within(configure_row_selector(id)) { find(configure_arrow_selector("up")).click }
-        self
-      end
-
-      def drag_section(source_id, target_id)
-        drag_and_drop(
-          source: configure_row_selector(source_id),
-          source_position: {
-            x: 16,
-            y: 20,
-          },
-          target: configure_row_selector(target_id),
-          target_position: {
-            x: 100,
-            y: 1,
-          },
-        )
+        within(".db-configure__row[data-section-id='#{id}']") do
+          find(".db-configure__arrow:first-child").click
+        end
         self
       end
 
@@ -224,14 +212,6 @@ module PageObjects
         page.refresh unless has_css?(".db-main", wait: 0)
         has_css?(".db-main [data-section-id], .db-main__empty")
         self
-      end
-
-      def configure_row_selector(id)
-        ".db-configure__row[data-section-id='#{id}']"
-      end
-
-      def configure_arrow_selector(direction)
-        ".db-configure__arrows button:has(.d-icon-chevron-#{direction})"
       end
 
       def preset_label(period)

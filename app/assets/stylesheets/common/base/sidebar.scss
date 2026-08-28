@@ -225,9 +225,10 @@
     margin-left: auto;
     margin-right: auto;
     cursor: move;
+    -webkit-user-drag: element;
   }
 
-  [data-drag-source].--dragging {
+  .dragging {
     opacity: 0.4;
   }
 
@@ -361,7 +362,7 @@
 
   .row-wrapper {
     display: grid;
-    grid-template-columns: 2em auto 4.5em repeat(2, 1fr) 2em;
+    grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
     padding: 0.55em 0 0.7em;
     cursor: default;
     border-top: 2px solid transparent;
@@ -369,7 +370,7 @@
     margin-bottom: -2px;
 
     @include viewport.until(sm) {
-      grid-template-columns: auto 4em auto auto min-content;
+      grid-template-columns: 4em auto auto min-content;
     }
 
     &.header {
@@ -380,36 +381,20 @@
       }
     }
 
-    /* Drawn on the row's own reserved border, so adjacent rows keep sharing one
-       gutter. The shared primitive's inserted line is dropped rather than
-       overridden, or both would show at once. */
-
-    &.--drag-above {
-      border-top: 2px solid var(--d-drag-indicator-color);
-
-      &::before {
-        content: none;
-      }
+    &.drag-above {
+      border-top: 2px solid var(--token-color-border-accent);
     }
 
-    &.--drag-below {
-      border-bottom: 2px solid var(--d-drag-indicator-color);
-
-      &::after {
-        content: none;
-      }
+    &.drag-below {
+      border-bottom: 2px solid var(--token-color-border-accent);
     }
 
     .link-icon {
-      grid-column: 3;
+      grid-column: 2;
 
       @include viewport.until(sm) {
-        grid-column: 2;
+        grid-column: 1;
       }
-    }
-
-    .sidebar-section-form-link__arrows {
-      align-self: center;
     }
 
     .input-group {

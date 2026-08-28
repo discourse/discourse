@@ -196,42 +196,12 @@ module PageObjects
         page.has_field?("link-name", with: name, match: :first)
       end
 
-      # Activated with Enter rather than clicked: these buttons exist because a
-      # drag has no keyboard path, so the spec has to go through the keyboard to
-      # be testing the thing they were added for.
-      def move_link_up(name)
-        find("button[aria-label='Move #{name} up']").send_keys(:enter)
-      end
-
-      def move_link_down(name)
-        find("button[aria-label='Move #{name} down']").send_keys(:enter)
-      end
-
-      # Presses whatever the previous move left focused, rather than looking the
-      # button up again. Finding it by name would pass even if focus had been
-      # lost, which is most of what there is to get wrong here.
-      def press_focused_link_arrow
-        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
-      end
-
-      # The accessible name of whatever currently holds focus, for asserting the
-      # arrows are reachable by tabbing rather than only clickable.
-      def focused_label
-        page.evaluate_script("document.activeElement?.getAttribute('aria-label')")
-      end
-
-      # Read from the name inputs, not from the drag handles, so it reports the
-      # order on a touch screen too — where no handle renders.
-      def link_names
-        all(".sidebar-section-form__links-wrapper input[name='link-name']").map(&:value)
-      end
-
       def topics_link
         find(".draggable[data-link-name='Topics']")
       end
 
-      def my_messages_link
-        find(".draggable[data-link-name='My messages']")
+      def review_link
+        find(".draggable[data-link-name='Review']")
       end
 
       def has_source_language?(locale)

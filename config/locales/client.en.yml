@@ -661,7 +661,6 @@ en:
     skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
-    reorder_announcement: "Moved %{label} to position %{position} of %{total}"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
@@ -6645,9 +6644,6 @@ en:
             title: "Section links"
             add: "Add another link"
             delete: "Delete link"
-            drag_handle: "Drag to reorder %{label}"
-            move_up: "Move %{label} up"
-            move_down: "Move %{label} down"
             reset: "Reset to default"
             icon:
               label: "Icon"
@@ -7999,7 +7995,6 @@ en:
             disable: "Disable %{title}"
             move_up: "Move %{title} up"
             move_down: "Move %{title} down"
-            drag_handle: "Drag to reorder %{title}"
             footer_note: "These changes will apply for all users."
 
         configure:

@@ -1,110 +1,109 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { modifier as createModifier } from "ember-modifier";
+import { service } from "@ember/service";
 import withEventValue from "discourse/helpers/with-event-value";
-import { eq } from "discourse/truth-helpers";
+import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
-import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
-import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
-import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
-  /**
-   * The grip element, once it exists. Held as tracked state rather than looked up,
-   * and the drag source re-registers when it arrives: the grip renders on desktop
-   * only, so its ref reaches the modifier's args on a later run.
-   */
-  @tracked gripElement;
+  @service site;
 
-  captureGrip = createModifier((element) => {
-    this.gripElement = element;
-    return () => (this.gripElement = undefined);
-  });
+  @tracked dragCssClass;
+  dragCount = 0;
 
-  get dragHandleLabel() {
-    return i18n("sidebar.sections.custom.links.drag_handle", {
-      label: this.args.link.name,
-    });
+  isAboveElement(event) {
+    event.preventDefault();
+    const target = event.currentTarget;
+    const domRect = target.getBoundingClientRect();
+    return event.offsetY < domRect.height / 2;
   }
 
-  get moveDownLabel() {
-    return i18n("sidebar.sections.custom.links.move_down", {
-      label: this.args.link.name,
-    });
-  }
-
-  get moveUpLabel() {
-    return i18n("sidebar.sections.custom.links.move_up", {
-      label: this.args.link.name,
-    });
-  }
-
-  /**
-   * Resolves a drop onto this row into a reorder.
-   *
-   * The dragged link travels as the payload, never its `segment` or `isPrimary`:
-   * those are read once when the drag starts, and the reorder mutates `segment` as
-   * it moves the link, so a snapshot would be of exactly the value being
-   * invalidated. The destination comes from this row's own link instead.
-   *
-   * @param {Object} params - The drop payload.
-   * @param {Object} params.source - The dragged source, carrying `data.link`.
-   * @param {string} params.position - Whether the drop landed before or after.
-   */
   @action
-  onRowDrop({ source, position }) {
-    this.args.reorderCallback(source.data.link, this.args.link, position);
+  dragHasStarted(event) {
+    event.dataTransfer.effectAllowed = "move";
+    this.args.setDraggedLinkCallback(this.args.link);
+    this.dragCssClass = "dragging";
+  }
+
+  @action
+  dragOver(event) {
+    event.preventDefault();
+    if (this.dragCssClass !== "dragging") {
+      if (this.isAboveElement(event)) {
+        this.dragCssClass = "drag-above";
+      } else {
+        this.dragCssClass = "drag-below";
+      }
+    }
+  }
+
+  @action
+  dragEnter() {
+    this.dragCount++;
+  }
+
+  @action
+  dragLeave() {
+    this.dragCount--;
+    if (
+      this.dragCount === 0 &&
+      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
+    ) {
+      discourseLater(() => {
+        this.dragCssClass = null;
+      }, 10);
+    }
+  }
+
+  @action
+  dropItem(event) {
+    event.stopPropagation();
+    this.dragCount = 0;
+    this.args.reorderCallback(this.args.link, this.isAboveElement(event));
+    this.dragCssClass = null;
+  }
+
+  @action
+  dragEnd() {
+    this.dragCount = 0;
+    this.dragCssClass = null;
   }
 
   <template>
     <div class="sidebar-section-form-link-wrapper" role="rowgroup">
       <div
-        {{dDragAndDropSource
-          type="sidebar-link"
-          data=(hash link=@link)
-          dragHandle=this.gripElement
-        }}
-        {{dDragAndDropTarget
-          accepts="sidebar-link"
-          acceptsSelf=false
-          onDrop=this.onRowDrop
-        }}
+        {{on "dragover" this.dragOver}}
+        {{on "dragenter" this.dragEnter}}
+        {{on "dragleave" this.dragLeave}}
+        {{on "dragend" this.dragEnd}}
+        {{on "drop" this.dropItem}}
         role="row"
         data-row-id={{@link.objectId}}
-        class={{dConcatClass "sidebar-section-form-link" "row-wrapper"}}
+        class={{dConcatClass
+          "sidebar-section-form-link"
+          "row-wrapper"
+          this.dragCssClass
+        }}
       >
-        {{! Every viewport, because a touch screen can drag from a grip and had
-            no way to reorder at all while this was desktop-only. The drag
-            starts here rather than anywhere on the row, so a press that was
-            meant to scroll still scrolls. }}
-        <DDragHandle
-          {{this.captureGrip}}
-          @label={{this.dragHandleLabel}}
-          class="draggable"
-          data-link-name={{@link.name}}
-        />
-
-        {{! The arrows are the keyboard path, which a touch screen does not
-            have either, so they render everywhere the grip does. }}
-        <DReorderButtons
-          @onMoveUp={{fn @moveUp @link}}
-          @onMoveDown={{fn @moveDown @link}}
-          @disableUp={{eq @index 0}}
-          @disableDown={{eq @index @lastIndex}}
-          @upLabel={{this.moveUpLabel}}
-          @downLabel={{this.moveDownLabel}}
-          role="cell"
-          class="sidebar-section-form-link__arrows"
-        />
+        {{#if this.site.desktopView}}
+          <div
+            {{on "dragstart" this.dragHasStarted}}
+            class="draggable"
+            data-link-name={{@link.name}}
+            draggable="true"
+          >
+            {{dIcon "grip-lines"}}
+          </div>
+        {{/if}}
 
         <div class="input-group" role="cell">
           <DIconGridPicker

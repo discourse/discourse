@@ -100,33 +100,11 @@ module PageObjects
           has_no_css?("#{@modal} .manageable-row-list__list.--reorderable")
       end
 
-      def drag_row(source_identifier, target_identifier)
-        drag_and_drop(
-          source: row_selector(source_identifier),
-          source_position: {
-            x: 32,
-            y: 20,
-          },
-          target: row_selector(target_identifier),
-          target_position: {
-            x: 100,
-            y: 1,
-          },
-        )
-        self
-      end
-
       def has_counter?(count, max)
         has_css?(
           "#{@modal} .manageable-row-list__counter",
           text: I18n.t(@counter_i18n_key, count:, max:),
         )
-      end
-
-      private
-
-      def row_selector(identifier)
-        "#{@modal} #{ROW}[data-identifier='#{identifier}']"
       end
     end
   end
