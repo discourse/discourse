@@ -9,7 +9,13 @@ module DiscourseVips
   class Error < RuntimeError
   end
 
-  class WorkerUnavailable < Error
+  class TransientError < Error
+  end
+
+  class WorkerUnavailable < TransientError
+  end
+
+  class OperationTimeout < TransientError
   end
 
   class WorkerProcess

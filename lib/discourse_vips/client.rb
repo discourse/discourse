@@ -32,7 +32,7 @@ module DiscourseVips
         when "ok"
           response["value"]
         when "timeout"
-          raise Error, "libvips operation timed out"
+          raise OperationTimeout, "libvips operation timed out"
         else
           raise Error, response["message"].presence || "libvips operation failed"
         end

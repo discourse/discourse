@@ -994,6 +994,28 @@ RSpec.describe Upload do
       expect(ico_image.dominant_color).to eq("")
     end
 
+    it "retries the dominant color after the worker is unavailable" do
+      DiscourseVips
+        .stubs(:dominant_color)
+        .raises(DiscourseVips::WorkerUnavailable)
+        .then
+        .returns("FFFFFF")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+    end
+
+    it "retries the dominant color after processing times out" do
+      DiscourseVips
+        .stubs(:dominant_color)
+        .raises(DiscourseVips::OperationTimeout)
+        .then
+        .returns("FFFFFF")
+
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+    end
+
     it "can be backfilled" do
       expect(white_image.dominant_color).to eq(nil)
       expect(red_image.dominant_color).to eq(nil)

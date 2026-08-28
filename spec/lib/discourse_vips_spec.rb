@@ -33,7 +33,7 @@ RSpec.describe DiscourseVips do
 
         File.open(input_path, File::RDWR) do
           expect { described_class.dominant_color(input_path:, timeout: 0.05) }.to raise_error(
-            DiscourseVips::Error,
+            DiscourseVips::OperationTimeout,
             "libvips operation timed out",
           )
         end
