@@ -35,6 +35,21 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.once
     end
 
+    it "refreshes the token before its reported expiry" do
+      token_request =
+        stub_request(:post, token_url).to_return(
+          { status: 200, body: { access_token: "first-token", expires_in: 61 }.to_json },
+          { status: 200, body: { access_token: "second-token", expires_in: 61 }.to_json },
+        )
+
+      expect(oauth_token.access_token).to eq("first-token")
+
+      sleep 1.1
+
+      expect(oauth_token.access_token).to eq("second-token")
+      expect(token_request).to have_been_requested.twice
+    end
+
     it "uses a new cache entry after credential rotation" do
       token_request =
         stub_request(:post, token_url).to_return(

@@ -14,6 +14,9 @@ module DiscourseZendeskPlugin
     READ_TIMEOUT_SECONDS = 10
     private_constant :READ_TIMEOUT_SECONDS
 
+    WRITE_TIMEOUT_SECONDS = 5
+    private_constant :WRITE_TIMEOUT_SECONDS
+
     SCOPES = "tickets:read tickets:write users:read users:write"
     private_constant :SCOPES
 
@@ -81,6 +84,7 @@ module DiscourseZendeskPlugin
           http.use_ssl = true
           http.open_timeout = OPEN_TIMEOUT_SECONDS
           http.read_timeout = READ_TIMEOUT_SECONDS
+          http.write_timeout = WRITE_TIMEOUT_SECONDS
         end
     end
 
