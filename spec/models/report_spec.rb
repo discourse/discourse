@@ -584,6 +584,7 @@ RSpec.describe Report do
           facets: [:prev_period],
           limit: 2,
           guardian: Discourse.system_user.guardian,
+          include_related_items: true,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -600,6 +601,7 @@ RSpec.describe Report do
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           limit: 1,
           guardian: Discourse.system_user.guardian,
+          include_related_items: true,
         )
 
       expect(summary_report.related_items[:users].map { |item| item[:user][:username] }).to eq(
@@ -616,6 +618,23 @@ RSpec.describe Report do
           "signups",
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          include_related_items: true,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
+    end
+
+    it "skips related items unless they are requested" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          guardian: Discourse.system_user.guardian,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(1)
@@ -674,6 +693,7 @@ RSpec.describe Report do
           facets: [:prev_period],
           limit: 2,
           guardian: Discourse.system_user.guardian,
+          include_related_items: true,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -696,6 +716,7 @@ RSpec.describe Report do
           "new_contributors",
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          include_related_items: true,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(1)
@@ -2055,6 +2076,25 @@ RSpec.describe Report do
       Fabricate(:group_user, group: group, user: user)
 
       expect(Report.find_cached("signups", guardian: User.find(user.id).guardian)).to be_nil
+    end
+
+    it "does not reuse a cache entry after a category becomes restricted" do
+      category = Fabricate(:category)
+      report = Report._get("signups", guardian: user.guardian)
+      Report.cache(report)
+
+      category.update!(read_restricted: true)
+
+      expect(Report.find_cached("signups", guardian: user.guardian)).to be_nil
+    end
+
+    it "partitions related-item responses from regular report responses" do
+      report = Report._get("signups", guardian: user.guardian)
+      Report.cache(report)
+
+      expect(
+        Report.find_cached("signups", guardian: user.guardian, include_related_items: true),
+      ).to be_nil
     end
 
     it "does not reuse a cache entry after shared draft access changes" do

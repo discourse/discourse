@@ -6,6 +6,7 @@ class Report
   SCHEMA_VERSION = 6
 
   RELATED_ITEMS_LIMIT = 50
+  CATEGORY_SECURITY_VERSION_CACHE_KEY = "reports-category-security-version"
 
   FILTERS = %i[
     name
@@ -182,6 +183,7 @@ class Report
                 :y_axis_title,
                 :current_user,
                 :guardian,
+                :include_related_items,
                 :related_items,
                 :related_items_totals
 
@@ -232,7 +234,17 @@ class Report
       guardian&.secure_category_ids&.join(","),
       guardian&.can_see_shared_draft?,
       CrawlerScorer.enabled?,
+      category_security_version,
+      report.include_related_items ? true : nil,
     ].compact.map(&:to_s).join(":")
+  end
+
+  def self.category_security_version
+    Discourse.cache.read(CATEGORY_SECURITY_VERSION_CACHE_KEY) || 0
+  end
+
+  def self.bump_category_security_version
+    Discourse.cache.write(CATEGORY_SECURITY_VERSION_CACHE_KEY, category_security_version + 1)
   end
 
   def add_filter(name, options = {})
@@ -363,6 +375,7 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.include_related_items = opts[:include_related_items] if opts[:include_related_items]
     report.guardian = opts[:guardian] if opts[:guardian]
     report.current_user = opts[:current_user] if opts[:current_user]
     report.current_user ||= report.guardian&.user

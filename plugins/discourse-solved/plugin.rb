@@ -208,7 +208,7 @@ after_initialize do
           .count
     end
 
-    next if report.guardian.blank?
+    next if !report.include_related_items || report.guardian.blank?
 
     guardian = report.guardian
     solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))

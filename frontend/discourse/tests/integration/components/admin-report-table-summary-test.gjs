@@ -77,6 +77,11 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
       "true",
       "lets the server cache the summary report"
     );
+    assert.strictEqual(
+      requestParams.include_related_items,
+      "true",
+      "requests the related-item payload"
+    );
   });
 
   test("retries loading after an error", async function (assert) {

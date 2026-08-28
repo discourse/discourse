@@ -394,6 +394,16 @@ RSpec.describe Admin::ReportsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["report"]["total"]).to eq(1)
           end
+
+          it "only includes related items when requested" do
+            Fabricate(:user, created_at: 1.hour.ago)
+
+            get "/admin/reports/signups.json"
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
+
+            get "/admin/reports/signups.json", params: { include_related_items: true }
+            expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
+          end
         end
 
         context "when limit param is invalid" do

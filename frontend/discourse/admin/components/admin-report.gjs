@@ -165,8 +165,11 @@ export default class AdminReport extends Component {
   }
 
   get hasRelatedItems() {
-    return Object.values(this.model?.related_items || {}).some(
-      (items) => items.length > 0
+    return (
+      this.args.showRelatedItems &&
+      Object.values(this.model?.related_items || {}).some(
+        (items) => items.length > 0
+      )
     );
   }
 
@@ -552,6 +555,10 @@ export default class AdminReport extends Component {
 
     if (this.args.filters?.customFilters) {
       payload.data.filters = this.args.filters?.customFilters;
+    }
+
+    if (this.args.showRelatedItems) {
+      payload.data.include_related_items = true;
     }
 
     return payload;

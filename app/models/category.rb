@@ -157,6 +157,7 @@ class Category < ActiveRecord::Base
   after_update :run_plugin_category_update_param_callbacks
   after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
   after_update :clear_page_not_found_topics_cache, if: :saved_change_to_read_restricted?
+  after_update :bump_report_category_security_version, if: :saved_change_to_read_restricted?
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -1466,6 +1467,10 @@ class Category < ActiveRecord::Base
   def clear_page_not_found_topics_cache
     Topic.clear_page_not_found_topics_cache!
     DB.after_commit { Topic.clear_page_not_found_topics_cache! }
+  end
+
+  def bump_report_category_security_version
+    DB.after_commit { Report.bump_category_security_version }
   end
 
   def clear_site_cache

@@ -17,6 +17,7 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
       end_date: Time.current,
       filters:,
       guardian:,
+      include_related_items: true,
     )
   end
 

@@ -125,8 +125,12 @@ module(
     });
 
     test("uses the table summary component registered for the report", async function (assert) {
-      pretender.get("/admin/reports/accepted_solutions", () =>
-        response({
+      let requestParams;
+
+      pretender.get("/admin/reports/accepted_solutions", (request) => {
+        requestParams = request.queryParams;
+
+        return response({
           report: {
             related_items: {
               solved_topics: [
@@ -154,8 +158,8 @@ module(
             },
             related_items_totals: { solved_topics: 3 },
           },
-        })
-      );
+        });
+      });
 
       const renderer = adminReportRelatedItemsRenderer("accepted_solutions");
 
@@ -204,6 +208,11 @@ module(
           "Showing the newest 1 of 3.",
           "discloses that the list is limited"
         );
+      assert.strictEqual(
+        requestParams.include_related_items,
+        "true",
+        "requests the related-item payload"
+      );
     });
 
     test("retries the table summary after an error", async function (assert) {

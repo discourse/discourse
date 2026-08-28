@@ -16,6 +16,7 @@ export default <template>
         @reportOptions={{@controller.reportOptions}}
         @showFilteringUI={{true}}
         @showDescriptionInTooltip={{false}}
+        @showRelatedItems={{true}}
         @onRefresh={{routeAction "onParamsChange"}}
       />
     </div>

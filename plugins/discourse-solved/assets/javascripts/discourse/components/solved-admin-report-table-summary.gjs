@@ -73,6 +73,7 @@ export default class SolvedAdminReportTableSummary extends Component {
       end_date: this.date,
       limit: SUMMARY_LIMIT,
       cache: true,
+      include_related_items: true,
     };
 
     if (this.args.reportFilters) {
