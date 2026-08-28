@@ -39,17 +39,6 @@ module DiscourseZendeskPlugin
       client
     end
 
-    def invalid_oauth_token_response?(environment)
-      return false if environment[:status] != 401
-
-      body = environment[:body]
-      body = JSON.parse(body) if body.is_a?(String)
-      body.is_a?(Hash) && body["error"] == "invalid_token"
-    rescue JSON::ParserError
-      false
-    end
-    private :invalid_oauth_token_response?
-
     def self.autogeneration_category?(category_id)
       return false if category_id.blank?
 
@@ -150,6 +139,18 @@ module DiscourseZendeskPlugin
       html = style.to_html
 
       "#{html} \n\n [<a href='#{post.full_url}'>Discourse post</a>]"
+    end
+
+    private
+
+    def invalid_oauth_token_response?(environment)
+      return false if environment[:status] != 401
+
+      body = environment[:body]
+      body = JSON.parse(body) if body.is_a?(String)
+      body.is_a?(Hash) && body["error"] == "invalid_token"
+    rescue JSON::ParserError
+      false
     end
   end
 end

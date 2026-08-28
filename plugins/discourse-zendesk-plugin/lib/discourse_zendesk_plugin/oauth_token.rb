@@ -3,13 +3,22 @@
 module DiscourseZendeskPlugin
   class OAuthToken
     TOKEN_LIFETIME_SECONDS = 30.minutes.to_i
-    EXPIRY_BUFFER_SECONDS = 1.minute.to_i
-    OPEN_TIMEOUT_SECONDS = 5
-    READ_TIMEOUT_SECONDS = 10
-    SCOPES = "tickets:read tickets:write users:read users:write"
+    private_constant :TOKEN_LIFETIME_SECONDS
 
-    RequestError = Class.new(StandardError)
-    private_constant :RequestError
+    EXPIRY_BUFFER_SECONDS = 1.minute.to_i
+    private_constant :EXPIRY_BUFFER_SECONDS
+
+    OPEN_TIMEOUT_SECONDS = 5
+    private_constant :OPEN_TIMEOUT_SECONDS
+
+    READ_TIMEOUT_SECONDS = 10
+    private_constant :READ_TIMEOUT_SECONDS
+
+    SCOPES = "tickets:read tickets:write users:read users:write"
+    private_constant :SCOPES
+
+    class RequestError < StandardError
+    end
 
     def initialize
       @zendesk_url = SiteSetting.zendesk_url
@@ -90,11 +99,5 @@ module DiscourseZendeskPlugin
       fingerprint = Digest::SHA256.hexdigest([@zendesk_url, @client_id, @client_secret].join("\0"))
       "discourse-zendesk-oauth-token:#{fingerprint}"
     end
-
-    private_constant :TOKEN_LIFETIME_SECONDS,
-                     :EXPIRY_BUFFER_SECONDS,
-                     :OPEN_TIMEOUT_SECONDS,
-                     :READ_TIMEOUT_SECONDS,
-                     :SCOPES
   end
 end

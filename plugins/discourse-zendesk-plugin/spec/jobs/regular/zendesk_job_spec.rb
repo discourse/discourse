@@ -50,23 +50,6 @@ RSpec.describe Jobs::ZendeskJob do
   context "with zendesk enabled" do
     let(:zendesk_enabled) { true }
 
-    context "with OAuth credentials only" do
-      let(:zendesk_jobs_email) { "" }
-      let(:zendesk_jobs_api_token) { "" }
-
-      before do
-        SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
-        SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
-        Post.expects(:find_by).with(id: post.id).returns(post).once
-      end
-
-      it "processes the post" do
-        job.expects(:add_comment).with(post, ticket_id).once
-
-        execute
-      end
-    end
-
     context "when topic has existing zendesk ticket" do
       let(:ticket_id) { "1234" }
 
@@ -181,6 +164,58 @@ RSpec.describe Jobs::ZendeskJob do
           job.expects(:add_comment).never
           execute
         end
+      end
+    end
+  end
+
+  describe "#execute" do
+    context "when only OAuth credentials are configured" do
+      let(:zendesk_enabled) { true }
+      let(:zendesk_jobs_email) { "" }
+      let(:zendesk_jobs_api_token) { "" }
+      let(:zendesk_api_url) { "https://your-url.zendesk.com/api/v2" }
+      let(:zendesk_comment_request) do
+        stub_request(:put, "#{zendesk_api_url}/tickets/#{ticket_id}").with(
+          headers: {
+            "Authorization" => "Bearer oauth-access-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { ticket: { id: ticket_id } }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+      end
+
+      before do
+        SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
+        SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
+        stub_request(:post, "https://your-url.zendesk.com/oauth/tokens").to_return(
+          status: 200,
+          body: { access_token: "oauth-access-token", expires_in: 1800 }.to_json,
+        )
+        stub_request(:get, "#{zendesk_api_url}/users/search?query=#{post.user.email}").to_return(
+          status: 200,
+          body: { users: [{ id: "zendesk-user-id" }] }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+        stub_request(:get, "#{zendesk_api_url}/tickets/#{ticket_id}/comments").to_return(
+          status: 200,
+          body: { comments: [{ id: "comment-id" }] }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+        zendesk_comment_request
+      end
+
+      it "pushes the post with OAuth authentication" do
+        execute
+
+        expect(zendesk_comment_request).to have_been_requested.once
       end
     end
   end

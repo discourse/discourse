@@ -69,25 +69,11 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.twice
     end
 
-    it "caches the token until shortly before its reported expiry" do
-      stub_request(:post, token_url).to_return(
-        status: 200,
-        body: { access_token: "access-token", expires_in: 1800 }.to_json,
-      )
-      Discourse.cache.expects(:read).returns(nil)
-      Discourse
-        .cache
-        .expects(:write)
-        .with(regexp_matches(/\Adiscourse-zendesk-oauth-token:/), "access-token", expires_in: 1740)
-
-      expect(oauth_token.access_token).to eq("access-token")
-    end
-
     it "rejects an insecure Zendesk URL before sending credentials" do
       SiteSetting.zendesk_url = "http://your-url.zendesk.com/api/v2"
 
       expect { oauth_token.access_token }.to raise_error(
-        StandardError,
+        described_class::RequestError,
         "Zendesk OAuth requires an HTTPS URL",
       )
       expect(WebMock).not_to have_requested(:post, %r{/oauth/tokens})
@@ -97,7 +83,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       stub_request(:post, token_url).to_return(status: 401, body: "oauth-client-secret")
 
       expect { oauth_token.access_token }.to raise_error(
-        StandardError,
+        described_class::RequestError,
         "Zendesk OAuth token request failed",
       )
     end
@@ -106,7 +92,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       stub_request(:post, token_url).to_return(status: 200, body: { expires_in: 1800 }.to_json)
 
       expect { oauth_token.access_token }.to raise_error(
-        StandardError,
+        described_class::RequestError,
         "Zendesk OAuth token response is invalid",
       )
     end

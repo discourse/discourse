@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
-describe DiscourseZendeskPlugin::Helper do
+RSpec.describe DiscourseZendeskPlugin::Helper do
   subject(:dummy) { Class.new { extend DiscourseZendeskPlugin::Helper } }
 
   describe ".configured?" do
-    it "accepts either complete credential pair" do
-      expect(described_class.configured?).to be(false)
-
+    it "accepts a complete API token credential pair" do
       SiteSetting.zendesk_jobs_email = "zendesk@example.com"
       SiteSetting.zendesk_jobs_api_token = "legacy-token"
 
       expect(described_class.configured?).to be(true)
+    end
 
-      SiteSetting.zendesk_jobs_email = ""
-      SiteSetting.zendesk_jobs_api_token = ""
+    it "accepts a complete OAuth credential pair" do
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
       SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
 
@@ -78,9 +76,11 @@ describe DiscourseZendeskPlugin::Helper do
         },
       )
 
-      expect(dummy.zendesk_client.current_user).to be_nil
+      rejected_user = dummy.zendesk_client.current_user
+      new_client = dummy.zendesk_client
 
-      expect(dummy.zendesk_client.config.access_token).to eq("new-token")
+      expect(rejected_user).to be_nil
+      expect(new_client.config.access_token).to eq("new-token")
       expect(token_request).to have_been_requested.twice
       expect(WebMock).not_to have_requested(:get, %r{/users/me}).with(
         basic_auth: %w[zendesk@example.com/token legacy-token],

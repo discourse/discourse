@@ -1,7 +1,7 @@
 en:
   site_settings:
-    zendesk_oauth_client_id: "The identifier for a confidential Zendesk OAuth client. Configure both OAuth settings to replace API token authentication. Restrict the client to tickets:read, tickets:write, users:read, and users:write scopes, and use a durable service account when attribution matters."
-    zendesk_oauth_client_secret: "The secret shown once when you create the confidential Zendesk OAuth client. Store it here with {{setting:zendesk_oauth_client_id}}. When both settings are present, OAuth takes precedence over legacy API token authentication."
+    zendesk_oauth_client_id: "Client ID for Zendesk OAuth authentication. Configure both OAuth settings to replace API token authentication. The OAuth client must allow the tickets:read, tickets:write, users:read, and users:write scopes. Use a dedicated service account to create the client if attribution matters."
+    zendesk_oauth_client_secret: "Client secret for Zendesk OAuth authentication. Configure it together with {{setting:zendesk_oauth_client_id}}. When both settings are present, OAuth takes precedence over legacy API token authentication."
   dashboard:
     problem:
       zendesk_api_token_deprecation: "The Discourse Zendesk plugin uses deprecated API token authentication. Configure the <a href='%{base_path}/admin/site_settings/category/all_results?filter=zendesk_oauth'>Zendesk OAuth client ID and client secret settings</a> before April 30, 2027."
