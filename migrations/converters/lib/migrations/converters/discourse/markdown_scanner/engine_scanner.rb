@@ -52,13 +52,21 @@ module Migrations
 
           # A post whose parse runs into the fast ceiling gets one retry
           # before `:engine_error`. This is a deadline for the whole retry of
-          # that one post: each engine call gets at most this much, and the
-          # substitution checks receive only what the slow parse left of it.
-          # A conversion runs once, so spending up to 30 seconds on one post
+          # that one post: every engine call on the retry gets at most the
+          # time left until the deadline, and a call with no time left is not
+          # made — it counts as the substitution budget running out. A
+          # conversion runs once, so spending up to 30 seconds on one post
           # is acceptable. Core's PrettyText allows 25 seconds for a full
           # cook; the slowest legitimate parse we measured took 435 ms, and a
           # corpus run with a 60-second ceiling recovered no additional posts.
           SLOW_TIMEOUT_MS = 30_000
+
+          # Raised in place of an engine call when the retry deadline has
+          # passed, and in place of its result when the call was cut short by
+          # the shrunken deadline ceiling. The substitution pass turns it into
+          # `:substitution_budget`; it never means the engine failed.
+          class RetryDeadlineError < StandardError
+          end
 
           # Locating URL occurrences scans the post once per distinct value.
           # A generated post with thousands of distinct links would cost
@@ -163,15 +171,43 @@ module Migrations
             # failures are not rescued.
             @engine.reset!
             Result.new(output: input, cause: :engine_error, detail: error.class.name)
+          rescue RetryDeadlineError
+            # The substitution pass turns the deadline into its budget cause
+            # itself; this only catches a deadline that passed outside it.
+            Result.new(output: input, cause: :substitution_budget)
           ensure
             @scan_timeout_ms = nil
             @retry_deadline = nil
           end
 
-          # Every engine parse for the current body goes through here, so a
-          # body on the slow path keeps its ceiling for the substitution parses too.
+          # Every engine parse for the current body goes through here. On the
+          # slow retry each call gets only the time left until the per-body
+          # deadline — without that, a substitution starting with one second
+          # left could still run for the full ceiling — and a call with no
+          # time left is not made.
           def engine_scan(posts)
-            @engine.scan(posts, timeout_ms: @scan_timeout_ms)
+            timeout = @scan_timeout_ms
+            if @retry_deadline
+              remaining_ms =
+                ((@retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)) * 1000).floor
+              raise RetryDeadlineError if remaining_ms <= 0
+
+              timeout = timeout.nil? ? remaining_ms : [timeout, remaining_ms].min
+            end
+            @engine.scan(posts, timeout_ms: timeout)
+          end
+
+          # Whether the current body is on its slow retry, with the per-body
+          # deadline in force. The substitution pass classifies a terminated
+          # parse as spent budget then, not as an engine failure.
+          def retry_deadline_active?
+            !@retry_deadline.nil?
+          end
+
+          # A terminated isolate cannot be reused; the pass that swallowed the
+          # termination asks for the rebuild here.
+          def reset_engine!
+            @engine.reset!
           end
 
           def attempt(input, scan_data)

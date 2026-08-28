@@ -70,14 +70,28 @@ module Migrations
             STORAGE = %r{(?:original|optimized)/}
             private_constant :STORAGE
 
+            # An optional query and fragment, taken whole or not at all. The
+            # lookahead after each part requires that nothing of it is left
+            # over except sentence punctuation at a URL boundary: a query
+            # longer than the cap must not match partially, because replacing
+            # a URL up to a mid-query cut would leave the rest behind as
+            # literal text. The final lookbehind backs sentence punctuation
+            # out of the end of the match.
+            QUERY_FRAGMENT =
+              /
+                (?: \? [^##{Base::URL_TERMINATORS}]{1,1024} (?= [.,;:!?]* (?: [##{Base::URL_TERMINATORS}] | \z ) ) )?
+                (?: \# [^#{Base::URL_TERMINATORS}]{1,255} (?= [.,;:!?]* (?: [#{Base::URL_TERMINATORS}] | \z ) ) )?
+                (?<! [.,;:!?] )
+              /x
+            private_constant :QUERY_FRAGMENT
+
             # From the storage marker down to the basename and whatever follows
             # it: partition segments, the sha1, the extension or `_WxH` suffix
             # ending on a word character (a sentence's `.` after a bare URL
             # stays out), then an optional query and fragment. The caps take a
             # signed CDN URL whole; a URL beyond them matches nothing at all —
             # a match over part of a URL would replace that part and leave the
-            # tail behind as literal text. The final lookbehind backs sentence
-            # punctuation out of a query or fragment end. The repeated groups
+            # tail behind as literal text. The repeated groups
             # are atomic with a lookahead deciding where they stop, so a
             # failing candidate is scanned once and never backtracked into;
             # the segment-count and length caps bound a single candidate.
@@ -87,9 +101,7 @@ module Migrations
                 (?> (?: (?! \h{40}[._] ) #{SEGMENT} / ){0,16} )   # depth/partition segments
                 (?<sha1> \h{40} ) (?=[._])                        # sha1, then the extension or `_WxH` suffix
                 [^/?##{Base::URL_TERMINATORS}]{0,255} \w
-                (?: \? [^##{Base::URL_TERMINATORS}]{1,1024} )?
-                (?: \# [^#{Base::URL_TERMINATORS}]{1,255} )?
-                (?<! [.,;:!?] )
+                #{QUERY_FRAGMENT}
               }x
             private_constant :STORAGE_TAIL
 
@@ -105,9 +117,16 @@ module Migrations
             # The short-URL shape. The token is base62, the extension optional
             # (core routes both spellings). `(?![\w/-])` stops the match when
             # more path follows — core's short-URL route has exactly one
-            # segment after `short-url/`.
+            # segment after `short-url/` — and a query or fragment may follow
+            # the segment like on any URL.
             SHORT_TAIL =
-              %r{/uploads/short-url/(?<short_token>[0-9a-zA-Z]{1,#{MAX_SHORT_TOKEN_LENGTH}})(?:\.\w{1,15})?(?![\w/-])}x
+              %r{
+                /uploads/short-url/
+                (?<short_token>[0-9a-zA-Z]{1,#{MAX_SHORT_TOKEN_LENGTH}})
+                (?:\.\w{1,15})?
+                (?![\w/-])
+                #{QUERY_FRAGMENT}
+              }x
             private_constant :SHORT_TAIL
 
             # The three shapes. The `/uploads/` segment may be absent only in
@@ -156,9 +175,11 @@ module Migrations
             # URL's href that no URL grammar accepts (a stray `-`, `#`,
             # punctuation, non-ASCII text glued to the URL); both sides drop
             # those at replacement, so a value may end in such a tail. A word
-            # character in the tail is different: it means the value's URL
-            # runs past what the grammar takes (a longer basename or query),
-            # and replacing only a prefix of it would leave the rest behind.
+            # character in the tail, or a tail longer than
+            # `Base::MAX_SWALLOWED_TAIL_BYTES`, is different: there the
+            # value's URL runs past what the grammar takes (a longer basename
+            # or query), and replacing only a prefix of it would leave the
+            # rest behind.
             TRAILING_WORD = /[0-9A-Za-z_]/
             private_constant :TRAILING_WORD
 
@@ -166,10 +187,15 @@ module Migrations
             # the cheap presence check for the {TierGate}: every supported
             # shape carries one of these markers, and a body with only
             # unrelated `/uploads/` paths (WordPress and friends) does not
-            # become a candidate.
+            # become a candidate. A storage marker alone is not enough — the
+            # S3/CDN shape needs a host, and the long shape an `uploads/`
+            # segment, so prose that merely mentions `original/` sends nothing
+            # to the engine.
             def self.candidate?(raw)
-              raw.include?("original/") || raw.include?("optimized/") ||
-                raw.include?("uploads/short-url/")
+              return true if raw.include?("uploads/short-url/")
+              return false unless raw.include?("original/") || raw.include?("optimized/")
+
+              raw.include?("//") || raw.include?("uploads/")
             end
 
             # Whether an engine href/src value has a supported upload shape.
@@ -185,7 +211,8 @@ module Migrations
               match = ANCHORED_URL.match(value)
               return false if match.nil?
 
-              !value.byteslice(match.byteoffset(0).last..).match?(TRAILING_WORD)
+              tail = value.byteslice(match.byteoffset(0).last..)
+              tail.bytesize <= Base::MAX_SWALLOWED_TAIL_BYTES && !tail.match?(TRAILING_WORD)
             end
 
             # The 40-hex sha1 for a short-URL token, or nil when the token is

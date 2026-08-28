@@ -195,8 +195,26 @@ module Migrations
               substituted_body =
                 "#{@input.byteslice(0, occurrence.offset)}#{marker}" \
                   "#{@input.byteslice((occurrence.offset + occurrence.length)..)}"
-              substituted =
-                construct_multiset(@scanner.engine_scan([{ id: nil, raw: substituted_body }]).first)
+              begin
+                substituted =
+                  construct_multiset(
+                    @scanner.engine_scan([{ id: nil, raw: substituted_body }]).first,
+                  )
+              rescue EngineScanner::RetryDeadlineError
+                @limit_hit = :substitution_budget
+                return :budget, 0
+              rescue MiniRacer::ScriptTerminatedError
+                # On the slow retry the call's ceiling is the time left until
+                # the per-body deadline, so a terminated check means the
+                # deadline is spent, not that the engine failed. Off the slow
+                # retry the termination keeps its meaning and triggers the
+                # retry.
+                raise unless @scanner.retry_deadline_active?
+
+                @scanner.reset_engine!
+                @limit_hit = :substitution_budget
+                return :budget, 0
+              end
 
               removed = diff(base, substituted)
               added = diff(substituted, base)

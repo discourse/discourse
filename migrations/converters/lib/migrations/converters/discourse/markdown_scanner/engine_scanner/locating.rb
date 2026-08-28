@@ -324,10 +324,16 @@ module Migrations
               nil
             end
 
-            # Whether every occurrence byte past the construct match is
-            # wordless linkify junk — the only tail a match may leave
-            # uncovered (see `anchor_match`).
+            # Whether the occurrence bytes past the construct match are a
+            # short wordless linkify tail — the only tail a match may leave
+            # uncovered (see `anchor_match` and
+            # `Constructs::Base::MAX_SWALLOWED_TAIL_BYTES`). Length matters as
+            # much as content: linkify swallows a few bytes of punctuation,
+            # never hundreds, and a long tail means the match stopped inside
+            # the URL proper.
             def swallowed_tail?(from, to)
+              return false if to - from > Constructs::Base::MAX_SWALLOWED_TAIL_BYTES
+
               (from...to).none? do |pos|
                 byte = @input.getbyte(pos)
                 byte == 0x5f || (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||

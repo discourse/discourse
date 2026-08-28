@@ -92,6 +92,16 @@ module Migrations
             # (`[^/#{URL_TERMINATORS}]`) to match a single path segment.
             URL_TERMINATORS = "\\s)\"'<>"
 
+            # Linkify takes a few trailing bytes into a bare URL's href that no
+            # URL grammar accepts: a stray `-` or `#`, sentence punctuation, a
+            # non-ASCII character glued to the URL. Such a tail is short — one
+            # or two characters, a few bytes. A construct match may leave at
+            # most this many wordless bytes of a confirmed URL occurrence
+            # uncovered; a longer tail means the match stopped inside the URL
+            # proper, and replacing a prefix would leave the rest behind as
+            # literal text.
+            MAX_SWALLOWED_TAIL_BYTES = 16
+
             # Link text, with the one level of balanced brackets CommonMark allows
             # (`[see [1]](/t/5)` links with text `see [1]`). The nested bracket
             # must not itself open a link or image — the `(?!\()` — so the `[` of a

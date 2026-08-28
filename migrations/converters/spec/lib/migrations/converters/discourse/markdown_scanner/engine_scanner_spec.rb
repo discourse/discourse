@@ -381,8 +381,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       output = extractor.extract("`@alice` #{(["@alice"] * 200).join(" ")}")
 
       # One initial parse, then one parse per check up to the limit. The
-      # occurrences past the limit cost no engine call and no allocation —
-      # the loop stops instead of walking a wrapper list.
+      # occurrences past the limit cost no engine call and no
+      # candidate-wrapper allocation — the loop stops instead of walking a
+      # wrapper list. (The occurrence index itself was already built for
+      # count matching; that part this example does not measure.)
       expect(engine_calls).to eq(1 + max)
       expect(buffer.mentions.size).to eq(max - 1)
       expect(output).to start_with("`@alice` ")
@@ -510,10 +512,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include(buffer.mentions.first[:placeholder])
       expect(refusals).to be_empty
-      # The fast attempt carries no override; the retry carries the ceiling.
-      expect(ceilings).to eq(
-        [nil, Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SLOW_TIMEOUT_MS],
-      )
+      # The fast attempt carries no override; the retry's ceiling is the time
+      # left until the per-body deadline, computed just after the deadline is
+      # set, so it comes in at most a moment under the constant.
+      slow_ms = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SLOW_TIMEOUT_MS
+      expect(ceilings.size).to eq(2)
+      expect(ceilings.first).to be_nil
+      expect(ceilings.last).to be_between(slow_ms - 1_000, slow_ms)
       expect(retrying_engine).to have_received(:reset!).once
       expect(extractor.slow_parses).to eq(1)
       expect(slow_parses_seen).to eq(1)
@@ -580,6 +585,50 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       slow_ceiling = engine_scanner::SLOW_TIMEOUT_MS / 1000.0
       expect(budgets).to all(be > engine_scanner::SubstitutionPass::SUBSTITUTION_SECONDS_BUDGET)
       expect(budgets).to all(be < slow_ceiling)
+    end
+
+    it "shrinks every engine call's ceiling toward the deadline and stops at zero" do
+      engine_scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
+      # A scripted clock: each engine call costs ten scripted seconds, so the
+      # 30-second deadline is spent after three calls on the retry.
+      now = 0.0
+      allow(Process).to receive(:clock_gettime).and_call_original
+      allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC) { now }
+      ceilings = []
+      calls = 0
+      slow_engine = instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(slow_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        ceilings << timeout_ms
+        calls += 1
+        now += 10.0
+        raise MiniRacer::ScriptTerminatedError, "terminated" if calls == 1
+        markdown_engine.scan(posts)
+      end
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: slow_engine,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+        )
+
+      # One copy in code and three in prose: counts cannot match, so every
+      # occurrence needs its own substitution parse — more parses than the
+      # deadline has time for.
+      output = extractor.extract("`@alice` and @alice and @alice and @alice")
+
+      # The fast attempt has no ceiling; the retry's base parse gets the full
+      # deadline; each substitution parse gets only what is left; the fourth
+      # call would start with nothing left and is not made.
+      expect(ceilings).to eq([nil, 30_000, 20_000, 10_000])
+      expect(refusals).to eq(%i[substitution_budget])
+      # The code copy was checked first and found to be no construct; one
+      # prose occurrence was confirmed before the deadline ran out, the
+      # other two stay as written.
+      expect(output).to include("`@alice`")
+      expect(buffer.mentions.size).to eq(1)
+      expect(output.scan("@alice").size).to eq(3)
     end
   end
 

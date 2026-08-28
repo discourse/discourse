@@ -111,23 +111,50 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
       files
     end
 
-    it "contains every siteSettings key the bundled markdown JavaScript reads" do
-      keys_read =
-        bundled_js_files.flat_map do |file|
-          source = File.read(file)
-          source.scan(property_read).flatten + source.scan(bracket_read).flatten +
-            source
-              .scan(destructuring_read)
-              .flatten
-              .flat_map { |names| names.split(",").map { |name| name[/[A-Za-z_0-9]+/] } }
-              .compact
-        end
+    def keys_read_in(files)
+      files.flat_map do |file|
+        source = File.read(file)
+        source.scan(property_read).flatten + source.scan(bracket_read).flatten +
+          source
+            .scan(destructuring_read)
+            .flatten
+            .flat_map { |names| names.split(",").map { |name| name[/[A-Za-z_0-9]+/] } }
+            .compact
+      end
+    end
 
-      # `avatar_sizes` is covered by the dedicated AVATAR_SIZES_KEY: it rides
-      # the options as `avatar_sizes`, and the processor's helpers shim hands
-      # it back to avatar-utils under a `siteSettings` reading.
-      covered = described_class::SETTING_KEYS + [described_class::AVATAR_SIZES_KEY]
-      expect(keys_read.uniq - covered).to be_empty
+    # `avatar_sizes` is covered by the dedicated AVATAR_SIZES_KEY: it rides
+    # the options as `avatar_sizes`, and the processor's helpers shim hands
+    # it back to avatar-utils under a `siteSettings` reading.
+    def covered_keys
+      described_class::SETTING_KEYS + [described_class::AVATAR_SIZES_KEY]
+    end
+
+    it "contains every siteSettings key the bundled markdown JavaScript reads" do
+      expect(keys_read_in(bundled_js_files).uniq - covered_keys).to be_empty
+    end
+
+    # The supported plugin list is an allowlist because of this: each listed
+    # plugin's own reads are covered, so its rules run with the source
+    # site's settings. A plugin added to the list without extending
+    # SETTING_KEYS fails here by name.
+    it "covers each supported plugin's own siteSettings reads" do
+      root = Migrations::Converters::MarkdownEngine.discourse_root
+
+      Migrations::Converters::MarkdownEngine::Bundle::CORE_MARKDOWN_PLUGINS.each do |plugin|
+        files =
+          Dir[
+            File.join(
+              root,
+              "plugins",
+              plugin,
+              "assets/javascripts/**/discourse-markdown/**/*.{js,js.es6}",
+            )
+          ]
+        missing = keys_read_in(files).uniq - covered_keys
+        expect(missing).to be_empty,
+        "#{plugin} reads siteSettings keys SETTING_KEYS does not cover: #{missing.inspect}"
+      end
     end
 
     it "recognizes every siteSettings mention, so aliases can't hide a read" do

@@ -505,6 +505,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads).to be_empty
       expect(extractor.engine_refusals).to be_empty
     end
+
+    # Same rule for a wordless over-cap query: 2,000 percent signs are not a
+    # short linkify tail, and a prefix match would cut the URL mid-query.
+    it "leaves a bare URL with an over-cap punctuation-only query alone" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?x=#{"%" * 2000}"
+      raw = "file #{url} end"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "leaves a markdown link with an over-cap punctuation-only query alone" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?x=#{"%" * 2000}"
+      raw = "[file](#{url})"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "takes a short URL with a query whole in a markdown link" do
+      result = extract("[file](/uploads/short-url/21.png?v=2)")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(original_markdown: "[file](/uploads/short-url/21.png?v=2)")
+      expect(result).to eq(upload[:placeholder])
+    end
   end
 
   describe "S3/CDN storage URLs without an uploads segment" do

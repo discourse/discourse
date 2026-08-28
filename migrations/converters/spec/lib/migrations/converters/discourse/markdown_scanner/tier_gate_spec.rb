@@ -85,6 +85,13 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       ).to eq(:engine)
     end
 
+    it "leaves prose that mentions a storage marker without any URL at :none" do
+      # The S3 shape needs a host, so `original/` in running text (a path in
+      # a code sample, an English sentence) must not pay an engine parse.
+      expect(gate.classify("copy the file into original/ before optimizing")).to eq(:none)
+      expect(gate.classify("the optimized/ directory holds the variants")).to eq(:none)
+    end
+
     it "treats an internal route as a candidate" do
       expect(gate.classify("see /t/some-topic/123")).to eq(:engine)
     end

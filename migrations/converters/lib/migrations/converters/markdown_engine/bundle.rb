@@ -73,14 +73,16 @@ module Migrations
           plugins/footnote/assets/vendor/javascripts/markdown-it-footnote.js
         ].freeze
 
-        # The default plugin set: the plugins bundled with the host
-        # application that ship markdown features. The scan runs with the
-        # configured set — a caller passes its own list to {load_or_build}
-        # when the target site cooks with different plugins. The constructs
-        # must tokenize the way the destination will see them, or text inside
-        # e.g. a `[poll]` would be scanned as ordinary prose. This is also an
-        # accuracy boundary: a source that relied on a plugin outside the
-        # configured set is scanned without that plugin's markdown rules.
+        # The supported plugins: the ones bundled with the host application
+        # that ship markdown features. Their constructs must tokenize the way
+        # the destination will see them, or text inside e.g. a `[poll]` would
+        # be scanned as ordinary prose. This list is an allowlist, not open
+        # configuration: `Config::SETTING_KEYS` covers exactly these plugins'
+        # parse-relevant settings (a spec checks that per plugin), so a
+        # caller passing a plugin outside the list gets its markdown rules
+        # running with absent settings — unsupported. A source that relied on
+        # a plugin outside the list is scanned without that plugin's rules;
+        # that is the engine's accuracy boundary.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
@@ -94,6 +96,10 @@ module Migrations
         # Digesting reads the host constants and file globs only; V8 boots on
         # a transpile, which never happens in this process, and the host
         # classes are Rails-free until their build/transpile methods run.
+        #
+        # @param plugins [Array<String>] a subset of {CORE_MARKDOWN_PLUGINS}.
+        #   A name outside the supported list is unsupported: its markdown
+        #   rules would run without their settings (see the list's comment).
         def self.load_or_build(
           root: MarkdownEngine.discourse_root,
           cache_dir: nil,

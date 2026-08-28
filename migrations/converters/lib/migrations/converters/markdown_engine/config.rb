@@ -9,7 +9,10 @@ module Migrations
       # from the checkout's own YAML defaults and are overridden by whatever
       # the source database provides for the keys the markdown pipeline reads;
       # a spec keeps `SETTING_KEYS` in sync with the JavaScript by grepping the
-      # same files the `Bundle` loads.
+      # same files the `Bundle` loads. The keys cover core and the supported
+      # plugins (`Bundle::CORE_MARKDOWN_PLUGINS`) — a plugin outside that
+      # list would read settings this class never passes, which is why the
+      # list is an allowlist.
       class Config
         # Every `siteSettings.*` key the loaded markdown JavaScript reads.
         SETTING_KEYS = %w[
