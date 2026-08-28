@@ -6,8 +6,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("AI Bot - Drafts dropdown icon", function (needs) {
-  // a user only ever has one draft per key, so the message draft is the only
-  // place a bot recipient can show up in this menu
   let recipients;
 
   needs.user({
@@ -25,37 +23,37 @@ acceptance("AI Bot - Drafts dropdown icon", function (needs) {
         drafts: [
           {
             draft_key: "new_private_message",
-            sequence: 0,
-            draft_username: "eviltrout",
-            username: "eviltrout",
-            user_id: 1,
-            data: JSON.stringify({
-              reply: "hello",
-              action: "privateMessage",
-              title: "A message draft",
-              recipients,
-              archetypeId: "private_message",
-            }),
+            data: JSON.stringify({ recipients }),
           },
         ],
       })
     );
   });
 
-  [
-    ["gpt4_bot", "robot"],
-    ["charlie,gpt4_bot", "robot"],
-    ["charlie", "envelope"],
-  ].forEach(([draftRecipients, icon]) => {
-    test(`a message draft addressed to ${draftRecipients} uses the ${icon} icon`, async function (assert) {
-      recipients = draftRecipients;
-      updateCurrentUser({ draft_count: 1 });
+  async function openDraftsMenu(draftRecipients) {
+    recipients = draftRecipients;
+    updateCurrentUser({ draft_count: 1 });
 
-      await visit("/");
-      await click("button.topic-drafts-menu-trigger");
-      await waitFor(".topic-drafts-menu-content");
+    await visit("/");
+    await click("button.topic-drafts-menu-trigger");
+    await waitFor(".topic-drafts-menu-content");
+  }
 
-      assert.dom(`.topic-drafts-item svg.d-icon-${icon}`).exists();
-    });
+  test("uses the robot icon for a draft addressed to a bot", async function (assert) {
+    await openDraftsMenu("gpt4_bot");
+
+    assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
+  });
+
+  test("uses the robot icon when a bot is one of several recipients", async function (assert) {
+    await openDraftsMenu("charlie,gpt4_bot");
+
+    assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
+  });
+
+  test("keeps the envelope icon when no recipient is a bot", async function (assert) {
+    await openDraftsMenu("charlie");
+
+    assert.dom(".topic-drafts-item svg.d-icon-envelope").exists();
   });
 });
