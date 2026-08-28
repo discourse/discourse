@@ -88,7 +88,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       SiteSetting.zendesk_url = "http://your-url.zendesk.com/api/v2"
 
       expect { oauth_token.access_token }.to raise_error(
-        described_class::RequestError,
+        described_class::PermanentRequestError,
         "Zendesk OAuth requires an HTTPS URL",
       )
       expect(WebMock).not_to have_requested(:post, %r{/oauth/tokens})
@@ -98,9 +98,25 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       stub_request(:post, token_url).to_return(status: 401, body: "oauth-client-secret")
 
       expect { oauth_token.access_token }.to raise_error(
-        described_class::RequestError,
+        described_class::PermanentRequestError,
         "Zendesk OAuth token request failed",
       )
+    end
+
+    it "keeps server failures retryable" do
+      stub_request(:post, token_url).to_return(status: 500)
+
+      expect { oauth_token.access_token }.to raise_error do |error|
+        expect(error.class).to eq(described_class::RequestError)
+      end
+    end
+
+    it "keeps rate limits retryable" do
+      stub_request(:post, token_url).to_return(status: 429)
+
+      expect { oauth_token.access_token }.to raise_error do |error|
+        expect(error.class).to eq(described_class::RequestError)
+      end
     end
 
     it "rejects a malformed token response" do

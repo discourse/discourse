@@ -25,10 +25,14 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       body: { user: { id: 24 } }.to_json,
       headers: default_header,
     )
-    stub_request(:get, %r{/tickets/.*/comments}).to_return(status: 200)
+    stub_request(:get, %r{/tickets/.*/comments}).to_return(
+      status: 200,
+      body: { comments: [{ id: "comment_id" }] }.to_json,
+      headers: default_header,
+    )
     stub_request(:get, %r{/users/search}).to_return(
       status: 200,
-      body: { user: {} }.to_json,
+      body: { users: [] }.to_json,
       headers: default_header,
     )
   end

@@ -58,33 +58,83 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       expect(client.config.access_token).to be_nil
     end
 
-    it "evicts a rejected OAuth token without falling back to legacy authentication" do
+    it "retries once with a fresh token when Zendesk rejects the cached token" do
       SiteSetting.zendesk_jobs_email = "zendesk@example.com"
       SiteSetting.zendesk_jobs_api_token = "legacy-token"
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
       SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
+      user = Fabricate(:user)
       token_request =
         stub_request(:post, "https://your-url.zendesk.com/oauth/tokens").to_return(
           { status: 200, body: { access_token: "rejected-token", expires_in: 1800 }.to_json },
           { status: 200, body: { access_token: "new-token", expires_in: 1800 }.to_json },
         )
-      stub_request(:get, "https://your-url.zendesk.com/api/v2/users/me").to_return(
-        status: 401,
-        body: { error: "invalid_token" }.to_json,
-        headers: {
-          "Content-Type" => "application/json",
-        },
-      )
+      user_search_request =
+        stub_request(
+          :get,
+          "https://your-url.zendesk.com/api/v2/users/search?query=#{user.email}",
+        ).to_return(
+          {
+            status: 401,
+            body: { error: "invalid_token" }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          },
+          {
+            status: 200,
+            body: { users: [{ id: 123 }] }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          },
+        )
 
-      rejected_user = dummy.zendesk_client.current_user
-      new_client = dummy.zendesk_client
+      zendesk_user = dummy.fetch_submitter(user)
 
-      expect(rejected_user).to be_nil
-      expect(new_client.config.access_token).to eq("new-token")
+      expect(zendesk_user.id).to eq(123)
       expect(token_request).to have_been_requested.twice
-      expect(WebMock).not_to have_requested(:get, %r{/users/me}).with(
+      expect(user_search_request).to have_been_requested.twice
+      expect(WebMock).to have_requested(
+        :get,
+        "https://your-url.zendesk.com/api/v2/users/search?query=#{user.email}",
+      ).with(headers: { "Authorization" => "Bearer rejected-token" }).once
+      expect(WebMock).to have_requested(
+        :get,
+        "https://your-url.zendesk.com/api/v2/users/search?query=#{user.email}",
+      ).with(headers: { "Authorization" => "Bearer new-token" }).once
+      expect(WebMock).not_to have_requested(:get, %r{/users/search}).with(
         basic_auth: %w[zendesk@example.com/token legacy-token],
       )
+    end
+
+    it "raises when Zendesk rejects the replacement token" do
+      SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
+      SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
+      user = Fabricate(:user)
+      token_request =
+        stub_request(:post, "https://your-url.zendesk.com/oauth/tokens").to_return(
+          { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
+          { status: 200, body: { access_token: "second-token", expires_in: 1800 }.to_json },
+        )
+      user_search_request =
+        stub_request(
+          :get,
+          "https://your-url.zendesk.com/api/v2/users/search?query=#{user.email}",
+        ).to_return(
+          status: 401,
+          body: { error: "invalid_token" }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      expect { dummy.fetch_submitter(user) }.to raise_error(
+        DiscourseZendeskPlugin::InvalidOAuthTokenError,
+        "Zendesk rejected the OAuth access token",
+      )
+      expect(token_request).to have_been_requested.twice
+      expect(user_search_request).to have_been_requested.twice
     end
   end
 

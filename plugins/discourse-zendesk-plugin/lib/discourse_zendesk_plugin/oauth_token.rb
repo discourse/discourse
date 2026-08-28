@@ -23,6 +23,9 @@ module DiscourseZendeskPlugin
     class RequestError < StandardError
     end
 
+    class PermanentRequestError < RequestError
+    end
+
     def initialize
       @zendesk_url = SiteSetting.zendesk_url
       @client_id = SiteSetting.zendesk_oauth_client_id
@@ -42,7 +45,8 @@ module DiscourseZendeskPlugin
     def request_access_token
       response = http.request(token_request)
       unless response.is_a?(Net::HTTPSuccess)
-        raise RequestError, "Zendesk OAuth token request failed"
+        error_class = permanent_failure?(response) ? PermanentRequestError : RequestError
+        raise error_class, "Zendesk OAuth token request failed"
       end
 
       payload = JSON.parse(response.body)
@@ -91,17 +95,22 @@ module DiscourseZendeskPlugin
     def token_uri
       zendesk_uri = URI.parse(@zendesk_url)
       unless zendesk_uri.is_a?(URI::HTTPS) && zendesk_uri.host.present?
-        raise RequestError, "Zendesk OAuth requires an HTTPS URL"
+        raise PermanentRequestError, "Zendesk OAuth requires an HTTPS URL"
       end
 
       URI::HTTPS.build(host: zendesk_uri.host, port: zendesk_uri.port, path: "/oauth/tokens")
     rescue URI::InvalidURIError
-      raise RequestError, "Zendesk OAuth requires an HTTPS URL"
+      raise PermanentRequestError, "Zendesk OAuth requires an HTTPS URL"
     end
 
     def cache_key
       fingerprint = Digest::SHA256.hexdigest([@zendesk_url, @client_id, @client_secret].join("\0"))
       "discourse-zendesk-oauth-token:#{fingerprint}"
+    end
+
+    def permanent_failure?(response)
+      status = response.code.to_i
+      status.between?(400, 499) && ![408, 429].include?(status)
     end
   end
 end
