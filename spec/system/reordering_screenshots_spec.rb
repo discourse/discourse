@@ -10,6 +10,10 @@ describe "Reordering surfaces" do
   fab!(:user_field) { Fabricate(:user_field, name: "Favourite colour") }
   fab!(:second_user_field) { Fabricate(:user_field, name: "Home town") }
 
+  # A non-system grouping, so the badge groupings shot shows a row that can be
+  # renamed and removed next to the ones that cannot.
+  fab!(:custom_grouping) { BadgeGrouping.create!(name: "Custom grouping", position: 10) }
+
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
   let(:reports_dashboard) { PageObjects::Pages::AdminDashboardReports.new }
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }

@@ -114,18 +114,19 @@ export default class EditBadgeGroupings extends Component {
                   <DButton
                     @action={{fn (mut wc.editing) false}}
                     @icon="check"
-                    class="btn-default"
+                    class="btn-flat"
                   />
                 {{else}}
-                  <DButton
-                    @action={{fn (mut wc.editing) true}}
-                    @disabled={{wc.system}}
-                    @icon="pencil"
-                    class="btn-default"
-                  />
+                  {{#unless wc.system}}
+                    <DButton
+                      @action={{fn (mut wc.editing) true}}
+                      @icon="pencil"
+                      class="btn-flat"
+                    />
+                  {{/unless}}
                 {{/if}}
                 {{#if controls.remove}}
-                  <controls.remove class="btn-default" />
+                  <controls.remove />
                 {{/if}}
               </div>
             </:row>
