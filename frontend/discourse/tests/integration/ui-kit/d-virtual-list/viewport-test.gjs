@@ -98,6 +98,49 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
         "Search results",
         "the scrollable region carries an accessible name"
       );
+    // A name on a role-less div is prohibited by ARIA: the implicit `generic`
+    // role cannot be named, so the attribute is decorative without a role that
+    // permits naming.
+    assert
+      .dom(".d-virtual-list")
+      .hasAttribute(
+        "role",
+        "region",
+        "and a role that is allowed to carry that name"
+      );
+  });
+
+  test("viewport hooks: an unnamed viewport stays role-less", async function (assert) {
+    const items = buildRows(50);
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 400px;
+            overflow-y: auto;
+          }
+        </style>
+        <DVirtualList
+          @items={{items}}
+          @key="id"
+          @estimateSize={{estimate}}
+          as |item|
+        >
+          <div class="row" style="height: 40px">{{item.text}}</div>
+        </DVirtualList>
+      </template>
+    );
+
+    // The role exists to make a name legal, so a viewport with no name must not
+    // gain one: a landmark per list would clutter the document's structure.
+    assert
+      .dom(".d-virtual-list")
+      .doesNotHaveAttribute(
+        "role",
+        "an unnamed viewport adds no landmark to the page"
+      );
   });
 
   test("viewport hooks: @viewportLabelledBy names it from existing markup", async function (assert) {
@@ -128,6 +171,13 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
     assert
       .dom(".d-virtual-list")
       .hasAttribute("aria-labelledby", "results-heading");
+    assert
+      .dom(".d-virtual-list")
+      .hasAttribute(
+        "role",
+        "region",
+        "either naming argument earns the role that permits a name"
+      );
   });
 
   // The existing split is deliberate and must survive: the semantic element owns

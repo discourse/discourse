@@ -234,9 +234,12 @@ interface DVirtualListSignature<T> {
     as?: string;
     /** Gives consumers a stable hook for sizing and styling the scroll viewport. */
     viewportClass?: string;
-    /** Names a scroll region whose non-interactive role offers no other naming path. */
+    /**
+     * Names a scroll region whose non-interactive role offers no other naming path.
+     * Naming it also makes it a `region`, since a role-less element cannot be named.
+     */
     viewportLabel?: string;
-    /** Names the scroll viewport from existing descriptive content. */
+    /** Names the scroll viewport from existing descriptive content, as `@viewportLabel` does. */
     viewportLabelledBy?: string;
     /**
      * Whether the scroll viewport may take sequential focus. Defaults to `true`, which leaves
@@ -558,6 +561,19 @@ export default class DVirtualList<T> extends Component<
   }
 
   /**
+   * `"region"` once the viewport carries a name, and otherwise absent.
+   *
+   * A `div` maps to the `generic` role, which ARIA forbids from carrying a name, so the
+   * naming arguments are inert without a role. An unnamed viewport is left alone: an
+   * unnamed region is skipped anyway, and a landmark per list would clutter the document.
+   */
+  get viewportRole() {
+    return this.args.viewportLabel || this.args.viewportLabelledBy
+      ? "region"
+      : undefined;
+  }
+
+  /**
    * `-1` once a consumer has opted the viewport out of the tab order, and otherwise absent so
    * the browser keeps its own judgement. Written as an explicit attribute rather than left off,
    * because a scroller a browser has adopted reports `tabIndex === -1` either way — the
@@ -610,11 +626,13 @@ export default class DVirtualList<T> extends Component<
   }
 
   <template>
-    {{! The outer viewport is the scroll element and stays role-less; the modifier
-        drives it. The role and splattributes go on the inner container, so the
-        semantic element owns them. Size this viewport from CSS. }}
+    {{! The outer viewport is the scroll element; the modifier drives it. The
+        consumer's role and splattributes go on the inner container, so the
+        semantic element owns them. This element takes a role only to carry its own
+        name. Size this viewport from CSS. }}
     <div
       class={{dConcatClass "d-virtual-list" @viewportClass}}
+      role={{this.viewportRole}}
       aria-label={{if @viewportLabel @viewportLabel}}
       aria-labelledby={{if @viewportLabelledBy @viewportLabelledBy}}
       tabindex={{this.viewportTabIndex}}
