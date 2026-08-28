@@ -263,6 +263,36 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(refusals).to be_empty
     end
 
+    it "stores the raw spelling of a swallowed query, not the href's percent-encoding" do
+      # Linkify takes the quote and everything after it into the href and
+      # percent-encodes it there. The href may only resolve the host: the
+      # suffix the importer writes back is read from the raw bytes, so the
+      # author's spelling survives the origin rewrite.
+      raw = %{key: https://forum.example.com/user-api-key/new?public_key="AAAAB3NzaC1yc2E" ok}
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(
+        target_suffix: %{/user-api-key/new?public_key="AAAAB3NzaC1yc2E"},
+        original_markdown:
+          %{https://forum.example.com/user-api-key/new?public_key="AAAAB3NzaC1yc2E"},
+      )
+      expect(output).to eq("key: #{buffer.links.first[:placeholder]} ok")
+      expect(refusals).to be_empty
+    end
+
+    it "stores a typed target's suffix in the raw spelling too" do
+      # Linkify swallows a balanced quote pair into the href and encodes it;
+      # the suffix stays in the author's spelling.
+      raw = %{see https://forum.example.com/t/slug/5?q="abc" now}
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(target_id: 5, target_suffix: %{?q="abc"})
+      expect(output).to eq("see #{buffer.links.first[:placeholder]} now")
+      expect(refusals).to be_empty
+    end
+
     it "rewrites a relative reference definition" do
       raw = "see [old topic][1] `x`\n\n[1]: /t/slug/5\n"
       output = extract(raw)

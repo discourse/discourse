@@ -59,6 +59,27 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.unresolved_embeds).to be_empty
     end
 
+    it "writes a SITE suffix back in the author's spelling" do
+      # The suffix is stored as the author wrote it — a quote stays a quote,
+      # never the percent-encoding the parser's normalized href used.
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: %{https://old.example.com/new?public_key="abc"},
+        target_type: link_target::SITE,
+        target_suffix: %{/new?public_key="abc"},
+      )
+      maps = FakePlaceholderMaps.new
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq(%{x https://dest.example.com/new?public_key="abc" y})
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "keeps the source URL for a link without a target" do
       link = placeholder.mint(:link)
       Migrations::Database::IntermediateDB::EmbedLink.create(

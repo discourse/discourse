@@ -295,16 +295,25 @@ module Migrations
             # A reference for a URL whose position the engine tier already
             # confirmed but whose surrounding bytes are the URL itself (a bare
             # schemeless domain linkify links, a reference definition's
-            # destination). `route_url` is the engine's href — the spelling the
-            # route parses from; `url` is the raw spelling, stored as the
-            # fallback and the whole construct (so its destination span is the
-            # entire snippet). The value was tracked before this is called, so
-            # no foreign-host signal fires here.
+            # destination). `route_url` is the engine's href and only resolves
+            # the host — it is a normalized spelling (percent-encoding, an
+            # added scheme), and a normalized spelling must never be written
+            # back into a post. The route and the stored suffix are read from
+            # `url`, the raw spelling at the occurrence, which is also stored
+            # as the fallback and the whole construct (so its destination span
+            # is the entire snippet). A raw path the route parser cannot read
+            # builds no typed target; the coordinate-shape rule then decides
+            # between a `:site` rewrite and no node, as everywhere else. The
+            # value was tracked before this is called, so no foreign-host
+            # signal fires here.
             def reference_for(route_url:, url:, text: nil)
-              host, rest = split_host(route_url)
-              return nil unless rest
+              host, href_rest = split_host(route_url)
+              return nil unless href_rest
               prefix = host ? @hosts[host] : @base_prefix
               return nil if host && !@hosts.key?(host)
+
+              rest = raw_rest(url)
+              return nil if rest.nil?
 
               path = strip_prefix(rest, prefix)
               return nil if path.nil?
@@ -312,6 +321,19 @@ module Migrations
               route_or_site_node(url:, text:, path:, host:, url_offset: 0, label_url_offset: nil)
             end
             public :reference_for
+
+            # The path/query/fragment part of the raw spelling. A schemeful or
+            # protocol-relative raw URL splits like any other; a bare
+            # schemeless domain starts with its host, so the part from the
+            # first `/`, `?` or `#` on is the path (a bare domain with no path
+            # is the site's front page: an empty rest).
+            def raw_rest(url)
+              host, rest = split_host(url)
+              return rest unless host.nil? && rest.nil?
+
+              start = url.index(%r{[/?\#]})
+              start.nil? ? "" : url[start..]
+            end
 
             # A resolved route builds a typed target; an absolute internal URL with no
             # route builds a `:site` target (origin-only rewrite). A relative route-less
