@@ -76,6 +76,8 @@ module DiscourseAi
       # its `search_type` records where a search happened, and the reports group
       # by it. The two lists are merged for display instead.
       def record_recent_ask(user_id:, query:)
+        return if !SiteSetting.log_search_queries
+
         normalized = query.to_s.squish
         return if normalized.blank?
 

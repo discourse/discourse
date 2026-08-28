@@ -10,13 +10,14 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
 
   hooks.beforeEach(function () {
     this.triggeredQueries = [];
+    this.creditsAvailable = true;
     const testContext = this;
 
     this.owner.register(
       "service:ai-credits",
       class extends Service {
         async isFeatureCreditAvailable() {
-          return true;
+          return testContext.creditsAvailable;
         }
       }
     );
@@ -63,6 +64,21 @@ module("Integration | Component | AiDiscobotDiscoveries", function (hooks) {
       [],
       "typing alone does not start an AI request"
     );
+  });
+
+  test("keeps the answer surface mounted when credits are unavailable", async function (assert) {
+    this.creditsAvailable = false;
+    this.discobotDiscoveries.lastQuery = "miyazaki";
+
+    await render(
+      <template>
+        <AiDiscobotDiscoveries @outletArgs={{this.outletArgs}} />
+      </template>
+    );
+
+    assert
+      .dom(".ai-search-discoveries")
+      .exists("the server credit error has a subscribed surface to render in");
   });
 
   // Whether the indexed list renders is decided by the search-menu transformers,

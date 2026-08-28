@@ -424,7 +424,15 @@ export default class FullPageSearchController extends Controller {
 
   @computed("search_type")
   get usingDefaultSearchType() {
-    return this.search_type === SEARCH_TYPE_DEFAULT;
+    return (
+      ![SEARCH_TYPE_CATS_TAGS, SEARCH_TYPE_USERS].includes(this.search_type) &&
+      !this.customSearchType
+    );
+  }
+
+  @computed("search_type")
+  get activeSearchType() {
+    return this.usingDefaultSearchType ? SEARCH_TYPE_DEFAULT : this.search_type;
   }
 
   @computed("search_type")

@@ -100,6 +100,11 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
       service.discoveryTimedOut,
       "an HTTP failure is not presented as a timeout"
     );
+    assert.strictEqual(
+      service.lastQuery,
+      "What is Discourse?",
+      "the failed query stays attached to its visible error"
+    );
   });
 
   test("stores source updates without completing the streamed answer", async function (assert) {
@@ -197,7 +202,11 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     assert.true(service.discoveryTimedOut);
     assert.strictEqual(service.discovery, "");
     assert.deepEqual(service.sources, []);
-    assert.strictEqual(service.lastQuery, "");
+    assert.strictEqual(
+      service.lastQuery,
+      "What is Discourse?",
+      "the timed-out query stays attached to its visible message"
+    );
     assert.strictEqual(service.activeRequestId, "");
     assert.false(service.isStreaming);
   });
@@ -233,8 +242,8 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     assert.false(service.loadingDiscoveries);
     assert.strictEqual(
       service.lastQuery,
-      "",
-      "the failed query can be retried"
+      "miyazaki",
+      "the failed query stays attached to its visible error"
     );
     assert.strictEqual(
       service.activeRequestId,

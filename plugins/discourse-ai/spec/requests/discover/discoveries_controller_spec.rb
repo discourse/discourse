@@ -177,6 +177,23 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.parsed_body["topic_id"]).to be_present
       end
 
+      it "limits the private message title to the configured maximum" do
+        long_query = "猫" * 1000
+        DiscourseAi::Discoveries.store_result(
+          user_id: user.id,
+          request_id:,
+          query: long_query,
+          answer: context,
+          sources: [{ "post_id" => source_post.id, "topic_id" => source_post.topic_id }],
+          agent_id: ai_agent.id,
+        )
+
+        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+
+        topic = Topic.find(response.parsed_body["topic_id"])
+        expect(topic.title.length).to be <= SiteSetting.max_topic_title_length
+      end
+
       it "returns the existing conversation when a follow-up is submitted again" do
         expect {
           post "/discourse-ai/discoveries/continue-convo",

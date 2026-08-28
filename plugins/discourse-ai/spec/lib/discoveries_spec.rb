@@ -65,6 +65,25 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".record_recent_ask" do
+    it "does not store queries when search logging is disabled" do
+      SiteSetting.log_search_queries = false
+
+      described_class.record_recent_ask(user_id: user.id, query: "private question")
+
+      expect(described_class.recent_asks(user_id: user.id)).to be_empty
+    end
+
+    it "removes stored queries when the user is destroyed" do
+      target_user = Fabricate(:user)
+      described_class.record_recent_ask(user_id: target_user.id, query: "private question")
+
+      UserDestroyer.new(Fabricate(:admin)).destroy(target_user)
+
+      expect(described_class.recent_asks(user_id: target_user.id)).to be_empty
+    end
+  end
+
   describe ".bind_request" do
     it "atomically binds a request ID to one normalized query" do
       request_id = SecureRandom.uuid

@@ -236,6 +236,33 @@ acceptance("AI Discoveries - header search", function (needs) {
       .exists("advanced search is available for all topics");
   });
 
+  test("keeps a background error visible", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "miyazaki");
+
+    find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "miyazaki",
+      error: true,
+      message: "Ask AI could not complete this search.",
+      done: true,
+    });
+
+    assert
+      .dom(".ai-search-discoveries__error")
+      .hasText(
+        "Ask AI could not complete this search.",
+        "the background error stays mounted in the search menu"
+      );
+  });
+
   test("history keeps both kinds, each marked with its own icon", async function (assert) {
     await visit("/");
     await click("#search-button");

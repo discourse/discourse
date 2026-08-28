@@ -56,7 +56,7 @@ export default <template>
               type="button"
               class={{dConcatClass
                 "search-types__type"
-                (if (eq @controller.search_type searchType.id) "active")
+                (if (eq @controller.activeSearchType searchType.id) "active")
               }}
               data-search-type={{searchType.id}}
               {{on "click" (fn @controller.setSearchType searchType.id)}}

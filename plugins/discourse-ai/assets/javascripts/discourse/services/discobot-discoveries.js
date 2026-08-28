@@ -231,7 +231,11 @@ export default class DiscobotDiscoveries extends Service {
 
     this.selectSearchMode(ASK_MODE);
 
-    if (this.lastQuery === normalizedQuery) {
+    if (
+      this.lastQuery === normalizedQuery &&
+      !this.errorMessage &&
+      !this.discoveryTimedOut
+    ) {
       return;
     }
 
@@ -260,13 +264,6 @@ export default class DiscobotDiscoveries extends Service {
         throw new Error("Discovery request ID mismatch");
       }
     } catch {
-      if (
-        this.lastQuery === normalizedQuery &&
-        this.activeRequestId === requestId
-      ) {
-        this.lastQuery = "";
-      }
-
       if (this.activeRequestId === requestId) {
         this.failDiscovery(
           i18n("discourse_ai.discobot_discoveries.request_failed")
@@ -286,7 +283,6 @@ export default class DiscobotDiscoveries extends Service {
     this.discoveryTitle = "";
     this.suggestedFollowUp = "";
     this.discoveryTimedOut = false;
-    this.lastQuery = "";
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(message, "assertive");
@@ -303,7 +299,6 @@ export default class DiscobotDiscoveries extends Service {
     this.discoveryTitle = "";
     this.suggestedFollowUp = "";
     this.discoveryTimedOut = true;
-    this.lastQuery = "";
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(

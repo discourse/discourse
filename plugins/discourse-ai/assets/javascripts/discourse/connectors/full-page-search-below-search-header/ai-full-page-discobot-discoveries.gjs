@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -15,35 +14,12 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
     );
   }
 
-  @service aiCredits;
   @service discobotDiscoveries;
-
-  @tracked creditsAvailable = true;
-  @tracked creditCheckComplete = false;
-
-  constructor() {
-    super(...arguments);
-    this.#checkCredits();
-  }
-
-  async #checkCredits() {
-    try {
-      this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("ask_ai");
-    } catch {
-      this.creditsAvailable = true;
-    }
-    this.creditCheckComplete = true;
-  }
 
   // Asking is a search type here rather than a mode, so the answer belongs on
   // screen exactly while that type is the one selected.
   get shouldShow() {
-    return (
-      this.creditCheckComplete &&
-      this.creditsAvailable &&
-      this.args.outletArgs.type === SEARCH_TYPE_ASK_AI
-    );
+    return this.args.outletArgs.type === SEARCH_TYPE_ASK_AI;
   }
 
   get hasContent() {

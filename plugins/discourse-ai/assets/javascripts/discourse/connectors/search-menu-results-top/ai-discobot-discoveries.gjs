@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -16,31 +15,10 @@ export default class AiDiscobotDiscoveries extends Component {
     );
   }
 
-  @service aiCredits;
   @service discobotDiscoveries;
-
-  @tracked creditsAvailable = true;
-  @tracked creditCheckComplete = false;
-
-  constructor() {
-    super(...arguments);
-    this._checkCredits();
-  }
-
-  async _checkCredits() {
-    try {
-      this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("ask_ai");
-    } catch {
-      this.creditsAvailable = true;
-    }
-    this.creditCheckComplete = true;
-  }
 
   get shouldShow() {
     return (
-      this.creditCheckComplete &&
-      this.creditsAvailable &&
       this.args.outletArgs.searchTerm &&
       this.discobotDiscoveries.lastQuery ===
         this.args.outletArgs.searchTerm.trim()

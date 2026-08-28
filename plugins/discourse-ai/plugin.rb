@@ -155,6 +155,7 @@ after_initialize do
 
   on(:user_destroyed) do |user|
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
+    DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)
   end
 

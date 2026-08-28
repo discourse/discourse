@@ -107,11 +107,15 @@ module DiscourseAi
         topic = nil
 
         Post.transaction do
+          title =
+            I18n.t(
+              "discourse_ai.ai_bot.discoveries.continue_conversation.title",
+              query: query,
+            ).truncate(SiteSetting.max_topic_title_length)
           query_post =
             PostCreator.create!(
               @user,
-              title:
-                I18n.t("discourse_ai.ai_bot.discoveries.continue_conversation.title", query: query),
+              title:,
               raw: neutralize_mentions(query),
               archetype: Archetype.private_message,
               target_usernames: bot_user.username,

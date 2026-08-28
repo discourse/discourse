@@ -120,6 +120,17 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
   });
 
+  test("unknown search types fall back to post results", async function (assert) {
+    await visit("/search?q=consectetur&search_type=unavailable_type");
+
+    assert
+      .dom(".fps-topic")
+      .exists({ count: 1 }, "shows indexed results for a stale search URL");
+    assert
+      .dom('.search-types__type[data-search-type="topics_posts"]')
+      .hasClass("active", "shows that the post search type is in effect");
+  });
+
   test("search for personal messages", async function (assert) {
     await visit("/search");
 
