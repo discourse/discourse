@@ -79,6 +79,7 @@ after_mold_fork do |server, mold|
   end
 
   Discourse.redis.close
+  DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
 end
 

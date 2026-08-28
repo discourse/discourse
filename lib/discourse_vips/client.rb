@@ -15,7 +15,13 @@ module DiscourseVips
     private_constant :WORKER_GRACE_SECONDS
 
     @owner_pid = Process.pid
+    @shared_worker = false
     @worker_process_mutex = Mutex.new
+
+    def self.use_shared_worker
+      @shared_worker = true
+      reset_worker_process
+    end
 
     def self.call(command, operation:, timeout: DEFAULT_TIMEOUT_SECONDS, nice: 10)
       payload = { command: command.map(&:to_s), timeout:, nice: }
@@ -38,20 +44,7 @@ module DiscourseVips
     end
 
     def self.send_command(request, timeout:)
-      shared_socket_path = WorkerProcess.shared_socket_path
-      shared_worker_running = File.socket?(shared_socket_path)
-
-      if shared_worker_running
-        begin
-          socket = UNIXSocket.new(shared_socket_path)
-          reset_worker_process
-        rescue Errno::ECONNREFUSED, Errno::ENOENT
-          shared_worker_running = false
-          socket = UNIXSocket.new(worker_process.socket_path)
-        end
-      else
-        socket = UNIXSocket.new(worker_process.socket_path)
-      end
+      socket = UNIXSocket.new(worker_socket_path)
 
       socket.write(MessagePack.pack(request))
       socket.close_write
@@ -65,16 +58,23 @@ module DiscourseVips
 
       MessagePack.unpack(payload)
     rescue WorkerUnavailable
-      reset_worker_process if !shared_worker_running
+      reset_worker_process if !@shared_worker
       raise
     rescue MessagePack::UnpackError, IOError, SystemCallError => error
-      reset_worker_process if !shared_worker_running
+      reset_worker_process if !@shared_worker
 
       raise WorkerUnavailable, "libvips worker request failed: #{error.message}"
     ensure
       socket&.close unless socket&.closed?
     end
     private_class_method :send_command
+
+    def self.worker_socket_path
+      return WorkerProcess.shared_socket_path if @shared_worker
+
+      worker_process.socket_path
+    end
+    private_class_method :worker_socket_path
 
     def self.worker_process
       reset_after_fork if @owner_pid != Process.pid

@@ -9,6 +9,7 @@ class Demon::DiscourseVips < Demon::Base
   end
 
   def self.start(verbose: false, logger: nil)
+    ::DiscourseVips::Client.use_shared_worker
     super(1, verbose:, logger:)
     ::DiscourseVips.version
   rescue StandardError

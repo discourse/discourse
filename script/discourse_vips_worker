@@ -124,13 +124,14 @@ class DiscourseVipsWorker
     end
     private_class_method :block_loaders
 
+    private
+
     def existing_paths(paths)
       paths
         .filter { |path| path.to_s != "" && File.exist?(path) }
         .map { |path| File.expand_path(path) }
         .uniq
     end
-    private :existing_paths
   end
 
   RLIMITS = {
