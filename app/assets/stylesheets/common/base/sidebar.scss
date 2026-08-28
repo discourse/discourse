@@ -616,13 +616,6 @@
       grid-column: 2;
     }
 
-    /* The row is the drag source, so the grip must not become one itself or the
-       browser photographs the grip instead of the row. */
-
-    .draggable {
-      -webkit-user-drag: auto;
-    }
-
     @include viewport.until(sm) {
       row-gap: 0.5em;
 
