@@ -103,4 +103,25 @@ describe "Admin User Fields" do
       expect(page).to have_no_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
     end
   end
+
+  context "when enable_new_reordering_controls is enabled" do
+    fab!(:field1) { Fabricate(:user_field, name: "Favourite colour") }
+    fab!(:field2) { Fabricate(:user_field, name: "Home town") }
+
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "keeps each row's controls anchored to its own row on mobile", mobile: true do
+      user_fields_page.visit
+
+      expect(page).to have_css(".admin-user_field-item", count: 2)
+
+      escaped = page.evaluate_script(<<~JS)
+          Array.from(document.querySelectorAll(".d-table__cell.--controls")).filter(
+            (cell) => cell.offsetParent !== cell.closest("tr")
+          ).length
+        JS
+
+      expect(escaped).to eq(0)
+    end
+  end
 end
