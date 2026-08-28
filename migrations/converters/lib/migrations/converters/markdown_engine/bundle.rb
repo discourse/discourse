@@ -11,7 +11,7 @@ module Migrations
       # The ordered JavaScript a `Context` evaluates: the host application's
       # precompiled pretty-text bundle (pretty-text, discourse-markdown-it,
       # and the allowlisted application modules, built out of process by
-      # `frontend/pretty-text-processor`), the bundled plugins' vendored
+      # `frontend/pretty-text-processor`), the configured plugins' vendored
       # libraries and markdown features (the latter transpiled through the
       # host's `AssetProcessor`), and the generated emoji replacement table.
       #
@@ -73,13 +73,14 @@ module Migrations
           plugins/footnote/assets/vendor/javascripts/markdown-it-footnote.js
         ].freeze
 
-        # The plugins bundled with the host application that ship markdown
-        # features. A dev checkout can contain many additional plugins; the
-        # target site cooks with exactly these, so the scan does too — their
-        # constructs must tokenize the way the destination will see them, or
-        # text inside e.g. a `[poll]` would be scanned as ordinary prose. This
-        # is also an accuracy boundary: a source that relied on some other
-        # plugin's markdown feature is scanned without it.
+        # The default plugin set: the plugins bundled with the host
+        # application that ship markdown features. The scan runs with the
+        # configured set — a caller passes its own list to {load_or_build}
+        # when the target site cooks with different plugins. The constructs
+        # must tokenize the way the destination will see them, or text inside
+        # e.g. a `[poll]` would be scanned as ordinary prose. This is also an
+        # accuracy boundary: a source that relied on a plugin outside the
+        # configured set is scanned without that plugin's markdown rules.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
@@ -93,13 +94,17 @@ module Migrations
         # Digesting reads the host constants and file globs only; V8 boots on
         # a transpile, which never happens in this process, and the host
         # classes are Rails-free until their build/transpile methods run.
-        def self.load_or_build(root: MarkdownEngine.discourse_root, cache_dir: nil)
+        def self.load_or_build(
+          root: MarkdownEngine.discourse_root,
+          cache_dir: nil,
+          plugins: CORE_MARKDOWN_PLUGINS
+        )
           cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
             require_host_build_classes(root)
 
-            digest = input_digest(root)
+            digest = input_digest(root, plugins)
             cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
             entries = read_cache(cache_file)
             return new(entries) if entries
@@ -110,7 +115,7 @@ module Migrations
               # Another process may have built while this one waited.
               entries = read_cache(cache_file)
               unless entries
-                build_in_subprocess(root, cache_file)
+                build_in_subprocess(root, cache_file, plugins)
                 entries = read_cache(cache_file)
                 if entries.nil?
                   raise BuildError, "bundle build subprocess produced no readable cache"
@@ -128,7 +133,7 @@ module Migrations
         # stand-ins, and neither may live in the forking converter parent.
         # Writes via temp file and atomic rename, so a crashed build cannot
         # leave a truncated cache another run would trust.
-        def self.build_and_write(root, cache_file)
+        def self.build_and_write(root, cache_file, plugins: CORE_MARKDOWN_PLUGINS)
           # discourse-emojis decides whether to load its railtie by checking
           # for `Rails`, so it must load before the Rails stand-in exists.
           require "discourse_emojis"
@@ -138,7 +143,7 @@ module Migrations
           Dir.chdir(root) do
             require_host_build_classes(root)
 
-            entries = build_entries(root)
+            entries = build_entries(root, plugins)
             FileUtils.mkdir_p(File.dirname(cache_file))
             temp_file = "#{cache_file}.#{Process.pid}.tmp"
             begin
@@ -156,10 +161,13 @@ module Migrations
         # A missing file, a truncated or corrupt one, and valid JSON with the
         # wrong shape are all cache misses. Without the shape check,
         # `{"entries":"corrupt"}` would reach the context and raise a
-        # NoMethodError there instead of rebuilding.
+        # NoMethodError there instead of rebuilding. An empty list is a miss
+        # too: no build produces zero entries, so it can only be a damaged
+        # file, and evaluating it would give a context with no engine at all.
         def self.read_cache(cache_file)
           entries = JSON.parse(File.read(cache_file))["entries"]
           return nil unless entries.is_a?(Array)
+          return nil if entries.empty?
           return nil unless entries.all? { |entry| entry_pair?(entry) }
 
           entries
@@ -171,12 +179,21 @@ module Migrations
           entry.is_a?(Array) && entry.size == 2 && entry.all?(String)
         end
 
-        def self.build_in_subprocess(root, cache_file)
+        def self.build_in_subprocess(root, cache_file, plugins)
           program =
             "require \"migrations-converters\"; " \
-              "Migrations::Converters::MarkdownEngine::Bundle.build_and_write(ARGV[0], ARGV[1])"
+              "Migrations::Converters::MarkdownEngine::Bundle.build_and_write(" \
+              "ARGV[0], ARGV[1], plugins: ARGV[2].to_s.split(\",\"))"
           _stdout, stderr, status =
-            Open3.capture3(RbConfig.ruby, "-e", program, root, cache_file, chdir: root)
+            Open3.capture3(
+              RbConfig.ruby,
+              "-e",
+              program,
+              root,
+              cache_file,
+              plugins.join(","),
+              chdir: root,
+            )
           return if status.success?
 
           raise BuildError, "bundle build subprocess failed: #{stderr.strip}"
@@ -198,14 +215,17 @@ module Migrations
           require File.join(root, "lib", "asset_processor")
         end
 
-        def self.input_digest(root)
+        def self.input_digest(root, plugins)
           digest = Digest::MD5.new
           digest.update("v#{VERSION}")
           digest.update("compiler-v#{::AssetProcessor::BASE_COMPILER_VERSION}")
+          # The list itself is an input: the same files with a different
+          # configured set must build a different bundle.
+          digest.update("plugins-#{plugins.join(",")}")
           digest_globs(digest, root, ::AssetProcessor::BUNDLE.dependency_globs)
           digest_globs(digest, root, CORE_BUNDLE_GLOBS)
 
-          (input_files(root) + EmojiData.data_files).each do |path|
+          (input_files(root, plugins) + EmojiData.data_files).each do |path|
             digest.update(path)
             digest.update(File.read(path))
           end
@@ -224,9 +244,9 @@ module Migrations
           end
         end
 
-        def self.input_files(root)
+        def self.input_files(root, plugins)
           files = PLUGIN_VENDOR_FILES.map { |path| File.join(root, path) }
-          CORE_MARKDOWN_PLUGINS.each { |plugin| files.concat(plugin_files(root, plugin)) }
+          plugins.each { |plugin| files.concat(plugin_files(root, plugin)) }
           files
         end
 
@@ -269,12 +289,12 @@ module Migrations
           end
         end
 
-        def self.build_entries(root)
+        def self.build_entries(root, plugins)
           entries = [["pretty-text.js", core_bundle_source(root)]]
 
           PLUGIN_VENDOR_FILES.each { |path| entries << [path, File.read(File.join(root, path))] }
 
-          CORE_MARKDOWN_PLUGINS.each do |plugin|
+          plugins.each do |plugin|
             plugin_files(root, plugin).each do |path|
               # The directory name stands in for the plugin's registered name;
               # feature discovery only pattern-matches the `discourse/plugins/`

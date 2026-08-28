@@ -273,13 +273,15 @@ module Migrations
                 end
               end
 
-              # The occurrence itself, as a bare URL. Linkify can include a
-              # trailing byte no URL grammar accepts (`` ` ``, `\`) and
-              # percent-encode it into the href, so the matched occurrence
-              # may run past what any construct can take; a construct match over
-              # a prefix still rewrites the reference correctly and leaves the
-              # odd byte literal, the way core will re-linkify both after
-              # resolution.
+              # The occurrence itself, as a bare URL. Linkify can take
+              # trailing bytes no URL grammar accepts (a stray backtick or
+              # backslash, punctuation, non-ASCII text glued to the URL) into
+              # the href, so the matched occurrence may run past what a
+              # construct can take. Leaving exactly those bytes literal is
+              # correct — core will re-linkify both after resolution. A word
+              # byte in the uncovered tail disqualifies the match: there the
+              # match stopped inside the URL proper, and replacing a prefix
+              # of a longer URL would leave its tail behind as text.
               construct_match_at(offset, occurrence, allow_prefix: true)
             end
 
@@ -307,14 +309,30 @@ module Migrations
 
             def construct_match_at(anchor, occurrence, allow_prefix: false)
               byte = @input.getbyte(anchor)
+              occurrence_end = occurrence.offset + occurrence.length
               @scanner.url_dispatch[byte]&.each do |construct|
                 match = construct.detect(@input, anchor, byte)
                 next if match.nil?
-                covered =
-                  allow_prefix ? occurrence.offset + 1 : occurrence.offset + occurrence.length
-                return match if match.start_pos <= occurrence.offset && match.end_pos >= covered
+                next unless match.start_pos <= occurrence.offset
+                if match.end_pos >= occurrence_end
+                  return match
+                elsif allow_prefix && match.end_pos > occurrence.offset &&
+                      swallowed_tail?(match.end_pos, occurrence_end)
+                  return match
+                end
               end
               nil
+            end
+
+            # Whether every occurrence byte past the construct match is
+            # wordless linkify junk — the only tail a match may leave
+            # uncovered (see `anchor_match`).
+            def swallowed_tail?(from, to)
+              (from...to).none? do |pos|
+                byte = @input.getbyte(pos)
+                byte == 0x5f || (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||
+                  (byte >= 0x61 && byte <= 0x7a)
+              end
             end
 
             def overlapping?(ordered)

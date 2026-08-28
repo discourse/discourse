@@ -433,4 +433,109 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("[#{thumb_ph}](#{full_ph})")
     end
   end
+
+  describe "upload paths outside the URL path" do
+    # The storage shape counts only inside the URL's own path. A redirect
+    # whose query or fragment carries an upload path is the author's link to
+    # the redirect, not to the file — rewriting it as an upload would swap
+    # the link for the file it points at.
+    let(:upload_path) { "/uploads/default/original/1X/#{sha1}.png" }
+
+    it "leaves a bare redirect URL with an upload path in its query alone" do
+      raw = "go to https://forum.example.com/redirect?to=#{upload_path} now"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "leaves a markdown link with an upload path in its query alone" do
+      raw = "[file](https://cdn.example.com/download?file=#{upload_path})"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "leaves an image with an upload path in its query alone" do
+      raw = "![x](https://cdn.example.com/proxy?src=#{upload_path})"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "leaves a URL with an upload path in its fragment alone" do
+      raw = "see https://forum.example.com/page##{upload_path} here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+  end
+
+  describe "upload URLs with a query" do
+    # A signed CDN URL must be taken whole or not at all: replacing only a
+    # prefix would leave the signature dangling after the placeholder.
+    it "takes a bare upload URL with a long signed query whole" do
+      query =
+        "X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=#{"a" * 320}&X-Amz-Signature=#{"b" * 64}"
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?#{query}"
+      result = extract("file #{url} end")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: url)
+      expect(result).to eq("file #{upload[:placeholder]} end")
+    end
+
+    it "takes an upload URL with a query whole in a markdown link" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?v=2"
+      result = extract("[file](#{url})")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: "[file](#{url})")
+      expect(result).to eq(upload[:placeholder])
+    end
+
+    it "leaves a URL whose query exceeds the cap alone instead of matching a prefix" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?x=#{"a" * 1200}"
+      raw = "file #{url} end"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+  end
+
+  describe "S3/CDN storage URLs without an uploads segment" do
+    # Core's S3 store writes the `original|optimized/` path directly under
+    # the bucket host or a bucket prefix, with no `/uploads/` segment.
+    it "defers a bare absolute storage URL" do
+      url = "https://cdn.example.com/original/1X/#{sha1}.png"
+      result = extract("pic #{url} here")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: url)
+      expect(result).to eq("pic #{upload[:placeholder]} here")
+    end
+
+    it "defers a protocol-relative bucket-prefixed storage URL in an image" do
+      url = "//cdn.example.com/bucket/optimized/2X/a/#{sha1}_2_690x388.png"
+      result = extract("![x](#{url})")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: "![x](#{url})")
+      expect(result).to eq(upload[:placeholder])
+    end
+
+    it "leaves a relative storage path without an uploads segment alone" do
+      # No local store writes a relative `/original/…` path; recognizing one
+      # would rewrite unrelated site paths that happen to share the name.
+      raw = "[x](/original/1X/#{sha1}.png)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
+    end
+  end
 end

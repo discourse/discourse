@@ -66,6 +66,25 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
       File.write(cache_files.first, "{\"entries\": \"corrupt\"}")
       reshaped = described_class.load_or_build(cache_dir: dir)
       expect(reshaped.entries.size).to eq(bundle.entries.size)
+
+      # An empty entry list can only come from a damaged file — no build
+      # produces zero entries — so it is a miss, not a bundle with no engine.
+      File.write(cache_files.first, "{\"entries\": []}")
+      refilled = described_class.load_or_build(cache_dir: dir)
+      expect(refilled.entries.size).to eq(bundle.entries.size)
+    end
+  end
+
+  it "builds with a configured plugin list instead of the default set" do
+    Dir.mktmpdir do |dir|
+      custom = described_class.load_or_build(cache_dir: dir, plugins: %w[poll])
+      custom_names = custom.entries.map(&:first)
+
+      expect(custom_names).to include(
+        a_string_matching(%r{\Adiscourse/plugins/poll/.*discourse-markdown/poll\z}),
+      )
+      expect(custom_names).not_to include(a_string_matching(%r{\Adiscourse/plugins/checklist/}))
+      expect(custom.entries.size).to be < bundle.entries.size
     end
   end
 

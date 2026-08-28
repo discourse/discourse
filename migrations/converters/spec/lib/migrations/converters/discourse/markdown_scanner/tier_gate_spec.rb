@@ -77,6 +77,14 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       )
     end
 
+    it "treats S3/CDN storage URLs without an uploads segment as candidates" do
+      sha1 = "0123456789abcdef0123456789abcdef01234567"
+      expect(gate.classify("pic https://cdn.example.com/original/1X/#{sha1}.png")).to eq(:engine)
+      expect(
+        gate.classify("pic //cdn.example.com/bucket/optimized/2X/a/#{sha1}_2_690x388.png"),
+      ).to eq(:engine)
+    end
+
     it "treats an internal route as a candidate" do
       expect(gate.classify("see /t/some-topic/123")).to eq(:engine)
     end

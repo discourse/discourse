@@ -17,11 +17,12 @@ module Migrations
         class TierGate
           # A body with none of these characters cannot hold any built-in
           # construct: `@` (mention), `[` (quote/attachment/image), `#`
-          # (hashtag), the `uploads/` segment of a full upload URL. Named
+          # (hashtag), the `uploads/` segment of a full upload URL or the
+          # `original/`/`optimized/` storage segment of an S3/CDN one. Named
           # character entities have their own alternative because
           # `&commat;bob` spells a construct while containing none of the
           # trigger characters; numeric forms all contain `#`.
-          BASE_PRESENCE = %r{[@\[#]|uploads/|&[a-zA-Z][a-zA-Z0-9]{1,31};}
+          BASE_PRESENCE = %r{[@\[#]|uploads/|(?:original|optimized)/|&[a-zA-Z][a-zA-Z0-9]{1,31};}
           private_constant :BASE_PRESENCE
 
           # Numeric character references, decoded and tested below — `&#64;bob`

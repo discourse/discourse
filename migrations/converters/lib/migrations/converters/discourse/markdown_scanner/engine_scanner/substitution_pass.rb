@@ -42,9 +42,6 @@ module Migrations
             # longer than this whole default.
             SUBSTITUTION_SECONDS_BUDGET = 10.0
 
-            Candidate = Data.define(:kind, :key, :text, :occurrence)
-            private_constant :Candidate
-
             def initialize(scanner, input, data, cause, seconds_budget: SUBSTITUTION_SECONDS_BUDGET)
               @scanner = scanner
               @input = input
@@ -70,16 +67,25 @@ module Migrations
                 return Result.new(output: @input, cause: :url_volume)
               end
 
+              # The occurrence indexes already exist per value; they are
+              # iterated in place, and the loops stop once the limit or the
+              # budget is hit — {MAX_SUBSTITUTIONS} bounds the checks and the
+              # allocations alike, so a body repeating one value thousands of
+              # times costs its index, not a wrapper object per occurrence.
+              # The tail past the stop stays unconfirmed through the expected
+              # totals below.
               spans = {}
               confirmed = 0
               expected.each do |entry|
-                candidates_for(entry).each do |candidate|
-                  outcome, covered = confirm(base, candidate, marker)
+                break if @limit_hit
+                occurrences_for(entry).each do |occurrence|
+                  break if @limit_hit
+                  outcome, covered = confirm(base, entry, occurrence, marker)
                   next unless outcome == :confirmed
                   # A reference definition's destination serves every link
                   # that uses its label, so one confirmed occurrence can cover
                   # several tokens.
-                  confirmed += covered if place(candidate, spans)
+                  confirmed += covered if place(entry, occurrence, spans)
                 end
               end
               unconfirmed_quotes = confirm_quotes(base, marker, spans)
@@ -147,18 +153,13 @@ module Migrations
               end
             end
 
-            def candidates_for(entry)
-              occurrences =
-                if entry[:kind] == :url
-                  # Overlapping readings are exactly what substitution can
-                  # attribute, so the spans are probed anyway.
-                  url_spans(entry[:text], 0...@input.bytesize).first
-                else
-                  probed_occurrences(entry[:kind], entry[:text])
-                end
-
-              occurrences.map do |occurrence|
-                Candidate.new(kind: entry[:kind], key: entry[:key], text: entry[:text], occurrence:)
+            def occurrences_for(entry)
+              if entry[:kind] == :url
+                # Overlapping readings are exactly what substitution can
+                # attribute, so the spans are probed anyway.
+                url_spans(entry[:text], 0...@input.bytesize).first
+              else
+                probed_occurrences(entry[:kind], entry[:text])
               end
             end
 
@@ -180,7 +181,7 @@ module Migrations
             # some other way), and `:limit`/`:budget` when no check ran. The
             # distinction lets the caller count real unconfirmed constructs
             # without counting shielded look-alikes.
-            def confirm(base, candidate, marker)
+            def confirm(base, entry, occurrence, marker)
               elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
               if elapsed > @seconds_budget
                 @limit_hit = :substitution_budget
@@ -191,7 +192,6 @@ module Migrations
                 return :limit, 0
               end
 
-              occurrence = candidate.occurrence
               substituted_body =
                 "#{@input.byteslice(0, occurrence.offset)}#{marker}" \
                   "#{@input.byteslice((occurrence.offset + occurrence.length)..)}"
@@ -201,11 +201,11 @@ module Migrations
               removed = diff(base, substituted)
               added = diff(substituted, base)
               return :not_construct, 0 if removed.empty? && added.empty?
-              return :mismatch, 0 if removed.keys != [candidate.key]
+              return :mismatch, 0 if removed.keys != [entry[:key]]
 
-              covered = removed[candidate.key]
+              covered = removed[entry[:key]]
               if covered != 1
-                unless candidate.kind == :url && definition_occurrence?(candidate)
+                unless entry[:kind] == :url && definition_occurrence?(entry[:text], occurrence)
                   return :mismatch, 0
                 end
               end
@@ -216,9 +216,8 @@ module Migrations
               [:confirmed, covered]
             end
 
-            def definition_occurrence?(candidate)
-              occurrence = candidate.occurrence
-              definition_offsets(candidate.text).include?([occurrence.offset, occurrence.length])
+            def definition_occurrence?(text, occurrence)
+              definition_offsets(text).include?([occurrence.offset, occurrence.length])
             end
 
             def diff(left, right)
@@ -228,13 +227,12 @@ module Migrations
               end
             end
 
-            def place(candidate, spans)
+            def place(entry, occurrence, spans)
               match =
-                if candidate.kind == :url
-                  anchor_match(candidate.occurrence) ||
-                    bare_value_match(candidate.key[1], candidate.occurrence)
+                if entry[:kind] == :url
+                  anchor_match(occurrence) || bare_value_match(entry[:key][1], occurrence)
                 else
-                  probe_match_at(candidate.kind, candidate.occurrence)
+                  probe_match_at(entry[:kind], occurrence)
                 end
 
               # The position is confirmed, but no grammar can take the construct
@@ -244,8 +242,8 @@ module Migrations
               # which class it was.
               if match.nil?
                 @unplaced_cause ||=
-                  if candidate.kind == :url
-                    @scanner.unplaced_url_cause(candidate.key[1])
+                  if entry[:kind] == :url
+                    @scanner.unplaced_url_cause(entry[:key][1])
                   else
                     :unanchored
                   end
@@ -266,6 +264,7 @@ module Migrations
             def confirm_quotes(base, marker, spans)
               return 0 if base.fetch([:block, "bbcode_open", "blockquote"], 0) == 0
 
+              quote_entry = { kind: :quote, key: [:block, "bbcode_open", "blockquote"], text: nil }
               unconfirmed = 0
               pos = 0
               while (offset = @input.byteindex(/\[quote=/i, pos))
@@ -276,19 +275,12 @@ module Migrations
                   next
                 end
 
-                candidate =
-                  Candidate.new(
-                    kind: :quote,
-                    key: [:block, "bbcode_open", "blockquote"],
-                    text: nil,
-                    occurrence:
-                      Locating::Occurrence.new(
-                        offset: match.start_pos,
-                        length: match.end_pos - match.start_pos,
-                      ),
+                occurrence =
+                  Locating::Occurrence.new(
+                    offset: match.start_pos,
+                    length: match.end_pos - match.start_pos,
                   )
-
-                outcome, = confirm(base, candidate, marker)
+                outcome, = confirm(base, quote_entry, occurrence, marker)
                 if outcome == :confirmed
                   spans[[match.start_pos, match.end_pos]] ||= match
                 elsif outcome != :not_construct

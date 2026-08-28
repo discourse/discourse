@@ -14,10 +14,10 @@ module Migrations
         # When a value occurs in that range exactly as often as the engine
         # created tokens for it, every occurrence is a real construct and all
         # of them are replaced. None of them can be inside a code span or a
-        # link label, because the engine creates no tokens there. When the
-        # counts differ, the value is counted once more against the whole
-        # post, because reference-link definitions are outside of all block
-        # maps.
+        # link label, because the engine creates no tokens there. When a
+        # region's counts differ, the value is counted once more against the
+        # whole post — the same exact equality, just without relying on the
+        # engine's line attribution.
         #
         # When counting cannot match a post's occurrence counts (duplicate values in mixed
         # contexts, a character entity that could form a construct, CR line
@@ -50,12 +50,14 @@ module Migrations
               end
             end
 
-          # A post whose parse runs into the fast ceiling gets one retry with
-          # this ceiling before `:engine_error`. A conversion runs once, so
-          # spending up to 30 seconds on one post is acceptable. Core's
-          # PrettyText allows 25 seconds for a full cook; the slowest
-          # legitimate parse we measured took 435 ms, and a corpus run with a
-          # 60-second ceiling recovered no additional posts.
+          # A post whose parse runs into the fast ceiling gets one retry
+          # before `:engine_error`. This is a deadline for the whole retry of
+          # that one post: each engine call gets at most this much, and the
+          # substitution checks receive only what the slow parse left of it.
+          # A conversion runs once, so spending up to 30 seconds on one post
+          # is acceptable. Core's PrettyText allows 25 seconds for a full
+          # cook; the slowest legitimate parse we measured took 435 ms, and a
+          # corpus run with a 60-second ceiling recovered no additional posts.
           SLOW_TIMEOUT_MS = 30_000
 
           # Locating URL occurrences scans the post once per distinct value.
@@ -80,6 +82,7 @@ module Migrations
             @engine = engine
             @slow_timeout_ms = slow_timeout_ms
             @scan_timeout_ms = nil
+            @retry_deadline = nil
             @gate = gate
             @hosts = internal_link_hosts
             @base_prefix = internal_link_base_prefix
@@ -138,6 +141,7 @@ module Migrations
           # @return [Result]
           def scan(input, scan_data: nil)
             @scan_timeout_ms = nil
+            @retry_deadline = nil
             begin
               attempt(input, scan_data)
             rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
@@ -148,6 +152,8 @@ module Migrations
               # again quickly, so the single retry stays cheap.
               @engine.reset!
               @scan_timeout_ms = @slow_timeout_ms
+              @retry_deadline =
+                Process.clock_gettime(Process::CLOCK_MONOTONIC) + @slow_timeout_ms / 1000.0
               attempt(input, scan_data).with(slow_parse: true)
             end
           rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError => error
@@ -159,6 +165,7 @@ module Migrations
             Result.new(output: input, cause: :engine_error, detail: error.class.name)
           ensure
             @scan_timeout_ms = nil
+            @retry_deadline = nil
           end
 
           # Every engine parse for the current body goes through here, so a
@@ -191,14 +198,17 @@ module Migrations
             ).result
           end
 
-          # On the slow path a single parse may take tens of seconds. The
-          # default substitution budget would not allow even one check, and the
-          # retry would be pointless for such a body. So the budget
-          # follows the ceiling; the substitution count cap still limits the total.
+          # On the slow path a single parse may take tens of seconds, and the
+          # default substitution budget would not allow even one check. The
+          # slow ceiling is a deadline for the retry of the whole body, so the
+          # substitution checks get what the slow parse left of it — not a
+          # fresh 30 seconds on top. The substitution count cap still limits
+          # the total.
           def substitution_seconds_budget
-            return SubstitutionPass::SUBSTITUTION_SECONDS_BUDGET if @scan_timeout_ms.nil?
+            return SubstitutionPass::SUBSTITUTION_SECONDS_BUDGET if @retry_deadline.nil?
 
-            @scan_timeout_ms / 1000.0
+            remaining = @retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+            remaining > 0 ? remaining : 0.0
           end
 
           attr_reader :mention_construct,
@@ -306,6 +316,15 @@ module Migrations
 
           # The per-body count-matching pass; the scanner itself stays
           # reusable across bodies.
+          #
+          # The pass answers one question: does the number of deduplicated raw
+          # occurrences equal the number of engine tokens, exactly. Any
+          # inequality escalates to the substitution pass, and so does any
+          # value where the two numbers can legitimately differ (a reference
+          # definition serving several links). The pass never accepts on
+          # unequal counts and never decides from the shape of the bytes —
+          # deciding what bytes mean is the engine's job, and the substitution
+          # pass is the only place that asks it about a single occurrence.
           class Pass
             include Locating
 
@@ -417,20 +436,19 @@ module Migrations
             # body replaces every occurrence, and the entity check widens to
             # the whole body.
             #
-            # A value with a reference-definition line has its own rule. One
-            # definition can serve several `[text][label]` links, so the
-            # engine may see more tokens than there are raw occurrences.
-            # When every raw occurrence lies on a definition line, replacing
-            # them rewrites all those links, and that counts as a match.
-            # When some occurrences sit elsewhere, a plain count equality
-            # could assign a copy inside code to the definition's reuse — so
-            # the value refuses and the substitution pass confirms each occurrence on
-            # its own.
+            # A value with a reference-definition line never matches by
+            # counting. One definition can serve several `[text][label]`
+            # links, so the token count no longer says how many raw
+            # occurrences are live — an equality can hold while one of the
+            # counted occurrences is a copy inside a code fence. Only the
+            # substitution pass can tell those apart.
             def match_all_counts
               whole = 0...@input.bytesize
               @matched = {}
 
               @expected.each do |(kind, value), entry|
+                return :count_mismatch if kind == :url && definition_offsets(value).any?
+
                 occurrences = match_region_counts(kind, value, entry)
 
                 if occurrences
@@ -440,14 +458,6 @@ module Migrations
 
                 return :entity if entity_offsets.any?
 
-                if kind == :url && definition_offsets(value).any?
-                  definitions = definition_only_spans(value, entry[:total])
-                  return :reference_definition if definitions.nil?
-
-                  @matched[[kind, value]] = definitions
-                  next
-                end
-
                 global = match_counts_in(kind, value, whole, entry[:total])
                 return :count_mismatch if global.nil?
 
@@ -455,17 +465,6 @@ module Migrations
               end
 
               nil
-            end
-
-            # Every whole-body occurrence of the value, when each one lies on
-            # a reference-definition line and the engine saw at least as many
-            # tokens; nil otherwise.
-            def definition_only_spans(value, expected)
-              spans, overlapping = url_spans(value, 0...@input.bytesize)
-              return nil if overlapping || spans.empty? || expected < spans.size
-
-              definitions = definition_offsets(value)
-              spans if spans.all? { |span| definitions.include?([span.offset, span.length]) }
             end
 
             # All regions matched and concatenated; nil when any region's

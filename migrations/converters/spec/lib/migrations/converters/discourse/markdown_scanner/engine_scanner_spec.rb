@@ -301,9 +301,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites a shared definition but not a copy of its URL inside code" do
       # The code-span copy makes the raw count two against two link tokens —
       # a bare count equality would attribute the code span to the
-      # definition's reuse. The definition rule refuses that; the substitution
-      # checks confirm the definition (both tokens vanish) and skip the code copy
-      # (nothing changes).
+      # definition's reuse. A definition-bearing value never matches by
+      # counting; the substitution checks confirm the definition (both
+      # tokens vanish) and skip the code copy (nothing changes).
       raw =
         "see [a][1] and [b][1] and `https://forum.example.com/t/slug/5`\n\n" \
           "[1]: https://forum.example.com/t/slug/5\n"
@@ -311,6 +311,25 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.links.size).to eq(1)
       expect(output).to include("`https://forum.example.com/t/slug/5`")
+      expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites a shared definition but not a definition-shaped line inside a fence" do
+      # Two link tokens, two raw occurrences — the counts are equal, and the
+      # fenced copy is even shaped like a definition. Equality must not
+      # accept a definition-bearing value: only the substitution checks can
+      # tell the live definition (both tokens vanish) from the fenced copy
+      # (nothing changes).
+      fenced_line = "[also]: https://forum.example.com/t/slug/5"
+      raw =
+        "see [a][1] and [b][1]\n\n" \
+          "[1]: https://forum.example.com/t/slug/5\n\n" \
+          "```text\n#{fenced_line}\n```\n"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(output).to include(fenced_line)
       expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
       expect(refusals).to be_empty
     end
@@ -334,6 +353,39 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.quotes.size).to eq(48)
       expect(output.scan(/\[quote=/).size).to eq(2)
+      expect(refusals).to eq(%i[substitution_limit])
+    end
+
+    it "stops enumerating a repeated value's occurrences at the substitution limit" do
+      engine_calls = 0
+      counting_engine =
+        instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(counting_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        engine_calls += 1
+        markdown_engine.scan(posts)
+      end
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: counting_engine,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+        )
+      max =
+        Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SubstitutionPass::MAX_SUBSTITUTIONS
+
+      # 200 live mentions plus one code-span copy: counting refuses the body,
+      # and the substitution pass pays at most the limit — the code-span copy
+      # burns the first check, the confirmed tail ends at the limit.
+      output = extractor.extract("`@alice` #{(["@alice"] * 200).join(" ")}")
+
+      # One initial parse, then one parse per check up to the limit. The
+      # occurrences past the limit cost no engine call and no allocation —
+      # the loop stops instead of walking a wrapper list.
+      expect(engine_calls).to eq(1 + max)
+      expect(buffer.mentions.size).to eq(max - 1)
+      expect(output).to start_with("`@alice` ")
       expect(refusals).to eq(%i[substitution_limit])
     end
 
@@ -488,9 +540,15 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(failing_engine).to have_received(:scan).once
     end
 
-    it "runs a slow-path body's substitution checks under the scaled budget" do
+    it "runs a slow-path body's substitution checks under what is left of the retry deadline" do
       engine_scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
-      allow(engine_scanner::SubstitutionPass).to receive(:new).and_call_original
+      budgets = []
+      allow(engine_scanner::SubstitutionPass).to receive(
+        :new,
+      ).and_wrap_original do |original, *args, **kwargs|
+        budgets << kwargs[:seconds_budget]
+        original.call(*args, **kwargs)
+      end
       calls = 0
       retrying_engine =
         instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
@@ -509,21 +567,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         )
 
       # Count matching cannot split this pair, so the body needs its check —
-      # which must run with the slow ceiling's budget: the default budget is
-      # smaller than what a single legitimate slow parse may already take.
+      # which must run with more than the default budget (a single legitimate
+      # slow parse may already take longer than that), but only with what the
+      # slow parse left of the 30-second retry deadline, never a fresh
+      # 30 seconds on top of it.
       output = extractor.extract("`@alice` and @alice")
 
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to eq("`@alice` and #{buffer.mentions.first[:placeholder]}")
       expect(refusals).to be_empty
       expect(extractor.slow_parses).to eq(1)
-      expect(engine_scanner::SubstitutionPass).to have_received(:new).with(
-        anything,
-        anything,
-        anything,
-        anything,
-        seconds_budget: engine_scanner::SLOW_TIMEOUT_MS / 1000.0,
-      )
+      slow_ceiling = engine_scanner::SLOW_TIMEOUT_MS / 1000.0
+      expect(budgets).to all(be > engine_scanner::SubstitutionPass::SUBSTITUTION_SECONDS_BUDGET)
+      expect(budgets).to all(be < slow_ceiling)
     end
   end
 
@@ -565,6 +621,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       output = extractor.extract(body, scan_data: data[7])
       expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
       expect(output).to include(buffer.mentions.first[:placeholder])
+    end
+
+    it "rejects a batch with duplicate post ids" do
+      # Keying by id would silently keep only one of the results.
+      expect {
+        extractor.scan_batch([{ id: 7, raw: body }, { id: 7, raw: "hi @alice" }])
+      }.to raise_error(ArgumentError, /unique ids/)
     end
 
     it "returns no data when the batched call is terminated, and per-body extraction recovers" do

@@ -7,20 +7,35 @@ module Migrations
         module Constructs
           # Detects uploads referenced by a full URL instead of a short `upload://`
           # one — markdown images `![alt](url)`, markdown links `[text](url)` and
-          # bare whitespace-delimited URLs. Two URL shapes are supported, matching
-          # what core's file store writes (see core's `Upload` and `FileStore`):
+          # bare whitespace-delimited URLs. Three URL shapes are supported,
+          # matching what core's file stores write (see core's `Upload` and
+          # `FileStore`):
           #
           #   * a long URL: an `/uploads/` or `/secure-uploads/` segment with an
           #     `original/` or `optimized/` path below it, and a basename that
           #     starts with the upload's 40-hex sha1;
+          #   * an S3/CDN URL: the same `original/` or `optimized/` path with no
+          #     `/uploads/` segment, directly under the host or below a bucket
+          #     prefix. Only with a host — no local store writes a relative
+          #     `/original/…` path, so a relative one stays unrecognized;
           #   * a short-URL path: `/uploads/short-url/<token>[.ext]`, where the
           #     token is the base62-encoded sha1 (core's `Upload#short_path`).
           #     It is decoded here, so the row carries the same 40-hex sha1 as a
           #     long URL and resolves the same way at import.
           #
+          # The storage shape must sit in the URL's path: every path segment
+          # stops at `?` and `#`, so an upload path inside a query or fragment
+          # (`/redirect?to=/uploads/…`) makes no upload URL — rewriting the
+          # redirect would swap the author's link for the file it points at.
           # Any other `/uploads/` path (a WordPress `wp-content/uploads/…` URL,
           # some unrelated site's file) is not an upload reference: it matches
-          # neither shape and is left alone.
+          # no shape and is left alone.
+          #
+          # The whole URL is taken, including its query and fragment. Both are
+          # capped (1024 and 255 bytes) so a generated URL cannot make the
+          # pattern scan without bounds. A URL beyond a cap matches no shape at
+          # all and stays as written — replacing only a prefix of a URL would
+          # leave its tail behind the placeholder.
           #
           # Recognition does no host allowlisting: a URL that has a supported
           # shape but points at some other site still resolves to nothing at
@@ -37,35 +52,53 @@ module Migrations
             # The sha1 is 160 bits; base62 needs at most 27 characters for that.
             MAX_SHORT_TOKEN_LENGTH = 27
 
-            # The optional scheme/host and the path segments before the
-            # `/uploads/` segment. `[^/#{Base::URL_TERMINATORS}]` is a
-            # path-segment character (a URL-body character minus the slash; see
-            # `Base::URL_TERMINATORS`). The scheme is case-insensitive because
-            # linkify-it reads it that way, so core links `HTTPS://…` too.
-            # The repeated group is atomic with a lookahead deciding where it
-            # stops, so a failing candidate is scanned once and never
-            # backtracked into. The segment-count and length caps bound a
-            # single candidate.
-            ORIGIN_AND_PREFIX =
-              %r{
-                (?<origin> (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]{1,255} )?      # optional scheme + host
-                (?> (?: / (?! (?:secure-)?uploads/ ) [^/#{Base::URL_TERMINATORS}]{1,255} ){0,16} )
-              }x
-            private_constant :ORIGIN_AND_PREFIX
+            # One path segment: a URL-body character (see
+            # `Base::URL_TERMINATORS`) that is also none of `/`, `?` and `#` —
+            # the storage shape must sit in the URL's path, and the path ends
+            # where the query or the fragment begins.
+            SEGMENT = /[^\/?##{Base::URL_TERMINATORS}]{1,255}/
+            private_constant :SEGMENT
 
-            # The long shape, from `/uploads/` down to the sha1 at the start of
-            # the basename. The trailing `\w` keeps a sentence's `.`/`,` after a
-            # bare URL out of the match. The lookaheads keep lazy semantics
-            # without lazy quantifiers: the first `original|optimized/` and the
-            # first sha1-shaped basename win.
+            # The scheme and host. The scheme is case-insensitive because
+            # linkify-it reads it that way, so core links `HTTPS://…` too.
+            ORIGIN = %r{(?<origin>(?i:https?:)?//#{SEGMENT})}
+            private_constant :ORIGIN
+
+            UPLOADS = %r{(?:secure-)?uploads/}
+            private_constant :UPLOADS
+
+            STORAGE = %r{(?:original|optimized)/}
+            private_constant :STORAGE
+
+            # From the storage marker down to the basename and whatever follows
+            # it: partition segments, the sha1, the extension or `_WxH` suffix
+            # ending on a word character (a sentence's `.` after a bare URL
+            # stays out), then an optional query and fragment. The caps take a
+            # signed CDN URL whole; a URL beyond them matches nothing at all —
+            # a match over part of a URL would replace that part and leave the
+            # tail behind as literal text. The final lookbehind backs sentence
+            # punctuation out of a query or fragment end. The repeated groups
+            # are atomic with a lookahead deciding where they stop, so a
+            # failing candidate is scanned once and never backtracked into;
+            # the segment-count and length caps bound a single candidate.
+            STORAGE_TAIL =
+              %r{
+                #{STORAGE}
+                (?> (?: (?! \h{40}[._] ) #{SEGMENT} / ){0,16} )   # depth/partition segments
+                (?<sha1> \h{40} ) (?=[._])                        # sha1, then the extension or `_WxH` suffix
+                [^/?##{Base::URL_TERMINATORS}]{0,255} \w
+                (?: \? [^##{Base::URL_TERMINATORS}]{1,1024} )?
+                (?: \# [^#{Base::URL_TERMINATORS}]{1,255} )?
+                (?<! [.,;:!?] )
+              }x
+            private_constant :STORAGE_TAIL
+
+            # The long shape, from `/uploads/` down through the storage path.
             LONG_TAIL =
               %r{
-                / (?:secure-)? uploads /
-                (?> (?: (?! (?:original|optimized)/ ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )
-                (?: original | optimized ) /
-                (?> (?: (?! \h{40}[._] ) [^/#{Base::URL_TERMINATORS}]{1,255} / ){0,16} )  # depth/partition segments
-                (?<sha1> \h{40} ) (?=[._])                                              # sha1, then the extension or `_WxH` suffix
-                [^#{Base::URL_TERMINATORS}]{0,255} \w
+                / #{UPLOADS}
+                (?> (?: (?! #{STORAGE} ) #{SEGMENT} / ){0,16} )
+                #{STORAGE_TAIL}
               }x
             private_constant :LONG_TAIL
 
@@ -77,7 +110,19 @@ module Migrations
               %r{/uploads/short-url/(?<short_token>[0-9a-zA-Z]{1,#{MAX_SHORT_TOKEN_LENGTH}})(?:\.\w{1,15})?(?![\w/-])}x
             private_constant :SHORT_TAIL
 
-            URL = /(?<upload_url>#{ORIGIN_AND_PREFIX}(?:#{LONG_TAIL}|#{SHORT_TAIL}))/
+            # The three shapes. The `/uploads/` segment may be absent only in
+            # the schemed or protocol-relative form — that is the S3/CDN
+            # shape, where the storage path sits directly under the host or
+            # below a bucket prefix. A relative URL must carry `/uploads/`.
+            URL =
+              %r{
+                (?<upload_url>
+                    #{ORIGIN} (?> (?: / (?! #{UPLOADS} | #{STORAGE} ) #{SEGMENT} ){0,16} )
+                      (?: #{LONG_TAIL} | / #{STORAGE_TAIL} )
+                  | (?> (?: / (?! #{UPLOADS} ) #{SEGMENT} ){0,16} ) #{LONG_TAIL}
+                  | #{ORIGIN}? (?> (?: / (?! #{UPLOADS} ) #{SEGMENT} ){0,16} ) #{SHORT_TAIL}
+                )
+              }x
             private_constant :URL
 
             # `\G` anchors each match at `pos` so scanning stays linear. The alt
@@ -104,23 +149,43 @@ module Migrations
             BASE62_KEYS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             private_constant :BASE62_KEYS
 
+            ANCHORED_URL = /\A#{URL}/
+            private_constant :ANCHORED_URL
+
+            # An ASCII word byte. Linkify takes trailing bytes into a bare
+            # URL's href that no URL grammar accepts (a stray `-`, `#`,
+            # punctuation, non-ASCII text glued to the URL); both sides drop
+            # those at replacement, so a value may end in such a tail. A word
+            # character in the tail is different: it means the value's URL
+            # runs past what the grammar takes (a longer basename or query),
+            # and replacing only a prefix of it would leave the rest behind.
+            TRAILING_WORD = /[0-9A-Za-z_]/
+            private_constant :TRAILING_WORD
+
             # Whether `raw` can contain a supported upload URL at all. This is
-            # the cheap presence check for the {TierGate}: a body with only
+            # the cheap presence check for the {TierGate}: every supported
+            # shape carries one of these markers, and a body with only
             # unrelated `/uploads/` paths (WordPress and friends) does not
             # become a candidate.
             def self.candidate?(raw)
-              return false unless raw.include?("uploads/")
-
-              raw.include?("short-url/") || raw.include?("original/") || raw.include?("optimized/")
+              raw.include?("original/") || raw.include?("optimized/") ||
+                raw.include?("uploads/short-url/")
             end
 
             # Whether an engine href/src value has a supported upload shape.
             # The {EngineScanner} tracks upload values with this, so the filter
             # and the grammar that later anchors the construct cannot disagree.
+            # The match must start at the value's first byte — a substring
+            # match would track a URL that merely contains an upload path, the
+            # redirect case again, one level up — and may leave only wordless
+            # linkify junk uncovered (see {TRAILING_WORD}).
             def self.tracked_value?(value)
-              return false unless value.include?("uploads/")
+              return false unless candidate?(value)
 
-              URL.match?(value)
+              match = ANCHORED_URL.match(value)
+              return false if match.nil?
+
+              !value.byteslice(match.byteoffset(0).last..).match?(TRAILING_WORD)
             end
 
             # The 40-hex sha1 for a short-URL token, or nil when the token is

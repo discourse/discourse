@@ -184,9 +184,9 @@ module Migrations
         #     `:engine_error`, `:overlap`, `:probe_desync`;
         #   * known unsupported source content — `:invalid_internal_route` (a
         #     coordinate-shaped path that parses no route, usually a link that
-        #     was already broken on the source), `:reference_definition`,
-        #     `:count_mismatch`, `:entity`, `:cr_line_endings` (genuinely
-        #     ambiguous spellings the passes refuse rather than guess);
+        #     was already broken on the source), `:count_mismatch`, `:entity`,
+        #     `:cr_line_endings` (genuinely ambiguous spellings the passes
+        #     refuse rather than guess);
         #   * budget — `:substitution_limit`, `:substitution_budget`, `:url_volume`
         #     (bounded work on pathological bodies);
         #   * the rest of a partially extracted body (the confirmed constructs
@@ -245,6 +245,12 @@ module Migrations
         # 18 workers, batches of 32 measured 45.2s wall / 360.4s V8 against
         # 70.9s / 684.4s unbatched, with identical extraction results.
         def scan_batch(posts)
+          ids = posts.map { |post| post[:id] }
+          if ids.uniq.size != ids.size
+            # `index_by` would keep only one result per id, silently.
+            raise ArgumentError, "scan_batch posts must have unique ids"
+          end
+
           @markdown_engine.scan(posts).index_by { |data| data["id"] }
         rescue MiniRacer::ScriptTerminatedError, MiniRacer::RuntimeError
           @markdown_engine.reset!
@@ -336,12 +342,6 @@ module Migrations
           end
         end
 
-        # The Discourse converter never knows the quoted post's source `original_id`,
-        # so it records the source coordinates (topic id + post number) instead and
-        # lets the importer resolve them. A quote with a `post:` but no `topic:`
-        # points into its own topic. A `topic:` with no `post:` drops both coordinates,
-        # because the importer can only resolve them as a pair. A quote with neither is
-        # username-only.
         # Whether a full-URL upload is the source's own. Returns nil when it
         # is; the host string when it is not (the importer maps such a row's
         # sha1 only against an explicit allowlist — a foreign basename that
@@ -364,6 +364,12 @@ module Migrations
           end
         end
 
+        # The Discourse converter never knows the quoted post's source `original_id`,
+        # so it records the source coordinates (topic id + post number) instead and
+        # lets the importer resolve them. A quote with a `post:` but no `topic:`
+        # points into its own topic. A `topic:` with no `post:` drops both coordinates,
+        # because the importer can only resolve them as a pair. A quote with neither is
+        # username-only.
         def defer_quote(node, source)
           post_number = node.post_number
           topic_id = post_number ? (node.topic_id || @topic_id) : nil
