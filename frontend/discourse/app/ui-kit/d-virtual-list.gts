@@ -607,13 +607,15 @@ export default class DVirtualList<T> extends Component<
   @action
   onRegisterApi(api: DVirtualListApi) {
     this._api = api;
-    this.args.onRegisterApi?.(api);
 
     // Registration happens once (first-run only), so an initial scroll set up
     // here is inherently applied a single time and never re-fights the user on a
     // later `@items` change. It is deferred a tick because the first flush must
     // size the sizer before the viewport can scroll past its initially empty
     // content.
+    //
+    // Scheduled before the consumer is handed the API, so a consumer that throws
+    // does not take the list's own opening position down with it.
     if (this.args.initialIndex != null) {
       const index = this.args.initialIndex;
       const align = this.args.initialAlign ?? "start";
@@ -623,6 +625,8 @@ export default class DVirtualList<T> extends Component<
       // engine's job, configured by the modifier.
       next(() => api.scrollToEdge("end"));
     }
+
+    this.args.onRegisterApi?.(api);
   }
 
   <template>
