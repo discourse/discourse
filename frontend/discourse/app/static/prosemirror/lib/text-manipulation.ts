@@ -585,6 +585,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
             placeholderNodes.push({ node, pos, filename: match[1] });
           }
         }
+      } else if (
+        node.type === this.schema.nodes.upload_placeholder &&
+        imagesToWrapGrid.has(node.attrs.filename)
+      ) {
+        placeholderNodes.push({
+          node,
+          pos,
+          filename: node.attrs.filename,
+        });
       }
     });
 
@@ -865,24 +874,22 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
 
     // resolve transparent.png placeholders using the upload URL cache,
     // which was populated before success() was called
-    if (found.node.type === this.schema.nodes.image) {
-      tr.doc.nodesBetween(
-        found.pos,
-        found.pos + replacement.size,
-        (node, pos) => {
-          if (
-            node.type.name === "image" &&
-            node.attrs.originalSrc &&
-            node.attrs.src?.includes("transparent.png")
-          ) {
-            const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
-            if (cached?.url) {
-              tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
-            }
+    tr.doc.nodesBetween(
+      found.pos,
+      found.pos + replacement.size,
+      (node, pos) => {
+        if (
+          node.type.name === "image" &&
+          node.attrs.originalSrc &&
+          node.attrs.src?.includes("transparent.png")
+        ) {
+          const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
+          if (cached?.url) {
+            tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
           }
         }
-      );
-    }
+      }
+    );
 
     if (wasSelected) {
       const resolved = tr.doc.resolve(found.pos);
