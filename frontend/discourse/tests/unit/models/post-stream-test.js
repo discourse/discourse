@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/owner";
+import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -887,6 +888,99 @@ module("Unit | Model | post-stream", function (hooks) {
     assert.true(
       postStream.loadedAllPosts,
       "the last post is loaded now that the post has an id"
+    );
+  });
+
+  test("triggerChangedPost ignores delayed older events", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 1,
+      updated_at: "2026-08-28T08:00:02.000Z",
+    });
+    postStream.appendPost(post);
+    let requestCount = 0;
+
+    pretender.get("/posts/1", () => {
+      requestCount += 1;
+      return response({
+        id: 1,
+        post_number: 1,
+        updated_at: "2026-08-28T08:00:03.000Z",
+      });
+    });
+
+    await postStream.triggerChangedPost(1, "2026-08-28T08:00:01.000Z");
+    assert.strictEqual(requestCount, 0, "an older event causes no refresh");
+    assert.strictEqual(
+      post.updated_at,
+      "2026-08-28T08:00:02.000Z",
+      "the loaded timestamp does not regress"
+    );
+
+    await postStream.triggerChangedPost(1, "2026-08-28T08:00:03.000Z");
+    assert.strictEqual(requestCount, 1, "a newer event refreshes the post");
+  });
+
+  test("triggerChangedPost keeps the newest concurrent response", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const olderRequest = postStream.triggerChangedPost(
+      1,
+      "2026-08-28T08:00:02.000Z"
+    );
+    const newerRequest = postStream.triggerChangedPost(
+      1,
+      "2026-08-28T08:00:03.000Z"
+    );
+    await waitUntil(() => resolveRequests.length === 2);
+
+    resolveRequests[1](
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "third",
+        updated_at: "2026-08-28T08:00:03.000Z",
+      })
+    );
+    await newerRequest;
+    resolveRequests[0](
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:02.000Z",
+      })
+    );
+    await olderRequest;
+
+    const loadedPost = postStream.findLoadedPost(1);
+    assert.strictEqual(
+      loadedPost.updated_at,
+      "2026-08-28T08:00:03.000Z",
+      "the timestamp does not regress"
+    );
+    assert.strictEqual(
+      loadedPost.cooked,
+      "third",
+      "the cooked HTML stays current"
     );
   });
 

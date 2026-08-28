@@ -23,6 +23,17 @@ import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
 
+function comparePostTimestamps(candidate, reference) {
+  const candidateTime = Date.parse(candidate);
+  const referenceTime = Date.parse(reference);
+
+  if (!Number.isNaN(candidateTime) && !Number.isNaN(referenceTime)) {
+    return candidateTime - referenceTime;
+  }
+
+  return candidate === reference ? 0 : 1;
+}
+
 export function Placeholder(viewName) {
   this.viewName = viewName;
 }
@@ -868,15 +879,25 @@ export default class PostStream extends RestModel {
     }
 
     const existing = this._identityMap[postId];
+    const hasChanged =
+      existing && comparePostTimestamps(updatedAt, existing.updated_at) > 0;
 
-    // Only fetch and update if the post exists and has a different updated timestamp
-    if (existing && existing.updated_at !== updatedAt) {
+    // Only fetch and update if the post exists and the event is newer.
+    if (hasChanged) {
       // Fetch the latest post data from the server
       const updatedData = await ajax(`/posts/${postId}`);
+      const latest = this._identityMap[postId];
+      if (
+        !latest ||
+        comparePostTimestamps(updatedData.updated_at, updatedAt) < 0 ||
+        comparePostTimestamps(updatedData.updated_at, latest.updated_at) <= 0
+      ) {
+        return;
+      }
 
       // Preserve the existing cooked HTML content if requested
       if (opts.preserveCooked) {
-        updatedData.cooked = existing.cooked;
+        updatedData.cooked = latest.cooked;
       }
 
       // Create a new post record with updated data and store it in the identity map.

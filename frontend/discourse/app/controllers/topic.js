@@ -38,6 +38,7 @@ import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
+import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -2099,7 +2100,22 @@ export default class TopicController extends Controller {
       }
       case "revised":
       case "rebaked": {
-        postStream.triggerChangedPost(data.id, data.updated_at);
+        const completeReconciliation = consumeOptimisticPostUpdate(
+          data.preserve_cooked_token
+        );
+        if (completeReconciliation) {
+          const post = postStream.findLoadedPost(data.id);
+          if (
+            post &&
+            (!post.updated_at ||
+              Date.parse(data.updated_at) >= Date.parse(post.updated_at))
+          ) {
+            post.updated_at = new Date(data.updated_at).toISOString();
+          }
+          completeReconciliation();
+        } else {
+          postStream.triggerChangedPost(data.id, data.updated_at);
+        }
         break;
       }
       case "deleted": {

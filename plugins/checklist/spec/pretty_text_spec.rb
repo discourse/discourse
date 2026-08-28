@@ -1,54 +1,102 @@
 # frozen_string_literal: true
 
-describe PrettyText do
-  describe "markdown it" do
-    it "can properly bake boxes" do
-      md = <<~MD
-        [],[ ],[x],[X] are all checkboxes
-        `[ ]` [x](hello) *[ ]* **[ ]** _[ ]_ __[ ]__ ~~[ ]~~ are not checkboxes
-      MD
+RSpec.describe PrettyText do
+  before { SiteSetting.checklist_enabled = true }
 
-      html = <<~HTML
-      <p><span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box checked fa fa-square-check-o"></span>,<span class="chcklst-box checked permanent fa fa-square-check"></span> are all checkboxes<br>
-      <code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes</p>
-      HTML
-      cooked = PrettyText.cook(md)
-      expect(cooked).to eq(html.strip)
+  def checklist_nodes(raw)
+    Nokogiri::HTML5.fragment(PrettyText.cook(raw)).css("span.chcklst-box")
+  end
+
+  describe "checklist Markdown" do
+    it "renders mutable and permanent checkbox variants" do
+      raw = "[],[ ],[x],[X] are all checkboxes"
+      nodes = checklist_nodes(raw)
+
+      expect(nodes.map { |node| node["data-chk-src"] }).to eq(["0:0", "0:1", "0:2", nil])
+      expect(nodes.map { |node| node.classes.include?("checked") }).to eq(
+        [false, false, true, true],
+      )
+      expect(nodes.last.classes).to include("permanent")
+    end
+
+    it "does not render markers in code, links, emphasis, or strikethrough" do
+      raw = "`[ ]` [x](hello) *[ ]* **[ ]** _[ ]_ __[ ]__ ~~[ ]~~ [ ] real"
+      nodes = checklist_nodes(raw)
+
+      expect(nodes.size).to eq(1)
+      expect(nodes.first["data-chk-src"]).to eq("0:7")
     end
 
     it "does not treat escaped brackets as checkboxes" do
-      md = <<~MD
+      raw = <<~MARKDOWN
         \\[x] escaped opening bracket
         [x\\] escaped closing bracket
         \\[x\\] both brackets escaped
         \\[ ] escaped empty checkbox
         [x] real checkbox
-      MD
+      MARKDOWN
+      cooked = PrettyText.cook(raw)
+      nodes = Nokogiri::HTML5.fragment(cooked).css("span.chcklst-box")
 
-      cooked = PrettyText.cook(md)
-
-      expect(cooked.scan("chcklst-box").count).to eq(1)
+      expect(nodes.size).to eq(1)
+      expect(nodes.first["data-chk-src"]).to eq("4:0")
       expect(cooked).to include("[x] escaped opening bracket")
       expect(cooked).to include("[x] escaped closing bracket")
       expect(cooked).to include("[x] both brackets escaped")
       expect(cooked).to include("[ ] escaped empty checkbox")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> real checkbox',
+    end
+
+    it "does not allow raw HTML to forge interactive checklist controls" do
+      raw = <<~MARKDOWN
+        <span class="chcklst-box fa fa-square-o" data-chk-src="1:0"></span>
+
+        `[ ]` [ ] real
+      MARKDOWN
+      cooked = PrettyText.cook(raw)
+      nodes = Nokogiri::HTML5.fragment(cooked).css("span.chcklst-box")
+
+      expect(nodes.map { |node| node["data-chk-src"] }).to eq(["2:1"])
+      expect(cooked).to include("&lt;span")
+    end
+
+    it "counts escaped and metadata markers when assigning line ordinals" do
+      raw = <<~MARKDOWN
+        \\[x] escaped [x] visible
+        ![](<https://example.test/[x]>)[x]
+        [link](<https://example.test/[x]> "[x]") [ ] visible
+      MARKDOWN
+
+      expect(checklist_nodes(raw).map { |node| node["data-chk-src"] }).to eq(%w[0:1 1:2 2:2])
+    end
+
+    it "preserves surrounding cooked HTML while adding source hints" do
+      raw = "[ ] before `[x]` [x] after"
+
+      expect(PrettyText.cook(raw)).to eq(
+        '<p><span class="chcklst-box fa fa-square-o" data-chk-src="0:0"></span> before <code>[x]</code> <span class="chcklst-box checked fa fa-square-check-o" data-chk-src="0:2"></span> after</p>',
       )
     end
 
-    it "handles escaped checkbox followed by real checkbox" do
-      md = <<~MD
-        \\[x] hello [x] world
-      MD
+    it "maps checkboxes in table header cells" do
+      raw = <<~MARKDOWN
+        | [ ] a | [x] b |
+        |---|---|
+        | c | d |
+      MARKDOWN
 
-      cooked = PrettyText.cook(md)
+      expect(checklist_nodes(raw).map { |node| node["data-chk-src"] }).to eq(%w[0:0 0:1])
+    end
 
-      expect(cooked.scan("chcklst-box").count).to eq(1)
-      expect(cooked).to include("[x] hello")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> world',
-      )
+    it "maps source lines through blockquotes, lists, and tables" do
+      raw = <<~MARKDOWN
+        > - [ ] quoted
+
+        | a | b |
+        |---|---|
+        | [x] no | [ ] go |
+      MARKDOWN
+
+      expect(checklist_nodes(raw).map { |node| node["data-chk-src"] }).to eq(%w[0:0 4:0 4:1])
     end
   end
 end

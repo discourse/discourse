@@ -460,6 +460,29 @@ describe PostRevisor do
       end
     end
 
+    it "rejects a stale raw snapshot inside the persistence transaction" do
+      expected_raw = post.raw
+      Post.where(id: post.id).update_all(
+        raw: "a concurrent edit",
+        cooked: "<p>a concurrent edit</p>",
+      )
+
+      result =
+        post_revisor.revise!(post.user, { raw: "a stale replacement" }, expected_raw: expected_raw)
+
+      expect(result).to eq(false)
+      expect(post.errors.full_messages).to include(I18n.t("edit_conflict"))
+      expect(post.reload.raw).to eq("a concurrent edit")
+    end
+
+    it "allows a revision when the expected raw still matches" do
+      result =
+        post_revisor.revise!(post.user, { raw: "a current replacement" }, expected_raw: post.raw)
+
+      expect(result).to eq(true)
+      expect(post.reload.raw).to eq("a current replacement")
+    end
+
     it "destroys last revision if edit is undone" do
       old_raw = post.raw
 
