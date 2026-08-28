@@ -34,8 +34,16 @@ module DiscourseAi
           nil
         end
 
+        def rag_document_sources
+          []
+        end
+
         def force_default_llm
           false
+        end
+
+        def supports_bot_user?
+          agents_supporting_bot_user.any? { |klass| self <= klass }
         end
 
         def allow_chat_channel_mentions
@@ -108,7 +116,9 @@ module DiscourseAi
             Tools::LockPost,
             Tools::DeleteTopic,
             Tools::EditPost,
+            Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
             Tools::MovePosts,
@@ -141,7 +151,9 @@ module DiscourseAi
 
           if SiteSetting.tagging_enabled
             tools << Tools::ListTags
-            tools << Tools::EditTags
+            tools << Tools::CreateTag
+            tools << Tools::EditTag
+            tools << Tools::ChangeTopicTags
           end
 
           # Image generation tools - use custom UI-configured tools
@@ -209,6 +221,24 @@ module DiscourseAi
             .each do |config|
               config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
             end
+        end
+
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            DiscourseAdminAssistant,
+          ].freeze
         end
 
         def builtin_system_agents

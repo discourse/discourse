@@ -555,6 +555,34 @@
     background: var(--token-color-surface-hovered);
   }
 
+  &__folder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: 1px dashed var(--primary-medium);
+
+    &.--open {
+      border-style: solid;
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__folder-toggle {
+    align-self: flex-start;
+  }
+
+  &__folder-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__folder-row {
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+  }
+
   &__panes {
     display: flex;
     align-items: stretch;
@@ -728,5 +756,12 @@
       left: -0.375rem;
       cursor: nwse-resize;
     }
+  }
+}
+
+.styleguide-shortcut-spellings {
+  th,
+  td {
+    padding: var(--space-1) var(--space-4) var(--space-1) 0;
   }
 }

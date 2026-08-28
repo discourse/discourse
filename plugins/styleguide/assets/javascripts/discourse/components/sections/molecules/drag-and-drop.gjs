@@ -20,6 +20,8 @@ import ExternalAxisExample from "../../examples/molecules/drag-and-drop/outside/
 import externalaxisSource from "../../examples/molecules/drag-and-drop/outside/external-axis?source=file";
 import AutoScrollExample from "../../examples/molecules/drag-and-drop/reacting/auto-scroll";
 import autoscrollSource from "../../examples/molecules/drag-and-drop/reacting/auto-scroll?source=file";
+import DwellExample from "../../examples/molecules/drag-and-drop/reacting/dwell";
+import dwellSource from "../../examples/molecules/drag-and-drop/reacting/dwell?source=file";
 import MonitorExample from "../../examples/molecules/drag-and-drop/reacting/monitor";
 import monitorSource from "../../examples/molecules/drag-and-drop/reacting/monitor?source=file";
 import ServiceExample from "../../examples/molecules/drag-and-drop/reacting/service";
@@ -308,6 +310,19 @@ export default class DragAndDrop extends Component {
           @code={{autoscrollSource}}
         >
           <AutoScrollExample />
+        </Example>
+
+        <Example
+          @title={{i18n "styleguide.sections.drag_and_drop.dwell_title"}}
+          @kind="modifier"
+          @description={{i18n
+            "styleguide.sections.drag_and_drop.dwell_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.drag_and_drop.dwell_try_this"}}
+          @note={{i18n "styleguide.sections.drag_and_drop.dwell_note"}}
+          @code={{dwellSource}}
+        >
+          <DwellExample />
         </Example>
       </Group>
 

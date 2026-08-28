@@ -463,6 +463,7 @@ pl_PL:
         unexpected_error: "wystąpił nieoczekiwany błąd"
       agents:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
+        bot_user_unsupported: "Ten agent jest używany wewnętrznie przez funkcję i nie może mieć użytkownika bota"
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
@@ -470,6 +471,7 @@ pl_PL:
         native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
         invalid_subagent_ids: "Identyfikatory podagentów muszą być listą liczb całkowitych"
         too_many_subagents: "Agent może mieć maksymalnie %{max} podagentów"
+        too_many_rag_document_sources: "Agent może mieć maksymalnie %{max} źródeł URL"
         subagent_self: "Agent nie może wybrać siebie jako podagenta"
         subagents_not_found: "Wybrane identyfikatory podagentów nie istnieją: %{ids}"
         subagent_tool_collision: "Agent z podagentami nie może skonfigurować narzędzia o nazwie spawn_agent"

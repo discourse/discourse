@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
-  describe EventsController do
+module DiscourseEvents::Events
+  describe DiscourseEvents::EventsController do
     before do
       Jobs.run_immediately!
       SiteSetting.discourse_events_enabled = true
@@ -96,7 +96,7 @@ module DiscoursePostEvent
         body = response.body
         calendar_name =
           I18n.t(
-            "discourse_calendar.calendar_subscriptions.all_events_feed_name",
+            "discourse_events.calendar_subscriptions.all_events_feed_name",
             site_title: SiteSetting.title,
           )
         expect(body).to include("BEGIN:VCALENDAR")
@@ -387,7 +387,7 @@ module DiscoursePostEvent
           expect(response.status).to eq(200)
           calendar_name =
             I18n.t(
-              "discourse_calendar.calendar_subscriptions.my_events_feed_name",
+              "discourse_events.calendar_subscriptions.my_events_feed_name",
               site_title: SiteSetting.title,
             )
           expect(response.body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
@@ -691,7 +691,7 @@ module DiscoursePostEvent
             Fabricate(
               :event,
               post: private_event_post,
-              status: DiscoursePostEvent::Event.statuses[:private],
+              status: DiscourseEvents::Events::Event.statuses[:private],
               raw_invitees: [restricted_group.name],
             )
           end

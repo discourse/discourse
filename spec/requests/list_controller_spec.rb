@@ -1864,6 +1864,20 @@ RSpec.describe ListController do
       end
     end
 
+    it "returns topics in the order specified by the topic filter" do
+      topic_1 =
+        Fabricate(:topic, bumped_at: 3.days.ago, pinned_at: 1.day.ago, pinned_globally: true)
+      topic_2 = Fabricate(:topic, bumped_at: 2.days.ago)
+      topic_3 = Fabricate(:topic, bumped_at: 1.day.ago)
+
+      get "/filter.json", params: { q: "topic:#{topic_3.id},#{topic_1.id},#{topic_2.id}" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
+        [topic_3.id, topic_1.id, topic_2.id],
+      )
+    end
+
     it "keeps query params encoded in more_topics_url when unicode usernames are enabled" do
       SiteSetting.unicode_usernames = true
 

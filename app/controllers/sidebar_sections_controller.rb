@@ -93,6 +93,62 @@ class SidebarSectionsController < ApplicationController
     render_serialized(sidebar_section, SidebarSectionSerializer)
   end
 
+  def reorder
+    SidebarSection::ReorderLinks.call(
+      service_params.deep_merge(params: { section_id: params[:id] }),
+    ) do
+      on_success { |section:| render_serialized(section.reload, SidebarSectionSerializer) }
+      on_model_not_found(:section) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_section) { render json: failed_json, status: :forbidden }
+      on_failed_policy(:order_covers_every_link) do
+        raise Discourse::InvalidParameters.new(:links_order)
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
+  end
+
+  def move_link
+    SidebarSection::MoveLink.call(
+      service_params.deep_merge(params: { source_section_id: params[:id] }),
+    ) do
+      on_success do |source_section:, target_section:|
+        sections = [source_section.reload, target_section.reload]
+        render json: {
+                 sidebar_sections:
+                   sections.map do |section|
+                     SidebarSectionSerializer.new(section, scope: guardian, root: false).as_json
+                   end,
+               }
+      end
+      on_model_not_found(:source_section) { raise Discourse::NotFound }
+      on_model_not_found(:target_section) { raise Discourse::NotFound }
+      on_model_not_found(:link) { raise Discourse::NotFound }
+      on_failed_policy(:can_edit_source_section) { render json: failed_json, status: :forbidden }
+      on_failed_policy(:can_edit_target_section) { render json: failed_json, status: :forbidden }
+      on_failed_policy(:sections_are_distinct) do
+        raise Discourse::InvalidParameters.new(:target_section_id)
+      end
+      on_failed_policy(:sections_are_custom) { raise Discourse::InvalidAccess }
+      on_failed_policy(:target_section_has_room) do |target_section:|
+        render_json_error(
+          I18n.t(
+            "activerecord.errors.models.sidebar_section.attributes.base.too_many_sidebar_urls",
+            limit: SiteSetting.max_sidebar_section_links,
+            count: target_section.sidebar_section_links.count + 1,
+          ),
+          status: :unprocessable_entity,
+        )
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
+  end
+
   def destroy
     sidebar_section = SidebarSection.find(section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)
@@ -176,10 +232,6 @@ class SidebarSectionsController < ApplicationController
     end
 
     links
-  end
-
-  def reorder_params
-    params.permit(:sidebar_section_id, links_order: [])
   end
 
   private

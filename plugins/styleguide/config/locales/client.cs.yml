@@ -13,6 +13,9 @@ cs:
   js:
     styleguide:
       title: "Průvodce styly"
+      example:
+        kind:
+          component: "Komponenta"
       categories:
         syntax: Syntaxe
         atoms: Atomy
@@ -39,6 +42,8 @@ cs:
           title: "Barvy"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          locked: "Uzamčeno"
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"

@@ -74,10 +74,17 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
         expect(agent_bot["force_default_llm"]).to eq(true)
       end
 
-      it "includes user ids for all agents in the serializer" do
+      it "includes agents using the site default LLM in the serializer" do
         Group.refresh_automatic_groups!
+        assign_fake_provider_to(:ai_default_llm_model)
 
-        agent = Fabricate(:ai_agent, enabled: true, allowed_group_ids: [bot_allowed_group.id])
+        agent =
+          Fabricate(
+            :ai_agent,
+            enabled: true,
+            allowed_group_ids: [bot_allowed_group.id],
+            default_llm: nil,
+          )
         agent.create_user!
 
         serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
@@ -86,6 +93,7 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
 
         agent_bot = bots.find { |bot| bot["id"] == agent.user_id }
         expect(agent_bot["username"]).to eq(agent.user.username)
+        expect(agent_bot["has_default_llm"]).to eq(true)
         expect(agent_bot["force_default_llm"]).to eq(false)
       end
 

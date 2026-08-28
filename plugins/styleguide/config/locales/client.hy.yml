@@ -7,6 +7,9 @@
 hy:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Բաղադրիչ"
       sections:
         typography:
           example: "Բարի գալուստ Discourse"

@@ -6,6 +6,8 @@
 
 ur:
   js:
+    ace_editor:
+      resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
     user_api_key:
       title: '"%{application_name} " کو مجاز بنائیں'
       authorize: "مجاز بنائیں"
@@ -41,8 +43,12 @@ ur:
       manage:
         access_permission_editor: "ترمیم کنندہ"
         access_permission_editor_description: "اس اکائی کے لیے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کے لیے مواد دیکھا جا سکتا ہے"
         access_permission_remove: "خارج کریں"
+        mandatory: "لازمی"
+        disallowed: "غیر مجاز"
+        required_permission_not_added: "اس %{typeName} کے لیے کم از کم ایک گرانٹی کے پاس %{permission} اجازت ہونی چاہیے"
     carousel:
       go_to_slide: "سلائیڈ %{index}پر جائیں"
       previous: "گزشتہ سلائیڈ"
@@ -2260,8 +2266,8 @@ ur:
           title: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
           cta: "دعوت کا رابطہ بنائیں"
           tip:
-            prefix: "آپ بذریعہ حجم دعوتیں بھی بھیج سکتے ہیں"
-            action: "CSV فائل اپ لوڈ ہو رہی"
+            prefix: "آپ دعوتوں کا مجموعہ بھی بھیج سکتے ہیں بزریعہ"
+            action: "CSV فائل اپ لوڈنگ"
         truncated:
           one: "پہلی دعوت دکھائی جا رہی ہیں۔"
           other: "پہلی %{count} دعوتیں دکھائی جا رہی ہیں۔"
@@ -2982,6 +2988,8 @@ ur:
       publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
+    gifs:
+      composer_title: "GIF کا اندراج"
     codemirror:
       expression:
         sections:
@@ -6235,25 +6243,20 @@ ur:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
       site_traffic_explorer:
-        pageviews: "صفحہ کے مشاہدات"
+        metric_information: "%{metric} کے بارے میں"
+        remove_filter_value: "%{value} ہٹائیں"
+        clear_all: "سبھی ہٹا دیں"
+        apply: "لاگو کریں"
         view_more: "مزید دیکھیں"
         cards:
           pages: "صفحات"
           visitors: "زائرین"
-        columns:
-          referrers: "حوالہ دہندہ"
-          countries: "ملک"
-          top_urls: "URL"
-          browsers: "براؤزر"
-          ip_addresses: "IP ایڈریس"
         filters:
           referrer: "حوالہ دہندہ"
           country: "ملک"
           browser: "براؤزر"
           ip: "IP ایڈریس"
         metrics:
-          pageviews:
-            label: "صفحہ کے مشاہدات"
           logged_in_share:
             label: "لاگ ان شدہ شراکت"
         series:
@@ -6382,7 +6385,7 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
         reports_section:
-          header_action: "مَینَیج"
+          header_action: "منتظمی"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
           add: "رپورٹ شامل کریں"
           no_data: "دکھانے کے لیے کچھ نہیں"

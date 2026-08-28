@@ -7,19 +7,48 @@
 ro:
   js:
     user_api_key:
+      title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
       deny: "Anulează"
+      logged_in_as: "Autentificat ca"
+      permissions_header: 'Aceasta va permite „%{application_name}” să:'
+      redirect_warning: "Autorizarea vă va redirecționa către"
+      expiry_notice: 'Această cheie pentru „%{application_name}” va expira pe %{expires_at}.'
+      copy_key: "Copiază cheia"
       copied: "Copiat!"
+      otp_description: 'Doriți să permiteți „%{application_name}” să acceseze acest site?'
       no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
       generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
       device:
+        title: "Autorizați o aplicație"
+        enter_code: "Introduceți codul afișat în aplicație."
         code: "Cod"
+        enter_full_code: "Introduceți codul complet pentru a autoriza această aplicație."
         continue: "Continuă"
+        invalid_code: "Ne pare rău, codul este invalid. Verificați codul și încercați din nou."
+        expired_code: "Ne pare rău, codul a expirat sau a fost deja utilizat. Solicitați un cod nou din aplicație și încercați din nou."
+        authorize_title: 'Autorizează „%{application_name}”'
+        expiry_notice: "Expiră: %{expires_at}"
+        no_expiry_warning: "Această cheie nu va expira automat. Autorizați-o doar dacă aveți încredere deplină în aplicație."
+        unregistered_app_warning: "Această aplicație nu este înregistrată sau verificată de acest site. Continuați doar dacă aveți încredere deplină în sursa codului."
+        complete: "Autorizare completă"
+        denied: "Autorizație refuzată"
+        return_to_cli: "Acum puteți reveni la terminal sau la aplicație."
     blocks:
       ghost:
         status: "Stare"
+        conditions: "Condiții"
+        arguments: "Argumente"
+        container_args: "Argumente container"
+        in_location: "în"
         hidden: "ascuns"
+        not_registered: "neînregistrat"
+        no_visible_children: "fără copii vizibili"
         failed: "eșuată"
+      ghost_reasons:
+        optional_missing_hint: "Acest bloc opțional nu este redat deoarece nu este înregistrat."
+        no_visible_children_hint: "Acest bloc container nu este redat deoarece niciunul dintre copiii săi nu este vizibil."
+        condition_failed_hint: "Acest bloc nu este redat deoarece condițiile sale au eșuat."
     access_control:
       manage:
         access_permission_editor: "Editor"
@@ -4289,19 +4318,16 @@ ro:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
       site_traffic_explorer:
-        pageviews: "Vizualizări"
+        metric_information: "Despre %{metric}"
+        remove_filter_value: "Înlătură %{value}"
+        clear_all: "Șterge tot"
+        apply: "Aplică"
         view_more: "Vezi mai multe"
         cards:
           pages: "Pagini"
           visitors: "Vizitatori"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Adresă IP"
         filters:
           ip: "Adresă IP"
-        metrics:
-          pageviews:
-            label: "Vizualizări"
         series:
           anonymous_human: "Anonimi"
       dashboard:

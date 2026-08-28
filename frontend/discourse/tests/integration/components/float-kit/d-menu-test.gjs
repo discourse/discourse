@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
@@ -22,6 +23,7 @@ import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dElement from "discourse/ui-kit/helpers/d-element";
 
@@ -1262,5 +1264,70 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert
       .dom(".fk-d-menu")
       .exists("interactive menu stays open without grace period");
+  });
+
+  test("destroys its instance when the menu itself is torn down", async function (assert) {
+    const state = new (class {
+      @tracked rendered = true;
+    })();
+
+    await render(
+      <template>
+        {{#if state.rendered}}
+          <DMenu @inline={{true}} @label="label" @content="content" />
+        {{/if}}
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists();
+
+    const menuService = getOwner(this).lookup("service:menu");
+    assert.strictEqual(menuService.registeredMenus.size, 1, "menu registered");
+
+    state.rendered = false;
+    await rerender();
+
+    assert.dom(".fk-d-menu").doesNotExist("the float is gone");
+    assert.strictEqual(
+      menuService.registeredMenus.size,
+      0,
+      "the instance is not leaked"
+    );
+  });
+
+  test("a changing triggerComponent does not kill the menu", async function (assert) {
+    const state = new (class {
+      @tracked label = "first";
+    })();
+
+    const trigger = <template>
+      <button ...attributes type="button">{{@componentArgs.expanded}}</button>
+    </template>;
+    const otherTrigger = <template>
+      <button ...attributes type="button">changed</button>
+    </template>;
+
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @content="content"
+          @triggerComponent={{if (eq state.label "first") trigger otherTrigger}}
+        />
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists("opens with the first trigger");
+
+    await click(".fk-d-menu__trigger");
+    state.label = "second";
+    await rerender();
+
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .exists("still opens after the trigger component is swapped");
   });
 });

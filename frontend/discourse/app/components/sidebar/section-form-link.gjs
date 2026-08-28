@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { modifier } from "ember-modifier";
+import { modifier as createModifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -12,6 +12,7 @@ import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
@@ -24,7 +25,7 @@ export default class SectionFormLink extends Component {
    */
   @tracked gripElement;
 
-  captureGrip = modifier((element) => {
+  captureGrip = createModifier((element) => {
     this.gripElement = element;
     return () => (this.gripElement = undefined);
   });
@@ -124,6 +125,7 @@ export default class SectionFormLink extends Component {
         <div class="input-group" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
+            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
             {{on "input" (withEventValue (fn (mut @link.name)))}}
             @type="text"
             @value={{@link.name}}
@@ -154,6 +156,12 @@ export default class SectionFormLink extends Component {
           {{#if @link.invalidValueMessage}}
             <div role="alert" aria-live="assertive" class="value warning">
               {{@link.invalidValueMessage}}
+            </div>
+          {{else if @duplicateValue}}
+            {{! Not announced assertively: nothing is wrong yet, and the row
+                still saves. }}
+            <div class="value warning duplicate-link">
+              {{i18n "sidebar.sections.custom.links.value.duplicate"}}
             </div>
           {{/if}}
         </div>

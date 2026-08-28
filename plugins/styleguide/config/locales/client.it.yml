@@ -13,6 +13,9 @@ it:
   js:
     styleguide:
       title: "Guida di stile"
+      example:
+        kind:
+          component: "Componente"
       categories:
         syntax: Sintassi
         atoms: Atomi

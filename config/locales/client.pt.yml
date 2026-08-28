@@ -4821,18 +4821,15 @@ pt:
         title: "O que é novo?"
         check_for_updates: "Procurar por atualizações"
       site_traffic_explorer:
-        pageviews: "Exibições de Página"
+        metric_information: "Acerca de %{metric}"
+        remove_filter_value: "Remover %{value}"
+        clear_all: "Limpar tudo"
+        apply: "Aplicar"
         view_more: "Ver mais"
         cards:
           visitors: "Visitantes"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Endereço IP"
         filters:
           ip: "Endereço IP"
-        metrics:
-          pageviews:
-            label: "Exibições de Página"
         series:
           anonymous_human: "Anónimo"
       dashboard:

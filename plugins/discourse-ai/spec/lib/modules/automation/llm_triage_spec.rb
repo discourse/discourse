@@ -98,6 +98,69 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(reviewable.reviewable_scores.first.reason).to eq(
       I18n.t("discourse_ai.ai_bot.flag_post.reason", reason: "bad"),
     )
+    expect(reviewable.reviewable_scores.first.context).to be_nil
+  end
+
+  it "records the automation on the reviewable score for review flags" do
+    automation = Fabricate(:automation, script: "llm_triage")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: automation,
+      )
+    end
+
+    score = ReviewablePost.last.reviewable_scores.first
+    expect(score.context).to eq("discourse_ai:triage_automation:#{automation.id}")
+  end
+
+  it "records the automation on the reviewable score for spam flags" do
+    automation = Fabricate(:automation, script: "llm_triage")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :spam,
+        automation: automation,
+      )
+    end
+
+    score = ReviewableFlaggedPost.last.reviewable_scores.first
+    expect(score.context).to eq("discourse_ai:triage_automation:#{automation.id}")
+  end
+
+  it "records the automation on the reviewable score when flagged via the flag_post tool" do
+    automation = Fabricate(:automation, script: "llm_triage")
+    ai_agent.update!(tools: ["FlagPost"])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        name: "flag_post",
+        parameters: {
+          flag_post: true,
+          reason: "Looks unsafe",
+        },
+        id: "tool_call_1",
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([tool_call, "all good"]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: automation,
+      )
+    end
+
+    score = ReviewablePost.last.reviewable_scores.first
+    expect(score.context).to eq("discourse_ai:triage_automation:#{automation.id}")
   end
 
   it "flags via tool call when the agent invokes flag_post" do

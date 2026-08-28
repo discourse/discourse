@@ -13,7 +13,7 @@ module PageObjects
       end
 
       def type_in_search(input)
-        component.find(".d-filter-controls__input").send_keys(input)
+        component.find(".d-filter-controls__input").set(input)
       end
 
       def clear_search

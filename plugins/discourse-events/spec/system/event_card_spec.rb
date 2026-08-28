@@ -23,7 +23,7 @@ describe "Event card" do
         raw:
           "[event start=\"#{2.hours.from_now.iso8601}\" end=\"#{3.hours.from_now.iso8601}\"]\n[/event]",
       )
-    DiscoursePostEvent::Event.find(post.id).update!(image_upload: upload)
+    DiscourseEvents::Events::Event.find(post.id).update!(image_upload: upload)
 
     category_page.visit(category)
 

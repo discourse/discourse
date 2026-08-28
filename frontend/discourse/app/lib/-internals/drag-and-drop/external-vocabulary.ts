@@ -84,20 +84,21 @@ export function decorateExternalSource(
 
 /**
  * Whether an incoming external drag is one of the named kinds. An empty or
- * missing filter matches every external drag.
+ * missing filter matches every external drag; callers wanting "no kinds means
+ * refuse" guard before calling.
  *
- * @param accepts - The kind filter as the consumer supplied it.
+ * @param kinds - The kind filter as the consumer supplied it.
  * @param source - The raw payload the underlying library reports.
  */
 export function matchesExternalKind(
-  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
+  kinds: ExternalDragKind | ExternalDragKind[] | undefined,
   source: NativeExternalDragPayload
 ) {
-  const kinds = makeArray(accepts);
-  if (kinds.length === 0) {
+  const list = makeArray(kinds);
+  if (list.length === 0) {
     return true;
   }
-  return kinds.some((kind) => {
+  return list.some((kind) => {
     const predicate = EXTERNAL_KIND_PREDICATES[kind];
     // Untyped callers can pass an unknown kind; it matches nothing.
     return predicate ? predicate({ source }) : false;

@@ -143,7 +143,7 @@ export default class LivestreamZoomPage extends Component {
       // nowhere to go but back to the topic the webinar belongs to.
       window.location.assign(this.topicUrl);
     } else if (event.data.state === "error") {
-      this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
+      this.errorMessage = i18n("discourse_events.livestream.zoom.load_error");
     }
   }
 
@@ -211,13 +211,13 @@ export default class LivestreamZoomPage extends Component {
 
             <DButton
               @href={{this.zoomUrl}}
-              @label="discourse_calendar.livestream.zoom.open_in_zoom"
+              @label="discourse_events.livestream.zoom.open_in_zoom"
               @icon="up-right-from-square"
             />
 
             <DButton
               @action={{this.retryZoom}}
-              @label="discourse_calendar.livestream.zoom.join"
+              @label="discourse_events.livestream.zoom.join"
               @icon="video"
               class="btn-primary"
             />
@@ -227,20 +227,20 @@ export default class LivestreamZoomPage extends Component {
         <iframe
           class="discourse-calendar-livestream-zoom-page__frame"
           src={{this.frameUrl}}
-          title={{i18n "discourse_calendar.livestream.zoom.frame_title"}}
+          title={{i18n "discourse_events.livestream.zoom.frame_title"}}
           allow="camera; microphone; autoplay; display-capture; fullscreen"
           {{this.listenForFrame}}
         ></iframe>
       {{else}}
         <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
           <p class="discourse-calendar-livestream-zoom-page__waiting">
-            {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+            {{i18n "discourse_events.livestream.zoom.too_early"}}
             <a
               href={{this.topicUrl}}
               class="raw-link"
               {{on "click" this.viewTopic}}
             >
-              {{i18n "discourse_calendar.livestream.zoom.view_topic"}}
+              {{i18n "discourse_events.livestream.zoom.view_topic"}}
             </a>
           </p>
 

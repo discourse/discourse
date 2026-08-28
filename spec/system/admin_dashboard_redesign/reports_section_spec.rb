@@ -4,7 +4,12 @@ describe "Admin Dashboard Redesign | Reports section" do
   fab!(:current_user, :admin)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboardReports.new }
-  let(:modal) { PageObjects::Components::ManageReportsModal.new }
+  let(:modal) do
+    PageObjects::Components::ManageableRowListModal.new(
+      ".manage-reports",
+      "admin_js.admin.dashboard.reports_section.modal.counter",
+    )
+  end
 
   before do
     SiteSetting.dashboard_improvements = true
@@ -55,7 +60,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
 
-    modal.drag_report("core_report:topics", "core_report:signups")
+    modal.drag_row("core_report:topics", "core_report:signups")
 
     try_until_success do
       expect(modal.enabled_identifiers).to eq(%w[core_report:topics core_report:signups])

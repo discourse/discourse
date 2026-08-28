@@ -179,14 +179,20 @@ module Chat
       end
 
       # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
+      return upload_filename_excerpt if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
       PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links:, keep_mentions: true)
     end
 
+    def excerpt_for_display
+      return upload_filename_excerpt if only_uploads?
+
+      excerpt || build_excerpt
+    end
+
     def cooked_for_excerpt
-      (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
+      (cooked.blank? && uploads.present?) ? "<p>#{upload_filename_excerpt}</p>" : cooked
     end
 
     def push_notification_excerpt
@@ -414,6 +420,10 @@ module Chat
     end
 
     private
+
+    def upload_filename_excerpt
+      ERB::Util.html_escape(uploads.first.original_filename.truncate(EXCERPT_LENGTH, omission: ""))
+    end
 
     def urls_as_links(urls)
       html =

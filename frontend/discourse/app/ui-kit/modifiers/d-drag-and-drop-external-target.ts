@@ -16,7 +16,7 @@ import {
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
 import type { Axis } from "discourse/lib/geometry";
 
-/** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
+/** What a synchronous gate (`canDrop`, a `dropEffect` function) is asked about. */
 export type ExternalDropTargetFeedback =
   DropTargetKernelFeedback<ExternalDragPayload>;
 

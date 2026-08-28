@@ -194,6 +194,30 @@
     &.--staff {
       background: var(--primary-medium);
     }
+
+    &.--group-0 {
+      background: var(--quaternary);
+    }
+
+    &.--group-1 {
+      background: var(--love);
+    }
+
+    &.--group-2 {
+      background: var(--success);
+    }
+
+    &.--group-3 {
+      background: var(--danger);
+    }
+
+    &.--group-4 {
+      background: var(--success-medium);
+    }
+
+    &.--group-5 {
+      background: var(--danger-medium);
+    }
   }
 
   &__bar-share {

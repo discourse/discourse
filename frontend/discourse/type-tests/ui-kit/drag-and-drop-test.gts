@@ -131,7 +131,7 @@ const Positives = <template>
   {{! Scrolling for a drag from outside the window is a separate opt-in, and
       speaks the kind vocabulary rather than the drag types beside it }}
   <div
-    {{dDragAndDropAutoScroll types="card" accepts=(array "urls" "files")}}
+    {{dDragAndDropAutoScroll types="card" externalKinds=(array "urls" "files")}}
   ></div>
 
   {{! A separator takes numbers or measurement functions for its size }}

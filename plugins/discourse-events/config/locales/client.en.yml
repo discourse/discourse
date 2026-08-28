@@ -1,11 +1,10 @@
 en:
   admin_js:
     admin:
-      calendar: "Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Events"
+          discourse_events: "Events"
       web_hooks:
         calendar_event:
           group_name: "Calendar Event"
@@ -26,7 +25,8 @@ en:
           fields:
             topic_id:
               label: Topic ID
-    discourse_calendar:
+    discourse_events:
+      title: "Events"
       livestream:
         zoom:
           join: "Join Zoom"
@@ -39,7 +39,6 @@ en:
           rsvp_to_event: "RSVP to the event to start chatting"
           rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
           rsvp_body: "Connect with other attendees before, during, and after the event."
-      invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Events - All events"
         all_events_description: "All forum events"
@@ -335,6 +334,10 @@ en:
         week: "Week"
         day: "Day"
         year: "Year"
+    # Persisted verbatim in notifications.data.message on existing sites, so this key
+    # cannot move with the rest of the namespace without blanking historic notifications.
+    discourse_calendar:
+      invite_user_notification: "%{username} invited you to: %{description}"
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"

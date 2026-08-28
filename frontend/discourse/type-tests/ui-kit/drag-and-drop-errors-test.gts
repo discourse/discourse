@@ -53,7 +53,7 @@ const Negatives = <template>
   <div {{dDragAndDropAutoScroll target="document"}}></div>
 
   {{! @glint-expect-error - auto-scroll filters external drags by the same closed set of kinds the external target does }}
-  <div {{dDragAndDropAutoScroll accepts="images"}}></div>
+  <div {{dDragAndDropAutoScroll externalKinds="images"}}></div>
 
   {{! @glint-expect-error - adoption is described by a predicate, not by the external kind vocabulary }}
   <li {{dDragAndDropTarget adopts="urls"}}></li>

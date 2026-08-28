@@ -176,6 +176,22 @@ describe Jobs::DigestRagUpload do
           expect(indexed_content).to eq("before 猫  after 犬")
         end
       end
+
+      context "when the document produces a blank trailing chunk" do
+        let(:document_file) do
+          StringIO.new(
+            "[[metadata {\"source_url\":\"https://example.com\"}]]\n#{"some text " * 200}\n",
+          )
+        end
+
+        it "only creates fragments containing text" do
+          job.execute(upload_id: upload.id, target_id: agent.id, target_type: agent.class.to_s)
+
+          fragments = RagDocumentFragment.where(upload:, target: agent).pluck(:fragment)
+
+          expect(fragments).to all(be_present)
+        end
+      end
     end
 
     it "doesn't generate new fragments if we already processed the upload" do

@@ -34,12 +34,35 @@ export default class WorkflowsUserModal extends Component {
     try {
       await ajax("/discourse-workflows/modal-responses", {
         type: "POST",
-        data: { action_id: button.action_id },
+        data: {
+          action_id: button.action_id,
+          modal_id: this.args.model.modal_id,
+        },
       });
-      this.args.closeModal();
     } catch (e) {
+      // Deliberately unguarded: the dialog is global, unlike closeModal below.
       popupAjaxError(e);
       this.submitting = false;
+      return;
+    }
+
+    // While awaiting, the server's close_modal broadcast may have already
+    // closed this modal — and the workflow may have shown the next one.
+    // Closing again here would close that new modal instead.
+    if (!this.isDestroying && !this.isDestroyed) {
+      this.args.closeModal();
+    }
+  }
+
+  @action
+  propagateDismissal() {
+    // Not while a response is in flight: if it fails, the copies in the
+    // other tabs are the only place the modal can still be answered.
+    if (this.args.model.modal_id && !this.submitting) {
+      ajax("/discourse-workflows/modal-dismissals", {
+        type: "POST",
+        data: { modal_id: this.args.model.modal_id },
+      }).catch(() => {});
     }
   }
 
@@ -47,6 +70,7 @@ export default class WorkflowsUserModal extends Component {
     <DModal
       @title={{@model.title}}
       @closeModal={{@closeModal}}
+      @beforeClose={{this.propagateDismissal}}
       class="workflows-user-modal"
     >
       <:body>

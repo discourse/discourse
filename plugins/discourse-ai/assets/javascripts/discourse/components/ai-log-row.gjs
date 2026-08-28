@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -44,6 +46,10 @@ export default class AiLogRow extends Component {
 
   get statusClass() {
     return this.status === "successful" ? "--success" : "--failed";
+  }
+
+  get statusIcon() {
+    return this.status === "successful" ? "circle-check" : "circle-xmark";
   }
 
   get featureName() {
@@ -121,21 +127,28 @@ export default class AiLogRow extends Component {
     <tr class="d-table__row ai-logs__row" data-log-id={{@log.id}}>
       <td class="d-table__cell ai-logs__col-outcome">
         <div class="ai-logs__status-cell">
-          <span
-            class="ai-logs__status-dot {{this.statusClass}}"
-            role="img"
-            title={{this.statusLabel}}
-            aria-label={{this.statusLabel}}
-          ></span>
+          <DTooltip @content={{this.statusLabel}}>
+            <:trigger>
+              {{dIcon
+                this.statusIcon
+                class=(dConcatClass "ai-logs__status-icon" this.statusClass)
+                aria-label=this.statusLabel
+              }}
+            </:trigger>
+          </DTooltip>
+
           {{#if @log.has_retries}}
-            <span
-              class="ai-logs__flag"
-              role="img"
-              title={{i18n "discourse_ai.logs.retried"}}
-              aria-label={{i18n "discourse_ai.logs.retried"}}
-            >
-              {{dIcon "arrows-rotate"}}
-            </span>
+            <DTooltip @content={{i18n "discourse_ai.logs.retried"}}>
+              <:trigger>
+                <span
+                  class="ai-logs__flag"
+                  role="img"
+                  aria-label={{i18n "discourse_ai.logs.retried"}}
+                >
+                  {{dIcon "arrows-rotate"}}
+                </span>
+              </:trigger>
+            </DTooltip>
           {{/if}}
         </div>
       </td>
@@ -194,11 +207,11 @@ export default class AiLogRow extends Component {
           {{/unless}}
         </div>
       </td>
-      <td class="d-table__cell ai-logs__col-actions --controls">
+      <td class="d-table__cell ai-logs__col-actions">
         <DButton
-          class="btn-flat"
-          @icon="ellipsis"
+          class="btn-default btn-small"
           @action={{fn @onOpen @log.id}}
+          @icon="far-file-lines"
           @title="discourse_ai.logs.view_details"
           @ariaLabel="discourse_ai.logs.view_details"
         />

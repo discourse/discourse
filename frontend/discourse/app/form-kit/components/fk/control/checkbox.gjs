@@ -1,6 +1,5 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
@@ -10,7 +9,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FKControlCheckbox extends FKBaseControl {
   static controlType = "checkbox";
-  @service siteSettings;
 
   @action
   handleInput(event) {
@@ -31,11 +29,9 @@ export default class FKControlCheckbox extends FKBaseControl {
         ...attributes
         {{on "change" this.handleInput}}
       />
-      {{#if this.siteSettings.enable_new_checkbox_style}}
-        <span class="form-kit__control-checkbox-checkmark">{{dIcon
-            "check"
-          }}</span>
-      {{/if}}
+      <span class="form-kit__control-checkbox-checkmark">{{dIcon
+          "check"
+        }}</span>
       <span class="form-kit__control-checkbox-content">
         {{#if @field.showControlTitle}}
           <span class="form-kit__control-checkbox-title">

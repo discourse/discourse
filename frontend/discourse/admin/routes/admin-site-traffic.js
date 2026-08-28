@@ -21,8 +21,6 @@ const FILTER_KEYS = [
   "ip",
 ];
 
-const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
-
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
   @service loadingSlider;
 
@@ -56,7 +54,6 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
           ...traffic,
           chart_start_date: requestParams.start_date,
           chart_end_date: requestParams.end_date,
-          chart_traffic_types: this.#selectedTrafficTypes(params.traffic_type),
         },
         fetchError: null,
       }))
@@ -67,6 +64,11 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
             ? "timeout"
             : "unexpected",
       }));
+  }
+
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.loadTraffic(model);
   }
 
   @action
@@ -132,22 +134,38 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     };
 
     for (const key of FILTER_KEYS) {
-      if (params[key] !== null && params[key] !== undefined) {
-        requestParams[key] = params[key];
+      const values = this.#filterValues(key, params[key]);
+      if (values.length) {
+        requestParams[key] = values;
       }
     }
 
     return requestParams;
   }
 
-  #selectedTrafficTypes(value) {
-    if (!value) {
-      return TRAFFIC_TYPES;
+  #filterValues(key, value) {
+    if (value === null || value === undefined) {
+      return [];
     }
 
-    const selected = value.split(",");
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
-    );
+    if (value === "") {
+      return key === "referrer" ? [value] : [];
+    }
+
+    if (value.startsWith("[")) {
+      try {
+        const values = JSON.parse(value);
+        if (
+          Array.isArray(values) &&
+          values.every((item) => typeof item === "string")
+        ) {
+          return values;
+        }
+      } catch {
+        return [];
+      }
+    }
+
+    return key === "traffic_type" ? value.split(",") : [value];
   }
 }

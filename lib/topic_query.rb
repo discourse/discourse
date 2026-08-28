@@ -324,7 +324,10 @@ class TopicQuery
 
     create_list(
       :filter,
-      { include_filter_option_info: @options[:include_filter_option_info].to_s != "false" },
+      {
+        include_filter_option_info: @options[:include_filter_option_info].to_s != "false",
+        unordered: topics_filter.topic_ids.present?,
+      },
       results,
     )
   end

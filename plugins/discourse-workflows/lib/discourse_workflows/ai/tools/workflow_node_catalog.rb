@@ -194,6 +194,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:topic_moderation" => [
+            {
+              name: "Unlist the trigger topic",
+              parameters: {
+                operation: "unlist_topic",
+                topic_id: "={{ $json.topic.id }}",
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
         QUERY_STOP_WORDS = %w[
@@ -229,6 +239,8 @@ module DiscourseWorkflows
           "action:flag_post" =>
             "flag spam moderation review queue reviewable hide delete silence triage report",
           "action:topic_category" => "category recategorize move topic uncategorized",
+          "action:topic_moderation" =>
+            "moderate moderation unlist unlisted topic visibility invisible",
         }.freeze
 
         def self.signature

@@ -9,6 +9,8 @@ describe "Search" do
   fab!(:post2) { Fabricate(:post, topic: topic2, raw: "This is another test post in a test topic") }
 
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
+  let(:topic_list_header) { PageObjects::Components::TopicListHeader.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   describe "when using full page search on mobile" do
     before do
@@ -253,10 +255,9 @@ describe "Search" do
     it "allows the user to perform bulk actions on the topic search results" do
       visit("/search?q=test")
       expect(page).to have_content(topic.title)
-      find(".search-info .bulk-select").click
-      find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
-      find(".search-info .bulk-select-topics-dropdown-trigger").click
-      PageObjects::Components::TopicListHeader.new.click_bulk_button("manage-tags")
+
+      search_page.bulk_select_result_and_open_dropdown(topic)
+      topic_list_header.click_bulk_button("manage-tags")
       manage_tags_modal = PageObjects::Modals::ManageTags.new
       manage_tags_modal.add_tags(tag1.name)
       manage_tags_modal.click_confirm
@@ -269,17 +270,24 @@ describe "Search" do
       visit("/search?q=This%20is%20a%20test%20post")
       expect(page).to have_content(post.raw)
 
-      find(".search-info .bulk-select").click
-      find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
-      find(".search-info .bulk-select-topics-dropdown-trigger").click
-
-      find(".bulk-select-topics-dropdown-content .delete-posts").click
-
-      find(".dialog-content")
-      click_button "OK"
+      search_page.bulk_select_result_and_open_dropdown(topic)
+      topic_list_header.click_bulk_button("delete-posts")
+      dialog.click_ok
 
       expect(page).to have_no_content(post.raw)
       expect(Post.with_deleted.find_by(id: post.id).deleted_at).to be_present
+    end
+
+    it "lets the user bulk delete the whole topic from a reply search result" do
+      visit("/search?q=This%20is%20a%20test%20post")
+      expect(page).to have_content(post.raw)
+
+      search_page.bulk_select_result_and_open_dropdown(topic)
+      topic_list_header.click_bulk_button("delete-topics")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(page).to have_no_content(post.raw)
+      expect(topic.reload).to be_trashed
     end
   end
 

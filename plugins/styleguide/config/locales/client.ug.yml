@@ -13,6 +13,9 @@ ug:
   js:
     styleguide:
       title: "ئۇسلۇب يېتەكچىسى"
+      example:
+        kind:
+          component: "بۆلەك"
       categories:
         syntax: گرامماتىكىسى
         atoms: ئاتوم
