@@ -164,4 +164,13 @@
   &__row.d-reorderable-list__row[draggable="true"] {
     cursor: auto;
   }
+
+  /* A row that cannot move renders no grip at all, so its text would start at
+     the row's own edge while a movable neighbour's starts past the grip, and
+     the column reads ragged. Reserve the grip's footprint instead: 24px is the
+     size the shared list gives it, plus the row's own gap. */
+
+  &__row.d-reorderable-list__row:not(:has(.d-reorderable-list__handle)) {
+    padding-inline-start: calc(var(--space-6) + 24px + var(--space-3));
+  }
 }
