@@ -89,6 +89,7 @@ module DiscourseWorkflows
           topic = ::Topic.find(config["topic_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
+          ensure_can_tag_personal_message!(topic, actor, guardian)
 
           names = normalize_tag_names(config["tag_names"])
           if names.empty?
@@ -105,6 +106,18 @@ module DiscourseWorkflows
             tag_topic!(topic, guardian, names, append: true)
             { tag_names: names, topic_id: topic.id }
           end
+        end
+
+        def ensure_can_tag_personal_message!(topic, actor, guardian)
+          return if !topic.private_message? || guardian.can_tag_pms?
+          return if !SiteSetting.tagging_enabled || !guardian.authenticated?
+
+          raise_node_error!(
+            I18n.t(
+              "discourse_workflows.errors.topic_tags.personal_message_not_allowed",
+              username: actor.username,
+            ),
+          )
         end
 
         def tag_topic!(topic, guardian, tag_names, append: false)

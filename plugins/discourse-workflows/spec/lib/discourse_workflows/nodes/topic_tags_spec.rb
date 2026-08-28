@@ -135,6 +135,24 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
       )
     end
 
+    it "explains how to grant the actor permission to tag personal messages" do
+      admin = Fabricate(:admin)
+      personal_message = Fabricate(:private_message_topic)
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      config = {
+        "operation" => "add",
+        "topic_id" => personal_message.id.to_s,
+        "tag_names" => "onboarding-initiated",
+        "actor_username" => admin.username,
+      }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        "'#{admin.username}' cannot tag personal messages. Add one of their groups to the " \
+          "'pm_tags_allowed_for_groups' site setting.",
+      )
+    end
+
     context "with restricted tags" do
       fab!(:regular_user, :user)
       fab!(:admin)
