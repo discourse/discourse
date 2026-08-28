@@ -25,6 +25,8 @@ module Reports::NewContributors
 
       data.each { |key, value| report.data << { x: key, y: value } }
 
+      return if report.guardian.blank?
+
       users =
         User
           .real

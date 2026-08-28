@@ -583,6 +583,7 @@ RSpec.describe Report do
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
           limit: 2,
+          guardian: Discourse.system_user.guardian,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -598,12 +599,28 @@ RSpec.describe Report do
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           limit: 1,
+          guardian: Discourse.system_user.guardian,
         )
 
       expect(summary_report.related_items[:users].map { |item| item[:user][:username] }).to eq(
         [second_signup.username],
       )
       expect(summary_report.related_items_totals).to eq(users: 2)
+    end
+
+    it "skips related items when the report has no guardian" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
     end
   end
 
@@ -656,6 +673,7 @@ RSpec.describe Report do
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
           limit: 2,
+          guardian: Discourse.system_user.guardian,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -664,6 +682,25 @@ RSpec.describe Report do
         [another_current_contributor.username, current_contributor.username],
       )
       expect(report.related_items_totals).to eq(users: 2)
+    end
+
+    it "skips related items when the report has no guardian" do
+      contributor = Fabricate(:user)
+      contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 1, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 1, 12),
+      )
+
+      report =
+        Report.find(
+          "new_contributors",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
     end
   end
 

@@ -10,7 +10,7 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     topic
   end
 
-  def build(filters: {}, guardian: nil)
+  def build(filters: {}, guardian: Discourse.system_user.guardian)
     Report.find(
       "accepted_solutions",
       start_date: 2.days.ago,
@@ -78,6 +78,16 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
       [in_range_topic.title],
     )
+  end
+
+  it "skips related items when the report has no guardian" do
+    solved_topic_in(Fabricate(:category))
+
+    report = build(guardian: nil)
+
+    expect(report.total).to eq(1)
+    expect(report.related_items).to be_nil
+    expect(report.related_items_totals).to be_nil
   end
 
   it "only includes solved topic details visible to the report guardian" do

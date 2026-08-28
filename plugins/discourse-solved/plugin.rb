@@ -208,7 +208,9 @@ after_initialize do
           .count
     end
 
-    guardian = report.guardian || Guardian.new
+    next if report.guardian.blank?
+
+    guardian = report.guardian
     solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
 
     report.related_items_totals = { solved_topics: solved_topics.count }

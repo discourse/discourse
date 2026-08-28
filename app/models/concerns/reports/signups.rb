@@ -22,6 +22,8 @@ module Reports::Signups
         report_about report, User.real, :count_by_signup_date
       end
 
+      return if report.guardian.blank?
+
       users = User.real.where(created_at: report.start_date..report.end_date)
       users =
         users.joins(:group_users).where(group_users: { group_id: group_filter }) if group_filter
