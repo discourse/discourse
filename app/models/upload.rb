@@ -378,7 +378,8 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") ||
+      %w[svg ico].include?(extension)
 
     if color.nil?
       local_path ||=

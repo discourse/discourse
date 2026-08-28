@@ -936,6 +936,12 @@ RSpec.describe Upload do
       upload.update!(url: Discourse.store.store_upload(file, upload))
       upload
     end
+    let(:ico_image) do
+      upload = Fabricate(:upload, extension: "ico")
+      file = file_from_fixtures("smallest.ico")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -981,6 +987,11 @@ RSpec.describe Upload do
       cached_tiny_color = tiny_image.dominant_color
 
       expect(cached_tiny_color).to eq(calculated_tiny_color)
+    end
+
+    it "stores an empty dominant color for ICO images" do
+      expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(ico_image.dominant_color).to eq("")
     end
 
     it "can be backfilled" do
