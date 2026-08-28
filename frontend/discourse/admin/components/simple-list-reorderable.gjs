@@ -95,8 +95,8 @@ export default class SimpleList extends Component {
         @onRemove={{this.removeValue}}
         @tag="div"
         @itemTag="div"
-        @rowClass="value --reorderable"
-        class="values --reorderable"
+        @rowClass="value"
+        class="values"
       >
         <:row as |value controls|>
           {{#if this.isPredefinedList}}
@@ -127,9 +127,9 @@ export default class SimpleList extends Component {
               @onChange={{this.addValue}}
               @valueProperty={{@setting.computedValueProperty}}
               @nameProperty={{@setting.computedNameProperty}}
-              {{! Without a `none` label the closed-set picker renders as an
-                empty box under the list. The free-text branch below shows the
-                same string as its placeholder. }}
+              {{! Without an empty-selection label the closed-set picker renders
+                as an empty box under the list. The free-text branch below shows
+                the same string as its placeholder. }}
               @options={{hash
                 castInteger=true
                 allowAny=false

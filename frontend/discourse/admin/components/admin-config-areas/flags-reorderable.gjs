@@ -36,7 +36,7 @@ export default class AdminConfigAreasFlags extends Component {
 
   rowClass = (flag) =>
     dConcatClass(
-      "d-table__row admin-flag-item --reorderable",
+      "d-table__row admin-flag-item",
       flag.name_key,
       this.pendingIds.has(flag.id) ? null : "saved"
     );

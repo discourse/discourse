@@ -71,17 +71,17 @@ export default class SidebarSectionFormLinksReorderable extends Component {
         @role="table"
         @itemTag="div"
         @itemRole="row"
-        @rowClass="sidebar-section-form-link row-wrapper --reorderable"
+        @rowClass="sidebar-section-form-link row-wrapper"
         aria-labelledby="section-links-label"
         aria-rowcount={{@activeLinks.length}}
-        class="sidebar-section-form__links-wrapper --reorderable"
+        class="sidebar-section-form__links-wrapper"
       >
         <:header>
           {{! The list element around this block carries the table role
                 through its role argument, which the static rule cannot
                 see from here. }}
           {{! eslint-disable-next-line ember/template-require-context-role }}
-          <div class="row-wrapper header --reorderable" role="row">
+          <div class="row-wrapper header" role="row">
             <div
               class="input-group link-icon"
               role="columnheader"
@@ -150,10 +150,10 @@ export default class SidebarSectionFormLinksReorderable extends Component {
           @role="table"
           @itemTag="div"
           @itemRole="row"
-          @rowClass="sidebar-section-form-link row-wrapper --reorderable"
+          @rowClass="sidebar-section-form-link row-wrapper"
           aria-labelledby="section-secondary-links-label"
           aria-rowcount={{@activeSecondaryLinks.length}}
-          class="sidebar-section-form__links-wrapper --secondary --reorderable"
+          class="sidebar-section-form__links-wrapper --secondary"
         >
           <:row as |link controls|>
             <SectionFormLinkReorderable

@@ -41,8 +41,8 @@ export default class ConfigureMenu extends Component {
         @key="id"
         @label={{this.sectionLabel}}
         @onMove={{this.handleMove}}
-        @rowClass="db-configure__row --reorderable"
-        class="db-configure__list --reorderable"
+        @rowClass="db-configure__row"
+        class="db-configure__list"
         aria-label={{i18n "admin.dashboard.configure.menu_title"}}
       >
         <:row as |section|>
