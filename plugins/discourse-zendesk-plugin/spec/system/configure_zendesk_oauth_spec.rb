@@ -31,11 +31,11 @@ RSpec.describe "Configure Zendesk OAuth" do
 
     expect(settings_page).to have_setting_description(
       "zendesk_oauth_client_id",
-      "Client ID for Zendesk OAuth authentication. Configure both OAuth settings to replace API token authentication. The OAuth client must allow the tickets:read, tickets:write, users:read, and users:write scopes. Use a dedicated service account to create the client if attribution matters.",
+      "The unique client ID provided by your Zendesk application, used for the authentication process.",
     )
     expect(settings_page).to have_setting_description(
       "zendesk_oauth_client_secret",
-      "Client secret for Zendesk OAuth authentication. Configure it together with Zendesk OAUTH client ID. When both settings are present, OAuth takes precedence over legacy API token authentication.",
+      "Client secret of your Zendesk application.",
     )
     expect(settings_page).to have_secret_setting_input("zendesk_oauth_client_secret")
   end
