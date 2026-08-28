@@ -44,16 +44,13 @@ module DiscourseVips
     end
 
     def self.send_command(request, timeout:)
-      socket = UNIXSocket.new(worker_socket_path)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout + WORKER_GRACE_SECONDS
+      socket = connect_socket(deadline:)
 
-      socket.write(MessagePack.pack(request))
+      write_request(socket, MessagePack.pack(request), deadline:)
       socket.close_write
 
-      if !IO.select([socket], nil, nil, timeout + WORKER_GRACE_SECONDS)
-        raise WorkerUnavailable, "libvips worker did not respond"
-      end
-
-      payload = socket.read.to_s
+      payload = read_response(socket, deadline:)
       raise WorkerUnavailable, "libvips worker returned no response" if payload.empty?
 
       MessagePack.unpack(payload)
@@ -68,6 +65,58 @@ module DiscourseVips
       socket&.close unless socket&.closed?
     end
     private_class_method :send_command
+
+    def self.connect_socket(deadline:)
+      Addrinfo.unix(worker_socket_path).connect(timeout: remaining_time(deadline))
+    rescue IO::TimeoutError
+      raise WorkerUnavailable, "libvips worker did not respond"
+    end
+    private_class_method :connect_socket
+
+    def self.write_request(socket, request, deadline:)
+      offset = 0
+      while offset < request.bytesize
+        written = socket.write_nonblock(request.byteslice(offset..), exception: false)
+        if written == :wait_writable
+          wait_for_socket(socket, deadline:, readable: false)
+        else
+          offset += written
+        end
+      end
+    end
+    private_class_method :write_request
+
+    def self.read_response(socket, deadline:)
+      response = +""
+      loop do
+        chunk = socket.read_nonblock(16 * 1024, exception: false)
+        return response if chunk.nil?
+
+        if chunk == :wait_readable
+          wait_for_socket(socket, deadline:, readable: true)
+        else
+          response << chunk
+        end
+      end
+    end
+    private_class_method :read_response
+
+    def self.wait_for_socket(socket, deadline:, readable:)
+      timeout = remaining_time(deadline)
+      ready =
+        readable ? IO.select([socket], nil, nil, timeout) : IO.select(nil, [socket], nil, timeout)
+
+      raise WorkerUnavailable, "libvips worker did not respond" if !ready
+    end
+    private_class_method :wait_for_socket
+
+    def self.remaining_time(deadline)
+      remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      raise WorkerUnavailable, "libvips worker did not respond" if !remaining.positive?
+
+      remaining
+    end
+    private_class_method :remaining_time
 
     def self.worker_socket_path
       return WorkerProcess.shared_socket_path if @shared_worker

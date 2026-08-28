@@ -41,6 +41,32 @@ RSpec.describe DiscourseVips do
 
       expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
     end
+
+    it "times out when the worker sends an incomplete response" do
+      Dir.mktmpdir do |directory|
+        socket_path = File.join(directory, "socket")
+        server = UNIXServer.new(socket_path)
+        server_thread =
+          Thread.new do
+            connection = server.accept
+            connection.read
+            connection.write("\x81")
+            sleep 3
+          ensure
+            connection&.close
+          end
+
+        DiscourseVips::Client.stubs(:worker_socket_path).returns(socket_path)
+
+        expect {
+          described_class.dominant_color(input_path: "unused", timeout: 0.01)
+        }.to raise_error(DiscourseVips::WorkerUnavailable, "libvips worker did not respond")
+      ensure
+        server&.close
+        server_thread&.kill
+        server_thread&.join
+      end
+    end
   end
 
   it "records image-processing instrumentation" do
