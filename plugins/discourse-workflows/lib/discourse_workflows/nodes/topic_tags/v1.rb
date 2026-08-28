@@ -89,12 +89,12 @@ module DiscourseWorkflows
           topic = ::Topic.find(config["topic_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           guardian = actor.guardian
-          ensure_can_tag_personal_message!(topic, actor, guardian)
 
           names = normalize_tag_names(config["tag_names"])
           if names.empty?
             raise_node_error!(I18n.t("discourse_workflows.errors.topic_tags.no_tag_names"))
           end
+          ensure_can_tag_personal_message!(topic, actor)
 
           case config["operation"]
           when "remove"
@@ -108,7 +108,8 @@ module DiscourseWorkflows
           end
         end
 
-        def ensure_can_tag_personal_message!(topic, actor, guardian)
+        def ensure_can_tag_personal_message!(topic, actor)
+          guardian = actor.guardian
           return if !topic.private_message? || guardian.can_tag_pms?
           return if !SiteSetting.tagging_enabled || !guardian.authenticated?
 

@@ -127,7 +127,15 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
     end
 
     it "raises when no tag names are provided" do
-      config = { "operation" => "add", "topic_id" => topic.id.to_s, "tag_names" => "" }
+      admin = Fabricate(:admin)
+      personal_message = Fabricate(:private_message_topic)
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      config = {
+        "operation" => "add",
+        "topic_id" => personal_message.id.to_s,
+        "tag_names" => "",
+        "actor_username" => admin.username,
+      }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
