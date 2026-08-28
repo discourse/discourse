@@ -307,7 +307,9 @@ CREATE TABLE public.admin_dashboard_reports (
     source character varying NOT NULL,
     identifier character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    rows integer DEFAULT 1 NOT NULL,
+    cols integer DEFAULT 1 NOT NULL
 );
 
 
@@ -23422,7 +23424,9 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260828145150'),
+('20260827064809'),
 ('20260826124054'),
+('20260826090055'),
 ('20260824091843'),
 ('20260824072257'),
 ('20260824051214'),

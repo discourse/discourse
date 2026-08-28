@@ -2,6 +2,7 @@
 
 .db-report {
   &__card {
+    position: relative;
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius-large);
     padding: var(--space-4);
@@ -13,8 +14,105 @@
     gap: var(--space-2);
 
     @include viewport.until(sm) {
-      position: relative;
       padding-inline: 0;
+    }
+
+    &.--wide {
+      grid-column: 1 / -1;
+    }
+
+    &.--wide,
+    &.--rows-2,
+    &.--rows-3,
+    &.--rows-4 {
+      .db-report__chart {
+        overflow-y: auto;
+      }
+    }
+
+    @for $rows from 2 through 4 {
+      &.--rows-#{$rows} {
+        grid-row: span #{$rows};
+        height: auto;
+      }
+    }
+
+    &.--floating {
+      position: fixed;
+      z-index: 100;
+    }
+
+    &.--resize-placeholder {
+      margin: calc(var(--space-2) * -1);
+      border-style: dashed;
+      border-color: var(--tertiary);
+      background: var(--tertiary-low);
+
+      &:not(.--rows-2, .--rows-3, .--rows-4) {
+        height: calc(320px + var(--space-2) * 2);
+      }
+    }
+
+    &:hover .db-report__resize-handle,
+    &:focus-within .db-report__resize-handle {
+      opacity: 1;
+    }
+  }
+
+  &__resize-handle {
+    position: absolute;
+    bottom: 2px;
+    width: 12px;
+    height: 12px;
+    opacity: 0.35;
+    transition: opacity 0.15s ease;
+
+    &.--se {
+      /*! rtl:ignore */
+      right: 2px;
+
+      /*! rtl:ignore */
+      cursor: nwse-resize;
+
+      /*! rtl:ignore */
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+
+      /*! rtl:ignore */
+      background: repeating-linear-gradient(
+        135deg,
+        var(--primary-medium) 0,
+        var(--primary-medium) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    }
+
+    &.--sw {
+      /*! rtl:ignore */
+      left: 2px;
+
+      /*! rtl:ignore */
+      cursor: nesw-resize;
+
+      /*! rtl:ignore */
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+
+      /*! rtl:ignore */
+      background: repeating-linear-gradient(
+        45deg,
+        var(--primary-medium) 0,
+        var(--primary-medium) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    }
+
+    &.--resizing {
+      opacity: 1;
+    }
+
+    @include viewport.until(sm) {
+      display: none;
     }
   }
 

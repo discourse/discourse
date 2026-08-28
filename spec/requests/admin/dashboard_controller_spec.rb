@@ -2375,6 +2375,81 @@ RSpec.describe Admin::DashboardController do
         expect(rows).to eq([["new_a", 0], ["new_b", 1]])
       end
 
+      it "persists the row count and column span supplied per item, defaulting to 1 when omitted" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                { source: "fake_source", identifier: "a", rows: 3, cols: 2 },
+                { source: "fake_source", identifier: "b" },
+              ],
+            }
+
+        expect(response.status).to eq(204)
+        rows = AdminDashboardReport.order(:position).pluck(:identifier, :rows, :cols)
+        expect(rows).to eq([["a", 3, 2], ["b", 1, 1]])
+      end
+
+      it "persists a single-row card that spans the full width" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 1, cols: 2 }],
+            }
+
+        expect(response.status).to eq(204)
+        record = AdminDashboardReport.find_by(identifier: "a")
+        expect(record.rows).to eq(1)
+        expect(record.cols).to eq(2)
+      end
+
+      it "rejects an item with an out-of-range row count" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                {
+                  source: "fake_source",
+                  identifier: "a",
+                  rows: AdminDashboardReport::MAX_ROWS + 1,
+                },
+              ],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects an item with an out-of-range column count" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                {
+                  source: "fake_source",
+                  identifier: "a",
+                  cols: AdminDashboardReport::MAX_COLS + 1,
+                },
+              ],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a multi-row item that does not span the full width" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 2, cols: 1 }],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
       it "accepts an empty layout (removes everything)" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
         AdminDashboardReport.create!(source: "fake_source", identifier: "y", position: 0)
