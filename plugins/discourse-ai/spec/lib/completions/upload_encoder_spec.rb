@@ -7,6 +7,8 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
   let(:jpg) { plugin_file_from_fixtures("1x1.jpg") }
   let(:large_jpg) { plugin_file_from_fixtures("100x100.jpg") }
   let(:webp) { plugin_file_from_fixtures("1x1.webp") }
+  let(:avif) { plugin_file_from_fixtures("1x1.avif") }
+  let(:large_avif) { plugin_file_from_fixtures("100x100.avif") }
 
   before { enable_current_plugin }
 
@@ -112,10 +114,109 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(encoded[0][:mime_type]).to eq("image/jpeg")
   end
 
+  it "automatically converts avif to pngs" do
+    upload = UploadCreator.new(avif, "1x1.avif").create_for(Discourse.system_user.id)
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+    expect(encoded.length).to eq(1)
+    expect(encoded[0][:base64]).to be_present
+    expect(encoded[0][:mime_type]).to eq("image/png")
+  end
+
+  it "resizes avif to the configured pixel area" do
+    upload = UploadCreator.new(large_avif, "100x100.avif").create_for(Discourse.system_user.id)
+
+    described_class.encode(upload_ids: [upload.id], max_pixels: 2_500)
+
+    expect(upload.optimized_images.find_by(width: 50, height: 50, extension: ".png")).to be_present
+  end
+
+  it "encodes uploads whose extension is not lowercase" do
+    upload = UploadCreator.new(jpg, "1x1.jpg").create_for(Discourse.system_user.id)
+    upload.update!(extension: "JPG")
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded.length).to eq(1)
+    expect(encoded[0][:mime_type]).to eq("image/jpeg")
+  end
+
+  it "skips and logs images it cannot encode" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    allow(Rails.logger).to receive(:warn)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "avatar.jxl", "unsupported image format"),
+    )
+  end
+
+  it "never routes an unsupported image through the document path" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+
+    encoded =
+      described_class.encode(
+        upload_ids: [upload.id],
+        max_pixels: MAX_PIXELS,
+        allowed_kinds: %i[image document],
+        allowed_attachment_types: nil,
+      )
+
+    expect(encoded).to be_empty
+  end
+
+  it "skips and logs images with unknown dimensions" do
+    upload = Fabricate(:upload, original_filename: "avatar.png", extension: "png", width: 0)
+    allow(Rails.logger).to receive(:warn)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "dimensions are unknown"),
+    )
+  end
+
+  it "skips and logs images that cannot be optimized" do
+    upload = UploadCreator.new(webp, "1x1.webp").create_for(Discourse.system_user.id)
+    allow(Rails.logger).to receive(:warn)
+    allow_any_instance_of(Upload).to receive(:get_optimized_image).and_return(nil)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "could not be converted to png"),
+    )
+  end
+
   it "does not raise when an upload no longer exists" do
     missing_id = Upload.maximum(:id).to_i + 1
 
     expect(described_class.encode(upload_ids: [missing_id], max_pixels: MAX_PIXELS)).to be_empty
+  end
+
+  it "only claims formats ImageMagick can decode" do
+    described_class::SUPPORTED_IMAGE_EXTENSIONS.each do |extension|
+      expect(extension).to match(OptimizedImage::IM_DECODERS)
+    end
+  end
+
+  describe ".supported_image_upload?" do
+    it "accepts every format the encoder can transcode" do
+      %w[jpg jpeg png gif webp avif].each do |extension|
+        upload = Fabricate.build(:upload, original_filename: "x.#{extension}", extension: extension)
+        expect(described_class.supported_image_upload?(upload)).to eq(true), extension
+      end
+    end
+
+    it "rejects formats the encoder cannot transcode" do
+      %w[jxl heic svg bmp pdf].each do |extension|
+        upload = Fabricate.build(:upload, original_filename: "x.#{extension}", extension: extension)
+        expect(described_class.supported_image_upload?(upload)).to eq(false), extension
+      end
+    end
   end
 
   describe ".doc, .docx, .xls, and .xlsx uploads" do

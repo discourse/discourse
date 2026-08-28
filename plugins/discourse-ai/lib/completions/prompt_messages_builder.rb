@@ -9,7 +9,6 @@ module DiscourseAi
       COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
       COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
       COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
-      IMAGE_UPLOAD_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
       attr_reader :chat_context_posts
       attr_accessor :topic
 
@@ -341,8 +340,8 @@ module DiscourseAi
         allowed_attachment_types: nil
       )
         type_allowed =
-          if image_upload?(upload)
-            include_image_uploads
+          if UploadEncoder.image?(upload)
+            include_image_uploads && UploadEncoder.supported_image_upload?(upload)
           else
             include_document_uploads &&
               document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
@@ -362,16 +361,6 @@ module DiscourseAi
         attachment_type =
           DiscourseAi::Completions::DocumentEncoder.attachment_type_for(upload.extension, mime_type)
         allowed_attachment_types.include?(attachment_type)
-      end
-
-      def self.image_upload?(upload)
-        extension = upload.extension.to_s.delete_prefix(".").downcase
-        return true if IMAGE_UPLOAD_EXTENSIONS.include?(extension)
-
-        filename = upload.original_filename.to_s
-        filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
-
-        MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
       end
 
       def initialize
