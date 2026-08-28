@@ -108,7 +108,7 @@ export default class AdminFlagItem extends Component {
   }
 
   <template>
-    <td class="d-table__cell --reorder">
+    <td class="d-table__cell --drag-handle">
       {{#if @controls.handle}}<@controls.handle />{{/if}}
     </td>
     <td class="d-table__cell --overview">
