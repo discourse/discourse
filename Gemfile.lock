@@ -332,7 +332,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.10)
     literate_randomizer (0.4.0)
     logger (1.7.0)
-    lograge (0.14.0)
+    lograge (0.15.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -1118,7 +1118,7 @@ CHECKSUMS
   listen (3.10.0) sha256=c6e182db62143aeccc2e1960033bebe7445309c7272061979bb098d03760c9d2
   literate_randomizer (0.4.0) sha256=05073c9b383983b1ed7e26c40b963468e91bc86e663b3eeff3a4af91b84217b1
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  lograge (0.14.0) sha256=42371a75823775f166f727639f5ddce73dd149452a55fc94b90c303213dc9ae1
+  lograge (0.15.0) sha256=34072c1f50b95019dc185137f5fec1a6759f5a1b6d55c28163d0cba204e6df16
   logstash-event (1.2.02) sha256=89a7dc60fac67070a5f60ba07409e541b09cb58906c391e90cb74b9f217467ae
   logster (2.21.0) sha256=5edc71ea98d5f89fe081556893f77b7c4d2617341dae7d421fc37539cfb13a02
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
