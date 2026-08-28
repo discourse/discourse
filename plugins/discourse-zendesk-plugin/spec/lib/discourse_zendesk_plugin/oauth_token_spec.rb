@@ -50,6 +50,25 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.twice
     end
 
+    it "does not cache an in-flight token under rotated credentials" do
+      request_count = 0
+      token_request =
+        stub_request(:post, token_url).to_return do
+          request_count += 1
+
+          if request_count == 1
+            SiteSetting.zendesk_oauth_client_secret = "rotated-secret"
+            { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json }
+          else
+            { status: 200, body: { access_token: "rotated-token", expires_in: 1800 }.to_json }
+          end
+        end
+
+      expect(oauth_token.access_token).to eq("first-token")
+      expect(described_class.new.access_token).to eq("rotated-token")
+      expect(token_request).to have_been_requested.twice
+    end
+
     it "caches the token until shortly before its reported expiry" do
       stub_request(:post, token_url).to_return(
         status: 200,

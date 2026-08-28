@@ -11,6 +11,12 @@ module DiscourseZendeskPlugin
     RequestError = Class.new(StandardError)
     private_constant :RequestError
 
+    def initialize
+      @zendesk_url = SiteSetting.zendesk_url
+      @client_id = SiteSetting.zendesk_oauth_client_id
+      @client_secret = SiteSetting.zendesk_oauth_client_secret
+    end
+
     def access_token
       Discourse.cache.read(cache_key).presence || request_access_token
     end
@@ -51,8 +57,8 @@ module DiscourseZendeskPlugin
         .tap do |request|
           request.set_form_data(
             grant_type: "client_credentials",
-            client_id: SiteSetting.zendesk_oauth_client_id,
-            client_secret: SiteSetting.zendesk_oauth_client_secret,
+            client_id: @client_id,
+            client_secret: @client_secret,
             scope: SCOPES,
             expires_in: TOKEN_LIFETIME_SECONDS,
           )
@@ -70,7 +76,7 @@ module DiscourseZendeskPlugin
     end
 
     def token_uri
-      zendesk_uri = URI.parse(SiteSetting.zendesk_url)
+      zendesk_uri = URI.parse(@zendesk_url)
       unless zendesk_uri.is_a?(URI::HTTPS) && zendesk_uri.host.present?
         raise RequestError, "Zendesk OAuth requires an HTTPS URL"
       end
@@ -81,14 +87,7 @@ module DiscourseZendeskPlugin
     end
 
     def cache_key
-      fingerprint =
-        Digest::SHA256.hexdigest(
-          [
-            SiteSetting.zendesk_url,
-            SiteSetting.zendesk_oauth_client_id,
-            SiteSetting.zendesk_oauth_client_secret,
-          ].join("\0"),
-        )
+      fingerprint = Digest::SHA256.hexdigest([@zendesk_url, @client_id, @client_secret].join("\0"))
       "discourse-zendesk-oauth-token:#{fingerprint}"
     end
 
