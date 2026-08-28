@@ -179,6 +179,13 @@ module(
         "uses the registered Solved component"
       );
       assert
+        .dom(".admin-report-table-summary")
+        .hasAttribute(
+          "aria-label",
+          "Show summary for Aug 18, 2026",
+          "has an accessible label"
+        );
+      assert
         .dom(".admin-report-table-summary__heading")
         .hasText("Solved topics on Aug 18, 2026", "labels the selected day");
       assert

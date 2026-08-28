@@ -46,6 +46,13 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
     assert
       .dom(".admin-report-table-summary")
       .doesNotHaveClass("btn", "does not use generic button styling");
+    assert
+      .dom(".admin-report-table-summary")
+      .hasAttribute(
+        "aria-label",
+        "Show summary for Aug 18, 2026",
+        "has an accessible label"
+      );
 
     triggerEvent(".admin-report-table-summary", "pointerenter");
     await settled();

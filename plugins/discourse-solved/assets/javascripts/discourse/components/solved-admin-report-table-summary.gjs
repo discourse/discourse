@@ -112,6 +112,7 @@ export default class SolvedAdminReportTableSummary extends Component {
       @triggerClass="admin-report-table-summary"
       @triggers={{array "delayed-hover" "click"}}
       @untriggers={{array "hover" "click"}}
+      aria-label={{this.triggerLabel}}
     >
       <:trigger>{{trustHTML @formattedValue}}</:trigger>
       <:content>
