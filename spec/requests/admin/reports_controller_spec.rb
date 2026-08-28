@@ -438,6 +438,37 @@ RSpec.describe Admin::ReportsController do
           expect(report["data"].count).to eq(1)
         end
       end
+
+      describe "posters_by_member_type_members (internal drill-down report)" do
+        it "is excluded from the reports catalog but still fetchable directly" do
+          get "/admin/reports.json"
+          expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(
+            "posters_by_member_type_members",
+          )
+
+          get "/admin/reports/posters_by_member_type_members.json",
+              params: {
+                filters: {
+                  group: "staff",
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["type"]).to eq("posters_by_member_type_members")
+        end
+
+        it "returns a not_found error for an unparseable group token" do
+          get "/admin/reports/posters_by_member_type_members.json",
+              params: {
+                filters: {
+                  group: "not-a-real-token",
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["error"]).to eq("not_found")
+        end
+      end
     end
 
     context "when logged in as a moderator" do

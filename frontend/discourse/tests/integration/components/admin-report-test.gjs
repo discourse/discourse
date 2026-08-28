@@ -61,6 +61,23 @@ module("Integration | Component | AdminReport", function (hooks) {
       .hasText("7", "can sort rows");
   });
 
+  test("onDataLoaded", async function (assert) {
+    let loadedReport;
+    const onDataLoaded = (report) => (loadedReport = report);
+
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups" @onDataLoaded={{onDataLoaded}} />
+      </template>
+    );
+
+    assert.strictEqual(
+      loadedReport?.type,
+      "signups",
+      "calls onDataLoaded with the fetched report once it's loaded"
+    );
+  });
+
   test("options", async function (assert) {
     this.set("options", {
       table: {

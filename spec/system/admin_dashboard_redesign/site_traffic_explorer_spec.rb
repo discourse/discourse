@@ -552,15 +552,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
-     timezone: "UTC" do
+     time: Time.zone.local(2026, 8, 20, 12, 0, 0),
+     timezone: "Asia/Singapore" do
     sign_in(admin)
     SiteSetting.site_traffic_explorer_event_limit = 2
 
     [
-      ["/first-retained", "2026-02-15 09:00:00"],
-      ["/middle-retained", "2026-05-10 10:00:00"],
-      ["/latest-retained", "2026-05-12 10:00:00"],
+      ["/first-retained", "2026-08-17 21:00:00"],
+      ["/middle-retained", "2026-08-17 22:27:00"],
+      ["/latest-retained", "2026-08-17 23:00:00"],
     ].each do |url, created_at|
       Fabricate(
         :browser_pageview_event,
@@ -571,11 +571,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       )
     end
 
-    traffic.visit(start_date: "2026-01-01", end_date: "2026-05-12")
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-08-17")
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included; pageview data before Feb 14, 2026 is no longer available.",
+        "Results include the most recent 2 pageviews, beginning Aug 17, 2026 at 10:27 PM. Earlier pageviews in the selected date range are not included; pageview data before May 20, 2026 is no longer available.",
     )
   end
 

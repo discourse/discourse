@@ -1477,6 +1477,11 @@ en:
         new_members: "New members"
         returning: "Returning"
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Posts"
+        share: "Share"
     trust_level_pipeline:
       title: "Trust level pipeline"
       description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups."
@@ -1913,6 +1918,9 @@ en:
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
+  random_username:
+    unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
+
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -2217,6 +2225,9 @@ en:
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
+    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -3062,6 +3073,7 @@ en:
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
+      invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."

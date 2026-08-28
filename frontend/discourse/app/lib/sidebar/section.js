@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
@@ -6,6 +5,7 @@ import SidebarSectionForm from "discourse/components/modal/sidebar-section-form"
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { replaceUserSidebarSections } from "discourse/lib/sidebar/helpers";
 import { extractDroppedWebLink } from "discourse/lib/sidebar/link-drop";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
@@ -14,10 +14,10 @@ import { i18n } from "discourse-i18n";
 
 export default class Section {
   @service currentUser;
+  @service dialog;
   @service modal;
   @service router;
 
-  @tracked dragCss;
   @autoTrackedArray links;
 
   constructor({ section, owner }) {
@@ -120,40 +120,98 @@ export default class Section {
     return "pencil";
   }
 
+  /**
+   * Commits a dragged row's drop into this section: a drop from this very
+   * section reorders it, one from another section transfers the link here.
+   *
+   * @param {Object} dragData - The drag source's payload: `sectionId`,
+   *   `linkId`, and whether the source section is `public`.
+   * @param {number|undefined} dropIndex - The measured drop offset;
+   *   undefined appends.
+   */
   @bind
-  disable() {
-    this.dragCss = "disabled";
+  async moveLink(dragData, dropIndex) {
+    const reordering = dragData.sectionId === this.section.id;
+    // A drop right back into the gap it came from, on either side of the row,
+    // changes nothing; decided before anything asks, so it never nags either.
+    if (reordering && this.#reorderIsNoop(dragData.linkId, dropIndex)) {
+      return;
+    }
+
+    // Editing a public section reaches everyone, so a drag that touches one,
+    // on either end, gets the same confirmation the edit form gives it.
+    if (dragData.public || this.section.public) {
+      if (!(await this.#confirmPublicChange())) {
+        return;
+      }
+    }
+
+    if (reordering) {
+      await this.#reorderLink(dragData, dropIndex);
+    } else {
+      await this.#transferLinkHere(dragData, dropIndex);
+    }
   }
 
-  @bind
-  enable() {
-    this.dragCss = null;
+  #reorderIsNoop(linkId, dropIndex) {
+    const fromIndex = this.#indexOfLink(linkId);
+    const toIndex = dropIndex ?? this.links.length;
+    return toIndex === fromIndex || toIndex === fromIndex + 1;
   }
 
-  @bind
-  moveLinkDown(link) {
-    const position = this.links.indexOf(link);
-    this.links.splice(position, 1);
-    this.links.splice(position + 1, 0, link);
+  /**
+   * Where a link sits right now. The drag payload only snapshots the list at
+   * `dragstart`, and the drop may land in a different one.
+   */
+  #indexOfLink(linkId) {
+    return this.links.findIndex((link) => link.id === linkId);
   }
 
-  @bind
-  moveLinkUp(link) {
-    const position = this.links.indexOf(link);
-    this.links.splice(position, 1);
-    this.links.splice(position - 1, 0, link);
-  }
-
-  @bind
-  reorder() {
-    return ajax(`/sidebar_sections/reorder`, {
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        sidebar_section_id: this.section.id,
-        links_order: this.links.map((link) => link.id),
-      }),
+  #confirmPublicChange() {
+    return new Promise((resolve) => {
+      this.dialog.yesNoConfirm({
+        message: i18n("sidebar.sections.custom.update_public_confirm"),
+        didConfirm: () => resolve(true),
+        didCancel: () => resolve(false),
+      });
     });
+  }
+
+  async #reorderLink({ linkId }, dropIndex) {
+    const fromIndex = this.#indexOfLink(linkId);
+    if (fromIndex === -1) {
+      return;
+    }
+
+    const toIndex = dropIndex ?? this.links.length;
+    const ids = this.links.map((link) => link.id);
+    ids.splice(fromIndex, 1);
+    ids.splice(toIndex > fromIndex ? toIndex - 1 : toIndex, 0, linkId);
+
+    try {
+      const response = await ajax(
+        `/sidebar_sections/${this.section.id}/reorder`,
+        { type: "PUT", data: { links_order: ids } }
+      );
+      replaceUserSidebarSections(this.currentUser, [response.sidebar_section]);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  async #transferLinkHere({ sectionId, linkId }, dropIndex) {
+    try {
+      const response = await ajax(`/sidebar_sections/${sectionId}/move_link`, {
+        type: "PUT",
+        data: {
+          link_id: linkId,
+          target_section_id: this.section.id,
+          position: dropIndex ?? this.links.length,
+        },
+      });
+      replaceUserSidebarSections(this.currentUser, response.sidebar_sections);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

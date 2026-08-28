@@ -6,10 +6,7 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <DPageHeader
     @titleLabel={{i18n "admin.config.search_everything.title"}}
-    @descriptionLabel={{i18n
-      "admin.config.search_everything.header_description"
-      shortcutHTML=@controller.shortcutHTML
-    }}
+    @descriptionLabel={{@controller.description}}
     @shouldDisplay={{true}}
   >
     <:breadcrumbs>
