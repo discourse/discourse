@@ -170,7 +170,12 @@ class DiscourseVipsWorker
       ready_ios = IO.select([@server, @owner_reader]).first
       break if ready_ios.include?(@owner_reader)
 
-      fork_connection_process(@server.accept)
+      connection = @server.accept
+      if LINUX_PLATFORM
+        fork_connection_process(connection)
+      else
+        handle_connection(connection)
+      end
     end
   ensure
     @server.close unless @server.closed?
