@@ -164,10 +164,10 @@ class DiscourseVipsWorker
     Operations.warm
 
     loop do
-      readable, = IO.select([@server, @owner_reader])
-      break if readable.include?(@owner_reader)
+      ready_ios = IO.select([@server, @owner_reader]).first
+      break if ready_ios.include?(@owner_reader)
 
-      accept_connections if readable.include?(@server)
+      fork_connection_process(@server.accept)
     end
   ensure
     @server.close unless @server.closed?
@@ -177,15 +177,6 @@ class DiscourseVipsWorker
   end
 
   private
-
-  def accept_connections
-    loop do
-      connection = @server.accept_nonblock(exception: false)
-      return if connection == :wait_readable
-
-      fork_connection_process(connection)
-    end
-  end
 
   def fork_connection_process(connection)
     parent_pid = Process.pid
