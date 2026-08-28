@@ -334,6 +334,19 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       end
     end
 
+    it "routes .html uploads through the html converter" do
+      upload =
+        create_doc_upload(
+          contents: "<html><body><h1>Heading</h1></body></html>",
+          filename: "page.html",
+        )
+
+      encoded = encode_document(upload, ["html"])
+
+      expect(encoded.first).to include(converted_from: "html", mime_type: "text/plain")
+      expect(encoded.first[:text]).to include("# Heading")
+    end
+
     it "converts .rtf files to text" do
       upload =
         create_doc_upload(
