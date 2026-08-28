@@ -1658,6 +1658,7 @@ en:
         advanced_with_shortcut: "Open advanced search (%{shortcut})"
         search_all_topics: "All posts"
         search_this_topic: "This topic"
+        search_in_context: "In %{name}"
         search_user_posts: "Posts by %{username}"
         search_messages: "Messages"
         ask_ai: "AI"

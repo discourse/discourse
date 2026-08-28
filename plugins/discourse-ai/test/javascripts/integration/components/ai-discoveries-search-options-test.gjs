@@ -3,6 +3,8 @@ import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { translateModKey } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import Tag from "discourse/models/tag";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import AiDiscoveriesSearchOptions from "discourse/plugins/discourse-ai/discourse/components/ai-discoveries-search-options";
@@ -277,6 +279,182 @@ module(
           "is-active",
           "the wider reach does not light up alongside it"
         );
+    });
+
+    test("a category page offers that category", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      // a real subcategory from the site, so the context is the shape the app
+      // actually produces rather than one written out here
+      const category = this.owner
+        .lookup("service:site")
+        .categories.find((candidate) => candidate.parentCategory);
+      searchService.searchContext = category.searchContext;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".ai-discoveries-search-options__option:first-child")
+        .hasClass("--category", "the narrower reach is offered first");
+
+      await click(".ai-discoveries-search-options__option.--category");
+
+      assert.strictEqual(
+        this.termChanges[0]?.term,
+        `miyazaki #${category.parentCategory.slug}:${category.slug}`,
+        "a subcategory carries its parent, as the native slug does"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--category")
+        .hasClass("is-active", "and it reads as the one in effect");
+    });
+
+    test("a tag page offers that tag", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      searchService.searchContext = Tag.create({
+        id: 1,
+        name: "ruby",
+      }).searchContext;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      await click(".ai-discoveries-search-options__option.--tag");
+
+      assert.deepEqual(
+        this.termChanges,
+        [{ term: "miyazaki #ruby", opts: { searchTopics: true } }],
+        "the tag goes in the term the way the native shortcut puts it there"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--tag")
+        .hasClass("is-active", "and it reads as the one in effect");
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .doesNotHaveClass(
+          "is-active",
+          "the wider reach does not light up alongside it"
+        );
+    });
+
+    test("a tag page inside a category offers both", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      // mirrors what `routes/tag/show.js` assembles for a tag inside a category
+      searchService.searchContext = {
+        type: "tagIntersection",
+        tagId: "ruby",
+        tag: Tag.create({ id: 1, name: "ruby" }),
+        additionalTags: null,
+        categoryId: 2,
+        category: Category.create({ id: 2, slug: "support" }),
+      };
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".ai-discoveries-search-options__option:first-child")
+        .hasClass("--tag", "a tag inside a category reads as a tag scope");
+
+      await click(".ai-discoveries-search-options__option.--tag");
+
+      assert.deepEqual(
+        this.termChanges,
+        [{ term: "miyazaki #ruby #support", opts: { searchTopics: true } }],
+        "both operators go in, as the native shortcut puts them there"
+      );
+    });
+
+    test("several tags intersect rather than repeating", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      searchService.searchContext = {
+        type: "tagIntersection",
+        tagId: "ruby",
+        tag: Tag.create({ id: 1, name: "ruby" }),
+        additionalTags: ["rails"],
+        categoryId: null,
+        category: null,
+      };
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      await click(".ai-discoveries-search-options__option.--tag");
+
+      assert.deepEqual(
+        this.termChanges,
+        [{ term: "miyazaki tags:ruby+rails", opts: { searchTopics: true } }],
+        "several tags use the intersection operator"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--tag")
+        .hasClass("is-active", "and it reads as the one in effect");
+    });
+
+    test("widening drops every operator it was narrowed by", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      searchService.activeGlobalSearchTerm = "miyazaki #ruby #support";
+      // mirrors what `routes/tag/show.js` assembles for a tag inside a category
+      searchService.searchContext = {
+        type: "tagIntersection",
+        tagId: "ruby",
+        tag: Tag.create({ id: 1, name: "ruby" }),
+        additionalTags: null,
+        categoryId: 2,
+        category: Category.create({ id: 2, slug: "support" }),
+      };
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTopics={{true}}
+          />
+        </template>
+      );
+
+      await click(".ai-discoveries-search-options__option.--search");
+
+      assert.deepEqual(
+        this.termChanges,
+        [{ term: "miyazaki", opts: { searchTopics: true } }],
+        "the wider reach leaves neither behind"
+      );
     });
 
     test("widening drops the username it was narrowed by", async function (assert) {

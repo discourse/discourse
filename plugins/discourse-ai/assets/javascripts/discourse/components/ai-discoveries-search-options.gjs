@@ -13,6 +13,20 @@ function shortcutHint(...keys) {
   });
 }
 
+function operatorPattern(operator, flags) {
+  return new RegExp(`(?:^|\\s)${escapeRegExp(operator)}(?=\\s|$)`, flags);
+}
+
+function categoryOperator(category) {
+  if (!category) {
+    return null;
+  }
+
+  return category.parentCategory
+    ? `#${category.parentCategory.slug}:${category.slug}`
+    : `#${category.slug}`;
+}
+
 export default class AiDiscoveriesSearchOptions extends Component {
   @service discobotDiscoveries;
   @service search;
@@ -31,52 +45,91 @@ export default class AiDiscoveriesSearchOptions extends Component {
     return this.search.searchContext?.type === "topic";
   }
 
-  // Only a user page narrows what a search would reach, by way of the operator
-  // it puts in the term; category and tag pages still search globally.
-  get userContext() {
-    return this.search.searchContext?.type === "user"
-      ? this.search.searchContext.user
-      : null;
-  }
-
   get inPMInbox() {
     return this.search.searchContext?.type === "private_messages";
   }
 
-  get userPostsLabel() {
-    return i18n("discourse_ai.discobot_discoveries.search_user_posts", {
-      username: this.userContext?.username,
+  // A topic scopes the search itself and the inbox lives on the menu; the rest
+  // narrow by putting operators in the term, where the reader can see them.
+  // A tag page inside a category contributes two, so this is always a list.
+  get contextKind() {
+    switch (this.search.searchContext?.type) {
+      case "user":
+        return "user";
+      case "category":
+        return "category";
+      case "tag":
+      case "tagIntersection":
+        return "tag";
+      default:
+        return null;
+    }
+  }
+
+  get contextOperators() {
+    const context = this.search.searchContext;
+
+    switch (context?.type) {
+      case "user":
+        return context.user?.username ? [`@${context.user.username}`] : [];
+      case "category":
+        return [categoryOperator(context.category)].filter(Boolean);
+      case "tag":
+        return context.name ? [`#${context.name}`] : [];
+      case "tagIntersection": {
+        // several tags intersect with `tags:`, a single one keeps the `#` form
+        const tags = context.additionalTags?.length
+          ? [`tags:${[context.tagId, ...context.additionalTags].join("+")}`]
+          : [context.tagId && `#${context.tagId}`];
+
+        return [...tags, categoryOperator(context.category)].filter(Boolean);
+      }
+      default:
+        return [];
+    }
+  }
+
+  get contextOperator() {
+    return this.contextOperators.join(" ") || null;
+  }
+
+  get contextLabel() {
+    if (this.contextKind === "user") {
+      return i18n("discourse_ai.discobot_discoveries.search_user_posts", {
+        username: this.search.searchContext.user?.username,
+      });
+    }
+
+    return i18n("discourse_ai.discobot_discoveries.search_in_context", {
+      name: this.contextOperator,
     });
   }
 
-  get userOperator() {
-    const username = this.userContext?.username;
-    return username ? `@${username}` : null;
-  }
-
-  // Read off the term rather than remembered: the operator is visible in the
-  // input, so it stays recognised however it got there — picked here, typed by
-  // hand, or carried in from an earlier search.
-  get termNarrowedToUser() {
-    if (!this.userOperator) {
+  // Read off the term rather than remembered: the operators are visible in the
+  // input, so they stay recognised however they got there — picked here, typed
+  // by hand, or carried in from an earlier search. Order is not part of it, so
+  // each is looked for on its own.
+  get termNarrowedToContext() {
+    const operators = this.contextOperators;
+    if (operators.length === 0) {
       return false;
     }
 
-    const operator = escapeRegExp(this.userOperator);
-    return new RegExp(`(?:^|\\s)${operator}(?=\\s|$)`, "i").test(
-      this.query || ""
+    return operators.every((operator) =>
+      operatorPattern(operator, "i").test(this.query || "")
     );
   }
 
-  get userPostsActive() {
-    return this.termNarrowedToUser;
+  get contextActive() {
+    return this.termNarrowedToContext;
   }
 
-  get termWithoutUser() {
-    const operator = escapeRegExp(this.userOperator);
-
-    return (this.query || "")
-      .replace(new RegExp(`(?:^|\\s)${operator}(?=\\s|$)`, "gi"), " ")
+  get termWithoutContext() {
+    return this.contextOperators
+      .reduce(
+        (term, operator) => term.replace(operatorPattern(operator, "gi"), " "),
+        this.query || ""
+      )
       .replace(/\s+/g, " ")
       .trim();
   }
@@ -108,7 +161,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
     if (
       this.askedActive ||
       this.scopedToTopic ||
-      this.userPostsActive ||
+      this.contextActive ||
       this.messagesActive
     ) {
       return false;
@@ -144,8 +197,8 @@ export default class AiDiscoveriesSearchOptions extends Component {
     this.args.clearPMInboxContext?.();
 
     // the wider reach drops the operator that was narrowing it
-    if (this.termNarrowedToUser) {
-      this.args.searchTermChanged?.(this.termWithoutUser, {
+    if (this.termNarrowedToContext) {
+      this.args.searchTermChanged?.(this.termWithoutContext, {
         searchTopics: true,
       });
       return;
@@ -156,14 +209,19 @@ export default class AiDiscoveriesSearchOptions extends Component {
   }
 
   @action
-  searchUserPosts() {
+  searchInContext() {
     this.discobotDiscoveries.dismissDiscovery();
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
-    // mirrors the native shortcut: the operator goes in the term, but only once
-    const term = this.termNarrowedToUser
-      ? this.query
-      : `${this.query} ${this.userOperator}`;
+    // Mirrors the native shortcut: the operators go in the term. Only the ones
+    // missing, so picking it twice is a no-op and a term that already carries
+    // one of them keeps just the one.
+    const missing = this.contextOperators.filter(
+      (operator) => !operatorPattern(operator, "i").test(this.query || "")
+    );
+    const term = missing.length
+      ? [this.query, ...missing].join(" ")
+      : this.query;
 
     this.args.searchTermChanged?.(term, { searchTopics: true });
   }
@@ -209,13 +267,13 @@ export default class AiDiscoveriesSearchOptions extends Component {
             @action={{this.searchThisTopic}}
           />
         {{/if}}
-        {{#if this.userContext}}
+        {{#if this.contextOperator}}
           <DButton
-            class="btn-default btn-small ai-discoveries-search-options__option --user
-              {{if this.userPostsActive 'is-active'}}"
+            class="btn-default btn-small ai-discoveries-search-options__option --{{this.contextKind}}
+              {{if this.contextActive 'is-active'}}"
             @icon="magnifying-glass"
-            @translatedLabel={{this.userPostsLabel}}
-            @action={{this.searchUserPosts}}
+            @translatedLabel={{this.contextLabel}}
+            @action={{this.searchInContext}}
           />
         {{/if}}
         {{#if this.inPMInbox}}
