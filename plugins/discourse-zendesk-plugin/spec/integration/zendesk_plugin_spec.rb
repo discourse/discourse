@@ -5,7 +5,17 @@ RSpec.describe "Discourse Zendesk Plugin" do
   let(:zendesk_url_default) { "https://your-url.zendesk.com/api/v2" }
   let(:zendesk_api_ticket_url) { zendesk_url_default + "/tickets" }
 
-  let(:ticket_response) { { ticket: { id: "ticket_id", url: "ticket_url" } }.to_json }
+  let(:ticket_response) do
+    {
+      ticket: {
+        id: "ticket_id",
+        url: "ticket_url",
+      },
+      audit: {
+        events: [{ id: "comment_id", type: "Comment" }],
+      },
+    }.to_json
+  end
 
   before do
     default_header = { "Content-Type" => "application/json; charset=UTF-8" }
@@ -51,11 +61,6 @@ RSpec.describe "Discourse Zendesk Plugin" do
         SiteSetting.zendesk_enabled = true
         sign_in staff
         default_header = { "Content-Type" => "application/json; charset=UTF-8" }
-        stub_request(:get, zendesk_api_ticket_url + "/ticket_id/comments").to_return(
-          status: 200,
-          body: { comments: [{ id: "comment_id" }] }.to_json,
-          headers: default_header,
-        )
         stub_request(:get, zendesk_api_user_search_url).to_return(
           status: 200,
           body: { users: [] }.to_json,
@@ -84,6 +89,8 @@ RSpec.describe "Discourse Zendesk Plugin" do
 
         expect(custom_fields["discourse_zendesk_plugin_zendesk_api_url"]).to eq("ticket_url")
         expect(custom_fields["discourse_zendesk_plugin_zendesk_id"]).to eq("ticket_id")
+        expect(p1.reload.custom_fields["discourse_zendesk_plugin_zendesk_id"]).to eq("comment_id")
+        expect(WebMock).not_to have_requested(:get, %r{/tickets/.*/comments})
       end
     end
   end

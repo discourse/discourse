@@ -4,7 +4,17 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
   let(:zendesk_url_default) { "https://your-url.zendesk.com/api/v2" }
   let(:zendesk_api_ticket_url) { zendesk_url_default + "/tickets" }
   let(:zendesk_api_user_create_url) { zendesk_url_default + "/users" }
-  let(:ticket_response) { { ticket: { id: "ticket_id", url: "ticket_url" } }.to_json }
+  let(:ticket_response) do
+    {
+      ticket: {
+        id: "ticket_id",
+        url: "ticket_url",
+      },
+      audit: {
+        events: [{ id: "comment_id", type: "Comment" }],
+      },
+    }.to_json
+  end
   let(:default_header) { { "Content-Type" => "application/json; charset=UTF-8" } }
 
   before do
@@ -23,11 +33,6 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
     stub_request(:post, zendesk_api_user_create_url).to_return(
       status: 200,
       body: { user: { id: 24 } }.to_json,
-      headers: default_header,
-    )
-    stub_request(:get, %r{/tickets/.*/comments}).to_return(
-      status: 200,
-      body: { comments: [{ id: "comment_id" }] }.to_json,
       headers: default_header,
     )
     stub_request(:get, %r{/users/search}).to_return(

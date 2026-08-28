@@ -79,12 +79,8 @@ module DiscourseZendeskPlugin
           end
 
         if ticket.present?
-          comment =
-            with_zendesk_client do |client|
-              ZendeskAPI::Ticket.new(client, id: ticket.id).comments.to_a!.first
-            end
           update_topic_custom_fields(post.topic, ticket)
-          update_post_custom_fields(post, comment)
+          update_post_custom_fields(post, comment_from_ticket_response(ticket))
         end
       end
     end
@@ -105,16 +101,19 @@ module DiscourseZendeskPlugin
       zendesk_user_id = fetch_submitter(post.user)&.id
 
       if zendesk_user_id.present?
-        with_zendesk_client do |client|
-          ticket = ZendeskAPI::Ticket.new(client, id: ticket_id)
-          ticket.comment = { html_body: get_post_content(post), author_id: zendesk_user_id }
-          ticket.save!
-        end
-        comment =
+        ticket =
           with_zendesk_client do |client|
-            ZendeskAPI::Ticket.new(client, id: ticket_id).comments.to_a!.last
+            ZendeskAPI::Ticket
+              .new(client, id: ticket_id)
+              .tap do |zendesk_ticket|
+                zendesk_ticket.comment = {
+                  html_body: get_post_content(post),
+                  author_id: zendesk_user_id,
+                }
+                zendesk_ticket.save!
+              end
           end
-        update_post_custom_fields(post, comment)
+        update_post_custom_fields(post, comment_from_ticket_response(ticket))
       end
     end
 
@@ -164,6 +163,10 @@ module DiscourseZendeskPlugin
     end
 
     private
+
+    def comment_from_ticket_response(ticket)
+      ticket.response&.body&.dig("audit", "events")&.find { |event| event["type"] == "Comment" }
+    end
 
     def invalid_oauth_token_response?(environment)
       return false if environment[:status] != 401

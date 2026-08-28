@@ -209,7 +209,14 @@ RSpec.describe Jobs::ZendeskJob do
           },
         ).to_return(
           status: 200,
-          body: { ticket: { id: ticket_id } }.to_json,
+          body: {
+            ticket: {
+              id: ticket_id,
+            },
+            audit: {
+              events: [{ id: "comment-id", type: "Comment" }],
+            },
+          }.to_json,
           headers: {
             "Content-Type" => "application/json",
           },
@@ -230,13 +237,6 @@ RSpec.describe Jobs::ZendeskJob do
             "Content-Type" => "application/json",
           },
         )
-        stub_request(:get, "#{zendesk_api_url}/tickets/#{ticket_id}/comments").to_return(
-          status: 200,
-          body: { comments: [{ id: "comment-id" }] }.to_json,
-          headers: {
-            "Content-Type" => "application/json",
-          },
-        )
         zendesk_comment_request
       end
 
@@ -244,6 +244,10 @@ RSpec.describe Jobs::ZendeskJob do
         execute
 
         expect(zendesk_comment_request).to have_been_requested.once
+        expect(post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to eq(
+          "comment-id",
+        )
+        expect(WebMock).not_to have_requested(:get, %r{/tickets/.*/comments})
       end
     end
   end
