@@ -101,5 +101,86 @@ module(
         "after narrowing the threshold, reaching the true end re-fires"
       );
     });
+
+    // A threshold is arithmetic on an index, so a non-finite one makes every band
+    // comparison false and the edge silently never fires again. The sibling
+    // numeric argument @overscan is normalized for the same reason.
+    test("a non-finite @edgeThreshold falls back to the default", async function (assert) {
+      const items = buildRows(100);
+      const calls = [];
+      const onReachEnd = (range) => calls.push(range);
+      const config = new Config(NaN);
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 400px;
+              overflow-y: auto;
+            }
+          </style>
+          <DVirtualList
+            @items={{items}}
+            @estimateSize={{estimate}}
+            @edgeThreshold={{config.threshold}}
+            @onReachEnd={{onReachEnd}}
+            as |item|
+          >
+            <div class="row" style="height: 40px">{{item.text}}</div>
+          </DVirtualList>
+        </template>
+      );
+
+      assert.strictEqual(
+        calls.length,
+        0,
+        "the end is not reached from the top of a 100 row list"
+      );
+
+      await scrollTo(ROW_PX * 100);
+
+      assert.strictEqual(
+        calls.length,
+        1,
+        "reaching the end still fires, so the threshold fell back to a usable one"
+      );
+    });
+
+    test("a negative @edgeThreshold falls back to a reachable band", async function (assert) {
+      const items = buildRows(100);
+      const calls = [];
+      const onReachEnd = (range) => calls.push(range);
+      const config = new Config(-5);
+
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 400px;
+              overflow-y: auto;
+            }
+          </style>
+          <DVirtualList
+            @items={{items}}
+            @estimateSize={{estimate}}
+            @edgeThreshold={{config.threshold}}
+            @onReachEnd={{onReachEnd}}
+            as |item|
+          >
+            <div class="row" style="height: 40px">{{item.text}}</div>
+          </DVirtualList>
+        </template>
+      );
+
+      await scrollTo(ROW_PX * 100);
+
+      assert.strictEqual(
+        calls.length,
+        1,
+        "a negative threshold cannot push the band out of reach"
+      );
+    });
   }
 );

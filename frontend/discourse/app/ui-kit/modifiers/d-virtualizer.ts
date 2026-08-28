@@ -322,7 +322,12 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
 
-    this.#edgeThreshold = named.edgeThreshold ?? DEFAULT_EDGE_THRESHOLD;
+    // A non-finite threshold makes every band comparison false, and a negative one
+    // puts the band out of reach, so the edge would silently never fire again.
+    const threshold = named.edgeThreshold;
+    this.#edgeThreshold = Number.isFinite(threshold)
+      ? Math.max(0, Math.floor(threshold!))
+      : DEFAULT_EDGE_THRESHOLD;
 
     const options = this.#buildOptions(named);
 
