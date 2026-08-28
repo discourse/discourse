@@ -99,8 +99,7 @@
 
 /* A table row cannot carry the line itself: a pseudo-element inside a `tr` is
    wrapped in an anonymous table cell, which hands the row a column its table has
-   no width for and re-flows every other cell in it. `position: relative` on a row
-   is left undefined by CSS besides, so browsers disagree about it.
+   no width for and re-flows every other cell in it.
 
    The cells carry it instead, where a pseudo-element is ordinary content and
    positioning is well defined. Absolutely positioned, as on every other target:
@@ -108,7 +107,11 @@
    table draws between its header and its first row. Anything painting with the
    cell background instead — an inset shadow, a background image — goes under
    that border, and the line vanishes exactly where a row is dropped into first
-   place. */
+   place.
+
+   The row's own `position` is left untouched. A consumer's row may be the
+   containing block its cells position against, and resetting it here detaches
+   every absolutely positioned cell in the row to some ancestor far up the page. */
 
 :where(tr[data-drop-target] > *, tr[data-drop-target-external] > *) {
   position: relative;
@@ -116,8 +119,6 @@
 
 tr[data-drop-target],
 tr[data-drop-target-external] {
-  position: static;
-
   &.--drag-above::before,
   &.--drag-below::after,
   &.--drag-left::before,
