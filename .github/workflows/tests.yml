@@ -61,7 +61,6 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
-      DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
       fail-fast: false
@@ -331,14 +330,6 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
-      - name: Upload JS deprecation reports
-        uses: actions/upload-artifact@v7
-        if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
-        with:
-          name: deprecation-reports-${{ matrix.build_type }}-${{ matrix.target }}
-          if-no-files-found: ignore
-          path: tmp/deprecation-reports/*.json
-
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'system'
@@ -370,59 +361,6 @@ jobs:
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
-
-  deprecation-report:
-    name: JS deprecation report
-    if: always() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped'
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      actions: write
-      contents: read
-    steps:
-      - name: Check for JS deprecation reports
-        id: check-artifacts
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          artifact_ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[] | select(.name | startswith("deprecation-reports-")) | .id')
-          if [ -n "$artifact_ids" ]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - uses: actions/checkout@v7
-        if: steps.check-artifacts.outputs.exists == 'true'
-        with:
-          fetch-depth: 1
-
-      - uses: actions/download-artifact@v7
-        if: steps.check-artifacts.outputs.exists == 'true'
-        with:
-          pattern: deprecation-reports-*
-          path: tmp/deprecation-report-parts
-          merge-multiple: true
-
-      - name: Build combined JS deprecation report
-        if: steps.check-artifacts.outputs.exists == 'true'
-        run: node frontend/discourse/lib/deprecation-report-cli.js merge tmp/js-deprecation-report.json tmp/deprecation-report-parts/*.json
-
-      - name: Upload combined JS deprecation report
-        uses: actions/upload-artifact@v7
-        if: steps.check-artifacts.outputs.exists == 'true'
-        with:
-          name: js-deprecation-report
-          path: tmp/js-deprecation-report.json
-
-      - name: Delete intermediate JS deprecation reports
-        if: steps.check-artifacts.outputs.exists == 'true'
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          artifact_ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[] | select(.name | startswith("deprecation-reports-")) | .id')
-          for artifact_id in $artifact_ids; do
-            gh api --method DELETE "repos/${{ github.repository }}/actions/artifacts/$artifact_id"
-          done
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

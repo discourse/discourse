@@ -1,12 +1,7 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
 const fs = require("fs");
-const path = require("path");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
-const {
-  buildReport,
-  renderReportSummary,
-} = require("./lib/deprecation-report");
 
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
@@ -18,34 +13,10 @@ const sandboxDisabled =
     (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
   );
 
-const REPO_ROOT = path.resolve(__dirname, "..", "..");
-
-/**
- * Label identifying which CI run group produced a report, so the artifacts of a
- * single workflow run stay distinguishable.
- *
- * @returns {string}
- */
-function deprecationReportGroup() {
-  const explicit = process.env.DEPRECATION_REPORT_GROUP;
-  if (explicit) {
-    return explicit.replace(/[^\w.-]+/g, "-");
-  }
-
-  if (process.env.THEME_TEST_PAGES) {
-    return "frontend-themes";
-  } else if (process.env.PLUGIN_TARGETS) {
-    return "frontend-plugins";
-  }
-
-  return "frontend-core";
-}
-
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
-  deprecationDetails = new Map();
 
   constructor() {
     super(...arguments);
@@ -74,15 +45,6 @@ class Reporter extends TapReporter {
       const originMap = this.deprecationCountsByOrigin.get(originKey);
       const originCount = originMap.get(id) || 0;
       originMap.set(id, originCount + 1);
-    } else if (tag === "deprecation-details") {
-      // Entries are reported when first seen and re-reported when their count
-      // grows, so the highest count wins.
-      for (const detail of metadata.details || []) {
-        const existing = this.deprecationDetails.get(detail.key);
-        if (!existing || detail.count > existing.count) {
-          this.deprecationDetails.set(detail.key, detail);
-        }
-      }
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -166,74 +128,108 @@ class Reporter extends TapReporter {
     }
   }
 
+  generateDeprecationTable() {
+    const maxIdLength = Math.max(
+      ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
+    );
+
+    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
+
+    for (const [id, count] of this.deprecationCounts.entries()) {
+      const countString = count.toString();
+      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
+    }
+
+    return msg;
+  }
+
+  generateDeprecationsByOriginTable() {
+    const allDeprecationIds = this.collectAllDeprecationIds();
+    const maxIdLength = Math.max(
+      ...Array.from(allDeprecationIds).map((id) => id.length)
+    );
+    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
+    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
+
+    let msg = this.buildTableHeader(
+      ["origin", "id", "count"],
+      [maxOriginLength, maxIdLength, 5]
+    );
+
+    for (const origin of origins) {
+      const originMap = this.deprecationCountsByOrigin.get(origin);
+      const sortedIds = Array.from(originMap.keys()).sort();
+
+      for (const id of sortedIds) {
+        const count = originMap.get(id);
+        const countString = count.toString();
+        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
+      }
+    }
+
+    return msg;
+  }
+
+  collectAllDeprecationIds() {
+    const allIds = new Set();
+    for (const originMap of this.deprecationCountsByOrigin.values()) {
+      for (const id of originMap.keys()) {
+        allIds.add(id);
+      }
+    }
+    return allIds;
+  }
+
+  buildTableHeader(columnNames, columnWidths) {
+    let header = "| ";
+    let separator = "| ";
+
+    for (let i = 0; i < columnNames.length; i++) {
+      const name = columnNames[i];
+      const width = columnWidths[i];
+      header += `${name.padEnd(width)} | `;
+      separator += `${"".padEnd(width, "-")} | `;
+    }
+
+    return header + "\n" + separator + "\n";
+  }
+
   reportDeprecations() {
-    if (
-      this.deprecationCounts.size === 0 &&
-      this.deprecationDetails.size === 0
-    ) {
+    if (this.deprecationCounts.size === 0) {
       this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
       return;
     }
 
-    const report = this.writeDeprecationReport();
-    if (!report) {
+    const table = this.generateDeprecationTable();
+    let deprecationMessage =
+      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
+
+    let originTable = null;
+    if (this.deprecationCountsByOrigin.size > 0) {
+      originTable = this.generateDeprecationsByOriginTable();
+      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    this.writeGitHubSummary(table, originTable);
+    this.out.write(`\n${deprecationMessage}\n\n`);
+  }
+
+  writeGitHubSummary(table, originTable) {
+    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
       return;
     }
 
-    this.out.write(
-      `\n${renderReportSummary(report.document, {
-        reportLocation: `\`${report.path}\``,
-      })}\n`
-    );
+    let jobSummary =
+      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
+    jobSummary += table;
 
-    if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
-      fs.appendFileSync(
-        process.env.GITHUB_STEP_SUMMARY,
-        `${renderReportSummary(report.document, {
-          reportLocation: "the `js-deprecation-report` artifact",
-        })}\n`
-      );
-    }
-  }
-
-  /**
-   * Writes the machine-readable report which pairs every deprecation with the
-   * spec that triggered it and the source location it came from.
-   *
-   * @returns {?{path: string, document: Object}}
-   */
-  writeDeprecationReport() {
-    const group = deprecationReportGroup();
-    const dir =
-      process.env.DEPRECATION_REPORT_DIR ||
-      path.join(REPO_ROOT, "tmp", "deprecation-reports");
-
-    let document;
-    try {
-      document = buildReport({
-        group,
-        entries: Array.from(this.deprecationDetails.values()),
-        totals: Object.fromEntries(this.deprecationCounts),
-        totalsByOrigin: Object.fromEntries(
-          Array.from(this.deprecationCountsByOrigin, ([origin, counts]) => [
-            origin,
-            Object.fromEntries(counts),
-          ])
-        ),
-      });
-    } catch (error) {
-      this.out.write(
-        `\n[Deprecation Counter] Failed to build detailed report: ${error}\n`
-      );
-      return null;
+    if (originTable) {
+      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
     }
 
-    fs.mkdirSync(dir, { recursive: true });
+    jobSummary += "\n\n";
 
-    const file = path.join(dir, `${group}-${process.pid}.json`);
-    fs.writeFileSync(file, `${JSON.stringify(document, null, 2)}\n`);
-
-    return { path: path.relative(REPO_ROOT, file), document };
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
   }
 
   finish() {

@@ -664,7 +664,7 @@ acceptance("Admin - Onboarding Banner - non admin user", function (needs) {
 acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
   needs.settings({
     enable_site_owner_onboarding: false,

@@ -13,13 +13,6 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
  */
 const skipCountIds = new Set();
 
-// Detailed per-occurrence records are deduplicated and capped so a noisy
-// deprecation in a hot code path can't blow up memory or the reporter payload.
-const MAX_DETAIL_ENTRIES = 2000;
-// Deep enough to get past the runloop and computed-property machinery which sits
-// between a deprecated getter and the code that actually called it.
-const MAX_STACK_FRAMES = 60;
-
 /**
  * Marks a deprecation ID to be skipped when counting deprecations during tests.
  * This is useful when you want to temporarily ignore specific deprecations
@@ -62,25 +55,13 @@ export function restoreCountingDeprecation(id) {
 
 export default class DeprecationCounter {
   counts = new Map();
-  details = new Map();
   #origin = null;
-  #qunit = null;
-  #countsChanged = new Set();
 
-  start(origin, qunit) {
-    this.startDiscourseHandler(origin, qunit);
-    this.startEmberHandler();
-  }
-
-  startDiscourseHandler(origin, qunit) {
+  start(origin) {
     this.#origin = origin;
-    this.#qunit = qunit;
 
-    registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
-  }
-
-  startEmberHandler() {
     registerDeprecationHandler(this.handleEmberDeprecation);
+    registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
   }
 
   shouldCount(id) {
@@ -115,8 +96,6 @@ export default class DeprecationCounter {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
 
-    this.recordDetail(id);
-
     if (window.Testem) {
       reportDeprecationToTestem(id, this.#origin);
     }
@@ -124,75 +103,6 @@ export default class DeprecationCounter {
       // eslint-disable-next-line no-console
       console.count(`deprecation_id:${id}`); // origin will be identified using the spec metadata
     }
-  }
-
-  /**
-   * Captures the call stack and the surrounding test context for a deprecation,
-   * so the CI report can point at both the spec and the deprecated call site.
-   * Identical occurrences are collapsed into a single entry with a count.
-   */
-  recordDetail(id) {
-    const stack = captureStack();
-    const currentTest = this.#qunit?.config?.current;
-    const key = [
-      id,
-      this.#origin,
-      currentTest?.module?.name,
-      currentTest?.testName,
-      stack,
-    ].join("\u0000");
-
-    const existing = this.details.get(key);
-    if (existing) {
-      existing.count++;
-      this.#countsChanged.add(key);
-      return;
-    }
-
-    if (this.details.size >= MAX_DETAIL_ENTRIES) {
-      return;
-    }
-
-    const detail = {
-      key,
-      id,
-      origin: this.#origin,
-      module: currentTest?.module?.name,
-      testName: currentTest?.testName,
-      testStack: currentTest?.stack,
-      stack,
-      count: 1,
-    };
-
-    this.details.set(key, detail);
-
-    // Reported straight away rather than batched: a deprecation raised outside a
-    // test is followed by no `testDone`, and an end-of-run flush races the
-    // browser teardown.
-    if (window.Testem) {
-      reportDeprecationDetailsToTestem([detail]);
-    }
-
-    if (isRailsTesting()) {
-      // System specs identify the spec themselves, so only the JS stack is
-      // needed here.
-      // eslint-disable-next-line no-console
-      console.log(`deprecation_detail:${JSON.stringify({ id, stack })}`);
-    }
-  }
-
-  /**
-   * Hands over entries whose count has grown since they were first reported, so
-   * the reporter can correct the totals it already holds.
-   *
-   * @returns {Object[]}
-   */
-  takeUpdatedCounts() {
-    const updated = Array.from(this.#countsChanged, (key) =>
-      this.details.get(key)
-    );
-    this.#countsChanged.clear();
-    return updated.filter(Boolean);
   }
 
   get hasDeprecations() {
@@ -226,17 +136,6 @@ export default class DeprecationCounter {
   }
 }
 
-function captureStack() {
-  const previousLimit = Error.stackTraceLimit;
-
-  // Browsers default to a handful of frames, which never reaches the caller.
-  Error.stackTraceLimit = MAX_STACK_FRAMES;
-  const { stack } = new Error();
-  Error.stackTraceLimit = previousLimit;
-
-  return stack || "";
-}
-
 function reportDeprecationToTestem(id, origin) {
   window.Testem.useCustomAdapter(function (socket) {
     socket.emit("test-metadata", "increment-deprecation", {
@@ -246,43 +145,20 @@ function reportDeprecationToTestem(id, origin) {
   });
 }
 
-function reportDeprecationDetailsToTestem(details) {
-  window.Testem.useCustomAdapter(function (socket) {
-    socket.emit("test-metadata", "deprecation-details", { details });
-  });
-}
-
 export function setupDeprecationCounter({ QUnit, origin } = {}) {
   const deprecationCounter = new DeprecationCounter();
 
   // for system specs
   if (isRailsTesting()) {
-    deprecationCounter.start(origin, QUnit);
+    deprecationCounter.start(origin);
     return;
   }
 
   if (QUnit) {
-    // The counter has to see a deprecation before the handler which raises on
-    // it, or anything that raises goes unrecorded and the suites which must stay
-    // deprecation-free report nothing at all. Discourse handlers run in
-    // registration order and Ember's run in reverse, so the counter registers
-    // ahead of `configureRaiseOnDeprecation` for one and behind it for the
-    // other.
-    deprecationCounter.startDiscourseHandler(origin, QUnit);
-    QUnit.begin(() => deprecationCounter.startEmberHandler());
-
-    const flushCounts = () => {
-      const updated = deprecationCounter.takeUpdatedCounts();
-      if (window.Testem && updated.length > 0) {
-        reportDeprecationDetailsToTestem(updated);
-      }
-    };
-
-    QUnit.testDone(flushCounts);
+    // for QUnit tests
+    QUnit.begin(() => deprecationCounter.start(origin));
 
     QUnit.done(() => {
-      flushCounts();
-
       if (window.Testem) {
         return;
       } else if (deprecationCounter.hasDeprecations) {

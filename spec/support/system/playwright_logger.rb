@@ -45,9 +45,7 @@ class PlaywrightLogger
         if (
              log[:message].include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
                (log[:message].include?("uploads") || log[:message].include?("images"))
-           ) || log[:message].include?("favicon.ico") ||
-             # Machine-readable stacks for the deprecation report, not for humans.
-             log[:message].start_with?("deprecation_detail:")
+           ) || log[:message].include?("favicon.ico")
           next
         end
 
