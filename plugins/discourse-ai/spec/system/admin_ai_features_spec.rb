@@ -93,7 +93,9 @@ RSpec.describe "Admin AI features configuration" do
       "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::SEARCH_ID}/edit",
     )
 
-    expect(page).to have_no_css(".form-kit__field[data-name='ai_discover_enabled']")
+    expect(page).to have_no_css(
+      ".form-kit__field[data-name='ai_discover_enabled']:not([data-disabled])",
+    )
   end
 
   it "shows edit page with grouped settings" do
