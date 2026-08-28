@@ -21,6 +21,12 @@ export default class AdminUser extends User {
   static async find(user_id, opts = { raw: false }) {
     const result = await ajax(`/admin/users/${user_id}.json`);
     result.loadedDetails = true;
+
+    if (Object.hasOwn(result, "groups")) {
+      result.visibleGroups = result.groups;
+      delete result.groups;
+    }
+
     return opts?.raw ? result : AdminUser.create(result);
   }
 
