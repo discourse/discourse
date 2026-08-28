@@ -42,11 +42,13 @@ module(
           },
         ],
       });
+      this.set("relatedItemsTotals", { solved_topics: 3 });
 
       await render(
         <template>
           <AdminReportRelatedItems
             @relatedItems={{this.relatedItems}}
+            @relatedItemsTotals={{this.relatedItemsTotals}}
             @startDate="2026-07-17"
             @endDate="2026-08-18"
             @type="accepted_solutions"
@@ -80,6 +82,12 @@ module(
       assert
         .dom(".badge-category")
         .includesText("Support", "shows the category");
+      assert
+        .dom(".admin-report-related-items__limit")
+        .hasText(
+          "Showing the newest 1 of 3.",
+          "discloses that the list is limited"
+        );
     });
 
     test("preserves report dates in positive UTC offsets", async function (assert) {
@@ -158,6 +166,7 @@ module(
             this.tableSummaryComponent
             date="2026-08-18"
             formattedValue="1"
+            total=3
           }}
         </template>
       );
@@ -182,6 +191,12 @@ module(
       assert
         .dom(".admin-report-table-summary__user-link")
         .exists({ count: 2 }, "shows every answer author");
+      assert
+        .dom(".admin-report-table-summary__limit")
+        .hasText(
+          "Showing the newest 1 of 3.",
+          "discloses that the list is limited"
+        );
     });
 
     test("retries the table summary after an error", async function (assert) {

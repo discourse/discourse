@@ -209,9 +209,12 @@ after_initialize do
     end
 
     guardian = report.guardian || Guardian.new
+    solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
+
+    report.related_items_totals = { solved_topics: solved_topics.count }
+
     solved_topics =
-      current_accepted_solutions
-        .merge(Topic.listable_topics.secured(guardian))
+      solved_topics
         .includes({ topic: :category }, answer_posts: :user)
         .order(created_at: :desc)
         .limit(report.limit || Report::RELATED_ITEMS_LIMIT)

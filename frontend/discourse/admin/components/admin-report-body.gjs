@@ -254,6 +254,7 @@ export default <template>
         {{#if (and @report.isChartMode @report.hasRelatedItems)}}
           <AdminReportRelatedItems
             @relatedItems={{@report.model.related_items}}
+            @relatedItemsTotals={{@report.model.related_items_totals}}
             @startDate={{@report.startDate}}
             @endDate={{@report.endDate}}
             @type={{@report.model.type}}

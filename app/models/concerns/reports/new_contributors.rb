@@ -31,6 +31,8 @@ module Reports::NewContributors
           .preload(:user_stat)
           .with_first_post_created_between(report.start_date, report.end_date)
           .order("user_stats.first_post_created_at DESC")
+
+      report.related_items_totals = { users: users.count }
       users = users.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
 
       report.related_items = {

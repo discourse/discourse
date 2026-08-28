@@ -34,6 +34,7 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
           @date="2026-08-18"
           @formattedValue="3"
           @reportType="signups"
+          @total={{3}}
         />
       </template>
     );
@@ -54,6 +55,12 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
     assert
       .dom(".admin-report-table-summary__user-link")
       .doesNotHaveAttribute("data-user-card", "does not open a user card");
+    assert
+      .dom(".admin-report-table-summary__limit")
+      .hasText(
+        "Showing the newest 1 of 3.",
+        "discloses that the list is limited"
+      );
   });
 
   test("retries loading after an error", async function (assert) {

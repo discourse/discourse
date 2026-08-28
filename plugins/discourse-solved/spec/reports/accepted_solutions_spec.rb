@@ -39,8 +39,10 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     category = Fabricate(:category)
     topic = solved_topic_in(category)
 
-    item = build.related_items[:solved_topics].first
+    report = build
+    item = report.related_items[:solved_topics].first
 
+    expect(report.related_items_totals).to eq(solved_topics: 1)
     expect(item[:topic]).to eq(title: topic.title, url: topic.relative_url)
     expect(item.dig(:solved_by_users, 0, :username)).to eq(author.username)
     expect(item[:category]).to include(
@@ -88,6 +90,7 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     report = build(guardian: moderator.guardian)
 
     expect(report.total).to eq(2)
+    expect(report.related_items_totals).to eq(solved_topics: 1)
     expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
       [visible_topic.title],
     )

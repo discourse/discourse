@@ -24,12 +24,14 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
         },
       ],
     });
+    this.set("relatedItemsTotals", { users: 3 });
 
     try {
       await render(
         <template>
           <AdminReportRelatedItems
             @relatedItems={{this.relatedItems}}
+            @relatedItemsTotals={{this.relatedItemsTotals}}
             @startDate="2026-07-17"
             @endDate="2026-08-18"
             @type="new_contributors"
@@ -55,6 +57,12 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
       assert
         .dom(".admin-report-related-items__timestamp-cell time")
         .hasText("2 days ago", "shows a relative timestamp with ago");
+      assert
+        .dom(".admin-report-related-items__limit")
+        .hasText(
+          "Showing the newest 1 of 3.",
+          "discloses that the list is limited"
+        );
     } finally {
       clock.restore();
     }

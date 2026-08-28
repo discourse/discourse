@@ -46,6 +46,10 @@ export default class SolvedAdminReportTableSummary extends Component {
     return this.items?.length > 0;
   }
 
+  get itemsAreTruncated() {
+    return this.items.length < this.args.total;
+  }
+
   userProfilePath(user) {
     return userPath(user.username);
   }
@@ -113,6 +117,15 @@ export default class SolvedAdminReportTableSummary extends Component {
               {{i18n "admin.reports.related_items.table_summary.loading"}}
             </p>
           {{else if this.hasItems}}
+            {{#if this.itemsAreTruncated}}
+              <p class="admin-report-table-summary__limit">
+                {{i18n
+                  "admin.reports.related_items.showing"
+                  shown=this.items.length
+                  total=@total
+                }}
+              </p>
+            {{/if}}
             <ul
               class="admin-report-table-summary__list solved-admin-report-table-summary__list"
             >

@@ -182,7 +182,8 @@ class Report
                 :y_axis_title,
                 :current_user,
                 :guardian,
-                :related_items
+                :related_items,
+                :related_items_totals
 
   def self.default_days
     30
@@ -319,6 +320,7 @@ class Report
       json[:default_group_by] = default_group_by if default_group_by
       json[:y_axis_title] = y_axis_title if y_axis_title
       json[:related_items] = related_items if related_items
+      json[:related_items_totals] = related_items_totals if related_items_totals
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(

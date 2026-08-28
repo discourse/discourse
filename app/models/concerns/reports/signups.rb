@@ -26,6 +26,8 @@ module Reports::Signups
       users =
         users.joins(:group_users).where(group_users: { group_id: group_filter }) if group_filter
       users = users.order(created_at: :desc)
+
+      report.related_items_totals = { users: users.count }
       users = users.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
 
       report.related_items = {

@@ -6732,6 +6732,7 @@ en:
         chart:
           total: "Total: %{count}"
         related_items:
+          showing: "Showing the newest %{shown} of %{total}."
           users:
             title: "Users"
             signups:

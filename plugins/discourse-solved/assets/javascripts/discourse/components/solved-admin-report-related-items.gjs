@@ -10,6 +10,16 @@ export default class SolvedAdminReportRelatedItems extends Component {
     return this.args.relatedItems?.solved_topics || [];
   }
 
+  get solvedTopicsTotal() {
+    return (
+      this.args.relatedItemsTotals?.solved_topics || this.solvedTopics.length
+    );
+  }
+
+  get solvedTopicsAreTruncated() {
+    return this.solvedTopics.length < this.solvedTopicsTotal;
+  }
+
   get startDate() {
     return moment(this.args.startDate).format(
       i18n("dates.long_with_year_no_time")
@@ -42,6 +52,15 @@ export default class SolvedAdminReportRelatedItems extends Component {
             startDate=this.startDate
             endDate=this.endDate
           }}
+          {{#if this.solvedTopicsAreTruncated}}
+            <span class="admin-report-related-items__limit">
+              {{i18n
+                "admin.reports.related_items.showing"
+                shown=this.solvedTopics.length
+                total=this.solvedTopicsTotal
+              }}
+            </span>
+          {{/if}}
         </p>
 
         <table class="table admin-report-related-items__table">

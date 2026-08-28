@@ -582,6 +582,7 @@ RSpec.describe Report do
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
+          limit: 2,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -589,6 +590,7 @@ RSpec.describe Report do
       expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
         [second_signup.username, first_signup.username],
       )
+      expect(report.related_items_totals).to eq(users: 2)
 
       summary_report =
         Report.find(
@@ -601,6 +603,7 @@ RSpec.describe Report do
       expect(summary_report.related_items[:users].map { |item| item[:user][:username] }).to eq(
         [second_signup.username],
       )
+      expect(summary_report.related_items_totals).to eq(users: 2)
     end
   end
 
@@ -652,6 +655,7 @@ RSpec.describe Report do
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
+          limit: 2,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
@@ -659,6 +663,7 @@ RSpec.describe Report do
       expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
         [another_current_contributor.username, current_contributor.username],
       )
+      expect(report.related_items_totals).to eq(users: 2)
     end
   end
 

@@ -91,6 +91,9 @@ let signups = {
       },
     ],
   },
+  related_items_totals: {
+    users: 3,
+  },
 };
 
 let signups_fixture = JSON.parse(JSON.stringify(signups));

@@ -81,6 +81,7 @@ export default class AdminReportTableCell extends Component {
             date=this.data.x
             formattedValue=this.formattedValue
             reportFilters=this.reportFilters
+            total=this.value
           }}
         {{else}}
           <AdminReportTableSummary
@@ -88,6 +89,7 @@ export default class AdminReportTableCell extends Component {
             @formattedValue={{this.formattedValue}}
             @reportType={{this.reportType}}
             @reportFilters={{this.reportFilters}}
+            @total={{this.value}}
           />
         {{/if}}
       {{else}}

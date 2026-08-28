@@ -118,6 +118,12 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert
       .dom(".admin-report-related-items__user-link")
       .hasAttribute("href", "/u/dana_whitfield", "links to the user profile");
+    assert
+      .dom(".admin-report-related-items__limit")
+      .hasText(
+        "Showing the newest 1 of 3.",
+        "discloses that the list is limited"
+      );
   });
 
   test("timeout", async function (assert) {

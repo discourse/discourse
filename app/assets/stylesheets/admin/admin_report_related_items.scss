@@ -11,6 +11,11 @@
     color: var(--token-color-text-subtle);
   }
 
+  &__limit {
+    display: block;
+    margin-block-start: var(--space-1);
+  }
+
   &__table {
     width: 100%;
     margin: 0;
@@ -101,6 +106,11 @@
 
   &__message {
     margin: 0;
+    color: var(--token-color-text-subtle);
+  }
+
+  &__limit {
+    margin: 0 0 var(--space-2);
     color: var(--token-color-text-subtle);
   }
 

@@ -11,6 +11,14 @@ export default class AdminReportRelatedItems extends Component {
     return this.args.relatedItems?.users || [];
   }
 
+  get usersTotal() {
+    return this.args.relatedItemsTotals?.users || this.users.length;
+  }
+
+  get usersAreTruncated() {
+    return this.users.length < this.usersTotal;
+  }
+
   get userDescriptionKey() {
     return `admin.reports.related_items.users.${this.args.type}.description`;
   }
@@ -52,6 +60,15 @@ export default class AdminReportRelatedItems extends Component {
             startDate=this.startDate
             endDate=this.endDate
           }}
+          {{#if this.usersAreTruncated}}
+            <span class="admin-report-related-items__limit">
+              {{i18n
+                "admin.reports.related_items.showing"
+                shown=this.users.length
+                total=this.usersTotal
+              }}
+            </span>
+          {{/if}}
         </p>
 
         <table class="table admin-report-related-items__table">
@@ -110,6 +127,7 @@ export default class AdminReportRelatedItems extends Component {
       {{component
         this.relatedItemsComponent
         relatedItems=@relatedItems
+        relatedItemsTotals=@relatedItemsTotals
         startDate=@startDate
         endDate=@endDate
       }}
