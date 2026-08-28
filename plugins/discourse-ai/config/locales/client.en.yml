@@ -269,6 +269,10 @@ en:
           upload_ids: "Upload IDs"
           upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Image uploads are included when the agent has vision enabled; document uploads are included when the selected LLM supports their file type."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          on_unusable_upload: "When an upload cannot be sent"
+          on_unusable_upload_description: "Some uploads never reach the LLM, for example an unsupported image format or a file the workflow user cannot see. Choose whether to carry on without it or stop the node."
+          on_unusable_upload_skip: "Continue with a warning"
+          on_unusable_upload_fail: "Stop the node"
           select_agent: "Select an agent..."
 
       bot_chats:

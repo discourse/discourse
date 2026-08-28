@@ -8,6 +8,13 @@ if defined?(DiscourseWorkflows)
           RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
           RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
 
+          I18N_PREFIX = "discourse_ai.discourse_workflows.ai_agent"
+
+          PreparedPrompt = Data.define(:content, :sent_upload_ids, :unusable)
+
+          ON_UNUSABLE_UPLOAD_SKIP = "skip"
+          ON_UNUSABLE_UPLOAD_FAIL = "fail"
+
           description(
             name: "action:ai_agent",
             version: "1.0",
@@ -36,6 +43,23 @@ if defined?(DiscourseWorkflows)
                   "properties" => {
                     "result" => {
                       "type" => "string",
+                    },
+                    "unusable_uploads" => {
+                      "type" => "array",
+                      "items" => {
+                        "type" => "object",
+                        "properties" => {
+                          "upload_id" => {
+                            "type" => "integer",
+                          },
+                          "filename" => {
+                            "type" => "string",
+                          },
+                          "reason" => {
+                            "type" => "string",
+                          },
+                        },
+                      },
                     },
                   },
                 },
@@ -149,6 +173,13 @@ if defined?(DiscourseWorkflows)
                   expression: true,
                 },
               },
+              on_unusable_upload: {
+                type: :options,
+                required: false,
+                options: [ON_UNUSABLE_UPLOAD_SKIP, ON_UNUSABLE_UPLOAD_FAIL],
+                default: ON_UNUSABLE_UPLOAD_SKIP,
+                no_data_expression: true,
+              },
             },
           )
 
@@ -213,14 +244,14 @@ if defined?(DiscourseWorkflows)
 
             items =
               exec_ctx.input_items.map.with_index do |item, item_index|
-                result =
+                output =
                   run_agent(
                     agent_config(exec_ctx, item_index),
                     exec_ctx.log,
                     runner(exec_ctx, item_index),
                   )
 
-                wrap({ "result" => result }, paired_item: exec_ctx.paired_item_for(item))
+                wrap(output, paired_item: exec_ctx.paired_item_for(item))
               end
 
             [items]
@@ -229,10 +260,10 @@ if defined?(DiscourseWorkflows)
           private
 
           def run_once_for_all_items(exec_ctx)
-            result = run_agent(agent_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+            output = run_agent(agent_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
 
             wrap(
-              { "result" => result },
+              output,
               paired_item: exec_ctx.input_items.map { |item| exec_ctx.paired_item_for(item) },
             )
           end
@@ -243,6 +274,12 @@ if defined?(DiscourseWorkflows)
               "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
               "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
               "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
+              "on_unusable_upload" =>
+                exec_ctx.get_node_parameter(
+                  "on_unusable_upload",
+                  item_index,
+                  default: ON_UNUSABLE_UPLOAD_SKIP,
+                ),
             }
           end
 
@@ -253,9 +290,29 @@ if defined?(DiscourseWorkflows)
           def validate_mode!(mode)
             return if [RUN_ONCE_FOR_ALL_ITEMS, RUN_ONCE_FOR_EACH_ITEM].include?(mode)
 
-            raise_node_error!(
-              I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.invalid_mode", mode: mode),
-            )
+            raise_node_error!(node_t("errors.invalid_mode", mode: mode))
+          end
+
+          # agent_id and llm_model_id cannot be per-item expressions, so a multi-item run
+          # resolves the same agent, agent class and LLM every time
+          def resolved_agent(agent_id, llm_model_id)
+            @resolved_agents ||= {}
+            @resolved_agents[[agent_id, llm_model_id]] ||= begin
+              agent_record = ::AiAgent.find_by(id: agent_id)
+              if agent_record.nil?
+                raise_node_error!(node_t("errors.agent_not_found", agent_id: agent_id))
+              end
+
+              if !agent_record.enabled
+                raise_node_error!(node_t("errors.agent_disabled", agent: agent_record.name))
+              end
+
+              [
+                agent_record,
+                agent_record.class_instance,
+                resolve_llm_model(agent_record, llm_model_id),
+              ]
+            end
           end
 
           def resolve_llm_model(agent_record, requested_llm_model_id)
@@ -265,10 +322,7 @@ if defined?(DiscourseWorkflows)
               return llm_model if llm_model.present?
 
               raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.locked_default_llm_missing",
-                  agent: agent_record.name,
-                ),
+                node_t("errors.locked_default_llm_missing", agent: agent_record.name),
               )
             end
 
@@ -277,10 +331,7 @@ if defined?(DiscourseWorkflows)
               return llm_model if llm_model.present?
 
               raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.llm_not_found",
-                  llm_model_id: requested_llm_model_id,
-                ),
+                node_t("errors.llm_not_found", llm_model_id: requested_llm_model_id),
               )
             end
 
@@ -289,33 +340,140 @@ if defined?(DiscourseWorkflows)
               return llm_model if llm_model.present?
             end
 
-            raise_node_error!(
-              I18n.t(
-                "discourse_ai.discourse_workflows.ai_agent.errors.no_llm_configured",
-                agent: agent_record.name,
-              ),
+            raise_node_error!(node_t("errors.no_llm_configured", agent: agent_record.name))
+          end
+
+          def prompt_content(config, agent_record, llm_model, guardian, log)
+            prompt = config["prompt"].to_s
+            requested = normalize_upload_ids(config["upload_ids"])
+            if requested.blank?
+              return PreparedPrompt.new(content: prompt, sent_upload_ids: [], unusable: [])
+            end
+
+            uploads =
+              ::DiscourseAi::Completions::PromptMessagesBuilder.uploads_for_prompt(
+                requested,
+              ).index_by(&:id)
+            sendable =
+              sendable_upload_ids(
+                requested.filter_map { |upload_id| uploads[upload_id] },
+                agent_record,
+                llm_model,
+                guardian,
+              )
+            log.info("Attachments: #{sendable.size} of #{requested.size} upload(s)")
+
+            unusable =
+              report_unusable_uploads(
+                requested - sendable,
+                uploads,
+                agent_record,
+                guardian,
+                log,
+                config["on_unusable_upload"],
+              )
+
+            content =
+              if sendable.blank?
+                prompt
+              else
+                [prompt, *sendable.map { |upload_id| { upload_id: upload_id } }]
+              end
+
+            PreparedPrompt.new(content: content, sent_upload_ids: sendable, unusable: unusable)
+          end
+
+          def sendable_upload_ids(uploads, agent_record, llm_model, guardian)
+            allowed_attachment_types = llm_model.allowed_attachment_types
+
+            ::DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_from_uploads(
+              uploads,
+              include_image_uploads: agent_record.vision_enabled,
+              include_document_uploads: allowed_attachment_types.present?,
+              allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
+            ).to_a
+          end
+
+          def report_unusable_uploads(
+            upload_ids,
+            uploads,
+            agent_record,
+            guardian,
+            log,
+            on_unusable_upload
+          )
+            return [] if upload_ids.blank?
+
+            records =
+              upload_ids.map do |upload_id|
+                unusable_upload_record(upload_id, uploads[upload_id], agent_record, guardian)
+              end
+            reasons = records.map { |record| record["reason"] }
+
+            raise_node_error!(reasons.join(" ")) if on_unusable_upload == ON_UNUSABLE_UPLOAD_FAIL
+
+            log_upload_messages(reasons, log, :warn)
+            records
+          end
+
+          def report_encode_failures(skips, sendable, log, on_unusable_upload)
+            skips = skips.select { |skip| sendable.include?(skip[:upload_id]) }
+            return [] if skips.blank?
+
+            records =
+              skips.map do |skip|
+                {
+                  "upload_id" => skip[:upload_id],
+                  "filename" => skip[:filename],
+                  "reason" =>
+                    node_t(
+                      "uploads.encode_failed",
+                      filename: skip[:filename].to_s.truncate(100),
+                      reason: skip[:message],
+                    ),
+                }
+              end
+
+            level = on_unusable_upload == ON_UNUSABLE_UPLOAD_FAIL ? :error : :warn
+            log_upload_messages(records.map { |record| record["reason"] }, log, level)
+            records
+          end
+
+          def log_upload_messages(messages, log, level)
+            messages.each { |message| log.public_send(level, message) }
+          end
+
+          def unusable_upload_record(upload_id, upload, agent_record, guardian)
+            {
+              "upload_id" => upload_id,
+              "filename" => upload&.original_filename,
+              "reason" => unusable_upload_message(upload_id, upload, agent_record, guardian),
+            }
+          end
+
+          def unusable_upload_message(upload_id, upload, agent_record, guardian)
+            return node_t("uploads.not_found", upload_id: upload_id) if upload.blank?
+
+            filename = (upload.original_filename.presence || "upload #{upload.id}").truncate(100)
+            encoder = ::DiscourseAi::Completions::UploadEncoder
+
+            return node_t("uploads.not_visible", filename:) if !guardian.can_see_upload?(upload)
+            return node_t("uploads.not_allowed", filename:) if !encoder.image?(upload)
+
+            if !agent_record.vision_enabled
+              return node_t("uploads.vision_disabled", filename:, agent: agent_record.name)
+            end
+
+            node_t(
+              "uploads.unsupported_image",
+              filename:,
+              formats: encoder::SUPPORTED_IMAGE_EXTENSIONS.join(", "),
             )
           end
 
-          def prompt_content(prompt, upload_ids, agent_record, llm_model, guardian, log)
-            upload_ids = filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
-            return prompt if upload_ids.blank?
-
-            log.info("Attachments: #{upload_ids.size} upload(s)")
-            [prompt, *upload_ids.map { |upload_id| { upload_id: upload_id } }]
-          end
-
-          def filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
-            upload_ids = normalize_upload_ids(upload_ids)
-            return [] if upload_ids.blank?
-
-            ::DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: agent_record.vision_enabled,
-              include_document_uploads: llm_model.allowed_attachment_types.present?,
-              allowed_attachment_types: llm_model.allowed_attachment_types,
-              guardian: guardian,
-            ) || []
+          def node_t(key, **args)
+            I18n.t("#{I18N_PREFIX}.#{key}", **args)
           end
 
           def normalize_upload_ids(upload_ids)
@@ -342,18 +500,10 @@ if defined?(DiscourseWorkflows)
           end
 
           def run_agent(config, log, runner)
-            agent_id = config["agent_id"]
             prompt = config["prompt"].to_s
-
-            agent_record = ::AiAgent.find_by(id: agent_id)
-            raise_node_error!("AI Agent with id #{agent_id} not found") if agent_record.nil?
-
-            if !agent_record.enabled
-              raise_node_error!("AI Agent '#{agent_record.name}' is disabled")
-            end
-
-            agent_instance = agent_record.class_instance.new
-            llm_model = resolve_llm_model(agent_record, config["llm_model_id"])
+            agent_record, agent_class, llm_model =
+              resolved_agent(config["agent_id"], config["llm_model_id"])
+            agent_instance = agent_class.new
 
             log.info("Agent: #{agent_record.name}")
             log.info("Runner: #{runner.username}")
@@ -367,28 +517,22 @@ if defined?(DiscourseWorkflows)
                 model: llm_model,
               )
 
-            content =
-              prompt_content(
-                prompt,
-                config["upload_ids"],
-                agent_record,
-                llm_model,
-                runner.guardian,
-                log,
-              )
+            prepared = prompt_content(config, agent_record, llm_model, runner.guardian, log)
 
             bot_context =
               DiscourseAi::Agents::BotContext.new(
                 user: runner,
                 guardian: runner.guardian,
-                messages: [{ type: :user, content: content }],
+                messages: [{ type: :user, content: prepared.content }],
                 feature_name: "workflow",
               )
 
             result = +""
             tool_calls = 0
 
-            bot.reply(bot_context) do |partial, _, type|
+            execution_context = ::DiscourseAi::Completions::ExecutionContext.new
+
+            bot.reply(bot_context, execution_context: execution_context) do |partial, _, type|
               if type == :tool_call
                 tool_calls += 1
                 log.info("Tool call: #{partial}") if partial.is_a?(String)
@@ -399,10 +543,18 @@ if defined?(DiscourseWorkflows)
               end
             end
 
+            encode_failures =
+              report_encode_failures(
+                execution_context.upload_skips,
+                prepared.sent_upload_ids,
+                log,
+                config["on_unusable_upload"],
+              )
+
             log.info("Tool calls: #{tool_calls}") if tool_calls > 0
             log.info("Result length: #{result.size} chars")
 
-            result
+            { "result" => result, "unusable_uploads" => prepared.unusable + encode_failures }
           end
         end
       end

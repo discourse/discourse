@@ -251,43 +251,151 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     expect(prompts).to eq([["Review the screenshot", { upload_id: upload.id }]])
   end
 
-  it "filters image upload IDs when the agent does not have vision enabled" do
-    agent.update!(vision_enabled: false)
-    upload = Fabricate(:image_upload)
+  it "resolves the agent and LLM once for a multi-item run" do
+    allow(LlmModel).to receive(:find_by).and_call_original
+    allow_any_instance_of(AiAgent).to receive(:class_instance).and_call_original
 
     execute_node_output(
       configuration: {
         "agent_id" => agent.id,
-        "prompt" => "Review the screenshot",
-        "upload_ids" => [upload.id],
+        "llm_model_id" => llm_model.id,
+        "prompt" => "Review",
       },
+      input_items: 3.times.map { |index| { "json" => { "index" => index } } },
     )
 
-    expect(prompts).to eq(["Review the screenshot"])
+    expect(prompts.length).to eq(3)
+    expect(LlmModel).to have_received(:find_by).once
   end
 
-  it "filters upload IDs the execution user cannot see" do
-    agent.update!(vision_enabled: true)
-    visible_upload = Fabricate(:image_upload)
-    hidden_upload = Fabricate(:image_upload)
-    owner = Fabricate(:user)
-    recipient = Fabricate(:user)
-    private_topic = Fabricate(:private_message_topic, user: owner, recipient: recipient)
-    private_post = Fabricate(:post, topic: private_topic, user: owner)
-    hidden_upload.update!(access_control_post_id: private_post.id)
+  describe "unusable uploads" do
+    before { agent.update!(vision_enabled: true) }
 
-    runner = Fabricate(:user)
+    let(:svg) { Fabricate(:upload, original_filename: "logo.svg", extension: "svg") }
 
-    execute_node_output(
-      configuration: {
-        "agent_id" => agent.id,
-        "runner_username" => runner.username,
-        "prompt" => "Review the screenshot",
-        "upload_ids" => [visible_upload.id, hidden_upload.id],
-      },
-    )
+    def log_for(**overrides)
+      configuration = { "agent_id" => agent.id, "prompt" => "Review" }.merge(overrides)
 
-    expect(prompts).to eq([["Review the screenshot", { upload_id: visible_upload.id }]])
+      log = nil
+      execute_node_output(configuration: configuration) { |ctx| log = ctx.log }
+      log
+    end
+
+    def messages(log)
+      log.entries.map { |entry| entry["message"] }
+    end
+
+    it "reports a clean run truthfully and says nothing more" do
+      upload = Fabricate(:image_upload)
+
+      log = nil
+      output =
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "prompt" => "Review",
+            "upload_ids" => [upload.id],
+          },
+        ) { |ctx| log = ctx.log }.first.first[
+          "json"
+        ]
+
+      expect(messages(log)).to include("Attachments: 1 of 1 upload(s)")
+      expect(output["unusable_uploads"]).to eq([])
+      expect(log.entries.select { |entry| entry["level"] != "info" }).to be_empty
+    end
+
+    it "warns when an image format cannot be sent, and reports it as branchable output" do
+      good = Fabricate(:image_upload)
+
+      log = nil
+      output =
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "prompt" => "Review",
+            "upload_ids" => [good.id, svg.id],
+          },
+        ) { |ctx| log = ctx.log }.first.first[
+          "json"
+        ]
+
+      expect(messages(log)).to include("Attachments: 1 of 2 upload(s)")
+      expect(messages(log)).to include(a_string_including("logo.svg", "cannot be sent"))
+      expect(prompts).to eq([["Review", { upload_id: good.id }]])
+      expect(output["unusable_uploads"]).to match(
+        [
+          {
+            "upload_id" => svg.id,
+            "filename" => "logo.svg",
+            "reason" => a_string_including("cannot be sent"),
+          },
+        ],
+      )
+      expect(log.errors?).to eq(false)
+    end
+
+    it "warns when the agent has vision disabled" do
+      agent.update!(vision_enabled: false)
+
+      upload = Fabricate(:image_upload)
+
+      log = log_for("upload_ids" => [upload.id])
+
+      expect(messages(log)).to include(a_string_including("vision"))
+      expect(prompts).to eq(["Review"])
+    end
+
+    it "warns when the runner cannot see the upload, and still sends the visible one" do
+      visible = Fabricate(:image_upload)
+      hidden = Fabricate(:image_upload)
+      hidden.update!(access_control_post_id: Fabricate(:private_message_post).id)
+
+      log =
+        log_for(
+          "runner_username" => Fabricate(:user).username,
+          "upload_ids" => [visible.id, hidden.id],
+        )
+
+      expect(messages(log)).to include(a_string_including("not visible"))
+      expect(prompts).to eq([["Review", { upload_id: visible.id }]])
+    end
+
+    it "warns when the upload no longer exists" do
+      missing_id = Upload.maximum(:id).to_i + 1
+
+      log = log_for("upload_ids" => [missing_id])
+
+      expect(messages(log)).to include(a_string_including(missing_id.to_s, "no longer exists"))
+    end
+
+    it "fails the step when configured to fail on unusable uploads" do
+      expect { log_for("upload_ids" => [svg.id], "on_unusable_upload" => "fail") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /logo\.svg/,
+      )
+
+      expect(prompts).to be_empty
+    end
+
+    it "warns when an upload fails to encode at request time" do
+      upload = Fabricate(:large_image_upload)
+      allow_any_instance_of(Upload).to receive(:get_optimized_image).and_return(nil)
+
+      allow(bot).to receive(:reply) do |bot_context, execution_context:, &block|
+        prompt =
+          DiscourseAi::Completions::Prompt.new("system", messages: [bot_context.messages.first])
+        prompt.upload_skips = execution_context.upload_skips
+        prompt.encoded_uploads(prompt.messages.last)
+
+        block.call("ok", nil, nil)
+      end
+
+      log = log_for("upload_ids" => [upload.id])
+
+      expect(messages(log)).to include("Attachments: 1 of 1 upload(s)")
+      expect(messages(log)).to include(a_string_including(upload.original_filename, "could not be"))
+    end
   end
 
   it "resolves runner expressions per item" do

@@ -300,10 +300,19 @@ en:
     discourse_workflows:
       ai_agent:
         errors:
+          agent_not_found: "AI agent with id %{agent_id} was not found."
+          agent_disabled: "AI agent '%{agent}' is disabled."
           invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+        uploads:
+          not_found: "Upload %{upload_id} no longer exists and was not sent."
+          not_visible: "%{filename} is not visible to the user this workflow runs as, and was not sent."
+          vision_disabled: "%{filename} was not sent because agent '%{agent}' has vision disabled."
+          unsupported_image: "%{filename} cannot be sent to the LLM. Supported image formats: %{formats}."
+          not_allowed: "%{filename} was not sent because the selected LLM does not accept this file type."
+          encode_failed: "%{filename} could not be prepared for the LLM and was not sent: %{reason}."
 
     tools:
       custom_name: "%{name} (custom)"
