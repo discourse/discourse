@@ -379,12 +379,12 @@
 }
 
 /* The reordering surface behind `enable_new_reordering_controls`.
-   TODO (ui-kit-reorderable-list-cleanup) fold back above and drop the modifier
-   once the change ships. */
+   TODO (ui-kit-reorderable-list-cleanup) fold back above once the change
+   ships. */
 
 .edit-user-directory-columns-modal {
   .edit-directory-columns-container {
-    .edit-directory-column.--reorderable {
+    .edit-directory-column.d-reorderable-list__row {
       justify-content: normal;
       align-items: center;
       gap: var(--space-2);

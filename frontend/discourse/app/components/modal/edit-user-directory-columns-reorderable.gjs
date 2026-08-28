@@ -139,8 +139,8 @@ export default class EditUserDirectoryColumns extends Component {
             @onMove={{this.handleMove}}
             @tag="div"
             @itemTag="div"
-            @rowClass="edit-directory-column --reorderable"
-            class="edit-directory-columns-container --reorderable"
+            @rowClass="edit-directory-column"
+            class="edit-directory-columns-container"
           >
             <:row as |column|>
               <div class="left-content">

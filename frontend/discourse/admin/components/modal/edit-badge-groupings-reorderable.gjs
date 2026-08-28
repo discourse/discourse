@@ -97,8 +97,8 @@ export default class EditBadgeGroupings extends Component {
             @onRemove={{this.delete}}
             @removable={{this.canDelete}}
             @controls="manual"
-            @rowClass="badge-grouping-item --reorderable"
-            class="badge-groupings-list --reorderable"
+            @rowClass="badge-grouping-item"
+            class="badge-groupings-list"
           >
             <:row as |wc controls|>
               <controls.handle />

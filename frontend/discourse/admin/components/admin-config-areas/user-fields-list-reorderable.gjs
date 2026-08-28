@@ -109,7 +109,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
             @controls="manual"
             @tag="tbody"
             @itemTag="tr"
-            @rowClass="d-table__row admin-user_field-item --reorderable"
+            @rowClass="d-table__row admin-user_field-item"
             class="d-table__body"
           >
             <:row as |field controls|>

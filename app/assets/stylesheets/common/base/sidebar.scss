@@ -583,18 +583,18 @@
 }
 
 /* The section form's links region behind `enable_new_reordering_controls`.
-   Keyed on the modifier the new markup carries, so every rule here outranks the
-   legacy one it replaces without depending on stylesheet order, and none of it
-   applies while the legacy rows render.
+   Keyed on the classes the shared list puts on its own root and rows, so every
+   rule here outranks the legacy one it replaces without depending on stylesheet
+   order, and none of it applies while the legacy rows render.
 
-   TODO (ui-kit-reorderable-list-cleanup) fold back into the blocks above and
-   drop the modifier once the change ships. */
+   TODO (ui-kit-reorderable-list-cleanup) fold back into the blocks above once
+   the change ships. */
 
 .sidebar-section-form-modal {
   /* The tracks live on the wrapper and every row reaches them through subgrid,
      so the header and the rows resolve one set of columns. */
 
-  .sidebar-section-form__links-wrapper.--reorderable {
+  .sidebar-section-form__links-wrapper.d-reorderable-list {
     display: grid;
     grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
 
@@ -604,7 +604,7 @@
     }
   }
 
-  .row-wrapper.--reorderable {
+  .row-wrapper.d-reorderable-list__row {
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
 
@@ -644,15 +644,6 @@
       }
     }
 
-    /* Two-line rows have no columns for these to head; each control names
-       itself, and the picker shows its icon. */
-
-    &.header {
-      @include viewport.until(sm) {
-        display: none;
-      }
-    }
-
     /* Drawn on the row's own reserved border so adjacent rows keep sharing one
        gutter. The shared primitive's inserted line is dropped rather than
        overridden, or both would show at once. */
@@ -671,6 +662,18 @@
       &::after {
         content: none;
       }
+    }
+  }
+
+  /* The header is the list's own block, not one of its rows, so it is reached
+     through the list root rather than the row selector.
+
+     Two-line rows have no columns for these to head; each control names itself,
+     and the picker shows its icon. */
+
+  .d-reorderable-list .row-wrapper.header {
+    @include viewport.until(sm) {
+      display: none;
     }
   }
 

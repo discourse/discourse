@@ -628,19 +628,19 @@ $db-bar-height: var(--space-2);
 }
 
 /* The reordering surface behind `enable_new_reordering_controls`. Keyed on the
-   modifier the new markup carries, so these rules are inert while the legacy
-   rows render and need no flag scoping of their own.
+   classes the shared list puts on its own root and rows, so these rules are
+   inert while the legacy rows render and need no flag scoping.
 
-   TODO (ui-kit-reorderable-list-cleanup) fold back into the blocks above and
-   drop the modifier once the change ships. */
+   TODO (ui-kit-reorderable-list-cleanup) fold back into the blocks above once
+   the change ships. */
 
-.db-configure__list.--reorderable {
+.db-configure__list.d-reorderable-list {
   /* Rows tile edge to edge instead. A gap belongs to the container, so a drag
      crossing it reaches no drop target and the above/below zones stop meeting. */
   gap: normal;
 }
 
-.db-configure__row.--reorderable {
+.db-configure__row.d-reorderable-list__row {
   padding: calc(var(--space-3) / 2 + var(--space-half)) 0;
 
   /* The grip carries its own cursor; promising the whole row drags would

@@ -176,8 +176,8 @@ export default class EmojiValueList extends Component {
             @onMove={{this.handleMove}}
             @onRemove={{this.removeValue}}
             @removable={{this.isEditable}}
-            @rowClass="value --reorderable"
-            class="values emoji-value-list --reorderable"
+            @rowClass="value"
+            class="values emoji-value-list"
           >
             <:row as |data controls|>
               <div

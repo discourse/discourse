@@ -181,8 +181,8 @@ export default class ValueList extends Component {
         @onRemove={{this.removeValue}}
         @tag="div"
         @itemTag="div"
-        @rowClass="value --reorderable"
-        class="values --reorderable"
+        @rowClass="value"
+        class="values"
       >
         <:row as |value controls|>
           <Input

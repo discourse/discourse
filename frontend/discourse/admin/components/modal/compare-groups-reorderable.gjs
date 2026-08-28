@@ -47,8 +47,8 @@ export default class CompareGroups extends Component {
   /** Keeps the row's own class and its enabled modifier on the row element. */
   rowClass = (row) =>
     row.enabled
-      ? "manageable-row-list__row --reorderable --enabled"
-      : "manageable-row-list__row --reorderable";
+      ? "manageable-row-list__row --enabled"
+      : "manageable-row-list__row";
 
   /** Names a row wherever the list speaks about it: the handle, the menu, the announcement. */
   rowLabel = (row) => row.title;
@@ -173,7 +173,7 @@ export default class CompareGroups extends Component {
 
       <:body>
         <DReorderableList
-          class="manageable-row-list__list --reorderable"
+          class="manageable-row-list__list"
           @disabled={{not this.list.reorderable}}
           @items={{this.visibleRows}}
           @key="key"

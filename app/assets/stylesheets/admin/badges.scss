@@ -259,15 +259,15 @@
 }
 
 /* The reordering surface behind `enable_new_reordering_controls`.
-   TODO (ui-kit-reorderable-list-cleanup) fold back above and drop the modifier
-   once the change ships. */
+   TODO (ui-kit-reorderable-list-cleanup) fold back above once the change
+   ships. */
 
 .badge-groupings-modal {
   .badge-groupings-list {
     /* The name takes the slack, so the actions stay against the row's end while
        the grip stays against its start. */
 
-    .badge-grouping-item.--reorderable {
+    .badge-grouping-item.d-reorderable-list__row {
       justify-content: normal;
       gap: 0.5em;
 
