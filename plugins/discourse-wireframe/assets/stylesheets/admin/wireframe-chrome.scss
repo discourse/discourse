@@ -2532,6 +2532,7 @@ body.wireframe-active
 }
 
 .wireframe-empty-drop-placeholder {
+  --wf-empty-margin: 0.25rem;
   container-type: inline-size;
   container-name: wireframe-empty;
   position: relative;
@@ -2539,9 +2540,12 @@ body.wireframe-active
   align-items: center;
   justify-content: center;
   gap: var(--wf-gap);
-  width: 100%;
+
+  /* A button is shrink-to-fit, so the width is explicit; it also has to pay
+     for its own margin or it spills past the frame it sits in. */
+  width: calc(100% - 2 * var(--wf-empty-margin));
   min-height: 4rem;
-  margin: 0.25rem;
+  margin: var(--wf-empty-margin);
   padding: 1rem;
   border: 0;
   background: rgb(0 0 0 / 0.02);
@@ -2572,8 +2576,8 @@ body.wireframe-active
   }
 
   .wireframe-grid-cell > & {
+    --wf-empty-margin: 0;
     align-self: stretch;
-    margin: 0;
     min-height: 0;
     padding: 0.35rem;
   }
@@ -4655,6 +4659,8 @@ body.wireframe-active {
 }
 
 .wireframe-drop-preview {
+  /* The geometry it is handed is the painted box, border included. */
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
