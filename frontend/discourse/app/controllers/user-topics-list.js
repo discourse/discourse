@@ -17,7 +17,6 @@ import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
   @service site;
-  @service siteSettings;
 
   @tracked model;
   @tracked listContext = "user-activity";
@@ -61,11 +60,7 @@ export default class UserTopicsListController extends Controller {
   }
 
   get showBottomDismissButtons() {
-    return (
-      !this.site.mobileView ||
-      (this.site.mobileView &&
-        !this.siteSettings.floating_dismiss_topics_on_mobile)
-    );
+    return !this.site.mobileView;
   }
 
   @computed("model.topics.length", "incomingCount")

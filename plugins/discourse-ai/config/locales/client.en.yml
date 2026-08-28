@@ -1694,6 +1694,8 @@ en:
         rejected_tool_action:
           title: "Tool rejected"
       types:
+        discourse_ai_triage:
+          title: "AI triage"
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:

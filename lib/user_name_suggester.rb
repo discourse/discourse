@@ -102,6 +102,14 @@ module UserNameSuggester
     end
   end
 
+  # Whether a username is the generic fallback (e.g. "user1") rather than a name
+  # derived from real signup data. Callers use it to decide whether the name is
+  # worth offering back to the user as a suggestion.
+  def self.generic_username?(username)
+    base = User.normalize_username(username.to_s.sub(/\d+\z/, ""))
+    base.present? && base == User.normalize_username(fix_username(nil).to_s.sub(/\d+\z/, ""))
+  end
+
   def self.fix_username(name, allow_generic_fallback: true)
     fixed_username = sanitize_username(name)
     if fixed_username.blank?

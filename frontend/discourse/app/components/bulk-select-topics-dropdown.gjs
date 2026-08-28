@@ -297,7 +297,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         break;
       case "close-topics":
         this.showBulkTopicActionsModal("close", "close_topics", {
-          allowSilent: true,
           description: i18n(`topic_bulk_actions.close_topics.description`),
           confirmButtonTranslationKey: "topics.bulk.confirm_close_topics",
         });

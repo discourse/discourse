@@ -11873,7 +11873,6 @@ CREATE TABLE public.user_options (
     sidebar_show_count_of_new_items boolean DEFAULT false NOT NULL,
     watched_precedence_over_muted boolean DEFAULT false NOT NULL,
     chat_separate_sidebar_mode integer DEFAULT 0 NOT NULL,
-    topics_unread_when_closed boolean DEFAULT true NOT NULL,
     show_thread_title_prompts boolean DEFAULT true NOT NULL,
     auto_image_caption boolean DEFAULT false NOT NULL,
     enable_smart_lists boolean DEFAULT true NOT NULL,
@@ -23360,9 +23359,12 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260828145150'),
+('20260826124054'),
 ('20260824091843'),
 ('20260824072257'),
 ('20260824051214'),
+('20260821210913'),
+('20260821210543'),
 ('20260821164114'),
 ('20260820171539'),
 ('20260820143851'),

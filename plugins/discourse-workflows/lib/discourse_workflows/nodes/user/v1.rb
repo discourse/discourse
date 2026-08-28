@@ -134,7 +134,7 @@ module DiscourseWorkflows
             edit_user(exec_ctx, user, actor, item_index, extensions:)
           else
             raise_node_error!(
-              I18n.t("discourse_workflows.errors.user.unknown_operation", operation: operation),
+              I18n.t("discourse_workflows.errors.unknown_operation", operation: operation),
             )
           end
         end

@@ -135,6 +135,12 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(encoded[0][:mime_type]).to eq("image/jpeg")
   end
 
+  it "does not raise when an upload no longer exists" do
+    missing_id = Upload.maximum(:id).to_i + 1
+
+    expect(described_class.encode(upload_ids: [missing_id], max_pixels: 1_048_576)).to be_empty
+  end
+
   describe ".doc, .docx, .xls, and .xlsx uploads" do
     before { SiteSetting.authorized_extensions = "*" }
 

@@ -1,7 +1,6 @@
 en:
   admin_js:
     admin:
-      calendar: "Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
@@ -27,6 +26,7 @@ en:
             topic_id:
               label: Topic ID
     discourse_events:
+      title: "Events"
       livestream:
         zoom:
           join: "Join Zoom"

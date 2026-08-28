@@ -174,7 +174,7 @@ export default class SiteTrafficExplorer extends Component {
       ? moment(partial.available_start_date).format("ll")
       : null;
 
-    const pageviewLimitStart = moment(partial.pageview_limit_start_at);
+    const pageviewLimitStart = moment.utc(partial.pageview_limit_start_at);
     const pageviewLimitDate = pageviewLimitStart.format("ll");
     const pageviewLimitTime = pageviewLimitStart.format("LT");
 

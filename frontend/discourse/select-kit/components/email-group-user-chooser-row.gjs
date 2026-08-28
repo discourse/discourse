@@ -32,7 +32,7 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
   get shouldExcludeGroupName() {
     return (
       this.selectKit.options.excludeGroupNameWhenMatchingFullName &&
-      this.item.full_name.toLowerCase() ===
+      (this.item.full_name || "").toLowerCase() ===
         this.item.id.toLowerCase().replaceAll("_", " ").replaceAll("-", " ")
     );
   }
@@ -86,11 +86,17 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
             <span class="identifier">{{this.item.id}}</span>
           {{/unless}}
           <span class="name">{{this.item.full_name}}</span>
-        {{else}}
-          <span class="name">{{this.item.full_name}}</span>
-          {{#unless this.shouldExcludeGroupName}}
-            <span class="identifier">{{this.item.id}}</span>
-          {{/unless}}
+        {{else if (eq this.groupNameOrdering "groupFullNameFirst")}}
+          {{#if this.item.full_name}}
+            <span class="name">{{this.item.full_name}}</span>
+            {{#unless this.shouldExcludeGroupName}}
+              <span class="identifier">{{this.item.id}}</span>
+            {{/unless}}
+          {{else}}
+            {{#unless this.shouldExcludeGroupName}}
+              <span class="name">{{this.item.id}}</span>
+            {{/unless}}
+          {{/if}}
         {{/if}}
       </div>
     {{else}}

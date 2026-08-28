@@ -77,6 +77,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "create-topic-button-draft-menu-class",
   "create-topic-icon",
   "create-topic-label",
+  "draft-icon",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",

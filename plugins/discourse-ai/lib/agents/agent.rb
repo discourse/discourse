@@ -116,7 +116,9 @@ module DiscourseAi
             Tools::LockPost,
             Tools::DeleteTopic,
             Tools::EditPost,
+            Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
             Tools::MovePosts,
@@ -149,7 +151,9 @@ module DiscourseAi
 
           if SiteSetting.tagging_enabled
             tools << Tools::ListTags
-            tools << Tools::EditTags
+            tools << Tools::CreateTag
+            tools << Tools::EditTag
+            tools << Tools::ChangeTopicTags
           end
 
           # Image generation tools - use custom UI-configured tools

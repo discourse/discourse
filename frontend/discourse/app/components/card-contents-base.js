@@ -182,6 +182,8 @@ export default class CardContentsBase extends Component {
         event.preventDefault();
         event.stopPropagation();
       }
+
+      return true;
     }
 
     return false;
