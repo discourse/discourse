@@ -92,7 +92,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
         <table class="d-table user-fields">
           <thead class="d-table__header">
             <tr class="d-table__row">
-              <th class="d-table__header-cell --reorder"></th>
+              <th class="d-table__header-cell --drag-handle"></th>
               <th class="d-table__header-cell">{{i18n
                   "admin.config_areas.user_fields.field"
                 }}</th>
