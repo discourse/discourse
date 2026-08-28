@@ -92,7 +92,11 @@ export default class AdminReportRelatedItems extends Component {
                 </td>
                 <td class="admin-report-related-items__timestamp-cell">
                   <time datetime={{item.timestamp}}>
-                    {{dFormatDate item.timestamp format="medium"}}
+                    {{dFormatDate
+                      item.timestamp
+                      format="medium"
+                      leaveAgo="true"
+                    }}
                   </time>
                 </td>
               </tr>

@@ -19,6 +19,10 @@
 }
 
 .solved-admin-report-table-summary {
+  &__list {
+    gap: var(--space-4);
+  }
+
   &__topic-link {
     overflow-wrap: anywhere;
   }

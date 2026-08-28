@@ -6741,7 +6741,7 @@ en:
           labels:
             user: "User"
             created_at: "Created at"
-            first_post: "First post"
+            first_post: "First post created at"
           table_summary:
             trigger: "Show summary for %{date}"
             users_title: "Users on %{date}"

@@ -113,7 +113,9 @@ export default class SolvedAdminReportTableSummary extends Component {
               {{i18n "admin.reports.related_items.table_summary.loading"}}
             </p>
           {{else if this.hasItems}}
-            <ul class="admin-report-table-summary__list">
+            <ul
+              class="admin-report-table-summary__list solved-admin-report-table-summary__list"
+            >
               {{#each this.items as |item|}}
                 <li class="admin-report-table-summary__item">
                   <a
