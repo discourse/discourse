@@ -139,7 +139,9 @@ export default function dElement(
 
   if (tagName === "") {
     wrapper = empty;
-  } else if (shortcuts[tagName as ShortcutTag]) {
+    // `hasOwn`, not a bare read: the table is a plain object, so a tag named after
+    // an inherited member would otherwise resolve to that member.
+  } else if (Object.hasOwn(shortcuts, tagName)) {
     wrapper = shortcuts[tagName as ShortcutTag];
   } else {
     const cached = fallbacks.get(tagName);
