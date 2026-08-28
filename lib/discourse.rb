@@ -1314,7 +1314,7 @@ module Discourse
         ActionviewPrecompiler.precompile
       end,
       Thread.new do
-        LetterAvatar.vips_version
+        LetterAvatar.version
         LetterAvatar.cleanup_old
       end,
       Thread.new { SvgSprite.core_svgs },

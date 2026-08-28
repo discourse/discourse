@@ -2280,6 +2280,7 @@ en:
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
     instrument_image_processing: "Record wall-clock duration and success for image-processing operations. Disabled by default."
+    enable_vips_image_processing: "Use libvips for letter avatar generation and dominant color detection. Disabled by default."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."

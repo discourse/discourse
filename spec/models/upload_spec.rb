@@ -973,8 +973,8 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq("FF0000")
 
       expect(high_color_image.dominant_color).to eq(nil)
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("00A0F0")
-      expect(high_color_image.dominant_color).to eq("00A0F0")
+      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
+      expect(high_color_image.dominant_color).to eq("009FEF")
 
       uncached_tiny_color = tiny_image.dominant_color
 
@@ -982,19 +982,28 @@ RSpec.describe Upload do
 
       calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
 
-      expect(calculated_tiny_color).to eq("171613")
+      expect(calculated_tiny_color).to eq("524F40")
 
       cached_tiny_color = tiny_image.dominant_color
 
       expect(cached_tiny_color).to eq(calculated_tiny_color)
     end
 
+    it "uses libvips to calculate the dominant color when enabled" do
+      SiteSetting.enable_vips_image_processing = true
+
+      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("171613")
+    end
+
     it "stores an empty dominant color for ICO images" do
+      SiteSetting.enable_vips_image_processing = true
+
       expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(ico_image.dominant_color).to eq("")
     end
 
     it "retries the dominant color after image processing fails" do
+      SiteSetting.enable_vips_image_processing = true
       DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
@@ -1048,6 +1057,7 @@ RSpec.describe Upload do
     end
 
     it "stores an empty string for an invalid dominant color response" do
+      SiteSetting.enable_vips_image_processing = true
       DiscourseVips.stubs(:dominant_color).returns("invalid")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")

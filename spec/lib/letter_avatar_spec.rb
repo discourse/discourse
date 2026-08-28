@@ -31,5 +31,22 @@ RSpec.describe LetterAvatar do
         FileUtils.rm_f(described_class.fullsize_path(identity))
       end
     end
+
+    it "generates a PNG avatar with libvips when enabled" do
+      SiteSetting.enable_vips_image_processing = true
+      username = "A"
+      avatar_size = 45
+
+      generated_path = described_class.generate(username, avatar_size, cache: false)
+
+      expect(FastImage.type(generated_path)).to eq(:png)
+      expect(FastImage.size(generated_path)).to eq([avatar_size, avatar_size])
+    ensure
+      if generated_path
+        identity = LetterAvatar::Identity.from_username(username)
+        FileUtils.rm_f(generated_path)
+        FileUtils.rm_f(described_class.fullsize_path(identity))
+      end
+    end
   end
 end

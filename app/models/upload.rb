@@ -378,8 +378,8 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    color = "" if !FileHelper.is_supported_image?("image.#{extension}") ||
-      %w[svg ico].include?(extension)
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg" ||
+      (SiteSetting.enable_vips_image_processing && extension == "ico")
 
     if color.nil?
       local_path ||=
@@ -397,15 +397,40 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          color =
-            DiscourseVips.dominant_color(
-              input_path: local_path,
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            )
-          color = "" if color !~ /\A[0-9A-F]{6}\z/
-          color
-        rescue DiscourseVips::InvalidImage
-          # Unable to parse image
+          if SiteSetting.enable_vips_image_processing
+            color =
+              DiscourseVips.dominant_color(
+                input_path: local_path,
+                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+              )
+            color = "" if color !~ /\A[0-9A-F]{6}\z/
+            color
+          else
+            data =
+              ImageMagick.magick(
+                local_path,
+                "-depth",
+                "8",
+                "-resize",
+                "1x1",
+                "-define",
+                "histogram:unique-colors=true",
+                "-format",
+                "%c",
+                "histogram:info:",
+                operation: :upload_dominant_color,
+                read: [local_path],
+                nice: 10,
+                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+              )
+
+            color = data[/#([0-9A-F]{6})/, 1]
+            raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+
+            color
+          end
+        rescue DiscourseVips::InvalidImage, Discourse::Utils::CommandError
+          # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
           ""
