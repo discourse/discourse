@@ -208,11 +208,16 @@ after_initialize do
           .count
     end
 
+    guardian = report.guardian || Guardian.new
     solved_topics =
-      current_accepted_solutions.includes({ topic: :category }, answer_posts: :user).order(
-        created_at: :desc,
-      )
-    solved_topics = solved_topics.limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+      current_accepted_solutions
+        .merge(Topic.listable_topics.secured(guardian))
+        .includes({ topic: :category }, answer_posts: :user)
+        .order(created_at: :desc)
+        .limit(report.limit || Report::RELATED_ITEMS_LIMIT)
+        .to_a
+    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: solved_topics.map(&:topic_id))
+    solved_topics.select! { |solved_topic| visible_topic_ids.include?(solved_topic.topic_id) }
 
     report.related_items = {
       solved_topics:

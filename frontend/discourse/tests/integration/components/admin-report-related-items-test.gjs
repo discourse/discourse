@@ -46,4 +46,40 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
       .dom(".admin-report-related-items__name")
       .hasText("Dana Whitfield", "shows the user's name");
   });
+
+  test("preserves report dates in positive UTC offsets", async function (assert) {
+    this.set("relatedItems", {
+      users: [
+        {
+          user: {
+            id: 1,
+            username: "dana_whitfield",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/d/3be4f0/{size}.png",
+          },
+          timestamp: "2026-08-18T08:42:00Z",
+        },
+      ],
+    });
+    this.set("startDate", moment.parseZone("2026-07-26T00:00:00+08:00"));
+    this.set("endDate", moment.parseZone("2026-08-27T00:00:00+08:00"));
+
+    await render(
+      <template>
+        <AdminReportRelatedItems
+          @relatedItems={{this.relatedItems}}
+          @startDate={{this.startDate}}
+          @endDate={{this.endDate}}
+          @type="signups"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".admin-report-related-items__description")
+      .hasText(
+        "New accounts created between Jul 26, 2026 and Aug 27, 2026, newest first.",
+        "keeps the selected calendar dates"
+      );
+  });
 });

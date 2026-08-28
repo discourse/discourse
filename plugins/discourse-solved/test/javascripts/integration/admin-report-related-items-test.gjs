@@ -82,6 +82,40 @@ module(
         .includesText("Support", "shows the category");
     });
 
+    test("preserves report dates in positive UTC offsets", async function (assert) {
+      this.set("relatedItems", {
+        solved_topics: [
+          {
+            topic: {
+              title: "Composer loses draft when switching categories",
+              url: "/t/composer-loses-draft-when-switching-categories/1",
+            },
+            solved_by_users: [],
+          },
+        ],
+      });
+      this.set("startDate", moment.parseZone("2026-07-26T00:00:00+08:00"));
+      this.set("endDate", moment.parseZone("2026-08-27T00:00:00+08:00"));
+
+      await render(
+        <template>
+          <AdminReportRelatedItems
+            @relatedItems={{this.relatedItems}}
+            @startDate={{this.startDate}}
+            @endDate={{this.endDate}}
+            @type="accepted_solutions"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".admin-report-related-items__description")
+        .hasText(
+          "Topics marked as solved between Jul 26, 2026 and Aug 27, 2026, newest first.",
+          "keeps the selected calendar dates"
+        );
+    });
+
     test("uses the table summary component registered for the report", async function (assert) {
       pretender.get("/admin/reports/accepted_solutions", () =>
         response({

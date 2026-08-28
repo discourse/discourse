@@ -10,8 +10,14 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     topic
   end
 
-  def build(filters: {})
-    Report.find("accepted_solutions", start_date: 2.days.ago, end_date: Time.current, filters:)
+  def build(filters: {}, guardian: nil)
+    Report.find(
+      "accepted_solutions",
+      start_date: 2.days.ago,
+      end_date: Time.current,
+      filters:,
+      guardian:,
+    )
   end
 
   it "counts accepted solutions across all categories when no filter is given" do
@@ -69,6 +75,21 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
 
     expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
       [in_range_topic.title],
+    )
+  end
+
+  it "only includes solved topic details visible to the report guardian" do
+    private_topic = solved_topic_in(Fabricate(:private_category, group: Fabricate(:group)))
+    visible_topic = solved_topic_in(Fabricate(:category))
+    moderator = Fabricate(:moderator)
+
+    expect(moderator.guardian.can_see_topic?(private_topic)).to be(false)
+
+    report = build(guardian: moderator.guardian)
+
+    expect(report.total).to eq(2)
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [visible_topic.title],
     )
   end
 

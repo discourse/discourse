@@ -27,15 +27,15 @@ export default class AdminReportRelatedItems extends Component {
   }
 
   get startDate() {
-    return moment
-      .utc(this.args.startDate)
-      .format(i18n("dates.long_with_year_no_time"));
+    return moment(this.args.startDate).format(
+      i18n("dates.long_with_year_no_time")
+    );
   }
 
   get endDate() {
-    return moment
-      .utc(this.args.endDate)
-      .format(i18n("dates.long_with_year_no_time"));
+    return moment(this.args.endDate).format(
+      i18n("dates.long_with_year_no_time")
+    );
   }
 
   userProfilePath(user) {
