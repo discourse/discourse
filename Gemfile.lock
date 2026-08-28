@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/discourse/ruby-landlock.git
-  revision: e39d65acd53fcee8d44fc0efcdb7c846e153cab9
+  revision: 5cef41635b25e9b1130adea9569acb8ca41d8e63
   branch: tgxworld/capture-fork
   specs:
     landlock (0.4.1)
