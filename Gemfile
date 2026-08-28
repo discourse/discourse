@@ -274,6 +274,9 @@ gem "cgi", ">= 0.3.6", require: false
 gem "tzinfo-data"
 gem "csv", require: false
 
+# Rails 8.1 drops its own dependency on `benchmark`.
+gem "benchmark", require: false
+
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"

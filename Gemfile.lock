@@ -832,6 +832,7 @@ DEPENDENCIES
   aws-sdk-s3
   aws-sdk-sns
   aws-sdk-sts
+  benchmark
   better_errors
   bootsnap
   bullet
