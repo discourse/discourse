@@ -1,9 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
@@ -245,6 +241,7 @@ export default class DVirtualizer<T> extends Modifier<
   #flushScheduled = false;
   #flushTimer: ReturnType<typeof schedule> | null = null;
   #getItemKey: ((index: number) => VirtualKey) | null = null;
+  #getItemKeyEstimate: ((item: T, index: number) => number) | null = null;
   #getItemKeyField: string | undefined;
   #getItemKeyItems: readonly T[] | null = null;
   #lastSignature: StateSignature | null = null;
@@ -445,12 +442,7 @@ export default class DVirtualizer<T> extends Modifier<
    */
   #resyncScrollOffset() {
     const element = this.#element;
-    if (
-      this.#syncingScroll ||
-      !element?.isConnected ||
-      isDestroying(this) ||
-      isDestroyed(this)
-    ) {
+    if (this.#syncingScroll || !element?.isConnected || isDestroying(this)) {
       return;
     }
     const engineOffset = this.#virtualizer?.scrollOffset ?? null;
@@ -534,12 +526,7 @@ export default class DVirtualizer<T> extends Modifier<
         this.#syncScrollOffset(before);
       },
       armEdge: (edge) => {
-        if (
-          !this.#virtualizer ||
-          this.#inEdgeCallback ||
-          isDestroying(this) ||
-          isDestroyed(this)
-        ) {
+        if (!this.#virtualizer || this.#inEdgeCallback || isDestroying(this)) {
           return;
         }
         if (edge === "end") {
@@ -616,7 +603,6 @@ export default class DVirtualizer<T> extends Modifier<
       this.#syncingScroll ||
       !element?.isConnected ||
       isDestroying(this) ||
-      isDestroyed(this) ||
       element.scrollTop === previousScrollTop
     ) {
       return;
@@ -643,13 +629,22 @@ export default class DVirtualizer<T> extends Modifier<
     if (
       !this.#getItemKey ||
       this.#getItemKeyItems !== items ||
-      this.#getItemKeyField !== key
+      this.#getItemKeyField !== key ||
+      this.#getItemKeyEstimate !== estimateSize
     ) {
       // Count is insufficient: a same-length replacement must key the incoming
       // items rather than keep reading the outgoing array.
+      //
+      // The estimate belongs in this condition even though it is not part of the
+      // key. This function's identity is the only input to the engine's
+      // measurement memo that we control, and the engine does not watch its own
+      // `estimateSize`. Holding the function stable across an estimate change
+      // therefore leaves every unmeasured row at the old size. Measured rows are
+      // unaffected: the size cache is keyed by row key and survives the rebuild.
       this.#getItemKey = (index) => keyFor(items[index], key);
       this.#getItemKeyItems = items;
       this.#getItemKeyField = key;
+      this.#getItemKeyEstimate = estimateSize;
     }
 
     const options: VirtualizerOptions = {
@@ -692,7 +687,7 @@ export default class DVirtualizer<T> extends Modifier<
 
   #flush() {
     this.#flushScheduled = false;
-    if (!this.#virtualizer || isDestroying(this) || isDestroyed(this)) {
+    if (!this.#virtualizer || isDestroying(this)) {
       return;
     }
 
@@ -976,7 +971,7 @@ export default class DVirtualizer<T> extends Modifier<
   }
 
   #scheduleFlush() {
-    if (this.#flushScheduled || isDestroying(this) || isDestroyed(this)) {
+    if (this.#flushScheduled || isDestroying(this)) {
       return;
     }
     this.#flushScheduled = true;
