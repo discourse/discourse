@@ -270,6 +270,7 @@ en:
         "action:modal": "Modal"
         "action:topic_category": "Topic category"
         "action:topic_pin": "Topic pinning"
+        "action:topic_moderation": "Topic moderation"
         "action:flag_user": "Flag user"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
@@ -328,6 +329,7 @@ en:
         "action:modal": "Shows a modal to a user and waits for them to choose an option"
         "action:topic_category": "Set or clear the category of a topic"
         "action:topic_pin": "Pin or unpin a topic in its category, globally, or as a banner"
+        "action:topic_moderation": "Perform moderation actions on a topic"
         "action:flag_user": "Add a user to the review queue for a moderator to approve or reject. Best aimed at unapproved accounts, since approved ones can only be rejected by deletion"
       topic_admin_button:
         label: "Button label"
@@ -440,6 +442,12 @@ en:
         bannered_until_dynamic_hint: "Must resolve to a date and time, for example 2026-08-01 12:00."
         timezone: "Timezone"
         timezone_none: "Workflow default"
+        actor_username: "Performed by user"
+      topic_moderation:
+        operation: "Operation"
+        operations:
+          unlist_topic: "Unlist topic"
+        topic_id: "Topic ID"
         actor_username: "Performed by user"
       limit:
         max_items: "Max items"

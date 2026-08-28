@@ -61,6 +61,8 @@ module DiscourseWorkflows
           }
         },
         "first_post_id": { "type": "integer" },
+        "visible": { "type": "boolean" },
+        "visibility_reason_id": { "type": "integer" },
         "closed": { "type": "boolean" },
         "archived": { "type": "boolean" },
         "created_at": { "type": "string", "format": "date-time" },
