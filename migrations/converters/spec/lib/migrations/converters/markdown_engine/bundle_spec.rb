@@ -75,6 +75,16 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     end
   end
 
+  it "rejects a plugin outside the supported list before building anything" do
+    Dir.mktmpdir do |dir|
+      expect { described_class.load_or_build(cache_dir: dir, plugins: %w[poll discourse-math]) }.to(
+        raise_error(ArgumentError, /unsupported markdown plugins: discourse-math/),
+      )
+      # Rejected before building: no cache file appears.
+      expect(Dir[File.join(dir, "*.json")]).to be_empty
+    end
+  end
+
   it "builds with a configured plugin list instead of the default set" do
     Dir.mktmpdir do |dir|
       custom = described_class.load_or_build(cache_dir: dir, plugins: %w[poll])

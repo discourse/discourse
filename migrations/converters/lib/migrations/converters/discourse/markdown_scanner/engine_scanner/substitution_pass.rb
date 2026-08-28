@@ -286,6 +286,11 @@ module Migrations
               unconfirmed = 0
               pos = 0
               while (offset = @input.byteindex(/\[quote=/i, pos))
+                # Once the limit or the budget is hit, the body carries its
+                # refusal regardless of how many openers remain, so scanning
+                # the rest would only cost time and allocations. The opener
+                # whose check hit the limit was already counted below.
+                break if @limit_hit
                 pos = offset + 1
                 match = @scanner.quote_construct.detect_block_opener(@input, offset)
                 if match.nil?

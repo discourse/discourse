@@ -514,6 +514,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
     end
 
     it "leaves a markdown link with an over-cap punctuation-only query alone" do
@@ -522,6 +523,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.uploads).to be_empty
+      expect(extractor.engine_refusals).to be_empty
     end
 
     it "takes a short URL with a query whole in a markdown link" do
@@ -530,6 +532,37 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       upload = buffer.uploads.first
       expect(upload).to include(original_markdown: "[file](/uploads/short-url/21.png?v=2)")
       expect(result).to eq(upload[:placeholder])
+    end
+
+    # A destination may end in a bare `?` or `#`; the engine keeps the
+    # marker in the href, so the construct takes it as part of the URL.
+    it "takes a short URL ending in a bare query marker whole" do
+      result = extract("[file](/uploads/short-url/21.png?)")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(original_markdown: "[file](/uploads/short-url/21.png?)")
+      expect(result).to eq(upload[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "takes a full upload URL ending in a bare query marker whole" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png?"
+      result = extract("[file](#{url})")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: "[file](#{url})")
+      expect(result).to eq(upload[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
+    end
+
+    it "takes a full upload URL ending in a bare fragment marker whole" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png#"
+      result = extract("[file](#{url})")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: "[file](#{url})")
+      expect(result).to eq(upload[:placeholder])
+      expect(extractor.engine_refusals).to be_empty
     end
   end
 

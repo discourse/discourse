@@ -151,6 +151,11 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Config do
               "assets/javascripts/**/discourse-markdown/**/*.{js,js.es6}",
             )
           ]
+        # A supported plugin with no markdown files would make this example
+        # pass with nothing checked — that happens when the plugin's file
+        # layout changes, and it means the plugin is no longer bundled.
+        expect(files).not_to be_empty,
+        "#{plugin} has no markdown feature files under the known path"
         missing = keys_read_in(files).uniq - covered_keys
         expect(missing).to be_empty,
         "#{plugin} reads siteSettings keys SETTING_KEYS does not cover: #{missing.inspect}"

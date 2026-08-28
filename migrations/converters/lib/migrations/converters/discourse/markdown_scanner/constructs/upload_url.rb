@@ -75,13 +75,28 @@ module Migrations
             # over except sentence punctuation at a URL boundary: a query
             # longer than the cap must not match partially, because replacing
             # a URL up to a mid-query cut would leave the rest behind as
-            # literal text. The final lookbehind backs sentence punctuation
-            # out of the end of the match.
+            # literal text. A bare `?` or `#` with nothing after it is part
+            # of the URL too — a markdown destination like `(…21.png?)` keeps
+            # it, and so does the engine. The final guard backs sentence
+            # punctuation out of the end of the match, except when that end
+            # is such a bare marker.
             QUERY_FRAGMENT =
               /
-                (?: \? [^##{Base::URL_TERMINATORS}]{1,1024} (?= [.,;:!?]* (?: [##{Base::URL_TERMINATORS}] | \z ) ) )?
-                (?: \# [^#{Base::URL_TERMINATORS}]{1,255} (?= [.,;:!?]* (?: [#{Base::URL_TERMINATORS}] | \z ) ) )?
-                (?<! [.,;:!?] )
+                (?:
+                  \?
+                  (?:
+                    [^##{Base::URL_TERMINATORS}]{1,1024} (?= [.,;:!?]* (?: [##{Base::URL_TERMINATORS}] | \z ) )
+                    | (?= [.,;:!?]* (?: [##{Base::URL_TERMINATORS}] | \z ) | \# )
+                  )
+                )?
+                (?:
+                  \#
+                  (?:
+                    [^#{Base::URL_TERMINATORS}]{1,255} (?= [.,;:!?]* (?: [#{Base::URL_TERMINATORS}] | \z ) )
+                    | (?= [.,;:!?]* (?: [#{Base::URL_TERMINATORS}] | \z ) )
+                  )
+                )?
+                (?: (?<! [.,;:!?] ) | (?<= [?\#] ) )
               /x
             private_constant :QUERY_FRAGMENT
 

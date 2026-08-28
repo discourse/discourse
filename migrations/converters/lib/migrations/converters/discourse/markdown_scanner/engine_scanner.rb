@@ -59,7 +59,17 @@ module Migrations
           # is acceptable. Core's PrettyText allows 25 seconds for a full
           # cook; the slowest legitimate parse we measured took 435 ms, and a
           # corpus run with a 60-second ceiling recovered no additional posts.
+          #
+          # The deadline is a close bound, not an exact wall: each call's
+          # ceiling is rounded up to the step below, and the isolate rebuild
+          # for a changed ceiling runs outside the engine's own timeout.
           SLOW_TIMEOUT_MS = 30_000
+
+          # The ceiling shrinks in these steps. The engine rebuilds its
+          # isolate whenever the requested ceiling changes, so a fresh value
+          # per call would rebuild V8 once per substitution check; with
+          # five-second steps a slow body rebuilds at most six times.
+          SLOW_TIMEOUT_STEP_MS = 5_000
 
           # Raised in place of an engine call when the retry deadline has
           # passed, and in place of its result when the call was cut short by
@@ -192,7 +202,13 @@ module Migrations
                 ((@retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)) * 1000).floor
               raise RetryDeadlineError if remaining_ms <= 0
 
-              timeout = timeout.nil? ? remaining_ms : [timeout, remaining_ms].min
+              # Rounded up to the step (see SLOW_TIMEOUT_STEP_MS), so the
+              # ceiling takes few distinct values and the engine rebuilds its
+              # isolate at most once per step. A call may overrun the
+              # deadline by up to one step.
+              steps = (remaining_ms + SLOW_TIMEOUT_STEP_MS - 1) / SLOW_TIMEOUT_STEP_MS
+              stepped_ms = steps * SLOW_TIMEOUT_STEP_MS
+              timeout = timeout.nil? ? stepped_ms : [timeout, stepped_ms].min
             end
             @engine.scan(posts, timeout_ms: timeout)
           end

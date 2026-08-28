@@ -105,6 +105,7 @@ module Migrations
           cache_dir: nil,
           plugins: CORE_MARKDOWN_PLUGINS
         )
+          validate_plugins!(plugins)
           cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
@@ -140,6 +141,7 @@ module Migrations
         # Writes via temp file and atomic rename, so a crashed build cannot
         # leave a truncated cache another run would trust.
         def self.build_and_write(root, cache_file, plugins: CORE_MARKDOWN_PLUGINS)
+          validate_plugins!(plugins)
           # discourse-emojis decides whether to load its railtie by checking
           # for `Rails`, so it must load before the Rails stand-in exists.
           require "discourse_emojis"
@@ -331,7 +333,20 @@ module Migrations
           end
         end
 
-        private_class_method :input_digest,
+        # A plugin outside the supported list would run its markdown rules
+        # with absent settings and tokenize differently from the source site,
+        # so it is rejected before any building.
+        def self.validate_plugins!(plugins)
+          unknown = plugins - CORE_MARKDOWN_PLUGINS
+          return if unknown.empty?
+
+          raise ArgumentError,
+                "unsupported markdown plugins: #{unknown.join(", ")} " \
+                  "(supported: #{CORE_MARKDOWN_PLUGINS.join(", ")})"
+        end
+
+        private_class_method :validate_plugins!,
+                             :input_digest,
                              :digest_globs,
                              :input_files,
                              :plugin_files,

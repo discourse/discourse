@@ -617,10 +617,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(budgets).to all(be < slow_ceiling)
     end
 
-    it "shrinks every engine call's ceiling toward the deadline and stops at zero" do
-      engine_scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
-      # A scripted clock: each engine call costs ten scripted seconds, so the
-      # 30-second deadline is spent after three calls on the retry.
+    it "shrinks every engine call's ceiling in steps toward the deadline and stops at zero" do
+      # A scripted clock: each engine call costs seven scripted seconds, so
+      # the remaining time is rarely a step multiple and the rounding shows.
       now = 0.0
       allow(Process).to receive(:clock_gettime).and_call_original
       allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC) { now }
@@ -630,7 +629,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       allow(slow_engine).to receive(:scan) do |posts, timeout_ms: nil|
         ceilings << timeout_ms
         calls += 1
-        now += 10.0
+        now += 7.0
         raise MiniRacer::ScriptTerminatedError, "terminated" if calls == 1
         markdown_engine.scan(posts)
       end
@@ -643,21 +642,23 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           on_engine_refusal: ->(cause, _detail) { refusals << cause },
         )
 
-      # One copy in code and three in prose: counts cannot match, so every
+      # One copy in code and five in prose: counts cannot match, so every
       # occurrence needs its own substitution parse — more parses than the
       # deadline has time for.
-      output = extractor.extract("`@alice` and @alice and @alice and @alice")
+      output = extractor.extract("`@alice` and @alice and @alice and @alice and @alice and @alice")
 
       # The fast attempt has no ceiling; the retry's base parse gets the full
-      # deadline; each substitution parse gets only what is left; the fourth
-      # call would start with nothing left and is not made.
-      expect(ceilings).to eq([nil, 30_000, 20_000, 10_000])
+      # deadline; each substitution parse gets the remaining time rounded up
+      # to the next five-second step (23s left becomes a 25s ceiling), so the
+      # engine rebuilds its isolate at most once per step; the call after the
+      # deadline is not made.
+      expect(ceilings).to eq([nil, 30_000, 25_000, 20_000, 10_000, 5_000])
       expect(refusals).to eq(%i[substitution_budget])
-      # The code copy was checked first and found to be no construct; one
-      # prose occurrence was confirmed before the deadline ran out, the
+      # The code copy was checked first and found to be no construct; three
+      # prose occurrences were confirmed before the deadline ran out, the
       # other two stay as written.
       expect(output).to include("`@alice`")
-      expect(buffer.mentions.size).to eq(1)
+      expect(buffer.mentions.size).to eq(3)
       expect(output.scan("@alice").size).to eq(3)
     end
   end
