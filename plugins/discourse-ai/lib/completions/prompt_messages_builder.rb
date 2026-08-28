@@ -290,22 +290,21 @@ module DiscourseAi
         return if upload_ids.blank?
 
         upload_ids = Array(upload_ids).compact.map(&:to_i)
-        uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+        uploads_by_id = uploads_for_prompt(upload_ids).index_by(&:id)
 
-        filtered_upload_ids =
-          upload_ids.select do |upload_id|
-            upload = uploads_by_id[upload_id]
-            upload &&
-              upload_allowed_for_prompt?(
-                upload,
-                include_image_uploads: include_image_uploads,
-                include_document_uploads: include_document_uploads,
-                allowed_attachment_types: allowed_attachment_types,
-                guardian: guardian,
-              )
-          end
+        filtered_upload_ids_from_uploads(
+          upload_ids.filter_map { |upload_id| uploads_by_id[upload_id] },
+          include_image_uploads: include_image_uploads,
+          include_document_uploads: include_document_uploads,
+          allowed_attachment_types: allowed_attachment_types,
+          guardian: guardian,
+        )
+      end
 
-        filtered_upload_ids.presence
+      # Upload#access_control_post is deliberately wrapped in Post.unscoped so a deleted
+      # post still hides its uploads; a bare includes would bypass that and expose them
+      def self.uploads_for_prompt(upload_ids)
+        Post.unscoped { Upload.where(id: upload_ids).includes(:access_control_post).to_a }
       end
 
       def self.filtered_upload_ids_from_uploads(
