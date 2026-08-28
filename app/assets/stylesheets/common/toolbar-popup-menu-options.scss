@@ -75,7 +75,12 @@
       &.--active {
         .d-button-label__active-icon {
           visibility: visible;
-          margin-left: auto;
+        }
+
+        // The check owns the trailing slot at rest, even for a shortcut that
+        // is otherwise always shown.
+        &:not(:hover, :focus, :focus-visible) .shortcut {
+          visibility: hidden;
         }
       }
 
@@ -83,7 +88,7 @@
       &:focus,
       &:focus-visible {
         .shortcut {
-          display: block;
+          visibility: visible;
         }
 
         .d-button-label__active-icon {
@@ -92,32 +97,29 @@
       }
     }
 
+    // The shortcut and the active check share one trailing cell: both are
+    // laid out so the row reserves their width, and only one is shown.
     .d-button-label {
-      position: relative;
       flex: 1;
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: var(--space-4);
-      min-width: 0; // shrink if needed
+      column-gap: var(--space-4);
+      min-width: 0;
 
-      &__active-icon {
+      &__text {
+        text-align: start;
+      }
+
+      &__active-icon,
+      .shortcut {
+        grid-area: 1 / 2;
+        justify-self: end;
         visibility: hidden;
       }
 
-      &__text {
-        padding-right: var(--space-8); // extra spacing for the shortcut
-      }
-
-      .shortcut {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        display: none;
-
-        &.--always-visible {
-          display: block;
-        }
+      .shortcut.--always-visible {
+        visibility: visible;
       }
     }
   }
