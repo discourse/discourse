@@ -195,15 +195,15 @@ module Migrations
             if @retry_deadline
               remaining_ms =
                 ((@retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)) * 1000).floor
-              raise RetryDeadlineError if remaining_ms <= 0
-
-              # Rounded up to the step (see SLOW_TIMEOUT_STEP_MS), so the
+              # Rounded down to the step (see SLOW_TIMEOUT_STEP_MS), so the
               # ceiling takes few distinct values and the engine rebuilds its
-              # isolate at most once per step. The deadline is a close bound,
-              # not an exact wall: a call may overrun it by up to one step,
-              # and an isolate rebuild runs outside the engine's own timeout.
-              steps = (remaining_ms + SLOW_TIMEOUT_STEP_MS - 1) / SLOW_TIMEOUT_STEP_MS
-              stepped_ms = steps * SLOW_TIMEOUT_STEP_MS
+              # isolate at most once per step. A call with less than one full
+              # step remaining is declined, so no call can run past the
+              # deadline; only the isolate rebuild itself runs outside the
+              # engine's timeout.
+              stepped_ms = remaining_ms / SLOW_TIMEOUT_STEP_MS * SLOW_TIMEOUT_STEP_MS
+              raise RetryDeadlineError if stepped_ms <= 0
+
               timeout = timeout.nil? ? stepped_ms : [timeout, stepped_ms].min
             end
             @engine.scan(posts, timeout_ms: timeout)

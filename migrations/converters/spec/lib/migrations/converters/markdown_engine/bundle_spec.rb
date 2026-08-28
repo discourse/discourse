@@ -98,6 +98,17 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     end
   end
 
+  it "treats a duplicated plugin name like a single one" do
+    Dir.mktmpdir do |dir|
+      once = described_class.load_or_build(cache_dir: dir, plugins: %w[poll])
+      twice = described_class.load_or_build(cache_dir: dir, plugins: %w[poll poll])
+
+      # Same digest, so the second call reuses the first call's cache file.
+      expect(Dir[File.join(dir, "markdown-engine-bundle-*.json")].size).to eq(1)
+      expect(twice.entries).to eq(once.entries)
+    end
+  end
+
   it "supports the production fork model: bundle in the parent, context in the worker" do
     # Run in a fresh ruby process so this spec process's own V8 contexts (other
     # examples build them) can't mask or break the property under test: a
