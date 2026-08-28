@@ -404,13 +404,13 @@ class Upload < ActiveRecord::Base
             )
           color = "" if color !~ /\A[0-9A-F]{6}\z/
           color
-        rescue DiscourseVips::TransientError
-          nil
-        rescue DiscourseVips::Error
+        rescue DiscourseVips::InvalidImage
           # Unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
           ""
+        rescue DiscourseVips::Error
+          nil
         end
     end
 

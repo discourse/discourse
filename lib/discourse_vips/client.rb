@@ -33,6 +33,8 @@ module DiscourseVips
           response["value"]
         when "timeout"
           raise OperationTimeout, "libvips operation timed out"
+        when "invalid_image"
+          raise InvalidImage, response["message"].presence || "invalid image"
         else
           raise Error, response["message"].presence || "libvips operation failed"
         end

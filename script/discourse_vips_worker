@@ -10,6 +10,9 @@ require "vips"
 raise LoadError, "libvips 8.13 or newer is required" if !Vips.at_least_libvips?(8, 13)
 
 class DiscourseVipsWorker
+  class InvalidImage < StandardError
+  end
+
   LINUX_PLATFORM = RUBY_PLATFORM.include?("linux")
   private_constant :LINUX_PLATFORM
 
@@ -108,7 +111,12 @@ class DiscourseVipsWorker
             VipsForeignLoadJxl
           ],
         )
-        thumbnail = Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+        thumbnail =
+          begin
+            Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+          rescue Vips::Error => error
+            raise InvalidImage, error.message
+          end
         components = thumbnail.getpoint(0, 0).map(&:round)
         if thumbnail.has_alpha?
           alpha = components.pop / 255.0
@@ -285,6 +293,8 @@ class DiscourseVipsWorker
   def operation_response(operation)
     value = operation.call
     { "status" => "ok", "value" => value }
+  rescue InvalidImage => error
+    { "status" => "invalid_image", "message" => error.message.byteslice(0, 4096) }
   rescue StandardError => error
     { "status" => "error", "message" => error.message.byteslice(0, 4096) }
   end
