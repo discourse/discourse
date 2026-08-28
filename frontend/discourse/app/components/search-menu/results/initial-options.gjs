@@ -174,13 +174,15 @@ export default class InitialOptions extends Component {
         }}
       >
         {{#if this.termMatchesContextTypeKeyword}}
-          <AssistantItem
-            @slug={{this.slug}}
-            @extraHint={{true}}
-            @closeSearchMenu={{@closeSearchMenu}}
-            @searchTermChanged={{@searchTermChanged}}
-            @suggestionKeyword={{this.contextTypeKeyword}}
-          />
+          {{#if this.showSearchShortcuts}}
+            <AssistantItem
+              @slug={{this.slug}}
+              @extraHint={{true}}
+              @closeSearchMenu={{@closeSearchMenu}}
+              @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{this.contextTypeKeyword}}
+            />
+          {{/if}}
         {{else}}
           {{#if
             (or this.search.activeGlobalSearchTerm this.search.searchContext)

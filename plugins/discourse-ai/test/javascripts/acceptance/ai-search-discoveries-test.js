@@ -189,6 +189,12 @@ acceptance("AI Discoveries - header search", function (needs) {
     assert
       .dom(".search-menu-initial-options .search-menu-assistant-item")
       .doesNotExist("the native search-all-topics row steps aside for them");
+
+    await fillIn("#icon-search-input", "miyazaki #code");
+
+    assert
+      .dom(".search-menu-initial-options .search-menu-assistant-item")
+      .doesNotExist("including the row a modifier in the term would bring");
     assert.strictEqual(
       discoveryRequests,
       0,

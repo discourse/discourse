@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -122,6 +123,14 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   get contextActive() {
     return this.termNarrowedToContext;
+  }
+
+  get showContextOption() {
+    if (!this.contextOperator) {
+      return false;
+    }
+
+    return this.contextActive || !this.query?.match(MODIFIER_REGEXP);
   }
 
   get termWithoutContext() {
@@ -248,10 +257,18 @@ export default class AiDiscoveriesSearchOptions extends Component {
 
   @action
   ask() {
-    // asking never honours a scope, so picking it leaves any behind
     this.args.clearTopicContext?.();
     this.args.clearPMInboxContext?.();
-    this.discobotDiscoveries.triggerDiscovery(this.query);
+
+    const question = this.termNarrowedToContext
+      ? this.termWithoutContext
+      : this.query;
+
+    if (question !== this.query) {
+      this.args.searchTermChanged?.(question, { searchTopics: true });
+    }
+
+    this.discobotDiscoveries.triggerDiscovery(question);
   }
 
   <template>
@@ -267,7 +284,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
             @action={{this.searchThisTopic}}
           />
         {{/if}}
-        {{#if this.contextOperator}}
+        {{#if this.showContextOption}}
           <DButton
             class="btn-default btn-small ai-discoveries-search-options__option --{{this.contextKind}}
               {{if this.contextActive 'is-active'}}"

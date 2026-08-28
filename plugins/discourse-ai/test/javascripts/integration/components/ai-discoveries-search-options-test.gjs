@@ -423,6 +423,88 @@ module(
         .hasClass("is-active", "and it reads as the one in effect");
     });
 
+    test("asking leaves the scope it does not honour behind", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      const site = this.owner.lookup("service:site");
+      const category = site.categories.find(
+        (candidate) => !candidate.parentCategory
+      );
+      searchService.activeGlobalSearchTerm = `test #${category.slug}`;
+      searchService.searchContext = category.searchContext;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--category")
+        .hasClass("is-active", "the scope is what is in effect to begin with");
+
+      await click(".ai-discoveries-search-options__option.--ask");
+
+      assert.strictEqual(
+        this.termChanges.at(-1)?.term,
+        "test",
+        "the operator is taken out rather than asked as part of the question"
+      );
+      assert.deepEqual(
+        this.triggeredQueries,
+        ["test"],
+        "and the model is asked the question without it"
+      );
+      assert
+        .dom(".ai-discoveries-search-options__option.--category")
+        .doesNotHaveClass(
+          "is-active",
+          "so the scope stops reading as the one in effect"
+        );
+    });
+
+    test("a scope is not offered on top of a modifier already in the term", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      const site = this.owner.lookup("service:site");
+      const [first, second] = site.categories.filter(
+        (candidate) => !candidate.parentCategory
+      );
+      // the reader moved here from another category without clearing the box
+      searchService.activeGlobalSearchTerm = `miyazaki #${first.slug}`;
+      searchService.searchContext = second.searchContext;
+
+      await render(
+        <template>
+          <AiDiscoveriesSearchOptions
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearTopicContext={{this.clearTopicContext}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--category")
+        .doesNotExist(
+          "the page arrived at is not stacked onto the page left behind"
+        );
+
+      searchService.activeGlobalSearchTerm = `miyazaki #${second.slug}`;
+      await settled();
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--category")
+        .hasClass(
+          "is-active",
+          "but it stays while the modifier in the term is its own"
+        );
+    });
+
     test("widening drops every operator it was narrowed by", async function (assert) {
       const searchService = this.owner.lookup("service:search");
       searchService.activeGlobalSearchTerm = "miyazaki #ruby #support";
@@ -542,9 +624,12 @@ module(
         </template>
       );
 
+      // A sloppier match would read @eviltrout as this context's own operator
+      // and offer the option as the one in effect; a correct one sees a
+      // modifier belonging to something else and withholds it.
       assert
         .dom(".ai-discoveries-search-options__option.--user")
-        .doesNotHaveClass("is-active", "@eviltrout is not @evil");
+        .doesNotExist("@eviltrout is not @evil");
     });
 
     test("a message inbox offers its messages", async function (assert) {
