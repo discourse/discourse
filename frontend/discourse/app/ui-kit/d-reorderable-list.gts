@@ -594,6 +594,14 @@ export default class DReorderableList<T> extends Component<
     return this.args.removeIcon ?? "xmark";
   }
 
+  /**
+   * The remove control's button weight. A flat control by default, which suits
+   * the dense rows most surfaces reorder.
+   */
+  get removeButtonClass(): string {
+    return this.args.removeButtonClass ?? "btn-flat";
+  }
+
   /** Whether the list places the remove control itself. */
   get rendersRemove(): boolean {
     return !!this.args.onRemove && !this.isManual;
@@ -1026,6 +1034,7 @@ export default class DReorderableList<T> extends Component<
                           RemovePart
                           row=row
                           icon=this.removeIcon
+                          buttonClass=this.removeButtonClass
                           onRemove=this.onRemove
                         )
                       )
@@ -1036,6 +1045,7 @@ export default class DReorderableList<T> extends Component<
                     <RemovePart
                       @row={{row}}
                       @icon={{this.removeIcon}}
+                      @buttonClass={{this.removeButtonClass}}
                       @onRemove={{this.onRemove}}
                     />
                   {{/if}}

@@ -434,6 +434,14 @@ export interface DReorderableListSignature<T> {
     removeIcon?: string;
 
     /**
+     * The remove control's button weight, defaulting to `btn-flat`. List-level
+     * for the same reason as `removeIcon`: the control is placed by the list in
+     * every mode except manual, where `controls.remove` takes its own
+     * `@buttonClass` to override this.
+     */
+    removeButtonClass?: string;
+
+    /**
      * Called with the trimmed value when the default create affordance is
      * submitted. Never called for an empty or whitespace-only value.
      */

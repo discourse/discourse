@@ -526,6 +526,48 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     );
   });
 
+  test("lets a consumer choose the remove control's button weight", async function (assert) {
+    const items = objectItems();
+    const state = new (class {
+      @tracked buttonClass;
+    })();
+
+    await render(
+      <template>
+        <DMenus />
+        <DReorderableList
+          @items={{items}}
+          @key="id"
+          @label={{label}}
+          @onMove={{noop}}
+          @onRemove={{noop}}
+          @removeButtonClass={{state.buttonClass}}
+        >
+          <:row as |item|>
+            <span data-test-item={{item.id}}>{{item.name}}</span>
+          </:row>
+        </DReorderableList>
+      </template>
+    );
+
+    assert
+      .dom(".d-reorderable-list__remove")
+      .hasClass("btn-flat", "falls back to a flat control");
+
+    state.buttonClass = "btn-default";
+    await settled();
+
+    assert
+      .dom(".d-reorderable-list__remove")
+      .hasClass("btn-default", "takes the weight the consumer asked for");
+    assert
+      .dom(".d-reorderable-list__remove")
+      .doesNotHaveClass(
+        "btn-flat",
+        "and drops the default rather than merging"
+      );
+  });
+
   test("offers only the reachable directions in the movable subsequence", async function (assert) {
     const items = objectItems();
     const movable = (item) => item !== items[1];
