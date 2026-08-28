@@ -8,8 +8,12 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
   setupRenderingTest(hooks);
 
   test("loads and displays users for the selected day", async function (assert) {
-    pretender.get("/admin/reports/signups", () =>
-      response({
+    let requestParams;
+
+    pretender.get("/admin/reports/signups", (request) => {
+      requestParams = request.queryParams;
+
+      return response({
         report: {
           related_items: {
             users: [
@@ -26,8 +30,8 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
           },
           related_items_totals: { users: 3 },
         },
-      })
-    );
+      });
+    });
 
     await render(
       <template>
@@ -61,6 +65,11 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
         "Showing the newest 1 of 3.",
         "discloses that the list is limited"
       );
+    assert.strictEqual(
+      requestParams.cache,
+      "true",
+      "lets the server cache the summary report"
+    );
   });
 
   test("retries loading after an error", async function (assert) {
