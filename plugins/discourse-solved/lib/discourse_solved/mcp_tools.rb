@@ -3,7 +3,7 @@
 module DiscourseSolved
   module McpTools
     class SetSolution
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         service =
           (
             if arguments.fetch("accepted")
@@ -17,7 +17,7 @@ module DiscourseSolved
             params: {
               post_id: arguments.fetch("post_id"),
             },
-            guardian: principal.guardian,
+            guardian: request_context.guardian,
           )
         raise DiscourseMcp::ToolError, "Unable to change solution" if result.failure?
         DiscourseMcp::ToolHelpers.text_and_structured(

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseMcp
-  module CoreCapabilities
+  module CorePrimitives
     READ_ONLY = {
       readOnlyHint: true,
       destructiveHint: false,
@@ -40,9 +40,9 @@ module DiscourseMcp
         "discourse.current_user.get",
         title: "Get current user",
         description:
-          "Returns the authenticated Discourse user, granted scopes, and server resource.",
+          "Returns the authenticated Discourse user, granted scopes, and MCP server URI.",
         implementation: Tools::CurrentUser,
-        required_scopes: %w[mcp:profile:discover],
+        required_scopes: [DiscourseMcp::INITIAL_SCOPE],
         annotations: READ_ONLY,
       )
       registry.register_tool(
@@ -371,10 +371,12 @@ module DiscourseMcp
 
   module Resources
     class Topic
-      def self.call(uri:, principal:)
+      def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://topic/").to_i
         topic = ::Topic.find_by(id: id)
-        raise ToolError, "Resource not found" if topic.blank? || !principal.guardian.can_see?(topic)
+        if topic.blank? || !request_context.guardian.can_see?(topic)
+          raise ToolError, "Resource not found"
+        end
         {
           uri: uri,
           mimeType: "application/json",
@@ -384,10 +386,12 @@ module DiscourseMcp
     end
 
     class Post
-      def self.call(uri:, principal:)
+      def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://post/").to_i
-        post = ::Post.secured(principal.guardian).find_by(id: id)
-        raise ToolError, "Resource not found" if post.blank? || !principal.guardian.can_see?(post)
+        post = ::Post.secured(request_context.guardian).find_by(id: id)
+        if post.blank? || !request_context.guardian.can_see?(post)
+          raise ToolError, "Resource not found"
+        end
         { uri: uri, mimeType: "application/json", text: JSON.generate(ToolHelpers.post_json(post)) }
       end
     end
@@ -395,7 +399,7 @@ module DiscourseMcp
 
   module Prompts
     class ResearchTopic
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         {
           description: "Research visible Discourse discussions",
           messages: [
@@ -413,9 +417,11 @@ module DiscourseMcp
     end
 
     class DraftReply
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         topic = ::Topic.find_by(id: arguments.fetch("topic_id").to_i)
-        raise ToolError, "Topic not found" if topic.blank? || !principal.guardian.can_see?(topic)
+        if topic.blank? || !request_context.guardian.can_see?(topic)
+          raise ToolError, "Topic not found"
+        end
         {
           description: "Draft a reply to #{topic.title}",
           messages: [

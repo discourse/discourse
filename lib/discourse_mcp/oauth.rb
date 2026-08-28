@@ -119,7 +119,10 @@ module DiscourseMcp
         when "any_cimd"
           "approved"
         when "approved_domains"
-          if SiteSetting.mcp_oauth_approved_domains_map.include?(host.downcase)
+          if SiteSetting
+               .mcp_oauth_approved_domains
+               .split("|")
+               .any? { |domain| domain.casecmp?(host) }
             "approved"
           else
             "pending"
@@ -132,24 +135,22 @@ module DiscourseMcp
     end
 
     class AuthorizationGrant
-      def self.create!(user:, client:, profile:, redirect_uri:, requested_scopes:)
-        raise Discourse::InvalidAccess if !profile.available? || !profile.user_allowed?(user)
+      def self.create!(user:, client:, redirect_uri:, requested_scopes:)
+        if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(user)
+          raise Discourse::InvalidAccess
+        end
         if !client.approved? || !client.redirect_uris.include?(redirect_uri)
           raise Discourse::InvalidAccess
         end
 
         scopes = Array(requested_scopes).map(&:to_s).uniq
-        if scopes.blank? || (scopes - profile.allowed_scopes).present?
+        if !scopes.include?(DiscourseMcp::INITIAL_SCOPE) ||
+             (scopes - DiscourseMcp::Access.eligible_scopes(user)).present?
           raise Discourse::InvalidAccess
         end
 
         authorization =
-          McpOauthAuthorization.find_or_initialize_by(
-            user: user,
-            client: client,
-            profile: profile,
-            revoked_at: nil,
-          )
+          McpOauthAuthorization.find_or_initialize_by(user: user, client: client, revoked_at: nil)
         McpOauthAuthorization.transaction do
           authorization.lock! if authorization.persisted?
           if authorization.persisted?
@@ -164,7 +165,6 @@ module DiscourseMcp
             resource: DiscourseMcp.resource_url,
             status: "active",
             client_metadata_hash: client.metadata_hash,
-            consent_revision: profile.consent_revision,
             consented_at: Time.zone.now,
           )
           authorization.save!
@@ -240,7 +240,9 @@ module DiscourseMcp
 
           scopes =
             requested_scopes.present? ? Array(requested_scopes).map(&:to_s).uniq : record.scopes
-          raise Discourse::InvalidAccess if (scopes - record.scopes).present?
+          if !scopes.include?(DiscourseMcp::INITIAL_SCOPE) || (scopes - record.scopes).present?
+            raise Discourse::InvalidAccess
+          end
           validate_authorization!(
             authorization,
             scopes: scopes,
@@ -282,20 +284,17 @@ module DiscourseMcp
       private_class_method :token_response
 
       def self.validate_authorization!(authorization, scopes:, grant_version:)
-        raise Discourse::InvalidAccess if !authorization.active?
-        raise Discourse::InvalidAccess if !authorization.client.approved?
-        if authorization.client_metadata_hash != authorization.client.metadata_hash
-          raise Discourse::InvalidAccess
-        end
-        raise Discourse::InvalidAccess if !authorization.profile.available?
-        raise Discourse::InvalidAccess if !authorization.profile.user_allowed?(authorization.user)
+        status =
+          AuthorizationStatus.for(
+            [authorization],
+            scopes_by_authorization_id: {
+              authorization.id => scopes,
+            },
+          ).fetch(authorization.id)
+        authorization.update!(status: "consent_required") if status == "consent_required"
+        raise Discourse::InvalidAccess if status != "active"
         raise Discourse::InvalidAccess if grant_version != authorization.grant_version
         raise Discourse::InvalidAccess if (scopes - authorization.scopes).present?
-        raise Discourse::InvalidAccess if (scopes - authorization.profile.allowed_scopes).present?
-        if authorization.consent_revision < authorization.profile.consent_revision
-          authorization.update!(status: "consent_required")
-          raise Discourse::InvalidAccess
-        end
       end
       private_class_method :validate_authorization!
 

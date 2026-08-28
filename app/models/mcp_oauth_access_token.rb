@@ -5,7 +5,6 @@ class McpOauthAccessToken < ActiveRecord::Base
              class_name: "McpOauthAuthorization",
              foreign_key: :mcp_oauth_authorization_id
   belongs_to :client, class_name: "McpOauthClient", foreign_key: :mcp_oauth_client_id
-  belongs_to :profile, class_name: "McpServerProfile", foreign_key: :mcp_server_profile_id
   belongs_to :user
 
   scope :usable, -> { where(revoked_at: nil).where("expires_at > ?", Time.zone.now) }
@@ -20,7 +19,6 @@ class McpOauthAccessToken < ActiveRecord::Base
       token_hash: digest(raw),
       authorization: authorization,
       client: authorization.client,
-      profile: authorization.profile,
       user: authorization.user,
       resource: authorization.resource,
       scopes: scopes,
@@ -51,7 +49,6 @@ end
 #  updated_at                 :datetime         not null
 #  mcp_oauth_authorization_id :bigint           not null
 #  mcp_oauth_client_id        :bigint           not null
-#  mcp_server_profile_id      :bigint           not null
 #  user_id                    :integer          not null
 #
 # Indexes

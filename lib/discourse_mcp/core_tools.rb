@@ -44,8 +44,8 @@ module DiscourseMcp
 
   module Tools
     class CurrentUser
-      def self.call(arguments:, principal:)
-        user = principal.user or raise Discourse::InvalidAccess
+      def self.call(arguments:, request_context:)
+        user = request_context.user or raise Discourse::InvalidAccess
         ToolHelpers.text_and_structured(
           id: user.id,
           username: user.username,
@@ -53,33 +53,33 @@ module DiscourseMcp
           trust_level: user.trust_level,
           admin: user.admin,
           moderator: user.moderator,
-          scopes: principal.scopes.to_a.sort,
+          scopes: request_context.scopes.to_a.sort,
           resource: DiscourseMcp.resource_url,
         )
       end
     end
 
     class Search
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         query = arguments.fetch("query").to_s
         limit = arguments.fetch("limit", 20).to_i.clamp(1, 50)
-        results = ::Search.execute(query, guardian: principal.guardian)
+        results = ::Search.execute(query, guardian: request_context.guardian)
         posts = results.posts.first(limit).map { |post| ToolHelpers.post_json(post) }
         ToolHelpers.text_and_structured(query: query, posts: posts)
       end
     end
 
     class GetTopic
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         topic = Topic.find_by(id: arguments.fetch("topic_id").to_i)
-        if topic.blank? || !principal.guardian.can_see?(topic)
+        if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, "Topic not found"
         end
 
         limit = arguments.fetch("post_limit", 50).to_i.clamp(1, 100)
         posts =
           Post
-            .secured(principal.guardian)
+            .secured(request_context.guardian)
             .where(topic_id: topic.id)
             .order(:post_number)
             .limit(limit)
@@ -91,9 +91,9 @@ module DiscourseMcp
     end
 
     class GetPost
-      def self.call(arguments:, principal:)
-        post = Post.secured(principal.guardian).find_by(id: arguments.fetch("post_id").to_i)
-        if post.blank? || !principal.guardian.can_see?(post)
+      def self.call(arguments:, request_context:)
+        post = Post.secured(request_context.guardian).find_by(id: arguments.fetch("post_id").to_i)
+        if post.blank? || !request_context.guardian.can_see?(post)
           raise DiscourseMcp::ToolError, "Post not found"
         end
 
@@ -102,9 +102,9 @@ module DiscourseMcp
     end
 
     class ListTopics
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 30).to_i.clamp(1, 50)
-        topics = TopicQuery.new(principal.user).list_latest.topics.first(limit)
+        topics = TopicQuery.new(request_context.user).list_latest.topics.first(limit)
         ActiveRecord::Associations::Preloader.new(records: topics, associations: :tags).call
         ToolHelpers.text_and_structured(
           topics: topics.map { |topic| ToolHelpers.topic_json(topic) },
@@ -113,8 +113,8 @@ module DiscourseMcp
     end
 
     class ListCategories
-      def self.call(arguments:, principal:)
-        categories = Category.secured(principal.guardian).order(:position, :id).limit(500)
+      def self.call(arguments:, request_context:)
+        categories = Category.secured(request_context.guardian).order(:position, :id).limit(500)
         ToolHelpers.text_and_structured(
           categories:
             categories.map do |category|
@@ -131,10 +131,10 @@ module DiscourseMcp
     end
 
     class ListTags
-      def self.call(arguments:, principal:)
-        column = Tag.topic_count_column(principal.guardian)
+      def self.call(arguments:, request_context:)
+        column = Tag.topic_count_column(request_context.guardian)
         tags = Tag.order(column => :desc).limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
-        visible = DiscourseTagging.filter_visible(tags, principal.guardian)
+        visible = DiscourseTagging.filter_visible(tags, request_context.guardian)
         ToolHelpers.text_and_structured(
           tags:
             visible.map do |tag|
@@ -145,9 +145,9 @@ module DiscourseMcp
     end
 
     class GetUser
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         user = User.find_by_username(arguments.fetch("username"))
-        if user.blank? || !principal.guardian.can_see_profile?(user)
+        if user.blank? || !request_context.guardian.can_see_profile?(user)
           raise DiscourseMcp::ToolError, "User not found"
         end
 
@@ -164,17 +164,17 @@ module DiscourseMcp
     end
 
     class ListBookmarks
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         bookmarks =
           Bookmark
-            .where(user_id: principal.user_id)
+            .where(user_id: request_context.user_id)
             .includes(:bookmarkable)
             .order(updated_at: :desc)
             .limit(arguments.fetch("limit", 50).to_i.clamp(1, 100))
         values =
           bookmarks.filter_map do |bookmark|
             bookmarkable = bookmark.bookmarkable
-            next if bookmarkable.blank? || !principal.guardian.can_see?(bookmarkable)
+            next if bookmarkable.blank? || !request_context.guardian.can_see?(bookmarkable)
             {
               id: bookmark.id,
               name: bookmark.name,
@@ -188,32 +188,39 @@ module DiscourseMcp
     end
 
     class ListNotifications
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
         notifications =
           Notification
-            .where(user_id: principal.user_id)
+            .where(user_id: request_context.user_id)
             .visible
             .includes(:topic)
             .order(id: :desc)
             .limit(limit)
         notifications =
-          Notification.filter_inaccessible_topic_notifications(principal.guardian, notifications)
+          Notification.filter_inaccessible_topic_notifications(
+            request_context.guardian,
+            notifications,
+          )
         notifications = Notification.filter_disabled_badge_notifications(notifications)
         notifications = Notification.populate_acting_user(notifications)
         serialized =
           notifications.map do |notification|
-            NotificationSerializer.new(notification, scope: principal.guardian, root: false).as_json
+            NotificationSerializer.new(
+              notification,
+              scope: request_context.guardian,
+              root: false,
+            ).as_json
           end
         ToolHelpers.text_and_structured(notifications: serialized)
       end
     end
 
     class CreateTopic
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         post =
           PostCreator.create!(
-            principal.user,
+            request_context.user,
             title: arguments.fetch("title"),
             raw: arguments.fetch("raw"),
             category: arguments["category_id"],
@@ -228,10 +235,10 @@ module DiscourseMcp
     end
 
     class ReplyTopic
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         post =
           PostCreator.create!(
-            principal.user,
+            request_context.user,
             topic_id: arguments.fetch("topic_id"),
             raw: arguments.fetch("raw"),
             reply_to_post_number: arguments["reply_to_post_number"],
@@ -241,38 +248,38 @@ module DiscourseMcp
     end
 
     class EditPost
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         post = Post.find_by(id: arguments.fetch("post_id").to_i)
-        if post.blank? || !principal.guardian.can_edit_post?(post)
+        if post.blank? || !request_context.guardian.can_edit_post?(post)
           raise DiscourseMcp::ToolError, "Post not found"
         end
 
         fields = { raw: arguments.fetch("raw") }
         fields[:edit_reason] = arguments["edit_reason"] if arguments["edit_reason"].present?
-        PostRevisor.new(post, post.topic).revise!(principal.user, fields)
+        PostRevisor.new(post, post.topic).revise!(request_context.user, fields)
         ToolHelpers.text_and_structured(post: ToolHelpers.post_json(post.reload))
       end
     end
 
     class SetPostDeleted
-      def self.call(arguments:, principal:)
-        post = Post.find_by(id: arguments.fetch("post_id").to_i, user_id: principal.user_id)
+      def self.call(arguments:, request_context:)
+        post = Post.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
         raise DiscourseMcp::ToolError, "Post not found" if post.blank?
 
         if arguments.fetch("deleted")
-          raise Discourse::InvalidAccess if !principal.guardian.can_delete_post?(post)
-          PostDestroyer.new(principal.user, post).destroy
+          raise Discourse::InvalidAccess if !request_context.guardian.can_delete_post?(post)
+          PostDestroyer.new(request_context.user, post).destroy
         else
-          raise Discourse::InvalidAccess if !principal.guardian.can_recover_post?(post)
-          PostDestroyer.new(principal.user, post).recover
+          raise Discourse::InvalidAccess if !request_context.guardian.can_recover_post?(post)
+          PostDestroyer.new(request_context.user, post).recover
         end
         ToolHelpers.text_and_structured(post_id: post.id, deleted: arguments.fetch("deleted"))
       end
     end
 
     class SetUserStatus
-      def self.call(arguments:, principal:)
-        user = principal.user or raise Discourse::InvalidAccess
+      def self.call(arguments:, request_context:)
+        user = request_context.user or raise Discourse::InvalidAccess
         if arguments.fetch("clear", false)
           user.clear_status!
         else

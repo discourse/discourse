@@ -25,8 +25,8 @@ class McpController < ApplicationController
       )
     end
 
-    principal = DiscourseMcp::Authenticator.new(request).authenticate!
-    enforce_rate_limits!(principal)
+    request_context = DiscourseMcp::Authenticator.new(request).authenticate!
+    enforce_rate_limits!(request_context)
     raw_payload = request.body.read(SiteSetting.mcp_max_request_bytes + 1) || ""
     if raw_payload.bytesize > SiteSetting.mcp_max_request_bytes
       return(
@@ -35,7 +35,8 @@ class McpController < ApplicationController
     end
 
     payload = JSON.parse(raw_payload)
-    mcp_response = DiscourseMcp::Server.new(request: request, principal: principal).call(payload)
+    mcp_response =
+      DiscourseMcp::Server.new(request: request, request_context: request_context).call(payload)
     mcp_response.headers.each { |name, value| response.set_header(name, value) }
     return head mcp_response.http_status if mcp_response.body.nil?
 
@@ -49,7 +50,7 @@ class McpController < ApplicationController
 
     render json: encoded_response, status: mcp_response.http_status
   rescue RateLimiter::LimitExceeded => error
-    record_rate_limited_audit(principal)
+    record_rate_limited_audit(request_context)
     response.set_header("Retry-After", error.available_in.to_s)
     render json: jsonrpc_error(nil, -32_000, "Rate limit exceeded"), status: :too_many_requests
   rescue JSON::ParserError
@@ -58,7 +59,7 @@ class McpController < ApplicationController
     response.set_header(
       "WWW-Authenticate",
       DiscourseMcp::Authenticator.challenge(
-        scope: "mcp:profile:discover",
+        scope: DiscourseMcp::INITIAL_SCOPE,
         error: error.oauth_error,
       ),
     )
@@ -71,11 +72,11 @@ class McpController < ApplicationController
 
   private
 
-  def enforce_rate_limits!(principal)
+  def enforce_rate_limits!(request_context)
     limit = SiteSetting.mcp_global_rate_limit_per_minute
     RateLimiter.new(
-      principal.user,
-      "mcp-client-#{principal.oauth_client_id}",
+      request_context.user,
+      "mcp-client-#{request_context.oauth_client_id}",
       limit,
       1.minute,
       apply_limit_to_staff: true,
@@ -89,12 +90,11 @@ class McpController < ApplicationController
     ).performed!
   end
 
-  def record_rate_limited_audit(principal)
+  def record_rate_limited_audit(request_context)
     McpAuditLog.create!(
       occurred_at: Time.zone.now,
-      user_id: principal&.user_id,
-      mcp_oauth_client_id: principal&.oauth_client_id,
-      mcp_server_profile_id: principal&.profile_id,
+      user_id: request_context&.user_id,
+      mcp_oauth_client_id: request_context&.oauth_client_id,
       outcome: "rate_limited",
       http_status: 429,
     )

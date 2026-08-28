@@ -1929,9 +1929,11 @@ Discourse::Application.routes.draw do
 
     scope "/admin/mcp", constraints: AdminConstraint.new do
       get "/overview" => "admin/mcp#overview"
-      get "/capabilities" => "admin/mcp#capabilities"
-      put "/configuration" => "admin/mcp#update_configuration"
-      put "/capabilities" => "admin/mcp#update_capabilities"
+      get "/access" => "admin/mcp#access"
+      put "/access/:group_id" => "admin/mcp#update_access"
+      delete "/access/:group_id" => "admin/mcp#destroy_access"
+      get "/capabilities" => "admin/mcp#primitives"
+      put "/capabilities" => "admin/mcp#update_primitives"
       put "/capabilities/emergency-block" => "admin/mcp#emergency_block"
       get "/clients" => "admin/mcp_clients#index"
       post "/clients" => "admin/mcp_clients#create"

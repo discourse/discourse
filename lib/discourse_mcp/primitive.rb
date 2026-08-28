@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseMcp
-  class Capability
+  class Primitive
     KINDS = %i[tool resource resource_template prompt].freeze
     RISKS = %i[read write destructive moderation administration external_side_effect].freeze
 
@@ -59,29 +59,29 @@ module DiscourseMcp
     private
 
     def validate!
-      raise ArgumentError, "invalid MCP capability kind" if !KINDS.include?(kind)
-      raise ArgumentError, "invalid MCP capability risk" if !RISKS.include?(risk)
+      raise ArgumentError, "invalid MCP primitive kind" if !KINDS.include?(kind)
+      raise ArgumentError, "invalid MCP primitive risk" if !RISKS.include?(risk)
       if !identifier.match?(/\A[A-Za-z0-9_.-]{1,128}\z/)
-        raise ArgumentError, "invalid MCP capability identifier"
+        raise ArgumentError, "invalid MCP primitive identifier"
       end
-      raise ArgumentError, "MCP capability title is required" if title.blank?
-      raise ArgumentError, "MCP capability description is required" if description.blank?
-      raise ArgumentError, "MCP capability implementation is required" if implementation.blank?
+      raise ArgumentError, "MCP primitive title is required" if title.blank?
+      raise ArgumentError, "MCP primitive description is required" if description.blank?
+      raise ArgumentError, "MCP primitive implementation is required" if implementation.blank?
       if kind == :tool && input_schema["type"] != "object"
         raise ArgumentError, "MCP tool input schema must describe an object"
       end
       JSONSchemer.schema(input_schema)
       JSONSchemer.schema(output_schema) if output_schema
       if required_scopes.any? { |scope| !scope.match?(/\A[a-z0-9][a-z0-9:_-]{0,127}\z/) }
-        raise ArgumentError, "invalid MCP capability scope"
+        raise ArgumentError, "invalid MCP primitive scope"
       end
       allowed_annotations = %w[title readOnlyHint destructiveHint idempotentHint openWorldHint]
       if (annotations.keys - allowed_annotations).present? ||
            annotations.except("title").values.any? { |value| value != true && value != false }
-        raise ArgumentError, "invalid MCP capability annotations"
+        raise ArgumentError, "invalid MCP primitive annotations"
       end
     rescue JSONSchemer::InvalidSchema
-      raise ArgumentError, "invalid MCP capability schema"
+      raise ArgumentError, "invalid MCP primitive schema"
     end
   end
 end

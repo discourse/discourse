@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe "MCP transport" do
+describe "MCP transport" do
   fab!(:admin)
 
-  let(:profile) do
-    McpServerProfile.create!(
-      name: "Test MCP",
-      slug: "test",
-      enabled: true,
-      allowed_group_ids: admin.group_ids,
-      allowed_scopes: %w[mcp:profile:discover mcp:content:read],
-    )
-  end
   let(:client) do
     McpOauthClient.create!(
       client_id: "request-spec-client",
@@ -25,9 +16,8 @@ RSpec.describe "MCP transport" do
     DiscourseMcp::OAuth::AuthorizationGrant.create!(
       user: admin,
       client: client,
-      profile: profile,
       redirect_uri: client.redirect_uris.first,
-      requested_scopes: %w[mcp:profile:discover],
+      requested_scopes: %w[mcp:profile:read],
     )
   end
   let(:access_token) { McpOauthAccessToken.issue!(authorization: authorization) }
@@ -85,11 +75,7 @@ RSpec.describe "MCP transport" do
 
   before do
     SiteSetting.mcp_server_enabled = true
-    profile.capability_policies.create!(
-      kind: "tool",
-      identifier: "discourse.current_user.get",
-      enabled: true,
-    )
+    McpPrimitive.create!(kind: "tool", identifier: "discourse.current_user.get", enabled: true)
   end
 
   it "challenges requests without bearer credentials" do
@@ -97,7 +83,7 @@ RSpec.describe "MCP transport" do
 
     expect(response.status).to eq(401)
     expect(response.headers["WWW-Authenticate"]).to eq(
-      %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}", scope="mcp:profile:discover"),
+      %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}", scope="mcp:profile:read"),
     )
     expect(response.parsed_body.dig("error", "code")).to eq(-32_001)
   end
@@ -112,11 +98,7 @@ RSpec.describe "MCP transport" do
   end
 
   it "returns an OAuth insufficient-scope challenge for an exposed tool" do
-    profile.capability_policies.create!(
-      kind: "tool",
-      identifier: "discourse.post.get",
-      enabled: true,
-    )
+    McpPrimitive.create!(kind: "tool", identifier: "discourse.post.get", enabled: true)
     scoped_payload =
       payload.deep_merge(
         method: "tools/call",
@@ -149,7 +131,6 @@ RSpec.describe "MCP transport" do
     expect(response.parsed_body.dig("result", "capabilities", "tools")).to eq(
       "listChanged" => false,
     )
-    expect(response.headers["Mcp-Session-Id"]).to be_blank
   end
 
   it "accepts compatible stateless requests without dated request metadata" do
@@ -165,6 +146,27 @@ RSpec.describe "MCP transport" do
     expect(response.parsed_body.dig("result", "tools")).to be_an(Array)
   end
 
+  it "uses the server-wide cache TTL setting for cacheable responses" do
+    SiteSetting.mcp_cache_ttl_ms = 12_345
+    discover_payload =
+      payload.deep_merge(
+        method: "server/discover",
+        params: {
+          _meta: {
+            "io.modelcontextprotocol/protocolVersion" => DiscourseMcp::PROTOCOL_VERSION,
+            "io.modelcontextprotocol/clientCapabilities" => {
+            },
+          },
+        },
+      )
+    discover_headers = headers.except("HTTP_MCP_NAME").merge("HTTP_MCP_METHOD" => "server/discover")
+
+    post "/mcp", params: discover_payload.to_json, headers: discover_headers
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "ttlMs")).to eq(12_345)
+  end
+
   it "executes a stateless dated-protocol tool request" do
     post "/mcp", params: payload.to_json, headers: headers
 
@@ -173,6 +175,5 @@ RSpec.describe "MCP transport" do
       admin.username,
     )
     expect(response.parsed_body.dig("result", "resultType")).to eq("complete")
-    expect(response.headers["Mcp-Session-Id"]).to be_blank
   end
 end

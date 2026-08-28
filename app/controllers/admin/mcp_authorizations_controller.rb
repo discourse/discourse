@@ -4,10 +4,17 @@ class Admin::McpAuthorizationsController < Admin::AdminController
   def index
     authorizations =
       McpOauthAuthorization
-        .includes(:user, :client, :profile, :scope_records, :access_tokens)
+        .includes(:user, :client, :scope_records, :access_tokens)
         .order(updated_at: :desc)
         .limit(200)
-    render json: { authorizations: authorizations.map { |authorization| serialize(authorization) } }
+        .to_a
+    statuses = DiscourseMcp::AuthorizationStatus.for(authorizations)
+    render json: {
+             authorizations:
+               authorizations.map do |authorization|
+                 serialize(authorization, status: statuses.fetch(authorization.id))
+               end,
+           }
   end
 
   def destroy
@@ -24,7 +31,7 @@ class Admin::McpAuthorizationsController < Admin::AdminController
 
   private
 
-  def serialize(authorization)
+  def serialize(authorization, status:)
     active_tokens =
       authorization.access_tokens.select do |token|
         token.revoked_at.nil? && token.expires_at.future?
@@ -35,7 +42,7 @@ class Admin::McpAuthorizationsController < Admin::AdminController
       client_name: authorization.client.name,
       client_id: authorization.client.client_id,
       resource: authorization.resource,
-      status: authorization.status,
+      status: status,
       scopes: authorization.scopes,
       consented_at: authorization.consented_at,
       revoked_at: authorization.revoked_at,

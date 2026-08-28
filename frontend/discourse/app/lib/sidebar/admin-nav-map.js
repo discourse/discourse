@@ -562,6 +562,12 @@ export const ADMIN_NAV_MAP = [
             description: "admin.config.mcp.capabilities.description",
           },
           {
+            name: "admin_mcp_access",
+            route: "adminConfig.mcp.access",
+            label: "admin.config.mcp.tabs.access",
+            description: "admin.config.mcp.access.description",
+          },
+          {
             name: "admin_mcp_clients",
             route: "adminConfig.mcp.clients",
             label: "admin.config.mcp.tabs.clients",

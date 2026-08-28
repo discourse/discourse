@@ -9,11 +9,10 @@ module DiscourseMcp
 
     Response = Data.define(:http_status, :body, :headers)
 
-    def initialize(request:, principal:)
+    def initialize(request:, request_context:)
       @request = request
-      @principal = principal
-      @profile = principal.profile
-      @catalog = Catalog.new(profile: @profile, principal: principal)
+      @request_context = request_context
+      @catalog = Catalog.new(request_context: request_context)
     end
 
     def call(payload)
@@ -58,7 +57,7 @@ module DiscourseMcp
 
     private
 
-    attr_reader :request, :principal, :profile, :catalog
+    attr_reader :request, :request_context, :catalog
 
     def record_audit(payload, mcp_response, started_at)
       return if !payload.is_a?(Hash) || payload["method"] != "tools/call"
@@ -68,12 +67,11 @@ module DiscourseMcp
         mcp_response.body&.dig(:result, :isError) || mcp_response.body&.dig("result", "isError")
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
-        user_id: principal.user_id,
-        mcp_oauth_client_id: principal.oauth_client_id,
-        mcp_server_profile_id: principal.profile_id,
+        user_id: request_context.user_id,
+        mcp_oauth_client_id: request_context.oauth_client_id,
         request_id: payload["id"].to_s.presence,
         method: payload["method"],
-        capability: payload.dig("params", "name").to_s.first(255),
+        tool: payload.dig("params", "name").to_s.first(255),
         outcome: mcp_response.http_status < 400 && !tool_error ? "success" : "error",
         http_status: mcp_response.http_status,
         duration_ms: duration_ms,
@@ -209,7 +207,9 @@ module DiscourseMcp
           version: Discourse::VERSION::STRING,
         },
       }
-      result[:instructions] = profile.instructions if profile.instructions.present?
+      if SiteSetting.mcp_server_instructions.present?
+        result[:instructions] = SiteSetting.mcp_server_instructions
+      end
       result
     end
 
@@ -232,10 +232,12 @@ module DiscourseMcp
       result = {
         supportedVersions: SUPPORTED_PROTOCOL_VERSIONS,
         capabilities: server_capabilities,
-        ttlMs: profile.cache_ttl_ms,
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
       }
-      result[:instructions] = profile.instructions if profile.instructions.present?
+      if SiteSetting.mcp_server_instructions.present?
+        result[:instructions] = SiteSetting.mcp_server_instructions
+      end
       complete_result(**result)
     end
 
@@ -256,13 +258,13 @@ module DiscourseMcp
       complete_result(
         tools: tools,
         nextCursor: next_cursor,
-        ttlMs: profile.cache_ttl_ms,
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
       )
     end
 
     def call_tool(params)
-      tool = authorized_capability(:tool, params["name"], "Unknown tool")
+      tool = authorized_primitive(:tool, params["name"], "Unknown tool")
 
       arguments = params["arguments"].is_a?(Hash) ? params["arguments"] : {}
       errors = JSONSchemer.schema(tool.input_schema).validate(arguments).to_a
@@ -270,7 +272,7 @@ module DiscourseMcp
         raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: errors.first(20) })
       end
 
-      result = tool.implementation.call(arguments: arguments, principal: principal)
+      result = tool.implementation.call(arguments: arguments, request_context: request_context)
       complete_result(**result.symbolize_keys)
     rescue ActiveRecord::RecordInvalid => error
       raise ToolError, error.record.errors.full_messages.join(", ")
@@ -279,7 +281,7 @@ module DiscourseMcp
     end
 
     def list_resources(params)
-      complete_result(resources: [], ttlMs: profile.cache_ttl_ms, cacheScope: "private")
+      complete_result(resources: [], ttlMs: SiteSetting.mcp_cache_ttl_ms, cacheScope: "private")
     end
 
     def list_resource_templates(params)
@@ -296,7 +298,7 @@ module DiscourseMcp
           end
       complete_result(
         resourceTemplates: templates,
-        ttlMs: profile.cache_ttl_ms,
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
       )
     end
@@ -307,8 +309,12 @@ module DiscourseMcp
       raise Error.new("Resource not found", code: -32_602) if resource.blank?
       ensure_scopes!(resource)
 
-      content = resource.implementation.call(uri: uri, principal: principal)
-      complete_result(contents: [content], ttlMs: profile.cache_ttl_ms, cacheScope: "private")
+      content = resource.implementation.call(uri: uri, request_context: request_context)
+      complete_result(
+        contents: [content],
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
+        cacheScope: "private",
+      )
     end
 
     def list_prompts(params)
@@ -333,11 +339,11 @@ module DiscourseMcp
               arguments: arguments,
             }
           end
-      complete_result(prompts: prompts, ttlMs: profile.cache_ttl_ms, cacheScope: "private")
+      complete_result(prompts: prompts, ttlMs: SiteSetting.mcp_cache_ttl_ms, cacheScope: "private")
     end
 
     def get_prompt(params)
-      prompt = authorized_capability(:prompt, params["name"], "Prompt not found")
+      prompt = authorized_primitive(:prompt, params["name"], "Prompt not found")
       arguments = params["arguments"].is_a?(Hash) ? params["arguments"] : {}
       errors = JSONSchemer.schema(prompt.input_schema).validate(arguments).to_a
       if errors.present?
@@ -350,7 +356,10 @@ module DiscourseMcp
               )
       end
       complete_result(
-        **prompt.implementation.call(arguments: arguments, principal: principal).symbolize_keys,
+        **prompt
+          .implementation
+          .call(arguments: arguments, request_context: request_context)
+          .symbolize_keys,
       )
     end
 
@@ -414,31 +423,31 @@ module DiscourseMcp
       DiscourseMcp
         .registry
         .all(:resource_template)
-        .find do |capability|
-          uri.match?(%r{\Adiscourse://#{Regexp.escape(capability.identifier)}/\d+\z})
+        .find do |primitive|
+          uri.match?(%r{\Adiscourse://#{Regexp.escape(primitive.identifier)}/\d+\z})
         end
         &.identifier
     end
 
-    def authorized_capability(kind, identifier, not_found_message)
-      capability = catalog.find_exposed(kind, identifier)
-      raise Error.new(not_found_message, code: -32_602) if capability.blank?
+    def authorized_primitive(kind, identifier, not_found_message)
+      primitive = catalog.find_exposed(kind, identifier)
+      raise Error.new(not_found_message, code: -32_602) if primitive.blank?
 
-      ensure_scopes!(capability)
-      capability
+      ensure_scopes!(primitive)
+      primitive
     end
 
-    def ensure_scopes!(capability)
-      missing = capability.required_scopes.reject { |scope| principal.scopes.include?(scope) }
+    def ensure_scopes!(primitive)
+      missing = primitive.required_scopes.reject { |scope| request_context.scopes.include?(scope) }
       return if missing.empty?
 
-      required_scopes = capability.required_scopes.join(" ")
+      required_scopes = primitive.required_scopes.join(" ")
       raise Error.new(
               "Insufficient scope",
               code: -32_001,
               http_status: 403,
               data: {
-                required_scopes: capability.required_scopes,
+                required_scopes: primitive.required_scopes,
               },
               headers: {
                 "WWW-Authenticate" =>

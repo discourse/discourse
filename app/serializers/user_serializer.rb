@@ -21,7 +21,8 @@ class UserSerializer < UserCardSerializer
              :profile_background_upload_url,
              :can_upload_profile_header,
              :can_upload_user_card_background,
-             :no_password
+             :no_password,
+             :show_mcp_authorizations
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -148,6 +149,15 @@ class UserSerializer < UserCardSerializer
 
   def can_change_tracking_preferences
     scope.can_change_tracking_preferences?(object)
+  end
+
+  def include_show_mcp_authorizations?
+    user_is_current_user
+  end
+
+  def show_mcp_authorizations
+    object.mcp_oauth_authorizations.exists? ||
+      DiscourseMcp::Access.eligible_for_exposed_primitive?(object)
   end
 
   def user_api_keys

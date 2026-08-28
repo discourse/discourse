@@ -5,21 +5,120 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
-function scopesValue(scopes) {
-  return Array.isArray(scopes) ? scopes.join(", ") : scopes || "";
+function authorizationStatus(status) {
+  return i18n(`user.mcp_authorizations.statuses.${status}`);
+}
+
+class UserMcpAuthorizationRow extends Component {
+  @tracked showPermissions = false;
+
+  get hasPermissions() {
+    return this.args.authorization.scopes?.length > 0;
+  }
+
+  get isReauthorizationRequired() {
+    return this.args.authorization.status === "consent_required";
+  }
+
+  get canRevoke() {
+    return this.args.authorization.status !== "revoked";
+  }
+
+  @action
+  togglePermissions() {
+    this.showPermissions = !this.showPermissions;
+  }
+
+  <template>
+    <tr class="d-table__row user-mcp-authorization" ...attributes>
+      <td class="d-table__cell --overview user-mcp-authorization__application">
+        <div class="d-table__overview-name">{{@authorization.client_name}}</div>
+      </td>
+      <td class="d-table__cell --detail user-mcp-authorization__details-cell">
+        <div class="d-table__mobile-label">{{i18n
+            "user.mcp_authorizations.details"
+          }}</div>
+        <div class="user-mcp-authorization__details">
+          <div class="user-mcp-authorization__authorized">
+            <span>{{i18n "user.mcp_authorizations.authorized"}}:</span>
+            {{dAgeWithTooltip @authorization.consented_at format="medium"}}
+          </div>
+          <div class="user-mcp-authorization__last-used">
+            <span>{{i18n "user.mcp_authorizations.last_used"}}:</span>
+            {{#if @authorization.last_used_at}}
+              {{dAgeWithTooltip @authorization.last_used_at format="medium"}}
+            {{else}}
+              {{i18n "user.mcp_authorizations.never"}}
+            {{/if}}
+          </div>
+          <span class="user-mcp-authorization__token-count">{{i18n
+              "user.mcp_authorizations.active_tokens"
+              count=@authorization.token_count
+            }}</span>
+
+          {{#if this.hasPermissions}}
+            <div class="user-mcp-authorization__permissions">
+              <DButton
+                @action={{this.togglePermissions}}
+                @icon={{if this.showPermissions "caret-up" "caret-down"}}
+                @translatedLabel={{i18n
+                  "user.mcp_authorizations.permissions"
+                  count=@authorization.scopes.length
+                }}
+                @display="link"
+                class="user-mcp-authorization__permissions-toggle"
+                aria-expanded={{if this.showPermissions "true" "false"}}
+              />
+            </div>
+
+            {{#if this.showPermissions}}
+              <ul class="user-mcp-authorization__permissions-list">
+                {{#each @authorization.scopes as |scope|}}
+                  <li><code>{{scope}}</code></li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          {{/if}}
+        </div>
+      </td>
+      <td class="d-table__cell --detail user-mcp-authorization__status-cell">
+        <div class="d-table__mobile-label">{{i18n
+            "user.mcp_authorizations.status"
+          }}</div>
+        <div class="user-mcp-authorization__status-details">
+          <span
+            class="user-mcp-authorization__status"
+            data-state={{@authorization.status}}
+          >{{authorizationStatus @authorization.status}}</span>
+          {{#if this.canRevoke}}
+            <DButton
+              @action={{@onRevoke}}
+              @label="user.mcp_authorizations.revoke"
+              class="btn-default btn-small"
+            />
+          {{/if}}
+          {{#if this.isReauthorizationRequired}}
+            <DButton
+              @action={{@onReauthorize}}
+              @label="user.mcp_authorizations.reauthorize"
+              class="btn-default btn-small"
+            />
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </template>
 }
 
 export default class UserMcpAuthorizations extends Component {
   @service a11y;
   @service currentUser;
   @service dialog;
-  @service siteSettings;
   @service toasts;
 
   @tracked authorizations = [];
@@ -36,8 +135,8 @@ export default class UserMcpAuthorizations extends Component {
 
   get shouldRender() {
     return (
-      this.siteSettings.mcp_server_enabled &&
-      this.args.model?.id === this.currentUser?.id
+      this.args.model?.id === this.currentUser?.id &&
+      this.args.model?.show_mcp_authorizations
     );
   }
 
@@ -51,10 +150,6 @@ export default class UserMcpAuthorizations extends Component {
 
   get hasAuthorizations() {
     return this.authorizations.length > 0;
-  }
-
-  isReauthorizationRequired(authorization) {
-    return authorization.status === "consent_required";
   }
 
   async #loadAuthorizations() {
@@ -108,79 +203,52 @@ export default class UserMcpAuthorizations extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      <section
-        class="user-mcp-authorizations"
-        aria-labelledby="user-mcp-authorizations-title"
-      >
-        <h2 id="user-mcp-authorizations-title">{{i18n
+      <div class="control-group user-mcp-authorizations">
+        <label class="control-label">{{i18n
             "user.mcp_authorizations.title"
-          }}</h2>
+          }}</label>
         <p class="instructions">{{i18n
             "user.mcp_authorizations.description"
           }}</p>
 
         <DConditionalLoadingSpinner @condition={{this.loading}}>
           {{#if this.hasAuthorizations}}
-            <div class="user-mcp-authorizations__list">
-              {{#each this.authorizations as |authorization|}}
-                <article class="user-mcp-authorization">
-                  <div class="user-mcp-authorization__info">
-                    <h3>{{authorization.client_name}}</h3>
-                    <dl class="user-mcp-authorization__details">
-                      <div><dt>{{i18n
-                            "user.mcp_authorizations.endpoint"
-                          }}</dt><dd>{{authorization.resource}}</dd></div>
-                      <div><dt>{{i18n "user.mcp_authorizations.scopes"}}</dt><dd
-                        >{{scopesValue authorization.scopes}}</dd></div>
-                      <div><dt>{{i18n
-                            "user.mcp_authorizations.authorized"
-                          }}</dt><dd>{{dAgeWithTooltip
-                            authorization.consented_at
-                            format="medium"
-                          }}</dd></div>
-                      <div><dt>{{i18n
-                            "user.mcp_authorizations.last_used"
-                          }}</dt><dd>{{#if
-                            authorization.last_used_at
-                          }}{{dAgeWithTooltip
-                              authorization.last_used_at
-                              format="medium"
-                            }}{{else}}{{i18n
-                              "user.mcp_authorizations.never"
-                            }}{{/if}}</dd></div>
-                      <div><dt>{{i18n "user.mcp_authorizations.tokens"}}</dt><dd
-                        >{{authorization.token_count}}</dd></div>
-                    </dl>
-                    <p class="user-mcp-authorization__status">{{i18n
-                        "user.mcp_authorizations.status"
-                      }}:
-                      {{authorization.status}}</p>
-                  </div>
-                  <div class="user-mcp-authorization__actions">
-                    {{#if (eq authorization.status "active")}}
-                      <DButton
-                        @action={{fn this.revoke authorization}}
-                        @label="user.mcp_authorizations.revoke"
-                        class="btn-danger btn-small"
-                      />
-                    {{else if (this.isReauthorizationRequired authorization)}}
-                      <DButton
-                        @action={{fn this.reauthorize authorization}}
-                        @label="user.mcp_authorizations.reauthorize"
-                        class="btn-default btn-small"
-                      />
-                    {{/if}}
-                  </div>
-                </article>
-              {{/each}}
-            </div>
+            <table class="d-table user-mcp-authorizations__table">
+              <colgroup>
+                <col class="user-mcp-authorizations__application-column" />
+                <col />
+                <col class="user-mcp-authorizations__status-column" />
+              </colgroup>
+              <thead class="d-table__header">
+                <tr class="d-table__row">
+                  <th class="d-table__header-cell">{{i18n
+                      "user.mcp_authorizations.application"
+                    }}</th>
+                  <th class="d-table__header-cell">{{i18n
+                      "user.mcp_authorizations.details"
+                    }}</th>
+                  <th class="d-table__header-cell">{{i18n
+                      "user.mcp_authorizations.status"
+                    }}</th>
+                </tr>
+              </thead>
+              <tbody class="d-table__body">
+                {{#each this.authorizations as |authorization|}}
+                  <UserMcpAuthorizationRow
+                    @authorization={{authorization}}
+                    @onRevoke={{fn this.revoke authorization}}
+                    @onReauthorize={{this.reauthorize}}
+                  />
+                {{/each}}
+              </tbody>
+            </table>
           {{else}}
             <p class="user-mcp-authorizations__empty">{{i18n
                 "user.mcp_authorizations.empty"
               }}</p>
           {{/if}}
         </DConditionalLoadingSpinner>
-      </section>
+      </div>
     {{/if}}
   </template>
 }

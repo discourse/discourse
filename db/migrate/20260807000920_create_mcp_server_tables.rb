@@ -2,32 +2,22 @@
 
 class CreateMcpServerTables < ActiveRecord::Migration[8.0]
   def change
-    create_table :mcp_server_profiles do |table|
-      table.string :name, null: false
-      table.string :slug, null: false
-      table.boolean :enabled, null: false, default: false
-      table.text :instructions
-      table.integer :allowed_group_ids, array: true, null: false, default: []
-      table.string :allowed_scopes, array: true, null: false, default: []
-      table.integer :catalog_revision, null: false, default: 1
-      table.integer :consent_revision, null: false, default: 1
-      table.integer :cache_ttl_ms, null: false, default: 300_000
-      table.timestamps
-    end
-    add_index :mcp_server_profiles, :slug, unique: true
-
-    create_table :mcp_server_profile_capabilities do |table|
-      table.bigint :mcp_server_profile_id, null: false
+    create_table :mcp_primitives do |table|
       table.string :kind, null: false
       table.string :identifier, null: false
       table.boolean :enabled, null: false, default: false
       table.boolean :emergency_blocked, null: false, default: false
+      table.datetime :consent_required_at
       table.timestamps
     end
-    add_index :mcp_server_profile_capabilities,
-              %i[mcp_server_profile_id kind identifier],
-              unique: true,
-              name: "idx_mcp_profile_capabilities_unique"
+    add_index :mcp_primitives, %i[kind identifier], unique: true, name: "idx_mcp_primitives_unique"
+
+    create_table :mcp_group_scopes do |table|
+      table.integer :group_id, null: false
+      table.string :scope, null: false
+      table.timestamps
+    end
+    add_index :mcp_group_scopes, %i[group_id scope], unique: true
 
     create_table :mcp_oauth_clients do |table|
       table.string :client_id, null: false
@@ -47,11 +37,9 @@ class CreateMcpServerTables < ActiveRecord::Migration[8.0]
     create_table :mcp_oauth_authorizations do |table|
       table.integer :user_id, null: false
       table.bigint :mcp_oauth_client_id, null: false
-      table.bigint :mcp_server_profile_id, null: false
       table.string :resource, null: false
       table.string :status, null: false, default: "active"
       table.string :client_metadata_hash
-      table.integer :consent_revision, null: false, default: 1
       table.integer :grant_version, null: false, default: 1
       table.datetime :consented_at, null: false
       table.datetime :revoked_at
@@ -60,12 +48,11 @@ class CreateMcpServerTables < ActiveRecord::Migration[8.0]
       table.timestamps
     end
     add_index :mcp_oauth_authorizations,
-              %i[user_id mcp_oauth_client_id mcp_server_profile_id],
+              %i[user_id mcp_oauth_client_id],
               unique: true,
               where: "revoked_at IS NULL",
               name: "idx_mcp_active_authorizations_unique"
     add_index :mcp_oauth_authorizations, :mcp_oauth_client_id
-    add_index :mcp_oauth_authorizations, :mcp_server_profile_id
 
     create_table :mcp_oauth_authorization_scopes do |table|
       table.bigint :mcp_oauth_authorization_id, null: false
@@ -97,7 +84,6 @@ class CreateMcpServerTables < ActiveRecord::Migration[8.0]
       table.string :token_hash, null: false
       table.bigint :mcp_oauth_authorization_id, null: false
       table.bigint :mcp_oauth_client_id, null: false
-      table.bigint :mcp_server_profile_id, null: false
       table.integer :user_id, null: false
       table.string :resource, null: false
       table.string :scopes, array: true, null: false, default: []
@@ -134,10 +120,9 @@ class CreateMcpServerTables < ActiveRecord::Migration[8.0]
       table.integer :occurrences, null: false, default: 1
       table.integer :user_id
       table.bigint :mcp_oauth_client_id
-      table.bigint :mcp_server_profile_id
       table.string :request_id
       table.string :method
-      table.string :capability
+      table.string :tool
       table.string :outcome, null: false
       table.integer :http_status
       table.integer :duration_ms
@@ -145,6 +130,5 @@ class CreateMcpServerTables < ActiveRecord::Migration[8.0]
       table.timestamps
     end
     add_index :mcp_audit_logs, %i[occurred_at id]
-    add_index :mcp_audit_logs, %i[mcp_server_profile_id occurred_at]
   end
 end

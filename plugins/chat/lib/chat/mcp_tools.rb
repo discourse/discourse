@@ -3,15 +3,15 @@
 module Chat
   module McpTools
     class ListChannels
-      def self.call(arguments:, principal:)
-        result = Chat::ListUserChannels.call(guardian: principal.guardian)
+      def self.call(arguments:, request_context:)
+        result = Chat::ListUserChannels.call(guardian: request_context.guardian)
         raise DiscourseMcp::ToolError, "Unable to list chat channels" if result.failure?
         structured = result.structured
         channels =
           (structured[:public_channels] + structured[:direct_message_channels]).map do |channel|
             {
               id: channel.id,
-              title: channel.title(principal.user),
+              title: channel.title(request_context.user),
               status: channel.status,
               direct_message: channel.direct_message_channel?,
             }
@@ -21,14 +21,14 @@ module Chat
     end
 
     class ListMessages
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         result =
           Chat::ListChannelMessages.call(
             params: {
               channel_id: arguments.fetch("channel_id"),
               page_size: arguments.fetch("limit", 50),
             },
-            guardian: principal.guardian,
+            guardian: request_context.guardian,
           )
         raise DiscourseMcp::ToolError, "Unable to list chat messages" if result.failure?
         messages =
@@ -48,7 +48,7 @@ module Chat
     end
 
     class CreateMessage
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         result =
           Chat::CreateMessage.call(
             params: {
@@ -57,7 +57,7 @@ module Chat
               thread_id: arguments["thread_id"],
               in_reply_to_id: arguments["reply_to_message_id"],
             },
-            guardian: principal.guardian,
+            guardian: request_context.guardian,
           )
         raise DiscourseMcp::ToolError, "Unable to create chat message" if result.failure?
         message = result.message_instance

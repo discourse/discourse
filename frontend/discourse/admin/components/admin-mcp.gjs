@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -10,15 +11,21 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq, not, or } from "discourse/truth-helpers";
+import { eq, not, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 function listValue(value) {
@@ -41,52 +48,77 @@ function mcpValue(group, value) {
 }
 
 export default class AdminMcp extends Component {
+  @service a11y;
   @service dialog;
   @service router;
   @service site;
   @service toasts;
 
-  @tracked capabilityFilter = "";
-  @tracked capabilityProvider = "all";
-  @tracked capabilityKind = "all";
-  @tracked capabilityScope = "all";
-  @tracked capabilityRisk = "all";
-  @tracked capabilityState = "all";
+  @tracked primitiveFilter = "";
+  @tracked primitiveGroupBy = "scope";
+  @tracked selectedPrimitiveGroup = "all";
+  @tracked primitiveRisk = "all";
+  @tracked primitiveState = "all";
+  @tracked primitiveEnabledStates;
   @tracked authorizationFilter = "";
   @tracked clientFilter = "";
   @tracked activityFilter = "";
   @tracked activityOutcome = "all";
-  @tracked capabilityFormApi;
+  @tracked primitiveFormApi;
   @tracked saving = false;
   @tracked clients;
   @tracked clientRecord;
-  @tracked capabilityRecords;
-  @tracked updatingCapabilityId;
+  @tracked primitiveRecords;
+  @tracked updatingPrimitiveId;
   @tracked authorizations;
   @tracked activity;
+  @tracked activityMetrics;
   @tracked activityNextCursor;
+  @tracked activityLoading = false;
+  @tracked accessRules;
+  @tracked accessFormData;
+  @tracked editingAccessRule;
 
-  capabilityFilterFormData = {
-    capabilityFilter: "",
-    capabilityProvider: "all",
-    capabilityKind: "all",
-    capabilityScope: "all",
-    capabilityRisk: "all",
-    capabilityState: "all",
+  primitiveFilterFormData = {
+    primitiveFilter: "",
+    primitiveGroupBy: "scope",
+    primitiveRisk: "all",
+    primitiveState: "all",
   };
   clientFilterFormData = { clientFilter: "" };
   authorizationFilterFormData = { authorizationFilter: "" };
   activityFilterFormData = { activityFilter: "", activityOutcome: "all" };
+  activityRequestId = 0;
 
   constructor() {
     super(...arguments);
     const model = this.args.model || {};
     this.clients = model.clients || model.oauth_clients;
     this.clientRecord = model.client;
-    this.capabilityRecords = model.capabilities;
+    this.primitiveRecords = model.primitives;
+    this.primitiveEnabledStates = new Map(
+      (model.primitives || []).map((primitive) => [
+        primitive.id,
+        Boolean(primitive.enabled),
+      ])
+    );
     this.authorizations = model.authorizations;
     this.activity = model.activity || model.events;
+    this.activityMetrics = model.metrics;
     this.activityNextCursor = model.meta?.next_cursor;
+    this.accessRules = model.access_rules || [];
+    if (this.args.section === "access-new") {
+      this.accessFormData = {
+        group_ids: [],
+        scopes: this.accessScopeSelections([]),
+      };
+    } else if (this.args.section === "access-edit") {
+      this.editingAccessRule = model.access_rule;
+      this.accessFormData = {
+        group_ids: [model.access_rule.group_id.toString()],
+        scopes: this.accessScopeSelections(model.access_rule.scopes),
+      };
+    }
   }
 
   get model() {
@@ -100,20 +132,8 @@ export default class AdminMcp extends Component {
     }));
   }
 
-  get adminGroupId() {
-    return this.groupOptions
-      ?.find((group) => group.name === "admins")
-      ?.id.toString();
-  }
-
-  get configuration() {
-    return (
-      this.model.configuration || this.model.config || this.model.profile || {}
-    );
-  }
-
-  get capabilities() {
-    return this.capabilityRecords || this.model.capabilities || [];
+  get primitives() {
+    return this.primitiveRecords || this.model.primitives || [];
   }
 
   get catalog() {
@@ -121,7 +141,7 @@ export default class AdminMcp extends Component {
   }
 
   get metrics() {
-    return this.model.metrics || {};
+    return this.activityMetrics || this.model.metrics || {};
   }
 
   get setupChecklist() {
@@ -140,95 +160,123 @@ export default class AdminMcp extends Component {
     return this.clientRecord || this.model.client || this.model;
   }
 
-  get filteredCapabilities() {
-    const filter = this.capabilityFilter.trim().toLowerCase();
+  get filteredPrimitives() {
+    const filter = (this.primitiveFilter || "").trim().toLowerCase();
 
-    return this.capabilities.filter((capability) => {
+    return this.primitives.filter((primitive) => {
       const matchesText =
         !filter ||
         [
-          capability.id,
-          capability.name,
-          capability.title,
-          capability.description,
-          capability.provider,
-          ...(capability.required_scopes || []),
+          primitive.id,
+          primitive.name,
+          primitive.title,
+          primitive.description,
+          primitive.provider,
+          ...(primitive.required_scopes || []),
         ]
           .filter(Boolean)
           .join(" ")
           .toLowerCase()
           .includes(filter);
-      const matchesProvider =
-        this.capabilityProvider === "all" ||
-        capability.provider === this.capabilityProvider;
-      const matchesKind =
-        this.capabilityKind === "all" ||
-        capability.kind === this.capabilityKind;
-      const matchesScope =
-        this.capabilityScope === "all" ||
-        capability.required_scopes?.includes(this.capabilityScope);
+      const matchesGroup =
+        this.selectedPrimitiveGroup === "all" ||
+        this.primitiveGroupValues(primitive).includes(
+          this.selectedPrimitiveGroup
+        );
       const matchesRisk =
-        this.capabilityRisk === "all" ||
-        capability.risk === this.capabilityRisk;
+        this.primitiveRisk === "all" || primitive.risk === this.primitiveRisk;
       const matchesState =
-        this.capabilityState === "all" ||
-        (this.capabilityState === "enabled" && capability.enabled) ||
-        (this.capabilityState === "disabled" && !capability.enabled) ||
-        (this.capabilityState === "unavailable" && !capability.available) ||
-        (this.capabilityState === "blocked" && capability.emergency_blocked);
+        this.primitiveState === "all" ||
+        (this.primitiveState === "enabled" && primitive.enabled) ||
+        (this.primitiveState === "disabled" && !primitive.enabled) ||
+        (this.primitiveState === "unavailable" && !primitive.available) ||
+        (this.primitiveState === "blocked" && primitive.emergency_blocked);
 
-      return (
-        matchesText &&
-        matchesProvider &&
-        matchesKind &&
-        matchesScope &&
-        matchesRisk &&
-        matchesState
-      );
+      return matchesText && matchesGroup && matchesRisk && matchesState;
     });
   }
 
-  get capabilityProviders() {
+  get primitiveProviders() {
     return [
-      "all",
       ...new Set(
-        this.capabilities
-          .map((capability) => capability.provider)
-          .filter(Boolean)
+        this.primitives.map((primitive) => primitive.provider).filter(Boolean)
       ),
     ];
   }
 
-  get capabilityKinds() {
+  get primitiveKinds() {
     return [
-      "all",
       ...new Set(
-        this.capabilities.map((capability) => capability.kind).filter(Boolean)
+        this.primitives.map((primitive) => primitive.kind).filter(Boolean)
       ),
     ];
   }
 
-  get capabilityScopes() {
-    return ["all", ...this.scopeOptions.map((scope) => scope.id)];
-  }
-
-  get capabilityRisks() {
+  get primitiveRisks() {
     return [
       "all",
       ...new Set(
-        this.capabilities.map((capability) => capability.risk).filter(Boolean)
+        this.primitives.map((primitive) => primitive.risk).filter(Boolean)
       ),
     ];
   }
 
-  get capabilityStates() {
+  get primitiveStates() {
     return ["all", "enabled", "disabled", "unavailable", "blocked"];
+  }
+
+  get primitiveGroupByOptions() {
+    return ["scope", "provider", "kind"];
+  }
+
+  get primitiveGroupIds() {
+    switch (this.primitiveGroupBy) {
+      case "provider":
+        return this.primitiveProviders;
+      case "kind":
+        return this.primitiveKinds;
+      default:
+        return this.scopeOptions
+          .filter((scope) => scope.primitiveCount > 0)
+          .map((scope) => scope.id);
+    }
+  }
+
+  get primitiveGroups() {
+    return ["all", ...this.primitiveGroupIds].map((id) => {
+      const primitives =
+        id === "all"
+          ? this.primitives
+          : this.primitives.filter((primitive) =>
+              this.primitiveGroupValues(primitive).includes(id)
+            );
+
+      return {
+        id,
+        label:
+          id === "all"
+            ? i18n("admin.config.mcp.primitives.all_primitives")
+            : this.primitiveGroupLabel(id),
+        enabled: primitives.filter((primitive) =>
+          this.primitiveEnabledStates.get(primitive.id)
+        ).length,
+        total: primitives.length,
+      };
+    });
+  }
+
+  get selectedPrimitiveGroupDetails() {
+    return (
+      this.primitiveGroups.find(
+        (group) => group.id === this.selectedPrimitiveGroup
+      ) || this.primitiveGroups[0]
+    );
   }
 
   get scopeOptions() {
     const counts = new Map();
-    this.capabilities.forEach((capability) => {
-      (capability.required_scopes || []).forEach((scope) => {
+    this.primitives.forEach((primitive) => {
+      (primitive.required_scopes || []).forEach((scope) => {
         counts.set(scope, (counts.get(scope) || 0) + 1);
       });
     });
@@ -237,49 +285,61 @@ export default class AdminMcp extends Component {
     return scopes.map((scope) => ({
       id: scope,
       name: scope,
-      capabilityCount: counts.get(scope) || 0,
+      primitiveCount: counts.get(scope) || 0,
+      preventRemoval: scope === this.model.initial_scope,
     }));
   }
 
-  get selectedScopeOptions() {
+  accessScopeSelections(scopes) {
+    const scopeIds = new Set(scopes || []);
+    if (this.model.initial_scope) {
+      scopeIds.add(this.model.initial_scope);
+    }
+    return this.scopeSelections([...scopeIds]);
+  }
+
+  scopeSelections(scopes) {
     const options = new Map(
       this.scopeOptions.map((option) => [option.id, option])
     );
-    return (this.configuration.allowed_scopes || []).map(
+    return (scopes || []).map(
       (scope) =>
         options.get(scope) || {
           id: scope,
           name: scope,
-          capabilityCount: 0,
+          primitiveCount: 0,
         }
     );
   }
 
-  get configurationFormData() {
-    return {
-      server_enabled: Boolean(
-        this.configuration.server_enabled ?? this.configuration.enabled
-      ),
-      instructions: this.configuration.instructions || "",
-      allowed_group_ids: (
-        this.configuration.allowed_group_ids ||
-        this.configuration.allowed_groups ||
-        []
-      ).map(String),
-      allowed_scopes: this.selectedScopeOptions,
-      cache_ttl_ms: this.configuration.cache_ttl_ms || 0,
-    };
+  get groupChooserOptions() {
+    return { maximum: 1 };
+  }
+
+  get availableAccessGroups() {
+    const usedGroupIds = new Set(
+      this.accessRules.map((rule) => rule.group_id.toString())
+    );
+    return this.groupOptions.filter((group) => !usedGroupIds.has(group.id));
   }
 
   get newClientFormData() {
     return { name: "", client_id: "", redirect_uris: "" };
   }
 
-  get capabilityFormData() {
-    return this.capabilities.reduce((data, capability) => {
-      data[this.capabilityFieldName(capability)] = Boolean(capability.enabled);
+  get primitiveFormData() {
+    return this.primitives.reduce((data, primitive) => {
+      data[this.primitiveFieldName(primitive)] = Boolean(primitive.enabled);
       return data;
     }, {});
+  }
+
+  get hasPrimitiveChanges() {
+    return this.primitives.some(
+      (primitive) =>
+        this.primitiveEnabledStates.get(primitive.id) !==
+        Boolean(primitive.enabled)
+    );
   }
 
   get clientRecords() {
@@ -321,7 +381,6 @@ export default class AdminMcp extends Component {
         authorization.client_name,
         authorization.client_id,
         authorization.username,
-        authorization.profile,
         authorization.status,
         ...(authorization.scopes || []),
       ]
@@ -332,44 +391,43 @@ export default class AdminMcp extends Component {
     });
   }
 
-  get filteredActivity() {
-    const filter = this.activityFilter.trim().toLowerCase();
-    const activity =
-      this.activity || this.model.activity || this.model.events || [];
-    return activity.filter((event) => {
-      const matchesText =
-        !filter ||
-        [
-          event.method,
-          event.tool,
-          event.client_name,
-          event.username,
-          event.outcome,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(filter);
-      const matchesOutcome =
-        this.activityOutcome === "all" ||
-        event.outcome === this.activityOutcome;
-      return matchesText && matchesOutcome;
-    });
-  }
-
   get activityOutcomes() {
-    return [
-      "all",
-      ...new Set(
-        (this.activity || this.model.activity || [])
-          .map((event) => event.outcome)
-          .filter(Boolean)
-      ),
-    ];
+    return ["all", "success", "error", "rate_limited"];
   }
 
-  capabilityFieldName(capability) {
-    return capability.field_name;
+  get canLoadMoreActivity() {
+    return Boolean(this.activityNextCursor);
+  }
+
+  primitiveFieldName(primitive) {
+    return primitive.field_name;
+  }
+
+  primitiveGroupValues(primitive) {
+    switch (this.primitiveGroupBy) {
+      case "provider":
+        return primitive.provider ? [primitive.provider] : [];
+      case "kind":
+        return primitive.kind ? [primitive.kind] : [];
+      default:
+        return primitive.required_scopes || [];
+    }
+  }
+
+  primitiveGroupLabel(id) {
+    return this.primitiveGroupBy === "kind"
+      ? mcpValue("primitive_kind", id)
+      : id;
+  }
+
+  announcePrimitiveResults() {
+    this.a11y.announce(
+      i18n("admin.config.mcp.primitives.results_count", {
+        visible: this.filteredPrimitives.length,
+        total: this.primitives.length,
+      }),
+      "polite"
+    );
   }
 
   @action
@@ -383,23 +441,23 @@ export default class AdminMcp extends Component {
   @action
   updateFilter(name, value) {
     switch (name) {
-      case "capabilityFilter":
-        this.capabilityFilter = value;
+      case "primitiveFilter":
+        this.selectedPrimitiveGroup = "all";
+        this.primitiveFilter = value || "";
+        this.announcePrimitiveResults();
         break;
-      case "capabilityProvider":
-        this.capabilityProvider = value;
+      case "primitiveGroupBy":
+        this.primitiveGroupBy = value;
+        this.selectedPrimitiveGroup = "all";
+        this.announcePrimitiveResults();
         break;
-      case "capabilityKind":
-        this.capabilityKind = value;
+      case "primitiveRisk":
+        this.primitiveRisk = value;
+        this.announcePrimitiveResults();
         break;
-      case "capabilityScope":
-        this.capabilityScope = value;
-        break;
-      case "capabilityRisk":
-        this.capabilityRisk = value;
-        break;
-      case "capabilityState":
-        this.capabilityState = value;
+      case "primitiveState":
+        this.primitiveState = value;
+        this.announcePrimitiveResults();
         break;
       case "clientFilter":
         this.clientFilter = value;
@@ -408,93 +466,143 @@ export default class AdminMcp extends Component {
         this.authorizationFilter = value;
         break;
       case "activityFilter":
-        this.activityFilter = value;
+        this.activityFilter = value || "";
+        discourseDebounce(this, this.reloadActivity, INPUT_DELAY);
         break;
       case "activityOutcome":
         this.activityOutcome = value;
+        discourseDebounce(this, this.reloadActivity, 0);
         break;
     }
   }
 
   @action
-  registerCapabilityForm(api) {
-    this.capabilityFormApi = api;
+  registerPrimitiveForm(api) {
+    this.primitiveFormApi = api;
   }
 
   @action
-  selectVisibleCapabilities(enabled) {
-    this.filteredCapabilities.forEach((capability) => {
-      this.capabilityFormApi?.set(
-        this.capabilityFieldName(capability),
-        enabled
-      );
+  shouldConfirmPrimitiveChanges() {
+    return this.hasPrimitiveChanges;
+  }
+
+  @action
+  positionPrimitiveActions([entry]) {
+    const sectionElement = entry.target.closest(
+      ".admin-mcp__primitives-section"
+    );
+    const formElement = sectionElement?.querySelector(
+      ".admin-mcp__primitive-selection-form"
+    );
+    const actionsElement = formElement?.querySelector(".form-kit__actions");
+
+    if (!formElement || !actionsElement) {
+      return;
+    }
+
+    const { width } = formElement.getBoundingClientRect();
+    const { height } = actionsElement.getBoundingClientRect();
+    actionsElement.style.width = `${width}px`;
+    formElement.style.setProperty(
+      "--mcp-primitive-actions-height",
+      `${height}px`
+    );
+  }
+
+  @action
+  selectPrimitiveGroup(groupId) {
+    this.selectedPrimitiveGroup = groupId;
+    this.announcePrimitiveResults();
+  }
+
+  @action
+  updatePrimitiveEnabled(primitive, event) {
+    const enabled = event.target.checked;
+    const states = new Map(this.primitiveEnabledStates);
+    states.set(primitive.id, enabled);
+    this.primitiveEnabledStates = states;
+  }
+
+  @action
+  selectVisiblePrimitives(enabled) {
+    const states = new Map(this.primitiveEnabledStates);
+    this.filteredPrimitives.forEach((primitive) => {
+      this.primitiveFormApi?.set(this.primitiveFieldName(primitive), enabled);
+      states.set(primitive.id, enabled);
+    });
+    this.primitiveEnabledStates = states;
+  }
+
+  @action
+  async saveAccessRule(data) {
+    const groupId = this.editingAccessRule?.group_id || data.group_ids?.[0];
+    this.saving = true;
+    try {
+      const result = await ajax(`/admin/mcp/access/${groupId}.json`, {
+        type: "PUT",
+        data: {
+          scopes: (data.scopes || []).map((scope) => scope.id),
+        },
+      });
+      this.accessRules = result.access_rules;
+      this.model.access_rules = result.access_rules;
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("admin.config.mcp.access.saved") },
+      });
+      this.router.transitionTo("adminConfig.mcp.access");
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  @action
+  deleteAccessRule(rule) {
+    this.dialog.confirm({
+      message: i18n("admin.config.mcp.access.confirm_delete", {
+        group: rule.group_name,
+      }),
+      didConfirm: async () => {
+        try {
+          await ajax(`/admin/mcp/access/${rule.group_id}.json`, {
+            type: "DELETE",
+          });
+          this.accessRules = this.accessRules.filter(
+            (item) => item.group_id !== rule.group_id
+          );
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
     });
   }
 
   @action
-  saveConfiguration(data) {
-    const save = () => this.#saveConfiguration(data);
-    if (
-      data.server_enabled &&
-      !(this.configuration.server_enabled ?? this.configuration.enabled)
-    ) {
-      this.dialog.confirm({
-        message: i18n("admin.config.mcp.confirm_enable"),
-        didConfirm: save,
-      });
-      return;
-    }
-    return save();
-  }
-
-  async #saveConfiguration(data) {
+  async savePrimitives(data) {
     this.saving = true;
     try {
-      await ajax("/admin/mcp/configuration.json", {
-        type: "PUT",
-        data: {
-          configuration: {
-            enabled: data.server_enabled,
-            instructions: data.instructions,
-            cache_ttl_ms: data.cache_ttl_ms,
-            allowed_group_ids: (data.allowed_group_ids || []).map(Number),
-            allowed_scopes: (data.allowed_scopes || []).map(
-              (scope) => scope.id
-            ),
-          },
-        },
-      });
-      this.toasts.success({
-        duration: "short",
-        data: { message: i18n("admin.config.mcp.saved") },
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.saving = false;
-    }
-  }
-
-  @action
-  async saveCapabilities(data) {
-    this.saving = true;
-    try {
-      const enabledCapabilities = Object.entries(data)
+      const enabledPrimitives = Object.entries(data)
         .filter(([, enabled]) => enabled)
         .map(
           ([field]) =>
-            this.capabilities.find(
-              (capability) => capability.field_name === field
-            )?.id
+            this.primitives.find((primitive) => primitive.field_name === field)
+              ?.id
         )
         .filter(Boolean);
       await ajax("/admin/mcp/capabilities.json", {
         type: "PUT",
-        data: { capability_ids: enabledCapabilities },
+        data: { primitive_ids: enabledPrimitives },
       });
+      const enabledPrimitiveIds = new Set(enabledPrimitives);
+      this.primitiveRecords = this.primitives.map((primitive) => ({
+        ...primitive,
+        enabled: enabledPrimitiveIds.has(primitive.id),
+      }));
       this.toasts.success({
         duration: "short",
-        data: { message: i18n("admin.config.mcp.capabilities_saved") },
+        data: { message: i18n("admin.config.mcp.primitives_saved") },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -503,15 +611,15 @@ export default class AdminMcp extends Component {
     }
   }
 
-  async #setCapabilityBlocked(capability, blocked) {
-    this.updatingCapabilityId = capability.id;
+  async #setPrimitiveBlocked(primitive, blocked) {
+    this.updatingPrimitiveId = primitive.id;
     try {
       await ajax("/admin/mcp/capabilities/emergency-block.json", {
         type: "PUT",
-        data: { capability_id: capability.id, blocked },
+        data: { primitive_id: primitive.id, blocked },
       });
-      this.capabilityRecords = this.capabilityRecords.map((item) =>
-        item.id === capability.id
+      this.primitiveRecords = this.primitiveRecords.map((item) =>
+        item.id === primitive.id
           ? { ...item, emergency_blocked: blocked }
           : item
       );
@@ -520,28 +628,28 @@ export default class AdminMcp extends Component {
         data: {
           message: i18n(
             blocked
-              ? "admin.config.mcp.capability_blocked"
-              : "admin.config.mcp.capability_unblocked",
-            { name: capability.title || capability.name }
+              ? "admin.config.mcp.primitive_blocked"
+              : "admin.config.mcp.primitive_unblocked",
+            { name: primitive.title || primitive.name }
           ),
         },
       });
     } catch (error) {
       popupAjaxError(error);
     } finally {
-      this.updatingCapabilityId = null;
+      this.updatingPrimitiveId = null;
     }
   }
 
   @action
-  toggleCapabilityEmergencyBlock(capability) {
-    const blocked = !capability.emergency_blocked;
-    const updateBlock = () => this.#setCapabilityBlocked(capability, blocked);
+  togglePrimitiveEmergencyBlock(primitive) {
+    const blocked = !primitive.emergency_blocked;
+    const updateBlock = () => this.#setPrimitiveBlocked(primitive, blocked);
 
     if (blocked) {
       this.dialog.confirm({
         message: i18n("admin.config.mcp.confirm_emergency_block", {
-          name: capability.title || capability.name,
+          name: primitive.title || primitive.name,
         }),
         didConfirm: updateBlock,
       });
@@ -661,22 +769,61 @@ export default class AdminMcp extends Component {
   }
 
   @action
-  async loadMoreActivity() {
-    if (!this.activityNextCursor) {
+  reloadActivity() {
+    return this.loadActivity({ append: false });
+  }
+
+  @action
+  loadMoreActivity() {
+    if (!this.canLoadMoreActivity || this.activityLoading) {
       return;
     }
+
+    return this.loadActivity({ append: true });
+  }
+
+  async loadActivity({ append }) {
+    const cursor = append ? this.activityNextCursor : null;
+    const requestId = this.activityRequestId + 1;
+    this.activityRequestId = requestId;
+    this.activityLoading = true;
+
     try {
       const result = await ajax("/admin/mcp/activity.json", {
-        data: { cursor: this.activityNextCursor },
+        data: this.activityRequestData(cursor),
       });
-      this.activity = [
-        ...this.activity,
-        ...(result.activity || result.events || []),
-      ];
-      this.activityNextCursor = result.meta?.next_cursor;
+      if (requestId !== this.activityRequestId) {
+        return;
+      }
+
+      const activity = result.activity || result.events || [];
+      this.activity = append ? [...this.activity, ...activity] : activity;
+      this.activityNextCursor = result.meta?.next_cursor || result.next_cursor;
+      this.activityMetrics = result.metrics || this.activityMetrics;
     } catch (error) {
-      popupAjaxError(error);
+      if (requestId === this.activityRequestId) {
+        popupAjaxError(error);
+      }
+    } finally {
+      if (requestId === this.activityRequestId) {
+        this.activityLoading = false;
+      }
     }
+  }
+
+  activityRequestData(cursor) {
+    const data = {};
+    const filter = this.activityFilter.trim();
+    if (filter) {
+      data.filter = filter;
+    }
+    if (this.activityOutcome !== "all") {
+      data.outcome = this.activityOutcome;
+    }
+    if (cursor) {
+      data.cursor = cursor;
+    }
+    return data;
   }
 
   <template>
@@ -688,7 +835,6 @@ export default class AdminMcp extends Component {
       <div class="admin-mcp__overview-grid">
         <AdminConfigAreaCard
           @heading="admin.config.mcp.overview.endpoint_title"
-          @description="admin.config.mcp.overview.endpoint_description"
           class="admin-mcp__endpoint-card"
         >
           <:content>
@@ -709,14 +855,6 @@ export default class AdminMcp extends Component {
                   }}</dt><dd>{{@model.server_version}}</dd></div>
               <div><dt>{{i18n "admin.config.mcp.overview.status"}}</dt><dd
                 >{{mcpValue "server_status" @model.status}}</dd></div>
-              <div><dt>{{i18n "admin.config.mcp.overview.server_state"}}</dt><dd
-                >{{i18n
-                    (if
-                      @model.enabled
-                      "admin.config.mcp.overview.enabled"
-                      "admin.config.mcp.overview.disabled"
-                    )
-                  }}</dd></div>
             </dl>
           </:content>
         </AdminConfigAreaCard>
@@ -741,12 +879,13 @@ export default class AdminMcp extends Component {
 
         <AdminConfigAreaCard
           @heading="admin.config.mcp.overview.activity_title"
+          class="admin-mcp__usage"
         >
           <:content>
             <dl class="admin-mcp__metric-grid">
               <div><dt>{{i18n
-                    "admin.config.mcp.overview.active_clients"
-                  }}</dt><dd>{{this.metrics.active_clients}}</dd></div>
+                    "admin.config.mcp.overview.approved_oauth_clients"
+                  }}</dt><dd>{{this.metrics.approved_oauth_clients}}</dd></div>
               <div><dt>{{i18n
                     "admin.config.mcp.overview.authorizations"
                   }}</dt><dd>{{this.metrics.authorizations}}</dd></div>
@@ -790,62 +929,138 @@ export default class AdminMcp extends Component {
           </ul>
         </section>
       {{/if}}
-    {{else if (eq @section "capabilities")}}
-      <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.capabilities.title"}}
-        @descriptionLabel={{i18n "admin.config.mcp.capabilities.description"}}
+    {{else if (eq @section "access")}}
+      <section class="admin-mcp__access-section">
+        <DPageSubheader
+          @titleLabel={{i18n "admin.config.mcp.access.title"}}
+          @descriptionLabel={{i18n "admin.config.mcp.access.description"}}
+        >
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminConfig.mcp.access.new"
+              @label="admin.config.mcp.access.add"
+            />
+          </:actions>
+        </DPageSubheader>
+
+        <table class="d-table admin-mcp__access-table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__cell --overview">{{i18n
+                  "admin.config.mcp.access.groups"
+                }}</th>
+              <th class="d-table__cell --detail">{{i18n
+                  "admin.config.mcp.access.scopes"
+                }}</th>
+              <th class="d-table__cell --controls"><span class="sr-only">{{i18n
+                    "admin.config.mcp.access.edit"
+                  }}</span></th>
+              <th class="d-table__cell --controls"><span class="sr-only">{{i18n
+                    "admin.config.mcp.access.delete"
+                  }}</span></th>
+            </tr>
+          </thead>
+          <tbody class="d-table__body">
+            {{#each this.accessRules as |rule|}}
+              <tr
+                class="d-table__row admin-mcp__access-row"
+                data-group-id={{rule.group_id}}
+              >
+                <td class="d-table__cell --overview">
+                  <span
+                    class="d-table__overview-name"
+                  >{{rule.group_name}}</span>
+                  {{#if rule.pre_registered}}
+                    <small>{{i18n
+                        "admin.config.mcp.access.admins_description"
+                      }}</small>
+                  {{/if}}
+                </td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">{{i18n
+                      "admin.config.mcp.access.scopes"
+                    }}</div>
+                  <ul class="admin-mcp__access-scopes">
+                    {{#each rule.scopes as |scope|}}<li><code
+                        >{{scope}}</code></li>{{/each}}
+                  </ul>
+                </td>
+                <td class="d-table__cell --controls">
+                  <DButton
+                    @route="adminConfig.mcp.access.edit"
+                    @routeModels={{array rule.group_id}}
+                    @icon="pencil"
+                    @label="admin.config.mcp.access.edit"
+                    class="btn-small admin-mcp__edit-access-rule"
+                  />
+                </td>
+                <td class="d-table__cell --controls">
+                  {{#if rule.deletable}}
+                    <DButton
+                      @action={{fn this.deleteAccessRule rule}}
+                      @icon="trash-can"
+                      @title="admin.config.mcp.access.delete"
+                      class="btn-danger btn-small admin-mcp__delete-access-rule"
+                    />
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </section>
+
+    {{else if (or (eq @section "access-new") (eq @section "access-edit"))}}
+      <BackButton
+        @route="adminConfig.mcp.access"
+        @label="admin.config.mcp.access.back"
       />
       <AdminConfigAreaCard
-        @heading="admin.config.mcp.access.title"
-        @description="admin.config.mcp.access.description"
+        @heading={{if
+          this.editingAccessRule
+          "admin.config.mcp.access.edit_title"
+          "admin.config.mcp.access.new_title"
+        }}
+        class="admin-mcp__form-card"
       >
         <:content>
           <Form
-            @data={{this.configurationFormData}}
-            @onSubmit={{this.saveConfiguration}}
+            @data={{this.accessFormData}}
+            @onSubmit={{this.saveAccessRule}}
             @isLoading={{this.saving}}
-            class="admin-mcp__configuration-form"
+            class="admin-mcp__access-form"
             as |form|
           >
+            {{#if this.editingAccessRule}}
+              <div class="form-kit__field">
+                <span class="form-kit__label">{{i18n
+                    "admin.config.mcp.access.group"
+                  }}</span>
+                <strong>{{this.editingAccessRule.group_name}}</strong>
+              </div>
+            {{else}}
+              <form.Field
+                @name="group_ids"
+                @title={{i18n "admin.config.mcp.access.group"}}
+                @validation="required"
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <GroupChooser
+                    @content={{this.availableAccessGroups}}
+                    @value={{field.value}}
+                    @onChange={{field.set}}
+                    @options={{this.groupChooserOptions}}
+                  />
+                </field.Control>
+              </form.Field>
+            {{/if}}
             <form.Field
-              @name="server_enabled"
-              @title={{i18n "admin.config.mcp.access.enabled"}}
-              @type="checkbox"
-              as |field|
-            ><field.Control /></form.Field>
-            <form.Field
-              @name="instructions"
-              @title={{i18n "admin.config.mcp.access.instructions"}}
-              @type="textarea"
-              as |field|
-            ><field.Control @height={{80}} /></form.Field>
-            <form.Field
-              @name="allowed_group_ids"
-              @title={{i18n "admin.config.mcp.access.allowed_groups"}}
-              @description={{i18n
-                "admin.config.mcp.access.allowed_groups_description"
-              }}
-              @type="custom"
-              as |field|
-            >
-              <field.Control>
-                <GroupChooser
-                  @content={{this.groupOptions}}
-                  @value={{field.value}}
-                  @onChange={{field.set}}
-                  @mandatoryValues={{this.adminGroupId}}
-                  @mandatoryValueTitle={{i18n
-                    "admin.config.mcp.access.administrators_always_included"
-                  }}
-                />
-              </field.Control>
-            </form.Field>
-            <form.Field
-              @name="allowed_scopes"
-              @title={{i18n "admin.config.mcp.access.allowed_scopes"}}
-              @description={{i18n
-                "admin.config.mcp.access.allowed_scopes_description"
-              }}
+              @name="scopes"
+              @title={{i18n "admin.config.mcp.access.scopes"}}
+              @description={{i18n "admin.config.mcp.access.scopes_description"}}
+              @validation="required"
               @format="full"
               @type="custom"
               as |field|
@@ -856,9 +1071,7 @@ export default class AdminMcp extends Component {
                   @selection={{field.value}}
                   @loadFn={{this.loadScopeOptions}}
                   @onChange={{field.set}}
-                  @label={{i18n
-                    "admin.config.mcp.access.allowed_scopes_placeholder"
-                  }}
+                  @label={{i18n "admin.config.mcp.access.scopes_placeholder"}}
                   @contentClass="admin-mcp__scope-select-content"
                   class="admin-mcp__scope-select"
                 >
@@ -867,251 +1080,281 @@ export default class AdminMcp extends Component {
                     <span class="admin-mcp__scope-option">
                       <span>{{scope.name}}</span>
                       <small>{{i18n
-                          "admin.config.mcp.access.scope_capabilities"
-                          count=scope.capabilityCount
+                          "admin.config.mcp.access.scope_primitives"
+                          count=scope.primitiveCount
                         }}</small>
                     </span>
                   </:result>
                 </DMultiSelect>
               </field.Control>
             </form.Field>
-            <form.Field
-              @name="cache_ttl_ms"
-              @title={{i18n "admin.config.mcp.access.cache_ttl"}}
-              @validation="required|integer"
-              @type="input-number"
-              as |field|
-            ><field.Control
-                min="1000"
-                max="86400000"
-                step="1000"
-              /></form.Field>
-            <form.Submit @label="admin.config.mcp.save_configuration" />
+            <div class="admin-mcp__access-form-actions">
+              <form.Submit @label="admin.config.mcp.access.save" />
+            </div>
           </Form>
         </:content>
       </AdminConfigAreaCard>
 
+    {{else if (eq @section "primitives")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.capabilities.picker_title"}}
-        @descriptionLabel={{i18n
-          "admin.config.mcp.capabilities.picker_description"
-        }}
+        @titleLabel={{i18n "admin.config.mcp.capabilities.title"}}
+        @descriptionLabel={{i18n "admin.config.mcp.capabilities.description"}}
       />
-      <Form
-        @data={{this.capabilityFilterFormData}}
-        @onSet={{this.updateFilter}}
-        class="admin-mcp__capability-filters"
-        as |form|
+      <div
+        class="admin-mcp__primitives-section"
+        {{dOnResize this.positionPrimitiveActions}}
       >
-        <form.Field
-          @name="capabilityFilter"
-          @title={{i18n "admin.config.mcp.capabilities.search_placeholder"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="input"
-          class="admin-mcp__filter-search"
-          as |field|
+        <p class="admin-mcp__primitives-description">{{i18n
+            "admin.config.mcp.primitives.picker_description"
+          }}</p>
+        <Form
+          @data={{this.primitiveFilterFormData}}
+          @onSet={{this.updateFilter}}
+          class="admin-mcp__primitive-filters"
+          as |form|
         >
-          <field.Control
-            placeholder={{i18n
-              "admin.config.mcp.capabilities.search_placeholder"
-            }}
-          />
-        </form.Field>
-        <form.Field
-          @name="capabilityProvider"
-          @title={{i18n "admin.config.mcp.capabilities.provider"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="select"
-          as |field|
-        >
-          <field.Control
-            @includeNone={{false}}
-            aria-label={{i18n "admin.config.mcp.capabilities.provider"}}
-            as |select|
+          <form.Field
+            @name="primitiveFilter"
+            @title={{i18n "admin.config.mcp.primitives.search_placeholder"}}
+            @showTitle={{false}}
+            @showOptional={{false}}
+            @format="full"
+            @type="input"
+            class="admin-mcp__filter-search"
+            as |field|
           >
-            {{#each this.capabilityProviders as |provider|}}
-              <select.Option @value={{provider}}>{{#if
-                  (eq provider "all")
-                }}{{mcpValue
-                    "filter"
-                    "all"
-                  }}{{else}}{{provider}}{{/if}}</select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-        <form.Field
-          @name="capabilityKind"
-          @title={{i18n "admin.config.mcp.capabilities.kind"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="select"
-          as |field|
-        >
-          <field.Control
-            @includeNone={{false}}
-            aria-label={{i18n "admin.config.mcp.capabilities.kind"}}
-            as |select|
+            <field.Control
+              placeholder={{i18n
+                "admin.config.mcp.primitives.search_placeholder"
+              }}
+            />
+          </form.Field>
+          <form.Field
+            @name="primitiveGroupBy"
+            @title={{i18n "admin.config.mcp.primitives.group_by"}}
+            @showTitle={{false}}
+            @showOptional={{false}}
+            @format="full"
+            @type="select"
+            as |field|
           >
-            {{#each this.capabilityKinds as |kind|}}
-              <select.Option @value={{kind}}>{{mcpValue
-                  "capability_kind"
-                  kind
-                }}</select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-        <form.Field
-          @name="capabilityScope"
-          @title={{i18n "admin.config.mcp.capabilities.scope"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="select"
-          class="admin-mcp__filter-scope"
-          as |field|
-        >
-          <field.Control
-            @includeNone={{false}}
-            aria-label={{i18n "admin.config.mcp.capabilities.scope"}}
-            as |select|
-          >
-            {{#each this.capabilityScopes as |scope|}}
-              <select.Option @value={{scope}}>{{#if (eq scope "all")}}{{i18n
-                    "admin.config.mcp.capabilities.any_scope"
-                  }}{{else}}{{scope}}{{/if}}</select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-        <form.Field
-          @name="capabilityRisk"
-          @title={{i18n "admin.config.mcp.capabilities.risk"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="select"
-          class="admin-mcp__filter-impact"
-          as |field|
-        >
-          <field.Control
-            @includeNone={{false}}
-            aria-label={{i18n "admin.config.mcp.capabilities.risk"}}
-            as |select|
-          >
-            {{#each this.capabilityRisks as |risk|}}
-              <select.Option @value={{risk}}>{{mcpValue
-                  "capability_risk"
-                  risk
-                }}</select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-        <form.Field
-          @name="capabilityState"
-          @title={{i18n "admin.config.mcp.capabilities.state"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @type="select"
-          as |field|
-        >
-          <field.Control
-            @includeNone={{false}}
-            aria-label={{i18n "admin.config.mcp.capabilities.state"}}
-            as |select|
-          >
-            {{#each this.capabilityStates as |state|}}
-              <select.Option @value={{state}}>{{mcpValue
-                  "capability_state"
-                  state
-                }}</select.Option>
-            {{/each}}
-          </field.Control>
-        </form.Field>
-      </Form>
-      <p class="admin-mcp__results-count" aria-live="polite">{{i18n
-          "admin.config.mcp.capabilities.results_count"
-          visible=this.filteredCapabilities.length
-          total=this.capabilities.length
-        }}</p>
-      <Form
-        @data={{this.capabilityFormData}}
-        @onRegisterApi={{this.registerCapabilityForm}}
-        @onSubmit={{this.saveCapabilities}}
-        @isLoading={{this.saving}}
-        as |form|
-      >
-        <div class="admin-mcp__bulk-actions">
-          <DButton
-            @action={{fn this.selectVisibleCapabilities true}}
-            @label="admin.config.mcp.capabilities.enable_visible"
-            class="btn-default btn-small"
-          />
-          <DButton
-            @action={{fn this.selectVisibleCapabilities false}}
-            @label="admin.config.mcp.capabilities.disable_visible"
-            class="btn-default btn-small"
-          />
-        </div>
-        <div class="admin-mcp__capability-list">
-          {{#each this.filteredCapabilities as |capability|}}
-            <article
-              class="admin-mcp__capability"
-              data-capability-id={{capability.id}}
+            <field.Control
+              @includeNone={{false}}
+              aria-label={{i18n "admin.config.mcp.primitives.group_by"}}
+              as |select|
             >
-              <form.Field
-                @name={{capability.field_name}}
-                @title={{capability.title}}
-                @showTitle={{false}}
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control
-                  disabled={{or
-                    (not capability.available)
-                    capability.emergency_blocked
-                  }}
-                >{{capability.description}}</field.Control>
-              </form.Field>
-              <dl class="admin-mcp__capability-meta">
-                <div><dt>{{i18n
-                      "admin.config.mcp.capabilities.provider"
-                    }}</dt><dd>{{capability.provider}}</dd></div>
-                <div><dt>{{i18n "admin.config.mcp.capabilities.kind"}}</dt><dd
-                  >{{mcpValue "capability_kind" capability.kind}}</dd></div>
-                <div><dt>{{i18n "admin.config.mcp.capabilities.risk"}}</dt><dd
-                  >{{mcpValue "capability_risk" capability.risk}}</dd></div>
-                <div><dt>{{i18n "admin.config.mcp.capabilities.scopes"}}</dt><dd
-                  >{{listValue capability.required_scopes}}</dd></div>
-              </dl>
-              {{#unless capability.available}}<p
-                  class="admin-mcp__unavailable"
-                >{{capability.unavailable_reason}}</p>{{/unless}}
-              {{#if capability.emergency_blocked}}<p
-                  class="admin-mcp__unavailable"
-                >{{i18n
-                    "admin.config.mcp.capabilities.emergency_blocked"
-                  }}</p>{{/if}}
-              <div class="admin-mcp__capability-actions">
-                <DButton
-                  @action={{fn this.toggleCapabilityEmergencyBlock capability}}
-                  @title={{if
-                    capability.emergency_blocked
-                    "admin.config.mcp.actions.unblock_capability"
-                    "admin.config.mcp.actions.block_capability"
-                  }}
-                  @icon={{if capability.emergency_blocked "unlock" "ban"}}
-                  @isLoading={{eq this.updatingCapabilityId capability.id}}
-                  class="btn-transparent btn-small"
-                />
+              {{#each this.primitiveGroupByOptions as |groupBy|}}
+                <select.Option @value={{groupBy}}>{{i18n
+                    (concat
+                      "admin.config.mcp.primitives.group_by_options." groupBy
+                    )
+                  }}</select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+          <form.Field
+            @name="primitiveRisk"
+            @title={{i18n "admin.config.mcp.primitives.risk"}}
+            @showTitle={{false}}
+            @showOptional={{false}}
+            @format="full"
+            @type="select"
+            class="admin-mcp__filter-impact"
+            as |field|
+          >
+            <field.Control
+              @includeNone={{false}}
+              aria-label={{i18n "admin.config.mcp.primitives.risk"}}
+              as |select|
+            >
+              {{#each this.primitiveRisks as |risk|}}
+                <select.Option @value={{risk}}>{{mcpValue
+                    "primitive_risk"
+                    risk
+                  }}</select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+          <form.Field
+            @name="primitiveState"
+            @title={{i18n "admin.config.mcp.primitives.state"}}
+            @showTitle={{false}}
+            @showOptional={{false}}
+            @format="full"
+            @type="select"
+            as |field|
+          >
+            <field.Control
+              @includeNone={{false}}
+              aria-label={{i18n "admin.config.mcp.primitives.state"}}
+              as |select|
+            >
+              {{#each this.primitiveStates as |state|}}
+                <select.Option @value={{state}}>{{mcpValue
+                    "primitive_state"
+                    state
+                  }}</select.Option>
+              {{/each}}
+            </field.Control>
+          </form.Field>
+        </Form>
+        <Form
+          @data={{this.primitiveFormData}}
+          @onRegisterApi={{this.registerPrimitiveForm}}
+          @onSubmit={{this.savePrimitives}}
+          @onDirtyCheck={{this.shouldConfirmPrimitiveChanges}}
+          @isLoading={{this.saving}}
+          class={{dConcatClass
+            "admin-mcp__primitive-selection-form"
+            (if this.hasPrimitiveChanges "has-floating-actions")
+          }}
+          as |form|
+        >
+          <div class="admin-mcp__primitive-browser">
+            <nav
+              class="admin-mcp__primitive-groups"
+              aria-label={{i18n "admin.config.mcp.primitives.groups_label"}}
+            >
+              <ul class="admin-mcp__primitive-group-list">
+                {{#each this.primitiveGroups as |group|}}
+                  <li>
+                    <button
+                      type="button"
+                      class={{dConcatClass
+                        "admin-mcp__primitive-group"
+                        (if
+                          (eq group.id this.selectedPrimitiveGroup)
+                          "is-selected"
+                        )
+                      }}
+                      data-primitive-group-id={{group.id}}
+                      aria-pressed={{eq group.id this.selectedPrimitiveGroup}}
+                      {{on "click" (fn this.selectPrimitiveGroup group.id)}}
+                    >
+                      <span>{{group.label}}</span>
+                      <small>{{i18n
+                          "admin.config.mcp.primitives.group_count"
+                          enabled=group.enabled
+                          total=group.total
+                        }}</small>
+                    </button>
+                  </li>
+                {{/each}}
+              </ul>
+            </nav>
+            <section
+              class="admin-mcp__primitive-panel"
+              aria-labelledby="mcp-primitive-group-title"
+            >
+              <header class="admin-mcp__primitive-panel-header">
+                <h3
+                  id="mcp-primitive-group-title"
+                >{{this.selectedPrimitiveGroupDetails.label}}</h3>
+                <p class="admin-mcp__results-count">{{i18n
+                    "admin.config.mcp.primitives.results_count"
+                    visible=this.filteredPrimitives.length
+                    total=this.primitives.length
+                  }}</p>
+                <div class="admin-mcp__primitive-group-actions">
+                  <DButton
+                    @action={{fn this.selectVisiblePrimitives true}}
+                    @label="admin.config.mcp.primitives.enable_visible"
+                    class="btn-default btn-small"
+                  />
+                  <DButton
+                    @action={{fn this.selectVisiblePrimitives false}}
+                    @label="admin.config.mcp.primitives.disable_visible"
+                    class="btn-default btn-small"
+                  />
+                </div>
+              </header>
+              <div class="admin-mcp__primitive-list">
+                {{#each this.filteredPrimitives as |primitive|}}
+                  <article
+                    class="admin-mcp__primitive"
+                    data-primitive-id={{primitive.id}}
+                  >
+                    <form.Field
+                      @name={{primitive.field_name}}
+                      @title={{primitive.title}}
+                      @showTitle={{false}}
+                      @type="checkbox"
+                      as |field|
+                    >
+                      <field.Control
+                        disabled={{or
+                          (not primitive.available)
+                          primitive.emergency_blocked
+                        }}
+                        {{on
+                          "change"
+                          (fn this.updatePrimitiveEnabled primitive)
+                        }}
+                      >{{primitive.description}}</field.Control>
+                    </form.Field>
+                    <dl class="admin-mcp__primitive-meta">
+                      <div><dt>{{i18n
+                            "admin.config.mcp.primitives.provider"
+                          }}</dt><dd>{{primitive.provider}}</dd></div>
+                      <div><dt>{{i18n
+                            "admin.config.mcp.primitives.kind"
+                          }}</dt><dd>{{mcpValue
+                            "primitive_kind"
+                            primitive.kind
+                          }}</dd></div>
+                      <div><dt>{{i18n
+                            "admin.config.mcp.primitives.risk"
+                          }}</dt><dd>{{mcpValue
+                            "primitive_risk"
+                            primitive.risk
+                          }}</dd></div>
+                      <div><dt>{{i18n
+                            "admin.config.mcp.primitives.scopes"
+                          }}</dt><dd>{{listValue
+                            primitive.required_scopes
+                          }}</dd></div>
+                    </dl>
+                    {{#unless primitive.available}}<p
+                        class="admin-mcp__unavailable"
+                      >{{primitive.unavailable_reason}}</p>{{/unless}}
+                    {{#if primitive.emergency_blocked}}<p
+                        class="admin-mcp__unavailable"
+                      >{{i18n
+                          "admin.config.mcp.primitives.emergency_blocked"
+                        }}</p>{{/if}}
+                    <div class="admin-mcp__primitive-actions">
+                      <DButton
+                        @action={{fn
+                          this.togglePrimitiveEmergencyBlock
+                          primitive
+                        }}
+                        @title={{if
+                          primitive.emergency_blocked
+                          "admin.config.mcp.actions.unblock_primitive"
+                          "admin.config.mcp.actions.block_primitive"
+                        }}
+                        @icon={{if primitive.emergency_blocked "unlock" "ban"}}
+                        @isLoading={{eq this.updatingPrimitiveId primitive.id}}
+                        class="btn-transparent btn-small"
+                      />
+                    </div>
+                  </article>
+                {{else}}
+                  <p class="admin-mcp__empty">{{i18n
+                      "admin.config.mcp.primitives.no_results"
+                    }}</p>
+                {{/each}}
               </div>
-            </article>
-          {{else}}
-            <p class="admin-mcp__empty">{{i18n
-                "admin.config.mcp.capabilities.no_results"
-              }}</p>
-          {{/each}}
-        </div>
-        <form.Submit @label="admin.config.mcp.save_capabilities" />
-      </Form>
+            </section>
+          </div>
+          <form.Actions
+            class={{if this.hasPrimitiveChanges "is-floating"}}
+            {{dOnResize this.positionPrimitiveActions}}
+          >
+            <form.Submit @label="admin.config.mcp.save_primitives" />
+          </form.Actions>
+        </Form>
+      </div>
     {{else if (eq @section "clients")}}
       <DPageSubheader
         @titleLabel={{i18n "admin.config.mcp.clients.title"}}
@@ -1189,20 +1432,26 @@ export default class AdminMcp extends Component {
                       "admin.config.mcp.clients.authorizations"
                     }}</div>{{client.authorization_count}}</td>
                 <td class="d-table__cell --controls"><div
+                    class="d-table__mobile-label"
+                  >{{i18n "admin.config.mcp.clients.actions"}}</div><div
                     class="d-table__cell-actions"
-                  ><DButton
+                  >{{#if (eq client.registration_type "cimd")}}<DButton
+                        @action={{fn this.refreshClient client}}
+                        @label="admin.config.mcp.actions.refresh_metadata"
+                        class="btn-small btn-transparent --primary admin-mcp__refresh-client"
+                      />{{/if}}<DButton
                       @action={{fn this.toggleClientBlock client}}
                       @label={{if
                         client.blocked
-                        "admin.config.mcp.actions.unblock_client"
-                        "admin.config.mcp.actions.block_client"
+                        "admin.config.mcp.clients.unblock"
+                        "admin.config.mcp.clients.block"
                       }}
-                      class="btn-small btn-default"
-                    />{{#if (eq client.registration_type "cimd")}}<DButton
-                        @action={{fn this.refreshClient client}}
-                        @label="admin.config.mcp.actions.refresh_metadata"
-                        class="btn-small btn-transparent"
-                      />{{/if}}</div></td>
+                      class={{if
+                        client.blocked
+                        "btn-small btn-default admin-mcp__toggle-client-block"
+                        "btn-small btn-danger admin-mcp__toggle-client-block"
+                      }}
+                    /></div></td>
               </tr>
             {{else}}
               <tr class="d-table__row"><td
@@ -1357,7 +1606,15 @@ export default class AdminMcp extends Component {
           />
         </form.Field>
       </Form>
-      <table class="d-table admin-mcp__table">
+      <table class="d-table admin-mcp__table admin-mcp__authorizations-table">
+        <colgroup>
+          <col class="admin-mcp__authorizations-client-column" />
+          <col class="admin-mcp__authorizations-user-column" />
+          <col class="admin-mcp__authorizations-scopes-column" />
+          <col class="admin-mcp__authorizations-last-used-column" />
+          <col class="admin-mcp__authorizations-status-column" />
+          <col class="admin-mcp__authorizations-actions-column" />
+        </colgroup>
         <thead class="d-table__header"><tr class="d-table__row"><th
               class="d-table__cell --overview"
             >{{i18n "admin.config.mcp.authorizations.client"}}</th><th
@@ -1378,8 +1635,7 @@ export default class AdminMcp extends Component {
             <tr class="d-table__row">
               <td class="d-table__cell --overview"><span
                   class="d-table__overview-name"
-                >{{authorization.client_name}}</span><small
-                >{{authorization.profile}}</small></td>
+                >{{authorization.client_name}}</span></td>
               <td class="d-table__cell --detail"><div
                   class="d-table__mobile-label"
                 >{{i18n
@@ -1387,8 +1643,8 @@ export default class AdminMcp extends Component {
                   }}</div>{{authorization.username}}</td>
               <td class="d-table__cell --detail"><div
                   class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.authorizations.scopes"}}</div><span
-                >{{listValue authorization.scopes}}</span></td>
+                >{{i18n "admin.config.mcp.authorizations.scopes"}}</div><code
+                >{{listValue authorization.scopes}}</code></td>
               <td class="d-table__cell --detail"><div
                   class="d-table__mobile-label"
                 >{{i18n "admin.config.mcp.authorizations.last_used"}}</div>{{#if
@@ -1407,7 +1663,7 @@ export default class AdminMcp extends Component {
                     authorization.status
                   }}</span></td>
               <td class="d-table__cell --controls">{{#if
-                  (eq authorization.status "active")
+                  (notEq authorization.status "revoked")
                 }}<DButton
                     @action={{fn this.revokeAuthorization authorization}}
                     @label="admin.config.mcp.actions.revoke"
@@ -1428,8 +1684,8 @@ export default class AdminMcp extends Component {
         @descriptionLabel={{i18n "admin.config.mcp.activity.description"}}
       />
       <div class="admin-mcp__metric-grid admin-mcp__activity-metrics">
-        <div><dt>{{i18n "admin.config.mcp.activity.calls"}}</dt><dd
-          >{{this.metrics.calls}}</dd></div><div><dt>{{i18n
+        <div><dt>{{i18n "admin.config.mcp.activity.tool_calls"}}</dt><dd
+          >{{this.metrics.tool_calls}}</dd></div><div><dt>{{i18n
               "admin.config.mcp.activity.errors"
             }}</dt><dd>{{this.metrics.errors}}</dd></div><div><dt>{{i18n
               "admin.config.mcp.activity.rate_limits"
@@ -1451,6 +1707,7 @@ export default class AdminMcp extends Component {
           @title={{i18n "admin.config.mcp.activity.search_placeholder"}}
           @showTitle={{false}}
           @showOptional={{false}}
+          @format="full"
           @type="input"
           class="admin-mcp__filter-search"
           as |field|
@@ -1473,69 +1730,69 @@ export default class AdminMcp extends Component {
             as |select|
           >
             {{#each this.activityOutcomes as |outcome|}}
-              <select.Option @value={{outcome}}>{{#if
-                  (eq outcome "all")
-                }}{{mcpValue "filter" "all"}}{{else}}{{mcpValue
-                    "activity_outcome"
-                    outcome
-                  }}{{/if}}</select.Option>
+              <select.Option @value={{outcome}}>
+                {{mcpValue "activity_outcome" outcome}}
+              </select.Option>
             {{/each}}
           </field.Control>
         </form.Field>
       </Form>
-      <table class="d-table admin-mcp__table">
-        <thead class="d-table__header"><tr class="d-table__row"><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.activity.time"}}</th><th
-              class="d-table__cell --overview"
-            >{{i18n "admin.config.mcp.activity.method"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.activity.user"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.activity.outcome"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.activity.duration"}}</th><th
-              class="d-table__cell --detail"
-            >{{i18n "admin.config.mcp.activity.request_id"}}</th></tr></thead>
-        <tbody class="d-table__body">{{#each
-            this.filteredActivity
-            as |event|
-          }}<tr class="d-table__row"><td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.activity.time"}}</div>{{dFormatDate
-                  event.created_at
-                }}</td><td class="d-table__cell --overview"><span
-                  class="d-table__overview-name"
-                >{{event.tool}}</span><small>{{event.method}}</small></td><td
+      <DLoadMore
+        @action={{this.loadMoreActivity}}
+        @enabled={{this.canLoadMoreActivity}}
+        @isLoading={{this.activityLoading}}
+        @rootMargin="0px 0px 250px 0px"
+        class="admin-mcp__load-more"
+      >
+        <table class="d-table admin-mcp__table admin-mcp__activity-table">
+          <thead class="d-table__header"><tr class="d-table__row"><th
                 class="d-table__cell --detail"
-              ><div class="d-table__mobile-label">{{i18n
-                    "admin.config.mcp.activity.user"
-                  }}</div>{{event.username}}</td><td
+              >{{i18n "admin.config.mcp.activity.time"}}</th><th
+                class="d-table__cell --overview"
+              >{{i18n "admin.config.mcp.activity.method"}}</th><th
                 class="d-table__cell --detail"
-              ><div class="d-table__mobile-label">{{i18n
-                    "admin.config.mcp.activity.outcome"
-                  }}</div><span
-                  class="admin-mcp__status"
-                  data-state={{event.outcome}}
-                >{{mcpValue "activity_outcome" event.outcome}}</span></td><td
+              >{{i18n "admin.config.mcp.activity.user"}}</th><th
                 class="d-table__cell --detail"
-              ><div class="d-table__mobile-label">{{i18n
-                    "admin.config.mcp.activity.duration"
-                  }}</div>{{event.duration_ms}}
-                ms</td><td class="d-table__cell --detail"><div
-                  class="d-table__mobile-label"
-                >{{i18n "admin.config.mcp.activity.request_id"}}</div><code
-                >{{event.request_id}}</code></td></tr>{{else}}<tr
-              class="d-table__row"
-            ><td class="d-table__cell" colspan="6">{{i18n
-                  "admin.config.mcp.activity.empty"
-                }}</td></tr>{{/each}}</tbody>
-      </table>
-      {{#if this.activityNextCursor}}<DButton
-          @action={{this.loadMoreActivity}}
-          @label="admin.config.mcp.activity.load_more"
-          class="btn-default"
-        />{{/if}}
+              >{{i18n "admin.config.mcp.activity.outcome"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.activity.duration"}}</th><th
+                class="d-table__cell --detail"
+              >{{i18n "admin.config.mcp.activity.request_id"}}</th></tr></thead>
+          <tbody class="d-table__body">{{#each this.activity as |event|}}<tr
+                class="d-table__row"
+              ><td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n "admin.config.mcp.activity.time"}}</div>{{dFormatDate
+                    event.created_at
+                  }}</td><td class="d-table__cell --overview"><span
+                    class="d-table__overview-name"
+                  >{{event.tool}}</span><small>{{event.method}}</small></td><td
+                  class="d-table__cell --detail"
+                ><div class="d-table__mobile-label">{{i18n
+                      "admin.config.mcp.activity.user"
+                    }}</div>{{event.username}}</td><td
+                  class="d-table__cell --detail"
+                ><div class="d-table__mobile-label">{{i18n
+                      "admin.config.mcp.activity.outcome"
+                    }}</div><span
+                    class="admin-mcp__status"
+                    data-state={{event.outcome}}
+                  >{{mcpValue "activity_outcome" event.outcome}}</span></td><td
+                  class="d-table__cell --detail"
+                ><div class="d-table__mobile-label">{{i18n
+                      "admin.config.mcp.activity.duration"
+                    }}</div>{{event.duration_ms}}
+                  ms</td><td class="d-table__cell --detail"><div
+                    class="d-table__mobile-label"
+                  >{{i18n "admin.config.mcp.activity.request_id"}}</div><code
+                  >{{event.request_id}}</code></td></tr>{{else}}<tr
+                class="d-table__row"
+              ><td class="d-table__cell" colspan="6">{{i18n
+                    "admin.config.mcp.activity.empty"
+                  }}</td></tr>{{/each}}</tbody>
+        </table>
+      </DLoadMore>
+      <DConditionalLoadingSpinner @condition={{this.activityLoading}} />
     {{/if}}
   </template>
 }

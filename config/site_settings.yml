@@ -4458,10 +4458,14 @@ mcp:
     client: true
     area: "mcp"
     requires_confirmation: simple_on_enable
-  mcp_server_allowed_groups:
-    type: group_list
-    default: "1"
-    mandatory_values: "1"
+  mcp_server_instructions:
+    default: ""
+    textarea: true
+    area: "mcp"
+  mcp_cache_ttl_ms:
+    default: 300000
+    min: 0
+    max: 86400000
     area: "mcp"
   mcp_oauth_client_trust_policy:
     type: enum

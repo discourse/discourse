@@ -19,20 +19,23 @@ module DiscourseMcp
       raise AuthenticationError.new("invalid_token") if token.blank?
 
       authorization = token.authorization
-      profile = token.profile
       client = token.client
+      authorization_status =
+        AuthorizationStatus.for(
+          [authorization],
+          scopes_by_authorization_id: {
+            authorization.id => token.scopes,
+          },
+        ).fetch(authorization.id)
       valid =
         token.resource == DiscourseMcp.resource_url && authorization.active? &&
           token.grant_version == authorization.grant_version &&
-          (token.scopes - authorization.scopes).empty? &&
-          (token.scopes - profile.allowed_scopes).empty? &&
-          authorization.consent_revision >= profile.consent_revision &&
-          authorization.client_metadata_hash == client.metadata_hash && client.approved? &&
-          profile.available? && profile.user_allowed?(token.user)
+          (token.scopes - authorization.scopes).empty? && client == authorization.client &&
+          token.user_id == authorization.user_id && authorization_status == "active"
       raise AuthenticationError.new("invalid_token") if !valid
 
       token.touch_last_used!
-      Principal.new(token)
+      RequestContext.new(token)
     end
 
     def self.challenge(scope: nil, error: nil)

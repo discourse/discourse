@@ -8,9 +8,16 @@ class McpUserAuthorizationsController < ApplicationController
     authorizations =
       current_user
         .mcp_oauth_authorizations
-        .includes(:client, :scope_records, :access_tokens)
+        .includes(:user, :client, :scope_records, :access_tokens)
         .order(updated_at: :desc)
-    render json: { authorizations: authorizations.map { |authorization| serialize(authorization) } }
+        .to_a
+    statuses = DiscourseMcp::AuthorizationStatus.for(authorizations)
+    render json: {
+             authorizations:
+               authorizations.map do |authorization|
+                 serialize(authorization, status: statuses.fetch(authorization.id))
+               end,
+           }
   end
 
   def destroy
@@ -26,7 +33,7 @@ class McpUserAuthorizationsController < ApplicationController
     raise Discourse::InvalidAccess if current_user.username_lower != params[:username].to_s.downcase
   end
 
-  def serialize(authorization)
+  def serialize(authorization, status:)
     active_tokens =
       authorization.access_tokens.select do |token|
         token.revoked_at.nil? && token.expires_at.future?
@@ -36,7 +43,7 @@ class McpUserAuthorizationsController < ApplicationController
       client_name: authorization.client.name,
       client_id: authorization.client.client_id,
       resource: authorization.resource,
-      status: authorization.status,
+      status: status,
       scopes: authorization.scopes,
       authorized_at: authorization.consented_at,
       consented_at: authorization.consented_at,

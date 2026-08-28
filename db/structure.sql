@@ -6998,10 +6998,9 @@ CREATE TABLE public.mcp_audit_logs (
     occurrences integer DEFAULT 1 NOT NULL,
     user_id integer,
     mcp_oauth_client_id bigint,
-    mcp_server_profile_id bigint,
     request_id character varying,
     method character varying,
-    capability character varying,
+    tool character varying,
     outcome character varying NOT NULL,
     http_status integer,
     duration_ms integer,
@@ -7031,6 +7030,38 @@ ALTER SEQUENCE public.mcp_audit_logs_id_seq OWNED BY public.mcp_audit_logs.id;
 
 
 --
+-- Name: mcp_group_scopes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_group_scopes (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    scope character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_group_scopes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_group_scopes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_group_scopes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_group_scopes_id_seq OWNED BY public.mcp_group_scopes.id;
+
+
+--
 -- Name: mcp_oauth_access_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7039,7 +7070,6 @@ CREATE TABLE public.mcp_oauth_access_tokens (
     token_hash character varying NOT NULL,
     mcp_oauth_authorization_id bigint NOT NULL,
     mcp_oauth_client_id bigint NOT NULL,
-    mcp_server_profile_id bigint NOT NULL,
     user_id integer NOT NULL,
     resource character varying NOT NULL,
     scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
@@ -7151,11 +7181,9 @@ CREATE TABLE public.mcp_oauth_authorizations (
     id bigint NOT NULL,
     user_id integer NOT NULL,
     mcp_oauth_client_id bigint NOT NULL,
-    mcp_server_profile_id bigint NOT NULL,
     resource character varying NOT NULL,
     status character varying DEFAULT 'active'::character varying NOT NULL,
     client_metadata_hash character varying,
-    consent_revision integer DEFAULT 1 NOT NULL,
     grant_version integer DEFAULT 1 NOT NULL,
     consented_at timestamp(6) without time zone NOT NULL,
     revoked_at timestamp(6) without time zone,
@@ -7266,26 +7294,26 @@ ALTER SEQUENCE public.mcp_oauth_refresh_tokens_id_seq OWNED BY public.mcp_oauth_
 
 
 --
--- Name: mcp_server_profile_capabilities; Type: TABLE; Schema: public; Owner: -
+-- Name: mcp_primitives; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.mcp_server_profile_capabilities (
+CREATE TABLE public.mcp_primitives (
     id bigint NOT NULL,
-    mcp_server_profile_id bigint NOT NULL,
     kind character varying NOT NULL,
     identifier character varying NOT NULL,
     enabled boolean DEFAULT false NOT NULL,
     emergency_blocked boolean DEFAULT false NOT NULL,
+    consent_required_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
 
 
 --
--- Name: mcp_server_profile_capabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: mcp_primitives_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.mcp_server_profile_capabilities_id_seq
+CREATE SEQUENCE public.mcp_primitives_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7294,49 +7322,10 @@ CREATE SEQUENCE public.mcp_server_profile_capabilities_id_seq
 
 
 --
--- Name: mcp_server_profile_capabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: mcp_primitives_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.mcp_server_profile_capabilities_id_seq OWNED BY public.mcp_server_profile_capabilities.id;
-
-
---
--- Name: mcp_server_profiles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mcp_server_profiles (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    enabled boolean DEFAULT false NOT NULL,
-    instructions text,
-    allowed_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    allowed_scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    catalog_revision integer DEFAULT 1 NOT NULL,
-    consent_revision integer DEFAULT 1 NOT NULL,
-    cache_ttl_ms integer DEFAULT 300000 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: mcp_server_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mcp_server_profiles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mcp_server_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mcp_server_profiles_id_seq OWNED BY public.mcp_server_profiles.id;
+ALTER SEQUENCE public.mcp_primitives_id_seq OWNED BY public.mcp_primitives.id;
 
 
 --
@@ -14215,6 +14204,13 @@ ALTER TABLE ONLY public.mcp_audit_logs ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: mcp_group_scopes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_group_scopes ALTER COLUMN id SET DEFAULT nextval('public.mcp_group_scopes_id_seq'::regclass);
+
+
+--
 -- Name: mcp_oauth_access_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14257,17 +14253,10 @@ ALTER TABLE ONLY public.mcp_oauth_refresh_tokens ALTER COLUMN id SET DEFAULT nex
 
 
 --
--- Name: mcp_server_profile_capabilities id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: mcp_primitives id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.mcp_server_profile_capabilities ALTER COLUMN id SET DEFAULT nextval('public.mcp_server_profile_capabilities_id_seq'::regclass);
-
-
---
--- Name: mcp_server_profiles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mcp_server_profiles ALTER COLUMN id SET DEFAULT nextval('public.mcp_server_profiles_id_seq'::regclass);
+ALTER TABLE ONLY public.mcp_primitives ALTER COLUMN id SET DEFAULT nextval('public.mcp_primitives_id_seq'::regclass);
 
 
 --
@@ -16755,6 +16744,14 @@ ALTER TABLE ONLY public.mcp_audit_logs
 
 
 --
+-- Name: mcp_group_scopes mcp_group_scopes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_group_scopes
+    ADD CONSTRAINT mcp_group_scopes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: mcp_oauth_access_tokens mcp_oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16803,19 +16800,11 @@ ALTER TABLE ONLY public.mcp_oauth_refresh_tokens
 
 
 --
--- Name: mcp_server_profile_capabilities mcp_server_profile_capabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: mcp_primitives mcp_primitives_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.mcp_server_profile_capabilities
-    ADD CONSTRAINT mcp_server_profile_capabilities_pkey PRIMARY KEY (id);
-
-
---
--- Name: mcp_server_profiles mcp_server_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mcp_server_profiles
-    ADD CONSTRAINT mcp_server_profiles_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.mcp_primitives
+    ADD CONSTRAINT mcp_primitives_pkey PRIMARY KEY (id);
 
 
 --
@@ -18733,7 +18722,7 @@ CREATE UNIQUE INDEX idx_leaderboard_scores_lb_user_date ON public.gamification_l
 -- Name: idx_mcp_active_authorizations_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_mcp_active_authorizations_unique ON public.mcp_oauth_authorizations USING btree (user_id, mcp_oauth_client_id, mcp_server_profile_id) WHERE (revoked_at IS NULL);
+CREATE UNIQUE INDEX idx_mcp_active_authorizations_unique ON public.mcp_oauth_authorizations USING btree (user_id, mcp_oauth_client_id) WHERE (revoked_at IS NULL);
 
 
 --
@@ -18744,10 +18733,10 @@ CREATE UNIQUE INDEX idx_mcp_authorization_scopes_unique ON public.mcp_oauth_auth
 
 
 --
--- Name: idx_mcp_profile_capabilities_unique; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_mcp_primitives_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_mcp_profile_capabilities_unique ON public.mcp_server_profile_capabilities USING btree (mcp_server_profile_id, kind, identifier);
+CREATE UNIQUE INDEX idx_mcp_primitives_unique ON public.mcp_primitives USING btree (kind, identifier);
 
 
 --
@@ -21019,17 +21008,17 @@ CREATE INDEX index_llm_quotas_on_llm_model_id ON public.llm_quotas USING btree (
 
 
 --
--- Name: index_mcp_audit_logs_on_mcp_server_profile_id_and_occurred_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mcp_audit_logs_on_mcp_server_profile_id_and_occurred_at ON public.mcp_audit_logs USING btree (mcp_server_profile_id, occurred_at);
-
-
---
 -- Name: index_mcp_audit_logs_on_occurred_at_and_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_mcp_audit_logs_on_occurred_at_and_id ON public.mcp_audit_logs USING btree (occurred_at, id);
+
+
+--
+-- Name: index_mcp_group_scopes_on_group_id_and_scope; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_group_scopes_on_group_id_and_scope ON public.mcp_group_scopes USING btree (group_id, scope);
 
 
 --
@@ -21068,13 +21057,6 @@ CREATE INDEX index_mcp_oauth_authorizations_on_mcp_oauth_client_id ON public.mcp
 
 
 --
--- Name: index_mcp_oauth_authorizations_on_mcp_server_profile_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mcp_oauth_authorizations_on_mcp_server_profile_id ON public.mcp_oauth_authorizations USING btree (mcp_server_profile_id);
-
-
---
 -- Name: index_mcp_oauth_clients_on_client_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21100,13 +21082,6 @@ CREATE INDEX index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id ON pub
 --
 
 CREATE UNIQUE INDEX index_mcp_oauth_refresh_tokens_on_token_hash ON public.mcp_oauth_refresh_tokens USING btree (token_hash);
-
-
---
--- Name: index_mcp_server_profiles_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_mcp_server_profiles_on_slug ON public.mcp_server_profiles USING btree (slug);
 
 
 --

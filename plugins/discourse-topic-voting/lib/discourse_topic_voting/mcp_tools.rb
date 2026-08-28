@@ -3,7 +3,7 @@
 module DiscourseTopicVoting
   module McpTools
     class SetVote
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         service =
           (
             if arguments.fetch("voted")
@@ -17,7 +17,7 @@ module DiscourseTopicVoting
             params: {
               topic_id: arguments.fetch("topic_id"),
             },
-            guardian: principal.guardian,
+            guardian: request_context.guardian,
           )
         raise DiscourseMcp::ToolError, "Unable to change vote" if result.failure?
         DiscourseMcp::ToolHelpers.text_and_structured(

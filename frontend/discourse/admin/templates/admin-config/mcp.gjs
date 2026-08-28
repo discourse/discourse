@@ -27,6 +27,11 @@ export default <template>
         class="admin-mcp-tabs__capabilities"
       />
       <DNavItem
+        @route="adminConfig.mcp.access"
+        @label="admin.config.mcp.tabs.access"
+        class="admin-mcp-tabs__access"
+      />
+      <DNavItem
         @route="adminConfig.mcp.clients"
         @label="admin.config.mcp.tabs.clients"
         class="admin-mcp-tabs__clients"

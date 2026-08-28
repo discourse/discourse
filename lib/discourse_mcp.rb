@@ -5,6 +5,7 @@ module DiscourseMcp
   SUPPORTED_PROTOCOL_VERSIONS = [PROTOCOL_VERSION, "2025-11-25"].freeze
   JSONRPC_VERSION = "2.0"
   SERVER_NAME = "discourse"
+  INITIAL_SCOPE = "mcp:profile:read"
 
   class Error < StandardError
     attr_reader :code, :data, :http_status, :headers
@@ -37,7 +38,7 @@ module DiscourseMcp
 
     def reset_registry!
       @registry = Registry.new
-      CoreCapabilities.register!
+      CorePrimitives.register!
       @registry
     end
 

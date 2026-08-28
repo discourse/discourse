@@ -1053,21 +1053,21 @@ class Plugin::Instance
     )
   end
 
-  # Register a capability exposed through Discourse's MCP server. Registered
-  # capabilities remain disabled until an administrator enables them.
+  # Register a primitive exposed through Discourse's MCP server. Registered
+  # primitives remain disabled until an admin enables them.
   def register_mcp_tool(identifier, **attributes)
-    register_mcp_capability(:tool, identifier, **attributes)
+    register_mcp_primitive(:tool, identifier, **attributes)
   end
 
   def register_mcp_resource_template(identifier, **attributes)
-    register_mcp_capability(:resource_template, identifier, **attributes)
+    register_mcp_primitive(:resource_template, identifier, **attributes)
   end
 
   def register_mcp_prompt(identifier, **attributes)
-    register_mcp_capability(:prompt, identifier, **attributes)
+    register_mcp_primitive(:prompt, identifier, **attributes)
   end
 
-  def register_mcp_capability(kind, identifier, **attributes)
+  def register_mcp_primitive(kind, identifier, **attributes)
     configured_availability = attributes.delete(:availability)
     attributes[:provider] ||= name || directory_name
     attributes[:availability] = -> do

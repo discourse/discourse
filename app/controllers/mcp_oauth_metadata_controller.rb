@@ -5,11 +5,10 @@ class McpOauthMetadataController < ApplicationController
   before_action :ensure_mcp_enabled
 
   def protected_resource
-    profile = McpServerProfile.default
     render json: {
              resource: DiscourseMcp.resource_url,
              authorization_servers: [DiscourseMcp.issuer],
-             scopes_supported: profile&.allowed_scopes || McpServerProfile::DEFAULT_SCOPES,
+             scopes_supported: [DiscourseMcp::INITIAL_SCOPE],
              bearer_methods_supported: ["header"],
            }
   end
@@ -26,8 +25,7 @@ class McpOauthMetadataController < ApplicationController
              authorization_response_iss_parameter_supported: true,
              client_id_metadata_document_supported: true,
              token_endpoint_auth_methods_supported: ["none"],
-             scopes_supported:
-               McpServerProfile.default&.allowed_scopes || McpServerProfile::DEFAULT_SCOPES,
+             scopes_supported: DiscourseMcp.registry.scopes,
            }
   end
 

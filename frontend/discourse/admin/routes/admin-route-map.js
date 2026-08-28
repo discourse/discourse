@@ -397,6 +397,11 @@ export default function () {
         });
         this.route("mcp", function () {
           this.route("index", { path: "/" });
+          this.route("access", function () {
+            this.route("index", { path: "/" });
+            this.route("new");
+            this.route("edit", { path: "/:group_id/edit" });
+          });
           this.route("capabilities");
           this.route("clients", function () {
             this.route("index", { path: "/" });

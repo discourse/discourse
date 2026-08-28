@@ -3,7 +3,7 @@
 module DiscourseCalendar
   module McpTools
     class ListEvents
-      def self.call(arguments:, principal:)
+      def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
         events =
           DiscoursePostEvent::Event
@@ -14,7 +14,7 @@ module DiscourseCalendar
         values =
           events
             .filter_map do |event|
-              next if event.post.blank? || !principal.guardian.can_see?(event.post)
+              next if event.post.blank? || !request_context.guardian.can_see?(event.post)
               {
                 id: event.id,
                 post_id: event.post_id,

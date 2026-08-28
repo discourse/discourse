@@ -10,9 +10,14 @@ class McpOauthAuthorizationsController < ApplicationController
     raise Discourse::InvalidAccess if current_user.is_impersonating
     @client = DiscourseMcp::OAuth::ClientResolver.resolve!(params[:client_id])
     validate_redirect!(@client)
-    @profile = McpServerProfile.ensure_default!
     @requested_scopes = requested_scopes
-    raise Discourse::InvalidAccess if !@profile.available? || !@profile.user_allowed?(current_user)
+    if !SiteSetting.mcp_server_enabled || !DiscourseMcp::Access.allowed?(current_user)
+      raise Discourse::InvalidAccess
+    end
+    if !@requested_scopes.include?(DiscourseMcp::INITIAL_SCOPE) ||
+         (@requested_scopes - DiscourseMcp::Access.eligible_scopes(current_user)).present?
+      raise Discourse::InvalidAccess
+    end
     render :show
   end
 
@@ -22,12 +27,10 @@ class McpOauthAuthorizationsController < ApplicationController
     validate_redirect!(client)
     return redirect_with(error: "access_denied") if params[:decision] != "approve"
 
-    profile = McpServerProfile.ensure_default!
     authorization =
       DiscourseMcp::OAuth::AuthorizationGrant.create!(
         user: current_user,
         client: client,
-        profile: profile,
         redirect_uri: params[:redirect_uri],
         requested_scopes: requested_scopes,
       )

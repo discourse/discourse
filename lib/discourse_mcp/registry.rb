@@ -3,21 +3,21 @@
 module DiscourseMcp
   class Registry
     def initialize
-      @capabilities = {}
+      @primitives = {}
       @mutex = Mutex.new
     end
 
     def register(**attributes)
-      capability = Capability.new(**attributes)
-      key = [capability.kind, capability.identifier]
+      primitive = Primitive.new(**attributes)
+      key = [primitive.kind, primitive.identifier]
       @mutex.synchronize do
-        if @capabilities.key?(key)
-          raise ArgumentError, "MCP capability already registered: #{key.join(":")}"
+        if @primitives.key?(key)
+          raise ArgumentError, "MCP primitive already registered: #{key.join(":")}"
         end
 
-        @capabilities[key] = capability
+        @primitives[key] = primitive
       end
-      capability
+      primitive
     end
 
     def register_tool(identifier, **attributes)
@@ -37,12 +37,12 @@ module DiscourseMcp
     end
 
     def find(kind, identifier)
-      @capabilities[[kind.to_sym, identifier.to_s]]
+      @primitives[[kind.to_sym, identifier.to_s]]
     end
 
     def all(kind = nil)
-      values = @capabilities.values
-      values = values.select { |capability| capability.kind == kind.to_sym } if kind
+      values = @primitives.values
+      values = values.select { |primitive| primitive.kind == kind.to_sym } if kind
       values.sort_by(&:identifier)
     end
 
