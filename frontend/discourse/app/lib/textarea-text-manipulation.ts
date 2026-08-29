@@ -59,6 +59,18 @@ interface InsertAtOptions {
   skipFocus?: boolean;
 }
 
+async function readHtmlFromClipboard(): Promise<string> {
+  const items = await navigator.clipboard.read();
+
+  for (const item of items) {
+    if (item.types.includes("text/html")) {
+      return (await item.getType("text/html")).text();
+    }
+  }
+
+  return "";
+}
+
 interface PlaceholderData {
   uploadPlaceholder: string;
   processingPlaceholder?: string;
@@ -612,7 +624,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     });
 
     let plainText = clipboard.getData("text/plain");
-    // eslint-disable-next-line prefer-const
+
     let html = clipboard.getData("text/html");
     let handled = false;
 
@@ -620,6 +632,13 @@ export default class TextareaTextManipulation implements TextManipulation {
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
     const isCodeBlock = this.#isAfterStartedCodeFence(pre);
+    const canPasteRichText = isInlinePasting
+      ? !(
+          lineVal.match(/^```/) ||
+          this.isInside(pre, /`/g) ||
+          lineVal.match(/^    /)
+        )
+      : !isCodeBlock;
 
     if (
       plainText &&
@@ -639,15 +658,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
 
     if (canPasteHtml && plainText) {
-      if (isInlinePasting) {
-        canPasteHtml = !(
-          lineVal.match(/^```/) ||
-          this.isInside(pre, /`/g) ||
-          lineVal.match(/^    /)
-        );
-      } else {
-        canPasteHtml = !isCodeBlock;
-      }
+      canPasteHtml = canPasteRichText;
     }
 
     if (
@@ -672,6 +683,39 @@ export default class TextareaTextManipulation implements TextManipulation {
           this.addText(selected, `[${selectedValue}](${match.url})`);
           handled = true;
         }
+      }
+    }
+
+    // Some Chromium-based Android browsers omit HTML from ClipboardEvent but
+    // expose it through the Async Clipboard API during the same paste action.
+    if (
+      this.capabilities.isAndroid &&
+      this.capabilities.isChrome &&
+      this.siteSettings.enable_rich_text_paste &&
+      !handled &&
+      !canUpload &&
+      plainText &&
+      !html &&
+      canPasteRichText &&
+      typeof navigator.clipboard?.read === "function"
+    ) {
+      const htmlPromise = readHtmlFromClipboard();
+      e.preventDefault();
+
+      try {
+        html = await htmlPromise;
+      } catch {
+        // Fall through to the plain-text paste below.
+      }
+
+      if (html) {
+        canPasteHtml = true;
+      } else if (isComposer) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
       }
     }
 
