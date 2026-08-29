@@ -56,18 +56,10 @@ module Migrations
           # recovered no additional posts.
           SLOW_TIMEOUT_MS = 30_000
 
-          # The ceiling shrinks in steps of a sixth of the configured
-          # timeout, rounded up — five seconds by default. The engine
-          # rebuilds its isolate whenever the requested ceiling changes, so a
-          # fresh value per call would rebuild V8 once per substitution
-          # check; rounding the step up keeps it to at most six distinct
-          # ceilings, whatever the configured timeout is.
-          SLOW_TIMEOUT_STEPS = 6
-
           # Raised in place of an engine call when the retry deadline has
           # passed, and in place of its result when the call was cut short by
-          # the shrunken deadline ceiling. The substitution pass turns it into
-          # `:substitution_budget`; it never means the engine failed.
+          # the shrinking deadline ceiling. The substitution pass turns it
+          # into `:substitution_budget`; it never means the engine failed.
           class RetryDeadlineError < StandardError
           end
 
@@ -91,8 +83,6 @@ module Migrations
           )
             @engine = engine
             @slow_timeout_ms = slow_timeout_ms
-            @slow_timeout_step_ms =
-              slow_timeout_ms && [slow_timeout_ms.ceildiv(SLOW_TIMEOUT_STEPS), 1].max
             @scan_timeout_ms = nil
             @retry_deadline = nil
             @hosts = internal_link_hosts
@@ -189,16 +179,14 @@ module Migrations
             if @retry_deadline
               remaining_ms =
                 ((@retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)) * 1000).floor
-              # Rounded down to the step (see SLOW_TIMEOUT_STEPS), so the
-              # ceiling takes few distinct values and the engine rebuilds its
-              # isolate at most once per step. A call with less than one full
-              # step remaining is declined, so the scan ceiling can never
-              # extend past the deadline; the isolate rebuild itself is the
-              # one piece of work outside the engine's timeout.
-              stepped_ms = remaining_ms / @slow_timeout_step_ms * @slow_timeout_step_ms
-              raise RetryDeadlineError if stepped_ms <= 0
+              # A call with no time left is declined, so the scan ceiling can
+              # never extend past the deadline; the isolate rebuild the
+              # changed ceiling causes is the one piece of work outside the
+              # engine's timeout, and only a pathological body — none in a
+              # 1.5M-post corpus — pays for those rebuilds at all.
+              raise RetryDeadlineError if remaining_ms <= 0
 
-              timeout = timeout.nil? ? stepped_ms : [timeout, stepped_ms].min
+              timeout = timeout.nil? ? remaining_ms : [timeout, remaining_ms].min
             end
             @engine.scan(posts, timeout_ms: timeout)
           end
