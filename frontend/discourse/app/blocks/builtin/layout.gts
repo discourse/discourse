@@ -83,7 +83,7 @@ interface LayoutSignature {
   container: true,
   displayName: "Layout",
   icon: "table-cells-large",
-  category: "Layout",
+  category: "layout",
   description:
     "A flexible container — stack (column), row, or grid with per-cell placement.",
   args: {
@@ -741,7 +741,7 @@ export default class Layout extends Component<LayoutSignature> {
  */
 @block(LAYOUT_MERGED_CELL_BLOCK, {
   displayName: "Merged cell",
-  category: "Layout",
+  category: "layout",
   icon: "border-none",
   paletteHidden: true,
 })

@@ -1,8 +1,16 @@
-import type { ArgSchema, BlockThumbnail } from "discourse/blocks/types";
+import {
+  type ArgSchema,
+  BLOCK_CATEGORIES,
+  type BlockCategory,
+  type BlockThumbnail,
+} from "discourse/blocks/types";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 const DEFAULT_ICON = "cube";
-const DEFAULT_CATEGORY = "Misc";
+const DEFAULT_CATEGORY = "uncategorized";
+
+/** A listing group: one of the known categories, or the catch-all. */
+export type BlockDisplayCategory = BlockCategory | typeof DEFAULT_CATEGORY;
 
 /**
  * The fully-resolved display-metadata vocabulary for a block, with defaults
@@ -15,8 +23,8 @@ export interface BlockDisplayMetadata {
   /** Icon ID representing the block. */
   icon: string;
 
-  /** Grouping label for organizing blocks. */
-  category: string;
+  /** The group the block is listed under. */
+  category: BlockDisplayCategory;
 
   /** Example args used to render a preview of the block. */
   previewArgs: Record<string, unknown>;
@@ -79,7 +87,8 @@ function previewArgsFromSchema(
  * Defaults:
  * - `displayName` falls back to a Title Case of `shortName`.
  * - `icon` falls back to `"cube"`.
- * - `category` falls back to `"Misc"`.
+ * - `category` falls back to `"uncategorized"`, also for a value outside
+ *   `BLOCK_CATEGORIES`, so an unknown group never becomes a section.
  * - `previewArgs` falls back to a shallow object harvested from each arg
  *   schema's `default` field.
  * - `thumbnail` falls back to `null` (the icon is rendered instead). When set,
@@ -102,10 +111,16 @@ export function getBlockDisplayMetadata(
   return {
     displayName: metadata.displayName ?? titleCase(metadata.shortName),
     icon: metadata.icon ?? DEFAULT_ICON,
-    category: metadata.category ?? DEFAULT_CATEGORY,
+    category: isKnownCategory(metadata.category)
+      ? metadata.category
+      : DEFAULT_CATEGORY,
     previewArgs: metadata.previewArgs ?? previewArgsFromSchema(metadata.args),
     thumbnail: metadata.thumbnail ?? null,
     paletteHidden: metadata.paletteHidden === true,
     transparent: metadata.transparent === true,
   };
+}
+
+function isKnownCategory(value: unknown): value is BlockCategory {
+  return (BLOCK_CATEGORIES as readonly unknown[]).includes(value);
 }

@@ -4,7 +4,8 @@
  * This module contains validation functions used by the `@block` decorator.
  * These validations run at decoration time (not render time) for fail-fast behavior.
  */
-import type { BlockOptions } from "discourse/blocks/types";
+import { DEBUG } from "@glimmer/env";
+import { BLOCK_CATEGORIES, type BlockOptions } from "discourse/blocks/types";
 import { isBlockDataSource } from "discourse/lib/blocks/-internals/data-source";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
@@ -133,6 +134,20 @@ export function validateDisplayMetadata(name, options) {
     if (typeof value !== "string" || value.trim() === "") {
       raiseBlockError(`Block "${name}": "${key}" must be a non-empty string.`);
     }
+  }
+
+  // A group outside the known set is not an error: the block still renders and
+  // is listed under the catch-all. Say so while developing, since the author
+  // almost certainly meant one of the real groups.
+  if (
+    DEBUG &&
+    category != null &&
+    !(BLOCK_CATEGORIES as readonly string[]).includes(category)
+  ) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[Blocks] Block "${name}": unknown category "${category}"; expected one of ${BLOCK_CATEGORIES.join(", ")}. It will be listed as uncategorized.`
+    );
   }
 
   if (previewArgs != null) {

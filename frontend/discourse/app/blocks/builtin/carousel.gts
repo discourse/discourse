@@ -44,7 +44,7 @@ interface CarouselSignature {
   container: true,
   displayName: "Carousel",
   icon: "images",
-  category: "Layout",
+  category: "layout",
   description:
     "A slideshow of blocks, one slide at a time with navigation controls.",
   args: {

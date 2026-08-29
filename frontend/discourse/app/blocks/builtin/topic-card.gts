@@ -56,7 +56,7 @@ interface TopicCardSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/topic-card"),
   displayName: "Topic card",
   icon: "book",
-  category: "Discourse data",
+  category: "community",
   description: "A card for a single hand-picked topic, resolved by its id.",
   args: {
     topicId: {

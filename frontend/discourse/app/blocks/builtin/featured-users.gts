@@ -58,7 +58,7 @@ interface FeaturedUsersSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/featured-users"),
   displayName: "Top contributors",
   icon: "users",
-  category: "Discourse data",
+  category: "community",
   description: "A list of top contributing users for a period.",
   args: {
     title: {

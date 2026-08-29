@@ -42,7 +42,7 @@ interface NewTopicButtonSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/new-topic-button"),
   displayName: "New topic button",
   icon: "plus",
-  category: "Navigation",
+  category: "actions",
   description:
     "A button that opens the composer to start a new topic in a category.",
   args: {

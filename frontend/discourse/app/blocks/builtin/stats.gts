@@ -30,7 +30,7 @@ interface StatsSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/stats"),
   displayName: "Stats",
   icon: "chart-column",
-  category: "Content",
+  category: "text",
   description: "A row of statistics, each a value with a label.",
   args: {
     columns: {

@@ -62,7 +62,7 @@ interface CardSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/card"),
   displayName: "Card",
   icon: "id-card",
-  category: "Content",
+  category: "actions",
   description:
     "A card with an image, title, meta, and body — optionally linked as a whole.",
   args: {

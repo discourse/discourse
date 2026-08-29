@@ -40,7 +40,7 @@ interface QuoteSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/quote"),
   displayName: "Quote",
   icon: "quote-left",
-  category: "Content",
+  category: "text",
   description: "A testimonial or pull quote with attribution.",
   args: {
     content: {

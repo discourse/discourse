@@ -52,7 +52,7 @@ interface MediaCardSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/media-card"),
   displayName: "Media card",
   icon: "photo-film",
-  category: "Content",
+  category: "actions",
   description:
     "Featured media card with avatar, name, badge, title, and CTA link.",
   args: {

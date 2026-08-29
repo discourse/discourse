@@ -32,7 +32,7 @@ interface FeaturedCategoriesSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/featured-categories"),
   displayName: "Featured categories",
   icon: "folder-tree",
-  category: "Discourse data",
+  category: "community",
   description: "A grid of selected category cards.",
   args: {
     categories: {

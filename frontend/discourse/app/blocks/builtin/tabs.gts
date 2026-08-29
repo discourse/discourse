@@ -43,7 +43,7 @@ interface TabsSignature {
   container: true,
   displayName: "Tabs",
   icon: "table-columns",
-  category: "Layout",
+  category: "layout",
   description: "A tabbed container — one panel of blocks shown at a time.",
   // Each panel is itself a `layout` block, so a tab is a rich container out of
   // the box. The allow-list is validator-enforced; edit-driven tooling wraps any

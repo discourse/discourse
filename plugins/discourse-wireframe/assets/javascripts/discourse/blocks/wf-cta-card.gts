@@ -25,7 +25,7 @@ interface WFCtaCardSignature {
  */
 @block("wf:cta-card", {
   displayName: "CTA card",
-  category: "Content",
+  category: "actions",
   icon: "bullhorn",
   description:
     "A call-to-action card composed of a heading, text, and buttons.",

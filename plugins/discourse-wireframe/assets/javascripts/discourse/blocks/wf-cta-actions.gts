@@ -25,7 +25,7 @@ interface WFCtaActionsSignature {
  */
 @block("wf:cta-actions", {
   displayName: "CTA actions",
-  category: "Layout",
+  category: "actions",
   icon: "arrows-left-right",
   description: "A row of primary and secondary call-to-action buttons.",
   parts: [

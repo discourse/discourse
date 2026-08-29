@@ -28,7 +28,7 @@ interface ButtonLinkSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/button-link"),
   displayName: "Button Link",
   icon: "link",
-  category: "Navigation",
+  category: "actions",
   description: "A button-styled link.",
   args: {
     label: {

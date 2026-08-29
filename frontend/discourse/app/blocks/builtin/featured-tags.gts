@@ -49,7 +49,7 @@ interface FeaturedTagsSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/featured-tags"),
   displayName: "Featured tags",
   icon: "tag",
-  category: "Discourse data",
+  category: "community",
   description: "A list of popular or alphabetical tags.",
   args: {
     title: {

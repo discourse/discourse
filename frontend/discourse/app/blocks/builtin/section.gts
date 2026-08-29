@@ -52,7 +52,7 @@ interface SectionSignature {
   container: true,
   displayName: "Section",
   icon: "image",
-  category: "Layout",
+  category: "layout",
   description:
     "A full-bleed section with an optional background and overlaid content.",
   args: {

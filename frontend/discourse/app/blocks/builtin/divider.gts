@@ -17,7 +17,7 @@ interface DividerSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/divider"),
   displayName: "Divider",
   icon: "minus",
-  category: "Layout",
+  category: "layout",
   description: "A horizontal rule.",
   args: {
     style: {

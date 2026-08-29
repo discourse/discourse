@@ -26,7 +26,7 @@ interface CalloutSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/callout"),
   displayName: "Callout",
   icon: "circle-info",
-  category: "Content",
+  category: "text",
   description: "A bordered notice card with an icon.",
   args: {
     tone: {

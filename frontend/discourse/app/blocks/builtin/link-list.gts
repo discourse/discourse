@@ -34,7 +34,7 @@ interface LinkListSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/link-list"),
   displayName: "Link list",
   icon: "link",
-  category: "Content",
+  category: "actions",
   description: "A list of links, laid out vertically or horizontally.",
   args: {
     layout: {

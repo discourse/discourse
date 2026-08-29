@@ -38,7 +38,7 @@ const gamificationLeaderboardDataSource = defineBlockDataSource({
 @block("gamification:leaderboard", {
   displayName: "Gamification leaderboard",
   icon: "trophy",
-  category: "Discourse data",
+  category: "community",
   description: "Compact sidebar leaderboard with top contributors and scores.",
   args: {
     leaderboardId: {

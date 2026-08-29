@@ -31,7 +31,7 @@ interface EmbedSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/embed"),
   displayName: "Embed",
   icon: "code",
-  category: "Content",
+  category: "media",
   description: "Embeds pre-cooked HTML (a provider snippet or oneboxed link).",
   args: {
     html: {

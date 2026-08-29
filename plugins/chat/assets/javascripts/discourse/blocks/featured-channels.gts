@@ -81,7 +81,7 @@ interface FeaturedChatChannelsSignature {
   thumbnail: FeaturedChannelsThumbnail,
   displayName: "Featured chat channels",
   icon: "d-chat",
-  category: "Chat",
+  category: "community",
   description: "A grid of selected chat channel cards.",
   args: {
     channels: {

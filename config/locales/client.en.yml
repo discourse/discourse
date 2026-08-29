@@ -32,6 +32,13 @@ en:
         denied: "Authorization denied"
         return_to_cli: "You can now return to your terminal or application."
     blocks:
+      categories:
+        layout: "Layout"
+        text: "Text"
+        media: "Media"
+        actions: "Cards & actions"
+        community: "Community"
+        uncategorized: "Other"
       ghost:
         # Section titles
         status: "Status"

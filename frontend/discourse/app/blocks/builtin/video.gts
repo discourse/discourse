@@ -35,7 +35,7 @@ interface VideoSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/video"),
   displayName: "Video",
   icon: "video",
-  category: "Content",
+  category: "media",
   description: "Plays a video file, with an optional poster image.",
   args: {
     source: {

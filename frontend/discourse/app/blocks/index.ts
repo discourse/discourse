@@ -28,9 +28,12 @@ export {
   parseSlotPlacement,
 } from "discourse/lib/blocks/-internals/grid-placement";
 
+export { BLOCK_CATEGORIES } from "discourse/blocks/types";
+
 export type {
   ArgSchema,
   ArgType,
+  BlockCategory,
   BlockClassNames,
   BlockConstraints,
   BlockMetadata,

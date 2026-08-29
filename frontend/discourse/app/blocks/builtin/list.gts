@@ -24,7 +24,7 @@ interface ListSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/list"),
   displayName: "List",
   icon: "list",
-  category: "Content",
+  category: "text",
   description: "An ordered or unordered list of items.",
   args: {
     ordered: {

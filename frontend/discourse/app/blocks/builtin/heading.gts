@@ -31,7 +31,7 @@ interface HeadingSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/heading"),
   displayName: "Heading",
   icon: "heading",
-  category: "Content",
+  category: "text",
   description: "A configurable section heading.",
   args: {
     text: {

@@ -13,7 +13,7 @@ interface SpacerSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/spacer"),
   displayName: "Spacer",
   icon: "arrows-up-down",
-  category: "Layout",
+  category: "layout",
   description: "An empty vertical or horizontal gap.",
   args: {
     size: {

@@ -39,7 +39,7 @@ interface RecentTopicsSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/recent-topics"),
   displayName: "Topic list",
   icon: "list",
-  category: "Discourse data",
+  category: "community",
   description: "List of topics with category / tag / solved filters.",
   args: {
     title: {

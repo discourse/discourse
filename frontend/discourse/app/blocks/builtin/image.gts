@@ -60,7 +60,7 @@ function darkVariantWithLightFrame(
   thumbnail: () => import("discourse/blocks/thumbnails/image"),
   displayName: "Image",
   icon: "image",
-  category: "Content",
+  category: "media",
   description: "An image with an optional dark-mode variant.",
   args: {
     image: {

@@ -44,7 +44,7 @@ interface CtaBannerSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/cta-banner"),
   displayName: "CTA banner",
   icon: "bullhorn",
-  category: "Content",
+  category: "actions",
   description:
     "A banner with title, body text, optional CTA button, and optional dismiss.",
   args: {

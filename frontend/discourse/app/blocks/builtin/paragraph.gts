@@ -23,7 +23,7 @@ interface ParagraphSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/paragraph"),
   displayName: "Paragraph",
   icon: "paragraph",
-  category: "Content",
+  category: "text",
   description: "A simple paragraph of text.",
   args: {
     text: {

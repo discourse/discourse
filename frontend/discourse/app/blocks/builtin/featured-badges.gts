@@ -47,7 +47,7 @@ interface FeaturedBadgesSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/featured-badges"),
   displayName: "Recently awarded badges",
   icon: "certificate",
-  category: "Discourse data",
+  category: "community",
   description: "A feed of the most recent recipients of selected badges.",
   args: {
     title: {

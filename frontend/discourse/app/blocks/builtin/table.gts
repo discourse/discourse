@@ -65,7 +65,7 @@ interface RenderedRow {
   gridEditable: true,
   displayName: "Table",
   icon: "table",
-  category: "Layout",
+  category: "layout",
   description: "A table whose cells hold blocks, with optional headers.",
   args: {
     columns: {

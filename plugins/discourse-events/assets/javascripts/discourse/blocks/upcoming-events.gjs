@@ -28,7 +28,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
 @block("events:upcoming-events", {
   displayName: "Upcoming events",
   icon: "calendar-days",
-  category: "Discourse data",
+  category: "community",
   description: "Compact sidebar list of upcoming calendar events.",
   args: {
     count: {

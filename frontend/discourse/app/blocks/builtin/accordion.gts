@@ -19,7 +19,7 @@ interface AccordionSignature {
   container: true,
   displayName: "Accordion",
   icon: "bars",
-  category: "Layout",
+  category: "layout",
   description: "A stack of collapsible titled sections.",
 })
 export default class Accordion extends Component<AccordionSignature> {

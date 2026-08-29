@@ -33,7 +33,7 @@ interface TagBannerSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/tag-banner"),
   displayName: "Tag banner",
   icon: "tag",
-  category: "Discourse data",
+  category: "community",
   description: "Banner for the current tag page showing the tag.",
   args: {
     showDescription: {

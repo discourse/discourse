@@ -13,7 +13,7 @@ module("Unit | Lib | blocks/display-metadata", function () {
     @block("display-explicit", {
       displayName: "Hero Banner",
       icon: "image",
-      category: "Content",
+      category: "text",
       previewArgs: { title: "Sample" },
       thumbnail: "/uploads/preview.png",
     })
@@ -22,7 +22,7 @@ module("Unit | Lib | blocks/display-metadata", function () {
     assert.deepEqual(getBlockDisplayMetadata(ExplicitBlock), {
       displayName: "Hero Banner",
       icon: "image",
-      category: "Content",
+      category: "text",
       previewArgs: { title: "Sample" },
       thumbnail: "/uploads/preview.png",
       paletteHidden: false,
@@ -47,13 +47,24 @@ module("Unit | Lib | blocks/display-metadata", function () {
     );
   });
 
-  test("falls back to 'cube' for icon and 'Misc' for category", function (assert) {
+  test("falls back to 'cube' for icon and 'uncategorized' for category", function (assert) {
     @block("display-default-icon-and-category")
     class DefaultsBlock extends Component {}
 
     const display = getBlockDisplayMetadata(DefaultsBlock);
     assert.strictEqual(display.icon, "cube");
-    assert.strictEqual(display.category, "Misc");
+    assert.strictEqual(display.category, "uncategorized");
+  });
+
+  test("files a category outside the known set as uncategorized", function (assert) {
+    @block("display-unknown-category", { category: "Widgets" })
+    class UnknownCategoryBlock extends Component {}
+
+    assert.strictEqual(
+      getBlockDisplayMetadata(UnknownCategoryBlock).category,
+      "uncategorized",
+      "a group the listing does not know cannot create its own section"
+    );
   });
 
   test("derives previewArgs from arg-schema defaults when unset", function (assert) {

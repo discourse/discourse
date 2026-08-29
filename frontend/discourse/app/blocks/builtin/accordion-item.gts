@@ -26,7 +26,7 @@ interface AccordionItemSignature {
   container: true,
   displayName: "Accordion item",
   icon: "chevron-down",
-  category: "Layout",
+  category: "layout",
   description: "A collapsible section with a title and content.",
   args: {
     title: {

@@ -49,7 +49,7 @@ interface FeaturedTopicsSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/featured-topics"),
   displayName: "Topic highlights",
   icon: "fire",
-  category: "Discourse data",
+  category: "community",
   description: "Compact sidebar list of trending or recent topics.",
   args: {
     title: {

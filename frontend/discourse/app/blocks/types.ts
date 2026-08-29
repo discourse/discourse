@@ -13,6 +13,23 @@ import type { SkeletonVariant } from "discourse/ui-kit/d-skeleton";
 /** The namespace category a block name resolves to. */
 export type BlockNamespaceType = "core" | "plugin" | "theme";
 
+/**
+ * The groups a block can be listed under, in the order a page is built:
+ * structure first, then what goes inside it. Closed so that listings stay
+ * translatable and a block cannot mint a group of its own; a value outside
+ * this set is listed as uncategorized.
+ */
+export const BLOCK_CATEGORIES = [
+  "layout",
+  "text",
+  "media",
+  "actions",
+  "community",
+] as const;
+
+/** One of the groups in {@link BLOCK_CATEGORIES}. */
+export type BlockCategory = (typeof BLOCK_CATEGORIES)[number];
+
 /** The value type of a block argument. */
 export type ArgType =
   | "string"
@@ -399,8 +416,8 @@ export interface BlockOptions {
   /** Icon ID representing the block. */
   icon?: string;
 
-  /** Grouping label for organizing blocks. */
-  category?: string;
+  /** The group the block is listed under; see {@link BLOCK_CATEGORIES}. */
+  category?: BlockCategory;
 
   /** Example args used to render a preview of the block. */
   previewArgs?: Record<string, unknown>;
@@ -468,8 +485,8 @@ export interface BlockMetadata {
   /** Denied outlet glob patterns. */
   deniedOutlets: readonly string[] | null;
 
-  /** Grouping label, or `null` when none was declared. */
-  category: string | null;
+  /** The declared group, or `null` when none was declared. */
+  category: BlockCategory | null;
 
   /** Names of permitted direct child blocks, or `null` for no restriction. */
   childBlocks: readonly string[] | null;

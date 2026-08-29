@@ -50,7 +50,7 @@ interface CategoryBannerSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/category-banner"),
   displayName: "Category banner",
   icon: "folder",
-  category: "Discourse data",
+  category: "community",
   description:
     "Banner for the current category page — logo, title, description, and subcategories.",
   args: {

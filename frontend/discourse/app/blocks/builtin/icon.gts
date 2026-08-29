@@ -29,7 +29,7 @@ interface IconSignature {
   thumbnail: () => import("discourse/blocks/thumbnails/icon"),
   displayName: "Icon",
   icon: "star",
-  category: "Content",
+  category: "media",
   description: "A standalone icon, optionally linked.",
   args: {
     icon: {

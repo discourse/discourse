@@ -56,7 +56,7 @@ interface ChatChannelCardBlockSignature {
   thumbnail: ChannelCardThumbnail,
   displayName: "Chat channel",
   icon: "d-chat",
-  category: "Chat",
+  category: "community",
   description: "A card for a single hand-picked chat channel.",
   args: {
     channelId: {
