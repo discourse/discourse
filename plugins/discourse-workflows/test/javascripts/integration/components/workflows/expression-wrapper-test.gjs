@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { click, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -34,14 +33,37 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    let caretPositionDescriptor;
+
+    // Defined rather than stubbed: the API is absent on some engines.
+    function stubCaretPosition(offsetNode, offset) {
+      Object.defineProperty(document, "caretPositionFromPoint", {
+        configurable: true,
+        value: () => ({ offsetNode, offset }),
+      });
+    }
+
     hooks.beforeEach(function () {
       pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
         response(200, { variables: [] })
       );
+
+      caretPositionDescriptor = Object.getOwnPropertyDescriptor(
+        document,
+        "caretPositionFromPoint"
+      );
     });
 
     hooks.afterEach(function () {
-      sinon.restore();
+      if (caretPositionDescriptor) {
+        Object.defineProperty(
+          document,
+          "caretPositionFromPoint",
+          caretPositionDescriptor
+        );
+      } else {
+        delete document.caretPositionFromPoint;
+      }
     });
 
     test("preserves plain text when dropping a variable into a text control", async function (assert) {
@@ -71,10 +93,7 @@ module(
       );
 
       const textareaElement = find("textarea");
-      sinon.stub(document, "caretPositionFromPoint").returns({
-        offsetNode: textareaElement,
-        offset: insertionStart,
-      });
+      stubCaretPosition(textareaElement, insertionStart);
 
       await triggerEvent(textareaElement, "dragover", {
         dataTransfer: variableTransfer({ id: "result" }),
@@ -121,10 +140,7 @@ module(
       );
 
       const modeControl = find(".workflows-property-engine__mode-control");
-      sinon.stub(document, "caretPositionFromPoint").returns({
-        offsetNode: modeControl,
-        offset: 0,
-      });
+      stubCaretPosition(modeControl, 0);
 
       await triggerEvent(modeControl, "drop", {
         dataTransfer: variableTransfer({ id: "result" }),
@@ -156,10 +172,7 @@ module(
       );
 
       const inputElement = find("input[type='text']");
-      sinon.stub(document, "caretPositionFromPoint").returns({
-        offsetNode: inputElement,
-        offset: 9,
-      });
+      stubCaretPosition(inputElement, 9);
 
       await triggerEvent(inputElement, "drop", {
         dataTransfer: variableTransfer({ id: "result" }),

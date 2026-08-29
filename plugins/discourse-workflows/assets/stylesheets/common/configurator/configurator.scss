@@ -156,7 +156,8 @@
       outline-offset: 2px;
     }
 
-    &.is-drag-over input {
+    &.is-drag-over input,
+    &.is-drag-over textarea {
       border-color: var(--tertiary) !important;
       background: var(--tertiary-50);
     }
