@@ -26,6 +26,7 @@ import type WireframeBlockRevealService from "./wireframe-block-reveal";
 import type WireframeDropAuthorityService from "./wireframe-drop-authority";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
+import type WireframeRecentBlocksService from "./wireframe-recent-blocks";
 import type WireframeSelectionService from "./wireframe-selection";
 
 /** The relative position of an enter-style drop against its target. */
@@ -115,6 +116,9 @@ export default class WireframeBlockMutationsService extends Service {
 
   /** Records, publishes, and reverses structural mutations. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
+  /** Remembers what was inserted, for the palette's Recent group. */
+  @service declare wireframeRecentBlocks: WireframeRecentBlocksService;
 
   /** Resolves live entries, layouts, and parent relationships. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -435,7 +439,7 @@ export default class WireframeBlockMutationsService extends Service {
     ) {
       return false;
     }
-    return this.wireframeMutationEngine.recordStructural(
+    const inserted = this.wireframeMutationEngine.recordStructural(
       [targetOutletName],
       () => {
         // Mint a draft on the fly for outlets the user is populating from
@@ -495,6 +499,10 @@ export default class WireframeBlockMutationsService extends Service {
         return true;
       }
     );
+    if (inserted) {
+      this.wireframeRecentBlocks.record(blockName);
+    }
+    return inserted;
   }
 
   /**

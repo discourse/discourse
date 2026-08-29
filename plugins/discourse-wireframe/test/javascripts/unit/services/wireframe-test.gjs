@@ -872,6 +872,36 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(after[1].args.title, "Inserted");
     });
 
+    test("a successful insert is remembered for the palette's Recent group, a refused one is not", function (assert) {
+      const owner = getOwner(this);
+      // The session enters with no publish target here; Recent is per theme.
+      owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
+      const recent = owner.lookup("service:wireframe-recent-blocks");
+
+      // A target that is not in the layout leaves it unchanged: a refusal.
+      const refused = mutationsOf(this.editor).insertBlock({
+        blockName: "wf:svc-test-tile",
+        targetKey: "wf:svc-test-tile:not-in-this-layout",
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.false(refused);
+      assert.deepEqual(
+        recent.names,
+        [],
+        "nothing recorded for a refused insert"
+      );
+
+      const ok = mutationsOf(this.editor).insertBlock({
+        blockName: "wf:svc-test-tile",
+        targetKey: null,
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.true(ok);
+      assert.deepEqual(recent.names, ["wf:svc-test-tile"]);
+    });
+
     test("inserts inside the outlet root layout when targetKey is null", function (assert) {
       const ok = mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
