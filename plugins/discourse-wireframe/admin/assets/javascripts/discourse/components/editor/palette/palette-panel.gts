@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { type ModifierLike } from "@glint/template";
-import type { LayoutEntry } from "discourse/blocks/types";
+import { BLOCK_CATEGORIES, type LayoutEntry } from "discourse/blocks/types";
+import type { BlockDisplayCategory } from "discourse/lib/blocks/-internals/display-metadata";
 import type A11yService from "discourse/services/a11y";
 import type BlocksService from "discourse/services/blocks";
 import dAutoFocusUntyped from "discourse/ui-kit/modifiers/d-auto-focus";
@@ -21,6 +22,7 @@ import BlockTile from "discourse/plugins/discourse-wireframe/discourse/component
 import {
   type BlockPaletteEntry,
   buildBlockPalette,
+  compareWithinCategory,
   RECENT_FALLBACK,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
@@ -49,11 +51,17 @@ const dAutoFocus = dAutoFocusUntyped as unknown as ModifierLike<{
 }>;
 
 type PaletteCategorySection = {
-  /** Display category heading. */
-  category: string;
-  /** Palette entries in the category. */
+  /** The group, which names its translated heading. */
+  category: BlockDisplayCategory;
+  /** Palette entries in the group, leads first. */
   rows: BlockPaletteEntry[];
 };
+
+/** Section order: the known groups as declared, then the catch-all. */
+const SECTION_ORDER: readonly BlockDisplayCategory[] = [
+  ...BLOCK_CATEGORIES,
+  "uncategorized",
+];
 
 /**
  * Palette of registered blocks, shown in the left rail when the user
@@ -153,36 +161,25 @@ export default class PalettePanel extends Component {
   }
 
   /**
-   * Same rows as `filteredRows`, but grouped into category sections for the
-   * list-with-headers view. Each section is `{category, rows}`; a canonical
-   * order (Content, Layout, Navigation, Data) leads, then any remaining
-   * categories alphabetically. Within a section, rows keep their displayName
-   * order (from the shared `buildBlockPalette` sort).
+   * Same rows as `filteredRows`, grouped into sections in the order the
+   * groups are declared (structure first, the catch-all last), each sorted
+   * leads first and then by display name.
    *
    * @returns Matching palette entries grouped by category.
    */
   get filteredRowsByCategory(): PaletteCategorySection[] {
-    const groups = new Map<string, BlockPaletteEntry[]>();
+    const groups = new Map<BlockDisplayCategory, BlockPaletteEntry[]>();
     for (const row of this.filteredRows) {
-      // `buildBlockPalette` always fills `category` (falling back to "Misc").
-      const key = row.category;
-      const bucket = groups.get(key) ?? [];
+      const bucket = groups.get(row.category) ?? [];
       bucket.push(row);
-      groups.set(key, bucket);
+      groups.set(row.category, bucket);
     }
-    const order = ["Content", "Layout", "Navigation", "Data"];
-    const sorted: PaletteCategorySection[] = [];
-    for (const cat of order) {
-      const rows = groups.get(cat);
-      if (rows) {
-        sorted.push({ category: cat, rows });
-        groups.delete(cat);
-      }
-    }
-    for (const [category, rows] of [...groups.entries()].sort()) {
-      sorted.push({ category, rows });
-    }
-    return sorted;
+    return SECTION_ORDER.flatMap((category) => {
+      const rows = groups.get(category);
+      return rows
+        ? [{ category, rows: [...rows].sort(compareWithinCategory) }]
+        : [];
+    });
   }
 
   /**
@@ -480,7 +477,7 @@ export default class PalettePanel extends Component {
           {{/if}}
           {{#each this.filteredRowsByCategory key="category" as |section|}}
             <div class="wireframe-palette__section-header">
-              {{section.category}}
+              {{i18n (concat "blocks.categories." section.category)}}
             </div>
             {{#each section.rows key="name" as |row|}}
               <BlockRow

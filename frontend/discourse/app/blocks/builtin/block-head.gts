@@ -63,7 +63,10 @@ interface HeadBlockSignature {
  */
 @block("head", {
   container: true,
-  description: "Renders only the first child whose conditions pass",
+  displayName: "Conditional",
+  icon: "code-branch",
+  category: "layout",
+  description: "Shows the first child whose conditions match.",
   thumbnail: () => import("discourse/blocks/thumbnails/head"),
 })
 export default class HeadBlock extends Component<HeadBlockSignature> {

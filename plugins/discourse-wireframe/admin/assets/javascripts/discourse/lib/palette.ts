@@ -1,8 +1,12 @@
-import type {
-  BlockNamespaceType,
-  BlockThumbnail,
+import {
+  type BlockCategory,
+  type BlockNamespaceType,
+  type BlockThumbnail,
 } from "discourse/blocks/types";
-import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
+import {
+  type BlockDisplayCategory,
+  getBlockDisplayMetadata,
+} from "discourse/lib/blocks/-internals/display-metadata";
 import type BlocksService from "discourse/services/blocks";
 
 /**
@@ -11,13 +15,79 @@ import type BlocksService from "discourse/services/blocks";
  * are usually reached for.
  */
 export const RECENT_FALLBACK: readonly string[] = [
-  "paragraph",
+  "layout",
   "heading",
+  "paragraph",
   "image",
   "card",
   "list",
-  "cta-banner",
 ];
+
+/**
+ * Within each group, the blocks worth reaching first, in that order. Blocks
+ * not named here follow alphabetically, which is where a plugin's block lands.
+ */
+export const CATEGORY_LEADS: Readonly<
+  Record<BlockCategory, readonly string[]>
+> = {
+  layout: [
+    "layout",
+    "section",
+    "head",
+    "spacer",
+    "divider",
+    "tabs",
+    "accordion",
+    "carousel",
+    "table",
+  ],
+  text: ["heading", "paragraph", "list", "quote", "callout", "stats"],
+  media: ["image", "video", "embed", "icon"],
+  actions: [
+    "card",
+    "media-card",
+    "wf:cta-card",
+    "cta-banner",
+    "wf:cta-actions",
+    "button-link",
+    "new-topic-button",
+    "link-list",
+  ],
+  community: [
+    "recent-topics",
+    "topic-card",
+    "featured-topics",
+    "featured-categories",
+    "featured-tags",
+    "featured-badges",
+    "featured-users",
+    "category-banner",
+    "tag-banner",
+  ],
+};
+
+/**
+ * Orders two entries of the same group: by their place in the group's lead
+ * list, then by display name for everything after it.
+ *
+ * @param a - One entry.
+ * @param b - The other entry.
+ * @returns A comparator result for `Array#sort`.
+ */
+export function compareWithinCategory(
+  a: BlockPaletteEntry,
+  b: BlockPaletteEntry
+): number {
+  const leads =
+    a.category === "uncategorized" ? [] : (CATEGORY_LEADS[a.category] ?? []);
+  const rank = (name: string) => {
+    const index = leads.indexOf(name);
+    return index === -1 ? leads.length : index;
+  };
+  return (
+    rank(a.name) - rank(b.name) || a.displayName.localeCompare(b.displayName)
+  );
+}
 
 /**
  * A single row of the block palette, as returned by {@link buildBlockPalette}.
@@ -33,8 +103,8 @@ export interface BlockPaletteEntry {
   /** Icon ID representing the block. */
   icon: string;
 
-  /** Grouping label for organizing blocks (defaults to `"Misc"`). */
-  category: string;
+  /** The group the block is listed under (`"uncategorized"` when unknown). */
+  category: BlockDisplayCategory;
 
   /** Human-readable description of the block (empty when unset). */
   description: string;
@@ -91,7 +161,7 @@ export function buildBlockPalette(
         name,
         displayName: display?.displayName ?? "",
         icon: display?.icon ?? "",
-        category: display?.category ?? "Misc",
+        category: display?.category ?? "uncategorized",
         description: metadata?.description ?? "",
         namespaceType: metadata?.namespaceType ?? "core",
         thumbnail: display?.thumbnail ?? null,

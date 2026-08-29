@@ -57,8 +57,29 @@ module(
       const headers = [
         ...document.querySelectorAll(".wireframe-palette__section-header"),
       ].map((el) => el.textContent.trim());
-      assert.true(headers.includes("Content"));
-      assert.true(headers.includes("Layout"));
+      assert.deepEqual(
+        headers,
+        ["Recent", "Layout", "Text", "Media", "Cards & actions", "Community"],
+        "structure first, the rest in the declared order, no invented group"
+      );
+    });
+
+    test("rows in a group lead with the blocks reached for first, then A-Z", async function (assert) {
+      await render(<template><PalettePanel /></template>);
+
+      const headers = [
+        ...document.querySelectorAll(".wireframe-palette__section-header"),
+      ];
+      const text = headers.find((el) => el.textContent.trim() === "Text");
+      const names = [];
+      for (
+        let el = text.nextElementSibling;
+        el && el.classList.contains("wireframe-block-row");
+        el = el.nextElementSibling
+      ) {
+        names.push(el.dataset.blockName);
+      }
+      assert.deepEqual(names.slice(0, 3), ["heading", "paragraph", "list"]);
     });
 
     test("offers the default blocks as Recent until the layout has taught it anything", async function (assert) {
@@ -69,7 +90,7 @@ module(
           ".wireframe-palette__recent .wireframe-block-tile"
         ),
       ].map((el) => el.dataset.blockName);
-      assert.deepEqual(recentNames.slice(0, 2), ["paragraph", "heading"]);
+      assert.deepEqual(recentNames.slice(0, 2), ["layout", "heading"]);
       assert.strictEqual(recentNames.length, 6, "the group is full");
     });
 
@@ -104,7 +125,7 @@ module(
       ].map((el) => el.dataset.blockName);
       assert.deepEqual(
         recentNames,
-        ["icon", "callout", "list", "quote", "paragraph", "heading"],
+        ["icon", "callout", "list", "quote", "layout", "heading"],
         "inserted first, then most used, then defaults, six in all"
       );
     });
