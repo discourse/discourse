@@ -1,14 +1,12 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
+import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DResizeHandles from "discourse/ui-kit/d-resize-handles";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
-
-// Pixels per keyboard step (Arrow keys). Matches the granularity a keyboard user
-// expects from a splitter without being tediously fine.
-const STEP = 16;
 
 interface RailResizeHandleSignature {
   /** Rail-side selection for the resize handle. */
@@ -18,27 +16,16 @@ interface RailResizeHandleSignature {
   };
 }
 
-type ResizeDragInfo = {
-  /** Pointer displacement since drag start. */
-  delta: {
-    /** Horizontal displacement in pixels. */
-    x: number;
-  };
-};
-
 /**
- * A draggable / keyboard-operable separator at a rail's inner seam that resizes
- * the rail. Rendered as a DIRECT child of the shell grid (so it inherits the
- * shell's `pointer-events: auto` re-enable and can't be clipped by the panel's
+ * The separator at a rail's inner seam that resizes the rail. Rendered as a
+ * DIRECT child of the shell grid (so it inherits the shell's
+ * `pointer-events: auto` re-enable and can't be clipped by the panel's
  * `overflow: hidden`), positioned over the seam by its stylesheet.
  *
- * Pointer drag is delegated to the shared `DResizeHandles` (which reports a
- * pointer delta); this component turns that delta into a new rail width on the
- * `wireframe-rail` service. Keyboard operation follows the WAI-ARIA window
- * splitter pattern: the root is a focusable `role="separator"` with live
- * `aria-valuenow`/min/max, and Arrow keys nudge the width, Home/End snap to the
- * bounds. `aria-orientation` is `vertical` because the separator itself is a
- * vertical divider between side-by-side columns (its drag axis is horizontal).
+ * The gesture, the keyboard path and the splitter semantics all come from
+ * `DResizeSeparator`; this component only names which rail is resized and
+ * hands sizes to the `wireframe-rail` service, previewing during the gesture
+ * and persisting when it ends.
  *
  * Args:
  *  - `@side` — `"left"` (resizes the left panel; its inner edge faces the canvas)
@@ -48,17 +35,16 @@ export default class RailResizeHandle extends Component<RailResizeHandleSignatur
   /** Reads, previews, and persists rail widths. */
   @service declare wireframeRail: WireframeRailService;
 
-  /** Width snapshot captured at drag start. */
-  #startWidth: number = 0;
+  /**
+   * Whether a resize is in progress, for the seam's own highlight; the
+   * separator marks the body, not itself. `@tracked` cannot sit on a `#`
+   * field, hence the prefix.
+   */
+  @tracked _resizing = false;
 
   /** Whether this handle controls the left rail. */
   get #isLeft(): boolean {
     return this.args.side === "left";
-  }
-
-  /** Whether the document is right-to-left. */
-  get #rtl(): boolean {
-    return document.documentElement.getAttribute("dir") === "rtl";
   }
 
   /** The current width of the rail this handle resizes. */
@@ -92,87 +78,38 @@ export default class RailResizeHandle extends Component<RailResizeHandleSignatur
   }
 
   /**
-   * The single edge handle `DResizeHandles` should render: the left panel's east
-   * edge, the right rail's west edge.
+   * Which edge of the rail the handle sits on, in the separator's terms: the
+   * left panel grows as its handle moves toward the inline end, the right
+   * rail as its handle moves toward the inline start.
    */
-  get directions(): ("e" | "w")[] {
-    return [this.#isLeft ? "e" : "w"];
+  get side(): "start" | "end" {
+    return this.#isLeft ? "start" : "end";
   }
 
-  /** Captures the current width at the beginning of a pointer resize. */
   @action
   onResizeStart(): void {
-    this.#startWidth = this.width;
+    this._resizing = true;
   }
 
   /**
-   * Applies a live width preview from pointer displacement.
+   * Applies a live width preview.
    *
-   * @param _payload - Direction payload supplied by the resize component.
-   * @param dragInfo - Pointer displacement for the current frame.
+   * @param width - The width the gesture is at.
    */
   @action
-  onResize(
-    /** Direction payload supplied by the shared resize component. */
-    _payload: unknown,
-    /** Pointer displacement for the current resize frame. */
-    dragInfo: ResizeDragInfo
-  ): void {
-    this.#setWidth(this.#startWidth + this.#growth(dragInfo.delta.x), {
-      commit: false,
-    });
-  }
-
-  /** Persists the width settled on at the end of a pointer resize. */
-  @action
-  onResizeEnd(): void {
-    // Persist the width settled on during the live drag.
-    this.#setWidth(this.width, { commit: true });
+  onResize(width: number): void {
+    this.#setWidth(width, { commit: false });
   }
 
   /**
-   * Applies arrow, Home, and End keyboard resizing.
+   * Persists the width the gesture settled on.
    *
-   * @param event - Separator keyboard event.
+   * @param width - The final width.
    */
   @action
-  onKeyDown(event: KeyboardEvent): void {
-    let physical: number;
-    switch (event.key) {
-      case "ArrowRight":
-        physical = STEP;
-        break;
-      case "ArrowLeft":
-        physical = -STEP;
-        break;
-      case "Home":
-        event.preventDefault();
-        this.#setWidth(this.min, { commit: true });
-        return;
-      case "End":
-        event.preventDefault();
-        this.#setWidth(this.max, { commit: true });
-        return;
-      default:
-        return;
-    }
-    event.preventDefault();
-    this.#setWidth(this.width + this.#growth(physical), { commit: true });
-  }
-
-  /**
-   * Turns a signed pointer/keyboard movement (in physical pixels, positive =
-   * rightward) into a width delta for this rail, accounting for which edge the
-   * handle sits on and text direction.
-   *
-   * @param physical - Signed horizontal movement in physical pixels.
-   * @returns Corresponding signed rail-width delta.
-   */
-  #growth(physical: number): number {
-    // The left panel grows as its right edge moves right; the right rail grows as
-    // its left edge moves left. RTL mirrors the horizontal axis.
-    const sign = (this.#isLeft ? 1 : -1) * (this.#rtl ? -1 : 1);
-    return physical * sign;
+  onResizeEnd(width: number): void {
+    this._resizing = false;
+    this.#setWidth(width, { commit: true });
   }
 
   /**
@@ -194,25 +131,21 @@ export default class RailResizeHandle extends Component<RailResizeHandleSignatur
   }
 
   <template>
-    <div
-      class="wireframe-rail-resizer wireframe-rail-resizer--{{@side}}"
-      role="separator"
-      aria-orientation="vertical"
-      aria-label={{this.label}}
-      aria-valuenow={{this.width}}
-      aria-valuemin={{this.min}}
-      aria-valuemax={{this.max}}
-      tabindex="0"
-      {{on "keydown" this.onKeyDown}}
-    >
-      <DResizeHandles
-        @handleClass="wireframe-rail-resizer__grip"
-        @directions={{this.directions}}
-        @onResizeStart={{this.onResizeStart}}
-        @onResize={{this.onResize}}
-        @onResizeEnd={{this.onResizeEnd}}
-        @draggingClass="--dragging"
-      />
-    </div>
+    <DResizeSeparator
+      class={{dConcatClass
+        "wireframe-rail-resizer"
+        (concat "wireframe-rail-resizer--" @side)
+        (if this._resizing "--resizing")
+      }}
+      @axis="horizontal"
+      @side={{this.side}}
+      @label={{this.label}}
+      @value={{this.width}}
+      @min={{this.min}}
+      @max={{this.max}}
+      @onResizeStart={{this.onResizeStart}}
+      @onResize={{this.onResize}}
+      @onResizeEnd={{this.onResizeEnd}}
+    />
   </template>
 }

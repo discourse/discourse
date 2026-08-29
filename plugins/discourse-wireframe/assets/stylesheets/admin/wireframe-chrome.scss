@@ -1270,7 +1270,6 @@ body.wireframe-active {
   position: relative;
   width: 8px;
   z-index: 5;
-  cursor: col-resize;
 
   &--left {
     grid-column: 2;
@@ -1284,45 +1283,38 @@ body.wireframe-active {
     margin-left: -4px;
   }
 
-  /* The pointer-drag target from DResizeHandles fills the strip; a wider
-     invisible ::before extends the hit area for touch/mouse without widening
-     the visible seam. */
+  /* A wider invisible ::before extends the hit area for touch/mouse without
+     widening the visible seam. */
 
-  &__grip {
+  &::before {
+    content: "";
     position: absolute;
-    inset: 0;
-    cursor: col-resize;
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0 -3px;
-    }
-
-    /* A hairline that only shows on hover / focus / drag, so the seam is
-       discoverable without adding visual noise at rest. */
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset-block: 0;
-      inset-inline-start: 50%;
-      width: 2px;
-      transform: translateX(-50%);
-      background: transparent;
-      transition: background 80ms ease-out;
-    }
+    inset: 0 -3px;
   }
 
-  &:hover .wireframe-rail-resizer__grip::after,
-  .wireframe-rail-resizer__grip.--dragging::after {
+  /* A hairline that only shows on hover / focus / drag, so the seam is
+     discoverable without adding visual noise at rest. */
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: transparent;
+    transition: background 80ms ease-out;
+  }
+
+  &:hover::after,
+  &.--resizing::after {
     background: var(--wf-accent);
   }
 
   &:focus-visible {
     outline: none;
 
-    .wireframe-rail-resizer__grip::after {
+    &::after {
       background: var(--wf-accent);
       width: 3px;
     }
