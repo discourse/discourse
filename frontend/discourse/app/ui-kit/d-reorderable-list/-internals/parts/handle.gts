@@ -21,23 +21,17 @@ interface HandlePartSignature {
 
 /**
  * The one control a movable row renders: a real button that is the drag
- * source and the move menu's trigger at once.
+ * source and the move menu's trigger at once, so a pointer drags or clicks it
+ * and a keyboard activates it, with nothing intercepting a plain button.
  *
- * Fusing the two is what lets the row carry a single affordance. A pointer
- * user drags it or clicks it for the menu; a keyboard user tabs or arrows onto
- * it and presses Enter for the same menu, because nothing intercepts a plain
- * button's native activation.
+ * The menu itself belongs to the list, not to this button; the button carries
+ * only the menu's ARIA, driven by the list's single record of which row is
+ * open.
  *
- * The menu itself belongs to the list, not to this button: a list is arbitrarily
- * long, and one instance and one set of listeners per row is a cost that scales
- * with the wrong thing. The button therefore carries the menu's ARIA itself,
- * driven by the list's single record of which row is open.
- *
- * The drag registration belongs to the row for the same reason it is not here:
- * the registered element is what a drop target receives and what the browser
- * photographs for the drag preview. Registered on this button, a drag would
- * show a picture of the grip rather than of the row being moved. The row
- * registers instead and names this button as its `dragHandle`.
+ * The drag registration belongs to the row: the registered element is what
+ * the browser photographs for the drag preview, and registered here a drag
+ * would show the grip rather than the row. The row registers instead and
+ * names this button as its `dragHandle`.
  */
 export default class HandlePart extends Component<HandlePartSignature> {
   @action
@@ -52,14 +46,18 @@ export default class HandlePart extends Component<HandlePartSignature> {
       @action={{this.open}}
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
-      @ariaExpanded={{@isOpen}}
-      aria-haspopup="menu"
+      @ariaExpanded={{if @row.hasDestinations @isOpen}}
+      aria-haspopup={{if @row.hasDestinations "menu"}}
       aria-describedby={{@row.descriptionId}}
       class="btn-flat d-reorderable-list__handle"
       ...attributes
     >
       <span id={{@row.descriptionId}} class="sr-only">
-        {{i18n "reorder.handle_description"}}
+        {{if
+          @row.hasDestinations
+          (i18n "reorder.handle_description")
+          (i18n "reorder.handle_description_drag_only")
+        }}
       </span>
     </DButton>
   </template>

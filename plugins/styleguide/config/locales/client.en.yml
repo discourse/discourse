@@ -63,6 +63,8 @@ en:
           policies_example: "Pinned and required rows"
           policies_description: "Two predicates, two policies, both subtractive. A row the movable predicate excludes renders no handle and keeps its exact slot, wherever it sits — this list pins its first and last rows, and the rows around them move within the slots that are left. A row the removable predicate excludes renders no remove control, so a protected row offers nothing that cannot be acted on."
           policies_try_this: "Send the first movable row to the bottom from its menu: neither pinned row shifts. The required row has no remove control at all."
+          policies_pinned: "Pinned"
+          policies_required: "Required"
           toggles_example: "Rows with toggles"
           toggles_description: "The admin-dashboard pattern: rows carry their own interactive controls, which keep their normal focus and clicks. Rows toggled off stay in the list but stop being movable — they keep their slot and lose their handle, rather than disappearing into a separate block."
           toggles_try_this: "Turn a toggle off and the row keeps its place but can no longer be moved. Reorder the rows around it and watch it stay put."

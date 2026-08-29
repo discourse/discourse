@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type MenuService from "discourse/float-kit/services/menu";
@@ -51,6 +51,9 @@ interface MoveMenuCoordinatorOptions {
    * stay the same answer.
    */
   canSpill: (target: MoveTarget) => boolean;
+
+  /** Announces that an explicit cross-list command was refused. */
+  onRefusedMove: (key: string) => void;
 }
 
 /**
@@ -64,12 +67,7 @@ interface MoveMenuCoordinatorOptions {
  * no instance of its own beyond the one needed to close on its own terms.
  */
 export default class MoveMenuCoordinator {
-  /**
-   * The row whose menu is open, and the list's only record of it. One menu
-   * means one answer: with an instance per row there were as many claims about
-   * what was open as there were rows, and keeping them agreeing was work the
-   * design should not have needed.
-   */
+  /** The row whose menu is open, and the list's only record of it. */
   @tracked openKey: string | null = null;
 
   #menuService: MenuService;
@@ -80,6 +78,8 @@ export default class MoveMenuCoordinator {
   #siblings: () => { listId: string; listLabel: string }[];
   #move: (key: string, target: MoveTarget) => void;
   #canSpill: (target: MoveTarget) => boolean;
+  #onRefusedMove: (key: string) => void;
+  #ownership: symbol | null = null;
 
   /**
    * The menu the service last opened for this list, held only so a close can
@@ -97,6 +97,7 @@ export default class MoveMenuCoordinator {
     siblings,
     move,
     canSpill,
+    onRefusedMove,
   }: MoveMenuCoordinatorOptions) {
     this.#menuService = menu;
     this.#args = args;
@@ -106,6 +107,7 @@ export default class MoveMenuCoordinator {
     this.#siblings = siblings;
     this.#move = move;
     this.#canSpill = canSpill;
+    this.#onRefusedMove = onRefusedMove;
 
     // The content is rendered by the app-root host, not by this list, so a
     // list torn down while open would otherwise leave a menu anchored to a
@@ -134,42 +136,62 @@ export default class MoveMenuCoordinator {
       return;
     }
 
+    const row = this.#rowFor(key);
+    if (
+      row &&
+      !row.canMoveUp &&
+      !row.canMoveDown &&
+      this.#siblings().length === 0 &&
+      !this.#canSpill("up") &&
+      !this.#canSpill("down")
+    ) {
+      return;
+    }
+
+    const ownership = Symbol("move-menu");
+    this.#ownership = ownership;
     this.openKey = key;
-    this.#instance =
+    const instance =
       (await this.#menuService.show(trigger, {
         identifier: MENU_IDENTIFIER,
         placement: "bottom-start",
         component: MoveMenu,
         autoUpdate: true,
-        // The panel holds a list of buttons and nothing else — no filter, no
-        // controller of its own — so the float element steps out of the way
-        // rather than announcing itself as a dialog wrapped around them.
+        // The panel holds only the menu itself, so the float element steps
+        // out of the way rather than announcing itself as a dialog around it.
         contentRole: "none",
-        // Not the tab trap: containment belongs to a surface that owns the
-        // screen until dismissed, and this one shows nothing to say that Tab
-        // has stopped meaning "move on". Tab instead dismisses the menu and
-        // resumes the page's sequence from the handle it was opened at.
+        // Not the tab trap: nothing shows the reader that Tab has stopped
+        // meaning "move on", so Tab instead dismisses the menu and resumes
+        // the page's sequence from the handle it was opened at.
         inlineTabOrder: true,
         data: { list: this.#menuData(), key },
-        onClose: () => (this.openKey = null),
+        onClose: () => {
+          if (this.#ownership === ownership) {
+            this.#ownership = null;
+            this.openKey = null;
+          }
+        },
       })) ?? null;
+
+    if (isDestroying(this) || this.#ownership !== ownership) {
+      if (this.#ownership === ownership) {
+        this.#ownership = null;
+      }
+      instance?.destroy();
+      return;
+    }
+    this.#instance = instance;
 
     this.#focusFirstDestination();
   }
 
   /**
-   * Puts focus on the first destination.
+   * Puts focus on the first destination, which is always a legitimate landing
+   * spot: the menu renders only destinations the row can take.
    *
-   * Every destination the menu renders is one the row can take, so the first
-   * of them is always a legitimate landing spot. A row left with only
-   * cross-list entries opens on the first of those, and one with nothing at
-   * all leaves focus on the handle rather than stranding it on the document.
-   *
-   * Focused without scrolling: the float is placed asynchronously, so at this
-   * point it can still be sitting at the document origin, and asking the
-   * browser to reveal it throws the reader to the top of the page they were
-   * working in. The menu is opened from a handle that is on screen already, so
-   * there is nothing to reveal.
+   * Focused without scrolling: the float is placed asynchronously and can
+   * still be sitting at the document origin, so asking the browser to reveal
+   * it would throw the reader to the top of the page.
    */
   #focusFirstDestination() {
     const content = document.querySelector(MENU_CONTENT_SELECTOR);
@@ -191,6 +213,7 @@ export default class MoveMenuCoordinator {
    */
   @action
   async closeMenu(focusTrigger = true) {
+    this.#ownership = null;
     this.openKey = null;
     if (this.#instance?.expanded) {
       // Closed through the instance rather than the service, which offers no
@@ -200,18 +223,15 @@ export default class MoveMenuCoordinator {
   }
 
   /**
-   * A move chosen from the menu: commit, then close and hand focus back to the
-   * handle, which the closing float would otherwise return to its pre-open
-   * position.
+   * A move chosen from the menu: close first, then commit. The close skips
+   * the trigger refocus, so the move's own refocus is what places focus — on
+   * the handle of the row that actually moved.
    *
    * @param key - The row to move.
    * @param target - Where to move it.
-   * @param close - Closes the menu the item was chosen from.
    */
   @action
   onMenuMove(key: string, target: MoveTarget) {
-    // Closed without returning focus to the trigger: the move's own refocus
-    // is what puts focus back, on the row that actually moved.
     this.closeMenu(false);
     this.#move(key, target);
   }
@@ -228,26 +248,23 @@ export default class MoveMenuCoordinator {
   onMenuMoveToList(key: string, listId: string, close: () => void) {
     close();
     const member = this.#args().group?.lookupMember(listId);
-    if (!member) {
+    if (
+      !member ||
+      !member.acceptMove(this.#listId(), key, member.getItems().length, "menu")
+    ) {
+      this.#onRefusedMove(key);
       return;
     }
-    // The destination lands the item, exactly as it does for a drop, because
-    // the projections it needs are its own. This list only supplies the key.
-    member.acceptMove(this.#listId(), key, member.getItems().length, "menu");
   }
 
-  /**
-   * What the menu part is handed as its list.
-   *
-   * Assembled in one place because the four members no longer share an owner:
-   * the row lookups belong to the component, the move handlers to this
-   * coordinator. Every one stays a live call, since the part reads them while
-   * it renders.
-   */
+  /** What the menu part is handed as its list. Row and spill state stay live. */
   #menuData() {
+    const siblings = this.#siblings();
     return {
       rowFor: (key: string) => this.#rowFor(key),
-      siblings: () => this.#siblings(),
+      // A destination is revalidated when chosen, so retaining the opened
+      // menu's choices makes a membership race an announced refusal.
+      siblings: () => siblings,
       canSpill: (target: MoveTarget) => this.#canSpill(target),
       onMenuMove: (key: string, target: MoveTarget) =>
         this.onMenuMove(key, target),

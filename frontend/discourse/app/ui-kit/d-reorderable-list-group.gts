@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
+import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { isDestroying } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
@@ -19,11 +20,9 @@ const FOLLOWING = Node.DOCUMENT_POSITION_FOLLOWING;
 
 /**
  * Whether one element comes after another in the document.
- *
- * `compareDocumentPosition` answers with a bitmask and several of its bits can
- * be set at once — a node that follows another may also be contained by it — so
- * the one bit being asked about is masked out rather than compared against the
- * whole result.
+ * `compareDocumentPosition` answers with a bitmask whose bits can combine, so
+ * the one bit being asked about is masked out rather than compared against
+ * the whole result.
  *
  * @param left - The element to look out from.
  * @param right - The element to place relative to it.
@@ -55,8 +54,8 @@ interface DReorderableListGroupSignature {
  * output is the API it yields. Member lists that receive it as `@group` share
  * one drag token — which is what lets a row dragged out of one member land in
  * another — and route every move through the group's single `@onMove`. Every
- * member that carries a `@listLabel` also appears as a destination in the
- * other members' move menus, which is how a cross-list move is reachable
+ * enabled member that carries a `@listLabel` also appears as a destination in
+ * the other members' move menus, which is how a cross-list move is reachable
  * without a pointer.
  *
  * Members register themselves on construction and deregister on destruction,
@@ -72,25 +71,30 @@ interface DReorderableListGroupSignature {
  * ```
  */
 export default class DReorderableListGroup extends Component<DReorderableListGroupSignature> {
+  /** Keeps registry writes out of the member-construction render pass. */
+  @tracked generation = 0;
+
   /**
    * The yielded API. Built once — members hold onto it across their whole
    * life, so its identity must not churn with renders.
    */
   api: ReorderableGroupApi = {
     token: `d-reorderable-list-group:${guidFor(this)}`,
+    generation: () => this.generation,
     registerMember: (member: ReorderableGroupMember) => {
       const displaced = this.#members.get(member.listId);
       this.#members.set(member.listId, member);
+      schedule("afterRender", () => {
+        if (!isDestroying(this)) {
+          this.generation++;
+        }
+      });
 
       // A re-render builds the replacement before tearing down what it
-      // replaces, so the two overlap and a collision here is usually churn
-      // rather than an authoring error. What separates them is whether the
-      // displaced member is still on the page once the render settles: churn
-      // leaves a detached element behind, two genuinely distinct lists do not.
-      // Checked after render for that reason, and because an exception
-      // unwinding a half-built render corrupts it. The whole check is
-      // development-only: `assert` compiles away in production, and without the
-      // guard the scheduling around it would not.
+      // replaces, so a collision here is usually churn, and churn leaves a
+      // detached element once the render settles where distinct lists do not.
+      // Guarded with DEBUG because `assert` compiles away in production while
+      // the scheduling around it would not.
       if (DEBUG && displaced && displaced !== member) {
         schedule("afterRender", () => {
           if (isDestroying(this)) {
@@ -108,6 +112,11 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
         // its place.
         if (this.#members.get(member.listId) === member) {
           this.#members.delete(member.listId);
+          schedule("afterRender", () => {
+            if (!isDestroying(this)) {
+              this.generation++;
+            }
+          });
         }
       };
     },
@@ -116,14 +125,16 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
       this.#ordered()
         .filter(
           (member) =>
-            member.listId !== listId && member.listLabel() !== undefined
+            member.listId !== listId &&
+            !member.disabled() &&
+            member.listLabel() !== undefined
         )
         .map((member) => ({
           listId: member.listId,
           listLabel: member.listLabel()!,
         })),
     neighbour: (listId: string, direction: "previous" | "next") => {
-      const ordered = this.#ordered();
+      const ordered = this.#ordered().filter((member) => !member.disabled());
       const index = ordered.findIndex((member) => member.listId === listId);
       if (index === -1) {
         return undefined;
@@ -135,22 +146,17 @@ export default class DReorderableListGroup extends Component<DReorderableListGro
   /**
    * The registered members, by listId.
    *
-   * Deliberately NOT tracked. Members register during their own construction,
-   * so the first list registers, renders, and would read this set before the
-   * second list exists — a read followed by a write inside one render pass,
-   * which is the backtracking-rerender error. Nothing reads it during render
-   * instead: `siblings` is consulted when a move menu opens, by which point
-   * every member has long since registered.
+   * Deliberately NOT tracked. Members register during construction, so a
+   * reactive write here could follow another member's render-time read in the
+   * same pass. The separately tracked generation changes only after render.
    */
   #members = new Map<string, ReorderableGroupMember>();
 
   /**
-   * The registered members in the order they appear on the page.
-   *
-   * Registration order is the order members were constructed, which stops
-   * matching what the reader sees the moment the members themselves are
-   * reordered: the DOM node moves and the component instance does not. Members
-   * that have not rendered yet are dropped, having no position to sort on.
+   * The registered members in document order, never registration order, which
+   * stops matching the page as soon as the members themselves are reordered.
+   * Members that have not rendered yet are dropped, having no position to
+   * sort on.
    */
   #ordered(): ReorderableGroupMember[] {
     return [...this.#members.values()]

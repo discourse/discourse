@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
 import {
+  click,
   find,
   render,
   resetOnerror,
@@ -20,6 +21,7 @@ import {
 import {
   assertDragReady,
   dropCoordinates,
+  INDEX_KEY,
   label,
   noop,
   objectItems,
@@ -1657,3 +1659,672 @@ module("Integration | ui-kit | DReorderableList | nested", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | DReorderableList | group | rev42618",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /**
+     * Records every move and applies it to the tracked lists it names, the
+     * way a real consumer's handler does, so a move that should not have
+     * happened shows up in the DOM as well as in the log.
+     */
+    function recordingApplier(listsById) {
+      const moves = [];
+      const applyMove = (move) => {
+        moves.push(move);
+        const from = listsById[move.fromList];
+        from.splice(0, from.length, ...move.proposedFromItems);
+        if (move.toList !== move.fromList) {
+          const to = listsById[move.toList];
+          to.splice(0, to.length, ...move.proposedToItems);
+        }
+      };
+      return { moves, applyMove };
+    }
+
+    test("rev42618 a disabled member is not offered as a menu destination", async function (assert) {
+      const primaryItems = objectItems();
+      const archiveItems = [{ id: "archived-alpha", name: "Archived Alpha" }];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @listLabel="Primary"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-disabled-menu-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="archive"
+              @listLabel="Archive"
+              @disabled={{true}}
+              @items={{archiveItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-disabled-menu-target"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await openMoveMenu(primaryItems[0].id, "#rev-disabled-menu-source");
+
+      assert
+        .dom(moveItemSelector("list"))
+        .doesNotExist(
+          "a member that cannot accept anything is not offered as somewhere to send a row"
+        );
+    });
+
+    test("rev42618 a disabled member refuses a spilled move", async function (assert) {
+      const primaryItems = trackedArray(objectItems());
+      const archiveItems = trackedArray([
+        { id: "archived-alpha", name: "Archived Alpha" },
+      ]);
+      const { moves, applyMove } = recordingApplier({
+        primary: primaryItems,
+        archive: archiveItems,
+      });
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const lastItem = primaryItems.at(-1);
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{applyMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @listLabel="Primary"
+              @spill={{true}}
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-spill-refused-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="archive"
+              @listLabel="Archive"
+              @disabled={{true}}
+              @items={{archiveItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-spill-refused-target"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      const archiveOrderBefore = renderedItemOrder("#rev-spill-refused-target");
+
+      await moveViaChord(lastItem.id, "down", "#rev-spill-refused-source");
+
+      assert.strictEqual(
+        moves.length,
+        0,
+        "a spill aimed at a disabled member commits nothing"
+      );
+      assert.deepEqual(
+        renderedItemOrder("#rev-spill-refused-target"),
+        archiveOrderBefore,
+        "the disabled member's rendered order is untouched"
+      );
+      assert.true(
+        announce.calledWith(sinon.match(label(lastItem))),
+        "the refusal is spoken as the row's own boundary"
+      );
+    });
+
+    test("rev42618 a cross-list move refocuses the row it landed on", async function (assert) {
+      const sourceItems = trackedArray([
+        { id: "source-alpha", name: "Source Alpha" },
+        { id: "source-bravo", name: "Source Bravo" },
+      ]);
+      const frozenItem = { id: "target-pinned", name: "Target Pinned" };
+      const targetItems = trackedArray([
+        frozenItem,
+        { id: "target-alpha", name: "Target Alpha" },
+      ]);
+      const movable = (item) => item !== frozenItem;
+      const { applyMove } = recordingApplier({
+        source: sourceItems,
+        target: targetItems,
+      });
+      const movedItem = sourceItems.at(-1);
+      const otherTargetId = targetItems[1].id;
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{applyMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="source"
+              @listLabel="Source"
+              @spill={{true}}
+              @items={{sourceItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-refocus-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="target"
+              @listLabel="Target"
+              @movable={{movable}}
+              @items={{targetItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-refocus-target"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await moveViaChord(movedItem.id, "down", "#rev-refocus-source");
+
+      assert.deepEqual(
+        renderedItemOrder("#rev-refocus-target"),
+        [frozenItem.id, movedItem.id, otherTargetId],
+        "the frozen row keeps index zero, so the arrival fills the first movable slot"
+      );
+      assert
+        .dom(handleSelector(movedItem.id, "#rev-refocus-target"))
+        .isFocused(
+          "focus lands on the handle of the row that moved, in the list it moved into"
+        );
+    });
+
+    test("rev42618 a cross-list move reports the slot the item landed in", async function (assert) {
+      const sourceValues = ["bravo"];
+      const secondValues = ["alpha", "bravo", "charlie"];
+      const movedValue = sourceValues[0];
+      const expectedProposed = [...secondValues, movedValue];
+      const expectedToIndex = expectedProposed.length - 1;
+      const onMove = sinon.spy();
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{onMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="index-source"
+              @items={{sourceValues}}
+              @key={{INDEX_KEY}}
+              @label={{label}}
+              id="rev-slot-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item}}>{{item}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="index-second"
+              @listLabel="Second"
+              @items={{secondValues}}
+              @key={{INDEX_KEY}}
+              @label={{label}}
+              id="rev-slot-second"
+            >
+              <:row as |item|>
+                <span data-test-item={{item}}>{{item}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await moveVia("0", "list", "#rev-slot-source");
+
+      assert.strictEqual(
+        onMove.callCount,
+        1,
+        "the menu destination commits one move"
+      );
+      assert.deepEqual(
+        onMove.firstCall.args[0].proposedToItems,
+        expectedProposed,
+        "the arriving duplicate lands at the end of the destination's proposal"
+      );
+      assert.strictEqual(
+        onMove.firstCall.args[0].toIndex,
+        expectedToIndex,
+        "toIndex names the slot the item landed in, not the first equal value"
+      );
+      assert.true(
+        announce.calledWith(
+          sinon.match(
+            `position ${expectedToIndex + 1} of ${expectedProposed.length}`
+          )
+        ),
+        "the announcement places the row in the slot it landed in"
+      );
+    });
+
+    test("rev42618 the move menu commits a cross-list move", async function (assert) {
+      const firstItems = trackedArray([
+        { id: "first-alpha", name: "First Alpha" },
+        { id: "first-bravo", name: "First Bravo" },
+      ]);
+      const secondItems = trackedArray([
+        { id: "second-alpha", name: "Second Alpha" },
+      ]);
+      const { moves, applyMove } = recordingApplier({
+        first: firstItems,
+        second: secondItems,
+      });
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const movedItem = firstItems[0];
+      const expectedFirstOrder = firstItems
+        .filter((item) => item !== movedItem)
+        .map((item) => item.id);
+      const expectedSecondOrder = [
+        ...secondItems.map((item) => item.id),
+        movedItem.id,
+      ];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{applyMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="first"
+              @listLabel="First links"
+              @items={{firstItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-menu-commit-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="second"
+              @listLabel="Second links"
+              @items={{secondItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-menu-commit-target"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await moveVia(movedItem.id, "list", "#rev-menu-commit-source");
+
+      assert.deepEqual(
+        renderedItemOrder("#rev-menu-commit-source"),
+        expectedFirstOrder,
+        "the row left the list it was sent from"
+      );
+      assert.deepEqual(
+        renderedItemOrder("#rev-menu-commit-target"),
+        expectedSecondOrder,
+        "and joined the destination at its end"
+      );
+      assert.strictEqual(
+        moves.length,
+        1,
+        "choosing the destination commits exactly one move"
+      );
+      assert.strictEqual(
+        moves[0].method,
+        "menu",
+        "a menu choice is reported as one"
+      );
+      assert.strictEqual(
+        moves[0].fromList,
+        "first",
+        "the move names the member the row left"
+      );
+      assert.strictEqual(
+        moves[0].toList,
+        "second",
+        "and the member it entered"
+      );
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "the cross-list menu move announces exactly once"
+      );
+      assert.true(
+        announce.firstCall.args[0].includes("Second links"),
+        "and the announcement names the destination list"
+      );
+    });
+
+    test("rev42618 the move menu spills at a boundary", async function (assert) {
+      const firstItems = trackedArray([
+        { id: "run-alpha", name: "Run Alpha" },
+        { id: "run-bravo", name: "Run Bravo" },
+      ]);
+      const secondItems = trackedArray([
+        { id: "run-charlie", name: "Run Charlie" },
+      ]);
+      const { moves, applyMove } = recordingApplier({
+        first: firstItems,
+        second: secondItems,
+      });
+      const movedItem = firstItems.at(-1);
+      const expectedFirstOrder = firstItems
+        .filter((item) => item !== movedItem)
+        .map((item) => item.id);
+      const expectedSecondOrder = [
+        movedItem.id,
+        ...secondItems.map((item) => item.id),
+      ];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{applyMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="first"
+              @listLabel="First"
+              @spill={{true}}
+              @items={{firstItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-menu-spill-first"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="second"
+              @listLabel="Second"
+              @items={{secondItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-menu-spill-second"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await moveVia(movedItem.id, "down", "#rev-menu-spill-first");
+
+      assert.deepEqual(
+        renderedItemOrder("#rev-menu-spill-first"),
+        expectedFirstOrder,
+        "the last row stepped out of the list it had run out of room in"
+      );
+      assert.deepEqual(
+        renderedItemOrder("#rev-menu-spill-second"),
+        expectedSecondOrder,
+        "and entered the next member at the top"
+      );
+      assert.strictEqual(
+        moves.length,
+        1,
+        "the boundary step commits exactly one move"
+      );
+      assert.strictEqual(
+        moves[0].method,
+        "menu",
+        "a spill chosen from the menu is reported as a menu move, not a keyboard one"
+      );
+    });
+
+    test("rev42618 a frozen destination row keeps its slot when an item arrives", async function (assert) {
+      const sourceItems = [
+        { id: "drag-source-alpha", name: "Drag Source Alpha" },
+      ];
+      const frozenItem = { id: "drag-pinned", name: "Drag Pinned" };
+      const targetItems = [
+        { id: "drag-target-alpha", name: "Drag Target Alpha" },
+        frozenItem,
+        { id: "drag-target-charlie", name: "Drag Target Charlie" },
+      ];
+      const frozenIndex = targetItems.indexOf(frozenItem);
+      const movable = (item) => item !== frozenItem;
+      const onMove = sinon.spy();
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{onMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="source"
+              @items={{sourceItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-frozen-drop-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="target"
+              @movable={{movable}}
+              @items={{targetItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-frozen-drop-target"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      const source = rowSelector(sourceItems[0].id, "#rev-frozen-drop-source");
+      const target = rowSelector(
+        targetItems.at(-1).id,
+        "#rev-frozen-drop-target"
+      );
+      assertDragReady(assert, source, target);
+      await simulateDrag(source, target, {
+        dataTransfer: new DataTransfer(),
+        targetCoordinates: dropCoordinates(target, "before"),
+      });
+
+      assert.strictEqual(onMove.callCount, 1, "the drop commits one move");
+      assert.strictEqual(
+        onMove.firstCall.args[0].proposedToItems[frozenIndex],
+        frozenItem,
+        "the frozen destination row holds its slot while the arrival is interleaved around it"
+      );
+    });
+
+    test("rev42618 a stale cross-list destination announces its refusal", async function (assert) {
+      const primaryItems = objectItems();
+      const secondaryItems = [
+        { id: "stale-secondary-alpha", name: "Stale Secondary Alpha" },
+      ];
+      const state = new (class {
+        @tracked showSecondary = true;
+      })();
+      const onMove = sinon.spy();
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{onMove}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="primary"
+              @items={{primaryItems}}
+              @key="id"
+              @label={{label}}
+              id="rev-stale-source"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            {{#if state.showSecondary}}
+              <DReorderableList
+                @group={{group}}
+                @listId="secondary"
+                @listLabel="Secondary links"
+                @items={{secondaryItems}}
+                @key="id"
+                @label={{label}}
+                id="rev-stale-target"
+              >
+                <:row as |item|>
+                  <span data-test-item={{item.id}}>{{item.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/if}}
+          </DReorderableListGroup>
+        </template>
+      );
+
+      await openMoveMenu(primaryItems[0].id, "#rev-stale-source");
+      assert
+        .dom(moveItemSelector("list"))
+        .exists(
+          "the destination stands in the menu while its member is mounted"
+        );
+
+      state.showSecondary = false;
+      await settled();
+
+      await click(moveItemSelector("list"));
+
+      assert.strictEqual(
+        onMove.callCount,
+        0,
+        "no move is recorded against a member that no longer exists"
+      );
+      assert.true(
+        announce
+          .getCalls()
+          .some((call) => String(call.args[0]).includes("Could not move")),
+        "the refusal itself is spoken, not a success sentence for a move that never happened"
+      );
+    });
+
+    test("rev42618 spill follows document order not registration order", async function (assert) {
+      const alphaItems = trackedArray([
+        { id: "alpha-one", name: "Alpha One" },
+        { id: "alpha-two", name: "Alpha Two" },
+      ]);
+      const betaItems = trackedArray([{ id: "beta-one", name: "Beta One" }]);
+      const members = trackedArray([
+        {
+          listId: "alpha",
+          listLabel: "Alpha",
+          className: "doc-order-alpha",
+          items: alphaItems,
+        },
+        {
+          listId: "beta",
+          listLabel: "Beta",
+          className: "doc-order-beta",
+          items: betaItems,
+        },
+      ]);
+      const { applyMove } = recordingApplier({
+        alpha: alphaItems,
+        beta: betaItems,
+      });
+      const alphaOrderBefore = alphaItems.map((item) => item.id);
+      const movedItem = betaItems[0];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{applyMove}} as |group|>
+            {{#each members key="listId" as |member|}}
+              <DReorderableList
+                @group={{group}}
+                @listId={{member.listId}}
+                @listLabel={{member.listLabel}}
+                @spill={{true}}
+                @items={{member.items}}
+                @key="id"
+                @label={{label}}
+                class={{member.className}}
+              >
+                <:row as |item|>
+                  <span data-test-item={{item.id}}>{{item.name}}</span>
+                </:row>
+              </DReorderableList>
+            {{/each}}
+          </DReorderableListGroup>
+        </template>
+      );
+
+      // Reversing the keyed array moves the members' DOM nodes without
+      // destroying the components, so the group's registration order still
+      // says "alpha" came first. Only a neighbour lookup sorted by document
+      // position can tell that "beta" now renders above it; a
+      // registration-ordered one would refuse this move as the group's end.
+      const [alphaMember, betaMember] = [...members];
+      members.splice(0, members.length, betaMember, alphaMember);
+      await settled();
+
+      await moveViaChord(movedItem.id, "down", ".doc-order-beta");
+
+      assert.deepEqual(
+        renderedItemOrder(".doc-order-alpha"),
+        [movedItem.id, ...alphaOrderBefore],
+        "the row spilled into the member that now renders below its own"
+      );
+      assert.deepEqual(
+        renderedItemOrder(".doc-order-beta"),
+        [],
+        "and left the member it ran out of"
+      );
+    });
+  }
+);

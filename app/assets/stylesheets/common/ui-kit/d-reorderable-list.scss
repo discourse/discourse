@@ -5,10 +5,9 @@
    itself owns. */
 
 .d-reorderable-list {
-  /* Base layout for the default list shell. The :where() tag guards carry zero
-     specificity, so they only reach the default ul/li rendering — a table or
-     ARIA-table shell keeps its own display model, and a consumer's row class
-     overrides these at equal specificity. */
+  /* The :where() tag guards carry zero specificity, so only the default
+     ul/li rendering is reached and a consumer's row class overrides these at
+     equal specificity. */
 
   &:where(ul) {
     margin: 0;
@@ -23,11 +22,8 @@
     padding-block: 0.25em;
   }
 
-  /* An emptied group member still accepts drops, and a list with no rows has
-     no height to drop onto. The dashed border is the affordance and the
-     min-height is what makes the target hittable — without it the list is a
-     live drop target a pointer cannot reach. Only ever applied while the root
-     is genuinely accepting drops. */
+  /* An emptied group member is a live drop target with no rows to give it
+     height; the min-height is what keeps it reachable by pointer. */
 
   &.--empty-drop-target {
     display: flex;
@@ -41,21 +37,18 @@
     text-align: center;
   }
 
-  /* The handle is a real button carrying an icon, sized to the grip rather
-     than to a button: it sits in dense rows and must not drive their height.
-     Chained with `.btn` to outrank the base button rules it would otherwise
-     tie with on source order alone — the grab cursor in particular. */
+  /* Sized to the grip rather than to a button, so the handle never drives a
+     dense row's height. Chained with `.btn` to outrank the base button rules
+     it would otherwise tie with on source order alone. */
 
   &__handle.btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    /* Sized explicitly rather than by its glyph. The button carries a
-       screen-reader description as its block, and a button with a block gets
-       none of the spacing an icon-only one does, so it would otherwise be a
-       press target the size of the grip itself. 24px is the smallest target
-       the guidelines accept. */
+    /* Sized explicitly: the screen-reader description is a block, and a
+       button with a block gets none of an icon-only button's spacing, leaving
+       a press target smaller than the guidelines accept. */
     min-width: 24px;
     min-height: 24px;
     padding: 0;
@@ -71,9 +64,8 @@
       color: var(--primary-low-mid);
     }
 
-    /* A real ring, where the button family indicates focus with a background
-       colour. At the size this renders that background is indistinguishable,
-       and on most rows the handle is the only control there is to find. */
+    /* A real ring: the button family's focus background is indistinguishable
+       at this size, and often the handle is the row's only control. */
 
     &:focus-visible {
       outline: 2px solid var(--d-input-focused-color);
@@ -82,10 +74,8 @@
     }
   }
 
-  /* The list's other control, sized to match the handle rather than to a
-     button. Both belong to the list, and a full-size button beside a 24px grip
-     reads as the heavier action of the two when it is the lighter one. A
-     consumer wanting a different weight overrides it at its own specificity. */
+  /* Sized to match the handle, so the two controls the list places read as
+     one family. */
 
   &__remove.btn {
     display: inline-flex;
@@ -111,14 +101,10 @@
     }
   }
 
-  /* Drawn on the row only when the row ITSELF is what focus landed on, which
-     is a frozen row the arrow cursor stepped onto: it renders no handle, so it
-     has nothing else to carry a ring.
-
-     `:focus` rather than `:focus-within` deliberately. The latter matches every
-     ancestor, so a row hosting a list of its own framed the whole of itself
-     whenever anything inside took focus — a second outline around the first,
-     and a frame the height of a section around a grip. */
+  /* A frozen row renders no handle, so the row itself carries the ring.
+     `:focus` rather than `:focus-within` deliberately: the latter matches
+     every ancestor, so a row hosting a list of its own would frame the whole
+     section whenever anything inside took focus. */
 
   &__row:focus {
     outline: 2px solid var(--d-input-focused-color);
@@ -132,37 +118,29 @@
   }
 }
 
-/* In a table the handle shares a cell with text rather than sitting in a flex
-   row, and an inline-level box there lands on the text baseline, so the grip
-   rides low against the label beside it. Only the table shape needs this: every
-   other row centres it already. */
+/* In a table cell an inline-level box lands on the text baseline, so the
+   grip would ride low against the label beside it. */
 
 td .d-reorderable-list__handle.btn {
   vertical-align: middle;
 }
 
-/* The accelerator each destination answers to, pushed to the trailing edge so
-   the labels stay in one column. Hidden where there is no keyboard to press
-   it with. */
-
 .d-reorderable-list__move-item {
   justify-content: start;
 }
 
-/* Inside a menu, focus is the cursor rather than a by-product of tabbing, and
-   the menu puts it on a destination as it opens. A pointer press does not set
-   `:focus-visible`, so a highlight keyed on that alone opens onto an invisible
-   cursor and says nothing about what Enter will do. Same declaration the
-   dropdown gives `:hover` and `:focus-visible`, so the three agree. */
+/* Inside a menu, focus is the cursor, and a pointer press does not set
+   `:focus-visible` — a highlight keyed on that alone opens onto an invisible
+   cursor. Kept identical to the dropdown's `:hover` and `:focus-visible`
+   declaration so the three agree. */
 
 .d-reorderable-list__move-item:focus:not(:focus-visible) {
   background: var(--d-hover);
   color: var(--primary);
 }
 
-/* The chip draws itself; the menu only decides where it sits. Selected above
-   the shortcut component's own specificity, whose margin reset would otherwise
-   leave each chip against its label and the column ragged. */
+/* Selected above the shortcut component's own specificity, whose margin
+   reset would otherwise leave the chip column ragged. */
 
 kbd.d-shortcut.d-reorderable-list__move-shortcut {
   margin-inline-start: auto;
@@ -172,10 +150,9 @@ kbd.d-shortcut.d-reorderable-list__move-shortcut {
   }
 }
 
-/* Reorderable lists are routinely hosted inside a modal — the sidebar section
-   form, manage reports, the dashboard's configure menu — where the default
-   dropdown layer sits under the modal and its backdrop swallows the clicks.
-   This is the layer the scale reserves for exactly that. */
+/* Reorderable lists are routinely hosted inside a modal, where the default
+   dropdown layer sits under the backdrop and its clicks are swallowed. This
+   is the layer the scale reserves for exactly that. */
 
 [data-identifier="reorderable-list-move"] {
   z-index: z("modal", "dropdown");

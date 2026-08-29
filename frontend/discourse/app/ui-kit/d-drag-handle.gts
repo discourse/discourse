@@ -25,9 +25,6 @@ interface DDragHandleSignature {
  * button there and give it its own accessible name, the way
  * `DReorderableList` does.
  *
- * Attributes pass through, so a consumer keeps its own class and can attach the
- * modifier that registers the handle with a drag source.
- *
  * @example
  * ```hbs
  * <DDragHandle @label={{this.dragLabel}} class="my-block__handle" />

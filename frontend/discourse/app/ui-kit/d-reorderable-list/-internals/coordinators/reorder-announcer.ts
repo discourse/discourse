@@ -20,12 +20,7 @@ interface AnnouncerArgs<T> {
 interface ReorderAnnouncerOptions<T> {
   a11y: A11yService;
 
-  /**
-   * The list's current arguments. A thunk rather than a snapshot: a consumer
-   * may swap `@label` or `@listLabel` at any time, and an announcement built
-   * from a captured one would speak the wrong name for the rest of the
-   * component's life.
-   */
+  /** The list's current arguments; never a snapshot. */
   getArgs: () => AnnouncerArgs<T>;
 
   /** The list's current row projection, read only when a run settles. */
@@ -33,13 +28,10 @@ interface ReorderAnnouncerOptions<T> {
 }
 
 /**
- * Everything a reorderable list says out loud.
- *
- * Owns the run state, which is why it owns the timer: a held chord speaks its
- * position only, and the full sentence lands once the key is released. The
- * timer must not outlive the list, so this cancels it from its own destructor
- * — which requires the component to call `associateDestroyableChild`, or
- * nothing here is ever destroyed and `isDestroying` stays false forever.
+ * Everything a reorderable list says out loud. Owns the chord-run state and
+ * therefore its timer, cancelled from its own destructor — which requires the
+ * component to call `associateDestroyableChild`, or nothing here is ever
+ * destroyed and `isDestroying` stays false forever.
  */
 export default class ReorderAnnouncer<T> {
   #a11y: A11yService;
@@ -52,13 +44,17 @@ export default class ReorderAnnouncer<T> {
    * re-announces even an unchanged string, so a run says only where the row
    * now is and the full sentence waits for the run to settle.
    */
-  #run: { key: string; timer: Timer } | null = null;
+  #run: {
+    index: number;
+    move?: ReorderableMove<T>;
+    timer: Timer;
+  } | null = null;
 
   constructor({ a11y, getArgs, rows }: ReorderAnnouncerOptions<T>) {
     this.#a11y = a11y;
     this.#getArgs = getArgs;
     this.#rows = rows;
-    registerDestructor(this, () => this.#cancelRun());
+    registerDestructor(this, () => this.cancelRun());
   }
 
   /**
@@ -83,9 +79,7 @@ export default class ReorderAnnouncer<T> {
     const position = move.toIndex + 1;
     const total = move.proposedToItems.length;
 
-    // Mid-run, only where the row now is: the live region re-speaks even an
-    // unchanged string, so a held key would otherwise read the same sentence
-    // once per step. The full one lands when the run settles.
+    // Mid-run, position only; the full sentence lands when the run settles.
     if (this.#run) {
       this.#a11y.announce(i18n("reorder.position", { position, total }));
       return;
@@ -93,7 +87,7 @@ export default class ReorderAnnouncer<T> {
 
     if (move.fromList !== move.toList && args.listLabel) {
       this.#a11y.announce(
-        i18n("reorder_announcement_cross_list", {
+        i18n("reorder.announcement_cross_list", {
           label,
           list: args.listLabel,
           position,
@@ -103,37 +97,63 @@ export default class ReorderAnnouncer<T> {
       return;
     }
 
-    this.announceMoved(move.item, move.toIndex, total);
+    this.#announceMoved(move.item, move.toIndex, total);
   }
 
   /**
-   * Marks a chord move as part of a run, so a held key speaks position only
-   * and the full sentence lands once the key is released. A menu move is
-   * always deliberate and single, so it ends any run rather than joining one.
+   * Marks a chord move as part of a run. A menu move is always deliberate and
+   * single, so it ends any run rather than joining one.
    *
    * @param key - The row being moved.
    * @param method - Which input method asked.
    */
   noteRun(key: string, method: "menu" | "keyboard") {
-    this.#cancelRun();
+    this.cancelRun();
     if (method !== "keyboard") {
       return;
     }
+    // A custom announcer owns its full message and throttling for every move.
+    if (this.#getArgs().announceMove) {
+      return;
+    }
+    const index = this.#rows().find((row) => row.key === key)?.index;
+    if (index === undefined) {
+      return;
+    }
     this.#run = {
-      key,
+      index,
       timer: discourseLater(() => {
         if (isDestroying(this)) {
           return;
         }
         const run = this.#run;
         this.#run = null;
-        const rows = this.#rows();
-        const row = rows.find((candidate) => candidate.key === run?.key);
-        if (row) {
-          this.announceMoved(row.item, row.index, rows.length);
+        const row = run ? this.#rows()[run.index] : undefined;
+        if (row && run?.move && Object.is(row.item, run.move.item)) {
+          this.announceMove({
+            ...run.move,
+            item: row.item,
+            toIndex: row.index,
+          });
         }
       }, RUN_SETTLE_MS),
     };
+  }
+
+  /** Points the armed chord run at the row's committed landing slot. */
+  updateRun(move: ReorderableMove<T>) {
+    if (this.#run) {
+      this.#run.index = move.toIndex;
+      this.#run.move = move;
+    }
+  }
+
+  /** Ends an armed chord run without speaking for it. */
+  cancelRun() {
+    if (this.#run) {
+      cancel(this.#run.timer);
+      this.#run = null;
+    }
   }
 
   /**
@@ -156,6 +176,15 @@ export default class ReorderAnnouncer<T> {
     );
   }
 
+  /** Speaks when an explicit destination disappeared or refused the move. */
+  announceRefusal(row: Row<T>) {
+    this.#a11y.announce(
+      i18n("reorder.move_refused", {
+        label: this.#getArgs().label(row.item),
+      })
+    );
+  }
+
   /**
    * Speaks a committed move in the standard form.
    *
@@ -163,20 +192,13 @@ export default class ReorderAnnouncer<T> {
    * @param index - Its visible index afterwards.
    * @param total - The visible list length afterwards.
    */
-  announceMoved(item: T, index: number, total: number) {
+  #announceMoved(item: T, index: number, total: number) {
     this.#a11y.announce(
-      i18n("reorder_announcement", {
+      i18n("reorder.announcement", {
         label: this.#getArgs().label(item),
         position: index + 1,
         total,
       })
     );
-  }
-
-  #cancelRun() {
-    if (this.#run) {
-      cancel(this.#run.timer);
-      this.#run = null;
-    }
   }
 }

@@ -242,10 +242,13 @@ export async function simulateDrag(
   assertDragRegistered(sourceSelector, targetSelector);
   const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
   const target = { ...centerOf(targetSelector), ...targetCoordinates };
+  // Resolved before the drop, because a consumer that applies a cross-list
+  // move destroys the source row and `dragend` still belongs to that element.
+  const registered = registeredElementFor(sourceSelector);
   await startDrag(sourceSelector, { dataTransfer, coordinates: source });
   await dragOver(targetSelector, { dataTransfer, coordinates: target });
   await dragEvent(targetSelector, "drop", { dataTransfer, ...target });
-  await dragEvent(registeredElementFor(sourceSelector), "dragend", {
+  await dragEvent(registered, "dragend", {
     dataTransfer,
     ...source,
   });
@@ -259,7 +262,12 @@ export async function simulateDrag(
  * `draggable`, so a synthetic `dragstart` aimed anywhere else does nothing.
  */
 function registeredElementFor(rowSelector: string) {
-  const row = document.querySelector(rowSelector) as Element;
+  const row = document.querySelector(rowSelector);
+  if (!row) {
+    throw new Error(
+      `drag-and-drop-helper: no element matches ${rowSelector}; resolve the drag source before the drop removes it`
+    );
+  }
   if (row.matches('[draggable="true"]')) {
     return row;
   }
@@ -267,7 +275,7 @@ function registeredElementFor(rowSelector: string) {
 }
 
 /**
- * Drives a browser-started drag from page content no source registered.
+ * Drives a browser-started drag from page content with no source registered.
  *
  * The event sequence matches an element drag. The guards prove the source is
  * unsourced and the destination is an element target, so this cannot quietly

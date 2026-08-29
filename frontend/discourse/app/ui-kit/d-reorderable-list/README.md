@@ -2,8 +2,8 @@
 
 One component (`../d-reorderable-list.gts`) over focused collaborators in
 `-internals/`. Consumers import only `discourse/ui-kit/d-reorderable-list` and
-`discourse/ui-kit/d-reorderable-list-group`; nothing outside this directory
-imports from `-internals/`.
+`discourse/ui-kit/d-reorderable-list-group`; only the component itself and the
+internals' own unit tests import from `-internals/`.
 
 The component owns the whole interaction — keyed iteration, the drag handle, the
 move menu, the keyboard path, boundary state, drop normalization, no-op
@@ -18,8 +18,8 @@ See the argument reference in the `Args` block of `types.ts`.
   as its public surface (`ReorderableMove`, `ReorderableRowApi`,
   `ReorderableGroupMember`, `ReorderableGroupApi`). It is a documentation home
   as much as a type home. The re-export is what `d-reorderable-list-group.gts`
-  imports from, and `type-tests/ui-kit/d-reorderable-list-test.gts` is the only
-  thing that would notice if it were dropped.
+  imports from, and it and `type-tests/ui-kit/d-reorderable-list-test.gts`
+  would both notice if it were dropped.
 - **`-internals/engine/move-engine.ts`** — the move algebra. Every input method
   and both drag paths funnel into `commitSeqMove`, so there is one place that
   calls the consumer back and one that announces. Also owns `removalProjection`,
@@ -70,8 +70,8 @@ and does nothing; a `registerDestructor` on it never fires.
 at construction breaks nothing any existing test can see — none of them swaps an
 argument after the first render except the ones written to catch exactly this —
 and breaks the day a consumer passes a getter-produced closure. The group member
-registration is the place this went wrong once: every field on it is a closure,
-and `listLabel` was a snapshot, so a list the reader could rename stood in its
+registration is where a snapshot bites hardest: every field on it is a closure,
+and a snapshotted `listLabel` would leave a renamed list standing in its
 siblings' menus under its old name while the announcement used the new one.
 
 **A removal is verified, not assumed.** `onRemove` awaits whatever the handler
@@ -112,5 +112,6 @@ reading order.
 ## Announcements
 
 `reorder.at_start` and `reorder.at_end` are built from the refused direction, so
-neither key appears as a literal anywhere. A grep for them finds nothing, and
-nothing detects an unused translation key. They are live.
+neither key appears as a literal in the code that speaks them. A grep for them
+finds only the comment in `reorder-announcer.ts` marking them live, and nothing
+detects an unused translation key. They are live.

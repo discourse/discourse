@@ -69,8 +69,9 @@ const Test = <template>
     <:row as |section controls|>
       <controls.handle />
       <span>{{section.name}}</span>
+      {{! Manual mode lets the yielded remove control take its own buttonClass }}
       {{#if controls.remove}}
-        <controls.remove />
+        <controls.remove @buttonClass="btn-default" />
       {{/if}}
     </:row>
   </DReorderableList>

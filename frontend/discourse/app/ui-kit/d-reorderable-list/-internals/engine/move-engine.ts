@@ -10,6 +10,7 @@ import type {
 /** The arguments a move reads, resolved per call rather than captured. */
 interface MoveEngineArgs<T> {
   items: readonly T[];
+  disabled?: boolean;
   group?: ReorderableGroupApi;
   onMove?: (move: ReorderableMove<T>) => void | false;
   listLabel?: string;
@@ -30,13 +31,9 @@ interface MoveEngineOptions<T> {
   announcer: ReorderAnnouncer<T>;
 
   /**
-   * Returns focus to a row's handle after a commit moved it in the DOM.
-   *
-   * Owned by the component rather than here, because it resolves against the
-   * list element the keyboard modifier installed on. An engine holding that
-   * element instead would have captured `null` at construction and fallen back
-   * to a document-wide query, which lands on the wrong list as soon as two
-   * index-keyed members share a key.
+   * Returns focus to a row's handle after a commit moved it in the DOM. Owned
+   * by the component rather than here, because it resolves against the list
+   * element the keyboard modifier installed on.
    */
   refocusIndex: (index: number) => void;
 }
@@ -79,9 +76,10 @@ export default class MoveEngine<T> {
    *
    * A move that would leave the list past either end is refused, and the
    * refusal is announced. Reaching an end is information, and a silent no-op is
-   * the failure this component exists to stop repeating. Only the accelerator
-   * arrives here at a boundary, the menu having omitted that destination
-   * entirely, which is what makes the spoken refusal the only account of it.
+   * the failure this component exists to stop repeating. With `spill` the menu
+   * offers the boundary step too, so both paths arrive here at an end; only
+   * the spoken refusal is accelerator-only, the menu never offering a
+   * destination that goes nowhere.
    *
    * @param key - The row to move.
    * @param target - Where to move it.
@@ -112,11 +110,10 @@ export default class MoveEngine<T> {
 
     this.#announcer.noteRun(key, method);
     const committed = this.commitSeqMove(method, rows, seq, from, to);
-    // Addressed by where the row landed, not by the key it had. On a list keyed
-    // by position that key now belongs to whichever row took the vacated slot,
-    // so refocusing by it hands the next press a different row and the two
-    // trade places for as long as the reader holds the chord.
+    // By landing index, not key: on a position-keyed list the old key now
+    // names whichever row took the vacated slot.
     if (committed) {
+      this.#announcer.updateRun(committed);
       this.#refocusIndex(committed.toIndex);
     }
   }
@@ -137,10 +134,8 @@ export default class MoveEngine<T> {
     if (!spill || !group || (target !== "up" && target !== "down")) {
       return undefined;
     }
-    // Up and down are true of a row inside its own list, where the axis is
-    // fixed. Between members they are not: the group is laid out by its
-    // consumer and may not be a column at all, so the crossing is asked for in
-    // reading order and `@spill` is what says the two coincide here.
+    // Between members "up" and "down" are not fixed directions, so the
+    // crossing is asked for in reading order; `spill` says the two coincide.
     return group.neighbour(
       this.#listId(),
       target === "down" ? "next" : "previous"
@@ -169,8 +164,7 @@ export default class MoveEngine<T> {
     // Entering from above lands first and entering from below lands last, so a
     // row keeps travelling the way it was pushed once it has crossed.
     const toIndex = target === "down" ? 0 : member.getItems().length;
-    member.acceptMove(this.#listId(), key, toIndex, method);
-    return true;
+    return !!member.acceptMove(this.#listId(), key, toIndex, method);
   }
 
   /**
@@ -255,7 +249,7 @@ export default class MoveEngine<T> {
    * through the group, asks it for its removal projection, splices the item
    * into this list's visible order, and finalizes. A source member that
    * unregistered mid-drag, or a key that no longer resolves there, refuses
-   * the drop silently.
+   * the drop. A disabled destination refuses every path at this chokepoint.
    *
    * @param sourceListId - The group listId the payload named as its origin.
    * @param key - The dragged row's key in the source member.
@@ -267,15 +261,15 @@ export default class MoveEngine<T> {
     key: string,
     toIndex: number,
     method: ReorderableMove<T>["method"]
-  ) {
-    const { group } = this.#args();
-    if (!group || !sourceListId) {
-      return;
+  ): ReorderableMove<T> | null {
+    const { disabled, group, items: toItems } = this.#args();
+    if (disabled || !group || !sourceListId) {
+      return null;
     }
     const member = group.lookupMember(sourceListId);
     const removal = member?.removalProjection(key);
     if (!member || !removal) {
-      return;
+      return null;
     }
 
     // The same slot model as everywhere else: frozen destination rows keep
@@ -297,24 +291,30 @@ export default class MoveEngine<T> {
     const queue = rows.filter((row) => row.movable).map((row) => row.item);
     queue.splice(seqInsert, 0, item);
     let cursor = 0;
+    let landingIndex = -1;
     for (let index = 0; index < size; index++) {
       if (proposedTo[index] === empty) {
+        if (cursor === seqInsert) {
+          landingIndex = index;
+        }
         proposedTo[index] = queue[cursor++]!;
       }
     }
 
-    this.#finalize({
+    const move: ReorderableMove<T> = {
       method,
       item,
       fromList: sourceListId,
       toList: this.#listId(),
       fromIndex: removal.fromIndex,
-      toIndex: proposedTo.indexOf(item),
+      toIndex: landingIndex,
       fromItems: member.getItems() as readonly T[],
-      toItems: this.#args().items,
+      toItems,
       proposedFromItems: removal.proposedFromItems as readonly T[],
       proposedToItems: proposedTo as readonly T[],
-    });
+    };
+    this.#finalize(move);
+    return move;
   }
 
   /**
@@ -328,6 +328,7 @@ export default class MoveEngine<T> {
    */
   #finalize(move: ReorderableMove<T>) {
     if (!this.#dispatch(move)) {
+      this.#announcer.cancelRun();
       return;
     }
     this.#announcer.announceMove(move);
@@ -342,7 +343,15 @@ export default class MoveEngine<T> {
    */
   #dispatch(move: ReorderableMove<T>): boolean {
     const handler = this.#args().group?.onMove ?? this.#args().onMove;
-    return handler?.(move) !== false;
+    return !!handler && handler(move) !== false;
+  }
+
+  /** Speaks when an explicit cross-list destination can no longer accept. */
+  announceRefusal(key: string) {
+    const row = this.#rows().find((candidate) => candidate.key === key);
+    if (row) {
+      this.#announcer.announceRefusal(row);
+    }
   }
 
   /**
@@ -359,11 +368,9 @@ export default class MoveEngine<T> {
     if (!moved?.movable) {
       return undefined;
     }
-    // The same slot model as an in-list move: frozen rows keep their
-    // exact visible indices while the remaining movable items refill
-    // the movable slots in order, and the list shrinks by its last
-    // slot. A frozen row that sat on the dropped final slot has no
-    // index to keep and joins the end of the refill queue.
+    // The same slot model as an in-list move: frozen rows keep their visible
+    // indices, the list shrinks by its last slot, and a frozen row that sat
+    // on that slot joins the end of the refill queue.
     const size = rows.length - 1;
     const empty = Symbol("empty");
     const proposed: (T | typeof empty)[] = new Array(size).fill(empty);

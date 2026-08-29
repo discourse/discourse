@@ -40,6 +40,8 @@ module("Unit | ui-kit | DReorderableList | MoveEngine", function (hooks) {
         announceMove() {},
         announceBoundary() {},
         noteRun() {},
+        updateRun() {},
+        cancelRun() {},
       },
       refocusIndex() {},
     });
@@ -119,6 +121,8 @@ module("Unit | ui-kit | DReorderableList | MoveEngine", function (hooks) {
         },
         announceBoundary() {},
         noteRun() {},
+        updateRun() {},
+        cancelRun() {},
       },
       refocusIndex() {},
     });
@@ -153,5 +157,82 @@ module("Unit | ui-kit | DReorderableList | MoveEngine", function (hooks) {
 
     assert.strictEqual(engine.removalProjection("a"), undefined, "frozen");
     assert.strictEqual(engine.removalProjection("nope"), undefined, "unknown");
+  });
+
+  test("rev42618 removalProjection keeps a frozen final row", async function (assert) {
+    // "pinned" sits on the final visible index, the one slot the shrinking
+    // list no longer has, so it must join the end of the refill queue.
+    const { engine } = engineFor([
+      { id: "a" },
+      { id: "b" },
+      { id: "pinned", movable: false },
+    ]);
+
+    const removal = engine.removalProjection("a");
+
+    assert.deepEqual(
+      removal.proposedFromItems,
+      ["b", "pinned"],
+      "the frozen row whose slot was dropped joins the end instead of vanishing"
+    );
+    assert.strictEqual(
+      removal.proposedFromItems.length,
+      2,
+      "the list shrinks by exactly one slot"
+    );
+    assert.deepEqual(
+      [...removal.proposedFromItems].sort(),
+      ["a", "b", "pinned"].filter((item) => item !== "a").sort(),
+      "conservation: the projection holds exactly the original items minus the removed one"
+    );
+  });
+
+  test("rev42618 commitCrossMove keeps a frozen destination row on its slot", async function (assert) {
+    const crossMoves = [];
+    const sourceMember = {
+      listId: "source",
+      listLabel: () => "Source",
+      disabled: () => false,
+      getItems: () => ["arrival"],
+      element: () => undefined,
+      removalProjection: (key) =>
+        key === "arrival"
+          ? { item: "arrival", fromIndex: 0, proposedFromItems: [] }
+          : undefined,
+      acceptMove() {},
+    };
+    const group = {
+      token: "token",
+      generation: () => 0,
+      registerMember: () => () => {},
+      lookupMember: (listId) =>
+        listId === "source" ? sourceMember : undefined,
+      siblings: () => [],
+      neighbour: () => undefined,
+      onMove: (move) => crossMoves.push(move),
+    };
+    const { engine } = engineFor(
+      [{ id: "x" }, { id: "pinned", movable: false }, { id: "y" }],
+      { group }
+    );
+
+    engine.commitCrossMove("source", "arrival", 2, "menu");
+
+    const move = crossMoves.at(-1);
+    assert.strictEqual(
+      move.proposedToItems[1],
+      "pinned",
+      "the frozen destination row keeps its original visible index while the list grows"
+    );
+    assert.strictEqual(
+      move.proposedToItems[move.toIndex],
+      "arrival",
+      "the arriving item sits exactly where the move reports it landed"
+    );
+    assert.deepEqual(
+      [...move.proposedToItems].sort(),
+      ["x", "pinned", "y", "arrival"].sort(),
+      "conservation: the destination holds exactly its own items plus the arriving one"
+    );
   });
 });

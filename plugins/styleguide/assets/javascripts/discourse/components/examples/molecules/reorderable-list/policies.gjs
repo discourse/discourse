@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+import { i18n } from "discourse-i18n";
 
 export default class ReorderableListPoliciesExample extends Component {
   items = trackedArray([
@@ -41,9 +42,13 @@ export default class ReorderableListPoliciesExample extends Component {
       <:row as |item|>
         <span class="styleguide-reorderable-list__label">{{item.name}}</span>
         {{#if item.pinned}}
-          <span class="styleguide-reorderable-list__note">Pinned</span>
+          <span class="styleguide-reorderable-list__note">{{i18n
+              "styleguide.sections.reorderable_list.policies_pinned"
+            }}</span>
         {{else if item.required}}
-          <span class="styleguide-reorderable-list__note">Required</span>
+          <span class="styleguide-reorderable-list__note">{{i18n
+              "styleguide.sections.reorderable_list.policies_required"
+            }}</span>
         {{/if}}
       </:row>
     </DReorderableList>

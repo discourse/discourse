@@ -19,14 +19,17 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   centerOf,
   dragEvent,
+  dragOver,
   simulateDrag,
   simulateUntargetedDrag,
+  startDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import {
   assertDragReady,
   dropCoordinates,
   label,
   List,
+  MENU_SELECTOR,
   noop,
   objectItems,
   renderedItemOrder,
@@ -39,6 +42,7 @@ import {
   rowSelector,
 } from "discourse/tests/helpers/ui-kit/reorderable-list-helper";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+import DReorderableListGroup from "discourse/ui-kit/d-reorderable-list-group";
 
 module("Integration | ui-kit | DReorderableList", function (hooks) {
   setupRenderingTest(hooks);
@@ -1972,6 +1976,422 @@ module(
           "--dragging",
           "a reinserted row does not inherit a removed drag's state"
         );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | DReorderableList | rev42618 review oracle",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("rev42618 removal is judged by the row leaving not by the count", async function (assert) {
+      const items = trackedArray(objectItems());
+      const removed = items[1];
+      const onRemove = (item) => {
+        items.splice(items.indexOf(item), 1);
+        items.push({ id: "delta", name: "Delta" });
+      };
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector(removed.id)} .d-reorderable-list__remove`);
+
+      assert.false(
+        renderedItemOrder().includes(removed.id),
+        "the removed row is gone from the rendered order even though the count is unchanged"
+      );
+      assert.true(
+        announce
+          .getCalls()
+          .some((call) => call.args[0].includes(label(removed))),
+        "the removal is announced by the row leaving, naming the removed row, not inferred from the count"
+      );
+    });
+
+    test("rev42618 focus after removal lands on the control that took the slot", async function (assert) {
+      const items = trackedArray([
+        { id: "alpha", name: "Alpha" },
+        { id: "bravo", name: "Bravo" },
+        { id: "charlie", name: "Charlie" },
+        { id: "delta", name: "Delta" },
+        { id: "echo", name: "Echo" },
+      ]);
+      const movable = (item) => item.id !== "alpha" && item.id !== "bravo";
+      const onRemove = (item) => items.splice(items.indexOf(item), 1);
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+            @movable={{movable}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector("charlie")} .d-reorderable-list__remove`);
+
+      assert.strictEqual(
+        document.activeElement,
+        find(`${rowSelector("delta")} .d-reorderable-list__remove`),
+        "focus lands on the remove control of the row that now occupies the vacated slot, not on the last row's control"
+      );
+    });
+
+    test("rev42618 removing the last removable row keeps focus in the list", async function (assert) {
+      const items = trackedArray([{ id: "alpha", name: "Alpha" }]);
+      const onRemove = (item) => items.splice(items.indexOf(item), 1);
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+            @onRemove={{onRemove}}
+            @onCreate={{noop}}
+            @allowCreate={{true}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      await click(`${rowSelector("alpha")} .d-reorderable-list__remove`);
+
+      assert.notStrictEqual(
+        document.activeElement,
+        document.body,
+        "focus does not fall to the body when the last removable row goes"
+      );
+      assert.true(
+        find(".d-reorderable-list").contains(document.activeElement),
+        "focus stays inside the list root, where the reader can act again"
+      );
+    });
+
+    test("rev42618 a row without a handle is not itself draggable", async function (assert) {
+      const items = [{ id: "alpha", name: "Alpha" }];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert
+        .dom(handleSelector("alpha"))
+        .doesNotExist(
+          "a lone standalone row has nowhere to move, so it renders no handle"
+        );
+      assert.notStrictEqual(
+        find(rowSelector("alpha")).getAttribute("draggable"),
+        "true",
+        "the drag source does not fall back to the row element, so the row's text stays selectable"
+      );
+    });
+
+    test("rev42618 an open menu closes when its row leaves the list", async function (assert) {
+      const items = trackedArray(objectItems());
+      const removedKey = items[1].id;
+
+      await render(
+        <template><List @items={{items}} @onMove={{noop}} /></template>
+      );
+
+      await openMoveMenu(removedKey);
+      assert
+        .dom(MENU_SELECTOR)
+        .exists("the move menu is open before the row leaves");
+
+      const remaining = items.filter((item) => item.id !== removedKey);
+      items.splice(0, items.length, ...remaining);
+      await settled();
+
+      assert
+        .dom(MENU_SELECTOR)
+        .doesNotExist(
+          "the menu is dismissed when the row it describes leaves the list"
+        );
+    });
+
+    test("rev42618 a lone grouped row advertises no popup", async function (assert) {
+      const soloItems = [{ id: "golf", name: "Golf" }];
+      const otherItems = [
+        { id: "hotel", name: "Hotel" },
+        { id: "india", name: "India" },
+      ];
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableListGroup @onMove={{noop}} as |group|>
+            <DReorderableList
+              @group={{group}}
+              @listId="solo"
+              @items={{soloItems}}
+              @key="id"
+              @label={{label}}
+              id="solo-list"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+            <DReorderableList
+              @group={{group}}
+              @listId="other"
+              @items={{otherItems}}
+              @key="id"
+              @label={{label}}
+              id="other-list"
+            >
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </DReorderableListGroup>
+        </template>
+      );
+
+      assert
+        .dom(handleSelector("golf", "#solo-list"))
+        .exists(
+          "the lone grouped row keeps its handle, which is still the cross-list drag source"
+        );
+      assert
+        .dom(handleSelector("golf", "#solo-list"))
+        .doesNotHaveAttribute(
+          "aria-haspopup",
+          "a handle whose menu holds no destinations advertises no popup"
+        );
+
+      await openMoveMenu("golf", "#solo-list");
+      assert
+        .dom(MENU_SELECTOR)
+        .doesNotExist("clicking the handle opens no empty menu");
+    });
+
+    test("rev42618 the default create row is a cell in a table shell", async function (assert) {
+      const items = objectItems().slice(0, 2);
+      const onCreate = sinon.spy();
+
+      await render(
+        <template>
+          <DMenus />
+          {{! eslint-disable ember/template-table-groups }}
+          <table>
+            <DReorderableList
+              @items={{items}}
+              @key="id"
+              @label={{label}}
+              @onMove={{noop}}
+              @onCreate={{onCreate}}
+              @allowCreate={{true}}
+              @tag="tbody"
+              @itemTag="tr"
+            >
+              <:row as |item|>
+                <td data-test-item={{item.id}}>{{item.name}}</td>
+              </:row>
+            </DReorderableList>
+          </table>
+        </template>
+      );
+
+      const createRow = find(".d-reorderable-list__create");
+      assert
+        .dom(createRow)
+        .hasTagName("tr", "the create row adopts the table shell's item tag");
+      const children = Array.from(createRow.children);
+      assert.strictEqual(
+        children.length,
+        1,
+        "the create row holds exactly one element child, so the tr contains no stray non-cell children"
+      );
+      assert
+        .dom(children[0])
+        .hasTagName("td", "that only child is a table cell");
+      assert.true(
+        !!children[0]?.querySelector(".d-reorderable-list__create-input"),
+        "the create input lives inside the cell, keeping the table markup valid"
+      );
+    });
+
+    test("rev42618 a standalone list without onMove asserts", async function (assert) {
+      const items = objectItems();
+      let raised;
+
+      setupOnerror((error) => {
+        raised = error;
+      });
+
+      try {
+        await render(
+          <template>
+            <DMenus />
+            <DReorderableList @items={{items}} @key="id" @label={{label}}>
+              <:row as |item|>
+                <span data-test-item={{item.id}}>{{item.name}}</span>
+              </:row>
+            </DReorderableList>
+          </template>
+        );
+
+        await moveVia(items[1].id, "up");
+      } finally {
+        resetOnerror();
+      }
+
+      assert.true(
+        /Assertion Failed:.*@onMove/i.test(raised?.message ?? ""),
+        "a standalone list has no way to commit a move without @onMove, and a development assertion says so"
+      );
+    });
+
+    test("rev42618 a row refuses a drop on itself", async function (assert) {
+      const items = objectItems();
+      const onMove = sinon.spy();
+
+      await render(
+        <template><List @items={{items}} @onMove={{onMove}} /></template>
+      );
+
+      const source = rowSelector(items[1].id);
+      assertDragReady(assert, source, source);
+
+      const dataTransfer = new DataTransfer();
+      await startDrag(source, { dataTransfer });
+      await dragOver(source, {
+        dataTransfer,
+        coordinates: dropCoordinates(source, "before"),
+      });
+
+      assert
+        .dom(source)
+        .doesNotHaveClass(
+          "--drag-above",
+          "hovering a row with its own drag offers no before indicator"
+        );
+      assert
+        .dom(source)
+        .doesNotHaveClass(
+          "--drag-below",
+          "and no after indicator, so the row is never offered a position relative to itself"
+        );
+
+      await dragEvent(source, "drop", {
+        dataTransfer,
+        ...dropCoordinates(source, "before"),
+      });
+      const handle = handleSelector(items[1].id);
+      await dragEvent(handle, "dragend", { dataTransfer, ...centerOf(handle) });
+
+      assert.strictEqual(
+        onMove.callCount,
+        0,
+        "a drop of a row on itself commits no move"
+      );
+    });
+
+    test("rev42618 the hint block renders before the header", async function (assert) {
+      const items = objectItems().slice(0, 2);
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @onMove={{noop}}
+          >
+            <:hint><li data-slot="hint">Hint</li></:hint>
+            <:header><li data-slot="header">Header</li></:header>
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      assert.dom("[data-slot='hint']").exists("the hint block renders");
+      assert.dom("[data-slot='header']").exists("the header block renders");
+      assert.deepEqual(
+        Array.from(find(".d-reorderable-list").children).map(
+          (element) => element.dataset.slot ?? element.dataset.reorderableKey
+        ),
+        ["hint", "header", ...items.map((item) => item.id)],
+        "the hint precedes the header in document order, and both precede every row"
+      );
+    });
+
+    test("rev42618 the move callback is read live", async function (assert) {
+      const items = objectItems();
+      const firstOnMove = sinon.spy();
+      const secondOnMove = sinon.spy();
+      const state = new (class {
+        @tracked onMove = firstOnMove;
+      })();
+
+      await render(
+        <template><List @items={{items}} @onMove={{state.onMove}} /></template>
+      );
+
+      state.onMove = secondOnMove;
+      await settled();
+
+      await moveVia(items[1].id, "up");
+
+      assert.strictEqual(
+        secondOnMove.callCount,
+        1,
+        "the callback swapped in after the first render receives the move"
+      );
+      assert.strictEqual(
+        firstOnMove.callCount,
+        0,
+        "the callback captured at the first render does not, proving @onMove is read live"
+      );
     });
   }
 );

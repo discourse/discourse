@@ -25,9 +25,7 @@ placement, not who imports it.
 **One named owner.** A component or module owns the concept, so its internals sit inside it:
 
 ```
-ui-kit/select/-internals/                 owned by DSelect
 ui-kit/d-reorderable-list/-internals/     owned by DReorderableList
-ui-kit/panel-dock/-internals/             owned by DPanelDock
 lib/blocks/-internals/                    owned by the blocks module
 ```
 

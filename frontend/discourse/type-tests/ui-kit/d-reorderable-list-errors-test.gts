@@ -12,7 +12,7 @@ const Test = <template>
   <DReorderableList
     @items={{sections}}
     @label={{label}}
-    {{! @glint-expect-error - @controls is closed; "split" went away with the arrow pair }}
+    {{! @glint-expect-error - @controls is a closed union; "split" is not a member }}
     @controls="split"
   >
     <:row as |section|>{{section.name}}</:row>

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { assert } from "@ember/debug";
 import {
   associateDestroyableChild,
@@ -51,6 +52,35 @@ export type {
 } from "discourse/ui-kit/d-reorderable-list/types";
 
 /**
+ * What the arrow cursor may land on: one per row, its handle where it renders
+ * one and the row itself where it does not. A frozen row still belongs to the
+ * list the reader is walking, so leaving it out would make the cursor cover a
+ * fraction of what is on screen.
+ */
+const CURSOR_TARGET = ".d-reorderable-list__handle, [data-reorderable-cursor]";
+
+/**
+ * The list root, for telling this list's own rows and controls from those of
+ * a nested list. Every DOM lookup below has to say which list it means: a
+ * bare `querySelector` from the outer root reaches straight through the inner
+ * one and answers with its rows.
+ */
+const LIST_ROOT = ".d-reorderable-list";
+
+/**
+ * Controls that demonstrably do nothing with Up and Down, so a press on one
+ * can step the cursor from the row it sits in rather than dying there.
+ *
+ * An allow-list rather than a list of controls to avoid, so the failure
+ * direction is safe: a caret, a radio in its group, a slider, a listbox, and
+ * anything this does not recognise all keep their keys. A button that opens a
+ * popup is excluded because the arrows may open it, which is also what keeps
+ * the row's own handle out.
+ */
+const ARROW_INERT =
+  '[role="switch"], [role="checkbox"], button:not([role]):not([aria-haspopup])';
+
+/**
  * A reorderable list: the standard shell for any surface where the user
  * changes the order of visible rows.
  *
@@ -89,7 +119,9 @@ export type {
  * exists to stop surfaces from reinventing. The menu holds only the
  * destinations the row can reach, so the set it publishes to assistive
  * software is the set the cursor can land on. A row that can reach none of
- * them renders no handle rather than one that opens onto nothing.
+ * them renders no handle rather than one that opens onto nothing. A grouped
+ * row keeps its handle as a cross-list drag source but advertises no popup
+ * when the menu has no destinations.
  *
  * The list and row elements stay stylable and semantically flexible through
  * `@tag` / `@itemTag` / `@role` / `@itemRole`, which is what lets one
@@ -110,38 +142,6 @@ export type {
  * </DReorderableList>
  * ```
  */
-/**
- * What the arrow cursor may land on: one per row, its handle where it renders
- * one and the row itself where it does not. A frozen row still belongs to the
- * list the reader is walking, so leaving it out would make the cursor cover a
- * fraction of what is on screen.
- */
-const CURSOR_TARGET = ".d-reorderable-list__handle, [data-reorderable-cursor]";
-
-/**
- * The list root, for telling this list's own rows and controls from those of a
- * list nested inside one of them.
- *
- * Lists nest wherever the things being ordered do: a section holding rows, a
- * board holding columns. Every DOM lookup below therefore has to say which list
- * it means, because a bare `querySelector` from the outer root reaches straight
- * through the inner one and answers with its rows.
- */
-const LIST_ROOT = ".d-reorderable-list";
-
-/**
- * Controls that demonstrably do nothing with Up and Down, so a press on one
- * can step the cursor from the row it sits in rather than dying there.
- *
- * An allow-list rather than a list of controls to avoid, so the failure
- * direction is safe: a caret, a radio in its group, a slider, a listbox, and
- * anything this does not recognise all keep their keys. A button that opens a
- * popup is excluded because the arrows may open it, which is also what keeps
- * the row's own handle out.
- */
-const ARROW_INERT =
-  '[role="switch"], [role="checkbox"], button:not([role]):not([aria-haspopup])';
-
 export default class DReorderableList<T> extends Component<
   DReorderableListSignature<T>
 > {
@@ -176,12 +176,10 @@ export default class DReorderableList<T> extends Component<
    * later is beyond this guard's reach.
    */
   verifyKeyboardPath = modifier((element: Element) => {
-    // The key is read from the element rather than taken as an argument: an
-    // argument's tracking tag invalidates on every rows recompute, and a
-    // function modifier that consumed it would tear down and re-run each
-    // time. Reading only the element keeps this a strict once-per-element
-    // lifecycle hook.
-    if (!this.isManual) {
+    // The key is read from the element, not taken as an argument: an
+    // argument's tracking tag would tear this down and re-run it on every
+    // rows recompute instead of once per element.
+    if (!DEBUG || !this.isManual) {
       return;
     }
     const key = element.getAttribute("data-reorderable-key") ?? "";
@@ -219,25 +217,34 @@ export default class DReorderableList<T> extends Component<
     }));
   });
 
+  /** Dismisses a move menu whose row no longer belongs to the list. */
+  reconcileMenu = modifier(
+    (_element: Element, [rows, openKey]: [Row<T>[], string | null]) => {
+      if (!openKey || rows.some((row) => row.key === openKey)) {
+        return;
+      }
+      schedule("afterRender", () => {
+        if (
+          !isDestroying(this) &&
+          this.menuCoordinator.openKey === openKey &&
+          !this.rowFor(openKey)
+        ) {
+          this.menuCoordinator.closeMenu(false);
+        }
+      });
+    }
+  );
+
   /**
    * The keyboard accelerators, plus the focus bookkeeping the menu needs.
    *
-   * Deliberately not `dRovingFocus`. That modifier implements the practice
-   * page's composite pattern, where the group owns a single tab stop and the
-   * arrows are the only way between items; its strategy stamps `tabindex="-1"`
-   * on every item it manages. This list was built that way and it was reverted
-   * after screen-reader testing: there is no ARIA role for one tab stop that
-   * Tab descends into, so nothing told a reader that the arrows navigate or
-   * that a row holds its own controls. A row is content carrying controls, not
-   * one alternative among a set. So every handle stays an ordinary tab stop,
-   * document order is the tab order, and the arrows are a redundant
-   * accelerator over it — never the only path, so software that swallows one
-   * costs speed rather than access.
-   *
-   * What is shared with that modifier is the part underneath the strategy:
-   * `ItemScope` decides which candidates the cursor may land on and `step`
-   * walks them. Only the tab-sequence ownership differs, and that is the whole
-   * of the disagreement.
+   * Deliberately not `dRovingFocus`: its composite strategy stamps
+   * `tabindex="-1"` on every item and makes the arrows the only way between
+   * them, and no ARIA role announces a single tab stop that Tab descends
+   * into. Here every handle stays an ordinary tab stop, document order is the
+   * tab order, and the arrows are a redundant accelerator over it — never the
+   * only path, so software that swallows one costs speed rather than access.
+   * Only `ItemScope` and `step` are shared with that modifier.
    *
    * Consumes nothing reactive: the row is resolved at event time.
    */
@@ -245,7 +252,8 @@ export default class DReorderableList<T> extends Component<
     this.#listElement = element;
 
     const onKeydown = (event: Event) => {
-      const { key, altKey, target } = event as KeyboardEvent;
+      const { key, altKey, ctrlKey, metaKey, shiftKey, target } =
+        event as KeyboardEvent;
       if (!(target instanceof HTMLElement)) {
         return;
       }
@@ -257,34 +265,34 @@ export default class DReorderableList<T> extends Component<
       if (!onCursorTarget && !onInertControl) {
         return;
       }
-      // The listener is registered for the capture phase, so an outer list sees
-      // a nested list's keys first. Without this it would answer for them:
-      // every handle matches the cursor selector regardless of which list it
-      // belongs to, and the chord path below stops propagation, so the list the
-      // reader is actually in would never receive the key at all.
+      // The listener runs in the capture phase, so an outer list sees a
+      // nested list's keys first; without this ownership gate it would answer
+      // them, and the chord path below stops propagation.
       if (target.closest(LIST_ROOT) !== element) {
         return;
       }
       if (!altKey) {
+        // Modified arrows retain their browser and platform shortcuts.
+        if (ctrlKey || metaKey || shiftKey) {
+          return;
+        }
         const delta = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
         if (!delta) {
           return;
         }
+        event.preventDefault();
         const scope = new ItemScope(
           element as HTMLElement,
           CURSOR_TARGET,
           "skip"
         );
-        // Filtered to this list's own targets: the scope is a plain query from
-        // the root, so a nested list's handles are inside it and the cursor
-        // would otherwise walk into rows belonging to another list.
+        // A nested list's handles are inside this query too; without the
+        // filter the cursor walks into rows belonging to another list.
         const targets = scope
           .all()
           .filter((candidate) => candidate.closest(LIST_ROOT) === element);
-        // Resolved through the owning row rather than by querying it for a
-        // handle, so a manual placement nested anywhere in the row still
-        // resolves, and a nested list's target can never be mistaken for this
-        // row's.
+        // Resolved through the owning row, so a manual placement nested
+        // anywhere in the row still resolves to this list's own target.
         const row = target.closest("[data-reorderable-key]");
         const from = onCursorTarget
           ? targets.indexOf(target)
@@ -301,7 +309,6 @@ export default class DReorderableList<T> extends Component<
           (item) => scope.isNavigable(item)
         );
         if (outcome.kind === "move") {
-          event.preventDefault();
           targets[outcome.index].focus();
         }
         return;
@@ -332,15 +339,13 @@ export default class DReorderableList<T> extends Component<
       if (!(event.target instanceof Element)) {
         return;
       }
-      // The menu renders inside the list when it is not portaled, so its own
-      // focus must not read as focus leaving the row it belongs to, which
-      // would close the menu before a destination could be chosen.
+      // A non-portaled menu renders inside the list; its focus must not read
+      // as leaving the row, which would close it before a choice was made.
       if (event.target.closest(MENU_CONTENT_SELECTOR)) {
         return;
       }
-      // Any focus inside the row counts as being on the row, since its own
-      // controls are part of it — including a nested list, which is why this
-      // walks out to the row this list owns rather than taking the innermost.
+      // Any focus inside the row counts as being on the row — including in a
+      // nested list, so this walks out to the row this list owns.
       const key = this.#ownRowFor(event.target)?.getAttribute(
         "data-reorderable-key"
       );
@@ -358,9 +363,8 @@ export default class DReorderableList<T> extends Component<
     };
 
     const onFocusOut = () => {
-      // Deferred past the render that may be moving the row: a move blurs its
-      // handle until the after-render refocus lands, so only focus that has
-      // settled outside the list clears the record.
+      // Deferred past the render that may be moving the row, so only focus
+      // that has settled outside the list clears the record.
       next(() => {
         if (
           isDestroying(this) ||
@@ -489,6 +493,7 @@ export default class DReorderableList<T> extends Component<
       move: (key: string, target: MoveTarget) =>
         this.#engine.move(key, target, "menu"),
       canSpill: (target: MoveTarget) => !!this.#engine.spillTarget(target),
+      onRefusedMove: (key: string) => this.#engine.announceRefusal(key),
     });
     // Without this the coordinator is never destroyed, so a menu left open at
     // teardown stays registered with the service for the app's lifetime.
@@ -497,19 +502,23 @@ export default class DReorderableList<T> extends Component<
     const { group } = this.args;
     if (group && !this.args.listId) {
       // Reported after render rather than thrown here: an exception unwinding
-      // a half-built render corrupts it. The list simply stays unregistered.
-      schedule("afterRender", () => {
-        if (isDestroying(this)) {
-          return;
-        }
-        assert(
-          "d-reorderable-list: @listId is required when the list joins a group",
-          false
-        );
-      });
+      // a half-built render corrupts it. The list simply stays unregistered,
+      // in production too, so the guard covers only the reporting.
+      if (DEBUG) {
+        schedule("afterRender", () => {
+          if (isDestroying(this)) {
+            return;
+          }
+          assert(
+            "d-reorderable-list: @listId is required when the list joins a group",
+            false
+          );
+        });
+      }
     } else if (group) {
       const unregister = group.registerMember({
         listId: this.args.listId!,
+        disabled: () => !!this.args.disabled,
         listLabel: () => this.args.listLabel,
         getItems: () => this.args.items,
         element: () => (this.#listElement as HTMLElement | null) ?? undefined,
@@ -519,16 +528,34 @@ export default class DReorderableList<T> extends Component<
           toIndex: number,
           method: "menu" | "keyboard"
         ) => {
-          this.#engine.commitCrossMove(sourceListId, key, toIndex, method);
-          // Focus follows the item across: the row is destroyed in the source
-          // list's iteration and rebuilt in this one, so only the destination
-          // can put focus back on it. By landing slot, since the source's key
-          // means nothing here on a list keyed by position.
-          this.#refocusIndex(toIndex);
+          const move = this.#engine.commitCrossMove(
+            sourceListId,
+            key,
+            toIndex,
+            method
+          );
+          // Focus follows the item across: only the destination can put
+          // focus back on the rebuilt row, and only by landing slot.
+          if (move) {
+            this.#refocusIndex(move.toIndex);
+          }
+          return move;
         },
         removalProjection: (key: string) => this.#engine.removalProjection(key),
       });
       registerDestructor(this, unregister);
+    }
+
+    if (DEBUG && !group && !this.args.onMove) {
+      schedule("afterRender", () => {
+        if (isDestroying(this)) {
+          return;
+        }
+        assert(
+          "d-reorderable-list: @onMove is required when the list does not join a group",
+          !!this.args.onMove
+        );
+      });
     }
   }
 
@@ -543,15 +570,10 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * The drag preview for a row that cannot be photographed on its own.
-   *
-   * The browser pictures the source element as it stands, which works for a row
-   * that carries its own box. A table row does not: its cells take their widths
-   * from columns that belong to the table, so a `tr` photographed alone collapses
-   * every cell to its content and the picture is not the row the reader grabbed.
-   * Cloned back into a table of its own at the measured widths, it is.
-   *
-   * Returns undefined for every other row shape, which leaves the browser's own
+   * The drag preview for a table row. A `tr` photographed alone collapses:
+   * its cells take their widths from columns that belong to the table, so the
+   * clone is rebuilt inside a table of its own at the measured widths.
+   * Undefined for every other row shape, which leaves the browser's own
    * picture in place.
    */
   get rowDragPreview(): DragPreviewRenderer | undefined {
@@ -589,15 +611,11 @@ export default class DReorderableList<T> extends Component<
     return this.args.itemTag ?? "li";
   }
 
-  /** The remove control's icon, defaulting to the list family's own. */
   get removeIcon(): string {
     return this.args.removeIcon ?? "xmark";
   }
 
-  /**
-   * The remove control's button weight. A flat control by default, which suits
-   * the dense rows most surfaces reorder.
-   */
+  /** The remove control's button weight, flat by default for dense rows. */
   get removeButtonClass(): string {
     return this.args.removeButtonClass ?? "btn-flat";
   }
@@ -659,11 +677,13 @@ export default class DReorderableList<T> extends Component<
 
     const rows = items.map((item, index) => {
       const key = this.#keyFor(item, index);
-      assert(
-        `d-reorderable-list: duplicate row key "${key}" — every item needs a unique key`,
-        !seen.has(key)
-      );
-      seen.add(key);
+      if (DEBUG) {
+        assert(
+          `d-reorderable-list: duplicate row key "${key}" — every item needs a unique key`,
+          !seen.has(key)
+        );
+        seen.add(key);
+      }
 
       const itemLabel = label(item);
       const rowMovable = !disabled && (movable ? movable(item) : true);
@@ -680,10 +700,8 @@ export default class DReorderableList<T> extends Component<
         rendersHandle: false,
         label: itemLabel,
         handleLabel: i18n("reorder.handle", { label: itemLabel }),
-        // The description belongs to the row, but the element carrying the
-        // text has to live inside the handle's button: a list element's
-        // children are `li`, or the rows of whatever table shell a consumer
-        // chose, and a bare `span` is legal in neither.
+        // The element carrying the description lives inside the handle's
+        // button: a bare `span` is not a legal child of `ul` or `tbody`.
         descriptionId: `${guidFor(this)}-move-${index}`,
         removable: !disabled && (removable ? removable(item) : true),
         removeLabel: i18n("reorder.remove", { label: itemLabel }),
@@ -692,20 +710,27 @@ export default class DReorderableList<T> extends Component<
     });
 
     const movableRows = rows.filter((row) => row.movable);
-    // With a single movable item every direction is a no-op. A member list
-    // still has its siblings to offer; a standalone one has nothing, and its
-    // row drops the handle rather than opening onto an empty menu. Group
-    // membership rather than the sibling count, because members are still
-    // registering while the rows first project.
     const alone = movableRows.length < 2;
-    const inGroup = !!this.args.group;
+    const { group } = this.args;
+    const inGroup = !!group;
+    // The generation invalidates this after construction-time registry writes
+    // without making the registry itself reactive during member construction.
+    const groupGeneration = group?.generation();
+    const hasGroupDestinations =
+      groupGeneration !== undefined &&
+      (group.siblings(this.listIdOrDefault).length > 0 ||
+        (!!this.args.spill &&
+          (!!group.neighbour(this.listIdOrDefault, "previous") ||
+            !!group.neighbour(this.listIdOrDefault, "next"))));
     for (const [seqIndex, row] of movableRows.entries()) {
       row.isFirst = seqIndex === 0;
       row.isLast = seqIndex === movableRows.length - 1;
       row.canMoveUp = !alone && !row.isFirst;
       row.canMoveDown = !alone && !row.isLast;
-      row.hasDestinations = row.canMoveUp || row.canMoveDown || inGroup;
-      row.rendersHandle = row.hasDestinations;
+      row.hasDestinations =
+        row.canMoveUp || row.canMoveDown || hasGroupDestinations;
+      // A grouped handle remains the cross-list drag source without a menu.
+      row.rendersHandle = row.hasDestinations || inGroup;
       row.yieldControls &&= row.rendersHandle;
     }
 
@@ -717,18 +742,11 @@ export default class DReorderableList<T> extends Component<
    * for the removal to actually happen, then say so and leave focus somewhere
    * the reader can act again.
    *
-   * Focus is the part a consumer cannot reasonably get right on its own. The
-   * control that was just pressed is gone with its row, so focus would fall to
-   * the document without help, and a reader clearing several entries would be
-   * thrown to the top of the page after each one.
-   *
-   * Awaited and then verified, rather than assumed. A consumer that puts a
-   * confirmation in front of the removal is back before the reader has
-   * answered, so announcing there speaks over a row still on screen and says
-   * something untrue when they cancel, while the scheduled focus fires into
-   * the dialog's own trap. Returning a promise defers both until the outcome
-   * is known, and checking the count covers the rest: a handler that simply
-   * declined never removed anything and there is nothing to report.
+   * Awaited and then verified, rather than assumed. A consumer with a
+   * confirmation in front of the removal returns before the reader has
+   * answered, so announcing on the call would speak over a row still on
+   * screen, and checking the count covers a handler that declined without
+   * returning a promise.
    *
    * @param key - The row to remove.
    */
@@ -739,7 +757,16 @@ export default class DReorderableList<T> extends Component<
       return;
     }
     const index = row.index;
-    const before = this.args.items.length;
+    const keyUsesIndex = this.args.key === "@index";
+    const beforeOccurrences = keyUsesIndex
+      ? this.args.items.filter((item) => Object.is(item, row.item)).length
+      : 0;
+    const controlIndex = this.#removeControls().findIndex(
+      (control) =>
+        control
+          .closest("[data-reorderable-key]")
+          ?.getAttribute("data-reorderable-key") === key
+    );
     // Captured before the handler runs: whatever it puts in front of the
     // reader takes focus away, and this is where they were.
     const asked = document.activeElement as HTMLElement | null;
@@ -747,10 +774,13 @@ export default class DReorderableList<T> extends Component<
     if (isDestroying(this)) {
       return;
     }
-    if (this.args.items.length === before) {
-      // Declined. Nothing is announced, and the row is still there — but so is
-      // the question of where the reader now is, because a confirmation hands
-      // focus back to an element it has already detached and so to nowhere.
+    const rowRemains = keyUsesIndex
+      ? this.args.items.filter((item) => Object.is(item, row.item)).length >=
+        beforeOccurrences
+      : !!this.rowFor(key);
+    if (rowRemains) {
+      // Declined: nothing is announced, but a confirmation hands focus back
+      // to an element it already detached, so put the reader back.
       this.#restoreLostFocus(() => asked);
       return;
     }
@@ -759,11 +789,11 @@ export default class DReorderableList<T> extends Component<
       if (isDestroying(this)) {
         return;
       }
-      this.#successorControl(index)?.focus();
+      this.#removalFocusTarget(controlIndex)?.focus();
     });
     // Re-asserted once everything else has settled, in case the handler put
     // something in front of the reader that returns focus after this.
-    this.#restoreLostFocus(() => this.#successorControl(index));
+    this.#restoreLostFocus(() => this.#removalFocusTarget(controlIndex));
   }
 
   /**
@@ -874,19 +904,43 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * This list's remove control standing where a row used to be: the slot it
-   * occupied, which now holds the row that followed it, or at the end of the
-   * list the one before it.
+   * The remove control at the departing control's place, or the final one when
+   * the departing control was last.
    *
-   * @param index - The removed row's visible index.
+   * @param index - The removed control's index among rendered controls.
    */
   #successorControl(index: number): HTMLElement | undefined {
-    const controls = Array.from(
+    const controls = this.#removeControls();
+    return controls[index] ?? controls.at(-1);
+  }
+
+  #removeControls(): HTMLElement[] {
+    return Array.from(
       this.#listElement?.querySelectorAll<HTMLElement>(
         ".d-reorderable-list__remove"
       ) ?? []
     ).filter((control) => control.closest(LIST_ROOT) === this.#listElement);
-    return controls[index] ?? controls.at(-1);
+  }
+
+  /** Finds the next useful control, or makes the list root focusable. */
+  #removalFocusTarget(index: number): HTMLElement | undefined {
+    const successor = this.#successorControl(index);
+    if (successor) {
+      return successor;
+    }
+    const createInput = Array.from(
+      this.#listElement?.querySelectorAll<HTMLElement>(
+        ".d-reorderable-list__create-input"
+      ) ?? []
+    ).find((input) => input.closest(LIST_ROOT) === this.#listElement);
+    if (createInput) {
+      return createInput;
+    }
+    const list = this.#listElement as HTMLElement | null;
+    if (list && !list.hasAttribute("tabindex")) {
+      list.setAttribute("tabindex", "-1");
+    }
+    return list ?? undefined;
   }
 
   /**
@@ -968,6 +1022,7 @@ export default class DReorderableList<T> extends Component<
         role={{@role}}
         {{this.rootDropTarget}}
         {{this.moveKeys}}
+        {{this.reconcileMenu this.rows this.menuCoordinator.openKey}}
         ...attributes
       >
         {{yield to="hint"}}
@@ -975,11 +1030,10 @@ export default class DReorderableList<T> extends Component<
         {{#if this.rows.length}}
           {{#let (dElement this.itemTag) as |Item|}}
             {{#each this.rows key="key" as |row|}}
-              {{! Two whole-row branches rather than one row with a conditional
-                  modifier: a conditionally curried modifier is re-created every
-                  time the rows recompute, and re-installing the drop target
-                  mid-drag leaves the element with a dead registration. Applied
-                  statically, the target registers once per row element. }}
+              {{! Two whole-row branches rather than a conditionally curried
+                  modifier: that is re-created on every rows recompute, and
+                  re-installing the drop target mid-drag leaves a dead
+                  registration. }}
               {{#if row.movable}}
                 <Item
                   class={{dConcatClass
@@ -995,6 +1049,7 @@ export default class DReorderableList<T> extends Component<
                     data=(hash key=row.key listId=this.listIdOrDefault)
                     dragHandle=(this.handleFor row.key)
                     dragPreview=this.rowDragPreview
+                    disabled=(not row.rendersHandle)
                   }}
                   {{dDragAndDropTarget
                     accepts=this.dragType

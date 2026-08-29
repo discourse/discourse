@@ -7,6 +7,9 @@ import type { MoveTarget } from "discourse/ui-kit/d-reorderable-list/types";
  */
 export const RUN_SETTLE_MS = 400;
 
+/** A table create row spans every real column without measuring the table. */
+export const TABLE_CREATE_COLSPAN = 1000;
+
 /** The list's move menu, identified by the attribute float-kit stamps on it. */
 export const MENU_IDENTIFIER = "reorderable-list-move";
 export const MENU_CONTENT_SELECTOR = `[data-identifier="${MENU_IDENTIFIER}"]`;

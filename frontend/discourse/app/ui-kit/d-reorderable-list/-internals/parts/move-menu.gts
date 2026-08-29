@@ -28,10 +28,9 @@ interface MoveItemSignature {
 }
 
 /**
- * The accelerator a destination answers to, in binding spelling.
- *
- * Absent for a destination with no accelerator, which the shortcut component
- * renders as nothing at all, so the item needs no test of its own.
+ * The accelerator a destination answers to, in binding spelling; undefined
+ * for a destination with no accelerator, which the shortcut component renders
+ * as nothing at all.
  *
  * @param target - The destination, as its own argument names it.
  */
@@ -43,15 +42,13 @@ function chordFor(target: string) {
 /**
  * One destination in the move menu.
  *
- * Only reachable destinations are rendered. A menu holding an unavailable one
- * counts it in the set it publishes, so a reader is told the menu has four
- * items while the cursor can land on two. The accelerator still reaches the
- * boundary and still speaks the refusal, which is where "already first" is
- * conveyed now that nothing stands in the menu to convey it.
+ * Only reachable destinations are rendered: an unavailable one would still
+ * count in the set the menu publishes to assistive software. The accelerator
+ * still reaches the boundary and speaks the refusal in the menu's place.
  *
- * Each destination carries its own modifier class, which is what lets a test
- * or a page object name the destination it wants rather than counting menu
- * positions that shift as soon as a group adds a cross-list entry.
+ * Each destination carries its own modifier class, so a test or page object
+ * can name the destination it wants rather than counting menu positions that
+ * shift as soon as a group adds a cross-list entry.
  */
 const MoveItem: TOC<MoveItemSignature> = <template>
   <DShortcut @keys={{chordFor @target}} as |shortcut|>
@@ -108,10 +105,10 @@ interface MoveMenuSignature {
  * menu is open, not as it stood when the row last rendered.
  *
  * A real menu, so the arrows that move between destinations are a pattern
- * assistive software already names rather than one this list invented. The role
- * goes on the list element here, not through the float's `contentRole`, which
- * only reaches the wrapper two levels above these buttons — far enough out that
- * it could never own them as items.
+ * assistive software already names rather than one this list invented. The
+ * role goes on the list element here, not through the float's `contentRole`,
+ * which reaches only the float's outer wrapper — too far out to own these
+ * buttons as items.
  */
 export default class MoveMenu extends Component<MoveMenuSignature> {
   get row(): Row<unknown> | undefined {
@@ -141,12 +138,10 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
   }
 
   /**
-   * An accelerator pressed inside the menu, which is where it is advertised.
-   *
-   * Routed to the same place choosing the destination goes, so the hint means
-   * what it says. The keydown handler on the list element rather than on each
-   * destination, because a chord aimed at a boundary has no destination in the
-   * menu to receive it and the refusal still has to be spoken.
+   * An accelerator pressed inside the menu, routed to the same place choosing
+   * the destination goes. Handled on the list element rather than on each
+   * destination: a chord aimed at a boundary has no destination in the menu
+   * to receive it, and the refusal still has to be spoken.
    *
    * @param event - The keydown that may carry a chord.
    */
@@ -245,11 +240,9 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
       {{/if}}
       {{#if this.siblings.length}}
         {{#if this.hasDirections}}
-          {{! Not a separator: the attribute lands on the list item, and the
-              rule it wraps is already one. Naming it here would nest a
-              separator inside a separator instead of giving the menu a single
-              one. Absent when no direction survives, since a rule below
-              nothing divides nothing. }}
+          {{! Not role="separator": the attribute lands on the list item, and
+              the rule it wraps is already one, so naming it here would nest a
+              separator inside a separator. }}
           <dropdown.divider role="none" />
         {{/if}}
         {{#each this.siblings key="listId" as |sibling|}}

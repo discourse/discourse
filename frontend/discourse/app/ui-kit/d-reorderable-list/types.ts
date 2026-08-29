@@ -24,16 +24,22 @@ export interface ReorderableMove<T = unknown> {
   /** The item's visible index after the move. */
   toIndex: number;
 
-  /** The visible items before the move, exactly as passed in `@items`. */
+  /** The source list's visible items before the move. */
   fromItems: readonly T[];
 
-  /** The visible items before the move; the same array for a single list. */
+  /**
+   * The destination list's visible items before the move. The same array as
+   * `fromItems` for an in-list move.
+   */
   toItems: readonly T[];
 
-  /** The proposed visible order after the move. */
+  /** The source list's proposed visible order after the move. */
   proposedFromItems: readonly T[];
 
-  /** The proposed visible order; the same array for a single list. */
+  /**
+   * The destination list's proposed visible order after the move. The same
+   * array as `proposedFromItems` for an in-list move.
+   */
   proposedToItems: readonly T[];
 }
 
@@ -57,19 +63,24 @@ export interface ReorderableRowApi {
   movable: boolean;
 
   /**
-   * The pre-wired handle for this row, present only under
-   * `@controls="manual"` on a movable row. It is the drag source and the move
-   * menu's trigger at once, so a movable manual row must place it; a
-   * development assertion fires when one does not.
+   * The pre-wired handle for this row. Yielded only under `@controls="manual"`
+   * on a movable row that renders a handle: one with a reachable destination,
+   * or any grouped row, whose handle stays the cross-list drag source. It is
+   * the drag source and the move menu's trigger at once, so a row yielded one
+   * must place it; a development assertion fires when one does not.
    */
   handle?: ComponentLike<{ Element: HTMLElement }>;
 
   /**
-   * The pre-wired remove control, present only under `@controls="manual"` on a
-   * removable row when `@onRemove` is set. Carries its own accessible name;
-   * everything visual passes through.
+   * The pre-wired remove control. Yielded only under `@controls="manual"` on a
+   * movable, removable row when `onRemove` is set; a frozen row yields no
+   * controls at all. Carries its own accessible name; everything visual passes
+   * through.
    */
-  remove?: ComponentLike<{ Element: HTMLElement }>;
+  remove?: ComponentLike<{
+    Args: { buttonClass?: string };
+    Element: HTMLElement;
+  }>;
 }
 
 /** The context handed to a `@rowClass` function. */
@@ -87,23 +98,18 @@ export interface RowClassContext {
 export interface ReorderableGroupMember {
   listId: string;
 
-  /**
-   * The member's current translated name. A closure like everything else
-   * beside it: a list whose name the reader can edit would otherwise stand in
-   * its siblings' menus under whatever it was called when it registered.
-   */
+  /** Whether the member currently refuses every move. */
+  disabled: () => boolean;
+
+  /** The member's current translated name. */
   listLabel: () => string | undefined;
 
   /** The member's current visible items. */
   getItems: () => readonly unknown[];
 
   /**
-   * The member's root element, for resolving which member sits next to which.
-   * Undefined before the member has rendered.
-   *
-   * Document position rather than registration order, because the two stop
-   * agreeing the moment members are reordered: the DOM node moves while the
-   * component instance, and so its place in the registry, stays put.
+   * The member's root element, for resolving which member sits next to which
+   * in document order. Undefined before the member has rendered.
    */
   element: () => HTMLElement | undefined;
 
@@ -138,7 +144,7 @@ export interface ReorderableGroupMember {
     key: string,
     toIndex: number,
     method: "menu" | "keyboard"
-  ) => void;
+  ) => ReorderableMove | null;
 }
 
 /**
@@ -153,6 +159,9 @@ export interface ReorderableGroupApi {
    */
   token: string;
 
+  /** Lets projections react without tracking the construction-time registry. */
+  generation: () => number;
+
   /** Adds a member; returns its deregistration. Duplicate listIds assert. */
   registerMember: (member: ReorderableGroupMember) => () => void;
 
@@ -161,26 +170,23 @@ export interface ReorderableGroupApi {
 
   /**
    * The other members registered right now, in document order, as the move
-   * menu's cross-list destinations. Only members carrying a `listLabel` are
-   * returned: an unnamed destination has nothing to put in the menu item, so
-   * it stays pointer-only rather than offering "Move to undefined".
+   * menu's cross-list destinations. Only enabled members carrying a
+   * `listLabel` are returned: an unnamed destination has nothing to put in the
+   * menu item, so it stays pointer-only rather than offering "Move to
+   * undefined".
    */
   siblings: (listId: string) => { listId: string; listLabel: string }[];
 
   /**
    * The member immediately before or after another **in reading order**, which
-   * is what a row spilling past its own list's end travels into.
+   * is what a row spilling past its own list's end travels into. Disabled
+   * members are skipped because they cannot accept the spill.
    *
-   * Reading order, not screen position: a group is free to lay its members out
-   * however it likes, and a flex-wrapped one is side by side at one width and
-   * stacked at another. Nothing here can turn that into "above" and "below",
-   * so this answers the only question it can — which member the document puts
-   * next — and `@spill` is opt-in because saying that also means "next on
-   * screen" is the consumer's claim to make.
-   *
-   * Registration order will not do either: it is the order members were
-   * constructed, and stops matching the document as soon as the members
-   * themselves are reordered.
+   * Reading order, not screen position or registration order: the group cannot
+   * see where its members landed, and registration order stops matching the
+   * document as soon as the members themselves are reordered. `spill` is
+   * opt-in because "next in the document" meaning "next on screen" is the
+   * consumer's claim to make.
    *
    * @param listId - The member to look out from.
    * @param direction - Which way along the document to look.
@@ -211,9 +217,8 @@ export interface Row<T> {
   canMoveDown: boolean;
 
   /**
-   * Whether the row has anywhere to go: a direction that is not a no-op, or a
-   * sibling list to cross into. A row with none renders no handle, since its
-   * only control would open a menu holding nothing.
+   * Whether the move menu has a reachable destination. A grouped row may still
+   * render a handle as its cross-list drag source when this is false.
    */
   hasDestinations: boolean;
 
@@ -263,8 +268,8 @@ export interface DReorderableListSignature<T> {
     key?: string;
 
     /**
-     * Translated display name for an item. It names the drag handle, both
-     * arrow buttons, and the post-move announcement, so every control stays
+     * Translated display name for an item. It names the drag handle, the
+     * remove control, and the announcements, so every control stays
      * distinguishable when read out of context.
      */
     label: (item: T) => string;
@@ -308,24 +313,18 @@ export interface DReorderableListSignature<T> {
      * Whether a row refused at this list's own end carries on into the
      * adjacent group member instead. Requires `@group`; ignored without one.
      *
-     * For members that read as one continuous run — the stacked sections of a
-     * document — where stopping dead at an internal edge is an artefact of how
-     * the surface is built rather than anything the reader can see. Moving
-     * down enters the next member at the top and moving up enters the previous
-     * one at the bottom, so the row keeps travelling the way it was pushed.
-     * The ends of the outermost members still refuse and still announce it.
+     * For members that read as one continuous run: moving down enters the next
+     * member at the top and moving up enters the previous one at the bottom,
+     * so the row keeps travelling the way it was pushed. The ends of the
+     * outermost members still refuse and still announce it.
      *
      * **Setting this asserts that the group runs top to bottom in reading
-     * order**, because that is the only order the group can resolve: it does
-     * not lay its members out and cannot see where they landed. A group whose
-     * members sit side by side — or a flex-wrapped one, which is side by side
-     * at one width and stacked at another — breaks that assertion, and Down
-     * would carry a row into the list beside it.
+     * order** — the only order the group can resolve. In a group laid out side
+     * by side, Down would carry a row into the list beside it.
      *
      * Off by default, and not only for that reason: members that are genuinely
-     * separate lists (a picker's chosen and available columns) should stop at
-     * their own edges, with "Move to …" in the menu as the deliberate way
-     * across.
+     * separate lists should stop at their own edges, with "Move to …" in the
+     * menu as the deliberate way across.
      */
     spill?: boolean;
 
@@ -389,9 +388,9 @@ export interface DReorderableListSignature<T> {
     /**
      * Renders a create affordance after the rows: a text input and an add
      * button by default, or the `<:create>` block when one is given. The
-     * default row is list-shaped (it renders as one extra item element), so a
-     * table shell should supply its own `<:create>` block with valid cell
-     * markup.
+     * default row is list-shaped (it renders as one extra item element), and
+     * wraps its controls in a spanning cell when `@itemTag="tr"`. A table that
+     * needs richer cell markup can supply its own `<:create>` block.
      */
     allowCreate?: boolean;
 
@@ -420,9 +419,7 @@ export interface DReorderableListSignature<T> {
      * Mirrors `@movable`, which renders no handle on a row that cannot move:
      * a row that cannot be removed renders no remove control either. A
      * permanently protected row would otherwise carry a dead tab stop that
-     * announces itself as unavailable on every pass. This is deliberately
-     * unlike the menu's boundary destinations, which stay marked because
-     * reaching an end is temporary and the row will move again.
+     * announces itself as unavailable on every pass.
      */
     removable?: (item: T) => boolean;
 

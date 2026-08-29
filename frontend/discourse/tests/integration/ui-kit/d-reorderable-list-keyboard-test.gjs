@@ -315,9 +315,8 @@ module(
     });
 
     test("tab order runs in DOM order through each row and its controls", async function (assert) {
-      // The defect this replaced: a roving cursor over the handles interleaved
-      // with the rows' own tab order, so a handle could not be reached from the
-      // control sitting beside it.
+      // A roving cursor over the handles would interleave with the rows' own
+      // tab order, leaving a handle unreachable from the control beside it.
       const items = objectItems();
 
       await render(
@@ -1590,6 +1589,168 @@ module(
       assert
         .dom(control)
         .isFocused("and leaves focus on the control that was pressed");
+    });
+
+    test("rev42618 a chord run settles onto the row that moved", async function (assert) {
+      const items = trackedArray(["Alpha", "Bravo", "Charlie"]);
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const handleMove = (move) => {
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key={{INDEX_KEY}}
+            @label={{label}}
+            @onMove={{handleMove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item}}>{{item}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      // Dispatched directly, then settled: `settled()` drains the run's
+      // settle timer, which is what lands the full sentence.
+      find(handleSelector("0")).focus();
+      document.activeElement.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowDown",
+          altKey: true,
+          bubbles: true,
+        })
+      );
+      await settled();
+
+      assert.deepEqual(
+        renderedItemOrder(),
+        ["Bravo", "Alpha", "Charlie"],
+        "the move was applied, so the settled sentence describes a reordered list"
+      );
+      assert.strictEqual(
+        announce.lastCall.args[0],
+        "Moved Alpha to position 2 of 3",
+        "the settled sentence names the row that moved, not whichever row now sits at the index the run remembered"
+      );
+    });
+
+    test("rev42618 announceMove false suppresses the settle sentence", async function (assert) {
+      const items = trackedArray(objectItems());
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const suppress = () => false;
+      const handleMove = (move) => {
+        items.splice(0, items.length, ...move.proposedToItems);
+      };
+
+      await render(
+        <template>
+          <DMenus />
+          <DReorderableList
+            @items={{items}}
+            @key="id"
+            @label={{label}}
+            @announceMove={{suppress}}
+            @onMove={{handleMove}}
+          >
+            <:row as |item|>
+              <span data-test-item={{item.id}}>{{item.name}}</span>
+            </:row>
+          </DReorderableList>
+        </template>
+      );
+
+      // Dispatched directly, then settled: `settled()` drains the run's
+      // settle timer, which is where the leaked default sentence comes from.
+      find(handleSelector("alpha")).focus();
+      document.activeElement.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowDown",
+          altKey: true,
+          bubbles: true,
+        })
+      );
+      await settled();
+
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "a consumer returning false silences the whole move: the settle timer honors the override instead of speaking the default sentence anyway"
+      );
+    });
+
+    test("rev42618 a vetoed move is not announced at settle", async function (assert) {
+      const items = trackedArray(objectItems());
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+      const handleMove = () => false;
+
+      await render(
+        <template><List @items={{items}} @onMove={{handleMove}} /></template>
+      );
+
+      // Dispatched directly, then settled: `settled()` drains the run's
+      // settle timer, which must not speak for a move that never happened.
+      find(handleSelector("alpha")).focus();
+      document.activeElement.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowDown",
+          altKey: true,
+          bubbles: true,
+        })
+      );
+      await settled();
+
+      assert.strictEqual(
+        announce.callCount,
+        0,
+        "a move the consumer vetoed never happened, so neither the run nor its settle timer has anything to announce"
+      );
+      assert.deepEqual(
+        renderedItemOrder(),
+        ["alpha", "bravo", "charlie"],
+        "and the rendered order is unchanged, confirming the veto held"
+      );
+    });
+
+    test("rev42618 an arrow at the list boundary is not left to the browser", async function (assert) {
+      const items = objectItems();
+
+      await render(
+        <template><List @items={{items}} @onMove={{noop}} /></template>
+      );
+
+      // Constructed by hand because `triggerKeyEvent` never hands the event
+      // back, and `defaultPrevented` is the whole assertion.
+      await focus(handleSelector("alpha"));
+      const upAtStart = new KeyboardEvent("keydown", {
+        key: "ArrowUp",
+        bubbles: true,
+        cancelable: true,
+      });
+      find(handleSelector("alpha")).dispatchEvent(upAtStart);
+      await settled();
+
+      assert.true(
+        upAtStart.defaultPrevented,
+        "a bare ArrowUp on the first handle is consumed even though the cursor clamps: otherwise the browser scrolls the page while focus stays on the end handle"
+      );
+
+      await focus(handleSelector("charlie"));
+      const downAtEnd = new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        bubbles: true,
+        cancelable: true,
+      });
+      find(handleSelector("charlie")).dispatchEvent(downAtEnd);
+      await settled();
+
+      assert.true(
+        downAtEnd.defaultPrevented,
+        "and a bare ArrowDown on the last handle is likewise consumed rather than handed to the browser to scroll with"
+      );
     });
   }
 );
