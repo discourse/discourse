@@ -13,6 +13,12 @@ module DiscourseAi
 
         path
       end
+
+      def record_skip(skips, upload, message)
+        return if skips.any? { |skip| skip[:upload_id] == upload.id }
+
+        skips << { upload_id: upload.id, filename: upload.original_filename, message: message }
+      end
     end
   end
 end

@@ -26,9 +26,11 @@ module DiscourseAi
         upload_ids:,
         max_pixels:,
         allowed_kinds: [:image],
-        allowed_attachment_types: nil
+        allowed_attachment_types: nil,
+        skips: nil
       )
         allowed_attachment_types = normalize_attachment_types(allowed_attachment_types)
+        skips ||= []
         uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
 
         upload_ids.filter_map do |upload_id|
@@ -40,6 +42,7 @@ module DiscourseAi
 
           if kind == :document && image?(upload)
             log_image_upload_skip(
+              skips,
               upload,
               "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_EXTENSIONS.join(", ")}",
             )
@@ -56,15 +59,15 @@ module DiscourseAi
             attachment_type = DocumentEncoder.attachment_type_for(upload.extension, mime_type)
             next if allowed_attachment_types&.exclude?(attachment_type)
 
-            next DocumentEncoder.encode(upload, mime_type, attachment_type)
+            next DocumentEncoder.encode(upload, mime_type, attachment_type, skips)
           end
 
           if upload.width.to_i == 0 || upload.height.to_i == 0
-            log_image_upload_skip(upload, "image dimensions are unknown")
+            log_image_upload_skip(skips, upload, "image dimensions are unknown")
             next
           end
 
-          encode_image(upload, transcode_format(extension), max_pixels)
+          encode_image(upload, transcode_format(extension), max_pixels, skips)
         end
       end
 
@@ -85,14 +88,16 @@ module DiscourseAi
           JPEG_EXTENSIONS.include?(extension) ? "jpeg" : "png"
         end
 
-        def log_image_upload_skip(upload, message)
+        def log_image_upload_skip(skips, upload, message)
+          record_skip(skips, upload, message)
+
           Rails.logger.warn(
             "Discourse AI: Skipping image upload " \
               "(upload_id=#{upload.id}, filename=#{upload.original_filename.inspect}): #{message}",
           )
         end
 
-        def encode_image(upload, desired_extension, max_pixels)
+        def encode_image(upload, desired_extension, max_pixels, skips)
           original_pixels = upload.width * upload.height
 
           image = upload
@@ -110,7 +115,7 @@ module DiscourseAi
           end
 
           if !image
-            log_image_upload_skip(upload, "could not be converted to #{desired_extension}")
+            log_image_upload_skip(skips, upload, "could not be converted to #{desired_extension}")
             return
           end
 
@@ -119,7 +124,7 @@ module DiscourseAi
           path = fetch_path(image)
 
           if path.blank?
-            log_image_upload_skip(upload, "file is not available in the store")
+            log_image_upload_skip(skips, upload, "file is not available in the store")
             return
           end
 
