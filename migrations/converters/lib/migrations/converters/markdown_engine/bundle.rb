@@ -11,7 +11,7 @@ module Migrations
       # The ordered JavaScript a `Context` evaluates: the host application's
       # precompiled pretty-text bundle (pretty-text, discourse-markdown-it,
       # and the allowlisted application modules, built out of process by
-      # `frontend/pretty-text-processor`), the configured plugins' vendored
+      # `frontend/pretty-text-processor`), the supported plugins' vendored
       # libraries and markdown features (the latter transpiled through the
       # host's `AssetProcessor`), and the generated emoji replacement table.
       #
@@ -76,13 +76,12 @@ module Migrations
         # The supported plugins: the ones bundled with the host application
         # that ship markdown features. Their constructs must tokenize the way
         # the destination will see them, or text inside e.g. a `[poll]` would
-        # be scanned as ordinary prose. This list is an allowlist, not open
-        # configuration: `Config::SETTING_KEYS` covers exactly these plugins'
-        # parse-relevant settings (a spec checks that per plugin), so a name
-        # outside the list would run its markdown rules with absent settings —
-        # `validate_plugins!` rejects it instead. A source that relied on such
-        # a plugin is scanned without its rules; that is the engine's
-        # accuracy boundary.
+        # be scanned as ordinary prose. The set is fixed, not configuration:
+        # `Config::SETTING_KEYS` covers exactly these plugins' parse-relevant
+        # settings (a spec checks that per plugin), so a plugin outside the
+        # list would run its markdown rules with absent settings. A source
+        # that relied on such a plugin is scanned without its rules; that is
+        # the engine's accuracy boundary.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
@@ -96,21 +95,13 @@ module Migrations
         # Digesting reads the host constants and file globs only; V8 boots on
         # a transpile, which never happens in this process, and the host
         # classes are Rails-free until their build/transpile methods run.
-        #
-        # @param plugins [Array<String>] a subset of {CORE_MARKDOWN_PLUGINS};
-        #   any other name raises `ArgumentError` (see the list's comment).
-        def self.load_or_build(
-          root: MarkdownEngine.discourse_root,
-          cache_dir: nil,
-          plugins: CORE_MARKDOWN_PLUGINS
-        )
-          plugins = validate_plugins!(plugins)
+        def self.load_or_build(root: MarkdownEngine.discourse_root, cache_dir: nil)
           cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do
             require_host_build_classes(root)
 
-            digest = input_digest(root, plugins)
+            digest = input_digest(root)
             cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
             entries = read_cache(cache_file)
             return new(entries) if entries
@@ -121,7 +112,7 @@ module Migrations
               # Another process may have built while this one waited.
               entries = read_cache(cache_file)
               unless entries
-                build_in_subprocess(root, cache_file, plugins)
+                build_in_subprocess(root, cache_file)
                 entries = read_cache(cache_file)
                 if entries.nil?
                   raise BuildError, "bundle build subprocess produced no readable cache"
@@ -139,8 +130,7 @@ module Migrations
         # stand-ins, and neither may live in the forking converter parent.
         # Writes via temp file and atomic rename, so a crashed build cannot
         # leave a truncated cache another run would trust.
-        def self.build_and_write(root, cache_file, plugins: CORE_MARKDOWN_PLUGINS)
-          plugins = validate_plugins!(plugins)
+        def self.build_and_write(root, cache_file)
           # discourse-emojis decides whether to load its railtie by checking
           # for `Rails`, so it must load before the Rails stand-in exists.
           require "discourse_emojis"
@@ -150,7 +140,7 @@ module Migrations
           Dir.chdir(root) do
             require_host_build_classes(root)
 
-            entries = build_entries(root, plugins)
+            entries = build_entries(root)
             FileUtils.mkdir_p(File.dirname(cache_file))
             temp_file = "#{cache_file}.#{Process.pid}.tmp"
             begin
@@ -186,21 +176,12 @@ module Migrations
           entry.is_a?(Array) && entry.size == 2 && entry.all?(String)
         end
 
-        def self.build_in_subprocess(root, cache_file, plugins)
+        def self.build_in_subprocess(root, cache_file)
           program =
             "require \"migrations-converters\"; " \
-              "Migrations::Converters::MarkdownEngine::Bundle.build_and_write(" \
-              "ARGV[0], ARGV[1], plugins: ARGV[2].to_s.split(\",\"))"
+              "Migrations::Converters::MarkdownEngine::Bundle.build_and_write(ARGV[0], ARGV[1])"
           _stdout, stderr, status =
-            Open3.capture3(
-              RbConfig.ruby,
-              "-e",
-              program,
-              root,
-              cache_file,
-              plugins.join(","),
-              chdir: root,
-            )
+            Open3.capture3(RbConfig.ruby, "-e", program, root, cache_file, chdir: root)
           return if status.success?
 
           raise BuildError, "bundle build subprocess failed: #{stderr.strip}"
@@ -222,17 +203,14 @@ module Migrations
           require File.join(root, "lib", "asset_processor")
         end
 
-        def self.input_digest(root, plugins)
+        def self.input_digest(root)
           digest = Digest::MD5.new
           digest.update("v#{VERSION}")
           digest.update("compiler-v#{::AssetProcessor::BASE_COMPILER_VERSION}")
-          # The list itself is an input: the same files with a different
-          # configured set must build a different bundle.
-          digest.update("plugins-#{plugins.join(",")}")
           digest_globs(digest, root, ::AssetProcessor::BUNDLE.dependency_globs)
           digest_globs(digest, root, CORE_BUNDLE_GLOBS)
 
-          (input_files(root, plugins) + EmojiData.data_files).each do |path|
+          (input_files(root) + EmojiData.data_files).each do |path|
             digest.update(path)
             digest.update(File.read(path))
           end
@@ -251,9 +229,9 @@ module Migrations
           end
         end
 
-        def self.input_files(root, plugins)
+        def self.input_files(root)
           files = PLUGIN_VENDOR_FILES.map { |path| File.join(root, path) }
-          plugins.each { |plugin| files.concat(plugin_files(root, plugin)) }
+          CORE_MARKDOWN_PLUGINS.each { |plugin| files.concat(plugin_files(root, plugin)) }
           files
         end
 
@@ -296,12 +274,12 @@ module Migrations
           end
         end
 
-        def self.build_entries(root, plugins)
+        def self.build_entries(root)
           entries = [["pretty-text.js", core_bundle_source(root)]]
 
           PLUGIN_VENDOR_FILES.each { |path| entries << [path, File.read(File.join(root, path))] }
 
-          plugins.each do |plugin|
+          CORE_MARKDOWN_PLUGINS.each do |plugin|
             plugin_files(root, plugin).each do |path|
               # The directory name stands in for the plugin's registered name;
               # feature discovery only pattern-matches the `discourse/plugins/`
@@ -332,24 +310,7 @@ module Migrations
           end
         end
 
-        # Called from both public entry points: `build_and_write` runs in its
-        # own subprocess and can be invoked directly, so it cannot rely on
-        # `load_or_build` having validated. Returns the normalized list —
-        # deduplicated (a doubled name would bundle the plugin twice and
-        # change the cache digest) and frozen against later mutation.
-        def self.validate_plugins!(plugins)
-          unknown = plugins - CORE_MARKDOWN_PLUGINS
-          unless unknown.empty?
-            raise ArgumentError,
-                  "unsupported markdown plugins: #{unknown.join(", ")} " \
-                    "(supported: #{CORE_MARKDOWN_PLUGINS.join(", ")})"
-          end
-
-          plugins.uniq.freeze
-        end
-
-        private_class_method :validate_plugins!,
-                             :input_digest,
+        private_class_method :input_digest,
                              :digest_globs,
                              :input_files,
                              :plugin_files,

@@ -75,40 +75,6 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     end
   end
 
-  it "rejects a plugin outside the supported list before building anything" do
-    Dir.mktmpdir do |dir|
-      expect { described_class.load_or_build(cache_dir: dir, plugins: %w[poll discourse-math]) }.to(
-        raise_error(ArgumentError, /unsupported markdown plugins: discourse-math/),
-      )
-      # Rejected before building: no cache file appears.
-      expect(Dir[File.join(dir, "*.json")]).to be_empty
-    end
-  end
-
-  it "builds with a configured plugin list instead of the default set" do
-    Dir.mktmpdir do |dir|
-      custom = described_class.load_or_build(cache_dir: dir, plugins: %w[poll])
-      custom_names = custom.entries.map(&:first)
-
-      expect(custom_names).to include(
-        a_string_matching(%r{\Adiscourse/plugins/poll/.*discourse-markdown/poll\z}),
-      )
-      expect(custom_names).not_to include(a_string_matching(%r{\Adiscourse/plugins/checklist/}))
-      expect(custom.entries.size).to be < bundle.entries.size
-    end
-  end
-
-  it "treats a duplicated plugin name like a single one" do
-    Dir.mktmpdir do |dir|
-      once = described_class.load_or_build(cache_dir: dir, plugins: %w[poll])
-      twice = described_class.load_or_build(cache_dir: dir, plugins: %w[poll poll])
-
-      # Same digest, so the second call reuses the first call's cache file.
-      expect(Dir[File.join(dir, "markdown-engine-bundle-*.json")].size).to eq(1)
-      expect(twice.entries).to eq(once.entries)
-    end
-  end
-
   it "supports the production fork model: bundle in the parent, context in the worker" do
     # Run in a fresh ruby process so this spec process's own V8 contexts (other
     # examples build them) can't mask or break the property under test: a

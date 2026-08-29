@@ -546,7 +546,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       scanner = Migrations::Converters::Discourse::MarkdownScanner::EngineScanner
       expect(ceilings.size).to eq(2)
       expect(ceilings.first).to be_nil
-      expect(ceilings.last).to eq(scanner::SLOW_TIMEOUT_MS - scanner::SLOW_TIMEOUT_STEP_MS).or eq(
+      step_ms = scanner::SLOW_TIMEOUT_MS / scanner::SLOW_TIMEOUT_STEPS
+      expect(ceilings.last).to eq(scanner::SLOW_TIMEOUT_MS - step_ms).or eq(
              scanner::SLOW_TIMEOUT_MS,
            )
       expect(retrying_engine).to have_received(:reset!).once
@@ -573,6 +574,37 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.extract("@alice `x`")).to eq("@alice `x`")
       expect(refusals).to eq(%i[engine_error])
       expect(failing_engine).to have_received(:scan).once
+    end
+
+    it "still retries when the configured slow timeout is smaller than the default step" do
+      # The step is a sixth of the configured timeout, not a fixed five
+      # seconds — with a fixed step, a four-second timeout would round every
+      # remaining time down to zero and skip the retry entirely.
+      ceilings = []
+      retrying_engine =
+        instance_double(Migrations::Converters::MarkdownEngine::Context, reset!: nil)
+      allow(retrying_engine).to receive(:scan) do |posts, timeout_ms: nil|
+        ceilings << timeout_ms
+        raise MiniRacer::ScriptTerminatedError, "terminated" if ceilings.size == 1
+        markdown_engine.scan(posts)
+      end
+      extractor =
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          markdown_engine: retrying_engine,
+          slow_timeout_ms: 4_000,
+          on_engine_refusal: ->(cause, _detail) { refusals << cause },
+        )
+
+      output = extractor.extract("@alice `x`")
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to include(buffer.mentions.first[:placeholder])
+      expect(refusals).to be_empty
+      expect(ceilings.size).to eq(2)
+      expect(ceilings.last).to be_between(1, 4_000)
     end
 
     it "runs a slow-path body's substitution checks under what is left of the retry deadline" do
@@ -652,8 +684,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       # down to a five-second step (23s left becomes a 20s ceiling), so the
       # engine rebuilds its isolate at most once per step and no call can run
       # past the deadline; a call with less than one full step remaining is
-      # declined. The engine is a double here, so the ceilings are proven but
-      # the rebuild count itself is not.
+      # declined. The engine is a double here, so this checks the chosen
+      # ceilings, not the actual rebuild count.
       expect(ceilings).to eq([nil, 30_000, 20_000, 15_000, 5_000])
       expect(refusals).to eq(%i[substitution_budget])
       # The code copy was checked first and found to be no construct; two

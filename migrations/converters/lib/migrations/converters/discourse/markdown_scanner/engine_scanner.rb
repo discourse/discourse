@@ -60,11 +60,13 @@ module Migrations
           # recovered no additional posts.
           SLOW_TIMEOUT_MS = 30_000
 
-          # The ceiling shrinks in these steps. The engine rebuilds its
+          # The ceiling shrinks in steps of a sixth of the configured
+          # timeout — five seconds by default. The engine rebuilds its
           # isolate whenever the requested ceiling changes, so a fresh value
-          # per call would rebuild V8 once per substitution check; with
-          # five-second steps a slow body rebuilds at most six times.
-          SLOW_TIMEOUT_STEP_MS = 5_000
+          # per call would rebuild V8 once per substitution check; with six
+          # steps a slow body rebuilds at most six times, whatever the
+          # configured timeout is.
+          SLOW_TIMEOUT_STEPS = 6
 
           # Raised in place of an engine call when the retry deadline has
           # passed, and in place of its result when the call was cut short by
@@ -94,6 +96,7 @@ module Migrations
           )
             @engine = engine
             @slow_timeout_ms = slow_timeout_ms
+            @slow_timeout_step_ms = slow_timeout_ms && [slow_timeout_ms / SLOW_TIMEOUT_STEPS, 1].max
             @scan_timeout_ms = nil
             @retry_deadline = nil
             @gate = gate
@@ -195,13 +198,13 @@ module Migrations
             if @retry_deadline
               remaining_ms =
                 ((@retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)) * 1000).floor
-              # Rounded down to the step (see SLOW_TIMEOUT_STEP_MS), so the
+              # Rounded down to the step (see SLOW_TIMEOUT_STEPS), so the
               # ceiling takes few distinct values and the engine rebuilds its
               # isolate at most once per step. A call with less than one full
-              # step remaining is declined, so no call can run past the
-              # deadline; only the isolate rebuild itself runs outside the
-              # engine's timeout.
-              stepped_ms = remaining_ms / SLOW_TIMEOUT_STEP_MS * SLOW_TIMEOUT_STEP_MS
+              # step remaining is declined, so the scan ceiling can never
+              # extend past the deadline; the isolate rebuild itself is the
+              # one piece of work outside the engine's timeout.
+              stepped_ms = remaining_ms / @slow_timeout_step_ms * @slow_timeout_step_ms
               raise RetryDeadlineError if stepped_ms <= 0
 
               timeout = timeout.nil? ? stepped_ms : [timeout, stepped_ms].min
