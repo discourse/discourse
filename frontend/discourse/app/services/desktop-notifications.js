@@ -184,10 +184,13 @@ export default class DesktopNotificationsService extends Service {
       applicationServerKey: this.siteSettings.vapid_public_key_bytes,
     });
 
-    // "unconfirmed" leaves the question open, so the stored intent stays the
-    // best evidence and the UI does not flip on a single failed request
-    if (result !== "unconfirmed") {
-      this.pushSubscriptionConfirmed = result === "subscribed";
+    // Only conclusive results move the toggle: "unconfirmed" and null leave
+    // the stored intent as the best evidence, so one failed boot cannot flip
+    // the UI off while push may still deliver.
+    if (result === "subscribed") {
+      this.pushSubscriptionConfirmed = true;
+    } else if (result === "lost") {
+      this.pushSubscriptionConfirmed = false;
     }
 
     if (result === "lost") {

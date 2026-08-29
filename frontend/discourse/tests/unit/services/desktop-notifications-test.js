@@ -15,8 +15,13 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     ).enable_desktop_push_notifications = true;
   });
 
-  hooks.afterEach(function () {
+  hooks.afterEach(async function () {
     this.service.rearmConsentPrompt();
+
+    const { keyValueStore } = await import("discourse/lib/push-notifications");
+    keyValueStore.remove(
+      `confirmed-endpoint-${this.owner.lookup("service:current-user").id}`
+    );
   });
 
   function unusablePushManager() {
@@ -79,12 +84,16 @@ module("Unit | Service | desktop-notifications", function (hooks) {
       "the service stops reporting push as enabled"
     );
     assert.false(
+      this.service.pushSubscriptionConfirmed,
+      "a loss is conclusive, unlike a transient failure"
+    );
+    assert.false(
       this.service.consentPromptDismissed,
       "the consent prompt is re-armed so the user can opt back in"
     );
   });
 
-  test("stops reporting push as enabled when a restore could not be confirmed", async function (assert) {
+  test("keeps reporting push as enabled when reconciliation concluded nothing", async function (assert) {
     const { setSubscriptionIntent } =
       await import("discourse/lib/push-notifications");
     setSubscriptionIntent(
@@ -92,11 +101,6 @@ module("Unit | Service | desktop-notifications", function (hooks) {
       "subscribed"
     );
     this.service.pushIntent = "subscribed";
-
-    assert.true(
-      this.service.isEnabledPush,
-      "before reconciling, intent stands"
-    );
 
     sinon.stub(Notification, "permission").get(() => "granted");
     sinon
@@ -111,11 +115,11 @@ module("Unit | Service | desktop-notifications", function (hooks) {
       "subscribed",
       "the intent is kept so the next boot retries"
     );
-    assert.false(
+    assert.true(
       this.service.isEnabledPush,
-      "but the UI must not claim push is working"
+      "the stored intent stays the best evidence, so one failed boot must not flip the toggle off"
     );
-    assert.false(this.service.isSubscribed);
+    assert.true(this.service.isSubscribed);
   });
 
   test("keeps push enabled when only the boot resync failed", async function (assert) {
@@ -136,6 +140,12 @@ module("Unit | Service | desktop-notifications", function (hooks) {
         },
       })
     );
+    // a first boot in which the server acknowledged this endpoint
+    pretender.post("/push_notifications/subscribe", () =>
+      response({ success: "OK" })
+    );
+    await this.service.reconcilePushSubscription();
+
     pretender.post("/push_notifications/subscribe", () => response(500, {}));
 
     const result = await this.service.reconcilePushSubscription();

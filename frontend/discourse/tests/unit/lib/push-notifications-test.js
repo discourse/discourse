@@ -114,6 +114,7 @@ module(
 
     hooks.afterEach(function () {
       keyValueStore.remove(userSubscriptionKey(user));
+      keyValueStore.remove(`confirmed-endpoint-${user.get("id")}`);
     });
 
     test("restores a subscription the platform dropped while permission is granted", async function (assert) {
@@ -275,16 +276,42 @@ module(
       );
       assert.strictEqual(
         pushManager.platformUnsubscribeCalls,
-        1,
-        "the unconfirmed endpoint is discarded so the next boot restores it again"
+        0,
+        "only one subscription exists per origin, so a restore this tab could not confirm must not destroy one another tab just did"
       );
-      assert.strictEqual(pushManager.subscription, null);
+    });
+
+    test("does not claim an endpoint the server never acknowledged is delivering", async function (assert) {
+      setSubscriptionIntent(user, "subscribed");
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.subscription = {
+        toJSON: () => ({ endpoint: "never-synced" }),
+      };
+      pretender.post("/push_notifications/subscribe", () => response(500, {}));
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(
+        result,
+        null,
+        "the row may never have been created, so the in-tab fallback has to stay alive rather than be silenced"
+      );
+      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
     });
 
     test("keeps an existing subscription when only the resync failed", async function (assert) {
       setSubscriptionIntent(user, "subscribed");
       sinon.stub(Notification, "permission").get(() => "granted");
       pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
+
+      // a first boot in which the server acknowledged this endpoint
+      await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
       pretender.post("/push_notifications/subscribe", () => response(500, {}));
 
       const result = await reconcileSubscription(user, {
@@ -352,6 +379,37 @@ module(
       const result = await reconcileSubscription(user, { resubscribe: true });
 
       assert.strictEqual(result, null);
+      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
+    });
+
+    test("re-reads the intent recorded while it was awaiting the platform", async function (assert) {
+      let platformUnsubscribeCalls = 0;
+      const subscription = {
+        toJSON: () => ({ endpoint: "just-enabled" }),
+        unsubscribe: () => {
+          platformUnsubscribeCalls++;
+          return Promise.resolve(true);
+        },
+      };
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.getSubscription = () => {
+        // the consent banner's `enable()` completes while reconcile is parked
+        // on this await, so the intent it read on entry is already stale
+        setSubscriptionIntent(user, "subscribed");
+        return Promise.resolve(subscription);
+      };
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(
+        platformUnsubscribeCalls,
+        0,
+        "a subscription the user just created must not be destroyed by a stale intent read"
+      );
+      assert.strictEqual(result, "subscribed");
       assert.strictEqual(getSubscriptionIntent(user), "subscribed");
     });
 
@@ -437,6 +495,7 @@ module(
 
     hooks.afterEach(function () {
       keyValueStore.remove(userSubscriptionKey(user));
+      keyValueStore.remove(`confirmed-endpoint-${user.get("id")}`);
     });
 
     test("retires the server subscription even when the platform already dropped it", async function (assert) {

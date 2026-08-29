@@ -6,7 +6,7 @@ import {
   alertChannel,
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
-  unsubscribe as unsubscribeDesktopNotifications,
+  setPushTransport,
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
@@ -119,27 +119,31 @@ export class SubscribeUserNotificationsInit {
   reconcileTransports() {
     this.pushReconciliation ??= this.desktopNotifications
       .reconcilePushSubscription()
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return null;
+      })
       .then((result) => {
-        if (result === "subscribed") {
-          // Push suppression is session-local so a later failed recovery still
-          // has a MessageBus fallback.
-          unsubscribeDesktopNotifications(this.messageBus, this.currentUser);
+        // The alert channel stays subscribed either way; only this session
+        // flag decides whether its handlers show anything.
+        if (result === "subscribed" || result === "unconfirmed") {
+          // "unconfirmed" still delivers: the device kept the subscription the
+          // server already knows, only the redundant resync went unanswered.
+          setPushTransport("delivering");
         } else if (
           this.desktopNotifications.pushIntent === "subscribed" &&
           this.desktopNotifications.isGrantedPermission &&
           !this.capabilities.isMobileDevice
         ) {
-          // Clear persistent suppression written by older builds when the
-          // browser transport is needed as a fallback.
-          this.desktopNotifications.setIsEnabledBrowser(true);
+          // Session-only: push may be broken, so in-tab alerts stand in
+          // without rewriting the stored browser-notification preference.
+          setPushTransport("fallback");
+        } else {
+          setPushTransport(null);
         }
 
         return result;
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return null;
       })
       .finally(() => (this.pushReconciliation = null));
 

@@ -41,6 +41,27 @@ export function setSubscriptionIntent(user, intent) {
   }
 }
 
+// "unconfirmed" is only safe for an endpoint the server acknowledged in an
+// earlier session. A brand-new one it never answered for must keep the in-tab
+// fallback alive, or a device whose row was never created goes silent.
+function confirmedEndpointKey(user) {
+  return `confirmed-endpoint-${user.get("id")}`;
+}
+
+function markEndpointConfirmed(user, subscription) {
+  keyValueStore.setItem(
+    confirmedEndpointKey(user),
+    subscription.toJSON().endpoint
+  );
+}
+
+function isEndpointConfirmed(user, subscription) {
+  return (
+    keyValueStore.getItem(confirmedEndpointKey(user)) ===
+    subscription.toJSON().endpoint
+  );
+}
+
 function sendSubscriptionToServer(subscription, sendConfirmation) {
   return ajax("/push_notifications/subscribe", {
     type: "POST",
@@ -112,14 +133,18 @@ export function listenForPushNotificationMessages(router, appEvents) {
 // Tells the server to forget this device's subscription. Scoped to the current
 // user server-side, so it can never drop a row belonging to another account
 // sharing the browser.
-function retireServerSubscription(subscription) {
-  return ajax("/push_notifications/unsubscribe", {
-    type: "POST",
-    data: { subscription: subscription.toJSON() },
-  }).catch((e) => {
+async function retireServerSubscription(subscription) {
+  try {
+    await ajax("/push_notifications/unsubscribe", {
+      type: "POST",
+      data: { subscription: subscription.toJSON() },
+    });
+    return true;
+  } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-  });
+    return false;
+  }
 }
 
 async function discardPlatformSubscription(subscription) {
@@ -147,7 +172,6 @@ export async function reconcileSubscription(
     return null;
   }
 
-  const intent = getSubscriptionIntent(user);
   const registration = await serviceWorkerRegistration();
   if (!registration) {
     return null;
@@ -162,6 +186,10 @@ export async function reconcileSubscription(
     return null;
   }
 
+  // Re-read: `enable()` can record an intent while the awaits above are still
+  // pending, and the branches below destroy subscriptions.
+  const intent = getSubscriptionIntent(user);
+
   if (intent === null) {
     if (subscription) {
       // An origin has only one subscription. With no current-user intent its
@@ -173,8 +201,9 @@ export async function reconcileSubscription(
   }
 
   if (intent === "off") {
-    if (subscription) {
-      await retireServerSubscription(subscription);
+    // Only drop the platform subscription once the server row is gone: it is
+    // the sole way back to that row if the request failed.
+    if (subscription && (await retireServerSubscription(subscription))) {
       await discardPlatformSubscription(subscription);
     }
     return null;
@@ -189,11 +218,14 @@ export async function reconcileSubscription(
   }
 
   if (subscription) {
-    // The server was told about this endpoint when it was created, so a failed
-    // resync leaves it working; only a restored one is new to the server.
-    return (await resyncSubscriptionWithServer(subscription))
-      ? "subscribed"
-      : "unconfirmed";
+    if (await resyncSubscriptionWithServer(subscription)) {
+      markEndpointConfirmed(user, subscription);
+      return "subscribed";
+    }
+
+    // A failed request is not proof the row is missing, so an endpoint the
+    // server acknowledged before still counts as delivering.
+    return isEndpointConfirmed(user, subscription) ? "unconfirmed" : null;
   }
 
   // The platform dropped the subscription but the grant survived, so it can be
@@ -217,12 +249,13 @@ export async function reconcileSubscription(
   }
 
   if (await resyncSubscriptionWithServer(subscription)) {
+    markEndpointConfirmed(user, subscription);
     return "subscribed";
   }
 
-  // Do not let an endpoint that was never confirmed become indistinguishable
-  // from one that previously worked when the next boot finds it.
-  await discardPlatformSubscription(subscription);
+  // Left in place: only one subscription exists per origin, so discarding it can
+  // destroy one another tab just confirmed. It stays unacknowledged, so the next
+  // boot keeps the fallback and resyncs this same endpoint.
   return null;
 }
 
@@ -289,10 +322,12 @@ export async function unsubscribe(user, callback) {
     const subscription = await registration?.pushManager.getSubscription();
 
     if (subscription) {
-      // `unsubscribe()` resolves false when the platform already dropped the
-      // subscription, so the server row has to be retired either way
-      await retireServerSubscription(subscription);
-      await subscription.unsubscribe();
+      // The row is retired first and unconditionally: `unsubscribe()` resolves
+      // false for an already-dropped subscription, and the endpoint is the only
+      // handle on that row, so it is kept until the row is actually gone.
+      if (await retireServerSubscription(subscription)) {
+        await subscription.unsubscribe();
+      }
     }
   } catch (e) {
     // eslint-disable-next-line no-console
