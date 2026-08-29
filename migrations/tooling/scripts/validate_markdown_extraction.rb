@@ -48,7 +48,8 @@
 # worker) for offline inspection — the timeout bodies are the same ones a
 # target site would cook pathologically, so they are operationally
 # interesting beyond migration accounting. A body whose parse outruns the fast
-# ceiling is retried once at `--slow-timeout` seconds (default 60, 0 disables)
+# ceiling is retried once at `--slow-timeout` seconds (default: the
+# production ceiling, `EngineScanner::SLOW_TIMEOUT_MS`; 0 disables)
 # before it refuses; recovered bodies are reported with sampled ids and their
 # V8 wall-time share. `--skip-posts id,id,...` and `--skip-posts-file PATH`
 # (one id per line, `#` comments allowed) exclude known-pathological posts
@@ -72,7 +73,7 @@ options = {
   cold_bundle: false,
   log_refusals: 0,
   dump_refusals: nil,
-  slow_timeout: 60,
+  slow_timeout: nil,
   skip_posts: [],
   skip_posts_file: nil,
 }
@@ -124,7 +125,7 @@ OptionParser
     parser.on(
       "--slow-timeout SECONDS",
       Integer,
-      "Retry ceiling for a body whose parse outruns the fast timeout (default 60; 0 disables)",
+      "Retry ceiling for a body whose parse outruns the fast timeout (default: production's; 0 disables)",
     ) { |v| options[:slow_timeout] = v }
     parser.on("--skip-posts IDS", "Comma-separated post ids to exclude from the run") do |v|
       options[:skip_posts].concat(v.split(","))
@@ -168,6 +169,11 @@ MarkdownEngine = Migrations::Converters::MarkdownEngine
 EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
 LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
 UrlOrigin = Migrations::Converters::Discourse::MarkdownScanner::UrlOrigin
+
+# The default keeps corpus recovery/refusal numbers representative of
+# production; a diverging script default would drift silently.
+options[:slow_timeout] ||=
+  Migrations::Converters::Discourse::MarkdownScanner::EngineScanner::SLOW_TIMEOUT_MS / 1000
 
 def monotonic_time
   Process.clock_gettime(Process::CLOCK_MONOTONIC)
