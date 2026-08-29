@@ -1551,6 +1551,11 @@ body.wireframe-active {
     opacity: 0.5;
   }
 
+  /* The drag image: one fixed size whichever shape was picked up. */
+  &.--ghost {
+    width: 120px;
+  }
+
   &__thumbnail {
     display: block;
     width: 100%;

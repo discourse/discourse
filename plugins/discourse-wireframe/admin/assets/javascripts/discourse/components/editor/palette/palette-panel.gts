@@ -25,6 +25,7 @@ import {
   compareWithinCategory,
   RECENT_FALLBACK,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import { buildPaletteDragGhost } from "discourse/plugins/discourse-wireframe/discourse/lib/palette-drag-ghost";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import WireframeDragSessionService, {
   type PaletteDragPayload,
@@ -328,16 +329,15 @@ export default class PalettePanel extends Component {
   }
 
   /**
-   * Builds the native drag preview for a palette row or tile: a clone of the
-   * dragged element without its description, rendered into the isolated offscreen
-   * container so no neighboring row bleeds into the drag image the way the
-   * browser's default snapshot of the live row does.
+   * Builds the native drag preview for a palette row or tile: a tile-shaped
+   * ghost with the sketch and the name, rendered into the isolated offscreen
+   * container so nothing around the source bleeds into the drag image.
    *
    * @param args - Drag preview elements.
    *   - `container` - The offscreen host the browser photographs; appended to
    *     `document.body` and removed after cleanup.
    *   - `element` - The dragged row or tile.
-   * @returns Cleanup that removes the cloned preview.
+   * @returns Cleanup that removes the ghost.
    */
   @action
   renderDragPreview({
@@ -349,20 +349,9 @@ export default class PalettePanel extends Component {
     /** Palette row or tile being dragged. */
     element: HTMLElement;
   }): () => void {
-    const clone = element.cloneNode(true);
-    if (!(clone instanceof HTMLElement)) {
-      return () => {};
-    }
-    // Drop the source-only drag styling and the description (visible on a
-    // row, screen-reader-only on a tile) so the ghost is the sketch and name.
-    clone.classList.remove("--dragging");
-    clone.querySelector(".wireframe-block-row__description")?.remove();
-    clone.querySelector(".sr-only")?.remove();
-    // Pin the clone to the source width so it renders at the row's size rather
-    // than shrinking to its content in the unconstrained container.
-    clone.style.width = `${element.offsetWidth}px`;
-    container.append(clone);
-    return () => clone.remove();
+    const ghost = buildPaletteDragGhost(element);
+    container.append(ghost);
+    return () => ghost.remove();
   }
 
   /**
