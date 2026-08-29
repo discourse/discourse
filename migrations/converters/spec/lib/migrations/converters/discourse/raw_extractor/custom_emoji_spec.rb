@@ -42,11 +42,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # cases below are verified against PrettyText in `emoji_parity_spec.rb`; kept
     # here as fixtures so the fast suite pins each one.
     [
-      ["no-break space", "a :parrot: b"],
-      ["ideographic space", "a　:parrot: b"],
+      ["no-break space", "a\u00A0:parrot: b"],
+      ["ideographic space", "a\u3000:parrot: b"],
       ["superscript two", "²:parrot: b"],
       ["vulgar half", "½:parrot: b"],
-      ["soft hyphen", "a­:parrot: b"],
+      ["soft hyphen", "a\u00AD:parrot: b"],
       ["escaping backslash", "a\\:parrot: b"],
     ].each do |label, raw|
       it "leaves a shortcode after a #{label} literal, like core" do
@@ -56,7 +56,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers a shortcode after a zero-width space, like core" do
-      extract("a​:parrot: b")
+      extract("a\u200B:parrot: b")
 
       expect(buffer.emojis.first[:name]).to eq("parrot")
     end

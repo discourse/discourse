@@ -66,8 +66,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       "tab" => "\t",
       "newline" => "\n",
       "no-break space" => "\u00A0",
-      "ideographic space" => "　",
-      "zero-width space" => "​",
+      "ideographic space" => "\u3000",
+      "zero-width space" => "\u200B",
       "em dash" => "—",
       "low double quote" => "„",
       "left guillemet" => "«",
@@ -75,7 +75,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       "euro sign" => "€",
       "superscript two" => "²",
       "vulgar half" => "½",
-      "soft hyphen" => "­",
+      "soft hyphen" => "\u00AD",
     }.merge(ascii_punctuation)
   end
 

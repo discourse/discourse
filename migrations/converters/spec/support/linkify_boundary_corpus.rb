@@ -21,7 +21,7 @@ module LinkifyBoundaryCorpus
       "space" => " ",
       "tab" => "\t",
       "newline" => "\n",
-      "no-break space" => " ",
+      "no-break space" => "\u00A0",
       "ideographic space" => "\u3000",
       "em dash" => "—",
       "low double quote" => "„",

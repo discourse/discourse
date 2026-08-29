@@ -44,7 +44,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       "tab" => "\t",
       "newline" => "\n",
       "no-break space" => "\u00A0",
-      "ideographic space" => "　",
+      "ideographic space" => "\u3000",
       "em dash" => "—",
       "low double quote" => "„",
       "left guillemet" => "«",
