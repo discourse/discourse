@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   buildScope,
+  buildWorkflowVariableDragData,
   lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
@@ -398,3 +399,22 @@ module("Unit | lib | discourse-workflows | resolveVariableId", function () {
     );
   });
 });
+
+module(
+  "Unit | lib | discourse-workflows | buildWorkflowVariableDragData",
+  function () {
+    test("provides matching structured and plain-text drag data", function (assert) {
+      const { serializedVariable, dropText } = buildWorkflowVariableDragData({
+        id: "topic_id",
+        type: "integer",
+      });
+
+      assert.strictEqual(dropText, "{{ $json.topic_id }}");
+      assert.deepEqual(JSON.parse(serializedVariable), {
+        id: "topic_id",
+        type: "integer",
+        dropText,
+      });
+    });
+  }
+);

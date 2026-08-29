@@ -1,6 +1,10 @@
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
-import { walkScope, WORKFLOW_VARIABLE_MIME } from "../expression-context";
+import {
+  buildWorkflowVariableDragData,
+  walkScope,
+  WORKFLOW_VARIABLE_MIME,
+} from "../expression-context";
 import { dragSource } from "./drag-source";
 import { parseReference, referenceLabel } from "./reference-label";
 import { propertyAccessor, referencePickerData } from "./reference-properties";
@@ -204,10 +208,11 @@ export function buildReferencePills(
       pill.draggable = true;
       pill.addEventListener("dragstart", (event) => {
         event.stopPropagation();
-        event.dataTransfer.setData(
-          WORKFLOW_VARIABLE_MIME,
-          JSON.stringify({ id: this.inner })
-        );
+        const { serializedVariable, dropText } = buildWorkflowVariableDragData({
+          id: this.inner,
+        });
+        event.dataTransfer.setData(WORKFLOW_VARIABLE_MIME, serializedVariable);
+        event.dataTransfer.setData("text/plain", dropText);
         event.dataTransfer.effectAllowed = "copyMove";
         const range = expressionRangeAt(view, view.posAtDOM(pill));
         dragSource.current = range

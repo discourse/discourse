@@ -32,6 +32,15 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
     : `${itemPrefix}.${variable.id}`;
 }
 
+export function buildWorkflowVariableDragData(variable, itemPrefix = "$json") {
+  const dropText = `{{ ${resolveVariableId(variable, itemPrefix)} }}`;
+
+  return {
+    serializedVariable: JSON.stringify({ ...variable, dropText }),
+    dropText,
+  };
+}
+
 // Matches paths like $('Node Name').rest or $("Node Name").rest
 export const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 const METHOD_CALL_RE = /^([A-Za-z_$][\w$]*)\((.*)\)$/;
