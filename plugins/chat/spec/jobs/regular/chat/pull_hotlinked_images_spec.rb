@@ -294,6 +294,25 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect(message.cooked).not_to include(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
 
+    it "ignores blocked non-image candidates that chat cannot localize" do
+      stub_image_size
+      message = fabricate_chat_message("https://example.com/video-page")
+      blocked_cooked =
+        "<p><video><source #{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}=\"#{image_url}\"></video></p>"
+      Chat::Message.stubs(:cook).returns(blocked_cooked)
+      message.update_columns(cooked: blocked_cooked)
+
+      # two full pull/re-cook cycles: without the img filter, the unused-row
+      # sweep in ProcessMessage erases the row each time and the second run
+      # downloads the media from the remote host again
+      expect {
+        2.times { described_class.new.execute(chat_message_id: message.id) }
+      }.not_to change { Upload.count }
+
+      expect(message.reload.hotlinked_media).to be_empty
+      expect(WebMock).not_to have_requested(:get, image_url)
+    end
+
     it "destroys tracking rows when the message is destroyed" do
       stub_image_size
       message = fabricate_chat_message("![longcat](#{image_url})")

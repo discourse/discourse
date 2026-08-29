@@ -36,6 +36,10 @@ module Jobs
         HotlinkedMedia
           .extract_candidates(chat_message.cooked)
           .each do |node|
+            # chat only localizes imgs; downloading other media would loop
+            # forever, as the unused-row sweep erases the download history
+            next if node.name != "img"
+
             download_src = HotlinkedMedia.download_src_for(node)
             next if !should_download?(download_src)
 
