@@ -928,7 +928,7 @@ puts format(
 puts "#{number(sum.call("skipped"))} posts skipped by request" unless options[:skip_ids].empty?
 puts format(
        "Engine tier: %s posts (%.1f%%), %.1f MiB (%.1f%%); scan calls %s " \
-         "(%s live, %s batched), %.1fs in V8; trials %s",
+         "(%s live, %s batched), %.1fs in V8; substitution parses %s",
        number(sum.call("engine_posts")),
        100.0 * sum.call("engine_posts") / sum.call("posts"),
        sum.call("engine_bytes") / 1024.0 / 1024,
