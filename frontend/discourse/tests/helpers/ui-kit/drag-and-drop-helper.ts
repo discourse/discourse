@@ -60,10 +60,7 @@ export function fileTransfer(name = "a.txt") {
  * @param sourceSelector - CSS selector for the element the drag starts on.
  * @param targetSelector - CSS selector for the element it is dropped on.
  */
-export function assertDragRegistered(
-  sourceSelector: string,
-  targetSelector: string
-) {
+function assertDragRegistered(sourceSelector: string, targetSelector: string) {
   const source = document.querySelector(sourceSelector);
   const target = document.querySelector(targetSelector);
 

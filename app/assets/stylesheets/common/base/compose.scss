@@ -35,20 +35,6 @@ html.composer-open:not(.has-full-page-chat) {
   &:hover::before {
     background-color: var(--primary-high);
   }
-
-  /* The separator is focusable, and a ring around a full-width strip reads as a
-     page-wide box. Marking the bar keeps the affordance on the part that is
-     actually grabbed. */
-
-  &:focus-visible {
-    outline: none;
-
-    &::before {
-      background-color: var(--tertiary);
-      outline: 1px solid var(--tertiary);
-      outline-offset: 2px;
-    }
-  }
 }
 
 .composer-toggles-menu-content,
