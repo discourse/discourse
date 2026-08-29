@@ -21,9 +21,16 @@ module Migrations
           chat_enabled
           checklist_enabled
           default_code_lang
+          discourse_events_enabled
+          discourse_graphviz_enabled
           discourse_local_dates_email_format
           discourse_local_dates_email_timezone
           discourse_local_dates_enabled
+          discourse_math_enable_asciimath
+          discourse_math_enable_latex_delimiters
+          discourse_math_enabled
+          discourse_math_provider
+          discourse_post_event_enabled
           emoji_set
           enable_emoji
           enable_emoji_shortcuts
@@ -35,6 +42,7 @@ module Migrations
           external_emoji_url
           markdown_linkify_tlds
           markdown_typographer_quotation_marks
+          policy_enabled
           poll_enabled
           poll_maximum_options
           secure_uploads

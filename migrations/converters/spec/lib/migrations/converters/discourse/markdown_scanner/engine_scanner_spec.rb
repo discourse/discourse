@@ -772,4 +772,72 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(output).to include(buffer.mentions.first[:placeholder])
     end
   end
+
+  describe "plugin syntax shielding" do
+    context "with the plugin settings enabled on the source" do
+      # A source with these plugins enabled parses their blocks with the real
+      # plugin rules, so candidate text inside plugin syntax is not prose and
+      # must stay as written; the same text in prose beside it is extracted.
+      let(:markdown_engine) do
+        MarkdownEngineHelper.context_for(
+          settings: {
+            "unicode_usernames" => true,
+            "discourse_events_enabled" => true,
+            "discourse_post_event_enabled" => true,
+            "discourse_graphviz_enabled" => true,
+            "discourse_math_enabled" => true,
+            "policy_enabled" => true,
+          },
+        )
+      end
+
+      it "keeps a mention inside an event header and extracts the prose copy" do
+        raw = %{[event name="@alice" start="2026-01-01"]\n[/event]\n\nthanks @alice}
+        output = extract(raw)
+
+        expect(refusals).to be_empty
+        expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+        expect(output).to include(%{[event name="@alice" start="2026-01-01"]})
+        expect(output).to end_with("thanks #{buffer.mentions.first[:placeholder]}")
+      end
+
+      it "keeps a mention inside a math block" do
+        output = extract("$$\n@alice + x\n$$\n\n@alice")
+
+        expect(refusals).to be_empty
+        expect(buffer.mentions.size).to eq(1)
+        expect(output).to include("$$\n@alice + x\n$$")
+        expect(output).to end_with(buffer.mentions.first[:placeholder])
+      end
+
+      it "keeps a mention inside a graphviz program" do
+        output = extract("[graphviz]\n@alice -> x\n[/graphviz]\n\n@alice")
+
+        expect(refusals).to be_empty
+        expect(buffer.mentions.size).to eq(1)
+        expect(output).to include("[graphviz]\n@alice -> x\n[/graphviz]")
+        expect(output).to end_with(buffer.mentions.first[:placeholder])
+      end
+
+      it "keeps a mention inside a policy header while its body stays prose" do
+        raw = %{[policy group="@alice"]\nplease agree, @alice\n[/policy]}
+        output = extract(raw)
+
+        expect(refusals).to be_empty
+        expect(buffer.mentions.size).to eq(1)
+        expect(output).to include(%{[policy group="@alice"]})
+        expect(output).to include("please agree, #{buffer.mentions.first[:placeholder]}")
+      end
+    end
+
+    it "treats plugin syntax as prose when the source did not enable the plugin" do
+      # The default engine runs without these plugin settings, so `$$` is
+      # ordinary text there and the mention in between is a real mention —
+      # exactly what such a post cooks to on a site without the plugin.
+      output = extractor.extract("$$ @alice $$")
+
+      expect(buffer.mentions.map { |row| row[:name] }).to eq(%w[alice])
+      expect(output).to eq("$$ #{buffer.mentions.first[:placeholder]} $$")
+    end
+  end
 end

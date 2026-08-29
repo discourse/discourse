@@ -75,6 +75,22 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     end
   end
 
+  it "supports every host plugin that ships markdown rules" do
+    root = Migrations::Converters::MarkdownEngine.discourse_root
+    shipping =
+      Dir[
+        File.join(root, "plugins", "*", "assets/javascripts/**/discourse-markdown/**/*.{js,js.es6}")
+      ].map { |path| path.delete_prefix("#{File.join(root, "plugins")}/").split("/").first }.uniq
+
+    # discourse-ai's markdown modules only allowlist HTML attributes and
+    # register no rules, so nothing tokenizes differently without them. Any
+    # other unlisted plugin would have its syntax scanned as ordinary prose —
+    # candidate text inside it would be replaced — so a new plugin must be
+    # added to the supported list (with its settings in Config::SETTING_KEYS)
+    # or excluded here with a reason.
+    expect(shipping - %w[discourse-ai]).to match_array(described_class::CORE_MARKDOWN_PLUGINS)
+  end
+
   it "supports the production fork model: bundle in the parent, context in the worker" do
     # Run in a fresh ruby process so this spec process's own V8 contexts (other
     # examples build them) can't mask or break the property under test: a

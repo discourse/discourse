@@ -73,20 +73,28 @@ module Migrations
           plugins/footnote/assets/vendor/javascripts/markdown-it-footnote.js
         ].freeze
 
-        # The supported plugins: the ones bundled with the host application
-        # that ship markdown features. Their constructs must tokenize the way
-        # the destination will see them, or text inside e.g. a `[poll]` would
-        # be scanned as ordinary prose. The set is fixed, not configuration:
-        # `Config::SETTING_KEYS` covers exactly these plugins' parse-relevant
-        # settings (a spec checks that per plugin), so a plugin outside the
-        # list would run its markdown rules with absent settings. A source
-        # that relied on such a plugin is scanned without its rules; that is
-        # the engine's accuracy boundary.
+        # The supported plugins: every one bundled with the host application
+        # whose markdown features change tokenization. Their constructs must
+        # tokenize the way the destination will see them, or text inside e.g.
+        # a `[poll]` or `$$…$$` would be scanned as ordinary prose and a
+        # mention in there would be replaced. The set is fixed, not
+        # configuration: `Config::SETTING_KEYS` covers exactly these plugins'
+        # parse-relevant settings (a spec checks that per plugin), so a
+        # plugin outside the list would run its markdown rules with absent
+        # settings. A drift spec compares this list against the plugins that
+        # actually ship markdown files, so a newly added plugin fails a test
+        # instead of being scanned without its rules. discourse-ai is the one
+        # deliberate exclusion: its markdown modules only allowlist HTML
+        # attributes and register no rules.
         CORE_MARKDOWN_PLUGINS = %w[
           chat
           checklist
           discourse-details
+          discourse-events
+          discourse-graphviz
           discourse-local-dates
+          discourse-math
+          discourse-policy
           footnote
           poll
           spoiler-alert
