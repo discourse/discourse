@@ -5,10 +5,7 @@ import { action } from "@ember/object";
 import { and, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import {
-  buildWorkflowVariableDragData,
-  WORKFLOW_VARIABLE_MIME,
-} from "../../../lib/workflows/expression-context";
+import { WORKFLOW_VARIABLE_MIME } from "../../../lib/workflows/expression-context";
 
 export default class SchemaField extends Component {
   @tracked collapsed = true;
@@ -49,13 +46,10 @@ export default class SchemaField extends Component {
   handleDragStart(event) {
     event.stopPropagation();
     const field = this.args.field;
-    const { serializedVariable, dropText } = buildWorkflowVariableDragData({
-      id: this.fieldId,
-      key: field.key,
-      type: field.type,
-    });
-    event.dataTransfer.setData(WORKFLOW_VARIABLE_MIME, serializedVariable);
-    event.dataTransfer.setData("text/plain", dropText);
+    event.dataTransfer.setData(
+      WORKFLOW_VARIABLE_MIME,
+      JSON.stringify({ id: this.fieldId, key: field.key, type: field.type })
+    );
     event.dataTransfer.effectAllowed = "copy";
     document.documentElement.dataset.draggingVariable = "true";
   }

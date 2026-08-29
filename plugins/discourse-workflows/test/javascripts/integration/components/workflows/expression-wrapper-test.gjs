@@ -1,21 +1,19 @@
 import { tracked } from "@glimmer/tracking";
 import { click, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DefaultInputControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/default-input-control";
 import ExpressionWrapper from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/expression-wrapper";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
 function variableTransfer(variable) {
-  const dropText = `{{ $json.${variable.id} }}`;
   return {
-    types: [WORKFLOW_VARIABLE_MIME, "text/plain"],
-    getData: (type) => {
-      if (type === WORKFLOW_VARIABLE_MIME) {
-        return JSON.stringify({ ...variable, dropText });
-      }
-      return type === "text/plain" ? dropText : "";
-    },
+    types: [WORKFLOW_VARIABLE_MIME],
+    getData: (type) =>
+      type === WORKFLOW_VARIABLE_MIME ? JSON.stringify(variable) : "",
   };
 }
 
@@ -42,10 +40,72 @@ module(
       );
     });
 
+    hooks.afterEach(function () {
+      sinon.restore();
+    });
+
     test("preserves plain text when dropping a variable into a text control", async function (assert) {
       const originalValue = "Introduction 😀\n\nالخلاصة";
       const insertionStart = "Introduction 😀\n".length;
-      this.field = new TestField(originalValue);
+      this.configuration = { prompt: originalValue };
+      this.schema = { type: "string" };
+
+      await render(
+        <template>
+          <Form @data={{this.configuration}} as |form transientData|>
+            <form.Field
+              @name="prompt"
+              @title="Prompt"
+              @type="textarea"
+              as |field|
+            >
+              <DefaultInputControl
+                @field={{field}}
+                @schema={{this.schema}}
+                @supportsExpression={{true}}
+              />
+            </form.Field>
+            <output data-value={{transientData.prompt}}></output>
+          </Form>
+        </template>
+      );
+
+      const textareaElement = find("textarea");
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: textareaElement,
+        offset: insertionStart,
+      });
+
+      await triggerEvent(textareaElement, "dragover", {
+        dataTransfer: variableTransfer({ id: "result" }),
+        clientX: 20,
+        clientY: 30,
+      });
+
+      assert.strictEqual(
+        find("output").dataset.value,
+        originalValue,
+        "dragging over the field does not change its value"
+      );
+
+      await triggerEvent(textareaElement, "drop", {
+        dataTransfer: variableTransfer({ id: "result" }),
+        clientX: 20,
+        clientY: 30,
+      });
+
+      assert.strictEqual(
+        find("output").dataset.value,
+        "=Introduction 😀\n{{ $json.result }}\nالخلاصة",
+        "the original text is preserved around the expression"
+      );
+      assert
+        .dom(".workflows-variable-input")
+        .exists("the field switches to dynamic mode");
+    });
+
+    test("appends a variable when dropping on the mode control", async function (assert) {
+      this.field = new TestField("Existing prompt");
       this.schema = { type: "string" };
 
       await render(
@@ -54,50 +114,64 @@ module(
             @field={{this.field}}
             @schema={{this.schema}}
             @supportsExpression={{true}}
-            @preserveTextareaOnDrop={{true}}
           >
-            <textarea
-              class="plain-control"
-              value={{this.field.value}}
-            ></textarea>
+            <textarea value={{this.field.value}}></textarea>
           </ExpressionWrapper>
         </template>
       );
 
-      const textareaElement = find(".plain-control");
-      const dropText = "{{ $json.result }}";
+      const modeControl = find(".workflows-property-engine__mode-control");
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: modeControl,
+        offset: 0,
+      });
 
-      await triggerEvent(textareaElement, "dragover", {
+      await triggerEvent(modeControl, "drop", {
         dataTransfer: variableTransfer({ id: "result" }),
+        clientX: 20,
+        clientY: 30,
       });
 
       assert.strictEqual(
         this.field.value,
-        originalValue,
-        "dragging over the field does not change its value"
+        "=Existing prompt{{ $json.result }}",
+        "dropping outside the text control preserves and appends to its value"
+      );
+    });
+
+    test("preserves populated single-line text controls", async function (assert) {
+      this.field = new TestField("Existing title");
+      this.schema = { type: "string" };
+
+      await render(
+        <template>
+          <ExpressionWrapper
+            @field={{this.field}}
+            @schema={{this.schema}}
+            @supportsExpression={{true}}
+          >
+            <input type="text" value={{this.field.value}} />
+          </ExpressionWrapper>
+        </template>
       );
 
-      await triggerEvent(textareaElement, "drop", {
-        dataTransfer: variableTransfer({ id: "result" }),
+      const inputElement = find("input[type='text']");
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: inputElement,
+        offset: 9,
       });
-      textareaElement.value = `Introduction 😀\n${dropText}\nالخلاصة`;
-      textareaElement.setSelectionRange(
-        insertionStart,
-        insertionStart + dropText.length
-      );
-      await triggerEvent(textareaElement, "input", {
-        data: dropText,
-        inputType: "insertFromDrop",
+
+      await triggerEvent(inputElement, "drop", {
+        dataTransfer: variableTransfer({ id: "result" }),
+        clientX: 20,
+        clientY: 30,
       });
 
       assert.strictEqual(
         this.field.value,
-        "=Introduction 😀\n{{ $json.result }}\nالخلاصة",
-        "the original text is preserved around the expression"
+        "=Existing {{ $json.result }}title",
+        "the expression is inserted without replacing the current title"
       );
-      assert
-        .dom(".workflows-variable-input")
-        .exists("the field switches to dynamic mode");
     });
 
     test("keeps replacement behavior for string-valued non-text controls", async function (assert) {

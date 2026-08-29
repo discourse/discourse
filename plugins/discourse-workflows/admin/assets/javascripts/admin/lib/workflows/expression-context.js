@@ -32,13 +32,32 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
     : `${itemPrefix}.${variable.id}`;
 }
 
-export function buildWorkflowVariableDragData(variable, itemPrefix = "$json") {
-  const dropText = `{{ ${resolveVariableId(variable, itemPrefix)} }}`;
+function controlCaretOffset(control, node, offset) {
+  if (
+    node !== control ||
+    !Number.isInteger(offset) ||
+    offset < 0 ||
+    offset > control.value.length
+  ) {
+    return null;
+  }
 
-  return {
-    serializedVariable: JSON.stringify({ ...variable, dropText }),
-    dropText,
-  };
+  return offset;
+}
+
+export function caretOffsetFromPoint(control, x, y) {
+  const position = document.caretPositionFromPoint?.(x, y);
+  const positionOffset = controlCaretOffset(
+    control,
+    position?.offsetNode,
+    position?.offset
+  );
+  if (positionOffset !== null) {
+    return positionOffset;
+  }
+
+  const range = document.caretRangeFromPoint?.(x, y);
+  return controlCaretOffset(control, range?.startContainer, range?.startOffset);
 }
 
 // Matches paths like $('Node Name').rest or $("Node Name").rest

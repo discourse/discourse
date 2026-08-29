@@ -8,7 +8,6 @@ export default <template>
     @placeholder={{@placeholder}}
     @dynamicValueHint={{@dynamicValueHint}}
     @session={{@session}}
-    @preserveTextareaOnDrop={{true}}
   >
     <@field.Control placeholder={{@placeholder}} />
   </ExpressionWrapper>

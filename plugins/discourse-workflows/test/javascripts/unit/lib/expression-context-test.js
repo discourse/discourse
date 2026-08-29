@@ -1,7 +1,8 @@
 import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   buildScope,
-  buildWorkflowVariableDragData,
+  caretOffsetFromPoint,
   lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
@@ -401,20 +402,69 @@ module("Unit | lib | discourse-workflows | resolveVariableId", function () {
 });
 
 module(
-  "Unit | lib | discourse-workflows | buildWorkflowVariableDragData",
-  function () {
-    test("provides matching structured and plain-text drag data", function (assert) {
-      const { serializedVariable, dropText } = buildWorkflowVariableDragData({
-        id: "topic_id",
-        type: "integer",
+  "Unit | lib | discourse-workflows | caretOffsetFromPoint",
+  function (hooks) {
+    let caretRangeDescriptor;
+
+    hooks.beforeEach(function () {
+      caretRangeDescriptor = Object.getOwnPropertyDescriptor(
+        document,
+        "caretRangeFromPoint"
+      );
+    });
+
+    hooks.afterEach(function () {
+      sinon.restore();
+      if (caretRangeDescriptor) {
+        Object.defineProperty(
+          document,
+          "caretRangeFromPoint",
+          caretRangeDescriptor
+        );
+      } else {
+        delete document.caretRangeFromPoint;
+      }
+    });
+
+    test("uses a caret position that belongs to the control", function (assert) {
+      const control = document.createElement("textarea");
+      control.value = "abcdef";
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: control,
+        offset: 3,
       });
 
-      assert.strictEqual(dropText, "{{ $json.topic_id }}");
-      assert.deepEqual(JSON.parse(serializedVariable), {
-        id: "topic_id",
-        type: "integer",
-        dropText,
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 3);
+    });
+
+    test("falls back to a caret range for Safari", function (assert) {
+      const control = document.createElement("input");
+      control.value = "abcdef";
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: document.body,
+        offset: 0,
       });
+      Object.defineProperty(document, "caretRangeFromPoint", {
+        configurable: true,
+        value: () => ({ startContainer: control, startOffset: 4 }),
+      });
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), 4);
+    });
+
+    test("rejects offsets that do not belong to the control", function (assert) {
+      const control = document.createElement("textarea");
+      control.value = "abcdef";
+      sinon.stub(document, "caretPositionFromPoint").returns({
+        offsetNode: document.body,
+        offset: 0,
+      });
+      Object.defineProperty(document, "caretRangeFromPoint", {
+        configurable: true,
+        value: () => ({ startContainer: document.body, startOffset: 0 }),
+      });
+
+      assert.strictEqual(caretOffsetFromPoint(control, 10, 20), null);
     });
   }
 );

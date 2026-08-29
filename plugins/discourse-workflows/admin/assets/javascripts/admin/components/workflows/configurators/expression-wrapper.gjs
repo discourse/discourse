@@ -7,6 +7,7 @@ import DSegmentedControl from "discourse/components/d-segmented-control";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import {
+  caretOffsetFromPoint,
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
 } from "../../../lib/workflows/expression-context";
@@ -148,7 +149,6 @@ export default class ExpressionWrapper extends Component {
 
   @tracked isDragOver = false;
   dragEndHandler = null;
-  pendingTextareaDrop = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -156,7 +156,6 @@ export default class ExpressionWrapper extends Component {
       document.removeEventListener("dragend", this.dragEndHandler);
       this.dragEndHandler = null;
     }
-    this.pendingTextareaDrop = null;
   }
 
   get expressionMode() {
@@ -189,14 +188,7 @@ export default class ExpressionWrapper extends Component {
     if (!event.dataTransfer.types.includes(WORKFLOW_VARIABLE_MIME)) {
       return;
     }
-    const usesNativeTextareaDrop =
-      this.args.preserveTextareaOnDrop &&
-      schemaType(this.args.schema) === "string" &&
-      event.target?.tagName === "TEXTAREA" &&
-      event.dataTransfer.types.includes("text/plain");
-    if (!usesNativeTextareaDrop) {
-      event.preventDefault();
-    }
+    event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     this.isDragOver = true;
 
@@ -204,7 +196,6 @@ export default class ExpressionWrapper extends Component {
     if (!this.dragEndHandler) {
       this.dragEndHandler = () => {
         this.isDragOver = false;
-        this.pendingTextareaDrop = null;
         document.removeEventListener("dragend", this.dragEndHandler);
         this.dragEndHandler = null;
       };
@@ -222,35 +213,6 @@ export default class ExpressionWrapper extends Component {
   }
 
   @action
-  handleInput(event) {
-    const pending = this.pendingTextareaDrop;
-    if (!pending || pending.target !== event.target) {
-      return;
-    }
-    this.pendingTextareaDrop = null;
-
-    let start = event.target.selectionStart;
-    let end = event.target.selectionEnd;
-    if (start === end) {
-      start -= pending.dropText.length;
-    }
-    if (
-      !Number.isInteger(start) ||
-      !Number.isInteger(end) ||
-      start < 0 ||
-      event.target.value.slice(start, end) !== pending.dropText
-    ) {
-      return;
-    }
-
-    const value =
-      event.target.value.slice(0, start) +
-      pending.expression +
-      event.target.value.slice(end);
-    this.args.field.set(`=${value}`);
-  }
-
-  @action
   handleDrop(event) {
     this.isDragOver = false;
 
@@ -263,13 +225,13 @@ export default class ExpressionWrapper extends Component {
       return;
     }
 
+    event.preventDefault();
     event.stopPropagation();
 
     let variable;
     try {
       variable = JSON.parse(data);
     } catch {
-      event.preventDefault();
       return;
     }
 
@@ -277,21 +239,21 @@ export default class ExpressionWrapper extends Component {
       this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
     const variableId = resolveVariableId(variable, prefix);
 
-    if (
-      this.args.preserveTextareaOnDrop &&
-      schemaType(this.args.schema) === "string" &&
-      event.target?.tagName === "TEXTAREA" &&
-      variable.dropText
-    ) {
-      this.pendingTextareaDrop = {
-        target: event.target,
-        dropText: variable.dropText,
-        expression: `{{ ${variableId} }}`,
-      };
+    const control = event.currentTarget.querySelector(
+      "textarea, input[type='text']"
+    );
+    if (control && schemaType(this.args.schema) === "string") {
+      const value = control.value ?? "";
+      const offset =
+        caretOffsetFromPoint(control, event.clientX, event.clientY) ??
+        value.length;
+      const expression = `{{ ${variableId} }}`;
+      this.args.field.set(
+        `=${value.slice(0, offset)}${expression}${value.slice(offset)}`
+      );
       return;
     }
 
-    event.preventDefault();
     this.args.field.set(`={{ ${variableId} }}`);
   }
 
@@ -305,7 +267,6 @@ export default class ExpressionWrapper extends Component {
       {{on "dragover" this.handleDragOver}}
       {{on "dragleave" this.handleDragLeave}}
       {{on "drop" this.handleDrop}}
-      {{on "input" this.handleInput}}
     >
       {{#if this.expressionMode}}
         <ExpressionInput
