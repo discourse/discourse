@@ -73,6 +73,22 @@ module("Unit | Lib | swipe-events | lifecycle", function (hooks) {
     assert.false(move.defaultPrevented, "native scrolling remains available");
   });
 
+  test("touchmove velocity preserves high-refresh timing", function (assert) {
+    let started;
+    element.addEventListener("swipestart", (event) => {
+      started = event.detail;
+    });
+
+    dispatchTouch(element, "touchstart", { time: 0 });
+    dispatchTouch(element, "touchmove", { x: 8, time: 8 });
+
+    assert.strictEqual(
+      started.velocityX,
+      1,
+      "velocity uses the touchmove interval"
+    );
+  });
+
   test("release velocity expires while the touch is parked", function (assert) {
     let ended;
     element.addEventListener("swipeend", (event) => (ended = event.detail));
@@ -111,7 +127,6 @@ module("Unit | Lib | swipe-events | lifecycle", function (hooks) {
     let ended;
     element.addEventListener("swipeend", (event) => (ended = event.detail));
 
-    // parked long enough for the flick to expire, then lifted with a smear
     dispatchTouch(element, "touchstart", { time: 0 });
     dispatchTouch(element, "touchmove", { x: 20, time: 20 });
     dispatchTouch(element, "touchend", { x: 21, time: 200 });

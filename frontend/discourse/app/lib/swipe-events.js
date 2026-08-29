@@ -100,12 +100,9 @@ export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
-const SWIPE_VELOCITY_EXPIRY_MS = 100;
-// A release trails the last move by a frame or two. A pixel or two across that
-// sliver is the finger lifting, so it neither reads as a flick of its own nor
-// discards the flick that came before it.
-const SWIPE_VELOCITY_STILL_PX = 2;
-const SWIPE_VELOCITY_MIN_INTERVAL_MS = 16;
+const RELEASE_VELOCITY_EXPIRY_MS = 100;
+const RELEASE_VELOCITY_STILL_PX = 2;
+const RELEASE_VELOCITY_MIN_INTERVAL_MS = 16;
 
 /**
  * Turns touch events on an element into `swipestart`, `swipe`, `swipeend` and
@@ -213,15 +210,18 @@ export default class SwipeEvents {
     const elapsed = timestamp - oldState.timestamp;
     const movedX = e.clientX - oldState.center.x;
     const movedY = e.clientY - oldState.center.y;
-    const interval = Math.max(elapsed, SWIPE_VELOCITY_MIN_INTERVAL_MS);
+    const interval =
+      e.type === "pointerup"
+        ? Math.max(elapsed, RELEASE_VELOCITY_MIN_INTERVAL_MS)
+        : elapsed;
     let velocityX = elapsed > 0 ? movedX / interval : 0;
     let velocityY = elapsed > 0 ? movedY / interval : 0;
     if (
       e.type === "pointerup" &&
-      Math.abs(movedX) <= SWIPE_VELOCITY_STILL_PX &&
-      Math.abs(movedY) <= SWIPE_VELOCITY_STILL_PX &&
+      Math.abs(movedX) <= RELEASE_VELOCITY_STILL_PX &&
+      Math.abs(movedY) <= RELEASE_VELOCITY_STILL_PX &&
       elapsed >= 0 &&
-      elapsed <= SWIPE_VELOCITY_EXPIRY_MS
+      elapsed <= RELEASE_VELOCITY_EXPIRY_MS
     ) {
       velocityX = oldState.velocityX;
       velocityY = oldState.velocityY;
