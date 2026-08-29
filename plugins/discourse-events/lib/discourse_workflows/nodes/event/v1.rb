@@ -5,7 +5,8 @@ if defined?(DiscourseWorkflows)
     module Nodes
       module Event
         class V1 < NodeType
-          OPERATIONS = %w[close open].freeze
+          OPERATIONS = %w[close open set_attendance].freeze
+          ATTENDANCE_OPTIONS = %w[going interested not_going remove].freeze
 
           description(
             name: "action:event",
@@ -30,6 +31,29 @@ if defined?(DiscourseWorkflows)
                 type: :string,
                 required: true,
               },
+              attendee_username: {
+                type: :string,
+                required: true,
+                display_options: {
+                  show: {
+                    operation: ["set_attendance"],
+                  },
+                },
+                ui: {
+                  control: :user,
+                },
+              },
+              attendance: {
+                type: :options,
+                required: true,
+                options: ATTENDANCE_OPTIONS,
+                default: "going",
+                display_options: {
+                  show: {
+                    operation: ["set_attendance"],
+                  },
+                },
+              },
               actor_username: {
                 type: :string,
                 required: false,
@@ -48,6 +72,10 @@ if defined?(DiscourseWorkflows)
                   "operation" =>
                     exec_ctx.get_node_parameter("operation", item_index, default: "close"),
                   "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+                  "attendee_username" =>
+                    exec_ctx.get_node_parameter("attendee_username", item_index),
+                  "attendance" =>
+                    exec_ctx.get_node_parameter("attendance", item_index, default: "going"),
                 }
 
                 wrap(execute_with_config(exec_ctx, config, item_index))
@@ -77,17 +105,23 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            actor.guardian.ensure_can_act_on_discourse_post_event!(event)
+            case operation
+            when "close", "open"
+              actor.guardian.ensure_can_act_on_discourse_post_event!(event)
 
-            desired_closed_state = operation == "close"
+              desired_closed_state = operation == "close"
 
-            if event.closed? != desired_closed_state
-              new_raw = raw_with_closed_state(event.post.raw, closed: desired_closed_state)
+              if event.closed? != desired_closed_state
+                new_raw = raw_with_closed_state(event.post.raw, closed: desired_closed_state)
 
-              post = exec_ctx.edit_post(user: actor, post_id: event.post.id, raw: new_raw)
+                post = exec_ctx.edit_post(user: actor, post_id: event.post.id, raw: new_raw)
 
-              post.association(:event).reload
-              event = post.event
+                post.association(:event).reload
+                event = post.event
+              end
+            when "set_attendance"
+              attendee = exec_ctx.find_user(username: config["attendee_username"])
+              set_attendance!(event:, attendee:, attendance: config["attendance"], actor:)
             end
 
             {
@@ -95,6 +129,83 @@ if defined?(DiscourseWorkflows)
               topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
               post: exec_ctx.serialize_post(event.post, guardian: actor.guardian),
             }
+          end
+
+          def set_attendance!(event:, attendee:, attendance:, actor:)
+            if ATTENDANCE_OPTIONS.exclude?(attendance)
+              raise_node_error!(
+                I18n.t(
+                  "discourse_workflows.errors.event.unknown_attendance",
+                  attendance: attendance,
+                ),
+              )
+            end
+
+            invitee = event.invitees.find_by(user_id: attendee.id)
+
+            if attendance == "remove"
+              return if invitee.blank?
+
+              return destroy_invitee!(event:, invitee:, actor:)
+            end
+
+            status = attendance.to_sym
+
+            return if invitee && invitee.status == DiscourseEvents::Events::Invitee.statuses[status]
+
+            if invitee
+              update_invitee!(event:, invitee:, status:, actor:)
+            else
+              create_invitee!(event:, attendee:, status:, actor:)
+            end
+          end
+
+          def create_invitee!(event:, attendee:, status:, actor:)
+            DiscourseEvents::Events::CreateInvitee.call(
+              guardian: actor.guardian,
+              params: {
+                event_id: event.id,
+                user_id: attendee.id,
+                status: status,
+              },
+            ) do |result|
+              on_success { next }
+              on_failure { raise_attendance_error!(result) }
+            end
+          end
+
+          def update_invitee!(event:, invitee:, status:, actor:)
+            DiscourseEvents::Events::UpdateInvitee.call(
+              guardian: actor.guardian,
+              params: {
+                event_id: event.id,
+                invitee_id: invitee.id,
+                status: status,
+              },
+            ) do |result|
+              on_success { next }
+              on_failure { raise_attendance_error!(result) }
+            end
+          end
+
+          def destroy_invitee!(event:, invitee:, actor:)
+            DiscourseEvents::Events::DestroyInvitee.call(
+              guardian: actor.guardian,
+              params: {
+                post_id: event.id,
+                id: invitee.id,
+              },
+            ) do |result|
+              on_success { next }
+              on_failure { raise_attendance_error!(result) }
+            end
+          end
+
+          def raise_attendance_error!(result)
+            raise_node_error!(
+              I18n.t("discourse_workflows.errors.event.attendance_failed"),
+              description: result.inspect_steps,
+            )
           end
 
           def event_data(event)

@@ -5,6 +5,7 @@ require_relative "../../../../../lib/discourse_workflows/nodes/event/v1"
 
 RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   fab!(:admin)
+  fab!(:attendee, :user)
 
   before { SiteSetting.discourse_post_event_enabled = true }
 
@@ -16,7 +17,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
         admin,
         title: "Workflow event topic",
         raw:
-          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\"#{closed_attribute}]\n" \
+          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\" status=\"public\"#{closed_attribute}]\n" \
             "Event description\n" \
             "[/event]",
       )
@@ -30,14 +31,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     post
   end
 
-  def execution_context(topic:, operation:)
+  def execution_context(topic:, operation:, attendee: nil, attendance: nil)
     actor = admin
 
     Class
       .new do
-        define_method(:initialize) do |topic_arg, operation_arg, actor_arg|
+        define_method(
+          :initialize,
+        ) do |topic_arg, operation_arg, attendee_arg, attendance_arg, actor_arg|
           @topic = topic_arg
           @operation = operation_arg
+          @attendee = attendee_arg
+          @attendance = attendance_arg
           @actor = actor_arg
         end
 
@@ -49,12 +54,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
             @operation
           when "topic_id"
             @topic.id.to_s
+          when "attendee_username"
+            @attendee&.username
+          when "attendance"
+            @attendance || default
           else
             default
           end
         end
 
         define_method(:actor_from_parameter) { |_name, _item_index| @actor }
+
+        define_method(:find_user) { |username:| User.find_by(username:) }
 
         define_method(:edit_post) do |user:, post_id:, raw:|
           post = Post.find(post_id)
@@ -80,7 +91,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
           { id: post.id, post_number: post.post_number }
         end
       end
-      .new(topic, operation, actor)
+      .new(topic, operation, attendee, attendance, actor)
   end
 
   it "closes the event by revising its source BBCode" do
@@ -153,5 +164,122 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
 
     expect(post.reload.raw).to eq(original_raw)
     expect(post.event.closed?).to eq(true)
+  end
+
+  it "creates attendance for a user" do
+    post = create_event_post
+
+    expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
+
+    described_class.new(parameters: {}).execute(
+      execution_context(
+        topic: post.topic,
+        operation: "set_attendance",
+        attendee: attendee,
+        attendance: "going",
+      ),
+    )
+
+    invitee = post.event.invitees.find_by(user_id: attendee.id)
+
+    expect(invitee).to be_present
+    expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
+  end
+
+  it "updates existing attendance for a user" do
+    post = create_event_post
+    invitee =
+      DiscourseEvents::Events::Invitee.create_attendance!(attendee.id, post.event.id, :interested)
+
+    described_class.new(parameters: {}).execute(
+      execution_context(
+        topic: post.topic,
+        operation: "set_attendance",
+        attendee: attendee,
+        attendance: "going",
+      ),
+    )
+
+    expect(invitee.reload.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
+  end
+
+  it "removes attendance for a user" do
+    post = create_event_post
+    DiscourseEvents::Events::Invitee.create_attendance!(attendee.id, post.event.id, :going)
+
+    described_class.new(parameters: {}).execute(
+      execution_context(
+        topic: post.topic,
+        operation: "set_attendance",
+        attendee: attendee,
+        attendance: "remove",
+      ),
+    )
+
+    expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
+  end
+
+  it "does not update attendance when it already matches" do
+    post = create_event_post
+    invitee =
+      DiscourseEvents::Events::Invitee.create_attendance!(attendee.id, post.event.id, :going)
+
+    allow(DiscourseEvents::Events::UpdateInvitee).to receive(:call).and_call_original
+
+    described_class.new(parameters: {}).execute(
+      execution_context(
+        topic: post.topic,
+        operation: "set_attendance",
+        attendee: attendee,
+        attendance: "going",
+      ),
+    )
+
+    expect(DiscourseEvents::Events::UpdateInvitee).not_to have_received(:call)
+    expect(invitee.reload.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
+  end
+
+  it "does nothing when removing attendance that does not exist" do
+    post = create_event_post
+
+    allow(DiscourseEvents::Events::DestroyInvitee).to receive(:call).and_call_original
+
+    described_class.new(parameters: {}).execute(
+      execution_context(
+        topic: post.topic,
+        operation: "set_attendance",
+        attendee: attendee,
+        attendance: "remove",
+      ),
+    )
+
+    expect(DiscourseEvents::Events::DestroyInvitee).not_to have_received(:call)
+    expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
+  end
+
+  it "fails when setting Going on an event at capacity" do
+    post = create_event_post
+    event = post.event
+    event.update!(max_attendees: 1)
+
+    event.create_invitees(
+      [{ user_id: admin.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+    )
+
+    expect do
+      described_class.new(parameters: {}).execute(
+        execution_context(
+          topic: post.topic,
+          operation: "set_attendance",
+          attendee: attendee,
+          attendance: "going",
+        ),
+      )
+    end.to raise_error(DiscourseWorkflows::NodeError) do |error|
+      expect(error.message).to include("Could not update event attendance.")
+      expect(error.message).to include("[policy] has_capacity")
+    end
+
+    expect(event.invitees.find_by(user_id: attendee.id)).to be_nil
   end
 end
