@@ -3740,6 +3740,14 @@ body.wireframe-active {
   border-radius: 4px;
 }
 
+/* Held on the body while the panel is dragged by its header, so the cursor
+   survives the pointer outrunning the header. */
+
+body.wf-conditions-panel-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
 .wireframe-conditions-floating {
   position: fixed;
   z-index: z("modal", "popover");
