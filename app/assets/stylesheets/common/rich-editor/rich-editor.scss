@@ -359,7 +359,7 @@
       outline-offset: 2px;
     }
 
-    // hidden, but still holding its space: swapping faces must not resize
+    // hidden, but still holding its space
     &:not(.--source) .composer-preview-node__source,
     &.--source .composer-preview-node__preview {
       visibility: hidden;

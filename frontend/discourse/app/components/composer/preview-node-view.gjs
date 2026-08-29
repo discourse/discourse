@@ -58,9 +58,6 @@ export default class PreviewNodeView extends Component {
     return this.args.node.textContent;
   }
 
-  // the preview follows the source, except while it is being edited: there it
-  // holds still, so it neither re-renders on every keystroke nor rebuilds
-  // itself for a half-typed source
   get previewSource() {
     return this.showingSource ? this.renderedSource : this.source;
   }

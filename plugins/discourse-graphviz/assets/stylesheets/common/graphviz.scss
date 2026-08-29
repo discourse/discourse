@@ -11,8 +11,8 @@ div.graphviz.is-loading,
   }
 }
 
-// In the editor the block already has a frame, and both of its faces share one
-// cell, so the box needs no reserving — only a floor for a source not yet typed.
+// In the editor the block already has a frame, so the box needs no reserving —
+// only a floor for a source not yet typed.
 .composer-graphviz-node .composer-preview-node__preview {
   min-height: 3em;
 }
