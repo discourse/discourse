@@ -1425,19 +1425,24 @@ body.wireframe-active {
     font-size: var(--font-down-1);
   }
 
-  /* One grid holds every tile across all category sections, so a single
-     roving-focus container can navigate them in DOM order and derive its column
-     count from these tracks. Section headers are emitted as direct grid children
-     that span every column (no per-section wrapper), keeping the grid flat. */
+  /* One flat list holds every row across the Recent and category sections,
+     so a single roving-focus container walks them in DOM order. */
 
   &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* The Recent group is the one place the palette keeps compact tiles. */
+  &__recent {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   &__section-header {
-    grid-column: 1 / -1;
     position: sticky;
     top: 0;
     z-index: 5;
@@ -1449,6 +1454,63 @@ body.wireframe-active {
     color: var(--primary-medium);
     font-weight: 600;
     border-bottom: 1px solid var(--primary-low);
+  }
+}
+
+.wireframe-block-row {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 0.625rem;
+  align-items: center;
+  padding: 0.375rem 0.25rem;
+  border-radius: var(--d-border-radius);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: -2px;
+  }
+
+  /* Keyboard cursor while DOM focus stays in the search input. */
+  &.--active {
+    background: var(--primary-very-low);
+    box-shadow: inset 2px 0 0 var(--wf-accent);
+  }
+
+  &.--dragging {
+    opacity: 0.5;
+  }
+
+  /* The sketch needs a fixed-width box: it fills whatever it is given. */
+  &__thumbnail {
+    display: block;
+    width: 52px;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 500;
+    font-size: var(--font-down-1);
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

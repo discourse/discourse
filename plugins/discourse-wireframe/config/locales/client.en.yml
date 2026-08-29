@@ -101,6 +101,7 @@ en:
         search_placeholder: "Search blocks"
         empty: "No blocks match your filter."
         list_label: "Blocks"
+        recent: "Recent"
         insert_hint:
           no_selection: "Select a block on the canvas to insert next to it."
           grid: "Grids need a specific cell — use the + in the cell to add there."

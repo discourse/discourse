@@ -6,6 +6,20 @@ import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display
 import type BlocksService from "discourse/services/blocks";
 
 /**
+ * What the palette's Recent group offers before a layout has taught it
+ * anything: the blocks a page is most likely to start with, in the order they
+ * are usually reached for.
+ */
+export const RECENT_FALLBACK: readonly string[] = [
+  "paragraph",
+  "heading",
+  "image",
+  "card",
+  "list",
+  "cta-banner",
+];
+
+/**
  * A single row of the block palette, as returned by {@link buildBlockPalette}.
  * Every face of the palette consumes this shape.
  */
