@@ -44,10 +44,6 @@ module Migrations
               def initialize(output:, cause:, detail: nil, slow_parse: false)
                 super
               end
-
-              def refused?
-                !cause.nil?
-              end
             end
 
           # A post whose parse runs into the fast ceiling gets one retry
@@ -88,7 +84,6 @@ module Migrations
           def initialize(
             engine:,
             constructs:,
-            gate:,
             internal_link_hosts: {},
             internal_link_base_prefix: nil,
             slow_timeout_ms: SLOW_TIMEOUT_MS,
@@ -99,7 +94,6 @@ module Migrations
             @slow_timeout_step_ms = slow_timeout_ms && [slow_timeout_ms / SLOW_TIMEOUT_STEPS, 1].max
             @scan_timeout_ms = nil
             @retry_deadline = nil
-            @gate = gate
             @hosts = internal_link_hosts
             @base_prefix = internal_link_base_prefix
             @on_node = on_node
@@ -141,11 +135,7 @@ module Migrations
             end
             @probe_dispatch.freeze
             @probe_stop =
-              if @probe_dispatch.empty?
-                nil
-              else
-                Regexp.new("[#{@probe_dispatch.keys.map { |byte| Regexp.escape(byte.chr) }.join}]")
-              end
+              Regexp.new("[#{@probe_dispatch.keys.map { |byte| Regexp.escape(byte.chr) }.join}]")
           end
 
           # @param input [String]
@@ -234,7 +224,7 @@ module Migrations
             cause = :cr_line_endings
             unless input.include?("\r")
               result = Pass.new(self, input, data).result
-              return result unless result.refused?
+              return result if result.cause.nil?
               # Substitution checks would pay the same per-value cost the cap avoids.
               return result if result.cause == :url_volume
               cause = result.cause
@@ -248,6 +238,7 @@ module Migrations
               seconds_budget: substitution_seconds_budget,
             ).result
           end
+          private :attempt
 
           # On the slow path a single parse may take tens of seconds, and the
           # default substitution budget would not allow even one check. The
@@ -261,6 +252,7 @@ module Migrations
             remaining = @retry_deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
             remaining > 0 ? remaining : 0.0
           end
+          private :substitution_seconds_budget
 
           attr_reader :mention_construct,
                       :hashtag_construct,
@@ -275,7 +267,7 @@ module Migrations
           # token filter here and the grammar that later anchors a construct
           # cannot drift apart.
           def mention_tracked?(name)
-            !@mention_construct.nil? && @mention_construct.tracked_name?(name)
+            @mention_construct.tracked_name?(name)
           end
 
           def emoji_tracked?(name)
@@ -292,13 +284,9 @@ module Migrations
             return nil if ref.empty?
 
             name = ref.sub(/::(?:category|tag)\z/, "")
-            return nil if @hashtag_construct.nil? || !@hashtag_construct.tracked_name?(name)
+            return nil unless @hashtag_construct.tracked_name?(name)
 
             "##{ref}"
-          end
-
-          def construct_capable_entity_offsets(text)
-            @gate.construct_capable_entity_offsets(text)
           end
 
           # A link or image value the migration remaps: an `upload://` short
@@ -322,7 +310,7 @@ module Migrations
 
               # An internal-looking URL on an unconfigured host may be a
               # forgotten former domain; report it once per host.
-              @internal_link_construct&.note_foreign_url(value)
+              @internal_link_construct.note_foreign_url(value)
               return false
             end
 
@@ -362,7 +350,7 @@ module Migrations
           # definition's destination). `route_url` is the engine's normalized
           # href; `url` is the raw spelling at the occurrence.
           def bare_url_node(route_url:, url:)
-            @internal_link_construct&.reference_for(route_url:, url:)
+            @internal_link_construct.reference_for(route_url:, url:)
           end
 
           # The per-body count-matching pass; the scanner itself stays

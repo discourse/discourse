@@ -64,7 +64,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil if @names.exclude?(name)
+              return nil unless tracked_name?(name)
 
               Match.new(
                 start_pos: pos,

@@ -166,17 +166,18 @@ module Migrations
 
             # A construct-capable entity is a candidate the byte checks cannot
             # see: `&#64;bob` spells a mention without a literal `@` anywhere.
-            return :engine if construct_capable_entity?(raw)
+            return :engine if TierGate.construct_capable_entity?(raw)
 
             real_candidates?(raw) ? :engine : :none
           end
 
           # Whether `text` holds a character reference that can decode into a
-          # construct-relevant character. Public because the engine tier's
-          # count matching has the same blind spot as the presence check:
-          # entities decode before the engine's text rules run, so a token's
-          # value no longer has to exist as literal bytes.
-          def construct_capable_entity?(text)
+          # construct-relevant character. Entities decode before the engine's
+          # text rules run, so a token's value no longer has to exist as
+          # literal bytes — the gate and the engine tier share that blind
+          # spot, which is why this and the offsets variant below read only
+          # the entity patterns and live on the class.
+          def self.construct_capable_entity?(text)
             return false unless text.include?("&")
 
             text.scan(NUMERIC_ENTITY) do
@@ -194,7 +195,7 @@ module Migrations
           # The byte offsets of every construct-capable reference in `text`,
           # sorted — so the engine tier checks a region with a binary search
           # instead of slicing and rescanning it per region.
-          def construct_capable_entity_offsets(text)
+          def self.construct_capable_entity_offsets(text)
             return [] unless text.include?("&")
 
             offsets = []
@@ -252,13 +253,14 @@ module Migrations
             false
           end
 
-          def construct_codepoint?(code)
+          def self.construct_codepoint?(code)
             codepoint = code.start_with?("x", "X") ? code[1..].to_i(16) : code.to_i
             return false if codepoint == 0 || codepoint > 0x10ffff
             return false if codepoint >= 0xd800 && codepoint <= 0xdfff
 
             CONSTRUCT_CHAR.match?(codepoint.chr(Encoding::UTF_8))
           end
+          private_class_method :construct_codepoint?
         end
       end
     end

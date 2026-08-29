@@ -140,11 +140,9 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records an emoji descriptor keyed for IntermediateDB::EmbedEmoji" do
-      token = buffer.emoji(name: "parrot", original_markdown: ":parrot:")
+      token = buffer.emoji(name: "parrot")
 
-      expect(buffer.emojis).to contain_exactly(
-        { placeholder: token, name: "parrot", original_markdown: ":parrot:" },
-      )
+      expect(buffer.emojis).to contain_exactly({ placeholder: token, name: "parrot" })
     end
 
     it "records a poll descriptor keyed for IntermediateDB::EmbedPoll" do

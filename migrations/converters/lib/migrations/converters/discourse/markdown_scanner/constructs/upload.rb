@@ -67,7 +67,7 @@ module Migrations
             LINK_PATTERN =
               %r{
               \G
-              \[(?<filename>#{LABEL})\|(?!attachment\])(?<label_suffix>[^\[\]\n]{0,99})\]
+              \[(?<filename>#{LABEL})\|(?!attachment\])[^\[\]\n]{0,99}\]
               \((?-i:upload)://(?<url>[^)\n]{1,512})\)
             }xi
             # A plain `[label](upload://sha1.ext)` link, which core links the

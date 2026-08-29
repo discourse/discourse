@@ -165,7 +165,6 @@ module Migrations
             MarkdownScanner::EngineScanner.new(
               engine: markdown_engine,
               constructs:,
-              gate: @gate,
               internal_link_hosts:,
               internal_link_base_prefix:,
               slow_timeout_ms:,
@@ -334,7 +333,7 @@ module Migrations
               original_markdown: source,
             )
           when MarkdownScanner::EmojiReference
-            @embeds.emoji(name: node.name, original_markdown: source)
+            @embeds.emoji(name: node.name)
           when MarkdownScanner::QuoteReference
             defer_quote(node, source)
           else

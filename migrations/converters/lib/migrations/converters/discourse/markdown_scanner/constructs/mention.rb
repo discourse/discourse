@@ -57,7 +57,7 @@ module Migrations
 
               end_pos = pos + 1 + name.bytesize # +1 for the `@` (one byte)
               return nil unless mention_boundary_after?(input, end_pos)
-              return nil unless @names.include?(normalize(name))
+              return nil unless tracked_name?(name)
 
               Match.new(start_pos: pos, end_pos:, node: Markbridge::AST::Mention.new(name:))
             end

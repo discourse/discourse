@@ -47,7 +47,7 @@ module Migrations
         # is tracked separately.
         AVATAR_SIZES_KEY = "avatar_sizes"
 
-        attr_reader :settings, :category_slugs, :tag_names, :custom_emoji_names, :additional_options
+        attr_reader :settings, :category_slugs, :tag_names, :additional_options
 
         # @param source_settings [Hash] site settings of the source site; only
         #   `SETTING_KEYS` are used, other keys are ignored. String values for

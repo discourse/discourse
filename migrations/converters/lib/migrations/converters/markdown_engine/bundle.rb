@@ -95,7 +95,8 @@ module Migrations
         # Digesting reads the host constants and file globs only; V8 boots on
         # a transpile, which never happens in this process, and the host
         # classes are Rails-free until their build/transpile methods run.
-        def self.load_or_build(root: MarkdownEngine.discourse_root, cache_dir: nil)
+        def self.load_or_build(cache_dir: nil)
+          root = MarkdownEngine.discourse_root
           cache_dir ||= File.join(root, CACHE_DIR)
           # rubocop:disable Discourse/NoChdir
           Dir.chdir(root) do

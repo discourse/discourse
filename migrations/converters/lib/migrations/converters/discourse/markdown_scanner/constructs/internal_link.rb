@@ -96,7 +96,7 @@ module Migrations
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner
             # walks past, so it must reject ordinary words inside the regex engine. A
             # permissive capture-everything pattern here (with the rejection left to
-            # `split_host`/`RouteParser`) costs a MatchData and a string per h-word of
+            # `UrlOrigin`/`RouteParser`) costs a MatchData and a string per h-word of
             # every scanned post, which is measurable across a whole conversion. Each
             # branch below therefore starts with something an ordinary word fails on.
             #
@@ -105,7 +105,7 @@ module Migrations
             # route-less one (`/faq`, `/search?q=…`) becomes a `:site` link exactly
             # like the same URL in link syntax. Whatever follows the host is the path,
             # which also covers a subfolder install (`//host/forum/t/5`) — the prefix
-            # comes off in `strip_prefix`.
+            # comes off via `UrlOrigin.path_within_prefix`.
             #
             # The scheme is case-insensitive because linkify-it reads it that way, so
             # core links `HTTPS://…` too. The insensitivity stops at the scheme: route
@@ -157,9 +157,7 @@ module Migrations
               @presence_pattern = build_presence_pattern
             end
 
-            def presence_pattern
-              @presence_pattern
-            end
+            attr_reader :presence_pattern
 
             def detect(input, pos, byte)
               case byte
@@ -236,7 +234,7 @@ module Migrations
             #
             # A bare relative URL is a link only at a `](…)` target; in prose it stays
             # plain text once cooked, so there we leave it literal (only an absolute
-            # bare URL is rewritten in prose). `split_host` reports the relative case
+            # bare URL is rewritten in prose). `UrlOrigin.split` reports the relative case
             # inside `build`, so the boundary form we admit at is passed down.
             def detect_bare(input, pos)
               return nil unless bare_url_boundary_before?(input, pos)
@@ -259,13 +257,13 @@ module Migrations
             # once-per-host signal for an absolute URL whose host isn't
             # configured.
             def note_foreign_url(url)
-              host, rest = split_host(url)
+              host, rest = UrlOrigin.split(url)
               note_foreign_host(host, rest) if host && rest && !@hosts.key?(host)
             end
             public :note_foreign_url
 
             def build(pos, match, url:, text:, allow_relative:)
-              host, rest = split_host(url)
+              host, rest = UrlOrigin.split(url)
               return nil unless rest
               return nil if host.nil? && !allow_relative
 
@@ -282,7 +280,7 @@ module Migrations
               # On a prefixed host only paths inside the prefix belong to the forum;
               # a sibling app's path (or a relative link that isn't the subfolder
               # site's own) stays literal — no route, no `:site` rewrite, no signal.
-              path = strip_prefix(rest, prefix)
+              path = UrlOrigin.path_within_prefix(rest, prefix)
               return nil if path.nil?
 
               url_offset, label_url_offset = destination_spans(pos, match, url)
@@ -306,8 +304,8 @@ module Migrations
             # between a `:site` rewrite and no node, as everywhere else. The
             # value was tracked before this is called, so no foreign-host
             # signal fires here.
-            def reference_for(route_url:, url:, text: nil)
-              host, href_rest = split_host(route_url)
+            def reference_for(route_url:, url:)
+              host, href_rest = UrlOrigin.split(route_url)
               return nil unless href_rest
               prefix = host ? @hosts[host] : @base_prefix
               return nil if host && !@hosts.key?(host)
@@ -315,10 +313,17 @@ module Migrations
               rest = raw_rest(url)
               return nil if rest.nil?
 
-              path = strip_prefix(rest, prefix)
+              path = UrlOrigin.path_within_prefix(rest, prefix)
               return nil if path.nil?
 
-              route_or_site_node(url:, text:, path:, host:, url_offset: 0, label_url_offset: nil)
+              route_or_site_node(
+                url:,
+                text: nil,
+                path:,
+                host:,
+                url_offset: 0,
+                label_url_offset: nil,
+              )
             end
             public :reference_for
 
@@ -328,7 +333,7 @@ module Migrations
             # first `/`, `?` or `#` on is the path (a bare domain with no path
             # is the site's front page: an empty rest).
             def raw_rest(url)
-              host, rest = split_host(url)
+              host, rest = UrlOrigin.split(url)
               return rest unless host.nil? && rest.nil?
 
               start = url.index(%r{[/?\#]})
@@ -356,9 +361,27 @@ module Migrations
                   label_url_offset:,
                 )
               elsif host && !RouteParser.coordinate_shaped?(path)
-                site_reference(url:, text:, suffix: path, url_offset:, label_url_offset:)
+                target_reference(
+                  url:,
+                  text:,
+                  target: SITE_TARGET,
+                  suffix: path,
+                  url_offset:,
+                  label_url_offset:,
+                )
               end
             end
+
+            # A `:site` target rewrites only the origin, so it names no record.
+            SITE_TARGET = {
+              target_type: :site,
+              target_id: nil,
+              target_name: nil,
+              target_topic_id: nil,
+              target_post_number: nil,
+              target_tag_path: nil,
+            }.freeze
+            private_constant :SITE_TARGET
 
             def target_reference(url:, text:, target:, suffix:, url_offset:, label_url_offset:)
               InternalLinkReference.new(
@@ -376,26 +399,6 @@ module Migrations
               )
             end
 
-            def site_reference(url:, text:, suffix:, url_offset:, label_url_offset:)
-              InternalLinkReference.new(
-                url:,
-                text:,
-                target_type: :site,
-                target_id: nil,
-                target_name: nil,
-                target_topic_id: nil,
-                target_post_number: nil,
-                target_tag_path: nil,
-                target_suffix: suffix.presence,
-                url_offset:,
-                label_url_offset:,
-              )
-            end
-
-            def strip_prefix(rest, prefix)
-              UrlOrigin.path_within_prefix(rest, prefix)
-            end
-
             # A foreign host is rejected before routing (the cheap check). Only when
             # a caller asked for the signal do we route-parse it, to tell an
             # internal-looking self-link on an unconfigured host from an ordinary
@@ -408,10 +411,6 @@ module Migrations
 
               @reported_foreign_hosts << host
               @on_foreign_host.call(host)
-            end
-
-            def split_host(url)
-              UrlOrigin.split(url)
             end
           end
         end

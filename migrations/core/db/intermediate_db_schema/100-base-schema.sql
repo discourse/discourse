@@ -119,11 +119,10 @@ CREATE TABLE category_users
 
 CREATE TABLE embed_emojis
 (
-    name              TEXT         NOT NULL,
-    original_markdown TEXT,
-    owner_id          NUMERIC      NOT NULL,
-    owner_type        ENUM_INTEGER NOT NULL,
-    placeholder       TEXT         NOT NULL
+    name        TEXT         NOT NULL,
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL
 );
 
 CREATE INDEX idx_embed_emojis_owner_type_owner_id ON embed_emojis (owner_type, owner_id);

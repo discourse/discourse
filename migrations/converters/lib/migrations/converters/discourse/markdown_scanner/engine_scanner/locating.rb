@@ -54,19 +54,16 @@ module Migrations
               @probe_index ||=
                 begin
                   index = {}
-                  stop = @scanner.probe_stop
-                  if stop
-                    pos = 0
-                    while (offset = @input.byteindex(stop, pos))
-                      byte = @input.getbyte(offset)
-                      kind, construct = @scanner.probe_dispatch[byte]
-                      if kind && (match = construct.detect(@input, offset, byte))
-                        length = match.end_pos - offset
-                        key = index_key(kind, @input.byteslice(offset, length))
-                        (index[key] ||= []) << Occurrence.new(offset:, length:)
-                      end
-                      pos = offset + 1
+                  pos = 0
+                  while (offset = @input.byteindex(@scanner.probe_stop, pos))
+                    byte = @input.getbyte(offset)
+                    kind, construct = @scanner.probe_dispatch[byte]
+                    if kind && (match = construct.detect(@input, offset, byte))
+                      length = match.end_pos - offset
+                      key = index_key(kind, @input.byteslice(offset, length))
+                      (index[key] ||= []) << Occurrence.new(offset:, length:)
                     end
+                    pos = offset + 1
                   end
                   index
                 end
@@ -171,7 +168,7 @@ module Migrations
             # scan for the whole body, so each region precondition is a binary
             # search instead of a byteslice plus a fresh scan.
             def entity_offsets
-              @entity_offsets ||= @scanner.construct_capable_entity_offsets(@input)
+              @entity_offsets ||= TierGate.construct_capable_entity_offsets(@input)
             end
 
             def entity_in?(range)

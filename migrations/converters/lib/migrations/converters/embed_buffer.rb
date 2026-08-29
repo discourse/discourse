@@ -197,13 +197,13 @@ module Migrations
       end
 
       # Only the source's own custom emoji reach here; a standard shortcode stays
-      # plain text.
+      # plain text. No `original_markdown` snippet: an emoji embed only exists
+      # when its `:name:` bytes occur in the source, so the importer rebuilds
+      # the exact source spelling from the name alone.
       #
       # @param name [String, nil] the shortcode without the surrounding colons.
-      # @param original_markdown [String, nil] the verbatim source snippet,
-      #   restored unchanged when the importer cannot map the embed.
-      def emoji(name: nil, original_markdown: nil)
-        record(@emojis, :emoji, name:, original_markdown:)
+      def emoji(name: nil)
+        record(@emojis, :emoji, name:)
       end
 
       # @param poll_id [Integer, String, nil] the poll's source `original_id` (a

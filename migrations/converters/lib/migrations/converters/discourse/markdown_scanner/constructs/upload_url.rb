@@ -51,6 +51,7 @@ module Migrations
 
             # The sha1 is 160 bits; base62 needs at most 27 characters for that.
             MAX_SHORT_TOKEN_LENGTH = 27
+            private_constant :MAX_SHORT_TOKEN_LENGTH
 
             # One path segment: a URL-body character (see
             # `Base::URL_TERMINATORS`) that is also none of `/`, `?` and `#`.

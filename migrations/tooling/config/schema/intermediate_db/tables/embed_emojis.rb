@@ -15,9 +15,6 @@ Migrations::Tooling::Schema.table :embed_emojis do
   add_column :owner_id, :numeric, required: true
   add_column :placeholder, :text, required: true
   add_column :name, :text, required: true
-  # The verbatim source snippet, restored unchanged when the importer cannot
-  # map the embed to a destination record (the round-trip fallback).
-  add_column :original_markdown, :text
 
   index :owner_type, :owner_id
 end

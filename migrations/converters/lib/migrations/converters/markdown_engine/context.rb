@@ -20,13 +20,13 @@ module Migrations
         # with a larger ceiling (see `EngineScanner`) instead of a refusal.
         EVAL_TIMEOUT_MS = 3_000
 
-        def initialize(bundle:, config:, timeout_ms: EVAL_TIMEOUT_MS)
+        def initialize(bundle:, config:)
           @bundle = bundle
           @config = config
-          @timeout_ms = timeout_ms
+          @timeout_ms = EVAL_TIMEOUT_MS
           @needs_rebuild = false
           @fork_hook = ForkManager.after_fork_child { discard! }
-          build_context(timeout_ms)
+          build_context(@timeout_ms)
         end
 
         # @param posts [Array<Hash>] `{ id:, raw: }` per post
@@ -97,17 +97,10 @@ module Migrations
 
         def evaluate_all(bundle, config)
           # Environment expected by the loaded modules; console output has no
-          # useful destination in a worker, so errors are collected for
-          # debugging instead of being routed to a logger.
           @context.eval(<<~JS, filename: "migrations/prelude.js")
             window = globalThis;
             window.devicePixelRatio = 2;
-            __consoleErrors = [];
-            console = {
-              log() {},
-              warn() {},
-              error(...args) { __consoleErrors.push(args.join(" ")); }
-            };
+            console = { log() {}, warn() {}, error() {} };
             __PRETTY_TEXT = true;
           JS
 

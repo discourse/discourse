@@ -107,30 +107,18 @@ module Migrations
       # @param maps see the class description for the methods it must answer.
       # @param unresolved_embeds [#<<] collects {UnresolvedEmbed}s.
       # @param orphan_placeholders [#<<] collects {OrphanPlaceholder}s.
-      # @param external_upload_hosts [Enumerable<String>] hosts (beyond the
-      #   source's own) whose full-URL uploads may map to imported files — an
-      #   old CDN or S3 bucket the conversion vouches for. A full-URL upload
-      #   row marked with any other `external_host` is restored verbatim: its
-      #   40-hex basename colliding with a source upload sha1 must not rewrite
-      #   another site's file. Entries are `host` or `host:port`. A scheme
-      #   prefix and that scheme's own default port are removed, matching how
-      #   the extractor records hosts on the rows; a port with no scheme is
-      #   kept, because the row keeps a non-default port too.
       def initialize(
         intermediate_db,
         maps,
         owner_type:,
         unresolved_embeds: [],
-        orphan_placeholders: [],
-        external_upload_hosts: []
+        orphan_placeholders: []
       )
         @intermediate_db = intermediate_db
         @maps = maps
         @owner_type = owner_type
         @unresolved_embeds = unresolved_embeds
         @orphan_placeholders = orphan_placeholders
-        @external_upload_hosts =
-          external_upload_hosts.map { |entry| normalize_allowlisted_host(entry) }.to_set
         @names = NameResolver.new(intermediate_db)
       end
 
@@ -504,29 +492,15 @@ module Migrations
         kind == :upload ? row[:original_markdown].to_s : ""
       end
 
-      # A row whose URL pointed at a host the conversion didn't recognize maps
-      # only when that host is explicitly vouched for — a foreign 40-hex
-      # basename can collide with a source upload sha1, and mapping it would
-      # rewrite another site's file. Declined rows take the verbatim fallback
-      # through the caller's miss path.
+      # A row whose URL pointed at a host the conversion didn't recognize is
+      # never mapped — a foreign 40-hex basename can collide with a source
+      # upload sha1, and mapping it would rewrite another site's file.
+      # Declined rows take the verbatim fallback through the caller's miss
+      # path.
       def resolve_upload(row)
-        host = row[:external_host]
-        return nil if host && !@external_upload_hosts.include?(host)
+        return nil if row[:external_host]
 
         @maps.upload_markdown(row[:upload_id])
-      end
-
-      # Rows store hosts the way the extractor's origin reading writes them:
-      # lowercased, no scheme, a scheme's own default port removed. An
-      # operator entry like `https://cdn.example.net:443/` is reduced to the
-      # same form so it matches.
-      def normalize_allowlisted_host(entry)
-        host = entry.to_s.strip.downcase
-        scheme = host[%r{\A(https?)://}, 1]
-        host = host.sub(%r{\Ahttps?://}, "").sub(%r{/.*\z}m, "")
-        host = host.delete_suffix(":80") if scheme == "http"
-        host = host.delete_suffix(":443") if scheme == "https"
-        host
       end
 
       # Builds the opening `[quote="…"]` tag only; the quoted text and `[/quote]` are
@@ -645,8 +619,11 @@ module Migrations
         spans.sort.map { |span_offset| [span_offset, length] }
       end
 
+      # A negative offset would make `byteslice` read from the end of the
+      # snippet; rows come from a database, so the sign is checked here, not
+      # assumed.
       def span_holds_url?(original, offset, url)
-        !offset.nil? && offset >= 0 && original.byteslice(offset, url.bytesize) == url
+        offset >= 0 && original.byteslice(offset, url.bytesize) == url
       end
 
       def splice_url_spans(original, spans, url)

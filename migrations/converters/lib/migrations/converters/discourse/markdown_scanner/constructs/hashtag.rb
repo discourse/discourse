@@ -92,7 +92,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil unless @names.include?(normalize(name))
+              return nil unless tracked_name?(name)
 
               Match.new(
                 start_pos: pos,
@@ -120,16 +120,12 @@ module Migrations
               end
             end
 
-            # The ASCII characters that open a hashtag when they sit right before the
-            # `#`: every printable ASCII punctuation or symbol character, minus `/` —
-            # core's rule refuses a `/`-preceded `#` (a URL fragment) — and `\`, which
-            # escapes the `#` into literal text. The gaps between the ranges are the
-            # digits and letters, which never open a hashtag.
+            # Every printable ASCII punctuation or symbol character opens a
+            # hashtag when it sits right before the `#`, minus `/` — core's
+            # rule refuses a `/`-preceded `#` (a URL fragment) — and `\`,
+            # which escapes the `#` into literal text.
             def boundary_punctuation_byte?(byte)
-              return false if byte == 0x2f || byte == 0x5c # `/`, `\`
-
-              (byte >= 0x21 && byte <= 0x2f) || (byte >= 0x3a && byte <= 0x40) ||
-                (byte >= 0x5b && byte <= 0x60) || (byte >= 0x7b && byte <= 0x7e)
+              byte != 0x2f && byte != 0x5c && ascii_punct_or_symbol_byte?(byte)
             end
           end
         end
