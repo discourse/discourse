@@ -43,7 +43,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       "space" => " ",
       "tab" => "\t",
       "newline" => "\n",
-      "no-break space" => " ",
+      "no-break space" => "\u00A0",
       "ideographic space" => "　",
       "em dash" => "—",
       "low double quote" => "„",
