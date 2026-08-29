@@ -2,7 +2,7 @@
 
 # Runs the markdown extraction machinery the way the future posts step will run
 # it — real fork model, real engine contexts, real embed writes — against a
-# Discourse corpus, and proves two things at scale:
+# Discourse corpus, and checks two things at scale:
 #
 #   correctness  every extracted body is resolved back in "all-miss" mode (no
 #                reference resolves) and must match the computed expectation
@@ -12,9 +12,9 @@
 #                own URL spelling. Everything else is the verbatim-fallback
 #                contract, checked against every post in the corpus. Any diff
 #                beyond the expectation is a bug and fails the run.
-#   viability    end-to-end throughput, per-worker RSS, refusal/trial tallies,
-#                and per-post vs batched engine calls — the numbers a posts
-#                step must reproduce.
+#   viability    end-to-end throughput, per-worker RSS, refusal and slow-retry
+#                tallies, and batched engine calls — the numbers a posts step
+#                must reproduce.
 #
 # Process model mirrors a converter run: the parent builds the engine bundle
 # (subprocess build on a cold cache; the parent itself never initializes V8),
@@ -38,9 +38,9 @@
 # canonicalized, a link destination is rebuilt from the resolved route, a
 # hashtag takes the resolved slug's case), so in that mode byte diffs on posts
 # carrying such embeds are reported as expected rewrites; a diff on a post with
-# only mention/emoji/upload embeds still fails. `--batch N` scans N
-# engine-bound bodies per V8 call instead of one, through the same production
-# `extract(..., scan_data:)` seam a batching posts step would use.
+# only mention/emoji/upload embeds still fails. Engine-bound bodies are
+# scanned in batches of 32 per V8 call (`--batch N` tunes the size), through
+# the same production `extract(..., scan_data:)` seam the posts step uses.
 # `--log-refusals N` samples up to N refusing post ids per cause and worker
 # (with the exception class behind an :engine_error), so a corpus run's refusal
 # tally is diagnosable without a rerun. `--dump-refusals DIR` additionally
@@ -67,7 +67,7 @@ options = {
   workers: 4,
   limit: nil,
   read_batch: 500,
-  batch: nil,
+  batch: 32,
   round_trip: "all-miss",
   cold_bundle: false,
   log_refusals: 0,
@@ -100,7 +100,7 @@ OptionParser
     parser.on("--read-batch N", Integer, "Rows per corpus query (default 500)") do |v|
       options[:read_batch] = v
     end
-    parser.on("--batch N", Integer, "Engine-bound bodies per V8 scan call (default: one)") do |v|
+    parser.on("--batch N", Integer, "Engine-bound bodies per V8 scan call (default 32)") do |v|
       options[:batch] = v
     end
     parser.on(
@@ -260,6 +260,9 @@ def expected_all_miss_body(output, buffer, hosts, base_url, stats)
       if kind == :link && row[:target_type] == LinkTarget::SITE
         stats["site_rewrites"] += 1
         expected_site_markup(row, hosts, base_url)
+      elsif kind == :emoji
+        # Emoji rows carry no snippet: the name is the source spelling.
+        ":#{row[:name]}:"
       else
         row[:original_markdown]
       end
@@ -721,21 +724,19 @@ def process_batch(
   end
 
   scan_data_by_id = {}
-  if options[:batch]
-    engine_bound =
-      rows.select do |row|
-        raw = row["raw"]
-        raw && !raw.empty? && raw.valid_encoding? && extractor.engine_bound?(raw)
-      end
-    engine_bound.each_slice(options[:batch]) do |slice|
-      payload = slice.map { |row| { id: row["id"], raw: row["raw"] } }
-      stats["batch_scans"] += 1
-      # A terminated batch call yields nothing; its bodies fall back to the
-      # per-post ladder through `extract(scan_data: nil)`.
-      data = extractor.scan_batch(payload)
-      stats["batch_failures"] += 1 if data.empty?
-      scan_data_by_id.merge!(data)
+  engine_bound =
+    rows.select do |row|
+      raw = row["raw"]
+      raw && !raw.empty? && raw.valid_encoding? && extractor.engine_bound?(raw)
     end
+  engine_bound.each_slice(options[:batch]) do |slice|
+    payload = slice.map { |row| { id: row["id"], raw: row["raw"] } }
+    stats["batch_scans"] += 1
+    # A terminated batch call yields nothing; its bodies fall back to the
+    # per-post ladder through `extract(scan_data: nil)`.
+    data = extractor.scan_batch(payload)
+    stats["batch_failures"] += 1 if data.empty?
+    scan_data_by_id.merge!(data)
   end
 
   items = []
@@ -789,7 +790,7 @@ def process_batch(
 
     # Identity hits legitimately rewrite quote headers, link destinations,
     # hashtag slug case and mention username case; only a diff on a post
-    # without any such embed can prove a bug in that mode.
+    # without any such embed points to a bug in that mode.
     if !all_miss && rewrite_expected[id]
       stats["expected_rewrites"] += 1
       next
