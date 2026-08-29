@@ -128,12 +128,16 @@ export default class ReorderAnnouncer<T> {
         }
         const run = this.#run;
         this.#run = null;
-        const row = run ? this.#rows()[run.index] : undefined;
+        const rows = this.#rows();
+        const row = run ? rows[run.index] : undefined;
         if (row && run?.move && Object.is(row.item, run.move.item)) {
+          // Counted from the list as it stands, not from the order the move was
+          // committed against, which the settle delay may have left behind.
           this.announceMove({
             ...run.move,
             item: row.item,
             toIndex: row.index,
+            proposedToItems: rows.map((candidate) => candidate.item),
           });
         }
       }, RUN_SETTLE_MS),

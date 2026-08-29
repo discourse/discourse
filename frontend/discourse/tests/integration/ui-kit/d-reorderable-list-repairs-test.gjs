@@ -367,4 +367,37 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
       .dom(handle)
       .hasAria("label", "Reorder Golf", "and it keeps its name");
   });
+  test("fix42618 the settled sentence counts the list as it stands", async function (assert) {
+    const items = trackedArray(objectItems());
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+    const applyMove = (move) => {
+      items.splice(0, items.length, ...move.proposedToItems);
+    };
+
+    await render(
+      <template>
+        <DMenus />
+        <List @items={{items}} @onMove={{applyMove}} />
+      </template>
+    );
+
+    // Dispatched raw so the settle timer is still armed while the list grows;
+    // `triggerKeyEvent` would await settled() and drain it first.
+    find(handleSelector("alpha")).focus();
+    document.activeElement.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        altKey: true,
+        bubbles: true,
+      })
+    );
+    items.push({ id: "delta", name: "Delta" });
+    await settled();
+
+    assert.strictEqual(
+      announce.lastCall.args[0],
+      "Moved Alpha to position 2 of 4",
+      "the settled sentence counts the rows on screen when it speaks, not the rows the move was committed against"
+    );
+  });
 });
