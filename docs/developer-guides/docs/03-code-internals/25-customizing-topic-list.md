@@ -16,7 +16,7 @@ General guidance on CSS customization can be found in [the Designer's Guide](htt
 
 On desktop, the topic list is rendered as a table. On mobile, each topic row uses a separate single-cell layout, so `topic-list-columns` only affects the desktop table.
 
-The [Plugin API](12-pluginapi.md) can be used to customize the desktop columns via the `topic-list-columns` [Value Transformer](23-transformers.md). This is the most surgical way to add, remove, replace, or reorder columns without taking ownership of the full row markup.
+The [Plugin API](13-pluginapi.md) can be used to customize the desktop columns via the `topic-list-columns` [Value Transformer](24-transformers.md). This is the most surgical way to add, remove, replace, or reorder columns without taking ownership of the full row markup.
 
 `topic-list-columns` is a **mutable** transformer. Core builds a `DAG` of columns, passes that mutable object through registered transformers, and resolves it afterwards. In practice, that means you should mutate the `columns` object directly.
 
@@ -123,7 +123,7 @@ export default apiInitializer((api) => {
 
 ## Introducing content via Plugin Outlets
 
-Prefer [Plugin Outlets](13-plugin-outlet-connectors.md) when you want to inject content without taking ownership of the whole row structure.
+Prefer [Plugin Outlets](14-plugin-outlet-connectors.md) when you want to inject content without taking ownership of the whole row structure.
 
 Some of the most useful topic-list outlets are:
 
@@ -150,7 +150,7 @@ If using this strategy, you should take extra care to ensure that your code is w
 
 ## Other tweaks via Transformers and Theme Modifiers
 
-A number of [Transformers](23-transformers.md) allow small, targeted changes to the topic-list implementation:
+A number of [Transformers](24-transformers.md) allow small, targeted changes to the topic-list implementation:
 
 - **`topic-list-columns`** (mutable context: `{ listContext, category, filter }`) - mutate the desktop column DAG
 - **`topic-list-class`** (context: `{ topics, listContext }`) - return classes to add to the topic list `<table>`

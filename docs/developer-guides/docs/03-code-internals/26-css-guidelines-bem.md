@@ -65,4 +65,4 @@ A great real world example of our CSS classes in use in Discourse is within the 
 
 ## See also
 
-- [Designing for Different Devices](27-designing-for-devices.md) — adapting styles to viewport size, touch vs. hover, and other device characteristics.
+- [Designing for Different Devices](28-designing-for-devices.md) — adapting styles to viewport size, touch vs. hover, and other device characteristics.

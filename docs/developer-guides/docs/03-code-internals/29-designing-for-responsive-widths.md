@@ -102,5 +102,5 @@ For a real example, see `.db-whos-posting` in `app/assets/stylesheets/admin/dash
 
 ## See also
 
-- [Designing for Different Devices (Touch & Hover)](27-designing-for-devices.md) — detecting touch/hover capability, and legacy mobile/desktop modes.
-- [Guidelines for CSS classes using BEM](25-css-guidelines-bem.md) — CSS class naming conventions.
+- [Designing for Different Devices (Touch & Hover)](28-designing-for-devices.md) — detecting touch/hover capability, and legacy mobile/desktop modes.
+- [Guidelines for CSS classes using BEM](26-css-guidelines-bem.md) — CSS class naming conventions.

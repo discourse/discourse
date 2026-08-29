@@ -52,9 +52,9 @@ class MyComponent extends Component {
 
 Historically, Discourse shipped two completely different layouts and stylesheets for "mobile" and "desktop" views, based on the browser's user-agent. Developers would target these modes by putting CSS in specific mobile/desktop directories, by using the `.mobile-view`/`.desktop-view` HTML classes, and the `site.mobileView` boolean in JavaScript.
 
-These techniques are now considered deprecated and should be replaced with the [viewport and capability-based strategies](28-designing-for-responsive-widths.md) discussed in the next document. For backwards-compatibility, legacy desktop/mobile CSS is used when the viewport is larger/smaller than the `sm` threshold.
+These techniques are now considered deprecated and should be replaced with the [viewport and capability-based strategies](29-designing-for-responsive-widths.md) discussed in the next document. For backwards-compatibility, legacy desktop/mobile CSS is used when the viewport is larger/smaller than the `sm` threshold.
 
 ## See also
 
-- [Designing for Responsive Widths](28-designing-for-responsive-widths.md) — breakpoints, viewport size, and container queries.
-- [Guidelines for CSS classes using BEM](25-css-guidelines-bem.md) — CSS class naming conventions.
+- [Designing for Responsive Widths](29-designing-for-responsive-widths.md) — breakpoints, viewport size, and container queries.
+- [Guidelines for CSS classes using BEM](26-css-guidelines-bem.md) — CSS class naming conventions.
