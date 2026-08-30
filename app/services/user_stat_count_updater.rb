@@ -30,7 +30,8 @@ class UserStatCountUpdater
       return if action == :increment! && post.topic.private_message?
       stat = user_stat || post.user&.user_stat
 
-      return if stat.blank?
+      # Rails 8.1 raises when the record is new or destroyed, where 8.0 ran a no-op UPDATE.
+      return if stat.blank? || stat.new_record? || stat.destroyed?
 
       column =
         if post.is_first_post?
