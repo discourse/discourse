@@ -693,7 +693,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/search/users" => "users#search_users"
 
       get(
-        { "#{root_path}/account-created/" => "users#account_created" }.merge(
+        **{ "#{root_path}/account-created/" => "users#account_created" }.merge(
           index == 1 ? { as: :users_account_created } : { as: :old_account_created },
         ),
       )
@@ -701,7 +701,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/account-created/resent" => "users#account_created"
       get "#{root_path}/account-created/edit-email" => "users#account_created"
       get(
-        { "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
+        **{ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
           index == 1 ? { as: :password_reset_token } : {},
         ),
       )
@@ -715,7 +715,7 @@ Discourse::Application.routes.draw do
             token: /[0-9a-f]+/,
           }
       put(
-        {
+        **{
           "#{root_path}/activate-account/:token" => "users#perform_account_activation",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -730,7 +730,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
-        {
+        **{
           "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -779,7 +779,7 @@ Discourse::Application.routes.draw do
             format: :json,
           }
       get(
-        {
+        **{
           "#{root_path}/:username" => "users#show",
           :constraints => {
             username: RouteFormat.username,
