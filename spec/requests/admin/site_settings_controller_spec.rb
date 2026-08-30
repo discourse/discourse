@@ -4,6 +4,8 @@ RSpec.describe Admin::SiteSettingsController do
   fab!(:moderator)
   fab!(:user)
 
+  before { described_class.clear_index_cache }
+
   describe "#index" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -26,6 +28,24 @@ RSpec.describe Admin::SiteSettingsController do
         expect(
           response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
+      end
+
+      it "returns updated values after the cache is populated" do
+        get "/admin/site_settings.json", params: { names: ["title"] }
+        original_title =
+          response.parsed_body["site_settings"].find { |setting| setting["setting"] == "title" }[
+            "value"
+          ]
+
+        SiteSetting.title = "Updated title"
+        get "/admin/site_settings.json", params: { names: ["title"] }
+        updated_title =
+          response.parsed_body["site_settings"].find { |setting| setting["setting"] == "title" }[
+            "value"
+          ]
+
+        expect(updated_title).to eq("Updated title")
+        expect(updated_title).not_to eq(original_title)
       end
 
       it "does not return settings from non-configurable plugins" do

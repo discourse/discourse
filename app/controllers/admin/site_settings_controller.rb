@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
+  INDEX_CACHE_SIZE = 16
+
+  def self.index_cache
+    @index_cache ||= LruRedux::ThreadSafeCache.new(INDEX_CACHE_SIZE)
+  end
+
+  def self.clear_index_cache
+    @index_cache&.clear
+  end
+
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
   end
@@ -11,16 +21,37 @@ class Admin::SiteSettingsController < Admin::AdminController
 
   def index
     params.permit(:categories, :plugin, :names)
-    render_json_dump(
-      site_settings:
-        SiteSetting.all_settings(
-          filter_categories: params[:categories],
-          filter_plugin: params[:plugin],
-          filter_names: params[:names],
-        ),
-      default_theme:
-        BasicThemeSerializer.new(Theme.find_default, scope: guardian, root: false).as_json,
-    )
+
+    default_theme = Theme.find_default
+    cache_key = [
+      RailsMultisite::ConnectionManagement.current_db,
+      I18n.locale,
+      SiteSetting.current.hash,
+      SiteSetting.theme_site_settings[default_theme.id]&.hash,
+      default_theme.cache_key_with_version,
+      Array.wrap(params[:categories]).sort,
+      params[:plugin],
+      Array.wrap(params[:names]).sort,
+    ]
+
+    json =
+      self
+        .class
+        .index_cache
+        .getset(cache_key) do
+          MultiJson.dump(
+            site_settings:
+              SiteSetting.all_settings(
+                filter_categories: params[:categories],
+                filter_plugin: params[:plugin],
+                filter_names: params[:names],
+              ),
+            default_theme:
+              BasicThemeSerializer.new(default_theme, scope: guardian, root: false).as_json,
+          ).freeze
+        end
+
+    render json: json
   end
 
   def update
