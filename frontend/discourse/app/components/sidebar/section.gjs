@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,6 +15,7 @@ import {
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import {
+  linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
@@ -176,10 +177,18 @@ export default class SidebarSection extends Component {
    */
   @action
   canDropLink({ source }) {
-    return (
-      Boolean(this.args.linkDropEnabled) &&
-      !webLinkPayload(source).containsFiles()
-    );
+    if (!this.args.linkDropEnabled) {
+      return false;
+    }
+    if (source.type === "sidebar-link") {
+      return true;
+    }
+    return !webLinkPayload(source).containsFiles();
+  }
+
+  @action
+  linkDropEffect({ source }) {
+    return linkDropEffectFor(source);
   }
 
   /**
@@ -193,8 +202,10 @@ export default class SidebarSection extends Component {
   @action
   trackLinkDrop({ source, location, element }) {
     // A drag carrying only text may well turn out to hold nothing droppable, so
-    // the insertion point stays hidden until the drag declares a real URL.
-    this.linkDropActive = webLinkPayload(source).containsURLs();
+    // the insertion point stays hidden until the drag declares a real URL. A
+    // registered row drag has no native payload to ask; it always qualifies.
+    this.linkDropActive =
+      source.type === "sidebar-link" || webLinkPayload(source).containsURLs();
 
     if (!this.linkDropActive) {
       this.linkDropIndex = undefined;
@@ -235,6 +246,10 @@ export default class SidebarSection extends Component {
   dropLink({ source }) {
     const linkDropIndex = this.linkDropIndex;
     this.clearLinkDrop();
+    if (source.type === "sidebar-link") {
+      this.args.onLinkMove?.(source.data, linkDropIndex);
+      return;
+    }
     // Unwrapped here so `onLinkDrop` keeps taking a decorated payload whichever
     // target reported the drop, and the section model needs no change.
     this.args.onLinkDrop?.(webLinkPayload(source), linkDropIndex);
@@ -246,11 +261,13 @@ export default class SidebarSection extends Component {
    */
   @action
   canDwellToOpen({ source }) {
-    return (
-      !this.displaySectionContent &&
-      this.canDropLink({ source }) &&
-      webLinkPayload(source).containsURLs()
-    );
+    if (this.displaySectionContent || !this.canDropLink({ source })) {
+      return false;
+    }
+    if (source.type === "sidebar-link") {
+      return true;
+    }
+    return webLinkPayload(source).containsURLs();
   }
 
   /**
@@ -311,6 +328,19 @@ export default class SidebarSection extends Component {
   <template>
     {{#if this.displaySection}}
       <div
+        class={{dConcatClass
+          "sidebar-section"
+          "sidebar-section-wrapper"
+          (if this.linkDropActive "is-link-drop-active")
+          (if
+            this.displaySectionContent
+            "sidebar-section--expanded"
+            "sidebar-section--collapsed"
+          )
+          (if @persistentActions "sidebar-section--persistent-actions")
+        }}
+        data-section-name={{@sectionName}}
+        ...attributes
         {{didInsert this.setExpandedState}}
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
@@ -325,9 +355,10 @@ export default class SidebarSection extends Component {
         {{! The same drop, for a link the browser started dragging from this
             page rather than from outside the window. }}
         {{dDragAndDropTarget
+          accepts="sidebar-link"
           adopts=WEB_LINK_ADOPTION
           canDrop=this.canDropLink
-          dropEffect="copy"
+          dropEffect=this.linkDropEffect
           indicator=false
           onDragEnter=this.trackLinkDrop
           onDrag=this.trackLinkDrop
@@ -335,24 +366,12 @@ export default class SidebarSection extends Component {
           onDrop=this.dropLink
         }}
         {{dDragDwell
-          types=WEB_LINK_ADOPTION.type
+          types=(array WEB_LINK_ADOPTION.type "sidebar-link")
           externalKinds=WEB_LINK_KINDS
           canDwell=this.canDwellToOpen
           onDwell=this.openForLinkDwell
           onDwellEnd=this.endLinkDwell
         }}
-        data-section-name={{@sectionName}}
-        class={{dConcatClass
-          "sidebar-section"
-          "sidebar-section-wrapper"
-          (if this.linkDropActive "is-link-drop-active")
-          (if
-            this.displaySectionContent
-            "sidebar-section--expanded"
-            "sidebar-section--collapsed"
-          )
-        }}
-        ...attributes
       >
         {{#unless @hideSectionHeader}}
           <div class="sidebar-section-header-wrapper sidebar-row">
@@ -394,6 +413,7 @@ export default class SidebarSection extends Component {
                   {{on "click" headerAction.action}}
                   type="button"
                   title={{headerAction.title}}
+                  aria-label={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
                 >
                   {{dIcon @headerActionsIcon}}

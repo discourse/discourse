@@ -1,12 +1,17 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { translateModKey } from "discourse/lib/utilities";
+import { service } from "@ember/service";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerToggleSwitch extends Component {
+  @service capabilities;
+
+  shortcut = formatShortcut("ctrl+m");
+
   @action
   mouseDown(event) {
     if (this.args.preventFocus) {
@@ -25,23 +30,13 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   get label() {
-    if (this.args.state) {
-      return i18n("composer.switch_to_markdown", {
-        keyboardShortcut: this.keyboardShortcut,
-      });
-    } else {
-      return i18n("composer.switch_to_rich_text", {
-        keyboardShortcut: this.keyboardShortcut,
-      });
+    const key = this.args.state
+      ? "composer.switch_to_markdown"
+      : "composer.switch_to_rich_text";
+    if (!this.capabilities.hasKeyboard) {
+      return i18n(`${key}_no_shortcut`);
     }
-  }
-
-  get keyboardShortcut() {
-    return `${translateModKey("ctrl")} M`;
-  }
-
-  get ariaKeyshortcuts() {
-    return this.keyboardShortcut.replace(/ /g, "+");
+    return i18n(key, { keyboardShortcut: this.shortcut.label });
   }
 
   <template>
@@ -56,12 +51,12 @@ export default class ComposerToggleSwitch extends Component {
       disabled={{@disabled}}
       aria-checked={{if @state "true" "false"}}
       aria-label={{this.label}}
-      aria-keyshortcuts={{this.ariaKeyshortcuts}}
+      aria-keyshortcuts={{if this.capabilities.hasKeyboard this.shortcut.aria}}
       title={{this.label}}
-      {{on "mousedown" this.mouseDown}}
-      {{on "keydown" this.handleKeydown}}
       data-rich-editor={{@state}}
       ...attributes
+      {{on "mousedown" this.mouseDown}}
+      {{on "keydown" this.handleKeydown}}
     >
       <span class="composer-toggle-switch__slider">
         <span

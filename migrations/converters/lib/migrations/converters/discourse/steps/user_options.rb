@@ -61,7 +61,6 @@ module Migrations
               theme_key_seq: item[:theme_key_seq],
               timezone: item[:timezone],
               title_count_mode_key: item[:title_count_mode_key],
-              topics_unread_when_closed: item[:topics_unread_when_closed],
               understood_languages: item[:understood_languages],
               watched_precedence_over_muted: item[:watched_precedence_over_muted],
             )

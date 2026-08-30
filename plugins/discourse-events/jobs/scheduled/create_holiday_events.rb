@@ -18,7 +18,7 @@ module Jobs
         regions_and_user_ids = Hash.new { |h, k| h[k] = [] }
 
         UserCustomField
-          .where(name: ::DiscourseCalendar::REGION_CUSTOM_FIELD)
+          .where(name: ::DiscourseEvents::REGION_CUSTOM_FIELD)
           .pluck(:user_id, :value)
           .each { |user_id, region| regions_and_user_ids[region] << user_id if region.present? }
 
@@ -52,27 +52,30 @@ module Jobs
             .to_h
 
         # Remove holidays for deactivated/suspended/silenced users
-        CalendarEvent.where(post_id: nil).where.not(user_id: usernames.keys).destroy_all
+        DiscourseEvents::Calendar::Event
+          .where(post_id: nil)
+          .where.not(user_id: usernames.keys)
+          .destroy_all
 
         # Remove future holidays when users changed their region
-        CalendarEvent
+        DiscourseEvents::Calendar::Event
           .joins(user: :_custom_fields)
           .where(post_id: nil)
           .where("start_date > ?", today)
-          .where("user_custom_fields.name = ?", ::DiscourseCalendar::REGION_CUSTOM_FIELD)
+          .where("user_custom_fields.name = ?", ::DiscourseEvents::REGION_CUSTOM_FIELD)
           .where("LENGTH(COALESCE(user_custom_fields.value, '')) > 0")
           .where("user_custom_fields.value != calendar_events.region")
           .destroy_all
 
         regions_and_user_ids.each do |region, user_ids|
-          if Holidays.available_regions.exclude?(region.to_sym)
+          if ::Holidays.available_regions.exclude?(region.to_sym)
             Rails.logger.warn(
               "Skipping invalid region '#{region}' for users: #{user_ids.join(", ")}.",
             )
             next
           end
 
-          ::DiscourseCalendar::Holiday
+          ::DiscourseEvents::Holidays::Finder
             .find_holidays_for(
               region_code: region,
               start_date: today,
@@ -92,7 +95,7 @@ module Jobs
                 end
 
                 event =
-                  CalendarEvent
+                  DiscourseEvents::Calendar::Event
                     .where(topic_id: topic_id, user_id: user_id, description: holiday[:name])
                     .where(
                       "start_date >= :from AND start_date <= :to",

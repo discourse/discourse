@@ -460,7 +460,7 @@ export default class SidebarSectionForm extends Component {
           "sidebar_sections",
           this.currentUser.sidebar_sections.concat(data.sidebar_section)
         );
-        this.closeModal();
+        this.closeModal({ createdSection: data.sidebar_section });
       })
       .catch((e) => {
         this.flash = sanitize(extractError(e));

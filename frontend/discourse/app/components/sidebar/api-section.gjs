@@ -24,6 +24,7 @@ export default class SidebarApiSection extends Component {
         @headerLinkTitle={{@section.title}}
         @headerActionsIcon={{@section.actionsIcon}}
         @headerActions={{@section.actions}}
+        @persistentActions={{@section.persistentActions}}
         @willDestroy={{@section.willDestroy}}
         @collapsable={{@collapsable}}
         @displaySection={{@section.displaySection}}

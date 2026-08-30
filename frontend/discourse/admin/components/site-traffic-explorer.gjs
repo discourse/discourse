@@ -95,13 +95,12 @@ export default class SiteTrafficExplorer extends Component {
 
   @cached
   get chartOptions() {
-    const trafficTypes =
-      this.args.traffic?.chart_traffic_types ?? this.args.trafficTypes;
-
     return {
       hideYAxisGridLines: true,
       hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
-        .filter(([, trafficType]) => !trafficTypes.includes(trafficType))
+        .filter(
+          ([, trafficType]) => !this.args.trafficTypes.includes(trafficType)
+        )
         .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
     };
@@ -175,7 +174,7 @@ export default class SiteTrafficExplorer extends Component {
       ? moment(partial.available_start_date).format("ll")
       : null;
 
-    const pageviewLimitStart = moment(partial.pageview_limit_start_at);
+    const pageviewLimitStart = moment.utc(partial.pageview_limit_start_at);
     const pageviewLimitDate = pageviewLimitStart.format("ll");
     const pageviewLimitTime = pageviewLimitStart.format("LT");
 

@@ -166,8 +166,20 @@ module DiscourseWorkflows
         private
 
         def process(exec_ctx, config, item_index)
-          operation = validated(config["operation"], OPERATIONS, "unknown_operation", :operation)
-          pin_type = validated(config["pin_type"], PIN_TYPES, "unknown_pin_type", :pin_type)
+          operation =
+            validated(
+              config["operation"],
+              OPERATIONS,
+              "discourse_workflows.errors.unknown_operation",
+              :operation,
+            )
+          pin_type =
+            validated(
+              config["pin_type"],
+              PIN_TYPES,
+              "discourse_workflows.errors.topic_pin.unknown_pin_type",
+              :pin_type,
+            )
 
           topic = ::Topic.find(config["topic_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
@@ -275,9 +287,7 @@ module DiscourseWorkflows
           value = value.to_s
           return value if allowed.include?(value)
 
-          raise_node_error!(
-            I18n.t("discourse_workflows.errors.topic_pin.#{error_key}", param => value),
-          )
+          raise_node_error!(I18n.t(error_key, param => value))
         end
       end
     end

@@ -76,6 +76,7 @@ en:
       node_does_not_accept_inputs: "%{node} does not accept inputs."
       duplicate_node_names: "Node names must be unique within a workflow. Duplicates: %{names}"
       no_rows_matched_filter: "No rows matched the provided filter."
+      unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
       item:
@@ -84,11 +85,9 @@ en:
       topic:
         create_failed: "Failed to create topic."
         bump_failed: "Failed to bump topic."
-        unknown_operation: "Unknown operation: %{operation}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
@@ -99,7 +98,6 @@ en:
         actor_not_staff: "The acting user must be a staff member to flag users."
         cannot_flag_staff: "'%{username}' cannot be flagged. Staff members and automated accounts cannot be added to the review queue."
       user:
-        unknown_operation: "Unknown operation: %{operation}."
         unknown_extensions: "Unknown user extensions: %{extensions}."
         invalid_updates: "User updates must be an object."
         invalid_trust_level: "Invalid trust level: %{level}."
@@ -126,12 +124,12 @@ en:
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
+        personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
         uncategorized_not_allowed: "This site does not allow topics without a category."
       topic_pin:
-        unknown_operation: "Unknown operation: %{operation}."
         unknown_pin_type: "Unknown pin type: %{pin_type}."
         invalid_timestamp: "'%{field}' is not a valid date and time: '%{value}'."
         pin_not_allowed: "'%{username}' cannot pin or unpin topic %{topic_id}. Pinning requires staff, trust level 4, or moderator access to the topic's category."
@@ -165,7 +163,6 @@ en:
         header_name_invalid: "Header name contains invalid characters."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
-        unknown_operation: "Unknown operation: %{operation}."
         invalid_query: "Invalid query: %{errors}"
         invalid_row: "Invalid row: %{errors}"
         filter_required: "Filter must not be empty"

@@ -1,3 +1,4 @@
+import { hash } from "@ember/helper";
 import {
   click,
   find,
@@ -12,9 +13,12 @@ import {
   centerOf,
   dragEvent,
   dragEventNow,
+  dragOver,
   externalDragOver,
   simulateExternalDrag,
+  startDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 
 /** A drag carrying a real URL, the way a link dragged from another tab arrives. */
 function urlTransfer() {
@@ -346,6 +350,35 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
         .dom(".sidebar-section-content")
         .exists(
           "holding a link over a collapsed section opens it, so the drop can be aimed at a row"
+        );
+    });
+
+    test("opens under one of its own links being moved over it", async function (assert) {
+      const movable = <template>
+        <div
+          data-test-row
+          {{dDragAndDropSource
+            type="sidebar-link"
+            data=(hash sectionId=1 linkId=2 index=0)
+            effectAllowed="move"
+          }}
+        >a row from elsewhere</div>
+        <collapsedSection />
+      </template>;
+      await render(movable);
+      await click(".sidebar-section-header-caret");
+
+      assert.dom(".sidebar-section-content").doesNotExist("starts collapsed");
+
+      const dataTransfer = new DataTransfer();
+      await startDrag("[data-test-row]", { dataTransfer });
+      await dragOver(".sidebar-section", { dataTransfer });
+      await settled();
+
+      assert
+        .dom(".sidebar-section-content")
+        .exists(
+          "a link being moved opens a collapsed section the same way an incoming one does"
         );
     });
 

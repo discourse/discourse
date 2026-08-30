@@ -471,7 +471,7 @@ en:
         failed: "Could not complete the action: %{error}"
         unexpected_error: "an unexpected error occurred"
       agents:
-        default_llm_required: "Default LLM model is required prior to enabling Chat"
+        forced_default_llm_required: "Select a default language model before requiring this agent to always use it."
         bot_user_unsupported: "This agent is used internally by a feature and cannot have a bot user"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
@@ -709,8 +709,12 @@ en:
         lock_post: "Lock post"
         delete_topic: "Delete topic"
         edit_post: "Edit post"
-        edit_tags: "Edit tags"
+        change_topic_tags: "Edit topic tags"
+        create_tag: "Create tag"
+        edit_tag: "Edit tag"
+        create_category: "Create category"
         edit_category: "Edit category"
+        change_topic_category: "Change topic category"
         set_topic_timer: "Set topic timer"
         set_slow_mode: "Set slow mode"
         move_posts: "Move posts"
@@ -763,8 +767,12 @@ en:
         lock_post: "Lock or unlock a post"
         delete_topic: "Delete a topic"
         edit_post: "Edit the content of a post"
-        edit_tags: "Edit the tags on a topic"
-        edit_category: "Move a topic to a different category"
+        change_topic_tags: "Edit the tags on a topic"
+        create_tag: "Create a new tag"
+        edit_tag: "Rename a tag or change its description"
+        create_category: "Create a new category"
+        edit_category: "Edit an existing category's name, description, or colors"
+        change_topic_category: "Move a topic to a different category"
         set_topic_timer: "Set a timer on a topic to close, open, delete, or bump it"
         set_slow_mode: "Enable or disable slow mode on a topic"
         move_posts: "Move posts to a new or existing topic"
@@ -816,8 +824,12 @@ en:
         lock_post: "Locking post %{post_id} (locked: %{locked})"
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
         edit_post: "Editing post %{post_id}"
-        edit_tags: "Editing tags on topic %{topic_id}: %{tags}"
-        edit_category: "Moving topic %{topic_id} to category %{category_id}"
+        change_topic_tags: "Editing tags on topic %{topic_id}: %{tags}"
+        create_tag: "Creating tag '%{name}'"
+        edit_tag: "Editing tag '%{name}' (%{fields})"
+        create_category: "Creating category '%{name}'"
+        edit_category: "Editing category %{category_id} (%{fields})"
+        change_topic_category: "Moving topic %{topic_id} to category %{category_id}"
         set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Moving posts %{post_ids} from topic %{topic_id}"
@@ -938,7 +950,7 @@ en:
           revision_failed: "Failed to revise the post."
         success: "Post edited successfully."
 
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Topic not found."
           not_allowed: "You are not allowed to edit tags on this topic."
@@ -946,7 +958,42 @@ en:
           tagging_disabled: "Tagging is not enabled on this site."
         success: "Tags updated successfully."
 
+      create_tag:
+        errors:
+          tagging_disabled: "Tagging is not enabled on this site."
+          no_name: "A name is required to create a tag."
+          already_exists: "A tag named '%{name}' already exists."
+          not_allowed: "You are not allowed to create tags."
+          no_reason: "A reason is required to create a tag."
+        success: "Tag '%{name}' created successfully."
+
+      edit_tag:
+        errors:
+          tagging_disabled: "Tagging is not enabled on this site."
+          not_found: "Tag not found."
+          not_allowed: "You are not allowed to edit this tag."
+          nothing_to_edit: "Either new_name or description must be provided."
+          invalid_new_name: "'%{name}' is not a valid tag name."
+          no_reason: "A reason is required to edit a tag."
+        success: "Tag '%{name}' updated successfully."
+
+      create_category:
+        errors:
+          no_name: "A name is required to create a category."
+          not_allowed: "You are not allowed to create categories."
+          parent_not_found: "Parent category not found."
+          no_reason: "A reason is required to create a category."
+        success: "Category '%{name}' created successfully."
+
       edit_category:
+        errors:
+          not_found: "Category not found."
+          not_allowed: "You are not allowed to edit this category."
+          nothing_to_edit: "At least one of name, description, color, or text_color must be provided."
+          no_reason: "A reason is required to edit a category."
+        success: "Category '%{name}' updated successfully."
+
+      change_topic_category:
         errors:
           not_found: "Topic not found."
           not_allowed: "You are not allowed to move this topic."
@@ -1176,7 +1223,7 @@ en:
       no_user_specified: The username or the user_unique_id parameter is required, please specify it.
       user_not_found: The user specified does not exist. Check the username param.
       agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
-      no_default_llm: The agent must have a default_llm defined.
+      no_default_llm: No default language model is available. Configure a model for the agent or site.
       user_not_allowed: The user is not allowed to participate in the topic.
       invalid_stream_resume_token: The resume_token is invalid or has expired.
       no_tool_results_specified: The tool_results parameter is required when resuming a stream.

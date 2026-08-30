@@ -829,7 +829,7 @@ en:
         create_user: Create user
         create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
+        default_llm_help: The default language model to use for this agent. When blank, the site default language model is used.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
@@ -1654,6 +1654,8 @@ en:
         rejected_tool_action:
           title: "Tool rejected"
       types:
+        discourse_ai_triage:
+          title: "AI triage"
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:

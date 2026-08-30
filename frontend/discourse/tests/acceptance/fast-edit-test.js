@@ -6,13 +6,17 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
+import { formatShortcut } from "discourse/lib/shortcut-format";
+import { capabilities } from "discourse/services/capabilities";
 import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
   metaModifier,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Fast Edit", function (needs) {
   needs.user();
@@ -136,5 +140,29 @@ acceptance("Fast Edit", function (needs) {
     await click(".quote-button .quote-edit-label");
 
     assert.dom("#fast-edit-input").exists();
+  });
+
+  test("gate: the save button names the shortcut only with a keyboard", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_1 .cooked p");
+    await click(".quote-button .quote-edit-label");
+
+    assert.dom(".save-fast-edit").hasAttribute(
+      "title",
+      i18n("composer.submit_shortcut_title", {
+        shortcut: formatShortcut("mod+enter").label,
+      })
+    );
+
+    sinon.stub(capabilities, "hasKeyboard").get(() => false);
+    await visit("/");
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_1 .cooked p");
+    await click(".quote-button .quote-edit-label");
+
+    assert
+      .dom(".save-fast-edit")
+      .doesNotHaveAttribute("title")
+      .doesNotHaveAttribute("aria-keyshortcuts");
   });
 });

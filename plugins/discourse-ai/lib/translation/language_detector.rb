@@ -48,8 +48,9 @@ module DiscourseAi
           )
 
         result = +""
-        bot.reply(context) do |partial|
-          next if partial.strip.blank?
+        bot.reply(context) do |partial, _, type|
+          next if type == :thinking || partial.strip.blank?
+
           result << partial
         end
 

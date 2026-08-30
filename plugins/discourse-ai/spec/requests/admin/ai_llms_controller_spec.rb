@@ -156,20 +156,32 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       llms = response.parsed_body["ai_llms"]
 
       model_json = llms.find { |m| m["id"] == llm_model.id }
-      expect(model_json["used_by"]).to contain_exactly({ "type" => "ai_bot" })
+      expect(model_json["used_by"]).to contain_exactly(
+        { "type" => "ai_bot", "id" => DiscourseAi::Configuration::Module::BOT_ID },
+      )
 
       model2_json = llms.find { |m| m["id"] == llm_model2.id }
 
       expect(model2_json["used_by"]).to contain_exactly(
         { "type" => "ai_agent", "name" => "Cool agent", "id" => ai_agent.id },
-        { "type" => "ai_helper", "name" => "Proofread text" },
+        {
+          "type" => "ai_helper",
+          "name" => "Proofread text",
+          "id" => DiscourseAi::Configuration::Module::AI_HELPER_ID,
+        },
       )
 
       model3_json = llms.find { |m| m["id"] == fake_model.id }
 
       expect(model3_json["used_by"]).to contain_exactly(
-        { "type" => "ai_summarization" },
-        { "type" => "ai_embeddings_semantic_search" },
+        {
+          "type" => "ai_summarization",
+          "id" => DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
+        },
+        {
+          "type" => "ai_embeddings_semantic_search",
+          "id" => DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+        },
       )
     end
   end
