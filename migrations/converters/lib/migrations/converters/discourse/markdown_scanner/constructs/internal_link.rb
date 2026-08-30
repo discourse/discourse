@@ -13,8 +13,12 @@ module Migrations
           #   * a bare, whitespace-delimited URL (kept bare, so the renderer emits a
           #     bare URL and oneboxes keep working).
           #
-          # An image `![](…)` is not our concern, and a raw HTML `<a>` is out of scope
-          # (as with the upload construct), so neither is matched.
+          # An image `![](…)` is not our concern. Raw HTML anchors are not matched
+          # either: markdown-it exposes an entire raw tag as an opaque HTML token,
+          # not as a link with an href. Rewriting those safely needs a separate HTML
+          # attribute parser that can preserve the attribute's exact source spelling;
+          # the URL constructs only locate links and images the engine reports
+          # semantically.
           #
           # `/filter?q=…` is out of scope too, and deliberately so: it names its
           # categories and tags inside the query string rather than in the path
