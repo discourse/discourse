@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
-  INDEX_CACHE_SIZE = 16
+  INDEX_CACHE_SIZE = 4
 
   def self.index_cache
     @index_cache ||= LruRedux::ThreadSafeCache.new(INDEX_CACHE_SIZE)
