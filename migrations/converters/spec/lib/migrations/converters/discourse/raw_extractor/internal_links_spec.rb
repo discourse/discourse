@@ -276,6 +276,16 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    it "defers a category link using the legacy `/category/` route" do
+      link, = link_for("[x](/category/support/billing)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::CATEGORY,
+        target_id: nil,
+        target_name: "support:billing",
+      )
+    end
+
     # Core routes every tab (`/l/<filter>`, `/none`, `/all`, `/subcategories`)
     # inside `c/*category_slug_path_with_id`, so Rails strips the tail before
     # `Category.find_by_slug_path_with_id` sees the glob. The id-less form has to
@@ -405,10 +415,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_type: enums::LinkTarget::TAG, target_name: "intersection")
     end
 
-    it "defers a group link by name" do
-      link, = link_for("[x](/g/team)")
+    it "defers a group link by name for canonical and legacy route segments" do
+      %w[/g/team /groups/team /group/team].each do |path|
+        link, = link_for("[x](#{path})")
 
-      expect(link).to include(target_type: enums::LinkTarget::GROUP, target_name: "team")
+        expect(link).to include(target_type: enums::LinkTarget::GROUP, target_name: "team")
+        buffer.clear
+      end
     end
 
     it "defers a badge link by id" do

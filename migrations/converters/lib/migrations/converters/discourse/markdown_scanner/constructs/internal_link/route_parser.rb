@@ -86,7 +86,7 @@ module Migrations
               # can't run past the tail, which keeps the tag id of an intersection URL
               # (`/c/support/none/<tag>/<tag-id>`) from being read as the category's.
               CATEGORY_ID =
-                %r{\A/c/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
+                %r{\A/(?:c|category)/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
               private_constant :CATEGORY_ID
 
               # The legacy id-less form, `/c/<slug>` or `/c/<parent>/<child>`, whose
@@ -95,7 +95,8 @@ module Migrations
               # slug rather than an id (see `Base::ID_PATTERN`). Stops at the filter tail
               # like the id form, so `/c/support/l/latest` names `support` instead of a
               # `support:l:latest` that resolves to nothing.
-              CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)(?=[/?#]|\z)}
+              CATEGORY_SLUG =
+                %r{\A/(?:c|category)/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)(?=[/?#]|\z)}
               private_constant :CATEGORY_SLUG
 
               # `/tag/<name>` / `/tags/<name>`. The guard routes the two reserved
@@ -145,7 +146,7 @@ module Migrations
                 %r{\A/tags/intersection/(?<tags>#{SEGMENT}(?:/#{SEGMENT})+)(?=[?#]|\z)}
               private_constant :TAG_INTERSECTION
 
-              GROUP = %r{\A/g/(?<name>#{SEGMENT})}
+              GROUP = %r{\A/(?:g|groups?)/(?<name>#{SEGMENT})}
               private_constant :GROUP
 
               # A path that steps INTO a coordinate-bearing route family — the
@@ -153,7 +154,7 @@ module Migrations
               # coordinates after it. A bare family segment (`/u`, `/badges`,
               # `/tags`) is that family's index page: coordinate-free, and not
               # matched here.
-              COORDINATE_OPENER = %r{\A/(?:t|p|u|users|c|g|tags?|badges)/}
+              COORDINATE_OPENER = %r{\A/(?:t|p|u|users|c|category|g|groups?|tags?|badges)/}
               private_constant :COORDINATE_OPENER
 
               # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated at

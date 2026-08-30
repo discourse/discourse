@@ -68,7 +68,7 @@ module Migrations
 
             # The route segments this construct understands, shared by the presence
             # gate and the bare-URL pattern.
-            ROUTE_SEGMENT = "t|p|u|users|c|g|tags?|badges"
+            ROUTE_SEGMENT = "t|p|u|users|c|category|g|groups?|tags?|badges"
             private_constant :ROUTE_SEGMENT
 
             # A relative link (`/t/5`) contains no character of the gate's
