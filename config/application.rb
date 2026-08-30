@@ -91,6 +91,10 @@ module Discourse
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
     config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
+
+    # Rails 8.1 lets `ActionDispatch::MissingController` escape instead of turning it into a
+    # routing error, which would answer 500 where Discourse answers 404.
+    config.action_dispatch.rescue_responses["ActionDispatch::MissingController"] = :not_found
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
     config.active_record.dump_schema_after_migration = false
