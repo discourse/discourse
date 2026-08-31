@@ -13,18 +13,15 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
-import type ModalService from "discourse/services/modal";
 
 /**
  * The concrete float instance backing a menu. It holds the menu's options,
  * open/close state, and portal outlet, and implements the trigger and lifecycle
  * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
- * it closes and, on mobile, closes through the modal service when it was shown
- * as a modal.
+ * it closes.
  */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
-  @service declare modal: ModalService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;
@@ -115,10 +112,6 @@ export default class DMenuInstance extends FloatKitInstance {
     const ownedFocus = this.#ownsFocus;
 
     await animateClosing(this.content);
-
-    if (this.renderInModal && this.expanded) {
-      await this.modal.close();
-    }
 
     await this.menu.close(this);
 

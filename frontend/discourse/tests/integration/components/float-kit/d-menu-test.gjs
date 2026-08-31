@@ -21,11 +21,24 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import DMenus from "discourse/float-kit/components/d-menus";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import { getLockState } from "discourse/lib/body-scroll-lock";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import dElement from "discourse/ui-kit/helpers/d-element";
+
+const ModalWithMenu = <template>
+  <DModal @closeModal={{@closeModal}} @inline={{true}}>
+    <span class="outer-modal-content">Outer modal</span>
+    <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+      <:content as |menu|>
+        <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
+      </:content>
+    </DMenu>
+  </DModal>
+</template>;
 
 module("Integration | Component | FloatKit | DMenu", function (hooks) {
   setupRenderingTest(hooks);
@@ -94,6 +107,57 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
+  });
+
+  test("closing a standalone mobile menu cleans up its modal", async function (assert) {
+    forceMobile();
+
+    const initialLockCount = getLockState().lockedNum;
+
+    await render(
+      <template>
+        <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+          <:content as |menu|>
+            <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
+          </:content>
+        </DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.strictEqual(
+      getLockState().lockedNum,
+      initialLockCount + 1,
+      "opening the menu locks body scrolling"
+    );
+
+    await click(".close-menu");
+
+    assert.dom(".fk-d-menu-modal").doesNotExist("the menu modal closes");
+    assert.strictEqual(
+      getLockState().lockedNum,
+      initialLockCount,
+      "closing the menu releases its body scroll lock"
+    );
+  });
+
+  test("closing a mobile menu preserves its containing modal", async function (assert) {
+    forceMobile();
+
+    await render(<template><ModalContainer /></template>);
+
+    const modal = getOwner(this).lookup("service:modal");
+    modal.show(ModalWithMenu);
+    await settled();
+
+    await open();
+    await click(".close-menu");
+
+    assert
+      .dom(".outer-modal-content")
+      .exists("the containing modal remains open");
+    assert.dom(".fk-d-menu-modal").doesNotExist("the menu modal closes");
   });
 
   test("DMenu uses a modal while DTooltip stays inline on mobile", async function (assert) {
