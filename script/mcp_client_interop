@@ -32,7 +32,7 @@ const transport = new StreamableHTTPClientTransport(new URL(process.env.MCP_URL)
 await client.connect(transport);
 const tools = await client.listTools();
 const currentUser = await client.callTool({
-  name: "discourse.current_user.get",
+  name: "discourse_current_user_get",
   arguments: {},
 });
 const resourceTemplates = await client.listResourceTemplates();

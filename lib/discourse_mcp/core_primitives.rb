@@ -37,7 +37,7 @@ module DiscourseMcp
 
     def register_read_tools(registry)
       registry.register_tool(
-        "discourse.current_user.get",
+        "discourse_current_user_get",
         title: "Get current user",
         description:
           "Returns the authenticated Discourse user, granted scopes, and MCP server URI.",
@@ -46,7 +46,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.search",
+        "discourse_search",
         title: "Search Discourse",
         description:
           "Searches topics and posts visible to the authenticated user using Discourse search syntax.",
@@ -71,7 +71,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.topic.get",
+        "discourse_topic_get",
         title: "Get topic",
         description: "Reads a topic and a bounded set of posts visible to the authenticated user.",
         implementation: Tools::GetTopic,
@@ -94,7 +94,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.post.get",
+        "discourse_post_get",
         title: "Get post",
         description: "Reads one visible post.",
         implementation: Tools::GetPost,
@@ -104,7 +104,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.topic.list",
+        "discourse_topic_list",
         title: "List topics",
         description: "Lists recent topics visible to the authenticated user.",
         implementation: Tools::ListTopics,
@@ -113,7 +113,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.category.list",
+        "discourse_category_list",
         title: "List categories",
         description: "Lists the visible category hierarchy.",
         implementation: Tools::ListCategories,
@@ -121,7 +121,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.tag.list",
+        "discourse_tag_list",
         title: "List tags",
         description: "Lists visible tags ordered by usage.",
         implementation: Tools::ListTags,
@@ -130,7 +130,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.user.get",
+        "discourse_user_get",
         title: "Get user",
         description: "Reads a user profile visible to the authenticated user.",
         implementation: Tools::GetUser,
@@ -143,7 +143,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.bookmark.list",
+        "discourse_bookmark_list",
         title: "List bookmarks",
         description: "Lists the authenticated user's bookmarks.",
         implementation: Tools::ListBookmarks,
@@ -152,7 +152,7 @@ module DiscourseMcp
         annotations: READ_ONLY,
       )
       registry.register_tool(
-        "discourse.notification.list",
+        "discourse_notification_list",
         title: "List notifications",
         description: "Lists the authenticated user's notifications.",
         implementation: Tools::ListNotifications,
@@ -164,7 +164,7 @@ module DiscourseMcp
 
     def register_write_tools(registry)
       registry.register_tool(
-        "discourse.topic.create",
+        "discourse_topic_create",
         title: "Create topic",
         description: "Creates a topic as the authenticated user.",
         implementation: Tools::CreateTopic,
@@ -197,7 +197,7 @@ module DiscourseMcp
         risk: :write,
       )
       registry.register_tool(
-        "discourse.topic.reply",
+        "discourse_topic_reply",
         title: "Reply to topic",
         description: "Replies to a topic as the authenticated user.",
         implementation: Tools::ReplyTopic,
@@ -224,7 +224,7 @@ module DiscourseMcp
         risk: :write,
       )
       registry.register_tool(
-        "discourse.post.edit",
+        "discourse_post_edit",
         title: "Edit post",
         description: "Edits a post when the authenticated user has permission.",
         implementation: Tools::EditPost,
@@ -251,7 +251,7 @@ module DiscourseMcp
         risk: :write,
       )
       registry.register_tool(
-        "discourse.post.set_deleted",
+        "discourse_post_set_deleted",
         title: "Delete or recover own post",
         description: "Deletes or recovers a post owned by the authenticated user.",
         implementation: Tools::SetPostDeleted,
@@ -265,7 +265,7 @@ module DiscourseMcp
         risk: :destructive,
       )
       registry.register_tool(
-        "discourse.user_status.set",
+        "discourse_user_status_set",
         title: "Set user status",
         description: "Sets or clears the authenticated user's status.",
         implementation: Tools::SetUserStatus,

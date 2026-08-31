@@ -227,7 +227,7 @@ describe DiscourseMcp::OAuth do
     access_token = McpOauthAccessToken.issue!(authorization: authorization)
     McpPrimitive.create!(
       kind: "tool",
-      identifier: "discourse.post.get",
+      identifier: "discourse_post_get",
       enabled: true,
       consent_required_at: 1.second.from_now,
     )

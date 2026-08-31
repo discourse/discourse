@@ -71,7 +71,7 @@ describe DiscourseMcp::AuthorizationStatus do
   it "ignores fresh consent requirements for primitives outside the granted scopes" do
     McpPrimitive.create!(
       kind: "tool",
-      identifier: "discourse.post.set_deleted",
+      identifier: "discourse_post_set_deleted",
       enabled: true,
       consent_required_at: 1.second.from_now,
     )

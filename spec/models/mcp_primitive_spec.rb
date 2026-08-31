@@ -2,18 +2,18 @@
 
 describe McpPrimitive do
   it "stores one exposure record for each primitive type and identifier" do
-    described_class.create!(kind: "tool", identifier: "discourse.search", enabled: true)
+    described_class.create!(kind: "tool", identifier: "discourse_search", enabled: true)
 
-    duplicate = described_class.new(kind: "tool", identifier: "discourse.search", enabled: false)
+    duplicate = described_class.new(kind: "tool", identifier: "discourse_search", enabled: false)
 
     expect(duplicate).not_to be_valid
   end
 
   it "returns only enabled primitives that are not emergency blocked" do
-    exposed = described_class.create!(kind: "tool", identifier: "discourse.search", enabled: true)
+    exposed = described_class.create!(kind: "tool", identifier: "discourse_search", enabled: true)
     described_class.create!(
       kind: "tool",
-      identifier: "discourse.post.set_deleted",
+      identifier: "discourse_post_set_deleted",
       enabled: true,
       emergency_blocked: true,
     )

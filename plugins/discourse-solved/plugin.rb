@@ -439,7 +439,7 @@ end
 after_initialize do
   require_relative "lib/discourse_solved/mcp_tools"
   register_mcp_tool(
-    "discourse-solved.solution.set",
+    "discourse_solved_solution_set",
     title: "Set accepted solution",
     description: "Accepts or unaccepts a post as the topic solution when permitted.",
     implementation: DiscourseSolved::McpTools::SetSolution,

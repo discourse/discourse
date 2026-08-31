@@ -10,7 +10,7 @@ describe Admin::McpActivityController do
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
         method: "tools/call",
-        tool: "discourse.search",
+        tool: "discourse_search",
         outcome: "success",
         occurrences: 2,
         duration_ms: 10,
@@ -18,7 +18,7 @@ describe Admin::McpActivityController do
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
         method: "tools/call",
-        tool: "discourse.topic.create",
+        tool: "discourse_topic_create",
         outcome: "error",
         occurrences: 3,
         duration_ms: 100,
@@ -40,7 +40,7 @@ describe Admin::McpActivityController do
         "rate_limits" => 4,
         "p95_latency_ms" => 200,
       )
-      expect(response.parsed_body.dig("activity", 2, "tool")).to eq("discourse.search")
+      expect(response.parsed_body.dig("activity", 2, "tool")).to eq("discourse_search")
       metric_queries =
         queries.select do |sql|
           sql.include?('FROM "mcp_audit_logs"') && sql.match?(/occurred_at.*>/)
@@ -99,7 +99,7 @@ describe Admin::McpActivityController do
         McpAuditLog.create!(
           occurred_at: 2.minutes.ago,
           method: "tools/call",
-          tool: "discourse.search",
+          tool: "discourse_search",
           outcome: "success",
         )
       McpAuditLog.create!(
@@ -112,7 +112,7 @@ describe Admin::McpActivityController do
         McpAuditLog.create!(
           occurred_at: Time.zone.now,
           method: "tools/call",
-          tool: "discourse.search",
+          tool: "discourse_search",
           outcome: "success",
         )
 

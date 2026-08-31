@@ -103,7 +103,7 @@ acceptance("Admin - MCP", function (needs) {
         ],
         primitives: [
           {
-            id: "tool:discourse.search",
+            id: "tool:discourse_search",
             field_name: "primitive_search",
             title: "Search Discourse",
             description: "Search visible topics and posts.",
@@ -116,7 +116,7 @@ acceptance("Admin - MCP", function (needs) {
             emergency_blocked: false,
           },
           {
-            id: "tool:discourse.topic.create",
+            id: "tool:discourse_topic_create",
             field_name: "primitive_create_topic",
             title: "Create topic",
             description: "Create a topic.",
@@ -142,7 +142,7 @@ acceptance("Admin - MCP", function (needs) {
             emergency_blocked: false,
           },
           {
-            id: "tool:discourse.topic.vote",
+            id: "tool:discourse_topic_vote",
             field_name: "primitive_topic_vote",
             title: "Set topic vote",
             description: "Votes in a topic poll.",
@@ -309,7 +309,7 @@ acceptance("Admin - MCP", function (needs) {
               id: 1,
               created_at: "2026-08-28T10:00:00Z",
               method: "tools/call",
-              tool: "discourse.search.older",
+              tool: "discourse_search_older",
               username: "sam",
               outcome: "error",
               duration_ms: 20,
@@ -326,7 +326,7 @@ acceptance("Admin - MCP", function (needs) {
             id: 2,
             created_at: "2026-08-28T11:00:00Z",
             method: "tools/call",
-            tool: "discourse.search.newer",
+            tool: "discourse_search_newer",
             username: "sam",
             outcome: "error",
             duration_ms: 25,
@@ -760,7 +760,7 @@ acceptance("Admin - MCP", function (needs) {
         .exists({ count: 1 }, "the filtered first page replaces the table");
       assert
         .dom(".admin-mcp__activity-table")
-        .includesText("discourse.search.newer", "the server result is shown");
+        .includesText("discourse_search_newer", "the server result is shown");
       assert
         .dom(".admin-mcp__load-more")
         .exists("automatic loading is enabled while a cursor is present");
@@ -783,7 +783,7 @@ acceptance("Admin - MCP", function (needs) {
         .exists({ count: 2 }, "the next filtered page is appended");
       assert
         .dom(".admin-mcp__activity-table")
-        .includesText("discourse.search.older", "the older result is loaded");
+        .includesText("discourse_search_older", "the older result is loaded");
       assert
         .dom(".admin-mcp__activity-metrics")
         .includesText("25 ms", "the initial metrics remain visible");
@@ -794,7 +794,7 @@ acceptance("Admin - MCP", function (needs) {
 
   test("blocks and unblocks a primitive immediately", async function (assert) {
     const primitiveSelector =
-      '.admin-mcp__primitive[data-primitive-id="tool:discourse.search"]';
+      '.admin-mcp__primitive[data-primitive-id="tool:discourse_search"]';
 
     await visit("/admin/config/mcp/capabilities");
     await click(`${primitiveSelector} .admin-mcp__primitive-actions button`);
@@ -810,7 +810,7 @@ acceptance("Admin - MCP", function (needs) {
 
     assert.deepEqual(
       emergencyBlockRequests,
-      [{ primitiveId: "tool:discourse.search", blocked: true }],
+      [{ primitiveId: "tool:discourse_search", blocked: true }],
       "the primitive identifier is sent in the request body"
     );
     assert
@@ -835,8 +835,8 @@ acceptance("Admin - MCP", function (needs) {
     assert.deepEqual(
       emergencyBlockRequests,
       [
-        { primitiveId: "tool:discourse.search", blocked: true },
-        { primitiveId: "tool:discourse.search", blocked: false },
+        { primitiveId: "tool:discourse_search", blocked: true },
+        { primitiveId: "tool:discourse_search", blocked: false },
       ],
       "the block can be removed without another confirmation"
     );
@@ -992,7 +992,7 @@ acceptance("Admin - MCP", function (needs) {
 
     assert.deepEqual(
       savedPrimitiveIds,
-      ["tool:discourse.search", "tool:discourse.topic.create"],
+      ["tool:discourse_search", "tool:discourse_topic_create"],
       "the selected primitives are saved"
     );
     assert

@@ -4,28 +4,28 @@ describe McpPrimitiveUpdater do
   fab!(:admin)
 
   it "updates primitive exposure and logs the enabled primitive count" do
-    McpPrimitive.create!(kind: "tool", identifier: "discourse.search", enabled: true)
+    McpPrimitive.create!(kind: "tool", identifier: "discourse_search", enabled: true)
     logger = instance_spy(StaffActionLogger, log_custom: nil)
     allow(StaffActionLogger).to receive(:new).with(admin).and_return(logger)
 
-    described_class.update!(actor: admin, primitive_ids: ["tool:discourse.current_user.get"])
+    described_class.update!(actor: admin, primitive_ids: ["tool:discourse_current_user_get"])
 
     expect(
-      McpPrimitive.find_by!(kind: "tool", identifier: "discourse.current_user.get"),
+      McpPrimitive.find_by!(kind: "tool", identifier: "discourse_current_user_get"),
     ).to be_enabled
-    expect(McpPrimitive.find_by!(kind: "tool", identifier: "discourse.search")).not_to be_enabled
+    expect(McpPrimitive.find_by!(kind: "tool", identifier: "discourse_search")).not_to be_enabled
     expect(logger).to have_received(:log_custom).with("mcp_primitives_updated", primitive_count: 1)
   end
 
   it "keeps the previous exposure when staff logging fails" do
     primitive =
-      McpPrimitive.create!(kind: "tool", identifier: "discourse.current_user.get", enabled: false)
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: false)
     logger = instance_spy(StaffActionLogger)
     allow(StaffActionLogger).to receive(:new).with(admin).and_return(logger)
     allow(logger).to receive(:log_custom).and_raise(StandardError, "staff logging failed")
 
     expect do
-      described_class.update!(actor: admin, primitive_ids: ["tool:discourse.current_user.get"])
+      described_class.update!(actor: admin, primitive_ids: ["tool:discourse_current_user_get"])
     end.to raise_error(StandardError, "staff logging failed")
 
     expect(primitive.reload).not_to be_enabled
@@ -33,7 +33,7 @@ describe McpPrimitiveUpdater do
 
   it "changes the emergency block inside the staff logging transaction" do
     primitive =
-      McpPrimitive.create!(kind: "tool", identifier: "discourse.current_user.get", enabled: true)
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
     logger = instance_spy(StaffActionLogger)
     allow(StaffActionLogger).to receive(:new).with(admin).and_return(logger)
     allow(logger).to receive(:log_custom).and_raise(StandardError, "staff logging failed")
@@ -41,7 +41,7 @@ describe McpPrimitiveUpdater do
     expect do
       described_class.set_emergency_block!(
         actor: admin,
-        primitive_id: "tool:discourse.current_user.get",
+        primitive_id: "tool:discourse_current_user_get",
         blocked: true,
       )
     end.to raise_error(StandardError, "staff logging failed")
@@ -53,7 +53,7 @@ describe McpPrimitiveUpdater do
     primitive =
       McpPrimitive.create!(
         kind: "tool",
-        identifier: "discourse.post.set_deleted",
+        identifier: "discourse_post_set_deleted",
         enabled: true,
         emergency_blocked: true,
       )
@@ -63,7 +63,7 @@ describe McpPrimitiveUpdater do
 
     described_class.set_emergency_block!(
       actor: admin,
-      primitive_id: "tool:discourse.post.set_deleted",
+      primitive_id: "tool:discourse_post_set_deleted",
       blocked: false,
     )
 

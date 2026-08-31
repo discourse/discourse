@@ -435,7 +435,7 @@ end
 after_initialize do
   require_relative "lib/discourse_reactions/mcp_tools"
   register_mcp_tool(
-    "discourse-reactions.post_reaction.set",
+    "discourse_reactions_post_reaction_set",
     title: "Set post reaction",
     description: "Adds, changes, or removes the authenticated user's reaction to a visible post.",
     implementation: DiscourseReactions::McpTools::SetReaction,

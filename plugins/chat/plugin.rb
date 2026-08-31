@@ -623,7 +623,7 @@ after_initialize do
   require_relative "lib/chat/mcp_tools"
 
   register_mcp_tool(
-    "chat.channel.list",
+    "chat_channel_list",
     title: "List chat channels",
     description:
       "Lists chat channels followed by the authenticated user, including direct-message channels.",
@@ -636,7 +636,7 @@ after_initialize do
     availability: -> { SiteSetting.chat_enabled },
   )
   register_mcp_tool(
-    "chat.message.list",
+    "chat_message_list",
     title: "List chat messages",
     description: "Reads a bounded page of messages from a visible chat channel.",
     implementation: Chat::McpTools::ListMessages,
@@ -664,7 +664,7 @@ after_initialize do
     availability: -> { SiteSetting.chat_enabled },
   )
   register_mcp_tool(
-    "chat.message.create",
+    "chat_message_create",
     title: "Create chat message",
     description: "Creates a message in a chat channel as the authenticated user.",
     implementation: Chat::McpTools::CreateMessage,

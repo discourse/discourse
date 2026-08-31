@@ -142,12 +142,12 @@ describe Admin::McpController do
 
   describe "#emergency_block" do
     it "immediately blocks and unblocks a registered primitive" do
-      params = { primitive_id: "tool:discourse.search", blocked: true }
+      params = { primitive_id: "tool:discourse_search", blocked: true }
 
       put "/admin/mcp/capabilities/emergency-block.json", params: params
 
       expect(response.status).to eq(200)
-      policy = McpPrimitive.find_by!(kind: "tool", identifier: "discourse.search")
+      policy = McpPrimitive.find_by!(kind: "tool", identifier: "discourse_search")
       expect(policy).to be_emergency_blocked
 
       put "/admin/mcp/capabilities/emergency-block.json", params: params.merge(blocked: false)
@@ -176,8 +176,8 @@ describe Admin::McpController do
         )
       McpOauthAccessToken.issue!(authorization: authorization)
       token = authorization.access_tokens.last
-      McpPrimitive.create!(kind: "tool", identifier: "discourse.post.set_deleted", enabled: true)
-      params = { primitive_id: "tool:discourse.post.set_deleted", blocked: true }
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_post_set_deleted", enabled: true)
+      params = { primitive_id: "tool:discourse_post_set_deleted", blocked: true }
 
       put "/admin/mcp/capabilities/emergency-block.json", params: params
 
@@ -233,11 +233,11 @@ describe Admin::McpController do
 
       put "/admin/mcp/capabilities.json",
           params: {
-            primitive_ids: ["tool:discourse.post.set_deleted"],
+            primitive_ids: ["tool:discourse_post_set_deleted"],
           }
 
       expect(response.status).to eq(200)
-      primitive = McpPrimitive.find_by!(kind: "tool", identifier: "discourse.post.set_deleted")
+      primitive = McpPrimitive.find_by!(kind: "tool", identifier: "discourse_post_set_deleted")
       expect(primitive).to be_enabled
       expect(primitive.consent_required_at).to be_present
       expect(authorization.reload.status).to eq("consent_required")
@@ -268,11 +268,11 @@ describe Admin::McpController do
 
       put "/admin/mcp/capabilities.json",
           params: {
-            primitive_ids: ["tool:discourse.current_user.get"],
+            primitive_ids: ["tool:discourse_current_user_get"],
           }
 
       expect(response.status).to eq(200)
-      primitive = McpPrimitive.find_by!(kind: "tool", identifier: "discourse.current_user.get")
+      primitive = McpPrimitive.find_by!(kind: "tool", identifier: "discourse_current_user_get")
       expect(primitive.consent_required_at).to be_blank
       expect(authorization.reload.status).to eq("active")
     end

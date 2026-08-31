@@ -1037,7 +1037,7 @@ end
 after_initialize do
   require_relative "lib/discourse_events/mcp_tools"
   register_mcp_tool(
-    "discourse-calendar.event.list",
+    "discourse_calendar_event_list",
     title: "List events",
     description: "Lists upcoming events whose posts are visible to the authenticated user.",
     implementation: DiscourseEvents::McpTools::ListEvents,

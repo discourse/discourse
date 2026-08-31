@@ -28,7 +28,7 @@ describe "MCP transport" do
       "HTTP_ACCEPT" => "application/json, text/event-stream",
       "HTTP_MCP_PROTOCOL_VERSION" => DiscourseMcp::PROTOCOL_VERSION,
       "HTTP_MCP_METHOD" => "tools/call",
-      "HTTP_MCP_NAME" => "discourse.current_user.get",
+      "HTTP_MCP_NAME" => "discourse_current_user_get",
     }
   end
   let(:classic_headers) do
@@ -61,7 +61,7 @@ describe "MCP transport" do
       id: 1,
       method: "tools/call",
       params: {
-        name: "discourse.current_user.get",
+        name: "discourse_current_user_get",
         arguments: {
         },
         _meta: {
@@ -75,7 +75,7 @@ describe "MCP transport" do
 
   before do
     SiteSetting.mcp_server_enabled = true
-    McpPrimitive.create!(kind: "tool", identifier: "discourse.current_user.get", enabled: true)
+    McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
   it "challenges requests without bearer credentials" do
@@ -98,18 +98,18 @@ describe "MCP transport" do
   end
 
   it "returns an OAuth insufficient-scope challenge for an exposed tool" do
-    McpPrimitive.create!(kind: "tool", identifier: "discourse.post.get", enabled: true)
+    McpPrimitive.create!(kind: "tool", identifier: "discourse_post_get", enabled: true)
     scoped_payload =
       payload.deep_merge(
         method: "tools/call",
         params: {
-          name: "discourse.post.get",
+          name: "discourse_post_get",
           arguments: {
             post_id: 1,
           },
         },
       )
-    scoped_headers = headers.merge("HTTP_MCP_NAME" => "discourse.post.get")
+    scoped_headers = headers.merge("HTTP_MCP_NAME" => "discourse_post_get")
 
     post "/mcp", params: scoped_payload.to_json, headers: scoped_headers
 
@@ -160,6 +160,16 @@ describe "MCP transport" do
 
     expect(response.status).to eq(200)
     expect(response.parsed_body.dig("result", "tools")).to be_an(Array)
+  end
+
+  it "lists tools with underscore-only names" do
+    list_request = { jsonrpc: "2.0", id: 1, method: "tools/list", params: {} }
+
+    post "/mcp", params: list_request.to_json, headers: classic_headers
+
+    tool_names = response.parsed_body.dig("result", "tools").pluck("name")
+    expect(tool_names).to include("discourse_current_user_get")
+    expect(tool_names).to all(match(/\A[A-Za-z0-9_]+\z/))
   end
 
   it "uses the server-wide cache TTL setting for cacheable responses" do

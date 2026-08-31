@@ -60,7 +60,7 @@ describe DiscourseMcp::Access do
       SiteSetting.mcp_server_enabled = true
       McpGroupScope.create!(group: group, scope: "mcp:profile:read")
       primitive =
-        McpPrimitive.create!(kind: "tool", identifier: "discourse.current_user.get", enabled: false)
+        McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: false)
 
       expect(described_class.eligible_for_exposed_primitive?(user)).to eq(false)
 
