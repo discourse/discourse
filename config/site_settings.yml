@@ -3739,6 +3739,17 @@ backups:
     type: enum
     enum: "BackupLocationSiteSetting"
     client: true
+  backup_download_resume_window:
+    default: "disabled"
+    type: enum
+    enum: "BackupDownloadResumeWindowSiteSetting"
+    depends_on:
+      - backup_location
+    depends_on_values:
+      backup_location:
+        - local
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   maximum_backups:
     client: true
     default: 5
