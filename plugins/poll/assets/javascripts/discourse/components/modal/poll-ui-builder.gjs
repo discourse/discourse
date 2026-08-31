@@ -550,8 +550,8 @@ export default class PollUiBuilderModal extends Component {
                 "poll.ui_builder.poll_title.label"
               }}</label>
             <Textarea
-              @value={{this.pollTitle}}
               rows="1"
+              @value={{this.pollTitle}}
               {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
             />
           </div>
