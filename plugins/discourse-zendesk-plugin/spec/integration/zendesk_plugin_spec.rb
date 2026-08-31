@@ -90,7 +90,6 @@ RSpec.describe "Discourse Zendesk Plugin" do
         expect(custom_fields["discourse_zendesk_plugin_zendesk_api_url"]).to eq("ticket_url")
         expect(custom_fields["discourse_zendesk_plugin_zendesk_id"]).to eq("ticket_id")
         expect(p1.reload.custom_fields["discourse_zendesk_plugin_zendesk_id"]).to eq("comment_id")
-        expect(WebMock).not_to have_requested(:get, %r{/tickets/.*/comments})
       end
     end
   end

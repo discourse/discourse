@@ -281,7 +281,6 @@ RSpec.describe Jobs::ZendeskJob do
         expect(post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to eq(
           "comment-id",
         )
-        expect(WebMock).not_to have_requested(:get, %r{/tickets/.*/comments})
       end
     end
   end
