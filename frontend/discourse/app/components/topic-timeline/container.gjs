@@ -223,10 +223,10 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get scrollareaHeight() {
-    const composerHeight = this.composer.isPreviewVisible
-        ? document.getElementById("reply-control")?.offsetHeight || 0
-        : 0,
-      headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
+    const composerHeight = this.composer.isPreviewActive
+      ? document.getElementById("reply-control")?.offsetHeight || 0
+      : 0;
+    const headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
     // scrollarea takes up about half of the timeline's height
     const availableHeight =
@@ -234,12 +234,12 @@ export default class TopicTimelineScrollArea extends Component {
 
     const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
-      : this.composer.isPreviewVisible
+      : this.composer.isPreviewActive
         ? desktopMinScrollAreaHeight
         : DEFAULT_MIN_SCROLLAREA_HEIGHT;
     const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
-      : this.composer.isPreviewVisible
+      : this.composer.isPreviewActive
         ? desktopMaxScrollAreaHeight
         : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 

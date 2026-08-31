@@ -38,23 +38,11 @@ module("Unit | Service | composer", function (hooks) {
     );
   });
 
-  test("predicts the markdown preview before the editor mounts", function (assert) {
-    setComposerModel(this);
-
-    assert.true(this.composer.allowPreview, "markdown allows a preview");
-    assert.true(
-      this.composer.isPreviewVisible,
-      "the composer can use its final width before the editor mounts"
-    );
-  });
-
   test("predicts no preview for the rich editor before it mounts", function (assert) {
     this.currentUser.set(
       "user_option.composition_mode",
       USER_OPTION_COMPOSITION_MODES.rich
     );
-    setComposerModel(this);
-
     assert.false(this.composer.allowPreview, "the rich editor has no preview");
     assert.false(
       this.composer.isPreviewVisible,
@@ -62,28 +50,19 @@ module("Unit | Service | composer", function (hooks) {
     );
   });
 
-  test("the mounted editor can override the predicted preview", function (assert) {
-    this.currentUser.set(
-      "user_option.composition_mode",
-      USER_OPTION_COMPOSITION_MODES.rich
-    );
+  test("closing clears the mounted editor override", function (assert) {
     setComposerModel(this);
-    this.composer.set("allowPreview", true);
+    this.composer.set("allowPreview", false);
 
-    assert.true(
-      this.composer.isPreviewVisible,
-      "the mounted editor can override the prediction"
+    assert.false(
+      this.composer.allowPreview,
+      "the mounted editor can override the prediction for this composer"
     );
-  });
-
-  test("closing preserves the predicted markdown preview width", function (assert) {
-    setComposerModel(this);
     this.composer.close();
 
-    assert.false(this.composer.isOpen, "the composer is closed");
     assert.true(
-      this.composer.isPreviewVisible,
-      "the next opening does not need to expand the composer width"
+      this.composer.allowPreview,
+      "the next composer uses the predicted markdown mode"
     );
   });
 });

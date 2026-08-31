@@ -301,6 +301,10 @@ export default class ComposerService extends Service {
     return this.showPreview && this.allowPreview;
   }
 
+  get isPreviewActive() {
+    return Boolean(this.visible && this.isPreviewVisible);
+  }
+
   @computed("model.action", "model.post.can_localize_post")
   get showTranslationSelector() {
     return (
@@ -2120,7 +2124,11 @@ export default class ComposerService extends Service {
 
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
-    this.setProperties({ model: null, lastValidatedAt: null });
+    this.setProperties({
+      model: null,
+      lastValidatedAt: null,
+      _allowPreview: null,
+    });
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);

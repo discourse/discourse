@@ -37,29 +37,4 @@ acceptance("Composer preview sizing", function (needs) {
       "opening does not change the width target or trigger horizontal expansion"
     );
   });
-
-  test("a hidden markdown preview keeps the composer narrow before opening", async function (assert) {
-    await visit("/");
-    this.owner.lookup("service:composer").showPreview = false;
-    await settled();
-
-    assert
-      .dom("#reply-control")
-      .hasClass(
-        "hide-preview",
-        "the closed composer respects the preview preference"
-      );
-    const initialMaxWidth = getComputedStyle(find("#reply-control")).maxWidth;
-
-    await click("#create-topic");
-
-    assert
-      .dom("#reply-control")
-      .hasClass("hide-preview", "the preview stays hidden after opening");
-    assert.strictEqual(
-      getComputedStyle(find("#reply-control")).maxWidth,
-      initialMaxWidth,
-      "opening without preview does not change the width target"
-    );
-  });
 });

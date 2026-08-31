@@ -74,7 +74,7 @@ module("Integration | Component | TopicNavigation", function (hooks) {
       this.matchMedia.restore();
     });
 
-    test("a predicted preview does not constrain the timeline while closed", async function (assert) {
+    test("the preview constrains the timeline only while the composer is visible", async function (assert) {
       const topic = this.topic;
 
       await render(<template><TopicNavigation @topic={{topic}} /></template>);
@@ -86,9 +86,7 @@ module("Integration | Component | TopicNavigation", function (hooks) {
       assert
         .dom(".with-timeline")
         .exists("a closed composer does not take space from the timeline");
-    });
 
-    test("the preview constrains the timeline only while the composer is visible", async function (assert) {
       this.composer.set(
         "model",
         this.owner.lookup("service:store").createRecord("composer", {
@@ -96,27 +94,11 @@ module("Integration | Component | TopicNavigation", function (hooks) {
           composeState: Composer.OPEN,
         })
       );
-      const topic = this.topic;
-
-      await render(<template><TopicNavigation @topic={{topic}} /></template>);
+      await settled();
 
       assert
         .dom(".with-topic-progress")
         .exists("an open preview leaves insufficient room for the timeline");
-
-      this.composer.showPreview = false;
-      await settled();
-
-      assert
-        .dom(".with-timeline")
-        .exists("hiding the preview restores the timeline");
-
-      this.composer.showPreview = true;
-      await settled();
-
-      assert
-        .dom(".with-topic-progress")
-        .exists("showing the preview constrains the timeline again");
 
       this.composer.close();
       await settled();

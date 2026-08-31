@@ -144,7 +144,7 @@ export default class TopicNavigation extends Component {
     }
 
     // If composer is open, check we have enough vertical space.
-    if (this.composer.visible && this.composer.isPreviewVisible) {
+    if (this.composer.isPreviewActive) {
       return this.heightQuery?.matches ?? false;
     }
 
@@ -153,10 +153,9 @@ export default class TopicNavigation extends Component {
 
   @cached
   get heightQuery() {
-    const threshold =
-      this.composer.visible && this.composer.isPreviewVisible
-        ? MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset()
-        : null;
+    const threshold = this.composer.isPreviewActive
+      ? MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset()
+      : null;
 
     return this.#buildHeightQuery(threshold);
   }
