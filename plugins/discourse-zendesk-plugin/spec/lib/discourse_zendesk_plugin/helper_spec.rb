@@ -4,21 +4,21 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
   subject(:dummy) { Class.new { extend DiscourseZendeskPlugin::Helper } }
 
   describe ".configured?" do
-    it "accepts a complete API token credential pair" do
+    it "returns true when API token credentials are complete" do
       SiteSetting.zendesk_jobs_email = "zendesk@example.com"
       SiteSetting.zendesk_jobs_api_token = "legacy-token"
 
       expect(described_class.configured?).to be(true)
     end
 
-    it "accepts a complete OAuth credential pair" do
+    it "returns true when OAuth credentials are complete" do
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
       SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
 
       expect(described_class.configured?).to be(true)
     end
 
-    it "rejects incomplete credential pairs" do
+    it "returns false when credential pairs are incomplete" do
       SiteSetting.zendesk_jobs_email = "zendesk@example.com"
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
 
