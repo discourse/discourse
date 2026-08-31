@@ -56,14 +56,6 @@ module PageObjects
         has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
       end
 
-      def has_setting_description?(setting_name, description)
-        has_css?("#{setting_row_selector(setting_name)} .desc", exact_text: description)
-      end
-
-      def has_secret_setting_input?(setting_name)
-        has_css?("#{setting_row_selector(setting_name)} .form-kit__control-password")
-      end
-
       def find_setting(setting_name, overridden: false)
         find(
           ".admin-detail #{setting_row_selector(setting_name)}#{overridden ? ".overridden" : ""}",
