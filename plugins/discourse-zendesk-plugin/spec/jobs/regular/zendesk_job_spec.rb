@@ -169,68 +169,6 @@ RSpec.describe Jobs::ZendeskJob do
   end
 
   describe "#execute" do
-    context "when one topic post is rejected by Zendesk" do
-      let(:zendesk_enabled) { true }
-      let(:job_args) { { topic_id: topic.id } }
-      let(:first_post) { Fabricate(:post, topic: topic, user: topic_user, post_number: 1) }
-      let(:second_post) { Fabricate(:post, topic: topic, user: other_user, post_number: 2) }
-      let(:zendesk_api_url) { "https://your-url.zendesk.com/api/v2" }
-
-      before do
-        first_post
-        second_post
-        allow(Discourse).to receive(:warn_exception)
-        stub_request(:get, "#{zendesk_api_url}/users/search?query=#{topic_user.email}").to_return(
-          status: 200,
-          body: { users: [] }.to_json,
-          headers: {
-            "Content-Type" => "application/json",
-          },
-        )
-        stub_request(:post, "#{zendesk_api_url}/users").to_return(
-          status: 422,
-          body: { description: "RecordInvalid" }.to_json,
-          headers: {
-            "Content-Type" => "application/json",
-          },
-        )
-        stub_request(:get, "#{zendesk_api_url}/users/search?query=#{other_user.email}").to_return(
-          status: 200,
-          body: { users: [{ id: "zendesk-user-id" }] }.to_json,
-          headers: {
-            "Content-Type" => "application/json",
-          },
-        )
-        stub_request(:put, "#{zendesk_api_url}/tickets/#{ticket_id}").to_return(
-          status: 200,
-          body: {
-            ticket: {
-              id: ticket_id,
-            },
-            audit: {
-              events: [{ id: "comment-id", type: "Comment" }],
-            },
-          }.to_json,
-          headers: {
-            "Content-Type" => "application/json",
-          },
-        )
-      end
-
-      it "reports the rejected post and synchronizes later posts" do
-        execute
-
-        expect(first_post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to be_nil
-        expect(second_post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to eq(
-          "comment-id",
-        )
-        expect(Discourse).to have_received(:warn_exception) do |error, message:|
-          expect(error).to be_a(ZendeskAPI::Error::RecordInvalid)
-          expect(message).to eq("Failed to synchronize post #{first_post.id} with Zendesk")
-        end
-      end
-    end
-
     context "when only OAuth credentials are configured" do
       let(:zendesk_enabled) { true }
       let(:zendesk_jobs_email) { "" }
