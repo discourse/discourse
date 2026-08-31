@@ -532,15 +532,14 @@ hy:
     success_unapproved: "Դուք հաջողությամբ փոփոխել եք Ձեր գաղտնաբառը:"
   email_login:
     title: "Էլ. հասցեով մուտք"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "անհայտ բրաուզեր"
     device:
       android: "Android Սարքավորում"
       ipad: "iPad"
@@ -561,10 +560,6 @@ hy:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Անանուն"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե հասցեն արդեն օգտագործվո՞ւմ է:"
     error_staged: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Հասցեն արդեն օգտագործվում է աստիճանավորված օգտատիրոջ կողմից:"
@@ -934,6 +929,9 @@ hy:
         num_topics: "Թեմաներ"
       description: "Օգտատերեր՝ ցուցակավորված ըստ այն հղումների սեղմումների, որոնցով կիսվել են:"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
+    top_entry_urls:
       labels:
         count: "Այցելություններ"
     top_referrers_by_browser_pageviews:
@@ -1324,7 +1322,6 @@ hy:
     topic_view_duration_hours: "Հաշվարկել թեմայի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     user_profile_view_duration_hours: "Հաշվարկել օգտատիրոջ պրոֆիլի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     levenshtein_distance_spammer_emails: "Սպամմերի էլ. նամակների համապատասխանեցման ժամանակ սիմվոլների տարբերության քանակը, որը դեռևս թույլ կտա անորոշ համընկնում:"
-    min_ban_entries_for_roll_up: "Խմբավորել կոճակը սեղմելիս կստեղծվի նոր սուբնեթի արգելքի մուտք, եթե կա առնվազն (N) մուտք:"
     max_age_unmatched_emails: "Ջնջել չհամընկած ցուցադրված էլ. մուտքերը (N) օր հետո:"
     max_age_unmatched_ips: "Ջնջել չհամընկնող ցուադրված IP մուտքերը (N) օր անց:"
     num_flaggers_to_close_topic: "Չկրկնվող դրոշակավորողների նվազագույն քանակը, որը պահանջվում է միջամտության համար թեմայի ավտոմատ դադարեցման համար:"
@@ -2819,6 +2816,10 @@ hy:
       low: "Բարձր"
       medium: "Միջին"
       high: "Ցածր"
+    reasons:
+      fast_typer_time:
+        one: "%{count} վայրկյան"
+        other: "%{count} վայրկյան"
     actions:
       agree:
         title: "Այո"

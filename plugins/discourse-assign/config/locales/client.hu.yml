@@ -121,8 +121,20 @@ hu:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Kiosztott"
+        "trigger:unassigned": "Nem kiosztott"
       assign_topic:
+        resource: "Forrás"
+        resources:
+          topic: "Téma"
+          post: "Bejegyzés"
         operations:
           assign: "Kiosztás"
           unassign: "Elvétel"
         topic_id: "Témaazonosító"
+        post_id: "Hozzászólás-azonosító"
+      check_assignment:
+        target_types:
+          topic: "Téma"
+          post: "Bejegyzés"
+        topic_id: "Témaazonosító"
+        post_id: "Hozzászólás-azonosító"

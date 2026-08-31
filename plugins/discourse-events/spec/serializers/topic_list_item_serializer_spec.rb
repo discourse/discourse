@@ -10,9 +10,9 @@ RSpec.describe TopicListItemSerializer do
   before do
     freeze_time(Time.utc(2020, 4, 24, 14, 10))
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    DiscoursePostEvent::Event.create!(
+    DiscourseEvents::Events::Event.create!(
       id: first_post.id,
       original_starts_at: 1.hour.from_now,
       original_ends_at: 2.hours.from_now,
@@ -53,7 +53,7 @@ RSpec.describe TopicListItemSerializer do
 
       all_day_topic = Fabricate(:topic)
       all_day_post = Fabricate(:post, topic: all_day_topic)
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: all_day_post.id,
         original_starts_at: Time.utc(2020, 4, 25),
         original_ends_at: Time.utc(2020, 4, 27),

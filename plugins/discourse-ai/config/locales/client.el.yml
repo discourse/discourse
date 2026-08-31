@@ -92,6 +92,12 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      copied: "Αντιγράφηκε"
+      ai_decoded_transcript:
+        arguments: "Παράμετροι"
+        type: "Τύπος"
+        error: "Σφάλμα"
+        response: "Απάντηση"
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
@@ -200,6 +206,47 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
+      logs:
+        short_title: "Αρχεία καταγραφής"
+        retry: "Δοκιμάστε ξανά"
+        apply: "Εφαρμογή"
+        successful: "Επιτυχής"
+        failed: "Απέτυχε"
+        unknown: "Άγνωστο"
+        topic_id: "ID Θέματος"
+        post_id: "Post ID"
+        time: "Ώρα"
+        when: "Πότε"
+        outcome: "Αποτέλεσμα"
+        feature: "Λειτουργία"
+        model: "Μοντέλο"
+        request: "Αίτημα"
+        provider: "Πάροχος"
+        user: "Χρήστης"
+        context: "Πλαίσιο αναφοράς"
+        topic: "Νήμα"
+        post: "Ανάρτηση"
+        post_short: "Ανάρτηση %{id}"
+        duration: "Διάρκεια"
+        actions: "Ενέργειες"
+        filters:
+          title: "Φίλτρα"
+          period: "Χρονική περίοδος"
+        periods:
+          day: "Τελευταίες 24 ώρες"
+          week: "Τελευταίες 7 ημέρες"
+          custom: "Προσαρμοσμένο"
+        detail:
+          request: "Αίτημα"
+          response: "Απάντηση"
+          context: "Πλαίσιο αναφοράς"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          network_error: "Σφάλμα δικτύου"
+        retention:
+          summary_stage: "Περίληψη"
+          deleted_stage: "Διαγράφηκε"
+          save: "Αποθήκευση"
       ai_agent:
         mcp_server_enabled_tools:
           one: "%{count} από %{total} εργαλείο ενεργοποιημένο"
@@ -378,6 +425,7 @@ el:
           copy_response: "Αντιγραφή απάντησης"
           this_turn: "Αυτός ο γύρος:"
           whole_conversation: "Συνομιλία:"
+          duration_label: "Διάρκεια:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"

@@ -3,6 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -45,13 +47,17 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   draftIcon(item) {
+    let icon;
+
     if (item.draft_key.startsWith(NEW_TOPIC_KEY)) {
-      return "layer-group";
+      icon = "layer-group";
     } else if (item.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY)) {
-      return "envelope";
+      icon = "envelope";
     } else {
-      return "reply";
+      icon = "reply";
     }
+
+    return applyValueTransformer("draft-icon", icon, { draft: item });
   }
 
   @action
@@ -134,7 +140,6 @@ export default class TopicDraftsDropdown extends Component {
                   draft.title
                   (i18n "drafts.dropdown.untitled")
                 }}
-                class="btn-secondary"
               />
             </dropdown.item>
           {{/each}}
@@ -144,7 +149,7 @@ export default class TopicDraftsDropdown extends Component {
 
             <dropdown.item>
               <DButton
-                @href="/my/activity/drafts"
+                @href={{getURL "/my/activity/drafts"}}
                 @model={{this.currentUser}}
                 class="btn-link view-all-drafts"
               >

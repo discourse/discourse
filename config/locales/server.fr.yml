@@ -998,16 +998,15 @@ fr:
     title: "Connexion par e-mail"
   email_login_code:
     invalid_code: "Ce code est incorrect ou a expiré. Veuillez demander un nouveau code et réessayer."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navigateur inconnu"
     device:
       android: "Appareil Android"
       chromebook: "Chrome OS"
@@ -1031,10 +1030,6 @@ fr:
     traffic_types:
       logged_in: "Utilisateurs connectés"
       anonymous: "Anonymes"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
@@ -1541,6 +1536,9 @@ fr:
       description: "Pays ayant enregistré le plus grand nombre de pages vues par navigateur sur votre forum au cours de la période sélectionnée."
       labels:
         country_code: "Code du pays"
+        count: "Visites"
+    top_entry_urls:
+      labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
       title: "Principales sources de trafic"
@@ -2286,7 +2284,6 @@ fr:
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse e-mail sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance de 0 utilisant cette adresse IP (et si aucun n'est un responsable ni un utilisateur avec un niveau de confiance de 2 ou plus), ne plus accepter de nouvelles inscriptions en provenance de cette adresse IP. Le réglage de cette valeur à 0 désactive cette limite."
-    min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses e-mail sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimal de signalements uniques requis pour suspendre automatiquement un sujet pour intervention"
@@ -2648,7 +2645,6 @@ fr:
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
     enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
-    enable_new_composer_actions: "Active le menu repensé des actions du panneau d'édition et le bouton combiné d'enregistrement, avec les options de murmure, de non-remontée et de retrait des listes affichées à côté de l'action d'enregistrement."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
@@ -5469,6 +5465,9 @@ fr:
       group: "Les réponses des utilisateurs ne faisant pas partie des groupes spécifiés doivent être approuvées par un responsable. Voir %{link}."
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
       fast_typer: "Un nouvel utilisateur a écrit sa première publication avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} secondes"
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
       watched_word:
         one: "Cette publication contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."

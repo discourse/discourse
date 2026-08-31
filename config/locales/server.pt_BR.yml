@@ -950,16 +950,15 @@ pt_BR:
   email_login:
     invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">pedir um link</a> para redefini-la.'
     title: "E-mail para entrar"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplicativo DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplicativo DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -982,10 +981,6 @@ pt_BR:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anônimo(a)"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
@@ -1454,6 +1449,9 @@ pt_BR:
         num_topics: "Tópicos"
       description: "Usuários(as) listados(as) pela quantidade de cliques nos links que eles compartilharam."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Acessos"
+    top_entry_urls:
       labels:
         count: "Acessos"
     top_referrers_by_browser_pageviews:
@@ -2115,7 +2113,6 @@ pt_BR:
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
     max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da equipe ou tiver NC2 ou mais alto), pare de aceitar novas assinaturas desse IP. Defina para 0 para desativar o limite."
-    min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, uma entrada de banimento de subrede será criada se houver ao menos (N) entradas."
     max_age_unmatched_emails: "Excluir entradas de e-mails filtrados sem correspondência após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados sem correspondência após (N) dias."
     num_flaggers_to_close_topic: "Quantidade mínima de usuários(as) sinalizadores únicos(as) exigidos para que um tópico seja automaticamente pausado por intervenção"
@@ -4872,6 +4869,9 @@ pt_BR:
       group: "Usuários(as) que não estiverem nos grupos especificados devem ter as respostas aprovadas pela equipe. Confira %{link}."
       new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja %{link}."
       fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "Novo(a) usuário(a) cuja primeira postagem correspponde à configuração %{link}."
       watched_word:
         one: "Esta postagem inclui uma palavra acompanhada, a palavra sinalizada é: %{words}. Veja %{link} para obter mais informações."

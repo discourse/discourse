@@ -2330,6 +2330,7 @@ RSpec.describe GroupsController do
           expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
 
           expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+          expect(group.reload.user_count).to eq(2)
         end
 
         it "returns not-found error when there is no group" do

@@ -48,20 +48,20 @@ export default class Flag extends Component {
       label: i18n("flagging.take_action"),
       actions: [
         {
-          id: "agree_and_hide",
+          action_name: "agree_and_hide",
           icon: "thumbs-up",
           label: i18n("flagging.take_action_options.default.title"),
           description: i18n("flagging.take_action_options.default.details"),
         },
         {
-          id: "agree_and_suspend",
+          action_name: "agree_and_suspend",
           icon: "ban",
           label: i18n("flagging.take_action_options.suspend.title"),
           description: i18n("flagging.take_action_options.suspend.details"),
           client_action: "suspend",
         },
         {
-          id: "agree_and_silence",
+          action_name: "agree_and_silence",
           icon: "microphone-slash",
           label: i18n("flagging.take_action_options.silence.title"),
           description: i18n("flagging.take_action_options.silence.details"),

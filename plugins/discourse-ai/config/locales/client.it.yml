@@ -153,6 +153,12 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      copied: "Copiato"
+      ai_decoded_transcript:
+        tool: "Strumento"
+        type: "Tipo"
+        error: "Errore"
+        response: "Risposta"
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
@@ -370,6 +376,49 @@ it:
           last_week: "Ultima settimana"
           last_month: "Ultimo mese"
           custom: "Personalizza..."
+      logs:
+        short_title: "Log"
+        retry: "Riprova"
+        apply: "Applica"
+        all_models: "Tutti i modelli"
+        all_features: "Tutte le funzionalità"
+        successful: "Completato"
+        failed: "Non riuscito"
+        unknown: "Sconosciuto"
+        topic_id: "ID dell'argomento"
+        post_id: "ID del messaggio"
+        time: "Ora"
+        when: "Quando"
+        outcome: "Esito"
+        feature: "Funzionalità"
+        model: "Modello"
+        request: "Richiesta"
+        provider: "Fornitore"
+        user: "Utente"
+        context: "Contesto"
+        topic: "Argomento"
+        post: "Messaggio"
+        post_short: "Messaggio %{id}"
+        duration: "Durata"
+        actions: "Azioni"
+        filters:
+          title: "Filtri"
+        periods:
+          hour: "Ultima ora"
+          day: "Ultime 24 ore"
+          week: "Ultimi 7 giorni"
+          custom: "Personalizzato"
+        detail:
+          request: "Richiesta"
+          response: "Risposta"
+          context: "Contesto"
+          copy_request: "Copia richiesta"
+          copy_response: "Copia risposta"
+          network_error: "Errore di rete"
+        retention:
+          summary_stage: "Riepilogo"
+          deleted_stage: "Eliminato"
+          save: "Salva"
       ai_agent:
         ai_tools: "Strumenti"
         tool_strategies:
@@ -776,6 +825,7 @@ it:
           title: "Visualizza l'interazione dell'IA"
           copy_request: "Copia richiesta"
           copy_response: "Copia risposta"
+          duration_label: "Durata:"
           request: "Richiesta"
           response: "Risposta"
           next_log: "Avanti"

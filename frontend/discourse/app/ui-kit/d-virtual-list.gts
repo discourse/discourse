@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
-import dElement from "discourse/ui-kit/helpers/d-element";
 import {
   isVirtualizationEnabled,
   keyFor,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
 import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 
 /** A single measured/positioned row as published by the engine. */
@@ -49,9 +51,16 @@ interface RowContext<T> {
    * Positions the row (absolute + `translateY`) when windowing; inert in the
    * render-all fallback. Apply with the row's offset and index:
    * `{{row.place row.start row.index}}`.
+   *
+   * Apply it BEFORE {@link measure}. It stamps the `data-index` that measurement
+   * identifies the row by, and modifiers run in template order.
    */
   place: PlaceModifier;
-  /** Registers the row for height measurement. Arg-less and stable; apply once per row. */
+  /**
+   * Registers the row for height measurement. Arg-less and stable; apply once per row,
+   * AFTER {@link place} — a row reached before its `data-index` is stamped cannot be
+   * identified, so it is skipped and keeps rendering at `@estimateSize`.
+   */
   measure: ModifierLike<HTMLElement>;
   /**
    * The row's `aria-posinset`, or undefined when `@itemRole` is not a role that
@@ -69,8 +78,8 @@ export interface DVirtualListApi {
   /**
    * Scroll a row into view.
    *
-   * @param index Absolute index in `@items`.
-   * @param opts Placement within the viewport, and how to animate getting there.
+   * @param index - Absolute index in `@items`.
+   * @param opts - Placement within the viewport, and how to animate getting there.
    */
   scrollToIndex(
     index: number,
@@ -83,17 +92,33 @@ export interface DVirtualListApi {
   /**
    * Scroll to an absolute pixel offset in the list's coordinate space.
    *
-   * @param offset Offset in px from the start of the list.
-   * @param opts How to animate getting there.
+   * @param offset - Offset in px from the start of the list.
+   * @param opts - How to animate getting there.
    */
   scrollToOffset(offset: number, opts?: { behavior?: ScrollBehavior }): void;
 
   /**
    * Scroll to the first or last row. A no-op on an empty list.
    *
-   * @param edge Which end to travel to.
+   * @param edge - Which end to travel to.
    */
   scrollToEdge(edge: "start" | "end"): void;
+
+  /**
+   * Let an edge callback fire again.
+   *
+   * An edge callback fires once and then latches, and re-arms on its own only when the reader
+   * retreats from the band or a boundary row changes. A consumer whose fetch FAILED has
+   * neither: the item set is byte-for-byte what it was, so nothing re-arms and the callback
+   * never fires again. On a list short enough that the range never leaves the band, that is
+   * permanent. This is the lever for that case.
+   *
+   * Arming is not firing. The callback runs on the next evaluation, and only if the range is
+   * still inside the band.
+   *
+   * @param edge - Which edge to re-arm. The other is left alone.
+   */
+  armEdge(edge: "start" | "end"): void;
 
   /**
    * Discard every cached row measurement so the next window re-measures from
@@ -109,8 +134,28 @@ export interface DVirtualListApi {
    * from `measure`, which clears the item-size cache and leaves the viewport untouched.
    */
   remeasureViewport(): void;
+  /**
+   * Registers one row element for height measurement.
+   *
+   * Internal plumbing for the row `measure` modifier, exposed because that modifier is
+   * yielded to consumers. The element must carry the `data-index` that `place` stamps;
+   * anything else is ignored rather than measured under a key that does not exist.
+   */
   measureElement(element: HTMLElement): void;
-  visibleRange(): { startIndex: number; endIndex: number } | undefined;
+
+  /**
+   * The visible index range, or undefined before the first measurement.
+   *
+   * A frozen snapshot, never the engine's own range object: the committed value of that
+   * object is what the engine's change memo compares against, so a consumer writing
+   * through it could silently stop the window updating. Every call builds a new
+   * object, so compare the indices rather than the identity.
+   */
+  visibleRange():
+    | Readonly<{ startIndex: number; endIndex: number }>
+    | undefined;
+
+  /** Whether the viewport is mid-scroll. */
   readonly isScrolling: boolean;
 }
 
@@ -174,7 +219,8 @@ interface DVirtualListSignature<T> {
     overscan?: number;
     /**
      * Tag name for the inner container that carries `@role`, `...attributes`, and
-     * the rows (the semantic element — e.g. `"ul"` for a listbox). Default `"div"`.
+     * the rows (the semantic element — e.g. `"ul"` for a listbox). Resolved once
+     * at mount, with an omitted or empty value falling back to `"div"`.
      *
      * A container with a content model, such as `ul` or `ol`, requires
      * `@ownedRow`: the wrapped path emits `div` rows, which those elements do not
@@ -187,6 +233,15 @@ interface DVirtualListSignature<T> {
      * indent they need.
      */
     as?: string;
+    /** Gives consumers a stable hook for sizing and styling the scroll viewport. */
+    viewportClass?: string;
+    /**
+     * Names a scroll region whose non-interactive role offers no other naming path.
+     * Naming it also makes it a `region`, since a role-less element cannot be named.
+     */
+    viewportLabel?: string;
+    /** Names the scroll viewport from existing descriptive content, as `@viewportLabel` does. */
+    viewportLabelledBy?: string;
     /**
      * Whether the scroll viewport may take sequential focus. Defaults to `true`, which leaves
      * the decision to the browser.
@@ -269,10 +324,10 @@ interface DVirtualListSignature<T> {
      * the primitive does not implement on the consumer's behalf, so the consumer
      * opts in.
      *
-     * With a non-interactive role, nothing inside the list is focusable, and the
-     * scroll viewport is not keyboard-operable on its own. Such a consumer should
-     * make the viewport focusable and name it, so the region can be scrolled
-     * without a pointer.
+     * With a non-interactive role, nothing inside the list is focusable. Use
+     * `@viewportClass` as the hook for making the viewport focusable, and name
+     * it with `@viewportLabel` or `@viewportLabelledBy`, so the region can be
+     * scrolled without a pointer.
      */
     role?: string;
     /**
@@ -291,8 +346,12 @@ interface DVirtualListSignature<T> {
      */
     itemRole?: string;
     /**
-     * Overrides `aria-setsize`. Only needed when `@items` is itself a window
-     * over an unbounded stream, where the true total is unknowable: pass `-1`.
+     * Overrides `aria-setsize`, for when `@items` is a loaded prefix of a
+     * larger known set.
+     *
+     * Omit it when the total is unknown: ARIA's `-1` sentinel is handled
+     * inconsistently by screen readers, so negative values are refused and the
+     * loaded count is published instead.
      */
     setSize?: number;
     /** Receives the imperative handle once mounted. */
@@ -315,22 +374,32 @@ interface DVirtualListSignature<T> {
     edgeThreshold?: number;
   };
   Blocks: {
-    default: [item: T, row: RowContext<T>];
+    /** Renders each item in the active window. */
+    default: [
+      /** The backing-array item. */
+      item: T,
+      /** Its measured position and row modifiers. */
+      row: RowContext<T>,
+    ];
+    /** Renders when the backing array is empty. */
     empty: [];
   };
   Element: HTMLElement;
 }
 
 /**
- * Renders only a window of a large list while keeping the DOM bounded, backed by
- * `@tanstack/virtual-core` behind the ui-kit library wall.
+ * Renders only a window of a large list while keeping the DOM bounded. The
+ * windowing engine remains behind the ui-kit library boundary.
  *
  * Structure: an outer role-less `.d-virtual-list` scroll VIEWPORT (the element the
  * `dVirtualizer` modifier drives) wraps an inner `@as` CONTAINER — the semantic
  * element that carries `@role`/`...attributes` and is the sizer (`height` = the
- * full total) — whose direct children are the rows, each absolutely positioned to
- * its virtual offset. The component owns the tracked window (`_virtualItems`/
- * `_totalSize`); the modifier owns the engine and pushes state in through `onState`.
+ * full total) — whose rows are direct children, each absolutely positioned to its
+ * virtual offset. The component owns the tracked window (`_virtualItems`); the
+ * modifier owns the engine and pushes state in through `onState`.
+ *
+ * The consumer must give the outer viewport a nonzero height. Without one,
+ * windowing has no visible area and renders no rows.
  *
  * Simple consumers yield content and let the primitive wrap it in a measured,
  * `@itemRole`-stamped row. A consumer that needs native row elements passes
@@ -356,7 +425,12 @@ interface DVirtualListSignature<T> {
 export default class DVirtualList<T> extends Component<
   DVirtualListSignature<T>
 > {
-  @tracked api: DVirtualListApi | null = null;
+  container = dElement(this.args.as || "div");
+  emptyContainer = dElement(
+    ["menu", "ol", "ul"].includes(this.args.as?.toLowerCase() ?? "")
+      ? "li"
+      : "div"
+  );
 
   /**
    * Makes the inner container a containing block for the absolutely positioned
@@ -382,7 +456,6 @@ export default class DVirtualList<T> extends Component<
     }
     element.style.position = "relative";
   });
-
   /**
    * Registers a row for height measurement. Runs on insert and re-runs only when
    * the api handle arrives — NOT per-render, so it does not re-measure on every
@@ -392,9 +465,8 @@ export default class DVirtualList<T> extends Component<
    * {@link placeRow} stamps, so apply place before measure.
    */
   measureRow = modifier((element: HTMLElement) => {
-    this.api?.measureElement(element);
+    this._api?.measureElement(element);
   });
-
   /**
    * Positions one row: stamps `data-index` (the engine reads it to identify the
    * row) and, while windowing, positions the row absolutely at its virtual
@@ -426,9 +498,9 @@ export default class DVirtualList<T> extends Component<
       element.style.transform = `translateY(${start}px)`;
     }
   );
+  @tracked _api: DVirtualListApi | null = null;
 
   @tracked _virtualItems: readonly VirtualItem[] = [];
-  @tracked _totalSize = 0;
 
   /**
    * Whether rows are windowed. Reads a module-level flag rather than tracked
@@ -488,15 +560,22 @@ export default class DVirtualList<T> extends Component<
     };
   }
 
-  // The inner container tag (the semantic element carrying `@role`/`...attributes`
-  // and the rows). `dElement` types `...attributes` against the chosen tag.
-  get container() {
-    return dElement(this.args.as ?? "div");
-  }
-
   /** Whether `@itemRole` is one of the roles that defines position attributes. */
   get positionAwareItems() {
     return POSITION_AWARE_ROLES.has(this.args.itemRole ?? "");
+  }
+
+  /**
+   * `"region"` once the viewport carries a name, and otherwise absent.
+   *
+   * A `div` maps to the `generic` role, which ARIA forbids from carrying a name, so the
+   * naming arguments are inert without a role. An unnamed viewport is left alone: an
+   * unnamed region is skipped anyway, and a landmark per list would clutter the document.
+   */
+  get viewportRole() {
+    return this.args.viewportLabel || this.args.viewportLabelledBy
+      ? "region"
+      : undefined;
   }
 
   /**
@@ -510,15 +589,24 @@ export default class DVirtualList<T> extends Component<
   }
 
   /**
-   * The true total, which is exactly what a windowed list must publish: the DOM
-   * count is a lie, and `-1` ("indeterminable") throws away a number we have.
-   * Consumers windowing an unbounded stream pass `@setSize={{-1}}` explicitly.
+   * The published total: `@setSize` when given, floored at the loaded count
+   * so no `aria-posinset` can exceed it. The ARIA `-1` sentinel has no
+   * consistent screen reader implementation, so it is refused.
    */
   get setSize() {
     if (!this.positionAwareItems) {
       return undefined;
     }
-    return this.args.setSize ?? this.args.items.length;
+
+    assert(
+      'DVirtualList: `aria-setsize="-1"` has no consistent screen reader ' +
+        "implementation; omit `@setSize` when the total is unknown and let " +
+        "the loaded count stand",
+      (this.args.setSize ?? 0) >= 0
+    );
+
+    const loaded = this.args.items.length;
+    return Math.max(this.args.setSize ?? loaded, loaded);
   }
 
   @action
@@ -528,19 +616,20 @@ export default class DVirtualList<T> extends Component<
     range: VisibleRange | null;
   }) {
     this._virtualItems = state.virtualItems;
-    this._totalSize = state.totalSize;
   }
 
   @action
   onRegisterApi(api: DVirtualListApi) {
-    this.api = api;
-    this.args.onRegisterApi?.(api);
+    this._api = api;
 
     // Registration happens once (first-run only), so an initial scroll set up
     // here is inherently applied a single time and never re-fights the user on a
     // later `@items` change. It is deferred a tick because the first flush must
-    // publish `_totalSize` and the sizer must take that height before the
-    // viewport can scroll past its (initially zero) content.
+    // size the sizer before the viewport can scroll past its initially empty
+    // content.
+    //
+    // Scheduled before the consumer is handed the API, so a consumer that throws
+    // does not take the list's own opening position down with it.
     if (this.args.initialIndex != null) {
       const index = this.args.initialIndex;
       const align = this.args.initialAlign ?? "start";
@@ -550,14 +639,20 @@ export default class DVirtualList<T> extends Component<
       // engine's job, configured by the modifier.
       next(() => api.scrollToEdge("end"));
     }
+
+    this.args.onRegisterApi?.(api);
   }
 
   <template>
-    {{! The outer viewport is the scroll element and stays role-less; the modifier
-        drives it. The role and splattributes go on the inner container, so the
-        semantic element owns them. Size this viewport from CSS. }}
+    {{! The outer viewport is the scroll element; the modifier drives it. The
+        consumer's role and splattributes go on the inner container, so the
+        semantic element owns them. This element takes a role only to carry its own
+        name. Size this viewport from CSS. }}
     <div
-      class="d-virtual-list"
+      class={{dConcatClass "d-virtual-list" @viewportClass}}
+      role={{this.viewportRole}}
+      aria-label={{if @viewportLabel @viewportLabel}}
+      aria-labelledby={{if @viewportLabelledBy @viewportLabelledBy}}
       tabindex={{this.viewportTabIndex}}
       {{dVirtualizer
         items=@items
@@ -580,7 +675,7 @@ export default class DVirtualList<T> extends Component<
           splattributes come first so the role and the sizer win a collision, and
           the sizer writes individual properties rather than a style attribute so a
           consumer's own styling survives. }}
-      {{#let this.container as |Container|}}
+      {{#let this.container this.emptyContainer as |Container EmptyContainer|}}
 
         <Container
           class="d-virtual-list__sizer"
@@ -610,7 +705,9 @@ export default class DVirtualList<T> extends Component<
               {{/if}}
             {{/each}}
           {{else}}
-            {{yield to="empty"}}
+            <EmptyContainer class="d-virtual-list__empty" role="presentation">
+              {{yield to="empty"}}
+            </EmptyContainer>
           {{/if}}
         </Container>
       {{/let}}

@@ -5,8 +5,14 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 const ROW_COUNT = 5000;
 
 export default class VirtualListVariableExample extends Component {
-  /** A single guess for rows whose real heights differ; each is measured on entry. */
-  estimateSize = () => 96;
+  /**
+   * A single guess for rows whose real heights differ; each is measured on entry.
+   * Deliberately near the MEAN rather than above every row, so measurements correct
+   * the total in both directions. An estimate above the tallest row would only ever
+   * shrink it, and 5000 rows of one-way drift reads as the primitive mis-measuring
+   * rather than as an estimate settling.
+   */
+  estimateSize = () => 60;
 
   @cached
   get rows() {

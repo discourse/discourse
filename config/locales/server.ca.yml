@@ -560,16 +560,15 @@ ca:
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
   email_login:
     title: "Inici de sessió de correu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconegut"
     device:
       android: "Dispositiu Android"
       ipad: "iPad"
@@ -590,10 +589,6 @@ ca:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anònim"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
@@ -985,6 +980,9 @@ ca:
         num_topics: "Temes"
       description: "Usuaris llistats per nombre de clics en els enllaços que han compartit."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Visites"
+    top_entry_urls:
       labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
@@ -1397,7 +1395,6 @@ ca:
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."
-    min_ban_entries_for_roll_up: "En clicar el botó Agrupa es crearà una nova entrada de prohibició de subxarxa si hi ha almenys (N) entrades."
     max_age_unmatched_emails: "Suprimeix entrades no coincidents de correus sota supervisió després de (N) dies."
     max_age_unmatched_ips: "Suprimeix entrades no coincidents d'entrades IP sota supervisió després de (N) dies."
     num_flaggers_to_close_topic: "Nombre mínim de banderes úniques necessàries per a aturar automàticament un tema per a una intervenció"
@@ -2820,6 +2817,10 @@ ca:
     user_claimed: "Aquest element ha estat reclamat per un altre usuari."
     missing_version: "Heu de proporcionar un paràmetre de versió"
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
+    reasons:
+      fast_typer_time:
+        one: "%{count} segon"
+        other: "%{count} segons"
     actions:
       agree:
         title: "Sí"

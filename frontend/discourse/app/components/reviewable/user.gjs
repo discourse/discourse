@@ -148,6 +148,20 @@ export default class ReviewableUser extends Component {
               />
             {{/if}}
 
+            {{#if this.reviewable.payload.avatar_url}}
+              <div class="reviewable-user-details avatar">
+                <div class="name">{{i18n "review.user.avatar"}}</div>
+                <div class="value">
+                  <img
+                    class="reviewable-user-avatar"
+                    src={{this.reviewable.payload.avatar_url}}
+                    alt={{i18n "review.user.avatar"}}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            {{/if}}
+
             <ReviewableField
               @classes="reviewable-user-details name"
               @name={{i18n "review.user.name"}}

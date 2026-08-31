@@ -7,6 +7,9 @@
 et:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Komponent"
       sections:
         typography:
           example: "Tere tulemast Discourse'i"

@@ -33,6 +33,8 @@ module Jobs
       topic_work_list << backfill_vector if backfill_vector
 
       topic_work_list.each do |vector|
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
+
         rebaked = 0
         table_name = DiscourseAi::Embeddings::Schema::TOPICS_TABLE
         vector_def = vector.vdef
@@ -48,6 +50,7 @@ module Jobs
 
         rebaked += populate_topic_embeddings(vector, topics.limit(limit - rebaked))
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next if rebaked >= limit
 
         # Then, we'll try to backfill embeddings for topics that have outdated
@@ -60,6 +63,7 @@ module Jobs
 
         rebaked += populate_topic_embeddings(vector, relation, force: true)
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next if rebaked >= limit
 
         # Finally, we'll try to backfill embeddings for topics that have outdated
@@ -72,6 +76,7 @@ module Jobs
 
         populate_topic_embeddings(vector, relation, force: true)
 
+        next if DiscourseAi::Embeddings::ProviderHealth.paused?(vector.vdef)
         next unless SiteSetting.ai_embeddings_per_post_enabled
 
         # Now for posts

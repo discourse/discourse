@@ -9,9 +9,15 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(schema).to have_key(:item_prefix)
     end
 
-    it "declares $site_settings, $vars, $current_user, $execution as environment symbols" do
+    it "declares $helpers, $site_settings, $vars, $current_user, $execution as environment symbols" do
       symbols = described_class.environment_symbols.keys
-      expect(symbols).to contain_exactly("$site_settings", "$vars", "$current_user", "$execution")
+      expect(symbols).to contain_exactly(
+        "$helpers",
+        "$site_settings",
+        "$vars",
+        "$current_user",
+        "$execution",
+      )
     end
 
     it "declares $current_user fields matching JsSandbox#build_current_user" do
@@ -81,7 +87,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       sandbox = DiscourseWorkflows::JsSandbox.new(context, user: user)
 
       # $execution is injected by ExpressionResolver, not JsSandbox directly
-      sandbox_symbols = %w[$site_settings $vars $current_user]
+      sandbox_symbols = %w[$site_settings $vars $current_user $helpers]
       sandbox_symbols.each do |symbol|
         result = sandbox.eval("typeof #{symbol}")
         expect(result).not_to eq("undefined"),

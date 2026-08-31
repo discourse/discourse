@@ -64,9 +64,6 @@ ar:
       weekly: "أسبوعيًا"
       monthly: "شهريًا"
       quarterly: "ربع سنوي"
-    discourse_workflows:
-      assign_topic:
-        error: "فشل تعيين الموضوع: %{reason}"
   assign_mailer:
     title: "تعيين مرسل البريد"
     subject_template: "عيَّن [%{email_prefix}] %{assignee_name} الموضوع \"%{topic_title}\" إليك!"

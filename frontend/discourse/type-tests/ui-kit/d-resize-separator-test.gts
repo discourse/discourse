@@ -9,9 +9,19 @@ declare const size: number;
 declare const measure: () => number;
 declare const measureMaybe: () => number | null;
 declare const box: HTMLElement;
+declare function resolveBox(separator: HTMLElement): HTMLElement | null;
 
 const Positives = <template>
-  {{! A separator takes numbers or measurement functions for its size }}
+  {{! The ordinary case: the box alone, in either form }}
+  <DResizeSeparator @measure={{box}} @label="Resize" />
+  <DResizeSeparator
+    @axis="horizontal"
+    @measure={{resolveBox}}
+    @label="Resize"
+    @onResizeStart={{noop}}
+  />
+
+  {{! Sizes may still be supplied, and may be given alongside the box }}
   <DResizeSeparator
     @axis="vertical"
     @side="end"
@@ -19,7 +29,7 @@ const Positives = <template>
     @min={{size}}
     @max={{size}}
     @label="Resize"
-    @observe={{box}}
+    @measure={{box}}
     @onResizeStart={{noop}}
     class="my-block__handle"
   />

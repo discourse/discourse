@@ -9,7 +9,7 @@ describe "Discourse Livestream - Livestream with Zoom webinar" do
   let(:topic_livestream) { PageObjects::Pages::TopicLivestream.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.chat_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s
@@ -30,7 +30,7 @@ describe "Discourse Livestream - Livestream with Zoom webinar" do
 
       expect(page).to have_css(
         ".discourse-calendar-livestream-zoom-entry__actions .btn",
-        text: I18n.t("js.discourse_calendar.livestream.zoom.join"),
+        text: I18n.t("js.discourse_events.livestream.zoom.join"),
       )
     end
 
@@ -45,9 +45,9 @@ describe "Discourse Livestream - Livestream with Zoom webinar" do
 
         expect(page).to have_css(
           ".discourse-calendar-livestream-zoom-entry__actions .btn[disabled]",
-          text: I18n.t("js.discourse_calendar.livestream.zoom.join"),
+          text: I18n.t("js.discourse_events.livestream.zoom.join"),
         )
-        expect(page).to have_content(I18n.t("js.discourse_calendar.livestream.zoom.too_early"))
+        expect(page).to have_content(I18n.t("js.discourse_events.livestream.zoom.too_early"))
       end
     end
   end

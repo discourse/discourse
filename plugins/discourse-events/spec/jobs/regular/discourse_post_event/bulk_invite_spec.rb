@@ -9,7 +9,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
   before do
     freeze_time DateTime.parse("2018-11-10 12:00")
     Jobs.run_immediately!
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
   end
 
@@ -103,7 +103,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             expect(invitee_klass.count).to eq(2)
             expect(invitee_klass.find_by(user_id: invitee_1.id).status).to eq(
@@ -123,7 +123,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
               processed: 1,
             )
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(
               event_id: post_event_1.id,
@@ -165,7 +165,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
               current_user_id: moderator.id,
             )
 
-            expect(DiscoursePostEvent::Invitee.where(post_id: mod_post.id)).to be_empty
+            expect(DiscourseEvents::Events::Invitee.where(post_id: mod_post.id)).to be_empty
           end
         end
 
@@ -189,7 +189,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
 
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             expect(invitee_klass.count).to eq(2)
             expect(invitee_klass.find_by(user_id: invitee_1)).to eq(nil)
@@ -203,7 +203,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
           end
 
           it "skips an unrecognized attendance instead of corrupting the invitee" do
-            invitee_klass = DiscoursePostEvent::Invitee
+            invitee_klass = DiscourseEvents::Events::Invitee
 
             Jobs::DiscoursePostEventBulkInvite.new.execute(
               event_id: post_event_1.id,

@@ -998,16 +998,15 @@ de:
     title: "E-Mail-Anmeldung"
   email_login_code:
     invalid_code: "Dieser Code ist falsch oder abgelaufen. Fordere einen neuen Code an und versuche es erneut."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-App"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-App"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "unbekannter Browser"
     device:
       android: "Android-Gerät"
       chromebook: "Chrome OS"
@@ -1031,10 +1030,6 @@ de:
     traffic_types:
       logged_in: "Angemeldet"
       anonymous: "Anonym"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Es gab einen Fehler beim Ändern deiner E-Mail-Adresse. Wird vielleicht diese Adresse bereits verwendet?"
     doesnt_exist: "Diese E-Mail-Adresse ist nicht mit deinem Konto verknüpft."
@@ -1541,6 +1536,9 @@ de:
       description: "Länder, aus denen im ausgewählten Zeitraum die meisten Browser-Seitenaufrufe in deinem Forum kamen."
       labels:
         country_code: "Ländercode"
+        count: "Aufrufe"
+    top_entry_urls:
+      labels:
         count: "Aufrufe"
     top_referrers_by_browser_pageviews:
       title: "Top-Referrer"
@@ -2286,7 +2284,6 @@ de:
     user_profile_view_duration_hours: "Zähle einen neuen Profilaufruf einmal pro IP/Benutzer alle N Stunden"
     levenshtein_distance_spammer_emails: "E-Mail-Adressen, die sich um so viele Zeichen unterscheiden, werden beim Abgleich mit Adressen der Spammer dennoch als identisch betrachtet."
     max_new_accounts_per_registration_ip: "Keine neuen Registrierungen von einer IP-Adresse annehmen, wenn bereits (n) Benutzerkonten mit Vertrauensstufe 0 zugeordnet sind (und keines davon ein Team-Mitglied ist oder Vertrauensstufe 2 oder höher hat). 0 deaktiviert die Begrenzung."
-    min_ban_entries_for_roll_up: "Wenn du auf die Schaltfläche „Zusammenfassen“ klickst, wird ein neuer Subnetz-Block-Eintrag erstellt, wenn es mindestens (N) Einträge gibt."
     max_age_unmatched_emails: "Gefilterte E-Mail-Adressen nach (N) Tagen ohne Treffer löschen."
     max_age_unmatched_ips: "Gefilterte IP-Adressen nach (N) Tagen ohne Treffer löschen."
     num_flaggers_to_close_topic: "Mindestzahl unabhängiger Mitglieder, die ein Thema melden, damit es automatisch für eine Prüfung pausiert wird."
@@ -2648,7 +2645,6 @@ de:
     enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Kontrollkästchen."
     enable_new_post_reactions_menu: "Aktiviere das überarbeitete Menü für „Gefällt mir“-Angaben und Reaktionen bei Beiträgen mit Endlos-Scrolling und einer nativen mobilen Benutzererfahrung."
     enable_composer_redesign: "Aktiviere den überarbeiteten Editor."
-    enable_new_composer_actions: "Aktiviere das neu gestaltete Aktionsmenü des Editors und die kombinierte Speichern-Schaltfläche, wobei neben der Speicherfunktion die Schaltflächen für „Flüstern“, „Nicht nach oben verschieben“ und „Unsichtbar machen“ angezeigt werden."
     prioritize_recently_used_tags: "Wenn beim Erstellen oder Bearbeiten eines Themas Schlagwörter hinzugefügt werden, zeige die Schlagwörter, die das Mitglied kürzlich in seinen eigenen Themen verwendet hat, ganz oben in der Liste an – noch vor den beliebtesten Tags des Forums."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -5633,6 +5629,9 @@ de:
       group: "Benutzer, die nicht zu den angegebenen Gruppen gehören, müssen ihre Antworten von Team-Mitgliedern genehmigen lassen. Siehe %{link}."
       new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
+      fast_typer_time:
+        one: "%{count} Sekunde"
+        other: "%{count} Sekunden"
       auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link}-Einstellung übereinstimmt."
       watched_word:
         one: "Dieser Beitrag enthält ein beobachtetes Wort, das gemeldete Wort ist: %{words}. Für weitere Informationen prüfe die %{link}."

@@ -7,7 +7,7 @@ import { TIME_ZONE_TO_REGION } from "../../lib/regions";
 
 export default class Region extends Component {
   static shouldRender(args, { siteSettings }) {
-    return siteSettings.calendar_enabled;
+    return siteSettings.discourse_events_enabled;
   }
 
   @action
@@ -26,7 +26,7 @@ export default class Region extends Component {
   <template>
     <div class="control-group region">
       <label class="control-label">
-        {{i18n "discourse_calendar.region.title"}}
+        {{i18n "discourse_events.region.title"}}
       </label>
 
       <div class="controls">
@@ -39,7 +39,7 @@ export default class Region extends Component {
 
       <DButton
         @icon="globe"
-        @label="discourse_calendar.region.use_current_region"
+        @label="discourse_events.region.use_current_region"
         @action={{this.useCurrentRegion}}
         class="btn-default"
       />

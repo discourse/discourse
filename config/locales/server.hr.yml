@@ -697,16 +697,15 @@ hr:
   email_login:
     invalid_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili zaporku, možete <a href="%{base_url}/password-reset">zatražiti poveznicu</a> da je ponovo postavite.'
     title: "Prijava emailom"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub aplikacija"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub aplikacija"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nepoznati preglednik"
     device:
       android: "Android uređaj"
       chromebook: "OS Chrome"
@@ -729,10 +728,6 @@ hr:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonimno"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
@@ -1073,6 +1068,9 @@ hr:
         num_topics: "Teme"
       description: "Korisnici navedeni prema broju klikova na poveznice koje su podijelili."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Posjeta"
+    top_entry_urls:
       labels:
         count: "Posjeta"
     top_referrers_by_browser_pageviews:
@@ -1417,7 +1415,6 @@ hr:
     user_profile_view_duration_hours: "Brojite prikaz profila novog korisnika jednom po IP-u/korisniku svakih N sati"
     levenshtein_distance_spammer_emails: "Prilikom uparivanja neželjene e-pošte, razlika u broju znakova koja će još uvijek omogućiti nejasno podudaranje."
     max_new_accounts_per_registration_ip: "Ako već postoji (n) računa razine povjerenja 0 s ovog IP-a (i nijedan nije član osoblja ili na TL2 ili višem), prestanite prihvaćati nove prijave s tog IP-a. Postavite na 0 da biste onemogućili ograničenje."
-    min_ban_entries_for_roll_up: "Kada se klikne gumb Skupi, stvorit će se novi unos zabrane podmreže ako postoji najmanje (N) unosa."
     max_age_unmatched_emails: "Izbrišite neusklađene pregledane unose e-pošte nakon (N) dana."
     max_age_unmatched_ips: "Izbrišite neusklađene zaštićene IP unose nakon (N) dana."
     num_flaggers_to_close_topic: "Minimalan broj jedinstvenih označavača koji je potreban za automatsko pauziranje teme radi intervencije"
@@ -2808,6 +2805,11 @@ hr:
       low: "Nizak"
       medium: "Srednji"
       high: "Visok"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundi"
+        other: "%{count} sekundi"
     actions:
       agree:
         title: "Da"

@@ -13,9 +13,6 @@ sq:
             topic_id:
               label: ID e temës
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Biseda"
       disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:
@@ -51,6 +48,7 @@ sq:
             private:
               title: "Private"
       composer:
+        url_placeholder: "Shto URL"
         reminder:
           units:
             minutes:
@@ -79,6 +77,12 @@ sq:
             after: "pas"
         attendance:
           none: "Asnjë"
+        location:
+          label: "Vendndodhja"
+        url:
+          label: "URL"
+          placeholder: "Fakultative"
+          add: "Shto URL"
         description:
           label: "Përshkrimi"
         event_type:

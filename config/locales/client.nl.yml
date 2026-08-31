@@ -3722,7 +3722,6 @@ nl:
           title: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
-        description: "Verwijder de geselecteerde topics permanent. Deze actie kan niet ongedaan worden gemaakt."
       update_category:
         name: "Categorie bijwerken"
         description: "Verplaats alle geselecteerde topics naar de volgende categorie:"
@@ -6328,23 +6327,18 @@ nl:
         title: "Wat is er nieuw?"
         check_for_updates: "Controleren op updates"
       site_traffic_explorer:
-        pageviews: "Paginaweergaven"
+        metric_information: "Over %{metric}"
+        remove_filter_value: "%{value} verwijderen"
+        clear_all: "Alles wissen"
+        apply: "Toepassen"
         view_more: "Meer weergeven"
         cards:
           pages: "Pagina's"
           visitors: "Bezoekers"
-        columns:
-          countries: "Land"
-          top_urls: "URL"
-          browsers: "Browser"
-          ip_addresses: "IP-adres"
         filters:
           country: "Land"
           browser: "Browser"
           ip: "IP-adres"
-        metrics:
-          pageviews:
-            label: "Paginaweergaven"
         series:
           anonymous_human: "Anoniem"
       dashboard:

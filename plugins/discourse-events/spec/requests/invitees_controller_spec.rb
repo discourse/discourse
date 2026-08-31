@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
-  describe InviteesController do
+module DiscourseEvents::Events
+  describe DiscourseEvents::InviteesController do
     before do
       Jobs.run_immediately!
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
       sign_in(user)
     end
@@ -57,7 +57,7 @@ module DiscoursePostEvent
           Fabricate(
             :event,
             post: public_post,
-            status: DiscoursePostEvent::Event.statuses[:private],
+            status: DiscourseEvents::Events::Event.statuses[:private],
             raw_invitees: [restricted_group.name],
           )
         end
@@ -407,7 +407,7 @@ module DiscoursePostEvent
 
   describe "anonymous access to InviteesController" do
     before do
-      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
     end
 
@@ -417,10 +417,10 @@ module DiscoursePostEvent
     fab!(:event) { Fabricate(:event, post: post_1) }
     fab!(:invitee_user, :user)
     fab!(:invitee) do
-      DiscoursePostEvent::Invitee.create!(
+      DiscourseEvents::Events::Invitee.create!(
         post_id: post_1.id,
         user_id: invitee_user.id,
-        status: DiscoursePostEvent::Invitee.statuses[:going],
+        status: DiscourseEvents::Events::Invitee.statuses[:going],
       )
     end
 
@@ -462,14 +462,14 @@ module DiscoursePostEvent
         Fabricate(
           :event,
           post: private_event_post,
-          status: DiscoursePostEvent::Event.statuses[:private],
+          status: DiscourseEvents::Events::Event.statuses[:private],
           raw_invitees: [restricted_group.name],
         )
       end
 
       before do
         private_event.create_invitees(
-          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+          [{ user_id: invitee_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
         )
       end
 

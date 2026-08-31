@@ -3737,7 +3737,6 @@ el:
           missing_to: "Απαιτείται μια ετικέτα αντικατάστασης"
       delete_topics:
         name: "Διαγραφή"
-        description: "Διαγράψτε μόνιμα τα επιλεγμένα θέματα. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
       update_category:
         name: "Ενημέρωση Κατηγορίας"
         description: "Μετακινήστε όλα τα επιλεγμένα θέματα στην ακόλουθη κατηγορία:"
@@ -6243,23 +6242,19 @@ el:
         title: "Τι νέο υπάρχει;"
         check_for_updates: "Ελέγξτε για ενημερώσεις"
       site_traffic_explorer:
-        pageviews: "Προβολές σελίδας"
+        metric_information: "Σχετικά με %{metric}"
+        remove_filter_value: "Αφαίρεση %{value}"
+        clear_all: "Εκκαθάριση όλων"
+        apply: "Εφαρμογή"
         view_more: "Δείτε περισσότερα"
         cards:
           pages: "Σελίδες"
           visitors: "Επισκέπτες"
-        columns:
-          countries: "Χώρα"
-          top_urls: "URL"
-          browsers: "Περιηγητής"
-          ip_addresses: "IP διεύθυνση"
         filters:
           country: "Χώρα"
           browser: "Περιηγητής"
           ip: "IP διεύθυνση"
         metrics:
-          pageviews:
-            label: "Προβολές σελίδας"
           logged_in_share:
             label: "Μερίδιο συνδεδεμένων"
         series:
@@ -6372,6 +6367,7 @@ el:
             kpi:
               total_searches:
                 label: "Συνολικές αναζητήσεις"
+                tooltip: "Ο αριθμός των αναζητήσεων που πραγματοποιήθηκαν στην κοινότητά σας."
             table:
               term: "Όρος αναζήτησης"
               searches: "Αναζητήσεις"

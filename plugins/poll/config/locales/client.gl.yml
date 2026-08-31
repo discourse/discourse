@@ -28,6 +28,8 @@ gl:
       cast-votes:
         title: "Vote"
         label: "Vote agora!"
+      keep-vote:
+        label: "Volver"
       show-results:
         title: "Amosar os resultados da enquisa"
         label: "Resultados"

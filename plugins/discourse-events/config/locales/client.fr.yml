@@ -36,15 +36,10 @@ fr:
       livestream:
         zoom:
           join: "Rejoindre dans Zoom"
-          chat: "Discussion"
           open_in_zoom: "Ouvrir dans Zoom"
           load_error: "Vous avez quitté le webinaire ou nous ne parvenons pas à charger Zoom sur cette page."
           too_early: "Vous pourrez rejoindre le webinaire à l'approche de l'heure de début de l'événement."
           view_topic: "Afficher le sujet de l'événement"
-          not_started_retrying:
-            one: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} seconde..."
-            other: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} secondes..."
-          not_started_trying_again: "Nouvelle tentative de connexion au webinaire en cours..."
         chat:
           rsvp_to_event: "Confirmez votre participation à l'événement pour commencer à discuter"
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
@@ -463,7 +458,8 @@ fr:
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"
-        location_placeholder: "Ajouter un lieu ou une URL"
+        location_or_url_placeholder: "Ajouter un lieu ou une URL"
+        url_placeholder: "Ajouter une URL"
         max_attendees_placeholder: "Nombre illimité de participants"
         max_attendees_display:
           one: "%{count} participant maximum"
@@ -575,8 +571,13 @@ fr:
           label: "Diffusion en direct"
           checkbox_label: "Intégrez l'URL sous forme de vidéo et ouvrez le chat de diffusion en direct pour les participants."
         location:
-          label: "Emplacement ou URL"
+          label: "Emplacement"
+          label_or_url: "Emplacement ou URL"
           placeholder: "Ajoutez un lieu, un lien ou autre."
+        url:
+          label: "URL"
+          placeholder: "Facultatif"
+          add: "Ajouter une URL"
         description:
           label: "Description"
           placeholder: "Donnez aux participants quelques informations supplémentaires sur votre événement. Les retours à la ligne et les liens sont pris en charge."

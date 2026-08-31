@@ -37,12 +37,14 @@ const adConfig = EmberObject.create({
     enabledSetting: false,
     nthPost: "amazon_nth_post_code",
     desktop: {
+      "above-site-header": "amazon_above_site_header_src_code",
       "topic-list-top": "amazon_topic_list_top_src_code",
       "post-bottom": "amazon_post_bottom_src_code",
       "topic-above-post-stream": "amazon_topic_above_post_stream_src_code",
       "topic-above-suggested": "amazon_topic_above_suggested_src_code",
     },
     mobile: {
+      "above-site-header": "amazon_mobile_above_site_header_src_code",
       "topic-list-top": "amazon_mobile_topic_list_top_src_code",
       "post-bottom": "amazon_mobile_post_bottom_src_code",
       "topic-above-post-stream":
@@ -54,6 +56,7 @@ const adConfig = EmberObject.create({
     settingPrefix: "carbonads",
     enabledSetting: "carbonads_serve_id",
     desktop: {
+      "above-site-header": "carbonads_above_site_header_enabled",
       "topic-list-top": "carbonads_topic_list_top_enabled",
       "post-bottom": false,
       "topic-above-post-stream": "carbonads_above_post_stream_enabled",
@@ -64,12 +67,14 @@ const adConfig = EmberObject.create({
     settingPrefix: "adbutler",
     enabledSetting: "adbutler_publisher_id",
     desktop: {
+      "above-site-header": "adbutler_above_site_header_zone_id",
       "topic-list-top": "adbutler_topic_list_top_zone_id",
       "post-bottom": "adbutler_post_bottom_zone_id",
       "topic-above-post-stream": "adbutler_topic_above_post_stream_zone_id",
       "topic-above-suggested": "adbutler_topic_above_suggested_zone_id",
     },
     mobile: {
+      "above-site-header": "adbutler_mobile_above_site_header_zone_id",
       "topic-list-top": "adbutler_mobile_topic_list_top_zone_id",
       "post-bottom": "adbutler_mobile_post_bottom_zone_id",
       "topic-above-post-stream":

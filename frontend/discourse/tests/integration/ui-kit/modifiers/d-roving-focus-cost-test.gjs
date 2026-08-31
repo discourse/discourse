@@ -441,6 +441,10 @@ module(
         .dom('[data-group="large"] [role="option"]:nth-child(3)')
         .isFocused("the large-group step lands on the adjacent item");
 
+      assert.true(
+        smallReads.total > 0,
+        "the small measurement observes a forced read, guarding the comparison oracle itself"
+      );
       assert.strictEqual(
         largeReads.total,
         smallReads.total,
@@ -511,6 +515,10 @@ module(
         .dom('[data-group="large-writes"] [role="option"]:nth-child(3)')
         .isFocused("the large-group step lands on the adjacent item");
 
+      assert.true(
+        smallWrites.total > 0,
+        "the small measurement observes a tabindex write, guarding the comparison oracle itself"
+      );
       assert.strictEqual(
         largeWrites.total,
         smallWrites.total,

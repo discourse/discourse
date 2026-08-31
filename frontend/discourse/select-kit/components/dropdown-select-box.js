@@ -15,6 +15,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   showCaret: false,
   customStyle: null,
   btnCustomClasses: null,
+  headerAriaLabel: null,
 })
 @pluginApiIdentifiers(["dropdown-select-box"])
 export default class DropdownSelectBox extends SingleSelectComponent {

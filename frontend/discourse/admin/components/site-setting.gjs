@@ -401,7 +401,7 @@ export default class SiteSettingComponent extends Component {
 
   get useFormKit() {
     return (
-      this.trackChanges && resolveSettingFieldType(this.setting).adminReady
+      this.trackChanges && resolveSettingFieldType(this.definition).adminReady
     );
   }
 
@@ -784,12 +784,14 @@ export default class SiteSettingComponent extends Component {
               <SettingDefinitionField
                 @definition={{this.definition}}
                 @form={{form}}
+                @format="full"
                 @showTitle={{false}}
                 @showControlTitle={{false}}
                 @showDescription={{false}}
                 @disabled={{this.isDisabled}}
               />
             </Form>
+            {{this.preview}}
           {{else}}
             <this.resolvedComponent
               {{on "keydown" this._handleKeydown}}
@@ -871,7 +873,7 @@ export default class SiteSettingComponent extends Component {
           />
         </div>
       {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
-        {{#if this.setting.secret}}
+        {{#if (and this.setting.secret (not this.useFormKit))}}
           <DButton
             @action={{this.toggleSecret}}
             @icon={{if this.isSecret "far-eye" "far-eye-slash"}}

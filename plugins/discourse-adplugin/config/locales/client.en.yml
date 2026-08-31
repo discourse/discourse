@@ -55,6 +55,9 @@ en:
             ads: "Ads"
             settings: "Settings"
 
+          above_site_header:
+            title: "Above site header"
+            description: "Ads to show at the top of the page, above the site header."
           topic_list_top:
             title: "Topic list top ads"
             description: "Ads to show at the top of topic list pages."

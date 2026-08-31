@@ -22,10 +22,8 @@ class AdminDashboardEngagement
   end
 
   def build
-    kpis = build_kpis
     {
-      kpis: kpis,
-      headline: build_headline(kpis),
+      kpis: build_kpis,
       trust_level_pipeline: build_trust_level_pipeline,
       posters: build_posters,
       activity_by_category: build_activity_by_category,
@@ -45,47 +43,6 @@ class AdminDashboardEngagement
 
   def build_kpis
     KPI_REPORTS.filter_map { |type, report| build_kpi(type, report) }
-  end
-
-  HEADLINE_KEYS = {
-    healthy_growth: "admin.dashboard.sections.engagement.headline.healthy_growth",
-    declining: "admin.dashboard.sections.engagement.headline.declining",
-    engaged_but_shrinking: "admin.dashboard.sections.engagement.headline.engaged_but_shrinking",
-    growing_but_distracted: "admin.dashboard.sections.engagement.headline.growing_but_distracted",
-    mixed: "admin.dashboard.sections.engagement.headline.mixed",
-    no_signal: "admin.dashboard.sections.engagement.headline.no_signal",
-  }.freeze
-
-  def build_headline(kpis)
-    stickiness = sign_of(kpi_change(kpis, :dau_mau))
-    signups = sign_of(kpi_change(kpis, :new_signups))
-    engaged = sign_of(kpi_change(kpis, :daily_engaged_users))
-
-    key =
-      if [stickiness, signups, engaged].all?(&:zero?)
-        :no_signal
-      elsif stickiness >= 0 && signups >= 0 && engaged >= 0
-        :healthy_growth
-      elsif stickiness <= 0 && signups <= 0 && engaged <= 0
-        :declining
-      elsif stickiness >= 0 && (signups < 0 || engaged < 0)
-        :engaged_but_shrinking
-      elsif stickiness < 0 && signups > 0
-        :growing_but_distracted
-      else
-        :mixed
-      end
-
-    { key: HEADLINE_KEYS[key] }
-  end
-
-  def kpi_change(kpis, type)
-    kpis.find { |k| k[:type] == type }&.dig(:percent_change)
-  end
-
-  def sign_of(value)
-    return 0 if value.nil? || value.zero?
-    value.positive? ? 1 : -1
   end
 
   def build_trust_level_pipeline
@@ -109,12 +66,15 @@ class AdminDashboardEngagement
   def build_posters
     args = { start_date: start_date, end_date: end_date, current_user: current_user }
 
-    selected_category_ids =
-      AdminDashboardSectionConfiguration.settings_for("engagement").dig(
-        "whos_posting",
-        "category_ids",
-      )
-    args[:filters] = { category_ids: selected_category_ids } if selected_category_ids.present?
+    whos_posting_settings =
+      AdminDashboardSectionConfiguration.settings_for("engagement")["whos_posting"] || {}
+    selected_category_ids = whos_posting_settings["category_ids"]
+    selected_groups = whos_posting_settings["groups"]
+
+    filters = {}
+    filters[:category_ids] = selected_category_ids if selected_category_ids.present?
+    filters[:groups] = selected_groups if selected_groups.present?
+    args[:filters] = filters if filters.present?
 
     report = Report.find_cached("posters_by_member_type", args)
     if report.nil?
@@ -128,6 +88,7 @@ class AdminDashboardEngagement
       rows: report_data(report),
       total: report.is_a?(Hash) ? report[:total] : report.total,
       category_ids: visible_category_ids(selected_category_ids),
+      groups: visible_groups(selected_groups),
     }
   end
 
@@ -160,5 +121,22 @@ class AdminDashboardEngagement
     return category_ids if category_ids.blank?
 
     Category.secured(Guardian.new(current_user)).in_order_of(:id, category_ids).pluck(:id)
+  end
+
+  def visible_groups(groups)
+    return Reports::PostersByMemberType::DEFAULT_GROUPS if groups.blank?
+
+    guardian = Guardian.new(current_user)
+    resolved =
+      groups.select do |token|
+        parsed = Report.parse_group_token(token)
+        next false if parsed.nil?
+        next true if parsed[:type] == :synthetic
+
+        group = Group.find_by(id: parsed[:id])
+        group.present? && (guardian.is_admin? || guardian.can_see_group_and_members?(group))
+      end
+
+    resolved.presence || Reports::PostersByMemberType::DEFAULT_GROUPS
   end
 end

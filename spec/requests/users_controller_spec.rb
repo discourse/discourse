@@ -2179,6 +2179,27 @@ RSpec.describe UsersController do
       expect(response.status).to eq(400)
     end
 
+    it "rate limits requests per IP" do
+      RateLimiter.enable
+
+      10.times { get "/u/check_username.json", params: { username: "available" } }
+      get "/u/check_username.json", params: { username: "available" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("available")
+      expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("rate_limiter.slow_down"))
+    end
+
+    it "does not rate limit staff" do
+      RateLimiter.enable
+      sign_in(moderator)
+
+      11.times { get "/u/check_username.json", params: { username: "available" } }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["available"]).to eq(true)
+    end
+
     shared_examples "when username is unavailable" do
       it "should return available as false in the JSON and return a suggested username" do
         expect(response.status).to eq(200)
@@ -2299,6 +2320,48 @@ RSpec.describe UsersController do
         end
         include_examples "when username is available"
       end
+    end
+  end
+
+  describe "#generate_random_username" do
+    it "returns a generated username" do
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+    end
+
+    it "rate limits requests per IP" do
+      RateLimiter.enable
+
+      20.times { get "/u/random-username.json" }
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(429)
+    end
+
+    it "404s when random usernames are disabled" do
+      SiteSetting.enable_random_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "reports an error when the word lists can no longer produce a username" do
+      # Unicode words pass validation while unicode usernames are on, then stop
+      # being usable once the site turns them off.
+      SiteSetting.unicode_usernames = true
+      SiteSetting.random_username_adjectives = "静か"
+      SiteSetting.random_username_nouns = "隼"
+      SiteSetting.unicode_usernames = false
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("random_username.unavailable"),
+      )
     end
   end
 
@@ -6131,10 +6194,33 @@ RSpec.describe UsersController do
     end
 
     context "with `include_staged_users`" do
-      it "includes staged users when the param is true" do
+      it "does not include staged users for public callers" do
         get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
-        json = response.parsed_body
-        expect(json["users"].map { |u| u["name"] }).to include(staged_user.name)
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["users"].map { |found_user| found_user["name"] },
+        ).not_to include(staged_user.name)
+      end
+
+      it "includes staged users for staff callers" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |found_user| found_user["name"] }).to include(
+          staged_user.name,
+        )
+      end
+
+      it "does not allow last-seen suggestions when staged users are included" do
+        sign_in(Fabricate(:admin))
+
+        get "/u/search/users.json", params: { include_staged_users: true, last_seen_users: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"]).to be_empty
       end
 
       it "doesn't include staged users when the param is not passed" do

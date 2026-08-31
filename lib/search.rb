@@ -336,6 +336,7 @@ class Search
           ip_address: @opts[:ip_address],
           user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
+          session_id: @opts[:session_id],
         )
       @results.search_log_id = search_log_id unless status == :error
     end

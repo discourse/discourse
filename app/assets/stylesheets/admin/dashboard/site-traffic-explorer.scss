@@ -1,35 +1,135 @@
 @use "lib/viewport";
 
 .site-traffic-explorer {
-  .d-page-header {
-    margin-bottom: var(--space-4);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
 
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding-bottom: var(--space-8);
+  .db-section__subheader {
+    justify-content: flex-end;
   }
 
   &__filters {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    min-width: 0;
     gap: var(--space-2);
+  }
+
+  &__filter-dropdown {
+    .d-button-label {
+      @include ellipsis;
+    }
+  }
+
+  &__filter-controls {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__filter-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-start: auto;
+
+    .btn {
+      padding-block: var(--space-1);
+    }
+  }
+
+  &__filter-apply {
+    gap: var(--space-2);
+  }
+
+  &__filter-apply-pending-count {
+    color: var(--tertiary);
+    background: var(--secondary);
+    padding: 0.21em 0.42em;
+    min-width: 0.6em;
+    border-radius: 1em;
+    font-size: var(--font-down-2-rem);
+    font-weight: 600;
   }
 
   &__filter-pill {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
     padding-inline-start: var(--space-3);
-    border-radius: 2rem;
-    background: var(--primary-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-pill);
+    background: var(--primary-very-low);
+    font-size: var(--font-down-1-rem);
+
+    &.is-pending {
+      border-color: var(--tertiary);
+      border-style: dashed;
+      background: var(--tertiary-very-low);
+    }
+
+    .site-traffic-explorer__filter-pill-remaining,
+    .d-icon-angle-down {
+      color: var(--primary-medium);
+    }
+
+    .fk-d-menu__trigger {
+      min-width: 0;
+      gap: var(--space-1);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+
+      &:hover,
+      &.-expanded {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+
+        .site-traffic-explorer__filter-pill-remaining,
+        .d-icon-angle-down {
+          color: var(--primary);
+        }
+      }
+
+      &.-expanded .d-icon-angle-down {
+        transform: rotate(180deg);
+      }
+    }
   }
 
   &__filter-remove {
-    padding: var(--space-1) var(--space-2);
+    color: var(--primary-medium);
+    border-top-right-radius: var(--d-border-radius-pill);
+    border-bottom-right-radius: var(--d-border-radius-pill);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid var(--primary-low);
+  }
+
+  &__filter-pill-values {
+    @include ellipsis;
+    display: inline-flex;
+  }
+
+  &__filter-pill-value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
   }
 
   &__partial-warning {
@@ -39,6 +139,9 @@
   &__empty {
     border-radius: var(--d-border-radius);
     padding: var(--space-3) var(--space-4);
+    border: 1px dashed var(--content-border-color);
+    background: var(--primary-very-low);
+    text-align: center;
   }
 
   &__skeleton {
@@ -49,12 +152,36 @@
 
     .db-skeleton__heading-line {
       width: min(24rem, 100%);
-      height: 2rem;
+      height: 1.625rem;
+    }
+
+    .db-skeleton__metric {
+      gap: var(--space-1);
+    }
+
+    .db-skeleton__metric-number {
+      height: 2.125rem;
+    }
+
+    .db-skeleton__metric-label {
+      height: 1.22rem;
     }
 
     .db-skeleton__chart {
       height: 360px;
       min-height: 260px;
+    }
+
+    .db-skeleton__row-block-title {
+      height: 2.4rem;
+    }
+
+    .db-skeleton__list {
+      gap: 0;
+    }
+
+    .db-skeleton__list-row {
+      min-height: 1.72rem;
     }
 
     @include viewport.until(md) {
@@ -85,91 +212,26 @@
     }
   }
 
-  &__results {
-    min-width: 0;
-  }
-
-  &__report {
-    overflow: hidden;
-    background: var(--secondary);
-  }
-
-  &__metrics {
-    .db-section__subintro {
-      flex: 1 1 15rem;
-    }
-
-    .db-section__metrics {
-      align-items: flex-start;
-    }
-
-    @include viewport.until(md) {
-      flex-direction: column;
-      gap: var(--space-4);
-
-      .db-section__subintro {
-        flex-basis: auto;
-      }
-
-      .db-section__metrics {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        width: 100%;
-      }
+  .db-section__metrics {
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
     }
   }
 
-  &__metric {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-
-    &.--primary {
-      flex-flow: row wrap;
-      align-items: baseline;
-
-      .site-traffic-explorer__metric-value,
-      .site-traffic-explorer__metric-label {
-        color: var(--primary);
-        font-size: var(--font-up-1);
-        font-weight: 700;
-      }
-    }
-  }
-
-  &__metric-value {
-    overflow-wrap: anywhere;
-    font-variant-numeric: tabular-nums;
-  }
-
-  &__metric-label-row {
+  .db-section__metric-label {
     display: flex;
     align-items: center;
     gap: var(--space-1);
-    width: max-content;
-    max-width: 100%;
+
+    .db-section__info {
+      font-size: inherit;
+    }
   }
 
-  &__metric-label {
-    overflow-wrap: anywhere;
-  }
-
-  &__empty {
-    border: 1px dashed var(--content-border-color);
-    background: var(--primary-very-low);
-    text-align: center;
-  }
-
-  &__cards {
-    gap: 0;
-  }
-
-  &__card {
+  .db-section__row-block {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    min-width: 0;
   }
 
   &__tabs {
@@ -180,76 +242,65 @@
     border-bottom: 1px solid var(--content-border-color);
 
     button {
-      appearance: none;
       border: 0;
       border-bottom: 2px solid transparent;
-      padding-block: var(--space-2);
+      padding-bottom: var(--space-2);
       padding-inline: 0;
       background: transparent;
       color: var(--primary-high);
-      font: inherit;
       font-size: var(--font-down-1-rem);
       white-space: nowrap;
-      cursor: pointer;
 
       &.is-active {
         border-bottom-color: var(--tertiary);
-        color: var(--primary);
-        font-weight: 600;
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--tertiary);
-        outline-offset: -2px;
+        color: var(--tertiary);
       }
     }
   }
 
   &__breakdown-list {
     @include unstyled-list;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
     font-size: var(--font-down-1-rem);
+    margin-block-end: var(--space-2);
   }
 
   &__row {
-    box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: calc(100% + 2 * var(--space-2));
-    min-width: 0;
-    gap: var(--space-3);
+    gap: var(--space-1);
     margin-inline: calc(-1 * var(--space-2));
-    border: 0;
     border-radius: var(--d-border-radius);
-    padding-block: var(--space-1);
     padding-inline: var(--space-2);
-    background: transparent;
-    color: var(--primary);
-    font: inherit;
-    text-align: start;
-  }
+    cursor: pointer;
 
-  &__row-label {
-    @include ellipsis;
+    html.discourse-no-touch &:hover:not(:has(a:hover)) {
+      background: var(--token-color-surface-hovered);
+    }
   }
 
   &__row-count {
     flex-shrink: 0;
     margin-inline-start: auto;
     color: var(--primary-medium);
-    font-variant-numeric: tabular-nums;
   }
 
   &__row-link {
-    display: block;
+    @include ellipsis;
     flex: 0 1 auto;
     min-width: 0;
-    overflow: hidden;
     color: inherit;
     text-decoration: none;
+    margin: 0;
+    margin-right: var(
+      --space-4
+    ); // leave extra space on purpose to click the row not the link
+
+    &:hover {
+      .discourse-no-touch & {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
 
     &:visited {
       color: inherit;
@@ -261,61 +312,13 @@
     }
   }
 
-  html.discourse-no-touch &__row-link:hover {
-    color: var(--tertiary);
-    text-decoration: underline;
-  }
-
-  &__row-filter-area {
-    display: flex;
-    align-items: center;
-    align-self: stretch;
-    justify-content: flex-end;
-    flex: 1 0 auto;
-    min-width: 0;
-    margin-block: calc(-1 * var(--space-1));
-    margin-inline-end: calc(-1 * var(--space-2));
-    border: 0;
-    padding-block: var(--space-1);
-    padding-inline: 0 var(--space-2);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-  }
-
-  button.site-traffic-explorer__row {
-    cursor: pointer;
-
-    &:focus-visible {
-      background: var(--token-color-surface-hovered);
-      color: var(--tertiary);
-    }
-  }
-
-  html.discourse-no-touch & .site-traffic-explorer__row:hover {
-    background: var(--token-color-surface-hovered);
-  }
-
-  &__view-more {
-    width: max-content;
-    max-width: 100%;
-    margin-block-start: auto;
-    margin-inline: calc(-1 * var(--space-2));
-    padding-inline: var(--space-2);
-    font-size: var(--font-down-1-rem);
-  }
-
   &__dimension-label {
     display: flex;
+    flex: 1 1 auto;
     align-items: center;
     min-width: 0;
-    width: 100%;
-  }
-
-  &__dimension-prefix {
-    flex: 0 0 auto;
-    margin-inline-end: var(--space-2);
+    gap: var(--space-2);
+    padding-block: var(--space-1);
   }
 
   &__dimension-text {
@@ -328,56 +331,21 @@
     padding-block: var(--space-3);
     color: var(--primary-medium);
   }
+}
 
-  @include viewport.until(md) {
-    &__cards {
-      flex-direction: column;
-    }
-
-    &__card:not(:last-child) {
-      border-right: 0;
-      border-bottom: 1px solid var(--content-border-color);
-    }
-  }
-
-  @include viewport.until(sm) {
-    &__chart {
-      height: 18rem;
-    }
-  }
+// The global `label` rule in common/base/discourse.scss wins on specificity
+// over the block class, so these resets have to match it at element level.
+label.site-traffic-explorer__row {
+  margin-block: 0;
+  font-weight: inherit;
 }
 
 .site-traffic-breakdown-modal {
-  @include viewport.until(md) {
-    .d-table {
-      table-layout: fixed;
-    }
+  .site-traffic-explorer__breakdown-list {
+    font-size: var(--font-0);
   }
 
-  &__dimension {
-    max-width: 0;
-    overflow: hidden;
-
-    .site-traffic-explorer__row-link {
-      display: block;
-    }
-
-    @include viewport.until(md) {
-      max-width: none;
-    }
-  }
-
-  &__pageviews {
-    width: 1%;
-    white-space: nowrap;
-    text-align: end;
-
-    @include viewport.until(md) {
-      width: auto;
-    }
-
-    .d-table__mobile-label {
-      text-align: start;
-    }
+  .site-traffic-explorer__dimension-label {
+    padding-block: var(--space-2);
   }
 }

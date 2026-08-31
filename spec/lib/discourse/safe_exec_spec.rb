@@ -4,7 +4,7 @@ require "discourse/safe_exec"
 
 RSpec.describe Discourse::SafeExec do
   describe ".capture" do
-    it "delegates sandboxed execution to Landlock" do
+    it "delegates filesystem and seccomp sandboxing without Landlock network rules" do
       status = instance_double(Process::Status, exited?: true, exitstatus: 0)
       result =
         instance_double(
@@ -51,8 +51,8 @@ RSpec.describe Discourse::SafeExec do
         },
         unsetenv_others: true,
         chdir: nil,
-        connect_tcp: [],
-        bind_tcp: [],
+        connect_tcp: nil,
+        bind_tcp: nil,
         rlimits: {
           cpu_seconds: 1,
         },

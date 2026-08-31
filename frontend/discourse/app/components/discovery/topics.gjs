@@ -26,7 +26,6 @@ export default class DiscoveryTopics extends Component {
   @service currentUser;
   @service topicTrackingState;
   @service site;
-  @service siteSettings;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
@@ -147,12 +146,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showBottomDismissButtons() {
-    return (
-      this.allLoaded &&
-      (!this.site.mobileView ||
-        (this.site.mobileView &&
-          !this.siteSettings.floating_dismiss_topics_on_mobile))
-    );
+    return this.allLoaded && !this.site.mobileView;
   }
 
   @action

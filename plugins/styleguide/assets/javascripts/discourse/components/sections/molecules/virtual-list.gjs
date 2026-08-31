@@ -8,32 +8,27 @@ export default <template>
   <StyleguideExample
     @title="<DVirtualList> — pinned rows and an initial selection"
     @code={{virtualListSource}}
+    @description="Thousands of rows, of which only the visible window plus overscan is in the DOM. The list opens already scrolled to the selected row."
   >
-    <div class="styleguide-virtual-list">
-      <p class="styleguide-virtual-list__note">
-        Thousands of rows, of which only the visible window plus overscan is in
-        the DOM. The list opens already scrolled to the selected row. Scroll far
-        away from it and inspect the DOM: the selected row keeps its
-        <code>[data-index]</code>
-        element mounted, so a keyboard cursor pointing at it never dangles.
-      </p>
-
-      <VirtualListExample />
-    </div>
+    <:tryThis>
+      Scroll far away from the selection and inspect the DOM: the selected row
+      keeps its
+      <code>[data-index]</code>
+      element mounted, so a cursor pointing at it never dangles.
+    </:tryThis>
+    <:default>
+      <div class="styleguide-virtual-list">
+        <VirtualListExample />
+      </div>
+    </:default>
   </StyleguideExample>
 
   <StyleguideExample
     @title="<DVirtualList> — variable-height rows"
     @code={{virtualListVariableSource}}
+    @description="Rows whose real heights differ against a single estimate, so each re-measures as it enters the window and the total settles as you scroll. Rows are placed individually rather than laid out in flow, so a correction moves one row instead of reflowing the rest."
   >
     <div class="styleguide-virtual-list styleguide-virtual-list--tall">
-      <p class="styleguide-virtual-list__note">
-        Rows whose real heights differ against a single estimate, so each one
-        re-measures as it enters the window and the total settles as you scroll.
-        Rows are placed individually rather than laid out in flow, so a
-        correction moves one row instead of reflowing the rest.
-      </p>
-
       <VirtualListVariableExample />
     </div>
   </StyleguideExample>

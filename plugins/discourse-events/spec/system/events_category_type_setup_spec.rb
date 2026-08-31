@@ -9,7 +9,7 @@ RSpec.describe "Events Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
   end
@@ -34,7 +34,7 @@ RSpec.describe "Events Category Type Setup" do
 
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Events"))
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-events")
-    expect(SiteSetting.calendar_enabled).to eq(true)
+    expect(SiteSetting.discourse_events_enabled).to eq(true)
     expect(SiteSetting.discourse_post_event_enabled).to eq(true)
 
     category = Category.find_by(name: "Events")
@@ -48,7 +48,7 @@ RSpec.describe "Events Category Type Setup" do
     fab!(:category)
 
     before do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
       )
@@ -82,7 +82,7 @@ RSpec.describe "Events Category Type Setup" do
     end
 
     it "preloads stored category_settings values onto the edit form" do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
         configuration_values: {

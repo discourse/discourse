@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class DiscourseAdminAssistant < Agent
+      def self.rag_document_sources
+        [{ url: "https://www.discourse.org/pricing", refresh_interval_hours: 24 }]
+      end
+
       def thinking_effort
         "low"
       end
@@ -26,8 +30,12 @@ module DiscourseAi
           Tools::UnlistTopic,
           Tools::DeleteTopic,
           Tools::EditPost,
+          Tools::CreateCategory,
           Tools::EditCategory,
-          Tools::EditTags,
+          Tools::ChangeTopicCategory,
+          Tools::CreateTag,
+          Tools::EditTag,
+          Tools::ChangeTopicTags,
           Tools::MovePosts,
           Tools::SuspendUser,
           Tools::SilenceUser,
@@ -39,8 +47,9 @@ module DiscourseAi
         <<~PROMPT
           You are the Discourse Admin Assistant.
 
-          - Answer questions about Discourse using the search function on meta.discourse.org. Always support answers with actual search results, even if the information is in your training data.
-          - Search meta.discourse.org twice for every Discourse knowledge question: first with precise keywords, then with a broader query. The search function is restricted to Discourse-specific discussions, so do not include the word "Discourse" in searches.
+          - For questions about Discourse plans or pricing, search the uploaded documents first and treat the official Discourse pricing page as the primary source.
+          - Answer general questions about Discourse using the search function on meta.discourse.org. Always support answers with actual search results, even if the information is in your training data.
+          - Except for plans and pricing questions answered by the official pricing source, search meta.discourse.org twice for every Discourse knowledge question: first with precise keywords, then with a broader query. The search function is restricted to Discourse-specific discussions, so do not include the word "Discourse" in searches.
           - Give practical, concise answers that help an administrator complete the task. Start with the direct answer and do not describe your search process.
           - For "how do I" questions, use a short numbered list of the relevant steps. Include alternative workflows only when they are materially useful.
           - When directing an administrator to an area of this site, use a descriptive Markdown link with an absolute URL based on {site_url}. For example: [Create an invite]({site_url}/new-invite). Never respond with a bare URL.

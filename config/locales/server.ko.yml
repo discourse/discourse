@@ -641,16 +641,15 @@ ko:
     success_unapproved: "비밀번호를 변경했습니다."
   email_login:
     title: "이메일 로그인"
+  browsers:
+    chrome: "구글 크롬"
+    discoursehub: "DiscourseHub 앱"
+    edge: "마이크로소프트 엣지"
+    firefox: "파이어폭스"
+    ie: "인터넷 익스플로러"
+    opera: "오페라"
+    safari: "사파리"
   user_auth_tokens:
-    browser:
-      chrome: "구글 크롬"
-      discoursehub: "DiscourseHub 앱"
-      edge: "마이크로소프트 엣지"
-      firefox: "파이어폭스"
-      ie: "인터넷 익스플로러"
-      opera: "오페라"
-      safari: "사파리"
-      unknown: "알수없는 브라우저"
     device:
       android: "Android 디바이스"
       chromebook: "크롬 OS"
@@ -673,10 +672,6 @@ ko:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "익명"
-    browsers:
-      edge: "마이크로소프트 엣지"
-      firefox: "파이어폭스"
-      safari: "사파리"
   change_email:
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "해당 이메일 주소는 계정과 연결되어 있지 않습니다."
@@ -1094,6 +1089,9 @@ ko:
         num_topics: "토픽"
       description: "사용자가 공유한 링크의 클릭 수로 사용자를 나열합니다."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "방문"
+    top_entry_urls:
       labels:
         count: "방문"
     top_referrers_by_browser_pageviews:
@@ -1583,7 +1581,6 @@ ko:
     topic_view_duration_hours: "N시간마다 IP/사용자별로 새 주제 조회수를 계산합니다."
     user_profile_view_duration_hours: "N시간마다 IP/사용자별로 신규 사용자 프로필 조회수를 계산합니다."
     levenshtein_distance_spammer_emails: "스팸 발송자 이메일을 일치시킬 때 일부 일치를 허용하는 문자 수 차이입니다."
-    min_ban_entries_for_roll_up: "롤업 버튼을 클릭하면 최소 (N)개 엔트리가 있는 경우 새 서브넷 금지 엔트리가 생성됩니다."
     max_age_unmatched_emails: "(N)일 후 일치하지 않는 스크린된 이메일 엔트리를 삭제합니다."
     max_age_unmatched_ips: "(N)일 후 일치하지 않는 스크린된 IP 엔트리를 삭제합니다."
     num_flaggers_to_close_topic: "중재를 위해 주제를 자동으로 일시 중지하기 위한 최소 고유 신고자 수"
@@ -3609,6 +3606,8 @@ ko:
     conflict: "업데이트 충돌로 인해 그렇게 할 수 없습니다."
     reasons:
       post_count: "모든 사용자의 처음 몇 개의 게시물은 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"
+      fast_typer_time:
+        other: "%{count}초"
       auto_silence_regex: "첫 게시물이 %{link} 설정과 일치하는 신규 사용자입니다."
       category: "이 카테고리의 게시물은 운영진의 수동 승인이 필요합니다. 다음을 참조하세요. %{link}"
       must_approve_users: "모든 신규 사용자는 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"

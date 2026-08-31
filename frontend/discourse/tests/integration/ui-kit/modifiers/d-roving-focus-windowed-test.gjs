@@ -303,7 +303,7 @@ module(
       );
     });
 
-    test("Home, End, and horizontal keys do not fire onBoundary", async function (assert) {
+    test("Home and End stay silent while horizontal edges fire onBoundary", async function (assert) {
       const boundaries = [];
       const onBoundary = (direction, axis) =>
         boundaries.push(`${axis}:${direction}`);
@@ -884,6 +884,11 @@ module(
         prevented.End,
         "an unserviceable jump falls through instead of becoming a dead key"
       );
+      assert
+        .dom('[data-index="105"]')
+        .isFocused(
+          "an unserviceable End leaves the cursor on its mounted starting row"
+        );
     });
 
     test("focusLogicalIndex refuses an out-of-range index on an unstamped group", async function (assert) {
@@ -994,6 +999,41 @@ module(
         "a zero-padded index still identifies its row"
       );
       assert.dom(".r1").isFocused("and the cursor lands on it");
+    });
+
+    test("focusLogicalIndex declines a fractional index on an unstamped list", async function (assert) {
+      let api = null;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              onRegisterApi=register
+            }}
+          >
+            <button class="a" role="option">A</button>
+            <button class="b" role="option">B</button>
+            <button class="c" role="option">C</button>
+          </div>
+        </template>
+      );
+
+      assert.false(
+        api.focusLogicalIndex(1.5),
+        "a fractional index reports false instead of landing between rows"
+      );
+      await settled();
+      assert
+        .dom(".a")
+        .hasAttribute(
+          "tabindex",
+          "0",
+          "the seeded tab stop is untouched by the declined call"
+        );
     });
   }
 );

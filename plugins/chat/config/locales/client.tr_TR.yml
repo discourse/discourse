@@ -806,4 +806,11 @@ tr_TR:
         message: "Mesaj"
       chat_approval:
         message: "Mesaj"
+        buttons: "Düğmeler"
+        value: "Değer"
+        style: "Stil"
+        style_default: "Varsayılan"
+        style_primary: "Birincil"
+        style_success: "Başarılı"
+        icon: "Simge"
         channel_id: "Kanal"

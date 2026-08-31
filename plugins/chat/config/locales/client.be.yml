@@ -144,3 +144,7 @@ be:
         message: "Паведамленне"
       chat_approval:
         message: "Паведамленне"
+        value: "Значэнне"
+        style_default: "Прадвызначаная"
+        style_success: "Поспех"
+        icon: "Значок"

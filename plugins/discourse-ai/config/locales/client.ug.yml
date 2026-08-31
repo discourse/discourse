@@ -46,6 +46,12 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      copied: "كۆچۈرۈلدى"
+      ai_decoded_transcript:
+        arguments: "ئۆزگەرگۈچى"
+        type: "تىپى"
+        error: "خاتالىق"
+        response: "ئىنكاس"
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
@@ -135,6 +141,38 @@ ug:
         total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
+      logs:
+        short_title: "خاتىرە"
+        apply: "قوللان"
+        successful: "مۇۋەپپەقىيەتلىك"
+        failed: "مەغلۇب بولدى"
+        unknown: "يوچۇن"
+        topic_id: "تېما كىملىكى"
+        post_id: "يازما كىملىكى"
+        time: "ۋاقىت"
+        when: "قاچان"
+        outcome: "نەتىجە"
+        feature: "ئىقتىدار"
+        request: "ئىلتىماس"
+        user: "ئىشلەتكۈچى"
+        context: "مەزمۇن"
+        topic: "تېما"
+        post: "يازما"
+        post_short: "%{id} يازما"
+        duration: "داۋاملىشىش ۋاقتى"
+        actions: "مەشغۇلات"
+        periods:
+          hour: "ئاخىرقى %{count} سائەت"
+          week: "ئۆتكەن 7 كۈن"
+          custom: "ئىختىيارى"
+        detail:
+          request: "ئىلتىماس"
+          response: "ئىنكاس"
+          context: "مەزمۇن"
+          network_error: "تور خاتالىقى"
+        retention:
+          summary_stage: "خۇلاسە"
+          save: "ساقلا"
       ai_agent:
         name: "ئىسمى"
         edit: "تەھرىر"
@@ -260,6 +298,7 @@ ug:
           fake: "ئىختىيارى"
       ai_bot:
         debug_ai_modal:
+          duration_label: "داۋاملىشىش ۋاقتى:"
           request: "ئىلتىماس"
           response: "ئىنكاس"
           next_log: "كېيىنكى"

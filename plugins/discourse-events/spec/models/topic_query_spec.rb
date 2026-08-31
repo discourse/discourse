@@ -14,28 +14,28 @@ describe TopicQuery do
     fab!(:post_4) { Fabricate(:post, topic: topic_4) }
 
     fab!(:future_event_1) do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: post_1.id,
         original_starts_at: Time.now + 5.hours,
         original_ends_at: Time.now + 7.hours,
       )
     end
     fab!(:future_event_2) do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: post_2.id,
         original_starts_at: Time.now + 1.hour,
         original_ends_at: Time.now + 2.hours,
       )
     end
     fab!(:past_event_1) do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: post_3.id,
         original_starts_at: Time.now - 10.hours,
         original_ends_at: Time.now - 8.hours,
       )
     end
     fab!(:past_event_2) do
-      DiscoursePostEvent::Event.create!(
+      DiscourseEvents::Events::Event.create!(
         id: post_4.id,
         original_starts_at: Time.now - 7.hours,
         original_ends_at: Time.now - 5.hours,

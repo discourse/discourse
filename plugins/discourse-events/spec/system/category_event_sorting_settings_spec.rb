@@ -10,7 +10,7 @@ RSpec.describe "Event Sorting Category Settings" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.sort_categories_by_event_start_date_enabled = true
     SiteSetting.disable_resorting_on_categories_enabled = true
     sign_in(admin)

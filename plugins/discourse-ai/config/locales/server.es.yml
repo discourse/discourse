@@ -89,7 +89,6 @@ es:
     ai_helper_allowed_in_pm: "Activar el asistente de IA del compositor en los MP."
     ai_helper_automatic_chat_thread_title_delay: "Retraso en minutos antes de que el ayudante de la IA establezca automáticamente el título del hilo del chat."
     ai_helper_automatic_chat_thread_title: "Establecer automáticamente los títulos de los hilos del chat en función de su contenido."
-    ai_helper_enabled_features: "Selecciona las funciones que quieres activar en el ayudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuarios autorizados a acceder a las funciones del ayudante de IA en las publicaciones"
     ai_helper_post_illustrator_agent: "El agente que se utilizará para la característica de ilustrar publicación del ayudante de IA. Nota: También debes crear una herramienta de generación de imágenes (Administración > Plugins > Discourse AI > Herramientas) para que esta característica funcione."
     ai_helper_chat_thread_title_agent: "El agente que se utilizará para generar los títulos de los hilos de chat."
@@ -134,7 +133,6 @@ es:
     ai_translation_backfill_hourly_rate: "El número de publicaciones y temas para traducir por hora durante las operaciones de relleno. Déjalo en 0 para desactivar el relleno automático de las traducciones para el contenido existente."
     ai_translation_backfill_parallel_jobs: "El número de trabajos paralelos de postlocalización que se deben ejecutar por ciclo de relleno. Los valores más altos aumentan el rendimiento, pero consumen más recursos."
     ai_usage_rollup_after_days: "Número de días que se conservarán las estadísticas de uso de IA por solicitud antes de incluirlas en los agregados diarios. Deja el valor en 0 para desactivar la agregación."
-    ai_audit_logs_purge_after_days: "Elimina los registros de auditoría de la API de IA que tengan más de esta cantidad de días. Por defecto es de unos 6 meses. Déjalo en 0 para mantener indefinidamente."
   reviewables:
     reasons:
       flagged_by_toxicity: El plugin de IA lo denunció tras clasificarlo como tóxico.
@@ -326,7 +324,6 @@ es:
         unknown_error: "Se ha producido un error inesperado al generar las miniaturas. Inténtalo de nuevo."
       prompts:
         translate: Traducir a %{language}
-        generate_titles: Sugerir títulos de temas
         proofread: Corregir el texto
         markdown_table: Generar tabla Markdown
         custom_prompt: "Instrucción personalizada"

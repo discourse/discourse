@@ -36,15 +36,10 @@ de:
       livestream:
         zoom:
           join: "Zoom beitreten"
-          chat: "Chat"
           open_in_zoom: "In Zoom öffnen"
           load_error: "Du hast das Webinar verlassen oder wir können Zoom auf dieser Seite nicht laden."
           too_early: "Du kannst dem Webinar kurz vor Beginn des Ereignisses beitreten"
           view_topic: "Thema des Ereignisses anzeigen"
-          not_started_retrying:
-            one: "Das Webinar hat noch nicht begonnen. Erneuter Beitrittsversuch in %{count} Sekunde..."
-            other: "Das Webinar hat noch nicht begonnen. Erneuter Beitrittsversuch in %{count} Sekunden..."
-          not_started_trying_again: "Es wird erneut versucht, am Webinar teilzunehmen..."
         chat:
           rsvp_to_event: "Melde dich für das Ereignis an, um mit dem Chatten zu beginnen"
           rsvp_to_event_with_link: "Melde dich bei <a href='%{url}'>dem Ereignis</a> an, um mit dem Chatten zu beginnen"
@@ -463,7 +458,8 @@ de:
       composer:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"
-        location_placeholder: "Ort oder URL hinzufügen"
+        location_or_url_placeholder: "Ort oder URL hinzufügen"
+        url_placeholder: "URL hinzufügen"
         max_attendees_placeholder: "Unbegrenzte Teilnehmerzahl"
         max_attendees_display:
           one: "Max. %{count} Teilnehmer"
@@ -575,8 +571,13 @@ de:
           label: "Livestream"
           checkbox_label: "URL als Video einbetten und Livestream-Chat für Teilnehmer öffnen"
         location:
-          label: "Ort oder URL"
+          label: "Ort"
+          label_or_url: "Ort oder URL"
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
+        url:
+          label: "URL"
+          placeholder: "Optional"
+          add: "URL hinzufügen"
         description:
           label: "Beschreibung"
           placeholder: "Erzähle ein bisschen mehr über deine Veranstaltung. Neue Zeilen und Links werden unterstützt."

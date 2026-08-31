@@ -1098,16 +1098,15 @@ he:
   email_login:
     invalid_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
     title: "כניסה עם דוא״ל"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "היישומון DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "היישומון DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "דפדפן בלתי ידוע"
     device:
       android: "מכשיר Android"
       chromebook: "Chrome OS"
@@ -1130,10 +1129,6 @@ he:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "אלמוני"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
     doesnt_exist: "כתובת דוא״ל זו אינה משויכת לחשבונך."
@@ -1603,6 +1598,9 @@ he:
       title: "מדינות מובילות"
       labels:
         country_code: "קוד המדינה"
+        count: "ביקורים"
+    top_entry_urls:
+      labels:
         count: "ביקורים"
     top_referrers_by_browser_pageviews:
       title: "מפנים מובילים"
@@ -2263,7 +2261,6 @@ he:
     user_profile_view_duration_hours: "ספרו צפיות בפרופיל משתמש פעם אחת לכל IP/משתמש בכל N שעות"
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     max_new_accounts_per_registration_ip: "אם יש כבר (n) חשבונות בדרגת אמון 0 מכתובת IP זו (ואף אחד מהם אינו חבר צוות, או בדרגת אמון 2 ומעלה), לא יתקבלו עוד הרשמות מכתובת IP זו. הגדרה ל־0 תשבית את המגבלה."
-    min_ban_entries_for_roll_up: "בעת לחיצה על לחצן הגלילה למעלה, ייוצר איסור כניסת משנה (subnet ban entry) חדשה אם יש לפחות (N) ערכים."
     max_age_unmatched_emails: "למחוק רשומות דוא״ל במעקב שלא קיבלו התאמה לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
@@ -5049,6 +5046,11 @@ he:
       group: "משתמשים שאינם בקבוצות שצוינו חייבים שהתגובות שלהם תאושרנה על ידי הסגל. ר׳ %{link}"
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
+      fast_typer_time:
+        one: "שנייה"
+        two: "%{count} שניות"
+        many: "%{count} שניות"
+        other: "%{count} שניות"
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
       watched_word:
         one: "הפוסט הזה מכיל מילה במעקב, המילה המסומנת היא: %{words}. פרטים נוספים בקישור %{link}."

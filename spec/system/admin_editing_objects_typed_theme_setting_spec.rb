@@ -118,6 +118,45 @@ RSpec.describe "Admin editing objects type" do
       )
     end
 
+    it "allows an admin to pick an icon for an icon type property" do
+      SiteSetting.svg_icon_subset = "gamepad"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        links_setting:
+          type: objects
+          default:
+            - title: link
+              icon: heart
+          schema:
+            name: link
+            properties:
+              title:
+                type: string
+              icon:
+                type: icon
+      YAML
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      admin_objects_theme_setting_editor =
+        admin_customize_themes_page.click_edit_objects_setting_button("links_setting")
+
+      icon_picker = PageObjects::Components::DIconGridPicker.new(".schema-field[data-name='icon']")
+
+      expect(icon_picker).to have_selected_icon("heart")
+
+      icon_picker.expand
+      icon_picker.filter("gamepad")
+      icon_picker.select_icon("gamepad")
+
+      admin_objects_theme_setting_editor.save
+
+      expect(theme.reload.settings[:links_setting].value).to eq(
+        [{ "title" => "link", "icon" => "gamepad" }],
+      )
+    end
+
     it "allows an admin to edit a theme setting of objects type via the settings editor" do
       visit "/admin/customize/themes/#{theme.id}"
 

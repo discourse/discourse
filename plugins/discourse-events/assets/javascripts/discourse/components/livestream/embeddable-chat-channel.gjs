@@ -65,7 +65,13 @@ export default class EmbedableChatChannel extends Component {
     this.activeChannel.currentUserMembership = membership;
   }
 
+  // Inline means the channel is laid out by its parent rather than pinned over
+  // the page, so neither the visibility toggle nor a way to dismiss it applies.
   get showCloseButton() {
+    if (this.args.inline) {
+      return false;
+    }
+
     return this.args.onClose || !this.embeddableChat.isMobileModal;
   }
 
@@ -82,9 +88,13 @@ export default class EmbedableChatChannel extends Component {
   <template>
     <div
       id="custom-chat-container"
-      class={{dConcatClass
-        (if this.embeddableChat.isMobileChatVisible "mobile")
-        (unless this.embeddableChat.isMobileModal "no-modal-mobile")
+      class={{if
+        @inline
+        "inline"
+        (dConcatClass
+          (if this.embeddableChat.isMobileChatVisible "mobile")
+          (unless this.embeddableChat.isMobileModal "no-modal-mobile")
+        )
       }}
       {{this.updateChannel}}
     >

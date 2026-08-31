@@ -2389,6 +2389,7 @@ RSpec.describe Post do
         post_number: post.post_number,
         updated_at: Time.now,
         user_id: post.user_id,
+        username: post.user.username,
         last_editor_id: post.last_editor_id,
         type: :created,
         version: post.version,

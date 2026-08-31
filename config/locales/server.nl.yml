@@ -963,16 +963,15 @@ nl:
   email_login:
     invalid_token: 'Oeps! De link die je hebt gebruikt werkt niet meer. Je kunt je nu <a href="%{base_url}/login">aanmelden</a>. Als je je wachtwoord bent vergeten, kun je <a href="%{base_url}/password-reset">een link verzoeken</a> om het te herstellen.'
     title: "E-mailaanmelding"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub-app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub-app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "onbekende browser"
     device:
       android: "Android-apparaat"
       chromebook: "Chrome OS"
@@ -995,10 +994,6 @@ nl:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anoniem"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Misschien is het adres al in gebruik?"
     doesnt_exist: "Dat e-mailadres is niet aan je account gekoppeld."
@@ -1472,6 +1467,9 @@ nl:
         num_topics: "Topics"
       description: "Gebruikers vermeld op volgorde van het aantal klikken op links die ze hebben gedeeld."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Bezoeken"
+    top_entry_urls:
       labels:
         count: "Bezoeken"
     top_referrers_by_browser_pageviews:
@@ -2139,7 +2137,6 @@ nl:
     user_profile_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-gebruikersprofielweergave tellen."
     levenshtein_distance_spammer_emails: "Bij het vergelijken van spam-e-mails, het aantal verschillende tekens waarbij nog steeds een wazige overeenkomst kan bestaan."
     max_new_accounts_per_registration_ip: "Als er al (n) accounts met vertrouwensniveau 0 zijn van een bepaald IP-adres (en geen daarvan medewerker is of vertrouwensniveau 2 of hoger heeft), wordt het accepteren van nieuwe registraties vanaf dat IP-adres gestopt."
-    min_ban_entries_for_roll_up: "Bij het klikken op de knop Samenvoegen, een nieuwe subnet-banvermelding maken als er minstens (N) vermeldingen zijn."
     max_age_unmatched_emails: "Niet-overeenkomende gecontroleerde e-mailadresvermeldingen na (N) dagen verwijderen."
     max_age_unmatched_ips: "Niet-overeenkomende gecontroleerde IP-adresvermeldingen na (N) dagen verwijderen."
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
@@ -5051,6 +5048,9 @@ nl:
       group: "Gebruikers die niet tot de opgegeven groepen behoren, moeten antwoorden laten goedkeuren door een medewerker. Zie %{link}."
       new_topics_unless_trust_level: "Gebruikers met een laag vertrouwensniveau moeten topics laten goedkeuren door een medewerker. Zie %{link}."
       fast_typer: "Nieuwe gebruiker typte zijn eerste bericht verdacht snel, vermoed bot- of spammergedrag. Zie %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} seconden"
       auto_silence_regex: "Nieuwe gebruiker wiens eerste bericht overeenkomt met de instelling %{link}."
       watched_word:
         one: "Dit bericht bevatte een geobserveerd woord. Het gemarkeerde woord is: %{words}. Zie de %{link} voor meer informatie."

@@ -872,16 +872,15 @@ fa_IR:
     title: "بازیابی رمز‌عبور"
     success: "شما با موفقیت رمز‌عبورتان را تغییر دادید و الان وارد حساب کاربری شده‌اید."
     success_unapproved: "شما با موفقیت رمز‌عبورتان را تغییر دادید."
+  browsers:
+    chrome: "گوگل کروم"
+    discoursehub: "برنامه DiscourseHub"
+    edge: "مایکروسافت اج"
+    firefox: "فایرفاکس"
+    ie: "اینترنت اکسپلورر"
+    opera: "اپرا"
+    safari: "سافاری"
   user_auth_tokens:
-    browser:
-      chrome: "گوگل کروم"
-      discoursehub: "برنامه DiscourseHub"
-      edge: "مایکروسافت اج"
-      firefox: "فایرفاکس"
-      ie: "اینترنت اکسپلورر"
-      opera: "اپرا"
-      safari: "سافاری"
-      unknown: "مرورگر ناشناخته"
     device:
       android: "دستگاه اندروید"
       ipad: "آی‌پد"
@@ -902,10 +901,6 @@ fa_IR:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "ناشناس"
-    browsers:
-      edge: "مایکروسافت اج"
-      firefox: "فایرفاکس"
-      safari: "سافاری"
   change_email:
     error: "در تغییر ایمیلتان خطایی روی داد. شاید قبلا در سایت استفاده شده است؟"
     error_staged: "خطایی در تغییر ایمیل رخ داده است. این ایمیل در حال حاضر در یک حساب‌کاربری خودکار استفاده می‌شود."
@@ -1321,6 +1316,9 @@ fa_IR:
     top_countries_by_browser_pageviews:
       labels:
         count: "بازدیدها"
+    top_entry_urls:
+      labels:
+        count: "بازدیدها"
     top_referrers_by_browser_pageviews:
       labels:
         count: "بازدیدها"
@@ -1702,7 +1700,6 @@ fa_IR:
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     user_profile_view_duration_hours: "بازدید‌های پروفایل کاربران را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد نویسه‌های متفاوت که هنوز هم به یک تطبق مبهم اجازه خواهد داد."
-    min_ban_entries_for_roll_up: "وقتی روی کلید جمع کردن کلیک کنید، اگر حداقل (N) ورودی وجود داشته باشد،  یک ممنوعیت زیرشبکه ورودی جدید ساخته می‌شود."
     max_age_unmatched_emails: "ایمیل های ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     max_age_unmatched_ips: "IP ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
@@ -2849,6 +2846,10 @@ fa_IR:
       low: "کم"
       medium: "متوسط"
       high: "بالا"
+    reasons:
+      fast_typer_time:
+        one: "%{count} ثانیه"
+        other: "%{count} ثانیه"
     actions:
       agree:
         title: "بله"

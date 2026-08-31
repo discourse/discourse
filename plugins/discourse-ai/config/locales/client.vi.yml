@@ -88,6 +88,11 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      copied: "Đã sao chép"
+      ai_decoded_transcript:
+        type: "Loại"
+        error: "Lỗi"
+        response: "Đáp ứng"
       post_image_captions:
         edit: "Không có tiến trình ngôn ngữ nào."
         title: "Đã dịch %{translated}/%{total} sang %{language}"
@@ -228,6 +233,43 @@ vi:
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
+      logs:
+        short_title: "Log"
+        retry: "Thử lại"
+        apply: "Áp dụng"
+        successful: "Thành công"
+        failed: "Thất bại"
+        unknown: "Không biết"
+        topic_id: "ID Chủ đề"
+        post_id: "ID Tút"
+        time: "Thời gian"
+        when: "Khi"
+        outcome: "Kết quả"
+        feature: "Tính năng"
+        model: "Mô hình"
+        request: "Yêu cầu"
+        user: "Người dùng"
+        context: "Ngữ cảnh"
+        topic: "Chủ đề"
+        post: "Tút"
+        post_short: "Tút %{id}"
+        duration: "Thời hạn"
+        actions: "Hành động"
+        filters:
+          title: "Bộ lọc"
+          period: "Khoảng thời gian"
+        periods:
+          day: "24 giờ qua"
+          week: "7 ngày qua"
+          custom: "Tùy biến"
+        detail:
+          request: "Yêu cầu"
+          response: "Đáp ứng"
+          context: "Ngữ cảnh"
+        retention:
+          summary_stage: "Tóm tắt"
+          deleted_stage: "Đã xóa"
+          save: "Lưu lại"
       ai_agent:
         name: "Tên"
         edit: "Sửa"
@@ -398,6 +440,7 @@ vi:
         llm: "Mô hình (Model):"
         try_again: "Thử lại"
         debug_ai_modal:
+          duration_label: "Thời hạn:"
           request: "Yêu cầu"
           response: "Đáp ứng"
           next_log: "Kế tiếp"

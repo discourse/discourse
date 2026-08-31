@@ -39,7 +39,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     Scheduler::Defer.later("Null topic slug") { Topic.update_all(slug: nil) }
   end
 
-  SvgSprite.expire_cache if name.to_s.include?("_icon")
+  if name.to_s.include?("_icon") ||
+       %i[icon objects].include?(SiteSetting.type_supervisor.get_type(name))
+    SvgSprite.expire_cache
+  end
 
   SiteIconManager.ensure_optimized! if SiteIconManager::WATCHED_SETTINGS.include?(name)
 

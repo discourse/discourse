@@ -35,6 +35,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import {
   getExtensions,
+  type MarkdownOptions,
   type PluginParams,
   type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
@@ -102,6 +103,8 @@ interface ProsemirrorEditorSignature {
     replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
     /** Toggles between the rich and plain-text editors. */
     toggleRichEditor?: () => void;
+    /** Markdown cook options from the host editor, exposed to extensions. */
+    markdownOptions?: MarkdownOptions;
   };
 }
 
@@ -113,7 +116,9 @@ type NodeViewComponent = ComponentLike<{
     view: EditorView;
     getPos: () => number | undefined;
     dom: HTMLElement;
+    contentDOM?: HTMLElement;
     pluginParams: PluginParams;
+    options: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -187,6 +192,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         appEvents: this.appEvents,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
+        markdownOptions: this.args.markdownOptions,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>
@@ -212,7 +218,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = { tab: "Tab" };
+    const replacements: Record<string, string> = {
+      shift: "Shift",
+      tab: "Tab",
+    };
     const result: Record<string, Command> = {};
     for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
@@ -310,6 +319,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           }
         },
         drop: (view, event) => {
+          if (view.dragging) {
+            // A drag from this editor is a move, but the browser exposes the
+            // dragged content as a file too, so keep it away from the upload
+            // drop target on an ancestor, which would upload it again.
+            event.stopPropagation();
+            return;
+          }
+
           if (
             [...event.dataTransfer.items].some((item) => item.kind === "file")
           ) {
@@ -477,7 +494,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @contentDOM={{nodeView.contentDOM}}
           @pluginParams={{nodeView.pluginParams}}
+          @options={{nodeView.options}}
           @onSetup={{nodeView.setComponentInstance}}
         />
       {{~/in-element~}}

@@ -415,15 +415,14 @@ et:
     title: "Uuenda Parool"
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "tundmatu brauser"
     device:
       android: "Androidi seade"
       ipad: "iPad"
@@ -444,10 +443,6 @@ et:
   admin_site_traffic_explorer:
     traffic_types:
       anonymous: "Anonüümne"
-    browsers:
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
   change_email:
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
@@ -706,6 +701,9 @@ et:
         num_clicks: "Klikke"
         num_topics: "Teemasid"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
+    top_entry_urls:
       labels:
         count: "Külastusi"
     top_referrers_by_browser_pageviews:
@@ -1123,6 +1121,10 @@ et:
       disabled: "Välja lülitatud"
       medium: "Keskmine"
       high: "Kõrge"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekundit"
     actions:
       agree:
         title: "Jah"

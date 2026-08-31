@@ -6,7 +6,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Admin - Events - Holidays", function (needs) {
   needs.user();
   needs.settings({
-    calendar_enabled: true,
+    discourse_events_enabled: true,
     available_locales: [{ name: "English", value: "en" }],
   });
 
@@ -20,7 +20,7 @@ acceptance("Admin - Events - Holidays", function (needs) {
         humanized_name: "Events",
         is_discourse_owned: true,
         admin_route: {
-          label: "admin.calendar",
+          label: "discourse_events.title",
           location: "discourse-events",
           use_new_show_route: true,
         },

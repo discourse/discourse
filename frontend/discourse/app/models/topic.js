@@ -918,7 +918,7 @@ export default class Topic extends RestModel {
         if (
           opts.force_destroy ||
           (!deleted_by.staff &&
-            !deleted_by.groups.some((group) =>
+            !deleted_by.visibleGroups.some((group) =>
               this.category?.moderating_group_ids?.includes(group.id)
             ) &&
             !deleted_by.can_delete_all_posts_and_topics)

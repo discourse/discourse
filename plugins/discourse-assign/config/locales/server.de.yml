@@ -64,9 +64,6 @@ de:
       weekly: "wöchentlich"
       monthly: "monatlich"
       quarterly: "vierteljährlich"
-    discourse_workflows:
-      assign_topic:
-        error: "Thema konnte nicht zugeordnet werden: %{reason}"
   assign_mailer:
     title: "Mailer zuordnen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"

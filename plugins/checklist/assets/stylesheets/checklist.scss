@@ -17,9 +17,43 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
-  cursor: pointer;
   display: inline-flex;
-  vertical-align: text-bottom;
+  position: relative;
+  vertical-align: -0.125em;
+
+  &.is-interactive {
+    cursor: pointer;
+    touch-action: manipulation;
+
+    .checklist-spinner {
+      animation: rotate-forever 2s infinite linear;
+      color: var(--primary);
+      display: none;
+      height: 1em;
+      inset: 0;
+      position: absolute;
+      width: 1em;
+    }
+
+    &.is-saving {
+      &::before {
+        visibility: hidden;
+      }
+
+      .checklist-spinner {
+        display: inline-block;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 0.2em;
+    }
+  }
+
+  &.permanent {
+    cursor: default;
+  }
 
   &:not(.checked) {
     &.fa-square-o {
@@ -46,13 +80,11 @@ span.chcklst-box {
       );
     }
   }
+}
 
-  &.readonly {
-    pointer-events: none;
-  }
-
-  &.hidden {
-    display: none;
+@media (prefers-reduced-motion: reduce) {
+  span.chcklst-box.is-interactive .checklist-spinner {
+    animation: none;
   }
 }
 
@@ -61,24 +93,6 @@ ul li.has-checkbox {
 
   .list-item-checkbox {
     margin-left: -1.33em;
-  }
-}
-
-.fa-spin {
-  display: inline-flex;
-  vertical-align: text-bottom;
-  animation: fa-spin 2s infinite linear;
-  width: 1em;
-  height: 1em;
-}
-
-@keyframes fa-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(1turn);
   }
 }
 

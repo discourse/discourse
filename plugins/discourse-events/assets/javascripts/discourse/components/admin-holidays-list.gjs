@@ -5,9 +5,9 @@ const AdminHolidaysList = <template>
   <table class="d-table admin-holidays-list">
     <thead class="d-table__header">
       <tr class="d-table__row">
-        <th class="d-table__header-cell">{{i18n "discourse_calendar.date"}}</th>
+        <th class="d-table__header-cell">{{i18n "discourse_events.date"}}</th>
         <th class="d-table__header-cell">{{i18n
-            "discourse_calendar.holiday"
+            "discourse_events.holiday"
           }}</th>
         <th></th>
       </tr>

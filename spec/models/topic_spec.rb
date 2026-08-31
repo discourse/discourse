@@ -3197,31 +3197,32 @@ RSpec.describe Topic do
   end
 
   describe "expandable_first_post?" do
-    let(:topic) { Fabricate.build(:topic) }
-
-    it "is false if embeddable_host is blank" do
-      expect(topic.expandable_first_post?).to eq(false)
+    it "is false without a topic embed" do
+      expect(Fabricate.build(:topic).expandable_first_post?).to eq(false)
     end
 
-    describe "with an embeddable host" do
-      before do
-        Fabricate(:embeddable_host)
-        SiteSetting.embed_truncate = true
-        topic.stubs(:has_topic_embed?).returns(true)
-      end
+    it "uses the recorded truncation state when available" do
+      post = Fabricate(:post)
+      embed = Fabricate(:topic_embed, post:, content_truncated: true)
+      SiteSetting.embed_truncate = false
 
-      it "is true with the correct settings and topic_embed" do
-        expect(topic.expandable_first_post?).to eq(true)
-      end
-      it "is false if embed_truncate? is false" do
-        SiteSetting.embed_truncate = false
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      expect(post.topic.expandable_first_post?).to eq(true)
 
-      it "is false if has_topic_embed? is false" do
-        topic.stubs(:has_topic_embed?).returns(false)
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      embed.update!(content_truncated: false)
+      SiteSetting.embed_truncate = true
+
+      expect(post.topic.expandable_first_post?).to eq(false)
+    end
+
+    it "uses the site setting for legacy embeds with unknown truncation state" do
+      post = Fabricate(:post)
+      Fabricate(:topic_embed, post:, content_truncated: nil)
+
+      SiteSetting.embed_truncate = true
+      expect(post.topic.expandable_first_post?).to eq(true)
+
+      SiteSetting.embed_truncate = false
+      expect(post.topic.expandable_first_post?).to eq(false)
     end
   end
 

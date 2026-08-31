@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
@@ -52,6 +52,9 @@ export default class ChatMessageInteractor {
   @tracked message = null;
   @tracked context = null;
 
+  #quickReactionEmojis;
+  #placeholderReactions = new Map();
+
   constructor(owner, message, context) {
     setOwner(this, owner);
 
@@ -59,7 +62,24 @@ export default class ChatMessageInteractor {
     this.context = context;
   }
 
+  // Reacting re-sorts the frequency-ordered quick reactions, so the emoji are resolved
+  // once and held: the controls must not move under a user who is still interacting
+  // with them. An interactor is built per open actions menu, which scopes the freeze.
+  get quickReactionEmojis() {
+    this.#quickReactionEmojis ??= this.#computeQuickReactionEmojis();
+    return this.#quickReactionEmojis;
+  }
+
+  @cached
   get emojiReactions() {
+    return this.quickReactionEmojis.map(
+      (emoji) =>
+        this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
+        this.#placeholderReaction(emoji)
+    );
+  }
+
+  #computeQuickReactionEmojis() {
     const userQuickReactionsCustom = (
       (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
         this.currentUser.user_option.chat_quick_reactions_custom) ||
@@ -92,12 +112,20 @@ export default class ChatMessageInteractor {
         return allReactionsInOrder.indexOf(item) === index;
       })
       .filter(Boolean)
-      .slice(0, 3)
-      .map(
-        (emoji) =>
-          this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
-          ChatMessageReactionModel.create({ emoji })
-      );
+      .slice(0, 3);
+  }
+
+  // An emoji with no reaction yet still needs a model to render against, and it has to
+  // keep its identity across re-renders or the control it backs is torn down.
+  #placeholderReaction(emoji) {
+    let reaction = this.#placeholderReactions.get(emoji);
+
+    if (!reaction) {
+      reaction = ChatMessageReactionModel.create({ emoji });
+      this.#placeholderReactions.set(emoji, reaction);
+    }
+
+    return reaction;
   }
 
   get pane() {

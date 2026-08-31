@@ -1,4 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import Application from "discourse/app";
 import "./loader-shims";
 import "discourse/static/markdown-it";
@@ -53,7 +54,7 @@ import {
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -235,6 +236,11 @@ export default async function setupTests(config) {
   }
 
   await loadSprites(setupData.svgSpritePath, "fontawesome");
+
+  // Shortcuts render only when a keyboard is likely; assume one before the
+  // first test, and after each test in testCleanup, so rendering does not
+  // depend on the test browser's pointer.
+  noteKeyboardEvidence();
 
   let app;
   QUnit.testStart(async function (ctx) {

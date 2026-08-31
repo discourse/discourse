@@ -34,6 +34,11 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tipus"
+        error: "Error"
+        response: "Reacció"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -110,6 +115,39 @@ ca:
         total: "Total"
         periods:
           last_day: "Últimes 24 hores"
+      logs:
+        short_title: "Registres"
+        apply: "Aplica"
+        successful: "Amb èxit"
+        failed: "Fallits"
+        unknown: "Desconegut"
+        topic_id: "ID de tema"
+        post_id: "ID de publicació"
+        time: "Hora"
+        when: "Quan"
+        request: "Sol·licita"
+        provider: "Proveïdor"
+        user: "Usuari"
+        context: "Context"
+        topic: "Tema"
+        post: "Publicació"
+        post_short: "Publicació %{id}"
+        duration: "Duració"
+        actions: "Accions"
+        filters:
+          title: "Filtres"
+        periods:
+          day: "Últimes 24 hores"
+          week: "Els darrers 7 dies"
+          custom: "Personalitzat"
+        detail:
+          request: "Sol·licita"
+          response: "Reacció"
+          context: "Context"
+        retention:
+          summary_stage: "Resum"
+          deleted_stage: "Suprimit"
+          save: "Desa"
       ai_agent:
         name: "Nom"
         edit: "Edita"
@@ -215,6 +253,7 @@ ca:
           fake: "Personalitzat"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Duració:"
           request: "Sol·licita"
           response: "Reacció"
           next_log: "Següent"

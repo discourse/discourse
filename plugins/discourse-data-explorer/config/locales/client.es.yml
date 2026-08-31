@@ -113,7 +113,6 @@ es:
       nodes:
         "action:sql": "Explorador de datos"
       sql:
-        queries: "Consultas"
         query_id: "Consulta"
         add_param: "Añadir parámetro"
         param_value: "Valor"

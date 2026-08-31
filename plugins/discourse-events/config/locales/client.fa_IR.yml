@@ -27,9 +27,6 @@ fa_IR:
             topic_id:
               label: شناسه موضوع
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "گفتگو"
       invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"
@@ -397,6 +394,7 @@ fa_IR:
               description: "فقط کاربران دعوت شده می‌توانند به رویداد خصوصی بپیوندند"
       composer:
         name_placeholder: "نام رویداد"
+        url_placeholder: "اضافه کردن URL"
         event_title_placeholder: "نام رویداد"
         create_event_button: "ایجاد رویداد"
         reminder:
@@ -454,6 +452,12 @@ fa_IR:
             last: "آخرین"
         attendance:
           none: "هیچ‌کدام"
+        location:
+          label: "موقعیت"
+        url:
+          label: "نشانی اینترنتی"
+          placeholder: "اختیاری"
+          add: "اضافه کردن URL"
         description:
           label: "توضیح"
         name:

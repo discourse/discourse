@@ -65,6 +65,8 @@ he:
       cast-votes:
         title: "להצביע"
         label: "להצביע עכשיו!"
+      keep-vote:
+        label: "חזרה"
       show-results:
         title: "הצגת תוצאות הסקר"
         label: "תוצאות"

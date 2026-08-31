@@ -33,9 +33,6 @@ nl:
             topic_id:
               label: Topic-ID
     discourse_calendar:
-      livestream:
-        zoom:
-          chat: "Chat"
       invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
       preferences:
         all_events_description: "Alle forumevenementen"
@@ -443,7 +440,8 @@ nl:
               description: "Alleen uitgenodigde gebruikers kunnen deelnemen aan een privé-evenement."
       composer:
         name_placeholder: "Evenementnaam"
-        location_placeholder: "Locatie of URL toevoegen"
+        location_or_url_placeholder: "Locatie of URL toevoegen"
+        url_placeholder: "URL toevoegen"
         description_placeholder: "Evenementbeschrijving toevoegen"
         event_title_placeholder: "Evenementnaam"
         create_event_button: "Evenement maken"
@@ -515,7 +513,12 @@ nl:
           label: "Chatintegratie"
           checkbox_label: "Evenementspecifiek chatkanaal maken en beheren"
         location:
+          label: "Locatie"
           placeholder: "Voeg een locatie, link of iets anders toe."
+        url:
+          label: "URL"
+          placeholder: "Optioneel"
+          add: "URL toevoegen"
         description:
           label: "Beschrijving"
           placeholder: "Vertel mensen wat meer over je evenement. Regeleindes en links worden ondersteund."

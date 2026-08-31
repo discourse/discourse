@@ -189,7 +189,7 @@ export default class FormTemplateForm extends Component {
           @label="admin.form_templates.new_template_form.preview"
           @action={{this.showPreview}}
           @disabled={{this.disablePreviewButton}}
-          class="form-templates__preview-button"
+          class="btn-default form-templates__preview-button"
         />
       </div>
 
@@ -214,6 +214,7 @@ export default class FormTemplateForm extends Component {
           @label="admin.form_templates.new_template_form.cancel"
           @icon="xmark"
           @action={{this.onCancel}}
+          class="btn-default"
         />
 
         {{#if this.isEditing}}

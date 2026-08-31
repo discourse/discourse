@@ -1,6 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import type { Side } from "discourse/lib/geometry";
+import type { ResizeAxis } from "discourse/lib/resize-measurements";
 import {
   type DPointerDragArgs,
   registerPointerDrag,
@@ -55,7 +57,7 @@ interface DResizeEdgeSignature {
        * should carry: that describes the separator itself, which lies across
        * the axis it moves along.
        */
-      axis?: "horizontal" | "vertical";
+      axis?: ResizeAxis;
 
       /**
        * Which edge the resized element is docked against, in logical terms.
@@ -67,7 +69,7 @@ interface DResizeEdgeSignature {
        * Changing this or `axis` mid-gesture measures the new orientation against
        * an origin captured in the old one, so the result is undefined.
        */
-      side?: "start" | "end";
+      side?: Side;
 
       /**
        * A class held on `document.body` for the length of a gesture, for a cursor
@@ -173,6 +175,8 @@ interface DResizeEdgeSignature {
  * @see The `DResizeSeparator` component, which wraps this and supplies the whole block of
  *   separator markup above. Prefer it; reach for this modifier directly only when
  *   the element and its semantics are already yours to own.
+ * @see The `DResizeHandles` component for a TWO-dimensional box resize. The separator role does
+ *   not apply there — a 2D resize has no single `aria-valuenow` to report.
  * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> {
@@ -266,6 +270,18 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       return;
     }
 
+    // A jump with no bound has nowhere to land. Leave the key to whatever else
+    // would act on it, as the size check below does.
+    let jumpTarget;
+    if (event.key === "Home" || event.key === "End") {
+      jumpTarget = this.#read(
+        event.key === "Home" ? this.#named.min : this.#named.max
+      );
+      if (!Number.isFinite(jumpTarget)) {
+        return;
+      }
+    }
+
     if (this.#keyboardValue === null) {
       const startValue = this.#read(this.#named.value);
       // Checked before the key is claimed: with no size to step from there is
@@ -292,11 +308,8 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       case growKey:
         next = this.#keyboardValue + KEYBOARD_STEP * this.#growthDirection;
         break;
-      case "Home":
-        next = this.#read(this.#named.min);
-        break;
       default:
-        next = this.#read(this.#named.max);
+        next = jumpTarget;
         break;
     }
 
@@ -513,14 +526,17 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   }
 
   #clamp(size: number) {
+    // An absent bound reads as zero in arithmetic, which would collapse the size
+    // onto the other one. Skip it instead.
+    const max = this.#read(this.#named.max);
+    const min = this.#read(this.#named.min);
+
     // The minimum is applied last, so it wins when the two bounds conflict — a
     // short viewport can put `max` below `min`, and the stylesheet's own min-height
     // would still hold the box open. Letting `max` win would report a size the
     // element never takes.
-    return Math.max(
-      Math.min(size, this.#read(this.#named.max)),
-      this.#read(this.#named.min)
-    );
+    const capped = Number.isFinite(max) ? Math.min(size, max) : size;
+    return Number.isFinite(min) ? Math.max(capped, min) : capped;
   }
 
   #cancelFrame() {

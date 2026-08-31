@@ -22,31 +22,36 @@ pl_PL:
             fetch_error: "Nie udało się załadować danych pomocniczych."
             save_error: "Nie udało się zapisać wyboru na następny raz."
             headline:
-              healthy:
-                title: "Społeczność rozwiązuje swoje problemy sama."
-              struggling:
-                title: "Na większość pytań nie ma odpowiedzi."
-              mixed:
-                title: "Wsparcie jest zróżnicowane."
-              no_data:
-                title: "Za mało jeszcze aktywności wsparcia"
-                summary: "W tym okresie nie ma jeszcze żadnych działań wspierających. Gdy pojawią się tematy, zobaczysz, jak Twoja społeczność sobie z nimi radzi."
-              resolution:
-                up: "Wskaźnik rozwiązywania wzrósł do %{rate}%."
-                down: "Wskaźnik rozwiązywania spadł do %{rate}%."
-                flat: "Wskaźnik rozwiązywania utrzymał się na poziomie %{rate}%."
-              answerers:
-                members: "Członkowie odpowiadają na %{share}% odpowiedzi."
-                staff: "Personel odpowiada na %{share}% odpowiedzi."
-              reply:
-                faster: "Czas pierwszej odpowiedzi skrócił się do %{time}, %{delta} szybciej niż w poprzednim okresie."
-                slower: "Czas pierwszej odpowiedzi spadł do %{time}, %{delta} wolniej niż w poprzednim okresie."
-                flat: "Czas pierwszej odpowiedzi wynosił %{time}."
-              unanswered:
-                one: "%{count} temat z tego okresu nadal nie ma żadnych odpowiedzi."
-                few: "%{count} tematy z tego okresu nadal nie ma żadnych odpowiedzi."
-                many: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
-                other: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
+              titles:
+                insufficient_activity: "Za mało jeszcze aktywności wsparcia"
+                resolution_rate_and_first_reply_time_improved: "W wybranym okresie nastąpiła poprawa wskaźnika rozwiązywania problemów i czasu oczekiwania na pierwszą odpowiedź"
+                resolution_rate_improved: "W wybranym okresie nastąpiła poprawa wskaźnika rozwiązywania"
+                first_reply_time_decreased: "Czas oczekiwania na pierwszą odpowiedź w wybranym okresie uległ skróceniu"
+                resolution_rate_and_first_reply_time_declined: "W wybranym okresie spadły wskaźniki rozwiązywania problemów i czas oczekiwania na pierwszą odpowiedź"
+                resolution_rate_decreased: "W wybranym okresie nastąpił spadek współczynnika rozwiązywania"
+                first_reply_time_increased: "Czas oczekiwania na pierwszą odpowiedź w wybranym okresie wydłużył się"
+                support_steady: "Wsparcie jest stabilne w wybranym okresie"
+              summaries:
+                insufficient_activity: "W tym okresie nie ma jeszcze żadnych działań wspierających. Gdy pojawią się tematy, zobaczysz, jak Twoja społeczność sobie z nimi radzi."
+                more_answers_and_faster_replies: "Otrzymujemy odpowiedzi na coraz więcej pytań, i to coraz szybciej."
+                more_answers_but_slower_replies: "Otrzymujemy coraz więcej odpowiedzi na pytania, ale czas oczekiwania na odpowiedź wydłuża się."
+                more_answers_first_reply_time_flat: "Otrzymujemy coraz więcej odpowiedzi na pytania, ale czas oczekiwania na pierwszą odpowiedź jest krótki."
+                faster_replies_but_lower_resolution_rate: "Członkowie otrzymują szybsze odpowiedzi, ale wskaźnik rozwiązywanych problemów spadł."
+                faster_replies_resolution_rate_steady: "Członkowie otrzymują szybsze odpowiedzi, ale wskaźnik rozwiązywanych problemów pozostaje stały."
+                fewer_answers_and_slower_replies: "Członkowie otrzymują mniej odpowiedzi i dłużej czekają na pierwszą odpowiedź."
+                fewer_answers_first_reply_time_steady: "Członkowie otrzymują coraz mniej odpowiedzi, ale czas oczekiwania na pierwszą odpowiedź utrzymuje się na stałym poziomie."
+                slower_replies_resolution_rate_steady: "Członkowie czekają dłużej na pierwszą odpowiedź, jednak wskaźnik rozpatrywania spraw utrzymuje się na stałym poziomie."
+                resolution_rate_and_first_reply_time_steady: "Brak znaczących zmian we wskaźniku rozwiązywania problemów lub czasie oczekiwania na pierwszą odpowiedź."
+                more_answers: "Coraz więcej pytań otrzymuje odpowiedzi."
+                fewer_answers: "Członkowie otrzymują coraz mniej odpowiedzi."
+                resolution_rate_steady: "Brak znaczących zmian w stopniu rozwiązywania."
+                faster_replies: "Członkowie otrzymują szybsze odpowiedzi."
+                slower_replies: "Członkowie czekają dłużej na pierwszą odpowiedź."
+                first_reply_time_steady: "Brak znaczących zmian w czasie oczekiwania na pierwszą odpowiedź."
+              cta:
+                unanswered: "Sprawdź nieodpowiedziane tematy i zobacz, do których z nich możesz się odnieść."
+                in_progress: "Przejrzyj wątki będące w toku, aby sprawdzić, czy są tam odpowiedzi, które należy oznaczyć jako odpowiedzi."
+                in_progress_and_unanswered: "Zbadaj trwające dyskusje i nierozstrzygnięte tematy, aby upewnić się, że członkowie otrzymują odpowiedzi na czas."
             kpi:
               resolution_rate:
                 label: "Współczynnik rozwiązywania"

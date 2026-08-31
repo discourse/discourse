@@ -51,6 +51,11 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      copied: "Copiat"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Eroare"
+        response: "Răspuns"
       discourse_workflows:
         ai_agent:
           mode: "Mod"
@@ -157,6 +162,40 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
+      logs:
+        short_title: "Rapoarte"
+        retry: "Încearcă din nou"
+        apply: "Aplică"
+        successful: "Cu succes"
+        failed: "Eșuată"
+        unknown: "Necunoscută"
+        topic_id: "ID subiect"
+        post_id: "ID postare"
+        time: "Oră"
+        when: "Când"
+        request: "Cere"
+        provider: "Furnizor"
+        user: "Utilizator"
+        context: "Context"
+        topic: "Subiect"
+        post: "Articol"
+        post_short: "Postarea %{id}"
+        duration: "Durată"
+        actions: "Acțiuni"
+        filters:
+          title: "Filtre"
+        periods:
+          day: "Ultimele 24 de ore"
+          week: "Ultimele 7 zile"
+          custom: "Personalizat"
+        detail:
+          request: "Cere"
+          response: "Răspuns"
+          context: "Context"
+        retention:
+          summary_stage: "Rezumat"
+          deleted_stage: "Șters"
+          save: "Salvează"
       ai_agent:
         name: "Nume"
         edit: "Editează"
@@ -284,6 +323,7 @@ ro:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
+          duration_label: "Durată:"
           request: "Cere"
           response: "Răspuns"
           next_log: "Următorul"

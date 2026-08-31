@@ -32,6 +32,13 @@ export default class WorkflowConnection {
   }
 }
 
+// user-supplied node names index this map directly, so a plain object literal
+// would route a node named `__proto__` to the prototype accessor: the write
+// lands on `Object.prototype` and the connection disappears from the payload
+function emptyConnectionMap() {
+  return Object.create(null);
+}
+
 export function serializeConnections(connections, nodes) {
   const nodesByClientId = new Map(nodes.map((node) => [node.clientId, node]));
 
@@ -61,7 +68,7 @@ export function serializeConnections(connections, nodes) {
     });
 
     return result;
-  }, {});
+  }, emptyConnectionMap());
 }
 
 export function deserializeConnections(connections, nodes) {

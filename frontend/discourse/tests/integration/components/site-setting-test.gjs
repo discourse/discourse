@@ -13,6 +13,7 @@ import ThemeTranslation from "discourse/admin/components/theme-translation";
 import SiteSetting from "discourse/admin/models/site-setting";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
+import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, {
   parsePostData,
@@ -290,14 +291,118 @@ module("Integration | Component | SiteSetting", function (hooks) {
       secret: true,
       value: "foo",
     });
-    assert.dom(".input-setting-string").hasAttribute("type", "password");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
-    await click(".setting-toggle-secret");
-    assert.dom(".input-setting-string").hasAttribute("type", "text");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye-slash");
-    await click(".setting-toggle-secret");
-    assert.dom(".input-setting-string").hasAttribute("type", "password");
-    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
+
+    assert.dom(".form-kit__control-password").hasAttribute("type", "password");
+    assert
+      .dom(".form-kit__control-password")
+      .hasAttribute(
+        "autocomplete",
+        "new-password",
+        "does not let password managers autofill credentials"
+      );
+    assert
+      .dom(".setting-toggle-secret")
+      .doesNotExist("the control owns the reveal toggle");
+
+    await click(".form-kit__control-password-toggle");
+    assert.dom(".form-kit__control-password").hasAttribute("type", "text");
+  });
+
+  test("an enum setting renders its preview and keeps it in sync", async function (assert) {
+    await renderSetting({
+      setting: "tag_style",
+      value: "simple",
+      type: "enum",
+      preview: '<span class="tag-preview">{{value}}</span>',
+      valid_values: [
+        { name: "Simple", value: "simple" },
+        { name: "Box", value: "box" },
+      ],
+    });
+
+    assert.dom(".preview .tag-preview").hasText("simple");
+
+    await fillIn(".form-kit__control-select", "box");
+
+    assert.dom(".preview .tag-preview").hasText("box");
+  });
+
+  test("a category setting selects the stored category", async function (assert) {
+    const category = Site.current().categories[0];
+
+    await renderSetting({
+      setting: "shared_drafts_category",
+      value: String(category.id),
+      default: "",
+      type: "category",
+    });
+
+    assert
+      .dom(".category-chooser .selected-name")
+      .hasAttribute(
+        "data-name",
+        category.name,
+        "the header names the stored category instead of its id"
+      );
+
+    await selectKit(".category-chooser").expand();
+
+    assert
+      .dom(`.category-row[data-value="${category.id}"]`)
+      .hasClass("is-selected", "the stored category is highlighted");
+  });
+
+  test("an unset category setting offers a none option", async function (assert) {
+    await renderSetting({
+      setting: "shared_drafts_category",
+      value: "",
+      default: "",
+      type: "category",
+    });
+
+    assert
+      .dom(".category-chooser .selected-name")
+      .hasText(
+        i18n("category.none"),
+        "an unset category setting offers a none option rather than uncategorized"
+      );
+  });
+
+  test("a disabled tag list setting cannot be edited", async function (assert) {
+    await renderSetting({
+      setting: "digest_suppress_tags",
+      value: "dog",
+      default: "",
+      type: "tag_list",
+      disabled: true,
+    });
+
+    assert.dom(".tag-chooser").hasClass("is-disabled");
+  });
+
+  test("a secret setting that is also a textarea stays readable", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      secret: true,
+      textarea: true,
+      value: "-----BEGIN PRIVATE KEY-----",
+    });
+
+    assert.dom(".form-kit__control-textarea").exists();
+    assert.dom(".form-kit__control-password").doesNotExist();
+  });
+
+  test("a secret list setting is not collapsed into a password input", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      type: "list",
+      list_type: "secret",
+      secret: true,
+      value: "key|secret",
+    });
+
+    assert.dom(".form-kit__control-password").doesNotExist();
+    assert.dom(".secret-value-list").exists();
   });
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
@@ -476,10 +581,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       ],
     });
 
-    const selector = selectKit(".select-kit");
-
-    await selector.expand();
-    await selector.selectRowByValue("1");
+    await fillIn(".form-kit__control-select", "1");
 
     assert
       .dom(".setting-controls__ok")
@@ -488,8 +590,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .dom(".setting-controls__cancel")
       .exists("the cancel button is shown after changing the value");
 
-    await selector.expand();
-    await selector.selectRowByValue("2");
+    await fillIn(".form-kit__control-select", "2");
 
     assert
       .dom(".setting-controls__ok")
@@ -522,7 +623,7 @@ module(
         themeable: true,
       });
 
-      assert.dom(".input-setting-string").hasAttribute("disabled", "");
+      assert.dom(".form-kit__control-input").hasAttribute("disabled", "");
       assert
         .dom(".setting-controls__ok")
         .doesNotExist("save button is not shown");

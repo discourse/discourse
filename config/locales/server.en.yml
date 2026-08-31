@@ -238,6 +238,9 @@ en:
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
 
+        humanize_not_valid_icon_value: "The property at JSON Pointer '%{property_json_pointer}' must be an icon name."
+        not_valid_icon_value: "must be an icon name"
+
         humanize_string_value_not_valid_min:
           one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
           other: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} characters long."
@@ -1096,17 +1099,23 @@ en:
   email_login_code:
     invalid_code: "That code is incorrect or has expired. Request a new code and try again."
 
-  user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub app"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "unknown browser"
+  browsers:
+    android_browser: "Android Browser"
+    baidu_browser: "Baidu Browser"
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub app"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    kaios_browser: "KaiOS Browser"
+    opera: "Opera"
+    qq_browser: "QQ Browser"
+    safari: "Safari"
+    samsung_browser: "Samsung Browser"
+    uc_browser: "UC Browser"
+    unknown: "Unknown browser"
 
+  user_auth_tokens:
     device:
       android: "Android Device"
       chromebook: "Chrome OS"
@@ -1133,13 +1142,6 @@ en:
       logged_in: "Logged in"
       anonymous: "Anonymous"
       likely_crawler: "Likely crawlers"
-    browsers:
-      chrome: "Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      safari: "Safari"
-      unknown: "Unknown browser"
-
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
@@ -1475,6 +1477,11 @@ en:
         new_members: "New members"
         returning: "Returning"
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Posts"
+        share: "Share"
     trust_level_pipeline:
       title: "Trust level pipeline"
       description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups."
@@ -1663,6 +1670,12 @@ en:
       description: "Countries driving the most browser pageviews to your forum in the selected period."
       labels:
         country_code: "Country code"
+        count: "Visits"
+    top_entry_urls:
+      title: "Top entry URLs"
+      description: "Pages that received the most direct or externally referred browser visits in the selected period."
+      labels:
+        entry_url: "Entry URL"
         count: "Visits"
     top_referrers_by_browser_pageviews:
       title: "Top referrers"
@@ -1904,6 +1917,9 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
+
+  random_username:
+    unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -2191,6 +2207,7 @@ en:
     discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://, and must not include a trailing slash)"
     discourse_connect_secret: "Secret string used to cryptographically authenticate DiscourseConnect information, be sure it is 10 characters or longer"
     discourse_connect_provider_secrets: "A list of domain-secret pairs that are using DiscourseConnect. Make sure DiscourseConnect secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
+    discourse_connect_provider_claims: "When {{setting:enable_discourse_connect_provider}} is enabled, choose which optional user claims are included in Provider responses. Payloads are signed but not encrypted. The stable external ID and username are always included. All claims are selected by default for compatibility; removing claims may break relying sites that use them for account linking, authorization, or profile synchronization."
     discourse_connect_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     discourse_connect_overrides_groups: "Synchronize all manual group membership with groups specified in the groups attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     auth_overrides_email: "Overrides local email with external site email on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -2208,6 +2225,9 @@ en:
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
+    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2270,6 +2290,7 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    instrument_image_processing: "Record wall-clock duration and success for image-processing operations. Disabled by default."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -2492,7 +2513,7 @@ en:
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    min_ban_entries_for_roll_up: "A new subnet ban entry will be created daily by the <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> job when there are at least (N) blocked IP addresses within the same subnet."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -2912,7 +2933,7 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
-    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
+    site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2948,7 +2969,6 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
-    enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -3053,6 +3073,7 @@ en:
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
+      invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -3175,6 +3196,8 @@ en:
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
+      topic: "Show specific topics by ID"
+      topic_any: "Show topics in the specified order (comma-separated IDs)"
       exclude_category: "Exclude topics from a specific category"
       category_without_subcategories: "Show topics only in the parent category, excluding subcategories"
       exclude_category_without_subcategories: "Exclude topics only from the parent category, not subcategories"
@@ -6169,6 +6192,10 @@ en:
       group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
+      fast_typer_with_time: "New user typed their first post suspiciously fast (%{typing_time}), suspected bot or spammer behavior. See %{link}."
+      fast_typer_time:
+        one: "%{count} second"
+        other: "%{count} seconds"
       auto_silence_regex: "New user whose first post matches the %{link} setting."
       watched_word:
         one: "This post included a Watched Word, the flagged word is: %{words}. Check the %{link} for more."
@@ -6287,6 +6314,10 @@ en:
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
+      remove_avatar:
+        title: "Remove avatar"
+        description: "Reset this user's profile picture to the system default"
+        complete: "Avatar removed."
       approve_user:
         title: "Yes"
         complete: "User approved."

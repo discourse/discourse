@@ -58,6 +58,13 @@ class Reviewable < ActiveRecord::Base
         @icon, @button_class, @label = icon, button_class, label
       end
 
+      # The id without its reviewable prefix, e.g. "post-delete_user", so the
+      # client can key styling and selection on something stable. Must not end
+      # in `_id`: the client store reads such attributes as record references.
+      def action_name
+        id.split("-", 2).last
+      end
+
       def server_action
         id.split("-").last
       end
@@ -69,13 +76,18 @@ class Reviewable < ActiveRecord::Base
       bundle
     end
 
+    # Ids are scoped to the reviewable because actions serialize into one
+    # id-keyed collection for the whole queue. Two reviewables offering the same
+    # action would otherwise collapse into a single record, and every one of
+    # them would render the last copy. Bundle ids are scoped by their callers.
     def add(id, bundle: nil)
-      id = [reviewable.target_type&.underscore, id].compact_blank.join("-")
-      action = Actions.common_actions[id] || Action.new(id)
+      action_name = [reviewable.target_type&.underscore, id].compact_blank.join("-")
+      scoped_id = [reviewable.id, action_name].compact_blank.join("-")
+      action = Actions.common_actions[action_name] || Action.new(scoped_id)
       yield action if block_given?
       @content << action
 
-      bundle ||= add_bundle(id)
+      bundle ||= add_bundle(scoped_id)
       bundle.actions << action
     end
   end

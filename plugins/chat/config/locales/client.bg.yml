@@ -236,3 +236,7 @@ bg:
         message: "Съобщение"
       chat_approval:
         message: "Съобщение"
+        value: "Стойност"
+        style_default: "По подразбиране"
+        style_primary: "Основен"
+        icon: "Икона"

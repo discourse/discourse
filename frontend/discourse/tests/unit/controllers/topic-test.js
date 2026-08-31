@@ -6,6 +6,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
+import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -21,6 +22,37 @@ module("Unit | Controller | topic", function (hooks) {
 
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
+  });
+
+  test("revised messages skip only the originating optimistic refresh", function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic", { id: 1 });
+    controller.setProperties({ model });
+    const triggerChangedPost = sinon
+      .stub(model.postStream, "triggerChangedPost")
+      .resolves();
+    registerOptimisticPostUpdate("originating-mutation");
+
+    controller.onMessage({
+      id: 1,
+      preserve_cooked_token: "originating-mutation",
+      type: "revised",
+      updated_at: "2026-08-31T00:00:00.000Z",
+    });
+    assert.false(
+      triggerChangedPost.called,
+      "the originating event preserves the optimistic DOM"
+    );
+
+    controller.onMessage({
+      id: 1,
+      type: "revised",
+      updated_at: "2026-08-31T00:00:01.000Z",
+    });
+    assert.true(
+      triggerChangedPost.calledOnceWith(1, "2026-08-31T00:00:01.000Z"),
+      "another event refreshes the post"
+    );
   });
 
   test("editTopic", function (assert) {
@@ -709,6 +741,81 @@ module("Unit | Controller | topic", function (hooks) {
     assert.false(
       controller.editingTopic,
       "transformer allowed finishedEditingTopic"
+    );
+  });
+
+  test("onMessage skips new posts from ignored users", async function (assert) {
+    const topic = topicWithStream.call(this, {
+      posts: [{ id: 1, post_number: 1 }],
+      stream: [1],
+    });
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: topic });
+
+    const user = this.store.createRecord("user", {
+      username: "eviltrout",
+      id: 321,
+      ignored_users: ["ignored-user"],
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", user, {
+      instantiate: false,
+    });
+
+    const stub = sinon
+      .stub(topic.postStream, "triggerNewPostsInStream")
+      .resolves();
+
+    controller.onMessage({
+      type: "created",
+      id: 101,
+      username: "ignored-user",
+      user_id: 321,
+    });
+    await settled();
+
+    assert.false(
+      topic.postStream.stream.includes(101),
+      "ignored user's post is not added to the stream"
+    );
+    assert.false(
+      stub.called,
+      "ignored user's post is not fetched into the stream"
+    );
+  });
+
+  test("onMessage live-inserts new posts from regular users", async function (assert) {
+    const topic = topicWithStream.call(this, {
+      posts: [{ id: 1, post_number: 1 }],
+      stream: [1],
+    });
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: topic });
+
+    const user = this.store.createRecord("user", {
+      username: "eviltrout",
+      id: 321,
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", user, {
+      instantiate: false,
+    });
+
+    const stub = sinon
+      .stub(topic.postStream, "triggerNewPostsInStream")
+      .resolves();
+
+    controller.onMessage({
+      type: "created",
+      id: 101,
+      username: "regular-user",
+      user_id: 321,
+    });
+    await settled();
+
+    assert.true(
+      stub.calledOnce,
+      "regular user's post is fetched into the stream"
     );
   });
 });

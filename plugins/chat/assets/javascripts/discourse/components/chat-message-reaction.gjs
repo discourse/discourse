@@ -12,6 +12,7 @@ import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
@@ -169,6 +170,27 @@ export default class ChatMessageReaction extends Component {
     return emojiUrlFor(this.args.reaction.emoji);
   }
 
+  get isCountedReaction() {
+    return !!(this.showCount && this.args.reaction.count);
+  }
+
+  get ariaLabel() {
+    const emoji = this.args.reaction.emoji;
+
+    if (this.isCountedReaction) {
+      return i18n("chat.reactions.counted", {
+        emoji,
+        count: this.args.reaction.count,
+      });
+    }
+
+    if (this.args.reaction.reacted) {
+      return i18n("chat.reactions.remove", { emoji });
+    }
+
+    return i18n("chat.reactions.add", { emoji });
+  }
+
   @action
   handleClick(event) {
     event.stopPropagation();
@@ -205,9 +227,15 @@ export default class ChatMessageReaction extends Component {
         {{this.registerReactionsUsersPopup}}
         type="button"
         title={{this.emojiString}}
+        aria-label={{this.ariaLabel}}
+        aria-pressed={{if
+          this.isCountedReaction
+          (if @reaction.reacted "true" "false")
+        }}
         data-emoji-name={{@reaction.emoji}}
+        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
+        false makes a reaction display-only. }}
         tabindex={{if (eq @interactive false) "-1" "0"}}
-        aria-pressed={{if @reaction.reacted "true" "false"}}
         aria-describedby={{if this.description this.descriptionId}}
         class={{dConcatClass
           "chat-message-reaction"

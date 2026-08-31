@@ -11,9 +11,10 @@ export function recurrenceRef(event) {
 
 export function recurrenceContext(ref) {
   const weekday = ref.format("dddd");
-  const dayOfMonth = ref.date();
-  const isLast = dayOfMonth + 7 > ref.daysInMonth();
-  const ordinalKey = isLast ? "last" : ORDINALS[Math.ceil(dayOfMonth / 7) - 1];
+  const nth = Math.ceil(ref.date() / 7);
+  // Mirrors RRuleConfigurator: a fifth occurrence is expressed as "last",
+  // since not every month has one.
+  const ordinalKey = nth === 5 ? "last" : ORDINALS[nth - 1];
   const ordinal = i18n(
     `discourse_post_event.builder_modal.recurrence.ordinals.${ordinalKey}`
   );

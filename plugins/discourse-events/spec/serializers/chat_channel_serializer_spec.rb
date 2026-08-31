@@ -7,7 +7,7 @@ RSpec.describe Chat::ChannelSerializer do
   let(:first_post) { Fabricate(:post, topic:) }
 
   before do
-    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.chat_enabled = true
     # avoid the onebox-warming job making a real request
@@ -16,12 +16,12 @@ RSpec.describe Chat::ChannelSerializer do
   end
 
   def create_event(livestream: true, status: :public, raw_invitees: nil)
-    DiscoursePostEvent::Event.create!(
+    DiscourseEvents::Events::Event.create!(
       id: first_post.id,
       original_starts_at: 1.hour.from_now,
       original_ends_at: 2.hours.from_now,
       location: "https://www.youtube.com/live/abc123",
-      status: DiscoursePostEvent::Event.statuses[status],
+      status: DiscourseEvents::Events::Event.statuses[status],
       raw_invitees:,
       livestream:,
     )

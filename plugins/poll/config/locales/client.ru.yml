@@ -66,6 +66,8 @@ ru:
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
+      keep-vote:
+        label: "Назад"
       show-results:
         title: "Показать результаты опроса"
         label: "Результаты"

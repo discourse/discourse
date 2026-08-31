@@ -1,13 +1,9 @@
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { DEBUG } from "@glimmer/env";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 import {
   createElementVirtualizer,
   isVirtualizationEnabled,
@@ -16,7 +12,8 @@ import {
   rangeExtractorWithPins,
   remeasureViewport,
   updateElementVirtualizer,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
+import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 
 type VirtualKey = number | string | bigint;
 
@@ -243,10 +240,15 @@ export default class DVirtualizer<T> extends Modifier<
   #element: HTMLDivElement | null = null;
   #flushScheduled = false;
   #flushTimer: ReturnType<typeof schedule> | null = null;
+  #getItemKey: ((index: number) => VirtualKey) | null = null;
+  #getItemKeyEstimate: ((item: T, index: number) => number) | null = null;
+  #getItemKeyField: string | undefined;
+  #getItemKeyItems: readonly T[] | null = null;
   #lastSignature: StateSignature | null = null;
   #lastEmittedRange: VisibleRange | null = null;
   #named: DVirtualizerSignature<T>["Args"]["Named"] | null = null;
   #virtualizer: VirtualizerApi | null = null;
+  #warnedZeroHeight = false;
 
   /**
    * The start latch begins satisfied (mount at the top is not a "reached start"
@@ -257,12 +259,19 @@ export default class DVirtualizer<T> extends Modifier<
   #endLatched = false;
 
   /**
+   * True while an edge callback is running. `armEdge` is inert then: the callback
+   * would be clearing the latch this evaluation has just set, and the flush it
+   * schedules would fire the same callback again, with no yield in between.
+   */
+  #inEdgeCallback = false;
+
+  /**
    * The edge keys the latches were last evaluated against. A latch can only be
    * re-armed by a range retreat, which an `@items` change never produces: rows
    * arriving beyond the viewport move the BAND, not the range. Watching the keys
    * instead re-arms the edge the change actually touched. Null until the first
    * non-empty evaluation seeds them, which is what keeps mount suppression
-   * intact across the initial 0 -> N transition.
+   * intact across the initial transition from zero to a populated list.
    */
   #lastFirstKey: VirtualKey | null = null;
   #lastLastKey: VirtualKey | null = null;
@@ -274,7 +283,7 @@ export default class DVirtualizer<T> extends Modifier<
    */
   #lastCount = 0;
 
-  /** Reentrancy guard for the synchronous offset push (see {@link #syncScrollOffset}). */
+  /** Reentrancy guard for the synchronous offset push (see `#syncScrollOffset`). */
   #syncingScroll = false;
 
   /**
@@ -313,7 +322,12 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
 
-    this.#edgeThreshold = named.edgeThreshold ?? DEFAULT_EDGE_THRESHOLD;
+    // A non-finite threshold makes every band comparison false, and a negative one
+    // puts the band out of reach, so the edge would silently never fire again.
+    const threshold = named.edgeThreshold;
+    this.#edgeThreshold = Number.isFinite(threshold)
+      ? Math.max(0, Math.floor(threshold!))
+      : DEFAULT_EDGE_THRESHOLD;
 
     const options = this.#buildOptions(named);
 
@@ -327,7 +341,8 @@ export default class DVirtualizer<T> extends Modifier<
       // the API is never registered — so `measureRow` stays a no-op and NO row is
       // ever measured, silently, for the life of the list.
       //
-      // The JavaScript adapter's public type loses its element and option types.
+      // TODO(devxp-typescript-pending): Remove once the JavaScript adapter
+      // preserves the engine's element and option types.
       const virtualizer = createElementVirtualizer(
         options
       ) as unknown as VirtualizerApi;
@@ -377,7 +392,7 @@ export default class DVirtualizer<T> extends Modifier<
    * An empty list gets no height at all: the `empty` block renders inside this
    * element, and a self-centering empty state would collapse into a zero-height box.
    *
-   * @param options `grow` raises the height but never lowers it.
+   * @param options - `grow` raises the height but never lowers it.
    */
   #applySizerHeight({ grow = false } = {}) {
     const sizer = this.#sizer();
@@ -417,7 +432,7 @@ export default class DVirtualizer<T> extends Modifier<
 
   /**
    * After an `@items` change the engine can hold a scroll offset the element no
-   * longer has: shrinking the list makes the browser clamp `scrollTop`, but that
+   * longer has: shrinking the sizer makes the browser clamp `scrollTop`, but that
    * clamp does not reach the engine's offset observer, so it keeps computing the
    * window from a stale, now out-of-range offset. On its own that only mis-scrolls
    * the window; combined with pinned indices it surfaces as a visible gap — the
@@ -428,16 +443,11 @@ export default class DVirtualizer<T> extends Modifier<
    * Compared with a tolerance rather than exactly, because the engine's offset is
    * arithmetic over estimates while `scrollTop` is snapped to the layout grid. A
    * no-op when they already agree, which is the common case now that
-   * {@link #growSizerToTotal} keeps a grown list's anchored scroll reachable.
+   * `#growSizerToTotal` keeps a grown list's anchored scroll reachable.
    */
   #resyncScrollOffset() {
     const element = this.#element;
-    if (
-      this.#syncingScroll ||
-      !element?.isConnected ||
-      isDestroying(this) ||
-      isDestroyed(this)
-    ) {
+    if (this.#syncingScroll || !element?.isConnected || isDestroying(this)) {
       return;
     }
     const engineOffset = this.#virtualizer?.scrollOffset ?? null;
@@ -453,12 +463,10 @@ export default class DVirtualizer<T> extends Modifier<
     // whose target it has not observed yet — and adopting the element's position
     // there would overwrite that intent and settle the window somewhere stale.
     //
-    // Measured against the ENGINE's new total rather than the element's current
-    // height. On a shrink the element is still as tall as the outgoing list,
-    // because the component applies the smaller height on a later render and this
-    // method does not run again; asking the DOM would answer for the list being
-    // left rather than the one being entered, and the stale offset would survive
-    // exactly the case this exists for.
+    // Measured against the ENGINE's new total rather than the element's height,
+    // which may still describe the outgoing list during the update-time call.
+    // The flush calls again after settling the height so a shrink's forced layout
+    // exposes the browser-clamped position before the window is read.
     const maxOffset = Math.max(
       this.#virtualizer.getTotalSize() - element.clientHeight,
       0
@@ -479,7 +487,7 @@ export default class DVirtualizer<T> extends Modifier<
    * Strip an animated scroll when the reader has asked for reduced motion, so a
    * consumer does not have to check for it at every call site.
    *
-   * @param options The caller's scroll options.
+   * @param options - The caller's scroll options.
    * @returns The options, with any animation removed if motion is unwelcome.
    */
   #respectMotionPreference<O extends { behavior?: ScrollBehavior }>(
@@ -522,14 +530,53 @@ export default class DVirtualizer<T> extends Modifier<
         });
         this.#syncScrollOffset(before);
       },
+      armEdge: (edge) => {
+        if (!this.#virtualizer || this.#inEdgeCallback || isDestroying(this)) {
+          return;
+        }
+        if (edge === "end") {
+          this.#endLatched = false;
+        } else {
+          this.#startLatched = false;
+        }
+        // Clearing the latch is all this does. The callback fires from the next
+        // flush's edge evaluation, and only if the range is still in the band, so
+        // a consumer cannot drive its own callback by calling this.
+        this.#scheduleFlush();
+      },
       measure: () => this.#virtualizer?.measure(),
       remeasureViewport: () => {
         if (this.#virtualizer) {
           remeasureViewport(this.#virtualizer);
         }
       },
-      measureElement: (element) => this.#virtualizer?.measureElement(element),
-      visibleRange: () => this.#virtualizer?.range ?? undefined,
+      measureElement: (element) => {
+        // The engine resolves the row from the `data-index` that `place` stamps. Given
+        // anything it cannot resolve it warns, then observes the element under a key no
+        // row has, for the life of the list. Refuse it here rather than poison the cache.
+        // Checked against the item count rather than just parsed, because an index past
+        // the end resolves to no row just as surely as a missing one.
+        if (!(element instanceof HTMLElement)) {
+          return;
+        }
+        // Read the raw attribute first: `Number("")` is 0, so an empty `data-index`
+        // would otherwise pass as a valid index into the first row.
+        const raw = element.dataset.index;
+        if (raw === undefined || raw.trim() === "") {
+          return;
+        }
+        const index = Number(raw);
+        if (
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= (this.#named?.items.length ?? 0)
+        ) {
+          return;
+        }
+        this.#virtualizer?.measureElement(element);
+      },
+      visibleRange: () =>
+        this.#freezeRange(this.#virtualizer?.range ?? null) ?? undefined,
       get isScrolling() {
         return isScrolling();
       },
@@ -553,7 +600,7 @@ export default class DVirtualizer<T> extends Modifier<
    * takes the no-op branch and settles through the engine's own reconcile loop
    * instead.
    *
-   * @param previousScrollTop The offset before the scroll was requested.
+   * @param previousScrollTop - The offset before the scroll was requested.
    */
   #syncScrollOffset(previousScrollTop: number | undefined) {
     const element = this.#element;
@@ -561,7 +608,6 @@ export default class DVirtualizer<T> extends Modifier<
       this.#syncingScroll ||
       !element?.isConnected ||
       isDestroying(this) ||
-      isDestroyed(this) ||
       element.scrollTop === previousScrollTop
     ) {
       return;
@@ -578,6 +624,33 @@ export default class DVirtualizer<T> extends Modifier<
     named: DVirtualizerSignature<T>["Args"]["Named"]
   ): VirtualizerOptions {
     const { items, estimateSize, overscan, key, pinnedIndices } = named;
+    // Fractional and non-finite ranges can permanently poison engine memoization;
+    // negative ranges leave viewport gaps.
+    const normalizedOverscan =
+      overscan === undefined || !Number.isFinite(overscan)
+        ? 5
+        : Math.max(0, Math.floor(overscan));
+
+    if (
+      !this.#getItemKey ||
+      this.#getItemKeyItems !== items ||
+      this.#getItemKeyField !== key ||
+      this.#getItemKeyEstimate !== estimateSize
+    ) {
+      // Count is insufficient: a same-length replacement must key the incoming
+      // items rather than keep reading the outgoing array.
+      //
+      // The estimate belongs in this condition even though it is not part of the
+      // key. This function's identity is the only input to the engine's
+      // measurement memo that we control, and the engine does not watch its own
+      // `estimateSize`. Holding the function stable across an estimate change
+      // therefore leaves every unmeasured row at the old size. Measured rows are
+      // unaffected: the size cache is keyed by row key and survives the rebuild.
+      this.#getItemKey = (index) => keyFor(items[index], key);
+      this.#getItemKeyItems = items;
+      this.#getItemKeyField = key;
+      this.#getItemKeyEstimate = estimateSize;
+    }
 
     const options: VirtualizerOptions = {
       // Despite the name, this does NOT set where the list rests — the component
@@ -590,8 +663,8 @@ export default class DVirtualizer<T> extends Modifier<
       count: items.length,
       getScrollElement: () => this.#element,
       estimateSize: (index) => estimateSize(items[index]!, index),
-      getItemKey: (index) => keyFor(items[index], key),
-      overscan: overscan ?? 5,
+      getItemKey: this.#getItemKey,
+      overscan: normalizedOverscan,
       onChange: () => this.#scheduleFlush(),
       // Only a bottom-anchored list tracks the live edge. The engine gates this
       // on the reader having been within `scrollEndThreshold` of the end BEFORE
@@ -619,8 +692,22 @@ export default class DVirtualizer<T> extends Modifier<
 
   #flush() {
     this.#flushScheduled = false;
-    if (!this.#virtualizer || isDestroying(this) || isDestroyed(this)) {
+    if (!this.#virtualizer || isDestroying(this)) {
       return;
+    }
+
+    const count = this.#named?.items.length ?? 0;
+    if (
+      DEBUG &&
+      count > 0 &&
+      !this.#warnedZeroHeight &&
+      this.#element?.clientHeight === 0
+    ) {
+      this.#warnedZeroHeight = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[d-virtual-list] The scroll viewport has zero height; give it a height so virtualized rows can render."
+      );
     }
 
     // Sweep disconnected rows out of the engine's ResizeObserver. A ResizeObserver
@@ -629,13 +716,15 @@ export default class DVirtualizer<T> extends Modifier<
     // The sweep contract is pinned in the virtualizer unit suite.
     this.#virtualizer.measureElement(null);
 
+    // Settle a shrink before reading the window. Reading `scrollTop` during the
+    // resync forces the browser to apply the height clamp, and pushes that
+    // position into the engine before anything can be published.
+    this.#applySizerHeight();
+    this.#resyncScrollOffset();
+
     const virtualItems = this.#virtualizer.getVirtualItems();
     const totalSize = this.#virtualizer.getTotalSize();
     const range = this.#virtualizer.range;
-    const count = this.#named?.items.length ?? 0;
-
-    // The settled height, including any shrink the pre-scroll raise skipped.
-    this.#applySizerHeight();
 
     const signature = this.#stateSignature(virtualItems, totalSize, range);
 
@@ -644,12 +733,7 @@ export default class DVirtualizer<T> extends Modifier<
     // the engine's change memo compares against, and `getVirtualItems()` returns a
     // memoized array the engine keeps handing back — so a consumer that wrote
     // through either could silently stop the window from updating.
-    const publishedRange = range
-      ? Object.freeze({
-          startIndex: range.startIndex,
-          endIndex: range.endIndex,
-        })
-      : null;
+    const publishedRange = this.#freezeRange(range);
     const publishedItems = Object.freeze([...virtualItems]);
 
     // Publish BEFORE any edge callback runs. The window is what the component
@@ -706,8 +790,8 @@ export default class DVirtualizer<T> extends Modifier<
    * the loss would instead desync the rendered window, the caller must undo its
    * commit on a false return rather than memoize a publish that never happened.
    *
-   * @param label Callback name, used to attribute the error.
-   * @param run The callback to invoke.
+   * @param label - Callback name, used to attribute the error.
+   * @param run - The callback to invoke.
    * @returns Whether it completed without throwing.
    */
   #safely(label: string, run: () => void): boolean {
@@ -731,7 +815,7 @@ export default class DVirtualizer<T> extends Modifier<
    * Keying off the boundary rows instead re-arms exactly the edge that gained
    * rows, which is why a tail change must not disturb the start latch.
    *
-   * @param count The total number of items, known to be non-zero.
+   * @param count - The total number of items, known to be non-zero.
    */
   #rearmEdgesForItemChange(count: number) {
     const named = this.#named;
@@ -813,12 +897,13 @@ export default class DVirtualizer<T> extends Modifier<
   /**
    * Fires `onReachStart`/`onReachEnd` once per entry into an edge band, re-arming
    * after the range retreats past the band plus hysteresis OR when the list gains
-   * a new edge (see {@link #rearmEdgesForItemChange}). An empty list resets both
-   * latches so a refill re-fires; a null range holds the current state (nothing
-   * measured yet) but still tracks the edges.
+   * a new edge (see `#rearmEdgesForItemChange`). An empty list returns both
+   * latches to their MOUNT state, so a refill behaves like a fresh mount: the end
+   * edge can fire again and the start edge stays suppressed. A null range holds
+   * the current state (nothing measured yet) but still tracks the edges.
    *
-   * @param range The visible range, or null before anything has been measured.
-   * @param count The total number of items.
+   * @param range - The visible range, or null before anything has been measured.
+   * @param count - The total number of items.
    */
   #evaluateEdges(range: VisibleRange | null, count: number) {
     if (count === 0) {
@@ -847,9 +932,14 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.startIndex <= startBand) {
       if (!this.#startLatched) {
         this.#startLatched = true;
-        this.#safely("onReachStart", () =>
-          this.#named?.onReachStart?.({ ...range, count })
-        );
+        this.#inEdgeCallback = true;
+        try {
+          this.#safely("onReachStart", () =>
+            this.#named?.onReachStart?.({ ...range, count })
+          );
+        } finally {
+          this.#inEdgeCallback = false;
+        }
       }
     } else if (range.startIndex > startBand + EDGE_HYSTERESIS) {
       this.#startLatched = false;
@@ -858,17 +948,36 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.endIndex >= endBand) {
       if (!this.#endLatched) {
         this.#endLatched = true;
-        this.#safely("onReachEnd", () =>
-          this.#named?.onReachEnd?.({ ...range, count })
-        );
+        this.#inEdgeCallback = true;
+        try {
+          this.#safely("onReachEnd", () =>
+            this.#named?.onReachEnd?.({ ...range, count })
+          );
+        } finally {
+          this.#inEdgeCallback = false;
+        }
       }
     } else if (range.endIndex < endBand - EDGE_HYSTERESIS) {
       this.#endLatched = false;
     }
   }
 
+  /**
+   * A frozen copy of a range. Hand these out, never the engine's own object: `range`
+   * stays attached to the engine between computations, and its committed value is what
+   * the engine's change memo compares against.
+   */
+  #freezeRange(range: VisibleRange | null): Readonly<VisibleRange> | null {
+    return range
+      ? Object.freeze({
+          startIndex: range.startIndex,
+          endIndex: range.endIndex,
+        })
+      : null;
+  }
+
   #scheduleFlush() {
-    if (this.#flushScheduled || isDestroying(this) || isDestroyed(this)) {
+    if (this.#flushScheduled || isDestroying(this)) {
       return;
     }
     this.#flushScheduled = true;

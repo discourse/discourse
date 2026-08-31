@@ -17,12 +17,8 @@ export default <template>
         {{i18n "admin.dashboard.sections.engagement.fetch_error"}}
       </div>
     {{else}}
-      {{#if @engagement.headline}}
-        <EngagementHeadline
-          @headline={{@engagement.headline}}
-          @kpis={{@engagement.kpis}}
-          @period={{@period}}
-        />
+      {{#if @engagement}}
+        <EngagementHeadline @kpis={{@engagement.kpis}} />
       {{/if}}
 
       <div class="db-section__row-group">

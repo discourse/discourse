@@ -122,7 +122,7 @@ if defined?(DiscourseWorkflows)
                 id: @message.id,
                 message: @message.message,
                 cooked: @message.cooked,
-                excerpt: @message.excerpt || @message.build_excerpt,
+                excerpt: @message.excerpt_for_display,
                 created_at: @message.created_at.iso8601,
                 thread_id: @message.thread_id,
                 chat_channel_id: @message.chat_channel_id,

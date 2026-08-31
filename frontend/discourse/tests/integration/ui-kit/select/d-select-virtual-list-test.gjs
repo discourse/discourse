@@ -16,7 +16,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   disableVirtualization,
   enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 
 // A tracked `@items` holder, so a test can shrink a windowed list at runtime and prove the

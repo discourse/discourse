@@ -118,6 +118,22 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe ".filter_visible_in_accessible_categories" do
+    it "treats a nil guardian as anonymous" do
+      public_tag = Fabricate(:tag)
+      restricted_tag = Fabricate(:tag)
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      private_category.tags = [restricted_tag]
+
+      visible_tags =
+        DiscourseTagging.filter_visible_in_accessible_categories(
+          Tag.where(id: [public_tag.id, restricted_tag.id]),
+        )
+
+      expect(visible_tags).to contain_exactly(public_tag)
+    end
+  end
+
   describe "#validate_one_tag_from_group_per_topic" do
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3], one_per_topic: true) }
     fab!(:topic)

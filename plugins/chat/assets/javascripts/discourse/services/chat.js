@@ -109,7 +109,7 @@ export default class Chat extends Service {
     this._activeChannel = channel;
   }
 
-  @computed("currentUser.staff", "currentUser.groups.[]")
+  @computed("currentUser.staff")
   get userCanDirectMessage() {
     if (!this.currentUser) {
       return false;

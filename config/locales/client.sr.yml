@@ -2953,13 +2953,11 @@ sr:
       search:
         title: "Pretraži"
       site_traffic_explorer:
+        metric_information: "O %{metric}"
+        apply: "Primeni"
         view_more: "Pogledajte više"
         cards:
           visitors: "Posetioci"
-        columns:
-          referrers: "Upućivač"
-          top_urls: "URL"
-          ip_addresses: "IP adrese"
         filters:
           referrer: "Upućivač"
           ip: "IP adrese"
@@ -3037,24 +3035,10 @@ sr:
                   other: "-%{count} padova"
               stable_aria: "bez pokreta"
             headline:
-              healthy_growth:
-                title: "Članovi stvaraju naviku da se vraćaju."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u porastu."
-              declining:
-                title: "Članovi se vraćaju ređe."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u padu."
-              engaged_but_shrinking:
-                title: "Članovi su angažovani, ali se zajednica smanjuje."
-                summary: "Lepljivost se održava, ali dnevna angažovanost ili nove registracije su opali."
-              growing_but_distracted:
-                title: "Novi članovi se registruju, ali ne ostaju."
-                summary: "Registracije rastu, ali je lepljivost ovog perioda opala."
-              mixed:
-                title: "Trendovi angažovanja su ovog perioda mešoviti."
-                summary: "Neki metrici su u porastu, a drugi u padu — otvorite pločice ispod za detalje."
-              no_signal:
-                title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
-                summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              titles:
+                insufficient_activity: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
+              summaries:
+                insufficient_activity: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
               metrics:
                 new_signups: "Nove registracije"
                 dau_mau: "DAU / MAU lepljivost"

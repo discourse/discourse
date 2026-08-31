@@ -45,8 +45,15 @@ describe "Sign up via email code" do
     expect(page).to have_css(".code-login-form__complete-step")
     screenshot_marker(label: "code-signup-complete-step")
 
-    # A username must be picked before the account can be used.
-    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+    # A random username is assigned and prefilled, so the account is usable
+    # as-is; the user can roll a new suggestion or type their own.
+    generated = find("#code-login-username").value
+    expect(generated).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+    expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
+
+    find(".code-login-form__username-regen").click
+    expect(page).to have_no_field("code-login-username", with: generated)
+
     pick_username("new-person")
 
     find(".code-login-form__continue-to-site").click
@@ -110,6 +117,28 @@ describe "Sign up via email code" do
 
     expect(page).to have_css(".code-login-form__complete-step")
     expect(find("#code-login-username").value).to eq("jane")
+  end
+
+  it "makes the user pick a username when random usernames are disabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = false
+    SiteSetting.enable_random_usernames = false
+
+    visit("/signup")
+    submit_email("no.random@example.com")
+    fill_code(latest_emailed_code("no.random@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_no_css(".code-login-form__username-regen")
+    # The account carries a generic placeholder name, so it isn't offered up
+    # for the user to accept as-is.
+    expect(find("#code-login-username").value).to eq("")
+    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+
+    pick_username("no-random")
+    find(".code-login-form__continue-to-site").click
+
+    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(User.find_by_email("no.random@example.com").username).to eq("no-random")
   end
 
   it "keeps the generated username when usernames can't be changed" do

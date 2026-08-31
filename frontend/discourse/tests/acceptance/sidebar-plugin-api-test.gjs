@@ -129,19 +129,15 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .exists();
 
     await click(
-      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
+      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown"
     );
 
     assert
-      .dom(
-        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-      )
+      .dom(".sidebar-section-header-dropdown__item")
       .exists({ count: 2 }, "displays two actions");
 
     const actions = [
-      ...document.querySelectorAll(
-        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-      ),
+      ...document.querySelectorAll(".sidebar-section-header-dropdown__item"),
     ];
 
     assert
@@ -286,6 +282,249 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "section test",
       "calls section willDestroy function"
     );
+  });
+
+  test("A section without moreLinks renders no drawer", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-plain-section";
+            text = "plain section text";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "plain-link";
+                route = "discovery.latest";
+                title = "plain link title";
+                text = "plain link text";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-section[data-section-name='test-plain-section']")
+      .exists();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-plain-section'] .sidebar-more-section-links-details-summary"
+      )
+      .doesNotExist("no drawer trigger is added to sections that opt out");
+  });
+
+  test("Links behind a more drawer", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-inboxes";
+            text = "inboxes text";
+            moreLinksTriggerText = "Pick an inbox";
+            moreLinksTriggerPrefixType = "icon";
+            moreLinksTriggerPrefixValue = "inbox";
+            moreLinksTriggerSuffixType = "icon";
+            moreLinksTriggerSuffixValue = "chevron-down";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "always-shown";
+                route = "discovery.latest";
+                title = "always shown title";
+                text = "always shown text";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "tucked-away";
+                route = "discovery.unread";
+                title = "tucked away title";
+                text = "tucked away text";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-section[data-section-name='test-inboxes']")
+      .exists("the section is rendered");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inboxes'] [data-link-name='tucked-away']"
+      )
+      .doesNotExist("drawer links are not rendered inline");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inboxes'] .sidebar-more-section-links-details-summary"
+      )
+      .hasText("Pick an inbox", "the trigger uses the section's text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inboxes'] .sidebar-section-link-prefix .d-icon-inbox"
+      )
+      .exists("the trigger takes a prefix like a section link does");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inboxes'] .sidebar-section-link-suffix .d-icon-chevron-down"
+      )
+      .exists("and a suffix");
+
+    await click(
+      ".sidebar-section[data-section-name='test-inboxes'] .sidebar-more-section-links-details-summary"
+    );
+
+    assert
+      .dom("[data-link-name='tucked-away']")
+      .exists("the drawer reveals its links");
+  });
+
+  test("A more drawer copes with links that only carry an href", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-href-drawer";
+            text = "href drawer text";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "always-shown";
+                route = "discovery.latest";
+                title = "always shown title";
+                text = "always shown text";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "external";
+                href = "https://www.discourse.org";
+                title = "External";
+                text = "External";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-href-drawer'] .sidebar-more-section-links-details-summary"
+      )
+      .exists("the section renders rather than throwing");
+
+    await click(
+      ".sidebar-section[data-section-name='test-href-drawer'] .sidebar-more-section-links-details-summary"
+    );
+
+    assert
+      .dom("[data-link-name='external']")
+      .exists("and the href-only link is listed");
+  });
+
+  test("A more drawer can be inlined by the section", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-inlined-drawer";
+            text = "inlined drawer text";
+            moreLinksInline = true;
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "always-shown";
+                route = "discovery.latest";
+                title = "always shown title";
+                text = "always shown text";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "listed-inline";
+                route = "discovery.unread";
+                title = "listed inline title";
+                text = "listed inline text";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inlined-drawer'] [data-link-name='listed-inline']"
+      )
+      .exists("the links are rendered in the section");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-inlined-drawer'] .sidebar-more-section-links-details-summary"
+      )
+      .doesNotExist("and there is no trigger to open");
+  });
+
+  test("A more drawer can lead the section", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-leading-drawer";
+            text = "leading drawer text";
+            moreLinksPosition = "start";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "second-item";
+                route = "discovery.latest";
+                title = "second item title";
+                text = "second item text";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "in-the-drawer";
+                route = "discovery.unread";
+                title = "in the drawer title";
+                text = "in the drawer text";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    const rows = [
+      ...document.querySelectorAll(
+        ".sidebar-section[data-section-name='test-leading-drawer'] .sidebar-section-link-wrapper"
+      ),
+    ];
+
+    assert.dom(rows[0]).hasText("More", "the drawer trigger is the first row");
   });
 
   test("Single header action and no links", async function (assert) {
@@ -856,6 +1095,149 @@ acceptance("Sidebar - Plugin API", function (needs) {
         "div[data-section-name='test-section-2'].sidebar-section.sidebar-section--expanded"
       )
       .exists({ count: 1 });
+  });
+
+  test("Scroll active link into view on first load, for a short section below long ones", async function (assert) {
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-long-section";
+            text = "Long";
+            collapsedByDefault = false;
+
+            get links() {
+              return [...Array(100)].map(
+                (_, i) =>
+                  new (class extends BaseCustomSidebarSectionLink {
+                    get name() {
+                      return `filler-${i}`;
+                    }
+
+                    get href() {
+                      return `/filler${i}`;
+                    }
+
+                    get title() {
+                      return `Filler ${i}`;
+                    }
+
+                    get text() {
+                      return `Filler ${i}`;
+                    }
+                  })()
+              );
+            }
+          };
+        }
+      );
+
+      // its own single-link section, rendered after the long one
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-trailing-section";
+            hideSectionHeader = true;
+            text = null;
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  name = "trailing-search";
+                  route = "full-page-search";
+                  title = "Search";
+                  text = "Search";
+                })(),
+              ];
+            }
+          };
+        }
+      );
+    });
+
+    // land on the page directly rather than transitioning to it
+    await visit("/search");
+
+    assert
+      .dom(
+        ".sidebar-section-link-wrapper[data-list-item-name='trailing-search'] > a.active"
+      )
+      .exists("precondition: the link is detected as active");
+
+    assert.true(
+      document.querySelector(".sidebar-sections").scrollTop > 0,
+      "the sidebar scrolled the trailing section's link into view on load"
+    );
+  });
+
+  test("Scroll active link into view for a section in the main sidebar", async function (assert) {
+    // Sections can be appended to the main sidebar rather than living in a
+    // panel of their own; those render through ApiSections inside the main
+    // panel, so the main panel's flag has to reach them.
+    withPluginApi((api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-appended-section";
+            text = "Appended";
+            collapsedByDefault = false;
+
+            get links() {
+              const values = [...Array(100)].map(
+                (_, i) =>
+                  new (class extends BaseCustomSidebarSectionLink {
+                    get name() {
+                      return `appended-link-${i}`;
+                    }
+
+                    get href() {
+                      return `/appended${i}`;
+                    }
+
+                    get title() {
+                      return `Appended Link ${i}`;
+                    }
+
+                    get text() {
+                      return `Appended Link ${i}`;
+                    }
+                  })()
+              );
+
+              values.push(
+                new (class extends BaseCustomSidebarSectionLink {
+                  name = "appended-search";
+                  route = "full-page-search";
+                  title = "Search";
+                  text = "Search";
+                })()
+              );
+
+              return values;
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".sidebar-sections")
+      .hasProperty("scrollTop", 0, "the sidebar is not scrolled initially");
+
+    await visit("/search");
+
+    assert
+      .dom(
+        ".sidebar-section-link-wrapper[data-list-item-name='appended-search'] > a.active"
+      )
+      .exists();
+
+    assert.true(
+      document.querySelector(".sidebar-sections").scrollTop > 0,
+      "the main sidebar scrolled the appended section's active link into view"
+    );
   });
 
   test("Scroll active link into view", async function (assert) {

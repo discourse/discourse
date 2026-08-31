@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::OdtToText do
-  def with_odt(entries)
-    tempfile = Tempfile.new(%w[document .odt])
-    path = tempfile.path
-    tempfile.close
-    FileUtils.rm_f(path)
-
-    ::Zip::File.open(path, create: true) do |zip_file|
-      entries.each do |name, content|
-        zip_file.get_output_stream(name) { |stream| stream.write(content) }
-      end
-    end
-
-    yield path
-  ensure
-    tempfile&.close
-    FileUtils.rm_f(path) if path
-  end
-
   def odt_content(body)
     <<~XML
       <?xml version="1.0" encoding="UTF-8"?>
@@ -37,7 +19,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "extracts headings, paragraphs, tabs, line breaks, and spans" do
-    with_odt("content.xml" => odt_content(<<~XML)) do |path|
+    with_zipped_document("odt", "content.xml" => odt_content(<<~XML)) do |path|
           <text:h text:outline-level="1">Title</text:h>
           <text:p>Hello<text:tab/>world<text:line-break/>second line</text:p>
           <text:p>Run with <text:span>nested <text:span>span</text:span></text:span> text</text:p>
@@ -49,7 +31,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "expands repeated spaces from text:s c=N" do
-    with_odt("content.xml" => odt_content(<<~XML)) do |path|
+    with_zipped_document("odt", "content.xml" => odt_content(<<~XML)) do |path|
           <text:p>A<text:s text:c="3"/>B</text:p>
         XML
       expect(described_class.convert(path)).to eq("A   B")
@@ -57,7 +39,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "renders nested lists with depth-aware bullet prefixes" do
-    with_odt("content.xml" => odt_content(<<~XML)) do |path|
+    with_zipped_document("odt", "content.xml" => odt_content(<<~XML)) do |path|
           <text:list>
             <text:list-item><text:p>One</text:p></text:list-item>
             <text:list-item>
@@ -75,7 +57,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "renders tables as tab-separated rows" do
-    with_odt("content.xml" => odt_content(<<~XML)) do |path|
+    with_zipped_document("odt", "content.xml" => odt_content(<<~XML)) do |path|
           <table:table>
             <table:table-row>
               <table:table-cell><text:p>Name</text:p></table:table-cell>
@@ -92,7 +74,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "walks into frames and text-boxes for callout text" do
-    with_odt("content.xml" => odt_content(<<~XML)) do |path|
+    with_zipped_document("odt", "content.xml" => odt_content(<<~XML)) do |path|
           <text:p>Body before</text:p>
           <draw:frame>
             <draw:text-box>
@@ -106,7 +88,7 @@ RSpec.describe DiscourseAi::Completions::OdtToText do
   end
 
   it "returns blank text when content.xml is missing" do
-    with_odt("META-INF/manifest.xml" => "<manifest/>") do |path|
+    with_zipped_document("odt", "META-INF/manifest.xml" => "<manifest/>") do |path|
       expect(described_class.convert(path)).to eq("")
     end
   end
