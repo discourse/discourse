@@ -1106,6 +1106,56 @@ class Plugin::Instance
     )
   end
 
+  # Registers a plugin page as an option for the default_homepage site setting.
+  # The route is also mounted at `/` when the option is selected, while `path`
+  # remains the page's canonical URL for direct navigation.
+  #
+  # @param id [String, Symbol] stable identifier stored in the site setting
+  # @param name [String] client-side translation key used in the admin setting
+  # @param path [String] application path for the homepage
+  # @param route [String] Rails controller action, in `controller#action` form
+  # @param anonymous [Boolean] whether logged-out visitors may use this homepage
+  # @param server_side [Boolean] whether navigation requires a full page request
+  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+    id = id.to_s
+
+    if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
+      raise ArgumentError,
+            "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
+    end
+    raise ArgumentError, "homepage name must be present" if name.blank?
+    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
+      raise ArgumentError, "homepage route must use controller#action format"
+    end
+    if ![true, false].include?(anonymous)
+      raise ArgumentError, "homepage anonymous must be true or false"
+    end
+    if ![true, false].include?(server_side)
+      raise ArgumentError, "homepage server_side must be true or false"
+    end
+
+    registered_ids =
+      DiscoursePluginRegistry._raw_homepage_options.map { |entry| entry[:value][:id] }
+    core_homepage_ids =
+      Discourse.filters.map(&:to_s) + %w[categories custom blank finish_installation]
+    if core_homepage_ids.include?(id) || registered_ids.include?(id)
+      raise ArgumentError, "homepage id '#{id}' is already registered"
+    end
+
+    DiscoursePluginRegistry.register_homepage_option(
+      {
+        id: id,
+        name: name,
+        path: path.to_s,
+        route: route.to_s,
+        anonymous: anonymous,
+        server_side: server_side,
+      },
+      self,
+    )
+  end
+
   # Register a new demon process to be forked by the Unicorn master.
   # The demon_class should inherit from Demon::Base.
   # With great power comes great responsibility - this method should
