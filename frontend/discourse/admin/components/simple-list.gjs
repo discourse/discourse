@@ -11,6 +11,8 @@ import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 // args: onChange, inputDelimiter, values, allowAny, choices
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `simple-list-reorderable.gjs` replaces it.
 export default class SimpleList extends Component {
   @tracked newValue = "";
 

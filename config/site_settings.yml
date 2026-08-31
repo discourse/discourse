@@ -4741,6 +4741,16 @@ experimental:
       status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/389820"
+  enable_new_reordering_controls:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      # TODO (ui-kit-reorderable-list-cleanup) raise to "experimental" once the
+      # meta topic exists; a non-conceptual status requires learn_more_url.
+      status: "conceptual"
+      impact: "feature,all_members"
   enable_composer_redesign:
     default: false
     client: true

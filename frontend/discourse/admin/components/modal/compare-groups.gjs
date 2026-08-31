@@ -22,6 +22,8 @@ export function groupToken(groupId) {
   return `group:${groupId}`;
 }
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `compare-groups-reorderable.gjs` replaces it.
 export default class CompareGroups extends Component {
   @service site;
 

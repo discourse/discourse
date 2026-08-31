@@ -10,10 +10,16 @@ import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { emojiUrlFor } from "discourse/lib/text";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
 
 export default class EmojiValueList extends Component {
   @service menu;
+  @service siteSettings;
+
+  emojiLabel = (data) => data.value;
+
+  isEditable = (item) => item.isEditable;
 
   @cached
   get collection() {
@@ -59,6 +65,7 @@ export default class EmojiValueList extends Component {
     this.#saveValues(newCollection);
   }
 
+  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
   get showUpDownButtons() {
     return this.collection.length > 1;
   }
@@ -94,6 +101,18 @@ export default class EmojiValueList extends Component {
     this.#saveValues(newCollection);
   }
 
+  /**
+   * Applies a committed move and persists the new order. Wrapping and
+   * announcements are the list's own.
+   *
+   * @param {Object} move - The normalized move from the list.
+   */
+  @action
+  handleMove(move) {
+    this.#saveValues([...move.proposedToItems]);
+  }
+
+  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
   @action
   shift(operation, index) {
     const updateCollection = [...this.collection];
@@ -146,22 +165,27 @@ export default class EmojiValueList extends Component {
   <template>
     <div class="value-list emoji-list">
       {{#if this.collection}}
-        <ul class="values emoji-value-list">
-          {{#each this.collection key="value" as |data index|}}
-            <li class="value" data-index={{index}}>
-              <DButton
-                @action={{fn this.removeValue data}}
-                @icon="xmark"
-                @disabled={{not data.isEditable}}
-                class="btn-default remove-value-btn btn-small"
-              />
-
+        {{! TODO (ui-kit-reorderable-list-cleanup) drop the branch and the
+            legacy arm once the change ships. This component keeps one class
+            because a plugin patches it by resolver key. }}
+        {{#if this.siteSettings.enable_new_reordering_controls}}
+          <DReorderableList
+            @items={{this.collection}}
+            @key="value"
+            @label={{this.emojiLabel}}
+            @onMove={{this.handleMove}}
+            @onRemove={{this.removeValue}}
+            @removable={{this.isEditable}}
+            @rowClass="value"
+            class="values emoji-value-list"
+          >
+            <:row as |data controls|>
               <div
                 class="value-input emoji-details
                   {{if data.isEditable 'can-edit'}}
                   {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-                {{on "click" (fn this.editValue index)}}
                 role="button"
+                {{on "click" (fn this.editValue controls.index)}}
               >
                 <img
                   height="15px"
@@ -171,22 +195,51 @@ export default class EmojiValueList extends Component {
                 />
                 <span class="emoji-name">{{data.value}}</span>
               </div>
+            </:row>
+          </DReorderableList>
+        {{else}}
+          <ul class="values emoji-value-list">
+            {{#each this.collection key="value" as |data index|}}
+              <li class="value" data-index={{index}}>
+                <DButton
+                  @action={{fn this.removeValue data}}
+                  @icon="xmark"
+                  @disabled={{not data.isEditable}}
+                  class="btn-default remove-value-btn btn-small"
+                />
 
-              {{#if this.showUpDownButtons}}
-                <DButton
-                  @action={{fn this.shift -1 index}}
-                  @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
-                />
-                <DButton
-                  @action={{fn this.shift 1 index}}
-                  @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
-                />
-              {{/if}}
-            </li>
-          {{/each}}
-        </ul>
+                <div
+                  class="value-input emoji-details
+                    {{if data.isEditable 'can-edit'}}
+                    {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+                  {{on "click" (fn this.editValue index)}}
+                  role="button"
+                >
+                  <img
+                    height="15px"
+                    width="15px"
+                    src={{data.emojiUrl}}
+                    class="emoji-list-emoji"
+                  />
+                  <span class="emoji-name">{{data.value}}</span>
+                </div>
+
+                {{#if this.showUpDownButtons}}
+                  <DButton
+                    @action={{fn this.shift -1 index}}
+                    @icon="arrow-up"
+                    class="btn-default shift-up-value-btn btn-small"
+                  />
+                  <DButton
+                    @action={{fn this.shift 1 index}}
+                    @icon="arrow-down"
+                    class="btn-default shift-down-value-btn btn-small"
+                  />
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
       {{/if}}
 
       <div class="value">

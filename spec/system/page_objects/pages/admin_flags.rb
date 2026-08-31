@@ -71,6 +71,28 @@ module PageObjects
         has_no_css?(".flag-menu-content")
       end
 
+      # Methods for when the enable_new_reordering_controls upcoming change is
+
+      # enabled. move_up/move_down above keep main's menu-driven behaviour.
+
+      #
+
+      # TODO (ui-kit-reorderable-list-cleanup) fold these over them once the
+
+      # change ships.
+
+      def reorderable(key)
+        PageObjects::Components::ReorderableList.new(".admin-flag-item.#{key}")
+      end
+
+      def move_up_via_list(key)
+        reorderable(key).move(:up)
+      end
+
+      def move_down_via_list(key)
+        reorderable(key).move(:down)
+      end
+
       def move_down(key)
         toggle_flag_menu(key)
         find(".admin-flag-item__move-down").click

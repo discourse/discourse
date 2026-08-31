@@ -11,6 +11,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `manageable-row-list-item-reorderable.gjs` replaces it.
 export default class ManageableRowListItem extends Component {
   @service site;
 

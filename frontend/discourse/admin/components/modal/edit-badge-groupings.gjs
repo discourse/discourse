@@ -10,6 +10,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `edit-badge-groupings-reorderable.gjs` replaces it.
 export default class EditBadgeGroupings extends Component {
   @service dialog;
   @service store;
