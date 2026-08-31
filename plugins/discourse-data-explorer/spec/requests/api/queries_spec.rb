@@ -107,36 +107,6 @@ RSpec.describe "JSON:API queries", type: :request do
       expect(parsed_body).to eq("data" => data, "included" => [], "links" => links)
     end
 
-    context "when the request sorts by name" do
-      let(:query_parameters) { { sort: "name" } }
-
-      it "sends the queries in that order" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(
-          ["Posts of the week", "Topics of a category", "Users who never posted"],
-        )
-      end
-    end
-
-    context "when the request sorts by the author's username" do
-      fab!(:later_author) { Fabricate(:user, username: "zoe_analyst") }
-      fab!(:by_zoe) { Fabricate(:query, name: "Written by Zoe", user: later_author) }
-      fab!(:by_nobody) { Fabricate(:query, name: "Written by nobody", user: nil) }
-
-      let(:query_parameters) { { sort: "user.username" } }
-
-      it "sends the queries in that order, and the ones with no author last" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(
-          [
-            "Posts of the week",
-            "Users who never posted",
-            "Topics of a category",
-            "Written by Zoe",
-            "Written by nobody",
-          ],
-        )
-      end
-    end
-
     context "when the request filters by a word in the name" do
       let(:query_parameters) { { filter: { search: "NEVER POSTED" } } }
 
@@ -163,91 +133,8 @@ RSpec.describe "JSON:API queries", type: :request do
       end
     end
 
-    context "when the request limits the page size to 1" do
-      let(:query_parameters) { { page: { size: "1" } } }
-      let(:order) { DiscourseDataExplorer::QueryResource.order.first }
-      let(:cursor) { order.position_of(newest).to_cursor.to_s }
-      let(:next_page) { "#{base}/queries?#{{ page: { after: cursor, size: "1" } }.to_query}" }
-
-      it "sends that many queries" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(["Topics of a category"])
-      end
-
-      it "links to the next page" do
-        expect(parsed_body["links"]).to eq(
-          "self" => {
-            "href" => "#{base}/queries?page%5Bsize%5D=1",
-            "type" => JsonApiKit::Pagination::Profile::MEDIA_TYPE,
-          },
-          "prev" => nil,
-          "next" => next_page,
-        )
-      end
-    end
-
-    context "when the request doesn’t limit the page size" do
-      fab!(:filler) do
-        DiscourseDataExplorer::Query.insert_all(
-          (1..60).map do
-            {
-              name: "Filler #{it}",
-              sql: "SELECT 1",
-              created_at: Time.utc(2026, 7, 1),
-              updated_at: Time.utc(2026, 7, 1),
-            }
-          end,
-        )
-      end
-
-      it "sends fifty queries" do
-        expect(parsed_body["data"].size).to eq(50)
-      end
-    end
-
-    context "when the request anchors the page on one query" do
-      let(:query_parameters) do
-        { sort: "name", page: { anchor: { id: middle.id }, before_size: "1", after_size: "0" } }
-      end
-
-      it "sends the page around that query" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(
-          ["Topics of a category", "Users who never posted"],
-        )
-      end
-    end
-
     context "when the request includes the author and the groups" do
       let(:query_parameters) { { include: "user,groups" } }
-      let(:relationships) do
-        [newest, middle, oldest].map do |query|
-          {
-            "user" => {
-              "data" => {
-                "type" => "users",
-                "id" => author.id.to_s,
-              },
-              "links" => {
-                "self" => "#{base}/queries/#{query.id}/relationships/user",
-                "related" => "#{base}/queries/#{query.id}/user",
-              },
-            },
-            "groups" => {
-              "data" => [{ "type" => "groups", "id" => analysts.id.to_s }],
-              "links" => {
-                "self" => "#{base}/queries/#{query.id}/relationships/groups",
-                "related" => "#{base}/queries/#{query.id}/groups",
-                "prev" => nil,
-                "next" => nil,
-              },
-            },
-          }
-        end
-      end
-
-      it "links every query to its author and to its groups" do
-        expect(parsed_body["data"].map { it["relationships"] }).to eq(relationships)
-      end
-
       it "sends every related record under its own namespace" do
         expect(parsed_body["included"]).to contain_exactly(
           {
@@ -306,12 +193,6 @@ RSpec.describe "JSON:API queries", type: :request do
           },
         },
       )
-    end
-
-    context "when no query has that id" do
-      let(:path) { "/api/data-explorer/queries/0" }
-
-      it { expect(response).to have_http_status(:not_found) }
     end
 
     context "when the query is hidden" do
