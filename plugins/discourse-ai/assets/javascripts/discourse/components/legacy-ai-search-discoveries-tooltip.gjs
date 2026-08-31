@@ -5,8 +5,8 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class AiSearchDiscoveriesTooltip extends Component {
-  @service discobotDiscoveries;
+export default class LegacyAiSearchDiscoveriesTooltip extends Component {
+  @service("legacy-discobot-discoveries") legacyDiscoveries;
 
   <template>
     <span class="ai-search-discoveries-tooltip">
@@ -17,14 +17,14 @@ export default class AiSearchDiscoveriesTooltip extends Component {
         <:content>
           <div class="ai-search-discoveries-tooltip__content">
             <div class="ai-search-discoveries-tooltip__header">
-              {{i18n "discourse_ai.discobot_discoveries.tooltip.header"}}
+              {{i18n "discourse_ai.discobot_discoveries.legacy.tooltip.header"}}
             </div>
 
             <div class="ai-search-discoveries-tooltip__description">
-              {{#if this.discobotDiscoveries.modelUsed}}
+              {{#if this.legacyDiscoveries.modelUsed}}
                 {{i18n
-                  "discourse_ai.discobot_discoveries.tooltip.content"
-                  model=this.discobotDiscoveries.modelUsed
+                  "discourse_ai.discobot_discoveries.legacy.tooltip.content"
+                  model=this.legacyDiscoveries.modelUsed
                 }}
               {{/if}}
             </div>
@@ -32,13 +32,13 @@ export default class AiSearchDiscoveriesTooltip extends Component {
             <div class="ai-search-discoveries-tooltip__actions">
               <DButton
                 class="btn-transparent --primary"
-                @label="discourse_ai.discobot_discoveries.tooltip.actions.info"
+                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.info"
                 @href="https://meta.discourse.org/t/conversational-ai-search-coming-to-discourse-ai/355939"
               />
               <DButton
                 class="btn-transparent btn-danger"
-                @label="discourse_ai.discobot_discoveries.tooltip.actions.disable"
-                @action={{this.discobotDiscoveries.disableDiscoveries}}
+                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.disable"
+                @action={{this.legacyDiscoveries.disableDiscoveries}}
               />
             </div>
           </div>

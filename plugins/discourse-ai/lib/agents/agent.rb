@@ -281,6 +281,8 @@ module DiscourseAi
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
             DiscourseAdminAssistant => -39,
+            AskAiQueryRewriter => -40,
+            AskAiSynthesis => -41,
           }.freeze
         end
       end
