@@ -372,6 +372,36 @@ acceptance("Admin - Site Settings", function (needs) {
     );
   });
 
+  test("labels the MCP settings category", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "mcp_oauth_client_trust_policy",
+              humanized_name: "Mcp OAUTH client trust policy",
+              description: "Choose which OAuth clients may request access.",
+              default: "pre_registered",
+              value: "pre_registered",
+              category: "mcp",
+              preview: null,
+              secret: false,
+              type: "enum",
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings?filter=mcp%20client%20trust");
+
+    assert
+      .dom(".admin-site-settings-category-nav__item.mcp a")
+      .hasText("MCP (1)", "the MCP category has a translated label");
+  });
+
   test("shows all_results if current category has none", async function (assert) {
     await visit("/admin/site_settings");
 

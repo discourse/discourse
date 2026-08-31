@@ -10316,6 +10316,7 @@ en:
           spam: "Spam"
           rate_limits: "Rate Limits"
           developer: "Developer"
+          mcp: "MCP"
           embedding: "Embedding"
           legal: "Legal"
           api: "API"
