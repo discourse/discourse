@@ -4,18 +4,15 @@ import KeyValueStore from "discourse/lib/key-value-store";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
-// a worker that failed to install never activates, so `ready` would hang; this
-// bounds both the boot resync and the button press behind `enable()`
+// a worker that failed to install never activates, so `ready` would hang
 const SERVICE_WORKER_READY_TIMEOUT_MS = 5000;
 
 export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
 }
 
-// The stored intent is the user's last expressed choice on this device; the
-// actual subscription lives in the platform's PushManager and can be purged
-// behind our back (common on iOS home screen apps).
-// "subscribed" = wants push, "off" = explicitly disabled, null = unknown.
+// The user's last expressed choice on this device; the platform's actual
+// subscription can be purged behind our back (common on iOS home screen apps).
 export function getSubscriptionIntent(user) {
   const value = keyValueStore.getItem(userSubscriptionKey(user));
 
@@ -72,8 +69,7 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
   });
 }
 
-// Reports whether the server now knows about this subscription. Retried on the
-// next boot, so a failure is logged rather than raised.
+// retried on the next boot, so a failure is logged rather than raised
 async function resyncSubscriptionWithServer(subscription) {
   try {
     await sendSubscriptionToServer(subscription, false);
@@ -130,9 +126,8 @@ export function listenForPushNotificationMessages(router, appEvents) {
   });
 }
 
-// Tells the server to forget this device's subscription. Scoped to the current
-// user server-side, so it can never drop a row belonging to another account
-// sharing the browser.
+// Scoped to the current user server-side, so it can never drop a row
+// belonging to another account sharing the browser.
 async function retireServerSubscription(subscription) {
   try {
     await ajax("/push_notifications/unsubscribe", {
@@ -156,9 +151,6 @@ async function discardPlatformSubscription(subscription) {
   }
 }
 
-// Reconciles the device's actual push subscription with the user's stored
-// intent.
-//
 // Returns "subscribed" when the server knows about a working subscription,
 // "unconfirmed" when the device still has the one it was told about earlier but
 // the resync could not reach the server, "lost" when the user has to opt in
@@ -228,10 +220,7 @@ export async function reconcileSubscription(
     return isEndpointConfirmed(user, subscription) ? "unconfirmed" : null;
   }
 
-  // The platform dropped the subscription but the grant survived, so it can be
-  // restored with no prompt and no UI — the common case on iOS home screen
-  // apps.
-
+  // the grant survived the platform purge, so the restore needs no prompt
   if (!resubscribe) {
     return null;
   }

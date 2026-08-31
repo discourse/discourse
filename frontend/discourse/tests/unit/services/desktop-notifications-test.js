@@ -140,7 +140,6 @@ module("Unit | Service | desktop-notifications", function (hooks) {
         },
       })
     );
-    // a first boot in which the server acknowledged this endpoint
     pretender.post("/push_notifications/subscribe", () =>
       response({ success: "OK" })
     );

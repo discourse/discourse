@@ -9,12 +9,9 @@ import { i18n } from "discourse-i18n";
 
 let primaryTab = false;
 let liveEnabled = false;
-// Session-local verdict from push reconciliation. "delivering" suppresses
-// in-tab alerts that would double what push already shows; "fallback" lets
-// them through past a stored opt-out, which older builds force-wrote on every
-// boot while push was on, so for push users it carries no user signal. Kept
-// out of localStorage so one bad boot can neither outlive the session nor
-// overwrite a real preference.
+// Kept out of localStorage so one bad boot can neither outlive the session
+// nor overwrite a real preference. "fallback" may bypass a stored opt-out:
+// older builds force-wrote it on every boot while push was on.
 let pushTransport = null;
 let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
@@ -244,8 +241,6 @@ function disable() {
   keyValueStore.setItem("notifications-disabled", "disabled");
 }
 
-// Gates every in-tab handler, core and plugin alike, since they all reach
-// notifications through `canUserReceiveNotifications`.
 function setPushTransport(value) {
   pushTransport = value;
 }

@@ -125,8 +125,6 @@ export class SubscribeUserNotificationsInit {
         return null;
       })
       .then((result) => {
-        // The alert channel stays subscribed either way; only this session
-        // flag decides whether its handlers show anything.
         if (result === "subscribed" || result === "unconfirmed") {
           // "unconfirmed" still delivers: the device kept the subscription the
           // server already knows, only the redundant resync went unanswered.
@@ -136,8 +134,6 @@ export class SubscribeUserNotificationsInit {
           this.desktopNotifications.isGrantedPermission &&
           !this.capabilities.isMobileDevice
         ) {
-          // Session-only: push may be broken, so in-tab alerts stand in
-          // without rewriting the stored browser-notification preference.
           setPushTransport("fallback");
         } else {
           setPushTransport(null);
