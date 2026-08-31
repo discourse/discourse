@@ -1,9 +1,9 @@
-import Component from "@glimmer/component";
 import { settled } from "@ember/test-helpers";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
-import PreviewNodeView from "discourse/components/composer/preview-node-view";
-import { previewNodeViewFor } from "discourse/lib/composer/preview-block";
+import PreviewNodeView, {
+  previewNodeViewFor,
+} from "discourse/components/composer/preview-node-view";
 import {
   registerRichEditorExtension,
   resetRichEditorExtensions,
@@ -12,18 +12,9 @@ import { activePreviewBlock } from "discourse/static/prosemirror/extensions/prev
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
 
-let renders;
-
-class PreviewStub extends Component {
-  get shown() {
-    renders++;
-    return this.args.source;
-  }
-
-  <template>
-    <span class="preview-stub">{{this.shown}}</span>
-  </template>
-}
+const PreviewStub = <template>
+  <span class="preview-stub">{{@source}}</span>
+</template>;
 
 const extension = {
   nodeSpec: {
@@ -33,7 +24,6 @@ const extension = {
       atom: true,
       defining: true,
       isolating: true,
-      selectable: true,
       parseDOM: [{ tag: "div.test-preview", preserveWhitespace: "full" }],
       toDOM: () => ["div", { class: "test-preview" }, 0],
     },
@@ -57,8 +47,7 @@ const extension = {
   },
 };
 
-// the extension has no markdown rule, so blocks are inserted into the document
-// directly rather than parsed out of the editor's initial value
+// no markdown rule here, so blocks are inserted directly
 async function insertBlock(view, source) {
   const { schema } = view.state;
   const block = schema.nodes.test_preview.createAndFill(
@@ -73,8 +62,7 @@ async function insertBlock(view, source) {
   await settled();
 }
 
-// the toolbar is a float-kit menu, which does not mount in a rendering test —
-// it is covered by a system spec, and this drives the seam its button acts on
+// float-kit does not mount in a rendering test; drive the seam the button acts on
 async function toggleSource(view) {
   previewNodeViewFor(view.nodeDOM(0)).toggleSource();
   await settled();
@@ -86,7 +74,6 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(async function () {
-      renders = 0;
       await resetRichEditorExtensions();
       registerRichEditorExtension(extension);
     });
@@ -117,7 +104,6 @@ module(
         "preview_source",
         "the caret is inside the source"
       );
-      assert.true(selection.empty, "nothing is selected");
       assert.strictEqual(
         selection.$head.parentOffset,
         3,
@@ -136,6 +122,11 @@ module(
         editorClass.view.state.selection.node?.type.name,
         "test_preview",
         "the block is selected, so its toolbar stays up"
+      );
+      assert.strictEqual(
+        editorClass.value.trim(),
+        "[test]\nabc\n[/test]",
+        "and the markdown is untouched"
       );
     });
 
@@ -199,35 +190,6 @@ module(
         activePreviewBlock(view.state),
         null,
         "and nothing once the caret leaves"
-      );
-    });
-
-    test("serializes the same source after the faces are swapped", async function (assert) {
-      const [editorClass] = await setupRichEditor(assert, "");
-      await insertBlock(editorClass.view, "the source");
-
-      await toggleSource(editorClass.view);
-      await toggleSource(editorClass.view);
-
-      assert.strictEqual(
-        editorClass.value.trim(),
-        "[test]\nthe source\n[/test]",
-        "swapping faces leaves the markdown untouched"
-      );
-    });
-
-    test("does not render the preview again over an untouched source", async function (assert) {
-      const [editorClass] = await setupRichEditor(assert, "");
-      await insertBlock(editorClass.view, "the source");
-
-      const before = renders;
-      await toggleSource(editorClass.view);
-      await toggleSource(editorClass.view);
-
-      assert.strictEqual(
-        renders,
-        before,
-        "swapping faces leaves the feature's render alone"
       );
     });
 

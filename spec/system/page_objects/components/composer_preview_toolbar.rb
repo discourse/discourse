@@ -23,7 +23,6 @@ module PageObjects
         self
       end
 
-      # a control the feature owning the block contributes, by its class
       def click_control(class_name)
         page.find("#{TOOLBAR_SELECTOR} button.#{class_name}").click
         self

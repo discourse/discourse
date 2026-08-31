@@ -1,6 +1,6 @@
 /**
  * Builds the source of a preview block, trimmed of the padding cooked markup
- * puts around it while keeping the line breaks within it.
+ * puts around it.
  *
  * @param {import("prosemirror-model").Schema} schema
  * @param {string} source
@@ -17,17 +17,13 @@ export function previewSourceNode(schema, source, params = "") {
 }
 
 /**
- * Puts the caret in the source of a preview block that a transaction just
- * inserted, so typing carries on inside the block rather than in the text it
- * interrupted.
+ * Puts the caret in the source of a preview block a transaction just inserted.
  *
- * Fitting the block into the document may move it past the position it was
- * written to, so the source is found by looking forward from there — the block
- * was inserted at `from`, so the first `preview_source` at or after it is the
- * one that was just created.
+ * Fitting the block in can move it past `from`, so the first `preview_source`
+ * at or after it is the one that was just created.
  *
- * @param {import("prosemirror-state").Transaction} tr transaction that inserted the block
- * @param {typeof import("prosemirror-state").TextSelection} TextSelection from `pmState`
+ * @param {import("prosemirror-state").Transaction} tr
+ * @param {typeof import("prosemirror-state").TextSelection} TextSelection
  * @param {number} from position the block was written to
  * @returns {import("prosemirror-state").Transaction} the same transaction
  */
@@ -48,28 +44,4 @@ export function selectPreviewSource(tr, TextSelection, from) {
   return pos === undefined
     ? tr
     : tr.setSelection(TextSelection.create(tr.doc, pos)).scrollIntoView();
-}
-
-/** Identifier of the menu the preview block's toolbar is shown in. */
-export const TOOLBAR_IDENTIFIER = "composer-preview-toolbar";
-
-const nodeViews = new WeakMap();
-
-/**
- * Registers the node view rendering a preview block, so the toolbar plugin can
- * reach the controls and the source toggle of the block a selection is in.
- *
- * @param {HTMLElement} dom the node view's outer element
- * @param {object} nodeView
- */
-export function registerPreviewNodeView(dom, nodeView) {
-  nodeViews.set(dom, nodeView);
-}
-
-/**
- * @param {HTMLElement} dom the node view's outer element
- * @returns {object|undefined} the node view registered for it
- */
-export function previewNodeViewFor(dom) {
-  return nodeViews.get(dom);
 }

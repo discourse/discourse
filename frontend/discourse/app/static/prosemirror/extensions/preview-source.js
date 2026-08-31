@@ -1,10 +1,7 @@
 /**
- * The source of a block that is shown rendered, held by a node view that
- * previews it (see `discourse/components/composer/preview-node-view`).
- *
- * It behaves like a code block without being one: the language belongs to the
- * feature rather than the author, so there is no language picker, and it never
- * serializes on its own — the feature wrapping it writes its own markup.
+ * The source of a block shown rendered by `composer/preview-node-view`.
+ * Highlighted like a code block, but the language belongs to the feature
+ * rather than the author, so there is no language picker.
  *
  * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
  */
@@ -15,8 +12,7 @@ const extension = {
       content: "text*",
       code: true,
       defining: true,
-      // the block around it is the unit to select, so a click that would select
-      // the source resolves to its parent instead
+      // clicks resolve to the block around it, which is the unit to select
       selectable: false,
       marks: "",
       parseDOM: [{ tag: "pre.preview-source", preserveWhitespace: "full" }],

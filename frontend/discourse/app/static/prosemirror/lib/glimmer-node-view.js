@@ -62,9 +62,8 @@ export default class GlimmerNodeView {
   }
 
   update(node) {
-    // the editor calls this for every transaction, but only hands over a new
-    // node object when this node changed; assigning regardless would re-render
-    // the component on every keystroke anywhere in the document
+    // assigning an unchanged node would re-render the component on every
+    // keystroke anywhere in the document
     if (node !== this.node) {
       this.node = node;
       this.#componentInstance?.update?.(node);

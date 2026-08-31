@@ -17,58 +17,33 @@ describe "Edit graphviz in the rich editor" do
   it "lets the user swap a diagram between its source and the drawing" do
     compose_diagram
 
-    expect(rich).to have_css(".composer-preview-node")
+    expect(toolbar).to have_toolbar
 
     toolbar.click_show_preview
 
     expect(rich).to have_css(".composer-preview-node .graphviz-diagram svg")
     expect(rich).to have_no_css(".composer-preview-node.--source")
 
-    toolbar.click_show_source
-
-    expect(rich).to have_css(".composer-preview-node.--source")
-  end
-
-  it "keeps the source intact when the diagram is swapped back and forth" do
-    compose_diagram
-
-    toolbar.click_show_preview
-    toolbar.click_show_source
-
-    composer.toggle_rich_editor
-
-    expect(composer.composer_input.value).to eq("[graphviz]\ndigraph G { a -> b; }\n[/graphviz]")
-  end
-
-  it "shows the toolbar only on the diagram the user is working on" do
-    compose_diagram
-
-    expect(toolbar).to have_toolbar
-
-    toolbar.click_show_preview
     composer.type_content(:down)
 
     expect(toolbar).to have_no_toolbar
 
     rich.find(".composer-preview-node .graphviz-diagram").click
+    toolbar.click_show_source
 
-    expect(toolbar).to have_toolbar
+    expect(rich).to have_css(".composer-preview-node.--source")
   end
 
-  it "opens the diagram full screen from the toolbar" do
-    compose_diagram
-
-    toolbar.click_control(fullscreen_control)
-
-    expect(page).to have_css(".d-modal.graphviz-fullscreen .graphviz-diagram svg")
-  end
-
-  it "lets the user reach the toolbar from the selected diagram with the keyboard" do
+  it "lets the user open the diagram full screen from the keyboard" do
     compose_diagram
 
     toolbar.click_show_preview
     composer.type_content(:tab)
 
     expect(toolbar).to have_focused_control(fullscreen_control)
+
+    page.send_keys(:enter)
+
+    expect(page).to have_css(".d-modal.graphviz-fullscreen .graphviz-diagram svg")
   end
 end

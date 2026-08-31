@@ -1,72 +1,55 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import {
-  registerPreviewNodeView,
-  TOOLBAR_IDENTIFIER,
-} from "discourse/lib/composer/preview-block";
+
+/** Identifier of the menu the toolbar for a preview block is shown in. */
+export const TOOLBAR_IDENTIFIER = "composer-preview-toolbar";
+
+const nodeViews = new WeakMap();
+
+/** @returns {PreviewNodeView|undefined} the view rendering the block at `dom` */
+export function previewNodeViewFor(dom) {
+  return nodeViews.get(dom);
+}
 
 /**
- * Node view for block nodes wrapping the source of something that can be
- * rendered, showing the rendered result in its place.
+ * Renders a block's `preview_source` child in place of the source itself.
  *
- * The node holds its source in a single `preview_source` child, so editing it
- * is ordinary code editing — highlighting, undo and redo all come from the
- * editor itself. The wrapper must be an `atom`, so the editor moves over it as
- * a unit rather than stepping into source it is not showing, and `isolating`,
- * so editing around it cannot merge neighboring text into the source.
+ * The wrapper must be `atom` and `isolating`, or the editor will step into
+ * source it is not showing and merge neighboring text into it.
  *
  * ```js
  * nodeSpec: {
- *   my_node: {
- *     content: "preview_source",
- *     atom: true,
- *     isolating: true,
- *     previewControls: [{ id, icon, title, className, action }],
- *     ...
- *   },
+ *   my_node: { content: "preview_source", atom: true, isolating: true, previewControls: [...] },
  * },
  * nodeViews: {
- *   my_node: {
- *     component: PreviewNodeView,
- *     hasContent: true,
- *     options: { preview: MyPreviewComponent },
- *   },
+ *   my_node: { component: PreviewNodeView, hasContent: true, options: { preview: MyPreview } },
  * }
  * ```
  *
- * The preview component is rendered with `@source` and `@node`. Controls a
- * feature declares join the source toggle in the toolbar shown for the block,
- * and are called with `{ node, view, getPos, context }`.
+ * The preview gets `@source` and `@node`; controls get `{ node, view, context }`.
+ *
+ * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
  */
 export default class PreviewNodeView extends Component {
   @tracked showingSource;
 
-  // The node the preview last rendered. Everything the feature reads comes from
-  // this rather than from the live node, so the preview holds still while the
-  // source is being edited, and swapping faces over an untouched source does
-  // not make the feature lay the same thing out again.
+  // the node the preview last rendered, so it holds still while the source is
+  // edited and is not laid out again over a source that has not changed
   @tracked renderedNode;
 
   constructor() {
     super(...arguments);
 
     this.renderedNode = this.args.node;
-    // nothing to preview yet when an empty node was just inserted
     this.showingSource = !this.source;
 
     this.args.dom.classList.add("composer-preview-node");
     this.args.contentDOM?.classList.add("composer-preview-node__source");
     this.#syncMode();
 
-    registerPreviewNodeView(this.args.dom, this);
+    nodeViews.set(this.args.dom, this);
     this.args.onSetup?.(this);
-  }
-
-  // the editor's own position closure: it maps through later transactions and
-  // reports undefined once the block is gone
-  getPos() {
-    return this.args.getPos();
   }
 
   get source() {
@@ -94,7 +77,8 @@ export default class PreviewNodeView extends Component {
 
     tr.setSelection(
       this.showingSource
-        ? TextSelection.create(tr.doc, pos + 2 + this.source.length)
+        ? // just inside the source, past the wrapper and the source's own start
+          TextSelection.create(tr.doc, pos + 2 + this.source.length)
         : NodeSelection.create(tr.doc, pos)
     );
 
@@ -102,8 +86,6 @@ export default class PreviewNodeView extends Component {
     view.focus();
   }
 
-  // the source can still change under a shown preview, through undo or a
-  // transaction the editor applies on its own
   update() {
     this.#syncRendered();
   }
@@ -116,8 +98,7 @@ export default class PreviewNodeView extends Component {
     this.args.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  // the toolbar is portaled into this node view, so the editor should not treat
-  // clicking it as clicking into the document
+  // the toolbar is portaled into this node view, so its clicks are not document clicks
   stopEvent(event) {
     return (
       event.target instanceof Node &&

@@ -340,9 +340,7 @@
     }
   }
 
-  // A block showing a rendered result in place of its source. Both faces share
-  // one cell, so the block keeps its footprint when they are swapped and the
-  // document below it does not move.
+  // both faces share one grid cell, so swapping them does not move the document
   .composer-preview-node {
     position: relative;
     display: grid;
@@ -361,18 +359,17 @@
     }
 
     // hidden, but still holding its space
-    &:not(.--source) .composer-preview-node__source,
-    &.--source .composer-preview-node__preview {
+    &:not(.--source) &__source,
+    &.--source &__preview {
       visibility: hidden;
     }
 
-    .composer-preview-node__source pre {
+    &__source pre {
       margin: 0;
       height: 100%;
       overflow: auto;
 
-      // the code element paints the source's backdrop, so it has to fill the row
-      // the taller face sized — overriding the cap code blocks carry elsewhere
+      // the code element paints the backdrop, so it must fill the taller face's row
       code {
         box-sizing: border-box;
         min-height: 100%;
@@ -380,12 +377,11 @@
       }
     }
 
-    .composer-preview-node__preview {
+    &__preview {
       user-select: none;
       cursor: pointer;
 
-      // renderers mark the raw source hidden once they have replaced it; the
-      // editor's own display rules would otherwise override that
+      // the editor's display rules would otherwise override a renderer's [hidden]
       [hidden] {
         display: none;
       }

@@ -17,7 +17,7 @@ import GlimmerNodeView from "../lib/glimmer-node-view";
   - `name: "customName"` - CSS class suffix (defaults to the key)
   - `hasContent: true` - for nodes with editable content inside
   - `shouldRender: ({ node, view, getPos, pluginParams }) => boolean` - for conditional rendering
-  - `options: {}` - passed to the component as `@options`, for reusable node views
+  - `options: {}` - passed to the component as `@options`
 */
 export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */

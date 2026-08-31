@@ -1,21 +1,18 @@
-import { trackedObject } from "@ember/reactive/collections";
 import { NodeSelection } from "prosemirror-state";
-import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import {
   previewNodeViewFor,
   TOOLBAR_IDENTIFIER,
-} from "discourse/lib/composer/preview-block";
+} from "discourse/components/composer/preview-node-view";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 
 const MENU_PADDING = 8;
 
 /**
- * Finds the preview block a selection acts on: either one selected as a node,
- * or the one whose source the caret is in, so the toolbar stays up while the
- * source is being edited.
+ * Finds the preview block a selection acts on: one selected as a node, or the
+ * one whose source the caret is in.
  *
- * @param {import("prosemirror-state").EditorState} state
  * @returns {{ node: import("prosemirror-model").Node, pos: number }|null}
  */
 export function activePreviewBlock({ selection, schema }) {
@@ -82,7 +79,7 @@ class PreviewToolbarPluginView {
   #replacedToolbar;
   #toolbars = new Map();
   #toolbar;
-  #state;
+  #pos;
 
   #view;
   #getContext;
@@ -120,17 +117,12 @@ class PreviewToolbarPluginView {
   }
 
   #updateState({ node, pos }) {
-    if (!this.#state) {
-      this.#state = trackedObject({ pos });
-    } else {
-      this.#state.pos = pos;
-    }
-
+    this.#pos = pos;
     this.#toolbar = this.#toolbarFor(node.type);
   }
 
-  // one toolbar per node type: the buttons a feature contributes are fixed, and
-  // everything they act on is resolved from the selection when they run
+  // one toolbar per node type: its buttons are fixed and resolve their target
+  // from the selection when they run
   #toolbarFor(type) {
     let toolbar = this.#toolbars.get(type.name);
 
@@ -150,24 +142,21 @@ class PreviewToolbarPluginView {
   }
 
   #nodeView() {
-    const dom = this.#view.nodeDOM(this.#state.pos);
+    const dom = this.#view.nodeDOM(this.#pos);
 
     return dom instanceof HTMLElement ? previewNodeViewFor(dom) : undefined;
   }
 
   #runControl(control) {
-    const nodeView = this.#nodeView();
-    const getPos = () => nodeView?.getPos();
-    const pos = getPos();
+    const active = activePreviewBlock(this.#view.state);
 
-    if (pos === undefined) {
+    if (!active) {
       return;
     }
 
     control.action({
-      node: this.#view.state.doc.nodeAt(pos),
+      node: active.node,
       view: this.#view,
-      getPos,
       context: this.#getContext(),
     });
   }
@@ -193,14 +182,13 @@ class PreviewToolbarPluginView {
   }
 
   async #showFloatingToolbar() {
-    const trigger = this.#view.nodeDOM(this.#state.pos);
+    const trigger = this.#view.nodeDOM(this.#pos);
 
     if (!(trigger instanceof HTMLElement)) {
       return;
     }
 
-    // claimed before the await below: two updates in one microtask would
-    // otherwise each create an instance, and the first would be orphaned
+    // claimed before the await: two updates in one microtask would orphan an instance
     if (this.#menuTrigger === trigger) {
       return;
     }
@@ -261,8 +249,7 @@ class PreviewToolbarPluginView {
 }
 
 /**
- * Toolbar for the block a `preview_source` belongs to, shown while it is
- * selected or its source is being edited.
+ * Toolbar for the block a `preview_source` belongs to.
  *
  * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
  */
@@ -289,8 +276,7 @@ const extension = {
             return false;
           }
 
-          // through this editor's own toolbar, so a second editor on the page
-          // cannot take the focus
+          // this editor's own toolbar, so a second editor cannot take the focus
           if (!pluginView?.focusToolbar()) {
             return false;
           }

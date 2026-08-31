@@ -40,12 +40,10 @@ export function setup(helper) {
       },
     });
 
-    // a single token keeps the graph source out of the token stream as text, so
-    // the rich editor can hold it as an attribute of one leaf node
     md.renderer.rules.graphviz = (tokens, idx) => {
       const token = tokens[idx];
       const source = md.utils.escapeHtml(token.content);
-      const engine = md.utils.escapeHtml(token.attrGet("data-engine"));
+      const engine = token.attrGet("data-engine");
 
       return `<div class="graphviz is-loading" data-engine="${engine}">\n${source}\n</div>\n`;
     };
