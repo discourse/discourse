@@ -428,13 +428,21 @@ function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
   };
 }
 
+function isInsideSourcedQuote(box) {
+  return Boolean(
+    box.closest(
+      "aside.quote[data-username], aside.quote[data-post], aside.quote[data-topic]"
+    )
+  );
+}
+
 export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
   const postModel = postDecorator?.getModel();
   const editable = postModel?.can_edit === true;
-  const interactiveBoxes = boxes.filter((box) => !box.closest("aside.quote"));
+  const interactiveBoxes = boxes.filter((box) => !isInsideSourcedQuote(box));
   const interactiveBoxSet = new Set(interactiveBoxes);
 
   boxes.forEach((box) =>
