@@ -2,6 +2,15 @@
 
 module DiscourseZendeskPlugin
   class OAuthToken
+    INVALIDATE_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
+        if redis.call("get", KEYS[1]) == ARGV[1] then
+          return redis.call("del", KEYS[1])
+        end
+
+        return 0
+      LUA
+    private_constant :INVALIDATE_SCRIPT
+
     TOKEN_LIFETIME_SECONDS = 30.minutes.to_i
     private_constant :TOKEN_LIFETIME_SECONDS
 
@@ -33,11 +42,15 @@ module DiscourseZendeskPlugin
     end
 
     def access_token
-      Discourse.cache.read(cache_key).presence || request_access_token
+      @access_token = Discourse.cache.read(cache_key).presence || request_access_token
     end
 
     def invalidate
-      Discourse.cache.delete(cache_key)
+      INVALIDATE_SCRIPT.eval(
+        Discourse.cache.redis,
+        [Discourse.cache.redis.namespace_key(Discourse.cache.normalize_key(cache_key))],
+        [Marshal.dump(@access_token)],
+      )
     end
 
     private

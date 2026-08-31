@@ -144,5 +144,24 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(oauth_token.access_token).to eq("second-token")
       expect(token_request).to have_been_requested.twice
     end
+
+    it "preserves a newer token when a stale client invalidates its token" do
+      stale_oauth_token = described_class.new
+      token_request =
+        stub_request(:post, token_url).to_return(
+          { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
+          { status: 200, body: { access_token: "second-token", expires_in: 1800 }.to_json },
+        )
+
+      expect(oauth_token.access_token).to eq("first-token")
+      expect(stale_oauth_token.access_token).to eq("first-token")
+      oauth_token.invalidate
+      expect(oauth_token.access_token).to eq("second-token")
+
+      stale_oauth_token.invalidate
+
+      expect(described_class.new.access_token).to eq("second-token")
+      expect(token_request).to have_been_requested.twice
+    end
   end
 end

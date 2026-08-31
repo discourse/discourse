@@ -6,7 +6,11 @@ module Jobs
     include DiscourseZendeskPlugin::Helper
 
     sidekiq_retry_in do |_count, exception|
-      :discard if exception.wrapped.is_a?(DiscourseZendeskPlugin::OAuthToken::PermanentRequestError)
+      error = exception.wrapped
+      if error.is_a?(DiscourseZendeskPlugin::OAuthToken::PermanentRequestError) ||
+           error.is_a?(ZendeskAPI::Error::RecordInvalid)
+        :discard
+      end
     end
 
     def execute(args)
@@ -31,7 +35,15 @@ module Jobs
         DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
       return if !has_zendesk_ticket && !in_autogeneration_category
 
-      topic.post_ids.each { |post_id| push_post!(post_id) }
+      topic.post_ids.each do |post_id|
+        push_post!(post_id)
+      rescue ZendeskAPI::Error::RecordInvalid => error
+        Discourse.warn_exception(
+          error,
+          message: "Failed to synchronize post #{post_id} with Zendesk",
+        )
+        next
+      end
     end
 
     def push_post!(post_id)
