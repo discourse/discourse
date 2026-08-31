@@ -2,7 +2,7 @@
 
 module PageObjects
   module Components
-    class DSelect < PageObjects::Components::Base
+    class DNativeSelect < PageObjects::Components::Base
       NO_VALUE_OPTION = "__NONE__"
 
       attr_reader :select_element
