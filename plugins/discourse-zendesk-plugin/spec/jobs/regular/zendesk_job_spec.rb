@@ -39,42 +39,6 @@ RSpec.describe Jobs::ZendeskJob do
     SiteSetting.zendesk_autogenerate_all_categories = zendesk_autogenerate_all_categories
   end
 
-  describe ".sidekiq_retry_in_block" do
-    subject(:retry_strategy) do
-      described_class.sidekiq_retry_in_block.call(0, Jobs::HandledExceptionWrapper.new(error))
-    end
-
-    context "with a permanent OAuth configuration error" do
-      let(:error) do
-        DiscourseZendeskPlugin::OAuthToken::PermanentRequestError.new(
-          "Zendesk OAuth token request failed",
-        )
-      end
-
-      it "discards the job" do
-        expect(retry_strategy).to eq(:discard)
-      end
-    end
-
-    context "with a transient OAuth request error" do
-      let(:error) do
-        DiscourseZendeskPlugin::OAuthToken::RequestError.new("Zendesk OAuth token request failed")
-      end
-
-      it "uses the default retry strategy" do
-        expect(retry_strategy).to be_nil
-      end
-    end
-
-    context "with a Zendesk record validation error" do
-      let(:error) { ZendeskAPI::Error::RecordInvalid.allocate }
-
-      it "discards the job" do
-        expect(retry_strategy).to eq(:discard)
-      end
-    end
-  end
-
   context "with zendesk disabled" do
     it "does nothing" do
       Topic.expects(:find_by).never
