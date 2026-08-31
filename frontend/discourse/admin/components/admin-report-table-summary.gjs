@@ -32,6 +32,7 @@ export default class AdminReportTableSummary extends Component {
 
   get triggerLabel() {
     return i18n("admin.reports.related_items.table_summary.trigger", {
+      count: this.args.formattedValue,
       date: this.dateLabel,
     });
   }

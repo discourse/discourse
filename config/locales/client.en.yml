@@ -6744,7 +6744,7 @@ en:
             created_at: "Created at"
             first_post: "First post created at"
           table_summary:
-            trigger: "Show summary for %{date}"
+            trigger: "%{count}, show summary for %{date}"
             users_title: "Users on %{date}"
             loading: "Loading summary…"
             empty: "No details are available."

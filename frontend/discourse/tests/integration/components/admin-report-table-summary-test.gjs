@@ -50,8 +50,8 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
       .dom(".admin-report-table-summary")
       .hasAttribute(
         "aria-label",
-        "Show summary for Aug 18, 2026",
-        "has an accessible label"
+        "3, show summary for Aug 18, 2026",
+        "starts the accessible label with the visible count"
       );
 
     triggerEvent(".admin-report-table-summary", "pointerenter");
