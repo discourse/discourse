@@ -613,7 +613,7 @@ class UsersController < ApplicationController
   # if the username is not available.
   def check_username
     begin
-      RateLimiter.new(nil, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
+      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
     rescue RateLimiter::LimitExceeded
       return render json: failed_json.merge(errors: [I18n.t("rate_limiter.slow_down")])
     end

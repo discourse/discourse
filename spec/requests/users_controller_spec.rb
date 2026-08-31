@@ -2190,6 +2190,16 @@ RSpec.describe UsersController do
       expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("rate_limiter.slow_down"))
     end
 
+    it "does not rate limit staff" do
+      RateLimiter.enable
+      sign_in(moderator)
+
+      11.times { get "/u/check_username.json", params: { username: "available" } }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["available"]).to eq(true)
+    end
+
     shared_examples "when username is unavailable" do
       it "should return available as false in the JSON and return a suggested username" do
         expect(response.status).to eq(200)
