@@ -3705,7 +3705,6 @@ es:
           title: "Reemplazar etiquetas"
       delete_topics:
         name: "Eliminar"
-        description: "Elimina permanentemente los temas seleccionados. Esta acción no se puede deshacer."
       update_category:
         name: "Actualizar Categoría"
         description: "Mueve todos los temas seleccionados a la siguiente categoría:"
@@ -6260,23 +6259,18 @@ es:
         title: "Novedades"
         check_for_updates: "Buscar actualizaciones"
       site_traffic_explorer:
-        pageviews: "Vistas de página"
+        metric_information: "Acerca de %{metric}"
+        remove_filter_value: "Quitar %{value}"
+        clear_all: "Borrar todo"
+        apply: "Aplicar"
         view_more: "Ver más"
         cards:
           pages: "Páginas"
           visitors: "Visitantes"
-        columns:
-          countries: "País"
-          top_urls: "URL"
-          browsers: "Navegador"
-          ip_addresses: "Dirección IP"
         filters:
           country: "País"
           browser: "Navegador"
           ip: "Dirección IP"
-        metrics:
-          pageviews:
-            label: "Vistas de página"
         series:
           anonymous_human: "Anónimas"
       dashboard:

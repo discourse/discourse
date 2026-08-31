@@ -1,9 +1,8 @@
-import { hash } from "@ember/helper";
-import { trustHTML } from "@ember/template";
 import CodeLoginForm from "discourse/components/code-login-form";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
+import NoLoginMethods from "discourse/components/no-login-methods";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
@@ -38,18 +37,7 @@ export default <template>
 
       {{#if @controller.hasNoLoginOptions}}
         <div class={{if @controller.site.desktopView "login-left-side"}}>
-          <div class="login-welcome-header no-login-methods-configured">
-            <h1 class="login-title">{{i18n "login.no_login_methods.title"}}</h1>
-            <img />
-            <p class="login-subheader">
-              {{trustHTML
-                (i18n
-                  "login.no_login_methods.description"
-                  (hash adminLoginPath=@controller.adminLoginPath)
-                )
-              }}
-            </p>
-          </div>
+          <NoLoginMethods />
         </div>
       {{else}}
         {{#if @controller.site.mobileView}}

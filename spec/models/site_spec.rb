@@ -290,6 +290,15 @@ RSpec.describe Site do
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
+  it "includes anonymous_list_filters for anon when login_required" do
+    SiteSetting.login_required = true
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+
+    expect(data["anonymous_list_filters"]).to include("latest")
+    expect(data["anonymous_list_filters"]).not_to include("unread")
+  end
+
   it "includes tos_url and privacy_policy_url when login_required" do
     SiteSetting.login_required = true
     SiteSetting.tos_url = "https://discourse.org"

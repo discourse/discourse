@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:calendar_event) do
+Fabricator(:calendar_event, from: "DiscourseEvents::Calendar::Event") do
   user
   username { |attrs| attrs[:user].username }
 

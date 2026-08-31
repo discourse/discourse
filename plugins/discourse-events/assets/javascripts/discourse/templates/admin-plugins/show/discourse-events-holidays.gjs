@@ -8,15 +8,13 @@ import RegionInput from "discourse/plugins/discourse-events/discourse/components
 export default <template>
   <DBreadcrumbsItem
     @path="/admin/plugins/discourse-events/holidays"
-    @label={{i18n "discourse_calendar.holidays.header_title"}}
+    @label={{i18n "discourse_events.holidays.header_title"}}
   />
 
   <div class="calendar-admin-holidays admin-detail">
     <DPageSubheader
-      @titleLabel={{i18n "discourse_calendar.holidays.header_title"}}
-      @descriptionLabel={{i18n
-        "discourse_calendar.holidays.header_description"
-      }}
+      @titleLabel={{i18n "discourse_events.holidays.header_title"}}
+      @descriptionLabel={{i18n "discourse_events.holidays.header_description"}}
     />
 
     <RegionInput

@@ -239,6 +239,9 @@ module DiscourseAi
                 automation_name: automation&.name,
               )
 
+            automation_score_context =
+              DiscourseAi::Automation.triage_automation_score_context(automation&.id)
+
             if !flagged_by_tool
               if flag_type == :spam || flag_type == :spam_silence
                 spam_score_reason =
@@ -263,6 +266,7 @@ module DiscourseAi
                     PostActionType.types[:spam],
                     message: spam_post_action_message,
                     reason: spam_score_reason,
+                    context: automation_score_context,
                     queue_for_review: true,
                   ).perform
 
@@ -282,6 +286,7 @@ module DiscourseAi
                   Discourse.system_user,
                   ReviewableScore.types[:needs_approval],
                   reason: score_reason,
+                  context: automation_score_context,
                   force_review: true,
                 )
 

@@ -267,4 +267,23 @@ RSpec.describe UserNameSuggester do
       end
     end
   end
+
+  describe ".generic_username?" do
+    it "recognizes the generic fallback name and its numbered variants" do
+      expect(UserNameSuggester.generic_username?("user")).to eq(true)
+      expect(UserNameSuggester.generic_username?("user1")).to eq(true)
+      expect(UserNameSuggester.generic_username?("User42")).to eq(true)
+    end
+
+    it "does not flag names derived from real signup data" do
+      expect(UserNameSuggester.generic_username?("jane")).to eq(false)
+      expect(UserNameSuggester.generic_username?("newuser")).to eq(false)
+      expect(UserNameSuggester.generic_username?("QuietFalcon42")).to eq(false)
+    end
+
+    it "is blank-safe" do
+      expect(UserNameSuggester.generic_username?(nil)).to eq(false)
+      expect(UserNameSuggester.generic_username?("")).to eq(false)
+    end
+  end
 end

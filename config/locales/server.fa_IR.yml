@@ -1700,7 +1700,6 @@ fa_IR:
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     user_profile_view_duration_hours: "بازدید‌های پروفایل کاربران را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد نویسه‌های متفاوت که هنوز هم به یک تطبق مبهم اجازه خواهد داد."
-    min_ban_entries_for_roll_up: "وقتی روی کلید جمع کردن کلیک کنید، اگر حداقل (N) ورودی وجود داشته باشد،  یک ممنوعیت زیرشبکه ورودی جدید ساخته می‌شود."
     max_age_unmatched_emails: "ایمیل های ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     max_age_unmatched_ips: "IP ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"

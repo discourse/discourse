@@ -1,11 +1,21 @@
 import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AdminReport from "discourse/admin/components/admin-report";
+import AdminReport, {
+  updateReportFilters,
+} from "discourse/admin/components/admin-report";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | AdminReport", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("clearing a group filter removes it", function (assert) {
+    assert.deepEqual(
+      updateReportFilters({ group: 88 }, "group", null),
+      {},
+      "omits the group filter"
+    );
+  });
 
   test("default", async function (assert) {
     await render(
@@ -49,6 +59,23 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert
       .dom(".admin-report-table tbody tr:nth-child(1) td:nth-child(2)")
       .hasText("7", "can sort rows");
+  });
+
+  test("onDataLoaded", async function (assert) {
+    let loadedReport;
+    const onDataLoaded = (report) => (loadedReport = report);
+
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups" @onDataLoaded={{onDataLoaded}} />
+      </template>
+    );
+
+    assert.strictEqual(
+      loadedReport?.type,
+      "signups",
+      "calls onDataLoaded with the fetched report once it's loaded"
+    );
   });
 
   test("options", async function (assert) {

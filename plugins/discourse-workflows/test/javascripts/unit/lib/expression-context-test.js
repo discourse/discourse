@@ -85,6 +85,19 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.deepEqual(scope.$input.context, Object.create(null));
   });
 
+  test("builds $helpers.absoluteUrl for converting a relative path", function (assert) {
+    const scope = buildScope({});
+
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("/t/some-slug/123/4"),
+      `${window.location.origin}/t/some-slug/123/4`
+    );
+    assert.strictEqual(
+      scope.$helpers.absoluteUrl("https://example.com/foo"),
+      "https://example.com/foo"
+    );
+  });
+
   test("exposes method docs for workflow-owned scope helpers", function (assert) {
     assert.deepEqual(lookupWorkflowMethodDoc("$input", "all"), {
       detail: "()",

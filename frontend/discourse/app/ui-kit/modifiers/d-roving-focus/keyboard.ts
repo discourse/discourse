@@ -50,6 +50,17 @@ export default class KeyboardRouter {
     ) {
       return;
     }
+    // A container routinely holds focusable controls that are not items and do
+    // not sit inside one, such as a row's own switch beside the handle that is
+    // the cursor's item. Routing their keys anyway resolves the cursor to
+    // whichever item happens to hold the tab stop, dragging focus off the
+    // control the user is actually on.
+    if (
+      config.focusStrategy === "roving-tabindex" &&
+      !this.#ownsTarget(event.target, context)
+    ) {
+      return;
+    }
     // Type-ahead must run before the active-mode allow-list and chord guard: printable keys are
     // absent from the allow-list, and Shift is how a capital letter arrives.
     if (
@@ -387,5 +398,22 @@ export default class KeyboardRouter {
       tag === "INPUT" &&
       !NON_ARROW_INPUT_TYPES.has((target as HTMLInputElement).type)
     );
+  }
+
+  /**
+   * Whether a keydown started inside this group's own item set.
+   *
+   * Resolved by containment rather than identity: an item may hold its own
+   * controls, and a key pressed on one of those still navigates from the item
+   * that contains it.
+   */
+  #ownsTarget(target: EventTarget | null, context: KeyboardContext): boolean {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+    const item = target.closest<HTMLElement>(context.scope.selector);
+    // `closest` walks past the container, so a matching ancestor outside this
+    // group would otherwise read as one of its items.
+    return Boolean(item && context.scope.container.contains(item));
   }
 }

@@ -11,7 +11,7 @@ import { HOLIDAY_REGIONS } from "../lib/regions";
 @selectKitOptions({
   filterable: true,
   allowAny: false,
-  none: "discourse_calendar.region.select_region",
+  none: "discourse_events.region.select_region",
 })
 @pluginApiIdentifiers("timezone-input")
 @classNames("timezone-input", "region-input")
@@ -29,14 +29,14 @@ export default class RegionInput extends ComboBoxComponent {
 
     if (this.allowNoneRegion === true) {
       regions.push({
-        name: i18n("discourse_calendar.region.none"),
+        name: i18n("discourse_events.region.none"),
         id: null,
       });
     }
 
     regions = regions.concat(
       HOLIDAY_REGIONS.map((region) => ({
-        name: i18n(`discourse_calendar.region.names.${region}`),
+        name: i18n(`discourse_events.region.names.${region}`),
         id: region,
       })).sort((a, b) => a.name.localeCompare(b.name))
     );

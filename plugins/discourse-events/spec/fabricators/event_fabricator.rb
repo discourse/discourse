@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:event, from: "DiscoursePostEvent::Event") do
+Fabricator(:event, from: "DiscourseEvents::Events::Event") do
   transient :user
 
   post do |attrs|
@@ -17,9 +17,9 @@ Fabricator(:event, from: "DiscoursePostEvent::Event") do
 
   status do |attrs|
     if attrs[:status]
-      DiscoursePostEvent::Event.statuses[attrs[:status]]
+      DiscourseEvents::Events::Event.statuses[attrs[:status]]
     else
-      DiscoursePostEvent::Event.statuses[:public]
+      DiscourseEvents::Events::Event.statuses[:public]
     end
   end
   original_starts_at { |attrs| attrs[:original_starts_at] || 1.day.from_now.iso8601 }
@@ -38,7 +38,7 @@ Fabricator(:private_event, from: :event) do
   end
 end
 
-Fabricator(:event_date, from: "DiscoursePostEvent::EventDate") do
+Fabricator(:event_date, from: "DiscourseEvents::Events::EventDate") do
   event
 
   starts_at { |attrs| attrs[:starts_at] || 1.day.from_now.iso8601 }

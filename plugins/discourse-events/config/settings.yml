@@ -1,4 +1,4 @@
-discourse_calendar:
+discourse_events:
   discourse_events_enabled:
     default: false
     client: true
@@ -14,11 +14,11 @@ discourse_calendar:
   all_day_event_start_time:
     default: ""
     client: true
-    validator: "CalendarSettingsValidator"
+    validator: "DiscourseEvents::Configuration::TimeOfDayValidator"
   all_day_event_end_time:
     default: ""
     client: true
-    validator: "CalendarSettingsValidator"
+    validator: "DiscourseEvents::Configuration::TimeOfDayValidator"
   calendar_categories:
     type: list
     list_type: simple
@@ -101,7 +101,7 @@ discourse_calendar:
     list_type: simple
     client: true
     default: ""
-    validator: "CalendarCustomFieldsValidator"
+    validator: "DiscourseEvents::Configuration::EventCustomFieldsValidator"
   events_calendar_categories:
     type: category_list
     client: true
@@ -118,19 +118,19 @@ discourse_calendar:
   map_events_to_color:
     client: true
     default: "[]"
-    json_schema: DiscourseCalendar::SiteSettings::MapEventTagColorsJsonSchema
+    json_schema: DiscourseEvents::Configuration::MapEventTagColorsJsonSchema
   map_events_title:
     client: true
     default: ""
-    json_schema: DiscourseCalendar::SiteSettings::MapEventsTitleJsonSchema
+    json_schema: DiscourseEvents::Configuration::MapEventsTitleJsonSchema
   calendar_first_day_of_week:
     type: enum
-    enum: "CalendarFirstDayOfWeek"
+    enum: "DiscourseEvents::Configuration::FirstDayOfWeek"
     default: monday
     client: true
   calendar_upcoming_events_default_view:
     type: enum
-    enum: "CalendarUpcomingEventsDefaultView"
+    enum: "DiscourseEvents::Configuration::UpcomingEventsDefaultView"
     default: month
     client: true
   enable_events_category_type_setup:
@@ -147,7 +147,7 @@ discourse_calendar:
     default: "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com"
     client: true
     hidden: true
-    validator: "DiscourseCalendar::Livestream::AllowedHostsValidator"
+    validator: "DiscourseEvents::Livestream::AllowedHostsValidator"
   livestream_zoom_enabled:
     default: false
     client: true

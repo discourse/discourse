@@ -156,15 +156,7 @@ module DiscourseWorkflows
         end
 
         def reviewable_payload(user)
-          profile = user.user_profile
-
-          {
-            username: user.username,
-            name: user.name,
-            email: user.email,
-            bio: profile&.bio_raw,
-            website: profile&.website,
-          }
+          ::ReviewableUser.payload_for(user)
         end
 
         def add_review_score(reviewable, actor)

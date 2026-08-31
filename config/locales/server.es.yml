@@ -2128,7 +2128,6 @@ es:
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas de nivel de confianza 0 en esta IP (y ninguna es de un miembro del personal o tiene al menos nivel de confianza), bloquear nuevos registros desde esa dirección. Poner a 0 para desactivar este límite."
-    min_ban_entries_for_roll_up: "Al hacer clic en el botón agrupar, se creará un nuevo rango de entradas prohibidas si hay al menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidos que no coincidan después de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para su intervención"

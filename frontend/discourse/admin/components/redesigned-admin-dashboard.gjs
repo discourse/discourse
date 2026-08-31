@@ -9,6 +9,7 @@ import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
 import DashboardSiteAdvice from "discourse/admin/components/dashboard/site-advice";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
+import DashboardSystem from "discourse/admin/components/dashboard/system";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import { lookupAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -131,6 +132,14 @@ export default class RedesignedAdminDashboard extends Component {
               @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
+            />
+          {{else if (eq section.id "system")}}
+            <DashboardSystem
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @data={{section.data}}
+              @loading={{@loadingSections}}
+              @fetchError={{section.error}}
             />
           {{else if (eq section.id "search")}}
             <DashboardSearch

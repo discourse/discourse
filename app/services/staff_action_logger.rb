@@ -915,6 +915,13 @@ class StaffActionLogger
     )
   end
 
+  def log_removed_avatar(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:removed_avatar], target_user_id: user.id),
+    )
+  end
+
   def log_user_deactivate(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(

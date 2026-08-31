@@ -4775,7 +4775,6 @@ ar:
           missing_to: "مطلوب تحديد وسم بديل"
       delete_topics:
         name: "حذف"
-        description: "احذف الموضوعات المحدَّدة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
       update_category:
         name: "تحديث الفئة"
         description: "انقل جميع الموضوعات المحدَّدة إلى الفئة التالية:"
@@ -7970,25 +7969,20 @@ ar:
         title: "ما الجديد؟"
         check_for_updates: "تحقَّق من وجود تحديثات"
       site_traffic_explorer:
-        pageviews: "مرات عرض الصفحة"
+        metric_information: "نبذة عن %{metric}"
+        remove_filter_value: "إزالة %{value}"
+        clear_all: "مسح الكل"
+        apply: "تطبيق"
         view_more: "عرض المزيد"
         cards:
           pages: "صفحتان"
           visitors: "الزوار"
-        columns:
-          referrers: "المُحيل"
-          countries: "البلد"
-          top_urls: "عنوان URL"
-          browsers: "المتصفح"
-          ip_addresses: "عنوان IP"
         filters:
           referrer: "المُحيل"
           country: "البلد"
           browser: "المتصفح"
           ip: "عنوان IP"
         metrics:
-          pageviews:
-            label: "مرات عرض الصفحة"
           logged_in_share:
             label: "نسبة المسجَّلين الدخول"
           bounce_rate:

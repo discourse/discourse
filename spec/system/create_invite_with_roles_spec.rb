@@ -101,6 +101,7 @@ describe "Creating invites with roles" do
       open_invite_modal_for(admin)
 
       modal.select_role("admin")
+      modal.toggle_advanced_options
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click
 
@@ -124,7 +125,6 @@ describe "Creating invites with roles" do
 
       modal.toggle_advanced_options
       screenshot_marker(label: "invite-members-advanced", only: :desktop)
-      modal.toggle_advanced_options
 
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click
