@@ -6,12 +6,18 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
     end_date = end_date.to_date + 1
 
     DB.exec(<<~SQL, start_date:, end_date:)
-      INSERT INTO browser_pageview_referrer_daily_rollups (date, normalized_referrer, count, logged_in_count)
+      INSERT INTO browser_pageview_referrer_daily_rollups (
+        date, normalized_referrer, count, logged_in_count, likely_crawler_count, likely_crawler_logged_in_count
+      )
       SELECT
         created_at::date AS date,
         normalized_referrer,
         COUNT(*) AS count,
-        COUNT(*) FILTER (WHERE user_id IS NOT NULL) AS logged_in_count
+        COUNT(*) FILTER (WHERE user_id IS NOT NULL) AS logged_in_count,
+        COUNT(*) FILTER (WHERE #{CrawlerScorer.likely_crawler_condition}) AS likely_crawler_count,
+        COUNT(*) FILTER (
+          WHERE user_id IS NOT NULL AND #{CrawlerScorer.likely_crawler_condition}
+        ) AS likely_crawler_logged_in_count
       FROM browser_pageview_events
       WHERE created_at >= :start_date
         AND created_at < :end_date
@@ -19,7 +25,9 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
       GROUP BY date, normalized_referrer
       ON CONFLICT (date, normalized_referrer) DO UPDATE
       SET count = EXCLUDED.count,
-          logged_in_count = EXCLUDED.logged_in_count
+          logged_in_count = EXCLUDED.logged_in_count,
+          likely_crawler_count = EXCLUDED.likely_crawler_count,
+          likely_crawler_logged_in_count = EXCLUDED.likely_crawler_logged_in_count
     SQL
   end
 
@@ -59,11 +67,13 @@ end
 #
 # Table name: browser_pageview_referrer_daily_rollups
 #
-#  id                  :bigint           not null, primary key
-#  count               :bigint           not null
-#  date                :date             not null
-#  logged_in_count     :bigint           not null
-#  normalized_referrer :string(2000)
+#  id                             :bigint           not null, primary key
+#  count                          :bigint           not null
+#  date                           :date             not null
+#  likely_crawler_count           :bigint           default(0), not null
+#  likely_crawler_logged_in_count :bigint           default(0), not null
+#  logged_in_count                :bigint           not null
+#  normalized_referrer            :string(2000)
 #
 # Indexes
 #

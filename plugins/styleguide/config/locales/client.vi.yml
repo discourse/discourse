@@ -14,6 +14,9 @@ vi:
     styleguide:
       title: "Hướng dẫn thiết kế (Styleguide)"
       welcome: "Để bắt đầu, hãy chọn một mục từ menu điều hướng."
+      example:
+        kind:
+          component: "Thành phần"
       categories:
         syntax: Cú pháp
         atoms: Nguyên tử
@@ -40,6 +43,8 @@ vi:
           title: "Màu sắc"
         dialog:
           title: "Hộp thoại thông báo"
+        drag_and_drop:
+          locked: "Đã khóa"
         icons:
           title: "Biểu tượng"
           full_list: "Xem danh sách đầy đủ các biểu tượng Font Awesome"

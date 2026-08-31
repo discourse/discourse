@@ -45,10 +45,10 @@ $db-bar-height: var(--space-2);
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
-    color: var(--primary-medium);
+    color: var(--primary);
 
     &:visited {
-      color: var(--primary-medium);
+      color: var(--primary);
     }
 
     &:hover,

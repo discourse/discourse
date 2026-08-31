@@ -232,6 +232,18 @@ RSpec.describe UserGuardian do
 
     before { tl2_user.user_stat.update!(post_count: 1) }
 
+    context "when public profiles are hidden" do
+      before { SiteSetting.hide_user_profiles_from_public = true }
+
+      it "does not allow anonymous users to view profiles" do
+        expect(Guardian.new.can_see_profile?(tl2_user)).to eq(false)
+      end
+
+      it "allows logged-in users to view profiles" do
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(true)
+      end
+    end
+
     context "when viewing the profile of a user with 0 posts" do
       before { user.user_stat.update!(post_count: 0) }
 
@@ -427,8 +439,8 @@ RSpec.describe UserGuardian do
   end
 
   describe "#can_see_user_actions?" do
-    it "is true by default" do
-      expect(Guardian.new.can_see_user_actions?(nil, [])).to eq(true)
+    it "defaults to no action types" do
+      expect(Guardian.new.can_see_user_actions?(nil)).to eq(true)
     end
 
     context "with 'hide_user_activity_tab' setting" do
@@ -523,6 +535,14 @@ RSpec.describe UserGuardian do
           expect(guardian.can_delete_user?(user)).to eq(true)
         end
       end
+    end
+
+    it "requires an admin to delete another moderator" do
+      another_moderator = Fabricate(:moderator)
+
+      expect(Guardian.new(moderator).can_delete_user?(another_moderator)).to eq(false)
+      expect(Guardian.new(admin).can_delete_user?(another_moderator)).to eq(true)
+      expect(Guardian.new(moderator).can_delete_user?(moderator)).to eq(true)
     end
 
     context "when deleting myself" do

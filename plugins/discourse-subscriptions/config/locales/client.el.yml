@@ -365,8 +365,6 @@ el:
         confirm_payment: Επιβεβαίωση πληρωμής
         success: Μετάβαση πίσω
       admin:
-        unconfigured: 'Το Stripe δεν έχει ρυθμιστεί σωστά. Παρακαλούμε δείτε στο Discourse Meta για πληροφορίες.'
-        on_meta: Συνδρομές Discourse στο Meta
         dashboard:
           title: Πίνακας ελέγχου
           table:

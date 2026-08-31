@@ -13,8 +13,6 @@ hu:
   js:
     discourse_reactions:
       reactions_title: "Reakciók"
-      state_panel:
-        more_users: "és még további %{count}..."
       picker:
         react_with: "Reagálás erre a bejegyzésre ezzel: %{reaction}"
         cant_remove_reaction: "Nem lehet eltávolítani a reakciót"

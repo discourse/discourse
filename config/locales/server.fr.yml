@@ -407,9 +407,7 @@ fr:
     max_redemptions_allowed_one: "pour les invitations par e-mail, la valeur doit être 1"
     redemption_count_less_than_max: "doit être inférieur à %{max_redemptions_allowed}."
     email_xor_domain: "Les champs e-mail et domaine ne sont pas autorisés en même temps"
-    admin_invite_requires_email: "Les invitations d'administrateur doivent être envoyées à une adresse e-mail"
     admin_invite_requires_admin_inviter: "Seuls les administrateurs peuvent créer des invitations d'administrateur."
-    moderator_invite_requires_email: "Les invitations de modérateur doivent être envoyées à une adresse e-mail"
     moderator_invite_requires_staff_inviter: "Seuls les responsables peuvent créer des invitations de modérateur"
     existing_user_success: "Invitation utilisée avec succès"
     email_invites_disabled: "L'envoi d'e-mails d'invitation est désactivé"
@@ -1000,16 +998,15 @@ fr:
     title: "Connexion par e-mail"
   email_login_code:
     invalid_code: "Ce code est incorrect ou a expiré. Veuillez demander un nouveau code et réessayer."
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navigateur inconnu"
     device:
       android: "Appareil Android"
       chromebook: "Chrome OS"
@@ -1029,6 +1026,10 @@ fr:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
+  admin_site_traffic_explorer:
+    traffic_types:
+      logged_in: "Utilisateurs connectés"
+      anonymous: "Anonymes"
   change_email:
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
@@ -1535,6 +1536,9 @@ fr:
       description: "Pays ayant enregistré le plus grand nombre de pages vues par navigateur sur votre forum au cours de la période sélectionnée."
       labels:
         country_code: "Code du pays"
+        count: "Visites"
+    top_entry_urls:
+      labels:
         count: "Visites"
     top_referrers_by_browser_pageviews:
       title: "Principales sources de trafic"
@@ -2280,7 +2284,6 @@ fr:
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse e-mail sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) comptes avec un niveau de confiance de 0 utilisant cette adresse IP (et si aucun n'est un responsable ni un utilisateur avec un niveau de confiance de 2 ou plus), ne plus accepter de nouvelles inscriptions en provenance de cette adresse IP. Le réglage de cette valeur à 0 désactive cette limite."
-    min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
     max_age_unmatched_emails: "Effacer les adresses e-mail sous surveillance sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimal de signalements uniques requis pour suspendre automatiquement un sujet pour intervention"
@@ -2535,7 +2538,6 @@ fr:
     default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
     default_other_enable_quoting: "Par défaut, proposer de citer le texte sélectionné."
     default_other_enable_smart_lists: "Activer par défaut les listes intelligentes lors de la saisie dans l'éditeur."
-    default_other_enable_defer: "Par défaut, activer le bouton pour reporter un sujet à plus tard."
     default_other_enable_markdown_monospace_font: "Utiliser une police à chasse fixe dans le mode Markdown de l'éditeur par défaut."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône du navigateur."
     default_other_skip_new_user_tips: "Ignorer les conseils et badges d'intégration des nouveaux utilisateurs."
@@ -2574,7 +2576,6 @@ fr:
     max_user_api_key_expiry_days: "Durée de validité maximale, en jours, que les clients peuvent demander pour les clés API utilisateur."
     verbose_user_api_key_device_auth_logging: "Consigne des diagnostics détaillés pour le processus d'autorisation des appareils utilisant une clé API utilisateur."
     tagging_enabled: "Activer les balises sur les sujets ? Consultez le <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>guide d'administration sur les étiquettes sur Meta</a> pour obtenir plus d'informations."
-    create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes. Les administrateurs et les modérateurs peuvent toujours créer des étiquettes."
     edit_tags_allowed_groups: "Groupes autorisés à modifier les étiquettes, les descriptions d'étiquettes et les synonymes d'étiquettes."
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."
     enable_max_tags_per_email_subject: "Utilise {{setting:max_tags_per_email_subject}} lors de la génération de l'objet d'un e-mail"
@@ -2644,7 +2645,6 @@ fr:
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
     enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
-    enable_new_composer_actions: "Active le menu repensé des actions du panneau d'édition et le bouton combiné d'enregistrement, avec les options de murmure, de non-remontée et de retrait des listes affichées à côté de l'action d'enregistrement."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
@@ -2664,7 +2664,6 @@ fr:
     content_localization_language_switcher: "Affiche un sélecteur de langue dans l'en-tête, permettant aux visiteurs de passer d'une version traduite de Discourse et du contenu publié par les utilisateurs à une autre. Utilise les langues définies dans {{setting:content_localization_supported_locales}}."
     content_localization_crawler_param: "Fournit du contenu localisé aux robots d'exploration Web lorsque {{setting:content_localization_enabled}} et {{setting:set_locale_from_param}} sont activés. La liste des langues prises en charge est définie dans {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Fournit du contenu localisé dans la langue par défaut du site aux utilisateurs dont la langue préférée ne figure pas dans la liste des langues prises en charge pour la localisation du contenu."
-    content_localization_allow_author_localization: "Autorise les auteurs à mettre à jour les localisations de leurs propres sujets et publications à partir du menu de la publication."
     nested_replies_enabled: "Active l'affichage des réponses imbriquées pour les sujets."
     nested_replies_default: "Utilise les réponses imbriquées comme affichage par défaut pour tous les sujets."
     nested_replies_hot_sort_enabled: "Autorise le tri des réponses imbriquées selon un score de popularité calculé à la demande. Les scores de popularité sont calculés en arrière-plan uniquement pour les sujets dans lesquels ce tri est demandé."
@@ -2786,7 +2785,6 @@ fr:
       invalid_uncategorized_category_setting: 'La catégorie « Sans catégorie » ne peut pas être sélectionnée si « Autoriser les sujets sans catégorie » n''est pas activé.'
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
       content_localization_locale_limit: "Le nombre de paramètres régionaux pris en charge ne peut pas dépasser %{max}."
-      content_localization_language_switcher_requirements: "Le sélecteur de langue nécessite l'activation de {{setting:set_locale_from_cookie}} et de {{setting:allow_user_locale}}, ainsi que la présence d'au moins une langue dans {{setting:content_localization_supported_locales}}. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Vous devez d'abord activer « définir la langue à partir du paramètre » avant d'activer ce paramètre."
       mediaconvert_role_arn_required: "Le rôle ARN IAM AWS est requis lors de l'utilisation d'AWS MediaConvert pour la conversion vidéo."
       mediaconvert_output_subdirectory_required: "Le sous-répertoire de sortie de MediaConvert est requis."
@@ -4380,9 +4378,6 @@ fr:
     user_posted_pm_staged:
       title: "Compte provisoire a publié un MP"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
@@ -5320,6 +5315,10 @@ fr:
     title: "Mode développeur"
     enable_rack_mini_profiler: "Activer Rack Mini Profiler pendant 1 heure, y compris après les changements de session"
     enter: "Accéder au mode développeur"
+  design_wizard:
+    palette_pairs:
+      default: "Par défaut"
+      dracula: "Dracula"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5466,6 +5465,9 @@ fr:
       group: "Les réponses des utilisateurs ne faisant pas partie des groupes spécifiés doivent être approuvées par un responsable. Voir %{link}."
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
       fast_typer: "Un nouvel utilisateur a écrit sa première publication avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
+      fast_typer_time:
+        one: "%{count} seconde"
+        other: "%{count} secondes"
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
       watched_word:
         one: "Cette publication contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."

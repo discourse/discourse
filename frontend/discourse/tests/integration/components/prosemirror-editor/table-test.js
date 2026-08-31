@@ -28,6 +28,11 @@ module(
         `<div class="md-table"><table><thead><tr><th>Line1<br>Line2</th><th>Cell 2</th></tr></thead><tbody><tr><td>Cell 3</td><td>Cell 4</td></tr></tbody></table></div>`,
         `| Line1<br>Line2 | Cell 2 |\n|----|----|\n| Cell 3 | Cell 4 |\n\n`,
       ],
+      "table with pipes inside a link": [
+        `| Link | Note |\n| --- | --- |\n| [x|y](https://example.com "title|value") | ok |`,
+        `<div class="md-table"><table><thead><tr><th>Link</th><th>Note</th></tr></thead><tbody><tr><td><a href="https://example.com" title="title|value">x|y</a></td><td>ok</td></tr></tbody></table></div>`,
+        `| Link | Note |\n|----|----|\n| [x\\|y](https://example.com "title\\|value") | ok |\n\n`,
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);

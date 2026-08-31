@@ -135,8 +135,6 @@ ru:
         "action:sql": "Выполните SQL-запрос только для чтения к базе данных."
       sql:
         operation_description: "Как выполнить запрос"
-        queries: "Запросы"
-        raw: "Необработанный SQL"
         query_id: "Запрос"
         add_param: "Добавить параметр"
         param_value: "Значение"

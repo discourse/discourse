@@ -4,15 +4,18 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import SidebarEditNavigationMenuTagsModal from "discourse/components/sidebar/edit-navigation-menu/tags-modal";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";
 
 export default class SidebarUserTagsSection extends Component {
+  @service router;
   @service currentUser;
   @service modal;
   @service site;
@@ -34,6 +37,11 @@ export default class SidebarUserTagsSection extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.topicTrackingState.offStateChange(this.callbackId);
+  }
+
+  @cached
+  get activeLink() {
+    return findActiveLink(this.sectionLinks, this.router);
   }
 
   @cached
@@ -85,6 +93,8 @@ export default class SidebarUserTagsSection extends Component {
   <template>
     <Section
       @sectionName="tags"
+      @activeLink={{this.activeLink}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
       @headerActions={{array
         (hash
@@ -97,6 +107,10 @@ export default class SidebarUserTagsSection extends Component {
     >
       {{#each this.sectionLinks as |sectionLink|}}
         <SectionLink
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq sectionLink.name this.activeLink.name)
+          }}
           @route={{sectionLink.route}}
           @title={{sectionLink.title}}
           @content={{sectionLink.text}}
@@ -113,7 +127,9 @@ export default class SidebarUserTagsSection extends Component {
         />
       {{/each}}
 
-      <AllTagsSectionLink />
+      <AllTagsSectionLink
+        @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      />
 
       {{#if this.shouldDisplayDefaultConfig}}
         <SectionLink

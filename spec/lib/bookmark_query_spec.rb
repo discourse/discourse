@@ -9,7 +9,7 @@ RSpec.describe BookmarkQuery do
 
   describe "#count_all" do
     fab!(:post_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:post)) }
-    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic)) }
+    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic_with_op)) }
 
     before do
       Fabricate(:topic_user, user:, topic: post_bookmark.bookmarkable.topic)
@@ -44,7 +44,7 @@ RSpec.describe BookmarkQuery do
 
   describe "#list_all" do
     fab!(:post_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:post)) }
-    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic)) }
+    fab!(:topic_bookmark) { Fabricate(:bookmark, user:, bookmarkable: Fabricate(:topic_with_op)) }
 
     let(:user_bookmark) do
       Fabricate(:bookmark, user:, bookmarkable: Fabricate(:user, username: "bookmarkqueen"))

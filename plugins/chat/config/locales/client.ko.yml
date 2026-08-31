@@ -303,9 +303,9 @@ ko:
         move_selection_to_channel: "채널로 이동"
         title: "채팅을 글로 이동"
         new_topic:
-          title: "새로운 주제로 이동"
+          title: "새 글로 이동"
         existing_topic:
-          title: "이미 있는 주제로 옮기기"
+          title: "기존 글로 이동"
         new_message:
           title: "새 메시지로 이동"
       replying_indicator:
@@ -402,4 +402,10 @@ ko:
         message: "메시지 보내기"
       chat_approval:
         message: "메시지 보내기"
+        buttons: "버튼"
+        value: "값"
+        style_default: "기본"
+        style_primary: "기본"
+        style_success: "성공"
+        icon: "아이콘"
         channel_id: "채널"

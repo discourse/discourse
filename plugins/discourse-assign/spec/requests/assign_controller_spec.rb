@@ -196,6 +196,26 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
       expect(allowed_topic.reload.assignment).to be_blank
     end
+
+    it "unassigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+      Fabricate(:topic_assignment, target: topic, assigned_to: admin, assigned_by_user: admin)
+
+      put "/assign/unassign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+          }
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#assign" do
@@ -524,6 +544,26 @@ RSpec.describe DiscourseAssign::AssignController do
         ),
       )
     end
+
+    it "assigns a topic with an API key scoped to assign -> assign" do
+      category = Fabricate(:category)
+      topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      api_key = Fabricate(:api_key, user: admin)
+      Fabricate(:api_key_scope, resource: "assign", action: "assign", api_key_id: api_key.id)
+
+      put "/assign/assign.json",
+          headers: {
+            "HTTP_API_KEY" => api_key.key,
+            "HTTP_API_USERNAME" => admin.username,
+          },
+          params: {
+            target_id: topic.id,
+            target_type: "Topic",
+            username: admin.username,
+          }
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#assigned" do
@@ -660,6 +700,40 @@ RSpec.describe DiscourseAssign::AssignController do
       end
 
       describe "with filter" do
+        it "does not disclose hidden name matches while filtering usernames" do
+          hidden_name_member =
+            Fabricate(
+              :user,
+              username: "opaque-assignee",
+              name: "Confidential Name Token",
+              groups: [allowed_group],
+            )
+          Fabricate(:topic_assignment, assigned_to: hidden_name_member, assigned_by_user: admin)
+          SiteSetting.enable_names = false
+          sign_in(allowed_user)
+
+          get "/assign/members/#{allowed_group.name}.json",
+              params: {
+                filter: hidden_name_member.name,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |member| member["id"] }).not_to include(
+            hidden_name_member.id,
+          )
+          expect(response.body).not_to include(hidden_name_member.name)
+
+          get "/assign/members/#{allowed_group.name}.json",
+              params: {
+                filter: hidden_name_member.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |member| member["id"] }).to contain_exactly(
+            hidden_name_member.id,
+          )
+        end
+
         it "returns members as according to filter" do
           sign_in(admin)
 

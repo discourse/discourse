@@ -27,6 +27,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     output_contracts_by_type.transform_values { |contract| contract.fetch(:fields) }
   end
 
+  it "excludes nodes hidden from the palette" do
+    hidden_node_type = DiscourseWorkflows::Nodes::LoopOverItems::V1.identifier
+
+    result = invoke_tool(query: hidden_node_type)
+
+    expect(result[:nodes]).to be_empty
+  end
+
   it "finds the external chat integration action by provider keywords" do
     SiteSetting.chat_integration_enabled = true
 
@@ -50,6 +58,28 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(node.dig(:output_contracts, 0, :fields)).to eq(
       "channel_id" => "integer",
       "provider" => "string",
+    )
+  end
+
+  it "finds the moderation action by unlist keywords", :aggregate_failures do
+    result = invoke_tool(query: "unlist topic", include_examples: true)
+    node = result[:nodes].find { |candidate| candidate[:type] == "action:topic_moderation" }
+
+    expect(node[:examples]).to contain_exactly(
+      include(
+        name: "Unlist the trigger topic",
+        parameters:
+          include(
+            operation: "unlist_topic",
+            topic_id: "={{ $json.topic.id }}",
+            actor_username: "system",
+          ),
+      ),
+    )
+    expect(node.dig(:output_contracts, 0, :fields)).to include(
+      "topic.id" => "integer",
+      "topic.visible" => "boolean",
+      "topic.visibility_reason_id" => "integer",
     )
   end
 

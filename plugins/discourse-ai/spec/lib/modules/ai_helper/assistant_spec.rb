@@ -342,6 +342,99 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
         expect(response[:suggestions]).to contain_exactly(*expected)
       end
+
+      it "returns clean suggestions when the model streams the JSON across many partial chunks" do
+        streaming_assistant = described_class.new(helper_llm: Fabricate(:llm_model))
+
+        # Mirrors backends that emit a title's closing `",` and the following
+        # whitespace as separate deltas, leaving the buffered JSON with a
+        # dangling comma between chunks.
+        deltas = [
+          "{",
+          "\n",
+          " ",
+          " \"",
+          "output",
+          "\":",
+          " [",
+          "\n",
+          "   ",
+          " \"",
+          "The",
+          " solitary",
+          " horse",
+          "\",",
+          "\n",
+          "   ",
+          " \"",
+          "A",
+          " horse",
+          " lost",
+          " in",
+          " time",
+          "\"",
+          "\n",
+          " ",
+          " ]",
+          "\n",
+          "}",
+        ]
+
+        body =
+          deltas
+            .map { |delta| { choices: [{ index: 0, delta: { content: delta } }] } }
+            .push({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })
+            .map { |event| "data: #{event.to_json}\n\n" }
+            .join
+        body << "data: [DONE]\n\n"
+
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+          status: 200,
+          body: body,
+        )
+
+        response = streaming_assistant.generate_and_send_prompt(mode, english_text, user)
+
+        expect(response[:suggestions]).to eq(["The solitary horse", "A horse lost in time"])
+      end
+    end
+
+    context "when using a prompt that returns a string" do
+      let(:mode) { described_class::PROOFREAD }
+
+      it "preserves whitespace-only deltas streamed between paragraphs" do
+        streaming_assistant = described_class.new(helper_llm: Fabricate(:llm_model))
+
+        # Mirrors backends that emit paragraph breaks (an escaped "\n\n") or a
+        # bare space as their own delta; reading the buffered property consumes
+        # it, so dropping these chunks loses the whitespace permanently.
+        deltas = [
+          "{\"output\":\"",
+          "First paragraph.",
+          "\\n\\n",
+          "Do a",
+          " ",
+          "2-pass on every message.",
+          "\"}",
+        ]
+
+        body =
+          deltas
+            .map { |delta| { choices: [{ index: 0, delta: { content: delta } }] } }
+            .push({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })
+            .map { |event| "data: #{event.to_json}\n\n" }
+            .join
+        body << "data: [DONE]\n\n"
+
+        stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+          status: 200,
+          body: body,
+        )
+
+        response = streaming_assistant.generate_and_send_prompt(mode, english_text, user)
+
+        expect(response[:suggestions]).to eq(["First paragraph.\n\nDo a 2-pass on every message."])
+      end
     end
   end
 end

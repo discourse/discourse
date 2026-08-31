@@ -1,5 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
+import { waitForPromise } from "@ember/test-waiters";
 import { autoUpdate } from "@floating-ui/dom";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import type { FloatKitTrigger } from "discourse/float-kit/lib/constants";
@@ -68,10 +69,12 @@ export default class FloatKitApplyFloatingUi extends Modifier<FloatKitApplyFloat
       return;
     }
 
-    await updatePosition(
-      this.instance.trigger,
-      this.instance.content,
-      this.options
+    // Positioning is what finally gives a float its size, and it resolves off a promise the
+    // test runtime cannot see. Without this, `settled()` returns while the float is still
+    // unpositioned, so a test reads it at zero size — and anything that measures the float to
+    // decide what to render, such as a virtualized list, computes an empty window from it.
+    await waitForPromise(
+      updatePosition(this.instance.trigger, this.instance.content, this.options)
     );
   }
 

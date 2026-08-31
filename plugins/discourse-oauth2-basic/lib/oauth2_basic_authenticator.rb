@@ -255,10 +255,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def primary_email_verified?(auth)
     return true if SiteSetting.oauth2_email_verified
-    verified = auth["info"]["email_verified"]
-    verified = true if verified == "true"
-    verified = false if verified == "false"
-    verified
+
+    email_verified = auth["info"]["email_verified"]
+    email_verified == true || (email_verified.is_a?(String) && email_verified.downcase == "true")
   end
 
   def always_update_user_email?

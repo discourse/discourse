@@ -43,4 +43,21 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
     expect(execution.status).to eq("running")
     expect(execution.updated_at).to eq_time(before_updated_at)
   end
+
+  context "when the timeout action is fail" do
+    before { execution.update!(timeout_action: "fail") }
+
+    it "fails the execution with the existing timeout error and clears its wait state" do
+      described_class.new.execute(execution_id: execution.id)
+
+      expect(execution.reload).to have_attributes(
+        status: "error",
+        error: I18n.t("discourse_workflows.errors.approval_timed_out"),
+        waiting_node_id: nil,
+        waiting_until: nil,
+        resume_token: nil,
+        timeout_action: nil,
+      )
+    end
+  end
 end

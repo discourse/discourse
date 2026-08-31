@@ -65,14 +65,7 @@ class CategoriesController < ApplicationController
           MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)),
         )
 
-        @topic_list = fetch_topic_list
-
-        if @topic_list.present? && @topic_list.topics.present?
-          store_preloaded(
-            @topic_list.preload_key,
-            MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
-          )
-        end
+        preload_topic_list
 
         render
       end
@@ -295,10 +288,6 @@ class CategoriesController < ApplicationController
 
       merge_pending_custom_fields!(cat, pending_custom_fields)
 
-      # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
-
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
@@ -314,8 +303,6 @@ class CategoriesController < ApplicationController
           )
         end
       end
-
-      DiscourseEvent.trigger(:category_updated, cat) if result
 
       result
     end
@@ -452,6 +439,10 @@ class CategoriesController < ApplicationController
     raise Discourse::NotFound if categories.blank?
 
     Category.preload_user_fields!(guardian, categories)
+
+    if serializer == SiteCategorySerializer && Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
@@ -884,6 +875,20 @@ class CategoriesController < ApplicationController
     }
 
     @category_list = CategoryList.new(guardian, category_options)
+  end
+
+  # The crawler layout renders categories only and emits no preloaded data, so
+  # building and serializing the list would be pure waste.
+  def preload_topic_list
+    return if use_crawler_layout?
+
+    @topic_list = fetch_topic_list
+    return if @topic_list.blank? || @topic_list.topics.blank?
+
+    store_preloaded(
+      @topic_list.preload_key,
+      MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
+    )
   end
 
   def fetch_topic_list(topics_filter: nil)

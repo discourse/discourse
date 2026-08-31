@@ -124,6 +124,29 @@ describe DiscourseAi::Translation::EntryPoint do
     end
   end
 
+  describe "upon enabling ai_translation_enabled" do
+    before do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.ai_translation_backfill_start_date = ""
+    end
+
+    it "sets the backfill start date to 5 days ago when it is at the default value" do
+      freeze_time
+
+      SiteSetting.ai_translation_enabled = true
+
+      expect(SiteSetting.ai_translation_backfill_start_date).to eq(5.days.ago.utc.to_date.iso8601)
+    end
+
+    it "keeps an existing backfill start date" do
+      SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
+
+      SiteSetting.ai_translation_enabled = true
+
+      expect(SiteSetting.ai_translation_backfill_start_date).to eq("2026-07-01")
+    end
+  end
+
   describe "upon post edited" do
     it "enqueues detect translate post job in grace period" do
       freeze_time
@@ -141,6 +164,92 @@ describe DiscourseAi::Translation::EntryPoint do
         at: 10.minutes.from_now,
       )
       expect(job_enqueued?(job: :detect_translate_topic)).to eq false
+    end
+  end
+
+  describe "upon category updated" do
+    it "enqueues category retranslation when the description changes" do
+      SiteSetting.content_localization_supported_locales = "de|fr"
+      category = Fabricate(:category_with_definition, locale: "en")
+
+      category.update!(description: "An updated category description")
+
+      expect_job_enqueued(
+        job: :localize_categories,
+        args: {
+          category_id: category.id,
+          fields: ["description"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "enqueues category retranslation when the name changes" do
+      category = Fabricate(:category, locale: "en")
+
+      category.update!(name: "A new category name")
+
+      expect_job_enqueued(
+        job: :localize_categories,
+        args: {
+          category_id: category.id,
+          fields: ["name"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "does not enqueue category retranslation when another field changes" do
+      category = Fabricate(:category, locale: "en")
+
+      category.update!(color: "FF0000")
+
+      expect(job_enqueued?(job: :localize_categories)).to eq(false)
+    end
+  end
+
+  describe "upon tag updated" do
+    it "enqueues tag retranslation when the description changes" do
+      SiteSetting.content_localization_supported_locales = "de|fr"
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(description: "An updated tag description")
+
+      expect_job_enqueued(
+        job: :localize_tags,
+        args: {
+          tag_id: tag.id,
+          fields: ["description"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "enqueues tag retranslation when the name changes" do
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(name: "a-new-tag-name")
+
+      expect_job_enqueued(
+        job: :localize_tags,
+        args: {
+          tag_id: tag.id,
+          fields: ["name"],
+          limit: 1,
+          force: true,
+        },
+      )
+    end
+
+    it "does not enqueue tag retranslation when another field changes" do
+      tag = Fabricate(:tag, locale: "en")
+
+      tag.update!(staff_topic_count: 1)
+
+      expect(job_enqueued?(job: :localize_tags)).to eq(false)
     end
   end
 end

@@ -470,10 +470,28 @@ hr:
       pill: "Predloženo"
       pm_title: "Predložene poruke"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Odabrano"
       start_posting:
         back: "Natrag"
+    design_wizard:
+      back: "Natrag"
+      next: "Sljedeći"
+      sections:
+        theme: "Tema"
+        fonts: "Fontovi"
+        homepage: "Početna stranica"
+      theme:
+        selected: "Odabrano"
+      colors:
+        light: "Svjetlo"
+        dark: "Tamno"
+      fonts:
+        base_font: "Osnovni font"
+        heading_font: "Font zaglavlja"
+      homepage:
+        topics: "Tema"
+        categories: "Kategorije"
+        styles:
+          boxes: "Kutije"
     about:
       edit: "Uredi ovu stranicu"
       simple_title: "O nama"
@@ -765,10 +783,6 @@ hr:
         optional: "neobvezno"
       claim_help:
         optional: "Možete prisvojiti ovu stavku kako drugi ne bi mogli dodavati osvrte."
-        required: "Morate prisvojiti ovu stavku prije nego dodate osvrt na nju."
-        claimed_by_you: "Prisvojili ste ovu stavku i možete dodati osvrt."
-        claimed_by_other: "Osvrt za ovu stavku može dodati samo <b>%{username}</b>."
-        automatically_claimed_by: "<b>%{username}</b> trenutno pregledava ovaj sadržaj."
       awaiting_approval: "Čeka na odobrenje"
       delete: "Pobriši"
       settings:
@@ -1567,7 +1581,6 @@ hr:
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       enable_smart_lists: "Omogući pametne popise prilikom pisanja u editoru"
-      enable_defer: "Omogući označavanje tema kao nepročitanih"
       enable_markdown_monospace_font: "Koristi monospace font u Markdown načinu rada editora"
       experimental_sidebar:
         enable: "Omogući bočnu traku"
@@ -2228,7 +2241,8 @@ hr:
           email_placeholder: "ime@primjer.com"
           invite_by_email: "Email"
           restrict_domain: "Ograniči na domenu"
-          more_options: "Više opcija"
+          create_and_send: "Pošalji"
+          create_and_copy: "Kopirajte poveznicu"
           update: "Ažuriraj"
           summary:
             role_member: "Član"
@@ -2239,7 +2253,7 @@ hr:
             expires: "Istječe"
             topic: "Tema"
             groups: "Grupe"
-            edit: "Uredi pozivnicu"
+            edit: "Uredi"
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
@@ -2782,6 +2796,7 @@ hr:
         one: "+%{count} potkategorija"
         few: "+%{count} potkategorija"
         other: "+%{count} potkategorija"
+      subcategories: "+ Podkategorije"
       topic_count:
         one: "%{count} tema u ovoj kategoriji"
         few: "%{count} tema u ovoj kategoriji"
@@ -2972,7 +2987,6 @@ hr:
       italic_label: "I"
       italic_title: "Naglasak"
       italic_text: "naglašen tekst"
-      heading_title: "Naslovi"
       heading_level_n: "Naslov %{levelNumber}"
       heading_level_n_title: "Naslov %{levelNumber}"
       heading_level_paragraph: "Odlomak"
@@ -3159,7 +3173,6 @@ hr:
         other: "%{count} otvorenih zahtjeva za članstvo za '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - dovršeno"
       new_features: "Dostupne su nove značajke!"
       admin_problems: "Novi savjeti na vašoj nadzornoj ploči"
       dismiss_confirmation:
@@ -5123,9 +5136,9 @@ hr:
           always_public: "Sadržaj u ovom odjeljku je uvijek javan"
           more_menu: "Više izbornika"
           localizations:
-            title: "Prijevodi"
             locale: "Jezik"
             title_label: "Naslov odjeljka"
+            remove_language: "Ukloni"
           links:
             add: "Dodajte još jednu poveznicu"
             delete: "Izbrišite poveznicu"
@@ -5816,13 +5829,24 @@ hr:
       new_features:
         title: "Što je novo?"
         check_for_updates: "Provjeri ažuriranja"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        clear_all: "Obriši sve"
+        apply: "Primijeni"
+        view_more: "Pogledaj više"
+        cards:
+          pages: "Stranice"
+          visitors: "Posjetitelji"
+        filters:
+          ip: "IP adrese"
+        series:
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Nadzorna ploča"
         last_updated: "Nadzorna ploča ažurirana:"
         discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
         up_to_date: "Imate ažurnu verziju!"
-        critical_available: "Dostupna je kritična dopuna."
         updates_available: "Dopune su dostupne."
         please_update: "Molimo ažurirajte!"
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."

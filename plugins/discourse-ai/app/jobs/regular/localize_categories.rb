@@ -31,17 +31,15 @@ module Jobs
           .where.not(locale: nil)
           .order(:id)
           .limit(limit)
+      categories = categories.where(id: args[:category_id]) if args[:category_id].present?
       return if categories.empty?
 
-      remaining_limit = limit
       locales = DiscourseAi::Translation.locales
+      force = args[:force] || false
       categories.each do |category|
-        break if remaining_limit <= 0
-
         existing_locales = CategoryLocalization.where(category_id: category.id).pluck(:locale)
-        missing_locales = locales - existing_locales - [category.locale]
-        missing_locales.each do |locale|
-          break if remaining_limit <= 0
+        target_locales = force ? locales : locales - existing_locales
+        target_locales.each do |locale|
           next if LocaleNormalizer.is_same?(locale, category.locale)
 
           begin
@@ -50,6 +48,7 @@ module Jobs
               locale,
               short_text_llm_model:,
               post_raw_llm_model:,
+              fields: args[:fields],
             )
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
@@ -57,8 +56,6 @@ module Jobs
             DiscourseAi::Translation::VerboseLogger.log(
               "Failed to translate category #{category.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
             )
-          ensure
-            remaining_limit -= 1
           end
         end
 

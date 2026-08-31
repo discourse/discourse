@@ -7,6 +7,9 @@
 ca:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Component"
       sections:
         typography:
           example: "Benvingut a Discourse"

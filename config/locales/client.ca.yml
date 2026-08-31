@@ -320,6 +320,20 @@ ca:
     admin_onboarding_banner:
       start_posting:
         back: "Enrere"
+    design_wizard:
+      back: "Enrere"
+      next: "Següent"
+      sections:
+        theme: "Aparença"
+        homepage: "Pàgina principal"
+      colors:
+        light: "Clar"
+        dark: "Fosc"
+      homepage:
+        topics: "Temes"
+        categories: "Categories"
+        styles:
+          boxes: "Caixes"
     about:
       edit: "Edita aquesta pàgina"
       simple_title: "Quant a"
@@ -489,9 +503,6 @@ ca:
         optional: "opcional"
       claim_help:
         optional: "Podeu reclamar aquest element per a impedir que altres el revisin."
-        required: "Heu de reclamar elements abans de poder revisar-los"
-        claimed_by_you: "Heu reclamat aquest element i podeu revisar-lo"
-        claimed_by_other: "Aquest element sols pot ser revisat per <b>%{username}</b>."
       awaiting_approval: "Esperant aprovació"
       delete: "Suprimeix"
       settings:
@@ -1394,6 +1405,7 @@ ca:
           staff_role_moderator: "Moderador"
           email_placeholder: "name@example.com"
           invite_by_email: "Correu electrònic"
+          create_and_send: "Envia"
           summary:
             role_member: "Membre"
             role_admin: "Administració"
@@ -1401,6 +1413,7 @@ ca:
             method_email: "Correu electrònic"
             topic: "Tema"
             groups: "Grups"
+            edit: "Edita"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1673,6 +1686,8 @@ ca:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retorn"
+    category_row:
+      subcategories: "+ Subcategories"
     select_kit:
       delete_item: "Suprimeix %{name}"
       no_content: No s'han trobat coincidències
@@ -3021,7 +3036,7 @@ ca:
           save: "Desa"
           delete: "Suprimeix"
           localizations:
-            title: "Traduccions"
+            remove_language: "Elimina"
           links:
             reset: "Restableix el valor predeterminat"
             icon:
@@ -3288,13 +3303,20 @@ ca:
         default_value: "Per defecte"
       search:
         title: "Cerca"
+      site_traffic_explorer:
+        metric_information: "Quant a %{metric}"
+        apply: "Aplica"
+        filters:
+          browser: "Navegador"
+          ip: "Adreça IP"
+        series:
+          anonymous_human: "Anònim"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
         discourse_last_updated: "Discourse actualitzat"
         version: "Versió"
         up_to_date: "Esteu al dia!"
-        critical_available: "Hi ha una actualització crítica."
         updates_available: "Hi ha actualitzacions disponibles."
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."

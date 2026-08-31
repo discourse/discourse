@@ -76,9 +76,17 @@
       width: 100% !important; // no other way to overrule the JS inline styling
       height: 100% !important;
     }
+
+    .loading-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
   }
 
-  &__empty {
+  &__empty,
+  &__error {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -90,6 +98,10 @@
     .d-icon {
       font-size: var(--font-up-3);
     }
+  }
+
+  &__error {
+    color: var(--danger);
   }
 
   &__add-report {

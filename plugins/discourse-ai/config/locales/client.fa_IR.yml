@@ -60,6 +60,12 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      copied: "کپی شد"
+      ai_decoded_transcript:
+        tool: "ابزار"
+        type: "نوع"
+        error: "خطا"
+        response: "پاسخ"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -147,6 +153,41 @@ fa_IR:
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
+      logs:
+        short_title: "گزارش‌ها"
+        retry: "دوباره امتحان کنید"
+        apply: "اعمال کردن"
+        successful: "موفق"
+        failed: "ناموفق"
+        unknown: "ناشناس"
+        topic_id: "شناسه موضوع"
+        post_id: "شناسه نوشته"
+        time: "زمان"
+        when: "وقتی‌که"
+        model: "مدل"
+        request: "درخواست"
+        provider: "ارائه‌دهنده"
+        user: "کاربر"
+        context: "محتوا"
+        topic: "موضوع"
+        post: "نوشته"
+        post_short: "نوشته %{id}"
+        duration: "مدت زمان"
+        actions: "عملیات"
+        filters:
+          title: "فیلترها"
+        periods:
+          day: "۲۴ ساعت گذشته"
+          week: "۷ روز گذشته"
+          custom: "سفارشی"
+        detail:
+          request: "درخواست"
+          response: "پاسخ"
+          context: "محتوا"
+        retention:
+          summary_stage: "خلاصه"
+          deleted_stage: "حذف شده"
+          save: "ذخیره"
       ai_agent:
         name: "نام"
         edit: "ویرایش"
@@ -158,6 +199,7 @@ fa_IR:
         enabled: "فعال شده؟"
         mcp_tools_modal:
           clear_all: "پاکسازی همه"
+        duplicate: "تکراری"
         delete: "حذف"
         thinking_effort_options:
           none: "هیچ‌کدام"
@@ -215,6 +257,9 @@ fa_IR:
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
+        vision_modes:
+          disabled:
+            title: "غیرفعال"
         save: "ذخیره"
         edit: "ویرایش"
         delete: حذف
@@ -239,7 +284,6 @@ fa_IR:
           success: "موفقیت!"
           failure: "در حال ارتباط با مدل این خطا رخ داد: %{error}"
         providers:
-          google: "گوگل"
           fake: "سفارشی"
         provider_fields:
           region: "منطقه"
@@ -290,6 +334,7 @@ fa_IR:
         try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"
         debug_ai_modal:
+          duration_label: "مدت زمان"
           request: "درخواست"
           response: "پاسخ"
           next_log: "بعدی"

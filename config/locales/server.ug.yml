@@ -936,16 +936,15 @@ ug:
   email_login:
     invalid_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
     title: "ئېلخەتتە تىزىمغا كىرىش"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "DiscourseHub ئەپى"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "DiscourseHub ئەپى"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "نامەلۇم توركۆرگۈ"
     device:
       android: "Android ئۈسكۈنىسى"
       chromebook: "Chrome OS"
@@ -965,6 +964,9 @@ ug:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "نامەلۇم مەشغۇلات سىستېمىسى"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "نامسىز"
   change_email:
     error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
     doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."
@@ -1421,6 +1423,9 @@ ug:
         num_topics: "تېما"
       description: "ئىشلەتكۈچى ھەمبەھىرلەنگەن ئۇلانمىنىڭ چېكىلىش قېتىم سانى بويىچە تىزىلىدۇ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "زىيارەت"
+    top_entry_urls:
       labels:
         count: "زىيارەت"
     top_referrers_by_browser_pageviews:
@@ -2060,7 +2065,6 @@ ug:
     user_profile_view_duration_hours: "ھەر IP/ئىشلەتكۈچىنىڭ ھەر N سائەتتە يېڭى ئىشلەتكۈچى تەرجىمىھالىنىڭ كۆرۈلۈشىنى ھېسابلايدۇ"
     levenshtein_distance_spammer_emails: "ئەخلەت ئېلخەت يوللىغۇچىلارنى ماسلاشتۇرۇپ سېلىشتۇرغاندا، مۈجمەل ماس كەلگەن ھەرپ سانى پەرقىگە يەنىلا يول قويىدۇ."
     max_new_accounts_per_registration_ip: "ئەگەر بۇ IP دىن كەلگەن ئىشەنچ دەرىجىسى 0 بولغان (n) ھېسابات بولسا (ھەمدە بىرسىمۇ باشقۇرغۇچى ئەمەس ياكى ئىشەنچ دەرىجىسى 2 ياكى ئۇنىڭدىن يۇقىرى بولمىغان بولسا)، ئۇنداقتا بۇ IP ئادرېستىن كەلگەن يېڭى تىزىملاشقا قوشۇلۇشنى توختىتىدۇ. 0 گە تەڭشەلسە چەكلىمىنى چەكلەيدۇ."
-    min_ban_entries_for_roll_up: "يىغ توپچە چېكىلگەندە، ئەگەر كەم دېگەندە (N) تۈر بولسا، تارماق تور چەكلەش تۈرىنى قۇرىدۇ."
     max_age_unmatched_emails: "(N) كۈندىن كېيىن ماس كەلمىگەن چەكلەنگەن ئېلخەت ئادرېس تۈرىنى ئۆچۈرىدۇ."
     max_age_unmatched_ips: "(N) كۈندىن كېيىن ماس كەلمىگەن چەكلەنگەن IP ئادرېس تۈرىنى ئۆچۈرىدۇ."
     num_flaggers_to_close_topic: "تېمىنى ئۆزلۈكىدىن ۋاقىتلىق توختىتىپ مۇداخىلە قىلىشقا كېرەكلىك ئەڭ ئاز پاش قىلىش قېتىم سانى"
@@ -2270,7 +2274,6 @@ ug:
     default_other_external_links_in_new_tab: "كۆڭۈلدىكى ئەھۋالدا سىرتقى ئۇلانمىنى يېڭى بەتكۈچتە ئاچىدۇ."
     default_other_enable_quoting: "كۆڭۈلدىكى ئەھۋالدا يورۇتۇلغان تېكىستنىڭ نەقىللىق جاۋاب بېرىشىنى قوزغىتىدۇ."
     default_other_enable_smart_lists: "كۆڭۈلدىكى ئەھۋالدا تەھرىرلىگۈچتە يازغاندا ئەقلىي تىزىمنى قوزغىتىدۇ."
-    default_other_enable_defer: "كۆڭۈلدىكى ئەھۋالدا تېما كېچىكتۈرۈش ئىقتىدارىنى قوزغىتىدۇ."
     default_other_dynamic_favicon: "كۆڭۈلدىكى ئەھۋالدا توركۆرگۈ سىنبەلگىسىدە يېڭى/يېڭىلانغان تېما سانىنى كۆرسىتىدۇ."
     default_other_skip_new_user_tips: "يېڭى ئىشلەتكۈچى باشلاش كۆرسەتمىسى ۋە تارتۇقتىن ئاتلايدۇ."
     default_other_like_notification_frequency: "ئىشلەتكۈچى كۆڭۈلدىكى ئەھۋالدا ياقتۇرۇش ئۇقتۇرۇشى تاپشۇرۇۋېلىشنىڭ چاستوتىسىنى تەڭشەيدۇ. ئۇقتۇرۇش تەڭشىكىنى خاسلاشتۇرمىغان ئىشلەتكۈچى بۇ كۆڭۈلدىكى مەشغۇلاتقا ئەگىشىدۇ."
@@ -2305,7 +2308,6 @@ ug:
     revoke_user_api_keys_unused_days: "ئىشلەتكۈچى API ئاچقۇچى ئاخىرقى قېتىم ئىشلىتىلگەندىن كېيىن ئۆزلۈكىدىن بىكار قىلىنىشتىن ئىلگىرىكى كۈن سانى (0 ھەرگىز)"
     revoke_user_api_keys_maxlife_days: "ئىشلەتكۈچى API ئاچقۇچى ئۆزلۈكىدىن بىكار قىلىنىشتىن ئىلگىرىكى كۈن سانى (0 ھەرگىز)"
     tagging_enabled: "تېمىدا بەلگىنى قوزغىتامدۇ؟ تېخىمۇ كۆپ ئۇچۇرنى <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta دا بەلگە باشقۇرۇش يېتەكچىسى</a>دىن كۆرۈڭ."
-    create_tag_allowed_groups: "بەلگە قۇرالايدىغانلارنىڭ گۇرۇپپىسى. باشقۇرغۇچى ۋە رىياسەتچى ھەمىشە بەلگە قۇرالايدۇ."
     max_tags_per_topic: "بىر تېمىغا قوللىنىشقا بولىدىغان ئەڭ كۆپ بەلگە سانى."
     max_tags_per_email_subject: "ئېلخەت ماۋزۇسىدا ئىشلىتىشكە بولىدىغان ئەڭ كۆپ بەلگە سانى"
     max_tag_length: "بەلگىدە ئىشلىتىشكە بولىدىغان ئەڭ كۆپ ھەرپ سانى."
@@ -3734,9 +3736,6 @@ ug:
     user_posted_pm_staged:
       title: "ئىشلەتكۈچى يوللىغان شەخسىي ئۇچۇر ۋاقىتلىق ساقلاندى"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
@@ -4484,6 +4483,10 @@ ug:
     deprecation_error_label: Javascript ئىشلەتمەسلىك خاتالىقى كەلتۈرۈپ چىقىرىدۇ
     enter: "بىخەتەر ھالەتكە كىرىدۇ"
     must_select: "بىخەتەر ھالەتكە كىرىشتە كەم دېگەندە تاللاشتىن بىرى تاللىنىدۇ."
+  design_wizard:
+    palette_pairs:
+      default: "كۆڭۈلدىكى"
+      dracula: "دراكۇلا"
   wizard:
     title: "Discourse تەڭشەك"
     step:
@@ -4604,6 +4607,9 @@ ug:
       group: "بەلگىلەنگەن گۇرۇپپىدا يوق ئىشلەتكۈچىلەرنىڭ ئىنكاسىنى چوقۇم باشقۇرغۇچى تەستىقلايدۇ. %{link} نى كۆرۈڭ."
       new_topics_unless_trust_level: "تۆۋەن ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچىنىڭ تېمىسىنى باشقۇرغۇچى خادىملار تەستىقلىشى كېرەك. %{link} نى كۆرۈڭ."
       fast_typer: "يېڭى ئىشلەتكۈچى كىرگۈزگەن تۇنجى يازما سۈرئىتى گۇمانلىق، ماشىنا ئادەم ياكى ئەخلەت ئۇچۇر تارقاتقۇچىنىڭ قىلمىشى بولۇشى مۇمكىن. %{link} نى كۆرۈڭ."
+      fast_typer_time:
+        one: "%{count} سېكۇنت"
+        other: "%{count} سېكۇنت"
       auto_silence_regex: "تۇنجى يازمىسى %{link} تەڭشەك بىلەن ماسلاشقان يېڭى ئىشلەتكۈچى."
       watched_word:
         one: "بۇ يازمىدا كۆزىتىلىدىغان سۆز بار، پاش قىلىنغان سۆز: %{words}. تەپسىلاتىنى %{link} دىن كۆرۈڭ."

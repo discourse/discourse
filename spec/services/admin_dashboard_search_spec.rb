@@ -3,10 +3,13 @@
 RSpec.describe AdminDashboardSearch do
   fab!(:user)
 
-  before { freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0)) }
+  before do
+    freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+    SiteSetting.improved_crawler_detection = true
+  end
 
   describe ".build" do
-    it "returns KPIs, trending terms, and content gaps for the selected dates, counting only non-staff users" do
+    it "returns KPIs, trending terms, and content gaps for the selected dates, counting non-staff and anonymous searches" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
@@ -55,13 +58,26 @@ RSpec.describe AdminDashboardSearch do
       )
       Fabricate.times(5, :search_log, term: "ghost", user: user, created_at: "2026-04-26 11:00")
 
-      # Anonymous searches (likely crawlers) must be excluded from every metric and from the
+      Fabricate.times(8, :clicked_search_log, term: "onboarding", created_at: "2026-05-05 10:00")
+      Fabricate.times(2, :search_log, term: "onboarding", created_at: "2026-05-05 11:00")
+
+      # Searches flagged as crawler traffic must stay out of every metric and out of the
       # prior-window deltas. If counted, "crawler-bait" would top trending, inflate the
-      # no-result rate, and surface as a content gap; the anonymous "ruby" rows would change
-      # its count and the percent change.
-      Fabricate.times(30, :search_log, term: "crawler-bait", created_at: "2026-05-05 10:00")
-      Fabricate.times(10, :search_log, term: "ruby", created_at: "2026-05-02 09:00")
-      Fabricate.times(20, :search_log, term: "crawler-bait", created_at: "2026-04-26 09:00")
+      # no-result rate, and surface as a content gap.
+      Fabricate.times(
+        30,
+        :search_log,
+        term: "crawler-bait",
+        crawler: true,
+        created_at: "2026-05-05 12:00",
+      )
+      Fabricate.times(
+        20,
+        :search_log,
+        term: "crawler-bait",
+        crawler: true,
+        created_at: "2026-04-26 09:00",
+      )
 
       Fabricate(:search_log, term: "admin-search", user: admin, created_at: "2026-05-05 12:00")
       Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-05 13:00")
@@ -73,19 +89,22 @@ RSpec.describe AdminDashboardSearch do
       )
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "content_gaps",
+        search_type: "human_only",
         kpis: {
           total_searches: {
-            value: 19,
-            percent_change: 90,
+            value: 29,
+            previous_value: 10,
+            percent_change: 190,
           },
           no_result_rate: {
-            value: 21,
-            point_change: -29,
+            value: 14,
+            previous_value: 50,
+            point_change: -36,
             exceeds_threshold: true,
           },
         },
         trending: [
+          { term: "onboarding", searches: 10 },
           { term: "ruby", searches: 6 },
           { term: "markdown tables", searches: 5 },
           { term: "zeta", searches: 4 },
@@ -97,6 +116,19 @@ RSpec.describe AdminDashboardSearch do
           { term: "discobot", searches: 4, status: "no_match" },
         ],
       )
+    end
+
+    it "stays members-only while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(9, :search_log, term: "crawler-bait", created_at: "2026-05-02 11:00")
+      Fabricate.times(4, :search_log, term: "onboarding", created_at: "2026-05-02 12:00")
+
+      result = described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")
+
+      expect(result[:kpis][:total_searches][:value]).to eq(3)
+      expect(result[:trending]).to eq([{ term: "ruby", searches: 3 }])
+      expect(result[:search_type]).to eq("non_staff_only")
     end
 
     it "buckets terms by exact CTR boundaries" do
@@ -155,13 +187,15 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "healthy",
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 136,
+            previous_value: 0,
           },
           no_result_rate: {
             value: 4,
+            previous_value: nil,
             exceeds_threshold: false,
           },
         },
@@ -194,13 +228,15 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "content_gaps",
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 11,
+            previous_value: 0,
           },
           no_result_rate: {
             value: 100,
+            previous_value: nil,
             exceeds_threshold: true,
           },
         },
@@ -211,108 +247,6 @@ RSpec.describe AdminDashboardSearch do
             { term: format("gap-%02d", index), searches: 1, status: "no_match" }
           end,
       )
-    end
-
-    it "picks the headline state from the rate and volume signals" do
-      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
-      Fabricate.times(
-        11,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-05-02 11:00",
-      )
-      Fabricate.times(
-        12,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-04-26 10:00",
-      )
-
-      Fabricate.times(
-        4,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-04-02 10:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-03-27 10:00",
-      )
-
-      Fabricate.times(
-        12,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-03-02 10:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-02-24 10:00",
-      )
-
-      expect(
-        described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline_state],
-      ).to eq("rate_climbing")
-
-      expect(
-        described_class.build(start_date: "2026-04-01", end_date: "2026-04-07")[:headline_state],
-      ).to eq("shrinking")
-
-      expect(
-        described_class.build(start_date: "2026-03-01", end_date: "2026-03-07")[:headline_state],
-      ).to eq("healthy")
-    end
-
-    it "resolves overlapping headline states by priority" do
-      Fabricate.times(3, :search_log, term: "ghost", user: user, created_at: "2026-02-02 10:00")
-      Fabricate.times(
-        7,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-02-02 11:00",
-      )
-      Fabricate.times(
-        10,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-01-27 10:00",
-      )
-
-      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-01-02 10:00")
-      Fabricate.times(
-        9,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2026-01-02 11:00",
-      )
-      Fabricate.times(
-        20,
-        :clicked_search_log,
-        term: "ruby",
-        user: user,
-        created_at: "2025-12-27 10:00",
-      )
-
-      expect(
-        described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline_state],
-      ).to eq("content_gaps")
-
-      expect(
-        described_class.build(start_date: "2026-01-01", end_date: "2026-01-07")[:headline_state],
-      ).to eq("rate_climbing")
     end
 
     it "omits deltas when the prior window has no searches" do
@@ -327,9 +261,11 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 2,
+          previous_value: 0,
         },
         no_result_rate: {
           value: 0,
+          previous_value: nil,
           exceeds_threshold: false,
         },
       )
@@ -340,13 +276,15 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline_state: "no_signal",
+        search_type: "human_only",
         kpis: {
           total_searches: {
             value: 0,
+            previous_value: 2,
           },
           no_result_rate: {
             value: nil,
+            previous_value: 100,
             exceeds_threshold: false,
           },
         },
@@ -375,9 +313,11 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 5,
+          previous_value: 5,
         },
         no_result_rate: {
           value: 0,
+          previous_value: 0,
           exceeds_threshold: false,
         },
       )
@@ -405,10 +345,12 @@ RSpec.describe AdminDashboardSearch do
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
           value: 4,
+          previous_value: 10,
           percent_change: -60,
         },
         no_result_rate: {
           value: 25,
+          previous_value: 10,
           point_change: 15,
           exceeds_threshold: true,
         },
@@ -429,7 +371,7 @@ RSpec.describe AdminDashboardSearch do
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
           :no_result_rate
         ],
-      ).to eq(value: 10, exceeds_threshold: false)
+      ).to eq(value: 10, previous_value: nil, exceeds_threshold: false)
     end
 
     it "flags a rate just above 10% even when the display rounds to 10%" do
@@ -446,7 +388,7 @@ RSpec.describe AdminDashboardSearch do
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
           :no_result_rate
         ],
-      ).to eq(value: 10, exceeds_threshold: true)
+      ).to eq(value: 10, previous_value: nil, exceeds_threshold: true)
     end
 
     it "maps the window length to the per-term report period" do

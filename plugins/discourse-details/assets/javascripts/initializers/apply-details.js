@@ -14,6 +14,8 @@ function initializeDetails(api) {
     },
     icon: "angle-right",
     label: "details.title",
+    name: "details",
+    shortcut: "Shift+D",
   });
 
   api.registerRichEditorExtension(richEditorExtension);

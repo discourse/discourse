@@ -170,8 +170,12 @@ module DiscourseAi
 
         def model_uri
           if llm_model.url.to_s.starts_with?("srv://")
-            service = DiscourseAi::Utils::DnsSrv.lookup(llm_model.url.sub("srv://", ""))
-            api_endpoint = "https://#{service.target}:#{service.port}#{srv_fallback_path}"
+            srv_uri = URI(llm_model.url)
+            service = DiscourseAi::Utils::DnsSrv.lookup(srv_uri.host)
+            path = srv_uri.path
+            path = srv_fallback_path if path.blank? || path == "/"
+            path = "#{path}?#{srv_uri.query}" if srv_uri.query.present?
+            api_endpoint = "https://#{service.target}:#{service.port}#{path}"
           else
             api_endpoint = llm_model.url
           end

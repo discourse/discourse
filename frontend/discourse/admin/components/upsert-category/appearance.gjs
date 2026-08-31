@@ -9,15 +9,19 @@ import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
+function withStoredValue(options, storedValue) {
+  if (!storedValue || options.some((o) => o.value === storedValue)) {
+    return options;
+  }
+
+  return [...options, { name: storedValue, value: storedValue }];
+}
+
 export default class UpsertCategoryAppearance extends Component {
   @service site;
 
   get isDefaultSortOrder() {
     return !this.args.transientData?.sort_order;
-  }
-
-  get sortAscendingValue() {
-    return this.args.transientData?.sort_ascending;
   }
 
   get backgroundImageUrl() {
@@ -44,6 +48,15 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   @action
+  async onSortOrderSet(value, { name, set }) {
+    await set(name, value);
+
+    if (!value) {
+      await set("sort_ascending", null);
+    }
+  }
+
+  @action
   onUploadDone(field, upload) {
     this.args.form.set(field, { url: upload.url, id: upload.id });
   }
@@ -54,7 +67,7 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   get subcategoryListStyles() {
-    return [
+    const styles = [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
         name: i18n(
@@ -73,6 +86,8 @@ export default class UpsertCategoryAppearance extends Component {
         value: "boxes_with_featured_topics",
       },
     ];
+
+    return withStoredValue(styles, this.args.category.subcategory_list_style);
   }
 
   get availableViews() {
@@ -86,10 +101,9 @@ export default class UpsertCategoryAppearance extends Component {
       customFields: this.args.category.custom_fields,
     };
 
-    return applyMutableValueTransformer(
-      "category-available-views",
-      views,
-      context
+    return withStoredValue(
+      applyMutableValueTransformer("category-available-views", views, context),
+      this.args.category.default_view
     );
   }
 
@@ -101,14 +115,16 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   get listFilters() {
-    return ["all", "none"].map((value) => ({
+    const filters = ["all", "none"].map((value) => ({
       name: i18n(`category.list_filters.${value}`),
       value,
     }));
+
+    return withStoredValue(filters, this.args.category.default_list_filter);
   }
 
   get sortOrders() {
-    return applyMutableValueTransformer("category-sort-orders", [
+    const orders = applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
       "views",
@@ -120,17 +136,8 @@ export default class UpsertCategoryAppearance extends Component {
     ])
       .map((s) => ({ name: i18n("category.sort_options." + s), value: s }))
       .toSorted((a, b) => a.name.localeCompare(b.name));
-  }
 
-  get sortAscendingOption() {
-    const sortAscending = this.sortAscendingValue;
-    if (sortAscending === "false") {
-      return false;
-    }
-    if (sortAscending === "true") {
-      return true;
-    }
-    return sortAscending;
+    return withStoredValue(orders, this.args.category.sort_order);
   }
 
   get sortAscendingOptions() {
@@ -245,6 +252,7 @@ export default class UpsertCategoryAppearance extends Component {
       @title={{i18n "category.sort_order"}}
       @format="max"
       @type="select"
+      @onSet={{this.onSortOrderSet}}
       as |field|
     >
       <field.Control
@@ -314,10 +322,7 @@ export default class UpsertCategoryAppearance extends Component {
           @type="select"
           as |field|
         >
-          <field.Control
-            @nonePlaceholder={{i18n "category.sort_options.default"}}
-            as |select|
-          >
+          <field.Control @includeNone={{false}} as |select|>
             {{#each this.subcategoryListStyles as |style|}}
               <select.Option
                 @value={{style.value}}

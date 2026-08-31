@@ -55,9 +55,24 @@ en:
             other: "Choose <strong>%{count} options</strong>."
           between_min_and_max_options: "Choose between <strong>%{min} and %{max} options</strong>."
 
+      vote_recorded: "Your vote has been recorded."
+
+      voted_choices:
+        title: "You voted for:"
+
       cast-votes:
         title: "Cast your votes"
         label: "Vote now!"
+        update_title: "Update your vote"
+        update_label: "Update vote"
+
+      amend-vote:
+        title: "Change your vote"
+        label: "Change vote"
+
+      keep-vote:
+        title: "Go back without changing your vote"
+        label: "Back"
 
       show-results:
         title: "Display the poll results"

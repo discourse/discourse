@@ -17,6 +17,13 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       expect(uncategorized.reload.uncategorized?).to eq(false)
     end
 
+    it "exempts the demoted category from being backfilled a definition topic" do
+      described_class.call(enabled: true)
+      Category.ensure_consistency!
+
+      expect(uncategorized.reload.topic_id).to eq(nil)
+    end
+
     it "leaves default_composer_category pointing at the now-normal category" do
       SiteSetting.default_composer_category = uncategorized.id.to_s
 
@@ -129,6 +136,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       SiteSetting.uncategorized_category_id = -1
       SiteSetting.allow_uncategorized_topics = false
       SiteSetting.default_composer_category = ""
+      uncategorized.upsert_custom_fields(Category::SKIP_DEFINITION_CUSTOM_FIELD => true)
 
       described_class.call(enabled: false)
 
@@ -136,6 +144,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       expect(SiteSetting.allow_uncategorized_topics).to eq(true)
       expect(SiteSetting.default_composer_category).to eq(uncategorized.id.to_s)
       expect(uncategorized.reload.uncategorized?).to eq(true)
+      expect(uncategorized.custom_fields).not_to include(Category::SKIP_DEFINITION_CUSTOM_FIELD)
     end
 
     it "does nothing when the site was not using uncategorized topics at opt-in" do
@@ -176,6 +185,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
 
     it "is hidden once uncategorized topics are disallowed and the change is off" do
       SiteSetting.allow_uncategorized_topics = false
+      SiteSetting.remove_and_replace_uncategorized = false
       expect(described_class.should_display_upcoming_change?).to eq(false)
     end
 
@@ -192,6 +202,8 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
     let(:legacy_settings) { %i[allow_uncategorized_topics suppress_uncategorized_badge] }
 
     it "hides the legacy uncategorized settings only while the change is enabled" do
+      SiteSetting.remove_and_replace_uncategorized = false
+
       expect(SiteSetting.hidden_settings).not_to include(*legacy_settings)
 
       SiteSetting.remove_and_replace_uncategorized = true

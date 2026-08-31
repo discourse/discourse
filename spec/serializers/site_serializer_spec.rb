@@ -17,9 +17,46 @@ RSpec.describe SiteSerializer do
   end
 
   describe "#homepage_choices" do
+    around do |example|
+      registrations = DiscoursePluginRegistry._raw_homepage_options.dup
+      example.run
+      DiscoursePluginRegistry._raw_homepage_options.replace(registrations)
+    end
+
     it "exposes the eligible homepage choices" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:homepage_choices]).to eq(TopMenu.homepage_choices)
+      expect(serialized[:homepage_choices]).to eq(HomepageSiteSetting.choices)
+    end
+
+    it "exposes registered homepage paths" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "directory",
+        name: "discourse_directory.navigation.title",
+        path: "/directory",
+        route: "discourse_directory/directory#index",
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_choices]).to include("directory")
+      expect(serialized[:homepage_options]).to include(
+        id: "directory",
+        path: "/directory",
+        server_side: false,
+      )
+    end
+  end
+
+  describe "#anonymous_list_filters" do
+    it "exposes the filters an anonymous visitor can request" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:anonymous_list_filters]).to include("latest", "top", "hot")
+      expect(serialized[:anonymous_list_filters]).not_to include("unread")
+      # an anonymous menu item, but not a list filter
+      expect(serialized[:anonymous_list_filters]).not_to include("categories")
     end
   end
 

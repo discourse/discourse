@@ -309,10 +309,25 @@ te:
       pill: "సూచించినవి"
       pm_title: "సూచించిన సందేశాలు"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "ఎంపిక చేయబడినవి"
       start_posting:
         back: "వెనుకకు"
+    design_wizard:
+      back: "వెనుకకు"
+      next: "తదుపరి"
+      sections:
+        theme: "థీమ్"
+      theme:
+        selected: "ఎంపిక చేయబడినవి"
+      colors:
+        light: "లేత"
+        dark: "డార్క్"
+      fonts:
+        heading_font: "శీర్షిక ఫాంట్"
+      homepage:
+        topics: "విషయాలు"
+        categories: "వర్గాలు"
+        styles:
+          boxes: "పెట్టెలు"
     about:
       edit: "ఈ పేజీని సవరించండి"
       simple_title: "మా సంఘం గురించి"
@@ -498,9 +513,6 @@ te:
         optional: "ఐచ్ఛికం"
       claim_help:
         optional: "ఇతరులు దీన్ని సమీక్షించకుండా నిరోధించడానికి మీరు ఈ అంశాన్ని దావా చేయవచ్చు."
-        required: "మీరు అంశాలను సమీక్షించే ముందు వాటిని తప్పనిసరిగా దావా చేయాలి."
-        claimed_by_you: "మీరు ఈ అంశాన్ని దావా చేసారు మరియు దానిని సమీక్షించవచ్చు."
-        claimed_by_other: "ఈ అంశాన్ని <b>%{username}</b> మాత్రమే సమీక్షించగలరు."
       awaiting_approval: "ఆమోదం కోసం ఎదురు చూస్తున్నాము"
       delete: "తొలగించండి"
       settings:
@@ -1718,6 +1730,7 @@ te:
           invite_by_email: "ఈమెయిల్"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
           domain_placeholder: "example.com"
+          create_and_send: "పంపండి"
           update: "నవీకరించండి"
           summary:
             role_member: "సభ్యుడు"
@@ -1728,6 +1741,7 @@ te:
             expires: "గడువు ముగుస్తుంది"
             topic: "విషయం"
             groups: "సమూహాలు"
+            edit: "సవరించండి"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"
@@ -2426,7 +2440,6 @@ te:
         other: "%{count} '%{group_name}' కోసం సభ్యత్వ అభ్యర్థనలు పెండింగ్‌లో ఉంన్నాయి"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - పూర్తయింది"
       new_features: "కొత్త ఫీచర్లు అందుబాటులో ఉన్నాయి!"
       admin_problems: "మీ సైట్ డ్యాష్‌బోర్డ్‌లో కొత్త సలహా"
       dismiss_confirmation:
@@ -4124,9 +4137,9 @@ te:
           always_public: "ఈ విభాగంలోని కంటెంట్ ఎల్లప్పుడూ బహిరంగంగా ఉంటుంది"
           more_menu: "మరిన్ని మెను"
           localizations:
-            title: "అనువాదాలు"
             locale: "భాష"
             title_label: "విభాగం శీర్షిక"
+            remove_language: "తొలగించు"
           links:
             add: "మరొక లింక్‌ని జోడించండి"
             delete: "లింక్‌ని తొలగించండి"
@@ -4525,13 +4538,20 @@ te:
         default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
+      site_traffic_explorer:
+        metric_information: "%{metric} గురించి"
+        apply: "దరఖాస్తు చేసుకోండి"
+        filters:
+          browser: "బ్రౌజర్"
+          ip: "ఐపీ చిరునామా"
+        series:
+          anonymous_human: "అనామక"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
         discourse_last_updated: "డిస్కోర్స్ నవీకరించబడింది:"
         version: "సంస్కరణ"
         up_to_date: "మీరు తాజాగా ఉన్నారు! "
-        critical_available: "ఒక క్రిటికల్ ఉన్నతీకరణ అందుబాటులో ఉంది."
         updates_available: "ఉన్నతీకరణలు అందుబాటులో ఉన్నాయి."
         no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."

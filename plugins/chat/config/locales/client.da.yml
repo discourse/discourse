@@ -345,4 +345,11 @@ da:
         message: "Meddelelse"
       chat_approval:
         message: "Meddelelse"
+        buttons: "Knapper"
+        value: "værdi"
+        style: "Stil"
+        style_default: "Standard"
+        style_primary: "Primær"
+        style_success: "Succes"
+        icon: "Ikon"
         channel_id: "Kanal"

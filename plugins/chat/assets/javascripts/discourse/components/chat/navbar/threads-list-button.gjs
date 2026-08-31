@@ -8,12 +8,14 @@ import ThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/compon
 
 export default class ChatNavbarThreadsListButton extends Component {
   @service router;
+  @service chatStateManager;
 
   threadsListLabel = i18n("chat.threads.list");
 
   get showThreadsListButton() {
     return (
       this.args.channel?.threadingEnabled &&
+      !this.chatStateManager.isDrawerCollapsed &&
       this.router.currentRoute.name !== "chat.channel.threads" &&
       this.router.currentRoute.name !== "chat.channel.thread" &&
       this.router.currentRoute.name !== "chat.channel.thread.index"

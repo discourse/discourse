@@ -806,6 +806,32 @@ class Group < ActiveRecord::Base
     trust_group_ids.keep_if { |id| id == AUTO_GROUPS[:trust_level_0] || (trust_level + 10) >= id }
   end
 
+  def self.refresh_automatic_groups_for_user!(user)
+    automatic_group_ids = auto_groups_between(:admins, :trust_level_4)
+    groups_by_id = automatic_group_ids.index_with { |group_id| self[AUTO_GROUP_IDS[group_id]] }
+
+    desired_group_ids = desired_trust_level_groups(user.trust_level)
+    desired_group_ids << AUTO_GROUPS[:admins] if user.admin?
+    desired_group_ids << AUTO_GROUPS[:moderators] if user.moderator?
+    desired_group_ids << AUTO_GROUPS[:staff] if user.staff?
+
+    current_group_ids =
+      GroupUser.where(user_id: user.id, group_id: automatic_group_ids).pluck(:group_id)
+
+    Group.transaction do
+      (current_group_ids - desired_group_ids).each do |group_id|
+        GroupUser.find_by!(user_id: user.id, group_id:).destroy!
+        groups_by_id[group_id].trigger_user_removed_event(user)
+      end
+      (desired_group_ids - current_group_ids).each do |group_id|
+        groups_by_id[group_id].group_users.create!(user:)
+        groups_by_id[group_id].trigger_user_added_event(user, true)
+      end
+    end
+
+    user.reload
+  end
+
   def self.user_trust_level_change!(user_id, trust_level)
     desired = desired_trust_level_groups(trust_level)
     undesired = trust_group_ids - desired

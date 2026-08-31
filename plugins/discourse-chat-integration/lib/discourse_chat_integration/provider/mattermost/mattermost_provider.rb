@@ -79,7 +79,7 @@ module DiscourseChatIntegration
               remap_emoji: true,
             ),
           title:
-            "#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}",
+            "#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
           title_link: post.full_url,
         }
 

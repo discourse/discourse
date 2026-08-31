@@ -58,9 +58,12 @@ fr:
           description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
         disagree:
           title: "Conserver le commentaire"
+          description: "Rejeter le signalement et laisser le commentaire inchangé."
         ignore:
           title: "Ignorer le signalement"
+          description: "Retirer l'élément de la file d'attente sans intervenir."
         delete_and_agree:
+          title: "Ignorer le signalement et supprimer le commentaire"
           description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
   post_action_types:
     vote:
@@ -109,14 +112,17 @@ fr:
             title: "Supprimer le commentaire"
             description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
           delete_and_agree:
+            title: "Ignorer le signalement et supprimer le commentaire"
             description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
           disagree_and_restore:
             title: "Rejeter le signalement et rétablir le commentaire"
             description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
           disagree:
             title: "Conserver le commentaire"
+            description: "Rejeter le signalement et laisser le commentaire inchangé."
           ignore:
             title: "Ignorer le signalement"
+            description: "Retirer l'élément de la file d'attente sans intervenir."
         transcript:
           view: "Afficher la transcription des commentaires précédents"
       reviewable_score_types:

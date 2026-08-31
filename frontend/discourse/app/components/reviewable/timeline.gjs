@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
 import { sanitize } from "discourse/lib/text";
+import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
@@ -20,9 +20,6 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const HISTORY_CLAIMED_ID = 3;
-const HISTORY_UNCLAIMED_ID = 4;
-
 /**
  * Timeline component for reviewable items that displays chronological events
  * including flags, reviews, notes, and target post creation.
@@ -31,19 +28,6 @@ const HISTORY_UNCLAIMED_ID = 4;
  */
 export default class ReviewableTimeline extends Component {
   @service currentUser;
-
-  /**
-   * Array of notes associated with the reviewable
-   *
-   * @type {Array<ReviewableNote>}
-   */
-  @tracked reviewableNotes = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
-  }
 
   /**
    * Combines all timeline events from reviewable scores, histories, and the reviewable itself
@@ -159,7 +143,7 @@ export default class ReviewableTimeline extends Component {
     }
 
     // Add notes events
-    this.reviewableNotes.forEach((note) => {
+    this.args.reviewable.reviewable_notes?.forEach((note) => {
       const date = note.created_at;
       events.push({
         type: "note",
@@ -177,7 +161,7 @@ export default class ReviewableTimeline extends Component {
     });
 
     this.args.historyEvents?.forEach((history) => {
-      if (history.reviewable_history_type === HISTORY_CLAIMED_ID) {
+      if (history.reviewable_history_type === CLAIMED) {
         events.push({
           type: "claimed",
           date: history.created_at,
@@ -185,7 +169,7 @@ export default class ReviewableTimeline extends Component {
           icon: "user-plus",
           titleKey: "review.timeline.claimed_by",
         });
-      } else if (history.reviewable_history_type === HISTORY_UNCLAIMED_ID) {
+      } else if (history.reviewable_history_type === UNCLAIMED) {
         events.push({
           type: "unclaimed",
           date: history.created_at,
@@ -211,8 +195,7 @@ export default class ReviewableTimeline extends Component {
       noteData.user = this.currentUser;
     }
 
-    this.reviewableNotes = [...this.reviewableNotes, noteData];
-    this.args.reviewable.reviewable_notes = this.reviewableNotes;
+    this.args.reviewable.reviewable_notes.push(noteData);
   }
 
   /**
@@ -227,8 +210,8 @@ export default class ReviewableTimeline extends Component {
         type: "DELETE",
       });
 
-      // Remove the note from the local array
-      this.reviewableNotes = this.reviewableNotes.filter(
+      const { reviewable } = this.args;
+      reviewable.reviewable_notes = reviewable.reviewable_notes.filter(
         (note) => note.id !== noteId
       );
     } catch (error) {

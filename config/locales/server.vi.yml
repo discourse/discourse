@@ -219,9 +219,7 @@ vi:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
     requires_groups: "Lời mời không được lưu vì không thể truy cập được chủ đề được chỉ định. Thêm một trong các nhóm sau: %{groups}."
     domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
-    admin_invite_requires_email: "Lời mời quản trị viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     admin_invite_requires_admin_inviter: "Chỉ quản trị viên mới có thể tạo lời mời quản trị viên"
-    moderator_invite_requires_email: "Lời mời điều hành viên phải được gửi đến một địa chỉ thư điện tử (Email)"
     moderator_invite_requires_staff_inviter: "Chỉ ban quản trị mới có thể tạo lời mời điều hành viên"
   bulk_invite:
     file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
@@ -621,6 +619,9 @@ vi:
       mobile: "Thiết bị di động"
       windows: "Máy tính Windows"
       unknown: "thiết bị không rõ"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Ẩn danh"
   change_email:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
@@ -952,6 +953,9 @@ vi:
         num_topics: "Chủ đề"
       description: "Danh sách thành viên theo số lần nhấp vào liên kết họ đã chia sẻ."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Ngày ghé thăm"
+    top_entry_urls:
       labels:
         count: "Ngày ghé thăm"
     top_referrers_by_browser_pageviews:
@@ -1304,7 +1308,6 @@ vi:
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
-    min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
     max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
     num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
@@ -1442,7 +1445,6 @@ vi:
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      content_localization_language_switcher_requirements: "Bộ chuyển đổi ngôn ngữ yêu cầu phải bật {{setting:set_locale_from_cookie}} cùng {{setting:allow_user_locale}}, đồng thời {{setting:content_localization_supported_locales}} phải có ít nhất một ngôn ngữ. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|Tất cả cài đặt bắt buộc}}"
       content_localization_crawler_param_requirements: "Bạn cần bật tùy chọn 'Đặt ngôn ngữ từ tham số' trước khi kích hoạt cài đặt này."
   search:
     within_post: "#%{post_number} bởi %{username}"
@@ -2720,6 +2722,9 @@ vi:
       button: "Đăng ký"
     resend_email:
       title: "Gửi lại email kích hoạt"
+  design_wizard:
+    palette_pairs:
+      default: "Mặc định"
   wizard:
     step:
       setup:
@@ -2779,6 +2784,8 @@ vi:
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer_time:
+        other: "%{count} giây"
     actions:
       agree:
         title: "Đồng ý"

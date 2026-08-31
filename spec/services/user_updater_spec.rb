@@ -46,24 +46,44 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
-    it "keeps the interface locale among the user's understood languages" do
-      user.update!(locale: "en")
-      user.user_option.update!(understood_languages: ["en"])
+    it "reports what changed on :user_updated, across the user and its profile" do
+      updater = UserUpdater.new(user, user)
 
-      UserUpdater.new(user, user).update(locale: "ja", understood_languages: [])
+      bio = DiscourseEvent.track_events(:user_updated) { updater.update(bio_raw: "New bio") }.first
+      name = DiscourseEvent.track_events(:user_updated) { updater.update(name: "Jim Tom") }.first
 
-      expect(user.reload.locale).to eq("ja")
-      expect(user.user_option.understood_languages).to eq(["ja"])
+      expect(bio[:params].last).to include("bio_raw")
+      expect(bio[:params].last).not_to include("updated_at")
+      expect(name[:params].last).to contain_exactly("name")
     end
 
-    it "uses the effective interface locale when user locales are disabled" do
+    it "preserves explicitly submitted understood languages when the interface locale changes" do
+      user.update!(locale: "en")
+
+      UserUpdater.new(user, user).update(locale: "ja", understood_languages: %w[ja de])
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(%w[ja de])
+    end
+
+    it "preserves understood languages when only the interface locale changes" do
+      user.update!(locale: "en")
+      user.user_option.update!(understood_languages: ["de"])
+
+      UserUpdater.new(user, user).update(locale: "ja")
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(["de"])
+    end
+
+    it "preserves explicitly submitted understood languages when user locales are disabled" do
       SiteSetting.default_locale = "en"
       SiteSetting.allow_user_locale = false
       user.update!(locale: "fr")
 
-      UserUpdater.new(user, user).update(understood_languages: [])
+      UserUpdater.new(user, user).update(understood_languages: %w[en ja])
 
-      expect(user.user_option.understood_languages).to eq(["en"])
+      expect(user.user_option.understood_languages).to eq(%w[en ja])
     end
 
     it "adapts legacy show-original updates to the positive preference" do
@@ -267,6 +287,39 @@ RSpec.describe UserUpdater do
       expect(success).to eq(true)
       user.reload
       expect(user.card_background_upload).to eq(nil)
+    end
+
+    context "with profile and card backgrounds" do
+      fab!(:profile_background, :upload)
+      fab!(:card_background, :upload)
+      fab!(:target, :user)
+      fab!(:other, :user)
+
+      before do
+        target.user_profile.update!(
+          profile_background_upload_id: profile_background.id,
+          card_background_upload_id: card_background.id,
+        )
+      end
+
+      it "keeps them when the update does not mention them" do
+        UserUpdater.new(other, target).update(bio_raw: "edited by someone else")
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to eq(profile_background.id)
+        expect(target.user_profile.card_background_upload_id).to eq(card_background.id)
+      end
+
+      it "still clears them when the update asks and the actor may not upload" do
+        UserUpdater.new(other, target).update(
+          profile_background_upload_url: profile_background.url,
+          card_background_upload_url: card_background.url,
+        )
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to be_nil
+        expect(target.user_profile.card_background_upload_id).to be_nil
+      end
     end
 
     it "disables email_digests when enabling mailing_list_mode" do

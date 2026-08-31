@@ -7,6 +7,7 @@
 ar:
   site_settings:
     discourse_automation_enabled: "تفعيل المكوِّن الإضافي discourse-automation"
+    discourse_automation_max_recursion_depth: "الحد الأقصى لعمق التكرار الذاتي للأتمتة"
   discourse_automation:
     staff_action_logs:
       empty_value: "(فارغ)"
@@ -45,6 +46,7 @@ ar:
         description: يتم تشغيل الأتمتة عند إنشاء أو تعديل منشور
       recurring:
         title: متكرر
+        invalid_interval: يجب أن تكون الفترة عددًا موجبًا.
       point_in_time:
         title: النقطة الزمنية
         description: عند الوصول إلى التاريخ، سيتم تشغيل الأتمتة.
@@ -129,7 +131,7 @@ ar:
         description: تحويل الموضوع إلى بانر
       gift_exchange:
         title: تبادل الهدايا
-        description: يسمح بإقران مستخدمي المجموعة بشكلٍٍ مجهول لإرسال هدية لبعضهم البعض.
+        description: يسمح بإقران مستخدمي المجموعة بشكلٍ مجهول لإرسال هدية لبعضهم البعض.
         doc: يتطلَّب تبادل الهدايا وجود مجموعة حالية تضم 3 مستخدمين على الأقل. سيتم إقران كل مستخدم في المجموعة بمُرسل هدايا واحد ومستقبل هدايا واحد في التاريخ المختار.
       remove_upload_markup_from_deleted_posts:
         title: إزالة علامات التحميل من المنشورات المحذوفة

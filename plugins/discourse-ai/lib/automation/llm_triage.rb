@@ -216,9 +216,12 @@ module DiscourseAi
 
           if changes.present?
             first_post = post.topic.posts.where(post_number: 1).first
-            changes[:bypass_bump] = true
-            changes[:skip_validations] = true
-            first_post.revise(Discourse.system_user, changes)
+            first_post.revise(
+              Discourse.system_user,
+              changes,
+              bypass_bump: true,
+              skip_validations: true,
+            )
           end
 
           post.topic.update!(visible: false) if hide_topic
@@ -235,6 +238,9 @@ module DiscourseAi
                 automation_id: automation&.id.to_s,
                 automation_name: automation&.name,
               )
+
+            automation_score_context =
+              DiscourseAi::Automation.triage_automation_score_context(automation&.id)
 
             if !flagged_by_tool
               if flag_type == :spam || flag_type == :spam_silence
@@ -260,6 +266,7 @@ module DiscourseAi
                     PostActionType.types[:spam],
                     message: spam_post_action_message,
                     reason: spam_score_reason,
+                    context: automation_score_context,
                     queue_for_review: true,
                   ).perform
 
@@ -279,6 +286,7 @@ module DiscourseAi
                   Discourse.system_user,
                   ReviewableScore.types[:needs_approval],
                   reason: score_reason,
+                  context: automation_score_context,
                   force_review: true,
                 )
 

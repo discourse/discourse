@@ -275,6 +275,30 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when the user can't move topics to the destination category" do
+      it "records an error and creates no revision" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        original_category = topic.category
+
+        bulk_action =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_category",
+            category_id: restricted_category.id,
+          )
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.category).to eq(original_category)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(
+          I18n.t("category.errors.move_topic_to_category_disallowed") => 1,
+        )
+      end
+    end
+
     context "when destination category does not allow the topic's tags" do
       fab!(:destination_category, :category)
       fab!(:other_tag) { Fabricate(:tag, name: "other-tag") }
@@ -467,17 +491,48 @@ RSpec.describe TopicsBulkAction do
       expect { topic_ids = tba.perform! }.to change { PostTiming.count }.by(-1)
       expect(topic_ids).to contain_exactly(topic.id)
     end
+
+    it "skips topics the user can't see" do
+      pm = Fabricate(:private_message_topic)
+      pm_post = Fabricate(:post, topic: pm)
+      stranger = Fabricate(:user)
+
+      topic_ids = nil
+      expect {
+        topic_ids = TopicsBulkAction.new(stranger, [pm.id], type: "destroy_post_timing").perform!
+      }.not_to change { pm_post.reload.reads }
+
+      expect(topic_ids).to eq([])
+    end
   end
 
   describe "delete" do
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:moderator)
 
-    it "deletes the topic" do
+    it "deletes the topic and returns its id" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
-      tba.perform!
-      topic.reload
-      expect(topic).to be_trashed
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+    end
+
+    it "skips topics the user can't delete" do
+      tba = TopicsBulkAction.new(user, [topic.id], type: "delete")
+
+      expect(tba.perform!).to be_empty
+      expect(topic.reload).not_to be_trashed
+    end
+
+    it "deletes the topic when its first post was already deleted" do
+      reply = Fabricate(:post, topic: topic)
+      topic.first_post.trash!(moderator)
+
+      tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
+
+      expect(tba.perform!).to contain_exactly(topic.id)
+      expect(topic.reload).to be_trashed
+      expect(reply.reload).not_to be_trashed
     end
   end
 
@@ -584,6 +639,29 @@ RSpec.describe TopicsBulkAction do
 
       expect(topic_ids).to eq([])
       expect(topic.reload.bumped_at).to eq_time(bumped_at)
+    end
+
+    it "skips topics the user can't see" do
+      trust_level_4 = Fabricate(:trust_level_4)
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      pm = Fabricate(:private_message_topic)
+      bumped_at = 1.hour.ago
+      [private_topic, pm].each do |restricted_topic|
+        Fabricate(:post, topic: restricted_topic, created_at: 1.day.ago)
+        restricted_topic.update!(bumped_at: bumped_at)
+      end
+
+      topic_ids =
+        TopicsBulkAction.new(
+          trust_level_4,
+          [private_topic.id, pm.id],
+          type: "reset_bump_dates",
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(private_topic.reload.bumped_at).to eq_time(bumped_at)
+      expect(pm.reload.bumped_at).to eq_time(bumped_at)
     end
   end
 
@@ -739,7 +817,7 @@ RSpec.describe TopicsBulkAction do
       fab!(:tag3, :tag)
 
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -751,6 +829,24 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when the user can't tag topics" do
+      fab!(:tag3, :tag)
+
+      it "records an error and creates no revision" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        bulk_action =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tag_ids: [tag3.id])
+        topic_ids = bulk_action.perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+        expect(first_post.reload.version).to eq(1)
+        expect(PostRevision.where(post: first_post)).to be_empty
+        expect(bulk_action.errors).to eq(I18n.t("tags.user_not_permitted") => 1)
       end
     end
 
@@ -835,7 +931,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't change the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids =
           TopicsBulkAction.new(
@@ -896,7 +992,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can't edit the topic" do
       it "doesn't remove the tags" do
-        Guardian.any_instance.expects(:can_edit?).returns(false)
+        Guardian.any_instance.expects(:can_edit_topic?).returns(false)
 
         topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 

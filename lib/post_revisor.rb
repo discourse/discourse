@@ -184,12 +184,12 @@ class PostRevisor
   track_topic_field(:tags) { |tc, tags| tc.apply_tag_changes(tags) }
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
-    if !SiteSetting.topic_featured_link_enabled ||
-         !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+    if featured_link.blank?
+      track_and_revise topic_changes, :featured_link, nil
+    elsif !topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
       topic_changes.check_result(false)
     else
-      topic_changes.record_change("featured_link", topic_changes.topic.featured_link, featured_link)
-      topic_changes.topic.featured_link = featured_link
+      track_and_revise topic_changes, :featured_link, featured_link
     end
   end
 
@@ -280,6 +280,8 @@ class PostRevisor
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
   # @option opts [Boolean] :silent Don't send notifications to user
   # @option opts [Boolean] :hidden Force the created revision to be hidden from non-staff users
+  # @option opts [String] :expected_raw Reject the revision if the post changed before persistence
+  # @option opts [String] :preserve_cooked_token Identifies a client that already rendered the change
   # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
@@ -361,6 +363,15 @@ class PostRevisor
     @should_bump_topic = false
 
     Post.transaction do
+      if (expected_raw = @opts[:expected_raw])
+        locked_raw = Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw)
+        if locked_raw != expected_raw
+          @post.errors.add(:base, :edit_conflict, message: I18n.t("edit_conflict"))
+          @post_successfully_saved = false
+          raise ActiveRecord::Rollback
+        end
+      end
+
       revise_post
 
       yield if block_given?
@@ -876,6 +887,10 @@ class PostRevisor
       end
 
     DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
+
+    if (token = @opts[:preserve_cooked_token])
+      options[:preserve_cooked_token] = token
+    end
 
     @post.publish_change_to_clients!(:revised, options)
   end

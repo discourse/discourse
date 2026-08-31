@@ -671,16 +671,15 @@ id:
   email_login:
     invalid_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
     title: "Masuk melalui email"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplikasi DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplikasi DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "browser yang tidak dikenal"
     device:
       android: "Perangkat Android"
       chromebook: "OS Chrome"
@@ -700,6 +699,9 @@ id:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonim"
   change_email:
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
@@ -1082,6 +1084,9 @@ id:
         num_clicks: "Klik"
         num_topics: "Topik"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "mengunjungi"
+    top_entry_urls:
       labels:
         count: "mengunjungi"
     top_referrers_by_browser_pageviews:
@@ -1508,6 +1513,9 @@ id:
     description: "Mode aman memungkinkan Anda menguji situs Anda tanpa memuat tema atau penyesuaian plugin client-side. Penyesuaian plugin server-side tetap diaktifkan."
     no_unofficial_plugins: "Nonaktifkan penyesuaian plugin client-side tidak resmi"
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
+  design_wizard:
+    palette_pairs:
+      default: "Asal"
   wizard:
     step:
       setup:
@@ -1543,6 +1551,9 @@ id:
       low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
+    reasons:
+      fast_typer_time:
+        other: "%{count} detik"
     actions:
       agree:
         title: "Ya"

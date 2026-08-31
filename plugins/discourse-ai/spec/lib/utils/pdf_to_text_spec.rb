@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::Utils::PdfToText do
+describe DiscourseAi::Utils::PdfToText do
   let(:pdf) { plugin_file_from_fixtures("2-page.pdf", "rag") }
   let(:upload) { UploadCreator.new(pdf, "2-page.pdf").create_for(Discourse.system_user.id) }
 
@@ -15,7 +15,7 @@ RSpec.describe DiscourseAi::Utils::PdfToText do
       pages = []
       pdf_to_text.extract_text { |page| pages << page }
 
-      expect(pages).to eq(["Page 1", "Page 2"])
+      expect(pages).to eq(["| 猫 | cat | 貓 |", "| 犬 | dog | 狗 |"])
     end
   end
 end

@@ -7,19 +7,48 @@
 ro:
   js:
     user_api_key:
+      title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
       deny: "Anulează"
+      logged_in_as: "Autentificat ca"
+      permissions_header: 'Aceasta va permite „%{application_name}” să:'
+      redirect_warning: "Autorizarea vă va redirecționa către"
+      expiry_notice: 'Această cheie pentru „%{application_name}” va expira pe %{expires_at}.'
+      copy_key: "Copiază cheia"
       copied: "Copiat!"
+      otp_description: 'Doriți să permiteți „%{application_name}” să acceseze acest site?'
       no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
       generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
       device:
+        title: "Autorizați o aplicație"
+        enter_code: "Introduceți codul afișat în aplicație."
         code: "Cod"
+        enter_full_code: "Introduceți codul complet pentru a autoriza această aplicație."
         continue: "Continuă"
+        invalid_code: "Ne pare rău, codul este invalid. Verificați codul și încercați din nou."
+        expired_code: "Ne pare rău, codul a expirat sau a fost deja utilizat. Solicitați un cod nou din aplicație și încercați din nou."
+        authorize_title: 'Autorizează „%{application_name}”'
+        expiry_notice: "Expiră: %{expires_at}"
+        no_expiry_warning: "Această cheie nu va expira automat. Autorizați-o doar dacă aveți încredere deplină în aplicație."
+        unregistered_app_warning: "Această aplicație nu este înregistrată sau verificată de acest site. Continuați doar dacă aveți încredere deplină în sursa codului."
+        complete: "Autorizare completă"
+        denied: "Autorizație refuzată"
+        return_to_cli: "Acum puteți reveni la terminal sau la aplicație."
     blocks:
       ghost:
         status: "Stare"
+        conditions: "Condiții"
+        arguments: "Argumente"
+        container_args: "Argumente container"
+        in_location: "în"
         hidden: "ascuns"
+        not_registered: "neînregistrat"
+        no_visible_children: "fără copii vizibili"
         failed: "eșuată"
+      ghost_reasons:
+        optional_missing_hint: "Acest bloc opțional nu este redat deoarece nu este înregistrat."
+        no_visible_children_hint: "Acest bloc container nu este redat deoarece niciunul dintre copiii săi nu este vizibil."
+        condition_failed_hint: "Acest bloc nu este redat deoarece condițiile sale au eșuat."
     access_control:
       manage:
         access_permission_editor: "Editor"
@@ -464,6 +493,22 @@ ro:
     admin_onboarding_banner:
       start_posting:
         back: "Înapoi"
+    design_wizard:
+      back: "Înapoi"
+      next: "Următorul"
+      sections:
+        theme: "Temă"
+        fonts: "Fonturi"
+        homepage: "Pagina principală"
+      colors:
+        light: "Luminos"
+        dark: "Întunecat"
+      fonts:
+        base_font: "Font de bază"
+        heading_font: "Font titlu"
+      homepage:
+        topics: "Discuții"
+        categories: "Categorii"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"
@@ -683,10 +728,6 @@ ro:
         optional: "opțional"
       claim_help:
         optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
-        required: "Trebuie să revendici elementele înainte de a le putea revizui."
-        claimed_by_you: "Ai revendicat acest element și îl poți revizui."
-        claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
-        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "Revendică acest subiect"
       unclaim:
@@ -1407,7 +1448,6 @@ ro:
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       enable_smart_lists: "Activează listele inteligente atunci când scrii în compozitor"
-      enable_defer: "Activează marcarea subiectelor ca necitite"
       enable_markdown_monospace_font: "Folosește fontul monospace în modul Markdown al compozitorului"
       experimental_sidebar:
         options: "Opțiuni"
@@ -1837,7 +1877,8 @@ ro:
           admin_email_label: "Adresă email"
           email_placeholder: "nume@exemplu.comb"
           invite_by_email: "E-mail"
-          more_options: "Mai multe opțiuni"
+          create_and_send: "Trimite"
+          create_and_copy: "Copiază legătură"
           update: "Actualizează"
           summary:
             role_member: "Membru"
@@ -1847,7 +1888,7 @@ ro:
             method_email: "E-mail"
             topic: "Subiect"
             groups: "Grupuri"
-            edit: "Editează invitație"
+            edit: "Editează"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2204,6 +2245,7 @@ ro:
         one: "+%{count} subcategorie"
         few: "+%{count} subcategorii"
         other: "+%{count} de subcategorii"
+      subcategories: "+ Subcategorii"
     timezone_input:
       ambiguous_ist: "IST este ambiguu, te rugăm să selectezi un fus orar specific (de exemplu: Asia/Kolkata)"
     select_kit:
@@ -2309,7 +2351,6 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      heading_title: "Titluri"
       heading_level_n: "Titlu %{levelNumber}"
       heading_level_n_title: "Titlu %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -3747,7 +3788,7 @@ ro:
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
           localizations:
-            title: "Traduceri"
+            remove_language: "Elimină"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -4276,11 +4317,23 @@ ro:
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
+      site_traffic_explorer:
+        metric_information: "Despre %{metric}"
+        remove_filter_value: "Înlătură %{value}"
+        clear_all: "Șterge tot"
+        apply: "Aplică"
+        view_more: "Vezi mai multe"
+        cards:
+          pages: "Pagini"
+          visitors: "Vizitatori"
+        filters:
+          ip: "Adresă IP"
+        series:
+          anonymous_human: "Anonimi"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
         up_to_date: "Ești la zi!"
-        critical_available: "O actualizare importantă este disponibilă."
         updates_available: "Sunt disponibile actualizări."
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."

@@ -798,7 +798,6 @@ export default class Category extends RestModel {
         slug: this.slug,
         color: this.color,
         text_color: this.text_color,
-        secure: this.secure,
         permissions: this._permissionsForUpdate(),
         auto_close_hours: this.auto_close_hours,
         auto_close_based_on_last_post: this.get(

@@ -4,7 +4,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@discourse/lint-configs": "^3.2.0",
+    "@discourse/lint-configs": "^3.3.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.2.0",
     "@glint/ember-tsc": "^1.8.11",
@@ -50,5 +50,5 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.34.5"
 }

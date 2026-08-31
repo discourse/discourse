@@ -436,6 +436,20 @@ pt:
     admin_onboarding_banner:
       start_posting:
         back: "Anterior"
+    design_wizard:
+      back: "Anterior"
+      next: "Próximo"
+      sections:
+        theme: "Tema"
+        homepage: "Página de início"
+      colors:
+        light: "Claro"
+        dark: "Escuro"
+      homepage:
+        topics: "Tópicos"
+        categories: "Categorias"
+        styles:
+          boxes: "Caixas"
     about:
       edit: "Editar esta página"
       simple_title: "Acerca"
@@ -707,10 +721,6 @@ pt:
         optional: "opcional"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
-        required: "Deve reivindicar items antes de as poder rever."
-        claimed_by_you: "Você reivindicou este item e pode efectuar a sua revisão."
-        claimed_by_other: "Este item só pode ser revisto por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está atualmente a ser revisto por <b>%{username}</b>."
       awaiting_approval: "Aguarda Aprovação"
       delete: "Eliminar"
       settings:
@@ -1485,7 +1495,6 @@ pt:
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       enable_smart_lists: "Ativar as listas inteligentes quando escreve no compositor"
-      enable_defer: "Ativar a marcação de tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar a barra lateral"
         options: "Opções"
@@ -2124,7 +2133,8 @@ pt:
           email_placeholder: "name@example.com"
           invite_by_email: "E-mail"
           restrict_domain: "Restringir ao domínio"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar hiperligação"
           update: "Atualização"
           summary:
             role_member: "Membro"
@@ -2135,7 +2145,7 @@ pt:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -2665,6 +2675,7 @@ pt:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2818,7 +2829,6 @@ pt:
       italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho  %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -2983,7 +2993,6 @@ pt:
         other: "%{count} solicitações de adesão abertas para '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - concluído"
       new_features: "Disponíveis novas funcionalidades!"
       admin_problems: "Novo conselho no seu painel do ''site''"
       dismiss_confirmation:
@@ -4488,7 +4497,7 @@ pt:
           save: "Guardar"
           delete: "Eliminar"
           localizations:
-            title: "Traduções"
+            remove_language: "Remover"
           links:
             reset: "Restaurar ao padrão"
             icon:
@@ -4811,13 +4820,24 @@ pt:
       new_features:
         title: "O que é novo?"
         check_for_updates: "Procurar por atualizações"
+      site_traffic_explorer:
+        metric_information: "Acerca de %{metric}"
+        remove_filter_value: "Remover %{value}"
+        clear_all: "Limpar tudo"
+        apply: "Aplicar"
+        view_more: "Ver mais"
+        cards:
+          visitors: "Visitantes"
+        filters:
+          ip: "Endereço IP"
+        series:
+          anonymous_human: "Anónimo"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
         discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Está atualizado!"
-        critical_available: "Uma atualização crítica está disponível."
         updates_available: "Há atualizações disponíveis."
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."

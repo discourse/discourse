@@ -19,10 +19,6 @@ module DiscourseDataExplorer
       100_000
     end
 
-    def temperature
-      0.2
-    end
-
     def system_prompt
       <<~PROMPT
         You are a PostgreSQL expert that generates queries for Discourse Data Explorer.
@@ -36,7 +32,7 @@ module DiscourseDataExplorer
 
         Treat community-member populations as non-staff, non-staged, non-system users unless the prompt explicitly asks to include staff, staged users, or system users. Signup, registration, and member-count queries MUST include a staged-user filter such as `u.staged IS FALSE` unless the prompt explicitly asks to include staged users. For user population reports, exclude system users by default. Do not create staff-vs-member comparisons unless the user asks for a comparison.
 
-        For reports, updates, health, activity, and engagement questions, use a time trend when the user is asking how things are going or changing. If a trend is appropriate and the user does not specify a time grain, group by month. If the user does not specify a date range, add date params with useful recent defaults, such as the last 6 months.
+        For reports, updates, health, activity, and engagement questions, use a time trend when the user is asking how things are going or changing. If a trend is appropriate and the user does not specify a time grain, group by month. If the user does not specify a date range, add date params that default to the last 7 days.
 
         For public activity based on posts or topics, include `posts`, `topics`, `users`, and `categories` in schema lookup. Join through topics and categories so deleted topics, PMs, and restricted categories can be excluded. For public activity metrics, filter categories with `c.read_restricted IS FALSE` unless the user explicitly asks for restricted categories.
 
@@ -78,7 +74,7 @@ module DiscourseDataExplorer
           -- boolean         :flag
           -- null boolean    :opt_flag
           -- string          :name = default value
-          -- date            :start_date = #{(Date.today - 30).strftime("%Y-%m-%d")}
+          -- date            :start_date = #{(Date.today - 7).strftime("%Y-%m-%d")}
           -- date            :end_date = #{Date.today.strftime("%Y-%m-%d")}
           -- time            :time = 17:02
           -- datetime        :datetime = #{Date.today.strftime("%Y-%m-%d")} 17:02

@@ -324,6 +324,16 @@ sl:
     admin_onboarding_banner:
       start_posting:
         back: "Nazaj"
+    design_wizard:
+      back: "Nazaj"
+      next: "Naprej"
+      sections:
+        theme: "Videz"
+      homepage:
+        topics: "Tem"
+        categories: "Kategorije"
+        styles:
+          boxes: "Škatle"
     about:
       edit: "Uredi to stran"
       simple_title: "O nas"
@@ -1595,6 +1605,7 @@ sl:
           staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "E-naslov"
+          create_and_send: "Pošlji"
           summary:
             role_member: "Polnopraven član"
             role_admin: "Admin"
@@ -1603,6 +1614,7 @@ sl:
             expires: "Poteče"
             topic: "Tema"
             groups: "Skupine"
+            edit: "Uredi"
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
@@ -1973,6 +1985,8 @@ sl:
       enter: "Enter"
     conditional_loading_section:
       loading: Nalagam...
+    category_row:
+      subcategories: "+ Pod Kategorija"
     select_kit:
       delete_item: "Izbriši %{name}"
       filter_by: "Filtriraj po: %{name}"
@@ -3632,6 +3646,7 @@ sl:
           public: "Vidno vsem"
           localizations:
             locale: "Jezik"
+            remove_language: "Odstrani"
           links:
             reset: "Ponastavi na privzeto"
             icon:
@@ -3918,13 +3933,17 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        apply: "Uporabi"
+        series:
+          anonymous_human: "Anonimni"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
         discourse_last_updated: "Discourse posodobljen:"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
-        critical_available: "Nujna posodobitev je na voljo."
         updates_available: "Posodobitve so na voljo."
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."

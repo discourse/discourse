@@ -6,10 +6,12 @@ class Admin::DashboardController < Admin::StaffController
   before_action :ensure_admin,
                 only: %i[
                   available_reports
+                  traffic
                   update_reports_section
                   update_configuration
                   update_section_settings
                 ]
+  before_action :ensure_dashboard_improvements_enabled, only: :traffic
 
   def index
     if dashboard_improvements?
@@ -56,6 +58,16 @@ class Admin::DashboardController < Admin::StaffController
 
   def general
     render json: AdminDashboardGeneralData.fetch_cached_stats
+  end
+
+  def traffic
+    AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: traffic_params)) do
+      on_success { |traffic:| render json: traffic }
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_failed_step(:load_traffic) do |step|
+        render json: { error_type: step.error }, status: :service_unavailable
+      end
+    end
   end
 
   def problems
@@ -150,6 +162,27 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def traffic_params
+    permitted = params.permit(:start_date, :end_date).to_h
+
+    AdminDashboardSiteTrafficExplorer::FILTER_KEYS.each do |key|
+      value = params[key]
+      next if value.nil?
+
+      if !value.is_a?(Array) || value.any? { |item| !item.is_a?(String) }
+        raise Discourse::InvalidParameters.new(key)
+      end
+
+      permitted[key] = if key == :traffic_type
+        value.flat_map { |item| item.split(",") }
+      else
+        value
+      end
+    end
+
+    permitted
+  end
+
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
   end
@@ -182,14 +215,7 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def dashboard_improvements?
-    dashboard_improvements_enabled =
-      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
-
-    if params[:version] == "alt"
-      !dashboard_improvements_enabled
-    else
-      dashboard_improvements_enabled
-    end
+    UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
   end
 
   def parse_reports_items_payload

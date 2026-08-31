@@ -29,6 +29,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           status: "waiting",
           waiting_node_id: "wait-1",
           finished_at: nil,
+          timeout_action: nil,
         )
         expect(execution.waiting_until).to eq_time(
           described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
@@ -169,6 +170,54 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(execution.waiting_until).to eq_time(3.hours.from_now)
       end
     end
+
+    context "when a node supplies a timeout action" do
+      let(:timeout_wait_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(
+            name: "action:timeout_wait_test",
+            version: "1.0",
+            capabilities: {
+              waits_for_resume: true,
+            },
+          )
+
+          def execute(exec_ctx)
+            exec_ctx.put_execution_to_wait(5.minutes.from_now, timeout_action: "fail")
+            [exec_ctx.input_items]
+          end
+        end
+      end
+
+      before do
+        plugin = Plugin::Instance.new
+        DiscoursePluginRegistry.register_discourse_workflows_node(timeout_wait_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after { unregister_workflow_nodes(timeout_wait_node_class) }
+
+      it "carries the timeout action through the executor into the execution" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "wait-1", "action:timeout_wait_test"
+            g.chain "trigger-1", "wait-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+        freeze_time do
+          execution = described_class.new(workflow, "trigger-1", {}).run
+
+          expect(execution).to have_attributes(
+            status: "waiting",
+            waiting_until: be_within(1.second).of(5.minutes.from_now),
+            timeout_action: "fail",
+          )
+        end
+      end
+    end
   end
 
   describe ".resume" do
@@ -196,9 +245,22 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(execution.status).to eq("waiting")
 
       response_items = [{ "json" => { "approved" => true } }]
-      claimed = DiscourseWorkflows::Execution.claim_for_resume(execution)
-      resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
+      claimed = nil
+      resumed = nil
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          claimed = DiscourseWorkflows::Execution.claim_for_resume(execution)
+          resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
+        end
 
+      resumed_wait_step = messages.find { |message| message.data.dig(:step, "node_id") == "wait-1" }
+      expect(resumed_wait_step.data.dig(:step, "status")).to eq("success")
+      expect(resumed_wait_step.data.dig(:step, "error")).to be_nil
+      resumed_status =
+        messages.find do |message|
+          message.data[:step].nil? && message.data.dig(:execution, :status) == "running"
+        end
+      expect(resumed_status.data[:refresh]).to eq(false)
       expect(resumed).to have_attributes(
         status: "success",
         finished_at: be_present,

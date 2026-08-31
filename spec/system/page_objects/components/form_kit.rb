@@ -63,28 +63,18 @@ module PageObjects
       end
 
       def uncheck
-        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+        if control_type == "checkbox"
           return unless value
 
           component.find(".form-kit__control-checkbox-checkmark").click
-          return
-        end
-
-        within component do
-          uncheck("input[type='checkbox']", visible: :all)
         end
       end
 
       def check
-        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+        if control_type == "checkbox"
           return if value
 
           component.find(".form-kit__control-checkbox-checkmark").click
-          return
-        end
-
-        within component do
-          check("input[type='checkbox']", visible: :all)
         end
       end
 
@@ -135,11 +125,7 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          if SiteSetting.enable_new_checkbox_style
-            component.find(".form-kit__control-checkbox-checkmark").click
-          else
-            component.find("input[type='checkbox']").click
-          end
+          component.find(".form-kit__control-checkbox-checkmark").click
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
@@ -200,6 +186,20 @@ module PageObjects
           value == true ? accept : refuse
         else
           raise "Unsupported control type: #{control_type}"
+        end
+      end
+
+      def select_none
+        select(PageObjects::Components::DSelect::NO_VALUE_OPTION)
+      end
+
+      def has_no_value?
+        if control_type == "select"
+          PageObjects::Components::DSelect.new(
+            component.find(".form-kit__control-select"),
+          ).has_no_value?
+        else
+          raise "'has_no_value?' is not supported for control type: #{control_type}"
         end
       end
 
@@ -296,6 +296,10 @@ module PageObjects
 
       def has_no_field_with_name?(name)
         has_no_css?(".form-kit__field[data-name='#{name}']")
+      end
+
+      def has_no_enabled_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']:not([data-disabled])")
       end
 
       def container(name)

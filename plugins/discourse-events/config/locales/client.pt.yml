@@ -1,0 +1,106 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          title: Evento iniciado
+          fields:
+            topic_id:
+              label: ID do Tópico
+    discourse_calendar:
+      disable_holiday: "Desativar"
+      enable_holiday: "Ativar"
+      holidays:
+        header_description: "Escolha uma região para ver as férias dessa região. Os feriados desativados serão excluídos do calendário de férias dos funcionários."
+      date: "Data"
+      region:
+        none: "Nenhuma"
+      toolbar_button:
+        today: "Hoje"
+        month: "Mês"
+        week: "Semana"
+        day: "Dia"
+        year: "Ano"
+    group_timezones:
+      search: "Pesquisar..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username}%{description}"
+      event_description:
+        show_more: "Mostrar mais"
+        show_less: "Mostrar menos"
+      show_all: "Mostrar tudo"
+      add_to_calendar: "Adicionar ao calendário"
+      bulk_invite: "Convite em Série"
+      bulk_invite_modal:
+        confirm: "confirmar"
+        title: "Convite em Série"
+        success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
+        error: "Desculpe, o ficheiro deverá estar no formato CSV."
+        group_selector_placeholder: "Escolher um grupo..."
+      upcoming_events:
+        status: "Estado"
+      models:
+        event:
+          expired: "Expirado"
+          closed: "Fechado"
+          status:
+            public:
+              title: "Público"
+            private:
+              title: "Privado"
+      composer:
+        url_placeholder: "Adicionar URL"
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minutos"
+            hours:
+              one: "hora"
+              other: "horas"
+            days:
+              one: "dia"
+              other: "dias"
+      builder_modal:
+        custom_fields:
+          placeholder: "Opcional"
+        create: "Criar"
+        update: "Guardar"
+        timezone:
+          label: Zona Horária
+        reminders:
+          units:
+            minutes: "minutos"
+            hours: "horas"
+            days: "dias"
+          periods:
+            before: "antes"
+            after: "depois"
+        recurrence:
+          label: "Recorrência"
+          none: "Nenhuma recorrência"
+          every_day: "Diariamente"
+          ordinals:
+            last: "último"
+        attendance:
+          none: "Nenhuma"
+        location:
+          label: "Localização"
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+          add: "Adicionar URL"
+        description:
+          label: "Descrição"
+        event_type:
+          public:
+            title: "Público"
+      invite_user_or_group:
+        invite: "Enviar"

@@ -13,8 +13,6 @@ ug:
   js:
     discourse_reactions:
       reactions_title: "ئىنكاس"
-      state_panel:
-        more_users: "ۋە باشقا %{count}..."
       picker:
         react_with: "بۇ يازمىغا ئىنكاس قايتۇرۇش شەكلى: %{reaction}"
         cant_remove_reaction: "ئىنكاسىڭىزنى ئەمدى چىقىرىۋېتەلمەيسىز"

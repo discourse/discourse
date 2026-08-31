@@ -48,6 +48,15 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(400)
     end
 
+    it "does not disclose badges when public profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: user.username }
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(user.username)
+    end
+
     it "returns not found for hidden new user profiles" do
       hidden_user = Fabricate(:trust_level_0)
       hidden_user.user_stat.update!(post_count: 1)
@@ -99,6 +108,15 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["user_badges"].length).to eq(1)
+    end
+
+    it "does not disclose a user's badges when public profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/user-badges/#{user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(user_badge.badge.name)
     end
 
     it "returns user_badges for a user with period in username" do

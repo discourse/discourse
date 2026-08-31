@@ -3,6 +3,8 @@
 module PageObjects
   module Components
     class DSelect < PageObjects::Components::Base
+      NO_VALUE_OPTION = "__NONE__"
+
       attr_reader :select_element
 
       def initialize(input)
@@ -23,6 +25,10 @@ module PageObjects
           var selector = arguments[0];
           selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
         JS
+      end
+
+      def has_no_value?
+        @select_element.has_css?("option[value='#{NO_VALUE_OPTION}']:checked", visible: :all)
       end
     end
   end

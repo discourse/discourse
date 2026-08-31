@@ -28,8 +28,6 @@ module DiscourseAi
 
         schema = DiscourseAi::Embeddings::Schema.for(relation.first.class, vector_def: @vdef)
 
-        embedding_gen = vdef.inference_client
-
         queued = 0
         results = Queue.new
         # map so we release the DB connection
@@ -42,7 +40,7 @@ module DiscourseAi
 
           pool.post do
             results << { target: record, text: prepared_text, digest: new_digest }.merge(
-              embedding: embedding_gen.perform!(prepared_text),
+              embedding: request_embedding!(prepared_text),
             )
           rescue StandardError => e
             results << e
@@ -61,11 +59,12 @@ module DiscourseAi
           queued -= 1
         end
 
-        if errors.any?
+        unexpected_errors = errors.reject { |error| expected_provider_error?(error) }
+        if unexpected_errors.any?
           Discourse.warn_exception(
-            errors[0],
+            unexpected_errors.first,
             message:
-              "Discourse AI: Errors during bulk classification: Failed to generate embeddings on #{errors.count} posts",
+              "Discourse AI: Unexpected errors during bulk embedding generation: #{unexpected_errors.count}",
           )
         end
       ensure
@@ -82,7 +81,7 @@ module DiscourseAi
         new_digest = OpenSSL::Digest::SHA1.hexdigest(text)
         return if schema.find_by_target(target)&.digest == new_digest
 
-        embeddings = vdef.inference_client.perform!(text)
+        embeddings = request_embedding!(text)
 
         schema.store(target, embeddings, new_digest)
       end
@@ -91,10 +90,21 @@ module DiscourseAi
         prepared_text = vdef.prepare_query_text(text, asymmetric: asymmetric)
         return if prepared_text.blank?
 
-        vdef.inference_client.perform!(prepared_text)
+        request_embedding!(prepared_text)
       end
 
       attr_reader :vdef
+
+      private
+
+      def request_embedding!(text)
+        ProviderHealth.request!(vdef) { vdef.inference_client.perform!(text) }
+      end
+
+      def expected_provider_error?(error)
+        error.is_a?(ProviderPausedError) ||
+          error.is_a?(DiscourseAi::Inference::EmbeddingInferenceError)
+      end
     end
   end
 end

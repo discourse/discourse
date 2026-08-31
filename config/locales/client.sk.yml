@@ -395,10 +395,27 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Vybrané"
       start_posting:
         back: "Späť"
+    design_wizard:
+      back: "Späť"
+      next: "Ďalej"
+      sections:
+        theme: "Téma"
+        fonts: "Fonty"
+      theme:
+        selected: "Vybrané"
+      colors:
+        light: "Svetlá"
+        dark: "Tmavá"
+      fonts:
+        base_font: "Základné písmo"
+        heading_font: "Písmo nadpisu"
+      homepage:
+        topics: "Témy"
+        categories: "Kategórie"
+        styles:
+          boxes: "Boxy"
     about:
       edit: "Upraviť túto stránku"
       simple_title: "O fóre"
@@ -712,10 +729,6 @@ sk:
         optional: "nepovinné"
       claim_help:
         optional: "Túto položku môžete uplatniť, aby ste zabránili ostatným v jej preskúmaní."
-        required: "Predtým, ako ich budete môcť skontrolovať, musíte si uplatniť položky."
-        claimed_by_you: "Túto položku ste si uplatnili a môžete ju skontrolovať."
-        claimed_by_other: "Túto položku môže skontrolovať iba <b>%{username}</b>."
-        automatically_claimed_by: "Túto položku v súčasnosti skúma <b>%{username}</b>."
       awaiting_approval: "Čaká sa na schválenie"
       delete: "Odstrániť"
       settings:
@@ -1542,7 +1555,6 @@ sk:
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       enable_smart_lists: "Povolenie inteligentných zoznamov pri písaní v aplikácii Composer"
-      enable_defer: "Povoliť označenie tém ako neprečítaných"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"
@@ -2228,7 +2240,8 @@ sk:
           email_placeholder: "meno@príklad.com"
           invite_by_email: "Email"
           restrict_domain: "Obmedziť na doménu"
-          more_options: "Ďalšie možnosti"
+          create_and_send: "Odoslať"
+          create_and_copy: "Kopírovať odkaz"
           update: "Aktualizovať"
           summary:
             role_member: "Člen"
@@ -2240,7 +2253,7 @@ sk:
             expires: "Platnosť vyprší"
             topic: "Téma"
             groups: "Skupiny"
-            edit: "Upraviť pozvánku"
+            edit: "Upraviť"
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
           text: "Hromadné pozvanie"
@@ -2807,6 +2820,7 @@ sk:
         few: "+%{count} podkategórií"
         many: "+%{count} podkategórie"
         other: "+%{count} podkategórie"
+      subcategories: "+ Podkategórie"
       topic_count:
         one: "%{count} téma v tejto kategórii"
         few: "%{count} tém v tejto kategórii"
@@ -3007,7 +3021,6 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
       heading_level_paragraph: "Odsek"
@@ -3191,7 +3204,6 @@ sk:
         other: "%{count} otvorené žiadosti o členstvo v skupine '%{group_name}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - dokončené"
       new_features: "K dispozícii sú nové funkcie!"
       admin_problems: "Nové rady na ovládacom paneli vášho webu"
       dismiss_confirmation:
@@ -5257,9 +5269,9 @@ sk:
           always_public: "Obsah v tejto časti je vždy verejný"
           more_menu: "Ďalšie menu"
           localizations:
-            title: "Preklady"
             locale: "Jazyk"
             title_label: "Názov sekcie"
+            remove_language: "Odstrániť"
           links:
             add: "Pridať ďalší odkaz"
             delete: "Odstrániť odkaz"
@@ -6029,13 +6041,25 @@ sk:
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        clear_all: "Vymazať všetko"
+        apply: "Použi"
+        view_more: "Zobraziť viac"
+        cards:
+          pages: "Stránky"
+          visitors: "Návštevníci"
+        filters:
+          browser: "Prehliadač"
+          ip: "IP adresy"
+        series:
+          anonymous_human: "Anonymný"
       dashboard:
         title: "Ovládací panel"
         last_updated: "Informačný panel bol aktualizovaný:"
         discourse_last_updated: "Discourse bol aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
-        critical_available: "Je dostupná kritická aktualizácia."
         updates_available: "Aktualizácie sú k dispozícii."
         please_update: "Aktualizujte prosím!"
         no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."

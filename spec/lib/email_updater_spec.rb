@@ -439,6 +439,60 @@ RSpec.describe EmailUpdater do
     end
   end
 
+  context "when the new email is an alias of an address already in use" do
+    let(:user) { Fabricate(:user, email: old_email) }
+    let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
+    let(:alias_of_old_email) { "oldemail+forum@example.com" }
+
+    before { SiteSetting.hide_email_address_taken = false }
+
+    context "when normalize_emails is enabled" do
+      before { SiteSetting.normalize_emails = true }
+
+      it "errors instead of failing after the email is confirmed" do
+        updater.change_to(alias_of_old_email, add: true)
+
+        expect(updater.errors.messages[:base].first).to eq(I18n.t("change_email.error_alias"))
+        expect(user.email_change_requests).to be_empty
+      end
+
+      it "keeps the generic error for an address that matches exactly" do
+        Fabricate(:user, email: new_email)
+        updater.change_to(new_email)
+
+        expect(updater.errors.messages[:base].first).to eq(I18n.t("change_email.error"))
+      end
+
+      it "errors when the alias belongs to another user" do
+        Fabricate(:user, email: new_email)
+        updater.change_to("newemail@example.com")
+
+        expect(updater.errors.messages[:base].first).to eq(I18n.t("change_email.error_alias"))
+        expect(user.email_change_requests).to be_empty
+      end
+
+      it "errors for the user's own address even when hide_email_address_taken is enabled" do
+        SiteSetting.hide_email_address_taken = true
+        updater.change_to(alias_of_old_email, add: true)
+
+        expect(updater.errors.messages[:base].first).to eq(I18n.t("change_email.error_alias"))
+        expect(user.email_change_requests).to be_empty
+      end
+    end
+
+    context "when normalize_emails is disabled" do
+      before { SiteSetting.normalize_emails = false }
+
+      it "allows adding the alias as a secondary email" do
+        updater.change_to(alias_of_old_email, add: true)
+        updater.confirm(updater.change_req.new_email_token.token)
+
+        expect(updater.errors).to be_blank
+        expect(user.reload.secondary_emails).to contain_exactly(alias_of_old_email)
+      end
+    end
+  end
+
   context "when hide_email_address_taken is enabled" do
     before { SiteSetting.hide_email_address_taken = true }
 

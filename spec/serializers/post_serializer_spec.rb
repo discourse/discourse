@@ -141,6 +141,21 @@ RSpec.describe PostSerializer do
       expect(json[:reviewable_score_count]).to eq(1)
       expect(json[:reviewable_score_pending_count]).to eq(1)
     end
+
+    it "omits the reviewable data when the reviewable type is no longer defined" do
+      reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin")
+      moderator = Fabricate(:moderator)
+
+      json = PostSerializer.new(post, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:reviewable_id]).to eq(nil)
+      expect(json[:reviewable_score_count]).to eq(0)
+
+      serializer = PostSerializer.new(post, scope: Guardian.new(moderator), root: false)
+      serializer.topic_view = TopicView.new(post.topic, moderator)
+      json = serializer.as_json
+      expect(json[:reviewable_id]).to eq(0)
+      expect(json[:reviewable_score_count]).to eq(0)
+    end
   end
 
   context "with a post by a nuked user" do
@@ -174,6 +189,41 @@ RSpec.describe PostSerializer do
 
       serialized_post = described_class.new(post, scope: Guardian.new(admin), root: false).as_json
       expect(serialized_post[:user_suspended]).to be_nil
+    end
+  end
+
+  describe "#user_locale" do
+    fab!(:admin)
+    fab!(:moderator)
+
+    before { post.user.update!(locale: "ja") }
+
+    it "includes the author's locale for admins only when user locale is enabled" do
+      SiteSetting.allow_user_locale = true
+
+      expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).to include(
+        user_locale: "ja",
+      )
+
+      expect(
+        described_class.new(post, scope: Guardian.new(moderator), root: false).as_json,
+      ).not_to have_key(:user_locale)
+
+      expect(described_class.new(post, scope: Guardian.new(post.user), root: false).as_json).not_to(
+        have_key(:user_locale),
+      )
+
+      expect(described_class.new(post, scope: Guardian.new, root: false).as_json).not_to have_key(
+        :user_locale,
+      )
+    end
+
+    it "omits the author's locale when user locale is disabled" do
+      SiteSetting.allow_user_locale = false
+
+      expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).not_to(
+        have_key(:user_locale),
+      )
     end
   end
 

@@ -5,6 +5,37 @@
 # https://translate.discourse.org/
 
 fr:
+  site_settings:
+    data_explorer_enabled: "Activer Data Explorer"
+    data_explorer_ai_queries_enabled: "Activer la génération de requêtes par l'IA dans Data Explorer"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Générateur de requêtes pour Data Explorer"
+          description: "Génère des requêtes SQL pour Data Explorer à partir d'instructions en langage naturel"
+      tool_help:
+        find_queries: "Recherche des requêtes Data Explorer existantes susceptibles de servir d'exemples utiles"
+        run_sql: "Exécute une requête SQL et renvoie les résultats"
+        submit_query: "Envoie la requête générée finale"
+      tool_summary:
+        find_queries: "Recherche de requêtes d'exemple"
+        run_sql: "Exécution de la requête SQL"
+        submit_query: "Envoi de la requête générée"
+      tool_description:
+        find_queries: "Requêtes d'exemple trouvées pour %{search}"
+        run_sql: "Requête SQL exécutée"
+        submit_query: "Requête générée %{name} envoyée"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "L'agent d'IA n'est pas configuré. Vérifiez les paramètres des fonctionnalités d'IA."
+      error_no_sql_returned: "L'IA n'a pas renvoyé de requête SQL valide. Réessayez ou rédigez la requête manuellement."
+    errors:
+      tool_not_allowed: "Vous ne pouvez pas utiliser cet outil."
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Aucune requête sélectionnée."
+        no_sql_provided: "Aucune requête SQL fournie."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -19,4 +50,28 @@ fr:
     report_generator:
       private_message:
         title: "Rapport planifié pour %{query_name}"
+        body: |
+          Bonjour %{recipient_name},
+
+          Votre rapport Data Explorer est prêt.
+
+          Nom de la requête :
+          %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Afficher la requête dans Data Explorer</a>
+
+          Rapport créé le %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Rapport planifié pour %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Afficher la requête dans Data Explorer</a>
+
+          Rapport créé le %{created_at} (%{timezone})
       upload_appendix: "Annexe : [%{filename}|pièce jointe](%{short_url})"

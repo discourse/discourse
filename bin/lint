@@ -22,7 +22,9 @@ class ExternalLinter
 
   def initialize(root, files, fix:, verbose: false)
     @root = root
-    @files = files.map { |f| File.expand_path(f) }
+    root_path = Pathname.new(@root).realpath
+    # Keep paths relative to the plugin root so linter exclusions work for symlinked plugins.
+    @files = files.map { |f| Pathname.new(f).realpath.relative_path_from(root_path).to_s }
     @fix = fix
     @verbose = verbose
     @results = []
@@ -239,7 +241,26 @@ class LefthookLinter
     end
 
     # Check if file extension is lintable
-    lintable_extensions = %w[rb rake js gjs cjs mjs ts gts mts cts hbs scss css yml yaml thor]
+    lintable_extensions = %w[
+      rb
+      rake
+      js
+      gjs
+      cjs
+      mjs
+      ts
+      gts
+      mts
+      cts
+      hbs
+      scss
+      css
+      yml
+      yaml
+      thor
+      md
+      json
+    ]
     lintable_extensions.include?(ext)
   end
 
@@ -296,7 +317,7 @@ class LefthookLinter
 
     files.each do |f|
       if (root = external_plugin_root(f))
-        external_files[File.join(PROJECT_ROOT, root)] << f
+        external_files[root] << f
       else
         core_files << f
       end
@@ -305,16 +326,22 @@ class LefthookLinter
     [core_files, external_files]
   end
 
-  # Returns "plugins/<name>" if the file is in an unbundled plugin directory, else nil.
+  # Returns the plugin root if the file is in an unbundled plugin directory, else nil.
   def external_plugin_root(file)
     path = normalize_relative_path(file)
-    return nil unless path.start_with?("plugins/")
+    return standalone_plugin_root(file) unless path.start_with?("plugins/")
 
     parts = path.split("/")
     return nil if parts.length < 2
 
     plugin_dir = "plugins/#{parts[1]}"
-    bundled_plugins.include?(plugin_dir) ? nil : plugin_dir
+    File.join(PROJECT_ROOT, plugin_dir) if bundled_plugins.exclude?(plugin_dir)
+  end
+
+  def standalone_plugin_root(file)
+    file_path = Pathname.new(file).realpath
+    plugin_root = file_path.ascend.find { |path| path.join("plugin.rb").file? }
+    plugin_root&.to_s
   end
 
   def bundled_plugins

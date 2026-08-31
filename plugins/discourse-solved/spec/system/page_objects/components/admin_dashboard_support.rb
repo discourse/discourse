@@ -13,8 +13,9 @@ module PageObjects
         has_no_css?(SELECTOR)
       end
 
-      def has_headline?(text)
-        has_css?("#{SELECTOR} .db-section__subintro h3", text: text)
+      def has_headline?(title, summary)
+        has_css?("#{SELECTOR} .db-section__subintro h3", exact_text: title) &&
+          has_css?("#{SELECTOR} .db-section__subintro p", exact_text: summary)
       end
 
       def has_kpi?(label)

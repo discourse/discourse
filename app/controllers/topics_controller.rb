@@ -429,7 +429,7 @@ class TopicsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
-    if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
+    if params.key?(:category_id) && (params[:category_id].to_i != topic.category_id.to_i)
       if topic.shared_draft
         topic.shared_draft.update(category_id: params[:category_id])
         params.delete(:category_id)
@@ -917,6 +917,10 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic)
 
     username_or_email = params[:user] ? fetch_username : fetch_email
+    unless String === username_or_email
+      return render(json: failed_json, status: :unprocessable_entity)
+    end
+
     group_ids =
       Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names]).pluck(
         :id,

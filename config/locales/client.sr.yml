@@ -364,14 +364,17 @@ sr:
     admin_onboarding_banner:
       select_theme:
         title: "Prilagodite svoj sajt"
-        description: "Izaberite početnu temu za svoju zajednicu"
-        action: "Izaberi temu"
-        modal_title: "Izaberite temu"
-        browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
       start_posting:
         back: "Nazad"
+    design_wizard:
+      title: "Prilagodite svoj sajt"
+      back: "Nazad"
+      next: "Dalje"
+      homepage:
+        topics: "Teme"
+        categories: "Kategorije"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"
@@ -663,9 +666,6 @@ sr:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti prava da sprečite ostale da ga pregledaju"
-        required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
-        claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
-        claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -1559,7 +1559,6 @@ sr:
           staff_role_moderator: "Moderator"
           email_placeholder: "ime@primer.com"
           invite_by_email: "E-mail"
-          more_options: "Više opcija"
           summary:
             role_member: "Član"
             role_admin: "Admin"
@@ -1567,6 +1566,7 @@ sr:
             method_email: "E-mail"
             topic: "Tema"
             groups: "Grupe"
+            edit: "Izmeni"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1800,6 +1800,8 @@ sr:
       optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Obriši %{name}"
       default_header_text: Odaberite…
@@ -2731,6 +2733,8 @@ sr:
           edit: "Uredite prilagođeni odeljak"
           save: "Sačuvaj"
           delete: "Obriši"
+          localizations:
+            remove_language: "Ukloni"
           links:
             icon:
               label: "Ikona"
@@ -2948,11 +2952,25 @@ sr:
         default_value: "Подразумевано"
       search:
         title: "Pretraži"
+      site_traffic_explorer:
+        metric_information: "O %{metric}"
+        apply: "Primeni"
+        view_more: "Pogledajte više"
+        cards:
+          visitors: "Posetioci"
+        filters:
+          referrer: "Upućivač"
+          ip: "IP adrese"
+        metrics:
+          logged_in_share:
+            label: "Udeo prijavljenih"
+        series:
+          logged_in_human: "Prijavljen"
+          anonymous_human: "Anonimno"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
-        critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
@@ -3017,24 +3035,10 @@ sr:
                   other: "-%{count} padova"
               stable_aria: "bez pokreta"
             headline:
-              healthy_growth:
-                title: "Članovi stvaraju naviku da se vraćaju."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u porastu."
-              declining:
-                title: "Članovi se vraćaju ređe."
-                summary: "Lepljivost, dnevna angažovanost i broj novih registracija su u ovom periodu u padu."
-              engaged_but_shrinking:
-                title: "Članovi su angažovani, ali se zajednica smanjuje."
-                summary: "Lepljivost se održava, ali dnevna angažovanost ili nove registracije su opali."
-              growing_but_distracted:
-                title: "Novi članovi se registruju, ali ne ostaju."
-                summary: "Registracije rastu, ali je lepljivost ovog perioda opala."
-              mixed:
-                title: "Trendovi angažovanja su ovog perioda mešoviti."
-                summary: "Neki metrici su u porastu, a drugi u padu — otvorite pločice ispod za detalje."
-              no_signal:
-                title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
-                summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              titles:
+                insufficient_activity: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
+              summaries:
+                insufficient_activity: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
               metrics:
                 new_signups: "Nove registracije"
                 dau_mau: "DAU / MAU lepljivost"

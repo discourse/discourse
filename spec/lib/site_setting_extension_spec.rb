@@ -184,6 +184,21 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "#client_settings_hash" do
+    it "memoizes the hash until a setting changes" do
+      settings.setting(:string_type, "haha", client: true)
+      settings.refresh!
+
+      hash = settings.client_settings_hash
+      expect(hash[:string_type]).to eq("haha")
+      expect(settings.client_settings_hash).to be(hash)
+
+      settings.string_type = "changed"
+
+      expect(settings.client_settings_hash[:string_type]).to eq("changed")
+    end
+  end
+
   describe ".after_fork" do
     it "refreshes the site settings" do
       settings.setting(:hello, 1)
@@ -877,8 +892,6 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after { DiscoursePluginRegistry.reset! }
-
     it "is in the `hidden_settings` collection" do
       expect(settings.hidden_settings.include?(:superman_identity)).to eq(true)
     end
@@ -900,25 +913,32 @@ RSpec.describe SiteSettingExtension do
     it "does not call the hidden_site_settings plugin modifier in a loop" do
       called = 0
       plugin = Plugin::Instance.new
-      plugin.register_modifier(:hidden_site_settings) do |defaults|
+      modifier = ->(defaults) do
         called += 1
         defaults + [:other_setting]
       end
+      plugin.register_modifier(:hidden_site_settings, &modifier)
+
       settings.all_settings(include_hidden: true)
       expect(called).to eq(1)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :hidden_site_settings, &modifier)
     end
 
     it "calls the site_setting_result modifier for each setting" do
       plugin = Plugin::Instance.new
-      plugin.register_modifier(:site_setting_result) do |opts|
+      modifier = ->(opts) do
         opts[:custom_attribute] = "test_value" if opts[:setting] == :other_setting
         opts
       end
+      plugin.register_modifier(:site_setting_result, &modifier)
 
       result = settings.all_settings
       other_setting = result.find { |s| s[:setting] == :other_setting }
 
       expect(other_setting[:custom_attribute]).to eq("test_value")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :site_setting_result, &modifier)
     end
   end
 
@@ -1084,9 +1104,15 @@ RSpec.describe SiteSettingExtension do
       settings.default_locale = "zh_CN"
     end
 
-    it "expires the cache" do
+    it "expires the client settings caches" do
+      settings.refresh!
+      expect(JSON.parse(settings.client_settings_json)["default_locale"]).to eq("en")
+      expect(settings.client_settings_hash[:default_locale]).to eq("en")
+
       settings.default_locale = "zh_CN"
-      expect(Discourse.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
+
+      expect(JSON.parse(settings.client_settings_json)["default_locale"]).to eq("zh_CN")
+      expect(settings.client_settings_hash[:default_locale]).to eq("zh_CN")
     end
 
     it "refreshes the client" do
@@ -1394,8 +1420,6 @@ RSpec.describe SiteSettingExtension do
         settings.setting(:test_setting, "value", client: true)
         settings.refresh!
 
-        cache_key = SiteSettingExtension.client_settings_cache_key
-
         call_count = 0
         allow(settings).to receive(:client_settings_json_uncached) do
           call_count += 1
@@ -1409,19 +1433,15 @@ RSpec.describe SiteSettingExtension do
         # First call fails
         result1 = settings.client_settings_json
         expect(result1).to eq("")
-        # Verify error was NOT cached in Redis
-        expect(Discourse.cache.exist?(cache_key)).to be_falsey
 
         # Second call should retry (not use cached error) and succeed
         result2 = settings.client_settings_json
         expect(result2).to eq('{"default_locale":"en","test_setting":"value"}')
         expect(call_count).to eq(2) # Both calls executed, error was not cached
 
-        # Verify success was cached in Redis
-        expect(Discourse.cache.exist?(cache_key)).to be_truthy
-        expect(Discourse.cache.read(cache_key)).to eq(
-          '{"default_locale":"en","test_setting":"value"}',
-        )
+        # Success is memoized; further calls do not regenerate
+        expect(settings.client_settings_json).to eq(result2)
+        expect(call_count).to eq(2)
       end
     end
   end
@@ -1864,6 +1884,11 @@ RSpec.describe SiteSettingExtension do
     it "handles splitting tag_list settings" do
       SiteSetting.digest_suppress_tags = "blah|blah2"
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
+    end
+
+    it "handles splitting host_list settings" do
+      SiteSetting.blocked_email_domains = "example.com|example.org"
+      expect(SiteSetting.blocked_email_domains_map).to eq(%w[example.com example.org])
     end
 
     it "handles blank values for settings" do

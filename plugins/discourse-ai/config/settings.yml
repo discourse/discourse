@@ -411,6 +411,7 @@ discourse_ai:
     list_type: compact
     default: "3|14" # 3: @staff, 14: @trust_level_4
     area: "ai-features/bot"
+    disallowed_groups: "0" # everyone
   ai_bot_public_sharing_allowed_groups:
     client: false
     type: group_list
@@ -443,12 +444,54 @@ discourse_ai:
   ai_discover_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::DiscoverEnabledValidator"
     area: "ai-features/search"
   ai_discover_agent:
     default: "-34"
     type: enum
     client: true
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_enabled:
+    default: false
+    client: true
+    area: "ai-features/search"
+  ai_ask_ai_summary_detail:
+    default: "balanced"
+    type: enum
+    enum: "DiscourseAi::Configuration::AskAiSummaryDetailEnumerator"
+    client: true
+    area: "ai-features/search"
+  ai_ask_ai_related_count:
+    default: 2
+    min: 2
+    max: 6
+    client: true
+    area: "ai-features/search"
+  ai_ask_ai_agent:
+    default: "-41"
+    type: enum
+    client: true
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_query_rewriter_agent:
+    default: "-40"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/search"
+  ai_ask_ai_follow_up_agent:
+    default: "-1"
+    type: enum
+    client: true
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::AskAiFollowUpAgentValidator"
+    area: "ai-features/search"
+  ai_ask_ai_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "10" # 10: @trust_level_0
+    allow_any: false
+    refresh: true
     area: "ai-features/search"
   ai_automation_max_triage_per_minute:
     default: 60
@@ -515,6 +558,7 @@ discourse_ai:
   ai_translation_enabled:
     default: false
     client: true
+    refresh: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/translation"
   ai_translation_locale_detector_agent:
@@ -660,7 +704,13 @@ discourse_ai:
     client: false
     hidden: true
 
+  ai_audit_logs_detailed_retention_days:
+    default: 0
+    min: 0
+    max: 36500
+    client: false
   ai_audit_logs_purge_after_days:
     default: 180
     min: 0
+    max: 36500
     client: false

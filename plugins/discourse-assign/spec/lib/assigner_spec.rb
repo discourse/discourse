@@ -161,6 +161,28 @@ RSpec.describe Assigner do
       expect(assignment.target).to eq(topic)
     end
 
+    it "triggers unassigned event after unassigning" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
+
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign }
+
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+      expect(assignment.topic_id).to eq(topic.id)
+      expect(assignment.assigned_to_id).to eq(moderator.id)
+    end
+
+    it "triggers unassigned event when deactivating instead of destroying" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
+
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign(deactivate: true) }
+
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+    end
+
     context "with published assignment workflows" do
       fab!(:all_assignments_workflow) do
         Fabricate(

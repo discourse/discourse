@@ -77,8 +77,8 @@ class PostDestroyer
 
     should_reset_bumped_at = @post.is_last_reply? && !@post.whisper?
 
-    if delete_removed_posts_after < 1 || post_is_reviewable? ||
-         Guardian.new(@user).can_moderate_topic?(@topic) || permanent?
+    if delete_removed_posts_after < 1 || post_is_reviewable? || can_moderate_this_topic? ||
+         permanent?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -114,15 +114,16 @@ class PostDestroyer
   end
 
   def recover
-    if (post_is_reviewable? || Guardian.new(@user).can_moderate_topic?(@post.topic)) &&
-         @post.deleted_at
-      staff_recovered
-    elsif @user.staff? || @user.id == @post.user_id
-      user_recovered
-    end
+    staff_recovery = (post_is_reviewable? || can_moderate_this_topic?) && @post.deleted_at.present?
+    user_recovery = !staff_recovery && (@user.staff? || @user.id == @post.user_id)
+
+    staff_recovered if staff_recovery
+    user_recovered if user_recovery
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
-    @topic.recover!(@user) if @post.is_first_post?
+    if (staff_recovery || user_recovery) && @post.is_first_post? && @post.deleted_at.nil?
+      @topic.recover!(@user)
+    end
     @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
@@ -310,10 +311,18 @@ class PostDestroyer
 
   private
 
+  def guardian
+    @guardian ||= Guardian.new(@user)
+  end
+
+  def can_moderate_this_topic?
+    guardian.can_moderate_topic?(@topic) || guardian.can_delete_all_posts_and_topics?
+  end
+
   def post_is_reviewable?
     return true if @user.staff?
 
-    Guardian.new(@user).can_review_topic?(@topic) && Reviewable.exists?(target: @post)
+    guardian.can_review_topic?(@topic) && Reviewable.exists?(target: @post)
   end
 
   # we need topics to change if ever a post in them is deleted or created

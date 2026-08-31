@@ -491,17 +491,12 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
-      launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
-      select_theme:
-        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
-        description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
         action: "Davet oluştur"
       start_posting:
         title: "Paylaşmaya Başla"
-        description: "İnsanlara birlikte konuşacakları bir konu verin"
         action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
@@ -522,6 +517,26 @@ tr_TR:
           what_is_your_favorite_food:
             title: "En sevdiğin yemek nedir?"
             body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
+    design_wizard:
+      back: "Geri"
+      next: "Sonraki"
+      sections:
+        theme: "Tema"
+        fonts: "Yazı Tipleri"
+        homepage: "Ana Sayfa"
+      theme:
+        selected: "Seçili"
+      colors:
+        light: "Açık"
+        dark: "Koyu"
+      fonts:
+        base_font: "Temel yazı tipi"
+        heading_font: "Başlık yazı tipi"
+      homepage:
+        topics: "Konular"
+        categories: "Kategoriler"
+        styles:
+          boxes: "Kutular"
     about:
       edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
@@ -820,10 +835,6 @@ tr_TR:
       stale_help: "Bu sorun <b>%{username}</b> tarafından çözülmüştür."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
-        required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
-        claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
-        claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
-        automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b> tarafından inceleniyor."
       claim:
         title: "Bu konuyu talep et"
       unclaim:
@@ -1661,7 +1672,6 @@ tr_TR:
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan metin için alıntı yanıtını etkinleştir"
       enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
-      enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       enable_markdown_monospace_font: "Bestecinin Markdown modunda monospace yazı tipini kullanın"
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
@@ -2327,7 +2337,8 @@ tr_TR:
           invite_by_email: "E-posta"
           restrict_domain: "Alan adıyla kısıtla"
           domain_placeholder: "example.com"
-          more_options: "Daha fazla seçenek"
+          create_and_send: "Gönder"
+          create_and_copy: "Bağlantıyı kopyala"
           update: "Güncelle"
           summary:
             role_member: "Üye"
@@ -2340,7 +2351,7 @@ tr_TR:
             expires: "Bitiş tarihi"
             topic: "Konu"
             groups: "Gruplar"
-            edit: "Daveti düzenleyin"
+            edit: "Düzenle"
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
           text: "Toplu Davet"
@@ -2872,6 +2883,7 @@ tr_TR:
       subcategory_count:
         one: "+%{count} alt kategori"
         other: "+%{count} alt kategori"
+      subcategories: "+ Alt kategoriler"
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
@@ -2944,6 +2956,7 @@ tr_TR:
       toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
+      search_label: "Arama simgeleri"
       search_placeholder: "Arama simgeleri..."
       no_results: "Simge bulunamadı"
       results_count:
@@ -3090,7 +3103,6 @@ tr_TR:
       italic_label: "I"
       italic_title: "Vurgulama"
       italic_text: "vurgulanan yazı"
-      heading_title: "Başlıklar"
       heading_level_n: "Başlık %{levelNumber}"
       heading_level_n_title: "Başlık %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -3291,7 +3303,6 @@ tr_TR:
         other: "\"%{group_name}\" için %{count} açık üyelik isteği"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - tamamlandı"
       new_features: "Yeni özellikler mevcut!"
       admin_problems: "Sitenizin kontrol panelinde yeni öneriler mevcut"
       upcoming_changes:
@@ -3737,7 +3748,6 @@ tr_TR:
           from_placeholder: "Değiştirilecek etiket"
       delete_topics:
         name: "Sil"
-        description: "Seçilen konuları kalıcı olarak sil. Bu işlem geri alınamaz."
       update_category:
         name: "Kategoriyi Güncelle"
         description: "Seçili tüm konuları aşağıdaki kategoriye taşı:"
@@ -5456,9 +5466,9 @@ tr_TR:
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
           localizations:
-            title: "Çeviriler"
             locale: "Dil"
             title_label: "Bölüm başlığı"
+            remove_language: "Kaldır"
           links:
             add: "Başka bir bağlantı ekle"
             delete: "Bağlantıyı sil"
@@ -6342,13 +6352,27 @@ tr_TR:
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
+      site_traffic_explorer:
+        metric_information: "%{metric} Hakkında"
+        remove_filter_value: "%{value} öğesini kaldır"
+        clear_all: "Tümünü temizle"
+        apply: "Uygula"
+        view_more: "Daha fazla görüntüle"
+        cards:
+          pages: "Sayfa"
+          visitors: "Ziyaretçiler"
+        filters:
+          country: "Ülke"
+          browser: "Tarayıcı"
+          ip: "IP adresi"
+        series:
+          anonymous_human: "Anonim"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
         discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Güncelsiniz!"
-        critical_available: "Kritik bir güncelleme mevcut."
         updates_available: "Güncellemeler mevcut."
         please_update: "Lütfen güncelleyin!"
         no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."

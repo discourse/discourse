@@ -187,9 +187,22 @@ it:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Assegnato"
+        "trigger:unassigned": "Non assegnato"
       assign_topic:
+        resource: "Risorsa"
+        resources:
+          topic: "Argomento"
+          post: "Messaggio"
         operations:
           assign: "Assegna"
           unassign: "Annulla assegnazione"
         topic_id: "ID dell'argomento"
+        post_id: "ID del messaggio"
+        assignee: "Assegnatario"
+      check_assignment:
+        target_types:
+          topic: "Argomento"
+          post: "Messaggio"
+        topic_id: "ID dell'argomento"
+        post_id: "ID del messaggio"
         assignee: "Assegnatario"

@@ -12,7 +12,6 @@ module PageObjects
         fill_in("link-url", with: url, match: :first)
         icon_picker = first_link_icon_picker
         icon_picker.expand
-        icon_picker.filter(icon)
         icon_picker.select_icon(icon)
       end
 
@@ -26,7 +25,6 @@ module PageObjects
 
             icon_picker = PageObjects::Components::DIconGridPicker.new(link_row)
             icon_picker.expand
-            icon_picker.filter(icon)
             icon_picker.select_icon(icon)
           end
       end
@@ -166,7 +164,7 @@ module PageObjects
       def has_selected_translation_language?(locale)
         page.has_css?(
           "#{translation_language_selector(locale)} " \
-            ".sidebar-section-translations__language-select option[value='#{locale}'][selected]",
+            ".sidebar-section-translations__language-select option[value='#{locale}']:checked",
           visible: :all,
         )
       end
@@ -208,7 +206,7 @@ module PageObjects
 
       def has_source_language?(locale)
         page.has_css?(
-          ".sidebar-section-form__source-locale-select option[value='#{locale}'][selected]",
+          ".sidebar-section-form__source-locale-select option[value='#{locale}']:checked",
           visible: :all,
         )
       end

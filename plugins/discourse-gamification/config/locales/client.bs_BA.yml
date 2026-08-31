@@ -36,3 +36,8 @@ bs_BA:
       custom_range_from: "Od"
       admin:
         name: "Ime"
+    discourse_workflows:
+      gamification_score:
+        username: "User"
+        date: "Datum"
+        description: "Opis"

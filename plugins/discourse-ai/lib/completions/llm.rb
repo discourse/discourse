@@ -32,6 +32,7 @@ module DiscourseAi
             cohere
             open_ai
             google
+            gemini_interactions
             google_vertex_ai
             azure
             samba_nova
@@ -106,6 +107,14 @@ module DiscourseAi
 
         def prompts
           @prompts
+        end
+
+        def text_from_response(response)
+          if response.is_a?(Array)
+            response.select { |content| content.is_a?(String) }.join
+          else
+            response
+          end
         end
 
         def proxy(model)
@@ -240,6 +249,8 @@ module DiscourseAi
         model_params = gateway.prepare_model_params(model_params) if gateway.respond_to?(
           :prepare_model_params,
         )
+        prompt.upload_skips ||= execution_context&.upload_skips
+
         dialect = dialect_klass.new(prompt, llm_model, opts: model_params)
 
         gateway.perform_completion!(

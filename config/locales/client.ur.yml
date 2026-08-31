@@ -6,12 +6,16 @@
 
 ur:
   js:
+    ace_editor:
+      resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
     user_api_key:
       title: '"%{application_name} " کو مجاز بنائیں'
       authorize: "مجاز بنائیں"
       deny: "منسوخ کریں"
       logged_in_as: "کے طور پر لاگ ان"
       permissions_header: 'یہ "%{application_name}" کو اجازت دے گا:'
+      redirect_warning: "مجاز کر دینے پر آپ کو منتقل کر دیا جائے گا"
+      expiry_notice: '"%{application_name}" کے لیے یہ کنجی %{expires_at} پر ختم ہو جائے گی۔'
       copied: "کاپی کر لیا!"
       otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
       no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
@@ -39,8 +43,12 @@ ur:
       manage:
         access_permission_editor: "ترمیم کنندہ"
         access_permission_editor_description: "اس اکائی کے لیے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_viewer: "دیکھنے والا"
         access_permission_viewer_description: "اس اکائی کے لیے مواد دیکھا جا سکتا ہے"
         access_permission_remove: "خارج کریں"
+        mandatory: "لازمی"
+        disallowed: "غیر مجاز"
+        required_permission_not_added: "اس %{typeName} کے لیے کم از کم ایک گرانٹی کے پاس %{permission} اجازت ہونی چاہیے"
     carousel:
       go_to_slide: "سلائیڈ %{index}پر جائیں"
       previous: "گزشتہ سلائیڈ"
@@ -71,8 +79,8 @@ ur:
       time_short_day: "dddd، HH:mm"
       timeline_date: "MMMM YYYY"
       long_no_year: "D MMMM، HH:mm"
-      long_no_year_no_time: "D MMMM"
-      full_no_year_no_time: "Do MMMM"
+      long_no_year_no_time: "D ‏MMMM"
+      full_no_year_no_time: "Do ‏MMMM"
       long_with_year: "D MMMM، YYYY HH:mm"
       long_with_year_no_time: "D MMMM، YYYY"
       full_with_year_no_time: "Do MMMM، YYYY"
@@ -495,24 +503,16 @@ ur:
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
-      launch_in_easy_steps: "آسان مراحل %{step_count} میں لانچ کریں۔"
       congrats_onboarding_complete: "آن بورڈنگ کے عمل کو مکمل کرنے پر مبارکباد!"
       select_theme:
         title: "اپنی سائٹ کو تخصیص کریں"
-        description: "اپنی کمیونٹی کے لیے ایک ابتدائی تھیم کا انتخاب کریں"
-        action: "تھیم منتخب کریں"
-        modal_title: "ایک تھیم منتخب کریں"
-        enabled: "منتخب"
-        browse_all: "تھیمز کا نظم کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
-        description: "ابتدائی ارکان آپ کی کمیونٹی کی رونق دوبالاکرتے ہیں"
         action: "دعوت نامہ بنائیں"
       start_posting:
         title: "دھاگے بنائیں"
-        description: "لوگوں کو آپس میں بات کرنے کے لیے موضوع دیں"
         action: "خیالات دیکھیں"
         choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
         predefined_topics: "بحث کے موضوع کے سانچے"
@@ -533,6 +533,27 @@ ur:
           what_is_your_favorite_food:
             title: "آپ کا پسندیدہ کھانا کیا ہے؟"
             body: "کمیونٹی کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
+    design_wizard:
+      title: "اپنی سائٹ کو تخصیص کریں"
+      back: "واپس"
+      next: "اگلا"
+      sections:
+        theme: "تھیم"
+        fonts: "فونٹس"
+        homepage: "ہَوم پَیج"
+      theme:
+        selected: "منتخب"
+      colors:
+        light: "لائٹ"
+        dark: "ڈارک"
+      fonts:
+        base_font: "بیس فونٹ"
+        heading_font: "سرخی والا فونٹ"
+      homepage:
+        topics: "موضوعات"
+        categories: "زمرہ جات"
+        styles:
+          boxes: "خانے"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -825,10 +846,6 @@ ur:
         optional: "اختیاری"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
-        required: "اشیاء کا جائزہ لینے سے پہلے ان کا آپکی ملکیت ہونا ضروری ہے۔"
-        claimed_by_you: "یہ آپکی ملکیت ہے اور اس کا جائزہ لے سکتے ہیں۔"
-        claimed_by_other: "اس چیز کا صرف <b>%{username}</b> جائزہ لے سکتے ہیں۔"
-        automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
       claim:
         title: "اس موضوع کو کلیم کریں"
       unclaim:
@@ -1344,7 +1361,7 @@ ur:
         public_groups: "عوامی گروپس"
         my_groups: "میرے گروپس"
         group_type: "گروپ قِسم"
-        is_group_user: "ممبر"
+        is_group_user: "معتمد"
         is_group_owner: "مالک"
         search_results: "تلاش کے نتائج نیچے ظاہر ہوں گے۔"
       title:
@@ -1383,7 +1400,7 @@ ur:
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
         no_filter_matches: "کوئی ممبر اس تلاش سے مماثل نہیں ہے۔"
       topics: "موضوعات"
-      posts: "پوسٹ"
+      posts: "دھاگے"
       aria_post_number: "%{title} - پوسٹ #%{postNumber}"
       mentions: "تذکرے"
       messages: "پیغامات"
@@ -1463,7 +1480,7 @@ ur:
         save: "محفوظ کردینے کا حکم"
         apply_all: "لاگو کریں"
         position: "پوزیشن"
-      posts: "پوسٹ"
+      posts: "دھاگے"
       topics: "موضوعات"
       latest: "تازہ ترین"
       subcategories: "ذیلی زمرے"
@@ -1675,7 +1692,6 @@ ur:
       external_links_in_new_tab: "تمام بیرونی رابطے ایک نئے ٹیب میں کھولیں"
       enable_quoting: "نمایاں کردہ متن کے لیے جواب میں اقتباس کو فعال کریں"
       enable_smart_lists: "کمپوزر میں لکھتے وقت سمارٹ لسٹوں کو فعال کریں"
-      enable_defer: "موضوعات کو بغیر پڑھے کے بطور نشان زد کریں"
       enable_markdown_monospace_font: "کمپوزر کے مارک ڈاؤن موڈ میں مونو اسپیس فونٹ استعمال کریں۔"
       experimental_sidebar:
         enable: "سائڈبار کو فعال کریں"
@@ -1721,7 +1737,7 @@ ur:
       watched_categories_instructions: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام موضوعات کو دیکھیں گے۔ آپ کو تمام نئے دھاگوں اور موضوعات کے بارے میں مطلع کیا جائے گا، اور نئے دھاگوں کی گنتی بھی موضوع کے ساتھ دکھائی جائے گی۔"
       tracked_categories: "ٹریک کیا ہوا"
       tracked_categories_instructions: "آپ خود کار طریقے سے اِن زمرہ جات میں موجود تمام موضوعات کو ڈھونڈیں۔ نئے دھاگوں کی گنتی موضوع کے ساتھ دکھائی جائے گی۔"
-      watched_first_post_categories: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+      watched_first_post_categories: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
       watched_first_post_categories_instructions: "آپ کو اِن زمرہ جات میں ہر نئے موضوع کے پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
       watched_first_post_tags: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
       watched_first_post_tags_instructions: "آپ کو اِن ٹیگ والے ہر نئے موضوع کے پہلے دھاگہ کے بارے میں مطلع کیا جائے گا۔"
@@ -1744,7 +1760,7 @@ ur:
       allowed_pm_users: "اجازت یافتہ"
       allowed_pm_users_instructions: "صرف ان اراکین سے PM کی اجازت دیں۔"
       allow_private_messages_from_specific_users: "صرف مخصوص اراکین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں۔"
-      ignored_users: "نظر انداز کردہ"
+      ignored_users: "نظر انداز شدہ"
       ignored_users_instructions: "ان اراکین کے تمام دھاگوں، اطلاعات اور نجی پیغامات کو دبا دیں۔"
       tracked_topics_link: "دیکھیں"
       automatically_unpin_topics: "جب میں نیچے تک پہنچ جاتا ہوں تو خودکار طور پر موضوعات کو اَن پِن کردیں"
@@ -1755,7 +1771,7 @@ ur:
       api_last_used_at: "آخری بار استعمال کیا:"
       api_expires_at: "میعاد ختم:"
       api_expired_at: "میعاد ختم ہوگئی:"
-      api_expires_never: "کبھی نہیں "
+      api_expires_never: "کبھی نہیں"
       theme: "تھیم"
       save_to_change_theme: 'آپ کے "%{save_text}" پر کلک کرنے کے بعد تھیم کو اپ ڈیٹ کر دیا جائے گا۔'
       home: "ڈیفالٹ ہوم پیج"
@@ -2164,6 +2180,7 @@ ur:
       bookmark_after_notification:
         title: "بُک مارک یاد دہانی کی اطلاع بھیجے جانے کے بعد:"
       send_shortcut:
+        title: "گفتگو کے کمپوزر سے پیغامات بھیجنے کے لیے استعمال کریں:"
         enter: "اَینٹر"
         meta_enter: "%{meta_key} + درج کریں"
       like_notification_frequency:
@@ -2249,8 +2266,8 @@ ur:
           title: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
           cta: "دعوت کا رابطہ بنائیں"
           tip:
-            prefix: "آپ بذریعہ حجم دعوتیں بھی بھیج سکتے ہیں"
-            action: "CSV فائل اپ لوڈ ہو رہی"
+            prefix: "آپ دعوتوں کا مجموعہ بھی بھیج سکتے ہیں بزریعہ"
+            action: "CSV فائل اپ لوڈنگ"
         truncated:
           one: "پہلی دعوت دکھائی جا رہی ہیں۔"
           other: "پہلی %{count} دعوتیں دکھائی جا رہی ہیں۔"
@@ -2333,7 +2350,8 @@ ur:
           email_placeholder: "name@example.com"
           invite_by_email: "ای میل"
           restrict_domain: "ڈومین تک محدود"
-          more_options: "مزید اختیارات"
+          create_and_send: "بھیجیں"
+          create_and_copy: "رابطہ کاپی کریں"
           update: "اپ ڈیٹ"
           summary:
             role_member: "معتمد"
@@ -2345,7 +2363,7 @@ ur:
             expires: "میعاد ختم"
             topic: "ٹاپک"
             groups: "گروپس"
-            edit: "دعوت میں ترمیم"
+            edit: "ترمیم کریں"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
           text: "مجموئی دعوت نامہ"
@@ -2779,8 +2797,8 @@ ur:
       preferences: "آپ کا اپنی صارف ترجیحات کو تبدیل کرنے کے لیے لاگ اِن ہونا ضروری ہے۔"
       not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گو اِی میل کے ذریعے آپ کو مطلع کر دیا جائے گا۔"
       discourse_id:
-        name: "ڈسکورس آئی ڈی"
-        title: "ڈسکورس آئی ڈی کے ساتھ لاگ ان"
+        name: "Discourse آئی ڈی"
+        title: "Discourse آئی ڈی کے ساتھ لاگ ان"
       google_oauth2:
         name: "گُوگَل"
         title: "گوگل کے ساتھ سائن ان"
@@ -2882,6 +2900,7 @@ ur:
       subcategory_count:
         one: "+%{count} ذیلی زمرہ"
         other: "+%{count} ذیلی زمرہ جات"
+      subcategories: "+ ذیلی زمرے"
       topic_count:
         one: "اس زمرے میں %{count} موضوعات"
         other: "اس زمرے میں %{count} موضوعات"
@@ -2953,6 +2972,7 @@ ur:
       reset: "ری سیٹ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
+      search_label: "آئیکنز ڈھونڈھیں"
       search_placeholder: "آئیکنز ڈھونڈھیں..."
       no_results: "آئیکنز نہیں ملے"
       results_count:
@@ -2968,6 +2988,8 @@ ur:
       publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
+    gifs:
+      composer_title: "GIF کا اندراج"
     codemirror:
       expression:
         sections:
@@ -3099,7 +3121,6 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      heading_title: "سرخیاں"
       heading_level_n: "سرخی %{levelNumber}"
       heading_level_n_title: "سرخی %{levelNumber}"
       heading_level_paragraph: "پیراگراف"
@@ -3307,7 +3328,6 @@ ur:
         other: "%{group_name}' کے %{count} کھلی رکنیت کی درخواستیں"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - مکمل"
       new_features: "نئی خصوصیات دستیاب ہیں!"
       admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
       upcoming_changes:
@@ -3497,7 +3517,7 @@ ur:
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
           count:
-            label: پوسٹ
+            label: دھاگے
           min:
             placeholder: کم از کم
             aria_label: پوسٹس کی کم از کم تعداد کے حساب سے فلٹر
@@ -3683,6 +3703,7 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
+        notify: "صارفین کو اس تبدیلی کے بارے مطلع کریں"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
         completed_count:
@@ -3880,6 +3901,39 @@ ur:
       unread_indicator: "کسی رکن نے ابھی تک اِس موضوع کا آخری دھاگہ نہیں پڑھا۔"
       sr_read: "رِیڈ"
       participant_groups: "شرکاء گروپس"
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> ہے}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> ہیں}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { اور <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other { اور and <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {یہاں <a href="{unreadUrl}"># بغیر پڑھا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{unreadUrl}"># بغیر پڑھے</a> مضوعات باقی ہیں،}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {یہاں <a href="{newUrl}"># نیا</a> موضوع باقی ہے،}
+              other {یہاں <a href="{newUrl}"># نئے</a> موضوعات باقی ہیں،}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { یا {categoryLink} میں مزید موضوعات دیکھیں}
+          false { یا <a href="{basePath}/latest">تازہ ترین موضوعات</a> دیکھیں}
+          other {}
+        }
       reply_count_link:
         one: "%{count} جواب، پہلے دھاگہ پر جائیں"
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
@@ -4745,7 +4799,7 @@ ur:
           title: "نظر رکھی ہوئی ہے"
           description: "آپ خود بخود اس زمرے کے تمام موضوعات دیکھیں گے۔ آپ کو ہر موضوع میں ہر نئے دھاگہ کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دکھائی جائے گی۔"
         watching_first_post:
-          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          title: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
           description: "آپ کو اِس زمرہ میں نئے ٹاپکس کے بارے میں مطلع کیا جائے گا لیکن ٹاپکس کے جوابات پر نہیں۔"
         tracking:
           title: "ٹریک کیا جا رہا"
@@ -5263,7 +5317,7 @@ ur:
           title: "نظر رکھی ہوئی ہے"
           description: "آپ خود کار طریقے سے اِس ٹیگ والے تمام ٹاپکس پر نظر رکھیں گے۔ تمام نئی پوسٹ اور ٹاپکس کے بارے میں مطلع کیا جائے گا، اور نئی پوسٹس کی گنتی بھی ٹاپک کے ساتھ دکھائی جائے گی۔"
         watching_first_post:
-          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          title: "پہلے دھاگے پر نظر رکھی ہوئی ہے"
           description: "آپ کو اِس ٹیگ میں نئے ٹاپکس کے بارے میں مطلع کیا جائے گا لیکن ٹاپکس کے جوابات پر نہیں۔"
         tracking:
           title: "ٹریک کیا جا رہا"
@@ -5418,9 +5472,9 @@ ur:
           always_public: "اس شعبہ میں مواد ہمیشہ عوامی ہوتا ہے"
           more_menu: "مزید مینو"
           localizations:
-            title: "ترجمہ"
             locale: "زبان"
             title_label: "سیکشن کا عنوان"
+            remove_language: "خارج کریں"
           links:
             add: "ایک اور رابطہ شامل کریں"
             delete: "رابطہ حذف"
@@ -5648,7 +5702,7 @@ ur:
           copy: "کاپی۔۔۔"
           paste: "چسپاں۔۔۔"
           save: "محفوظ کرنا۔۔۔"
-    powered_by_discourse: "تقویت بذریعہ ڈسکورس"
+    powered_by_discourse: "تقویت بذریعہ Discourse"
     safari_15_warning: "آپ کا براؤزر جلد ہی اس کمیونٹی کے ساتھ مطابقت کھو دے گا۔ یہاں شرکت جاری رکھنے کے لیے، براہ کرم اپنا براؤزر اپ گریڈ کریں یا <a href='%{url}'>مزید جانیں</a>۔"
     filter:
       placeholder: "زمرہ، دہجی، یا دیگر معیار کے لحاظ سے موضوعات کو چھانے۔"
@@ -5808,7 +5862,7 @@ ur:
           header_description: "نئے ایموجی شامل کریں جو ہر کسی کے لیے دستیاب ہوں گے۔ ایموجیز بنانے کے لیے ان کے فائل کے ناموں کا استعمال کرتے ہوئے متعدد فائلوں کو منتخب کریں۔ منتخب کردہ گروپ کو ان تمام فائلوں کے لیے استعمال کیا جائے گا جو ایک ہی وقت میں شامل کی گئی ہیں۔"
         flags:
           title: "ماڈریٹر کا کام"
-          header_description: "ڈسکورس میں نشان دہی کا نظام آپ کی اور آپ کی منتظمین ٹیم کو مواد اور رکن کے رویے کا نظم کرنے میں مدد کرتا ہے، آپ کی کمیونٹی کو باعزت اور صحت مند رکھتے ہوئے ڈیفالٹس زیادہ تر کمیونٹیز کے لیے موزوں ہیں اور آپ کو انہیں تبدیل کرنے کی ضرورت نہیں ہے۔ تاہم، اگر آپ کی سائٹ کی مخصوص ضروریات ہیں تو آپ ان نشان دہیوں کو غیر فعال کر سکتے ہیں جن کی آپ کو ضرورت نہیں ہے اور اپنے حسب ضرورت نشان دہییاں شامل کر سکتے ہیں۔"
+          header_description: "Discourse میں نشان دہی کا نظام آپ کی اور آپ کی منتظمین ٹیم کو مواد اور رکن کے رویے کا نظم کرنے میں مدد کرتا ہے، آپ کی کمیونٹی کو باعزت اور صحت مند رکھتے ہوئے ڈیفالٹس زیادہ تر کمیونٹیز کے لیے موزوں ہیں اور آپ کو انہیں تبدیل کرنے کی ضرورت نہیں ہے۔ تاہم، اگر آپ کی سائٹ کی مخصوص ضروریات ہیں تو آپ ان نشان دہیوں کو غیر فعال کر سکتے ہیں جن کی آپ کو ضرورت نہیں ہے اور اپنے حسب ضرورت نشان دہییاں شامل کر سکتے ہیں۔"
           keywords: "نشان دہی|جائزہ|سپیم|غیر قانونی"
         files:
           title: "فائلیں"
@@ -5825,17 +5879,19 @@ ur:
           keywords: "علاقائی ترتیبات|زبان|خطہ کے وقت|یونی کوڈ|ایل ٹی آر"
         upcoming_changes:
           title: "آنے والی تبدیلیاں"
-          header_description: "ڈسکورس میں آنے والی تبدیلیوں کی فہرست جو آپ کی سائٹ کو متاثر کریں گی، اور تجرباتی خصوصیات جن میں آپ حصہ لے سکتے ہیں۔ آپ انہیں اثر، قسم اور حیثیت کے لحاظ سے فلٹر کر سکتے ہیں۔\n\nآپٹ-ان گروپس مخصوص صارفین کو کسی تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دیتے ہیں، تاہم جب کوئی تبدیلی مستقل حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
+          header_description: "Discourse میں آنے والی تبدیلیوں کی فہرست جو آپ کی سائٹ کو متاثر کریں گی، اور تجرباتی خصوصیات جن میں آپ حصہ لے سکتے ہیں۔ آپ انہیں اثر، قسم اور حیثیت کے لحاظ سے فلٹر کر سکتے ہیں۔\n\nآپٹ-ان گروپس مخصوص صارفین کو کسی تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دیتے ہیں، تاہم جب کوئی تبدیلی مستقل حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         login:
           title: "لاگ ان اور تصدیق"
           header_description: "کنفیگر کریں کہ اراکین کس طرح لاگ ان اور تصدیق کرتے ہیں، راز اور چابیاں، او آتھ2 فراہم کنندگان اور مزید"
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
-              title: "ڈسکورس آئی ڈی"
+              title: "Discourse آئی ڈی"
         discourse_id:
-          title: "ڈسکورس آئی ڈی"
+          title: "Discourse آئی ڈی"
           learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
@@ -5979,7 +6035,7 @@ ur:
           header_description: "تعین کریں کہ کون سے صارفین کا مجموعہ API تک رسائی حاصل کر سکتے ہیں، نیز کن اسکوپس کی اجازت ہے۔"
         group_permissions:
           title: "گروپ کی اجازتیں"
-          header_description: "تمام گروپ پر مبنی ایپ کی اجازتوں کی تنظیم یہاں کی جاتی ہیں، جو ڈسکورس کی مختلف خصوصیات تک رسائی کا تعین کرتی ہیں"
+          header_description: "تمام گروپ پر مبنی ایپ کی اجازتوں کی تنظیم یہاں کی جاتی ہیں، جو Discourse کی مختلف خصوصیات تک رسائی کا تعین کرتی ہیں"
         dashboard:
           title: "ڈَیش بورڈ"
           header_description: "ڈیش بورڈ آپ کی کمیونٹی کی صحت کا اسنیپ شاٹ فراہم کرتا ہے، بشمول ٹریفک، رکن کی سرگرمی، اور دیگر کلیدی میٹرکس"
@@ -5991,14 +6047,14 @@ ur:
           header_description: "گروپس بنائیں اور ان کا نظم کریں، گروپ کی اجازتیں بنائیں کریں، اور گروپ کی سرگرمی اور ان باکسز دیکھیں"
         site_settings:
           title: "سائٹ کی تمام ترتیبات"
-          header_description: "اپنے ڈسکورس کی سائٹ کی ظاہری شکل، فعالیت اور رکن کے تجربے کو اپنی مرضی کے مطابق بنانے کے لیے تمام ترتیبات کو مطابقت دیں۔"
+          header_description: "اپنے Discourse کے فورم کی ظاہری شکل، فعالیت اور رکن کے تجربے کو اپنی مرضی کے مطابق بنانے کے لیے تمام ترتیبات کو مطابقت دیں۔"
         whats_new:
           title: "نیا کیا ہے؟"
-          header_description: "ڈسکورس میں تازہ ترین خصوصیات اور بہتری کے ساتھ تازہ ترین رکھیں"
+          header_description: "Discourse میں تازہ ترین خصوصیات اور بہتری کے ساتھ ہم آہنگ رہیں"
           keywords: "چینج لاگ|فیچر|ریلیز"
         backups:
           title: "بیک اَپس"
-          header_description: "ڈسکورس بیک اپ میں سائٹ کا مکمل ڈیٹا بیس شامل ہوتا ہے، جس میں سائٹ پر موجود ہر چیز شامل ہوتی ہے: موضوعات، دھاگے، اراکین، گروپس، ترتیبات، تھیمز وغیرہ۔ بیک اپ فائل کیسے بنتی ہے اس پر منحصر ہے، اس میں اپ لوڈز شامل ہو سکتے ہیں یا نہیں۔"
+          header_description: "Discourse بیک اپ میں فورم کا مکمل ڈیٹا بیس شامل ہوتا ہے، جس میں سائٹ پر موجود ہر چیز شامل ہوتی ہے: موضوعات، دھاگے، اراکین، گروپس، ترتیبات، تھیمز وغیرہ۔ بیک اپ فائل کیسے بنتی ہے اس پر منحصر ہے، اس میں اپ لوڈز شامل ہو سکتے ہیں یا نہیں۔"
           sub_pages:
             logs:
               title: "لاگز"
@@ -6083,7 +6139,7 @@ ur:
           keywords: "تھیم|جزو|توسیع"
         themes_and_components:
           title: "تھیمز اور اجزاء"
-          header_description: "تھیمز اور اجزاء کے ساتھ اپنی ڈسکورس سائٹ کو اپنی ضروریات کے مطابق بنائیں"
+          header_description: "تھیمز اور اجزاء کے ساتھ اپنے Discourse فورم کو اپنی ضروریات کے مطابق بنائیں"
           keywords: "تھیم|جزو|توسیع|تصرفات"
         site_admin:
           title: "سائٹ منتظم"
@@ -6091,7 +6147,7 @@ ur:
           keywords: "دریافت کریں | بوٹسٹریپ | ایپس"
         site_texts:
           title: "سائٹ کے متون"
-          header_description: "اپنی کمیونٹی کی آواز اور لہجے سے ملنے کے لیے ڈسکورس میں استعمال ہونے والے کسی بھی متن کو حسب ضرورت بنائیں"
+          header_description: "اپنی کمیونٹی کی آواز اور لہجے سے ملنے کے لیے Discourse میں استعمال ہونے والے کسی بھی متن کو حسب ضرورت ترتیب دیں"
         email:
           title: "ای میل کی ترتیبات"
           header_description: "ان ای میلز کے لیے ترتیبات بنائیں جو آپ کے اراکین کو بھیجی جاتی ہیں۔"
@@ -6105,7 +6161,7 @@ ur:
               header_description: "غیر فعال اراکین کو بھیجی گئی خلاصہ کی ای میلز کے مواد کا جائزہ لیں"
             advanced_test:
               title: "اعلی درجے کی جانچ"
-              header_description: "دیکھیں کہ ڈسکورس کے عمل کو ای میلز کیسے موصول ہوئیں"
+              header_description: "دیکھیں کہ Discourse کے عمل کو ای میلز کیسے موصول ہوئیں"
             templates:
               title: "ٹَیمپلیٹ"
               header_description: "ای میلز بنانے کے لیے استعمال ہونے والے سانچوں کو حسب ضرورت بنائیں"
@@ -6154,15 +6210,15 @@ ur:
           header_description: "اضافی سہولتیں نئی خصوصیات کے ذریعے آپ کی کمیونٹی کو بہتر بناتی ہیں۔ ذیل میں پہلے سے نصب شدہ اور اپنی مرضی کی سہولتیں درج ہیں"
         api_keys:
           title: "رسائی کی کنجیاں"
-          header_description: "رسائی کی کنجیوں کا فیچر آپ کو ڈسکورس کے ساتھ نتھی کرتا ہے اور ڈسکورس کو دوسرے نظاموں کے ساتھ محفوظ طریقے سے جوڑنے اور کام خودکار بنانے کی سہولت دیتا ہے۔ منتظمین مخصوص اختیارات کے ساتھ کنجیاں بنا سکتے ہیں تاکہ وسائل اور حساس معلومات تک رسائی کو قابو میں رکھا جا سکے۔ یہ اختیارات کام کرنے کی صلاحیت کو محدود کرتی ہیں اور سیکیورٹی کو مزید بہتر بناتی ہیں"
+          header_description: "رسائی کی کنجیوں کا فیچر آپ کو Discourse کے ساتھ نتھی کرتا ہے اور Discourse کو دوسرے نظاموں کے ساتھ محفوظ طریقے سے جوڑنے اور کام خودکار بنانے کی سہولت دیتا ہے۔ منتظمین مخصوص اختیارات کے ساتھ کنجیاں بنا سکتے ہیں تاکہ وسائل اور حساس معلومات تک رسائی کو قابو میں رکھا جا سکے۔ یہ اختیارات کام کرنے کی صلاحیت کو محدود کرتی ہیں اور سیکیورٹی کو مزید بہتر بناتی ہیں"
           keywords: "رسائی کوڈ/اختیارات"
         webhooks:
           title: "ویب ہکس"
-          header_description: "ویب ہُکس ڈسکورس کو یہ سہولت دیتے ہیں کہ جب آپ کی سائٹ پر کوئی خاص واقعہ پیش آئے تو وہ بیرونی سروسز کو اطلاع دے سکے۔ جب کوئی ویب ہُک متحرک ہوتا ہے تو فراہم کردہ یو آر ایل پر ایک درخواست بھیجی جاتی ہے"
+          header_description: "ویب ہُکس Discourse کو یہ سہولت دیتے ہیں کہ جب آپ کے فورم پر کوئی خاص واقعہ پیش آئے تو وہ بیرونی سروسز کو اطلاع دے سکے۔ جب کوئی ویب ہُک متحرک ہوتا ہے تو فراہم کردہ URL پر ایک POST درخواست بھیجی جاتی ہے"
           keywords: "سرگرمی/اصل معلومات/ویب پتہ"
         embedding:
           title: "اَیمبَیڈ کرنا"
-          header_description: "ڈسکورس میں یہ صلاحیت موجود ہے کہ وہ کسی موضوع کے تبصرے کو کسی بیرونی سائٹ میں ضم کر سکے۔ اس مقصد کے لیے جاوا اسکرپٹ API استعمال کی جاتی ہے جو ایک آئی فریم تیار کرتی ہے"
+          header_description: "Discourse میں یہ صلاحیت موجود ہے کہ وہ کسی موضوع کے تبصرے کو کسی بیرونی سائٹ میں ضم کر سکے۔ اس مقصد کے لیے جاوا اسکرپٹ API استعمال کی جاتی ہے جو ایک IFRAME تیار کرتی ہے"
       theme_site_settings:
         setting: "ترتیب"
         overridden_by: "کے ذریعے بدل دیا گیا"
@@ -6186,13 +6242,32 @@ ur:
       new_features:
         title: "نیا کیا ہے؟"
         check_for_updates: "اپ ڈیٹس کے لیے چیک کریں۔"
+      site_traffic_explorer:
+        metric_information: "%{metric} کے بارے میں"
+        remove_filter_value: "%{value} ہٹائیں"
+        clear_all: "سبھی ہٹا دیں"
+        apply: "لاگو کریں"
+        view_more: "مزید دیکھیں"
+        cards:
+          pages: "صفحات"
+          visitors: "زائرین"
+        filters:
+          referrer: "حوالہ دہندہ"
+          country: "ملک"
+          browser: "براؤزر"
+          ip: "IP ایڈریس"
+        metrics:
+          logged_in_share:
+            label: "لاگ ان شدہ شراکت"
+        series:
+          logged_in_human: "لاگ ان شدہ"
+          anonymous_human: "گمنام"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
-        discourse_last_updated: "ڈسکورس اَپ ڈیٹ کیا گیا:"
+        discourse_last_updated: "Discourse اَپ ڈیٹ کیا گیا:"
         version: "ورژن"
         up_to_date: "آپ اَپ ٹو ڈیٹ ہیں!"
-        critical_available: "ایک انتہائی اہم اَپ ڈیٹ دستیاب ہے۔"
         updates_available: "اَپ ڈیٹس دستیاب ہیں۔"
         please_update: "براہ کرم اپ ڈیٹ کریں!"
         no_check_performed: "اَپ ڈیٹس کے لئے چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
@@ -6231,7 +6306,7 @@ ur:
         show_traffic_report: "تفصیلی ٹریفک رپورٹ دکھائیں"
         community_health: کمیونٹی صحت
         moderators_activity: نگرانوں کی سرگرمی
-        whats_new_in_discourse: ڈسکورس میں نیا کیا ہے؟
+        whats_new_in_discourse: Discourse میں نیا کیا ہے؟
         activity_metrics: سرگرمی مَیٹرِکس
         all_reports: "تمام رپورٹیں"
         general_tab: "عام"
@@ -6288,31 +6363,11 @@ ur:
                   other: "-%{count} گرا"
               stable_aria: "کوئی حرکت نہیں"
             headline:
-              engaged_but_shrinking:
-                title: "اراکین فعال ہیں، لیکن فورم سکڑ رہا ہے۔"
-                summary: "شراکت برقرار ہے، لیکن روزانہ کی مشغولیت یا نئے سائن اپ میں کمی آئی ہے۔"
-              growing_but_distracted:
-                title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
                 daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
-            count_headline:
-              last_7_days:
-                one: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاش کی"
-                other: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              last_30_days:
-                one: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              last_3_months:
-                one: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
-              selected_period:
-                one: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاش کی۔"
-                other: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاشیں کیں۔"
-            headline:
-              content_gaps: "اس عرصے میں 10% سے زیادہ اراکین تلاشیں بغیر کلک کے ختم ہوئیں۔ نیچے دیے گئے مواد کے خلاؤں کا جائزہ لیں تاکہ معلوم ہو سکے کہ کیا غائب ہے۔"
             kpi:
               total_searches:
                 label: "کل تلاش"
@@ -6330,7 +6385,7 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
         reports_section:
-          header_action: "مَینَیج"
+          header_action: "منتظمی"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
           add: "رپورٹ شامل کریں"
           no_data: "دکھانے کے لیے کچھ نہیں"
@@ -6858,7 +6913,7 @@ ur:
             title: "بیک اَپس"
           whats_new:
             title: "نیا کیا ہے؟"
-            description: "ڈسکورس میں نئی ریلیز اور بہتری دریافت کریں۔"
+            description: "Discourse میں نئی ریلیز اور بہتری دریافت کریں۔"
       config_areas:
         about:
           general_settings: "عمومی ترتیبات"
@@ -7044,7 +7099,7 @@ ur:
         not_enabled: "N"
         change_settings_short: "ترتیبات"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
-        official: "آفیشل ڈسکورس پلگ ان"
+        official: "رسمی Discoirse اضافی سہولت"
         broken_route: "'%{name}' کے رابطہ کو ترتیب نہیں دی جا سکی۔ یقینی بنائیں کہ ایڈ بلاکرز غیر فعال ہیں اور صفحہ دوبارہ لوڈ کریں۔"
         author: "%{author} کی طرف سے"
         experimental_badge: "تجرباتی"
@@ -7189,8 +7244,8 @@ ur:
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
           themes_intro_new: "شروع کرنے کے لیے ایک نئی تھیم انسٹال کریں، یا ان وسائل کا استعمال کرتے ہوئے ابتداء سے اپنی تخلیق کریں۔"
           components_intro_new: "شروع کرنے کے لیے ایک نیا جزو انسٹال کریں، یا ان وسائل کا استعمال کرتے ہوئے شروع سے اپنا تخلیق کریں۔"
-          beginners_guide_title: "ڈسکورس تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
-          developers_guide_title: "ڈسکورس تِھیمز کیلئے ڈویلپر رہنمائی"
+          beginners_guide_title: "Discourse تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
+          developers_guide_title: "Discourse تِھیمز کیلئے ڈویلپر رہنمائی"
           browse_themes: "کمیونٹی تِھیمز دیکھیں"
           customize_desc: "مرضی کے مطابق بنائیں:"
           title: "تِھیمز"
@@ -7220,7 +7275,7 @@ ur:
           user_selectable_button_label: "اراکین کو منتخب کرنے کی اجازت دیں"
           user_selectable_unavailable_button_label: "اراکین کو منتخب کرنے کی اجازت نہیں"
           broken_badge_label: "ٹوٹا ہوا تھیم"
-          auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
+          auto_update: "Discourse کے جدید ہونے پر خود کار اپ ڈیٹ"
           color_scheme: "رنگ پیلیٹ"
           default_light_scheme: "ہلکا (ڈیفالٹ)"
           color_scheme_select: "تِھیم میں استعمال ہونے والے رنگ منتخب کریں."
@@ -7318,10 +7373,10 @@ ur:
             text: "CSS"
           header:
             text: "سرنامے سے پہلے"
-            title: "بنیادی HTML کو ڈسکورس ہیڈر کے اوپر پیش کیا جانا ہے۔"
+            title: "بنیادی HTML کوڈ Discourse کے فورم کے ہیڈر کے اوپر ظاہر کیا جاتا ہے"
           after_header:
             text: "ہَیڈر کے بعد"
-            title: "بنیادی HTML کو ڈسکورس ہیڈر کے نیچے پیش کیا جانا ہے۔"
+            title: "بنیادی HTML کوڈ Discourse فورم کے ہیڈر کے نیچے ظاہر کیا جاتا ہے"
           footer:
             text: "فوٹر"
             title: "بنیادی HTML صفحہ کے نچلے حصے میں پیش کیا جانا ہے۔"
@@ -8293,7 +8348,7 @@ ur:
         topic_id: "ٹاپک ID"
         topic_title: "موضوع"
         post_id: "پوسٹ ID"
-        post_title: "پوسٹ"
+        post_title: "دھاگہ"
         category_id: "زمرہ ID"
         category_title: "زمرہ"
         tag_name: "ٹیگ کا نام"

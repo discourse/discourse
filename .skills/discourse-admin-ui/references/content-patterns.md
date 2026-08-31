@@ -62,7 +62,7 @@ Current examples:
 
 Use FormKit for new admin forms. Do not build ad hoc form controls when FormKit components cover the interaction. Keep client validation paired with server-side validation; do not rely only on browser or JS validation.
 
-Reference: `docs/developer-guides/docs/03-code-internals/21-form-kit.md` and `frontend/discourse/app/form-kit`.
+Reference: `docs/developer-guides/docs/03-code-internals/22-form-kit.md` and `frontend/discourse/app/form-kit`.
 
 New/edit forms usually belong on third-level routes rather than inline inside a table row. This makes the form linkable, reloadable, and easier to test.
 
@@ -113,7 +113,7 @@ Current examples:
 
 - Core table and empty list: `frontend/discourse/admin/templates/admin-permalinks/index.gjs`
 - Plugin table: `plugins/discourse-data-explorer/admin/assets/javascripts/admin/templates/admin-plugins/show/explorer/index.gjs`
-- Toggle rows: `plugins/discourse-calendar/assets/javascripts/discourse/components/admin-holidays-list-item.gjs`
+- Toggle rows: `plugins/discourse-events/assets/javascripts/discourse/components/admin-holidays-list-item.gjs`
 
 ## Empty lists
 

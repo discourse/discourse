@@ -202,19 +202,33 @@ zh_CN:
       node_unavailable:
         requires_assign: "需要启用 Assign 插件"
       nodes:
-        "action:assign_topic": "指定话题"
         "trigger:assigned": "已指定"
+        "trigger:unassigned": "已取消指定"
       node_descriptions:
-        "action:assign_topic": "指定或取消指定话题"
         "trigger:assigned": "指定话题或帖子时触发"
       assign_topic:
+        resource: "资源"
+        resources:
+          topic: "话题"
+          post: "帖子"
         operation: "操作"
         operations:
           assign: "指定"
           unassign: "取消指定"
         topic_id: "话题 ID"
+        post_id: "帖子 ID"
         assignee: "受理人"
         replace_existing: "替换现有任务"
+      check_assignment:
+        target_types:
+          topic: "话题"
+          post: "帖子"
+        topic_id: "话题 ID"
+        post_id: "帖子 ID"
+        assignee: "受理人"
       assigned:
+        topic_assignments_only: "仅在指定目标为话题而非个别帖子时触发"
+        topic_assignments_only_description: "仅限话题指定"
+      unassigned:
         topic_assignments_only: "仅在指定目标为话题而非个别帖子时触发"
         topic_assignments_only_description: "仅限话题指定"

@@ -315,12 +315,18 @@ th:
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
     admin_onboarding_banner:
-      select_theme:
-        use_theme: "ใช้ธีมที่เลือก"
-        enabled: "เลือก"
-        applying_theme: "กำลังใช้ธีม..."
       start_posting:
         back: "กลับ"
+    design_wizard:
+      back: "กลับ"
+      next: "ต่อไป"
+      sections:
+        theme: "ธีม"
+      theme:
+        selected: "เลือก"
+      homepage:
+        topics: "หัวข้อ"
+        categories: "หมวดหมู่"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -1194,6 +1200,7 @@ th:
           staff_role_moderator: "ผู้ดูแล"
           email_placeholder: "name@example.com"
           invite_by_email: "อีเมล"
+          create_and_send: "ส่ง"
           update: "อัปเดต"
           summary:
             role_member: "สมาชิก"
@@ -1203,6 +1210,7 @@ th:
             expires: "หมดอายุ"
             topic: "หัวข้อ"
             groups: "กลุ่ม"
+            edit: "แก้ไข"
       password:
         title: "รหัสผ่าน"
         common: "รหัสผ่านง่ายเกินไป"
@@ -1439,6 +1447,7 @@ th:
       alt: "Alt"
       enter: "เอ็นเทอร์"
     category_row:
+      subcategories: "+ หมวดหมู่ย่อย"
       topic_count:
         other: "%{count}กระทู้ในหมวดหมู่นี้"
     select_kit:
@@ -2567,6 +2576,8 @@ th:
         custom:
           save: "บันทึก"
           delete: "ลบ"
+          localizations:
+            remove_language: "ลบ"
           links:
             icon:
               label: "ไอคอน"
@@ -2784,11 +2795,17 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
+      site_traffic_explorer:
+        metric_information: "เกี่ยวกับ %{metric}"
+        apply: "นำไปใช้"
+        filters:
+          ip: "ที่อยู่ไอพี"
+        series:
+          anonymous_human: "ไม่ระบุชื่อ"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
-        critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         github: "กิตฮับ"

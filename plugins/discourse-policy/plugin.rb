@@ -72,7 +72,8 @@ after_initialize do
     has_group = false
 
     if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
-      if policy = doc.search(".policy")&.first
+      policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
+      if policy
         post_policy = post.post_policy || post.build_post_policy
 
         group_names = []
@@ -160,6 +161,8 @@ after_initialize do
             if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
               add_to_group.id
             end
+        else
+          post_policy.add_users_to_group = nil
         end
 
         if has_group

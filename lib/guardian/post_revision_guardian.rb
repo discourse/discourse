@@ -21,6 +21,11 @@ module PostRevisionGuardian
     is_staff?
   end
 
+  def can_view_post_version?(post, version)
+    can_view_hidden_post_revisions? ||
+      !PostRevision.where(post_id: post.id, hidden: true, number: ..version).exists?
+  end
+
   def can_view_hidden_post_revisions?
     is_staff?
   end

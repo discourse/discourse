@@ -34,6 +34,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       anonymous: "page_view_anon_browser",
       embedded: "page_view_embed",
       crawlers: "page_view_crawler",
+      likely_crawlers: "page_view_likely_crawler",
     }.fetch(id)
   end
 
@@ -622,61 +623,86 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    context "for top countries and top referrers" do
+    context "for top countries, top referrers, and top entry URLs" do
       before { SiteSetting.persist_browser_pageview_events = true }
 
       def aggregate_rollups
         range = { start_date: 1.year.ago.to_date, end_date: Date.current }
         BrowserPageviewCountryDailyRollup.aggregate(**range)
         BrowserPageviewReferrerDailyRollup.aggregate(**range)
+        BrowserPageviewEntryUrlDailyRollup.aggregate(**range)
       end
 
-      it "omits top_countries and top_referrers when persist_browser_pageview_events is disabled" do
+      it "omits browser pageview cards when persist_browser_pageview_events is disabled" do
         SiteSetting.persist_browser_pageview_events = false
 
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result).not_to have_key(:top_countries)
         expect(result).not_to have_key(:top_referrers)
+        expect(result).not_to have_key(:top_entry_urls)
       end
 
-      it "returns top_countries and top_referrers with rows and no error when matching events exist" do
-        6.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
+      it "omits top_countries and top_referrers when legacy pageviews are enabled" do
+        SiteSetting.use_legacy_pageviews = true
 
         result = build_traffic(start_date: nil, end_date: nil)
-
-        expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(result[:top_countries][:error]).to be_nil
-
-        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
-        expect(result[:top_referrers][:error]).to be_nil
+        expect(result.keys).to contain_exactly(:kpis, :pageview_series)
       end
 
-      it "caps each card at the top 5 rows on both the fresh and cached paths" do
+      it "returns the same top five card rows from fresh and cached results" do
         %w[US GB DE FR JP CA].each do |code|
           Fabricate(
             :browser_pageview_event,
+            url: "/#{code.downcase}",
             country_code: code,
             normalized_referrer: "#{code.downcase}.example.com",
           )
         end
+        Fabricate(
+          :browser_pageview_event,
+          url: "/outside-range",
+          country_code: "AU",
+          normalized_referrer: "outside-range.example.com",
+          created_at: "2026-03-01",
+        )
         aggregate_rollups
 
+        expected_cards = {
+          top_countries: {
+            rows: %w[CA DE FR GB JP].map { |code| { country_code: code, count: 1, percent: 17 } },
+            error: nil,
+          },
+          top_referrers: {
+            rows:
+              %w[ca de fr gb jp].map do |code|
+                { normalized_referrer: "#{code}.example.com", count: 1, percent: 17 }
+              end,
+            error: nil,
+          },
+          top_entry_urls: {
+            rows:
+              %w[ca de fr gb jp].map { |code| { entry_url: "/#{code}", count: 1, percent: 17 } },
+            error: nil,
+          },
+        }
+
         fresh = build_traffic(start_date: nil, end_date: nil)
-        expect(fresh[:top_countries][:rows].size).to eq(5)
-        expect(fresh[:top_referrers][:rows].size).to eq(5)
+        expect(fresh.slice(*expected_cards.keys)).to eq(expected_cards)
+
+        BrowserPageviewCountryDailyRollup.delete_all
+        BrowserPageviewReferrerDailyRollup.delete_all
+        BrowserPageviewEntryUrlDailyRollup.delete_all
+        BrowserPageviewEvent.delete_all
 
         cached = build_traffic(start_date: nil, end_date: nil)
-        expect(cached[:top_countries][:rows].size).to eq(5)
-        expect(cached[:top_referrers][:rows].size).to eq(5)
+        expect(cached.slice(*expected_cards.keys)).to eq(expected_cards)
       end
 
       it "returns empty rows when no events match the date range" do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
+        expect(result[:top_entry_urls]).to eq(rows: [], error: nil)
       end
 
       it "returns an exception error payload when the underlying report cannot be built" do
@@ -685,24 +711,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
         expect(result[:top_referrers]).to eq(rows: [], error: "exception")
-      end
-
-      it "serves the cached payload on subsequent calls within the cache window" do
-        4.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
-
-        first = build_traffic(start_date: nil, end_date: nil)
-        expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
-
-        BrowserPageviewCountryDailyRollup.delete_all
-        BrowserPageviewReferrerDailyRollup.delete_all
-        BrowserPageviewEvent.delete_all
-
-        second = build_traffic(start_date: nil, end_date: nil)
-        expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(second[:top_countries][:rows].first.keys).to all(be_a(Symbol))
+        expect(result[:top_entry_urls]).to eq(rows: [], error: "exception")
       end
 
       it "invalidates the cached payload when login_required is toggled" do
@@ -718,6 +727,20 @@ RSpec.describe AdminDashboardSiteTraffic do
         SiteSetting.login_required = true
         second = build_traffic(start_date: nil, end_date: nil)
         expect(second[:top_countries][:rows]).to be_empty
+      end
+
+      it "invalidates the cached payload when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 90) }
+        Fabricate(:browser_pageview_event, country_code: "US", score: 10)
+        aggregate_rollups
+
+        first = build_traffic(start_date: nil, end_date: nil)
+        expect(first[:top_countries][:rows].first[:count]).to eq(4)
+
+        SiteSetting.improved_crawler_detection = true
+        second = build_traffic(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows].first[:count]).to eq(1)
       end
 
       it "invalidates the cached payload when current_hostname changes" do
@@ -815,6 +838,39 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
           average_session_duration_seconds: {
             value: nil,
+          },
+        )
+      end
+
+      it "excludes likely crawler pageviews from the direct traffic share once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        3.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: nil,
+            score: 10,
+            created_at: "2026-05-01",
+          )
+        end
+        9.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            score: 90,
+            created_at: "2026-05-01",
+          )
+        end
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "google.com",
+          score: 10,
+          created_at: "2026-05-01",
+        )
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to include(
+          direct_traffic: {
+            value: 75,
           },
         )
       end
@@ -979,6 +1035,54 @@ RSpec.describe AdminDashboardSiteTraffic do
         )
       end
 
+      it "excludes likely crawler sessions once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 63,
+          },
+          average_session_duration_seconds: {
+            value: 75,
+          },
+        )
+      end
+
+      it "counts likely crawler sessions while crawler detection is disabled" do
+        SiteSetting.improved_crawler_detection = false
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 79,
+          },
+          average_session_duration_seconds: {
+            value: 50,
+          },
+        )
+      end
+
       it "reports zero average duration, not a placeholder, for visits with no engaged time" do
         Fabricate(
           :browser_pageview_session_engagement_daily_rollup,
@@ -1082,6 +1186,132 @@ RSpec.describe AdminDashboardSiteTraffic do
           logged_in_share: {
             value: 0,
           },
+        )
+      end
+    end
+
+    context "for likely crawlers" do
+      before { SiteSetting.improved_crawler_detection = true }
+
+      it "orders likely crawlers ahead of known crawlers" do
+        SiteSetting.embed_topics_list = true
+        Fabricate(:embeddable_host)
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(response[:pageview_series].map { |series| series[:req] }).to eq(
+          %w[
+            page_view_logged_in_browser
+            page_view_anon_browser
+            page_view_embed
+            page_view_likely_crawler
+            page_view_crawler
+          ],
+        )
+      end
+
+      it "reclassifies likely crawlers out of the logged in and anonymous series" do
+        Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+        Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 20)
+
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: true,
+          count: 4,
+        )
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: false,
+          count: 15,
+        )
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(traffic_series_data(response, :logged_in)).to eq([traffic_point("2026-05-01", 6)])
+        expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 5)])
+        expect(traffic_series_data(response, :likely_crawlers)).to eq(
+          [traffic_point("2026-05-01", 19)],
+        )
+        expect(response[:kpis][:browser_pageviews][:value]).to eq(11)
+      end
+
+      it "never drives a series below zero when the rollup exceeds recorded pageviews" do
+        Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 2)
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: false,
+          count: 9,
+        )
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 0)])
+        expect(traffic_series_data(response, :likely_crawlers)).to eq(
+          [traffic_point("2026-05-01", 9)],
+        )
+      end
+
+      it "ignores rollups outside the requested range" do
+        Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 10)
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 4, 20),
+          logged_in: false,
+          count: 7,
+        )
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 10)])
+        expect(traffic_series_data(response, :likely_crawlers)).to eq(
+          [traffic_point("2026-05-01", 0)],
+        )
+      end
+
+      it "excludes anonymous likely crawlers when login is required" do
+        SiteSetting.login_required = true
+
+        Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: true,
+          count: 3,
+        )
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: false,
+          count: 8,
+        )
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(traffic_series_data(response, :logged_in)).to eq([traffic_point("2026-05-01", 7)])
+        expect(traffic_series_data(response, :likely_crawlers)).to eq(
+          [traffic_point("2026-05-01", 3)],
+        )
+      end
+
+      it "leaves the series out and keeps counts intact when the change is disabled" do
+        SiteSetting.improved_crawler_detection = false
+
+        Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 10)
+        Fabricate(
+          :browser_pageview_crawler_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: false,
+          count: 6,
+        )
+
+        response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+        expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 10)])
+        expect(response[:pageview_series].map { |series| series[:req] }).not_to include(
+          "page_view_likely_crawler",
         )
       end
     end

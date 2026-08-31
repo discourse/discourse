@@ -8,6 +8,9 @@ fa_IR:
   js:
     styleguide:
       title: "راهنمای سبک"
+      example:
+        kind:
+          component: "کامپوننت "
       categories:
         atoms: اتم‌ها
         molecules: مولکول‌ها

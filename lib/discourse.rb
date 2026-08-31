@@ -352,6 +352,12 @@ module Discourse
     @anonymous_filters ||= %i[latest top categories hot]
   end
 
+  # `anonymous_filters` also holds menu items such as `categories`, which have no
+  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+  def self.anonymous_list_filters
+    Discourse.filters & Discourse.anonymous_filters
+  end
+
   def self.top_menu_items
     @top_menu_items ||= Discourse.filters + [:categories]
   end
@@ -1305,7 +1311,10 @@ module Discourse
         require "actionview_precompiler"
         ActionviewPrecompiler.precompile
       end,
-      Thread.new { LetterAvatar.image_magick_version },
+      Thread.new do
+        LetterAvatar.image_magick_version
+        LetterAvatar.cleanup_old
+      end,
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
@@ -1350,10 +1359,24 @@ module Discourse
 
   def self.anonymous_locale(request)
     locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
-    locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
+    locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
     HttpLanguageParser.parse(locale)
+  end
+
+  def self.locale_from_cookie(request)
+    cookie = request.cookies["locale"]
+    return if cookie.blank?
+    return cookie if SiteSetting.set_locale_from_cookie
+
+    # The language switcher writes this cookie, so reading it back needs no separate opt-in.
+    # Restricted to the configured locales so anonymous cache variance stays bounded by the
+    # site's own locale list rather than every available locale.
+    if ContentLocalization.language_switcher_enabled? &&
+         SiteSetting.content_localization_locales.include?(cookie)
+      cookie
+    end
   end
 
   # For test environment only

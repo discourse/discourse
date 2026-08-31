@@ -180,6 +180,7 @@ export default class ChatSelectionManager extends Component {
           @disabled={{not this.anyMessagesSelected}}
           @action={{this.quoteMessages}}
           id="chat-quote-btn"
+          class="btn-default"
         />
 
         <DButton
@@ -188,6 +189,7 @@ export default class ChatSelectionManager extends Component {
           @disabled={{not this.anyMessagesSelected}}
           @action={{this.copyMessages}}
           id="chat-copy-btn"
+          class="btn-default"
         />
 
         {{#if this.enableMove}}
@@ -197,6 +199,7 @@ export default class ChatSelectionManager extends Component {
             @disabled={{not this.anyMessagesSelected}}
             @action={{this.openMoveMessageModal}}
             id="chat-move-to-channel-btn"
+            class="btn-default"
           />
         {{/if}}
 
@@ -210,6 +213,7 @@ export default class ChatSelectionManager extends Component {
           }}
           @action={{this.openDeleteMessagesModal}}
           id="chat-delete-btn"
+          class="btn-default"
         />
 
         <DButton
@@ -217,7 +221,7 @@ export default class ChatSelectionManager extends Component {
           @label="chat.selection.cancel"
           @action={{this.cancelSelecting}}
           id="chat-cancel-selection-btn"
-          class="btn-secondary cancel-btn"
+          class="btn-default cancel-btn"
         />
       </div>
     </div>

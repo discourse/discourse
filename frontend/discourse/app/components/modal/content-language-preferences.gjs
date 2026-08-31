@@ -10,6 +10,9 @@ import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   AUTOMATICALLY_TRANSLATE_COOKIE_EXPIRY,
   automaticallyTranslate,
+  languageSwitcherEnabled,
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_EXPIRY,
   normalizeUnderstoodLanguages,
 } from "discourse/lib/content-localization";
 import cookie from "discourse/lib/cookie";
@@ -35,25 +38,42 @@ export default class ContentLanguagePreferencesModal extends Component {
     return {
       interfaceLanguage,
       understoodLanguages: normalizeUnderstoodLanguages(
-        this.currentUser?.user_option?.understood_languages,
-        interfaceLanguage
+        this.currentUser?.user_option?.understood_languages
       ),
       automaticallyTranslate: automaticallyTranslate(this.currentUser),
     };
   }
 
+  get allLanguageOptions() {
+    return this.#toOptions(this.siteSettings.available_locales);
+  }
+
   get interfaceLanguageOptions() {
-    return this.siteSettings.available_locales.map(({ value }) => ({
-      name: this.languageNameLookup.getLanguageName(value),
-      value,
-      id: value,
-    }));
+    // Anonymous visitors change locale through the `locale` cookie. When the language switcher is
+    // what makes that cookie honoured, the server only accepts the site's configured locales, so
+    // offering the rest would silently discard the choice.
+    if (
+      !this.currentUser &&
+      !this.siteSettings.set_locale_from_cookie &&
+      languageSwitcherEnabled(this.siteSettings)
+    ) {
+      return this.#toOptions(
+        this.siteSettings.available_content_localization_locales
+      );
+    }
+
+    return this.allLanguageOptions;
   }
 
   get canChangeInterfaceLanguage() {
+    if (!this.siteSettings.allow_user_locale) {
+      return false;
+    }
+
     return (
-      this.siteSettings.allow_user_locale &&
-      (this.currentUser || this.siteSettings.set_locale_from_cookie)
+      !!this.currentUser ||
+      this.siteSettings.set_locale_from_cookie ||
+      languageSwitcherEnabled(this.siteSettings)
     );
   }
 
@@ -63,6 +83,14 @@ export default class ContentLanguagePreferencesModal extends Component {
 
   get loginPath() {
     return getURL("/login");
+  }
+
+  #toOptions(locales) {
+    return (locales ?? []).map(({ value }) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+      id: value,
+    }));
   }
 
   @action
@@ -76,23 +104,13 @@ export default class ContentLanguagePreferencesModal extends Component {
   }
 
   @action
-  async setInterfaceLanguage(value, { set }) {
-    await set("interfaceLanguage", value);
-    await set(
-      "understoodLanguages",
-      normalizeUnderstoodLanguages(
-        this.formApi.get("understoodLanguages"),
-        value
-      )
-    );
+  setInterfaceLanguage(value, { set }) {
+    return set("interfaceLanguage", value);
   }
 
   @action
   setUnderstoodLanguages(value, { set }) {
-    return set(
-      "understoodLanguages",
-      normalizeUnderstoodLanguages(value, this.formApi.get("interfaceLanguage"))
-    );
+    return set("understoodLanguages", normalizeUnderstoodLanguages(value));
   }
 
   @action
@@ -102,8 +120,7 @@ export default class ContentLanguagePreferencesModal extends Component {
     try {
       if (this.currentUser) {
         const understoodLanguages = normalizeUnderstoodLanguages(
-          data.understoodLanguages,
-          data.interfaceLanguage
+          data.understoodLanguages
         );
 
         const preferences = {
@@ -116,7 +133,8 @@ export default class ContentLanguagePreferencesModal extends Component {
 
         await ajax(`/u/${this.currentUser.username}.json`, {
           type: "PUT",
-          data: preferences,
+          contentType: "application/json",
+          data: JSON.stringify(preferences),
         });
         if (this.canChangeInterfaceLanguage) {
           this.currentUser.set("locale", data.interfaceLanguage);
@@ -132,7 +150,10 @@ export default class ContentLanguagePreferencesModal extends Component {
         );
       } else {
         if (this.canChangeInterfaceLanguage) {
-          cookie("locale", data.interfaceLanguage, { path: "/" });
+          cookie(LOCALE_COOKIE, data.interfaceLanguage, {
+            path: getURL("/"),
+            expires: LOCALE_COOKIE_EXPIRY,
+          });
         }
         cookie(AUTOMATICALLY_TRANSLATE_COOKIE, data.automaticallyTranslate, {
           path: "/",
@@ -152,6 +173,7 @@ export default class ContentLanguagePreferencesModal extends Component {
     <DModal
       @title={{i18n "content_localization.preferences.title"}}
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       class="content-language-preferences-modal"
     >
       <:body>
@@ -159,7 +181,7 @@ export default class ContentLanguagePreferencesModal extends Component {
           @data={{this.data}}
           @onSubmit={{this.save}}
           @onRegisterApi={{this.registerFormApi}}
-          as |form transientData|
+          as |form|
         >
           <form.Field
             @name="interfaceLanguage"
@@ -197,13 +219,9 @@ export default class ContentLanguagePreferencesModal extends Component {
                 <MultiSelect
                   @valueProperty="value"
                   @langProperty="value"
-                  @content={{this.interfaceLanguageOptions}}
+                  @content={{this.allLanguageOptions}}
                   @value={{field.value}}
                   @onChange={{field.set}}
-                  @mandatoryValues={{transientData.interfaceLanguage}}
-                  @mandatoryValueTitle={{i18n
-                    "content_localization.preferences.interface_language_mandatory"
-                  }}
                   @options={{hash filterable=true}}
                 />
               </field.Control>

@@ -116,7 +116,9 @@ export default class DAccessControl extends Component {
       return [];
     }
 
-    return this.site.access_control?.mandatory_acl?.[this.args.aclTarget] || [];
+    return (
+      this.site.access_control?.mandatory_acl?.[this.args.aclTarget.type] || []
+    );
   }
 
   /**
@@ -131,7 +133,9 @@ export default class DAccessControl extends Component {
       return [];
     }
 
-    return this.site.access_control?.banned_acl?.[this.args.aclTarget] || [];
+    return (
+      this.site.access_control?.banned_acl?.[this.args.aclTarget.type] || []
+    );
   }
 
   /**
@@ -386,7 +390,7 @@ export default class DAccessControl extends Component {
         @labelProperty="name"
         @filterPlaceholder="access_control.manage.add_group"
         @options={{hash
-          aclTarget=@aclTarget
+          aclTargetType=@aclTarget.type
           customSearchOptions=(hash
             defaultSearchResults=this.defaultAvailableGrantees
           )

@@ -5,6 +5,7 @@ import CodeLoginForm from "discourse/components/code-login-form";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
 import LoginButtons from "discourse/components/login-buttons";
+import NoLoginMethods from "discourse/components/no-login-methods";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupPageCta from "discourse/components/signup-page-cta";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
@@ -49,7 +50,9 @@ export default <template>
           @controller.authOptions.auth_provider
         }}
       >
-        {{#unless @controller.skipConfirmation}}
+        {{#if @controller.hasNoLoginOptions}}
+          <NoLoginMethods />
+        {{else if (not @controller.skipConfirmation)}}
           {{! Code signup renders its own heading inside CodeLoginForm. }}
           {{#unless @controller.showCodeSignupForm}}
             <SignupProgressBar @step={{@controller.progressBarStep}} />
@@ -72,7 +75,7 @@ export default <template>
               </WelcomeHeader>
             </PluginOutlet>
           {{/unless}}
-        {{/unless}}
+        {{/if}}
         {{#if @controller.showCodeSignupForm}}
           <CodeLoginForm
             @context="signup"

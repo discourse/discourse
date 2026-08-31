@@ -62,10 +62,23 @@ module PageObjects
         self
       end
 
-      def has_understood_language?(locale)
+      def has_removable_understood_language?(locale)
         understood_languages_dropdown.expand
         result =
-          page.has_css?("#understood-languages-selector .selected-choice[data-value='#{locale}']")
+          page.has_css?(
+            "#understood-languages-selector button.selected-choice" \
+              "[data-value='#{locale}']:not(:disabled)",
+          )
+        understood_languages_dropdown.collapse
+        result
+      end
+
+      def has_no_understood_language?(locale)
+        understood_languages_dropdown.expand
+        result =
+          page.has_no_css?(
+            "#understood-languages-selector .selected-choice[data-value='#{locale}']",
+          )
         understood_languages_dropdown.collapse
         result
       end
@@ -74,18 +87,6 @@ module PageObjects
         understood_languages_dropdown.expand
         result =
           page.has_css?("#understood-languages-selector .select-kit-row[data-value='#{locale}']")
-        understood_languages_dropdown.collapse
-        result
-      end
-
-      def has_locked_understood_language?(language = nil)
-        understood_languages_dropdown.expand
-        result =
-          page.has_css?(
-            "#understood-languages-selector .selected-content .tag-choice.disabled",
-            count: 1,
-            text: language,
-          )
         understood_languages_dropdown.collapse
         result
       end

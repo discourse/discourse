@@ -32,6 +32,7 @@ class SidebarSection < ActiveRecord::Base
             }
 
   validates :locale, presence: true, length: { maximum: 20 }
+  validate :sidebar_urls_count_within_limit, on: :sidebar_section_update
 
   scope :public_sections, -> { where("public") }
   scope :custom_sections, -> { where(section_type: nil) }
@@ -72,7 +73,41 @@ class SidebarSection < ActiveRecord::Base
     end
   end
 
+  # Renumbers the section's links so they read in `ordered_linkable_ids` order.
+  # Links the caller left out are pushed to the end.
+  def apply_links_order!(ordered_linkable_ids)
+    links = sidebar_section_links.reload.to_a
+    return if links.empty?
+
+    rank = ordered_linkable_ids.each_with_index.to_h
+    reordered = links.sort_by { |link| rank.fetch(link.linkable_id, rank.size) }
+
+    rows =
+      reordered.zip(free_positions(links)).map { |link, position| link.attributes.merge(position:) }
+
+    sidebar_section_links.upsert_all(rows, update_only: [:position])
+  end
+
   private
+
+  # Positions no link in the section currently holds, in ascending order.
+  #
+  # `upsert_all` writes every row in one statement, and a unique index covers
+  # (sidebar_section_id, user_id, position). Reusing a position another link
+  # still holds collides before that row is rewritten. Twice the link count
+  # always leaves enough free ones.
+  def free_positions(links)
+    (0..links.size * 2).to_a - links.map(&:position)
+  end
+
+  def sidebar_urls_count_within_limit
+    count = sidebar_urls.reject(&:marked_for_destruction?).size
+    persisted_count = sidebar_urls.count(&:persisted?)
+    limit = SiteSetting.max_sidebar_section_links
+    return if count <= [limit, persisted_count].max
+
+    errors.add(:base, :too_many_sidebar_urls, limit:, count:)
+  end
 
   def set_system_user_for_public_section
     self.user_id = Discourse.system_user.id if public

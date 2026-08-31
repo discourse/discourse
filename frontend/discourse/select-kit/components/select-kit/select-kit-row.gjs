@@ -240,7 +240,11 @@ export default class SelectKitRow extends Component {
 
   <template>
     {{#each this.icons as |i|}}
-      {{dIcon i translatedTitle=this.dasherizedTitle}}
+      {{dIcon
+        i
+        translatedTitle=this.dasherizedTitle
+        ignoreMissing=this.selectKit.options.ignoreMissingIcons
+      }}
     {{/each}}
 
     <span class="name">

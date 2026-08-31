@@ -1,9 +1,22 @@
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  find,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 const FORM_TEMPLATES = [
   {
@@ -40,6 +53,34 @@ const FORM_TEMPLATES = [
           type: date
     `,
   },
+  {
+    id: 3,
+    name: "Required Composer Only",
+    template: `
+      - type: composer
+        id: md-description
+        attributes:
+          label: "Description"
+        validations:
+          required: true
+    `,
+  },
+  {
+    id: 4,
+    name: "Required Composer With Other Field",
+    template: `
+      - type: input
+        id: other-field
+        attributes:
+          label: "Other field"
+      - type: composer
+        id: md-description
+        attributes:
+          label: "Description"
+        validations:
+          required: true
+    `,
+  },
 ];
 
 acceptance("Composer Form Template", function (needs) {
@@ -62,7 +103,7 @@ acceptance("Composer Form Template", function (needs) {
         slug: "general",
         permission: 1,
         topic_template: null,
-        form_template_ids: [1, 2],
+        form_template_ids: [1, 2, 3, 4],
       },
       {
         id: 2,
@@ -82,7 +123,7 @@ acceptance("Composer Form Template", function (needs) {
       });
     });
 
-    [1, 2].forEach((id) => {
+    [1, 2, 3, 4].forEach((id) => {
       server.get(`/form-templates/${id}.json`, () => {
         const index = id - 1;
 
@@ -179,5 +220,174 @@ acceptance("Composer Form Template", function (needs) {
     assert
       .dom(".form-template-field__input[name='activity-date']")
       .exists("it renders form template field");
+  });
+
+  test("blocks topic creation and shows a validation message when a required composer field is left empty", async function (assert) {
+    pretender.post("/posts", () => {
+      assert.true(
+        false,
+        "a topic should not be created while the required field is empty"
+      );
+      return response(200, { success: true });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await click("#reply-control button.create");
+
+    assert.strictEqual(currentURL(), "/", "the topic is not created");
+    assert
+      .dom(".form-template-field__error")
+      .exists("a validation error message is shown");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-invalid", "true", "the editor is marked invalid");
+
+    const describedBy =
+      find(".d-editor-input").getAttribute("aria-describedby");
+    assert
+      .dom(`#${describedBy}`)
+      .hasText(
+        i18n("form_templates.errors.value_missing.default"),
+        "the editor is connected to the visible error"
+      );
+
+    assert.true(
+      announce.calledWith(
+        i18n("form_templates.errors.value_missing.default"),
+        "assertive"
+      ),
+      "the error is announced to screen readers"
+    );
+
+    await fillIn(".d-editor-input", "some content");
+
+    assert
+      .dom(".d-editor-input")
+      .doesNotHaveAttribute("aria-invalid", "the invalid state is cleared");
+    assert
+      .dom(".d-editor-input")
+      .doesNotHaveAttribute(
+        "aria-describedby",
+        "the error reference is cleared"
+      );
+  });
+
+  test("keeps the editor marked invalid after switching editor modes", async function (assert) {
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await click("#reply-control button.create");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-invalid", "true", "the editor starts out invalid");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-required", "true", "the editor starts out required");
+
+    await click(".composer-toggle-switch");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute(
+        "aria-required",
+        "true",
+        "the replacement editor is still marked required"
+      );
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute(
+        "aria-invalid",
+        "true",
+        "the replacement editor is still marked invalid"
+      );
+
+    const describedBy =
+      find(".d-editor-input").getAttribute("aria-describedby");
+    assert
+      .dom(`#${describedBy}`)
+      .hasText(
+        i18n("form_templates.errors.value_missing.default"),
+        "the replacement editor is still connected to the visible error"
+      );
+  });
+
+  test("preserves newlines from a composer field in the generated post body", async function (assert) {
+    let capturedRaw;
+    pretender.post("/posts", (request) => {
+      capturedRaw = parsePostData(request.requestBody).raw;
+      return response(200, {
+        success: true,
+        action: "create_post",
+        post: { id: 42, topic_id: 960, topic_slug: "x" },
+      });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    const multiline = "## Heading\n\nParagraph one.\n\n- item a\n- item b";
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await fillIn(".d-editor-input", multiline);
+    await click("#reply-control button.create");
+
+    // normalise CRLF (from FormData's textarea handling) to LF so the
+    // assertions describe the shape, not the transport encoding
+    const raw = capturedRaw.replace(/\r\n/g, "\n");
+
+    assert.true(
+      raw.includes("## Heading\n\nParagraph one."),
+      "the multi-line composer field survives to the submitted post body"
+    );
+    assert.true(
+      raw.includes("- item a\n- item b"),
+      "list items from the composer field reach the post body on separate lines"
+    );
+  });
+
+  test("blocks topic creation when a required composer field is empty even if other fields are filled", async function (assert) {
+    pretender.post("/posts", () => {
+      assert.true(
+        false,
+        "a topic should not be created while the required field is empty"
+      );
+      return response(200, { success: true });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[3] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await fillIn(
+      ".form-template-field__input[name='other-field']",
+      "some content"
+    );
+    await click("#reply-control button.create");
+
+    assert.strictEqual(currentURL(), "/", "the topic is not created");
+    assert
+      .dom(".form-template-field__error")
+      .exists("a validation error message is shown");
   });
 });

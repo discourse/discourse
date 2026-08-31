@@ -651,6 +651,44 @@ RSpec.describe SidebarSectionsController do
       )
     end
 
+    it "enforces the total link limit when adding links" do
+      SiteSetting.max_sidebar_section_links = 5
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { icon: "link", name: "latest", value: "/latest" },
+              { icon: "link", name: "new", value: "/new" },
+              { icon: "link", name: "top", value: "/top" },
+              { icon: "link", name: "hot", value: "/hot" },
+            ],
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+      expect(sidebar_section.reload.sidebar_urls.count).to eq(2)
+    end
+
+    it "allows an existing over-limit section to remove links" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { id: sidebar_url_2.id, icon: "link", name: "tags", value: "/tags", _destroy: "1" },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(sidebar_section.reload.sidebar_urls).to contain_exactly(sidebar_url_1)
+    end
+
     it "returns 404 when updating a non-existent section" do
       sign_in(user)
 
@@ -1204,6 +1242,203 @@ RSpec.describe SidebarSectionsController do
       delete "/sidebar_sections/#{community_section.id}.json"
 
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#reorder" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
+    fab!(:section_link_1) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+    fab!(:section_link_2) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+    end
+
+    it "reorders the links of the user's own section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sidebar_section"]["links"].map { |link| link["id"] }).to eq(
+        [sidebar_url_2.id, sidebar_url_1.id],
+      )
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_2.id, sidebar_url_1.id],
+      )
+    end
+
+    it "returns 404 for an unknown section" do
+      sign_in(user)
+
+      put "/sidebar_sections/-999/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "doesn't allow to reorder another user's section" do
+      sign_in(moderator)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_2.id, sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(403)
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id],
+      )
+    end
+
+    it "returns 400 when links_order is missing" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json"
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "says which parameter was wrong when the order misses a link" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}/reorder.json",
+          params: {
+            links_order: [sidebar_url_1.id],
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].join).to include("links_order")
+      expect(sidebar_section.sidebar_urls.reload.map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id],
+      )
+    end
+  end
+
+  describe "#move_link" do
+    fab!(:source_section) { Fabricate(:sidebar_section, title: "Source section", user: user) }
+    fab!(:target_section) { Fabricate(:sidebar_section, title: "Target section", user: user) }
+    fab!(:moved_url) { Fabricate(:sidebar_url, name: "moved", value: "/moved") }
+    fab!(:target_url) { Fabricate(:sidebar_url, name: "existing", value: "/existing") }
+    fab!(:moved_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: source_section, linkable: moved_url)
+    end
+    fab!(:target_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: target_section, linkable: target_url)
+    end
+
+    it "moves the link between the user's own sections and returns both serialized sections" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+            position: 0,
+          }
+
+      expect(response.status).to eq(200)
+
+      sections = response.parsed_body["sidebar_sections"]
+      expect(sections.map { |section| section["id"] }).to eq([source_section.id, target_section.id])
+      expect(sections.first["links"]).to eq([])
+      expect(sections.last["links"].map { |link| link["id"] }).to eq([moved_url.id, target_url.id])
+      expect(moved_link.reload.sidebar_section_id).to eq(target_section.id)
+    end
+
+    it "returns 404 for an unknown source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/-999/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when the link is not in the source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: target_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "doesn't allow to move links of another user's section" do
+      sign_in(moderator)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(403)
+      expect(moved_link.reload.sidebar_section_id).to eq(source_section.id)
+    end
+
+    it "returns 400 for a negative position" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+            position: -1,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
+    end
+
+    it "names the limit when the target section is full" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: target_section.id,
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        [
+          I18n.t(
+            "activerecord.errors.models.sidebar_section.attributes.base.too_many_sidebar_urls",
+            limit: 1,
+            count: 2,
+          ),
+        ],
+      )
+      expect(moved_link.reload.sidebar_section_id).to eq(source_section.id)
+    end
+
+    it "returns 400 when the target section is the source section" do
+      sign_in(user)
+
+      put "/sidebar_sections/#{source_section.id}/move_link.json",
+          params: {
+            link_id: moved_url.id,
+            target_section_id: source_section.id,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to be_present
     end
   end
 end

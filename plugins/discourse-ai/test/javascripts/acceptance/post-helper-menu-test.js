@@ -26,7 +26,7 @@ acceptance("Post Helper Menu", function (needs) {
   needs.user({
     admin: true,
     moderator: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     can_use_assistant_in_post: true,
     ai_helper_prompts: aiHelperPrompts,
     trust_level: 4,

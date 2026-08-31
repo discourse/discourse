@@ -74,13 +74,6 @@ jobs:
       LOAD_PLUGINS: 1
 
     steps:
-      - name: Enable jemalloc
-        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
-
-      - name: Verify jemalloc is loaded into Ruby
-        run: |
-          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
-
       - name: Set working directory owner
         run: chown root:root .
 
@@ -94,8 +87,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        run: |
-          redis-server /etc/redis/redis.conf &
+        run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
       - name: Start Postgres
         run: |
@@ -137,5 +129,5 @@ jobs:
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem (Rails integration) =="
-            (cd "migrations/$gem" && BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
+            (cd "migrations/$gem" && LD_PRELOAD="$RUBY_ALLOCATOR" BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
           done

@@ -15,7 +15,8 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                         in the UI.
+#                         in the UI. Only applies to pipe-separated list type settings (e.g. group_list), as the values
+#                         are merged into the setting's value on both read and write.
 # disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
@@ -222,31 +223,6 @@ basic:
     client: true
     default: false
     area: "localization"
-  allow_user_locale:
-    client: true
-    default: true
-    area: "localization"
-  set_locale_from_accept_language_header:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_cookie:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_param:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
   support_mixed_text_direction:
     client: true
     default: false
@@ -653,9 +629,6 @@ basic:
     max: 86400
     hidden: true
     client: true
-  experimental_detect_crawler_pageviews:
-    default: false
-    hidden: true
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
@@ -727,6 +700,28 @@ login:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_random_usernames:
+    client: true
+    default: true
+    area: "login"
+    depends_on:
+      - enable_local_logins_via_code
+  random_username_adjectives:
+    type: list
+    list_type: compact
+    default: "agile|amber|azure|bold|brave|breezy|bright|calm|candid|cheery|civic|clever|cosmic|crisp|curious|daring|deft|eager|earnest|fabled|gentle|golden|happy|hardy|hearty|humble|jolly|keen|kind|lively|lucid|lunar|mellow|merry|mighty|nimble|noble|plucky|proud|quick|quiet|rapid|rustic|silent|silver|smart|snappy|solar|stellar|sunny|swift|tidy|upbeat|valiant|vivid|warm|witty|zesty"
+    area: "login"
+    validator: "RandomUsernameWordListValidator"
+    depends_on:
+      - enable_random_usernames
+  random_username_nouns:
+    type: list
+    list_type: compact
+    default: "acorn|badger|beacon|bison|breeze|brook|canyon|cedar|comet|condor|coral|cougar|coyote|crane|cricket|dolphin|ember|falcon|fern|finch|fjord|fox|gecko|glacier|harbor|heron|hawk|ibis|jaguar|lagoon|lark|lemur|lynx|maple|marmot|meadow|meteor|nebula|newt|orca|osprey|otter|owl|panda|pebble|penguin|pine|prairie|puffin|quokka|raven|reef|river|sequoia|sparrow|summit|tundra|walrus|willow|wren|zephyr"
+    area: "login"
+    validator: "RandomUsernameWordListValidator"
+    depends_on:
+      - enable_random_usernames
   enable_passkeys:
     client: true
     default: true
@@ -958,6 +953,21 @@ login:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
     area: "discourseconnect"
+  discourse_connect_provider_claims:
+    default: "name|email|admin|moderator|groups|avatar_url|profile_background_url|card_background_url"
+    type: list
+    list_type: compact
+    allow_any: false
+    choices:
+      - name
+      - email
+      - admin
+      - moderator
+      - groups
+      - avatar_url
+      - profile_background_url
+      - card_background_url
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
@@ -1046,8 +1056,8 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
-    mandatory_values: "admin|moderator|administrator|mod|sys|system|you|name|username|user|nickname|discourse|discourseorg|discourseforum|all|here"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here|random-username"
+    mandatory_values: "admin|moderator|administrator|mod|sys|system|you|name|username|user|nickname|discourse|discourseorg|discourseforum|all|here|random-username"
     area: "users"
   min_password_length:
     client: true
@@ -1422,7 +1432,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -1935,10 +1945,36 @@ posting:
     hidden: true
 
 content_localization:
+  allow_user_locale:
+    client: true
+    default: true
+    area: "localization"
   content_localization_enabled:
     client: true
     default: false
     area: "localization"
+  content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: locale
+    allow_any: false
+    enum: "LocaleSiteSetting"
+    area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
+    client: true
+    refresh: true
+    area: "localization"
+    validator: "LanguageSwitcherSettingValidator"
+    depends_on:
+      - "content_localization_enabled"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1951,29 +1987,11 @@ content_localization:
     default: true
     client: true
     area: "localization"
-  content_localization_supported_locales:
-    default: ""
-    type: list
-    client: true
-    list_type: locale
-    allow_any: false
-    enum: "LocaleSiteSetting"
-    area: "localization"
-    validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
     default: 10
+    client: true
     type: integer
     hidden: true
-  content_localization_language_switcher:
-    type: enum
-    choices:
-      - none
-      - anonymous
-      - all
-    default: none
-    client: true
-    area: "localization"
-    validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
     area: "localization"
@@ -1981,6 +1999,27 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+  set_locale_from_accept_language_header:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_cookie:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_param:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
 
 nested_replies:
   nested_replies_enabled:
@@ -2355,6 +2394,9 @@ email:
   ignore_by_title:
     type: list
     list_type: simple
+    default: ""
+    area: "email"
+  ignore_by_title_regex:
     default: ""
     area: "email"
   mailgun_api_key:
@@ -3128,10 +3170,10 @@ security:
     hidden: true
     default: "cubot|MetaIAB"
   # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 13238=Yandex
+  # 13238=Yandex, 45102=Alibaba
   crawler_asns:
     hidden: true
-    default: "38365|55967|140577|210743|7941|13238"
+    default: "38365|55967|140577|210743|7941|13238|45102"
     type: list
     list_type: compact
   # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
@@ -3582,6 +3624,9 @@ developer:
     default: 50
     hidden: true
   instrument_gc_stat_per_request:
+    default: false
+    hidden: true
+  instrument_image_processing:
     default: false
     hidden: true
   warn_critical_js_deprecations:
@@ -4333,9 +4378,6 @@ user_preferences:
   default_other_enable_quoting:
     default: true
     area: "user_defaults"
-  default_other_enable_defer:
-    default: false
-    area: "user_defaults"
   default_other_enable_smart_lists:
     default: true
     area: "user_defaults"
@@ -4537,7 +4579,7 @@ tags:
     area: "categories_and_tags"
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1|2" # auto group admins, moderators
+    mandatory_values: "1" # auto group admins
     type: group_list
     allow_any: false
     refresh: true
@@ -4646,6 +4688,12 @@ dashboard:
       - user_to_user_private_messages_with_replies
       - signups
     area: "reports"
+  site_traffic_explorer_event_limit:
+    default: 200000
+    type: integer
+    min: 1
+    max: 1000000
+    area: "reports"
   verbose_user_stat_count_logging:
     hidden: true
     default: false
@@ -4680,7 +4728,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
@@ -4690,7 +4738,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/389820"
   enable_composer_redesign:
@@ -4699,27 +4747,19 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "conceptual"
+      status: "alpha"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
-  enable_new_composer_actions:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/410419"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4763,7 +4803,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
       body_class: true
@@ -4827,9 +4867,19 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
+  improved_crawler_detection:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/409316"
+      allow_enabled_for:
+        - everyone
   admin_dashboard_reports_seeded:
     default: false
     hidden: true

@@ -2,12 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedSet } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
-import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
@@ -15,21 +14,40 @@ import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [
   class SelectTheme extends OnboardingStep {
     static name = "select_theme";
 
-    @service modal;
+    @service designWizard;
 
     icon = "paintbrush";
 
+    #onComplete = () => this.markAsCompleted();
+
+    constructor() {
+      super(...arguments);
+      this.designWizard.resumeAfterThemePreview({
+        onComplete: this.#onComplete,
+      });
+    }
+
+    // a homepage preview routes away from this component while the sheet lives on
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.designWizard.clearCompletionCallback(this.#onComplete);
+    }
+
+    @action
+    prefetch() {
+      this.designWizard.prefetch();
+    }
+
     @action
     performAction() {
-      this.modal.show(ThemePickerModal, {
-        model: { onThemeSelected: () => this.markAsCompleted() },
-      });
+      this.designWizard.start({ onComplete: this.#onComplete });
     }
   },
   class InviteCollaborators extends OnboardingStep {
@@ -130,12 +148,43 @@ const STEPS = [
 ];
 
 export default class AdminOnboardingBanner extends Component {
+  @service appEvents;
   @service currentUser;
   @service keyValueStore;
   @service router;
   @service toasts;
 
   @tracked dismissed = false;
+  @tracked minimized = false;
+  // the key value store isn't reactive, but the progress count must be
+  completedStepNames = trackedSet(
+    STEPS.filter(
+      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+    ).map((Step) => Step.name)
+  );
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      "onboarding-step:completed",
+      this,
+      this.markStepCompleted
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "onboarding-step:completed",
+      this,
+      this.markStepCompleted
+    );
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
+  }
 
   get shouldDisplay() {
     if (this.dismissed) {
@@ -150,6 +199,10 @@ export default class AdminOnboardingBanner extends Component {
     return currentRouteName === `discovery.${defaultHomepage()}`;
   }
 
+  get completedSteps() {
+    return this.completedStepNames.size;
+  }
+
   @action
   async checkIfOnboardingIsComplete() {
     const allStepsAreDone = STEPS.every(
@@ -162,6 +215,11 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   @action
+  minimize() {
+    this.minimized = !this.minimized;
+  }
+
+  @action
   async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
     await logOnboardingEvent(skipped ? "dismissed" : "completed");
@@ -169,6 +227,7 @@ export default class AdminOnboardingBanner extends Component {
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
+    this.completedStepNames.clear();
 
     if (!skipped) {
       this.toasts.success({
@@ -184,25 +243,51 @@ export default class AdminOnboardingBanner extends Component {
       <div class="admin-onboarding-banner">
         <div class="admin-onboarding-banner__wrap">
           <div class="admin-onboarding-banner__header">
-            <h2>
-              {{i18n
-                "admin_onboarding_banner.launch_in_easy_steps"
-                (hash step_count=STEPS.length)
-              }}
-            </h2>
-            <DButton
-              @action={{this.endOnboarding}}
-              @icon="xmark"
-              class="btn no-text btn-transparent btn-close"
-            />
-          </div>
-          <div class="admin-onboarding-banner__content">
-            <div class="admin-onboarding-banner__steps">
-              {{#each STEPS as |Step|}}
-                <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
-              {{/each}}
+            <div class="admin-onboarding-banner__header-text">
+              <span class="admin-onboarding-banner__title">
+                {{dIcon "list" class="admin-onboarding-banner__title-icon"}}
+                {{i18n "admin_onboarding_banner.launch_in_easy_steps"}}
+              </span>
+              {{#if this.minimized}}
+                <span class="admin-onboarding-banner__subtitle">
+                  {{i18n
+                    "admin_onboarding_banner.launch_in_easy_steps_subtitle"
+                    (hash
+                      completed_steps=this.completedSteps
+                      step_count=STEPS.length
+                    )
+                  }}
+                </span>
+              {{/if}}
+            </div>
+            <div class="admin-onboarding-banner__header-actions">
+              <DButton
+                @action={{this.minimize}}
+                @icon={{if this.minimized "angle-down" "angle-up"}}
+                @ariaLabel={{if
+                  this.minimized
+                  "admin_onboarding_banner.expand"
+                  "admin_onboarding_banner.collapse"
+                }}
+                class="btn no-text btn-transparent btn-minimize"
+              />
+              <DButton
+                @action={{this.endOnboarding}}
+                @icon="xmark"
+                @ariaLabel="admin_onboarding_banner.dismiss"
+                class="btn no-text btn-transparent btn-close"
+              />
             </div>
           </div>
+          {{#unless this.minimized}}
+            <div class="admin-onboarding-banner__content">
+              <div class="admin-onboarding-banner__steps">
+                {{#each STEPS as |Step|}}
+                  <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
+                {{/each}}
+              </div>
+            </div>
+          {{/unless}}
         </div>
       </div>
     {{/if}}

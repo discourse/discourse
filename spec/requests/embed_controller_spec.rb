@@ -113,6 +113,19 @@ RSpec.describe EmbedController do
         expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
       end
 
+      it "ignores invalid path allowlists from legacy hosts" do
+        embeddable_host = Fabricate(:embeddable_host, allowed_paths: "/articles/.*")
+        embeddable_host.update_column(:allowed_paths, "[invalid")
+
+        get "/embed/topics?discourse_embed_id=de-1234",
+            headers: {
+              "REFERER" => "https://#{embeddable_host.host}/articles/test",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+      end
+
       it "returns a list of top topics" do
         good_topic = Fabricate(:topic, like_count: 1000, posts_count: 100)
         TopTopic.refresh!
@@ -214,6 +227,39 @@ RSpec.describe EmbedController do
         expect(response.status).to eq(200)
       end
 
+      it "does not share an anonymous cached response between referers" do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+        Middleware::AnonymousCache.clear_all_cache!
+
+        attacker_referer = "https://origin-a.example/page"
+        victim_referer = "https://origin-b.example/page"
+
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+            },
+            headers: {
+              "REFERER" => attacker_referer,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+        expect(response.body).to include("data-referer=\"#{attacker_referer}\"")
+
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+            },
+            headers: {
+              "REFERER" => victim_referer,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+        expect(response.body).to include("data-referer=\"#{victim_referer}\"")
+      end
+
       fab!(:attacker, :trust_level_1)
       fab!(:existing_post) { Fabricate(:post, topic: topic) }
 
@@ -248,6 +294,26 @@ RSpec.describe EmbedController do
           expect(rendered_iframe).to be_present
           expect(rendered_iframe&.[]("src")).to eq(iframe_source)
           expect(document.css("img[onerror]")).to be_empty
+        end
+      end
+
+      it "does not publish an iframe that traverses an allowlist path boundary" do
+        iframe_source = "https://www.example.com/wild/preview/..\\outside"
+        SiteSetting.allowed_iframes = "https://www.example.com/*/preview/"
+        sign_in(attacker)
+
+        post "/posts.json",
+             params: {
+               raw: %(<iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        created_post = Post.find(response.parsed_body["id"])
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["id"]).to eq(created_post.id)
+          expect(created_post.cooked).not_to include(iframe_source)
         end
       end
     end

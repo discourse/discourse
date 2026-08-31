@@ -1,0 +1,92 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID e temës
+    discourse_calendar:
+      disable_holiday: "Çaktivizoni"
+      enable_holiday: "Aktivizo"
+      region:
+        none: "Asnjë"
+      toolbar_button:
+        today: "Sot"
+        month: "Këtë muaj"
+        week: "Këtë javë"
+        day: "Day"
+        year: "Këtë vit"
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Shfaq më shumë"
+        show_less: "Shfaq më pak"
+      show_all: "Shfaqni të gjitha"
+      bulk_invite: "Ftesë me shumicë"
+      bulk_invite_modal:
+        confirm: "konfirmoni"
+        title: "Ftesë me shumicë"
+        success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
+        error: "Na vjen keq, dokumenti duhet të jete i formatit CSV."
+      upcoming_events:
+        status: "Status"
+      models:
+        event:
+          expired: "Skaduar"
+          closed: "Mbyllur"
+          status:
+            public:
+              title: "Publike"
+            private:
+              title: "Private"
+      composer:
+        url_placeholder: "Shto URL"
+        reminder:
+          units:
+            minutes:
+              one: "minutë"
+              other: "minuta"
+            hours:
+              one: "orë"
+              other: "orë"
+            days:
+              one: "day"
+              other: "ditë"
+      builder_modal:
+        custom_fields:
+          placeholder: "Fakultative"
+        create: "Krijo"
+        update: "Ruani"
+        timezone:
+          label: Zona kohore
+        reminders:
+          units:
+            minutes: "minuta"
+            hours: "orë"
+            days: "ditë"
+          periods:
+            before: "përpara"
+            after: "pas"
+        attendance:
+          none: "Asnjë"
+        location:
+          label: "Vendndodhja"
+        url:
+          label: "URL"
+          placeholder: "Fakultative"
+          add: "Shto URL"
+        description:
+          label: "Përshkrimi"
+        event_type:
+          public:
+            title: "Publike"
+      invite_user_or_group:
+        success: "Ftesa u dërgua"

@@ -950,16 +950,15 @@ pt_BR:
   email_login:
     invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">pedir um link</a> para redefini-la.'
     title: "E-mail para entrar"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "Aplicativo DiscourseHub"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "Aplicativo DiscourseHub"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "navegador desconhecido"
     device:
       android: "Dispositivo Android"
       chromebook: "Chrome OS"
@@ -979,6 +978,9 @@ pt_BR:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anônimo(a)"
   change_email:
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
@@ -1447,6 +1449,9 @@ pt_BR:
         num_topics: "Tópicos"
       description: "Usuários(as) listados(as) pela quantidade de cliques nos links que eles compartilharam."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Acessos"
+    top_entry_urls:
       labels:
         count: "Acessos"
     top_referrers_by_browser_pageviews:
@@ -2108,7 +2113,6 @@ pt_BR:
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
     max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da equipe ou tiver NC2 ou mais alto), pare de aceitar novas assinaturas desse IP. Defina para 0 para desativar o limite."
-    min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, uma entrada de banimento de subrede será criada se houver ao menos (N) entradas."
     max_age_unmatched_emails: "Excluir entradas de e-mails filtrados sem correspondência após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados sem correspondência após (N) dias."
     num_flaggers_to_close_topic: "Quantidade mínima de usuários(as) sinalizadores únicos(as) exigidos para que um tópico seja automaticamente pausado por intervenção"
@@ -2329,7 +2333,6 @@ pt_BR:
     default_other_external_links_in_new_tab: "Abra links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a citação de resposta para texto realçado por padrão."
     default_other_enable_smart_lists: "Ativar listas inteligentes ao digitar no compositor por padrão."
-    default_other_enable_defer: "Ative a funcionalidade de adiar tópico por padrão."
     default_other_enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor por padrão."
     default_other_dynamic_favicon: "Mostre contagem de tópicos novos/atualizados no ícone do navegador por padrão."
     default_other_skip_new_user_tips: "Pule emblemas e dicas de integração de novo(a) usuário(a)."
@@ -2365,7 +2368,6 @@ pt_BR:
     revoke_user_api_keys_unused_days: "A quantidade de dias desde que a chave de API do(a) usuário(a) foi usada pela última vez antes de ser revogada automaticamente (0 para nunca)"
     revoke_user_api_keys_maxlife_days: "A quantidade de dias antes de uma chave de API do(a) usuário(a) ser revogada automaticamente (0 para nunca)"
     tagging_enabled: "Ativar etiquetas em tópicos? Confira o <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Guia de administrador(a) sobre etiquetas no Meta</a> para obter mais informações."
-    create_tag_allowed_groups: "Grupos com permissão para criar etiquetas novas. Administradores(as) e moderadores(as) sempre podem criar etiquetas."
     edit_tags_allowed_groups: "Grupos com permissão para editar etiquetas, descrições de etiquetas e sinônimos de etiquetas."
     max_tags_per_topic: "As etiquetas máximas que podem ser aplicadas a um tópico."
     max_tags_per_email_subject: "O máximo de etiquetas que podem estar no assunto de um e-mail"
@@ -2438,7 +2440,6 @@ pt_BR:
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_use_default_locale_when_unsupported: "Servir conteúdo traduzido no idioma padrão do site para usuários cujo idioma preferido não esteja listado em 'content localization supported locales'."
-    content_localization_allow_author_localization: "Permitir que os autores atualizem a localização de seus próprios tópicos e postagens por meio do menu da postagem."
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
     reporting_improvements: "Melhorias na navegação, design e usabilidade dos relatórios administrativos do Discourse."
@@ -3910,9 +3911,6 @@ pt_BR:
     user_posted_pm_staged:
       title: "MP postada por usuário(a) encenado(a)"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Conta suspensa"
       subject_template: "[%{email_prefix}] A sua conta foi suspensa"
@@ -4726,6 +4724,10 @@ pt_BR:
     title: "Modo de desenvolvedor"
     enable_rack_mini_profiler: "Ative o Rack Mini Profiler para que ele persista entre as mudanças de sessão por 1 hora."
     enter: "Entrar no modo de desenvolvedor"
+  design_wizard:
+    palette_pairs:
+      default: "Padrão"
+      dracula: "Drácula"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -4867,6 +4869,9 @@ pt_BR:
       group: "Usuários(as) que não estiverem nos grupos especificados devem ter as respostas aprovadas pela equipe. Confira %{link}."
       new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja %{link}."
       fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "Novo(a) usuário(a) cuja primeira postagem correspponde à configuração %{link}."
       watched_word:
         one: "Esta postagem inclui uma palavra acompanhada, a palavra sinalizada é: %{words}. Veja %{link} para obter mais informações."

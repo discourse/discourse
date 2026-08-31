@@ -145,6 +145,10 @@ class Topic < ActiveRecord::Base
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
 
+  def first_post_with_deleted
+    posts.with_deleted.find_by(post_number: 1)
+  end
+
   def trash!(trashed_by = nil)
     trigger_event = false
 
@@ -306,6 +310,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  after_update :clear_page_not_found_topics_cache, if: :moved_to_read_restricted_category?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -441,6 +446,19 @@ class Topic < ActiveRecord::Base
     elsif saved_changes[:category_id] && category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
+  end
+
+  def self.clear_page_not_found_topics_cache!
+    keys =
+      I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+      end
+    Discourse.cache.redis.del(*keys)
+  end
+
+  def clear_page_not_found_topics_cache
+    self.class.clear_page_not_found_topics_cache!
+    DB.after_commit { self.class.clear_page_not_found_topics_cache! }
   end
 
   def regenerate_og_image
@@ -1243,6 +1261,7 @@ class Topic < ActiveRecord::Base
         group_user.destroy
         allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name, skip_guardian: true)
+        Jobs.enqueue(:delete_inaccessible_notifications, topic_id: id)
         return true
       end
     end
@@ -1263,6 +1282,10 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
+        end
+
+        unless user.guardian.can_see?(self)
+          user.publish_notifications_state if Notification.remove_for(user.id, id).positive?
         end
 
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
@@ -1826,7 +1849,13 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embed_truncate? && has_topic_embed?
+    embed = topic_embed
+    return false if embed.nil?
+
+    # A nil state preserves site-wide behavior for embeds without recorded state.
+    return SiteSetting.embed_truncate? if embed.content_truncated.nil?
+
+    embed.content_truncated?
   end
 
   def message_archived?(user)
@@ -2241,7 +2270,10 @@ class Topic < ActiveRecord::Base
   end
 
   def visible_tags(guardian)
-    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+    guardian ||= Guardian.new
+    return tags if guardian.is_admin?
+
+    tags.select { |tag| guardian.visible_tag_ids.include?(tag.id) }
   end
 
   def self.editable_custom_fields(guardian)
@@ -2252,6 +2284,10 @@ class Topic < ActiveRecord::Base
   end
 
   private
+
+  def moved_to_read_restricted_category?
+    saved_change_to_category_id? && category&.read_restricted?
+  end
 
   def invite_to_private_message(invited_by, target_user, guardian)
     if !guardian.can_send_private_message?(target_user)

@@ -66,7 +66,7 @@ RSpec.describe "Managing LLM configurations" do
     form.field("provider").select("vllm")
     form.field("tokenizer").select("DiscourseAi::Tokenizer::Llama3Tokenizer")
     form.field("max_output_tokens").fill_in(2000)
-    form.field("vision_enabled").toggle
+    form.field("vision_mode").select("native")
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})
@@ -98,6 +98,35 @@ RSpec.describe "Managing LLM configurations" do
     expect(llm.ai_secret_id).to eq(ai_secret.id)
 
     expect(LlmModel.count).to eq(llm_count + 1)
+  end
+
+  it "links usage labels to their configuration pages" do
+    SiteSetting.discourse_automation_enabled = true
+    llm_model = Fabricate(:llm_model)
+    SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
+    automation = Fabricate(:automation, script: "llm_report", name: "LLM report", enabled: true)
+    automation.fields.create!(
+      component: "text",
+      name: "model",
+      metadata: {
+        value: llm_model.id,
+      },
+      target: "script",
+    )
+
+    visit "/admin/plugins/discourse-ai/ai-llms"
+
+    within("[data-llm-id='#{llm_model.name}'] .ai-llm-list-editor__usages") do
+      expect(page).to have_link(
+        I18n.t("js.discourse_ai.llms.usage.ai_bot"),
+        href:
+          "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::BOT_ID}/edit",
+      )
+      expect(page).to have_link(
+        I18n.t("js.discourse_ai.llms.usage.automation", agent: automation.name),
+        href: "/admin/plugins/automation/automation/#{automation.id}",
+      )
+    end
   end
 
   context "when changing the provider" do

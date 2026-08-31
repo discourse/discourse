@@ -80,7 +80,6 @@ ru:
     ai_helper_allowed_in_pm: "Включить AI-помощник для редактора в личных сообщениях."
     ai_helper_automatic_chat_thread_title_delay: "Задержка в минутах, прежде чем AI-помощник автоматически установит заголовок темы чата."
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
-    ai_helper_enabled_features: "Выберите функции, которые нужно включить в AI-помощнике."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
     ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
@@ -260,7 +259,6 @@ ru:
         unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
-        generate_titles: Предложить названия для темы
         proofread: Вычитать текст
         markdown_table: Сгенерировать таблицу в формате Markdown
         custom_prompt: "Пользовательский запрос"
@@ -288,6 +286,8 @@ ru:
     ai_bot:
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
+      read_post:
+        unknown_post: "публикация"
       agents:
         default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"

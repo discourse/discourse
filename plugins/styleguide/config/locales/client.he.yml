@@ -13,6 +13,9 @@ he:
   js:
     styleguide:
       title: "מדריך סגנון"
+      example:
+        kind:
+          component: "רכיב"
       categories:
         syntax: תחביר
         atoms: אטומים
@@ -39,6 +42,8 @@ he:
           title: "צבעים"
         dialog:
           title: "חלונית"
+        drag_and_drop:
+          locked: "נעול"
         icons:
           title: "סמלים"
           full_list: "הצגת רשימת הסמלים המלאה של Font Awesome"

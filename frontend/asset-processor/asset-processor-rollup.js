@@ -25,9 +25,6 @@ import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
 
-let lastRollupResult;
-let lastRollupError;
-
 let caches = new Map();
 
 async function performRollup(modules, opts) {
@@ -170,22 +167,4 @@ async function performRollup(modules, opts) {
   return chunks;
 }
 
-globalThis.rollup = async function (modules, opts) {
-  try {
-    lastRollupResult = await performRollup(modules, opts);
-  } catch (error) {
-    lastRollupError = error;
-  }
-};
-
-globalThis.getRollupResult = function () {
-  const error = lastRollupError;
-  const result = lastRollupResult;
-
-  lastRollupError = lastRollupResult = null;
-
-  if (error) {
-    throw error;
-  }
-  return result;
-};
+globalThis.rollup = performRollup;

@@ -94,6 +94,7 @@ function buildButtonComponent(workflow) {
         await ajax("/discourse-workflows/trigger-post-button", {
           type: "POST",
           data: {
+            workflow_id: workflow.workflow_id,
             trigger_node_id: workflow.trigger_node_id,
             post_id: this.args.post.id,
           },
@@ -152,6 +153,13 @@ export default {
         "post-menu-buttons",
         ({ value: dag, context }) => {
           buttons.forEach(({ key, workflow, component }) => {
+            if (
+              workflow.post_number != null &&
+              workflow.post_number !== context.post.post_number
+            ) {
+              return;
+            }
+
             dag.add(
               key,
               component,

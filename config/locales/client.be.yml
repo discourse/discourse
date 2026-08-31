@@ -427,6 +427,18 @@ be:
     admin_onboarding_banner:
       start_posting:
         back: "Назад"
+    design_wizard:
+      back: "Назад"
+      next: "Далей"
+      sections:
+        theme: "Тэма"
+        homepage: "Галоўная старонка"
+      colors:
+        light: "Светлая"
+        dark: "Цёмная"
+      homepage:
+        topics: "тэмы"
+        categories: "катэгорыі"
     about:
       edit: "Рэдагаваць гэту старонку"
       simple_title: "Пра сайт"
@@ -1162,6 +1174,7 @@ be:
           staff_role_moderator: "запавольнік"
           email_placeholder: "name@example.com"
           invite_by_email: "Электронная пошта"
+          create_and_send: "Адправіць"
           summary:
             role_member: "Член"
             role_admin: "адміністратар"
@@ -1169,6 +1182,7 @@ be:
             method_email: "Электронная пошта"
             topic: "Тэма"
             groups: "Груп"
+            edit: "Рэдагаваць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
@@ -1334,6 +1348,8 @@ be:
       required_at_signup: "Абавязкова"
     welcome_banner_page_visibility:
       homepage: "Галоўная старонка"
+    category_row:
+      subcategories: "+ Падкатэгорыі"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
@@ -1954,6 +1970,8 @@ be:
         custom:
           save: "Захаваць"
           delete: "Выдаліць"
+          localizations:
+            remove_language: "Выдаліць"
           links:
             add: "Дадаць яшчэ адну спасылку"
             delete: "Выдаліць спасылку"
@@ -2200,12 +2218,22 @@ be:
         default_value: "Прадвызначаная"
       search:
         title: "Пошук"
+      site_traffic_explorer:
+        metric_information: "Пра %{metric}"
+        apply: "Прымяніць"
+        view_more: "Паказаць больш"
+        cards:
+          visitors: "Наведвальнікі"
+        filters:
+          browser: "браўзэр"
+          ip: "IP-адрас"
+        series:
+          anonymous_human: "ананімны"
       dashboard:
         title: "Панэль кіравання"
         last_updated: "Панэль кіравання абноўлена:"
         version: "Версія"
         up_to_date: "У вас апошняя версія!"
-        critical_available: "Даступна крытычнае абнаўленне."
         updates_available: "Даступны абнаўленні."
         no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."

@@ -277,6 +277,16 @@ lv:
     admin_onboarding_banner:
       start_posting:
         back: "Atpakaļ"
+    design_wizard:
+      back: "Atpakaļ"
+      next: "Nākamais"
+      sections:
+        theme: "Tēma"
+      homepage:
+        topics: "Tēmas"
+        categories: "Sadaļas"
+        styles:
+          boxes: "Kastes"
     about:
       simple_title: "Par"
       title: "Par %{title}"
@@ -397,9 +407,6 @@ lv:
         optional: "pēc izvēles"
       claim_help:
         optional: "Jūs varat pieprasīt šo vienumu, lai citi to nevarētu pārskatīt."
-        required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
-        claimed_by_you: "Jūs pieprasījāt šo vienumu un varat to pārskatīt."
-        claimed_by_other: "Šo vienumu var pārskatīt tikai <b>%{username}</b>."
       awaiting_approval: "Gaida apstiprinājumu"
       delete: "Dzēst"
       settings:
@@ -1375,6 +1382,7 @@ lv:
           staff_role_moderator: "Moderātors"
           email_placeholder: "vards@piemers.com"
           invite_by_email: "E-pasts"
+          create_and_send: "Sūtīt"
           summary:
             role_member: "Biedrs"
             role_admin: "Administrators"
@@ -1384,6 +1392,7 @@ lv:
             expires: "Derīguma termiņš beidzas"
             topic: "Tēmas"
             groups: "Grupas"
+            edit: "Labot"
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
@@ -1676,6 +1685,8 @@ lv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Ievadīt"
+    category_row:
+      subcategories: "+ Apakšsadaļas"
     select_kit:
       delete_item: "Izdzēst %{name}"
       create: "Izveidot: '%{content}'"
@@ -2822,6 +2833,8 @@ lv:
         custom:
           save: "Saglabāt"
           delete: "Dzēst"
+          localizations:
+            remove_language: "Atcelt"
           links:
             reset: "Atiestatīt uz noklusējumu"
             icon:
@@ -3059,11 +3072,17 @@ lv:
         default_value: "Noklusējums"
       search:
         title: "Meklēt"
+      site_traffic_explorer:
+        metric_information: "Par %{metric}"
+        apply: "Pielietot"
+        filters:
+          ip: "IP adrese"
+        series:
+          anonymous_human: "Anonīmi"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
         up_to_date: "Tu seko līdzi laikam!"
-        critical_available: "Ir pieejams kritisks atjauninājums."
         updates_available: "Ir pieejami atjauninājumi."
         no_check_performed: "Nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."

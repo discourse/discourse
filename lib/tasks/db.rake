@@ -150,6 +150,7 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
        db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
@@ -234,6 +235,7 @@ task "db:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       assets:precompile:pretty_text
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",

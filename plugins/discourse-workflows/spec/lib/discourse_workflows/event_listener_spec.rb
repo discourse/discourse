@@ -446,6 +446,93 @@ RSpec.describe DiscourseWorkflows::EventListener do
     )
   end
 
+  it "enqueues user created workflows with the staged flag in the payload" do
+    create_published_workflow("user-created-trigger", "trigger:user_created")
+
+    new_user = Fabricate(:user)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("user-created-trigger")
+    expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["user_id"]).to eq(
+      new_user.id,
+    )
+
+    trigger_data = trigger_data_for("user-created-trigger")
+    expect(trigger_data).to include(
+      "user" => include("id" => new_user.id, "username" => new_user.username, "staged" => false),
+    )
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+    staged_user = Fabricate(:user, staged: true)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("user-created-trigger")
+    expect(trigger_data_for("user-created-trigger")).to include(
+      "user" => include("id" => staged_user.id, "staged" => true),
+    )
+  end
+
+  it "only enqueues user updated workflows matching the selected groups" do
+    group = Fabricate(:group)
+    group.add(user)
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+    create_published_workflow("user-updated-trigger", "trigger:user_updated")
+    create_published_workflow(
+      "matching-group-updated-trigger",
+      "trigger:user_updated",
+      configuration: {
+        "group_ids" => [group.id.to_s],
+      },
+    )
+    create_published_workflow(
+      "group-mismatch-updated-trigger",
+      "trigger:user_updated",
+      configuration: {
+        "group_ids" => [other_group.id.to_s],
+      },
+    )
+
+    UserUpdater.new(admin, user).update(bio_raw: "Updated bio")
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "user-updated-trigger",
+      "matching-group-updated-trigger",
+    )
+
+    trigger_data = trigger_data_for("user-updated-trigger")
+    expect(trigger_data).to include("user" => include("id" => user.id, "username" => user.username))
+  end
+
+  it "only enqueues reviewable created workflows matching the selected types" do
+    create_published_workflow("reviewable-created-trigger", "trigger:reviewable_created")
+    create_published_workflow(
+      "matching-type-created-trigger",
+      "trigger:reviewable_created",
+      configuration: {
+        "reviewable_types" => ["ReviewableFlaggedPost"],
+      },
+    )
+    create_published_workflow(
+      "type-mismatch-created-trigger",
+      "trigger:reviewable_created",
+      configuration: {
+        "reviewable_types" => ["ReviewableUser"],
+      },
+    )
+
+    reviewable = Fabricate(:reviewable_flagged_post)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "reviewable-created-trigger",
+      "matching-type-created-trigger",
+    )
+
+    trigger_data = trigger_data_for("reviewable-created-trigger")
+    expect(trigger_data).to include(
+      "reviewable" =>
+        include("id" => reviewable.id, "type" => "ReviewableFlaggedPost", "status" => "pending"),
+    )
+  end
+
   it "does not query the dependencies table when no live workflow uses the fired trigger type" do
     create_published_workflow("closed-trigger", "trigger:topic_closed")
     DiscourseWorkflows::WorkflowDependency.active_node_types # warm the cache

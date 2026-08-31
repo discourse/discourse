@@ -96,6 +96,14 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).not_to include("  fab fa-facebook-messenger  ")
   end
 
+  it "picks up a new badge icon in the picker list" do
+    expect(SvgSprite.picker_icon_ids(nil, true)).not_to include("seedling")
+
+    Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
+
+    expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
+  end
+
   it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
     expect(SvgSprite.all_icons).to include("far fa-building")
@@ -143,6 +151,65 @@ RSpec.describe SvgSprite do
     parent_theme = Fabricate(:theme)
     parent_theme.add_relative_theme!(:child, theme)
     expect(SvgSprite.all_icons(parent_theme.id)).to include("dragon")
+  end
+
+  it "includes icons defined in icon type theme settings" do
+    theme.set_field(
+      target: :settings,
+      name: :yaml,
+      value: "flair:\n  type: icon\n  default: dragon\n",
+    )
+    theme.save!
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    theme.update_setting(:flair, "gas-pump")
+    theme.save!
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
+  end
+
+  it "includes icons defined in icon type site settings" do
+    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+
+    SiteSetting.reaction_flair = "dragon"
+    SvgSprite.expire_cache
+
+    expect(SvgSprite.all_icons).to include("dragon")
+  end
+
+  it "includes icons defined in icon properties of objects type theme settings" do
+    theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+      featured_links:
+        type: objects
+        default:
+          - title: link
+            icon: dragon
+        schema:
+          name: link
+          properties:
+            title:
+              type: string
+            icon:
+              type: icon
+    YAML
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    theme.update_setting(:featured_links, [{ "title" => "link", "icon" => "gas-pump" }])
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
+  end
+
+  it "includes icons defined in icon properties of objects type site settings" do
+    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+
+    SiteSetting.reaction_list = [{ name: "party", icon: "dragon" }].to_json
+    SvgSprite.expire_cache
+
+    expect(SvgSprite.all_icons).to include("dragon")
   end
 
   it "includes icons defined in theme modifiers" do

@@ -21,7 +21,7 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { isSameLocale } from "discourse/lib/locale-normalizer";
 import { sanitize } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { not } from "discourse/truth-helpers";
+import { eq, has, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DSelect from "discourse/ui-kit/d-select";
@@ -161,6 +161,9 @@ class SectionLink {
   @tracked name;
   @tracked value;
   @tracked locale;
+  // Reassigned when a link moves between segments; tracked so a future reader
+  // of it, or of `isPrimary`, observes the move during render.
+  @tracked segment;
   @autoTrackedArray localizations;
   @tracked _destroy;
 
@@ -390,16 +393,21 @@ export default class SidebarSectionForm extends Component {
         locale: sectionLocale,
       });
     } else {
+      const locale = this.siteSettings.default_locale;
+      const link = this.model?.link;
+
       return new Section({
         links: [
-          new SectionLink({
-            router: this.router,
-            objectId: this.nextObjectId,
-            segment: "primary",
-            locale: this.siteSettings.default_locale,
-          }),
+          link
+            ? this.initLink(link, locale)
+            : new SectionLink({
+                router: this.router,
+                objectId: this.nextObjectId,
+                segment: "primary",
+                locale,
+              }),
         ],
-        locale: this.siteSettings.default_locale,
+        locale,
       });
     }
   }
@@ -452,7 +460,7 @@ export default class SidebarSectionForm extends Component {
           "sidebar_sections",
           this.currentUser.sidebar_sections.concat(data.sidebar_section)
         );
-        this.closeModal();
+        this.closeModal({ createdSection: data.sidebar_section });
       })
       .catch((e) => {
         this.flash = sanitize(extractError(e));
@@ -550,10 +558,60 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.links.filter((link) => !link._destroy);
   }
 
+  get initialFocusLinkObjectId() {
+    const index = this.model?.focusLinkIndex;
+    return index === undefined ? undefined : this.activeLinks[index]?.objectId;
+  }
+
+  get modalAutofocus() {
+    return this.model?.focusLinkIndex === undefined;
+  }
+
   get activeSecondaryLinks() {
     return this.transformedModel.secondaryLinks?.filter(
       (link) => !link._destroy
     );
+  }
+
+  /**
+   * Links whose URL an earlier link in the same section already uses.
+   *
+   * Worth pointing out, since a link dropped onto a section it is already in
+   * looks like nothing happened, but not worth refusing: two links to one place
+   * under different names are a reasonable thing to want. Only the later
+   * occurrence is marked, so the row that was already there does not start
+   * looking like the mistake.
+   */
+  get duplicateLinkObjectIds() {
+    const seen = new Set();
+    const duplicates = new Set();
+
+    for (const link of [
+      ...this.activeLinks,
+      ...(this.activeSecondaryLinks ?? []),
+    ]) {
+      const value = link.value?.trim();
+
+      if (!value) {
+        continue;
+      }
+
+      if (seen.has(value)) {
+        duplicates.add(link.objectId);
+      } else {
+        seen.add(value);
+      }
+    }
+
+    return duplicates;
+  }
+
+  get lastActiveLinkIndex() {
+    return this.activeLinks.length - 1;
+  }
+
+  get lastActiveSecondaryLinkIndex() {
+    return (this.activeSecondaryLinks?.length ?? 0) - 1;
   }
 
   @cached
@@ -805,16 +863,32 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    const links = this.draggedLink.isPrimary
+    const source = this.draggedLink.isPrimary
+      ? this.transformedModel.links
+      : this.transformedModel.secondaryLinks;
+    const destination = targetLink.isPrimary
       ? this.transformedModel.links
       : this.transformedModel.secondaryLinks;
 
-    removeValueFromArray(links, this.draggedLink);
+    // Nothing to insert next to, so leave both arrays untouched rather than
+    // removing the link and dropping it at an arbitrary offset.
+    if (!destination.includes(targetLink)) {
+      return;
+    }
 
-    const toPosition = links.indexOf(targetLink);
+    removeValueFromArray(source, this.draggedLink);
+
+    // Read after the removal: within one segment the two arrays are the same
+    // one, so a pre-removal index would be off by one when dragging downwards.
+    const toPosition = destination.indexOf(targetLink);
+
     this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
 
-    links.splice(above ? toPosition : toPosition + 1, 0, this.draggedLink);
+    destination.splice(
+      above ? toPosition : toPosition + 1,
+      0,
+      this.draggedLink
+    );
   }
 
   get canDelete() {
@@ -1139,7 +1213,9 @@ export default class SidebarSectionForm extends Component {
 
   <template>
     <DModal
+      @autofocus={{this.modalAutofocus}}
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
       @title={{i18n this.header}}
@@ -1328,9 +1404,19 @@ export default class SidebarSectionForm extends Component {
                 </div>
               </div>
 
-              {{#each this.activeLinks as |link|}}
+              {{#each this.activeLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveLinkIndex}}
+                  @focusNameInput={{eq
+                    link.objectId
+                    this.initialFocusLinkObjectId
+                  }}
+                  @duplicateValue={{has
+                    this.duplicateLinkObjectIds
+                    link.objectId
+                  }}
                   @deleteLink={{this.deleteLink}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}
@@ -1350,9 +1436,15 @@ export default class SidebarSectionForm extends Component {
             {{#if this.transformedModel.sectionType}}
               <hr />
               <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
-              {{#each this.activeSecondaryLinks as |link|}}
+              {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                  @duplicateValue={{has
+                    this.duplicateLinkObjectIds
+                    link.objectId
+                  }}
                   @deleteLink={{this.deleteLink}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}

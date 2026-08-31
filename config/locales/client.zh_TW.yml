@@ -394,12 +394,26 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
         back: "上一步"
+    design_wizard:
+      back: "上一步"
+      next: "下一步"
+      sections:
+        theme: "主題"
+        homepage: "主頁"
+      theme:
+        selected: "已選"
+      colors:
+        light: "輕亮"
+        dark: "黑暗"
+      homepage:
+        topics: "話題"
+        categories: "分類"
+        styles:
+          boxes: "匣"
     about:
       edit: "編輯此頁"
       simple_title: "關於"
@@ -643,10 +657,6 @@ zh_TW:
         optional: "選擇性"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
-        required: "您必須先審核項目才能查看它們。"
-        claimed_by_you: "您已聲明此項目，並可以查看。"
-        claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
-        automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -1350,7 +1360,9 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
-      enable_defer: " 將主題標記為未讀"
+      automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
+      content_languages:
+        understood: "我能理解的語言"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
@@ -1951,7 +1963,8 @@ zh_TW:
           email_placeholder: "name@example.com"
           invite_by_email: "電子信箱"
           restrict_domain: "僅限網域"
-          more_options: "更多選項"
+          create_and_send: "傳送"
+          create_and_copy: "複製連結"
           update: "更新"
           summary:
             role_member: "成員"
@@ -1962,7 +1975,7 @@ zh_TW:
             expires: "過期時間"
             topic: "話題"
             groups: "群組"
-            edit: "編輯邀請"
+            edit: "編輯"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           text: "批量邀請"
@@ -2424,6 +2437,7 @@ zh_TW:
     category_row:
       subcategory_count:
         other: "+%{count} 個子類別"
+      subcategories: "+ 次分類"
       topic_count:
         other: "%{count}個話題在此分類"
       read_only: "唯讀"
@@ -2710,7 +2724,6 @@ zh_TW:
         other: "%{count} 個未處理的加入「%{group_name}」的成員資格請求"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
-      votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
       admin_problems: "有新的建議出現在後台儀表板"
       dismiss_confirmation:
@@ -3701,6 +3714,11 @@ zh_TW:
       share:
         title: "分享貼文#%{post_number}"
         instructions: "分享此貼文的連結:"
+      click_to_show_original: "點擊以顯示原文"
+      tap_to_show_original: "輕觸此處以顯示原文"
+      click_to_show_translation: "點擊以顯示翻譯"
+      tap_to_show_translation: "輕觸此處以顯示翻譯"
+      ai_translation_disclaimer: "由 AI 產生的翻譯可能不準確。"
     category:
       none: "( 無分類 )"
       all: "所有分類"
@@ -4428,9 +4446,9 @@ zh_TW:
           always_public: "本節中的內容始終是公開"
           more_menu: "更多選單"
           localizations:
-            title: "翻譯"
             locale: "語言"
             title_label: "章節標題"
+            remove_language: "移除"
           links:
             add: "新增另一個連結"
             delete: "刪除連結"
@@ -5006,13 +5024,26 @@ zh_TW:
       new_features:
         title: "有什麼最新消息？"
         check_for_updates: "檢查更新"
+      site_traffic_explorer:
+        metric_information: "關於 %{metric}"
+        remove_filter_value: "移除 %{value}"
+        clear_all: "清除全部"
+        apply: "套用"
+        view_more: "查看更多"
+        cards:
+          pages: "頁面"
+          visitors: "訪客"
+        filters:
+          browser: "瀏覽器"
+          ip: "IP 位址"
+        series:
+          anonymous_human: "匿名"
       dashboard:
         title: "控制台"
         last_updated: "儀表板更新："
         discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
-        critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
         please_update: "請更新！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"

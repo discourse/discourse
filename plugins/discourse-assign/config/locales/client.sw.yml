@@ -71,7 +71,17 @@ sw:
       nodes:
         "trigger:assigned": "Kukabidhi"
       assign_topic:
+        resources:
+          topic: "Mada"
+          post: "Ujumbe"
         operations:
           assign: "Kabidhi"
           unassign: "Haijakabithiwa"
         topic_id: "Utambulisho wa Mada"
+        post_id: "Utambulisho wa Ujumbe"
+      check_assignment:
+        target_types:
+          topic: "Mada"
+          post: "Ujumbe"
+        topic_id: "Utambulisho wa Mada"
+        post_id: "Utambulisho wa Ujumbe"

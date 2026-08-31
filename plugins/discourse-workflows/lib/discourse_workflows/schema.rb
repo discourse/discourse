@@ -26,12 +26,26 @@ module DiscourseWorkflows
       { "$schema" => DRAFT_URI, "type" => "object", "properties" => properties }.freeze
     end
 
+    def self.entity_extension(name, properties)
+      {
+        "$schema" => DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          name => {
+            "type" => "object",
+            "properties" => properties,
+          },
+        },
+      }.freeze
+    end
+
     TOPIC_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },
         "title": { "type": "string" },
         "fancy_title": { "type": "string" },
         "slug": { "type": "string" },
+        "archetype": { "type": "string", "description": "regular for topics, private_message for PMs" },
         "posts_count": { "type": "integer" },
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
@@ -47,6 +61,8 @@ module DiscourseWorkflows
           }
         },
         "first_post_id": { "type": "integer" },
+        "visible": { "type": "boolean" },
+        "visibility_reason_id": { "type": "integer" },
         "closed": { "type": "boolean" },
         "archived": { "type": "boolean" },
         "created_at": { "type": "string", "format": "date-time" },
@@ -104,7 +120,13 @@ module DiscourseWorkflows
         "trust_level_name": { "type": "string" },
         "admin": { "type": "boolean" },
         "moderator": { "type": "boolean" },
-        "staff": { "type": "boolean" }
+        "staff": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "approved": { "type": "boolean" },
+        "silenced": { "type": "boolean" },
+        "suspended": { "type": "boolean" },
+        "uploaded_avatar_id": { "type": ["integer", "null"] },
+        "avatar_template": { "type": "string" }
       }
     JSON
 
@@ -146,13 +168,31 @@ module DiscourseWorkflows
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
     BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
-    USER_ACTION_SCHEMA =
-      entity(
-        "user",
-        USER_PROPERTIES.merge(JSON.parse(<<~JSON)),
+    IP_LOCATION_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "type": ["object", "null"],
+        "description": "Derived on demand from the MaxMind databases, null when unavailable",
+        "properties": {
+          "country": { "type": "string" },
+          "country_code": { "type": "string" },
+          "region": { "type": ["string", "null"] },
+          "city": { "type": ["string", "null"] },
+          "location": { "type": "string" },
+          "latitude": { "type": ["number", "null"] },
+          "longitude": { "type": ["number", "null"] },
+          "asn": { "type": ["integer", "null"] },
+          "organization": { "type": ["string", "null"] }
+        }
+      }
+    JSON
+
+    USER_ACTION_PROPERTIES = JSON.parse(<<~JSON).freeze
           {
             "title": { "type": ["string", "null"] },
             "bio_raw": { "type": ["string", "null"] },
+            "website": { "type": ["string", "null"] },
+            "profile_background_upload_id": { "type": ["integer", "null"] },
+            "card_background_upload_id": { "type": ["integer", "null"] },
             "manual_locked_trust_level": { "type": ["integer", "null"] },
             "trust_level_locked": { "type": "boolean" },
             "user_fields": { "type": "object" },
@@ -170,8 +210,59 @@ module DiscourseWorkflows
             }
           }
         JSON
+
+    USER_STATS_PROPERTIES = JSON.parse(<<~JSON).freeze
+          {
+            "stats": {
+              "type": ["object", "null"],
+              "properties": {
+                "topics_entered": { "type": "integer" },
+                "posts_read_count": { "type": "integer" },
+                "time_read": { "type": "integer" },
+                "days_visited": { "type": "integer" },
+                "post_count": { "type": "integer" },
+                "topic_count": { "type": "integer" },
+                "likes_given": { "type": "integer" },
+                "likes_received": { "type": "integer" },
+                "first_post_created_at": { "type": ["string", "null"], "format": "date-time" }
+              }
+            }
+          }
+        JSON
+
+    USER_EXTENSION_PROPERTIES = {
+      "stats" => USER_STATS_PROPERTIES,
+      "external_ids" =>
+        JSON.parse(
+          '{ "external_id": { "type": ["string", "null"] }, "external_ids": { "type": "object" } }',
+        ).freeze,
+      "emails" =>
+        JSON.parse(
+          '{ "email": { "type": ["string", "null"] }, "secondary_emails": { "type": "array", "items": { "type": "string" } } }',
+        ).freeze,
+      "ips" => {
+        "registration_ip_address" => {
+          "type" => %w[string null],
+        },
+        "registration_location" => IP_LOCATION_PROPERTIES,
+        "ip_address" => {
+          "type" => %w[string null],
+        },
+        "last_location" => IP_LOCATION_PROPERTIES,
+      }.freeze,
+    }.freeze
+
+    USER_ACTION_SCHEMA =
+      entity(
+        "user",
+        USER_PROPERTIES.merge(USER_ACTION_PROPERTIES),
         "Discourse user lookup/update payload",
       )
+
+    USER_EXTENSION_SCHEMAS =
+      USER_EXTENSION_PROPERTIES
+        .transform_values { |properties| entity_extension("user", properties) }
+        .freeze
     BASIC_GROUP_SCHEMA =
       entity("group", BASIC_GROUP_PROPERTIES, "Group involved in the membership event")
     GROUP_SCHEMA = entity("group", GROUP_PROPERTIES, "WebHookGroupSerializer payload")
@@ -222,6 +313,35 @@ module DiscourseWorkflows
     USER_ADDED_TO_GROUP_SCHEMA = group_membership_event("added")
     USER_REMOVED_FROM_GROUP_SCHEMA = group_membership_event("removed")
 
+    USER_EVENT_SCHEMA =
+      entity(
+        "user",
+        USER_PROPERTIES.merge(
+          "staged" => {
+            "type" => "boolean",
+          },
+          "created_at" => {
+            "type" => "string",
+            "format" => "date-time",
+          },
+        ),
+        "User account event payload",
+      )
+
+    USER_UPDATED_EVENT_SCHEMA =
+      document(
+        USER_EVENT_SCHEMA.fetch("properties").merge(
+          "changed" => {
+            "type" => %w[array null],
+            "description" =>
+              "Which parts of the profile changed, or null when the update did not report it",
+            "items" => {
+              "type" => "string",
+            },
+          },
+        ),
+      )
+
     USER_SEEN_SCHEMA =
       document(
         BASIC_USER_SCHEMA.fetch("properties").merge(
@@ -247,6 +367,23 @@ module DiscourseWorkflows
           },
         ),
       )
+
+    REVIEWABLE_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "target_type": { "type": ["string", "null"] },
+        "target_id": { "type": ["integer", "null"] },
+        "topic_id": { "type": ["integer", "null"] },
+        "category_id": { "type": ["integer", "null"] },
+        "score": { "type": "number" },
+        "created_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    JSON
+
+    REVIEWABLE_EVENT_SCHEMA =
+      entity("reviewable", REVIEWABLE_PROPERTIES, "Review queue item payload")
 
     BADGE_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
@@ -288,14 +425,30 @@ module DiscourseWorkflows
         schemas.reduce({}) { |combined, schema| merge_pair(combined, schema) }
       end
 
+      def unknown?(schema)
+        stringify(schema).empty?
+      end
+
       def union(*schemas)
         schemas = schemas.flatten.map { |schema| stringify(schema) }
-        return {} if schemas.empty? || schemas.any?(&:empty?)
+        return {} if schemas.empty? || schemas.any? { |schema| unknown?(schema) }
 
         branches = schemas.flat_map { |schema| union_branches(schema) }.uniq
         return branches.first if branches.one?
 
         { "$schema" => DRAFT_URI, "anyOf" => branches }
+      end
+
+      def augment(schema, *extensions)
+        extensions = extensions.flatten.map { |extension| stringify(extension) }.reject(&:empty?)
+        return schema if extensions.empty?
+
+        schema = stringify(schema)
+        if any_of_wrapper?(schema)
+          return union(*union_branches(schema).map { |branch| augment(branch, extensions) })
+        end
+
+        extensions.reduce(schema) { |merged, extension| merge_pair(merged, extension) }
       end
 
       def resolve(schema, mode:, input_schema: {})
@@ -324,16 +477,42 @@ module DiscourseWorkflows
         infer_value(value)
       end
 
-      def visible?(display_options, configuration)
+      def expression_value?(value)
+        value.is_a?(String) && value.start_with?("=")
+      end
+
+      # :indeterminate means a rule is anchored to an expression-valued parameter,
+      # so the target must neither be dropped nor have its requirements enforced.
+      def display_state(display_options, configuration)
         display_options = normalize_options(display_options)
-        configuration = normalize_options(configuration)
         show_rules = display_options["show"]
         hide_rules = display_options["hide"]
+        return :visible if show_rules.blank? && hide_rules.blank?
 
-        return false if show_rules.present? && !matches_rules?(show_rules, configuration)
-        return false if hide_rules.present? && matches_rules?(hide_rules, configuration)
+        configuration = normalize_configuration(configuration)
+        indeterminate = false
 
-        true
+        if show_rules.present?
+          outcome = rules_outcome(show_rules, configuration)
+          return :hidden if outcome == false
+          indeterminate ||= outcome == :unknown
+        end
+
+        if hide_rules.present?
+          outcome = rules_outcome(hide_rules, configuration)
+          return :hidden if outcome == true
+          indeterminate ||= outcome == :unknown
+        end
+
+        indeterminate ? :indeterminate : :visible
+      end
+
+      def visible?(display_options, configuration)
+        display_state(display_options, configuration) != :hidden
+      end
+
+      def definitely_visible?(display_options, configuration)
+        display_state(display_options, configuration) == :visible
       end
 
       private
@@ -431,10 +610,28 @@ module DiscourseWorkflows
         options.to_h.deep_stringify_keys
       end
 
-      def matches_rules?(rules, configuration)
-        rules.all? do |field_name, expected|
-          matches_rule?(expected, configuration[field_name.to_s])
+      # Rules only anchor on top-level keys, so a shallow pass avoids deep-copying
+      # the whole configuration on every visibility check.
+      def normalize_configuration(configuration)
+        return {} if configuration.blank?
+
+        configuration.to_h.stringify_keys
+      end
+
+      def rules_outcome(rules, configuration)
+        unknown = false
+
+        rules.each do |field_name, expected|
+          value = configuration[field_name.to_s]
+          if expression_value?(value)
+            unknown = true
+            next
+          end
+
+          return false unless matches_rule?(expected, value)
         end
+
+        unknown ? :unknown : true
       end
 
       def matches_rule?(expected, value)
@@ -444,7 +641,10 @@ module DiscourseWorkflows
 
       def matches_condition?(condition, value)
         operator = condition.is_a?(Hash) ? condition["condition"] : nil
-        return condition == value if operator.blank?
+        if operator.blank?
+          return value.include?(condition) if value.is_a?(Array) && !condition.is_a?(Array)
+          return condition == value
+        end
         return value != operator["not"] if operator.key?("not")
 
         if operator.key?("exists")

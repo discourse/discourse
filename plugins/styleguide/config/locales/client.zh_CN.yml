@@ -13,6 +13,13 @@ zh_CN:
   js:
     styleguide:
       title: "样式指南"
+      welcome: "首先，从导航菜单中选择一个部分。"
+      example:
+        toggle_code: "切换代码示例"
+        try_this: "请尝试此方法："
+        code_region: "源片段：%{title}"
+        kind:
+          component: "组件"
       categories:
         syntax: 语法
         atoms: 原子
@@ -39,6 +46,8 @@ zh_CN:
           title: "颜色"
         dialog:
           title: "对话框"
+        drag_and_drop:
+          locked: "已锁定"
         icons:
           title: "图标"
           full_list: "查看 Font Awesome 图标的完整列表"

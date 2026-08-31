@@ -156,12 +156,12 @@ module DiscourseAssign
           .limit(limit)
           .offset(offset)
 
-      users_with_assignments_count =
-        users_with_assignments_count.where(<<~SQL, pattern: "%#{params[:filter]}%") if params[
-          users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
-        SQL
-        :filter
-      ]
+      if params[:filter]
+        filter_query = "users.username_lower ILIKE :pattern"
+        filter_query = "users.name ILIKE :pattern OR #{filter_query}" if SiteSetting.enable_names?
+        users_with_assignments_count =
+          users_with_assignments_count.where(filter_query, pattern: "%#{params[:filter]}%")
+      end
       group_assignments_count = Assignment.active_for_group(group).count
       users_assignments_count =
         users_with_assignments_count.reduce(0) do |sum, assignment|

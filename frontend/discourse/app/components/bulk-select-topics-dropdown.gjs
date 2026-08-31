@@ -46,6 +46,7 @@ export default class BulkSelectTopicsDropdown extends Component {
   @service router;
   @service modal;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service toasts;
 
@@ -85,7 +86,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
-        visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       },
       {
         id: "close-topics",
@@ -96,8 +96,10 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "manage-tags",
         icon: "tag",
         name: i18n("topic_bulk_actions.manage_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
+        visible: ({ currentUser, siteSettings, site }) =>
+          siteSettings.tagging_enabled &&
+          site.can_tag_topics &&
+          currentUser.canManageTopic,
       },
       {
         id: "pin-topics",
@@ -187,7 +189,8 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "delete-topics",
         icon: "trash-can",
         name: i18n("topic_bulk_actions.delete_topics.name"),
-        visible: ({ currentUser }) => currentUser.staff,
+        visible: ({ currentUser }) =>
+          currentUser.can_delete_all_posts_and_topics,
       },
     ];
 
@@ -202,6 +205,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         return visible({
           topics: this.args.bulkSelectHelper.selected,
           currentUser: this.currentUser,
+          site: this.site,
           siteSettings: this.siteSettings,
           router: this.router,
         });
@@ -293,7 +297,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         break;
       case "close-topics":
         this.showBulkTopicActionsModal("close", "close_topics", {
-          allowSilent: true,
           description: i18n(`topic_bulk_actions.close_topics.description`),
           confirmButtonTranslationKey: "topics.bulk.confirm_close_topics",
         });

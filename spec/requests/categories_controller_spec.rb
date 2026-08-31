@@ -25,6 +25,18 @@ RSpec.describe CategoriesController do
       end
     end
 
+    it "does not build a topic list for crawlers" do
+      SiteSetting.categories_topics = 5
+      SiteSetting.categories_topics.times { Fabricate(:topic) }
+
+      CategoriesController.any_instance.expects(:fetch_topic_list).never
+
+      get "/categories", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("body.crawler")
+    end
+
     it "Shows correct title if category list is set for homepage" do
       SiteSetting.top_menu = "categories|latest"
       get "/"
@@ -445,6 +457,18 @@ RSpec.describe CategoriesController do
       ).not_to include(uncategorized.id)
     end
 
+    it "lists the subcategories of a parent that has no subcategory list style" do
+      category.update!(subcategory_list_style: nil)
+      subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+      get "/categories.json", params: { parent_category_id: category.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_list"]["categories"].map { |c| c["id"] }).to eq(
+        [subcategory.id],
+      )
+    end
+
     describe "with page" do
       before { sign_in(admin) }
 
@@ -495,21 +519,21 @@ RSpec.describe CategoriesController do
   describe "extensibility event" do
     before { sign_in(admin) }
 
-    it "triggers a extensibility event" do
-      event =
-        DiscourseEvent
-          .track_events do
-            put "/categories/#{category.id}.json",
-                params: {
-                  name: "hello",
-                  color: "ff0",
-                  text_color: "fff",
-                }
-          end
-          .last
+    it "triggers the category updated event once" do
+      events =
+        DiscourseEvent.track_events do
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "hello",
+                color: "ff0",
+                text_color: "fff",
+              }
+        end
 
-      expect(event[:event_name]).to eq(:category_updated)
-      expect(event[:params].first).to eq(category)
+      category_updated_events = events.select { |event| event[:event_name] == :category_updated }
+
+      expect(category_updated_events.size).to eq(1)
+      expect(category_updated_events.pluck(:params).map(&:first)).to all(eq(category))
     end
   end
 
@@ -1176,6 +1200,51 @@ RSpec.describe CategoriesController do
           expect(cat_json["subcategory_count"]).to eq(nil)
         end
 
+        context "with appearance settings set" do
+          before do
+            category.update!(
+              sort_order: "likes",
+              sort_ascending: true,
+              default_view: "top",
+              default_top_period: "weekly",
+              default_list_filter: "none",
+            )
+          end
+
+          it "resets the appearance settings that are sent as null" do
+            put "/categories/#{category.id}.json",
+                params: {
+                  sort_order: nil,
+                  sort_ascending: nil,
+                  default_view: nil,
+                  default_top_period: nil,
+                  default_list_filter: nil,
+                },
+                as: :json
+
+            expect(response.status).to eq(200)
+            category.reload
+            expect(category.sort_order).to eq(nil)
+            expect(category.sort_ascending).to eq(nil)
+            expect(category.default_view).to eq(nil)
+            expect(category.default_top_period).to eq(nil)
+            expect(category.default_list_filter).to eq(nil)
+          end
+
+          it "keeps the appearance settings that are not sent at all" do
+            put "/categories/#{category.id}.json", params: { name: "hello" }, as: :json
+
+            expect(response.status).to eq(200)
+            category.reload
+            expect(category.name).to eq("hello")
+            expect(category.sort_order).to eq("likes")
+            expect(category.sort_ascending).to eq(true)
+            expect(category.default_view).to eq("top")
+            expect(category.default_top_period).to eq("weekly")
+            expect(category.default_list_filter).to eq("none")
+          end
+        end
+
         it "does not update other fields" do
           SiteSetting.tagging_enabled = true
           tag_group_1 = Fabricate(:tag_group)
@@ -1348,6 +1417,21 @@ RSpec.describe CategoriesController do
 
         it "can correctly convert blank strings to appropriate null values" do
           put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
+          expect(response.status).to eq(200)
+          expect(category.reload.email_in).to be_nil
+          expect(category.reload.minimum_required_tags).to eq(0)
+        end
+
+        it "can correctly convert explicit nulls to appropriate null values" do
+          category.update!(email_in: "ted@discourse.org", minimum_required_tags: 5)
+
+          put "/categories/#{category.id}.json",
+              params: {
+                email_in: nil,
+                minimum_required_tags: nil,
+              },
+              as: :json
+
           expect(response.status).to eq(200)
           expect(category.reload.email_in).to be_nil
           expect(category.reload.minimum_required_tags).to eq(0)
@@ -1944,6 +2028,35 @@ RSpec.describe CategoriesController do
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
       expect(category["subcategory_count"]).to eq(1)
+    end
+
+    it "returns preloaded custom fields" do
+      Site.preloaded_category_custom_fields << "bob"
+      category.upsert_custom_fields("bob" => "marley")
+
+      get "/categories/find.json", params: { slug_path_with_id: "#{category.slug}/#{category.id}" }
+
+      expect(response.parsed_body["categories"].first["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
+    end
+
+    it "returns all custom fields when permissions are included" do
+      Site.preloaded_category_custom_fields << "bob"
+      category.upsert_custom_fields("bob" => "marley", "tosh" => "peter")
+
+      get "/categories/find.json",
+          params: {
+            slug_path_with_id: "#{category.slug}/#{category.id}",
+            include_permissions: true,
+          }
+
+      expect(response.parsed_body["categories"].first["custom_fields"]).to eq(
+        "bob" => "marley",
+        "tosh" => "peter",
+      )
+    ensure
+      Site.reset_preloaded_category_custom_fields
     end
 
     context "with a read restricted child category" do

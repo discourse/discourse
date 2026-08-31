@@ -124,6 +124,11 @@ export default class ChatChannel extends Component {
     return this.args.channel?.id ? `channel:${this.args.channel.id}` : null;
   }
 
+  @cached
+  get hiddenMessageIds() {
+    return new Set((this.args.hiddenMessageIds ?? []).map(Number));
+  }
+
   @action
   teardown() {
     document.removeEventListener("keydown", this._captureKeystroke);
@@ -377,11 +382,8 @@ export default class ChatChannel extends Component {
     const messages = [];
     let foundFirstNew = false;
 
-    const hiddenMessageIds = new Set(
-      (this.args.hiddenMessageIds ?? []).map(Number)
-    );
     const messagesData = (result?.messages ?? []).filter(
-      (messageData) => !hiddenMessageIds.has(messageData.id)
+      (messageData) => !this.hiddenMessageIds.has(messageData.id)
     );
 
     // Only compute the newest message marker on a full load.
@@ -824,6 +826,7 @@ export default class ChatChannel extends Component {
         @channel={{@channel}}
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
+        @hiddenMessageIds={{this.hiddenMessageIds}}
       />
 
       <ChatMessagesScroller

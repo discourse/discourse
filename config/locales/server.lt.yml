@@ -658,16 +658,15 @@ lt:
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
     title: "Prisijungimas e-paštu"
+  browsers:
+    chrome: "Google Chrome"
+    discoursehub: "“DiscourseHub” programa"
+    edge: "„Microsoft Edge“"
+    firefox: "„Firefox“"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      discoursehub: "“DiscourseHub” programa"
-      edge: "„Microsoft Edge“"
-      firefox: "„Firefox“"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "nežinoma naršyklė"
     device:
       android: "“Android” įrenginys"
       chromebook: "„Chrome“ OS"
@@ -687,6 +686,9 @@ lt:
       macos: "„MacOS“"
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonimas"
   change_email:
     error: "Keičiant el. pašto adresą įvyko klaida. Galbūt adresas jau naudojamas?"
     doesnt_exist: "Šis el. pašto adresas nėra susietas su jūsų paskyra."
@@ -1075,6 +1077,9 @@ lt:
         num_topics: "Temos"
       description: "Vartotojai išvardyti pagal paspaudimų skaičių nuorodose, kurias jie bendrino."
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Apsilankymai"
+    top_entry_urls:
       labels:
         count: "Apsilankymai"
     top_referrers_by_browser_pageviews:
@@ -2004,9 +2009,6 @@ lt:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Paskyra sustabdyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
@@ -2552,6 +2554,9 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  design_wizard:
+    palette_pairs:
+      default: "Numatytasis"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2613,6 +2618,11 @@ lt:
     reasons:
       post_count: "Pirmąsias kelias kiekvieno vartotojo žinutes turi patvirtinti darbuotojai. Žr. %{link}."
       trust_level: "Vartotojai, kurių patikimumo lygis yra žemas, turi turėti atsakymus, kuriuos patvirtina darbuotojai. Žr. %{link}."
+      fast_typer_time:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
       suspect_user: "Šis naujas vartotojas įvedė profilio informaciją neskaitydamas jokių temų ar įrašų, o tai rodo, kad jie gali būti šlamšto siuntėjai. Žr. %{link}."
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."

@@ -6,6 +6,7 @@ module DiscourseAi
       BOT_NOT_FOUND = Class.new(StandardError)
 
       DEFAULT_MAX_TURN_TOKENS = 32_000
+      MAX_DISCOVERED_IMAGE_REFERENCES = 20
       CONTEXT_TOKEN_BUDGET_RATIO = 0.5
       COMPRESSED_CONTEXT_PREFIX =
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX
@@ -14,12 +15,23 @@ module DiscourseAi
       COMPRESSED_CONTEXT_ACK =
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
+      SUBAGENT_FEATURE_CONTEXT_KEYS = %w[
+        subagent_parent_agent_id
+        subagent_agent_id
+        subagent_depth
+      ].freeze
+
       TOKEN_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
         [The turn token budget has been reached — no further tool calls are available.]
         Provide your final response now using the information already gathered.
         Do not describe additional tool calls or future work as though you will perform them.
         If the task is not fully complete, clearly state what was accomplished
         and what still needs to be done so the user can continue in a follow-up message.
+      TEXT
+      TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
+        [The configured tool invocation limit has been reached — no further tool calls are available.]
+        Provide your final response now using the information already gathered.
+        If the evidence is insufficient, say so instead of attempting another tool call.
       TEXT
       LEGACY_BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
@@ -30,8 +42,13 @@ module DiscourseAi
       BUDGET_EXHAUSTED_HINT = TOKEN_BUDGET_FINAL_ANSWER_HINT
       TRANSIENT_TOKEN_BUDGET_HINTS = [
         TOKEN_BUDGET_FINAL_ANSWER_HINT,
+        TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT,
         LEGACY_BUDGET_EXHAUSTED_HINT,
       ].freeze
+
+      def self.inject_tool_invocation_budget_final_answer_hint(prompt)
+        prompt.push(type: :user, content: TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT)
+      end
 
       def self.inject_token_budget_final_answer_hint(prompt)
         prompt.push(type: :user, content: TOKEN_BUDGET_FINAL_ANSWER_HINT)
@@ -75,15 +92,20 @@ module DiscourseAi
         DiscourseAi::Completions::Llm.proxy(model)
       end
 
-      def force_tool_if_needed(prompt, context)
+      def force_tool_if_needed(prompt, context, force: true, ignore_forced_tool_count: false)
         return if prompt.tool_choice == :none
 
         context.chosen_tools ||= []
+        if !force
+          prompt.tool_choice = nil
+          return
+        end
+
         forced_tools = agent.force_tool_use.map { |tool| tool.name }
         force_tool = forced_tools.find { |name| !context.chosen_tools.include?(name) }
 
-        if force_tool && agent.forced_tool_count > 0
-          user_turns = prompt.messages.select { |m| m[:type] == :user }.length
+        if force_tool && agent.forced_tool_count > 0 && !ignore_forced_tool_count
+          user_turns = prompt.messages.count { |message| message[:type] == :user }
           force_tool = false if user_turns > agent.forced_tool_count
         end
 
@@ -103,7 +125,27 @@ module DiscourseAi
 
         context.cancel_manager ||= DiscourseAi::Completions::CancelManager.new
         current_llm = llm
+        token_budget =
+          context.turn_token_budget.presence || agent.class.max_turn_tokens.presence ||
+            self.class.default_max_turn_tokens(current_llm)
+        execution_context ||=
+          context.execution_context || DiscourseAi::Completions::ExecutionContext.new
+        execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
+        context.execution_context = execution_context
+        context.subagent_execution_state ||=
+          SubagentExecutionState.new(
+            execution_context: execution_context,
+            root_token_budget: token_budget,
+          )
+        context.current_agent_id ||= agent.id
+        local_token_usage_start = execution_context.token_usage_tracker.total
+
         prompt = agent.craft_prompt(context, llm: current_llm)
+        defer_forced_tool =
+          agent.defer_forced_tool_for_vision? &&
+            context.runtime_tools&.include?(Tools::ViewImage) &&
+            context.authorized_image_upload_ids.present?
+        fallback_force_required = false
 
         total_completions = 0
         ongoing_chain = true
@@ -113,6 +155,11 @@ module DiscourseAi
 
         llm_kwargs = llm_args.dup
         llm_kwargs[:user] = user
+        context_feature_attribution =
+          context.feature_context.to_h.deep_stringify_keys.slice(*SUBAGENT_FEATURE_CONTEXT_KEYS)
+        llm_kwargs[:feature_context] = llm_args[:feature_context].to_h.deep_stringify_keys.merge(
+          context_feature_attribution,
+        )
         llm_kwargs[:temperature] = agent.temperature if agent.temperature
         llm_kwargs[:top_p] = agent.top_p if agent.top_p
         llm_kwargs[:thinking_effort] = agent.thinking_effort if agent.thinking_effort.present?
@@ -124,8 +171,6 @@ module DiscourseAi
         needs_newlines = false
 
         supports_context_compression = current_llm.max_prompt_tokens.to_i > 0
-        token_budget =
-          agent.class.max_turn_tokens.presence || self.class.default_max_turn_tokens(current_llm)
 
         # Compression manages context size instead of the dialect's destructive
         # trim_messages. Disabling trim prevents the two strategies from
@@ -133,27 +178,45 @@ module DiscourseAi
         # a usable context window because compression cannot estimate when to run.
         prompt.skip_trim = true if supports_context_compression
 
-        execution_context ||= DiscourseAi::Completions::ExecutionContext.new
-        execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
         llm_kwargs[:execution_context] = execution_context
         enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
-        token_usage_tracker = execution_context&.token_usage_tracker
+        token_usage_tracker = execution_context.token_usage_tracker
 
         final_answer_requested = false
+        tool_invocation_budget_exhausted = false
 
         while ongoing_chain
           if final_answer_requested
             break # already ran the final text-only generate
           end
+          break if context.cancel_manager.cancelled?
 
-          if token_usage_tracker.total >= token_budget
+          if tool_invocation_budget_exhausted
+            self.class.inject_tool_invocation_budget_final_answer_hint(prompt)
+            prompt.tool_choice = :none
+            final_answer_requested = true
+            tool_invocation_budget_exhausted = false
+          end
+
+          local_token_usage = token_usage_tracker.total - local_token_usage_start
+          root_budget_exhausted = context.subagent_execution_state.remaining_tokens <= 0
+          if !final_answer_requested &&
+               (local_token_usage >= token_budget || root_budget_exhausted) &&
+               !fallback_force_required
             self.class.inject_token_budget_final_answer_hint(prompt)
             prompt.tool_choice = :none
             final_answer_requested = true
           end
 
           compression_result =
-            maybe_compress_context(prompt, current_llm, execution_context:, raw_context:)
+            maybe_compress_context(
+              prompt,
+              current_llm,
+              execution_context: execution_context,
+              raw_context: raw_context,
+              subagent_execution_state: context.subagent_execution_state,
+              feature_context: context.feature_context,
+            )
           if supports_context_compression
             prompt.skip_trim = compression_result != :skipped
             if compression_result == :compressed &&
@@ -163,7 +226,12 @@ module DiscourseAi
           end
 
           tool_found = false
-          force_tool_if_needed(prompt, context)
+          force_tool_if_needed(
+            prompt,
+            context,
+            force: !defer_forced_tool || fallback_force_required,
+            ignore_forced_tool_count: defer_forced_tool && fallback_force_required,
+          )
 
           tool_halted = false
 
@@ -171,6 +239,31 @@ module DiscourseAi
           existing_tools = Set.new
           current_thinking = []
           thinking_placeholder = nil
+
+          completion_reserved =
+            if final_answer_requested && context.subagent_depth.to_i.zero?
+              context.subagent_execution_state.reserve_root_final_completion
+            else
+              context.subagent_execution_state.reserve_completion
+            end
+
+          unless completion_reserved
+            if final_answer_requested
+              context.completion_limit_reached = true
+              break
+            end
+
+            self.class.inject_token_budget_final_answer_hint(prompt)
+            prompt.tool_choice = :none
+            final_answer_requested = true
+
+            if context.subagent_depth.to_i.zero?
+              break if !context.subagent_execution_state.reserve_root_final_completion
+            else
+              context.completion_limit_reached = true
+              break
+            end
+          end
 
           result =
             current_llm.generate(
@@ -201,25 +294,38 @@ module DiscourseAi
                 end
 
                 tool_found = true
+                fallback_force_required = true if defer_forced_tool &&
+                  tool.name == Tools::ViewImage.name
                 # a bit hacky, but extra newlines do no harm
                 if needs_newlines
                   update_blk.call("\n\n")
                   needs_newlines = false
                 end
 
-                process_tool(
-                  tool: tool,
-                  raw_context: raw_context,
-                  current_llm: current_llm,
-                  update_blk: update_blk,
-                  prompt: prompt,
-                  context: context,
-                  current_thinking: current_thinking,
-                )
+                tool_result =
+                  process_tool(
+                    tool: tool,
+                    raw_context: raw_context,
+                    current_llm: current_llm,
+                    update_blk: update_blk,
+                    prompt: prompt,
+                    context: context,
+                    current_thinking: current_thinking,
+                  )
 
-                ongoing_chain &&= tool.chain_next_response?
+                tool_invocation_budget_exhausted ||=
+                  spawn_agent_budget_exhausted?(tool, context) ||
+                    tool_invocation_budget_exhausted?(context)
 
-                tool_halted = true if !tool.chain_next_response?
+                chain_next_response =
+                  tool.chain_next_response? &&
+                    !(
+                      agent.stop_chain_on_pending_approval? && tool_result.is_a?(Hash) &&
+                        tool_result[:status] == "pending_approval"
+                    )
+                ongoing_chain &&= chain_next_response
+
+                tool_halted = true if !chain_next_response
               else
                 next if tool_halted
                 needs_newlines = true
@@ -253,15 +359,17 @@ module DiscourseAi
             end
 
           if !tool_found
-            ongoing_chain = false
-            text = result
-
-            # we must strip out thinking and other types of blocks
-            if result.is_a?(Array)
-              text = +""
-              result.each { |item| text << item if item.is_a?(String) }
+            if defer_forced_tool && !fallback_force_required
+              fallback_force_required = true
+              final_answer_requested = false
+              prompt.tool_choice = nil
+              ongoing_chain = true
+            else
+              ongoing_chain = false
+              # we must strip out thinking and other types of blocks
+              text = DiscourseAi::Completions::Llm.text_from_response(result)
+              raw_context << [text, bot_user&.username]
             end
-            raw_context << [text, bot_user&.username]
           end
 
           total_completions += 1
@@ -281,8 +389,26 @@ module DiscourseAi
 
       private
 
+      def spawn_agent_budget_exhausted?(tool, context)
+        tool.is_a?(Tools::SpawnAgent) && !context.subagent_execution_state.spawn_available?
+      end
+
+      def tool_invocation_budget_exhausted?(context)
+        runtime_tools = context.runtime_tools.presence || agent.available_tools
+        return false if runtime_tools.empty?
+
+        runtime_tools.all? do |tool_class|
+          if tool_class <= Tools::SpawnAgent
+            !context.subagent_execution_state.spawn_available?
+          else
+            limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
+            context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
+          end
+        end
+      end
+
       def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
-        return if current_llm.llm_model.provider != "google"
+        return if !%w[google gemini_interactions].include?(current_llm.llm_model.provider)
         return if context.skip_show_thinking != false
 
         extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup
@@ -406,7 +532,25 @@ module DiscourseAi
         current_thinking:
       )
         tool_call_id = tool.tool_call_id
-        invocation_result_json = invoke_tool(tool, context, &update_blk).to_json
+        invocation_result = invoke_tool(tool, context, &update_blk)
+        if context.server_owned_tools != false &&
+             context.runtime_tools&.include?(Tools::ViewImage) &&
+             current_llm.llm_model.delegated_vision? && tool.name != Tools::ViewImage.name
+          image_references =
+            extract_tool_image_references([invocation_result, tool.custom_raw]).uniq.first(
+              MAX_DISCOVERED_IMAGE_REFERENCES,
+            )
+          available_images =
+            register_tool_image_references(
+              image_references,
+              context,
+              tool_image_guardian(context, tool),
+            )
+          if available_images.present? && invocation_result.is_a?(Hash)
+            invocation_result = invocation_result.merge(available_images: available_images)
+          end
+        end
+        invocation_result_json = invocation_result.to_json
 
         tool_call_message = {
           type: :tool_call,
@@ -454,14 +598,90 @@ module DiscourseAi
           tool.provider_data.presence,
         ]
         raw_context << [invocation_result_json, tool_call_id, "tool", tool.name]
+        invocation_result
+      end
+
+      def extract_tool_image_references(value, references = [])
+        case value
+        when Hash
+          value.each_value { |nested| extract_tool_image_references(nested, references) }
+        when Array
+          value.each { |nested| extract_tool_image_references(nested, references) }
+        when String
+          references.concat(value.scan(%r{upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]{1,10})?}))
+        end
+        references
+      end
+
+      def register_tool_image_references(references, context, guardian)
+        references_by_sha1 =
+          references.index_by { |short_url| Upload.sha1_from_short_url(short_url) }
+        uploads_by_sha1 = Upload.where(sha1: references_by_sha1.keys.compact).index_by(&:sha1)
+        system_secure_upload_ids =
+          system_context_secure_upload_ids(uploads_by_sha1.values, context, guardian)
+
+        references_by_sha1.filter_map do |sha1, short_url|
+          upload = uploads_by_sha1[sha1]
+          next if upload.blank?
+          next if !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+          next if !guardian.can_see_upload?(upload)
+          if system_secure_upload_ids && upload.secure? &&
+               !system_secure_upload_ids.include?(upload.id)
+            next
+          end
+
+          context.register_image_upload(upload.id)
+          short_url
+        end
+      end
+
+      def system_context_secure_upload_ids(uploads, context, guardian)
+        return if guardian.user&.id != Discourse.system_user.id
+
+        access_control_post_ids = uploads.filter_map(&:access_control_post_id).uniq
+        allowed_post_ids = [context.post_id, *context.context_post_ids].compact.map(&:to_i).to_set
+        if context.topic_id.present? && access_control_post_ids.present?
+          allowed_post_ids.merge(
+            Post.where(id: access_control_post_ids, topic_id: context.topic_id).pluck(:id),
+          )
+        end
+
+        uploads
+          .filter_map do |upload|
+            upload.id if upload.secure? && allowed_post_ids.include?(upload.access_control_post_id)
+          end
+          .to_set
+      end
+
+      def tool_image_guardian(context, tool)
+        context.image_guardian(fallback_user: tool.bot_user || Discourse.system_user)
       end
 
       def invoke_tool(tool, context, &update_blk)
+        if context.subagent_depth.to_i.positive? && tool_requires_approval?(tool)
+          return(
+            {
+              status: "error",
+              error: I18n.t("discourse_ai.ai_bot.subagent_errors.approval_unavailable"),
+            }
+          )
+        end
+
         if tool_requires_approval?(tool)
           if (error = tool.validation_error)
             return error
           end
           return enqueue_tool_for_approval(tool, context, &update_blk)
+        end
+
+        if tool.invocation_limited? &&
+             !context.reserve_tool_invocation(tool.name, limit: tool.max_invocations)
+          return(
+            {
+              status: "error",
+              error: I18n.t("discourse_ai.ai_bot.tool_errors.invocation_limit_reached"),
+            }
+          )
         end
 
         show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
@@ -519,7 +739,14 @@ module DiscourseAi
         Do not discard information from the previous summary unless it has been superseded.
       TEXT
 
-      def maybe_compress_context(prompt, current_llm, execution_context: nil, raw_context: nil)
+      def maybe_compress_context(
+        prompt,
+        current_llm,
+        execution_context: nil,
+        raw_context: nil,
+        subagent_execution_state: nil,
+        feature_context: nil
+      )
         max_tokens = current_llm.max_prompt_tokens
         return :not_needed if max_tokens.blank? || max_tokens <= 0
 
@@ -592,18 +819,23 @@ module DiscourseAi
               )
             compression_prompt.tool_choice = :none
 
+            if subagent_execution_state && !subagent_execution_state.reserve_completion
+              return :skipped
+            end
+
             current_llm.generate(
               compression_prompt,
               user: nil,
               feature_name: "context_compression",
-              execution_context:,
+              feature_context: feature_context,
+              execution_context: execution_context,
             )
           rescue => e
             Rails.logger.warn("DiscourseAi: Context compression failed, skipping: #{e.message}")
             return :skipped
           end
 
-        summary = summary.is_a?(Array) ? summary.select { |s| s.is_a?(String) }.join : summary
+        summary = DiscourseAi::Completions::Llm.text_from_response(summary)
         return :skipped if summary.blank?
 
         summary_tokens = tokenizer.size(summary)
@@ -722,6 +954,8 @@ module DiscourseAi
 
               if format["type"] == "array"
                 type_desc[:items] = { type: format["array_type"] || "string" }
+                max_items = format["max_items"]
+                type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
               end
 
               memo[format["key"].to_sym] = type_desc

@@ -195,10 +195,9 @@ module DiscourseAi
               end
             elsif type == :structured_output
               json_summary_schema_key = bot.agent.response_format&.first.to_h
-              partial_summary =
-                partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
-
-              if !partial_summary.nil? && !partial_summary.empty?
+              partial.read_buffered_property_chunk(
+                json_summary_schema_key["key"]&.to_sym,
+              ) do |partial_summary|
                 summary << partial_summary
                 on_partial_blk.call(partial_summary) if on_partial_blk
               end

@@ -435,7 +435,7 @@ describe "Composer - Drafts" do
         expect(Draft.where(user: current_user).count).to eq(1)
       end
 
-      composer.open_composer_actions_new
+      composer.open_composer_actions
       composer.select_action_by_id("reply_as_new_topic")
 
       expect(composer).to be_opened

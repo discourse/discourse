@@ -19,6 +19,8 @@ uk:
       title: 'Patreon'
       header:
         rules: 'Фільтри'
+      unconfigured: "Patreon ще не підключено. Будь ласка, дивіться <a href='%{url}' target='_blank'>документацію на Discourse Meta</a> для отримання детальної інформації."
+      configure_tokens: 'Перейдіть до налаштувань'
       group: 'Група'
       rewards: 'Нагороди'
       filter: 'Filter'

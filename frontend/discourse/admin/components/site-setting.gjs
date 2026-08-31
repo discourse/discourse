@@ -1,27 +1,64 @@
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isNone } from "@ember/utils";
+import { isEmpty, isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
+import SettingBool from "discourse/admin/components/site-settings/bool";
+import SettingCategory from "discourse/admin/components/site-settings/category";
+import SettingCategoryList from "discourse/admin/components/site-settings/category-list";
+import SettingColor from "discourse/admin/components/site-settings/color";
+import SettingCompactList from "discourse/admin/components/site-settings/compact-list";
+import SettingDate from "discourse/admin/components/site-settings/date";
+import SettingDatetime from "discourse/admin/components/site-settings/datetime";
 import Description from "discourse/admin/components/site-settings/description";
+import SettingEmojiList from "discourse/admin/components/site-settings/emoji-list";
+import SettingEnum from "discourse/admin/components/site-settings/enum";
+import SettingFileSizeRestriction from "discourse/admin/components/site-settings/file-size-restriction";
+import SettingFileTypesList from "discourse/admin/components/site-settings/file-types-list";
+import SettingFontList from "discourse/admin/components/site-settings/font-list";
+import SettingGroup from "discourse/admin/components/site-settings/group";
+import SettingGroupList from "discourse/admin/components/site-settings/group-list";
+import SettingHostList from "discourse/admin/components/site-settings/host-list";
+import SettingIcon from "discourse/admin/components/site-settings/icon";
+import SettingInteger from "discourse/admin/components/site-settings/integer";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
+import SettingList from "discourse/admin/components/site-settings/list";
+import SettingLocaleEnum from "discourse/admin/components/site-settings/locale-enum";
+import SettingLocaleList from "discourse/admin/components/site-settings/locale-list";
+import SettingNamedList from "discourse/admin/components/site-settings/named-list";
+import SettingSecretList from "discourse/admin/components/site-settings/secret-list";
+import SettingSimpleList from "discourse/admin/components/site-settings/simple-list";
+import SettingString from "discourse/admin/components/site-settings/string";
+import SettingTagGroupList from "discourse/admin/components/site-settings/tag-group-list";
+import SettingTagList from "discourse/admin/components/site-settings/tag-list";
+import SettingTopic from "discourse/admin/components/site-settings/topic";
+import SettingUpload from "discourse/admin/components/site-settings/upload";
+import SettingUploadedImageList from "discourse/admin/components/site-settings/uploaded-image-list";
+import SettingUrlList from "discourse/admin/components/site-settings/url-list";
+import SettingValueList from "discourse/admin/components/site-settings/value-list";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
+import Form from "discourse/components/form";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
+import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { and, not } from "discourse/truth-helpers";
@@ -30,38 +67,38 @@ import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const CUSTOM_TYPES = [
-  "bool",
-  "date",
-  "datetime",
-  "integer",
-  "enum",
-  "list",
-  "url_list",
-  "host_list",
-  "category_list",
-  "value_list",
-  "category",
-  "uploaded_image_list",
-  "compact_list",
-  "secret_list",
-  "upload",
-  "group_list",
-  "group",
-  "tag_list",
-  "tag_group_list",
-  "color",
-  "simple_list",
-  "emoji_list",
-  "named_list",
-  "file_size_restriction",
-  "file_types_list",
-  "font_list",
-  "locale_list",
-  "locale_enum",
-  "topic",
-  "icon",
-];
+const TYPE_COMPONENTS = {
+  bool: SettingBool,
+  date: SettingDate,
+  datetime: SettingDatetime,
+  integer: SettingInteger,
+  enum: SettingEnum,
+  list: SettingList,
+  url_list: SettingUrlList,
+  host_list: SettingHostList,
+  category_list: SettingCategoryList,
+  value_list: SettingValueList,
+  category: SettingCategory,
+  uploaded_image_list: SettingUploadedImageList,
+  compact_list: SettingCompactList,
+  secret_list: SettingSecretList,
+  upload: SettingUpload,
+  group_list: SettingGroupList,
+  group: SettingGroup,
+  tag_list: SettingTagList,
+  tag_group_list: SettingTagGroupList,
+  color: SettingColor,
+  simple_list: SettingSimpleList,
+  emoji_list: SettingEmojiList,
+  named_list: SettingNamedList,
+  file_size_restriction: SettingFileSizeRestriction,
+  file_types_list: SettingFileTypesList,
+  font_list: SettingFontList,
+  locale_list: SettingLocaleList,
+  locale_enum: SettingLocaleEnum,
+  topic: SettingTopic,
+  icon: SettingIcon,
+};
 
 export default class SiteSettingComponent extends Component {
   @service modal;
@@ -76,6 +113,9 @@ export default class SiteSettingComponent extends Component {
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+  formApi = null;
+
+  #formKitData;
 
   constructor() {
     super(...arguments);
@@ -97,6 +137,19 @@ export default class SiteSettingComponent extends Component {
         `/site_setting/${this.setting.setting}/process`,
         this.onMessage
       );
+    }
+  }
+
+  @action
+  syncFormValue(_element, [wireValue]) {
+    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
+  }
+
+  applyFormValue(wireValue) {
+    const name = this.setting.setting;
+
+    if (this.toWire(this.formApi.get(name)) !== wireValue) {
+      this.formApi.set(name, this.fromWire(wireValue));
     }
   }
 
@@ -130,18 +183,12 @@ export default class SiteSettingComponent extends Component {
   }
 
   get resolvedComponent() {
-    return getOwner(this).resolveRegistration(
-      `component:${this.componentName}`
-    );
+    return TYPE_COMPONENTS[this.componentType] ?? SettingString;
   }
 
   @dependentKeyCompat
   get buffered() {
     return this.setting.buffered;
-  }
-
-  get componentName() {
-    return `site-settings/${this.typeClass}`;
   }
 
   get siteSettingComponent() {
@@ -168,6 +215,10 @@ export default class SiteSettingComponent extends Component {
 
   get displayDescription() {
     return this.componentType !== "bool";
+  }
+
+  get formInlineDescription() {
+    return this.displayDescription ? null : this.setting.description;
   }
 
   get showThemeSiteSettingWarning() {
@@ -332,7 +383,7 @@ export default class SiteSettingComponent extends Component {
 
   get componentType() {
     const type = this.type;
-    return CUSTOM_TYPES.includes(type) ? type : "string";
+    return type in TYPE_COMPONENTS ? type : "string";
   }
 
   get type() {
@@ -341,6 +392,23 @@ export default class SiteSettingComponent extends Component {
       return `${setting.list_type}_list`;
     }
     return setting.type;
+  }
+
+  @cached
+  get definition() {
+    return this.setting.definition;
+  }
+
+  get useFormKit() {
+    return (
+      this.trackChanges && resolveSettingFieldType(this.definition).adminReady
+    );
+  }
+
+  get formKitData() {
+    return (this.#formKitData ??= {
+      [this.setting.setting]: this.fromWire(this.setting.buffered.get("value")),
+    });
   }
 
   get allowAny() {
@@ -447,8 +515,21 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
+  async submit() {
+    if (this.formApi) {
+      await this.formApi.submit();
+    } else {
+      await this.update();
+    }
+  }
+
+  @action
   async update() {
     const dirtySettings = this.dirtySettings;
+
+    if (dirtySettings.length === 0) {
+      return;
+    }
 
     for (const setting of dirtySettings) {
       if (!setting.requiresConfirmation) {
@@ -522,6 +603,46 @@ export default class SiteSettingComponent extends Component {
     if (isSettingValueTrue(value)) {
       this.adminSiteSettingStore.reveal(this.setting.setting);
     }
+  }
+
+  @action
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  onFormSet(name, value) {
+    const wireValue = this.toWire(value);
+
+    if (this.setting.type === "integer" && wireValue === "") {
+      return;
+    }
+
+    this.changeValueCallback(wireValue);
+  }
+
+  toWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value) ? "true" : "false";
+    }
+
+    if (this.setting.type === "integer") {
+      return isEmpty(value) ? "" : String(Math.trunc(value));
+    }
+
+    return isEmpty(value) ? "" : String(value);
+  }
+
+  fromWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value);
+    }
+
+    if (this.setting.type === "integer") {
+      return isEmpty(value) ? null : parseInt(value, 10);
+    }
+
+    return value;
   }
 
   @action
@@ -650,17 +771,40 @@ export default class SiteSettingComponent extends Component {
           <Description @description={{this.setting.description}} />
           <JobStatus @status={{this.status}} @progress={{this.progress}} />
         {{else}}
-          <this.resolvedComponent
-            {{on "keydown" this._handleKeydown}}
-            @disabled={{this.isDisabled}}
-            @setting={{this.setting}}
-            @value={{this.buffered.value}}
-            @preview={{this.preview}}
-            @isSecret={{this.isSecret}}
-            @allowAny={{this.allowAny}}
-            @changeValueCallback={{this.changeValueCallback}}
-            @setValidationMessage={{this.setValidationMessage}}
-          />
+          {{#if this.useFormKit}}
+            <Form
+              @data={{this.formKitData}}
+              @onSet={{this.onFormSet}}
+              @onSubmit={{this.update}}
+              @onRegisterApi={{this.registerFormApi}}
+              {{didUpdate this.syncFormValue this.buffered.value}}
+              {{linkifySettingLinks this.formInlineDescription}}
+              as |form|
+            >
+              <SettingDefinitionField
+                @definition={{this.definition}}
+                @form={{form}}
+                @format="full"
+                @showTitle={{false}}
+                @showControlTitle={{false}}
+                @showDescription={{false}}
+                @disabled={{this.isDisabled}}
+              />
+            </Form>
+            {{this.preview}}
+          {{else}}
+            <this.resolvedComponent
+              {{on "keydown" this._handleKeydown}}
+              @disabled={{this.isDisabled}}
+              @setting={{this.setting}}
+              @value={{this.buffered.value}}
+              @preview={{this.preview}}
+              @isSecret={{this.isSecret}}
+              @allowAny={{this.allowAny}}
+              @changeValueCallback={{this.changeValueCallback}}
+              @setValidationMessage={{this.setValidationMessage}}
+            />
+          {{/if}}
           <SettingValidationMessage
             @message={{this.setting.validationMessage}}
           />
@@ -714,7 +858,7 @@ export default class SiteSettingComponent extends Component {
       {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
-            @action={{this.update}}
+            @action={{this.submit}}
             @icon="check"
             @isLoading={{this.disableControls}}
             @ariaLabel="admin.settings.save"
@@ -729,7 +873,7 @@ export default class SiteSettingComponent extends Component {
           />
         </div>
       {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
-        {{#if this.setting.secret}}
+        {{#if (and this.setting.secret (not this.useFormKit))}}
           <DButton
             @action={{this.toggleSecret}}
             @icon={{if this.isSecret "far-eye" "far-eye-slash"}}

@@ -61,12 +61,11 @@ module Migrations
             theme_key_seq,
             timezone,
             title_count_mode_key,
-            topics_unread_when_closed,
             understood_languages,
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -124,7 +123,6 @@ module Migrations
         # @param theme_key_seq                                    [Integer, nil]
         # @param timezone                                         [String, nil]
         # @param title_count_mode_key                             [Integer, nil]
-        # @param topics_unread_when_closed                        [Boolean, nil]
         # @param understood_languages                             [String, nil]
         # @param watched_precedence_over_muted                    [Boolean, nil]
         #
@@ -181,7 +179,6 @@ module Migrations
           theme_key_seq: nil,
           timezone: nil,
           title_count_mode_key: nil,
-          topics_unread_when_closed: nil,
           understood_languages: nil,
           watched_precedence_over_muted: nil
         )
@@ -238,7 +235,6 @@ module Migrations
             theme_key_seq,
             timezone,
             title_count_mode_key,
-            Migrations::Database.format_boolean(topics_unread_when_closed),
             understood_languages,
             Migrations::Database.format_boolean(watched_precedence_over_muted),
           )

@@ -107,3 +107,8 @@ zh_CN:
         title: "游戏化"
         name: "名称"
         period: "时间段"
+    discourse_workflows:
+      gamification_score:
+        username: "用户"
+        date: "日期"
+        description: "描述"

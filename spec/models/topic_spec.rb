@@ -3197,31 +3197,32 @@ RSpec.describe Topic do
   end
 
   describe "expandable_first_post?" do
-    let(:topic) { Fabricate.build(:topic) }
-
-    it "is false if embeddable_host is blank" do
-      expect(topic.expandable_first_post?).to eq(false)
+    it "is false without a topic embed" do
+      expect(Fabricate.build(:topic).expandable_first_post?).to eq(false)
     end
 
-    describe "with an embeddable host" do
-      before do
-        Fabricate(:embeddable_host)
-        SiteSetting.embed_truncate = true
-        topic.stubs(:has_topic_embed?).returns(true)
-      end
+    it "uses the recorded truncation state when available" do
+      post = Fabricate(:post)
+      embed = Fabricate(:topic_embed, post:, content_truncated: true)
+      SiteSetting.embed_truncate = false
 
-      it "is true with the correct settings and topic_embed" do
-        expect(topic.expandable_first_post?).to eq(true)
-      end
-      it "is false if embed_truncate? is false" do
-        SiteSetting.embed_truncate = false
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      expect(post.topic.expandable_first_post?).to eq(true)
 
-      it "is false if has_topic_embed? is false" do
-        topic.stubs(:has_topic_embed?).returns(false)
-        expect(topic.expandable_first_post?).to eq(false)
-      end
+      embed.update!(content_truncated: false)
+      SiteSetting.embed_truncate = true
+
+      expect(post.topic.expandable_first_post?).to eq(false)
+    end
+
+    it "uses the site setting for legacy embeds with unknown truncation state" do
+      post = Fabricate(:post)
+      Fabricate(:topic_embed, post:, content_truncated: nil)
+
+      SiteSetting.embed_truncate = true
+      expect(post.topic.expandable_first_post?).to eq(true)
+
+      SiteSetting.embed_truncate = false
+      expect(post.topic.expandable_first_post?).to eq(false)
     end
   end
 
@@ -3614,6 +3615,47 @@ RSpec.describe Topic do
         }.by(1)
       end
     end
+
+    it "removes notifications when the removed user loses access" do
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).once
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.to change {
+        Notification.exists?(notification.id)
+      }.from(true).to(false)
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(false)
+    end
+
+    it "preserves notifications when the removed user still has group access" do
+      group.add(user1)
+      Fabricate(:topic_allowed_group, topic: private_topic, group: group)
+
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).never
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.not_to change {
+        Notification.exists?(notification.id)
+      }
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(true)
+    end
   end
 
   describe "#remove_allowed_group" do
@@ -3645,6 +3687,23 @@ RSpec.describe Topic do
       small_action = private_topic.posts.where(action_code: "removed_group").last
       expect(small_action).to be_present
       expect(small_action.user).to eq(moderator)
+    end
+
+    it "enqueues an inaccessible-notifications cleanup for the topic" do
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+
+      expect_enqueued_with(
+        job: :delete_inaccessible_notifications,
+        args: {
+          topic_id: private_topic.id,
+        },
+      ) { private_topic.remove_allowed_group(admin, pm_group.name) }
     end
   end
 
@@ -3816,6 +3875,28 @@ RSpec.describe Topic do
 
       topic.update(category: category)
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe ".clear_page_not_found_topics_cache!" do
+    it "clears every locale without traversing a large Redis keyspace" do
+      cache_keys =
+        I18n.available_locales.map do |locale|
+          Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+        end
+      post_keys = 10_000.times.map { |index| Discourse.cache.normalize_key("post:#{index}") }
+
+      Discourse.cache.redis.pipelined do |pipeline|
+        cache_keys.each { |key| pipeline.set(key, "cached topic suggestions") }
+        post_keys.each { |key| pipeline.set(key, "post") }
+      end
+      allow(Discourse.cache.redis).to receive(:scan_each).and_raise(Timeout::Error)
+
+      expect { described_class.clear_page_not_found_topics_cache! }.not_to raise_error
+      expect(Discourse.cache.redis.mget(*cache_keys)).to all be_nil
+      expect(Discourse.cache.redis.mget(*post_keys)).to all eq("post")
+    ensure
+      Discourse.cache.redis.del(*post_keys) if post_keys
     end
   end
 

@@ -508,6 +508,9 @@ nb_NO:
       iphone: "iPhone"
     os:
       android: "Android"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "Anonym"
   change_email:
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
@@ -822,6 +825,9 @@ nb_NO:
         num_clicks: "Klikk"
         num_topics: "Emner"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøk"
+    top_entry_urls:
       labels:
         count: "Besøk"
     top_referrers_by_browser_pageviews:
@@ -1330,6 +1336,9 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
+  design_wizard:
+    palette_pairs:
+      default: "Forvalg"
   wizard:
     title: "Discourse-oppsett"
     step:
@@ -1376,6 +1385,10 @@ nb_NO:
       low: "Lav"
       medium: "Middels"
       high: "Høy"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
     actions:
       agree:
         title: "Ja"

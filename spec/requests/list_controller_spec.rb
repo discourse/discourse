@@ -1193,6 +1193,29 @@ RSpec.describe ListController do
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
+
+        def filter_for(default_view, path = "")
+          category.update!(default_view: default_view)
+          get "/c/#{category.slug}/#{category.id}#{path}.json"
+          expect(response.status).to eq(200)
+          response.parsed_body["topic_list"]["filter"]
+        end
+
+        it "falls back to latest when the default view is not a filter this request can reach" do
+          expect(filter_for("destroy")).to eq("latest")
+          expect(filter_for("categories")).to eq("latest")
+          expect(filter_for("unread")).to eq("latest")
+        end
+
+        it "honours a logged in only default view for logged in users" do
+          sign_in(user)
+
+          expect(filter_for("unread")).to eq("unread")
+        end
+
+        it "honours the default view when excluding subcategories" do
+          expect(filter_for("hot", "/none")).to eq("hot")
+        end
       end
 
       describe "renders canonical tag" do
@@ -1334,6 +1357,23 @@ RSpec.describe ListController do
         json = response.parsed_body
         expect(json["topic_list"]["topics"].size).to eq(2)
       end
+    end
+  end
+
+  describe "topics_by with public profiles hidden" do
+    fab!(:profile_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:profile_topic) { Fabricate(:topic, user: profile_user) }
+
+    before do
+      profile_user.user_stat.update!(post_count: 1)
+      SiteSetting.hide_user_profiles_from_public = true
+    end
+
+    it "does not disclose a user's topics to anonymous users" do
+      get "/topics/created-by/#{profile_user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(profile_topic.title)
     end
   end
 
@@ -1800,6 +1840,20 @@ RSpec.describe ListController do
         expect(parsed["topic_list"]["topics"].length).to eq(1)
         expect(parsed["topic_list"]["topics"].first["id"]).to eq(topic_with_tag.id)
       end
+    end
+
+    it "returns topics in the order specified by the topic filter" do
+      topic_1 =
+        Fabricate(:topic, bumped_at: 3.days.ago, pinned_at: 1.day.ago, pinned_globally: true)
+      topic_2 = Fabricate(:topic, bumped_at: 2.days.ago)
+      topic_3 = Fabricate(:topic, bumped_at: 1.day.ago)
+
+      get "/filter.json", params: { q: "topic:#{topic_3.id},#{topic_1.id},#{topic_2.id}" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }).to eq(
+        [topic_3.id, topic_1.id, topic_2.id],
+      )
     end
 
     it "keeps query params encoded in more_topics_url when unicode usernames are enabled" do

@@ -493,16 +493,15 @@ te:
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
   email_login:
     title: "ఇమెయిల్ లాగిన్"
+  browsers:
+    chrome: "గూగుల్ క్రోమ్"
+    discoursehub: "DiscourseHub యాప్"
+    edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+    firefox: "ఫైర్‌ఫాక్స్"
+    ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
+    opera: "ఒపేరా"
+    safari: "సఫారి"
   user_auth_tokens:
-    browser:
-      chrome: "గూగుల్ క్రోమ్"
-      discoursehub: "DiscourseHub యాప్"
-      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
-      firefox: "ఫైర్‌ఫాక్స్"
-      ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
-      opera: "ఒపేరా"
-      safari: "సఫారి"
-      unknown: "తెలియని బ్రౌజర్"
     device:
       android: "ఆండ్రాయిడ్ పరికరం"
       chromebook: "క్రోమ్ OS"
@@ -522,6 +521,9 @@ te:
       macos: "macOS"
       windows: "మైక్రోసాఫ్ట్ విండోస్"
       unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "అనామక"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
@@ -870,6 +872,9 @@ te:
         num_clicks: "నొక్కులు"
         num_topics: "విషయాలు"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
+    top_entry_urls:
       labels:
         count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
@@ -1373,7 +1378,6 @@ te:
     user_profile_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త వినియోగదారు ప్రొఫైల్ వీక్షణను లెక్కించండి"
     levenshtein_distance_spammer_emails: "స్పామర్ ఇమెయిల్‌లను సరిపోల్చేటప్పుడు, అస్పష్టమైన సరిపోలికను అనుమతించే అక్షరాల సంఖ్య తేడా."
     max_new_accounts_per_registration_ip: "ఈ IP నుండి ఇప్పటికే (n) ట్రస్ట్ లెవల్ 0 ఖాతాలు ఉంటే (మరియు ఎవరూ స్టాఫ్ మెంబర్ లేదా TL2 లేదా అంతకంటే ఎక్కువ వద్ద), ఆ IP నుండి కొత్త సైన్అప్‌లను ఆమోదించడాన్ని ఆపివేయండి. పరిమితిని నిలిపివేయడానికి 0కి సెట్ చేయండి."
-    min_ban_entries_for_roll_up: "రోల్ అప్ బటన్‌ను క్లిక్ చేసినప్పుడు, కనీసం (N) ఎంట్రీలు ఉంటే కొత్త సబ్‌నెట్ బ్యాన్ ఎంట్రీని సృష్టిస్తుంది."
     max_age_unmatched_emails: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన ఇమెయిల్ ఎంట్రీలను తొలగించండి."
     max_age_unmatched_ips: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన IP ఎంట్రీలను తొలగించండి."
     num_flaggers_to_close_topic: "జోక్యం కోసం టాపిక్‌ను ఆటోమేటిక్‌గా పాజ్ చేయడానికి అవసరమైన కనిష్ట సంఖ్యలో ప్రత్యేకమైన ఫ్లాగర్‌లు అవసరం"
@@ -1549,7 +1553,6 @@ te:
     default_other_notification_level_when_replying: "వినియోగదారు ఒక అంశానికి ప్రత్యుత్తరం ఇచ్చినప్పుడు గ్లోబల్ డిఫాల్ట్ నోటిఫికేషన్ స్థాయి."
     default_other_external_links_in_new_tab: "డిఫాల్ట్‌గా కొత్త ట్యాబ్‌లో బాహ్య లింక్‌లను తెరవండి."
     default_other_enable_quoting: "హైలైట్ చేసిన వచనం కోసం కోట్ ప్రత్యుత్తరాన్ని ప్రారంభించండి"
-    default_other_enable_defer: "డిఫాల్ట్‌గా డిఫర్ టాపిక్ కార్యాచరణను ప్రారంభించండి."
     default_other_dynamic_favicon: "డిఫాల్ట్‌గా బ్రౌజర్ చిహ్నంపై కొత్త/నవీకరించబడిన టాపిక్ కౌంట్‌ని చూపండి."
     default_other_skip_new_user_tips: "కొత్త యూజర్ ఆన్‌బోర్డింగ్ చిట్కాలు మరియు బ్యాడ్జ్‌లను దాటవేయండి."
     default_topics_automatic_unpin: "వినియోగదారు డిఫాల్ట్‌గా దిగువకు చేరుకున్నప్పుడు టాపిక్‌లను ఆటోమేటిక్‌గా అన్‌పిన్ చేయండి."
@@ -1986,10 +1989,6 @@ te:
     user_posted_pm:
       title: "సభ్యుడు పోస్ట్ చేసిన PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
@@ -2407,6 +2406,10 @@ te:
   safe_mode:
     title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
     enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
+  design_wizard:
+    palette_pairs:
+      default: "అప్రమేయ"
+      dracula: "డ్రాక్యులా"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:
@@ -2480,6 +2483,9 @@ te:
       medium: "మధ్యస్థం"
       high: "అధిక"
     reasons:
+      fast_typer_time:
+        one: "ఒక సెకను"
+        other: "%{count} సెకన్లు"
       links:
         category: వర్గం సెట్టింగులు
     actions:

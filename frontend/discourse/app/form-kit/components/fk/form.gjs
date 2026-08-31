@@ -51,6 +51,7 @@ class FKForm extends Component {
       set: this.set,
       setProperties: this.setProperties,
       get: this.get,
+      commit: this.commit,
       commitField: this.commitField,
       submit: this.onSubmit,
       reset: this.onReset,
@@ -198,6 +199,11 @@ class FKForm extends Component {
   }
 
   @action
+  commit() {
+    this.formData.save();
+  }
+
+  @action
   commitField(name) {
     this.formData.commitField(name);
   }
@@ -267,10 +273,18 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate([...this.fields.values()]);
+      const submissionPrevented = await this.validate([
+        ...this.fields.values(),
+      ]);
+
+      if (submissionPrevented) {
+        return;
+      }
 
       if (this.formData.isValid) {
-        this.formData.save();
+        if (this.args.commitOnSubmit !== false) {
+          this.formData.save();
+        }
 
         await this.args.onSubmit?.(this.formData.draftData);
       } else {
@@ -315,6 +329,8 @@ class FKForm extends Component {
     }
 
     this.isValidating = true;
+    let submissionPrevented = false;
+    const preventSubmit = () => (submissionPrevented = true);
 
     try {
       for (const field of fields) {
@@ -323,17 +339,21 @@ class FKForm extends Component {
         await field.validate?.(
           field.name,
           this.formData.get(field.name),
-          this.formData.draftData
+          this.formData.draftData,
+          { preventSubmit }
         );
       }
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
         removeError: this.removeError,
+        preventSubmit,
       });
     } finally {
       this.isValidating = false;
     }
+
+    return submissionPrevented;
   }
 
   <template>
@@ -393,6 +413,7 @@ const Form = <template>
   {{#each (array @data) as |data|}}
     <FKForm
       @data={{data}}
+      @commitOnSubmit={{@commitOnSubmit}}
       @onSubmit={{@onSubmit}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}

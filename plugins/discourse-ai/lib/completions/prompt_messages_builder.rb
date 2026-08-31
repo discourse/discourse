@@ -9,7 +9,6 @@ module DiscourseAi
       COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
       COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
       COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
-      IMAGE_UPLOAD_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
       attr_reader :chat_context_posts
       attr_accessor :topic
 
@@ -171,6 +170,17 @@ module DiscourseAi
         guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
+          filtered_upload_ids =
+            filtered_upload_ids_for_prompt(
+              upload_ids,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
+            )
+          remaining_upload_ids = Array(filtered_upload_ids).dup
+          uploads_by_id = Upload.where(id: remaining_upload_ids).index_by(&:id)
+
           custom_prompt_translation =
             Proc.new do |message|
               # We can't keep backwards-compatibility for stored functions.
@@ -190,6 +200,19 @@ module DiscourseAi
                 custom_context[:provider_data] = provider_data if provider_data.is_a?(Hash)
                 custom_context[:created_at] = created_at
 
+                if custom_context[:type] == :model && remaining_upload_ids.present?
+                  content_text = message_text(custom_context[:content])
+                  referenced_upload_ids =
+                    remaining_upload_ids.select do |upload_id|
+                      upload = uploads_by_id[upload_id]
+                      upload && content_text.include?(upload.short_url)
+                    end
+                  if referenced_upload_ids.present?
+                    custom_context[:upload_ids] = referenced_upload_ids
+                    remaining_upload_ids -= referenced_upload_ids
+                  end
+                end
+
                 builder.push(**custom_context)
               end
             end
@@ -201,13 +224,7 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            context[:upload_ids] = filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: include_image_uploads,
-              include_document_uploads: include_document_uploads,
-              allowed_attachment_types: allowed_attachment_types,
-              guardian: guardian,
-            )
+            context[:upload_ids] = filtered_upload_ids
             context[:created_at] = created_at
 
             builder.push(**context)
@@ -273,22 +290,21 @@ module DiscourseAi
         return if upload_ids.blank?
 
         upload_ids = Array(upload_ids).compact.map(&:to_i)
-        uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+        uploads_by_id = uploads_for_prompt(upload_ids).index_by(&:id)
 
-        filtered_upload_ids =
-          upload_ids.select do |upload_id|
-            upload = uploads_by_id[upload_id]
-            upload &&
-              upload_allowed_for_prompt?(
-                upload,
-                include_image_uploads: include_image_uploads,
-                include_document_uploads: include_document_uploads,
-                allowed_attachment_types: allowed_attachment_types,
-                guardian: guardian,
-              )
-          end
+        filtered_upload_ids_from_uploads(
+          upload_ids.filter_map { |upload_id| uploads_by_id[upload_id] },
+          include_image_uploads: include_image_uploads,
+          include_document_uploads: include_document_uploads,
+          allowed_attachment_types: allowed_attachment_types,
+          guardian: guardian,
+        )
+      end
 
-        filtered_upload_ids.presence
+      # Upload#access_control_post is deliberately wrapped in Post.unscoped so a deleted
+      # post still hides its uploads; a bare includes would bypass that and expose them
+      def self.uploads_for_prompt(upload_ids)
+        Post.unscoped { Upload.where(id: upload_ids).includes(:access_control_post).to_a }
       end
 
       def self.filtered_upload_ids_from_uploads(
@@ -323,8 +339,8 @@ module DiscourseAi
         allowed_attachment_types: nil
       )
         type_allowed =
-          if image_upload?(upload)
-            include_image_uploads
+          if UploadEncoder.image?(upload)
+            include_image_uploads && UploadEncoder.supported_image_upload?(upload)
           else
             include_document_uploads &&
               document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
@@ -342,18 +358,8 @@ module DiscourseAi
           MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
             "application/octet-stream"
         attachment_type =
-          DiscourseAi::Completions::UploadEncoder.attachment_type_for(upload.extension, mime_type)
+          DiscourseAi::Completions::DocumentEncoder.attachment_type_for(upload.extension, mime_type)
         allowed_attachment_types.include?(attachment_type)
-      end
-
-      def self.image_upload?(upload)
-        extension = upload.extension.to_s.delete_prefix(".").downcase
-        return true if IMAGE_UPLOAD_EXTENSIONS.include?(extension)
-
-        filename = upload.original_filename.to_s
-        filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
-
-        MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
       end
 
       def initialize

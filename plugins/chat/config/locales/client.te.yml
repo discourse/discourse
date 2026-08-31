@@ -179,3 +179,8 @@ te:
         message: "సందేశం పంపించండి"
       chat_approval:
         message: "సందేశం పంపించండి"
+        value: "విలువ"
+        style_default: "అప్రమేయ"
+        style_primary: "ప్రాథమిక"
+        style_success: "విజయం"
+        icon: "చిహ్నం"

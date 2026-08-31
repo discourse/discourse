@@ -2,6 +2,10 @@
 @import "typography";
 
 .styleguide {
+  // The comfortable reading measure, for prose that sits directly on the page with nothing
+  // bounding it. Prose INSIDE a box does not get this: the box is already the measure, and
+  // capping it there just left obvious dead space inside a drawn border.
+  --styleguide-measure: 70ch;
   position: relative;
 
   // No top padding: the page header's breadcrumb brings its own top margin, and that alone lines
@@ -31,39 +35,12 @@
 
   .styleguide-section {
     .section-description {
+      max-width: var(--styleguide-measure);
       margin-bottom: 2em;
     }
 
     .description {
       margin: 1em 0;
-    }
-
-    .half-size {
-      width: 50%;
-    }
-
-    .styleguide-example {
-      border: 1px dotted var(--content-border-color);
-      background-color: var(--secondary);
-      padding: 1rem;
-
-      .example-title {
-        color: var(--primary-medium);
-        font-size: var(--font-up-1);
-        border-bottom: 1px dotted var(--content-border-color);
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .rendered {
-        width: 100%;
-        position: relative;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      margin-bottom: 2em;
     }
 
     .component-properties {
@@ -143,7 +120,7 @@
   p.reason {
     display: inline;
     color: var(--primary-medium);
-    margin: 0 0 0 10px;
+    margin: 0 0 0 var(--space-2);
   }
 
   &--char-counter {
@@ -153,7 +130,237 @@
   }
 }
 
-.buttons-examples .rendered {
+.styleguide-example {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background-color: var(--secondary);
+  padding: var(--space-4);
+
+  // Ungrouped pages stack their cards; the grid rule overrides this.
+  margin-bottom: var(--space-8);
+
+  // The row each slot occupies. Cards in a grid share these rows through subgrid, and a
+  // subgrid places its children in DOM order — so a card missing one slot would pull every
+  // later slot up a row and take the whole band's alignment with it. Placing each slot
+  // explicitly means a missing slot leaves its row empty instead.
+  &__header {
+    grid-row: 1;
+    display: flex;
+
+    // Not `baseline`: the second item is an icon-only button, and `.btn` is inline-flex
+    // around an svg, so its synthesised baseline is the bottom margin edge and the toggle
+    // hangs below the title rather than centring on it.
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+
+    // Header rows stay level between GROUPS, including a group where no card has a code
+    // toggle. Within a band the shared subgrid row already does this.
+    min-height: var(--space-8);
+    margin-bottom: var(--space-2);
+  }
+
+  &__title {
+    color: var(--primary);
+    font-size: var(--font-0);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  // The auto margin, not the header's `space-between`, is what keeps the badge
+  // beside the title and the code toggle at the far end.
+  &__kind {
+    margin-inline-end: auto;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+
+  &__description code,
+  &__try-this code,
+  &__note code {
+    padding: 0 0.2em;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+    color: var(--primary);
+    font-size: 0.9em;
+  }
+
+  &__description {
+    grid-row: 2;
+    color: var(--primary-high);
+    margin: 0 0 var(--space-4);
+  }
+
+  &__try-this {
+    grid-row: 3;
+    display: flex;
+    gap: var(--space-2);
+    color: var(--primary-high);
+    background: var(--primary-very-low);
+    border-inline-start: 2px solid var(--tertiary);
+    padding: var(--space-2) var(--space-3);
+    margin: 0 0 var(--space-4);
+  }
+
+  &__try-this-label {
+    color: var(--primary);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  // The instruction as ONE flex item, so a sentence containing inline code still wraps as a
+  // sentence. min-width:0 lets it shrink below the intrinsic width of a long code span
+  // instead of pushing the row wider.
+  &__try-this-text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  // Deliberately left `overflow: visible`. Examples render floating content in place rather
+  // than through a portal, positioned against this element, and any non-visible overflow
+  // would clip it — on either axis, since a non-visible value on one forces the other.
+  &__body {
+    grid-row: 4;
+    width: 100%;
+    position: relative;
+    min-width: 0;
+  }
+
+  // Unadorned on purpose: giving it the instruction's fill and stripe sandwiched the control
+  // between two identical bars.
+  &__note {
+    grid-row: 5;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin: var(--space-3) 0 0;
+  }
+
+  // An opt-in authoring class, like `__note-list`: an example applies it to its own output
+  // element inside the default block. Styled as a descendant rather than placed as a slot,
+  // because that element lands within `__body` and is not a grid item of the card, so a
+  // `grid-row` here would be inert. Documented in the README and the component JSDoc.
+  &__result {
+    display: block;
+    color: var(--primary);
+    background: var(--primary-very-low);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-2) var(--space-3);
+    margin: var(--space-3) 0 0;
+  }
+
+  &__note-list {
+    margin: 0;
+    padding-inline-start: var(--space-5);
+
+    li + li {
+      margin-block-start: var(--space-1);
+    }
+  }
+
+  &__code {
+    grid-row: 6;
+    min-width: 0;
+    max-width: 100%;
+    margin-block-start: var(--space-4);
+
+    pre {
+      margin: 0;
+    }
+  }
+
+  .d-header-wrap {
+    position: relative;
+    z-index: 0;
+  }
+}
+
+.styleguide-subnav {
+  position: sticky;
+
+  // Below the site header. The fallback matters: --header-offset is written at runtime after
+  // the header's first measurement, and until then an unresolved var() makes `top` compute
+  // to `auto`, which silently stops the bar sticking at all.
+  top: var(--header-offset, 0);
+
+  // Above static card content, and deliberately BELOW the float layer: a bar that covered the
+  // menu the reader just opened is worse than a menu that overlaps the bar while scrolling.
+  z-index: z("base");
+
+  // Required, not decorative: the overflow-nav's scroll fades and its scroll buttons both
+  // paint --secondary, so a transparent sticky bar would show content through them.
+  background: var(--secondary);
+  margin-bottom: var(--space-6);
+  padding-block: var(--space-2);
+}
+
+.styleguide-group {
+  /* Cards subgrid over one shared band of rows, so every slot lines up across a row
+     instead of drifting with the prose above it. Two rules make it hold: each slot is
+     placed explicitly (see `.styleguide-example`), because a subgrid auto-places in DOM
+     order and one missing slot would shift every later one; and row spacing is margin,
+     not `row-gap`, on BOTH sides, so an empty row — the code row, almost always — costs
+     nothing. */
+
+  &__examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    column-gap: var(--space-6);
+    row-gap: 0;
+
+    // Sparse placement on purpose: `dense` would backfill a gap left by a `--wide` card
+    // with a later card, so visual order would diverge from the DOM order a keyboard or
+    // screen reader follows. The cost is that a full-width card only lands flush when the
+    // cards before it fill their row — guaranteed only when it comes first, since the
+    // column count here is responsive.
+    > .styleguide-example {
+      display: grid;
+
+      // Rows only: the card is one parent column wide, so subgridding the column axis
+      // would hand it a single track it has no use for.
+      grid-template-columns: 1fr;
+      grid-template-rows: subgrid;
+
+      // header · description · try-this · body · note · code
+      grid-row: span 6;
+      gap: 0;
+
+      // Grid items default to min-width: auto, so a long code line or an unbreakable
+      // label would otherwise stretch its track.
+      min-width: 0;
+
+      // Carried by the card rather than the parent's row-gap, per the note above. Uniform
+      // across cards, so their bottom edges stay aligned.
+      margin-bottom: var(--space-6);
+
+      // Cards that own their width — a side-by-side comparison, a control strip, the
+      // synthesis picker — take the whole row rather than being squeezed into a track.
+      // They still span the band, so they subgrid against rows only they fill.
+      &.--wide {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  &__title {
+    font-size: var(--font-up-2);
+    font-weight: 600;
+    margin: 0 0 var(--space-1);
+  }
+
+  &__description {
+    color: var(--primary-high);
+    max-width: var(--styleguide-measure);
+    margin: 0 0 var(--space-6);
+  }
+}
+
+.buttons-examples .styleguide-example__body {
   button {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
@@ -178,14 +385,16 @@
 
 .styleguide-icons {
   display: grid;
-  grid-template-columns: 150px 150px 150px 150px 150px;
-  gap: 10px;
+
+  // Track count follows the width so the grid does not overflow on a narrow viewport.
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2);
 
   .styleguide-icon {
     background-color: var(--primary-low);
-    margin: 3px;
+    margin: var(--space-1);
     text-align: center;
-    padding: 10px;
+    padding: var(--space-2);
     overflow: hidden;
 
     svg {
@@ -202,7 +411,7 @@
 }
 
 .styleguide__component {
-  border: 1px dotted var(--content-border-color);
+  border: 1px solid var(--content-border-color);
   margin-bottom: 2rem;
   position: relative;
 
@@ -210,7 +419,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 3px 6px;
+    padding: var(--space-1) var(--space-2);
     background: var(--primary-low);
     max-width: 25%;
 
@@ -241,15 +450,566 @@
   }
 }
 
-.styleguide-example {
-  .d-header-wrap {
-    position: relative;
-    z-index: 0;
-  }
-}
-
 .more-topics-examples {
   .more-topics__container {
     flex-grow: 1;
+  }
+}
+
+.styleguide-drag-and-drop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+    cursor: grab;
+
+    &.--dual {
+      min-width: 7rem;
+    }
+
+    &.--with-grip {
+      cursor: auto;
+    }
+  }
+
+  &__grip {
+    cursor: grab;
+  }
+
+  &__zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+    padding: var(--space-3);
+    border: 1px dashed var(--primary-medium);
+
+    &.--outer {
+      flex-direction: column;
+      gap: var(--space-3);
+      min-height: 9rem;
+    }
+
+    &.--inner {
+      width: 70%;
+      min-height: 3.5rem;
+    }
+  }
+
+  &__columns {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__column {
+    flex: 1;
+    padding: var(--space-4) var(--space-2);
+    background: var(--token-color-surface-hovered);
+    text-align: center;
+  }
+
+  &__panel {
+    padding: var(--space-3);
+    background: var(--token-color-surface-hovered);
+
+    &.--armed {
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__log {
+    @include unstyled-list;
+    font-family: var(--font-family-monospace);
+  }
+
+  &__scroller {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    max-height: 9rem;
+    overflow-y: auto;
+  }
+
+  &__scroller-row {
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__folder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: 1px dashed var(--primary-medium);
+
+    &.--open {
+      border-style: solid;
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__folder-toggle {
+    align-self: flex-start;
+  }
+
+  &__folder-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__folder-row {
+    padding: var(--space-2) var(--space-3);
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__panes {
+    display: flex;
+    align-items: stretch;
+    min-height: 6rem;
+  }
+
+  // Core ships the separator's cursor only. The visible divider is the
+  // consumer's, drawn through the class it passes rather than the component's
+  // own, which is how the composer does it too.
+  &__divider {
+    flex: 0 0 auto;
+    width: 0.375rem;
+    background: var(--primary-medium);
+  }
+
+  &__pane {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--token-color-surface-hovered);
+
+    &.--grow {
+      flex: 1;
+    }
+  }
+
+  &__track {
+    position: relative;
+    padding: var(--space-2);
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__knob {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    padding: var(--space-2);
+    background: var(--tertiary-low);
+    cursor: grab;
+    user-select: none;
+  }
+
+  &__swipe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 5rem;
+    background: var(--token-color-surface-hovered);
+    touch-action: pan-y;
+  }
+
+  &__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  &__swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.625rem;
+    min-height: 3.75rem;
+    background: var(--token-color-surface-hovered);
+  }
+
+  // A fixed area the box floats inside, so a resize moves the box rather than
+  // reflowing the card, and every bound is measured from something stable.
+  &__stage {
+    position: relative;
+    height: 15rem;
+    overflow: hidden;
+    background: var(--primary-very-low);
+  }
+
+  &__resizable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--token-color-surface-hovered);
+  }
+
+  &__preview {
+    padding: var(--space-2) var(--space-3);
+    background: var(--tertiary);
+    color: var(--secondary);
+  }
+
+  &__handle {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--tertiary);
+
+    // Compass directions follow physical pointer axes and must not flip in RTL.
+    &.--n,
+    &.--s {
+      /*! rtl:ignore */
+      left: 0.75rem;
+
+      /*! rtl:ignore */
+      right: 0.75rem;
+      width: auto;
+      cursor: ns-resize;
+    }
+
+    &.--e,
+    &.--w {
+      top: 0.75rem;
+      bottom: 0.75rem;
+      height: auto;
+      cursor: ew-resize;
+    }
+
+    &.--n {
+      top: -0.375rem;
+    }
+
+    &.--s {
+      bottom: -0.375rem;
+    }
+
+    &.--e {
+      /*! rtl:ignore */
+      right: -0.375rem;
+    }
+
+    &.--w {
+      /*! rtl:ignore */
+      left: -0.375rem;
+    }
+
+    &.--ne {
+      top: -0.375rem;
+
+      /*! rtl:ignore */
+      right: -0.375rem;
+      cursor: nesw-resize;
+    }
+
+    &.--se {
+      /*! rtl:ignore */
+      right: -0.375rem;
+      bottom: -0.375rem;
+      cursor: nwse-resize;
+    }
+
+    &.--sw {
+      bottom: -0.375rem;
+
+      /*! rtl:ignore */
+      left: -0.375rem;
+      cursor: nesw-resize;
+    }
+
+    &.--nw {
+      top: -0.375rem;
+
+      /*! rtl:ignore */
+      left: -0.375rem;
+      cursor: nwse-resize;
+    }
+  }
+}
+
+.roving-demo {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.5em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__separator {
+    width: 1px;
+    align-self: stretch;
+    margin: 0 0.5em;
+    background: var(--primary-low);
+  }
+
+  &__item {
+    padding: 0.25em 0.75em;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      color: var(--primary-medium);
+      cursor: not-allowed;
+    }
+  }
+
+  &__tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    min-height: 2.5em;
+    align-items: center;
+  }
+
+  &__adjacent {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    flex-wrap: wrap;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.25em;
+  }
+
+  &__filter {
+    padding: 0.25em 0.75em;
+    border: 1px solid var(--primary-low);
+    border-radius: 2em;
+    background: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+  }
+
+  &__combobox {
+    position: relative;
+    width: fit-content;
+  }
+
+  &__combobox-trigger {
+    padding: 0.35em 0.75em;
+    border: 1px solid var(--primary-medium);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+    color: var(--primary);
+    cursor: pointer;
+    min-width: 10em;
+    text-align: start;
+  }
+
+  &__combobox-listbox {
+    position: absolute;
+    top: 100%;
+    inset-inline-start: 0;
+    z-index: z("dropdown");
+    margin: 0.25em 0 0;
+    padding: 0.25em;
+    list-style: none;
+    min-width: 100%;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+  }
+
+  &__combobox-option {
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    // The highlight is drawn from a class the modifier toggles, not from focus, because focus
+    // never arrives here.
+    &.--active {
+      background: var(--tertiary-low);
+    }
+
+    &[aria-selected="true"]::after {
+      content: "✓";
+      float: inline-end;
+    }
+  }
+
+  &__listbox {
+    margin: 0;
+    padding: 0.5em;
+    list-style: none;
+    max-width: 20em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__option {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      background: var(--tertiary-low);
+    }
+  }
+
+  &__count {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__radios {
+    display: flex;
+    gap: 0.25em;
+    padding: 0.5em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: fit-content;
+  }
+
+  &__radio {
+    padding: 0.25em 0.75em;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+    cursor: pointer;
+
+    &[aria-checked="true"] {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+    }
+  }
+
+  &__tree {
+    margin: 0;
+    padding: 0.5em;
+    list-style: none;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__row {
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+
+    // The rows are a flat list, so depth has to be drawn from aria-level rather than from nesting.
+    &[aria-level="2"] {
+      padding-inline-start: 2em;
+    }
+
+    &[aria-expanded]::before {
+      content: "▸";
+      display: inline-block;
+      width: 1em;
+    }
+
+    &[aria-expanded="false"]:dir(rtl)::before {
+      content: "◂";
+    }
+
+    &[aria-expanded="true"]::before {
+      content: "▾";
+    }
+  }
+}
+
+.styleguide-shortcut-spellings {
+  th,
+  td {
+    padding: var(--space-1) var(--space-4) var(--space-1) 0;
+  }
+}
+
+.styleguide-virtual-list {
+  /* The border goes on a wrapper, never on the scroll element: box spacing there
+     offsets the engine's measured total from the DOM scroll height. */
+  border: 1px solid var(--primary-low);
+
+  .d-virtual-list {
+    height: 400px;
+  }
+
+  &--tall .d-virtual-list {
+    height: 600px;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__row {
+    /* Border-box so the declared height IS the measured height. Under the default
+       content-box the border makes each row a pixel taller than the estimate, and
+       the total drifts upward as rows are measured. */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+
+    &--selected {
+      background: var(--tertiary-low);
+      font-weight: bold;
+    }
+  }
+
+  &__vrow {
+    /* Intrinsic height rather than a fixed one, so wrapped text of varying length
+       gives each row a different height and forces re-measurement. */
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+    line-height: 1.4;
   }
 }

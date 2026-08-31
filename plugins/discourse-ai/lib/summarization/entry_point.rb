@@ -99,6 +99,10 @@ module DiscourseAi
           end
         end
 
+        plugin.on(:post_destroyed) do |post|
+          AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
+        end
+
         plugin.on(:posts_moved) do |args|
           if SiteSetting.discourse_ai_enabled && SiteSetting.ai_summarization_enabled &&
                !SiteSetting.ai_summary_backfill_maximum_topics_per_hour.zero?

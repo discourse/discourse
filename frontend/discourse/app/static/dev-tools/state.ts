@@ -19,8 +19,6 @@ interface PersistedDevToolsState {
  * Singleton class that manages the state of developer tools.
  * State is persisted to sessionStorage so it survives page refreshes
  * but not browser restarts. Each property is tracked for reactivity.
- *
- * @class DevToolsState
  */
 class DevToolsState {
   static #SESSION_STORAGE_KEY = "discourse__dev_tools_state";

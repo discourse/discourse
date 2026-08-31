@@ -169,6 +169,9 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
@@ -287,6 +290,9 @@ th:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
+    top_entry_urls:
       labels:
         count: "เยี่ยมชม"
     top_referrers_by_browser_pageviews:
@@ -489,10 +495,6 @@ th:
         %{context}
 
         %{respond_instructions}
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     digest:
       liked_received: "ได้รับการชอบ"
       new_users: "ผู้ใช้งานใหม่"
@@ -537,6 +539,9 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  design_wizard:
+    palette_pairs:
+      default: "ค่าเริ่มต้น"
   wizard:
     step:
       setup:

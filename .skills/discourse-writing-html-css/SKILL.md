@@ -18,9 +18,9 @@ Two CSS rules are the most load-bearing — get them right by reflex:
 These rules operationalize Discourse's documented frontend philosophy — **mobile-first,
 progressive enhancement (works without hover or JS), a themeable base layer, and a shared design
 system over bespoke styling.** The two source-of-truth docs are
-[`25-css-guidelines-bem.md`](../../docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md)
+[`26-css-guidelines-bem.md`](../../docs/developer-guides/docs/03-code-internals/26-css-guidelines-bem.md)
 (naming) and
-[`27-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md)
+[`28-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/28-designing-for-devices.md)
 (responsive / device adaptation). The canonical real-world example is the chat loading skeleton —
 [`plugins/chat/assets/javascripts/discourse/components/chat-skeleton.gjs`](../../plugins/chat/assets/javascripts/discourse/components/chat-skeleton.gjs)
 and its `.scss`.
@@ -373,7 +373,7 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
   (`<form.Field>`, `<form.Row>`, `<form.Submit>`) and handles layout, validation, state, and the
   label/error/a11y wiring for you. Don't hand-assemble a raw `<form>` with manual `<input>`s and
   bespoke validation. See
-  [`docs/developer-guides/docs/03-code-internals/21-form-kit.md`](../../docs/developer-guides/docs/03-code-internals/21-form-kit.md)
+  [`docs/developer-guides/docs/03-code-internals/22-form-kit.md`](../../docs/developer-guides/docs/03-code-internals/22-form-kit.md)
   (`frontend/discourse/app/form-kit`).
 - **Splat `...attributes` on the component's root element** so a caller can pass a class,
   `data-*`, `aria-*`, or a `--modifier` through. Without it the component is a closed box. The
@@ -391,7 +391,7 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
   a **public API surface and maintenance commitment** — once it exists, extensions depend on its
   name and `@outletArgs`, so it can't be moved freely. Add one only for a concrete need; pass
   data via `lazyHash` (not `hash`) and name it by location (`above-…`, `below-…`). See
-  [`13-plugin-outlet-connectors.md`](../../docs/developer-guides/docs/03-code-internals/13-plugin-outlet-connectors.md).
+  [`14-plugin-outlet-connectors.md`](../../docs/developer-guides/docs/03-code-internals/14-plugin-outlet-connectors.md).
 - **Heading levels follow the document outline, not type size.** Never pick a level for its
   default font size — if the right heading looks wrong-sized, style it in CSS
   (`font-size: var(--font-up-1)`). An `<h1>` styled smaller is fine; an `<h3>` chosen because
@@ -443,7 +443,7 @@ it in the matching `_index.scss` / parent `@import` (partials are underscore-pre
 
 - **Write one responsive stylesheet, not desktop + mobile copies.** Discourse designs
   **mobile-first** and enhances upward (see the philosophy doc,
-  [`27-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/27-designing-for-devices.md)):
+  [`28-designing-for-devices.md`](../../docs/developer-guides/docs/03-code-internals/28-designing-for-devices.md)):
   new styles live in `common/` and adapt with breakpoints. **Prefer intrinsic layout** (e.g.
   `grid-template-columns: repeat(auto-fill, minmax(14em, 1fr))`) and reach for a breakpoint only
   to *restructure*; use the `lib/viewport` mixins (`viewport.from`/`until`/`between`). The legacy

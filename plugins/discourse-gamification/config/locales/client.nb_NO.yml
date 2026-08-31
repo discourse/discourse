@@ -39,3 +39,8 @@ nb_NO:
       custom_range_from: "Fra"
       admin:
         name: "Navn"
+    discourse_workflows:
+      gamification_score:
+        username: "Bruker"
+        date: "Dato"
+        description: "Beskrivelse"

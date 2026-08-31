@@ -3115,7 +3115,6 @@ const userFixtures = {
         enable_quoting: true,
         enable_smart_lists: true,
         enable_markdown_monospace_font: false,
-        enable_defer: false,
         digest_after_minutes: 1440,
         automatically_unpin_topics: true,
         auto_track_topics_after_msecs: 240000,

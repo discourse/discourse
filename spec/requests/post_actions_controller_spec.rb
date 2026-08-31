@@ -116,6 +116,26 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
+    it "returns 404 when flagging a hidden topic" do
+      sign_in(user)
+      SiteSetting.detailed_404 = false
+      pm = Fabricate(:private_message_post, user: coding_horror)
+
+      get "/t/#{pm.topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
+
+      post "/post_actions.json",
+           params: {
+             id: pm.topic.id,
+             flag_topic: "true",
+             post_action_type_id: PostActionType.types[:inappropriate],
+           }
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
+    end
+
     it "fails when the user tries to notify user that has disabled PM" do
       sign_in(user)
       user2 = Fabricate(:user)

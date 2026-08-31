@@ -75,7 +75,18 @@ zh_TW:
       nodes:
         "trigger:assigned": "已指派"
       assign_topic:
+        resource: "資源"
+        resources:
+          topic: "話題"
+          post: "貼文"
         operations:
           assign: "指派"
           unassign: "取消指派"
         topic_id: "話題 ID"
+        post_id: "貼文 ID"
+      check_assignment:
+        target_types:
+          topic: "話題"
+          post: "貼文"
+        topic_id: "話題 ID"
+        post_id: "貼文 ID"

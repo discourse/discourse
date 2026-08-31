@@ -13,14 +13,21 @@ he:
       logged_in_as: "נכנסת בתור"
       permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
       redirect_warning: "האימות יפנה אותך אל"
+      copy_key: "העתקת מפתח"
       copied: "הועתק!"
       otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
       no_trust_level: "אין לך את דרגת האמון הנדרשת כדי לגשת ל־API של המשתמשים, סליחה"
       generic_error: "לא הצלחנו לייצר את מפתחות ה־API של המשתמש, ייתכן שיכולת זו הושבתה על ידי הנהלת האתר, עמך הסליחה"
       device:
+        title: "אישור יישום"
         code: "קוד"
         continue: "המשך"
         authorize_title: 'אישור של „%{application_name}”'
+        expiry_notice: "תפוגה: %{expires_at}"
+        no_expiry_warning: "המפתח הזה לא יפוג אוטומטית. כדאי לאשר את זה רק אם היישום אמין לחלוטין בעיניך."
+        complete: "אימות הושלם"
+        denied: "אימות נדחה"
+        return_to_cli: "אפשר לחזור עכשיו למסוף או היישום שלך."
     blocks:
       ghost:
         status: "מצב"
@@ -41,6 +48,8 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        mandatory: "חובה"
+        disallowed: "אסור"
     carousel:
       go_to_slide: "מעבר לשקופית %{index}"
       previous: "השקופית הקודמת"
@@ -235,9 +244,12 @@ he:
       to_placeholder: "עד תאריך"
     date_range_picker:
       apply: "החלה"
+      start_date: "מועד התחלה"
+      end_date: "מועד סיום"
       presets:
         last_7_days: "7 הימים האחרונים"
         last_30_days: "30 הימים האחרונים"
+        last_3_months: "3 החודשים האחרונים"
         last_6_months: "חצי השנה האחרונה"
         last_year: "שנה שעברה"
     languages:
@@ -539,11 +551,6 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
-      select_theme:
-        action: "בחירת ערכת עיצוב"
-        modal_title: "בחירת ערכת עיצוב"
-        enabled: "נבחרים"
-        browse_all: "ניהול ערכות עיצוב"
       invite_collaborators:
         action: "יצירת הזמנה"
       start_posting:
@@ -563,6 +570,26 @@ he:
             body: "מה הדבר הכי מגניב שראית או חווית היום? זה יכול להיות כל דבר, החל משקיעה יפה ועד מחווה אדיבה אקראית. אני אתחיל: ראיתי כלב שעוזר לאדם מבוגר לחצות את הכביש!"
           what_is_your_favorite_food:
             title: "מה המאכל האהוב עליך או עלייך?"
+    design_wizard:
+      back: "חזרה"
+      next: "הבא"
+      sections:
+        theme: "תמה"
+        fonts: "גופנים"
+        homepage: "דף הבית"
+      theme:
+        selected: "נבחרים"
+      colors:
+        light: "בהיר"
+        dark: "כהה"
+      fonts:
+        base_font: "גופן בסיס"
+        heading_font: "גופן כותרת"
+      homepage:
+        topics: "נושאים"
+        categories: "קטגוריות"
+        styles:
+          boxes: "תיבות"
     about:
       edit: "עריכת עמוד זה"
       simple_title: "על אודות"
@@ -782,6 +809,7 @@ he:
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
     embed_mode:
+      allow_access: "לאפשר גישה"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
@@ -866,6 +894,7 @@ he:
       date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
       filtered_flagged_by: "סומן על ידי"
+      no_component_found: "לא נמצא רכיב עבור %{type}"
       unknown:
         instruction: "אי אפשר להציג אותם כראוי עד להפעלת התוסף המתאים. נא להפעיל את התוסף ולרענן את העמוד. לחלופין, אפשר להתעלם מהם. <a href='%{url}' target='_blank'>מידע נוסף…</a>"
         reviewable_unknown_source: "%{reviewableType} (תוסף לא ידוע)"
@@ -899,10 +928,6 @@ he:
         optional: "רשות"
       claim_help:
         optional: "אפשר לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
-        required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
-        claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
-        claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
-        automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
       claim:
         title: "דרישת נושא זה"
       unclaim:
@@ -1778,8 +1803,11 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_smart_lists: "הפעלת רשימות חכמות בעת כתיבה בחלון עריכת הודעות"
-      enable_defer: "הפעלת סימון נושאים כלא נקראו"
       enable_markdown_monospace_font: "להשתמש בגופן ברוחב אחיד במצב ה־Markdown בכתיבת הודעה"
+      automatically_translate: "לתרגם אוטומטית נושאים ופוסטים בשפות אחרות"
+      content_languages:
+        title: "שפות תוכן"
+        understood: "שפות שאני מבין או מבינה"
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
@@ -2471,7 +2499,8 @@ he:
           email_placeholder: "name@example.com"
           invite_by_email: "דוא״ל"
           restrict_domain: "הגבלה לשם תחום"
-          more_options: "אפשרויות נוספות"
+          create_and_send: "שליחה"
+          create_and_copy: "העתקת קישור"
           update: "עדכון"
           summary:
             role_member: "חברים"
@@ -2484,7 +2513,7 @@ he:
             expires: "תפוג"
             topic: "נושא"
             groups: "קבוצות"
-            edit: "עריכת הזמנה"
+            edit: "עריכה"
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -3060,6 +3089,7 @@ he:
         two: "+%{count} תת־קטגוריות"
         many: "+%{count} תת־קטגוריות"
         other: "+%{count} תת־קטגוריות"
+      subcategories: "+ תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"
@@ -3287,7 +3317,6 @@ he:
       italic_label: "I"
       italic_title: "נטוי"
       italic_text: "טקסט נטוי"
-      heading_title: "כותרות"
       heading_level_n: "כותרת %{levelNumber}"
       heading_level_n_title: "כותרת %{levelNumber}"
       heading_level_paragraph: "פסקה"
@@ -3501,7 +3530,6 @@ he:
         other: "%{count} בקשות חברות לקבוצה ‚%{group_name}’ ממתינות"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
       admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
       upcoming_changes:
@@ -4845,6 +4873,10 @@ he:
         instructions: "שיתוף קישור לפוסט זה:"
       original_language: "הפוסט הזה נכתב במקור ב%{language}"
       original_language_and_outdated: "הפוסט הזה נכתב במקור ב%{language}. יכול להיות שהתרגום לא עדכני"
+    content_localization:
+      preferences:
+        title: "העדפות שפת תוכן"
+        login_to_set_languages: "יש להיכנס כדי להגדיר שפות נוספות"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -5782,9 +5814,9 @@ he:
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
           localizations:
-            title: "תרגומים"
             locale: "שפה"
             title_label: "כותרת מקטע"
+            remove_language: "הסרה"
           links:
             add: "הוספת קישור נוסף"
             delete: "מחיקת קישור"
@@ -6659,13 +6691,28 @@ he:
       new_features:
         title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
+      site_traffic_explorer:
+        metric_information: "על %{metric}"
+        remove_filter_value: "הסרת %{value}"
+        clear_all: "לפנות הכול"
+        apply: "החלה"
+        view_more: "להציג עוד"
+        cards:
+          pages: "עמודים"
+          visitors: "מבקרים"
+        filters:
+          referrer: "מקור ההפניה"
+          country: "ארץ"
+          browser: "דפדפן"
+          ip: "כתובת IP"
+        series:
+          anonymous_human: "אלמוני"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
         version: "גירסה"
         up_to_date: "הכול עדכני!"
-        critical_available: "עדכון קריטי מוכן להתקנה."
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
         no_check_performed: "לא בוצעה בדיקה לעדכונים. וודא ש-sidekiq פועל."

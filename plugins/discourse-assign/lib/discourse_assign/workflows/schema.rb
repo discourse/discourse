@@ -29,6 +29,16 @@ module DiscourseAssign
         },
       }.freeze
 
+      CHECK_ASSIGNMENT_OUTPUT_SCHEMA = {
+        "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          "is_assigned" => {
+            "type" => "boolean",
+          },
+        },
+      }.freeze
+
       ASSIGNMENT_SCHEMA = {
         "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
         "type" => "object",
@@ -74,6 +84,13 @@ module DiscourseAssign
       }.freeze
 
       ASSIGNED_OUTPUT_SCHEMA =
+        DiscourseWorkflows::Schema.merge(
+          DiscourseWorkflows::Schema::POST_SCHEMA,
+          DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,
+          ASSIGNMENT_SCHEMA,
+        ).freeze
+
+      UNASSIGNED_OUTPUT_SCHEMA =
         DiscourseWorkflows::Schema.merge(
           DiscourseWorkflows::Schema::POST_SCHEMA,
           DiscourseWorkflows::Schema::TOPIC_LIST_ITEM_SCHEMA,

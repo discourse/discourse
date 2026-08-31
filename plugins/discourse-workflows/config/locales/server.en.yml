@@ -52,8 +52,10 @@ en:
       webhook_timed_out: "Webhook timed out"
       schedule_rules_required: "At least one schedule rule is required."
       invalid_schedule_rule: "One or more schedule rules are invalid."
+      invalid_timezone: "Invalid timezone: %{timezone}."
       not_enabled: "The discourse-workflows plugin is not enabled."
       no_permission_to_manage: "You don't have permission to manage workflows."
+      node_preview_failed: "Something went wrong while previewing this step."
       invalid_form_submission: "The form submission has invalid or missing fields."
       invalid_form_token: "The form token is invalid or has expired."
       webhook_test_listener_active: "A webhook test listener is already active for this URL."
@@ -74,6 +76,7 @@ en:
       node_does_not_accept_inputs: "%{node} does not accept inputs."
       duplicate_node_names: "Node names must be unique within a workflow. Duplicates: %{names}"
       no_rows_matched_filter: "No rows matched the provided filter."
+      unknown_operation: "Unknown operation: %{operation}."
       actor:
         blank: "The user for '%{field}' resolved to a blank value."
       item:
@@ -81,19 +84,21 @@ en:
         inconsistent_format: "Every returned item must use the same format."
       topic:
         create_failed: "Failed to create topic."
-        unknown_operation: "Unknown operation: %{operation}."
+        bump_failed: "Failed to bump topic."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
         actor_not_staff: "The acting user must be a staff member to flag posts."
         cannot_flag: "This post cannot be flagged as spam. It may already be hidden or authored by a staff member."
         flag_failed: "Failed to flag post: %{errors}"
+      flag_user:
+        actor_not_staff: "The acting user must be a staff member to flag users."
+        cannot_flag_staff: "'%{username}' cannot be flagged. Staff members and automated accounts cannot be added to the review queue."
       user:
-        unknown_operation: "Unknown operation: %{operation}."
+        unknown_extensions: "Unknown user extensions: %{extensions}."
         invalid_updates: "User updates must be an object."
         invalid_trust_level: "Invalid trust level: %{level}."
         update_failed: "Failed to update user: %{errors}"
@@ -113,19 +118,33 @@ en:
         invalid_time_range: "Start and end times must use the HH:MM format."
         start_end_equal: "Start and end times cannot be the same."
         invalid_time: "'%{field}' is not a valid HH:MM time: '%{value}'."
-        invalid_timezone: "Invalid timezone: %{timezone}."
       modal:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
+        personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
         uncategorized_not_allowed: "This site does not allow topics without a category."
+      topic_pin:
+        unknown_pin_type: "Unknown pin type: %{pin_type}."
+        invalid_timestamp: "'%{field}' is not a valid date and time: '%{value}'."
+        pin_not_allowed: "'%{username}' cannot pin or unpin topic %{topic_id}. Pinning requires staff, trust level 4, or moderator access to the topic's category."
+        pin_globally_not_allowed: "'%{username}' cannot pin topic %{topic_id} globally. Pinning globally requires staff or trust level 4."
+        banner_not_allowed: "'%{username}' cannot make topic %{topic_id} a banner. Banner topics can only be managed by staff."
+        banner_private_message: "Personal messages cannot be made into banner topics."
+        banner_restricted_category: "Topics in a restricted category cannot be made into banner topics."
       sort:
         code_missing_return: "Code must contain a return statement."
+      summarize:
+        no_aggregations: "No aggregations configured."
+        no_aggregations_help: "Add at least one aggregation, for example a count or a sum."
+        invalid_aggregation: "Unknown aggregation: %{aggregation}."
+        duplicate_output_field: "Two aggregations write to the same output field '%{field}'."
+        duplicate_output_field_help: "Set a different output field name on one of them."
       split_out:
         destination_count_mismatch: "Destination field name count must match field count."
         fields_to_include_required: "No fields specified."
@@ -144,7 +163,6 @@ en:
         header_name_invalid: "Header name contains invalid characters."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
-        unknown_operation: "Unknown operation: %{operation}."
         invalid_query: "Invalid query: %{errors}"
         invalid_row: "Invalid row: %{errors}"
         filter_required: "Filter must not be empty"
@@ -163,6 +181,10 @@ en:
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+    user:
+      check_email_context: "Workflow user node"
+    flag_user:
+      flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."
@@ -172,6 +194,8 @@ en:
     hints:
       split_out:
         field_not_found: "The field '%{field}' wasn't found in any input item."
+      flag_user:
+        already_resolved: "'%{username}' already has a review item with status '%{status}'. Turn on \"Reopen resolved reviews\" if this workflow should send them back to the queue."
   site_settings:
     enable_discourse_workflows: "Enable the discourse-workflows plugin."
     discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
@@ -219,3 +243,6 @@ en:
         search_chat_integration_channels: "Searched external chat integration channels"
         workflow_script_context: "Loaded script context"
         workflow_validate_script: "Validated script"
+  reviewables:
+    reasons:
+      workflow_flagged_user: "A workflow added this user to the review queue."

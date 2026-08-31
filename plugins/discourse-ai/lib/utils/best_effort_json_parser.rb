@@ -17,13 +17,6 @@ module DiscourseAi
           cast_value(value, schema_type)
         end
 
-        # Some providers deliver JSON whose string values had their control
-        # characters unescaped by an outer JSON parse (real newlines inside
-        # string values). Re-escaping them restores a parseable document.
-        def escape_control_characters(text)
-          text.gsub(/[\x00-\x1F]/) { |char| format("\\u%04x", char.ord) }
-        end
-
         private
 
         # Parse attempts, in order:
@@ -41,7 +34,7 @@ module DiscourseAi
         def best_effort_parse(cleaned, key)
           attempts = [
             -> { JsonCompleter.parse(cleaned) },
-            -> { JsonCompleter.parse(escape_control_characters(cleaned)) },
+            -> { JsonCompleter.parse(JsonControlCharacterEscaper.escape(cleaned)) },
             -> { parse_from_key_object(cleaned, key) },
             -> { SmarterJSON.process_one(cleaned) },
           ]
@@ -73,7 +66,7 @@ module DiscourseAi
           start = cleaned.rindex("{", key_idx)
           return if start.nil? || start.zero?
 
-          JsonCompleter.parse(escape_control_characters(cleaned[start..]))
+          JsonCompleter.parse(JsonControlCharacterEscaper.escape(cleaned[start..]))
         end
 
         def remove_markdown_fences(text)

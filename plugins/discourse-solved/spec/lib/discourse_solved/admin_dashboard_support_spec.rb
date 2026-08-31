@@ -80,12 +80,12 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       expect(dashboard[:topic_outcomes]).to eq(resolved: 1, in_progress: 1, unanswered: 1)
     end
 
-    it "treats a topic where only the author replied as unanswered, not in progress" do
+    it "treats a topic where only the author replied as in progress, not unanswered" do
       topic = Fabricate(:topic, category: support_category, user: author)
       Fabricate(:post, topic: topic, user: author)
       Fabricate(:post, topic: topic, user: author)
 
-      expect(dashboard[:topic_outcomes]).to eq(resolved: 0, in_progress: 0, unanswered: 1)
+      expect(dashboard[:topic_outcomes]).to eq(resolved: 0, in_progress: 1, unanswered: 0)
     end
 
     it "serves cached data for the same scope and window within the TTL" do
@@ -98,42 +98,6 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
 
       cached_result = described_class.build(**dashboard_options)
       expect(cached_result[:topic_outcomes]).to eq(resolved: 1, in_progress: 0, unanswered: 0)
-    end
-  end
-
-  describe "headline" do
-    it "chooses the key from the absolute resolution rate, not the trend" do
-      solved_topic
-      unanswered_topic
-      another_unanswered_topic
-
-      expect(dashboard[:headline][:key]).to eq("struggling")
-    end
-
-    it "reports the resolution direction against the previous period, independent of the level" do
-      previous =
-        Fabricate(:topic, category: support_category, user: author, created_at: 45.days.ago)
-      Fabricate(:post, topic: previous, user: author, created_at: 45.days.ago)
-
-      solved_topic
-      unanswered_topic
-      another_unanswered_topic
-
-      headline = dashboard[:headline]
-      expect(headline[:key]).to eq("struggling")
-      expect(headline[:resolution_direction]).to eq("up")
-    end
-
-    it "focuses the answerers clause on staff when staff dominate replies" do
-      solved_topic
-
-      expect(dashboard[:headline][:answerers_focus]).to eq("staff")
-    end
-
-    it "focuses the answerers clause on members when non-staff dominate replies" do
-      answered_topic
-
-      expect(dashboard[:headline][:answerers_focus]).to eq("members")
     end
   end
 

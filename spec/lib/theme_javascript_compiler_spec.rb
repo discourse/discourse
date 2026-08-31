@@ -258,4 +258,31 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content).not_to include("discourse.es6-extension")
     end
   end
+
+  describe "customization source" do
+    it "routes api entry points through a wrapper carrying the theme" do
+      compiler.append_tree({ "initializers/direct.js" => <<~JS })
+            import { withPluginApi } from "discourse/lib/plugin-api";
+            export function direct() {
+              withPluginApi((api) => api.source);
+            }
+          JS
+
+      expect(compiler.content).to include("[_INTERNAL_SOURCE_KEY]: SOURCE")
+      expect(compiler.content).to include('"type": "theme"')
+      expect(compiler.content).to include('"id": 1')
+    end
+
+    it "attributes a namespace import too" do
+      compiler.append_tree({ "initializers/indirect.js" => <<~JS })
+            import * as pluginApi from "discourse/lib/plugin-api";
+            const stored = pluginApi.withPluginApi;
+            export function indirect() {
+              stored((api) => api.source);
+            }
+          JS
+
+      expect(compiler.content).to include("[_INTERNAL_SOURCE_KEY]: SOURCE")
+    end
+  end
 end

@@ -10,12 +10,16 @@ import { i18n } from "discourse-i18n";
 import AiHelperOptionsList from "../components/ai-helper-options-list";
 import ModalDiffModal from "../components/modal/diff-modal";
 import ThumbnailSuggestion from "../components/modal/thumbnail-suggestions";
+import AiTitleSuggestionsMenu from "../components/suggestion-menus/ai-title-suggestions-menu";
+import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
 
 export default class AiComposerHelperMenu extends Component {
   @service modal;
   @service siteSettings;
   @service currentUser;
   @service site;
+  @service composer;
+  @service menu;
 
   @tracked customPromptValue = "";
   prompts = [];
@@ -30,7 +34,6 @@ export default class AiComposerHelperMenu extends Component {
 
     prompts = prompts
       .filter((p) => p.location.includes("composer"))
-      .filter((p) => p.name !== "generate_titles")
       .map((p) => {
         // AI helper by default returns interface locale on translations
         // Since we want site default translations (and we are using: force_default_locale)
@@ -62,6 +65,16 @@ export default class AiComposerHelperMenu extends Component {
 
     if (!this.currentUser?.can_use_custom_prompts) {
       prompts = prompts.filter((p) => p.name !== "custom_prompt");
+    }
+
+    const canSuggestTitles =
+      this.siteSettings.ai_helper_enabled_features.includes("suggestions") &&
+      this.composer.model?.canEditTitle &&
+      !this.composer.model?.disableTitleInput &&
+      this.composer.model?.reply?.length > MIN_CHARACTER_COUNT;
+
+    if (!canSuggestTitles) {
+      prompts = prompts.filter((p) => p.name !== "generate_titles");
     }
 
     prompts.forEach((p) => {
@@ -104,6 +117,16 @@ export default class AiComposerHelperMenu extends Component {
   @action
   async suggestChanges(option) {
     await this.args.close();
+
+    if (option.name === "generate_titles") {
+      return this.menu.show(document.querySelector(".ai-helper-trigger"), {
+        identifier: "ai-title-suggester",
+        modalForMobile: true,
+        interactive: true,
+        component: AiTitleSuggestionsMenu,
+        data: { model: this.composer.model },
+      });
+    }
 
     if (option.name === "illustrate_post") {
       return this.modal.show(ThumbnailSuggestion, {

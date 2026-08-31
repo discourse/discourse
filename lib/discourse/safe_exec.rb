@@ -4,7 +4,7 @@ require "landlock"
 
 module Discourse
   class SafeExec
-    DEFAULT_READ_PATHS = %w[/bin /etc /lib /lib64 /usr].freeze
+    DEFAULT_READ_PATHS = %w[/bin /lib /lib64 /usr].freeze
     DEFAULT_EXECUTE_PATHS = %w[/bin /lib /lib64 /usr].freeze
 
     def self.capture(
@@ -19,7 +19,7 @@ module Discourse
       unsetenv_others: false,
       chdir: nil,
       connect_tcp: nil,
-      bind_tcp: [],
+      bind_tcp: nil,
       rlimits: {},
       seccomp_deny_network: false,
       max_output_bytes: nil,
@@ -38,7 +38,7 @@ module Discourse
             env: env,
             unsetenv_others: unsetenv_others,
             chdir: chdir,
-            connect_tcp: Array(connect_tcp),
+            connect_tcp: connect_tcp,
             bind_tcp: bind_tcp,
             rlimits: rlimits,
             seccomp_deny_network: seccomp_deny_network,

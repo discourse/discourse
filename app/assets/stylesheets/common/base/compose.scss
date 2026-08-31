@@ -200,29 +200,6 @@ html.composer-open:not(.has-full-page-chat) {
       justify-content: space-between;
     }
 
-    .reply-details {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      min-width: 0;
-      white-space: nowrap;
-      gap: var(--space-2);
-
-      .composer-actions {
-        .select-kit-header {
-          border-color: var(--primary-low-mid);
-        }
-
-        .d-icon {
-          color: var(--primary-medium);
-        }
-      }
-
-      @include viewport.until(sm) {
-        max-width: calc(100% - 75px);
-      }
-    }
-
     .composer-actions-trigger {
       border-color: var(--input-border-color);
     }
@@ -305,18 +282,10 @@ html.composer-open:not(.has-full-page-chat) {
     // has no effect on most users but we need it for some cases. If this is
     // not added, "add edit reason" will overlap with the composer controls
     @include viewport.until(sm) {
-      .reply-details {
-        flex-wrap: wrap;
-      }
-
       .composer-actions-reply-target-link {
         .d-icon {
           margin-right: none;
         }
-      }
-
-      .display-edit-reason.--active {
-        width: 100%;
       }
 
       #edit-reason {
@@ -324,28 +293,6 @@ html.composer-open:not(.has-full-page-chat) {
         margin-left: 0;
         margin-top: var(--space-2);
       }
-    }
-  }
-
-  .whisper,
-  .display-edit-reason {
-    font-style: italic;
-  }
-
-  .whisper {
-    margin: 0 0.25em;
-  }
-
-  .unlist {
-    margin-left: 0.25em;
-  }
-
-  .display-edit-reason {
-    display: inline-flex;
-    margin-left: auto;
-
-    a {
-      display: inline-flex;
     }
   }
 
@@ -818,8 +765,9 @@ html.composer-open:not(.has-full-page-chat) {
 
       .submit-panel,
       .composer-fields {
-        // this prevents touch events (i.e. accidental scrolls) from bubbling up
-        touch-action: none;
+        // prevents accidental scroll-panning from bubbling up while still
+        // allowing the browser's pinch-zoom gesture
+        touch-action: pinch-zoom;
       }
     }
 
