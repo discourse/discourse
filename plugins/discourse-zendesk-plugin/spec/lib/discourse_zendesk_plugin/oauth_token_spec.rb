@@ -18,7 +18,6 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
           body: {
             "client_id" => "oauth-client-id",
             "client_secret" => "oauth-client-secret",
-            "expires_in" => "1800",
             "grant_type" => "client_credentials",
             "scope" => "tickets:read tickets:write users:read users:write",
           },

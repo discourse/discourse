@@ -11,9 +11,6 @@ module DiscourseZendeskPlugin
       LUA
     private_constant :INVALIDATE_SCRIPT
 
-    TOKEN_LIFETIME_SECONDS = 30.minutes.to_i
-    private_constant :TOKEN_LIFETIME_SECONDS
-
     EXPIRY_BUFFER_SECONDS = 1.minute.to_i
     private_constant :EXPIRY_BUFFER_SECONDS
 
@@ -80,7 +77,6 @@ module DiscourseZendeskPlugin
             client_id: @client_id,
             client_secret: @client_secret,
             scope: SCOPES,
-            expires_in: TOKEN_LIFETIME_SECONDS,
           )
         end
     end
