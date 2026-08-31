@@ -241,6 +241,24 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
       end
 
+      it "returns aggregates but not related items for identity-level reports" do
+        get "/admin/reports/bulk.json",
+            params: {
+              reports: {
+                signups: {
+                  include_related_items: false,
+                },
+                new_contributors: {
+                  include_related_items: true,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"][0]["type"]).to eq("signups")
+        expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+      end
+
       it "redacts suspicious login IP addresses when IP viewing is disabled" do
         SiteSetting.moderators_view_ips = false
         DiscourseIpInfo.stubs(:get).returns(location: "Earth")
@@ -494,6 +512,17 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["report"]["total"]).to eq(1)
+      end
+
+      it "returns report aggregates without identity-level data" do
+        get "/admin/reports/signups.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]["type"]).to eq("signups")
+
+        get "/admin/reports/signups.json", params: { include_related_items: true }
+
+        expect(response.status).to eq(404)
       end
 
       context "when moderators cannot view IPs" do

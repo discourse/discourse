@@ -159,7 +159,7 @@ after_initialize do
     result[:html] if result.success?
   end
 
-  Report.add_report("accepted_solutions", admin_only: true) do |report|
+  Report.add_report("accepted_solutions", admin_only_related_items: true) do |report|
     report.data = []
 
     accepted_solutions =

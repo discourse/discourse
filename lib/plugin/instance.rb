@@ -250,9 +250,9 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, exclude_from_dashboard: false, admin_only: false, &block)
+  def add_report(name, exclude_from_dashboard: false, admin_only_related_items: false, &block)
     reloadable_patch do |plugin|
-      Report.add_report(name, exclude_from_dashboard:, admin_only:, &block)
+      Report.add_report(name, exclude_from_dashboard:, admin_only_related_items:, &block)
     end
   end
 

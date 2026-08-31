@@ -40,14 +40,13 @@ class Report
 
   ADMIN_ONLY_REPORTS = %w[
     admin_logins
-    new_contributors
-    signups
     top_uploads
     topic_view_stats
     top_entry_urls
     top_referrers_by_browser_pageviews
     top_countries_by_browser_pageviews
   ]
+  ADMIN_ONLY_RELATED_ITEMS_REPORTS = %w[new_contributors signups]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
@@ -55,8 +54,11 @@ class Report
     top_referrers_by_browser_pageviews
   ]
 
-  def self.hidden?(type, guardian:)
-    return true if !guardian.is_admin? && admin_only_report_types.include?(type)
+  def self.hidden?(type, guardian:, include_related_items: false)
+    if !guardian.is_admin?
+      return true if ADMIN_ONLY_REPORTS.include?(type)
+      return true if include_related_items && admin_only_related_items_report_types.include?(type)
+    end
     if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
       return true
     end
@@ -335,13 +337,18 @@ class Report
     end
   end
 
-  def Report.add_report(name, exclude_from_dashboard: false, admin_only: false, &block)
+  def Report.add_report(
+    name,
+    exclude_from_dashboard: false,
+    admin_only_related_items: false,
+    &block
+  )
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
     dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
-    if admin_only
-      registered_admin_only_report_types << name.to_s
+    if admin_only_related_items
+      registered_admin_only_related_items_report_types << name.to_s
     else
-      registered_admin_only_report_types.delete(name.to_s)
+      registered_admin_only_related_items_report_types.delete(name.to_s)
     end
   end
 
@@ -349,7 +356,7 @@ class Report
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
     dashboard_excluded_report_types.delete(name.to_s)
-    registered_admin_only_report_types.delete(name.to_s)
+    registered_admin_only_related_items_report_types.delete(name.to_s)
   end
 
   # Report types a plugin has marked as not mountable on the customisable
@@ -358,12 +365,12 @@ class Report
     @dashboard_excluded_report_types ||= Set.new
   end
 
-  def Report.admin_only_report_types
-    ADMIN_ONLY_REPORTS.to_set | registered_admin_only_report_types
+  def Report.admin_only_related_items_report_types
+    ADMIN_ONLY_RELATED_ITEMS_REPORTS.to_set | registered_admin_only_related_items_report_types
   end
 
-  def Report.registered_admin_only_report_types
-    @registered_admin_only_report_types ||= Set.new
+  def Report.registered_admin_only_related_items_report_types
+    @registered_admin_only_related_items_report_types ||= Set.new
   end
 
   def self._get(type, opts = nil)

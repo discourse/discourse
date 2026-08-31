@@ -9,15 +9,15 @@ RSpec.describe Report do
       expect(Report.dashboard_excluded_report_types).to include("my_custom_report")
     end
 
-    it "records report types flagged as admin-only" do
-      Report.add_report("my_custom_report", admin_only: true) { |report| }
-      expect(Report.admin_only_report_types).to include("my_custom_report")
+    it "records report types with admin-only related items" do
+      Report.add_report("my_custom_report", admin_only_related_items: true) { |report| }
+      expect(Report.admin_only_related_items_report_types).to include("my_custom_report")
     end
 
     it "does not record report options by default" do
       Report.add_report("my_custom_report") { |report| }
       expect(Report.dashboard_excluded_report_types).not_to include("my_custom_report")
-      expect(Report.admin_only_report_types).not_to include("my_custom_report")
+      expect(Report.admin_only_related_items_report_types).not_to include("my_custom_report")
     end
   end
 
@@ -2358,6 +2358,14 @@ RSpec.describe Report do
         end
       end
 
+      it "returns false for reports with admin-only related items" do
+        Report::ADMIN_ONLY_RELATED_ITEMS_REPORTS.each do |report_type|
+          expect(
+            Report.hidden?(report_type, guardian: admin_guardian, include_related_items: true),
+          ).to eq(false)
+        end
+      end
+
       it "returns false for IP reports" do
         SiteSetting.moderators_view_ips = false
 
@@ -2375,6 +2383,15 @@ RSpec.describe Report do
       it "returns true for admin-only reports" do
         Report::ADMIN_ONLY_REPORTS.each do |report_type|
           expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+        end
+      end
+
+      it "only hides identity-level data for reports with admin-only related items" do
+        Report::ADMIN_ONLY_RELATED_ITEMS_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
+          expect(
+            Report.hidden?(report_type, guardian: moderator_guardian, include_related_items: true),
+          ).to eq(true)
         end
       end
 
