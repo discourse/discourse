@@ -11,6 +11,18 @@ module SpecBlog
 
   class UnbackedResource < JsonApiKit::Resource
   end
+
+  class AuthorResource < JsonApiKit::Resource
+    model User
+    type :authors
+  end
+
+  class ArticleResource < JsonApiKit::Resource
+    model Topic
+    type :articles
+    has_one :author
+    has_many :authors
+  end
 end
 
 RSpec.describe JsonApiKit::Resource do
@@ -188,6 +200,42 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
+  describe ".namespace" do
+    subject(:namespace) { resource.namespace }
+
+    context "when the resource declares none" do
+      it "returns nothing" do
+        expect(namespace).to be_nil
+      end
+    end
+
+    context "when the resource declares one" do
+      subject(:resource) { Class.new(described_class) { namespace :internal } }
+
+      it "returns the namespace as a string" do
+        expect(namespace).to eq("internal")
+      end
+    end
+
+    context "when a resource inherits from another" do
+      subject(:resource) { Class.new(parent) }
+
+      let(:parent) { Class.new(described_class) { namespace "data-explorer" } }
+
+      it "returns its parent's namespace" do
+        expect(namespace).to eq("data-explorer")
+      end
+
+      context "when it declares a namespace of its own" do
+        before { resource.namespace("internal") }
+
+        it "leaves its parent's namespace alone" do
+          expect(parent.namespace).to eq("data-explorer")
+        end
+      end
+    end
+  end
+
   describe ".schema" do
     it "returns a schema for the model it exposes" do
       expect(topic_resource.schema.model).to eq(Topic)
@@ -326,6 +374,24 @@ RSpec.describe JsonApiKit::Resource do
         expect(category_relationships.map(&:name)).to eq(%w[category])
       end
     end
+
+    context "without a resource" do
+      subject(:author_relationships) do
+        SpecBlog::ArticleResource.fields(guardian:).relationships.pick(%w[author])
+      end
+
+      it "infers it from the name" do
+        expect(author_relationships.first.resource).to eq(SpecBlog::AuthorResource)
+      end
+    end
+
+    context "when no resource matches the name" do
+      it do
+        expect { Class.new(described_class) { has_one :nobody } }.to raise_error(
+          JsonApiKit::ResourceLookup::MissingResource,
+        )
+      end
+    end
   end
 
   describe ".has_many" do
@@ -333,6 +399,16 @@ RSpec.describe JsonApiKit::Resource do
 
     it "relates the resource to many records of another" do
       expect(posts_relationships.first).to be_a(JsonApiKit::Declarations::Relationship::ToMany)
+    end
+
+    context "without a resource" do
+      subject(:author_relationships) do
+        SpecBlog::ArticleResource.fields(guardian:).relationships.pick(%w[authors])
+      end
+
+      it "infers it from the singular name" do
+        expect(author_relationships.first.resource).to eq(SpecBlog::AuthorResource)
+      end
     end
   end
 

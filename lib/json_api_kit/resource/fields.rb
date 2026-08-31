@@ -27,9 +27,9 @@ module JsonApiKit
           self.declared_attributes = declared_attributes + [Declarations::Attribute.new(...)]
         end
 
-        def has_one(...) = relate(Declarations::Relationship::ToOne.new(...))
+        def has_one(name, **options) = relate(Declarations::Relationship::ToOne, name, **options)
 
-        def has_many(...) = relate(Declarations::Relationship::ToMany.new(...))
+        def has_many(name, **options) = relate(Declarations::Relationship::ToMany, name, **options)
 
         def fields(names = nil, guardian:)
           Declarations::Fields.for(
@@ -45,8 +45,16 @@ module JsonApiKit
 
         def relationships = Declarations::Relationships.new(declared_relationships)
 
-        def relate(relationship)
-          self.declared_relationships = declared_relationships + [relationship]
+        def relate(kind, name, resource: nil, **options)
+          self.declared_relationships =
+            declared_relationships +
+              [
+                kind.new(
+                  name,
+                  resource: ResourceLookup.resource(resource || name, within: self),
+                  **options,
+                ),
+              ]
         end
       end
     end

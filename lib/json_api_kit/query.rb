@@ -14,7 +14,7 @@ module JsonApiKit
       @records ||=
         Records.new(
           rows.map do
-            Record.new(it, fields, type: resource.type, relationships: sideloads.linkage_for(it))
+            Record.new(it, fields, type:, namespace:, relationships: sideloads.linkage_for(it))
           end,
         )
     end
@@ -28,6 +28,7 @@ module JsonApiKit
     attr_reader :resource, :request, :scoped_to
 
     delegate :guardian, to: :request, private: true
+    delegate :type, :namespace, to: :resource, private: true
 
     def page = @page ||= scoping.page(request.page).paginate(scope, order:, limits:, anchors:)
 
@@ -49,7 +50,7 @@ module JsonApiKit
 
     def schema = @schema ||= resource.schema
 
-    def fields = @fields ||= resource.fields(request.fields[resource.type], guardian:)
+    def fields = @fields ||= resource.fields(request.fields[type], guardian:)
 
     def sideloads
       @sideloads ||= Sideloads.for(relationships, paths:, rows:, request:, schema:)

@@ -15,31 +15,11 @@ RSpec.describe JsonApiKit::Urls do
     end
   end
 
-  describe "#record" do
-    it "returns the URL of one record" do
-      expect(urls.record("topics", "5").to_s).to eq("https://example.com/api/topics/5")
-    end
+  describe "#for" do
+    subject(:address) { urls.for(record).to_s }
 
-    it "carries only the cursor a caller adds" do
-      expect(urls.record("topics", "5").at(after: "a-cursor").to_s).to eq(
-        "https://example.com/api/topics/5?page%5Bafter%5D=a-cursor",
-      )
-    end
-  end
+    let(:record) { instance_double(JsonApiKit::Record, namespace: nil, type: "topics", id: "5") }
 
-  describe "#relationship" do
-    it "returns the URL of the relationship itself" do
-      expect(urls.relationship("topics", "5", "posts").to_s).to eq(
-        "https://example.com/api/topics/5/relationships/posts",
-      )
-    end
-  end
-
-  describe "#related" do
-    it "returns the URL of the records a relationship points at" do
-      expect(urls.related("topics", "5", "posts").to_s).to eq(
-        "https://example.com/api/topics/5/posts",
-      )
-    end
+    it { is_expected.to eq("https://example.com/api/topics/5") }
   end
 end
