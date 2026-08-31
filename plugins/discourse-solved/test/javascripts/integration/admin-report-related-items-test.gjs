@@ -172,6 +172,7 @@ module(
             @formattedValue="1"
             @itemComponent={{this.tableSummary.itemComponent}}
             @itemsKey={{this.tableSummary.itemsKey}}
+            @listClass={{this.tableSummary.listClass}}
             @reportType="accepted_solutions"
             @titleKey={{this.tableSummary.titleKey}}
           />
@@ -195,6 +196,12 @@ module(
       assert
         .dom(".admin-report-table-summary__heading")
         .hasText("Solved topics on Aug 18, 2026", "labels the selected day");
+      assert
+        .dom(".admin-report-table-summary__list")
+        .hasClass(
+          "solved-admin-report-table-summary__list",
+          "preserves the Solved summary spacing hook"
+        );
       assert
         .dom(".solved-admin-report-table-summary__topic-link")
         .hasAttribute(

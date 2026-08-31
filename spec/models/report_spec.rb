@@ -637,7 +637,7 @@ RSpec.describe Report do
 
       report =
         Report.find(
-          "signups",
+          :signups,
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           guardian: Fabricate(:moderator).guardian,
@@ -645,6 +645,7 @@ RSpec.describe Report do
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.type).to eq("signups")
       expect(report.related_items).to be_nil
       expect(report.related_items_totals).to be_nil
     end

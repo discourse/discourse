@@ -86,6 +86,7 @@ export default class AdminReportTableCell extends Component {
               @formattedValue={{this.formattedValue}}
               @itemComponent={{this.relatedItemsSummary.itemComponent}}
               @itemsKey={{this.relatedItemsSummary.itemsKey}}
+              @listClass={{this.relatedItemsSummary.listClass}}
               @reportType={{this.reportType}}
               @reportFilters={{this.reportFilters}}
               @titleKey={{this.relatedItemsSummary.titleKey}}

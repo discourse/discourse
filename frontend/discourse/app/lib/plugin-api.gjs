@@ -3667,6 +3667,7 @@ class _PluginApi {
    * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
    * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
    * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
    * @param {String} renderer.tableSummary.titleKey - Summary title translation key
    */
   registerAdminReportRelatedItemsRenderer(reportType, renderer) {

@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 
@@ -133,7 +134,12 @@ export default class AdminReportTableSummary extends Component {
                 }}
               </p>
             {{/if}}
-            <ul class="admin-report-table-summary__list">
+            <ul
+              class={{dConcatClass
+                "admin-report-table-summary__list"
+                @listClass
+              }}
+            >
               {{#each this.items as |item|}}
                 <li class="admin-report-table-summary__item">
                   {{#if @itemComponent}}

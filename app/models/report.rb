@@ -372,6 +372,7 @@ class Report
 
   def self._get(type, opts = nil)
     opts ||= {}
+    type = type.to_s
 
     # Load the report
     report = Report.new(type)

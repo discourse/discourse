@@ -12,6 +12,7 @@ export default {
         tableSummary: {
           itemComponent: SolvedAdminReportTableSummaryItem,
           itemsKey: "solved_topics",
+          listClass: "solved-admin-report-table-summary__list",
           titleKey:
             "admin.reports.related_items.table_summary.solved_topics_title",
         },
