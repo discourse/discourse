@@ -443,9 +443,6 @@ module ApplicationHelper
   end
 
   def discourse_pageview_tracking_meta_tags
-    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
-      return ""
-    end
     return "" if Rails.env.development? && ENV["TRACK_REQUESTS"].blank?
 
     tags = +""
@@ -453,13 +450,6 @@ module ApplicationHelper
       name: "discourse-track-view-session-id",
       content: track_view_session_id_placeholder,
     )
-    if UpcomingChanges.enabled?(:dashboard_improvements)
-      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
-    end
-
-    if SiteSetting.persist_browser_pageview_events
-      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
-    end
     tags.html_safe
   end
 

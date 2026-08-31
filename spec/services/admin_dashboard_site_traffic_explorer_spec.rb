@@ -48,7 +48,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           asn: 64_496,
           ip_address: "192.0.2.#{index + 1}",
           session_id: "browser-#{index}",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           browser:,
           language: languages[index],
           created_at: Time.zone.local(2026, 5, 10, 10, index),
@@ -59,9 +58,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     before do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       SiteSetting.improved_crawler_detection = true
-      SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
-      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
     end
 
     context "when the contract is invalid" do
@@ -135,7 +132,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           normalized_referrer: "other.example",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           session_id: "other",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           browser: :chrome,
           created_at: Time.zone.local(2026, 5, 10, 11),
         )
@@ -218,7 +214,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           asn: 64_500,
           ip_address: "198.51.100.1",
           session_id: "other-network",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 11),
         )
         DiscourseIpInfo
@@ -274,7 +269,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/new-pageview",
           ip_address: "198.51.100.1",
           session_id: "new-pageview",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           user_agent: "ExampleBrowser/1.0",
           created_at: Time.zone.local(2026, 5, 11, 10),
         )
@@ -289,7 +283,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/outside-range-entry",
           normalized_referrer: "external.example/path",
           session_id: "continuing-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 4, 30, 23, 59),
         )
         Fabricate(
@@ -297,7 +290,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/inside-range-continuation",
           normalized_referrer: "test.localhost/internal",
           session_id: "continuing-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 12),
         )
 
@@ -317,14 +309,12 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           :browser_pageview_event,
           normalized_referrer: "external.example?article=traffic",
           session_id: "external-referrer-query",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 12),
         )
         Fabricate(
           :browser_pageview_event,
           normalized_referrer: "test.localhost?view=latest",
           session_id: "local-referrer-query",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 13),
         )
         expect(result.traffic.dig(:dimensions, "referrers")).to eq(
@@ -361,7 +351,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/capped-session-entry",
           normalized_referrer: "external.example/path",
           session_id: "capped-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 11, 10),
         )
         Fabricate(
@@ -369,7 +358,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/capped-session-continuation",
           normalized_referrer: "test.localhost/internal",
           session_id: "capped-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 11, 11),
         )
 
@@ -392,7 +380,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/acquisition-at-timestamp",
           normalized_referrer: "external.example/path",
           session_id: "same-timestamp",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at:,
         )
         Fabricate(
@@ -400,7 +387,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           url: "/internal-at-timestamp",
           normalized_referrer: "test.localhost/acquisition-at-timestamp",
           session_id: "same-timestamp",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at:,
         )
 

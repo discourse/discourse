@@ -11,177 +11,6 @@ RSpec.describe BrowserPageviewEvent do
     Discourse.clear_readonly!
   end
 
-  describe ".beacon_cutover_date" do
-    it "returns the day after dashboard improvements was manually opted into" do
-      SiteSetting.dashboard_improvements = true
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :manual_opt_in,
-        created_at: Time.zone.local(2026, 5, 1, 10),
-      )
-
-      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
-    end
-
-    it "returns the day after dashboard improvements was automatically promoted" do
-      SiteSetting.dashboard_improvements = true
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :automatically_promoted,
-        created_at: Time.zone.local(2026, 5, 1, 10),
-      )
-
-      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
-    end
-
-    it "falls back to the site setting row when no enablement event exists" do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting
-        .stubs(:where)
-        .with(name: "dashboard_improvements")
-        .returns(stub(maximum: Time.zone.local(2026, 5, 1, 10)))
-
-      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
-    end
-
-    it "uses the most recent enablement time across events and the setting row" do
-      SiteSetting.dashboard_improvements = true
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :automatically_promoted,
-        created_at: Time.zone.local(2026, 5, 1, 10),
-      )
-      SiteSetting
-        .stubs(:where)
-        .with(name: "dashboard_improvements")
-        .returns(stub(maximum: Time.zone.local(2026, 5, 5, 10)))
-
-      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 6))
-    end
-
-    it "returns nil when dashboard improvements are disabled" do
-      SiteSetting.dashboard_improvements = false
-
-      expect(described_class.beacon_cutover_date).to be_nil
-    end
-
-    it "falls back to the first beacon counter date when no enablement record exists" do
-      SiteSetting.dashboard_improvements = true
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-04", count: 2)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-05", count: 1)
-
-      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 4))
-    end
-
-    it "returns nil when no beacons are collected" do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.trigger_browser_pageview_events = false
-      SiteSetting.persist_browser_pageview_events = false
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :manual_opt_in,
-      )
-
-      expect(described_class.beacon_cutover_date).to be_nil
-    end
-
-    it "returns nil when legacy pageviews are enabled" do
-      SiteSetting.use_legacy_pageviews = true
-      SiteSetting.dashboard_improvements = true
-
-      expect(described_class.beacon_cutover_date).to be_nil
-    end
-  end
-
-  describe ".rollup_source_condition" do
-    it "matches only piggyback events when there is no cutover date" do
-      SiteSetting.dashboard_improvements = false
-      piggyback = Fabricate(:browser_pageview_event, source: :piggyback)
-      Fabricate(:browser_pageview_event, source: :beacon)
-
-      bounded_condition =
-        described_class.rollup_source_condition(
-          start_date: Date.new(2026, 6, 1),
-          end_date: Date.new(2026, 6, 20),
-        )
-
-      expect(described_class.rollup_source_condition).to eq(
-        "source = #{described_class::SOURCE_PIGGYBACK}",
-      )
-      expect(bounded_condition).to eq("source = #{described_class::SOURCE_PIGGYBACK}")
-      expect(described_class.where(described_class.rollup_source_condition)).to contain_exactly(
-        piggyback,
-      )
-    end
-
-    it "matches piggyback events before the cutover date and beacon events from it onwards" do
-      SiteSetting.dashboard_improvements = true
-      UpcomingChangeEvent.create!(
-        upcoming_change_name: "dashboard_improvements",
-        event_type: :manual_opt_in,
-        created_at: Time.utc(2026, 6, 10, 9),
-      )
-
-      pre_piggyback =
-        Fabricate(:browser_pageview_event, source: :piggyback, created_at: Time.utc(2026, 6, 9))
-      Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 9))
-      Fabricate(:browser_pageview_event, source: :piggyback, created_at: Time.utc(2026, 6, 15))
-      post_beacon =
-        Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 15))
-
-      expect(described_class.where(described_class.rollup_source_condition)).to contain_exactly(
-        pre_piggyback,
-        post_beacon,
-      )
-    end
-
-    it "qualifies columns with the given table alias" do
-      SiteSetting.dashboard_improvements = false
-      condition = described_class.rollup_source_condition(table: "e")
-
-      expect(condition).to eq("e.source = #{described_class::SOURCE_PIGGYBACK}")
-    end
-
-    it "matches only piggyback events when the bounded range ends at the cutover" do
-      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
-
-      condition =
-        described_class.rollup_source_condition(
-          start_date: Date.new(2026, 6, 1),
-          end_date: Date.new(2026, 6, 10),
-        )
-
-      expect(condition).to eq("source = #{described_class::SOURCE_PIGGYBACK}")
-    end
-
-    it "matches only beacon events when the bounded range starts at the cutover" do
-      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
-
-      condition =
-        described_class.rollup_source_condition(
-          start_date: Date.new(2026, 6, 10),
-          end_date: Date.new(2026, 6, 20),
-        )
-
-      expect(condition).to eq("source = #{described_class::SOURCE_BEACON}")
-    end
-
-    it "keeps the mixed source condition when the bounded range crosses the cutover" do
-      described_class.stubs(:beacon_cutover_date).returns(Date.new(2026, 6, 10))
-
-      condition =
-        described_class.rollup_source_condition(
-          start_date: Date.new(2026, 6, 1),
-          end_date: Date.new(2026, 6, 20),
-        )
-
-      expect(condition).to include(
-        "created_at < '2026-06-10' AND source = #{described_class::SOURCE_PIGGYBACK}",
-        "created_at >= '2026-06-10' AND source = #{described_class::SOURCE_BEACON}",
-      )
-    end
-  end
-
   it "truncates string fields before saving" do
     event =
       described_class.create!(
@@ -216,7 +45,6 @@ RSpec.describe BrowserPageviewEvent do
         language: "en-AU",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
         topic_id: 123,
-        source: described_class::SOURCE_BEACON,
         occurred_at: occurred_at.iso8601(6),
       }
     end
@@ -246,7 +74,6 @@ RSpec.describe BrowserPageviewEvent do
       )
       expect(event.normalized_referrer).to eq("example.com/path")
       expect(event.created_at).to eq_time(occurred_at)
-      expect(event.source).to eq("beacon")
       expect(event.browser).to eq("edge")
       expect(event.language).to eq("en-AU")
       expect(described_class.queued_count).to eq(0)

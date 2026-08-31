@@ -17,7 +17,6 @@ RSpec.describe Jobs::FlushBrowserPageviewEvents do
       ip_address: "1.2.3.4",
       user_agent: "Mozilla/5.0",
       session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
     }
   end
@@ -30,17 +29,7 @@ RSpec.describe Jobs::FlushBrowserPageviewEvents do
     payloads.each { |queued_payload| queue_payload(queued_payload) }
   end
 
-  it "does nothing when browser pageview persistence is disabled" do
-    SiteSetting.persist_browser_pageview_events = false
-    queue_payload(payload)
-
-    expect { described_class.new.execute({}) }.not_to change { BrowserPageviewEvent.count }
-
-    expect(BrowserPageviewEvent.queued_count).to eq(1)
-  end
-
   it "flushes queued browser pageviews" do
-    SiteSetting.persist_browser_pageview_events = true
     queue_payload(payload)
 
     expect { described_class.new.execute({}) }.to change { BrowserPageviewEvent.count }.by(1)
@@ -49,8 +38,6 @@ RSpec.describe Jobs::FlushBrowserPageviewEvents do
   end
 
   it "flushes multiple batches in one run" do
-    SiteSetting.persist_browser_pageview_events = true
-
     stub_const(BrowserPageviewEvent, "REDIS_FLUSH_BATCH_SIZE", 3) do
       payloads = 5.times.map { |index| payload.merge(session_id: format("%032d", index)) }
       queue_payloads(payloads)

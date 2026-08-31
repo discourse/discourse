@@ -8,12 +8,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
     return if start_date > end_date
 
     exclusive_end_date = end_date + 1
-    source_condition =
-      BrowserPageviewEvent.rollup_source_condition(
-        table: "events",
-        start_date:,
-        end_date: exclusive_end_date,
-      )
     transaction do
       DB.exec(<<~SQL, start_date:, end_date: exclusive_end_date)
         DELETE FROM browser_pageview_entry_url_daily_rollups rollup
@@ -24,7 +18,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
             FROM browser_pageview_events events
             WHERE events.created_at >= rollup.date
               AND events.created_at < rollup.date + 1
-              AND #{source_condition}
           )
       SQL
 
@@ -52,7 +45,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
           FROM browser_pageview_events events
           WHERE events.created_at >= :start_date
             AND events.created_at < :end_date
-            AND #{source_condition}
             AND events.normalized_url IS NOT NULL
             AND (
               NULLIF(events.referrer, '') IS NULL
@@ -75,7 +67,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
     earliest_source_date =
       BrowserPageviewEvent
         .where("created_at >= ?", BrowserPageviewEvent.retention_cutoff)
-        .where(BrowserPageviewEvent.rollup_source_condition)
         .minimum(:created_at)
         &.to_date
     return start_date if earliest_source_date.nil? || start_date > earliest_source_date

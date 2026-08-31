@@ -2445,31 +2445,5 @@ RSpec.describe Report do
         end
       end
     end
-
-    context "with browser pageview reports" do
-      it "hides them from admins when persist_browser_pageview_events is disabled" do
-        SiteSetting.persist_browser_pageview_events = false
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
-        end
-      end
-
-      it "exposes them to admins when persist_browser_pageview_events is enabled" do
-        SiteSetting.persist_browser_pageview_events = true
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
-        end
-      end
-
-      it "always hides them from moderators, even when persist_browser_pageview_events is enabled" do
-        SiteSetting.persist_browser_pageview_events = true
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
-        end
-      end
-    end
   end
 end
