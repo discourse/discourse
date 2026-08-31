@@ -358,9 +358,10 @@
       outline-offset: 2px;
     }
 
-    // hidden, but still holding its space
-    &:not(.--source) &__source,
-    &.--source &__preview {
+    // hidden, but still holding its space. `&` is a complex selector here, so
+    // the hidden face is named in full rather than suffixed onto a second `&`
+    &:not(.--source) .composer-preview-node__source,
+    &.--source .composer-preview-node__preview {
       visibility: hidden;
     }
 
