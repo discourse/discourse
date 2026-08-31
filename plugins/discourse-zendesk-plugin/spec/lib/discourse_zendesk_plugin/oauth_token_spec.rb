@@ -35,19 +35,17 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.once
     end
 
-    it "refreshes the token before its reported expiry" do
-      token_request =
-        stub_request(:post, token_url).to_return(
-          { status: 200, body: { access_token: "first-token", expires_in: 61 }.to_json },
-          { status: 200, body: { access_token: "second-token", expires_in: 61 }.to_json },
-        )
+    it "expires the cached token before its reported expiry" do
+      stub_request(:post, token_url).to_return(
+        status: 200,
+        body: { access_token: "access-token", expires_in: 120 }.to_json,
+      )
 
-      expect(oauth_token.access_token).to eq("first-token")
+      expect(oauth_token.access_token).to eq("access-token")
 
-      sleep 1.1
-
-      expect(oauth_token.access_token).to eq("second-token")
-      expect(token_request).to have_been_requested.twice
+      cache_keys = Discourse.cache.redis.scan_each(match: "*:discourse-zendesk-oauth-token:*").to_a
+      expect(cache_keys.size).to eq(1)
+      expect(Discourse.cache.redis.ttl(cache_keys.first)).to be_between(59, 60)
     end
 
     it "uses a new cache entry after credential rotation" do
