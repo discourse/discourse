@@ -119,6 +119,7 @@ module("Integration | Component | PanelDockChassis", function (hooks) {
     );
 
     await triggerKeyEvent(RESIZER, "keydown", "End");
+    await triggerKeyEvent(RESIZER, "keyup", "End");
 
     assert.deepEqual(
       store().getObject("a-panel"),
@@ -348,6 +349,7 @@ module("Integration | Component | PanelDockChassis", function (hooks) {
 
     await click(`${PICKER} .--bottom`);
     await triggerKeyEvent(RESIZER, "keydown", "End");
+    await triggerKeyEvent(RESIZER, "keyup", "End");
 
     assert.deepEqual(store().getObject("a-panel"), {
       mode: "docked",

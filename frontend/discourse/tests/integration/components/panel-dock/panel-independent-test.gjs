@@ -135,14 +135,19 @@ module(
       );
 
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "ArrowRight");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "ArrowRight");
       assert.dom(".d-panel-dock__resizer").hasAttribute("aria-valuenow", "336");
 
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "End");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "End");
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "ArrowRight");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "ArrowRight");
       assert.dom(".d-panel-dock__resizer").hasAttribute("aria-valuenow", "720");
 
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "Home");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "Home");
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "ArrowLeft");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "ArrowLeft");
       assert.dom(".d-panel-dock__resizer").hasAttribute("aria-valuenow", "240");
       assert.deepEqual(
         this.resizeEnds,
@@ -172,6 +177,7 @@ module(
       assert.dom(".d-panel-dock__resizer").hasAttribute("aria-valuenow", "720");
 
       await triggerKeyEvent(".d-panel-dock__resizer", "keydown", "Home");
+      await triggerKeyEvent(".d-panel-dock__resizer", "keyup", "Home");
 
       assert.deepEqual(
         this.store.getObject("independent-panel"),

@@ -15,7 +15,7 @@ contract.
 
 **2. Facades ("recipes") — any number, public.** Thin, named compositions of
 the core for a recurring use case: a facade wires a data source, an item
-shape, and defaults, adding *configuration, not capability*. Facades obey one
+shape, and defaults, adding _configuration, not capability_. Facades obey one
 hard constraint:
 
 > A facade may only consume the core's public API. If a facade needs
@@ -36,12 +36,12 @@ are importable only from within that group (and from test files). The
 boundary wherever the specifier's fixed text already proves the reach-in:
 static imports, re-exports, literal dynamic imports, and interpolated
 dynamic imports whose fixed prefix names an `-internals` path. A specifier
-whose *group* is only known at runtime is beyond static analysis; writing
+whose _group_ is only known at runtime is beyond static analysis; writing
 one against an internals path is the same violation, just one only review
 can catch.
 
 Note the enforcement split between the tiers: the lint rule guards the
-*group boundary* (tier 3). The facade constraint (tier 2) is a review-time
+_group boundary_ (tier 3). The facade constraint (tier 2) is a review-time
 rule — a facade lives inside its group, where internals imports are
 lexically legal, so keeping recipes on the public API is the reviewer's
 gate until a structural convention for recipe placement exists.
