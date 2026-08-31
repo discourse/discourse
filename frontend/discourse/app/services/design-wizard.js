@@ -15,10 +15,10 @@ import {
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
 import { isTesting } from "discourse/lib/environment";
+import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
-import { defaultHomepage } from "discourse/lib/utilities";
 
 const STATE_KEY = "design_wizard_panel_state";
 // site settings the wizard mutates locally to preview a selection, and which
@@ -170,7 +170,7 @@ export default class DesignWizardService extends Service {
       return;
     }
 
-    await this.router.transitionTo(`discovery.${defaultHomepage()}`);
+    await this.router.transitionTo(homepagePreviewDestination());
     await this.start({ source: SOURCE_ADMIN, returnUrl });
   }
 

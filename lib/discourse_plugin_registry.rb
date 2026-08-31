@@ -144,6 +144,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :calendar_subscription_feeds
 
+  define_filtered_register :homepage_options
+
   define_filtered_register :custom_filter_mappings
 
   define_filtered_register :acl_target_classes
