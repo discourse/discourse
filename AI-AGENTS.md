@@ -15,6 +15,7 @@ Discourse is large with long history. Understand context before changes.
 
 ### JavaScript and UI
 - No empty backing classes for template-only components unless requested
+- Use the skill at `.skills/discourse-frontend-conventions` when writing or reviewing JS/TS/Glimmer classes and templates (private members, member ordering, comments, invocation ordering)
 - Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/21-form-kit.md (`frontend/discourse/app/form-kit`)
 - Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
