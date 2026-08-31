@@ -10,4 +10,16 @@
 enabled_site_setting :checklist_enabled
 
 register_asset "stylesheets/checklist.scss"
-register_svg_icon "spinner"
+
+module ::Checklist
+  PLUGIN_NAME = "checklist"
+end
+
+require_relative "lib/checklist/checkbox"
+require_relative "lib/checklist/source_map"
+require_relative "lib/checklist/checkbox_locator"
+require_relative "lib/checklist/engine"
+
+after_initialize do
+  Discourse::Application.routes.append { mount Checklist::Engine, at: "/checklist" }
+end

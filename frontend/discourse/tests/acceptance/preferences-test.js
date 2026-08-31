@@ -202,7 +202,7 @@ acceptance("Ignored users", function (needs) {
       moderator: false,
       admin: false,
       can_ignore_users: false,
-      groups: [
+      visibleGroups: [
         {
           id: 10,
           name: "trust_level_0",

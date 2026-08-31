@@ -411,6 +411,7 @@ discourse_ai:
     list_type: compact
     default: "3|14" # 3: @staff, 14: @trust_level_4
     area: "ai-features/bot"
+    disallowed_groups: "0" # everyone
   ai_bot_public_sharing_allowed_groups:
     client: false
     type: group_list

@@ -6,7 +6,7 @@ export default class extends DiscourseRoute {
 
   model(params) {
     return this.modelFor("user")
-      .get("groups")
+      .get("visibleGroups")
       .find((group) => {
         return group.name.toLowerCase() === params.name.toLowerCase();
       });

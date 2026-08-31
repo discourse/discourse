@@ -124,6 +124,7 @@ en:
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
+        personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."

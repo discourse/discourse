@@ -60,7 +60,7 @@ function withGroupMessagesSetup(needs) {
   needs.user({
     id: 5,
     username: "charlie",
-    groups: [{ id: 14, name: "awesome_group", has_messages: true }],
+    visibleGroups: [{ id: 14, name: "awesome_group", has_messages: true }],
   });
 
   needs.site({

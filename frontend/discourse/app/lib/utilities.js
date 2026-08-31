@@ -537,10 +537,19 @@ export async function inCodeBlock(text, pos) {
 /**
  * Replaces modifier names in a shortcut string with their platform spelling.
  *
- * @deprecated Use `formatShortcut` from `discourse/lib/shortcut-format`, which
- * produces the drawn form and the `aria-keyshortcuts` value from one spelling.
+ * @deprecated To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`),
+ * which carries the accessible markup too. For the string alone use
+ * `formatShortcut` from `discourse/lib/shortcut-format`.
  */
 export function translateModKey(string, separator = " ") {
+  deprecated(
+    "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
+    {
+      since: "2026.9.0",
+      id: "discourse.translate-mod-key",
+    }
+  );
+
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
