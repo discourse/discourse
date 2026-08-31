@@ -61,8 +61,7 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      user_second_factors&.totps&.exists?
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps&.any?
   end
 
   def backup_codes_enabled?
@@ -72,19 +71,13 @@ module SecondFactorManager
 
   def security_keys_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      security_keys&.where(
-        factor_type: UserSecurityKey.factor_types[:second_factor],
-        enabled: true,
-      )&.exists?
+      security_key_factor_enabled?(UserSecurityKey.factor_types[:second_factor])
   end
 
   def passkeys_available_as_second_factor?
     SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
       !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      security_keys&.where(
-        factor_type: UserSecurityKey.factor_types[:first_factor],
-        enabled: true,
-      )&.exists?
+      security_key_factor_enabled?(UserSecurityKey.factor_types[:first_factor])
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
 
@@ -303,5 +296,15 @@ module SecondFactorManager
 
   def require_rotp
     require "rotp" if !defined?(ROTP)
+  end
+
+  private
+
+  def security_key_factor_enabled?(factor_type)
+    if security_keys.loaded?
+      security_keys.any? { |security_key| security_key.factor_type == factor_type }
+    else
+      security_keys.where(factor_type: factor_type).exists?
+    end
   end
 end

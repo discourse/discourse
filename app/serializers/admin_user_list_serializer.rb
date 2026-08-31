@@ -104,7 +104,7 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_second_factor_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      (object.totps.any? || second_factor_security_key_enabled?)
+      object.has_any_second_factor_methods_enabled?
   end
 
   def second_factor_enabled
@@ -141,13 +141,5 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_suspend_reason?
     @options[:include_suspend_reason]
-  end
-
-  private
-
-  def second_factor_security_key_enabled?
-    object.security_keys.any? do |security_key|
-      security_key.factor_type == UserSecurityKey.factor_types[:second_factor]
-    end
   end
 end
