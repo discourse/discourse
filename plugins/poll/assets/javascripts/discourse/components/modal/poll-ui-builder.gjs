@@ -11,6 +11,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import { buildBBCodeAttrs } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -42,6 +43,32 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
+function indentContinuationLines(value) {
+  return value
+    .split("\n")
+    .map((line, index) => (index > 0 && line.length ? `  ${line}` : line))
+    .join("\n");
+}
+
+function optionsFromText(value) {
+  const options = [];
+
+  for (const line of value.split("\n")) {
+    if (line.length && !/^\s/.test(line)) {
+      options.push(line);
+    } else if (options.length) {
+      const continuation = line.startsWith("  ") ? line.slice(2) : line;
+      options[options.length - 1] += `\n${continuation}`;
+    }
+  }
+
+  return options;
+}
+
+function optionsToText(options) {
+  return options.map(indentContinuationLines).join("\n");
+}
+
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
   @service site;
@@ -61,6 +88,36 @@ export default class PollUiBuilderModal extends Component {
   @tracked publicPoll = this.siteSettings.poll_default_public;
   @tracked showAdvanced = false;
   @autoTrackedArray pollOptions = [trackedObject({ value: "" })];
+
+  constructor() {
+    super(...arguments);
+
+    const poll = this.args.model.poll;
+    if (poll) {
+      this.pollType = poll.type || REGULAR_POLL_TYPE;
+      this.chartType = poll.chartType || BAR_CHART_TYPE;
+      this.dynamic = poll.dynamic === "true";
+      this.pollAutoClose = poll.close ? moment(poll.close) : null;
+      this.pollGroups = poll.groups?.split(",");
+      this.pollMin = Number(poll.min ?? 1);
+      this.pollMax = Number(
+        poll.max ??
+          (this.isNumber
+            ? this.siteSettings.poll_maximum_options
+            : poll.options.length)
+      );
+      this.pollStep = Number(poll.step ?? 1);
+      this.pollResult = poll.results || ALWAYS_POLL_RESULT;
+      this.pollTitle = poll.title;
+      this.publicPoll = poll.public === "true";
+      this.pollOptions = poll.options.map((value) => trackedObject({ value }));
+      this.pollOptionsText = optionsToText(poll.options);
+      this.showAdvanced = Boolean(
+        poll.title?.includes("\n") ||
+        poll.options.some((option) => option.includes("\n"))
+      );
+    }
+  }
 
   get showNumber() {
     return this.showAdvanced || this.isNumber;
@@ -158,8 +215,6 @@ export default class PollUiBuilderModal extends Component {
       ) {
         this.pollMax = this.pollOptionsCount;
       }
-    } else if (this.isNumber) {
-      this.pollMax = this.siteSettings.poll_maximum_options;
     }
   }
 
@@ -167,12 +222,18 @@ export default class PollUiBuilderModal extends Component {
     let pollHeader = "[poll";
     let output = "";
 
-    const match = this.args.model.toolbarEvent
-      .getText()
-      .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
+    if (this.args.model.poll) {
+      if (this.args.model.poll.name) {
+        pollHeader += ` ${buildBBCodeAttrs({ name: this.args.model.poll.name })}`;
+      }
+    } else {
+      const match = this.args.model.toolbarEvent
+        .getText()
+        .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
 
-    if (match) {
-      pollHeader += ` name=poll${match.length + 1}`;
+      if (match) {
+        pollHeader += ` name=poll${match.length + 1}`;
+      }
     }
 
     let step = this.pollStep;
@@ -186,7 +247,11 @@ export default class PollUiBuilderModal extends Component {
     if (this.pollResult) {
       pollHeader += ` results=${this.pollResult}`;
     }
-    if (this.pollMin && this.pollType !== REGULAR_POLL_TYPE) {
+    if (
+      this.pollMin !== null &&
+      this.pollMin !== "" &&
+      this.pollType !== REGULAR_POLL_TYPE
+    ) {
       pollHeader += ` min=${this.pollMin}`;
     }
     if (this.pollMax && this.pollType !== REGULAR_POLL_TYPE) {
@@ -206,20 +271,33 @@ export default class PollUiBuilderModal extends Component {
       pollHeader += ` groups=${this.pollGroups}`;
     }
     if (this.pollAutoClose) {
-      pollHeader += ` close=${this.pollAutoClose.toISOString()}`;
+      const originalClose = this.args.model.poll?.close;
+      const close =
+        originalClose && moment(originalClose).isSame(this.pollAutoClose)
+          ? originalClose
+          : this.pollAutoClose.toISOString();
+      pollHeader += ` close=${close}`;
+    }
+    for (const attr of ["status", "order"]) {
+      if (this.args.model.poll?.[attr]) {
+        pollHeader += ` ${buildBBCodeAttrs({ [attr]: this.args.model.poll[attr] })}`;
+      }
     }
 
     pollHeader += "]";
     output += `${pollHeader}\n`;
 
     if (this.pollTitle) {
-      output += `# ${this.pollTitle.trim()}\n`;
+      const titleMarkup = "#".repeat(this.args.model.poll?.titleLevel ?? 1);
+      output += `${titleMarkup} ${this.pollTitle
+        .trim()
+        .replaceAll("\n", "<br>")}\n`;
     }
 
     if (this.pollOptions.length > 0 && this.pollType !== NUMBER_POLL_TYPE) {
       this.pollOptions.forEach((option) => {
         if (option.value.length > 0) {
-          output += `* ${option.value.trim()}\n`;
+          output += `* ${indentContinuationLines(option.value.trim())}\n`;
         }
       });
     }
@@ -335,15 +413,19 @@ export default class PollUiBuilderModal extends Component {
 
   @action
   onOptionsTextChange(e) {
-    this.pollOptions = e.target.value
-      .split("\n")
-      .map((value) => trackedObject({ value }));
+    this.pollOptions = optionsFromText(e.target.value).map((value) =>
+      trackedObject({ value })
+    );
     this.enforceMinMaxValues();
   }
 
   @action
   insertPoll() {
-    this.args.model.toolbarEvent.addText(this.pollOutput);
+    if (this.args.model.onSave) {
+      this.args.model.onSave(this.pollOutput);
+    } else {
+      this.args.model.toolbarEvent.addText(this.pollOutput);
+    }
     this.args.closeModal();
   }
 
@@ -351,7 +433,9 @@ export default class PollUiBuilderModal extends Component {
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
     if (this.showAdvanced) {
-      this.pollOptionsText = this.pollOptions.map((x) => x.value).join("\n");
+      this.pollOptionsText = optionsToText(
+        this.pollOptions.map((option) => option.value)
+      );
     }
   }
 
@@ -421,6 +505,9 @@ export default class PollUiBuilderModal extends Component {
   @action
   updatePollType(pollType, event) {
     event?.preventDefault();
+    if (pollType === NUMBER_POLL_TYPE && !this.isNumber) {
+      this.pollMax = this.siteSettings.poll_maximum_options;
+    }
     this.pollType = pollType;
     this.enforceMinMaxValues();
   }
@@ -432,10 +519,12 @@ export default class PollUiBuilderModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "poll.ui_builder.title"}}
+      class="poll-ui-builder"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="poll-ui-builder"
+      @title={{i18n
+        (if @model.poll "poll.ui_builder.edit" "poll.ui_builder.title")
+      }}
     >
       <:body>
         <ul class="nav nav-pills poll-type">
@@ -494,10 +583,10 @@ export default class PollUiBuilderModal extends Component {
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_title.label"
               }}</label>
-            <input
+            <Textarea
+              @value={{this.pollTitle}}
+              rows="1"
               {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
-              type="text"
-              value={{this.pollTitle}}
             />
           </div>
         {{/if}}
@@ -694,11 +783,11 @@ export default class PollUiBuilderModal extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.insertPoll}}
-          @icon="chart-bar"
-          @label="poll.ui_builder.insert"
-          @disabled={{this.disableInsert}}
           class="btn-primary insert-poll"
+          @action={{this.insertPoll}}
+          @disabled={{this.disableInsert}}
+          @icon="chart-bar"
+          @label={{if @model.poll "save" "poll.ui_builder.insert"}}
         />
 
         <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />

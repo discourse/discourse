@@ -1,7 +1,11 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
+import PollNodeView from "../discourse/components/poll-node-view";
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    poll: { component: PollNodeView, name: "poll", hasContent: true },
+  },
   nodeSpec: {
     poll: {
       attrs: {

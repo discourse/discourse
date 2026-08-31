@@ -152,6 +152,7 @@ en:
       error_while_exporting_results: "Sorry, there was an error exporting poll results."
 
       ui_builder:
+        edit: Edit poll
         title: Build poll
         insert: Insert Poll
         help:

@@ -4,11 +4,13 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
 
-async function setupBuilder() {
+async function setupBuilder(poll) {
   const noop = () => {};
   const results = [];
   const model = {
     toolbarEvent: { getText: () => "", addText: (t) => results.push(t) },
+    poll,
+    onSave: poll ? (text) => results.push(text) : undefined,
   };
 
   await render(
@@ -22,6 +24,81 @@ async function setupBuilder() {
 
 module("Component | PollUiBuilder", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("editing preserves groups, close date, and attributes outside the builder", async function (assert) {
+    const results = await setupBuilder({
+      name: "existing",
+      type: "regular",
+      options: ["First", "Second"],
+      public: "false",
+      groups: "custom_group",
+      close: "2050-01-01T12:00:00.000Z",
+      status: "closed",
+      order: "desc",
+    });
+
+    assert
+      .dom(".poll-option-value input")
+      .exists({ count: 2 }, "editing opens in simple mode");
+    assert.dom(".poll-title").doesNotExist("advanced fields start hidden");
+    await click(".advanced-mode-btn");
+    await fillIn(".poll-title textarea", "New title");
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[0],
+      "[poll name=existing type=regular results=always public=false chartType=bar groups=custom_group close=2050-01-01T12:00:00.000Z status=closed order=desc]\n# New title\n* First\n* Second\n[/poll]\n",
+      "saves the edited poll without losing its settings or identity"
+    );
+  });
+
+  test("editing preserves date-only close values and structured content", async function (assert) {
+    const results = await setupBuilder({
+      type: "regular",
+      title: "First line\nSecond line",
+      options: ["First paragraph\n\nSecond paragraph", "Simple"],
+      close: "2050-01-01",
+    });
+
+    assert
+      .dom(".poll-title textarea")
+      .hasValue(
+        "First line\nSecond line",
+        "structured polls open in advanced mode without flattening the title"
+      );
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[0],
+      "[poll type=regular results=always public=false chartType=bar close=2050-01-01]\n# First line<br>Second line\n* First paragraph\n\n  Second paragraph\n* Simple\n[/poll]\n",
+      "does not shift the close time or detach option content"
+    );
+  });
+
+  test("editing structured options in advanced mode preserves nesting", async function (assert) {
+    const results = await setupBuilder({
+      type: "regular",
+      options: ["Parent\n\n* Child\n  * Grandchild", "Simple"],
+    });
+
+    assert
+      .dom(".poll-options textarea")
+      .hasValue(
+        "Parent\n\n  * Child\n    * Grandchild\nSimple",
+        "shows continuation content indented beneath its option"
+      );
+    await fillIn(
+      ".poll-options textarea",
+      "Updated parent\n\n  * Child\n    * Grandchild\nSimple"
+    );
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[0],
+      "[poll type=regular results=always public=false chartType=bar]\n* Updated parent\n\n  * Child\n    * Grandchild\n* Simple\n[/poll]\n",
+      "keeps nested content inside the edited option"
+    );
+  });
 
   test("Can switch poll type", async function (assert) {
     await setupBuilder();
