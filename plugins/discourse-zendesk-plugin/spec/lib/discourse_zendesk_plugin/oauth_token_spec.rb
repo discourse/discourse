@@ -48,7 +48,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(Discourse.cache.redis.ttl(cache_keys.first)).to be_between(59, 60)
     end
 
-    it "uses a new cache entry after credential rotation" do
+    it "returns a new token after the credentials change" do
       token_request =
         stub_request(:post, token_url).to_return(
           { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
@@ -63,7 +63,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.twice
     end
 
-    it "does not cache an in-flight token under rotated credentials" do
+    it "does not reuse a token requested with previous credentials" do
       request_count = 0
       token_request =
         stub_request(:post, token_url).to_return do
@@ -101,7 +101,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       )
     end
 
-    it "raises RequestError for server failures" do
+    it "raises RequestError when Zendesk returns a server error" do
       stub_request(:post, token_url).to_return(status: 500)
 
       expect { oauth_token.access_token }.to raise_error do |error|
@@ -109,7 +109,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       end
     end
 
-    it "raises RequestError for rate limits" do
+    it "raises RequestError when Zendesk rate limits the request" do
       stub_request(:post, token_url).to_return(status: 429)
 
       expect { oauth_token.access_token }.to raise_error do |error|
@@ -128,7 +128,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
   end
 
   describe "#invalidate" do
-    it "forces the next operation to request a new token" do
+    it "causes the next access to request a new token" do
       token_request =
         stub_request(:post, token_url).to_return(
           { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
@@ -143,7 +143,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.twice
     end
 
-    it "preserves a newer token when a stale client invalidates its token" do
+    it "preserves a newer cached token when a stale instance invalidates the previous token" do
       stale_oauth_token = described_class.new
       token_request =
         stub_request(:post, token_url).to_return(

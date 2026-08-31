@@ -217,7 +217,7 @@ RSpec.describe Jobs::ZendeskJob do
         )
       end
 
-      it "continues synchronizing the remaining posts" do
+      it "reports the rejected post and synchronizes later posts" do
         execute
 
         expect(first_post.reload.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD]).to be_nil

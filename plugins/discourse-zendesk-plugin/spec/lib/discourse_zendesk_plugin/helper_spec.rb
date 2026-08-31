@@ -46,7 +46,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       expect(client.config.token).to be_nil
     end
 
-    it "uses legacy authentication while OAuth is incomplete" do
+    it "uses API token authentication while OAuth credentials are incomplete" do
       SiteSetting.zendesk_jobs_email = "zendesk@example.com"
       SiteSetting.zendesk_jobs_api_token = "legacy-token"
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
@@ -108,7 +108,7 @@ RSpec.describe DiscourseZendeskPlugin::Helper do
       )
     end
 
-    it "raises when Zendesk rejects the replacement token" do
+    it "raises InvalidOAuthTokenError when Zendesk rejects the replacement token" do
       SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
       SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
       user = Fabricate(:user)
