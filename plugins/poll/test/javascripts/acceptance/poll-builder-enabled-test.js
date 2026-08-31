@@ -164,7 +164,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await waitFor(".ProseMirror");
     await settled();
 
-    assert.dom(".ProseMirror .poll h1").hasText("Question");
+    assert
+      .dom(".ProseMirror .poll h1")
+      .hasText("Question", "renders the poll title");
     assert
       .dom(".composer-poll-node__content li:first-child p")
       .exists({ count: 2 }, "loads both paragraphs in the first option");
@@ -172,7 +174,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await click(".composer-poll-node__edit");
     await click(".insert-poll");
 
-    assert.dom(".ProseMirror .poll h1").hasText("Question");
+    assert
+      .dom(".ProseMirror .poll h1")
+      .hasText("Question", "preserves the poll title");
     assert
       .dom(".composer-poll-node__content li:first-child p")
       .exists({ count: 2 }, "keeps both paragraphs attached to the option");
