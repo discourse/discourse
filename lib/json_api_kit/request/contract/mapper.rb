@@ -92,7 +92,7 @@ module JsonApiKit
           },
           %i[sort bad_shape] => {
             title: "Invalid sort parameter",
-            detail: ->(_) { "sort must name a direction for each sort." },
+            detail: ->(_) { "sort must be a comma-separated list, as in sort=-created_at." },
           },
           %i[filter bad_shape] => {
             title: "Invalid filter parameter",

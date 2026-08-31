@@ -192,6 +192,8 @@ RSpec.shared_context "with a listing of topics" do
 
   def cursor_at(index, rendered = document) = cursor_of(rendered[:data][index])
 
+  def parameters_of(url) = Rack::Utils.parse_nested_query(URI.parse(url).query)
+
   def cursor_of_record(record, of: resource, sort: {})
     order = of.order(sort.transform_keys(&:to_s))
     order.locate(of.model.where(id: record.id)).cursor.to_s

@@ -46,6 +46,32 @@ RSpec.describe "a listing entered at an anchor" do
     )
   end
 
+  describe "the links either side of the window" do
+    let(:query) do
+      {
+        "sort" => "created_at",
+        "page" => {
+          "anchor" => {
+            "id" => middle.id.to_s,
+          },
+          "before_size" => "1",
+          "after_size" => "1",
+        },
+      }
+    end
+
+    let(:next_listing) { listing_of(parameters_of(document.dig(:links, :next))) }
+    let(:previous_listing) { listing_of(parameters_of(document.dig(:links, :prev))) }
+
+    it "returns the rows after the window" do
+      expect(listed_ids(next_listing)).to eq([latest.id.to_s])
+    end
+
+    it "returns the rows before the window" do
+      expect(listed_ids(previous_listing)).to eq([earliest.id.to_s])
+    end
+  end
+
   context "when the page has a size alone" do
     let(:params) do
       {
