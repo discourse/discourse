@@ -218,6 +218,23 @@ function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
           }
         });
 
+        if (expectedRaw == null) {
+          try {
+            const post = await ajax(`/posts/${postModel.id}`);
+            expectedRaw = post.raw;
+            expectedUpdatedAt = post.updated_at;
+          } catch (error) {
+            pendingStates.clear();
+            restoreConfirmedStates();
+            popupAjaxError(error);
+            break;
+          }
+
+          if (!active) {
+            break;
+          }
+        }
+
         const mutationId = crypto.randomUUID();
         const {
           startExpiration: startOptimisticUpdateExpiration,
@@ -255,7 +272,9 @@ function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
             postModel.updated_at
           );
           if (!responseIsStale) {
+            postModel.last_editor_id = response.last_editor_id;
             postModel.updated_at = response.updated_at;
+            postModel.version = response.version;
           }
 
           if (response.revised) {
@@ -423,7 +442,7 @@ export function checklistSyntax(elem, postDecorator) {
   );
 
   if (editable) {
-    return addToggleBehavior(interactiveBoxes, postModel, boxes);
+    return addToggleBehavior(interactiveBoxes, postModel);
   }
 }
 

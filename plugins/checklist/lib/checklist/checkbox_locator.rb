@@ -28,7 +28,8 @@ module Checklist
     private
 
     def build(cooked, targets)
-      nodes = Nokogiri::HTML5.fragment(cooked).css("span.chcklst-box")
+      nodes =
+        Nokogiri::HTML5.fragment(cooked).css("span.chcklst-box").reject { |node| quoted?(node) }
       if !source_hints_valid?(nodes)
         return targets.map { Location.new(count: nodes.size, checkbox: nil, needs_recook: true) }
       end
@@ -50,6 +51,12 @@ module Checklist
 
       checkbox = checkbox_for(node)
       Location.new(count: nodes.size, checkbox:, needs_recook: checkbox.nil?)
+    end
+
+    def quoted?(node)
+      node.ancestors.any? do |ancestor|
+        ancestor.name == "aside" && ancestor.classes.include?("quote")
+      end
     end
 
     def source_hints_valid?(nodes)

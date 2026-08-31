@@ -1,4 +1,4 @@
-const CHECKLIST_HTML_PATTERN = /\bchcklst-(?:box|stroked)\b|\bdata-chk-src\b/i;
+const CHECKLIST_HTML_PATTERN = /\bchcklst-box\b|\bdata-chk-src\b/i;
 
 function neutralizeRawChecklistMarkup(state) {
   const neutralize = (token) => {

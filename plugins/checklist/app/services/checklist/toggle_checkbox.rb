@@ -31,7 +31,11 @@ module Checklist
 
       validates :post_id, presence: true
       validates :toggles, presence: true, length: { maximum: MAX_BATCH_SIZE }
-      validates :expected_raw, presence: true
+      validates :expected_raw,
+                presence: true,
+                length: {
+                  maximum: -> { SiteSetting.max_post_length },
+                }
       validates :expected_updated_at, presence: true
       validates :mutation_id, presence: true, length: { maximum: 100 }
       validate :toggles_are_valid, if: -> { toggles.present? }

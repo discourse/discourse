@@ -26,9 +26,17 @@ let _lastEditNotificationClick = null;
 function comparePostTimestamps(candidate, reference) {
   const candidateTime = Date.parse(candidate);
   const referenceTime = Date.parse(reference);
+  const candidateIsValid = !Number.isNaN(candidateTime);
+  const referenceIsValid = !Number.isNaN(referenceTime);
 
-  if (!Number.isNaN(candidateTime) && !Number.isNaN(referenceTime)) {
+  if (candidateIsValid && referenceIsValid) {
     return candidateTime - referenceTime;
+  }
+  if (candidateIsValid) {
+    return 1;
+  }
+  if (referenceIsValid) {
+    return -1;
   }
 
   return candidate === reference ? 0 : 1;

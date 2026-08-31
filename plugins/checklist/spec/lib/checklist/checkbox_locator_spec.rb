@@ -71,6 +71,21 @@ RSpec.describe Checklist::CheckboxLocator do
       )
     end
 
+    it "excludes checkboxes copied into quote asides" do
+      raw = <<~MARKDOWN
+        [quote="Other user"]
+        [ ] quoted
+        [/quote]
+
+        [ ] own
+      MARKDOWN
+
+      location = locate(raw, 0)
+
+      expect(location.count).to eq(1)
+      expect(location.checkbox.replace_in(raw, checked: true)).to end_with("[x] own\n")
+    end
+
     it "maps checkboxes in blockquotes, lists, and table cells" do
       raw = <<~MARKDOWN
         > - [ ] quoted

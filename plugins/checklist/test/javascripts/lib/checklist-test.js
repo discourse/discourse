@@ -14,6 +14,7 @@ import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializ
 
 let decoratorCleanup;
 let holdRequest;
+let hydrationRequests;
 let initialRaw;
 let postModel;
 let releaseRequest;
@@ -28,7 +29,7 @@ function nextUpdatedAt() {
   return `2026-08-27T08:00:0${responseSequence}.000Z`;
 }
 
-async function prepare(raw, { canEdit = true } = {}) {
+async function prepare(raw, { canEdit = true, includeRaw = true } = {}) {
   initialRaw = raw;
   const cooked = await cook(raw, {
     siteSettings: {
@@ -41,7 +42,7 @@ async function prepare(raw, { canEdit = true } = {}) {
     id: 42,
     can_edit: canEdit,
     cooked: cooked.toString(),
-    raw,
+    raw: includeRaw ? raw : undefined,
     updated_at: "2026-08-27T08:00:00.000Z",
   });
   const decoratorHelper = { getModel: () => postModel };
@@ -55,6 +56,15 @@ async function prepare(raw, { canEdit = true } = {}) {
 
 acceptance("checklist", function (needs) {
   needs.pretender((server, helper) => {
+    server.get("/posts/42", () => {
+      hydrationRequests += 1;
+      return helper.response({
+        id: 42,
+        raw: initialRaw,
+        updated_at: "2026-08-27T08:00:00.000Z",
+      });
+    });
+
     server.put("/checklist/toggle", (request) => {
       const body = JSON.parse(request.requestBody);
       requests.push(body);
@@ -75,9 +85,11 @@ acceptance("checklist", function (needs) {
       const updatedAt = nextUpdatedAt();
       const response = {
         cooked: `authoritative cooked ${responseSequence}`,
+        last_editor_id: 1,
         raw: `authoritative raw ${responseSequence}`,
         revised: responseRevised,
         updated_at: updatedAt,
+        version: responseSequence + 1,
       };
       if (responseRevised) {
         consumeOptimisticPostUpdate(body.mutation_id);
@@ -95,6 +107,7 @@ acceptance("checklist", function (needs) {
   needs.hooks.beforeEach(function () {
     decoratorCleanup = null;
     holdRequest = false;
+    hydrationRequests = 0;
     initialRaw = null;
     postModel = null;
     releaseRequest = null;
@@ -167,6 +180,12 @@ Actual checkboxes:
     await click(checkbox);
 
     assert.strictEqual(
+      postModel.last_editor_id,
+      1,
+      "last editor metadata is reconciled"
+    );
+    assert.strictEqual(postModel.version, 2, "version metadata is reconciled");
+    assert.strictEqual(
       postModel.raw,
       "authoritative raw 1",
       "raw content is reconciled"
@@ -211,6 +230,19 @@ Actual checkboxes:
       postModel.updated_at,
       "2026-08-27T08:00:09.000Z",
       "the timestamp does not regress"
+    );
+  });
+
+  test("hydrates raw before the first stream toggle", async function (assert) {
+    const [checkbox] = await prepare("[ ] first", { includeRaw: false });
+
+    await click(checkbox);
+
+    assert.strictEqual(hydrationRequests, 1, "the missing raw is fetched once");
+    assert.strictEqual(
+      requests[0].expected_raw,
+      "[ ] first",
+      "the toggle uses the hydrated baseline"
     );
   });
 
@@ -580,8 +612,8 @@ Actual checkboxes:
     assert.strictEqual(requests.length, 1, "the post's own checkbox toggles");
     assert.strictEqual(
       requests[0].toggles[0].checkbox_index,
-      1,
-      "the rendered index still includes quoted checkboxes"
+      0,
+      "quoted checkboxes are excluded from the rendered index"
     );
   });
 

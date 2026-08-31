@@ -2,7 +2,7 @@
 
 module Checklist
   class CheckboxesController < ::ApplicationController
-    MAX_TOGGLES_PER_MINUTE = 120
+    MAX_TOGGLE_REQUESTS_PER_MINUTE = 60
 
     requires_plugin Checklist::PLUGIN_NAME
     requires_login
@@ -15,9 +15,11 @@ module Checklist
             resolved_toggles.any? { |toggle| toggle.checkbox.checked? != toggle.request[:checked] }
           render json: {
                    cooked: post.cooked,
+                   last_editor_id: post.last_editor_id,
                    raw: post.raw,
                    revised:,
                    updated_at: post.updated_at.iso8601(3),
+                   version: post.version,
                  }
         end
         on_failed_contract do |contract|
@@ -50,9 +52,12 @@ module Checklist
     private
 
     def rate_limit_checklist_toggles
-      limiter = RateLimiter.new(current_user, "checklist_toggle", MAX_TOGGLES_PER_MINUTE, 1.minute)
-      toggle_count = [Array.wrap(params[:toggles]).size, 1].max
-      [toggle_count, Checklist::ToggleCheckbox::MAX_BATCH_SIZE + 1].min.times { limiter.performed! }
+      RateLimiter.new(
+        current_user,
+        "checklist_toggle",
+        MAX_TOGGLE_REQUESTS_PER_MINUTE,
+        1.minute,
+      ).performed!
     end
 
     def checklist_conflict_retryable?(post, params)

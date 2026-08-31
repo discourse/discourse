@@ -22,6 +22,7 @@ RSpec.describe Checklist::ToggleCheckbox do
       expect(contract.errors[:toggles]).to be_present
     end
     it { is_expected.to validate_presence_of(:expected_raw) }
+    it { is_expected.to validate_length_of(:expected_raw).is_at_most(SiteSetting.max_post_length) }
     it { is_expected.to validate_presence_of(:expected_updated_at) }
     it { is_expected.to validate_presence_of(:mutation_id) }
     it { is_expected.to validate_length_of(:mutation_id).is_at_most(100) }

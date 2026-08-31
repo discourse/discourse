@@ -38,9 +38,11 @@ RSpec.describe Checklist::CheckboxesController do
         post.reload
         expect(response.parsed_body).to include(
           "cooked" => post.cooked,
+          "last_editor_id" => post.last_editor_id,
           "raw" => "- [x] first\n- [x] second",
           "revised" => true,
           "updated_at" => post.updated_at.iso8601(3),
+          "version" => post.version,
         )
         expect(post.raw).to eq("- [x] first\n- [x] second")
       end

@@ -46,6 +46,12 @@ RSpec.describe PrettyText do
       expect(cooked).to include("[ ] escaped empty checkbox")
     end
 
+    it "preserves legacy stroked checklist markup" do
+      raw = '<span class="chcklst-stroked">done</span>'
+
+      expect(PrettyText.cook(raw)).to include('<span class="chcklst-stroked">done</span>')
+    end
+
     it "does not allow raw HTML to forge interactive checklist controls" do
       raw = <<~MARKDOWN
         <span class="chcklst-box fa fa-square-o" data-chk-src="1:0"></span>

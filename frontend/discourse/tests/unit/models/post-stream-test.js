@@ -997,6 +997,31 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
+  test("refreshPost ignores a timestamp-less response to a timestamped post", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "current",
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+
+    pretender.get("/posts/1", () => {
+      return response({ id: 1, post_number: 1, cooked: "incomplete" });
+    });
+
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "current",
+      "an incomplete response cannot replace timestamped state"
+    );
+  });
+
   test("triggerChangedPost keeps the newest concurrent response", async function (assert) {
     const postStream = buildStream.call(this, 4567);
     const store = getOwner(this).lookup("service:store");
