@@ -19,6 +19,9 @@ DiscourseDataExplorer::Engine.routes.draw do
 end
 
 Discourse::Application.routes.draw do
+  get "/api/data-explorer/queries" => "discourse_data_explorer/queries#index"
+  get "/api/data-explorer/queries/:id" => "discourse_data_explorer/queries#show"
+
   get "/g/:group_name/reports" => "discourse_data_explorer/query#group_reports_index"
   get "/g/:group_name/reports/:id" => "discourse_data_explorer/query#group_reports_show"
   post "/g/:group_name/reports/:id/run" => "discourse_data_explorer/query#group_reports_run"
