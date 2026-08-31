@@ -11899,7 +11899,7 @@ CREATE TABLE public.user_options (
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_ask_ai_default boolean DEFAULT false NOT NULL
+    ai_ask_ai_default boolean DEFAULT true NOT NULL
 );
 
 

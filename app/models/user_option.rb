@@ -284,7 +284,7 @@ end
 #
 # Table name: user_options
 #
-#  ai_ask_ai_default                              :boolean          default(FALSE), not null
+#  ai_ask_ai_default                              :boolean          default(TRUE), not null
 #  ai_search_discoveries                          :boolean          default(TRUE), not null
 #  allow_private_messages                         :boolean          default(TRUE), not null
 #  auto_image_caption                             :boolean          default(FALSE), not null

@@ -28,6 +28,14 @@ describe "AI Discoveries search modes" do
 
   after { SearchIndexer.disable }
 
+  it "enables Ask AI as the default for new users" do
+    visit "/"
+    discoveries_search.open.fill_query("miyazaki").select_ask
+
+    expect(discoveries_search).to have_discovery
+    expect(discoveries_search).to have_ask_as_default
+  end
+
   it "marks whichever option produced what is on screen" do
     visit "/"
     discoveries_search.open.fill_query("miyazaki")
@@ -57,8 +65,7 @@ describe "AI Discoveries search modes" do
 
     discoveries_search.submit
 
-    expect(discoveries_search).to have_topic_result(hayao_topic)
-    expect(discoveries_search).to have_search_in_effect
-    expect(discoveries_search).to have_no_discovery
+    expect(discoveries_search).to have_ask_in_effect
+    expect(discoveries_search).to have_discovery
   end
 end

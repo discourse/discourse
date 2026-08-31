@@ -62,6 +62,10 @@ module PageObjects
         has_css?("#{ROOT_SELECTOR} .ai-discobot-discoveries")
       end
 
+      def has_ask_as_default?
+        has_css?("#{ROOT_SELECTOR} .ai-search-discoveries__default-toggle[aria-checked='true']")
+      end
+
       def has_no_discovery?
         has_no_css?("#{ROOT_SELECTOR} .ai-discobot-discoveries")
       end

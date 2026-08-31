@@ -10,9 +10,9 @@ describe "Ask AI default preference" do
   end
 
   it "persists the preference through the user update endpoint" do
-    put "/u/#{user.username}.json", params: { ai_ask_ai_default: true }
+    put "/u/#{user.username}.json", params: { ai_ask_ai_default: false }
 
     expect(response.status).to eq(200)
-    expect(user.user_option.reload.ai_ask_ai_default).to eq(true)
+    expect(user.user_option.reload.ai_ask_ai_default).to eq(false)
   end
 end
