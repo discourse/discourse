@@ -43,7 +43,9 @@ module JsonApiKit
     end
 
     def render_document(document)
-      render json: document.to_h, status: document.status, content_type: MediaType::JSON_API
+      render json: document.to_h,
+             status: document.status,
+             content_type: Pagination::Profile::MEDIA_TYPE
     end
 
     def negotiate

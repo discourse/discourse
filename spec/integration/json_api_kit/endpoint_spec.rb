@@ -45,6 +45,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:base) { "http://test.localhost/api" }
   let(:current) { "#{base}/topics" }
   let(:media_type) { "application/vnd.api+json" }
+  let(:profile_media_type) { JsonApiKit::Pagination::Profile::MEDIA_TYPE }
   let(:profile) { "https://jsonapi.org/profiles/ethanresnick/cursor-pagination" }
   let(:path) { "/api/topics" }
   let(:headers) { {} }
@@ -68,7 +69,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
 
   describe "the response" do
     it "sends the JSON:API media type" do
-      expect(response.media_type).to eq(media_type)
+      expect(response.media_type).to eq(profile_media_type)
     end
 
     it "varies on the accept header" do
@@ -79,7 +80,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       let(:path) { "/api/topics.json" }
 
       it "sends the JSON:API media type" do
-        expect(response.media_type).to eq(media_type)
+        expect(response.media_type).to eq(profile_media_type)
       end
 
       it "varies on the accept header" do
@@ -186,7 +187,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
     it { expect(response).to have_http_status(:internal_server_error) }
 
     it "sends the JSON:API media type" do
-      expect(response.media_type).to eq(media_type)
+      expect(response.media_type).to eq(profile_media_type)
     end
 
     it "sends the reason" do
@@ -214,7 +215,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
     it { expect(response).to have_http_status(:forbidden) }
 
     it "sends the JSON:API media type" do
-      expect(response.media_type).to eq(media_type)
+      expect(response.media_type).to eq(profile_media_type)
     end
 
     it "sends the reason" do

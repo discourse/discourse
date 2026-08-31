@@ -13,12 +13,9 @@ RSpec.describe JsonApiKit::Document::Individual do
     end
   end
   let(:guardian) { Guardian.new }
-  let(:urls) do
-    JsonApiKit::Urls.new(
-      base: "https://example.com/api",
-      current: "https://example.com/api/topics/1",
-    )
-  end
+  let(:urls) { JsonApiKit::Urls.new(base: "https://example.com/api", current:) }
+  let(:current) { "https://example.com/api/topics/1" }
+  let(:self_link) { { href: current, type: JsonApiKit::Pagination::Profile::MEDIA_TYPE } }
   let(:reading) { resource.find(topic.id, guardian:) }
 
   describe "#to_h" do
@@ -36,7 +33,7 @@ RSpec.describe JsonApiKit::Document::Individual do
         },
         included: [],
         links: {
-          self: "https://example.com/api/topics/1",
+          self: self_link,
         },
       )
     end
