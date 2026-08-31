@@ -11,14 +11,23 @@ export default class ComposerToolbarButtons extends Component {
     return button === this.firstButton ? 0 : button.tabindex;
   }
 
+  // the tab stop has to be a button that is actually rendered: a toolbar whose
+  // leading button is hidden by its condition would otherwise have none
   get firstButton() {
     const { isFirst = true } = this.args;
-    return (
-      isFirst &&
-      this.args.data.groups
-        .find((group) => group.buttons?.length > 0)
-        ?.buttons.filter(this.isActionable)[0]
-    );
+
+    if (!isFirst) {
+      return false;
+    }
+
+    const { context } = this.args.data;
+
+    return this.args.data.groups
+      .flatMap((group) => group.buttons ?? [])
+      .find(
+        (button) =>
+          this.isActionable(button) && (button.condition?.(context) ?? true)
+      );
   }
 
   isActionable(button) {
