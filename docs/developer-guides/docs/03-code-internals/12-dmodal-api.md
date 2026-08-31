@@ -4,7 +4,7 @@ short_title: DModal API
 id: dmodal-api
 ---
 
-Discourse 3.1.0.beta6 ships with a brand new `<DModal>` component-based API.
+Discourse 3.1.0.beta6 ships with a brand new `<DModal>` component-based API. `DModal` is part of the [UI kit](02-ui-kit.md) and is imported from `discourse/ui-kit/d-modal`.
 
 > :information_source: This supersedes the old controller-based API, which is now deprecated. If you have existing modals using the old APIs, check out the migration guide [here](https://meta.discourse.org/t/converting-modals-from-legacy-controllers-to-new-dmodal-component-api/268057).
 

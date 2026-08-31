@@ -15,9 +15,10 @@ Discourse is large with long history. Understand context before changes.
 
 ### JavaScript and UI
 - No empty backing classes for template-only components unless requested
+- Build UI from the ui-kit primitives (`frontend/discourse/app/ui-kit`: `d-*` components, `helpers/`, `modifiers/`) rather than hand-rolling controls, layout, or behaviour; new shared, domain-free primitives go there. See ./docs/developer-guides/docs/03-code-internals/02-ui-kit.md
 - Use the skill at `.skills/discourse-frontend-conventions` when writing or reviewing JS/TS/Glimmer classes and templates (private members, member ordering, comments, invocation ordering)
-- Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/21-form-kit.md (`frontend/discourse/app/form-kit`)
-- Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
+- Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/22-form-kit.md (`frontend/discourse/app/form-kit`)
+- Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/26-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
 - Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
@@ -60,7 +61,7 @@ use `bin/lint --fix --recent` only when appropriate.
 
 ## Services
 - Extract business logic (validation, models, permissions) from controllers
-- docs/developer-guides/docs/03-code-internals/19-service-objects.md
+- docs/developer-guides/docs/03-code-internals/20-service-objects.md
 - Use the skill at .skills/discourse-service-authoring
 - Examples: `app/services` (only classes with `Service::Base`)
 

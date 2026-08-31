@@ -13,7 +13,7 @@ and
 [`frontend/discourse/float-kit/components/d-tooltip.gts`](../../frontend/discourse/float-kit/components/d-tooltip.gts)
 (typed `@service declare` injection, `Element`, several documented `Blocks`, an option bag
 derived from a shared type); the developer guide is
-[`26-types.md`](../../docs/developer-guides/docs/03-code-internals/26-types.md). **The
+[`27-types.md`](../../docs/developer-guides/docs/03-code-internals/27-types.md). **The
 global tsconfig is deliberately NOT strict** (it extends the repo-root `tsconfig-base.json`,
 which sets no `strict` and no `checkJs`); tightening it is a separate, repo-wide effort.
 
