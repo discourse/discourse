@@ -5,11 +5,6 @@ module Jobs
     sidekiq_options backtrace: true
     include DiscourseZendeskPlugin::Helper
 
-    sidekiq_retry_in do |_count, exception|
-      error = exception.wrapped
-      :discard if error.is_a?(DiscourseZendeskPlugin::OAuthToken::PermanentRequestError)
-    end
-
     def execute(args)
       return unless SiteSetting.zendesk_enabled?
       return unless DiscourseZendeskPlugin::Helper.configured?
