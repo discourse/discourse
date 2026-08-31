@@ -22,7 +22,9 @@ class ExternalLinter
 
   def initialize(root, files, fix:, verbose: false)
     @root = root
-    @files = files.map { |f| File.expand_path(f) }
+    root_path = Pathname.new(@root)
+    # Keep paths relative to the plugin root so linter exclusions work for symlinked plugins.
+    @files = files.map { |f| Pathname.new(File.expand_path(f)).relative_path_from(root_path).to_s }
     @fix = fix
     @verbose = verbose
     @results = []
