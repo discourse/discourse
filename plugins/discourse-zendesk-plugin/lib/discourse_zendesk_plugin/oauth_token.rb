@@ -17,15 +17,6 @@ module DiscourseZendeskPlugin
     EXPIRY_BUFFER_SECONDS = 1.minute.to_i
     private_constant :EXPIRY_BUFFER_SECONDS
 
-    OPEN_TIMEOUT_SECONDS = 5
-    private_constant :OPEN_TIMEOUT_SECONDS
-
-    READ_TIMEOUT_SECONDS = 10
-    private_constant :READ_TIMEOUT_SECONDS
-
-    WRITE_TIMEOUT_SECONDS = 5
-    private_constant :WRITE_TIMEOUT_SECONDS
-
     SCOPES = "tickets:read tickets:write users:read users:write"
     private_constant :SCOPES
 
@@ -95,14 +86,7 @@ module DiscourseZendeskPlugin
     end
 
     def http
-      FinalDestination::HTTP
-        .new(token_uri.host, token_uri.port)
-        .tap do |http|
-          http.use_ssl = true
-          http.open_timeout = OPEN_TIMEOUT_SECONDS
-          http.read_timeout = READ_TIMEOUT_SECONDS
-          http.write_timeout = WRITE_TIMEOUT_SECONDS
-        end
+      FinalDestination::HTTP.new(token_uri.host, token_uri.port).tap { |http| http.use_ssl = true }
     end
 
     def token_uri
