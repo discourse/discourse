@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Record do
-  subject(:record) { described_class.new(row, resource.fields, type: "topics", relationships:) }
+  subject(:record) do
+    described_class.new(row, resource.fields(guardian:), type: "topics", relationships:)
+  end
 
   fab!(:author, :user)
   fab!(:topic) { Fabricate(:topic, user: author, title: "A row read as a record") }
 
+  let(:guardian) { Guardian.new }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic
@@ -24,7 +27,7 @@ RSpec.describe JsonApiKit::Record do
   let(:author_record) do
     described_class.new(
       JsonApiKit::Pagination::Row.new(record: author, segment: nil),
-      users_resource.fields,
+      users_resource.fields(guardian:),
       type: "users",
     )
   end
@@ -51,7 +54,7 @@ RSpec.describe JsonApiKit::Record do
 
     it "matches another reading of the same row" do
       expect(record.identity).to eq(
-        described_class.new(row, resource.fields(["secrets"]), type: "topics").identity,
+        described_class.new(row, resource.fields(["secrets"], guardian:), type: "topics").identity,
       )
     end
   end
@@ -61,7 +64,12 @@ RSpec.describe JsonApiKit::Record do
 
     let(:relationships) { { "user" => JsonApiKit::Linkage::ToOne.new([author_record]) } }
     let(:other) do
-      described_class.new(row, resource.fields(["secrets"]), type: "topics", relationships: editors)
+      described_class.new(
+        row,
+        resource.fields(["secrets"], guardian:),
+        type: "topics",
+        relationships: editors,
+      )
     end
     let(:editors) do
       {

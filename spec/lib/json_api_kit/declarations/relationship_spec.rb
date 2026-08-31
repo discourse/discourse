@@ -8,6 +8,23 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
   fab!(:author, :user)
   fab!(:topic) { Fabricate(:topic, user: author, title: "A topic that relates to rows") }
 
+  let(:guardian) { Guardian.new }
+
+  describe ".new" do
+    context "when the readable block declares both a guardian and a record" do
+      subject(:relationship) do
+        described_class.new(
+          :user,
+          resource: users_resource,
+          readable: ->(guardian, record) { true },
+        )
+      end
+
+      it "raises an error" do
+        expect { relationship }.to raise_error(described_class::UnsupportedRule, /user/)
+      end
+    end
+  end
   let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
   let(:users_resource) do
     related = groups_resource
@@ -113,7 +130,7 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
           [first_post, second_post, third_post].map do
             JsonApiKit::Record.new(
               JsonApiKit::Pagination::Row.new(record: it, segment: order.first),
-              posts_resource.fields,
+              posts_resource.fields(guardian:),
               type: "posts",
             )
           end,
