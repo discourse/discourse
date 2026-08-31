@@ -50,7 +50,7 @@ RSpec.configure do |config|
     Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
 
     # Quiet seed-fu output produced by specs that call `Model.seed`.
-    SeedFu.quiet = true if defined?(SeedFu)
+    SeedFu.quiet = true
 
     # json-schema's MultiJSON support is deprecated.
     JSON::Validator.use_multi_json = false if defined?(JSON::Validator)

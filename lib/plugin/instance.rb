@@ -737,7 +737,6 @@ class Plugin::Instance
   end
 
   def register_seedfu_fixtures(paths)
-    require "discourse-seed-fu" if !defined?(SeedFu)
     paths = [paths] if !paths.kind_of?(Array)
     SeedFu.fixture_paths.concat(paths)
   end

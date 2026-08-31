@@ -23,7 +23,7 @@ gem "json"
 # allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
 
-gem "discourse-seed-fu", require: false
+gem "discourse-seed-fu"
 
 gem "mail"
 gem "mini_mime"

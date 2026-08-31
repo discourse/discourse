@@ -248,7 +248,6 @@ class DiscoursePluginRegistry
   end
 
   def self.seed_paths
-    require "discourse-seed-fu" if !defined?(SeedFu)
     result = SeedFu.fixture_paths.dup
     seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
     result.uniq
