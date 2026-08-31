@@ -9,18 +9,156 @@ zh_TW:
     events:
       name: "活動"
       title: "活動"
+      description: "可讓成員在共享行事曆上查看及討論即將舉行的活動。"
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "讀取行事曆活動摘要"
   reports:
     currently_away:
+      title: 目前不在的使用者
+      description: "目前正在休假或請假的使用者，可依群組篩選。"
       labels:
         username: 使用者名稱
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: 活動已開始
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "你提供的假日地區不存在。"
+    discourse_calendar_enable_holiday_failed: "無法啟用此假日，可能它已啟用或未被停用。"
+    discourse_post_event_bulk_invite_succeeded:
+      title: "活動－大量邀請成功"
+      subject_template: "已成功處理大量邀請"
+      text_body_template: "已處理你的大量邀請檔案，並建立 %{processed} 位受邀者。"
+    discourse_post_event_bulk_invite_failed:
+      title: "活動－大量邀請失敗"
+      subject_template: "處理大量邀請時發生錯誤"
+      text_body_template: |
+        已處理你的大量邀請檔案，已建立 %{processed} 位受邀者，並發生 %{failed} 個錯誤。
+
+        以下是記錄：
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    map_events_to_color: "為每個標籤或分類指派顏色。"
+    map_events_title: "依分類覆寫「即將舉行的活動」側邊欄標題中的「活動」。"
+    discourse_events_enabled: "啟用 Discourse 活動外掛。這會讓主題的第一篇貼文支援 [calendar][/calendar] 標籤。"
+    discourse_post_event_enabled: "啟用活動功能。注意：還必須啟用 {{setting:discourse_events_enabled}}。"
+    displayed_invitees_limit: "限制活動中顯示的受邀者人數。"
+    display_post_event_date_on_topic_title: "在主題標題後顯示活動日期。"
+    use_local_event_date: "在主題標題後使用本地日期，而不是相對時間。"
+    discourse_post_event_allowed_on_groups: "允許建立活動的群組。"
+    discourse_post_event_allowed_custom_fields: "允許每個活動設定自訂欄位的值。"
+    discourse_post_event_allowed_custom_fields_invalid: "以下自訂欄位名稱無效：%{names}。名稱必須以字母或數字開頭與結尾，並以單一句點、連字號或底線作為分隔符號（例如：dress_code、live-stream、q.and.a）。"
+    discourse_post_event_allowed_custom_fields_collision: "將句點、連字號與字母大小寫正規化後，以下自訂欄位名稱會解析為相同名稱：%{names}。每個自訂欄位都必須是唯一的。"
+    discourse_post_event_allowed_custom_fields_reserved: "以下自訂欄位名稱已由內建活動選項保留（例如 name、url、status、location）：%{names}。請選擇其他名稱。"
+    discourse_post_event_edit_notifications_time_extension: "延長活動結束後的期間（分鐘），在此期間，編輯原始貼文時仍會通知狀態為 `going` 的受邀者。"
+    holiday_calendar_topic_id: "工作人員假日／缺席行事曆的主題 ID。"
+    holiday_status_emoji: 定義假日狀態使用的表情符號。
+    delete_expired_event_posts_after: "活動過期的貼文將於 (n) 小時後自動刪除。設為 -1 可停用刪除。"
+    all_day_event_start_time: "未指定開始時間的活動將於此時間開始。格式為 HH:mm。例如上午 6:00，請輸入 06:00"
+    all_day_event_end_time: "未指定結束時間的活動將於此時間結束。格式為 HH:mm。例如下午 6:00，請輸入 18:00"
+    all_day_event_time_error: "時間無效。格式必須為 HH:mm（例如：08:00）。"
+    calendar_categories: "在分類頂端顯示行事曆。categoryId 為必填。例如：categoryId=6;weekends=false;defaultView=year;\n其他有效設定：weekends（true/false）與 defaultView（day、week、month、year）。"
+    calendar_categories_outlet: "可變更分類行事曆的顯示位置。"
+    working_days: "設定工作日。你可以在貼文中使用 `timezones` 標籤顯示群組的可用時段，例如：`[timezones group=admins][timezones]`"
+    working_day_start_hour: "工作日的開始時間。"
+    working_day_end_hour: "工作日的結束時間。"
+    close_to_working_day_hours_extension: "設定工作日前後的延伸時數，以醒目顯示時區。"
+    events_calendar_categories: "在分類頂端顯示活動行事曆。"
+    sort_categories_by_event_start_date_enabled: "啟用依活動開始日期排序分類主題。"
+    disable_resorting_on_categories_enabled: "允許分類停用使用者在活動分類中排序的功能。"
+    calendar_automatic_holidays_enabled: "根據使用者的地區自動設定假日狀態（注意：你可以在外掛設定中停用特定自動假日）"
+    event_participation_buttons: "使用者可使用的活動參與按鈕清單。"
+    sidebar_show_upcoming_events: "在側邊欄的「更多」下顯示即將舉行的活動連結。"
+    calendar_first_day_of_week: "設定行事曆顯示時每週的第一天。選項為星期六、星期日或星期一。"
+    enable_events_category_type_setup: "在建立分類的設定流程中啟用「活動」分類類型選項。"
+    livestream_allowed_hosts: "可作為活動直播來源的主機。"
+    livestream_allowed_hosts_invalid: "以下項目不是主機：%{hosts}。請單獨輸入主機名稱（例如 zoom.us），這會允許該主機及其子網域上的所有網址。"
+    livestream_zoom_enabled: "為直播主題啟用 Zoom 影片嵌入。"
+    livestream_zoom_sdk_key: "Zoom Meeting SDK 用戶端 ID。"
+    livestream_zoom_sdk_secret: "Zoom Meeting SDK 用戶端密鑰。"
+    livestream_embeddable_chat_allowed_paths: "可嵌入直播聊天室所允許的路徑。"
+    livestream_enable_modal_chat_on_mobile: "在行動裝置上以對話框顯示直播聊天室。"
   discourse_calendar:
     category_type:
       default_calendar_view:
+        label: "預設行事曆檢視"
         day: "天"
         week: "週"
         month: "月"
         year: "年"
+      display_weekends:
+        label: "顯示週末"
+      discourse_post_event_allowed_on_groups:
+        label: "可建立活動的群組"
+      use_local_event_date:
+        label: "活動日期格式"
+        local: "本地日期（例如 4 月 20 日）"
+        relative: "相對時間（例如 2 天後）"
+      sort_categories_by_event_start_date_enabled:
+        label: "主題排序"
+        event_date: "活動日期"
+        latest_post: "最新貼文活動"
+      sidebar_show_upcoming_events:
+        label: '在導覽選單中顯示「即將舉行的活動」連結'
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title}－所有活動"
+      my_events_feed_name: "%{site_title}－我的活動"
+    invite_user_notification: "%{username} 邀請你參加：%{description}"
+    livestream:
+      chat:
+        topic_reference_message: "此頻道供活動 [%{title}](%{url}) 使用——請前往主題查看詳細資訊並回覆是否出席。"
+      zoom:
+        frame_title: "Zoom 網路研討會"
+        frame_join: "加入網路研討會"
+        frame_joining: "連線中……"
+    calendar_must_be_in_first_post: "行事曆標籤只能用於主題的第一篇貼文。"
+    more_than_one_calendar: "一篇貼文中不能有多個行事曆。"
+    more_than_two_dates: "行事曆主題中的貼文不能包含超過兩個日期。"
+    whisper_not_allowed: "無法使用密語建立行事曆活動。"
+    event_expired: "活動已過期"
+    holiday_status:
+      description: "休假中"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date}（%{timezone}）"
+      date_format: "%Y年%-m月%-d日"
+      datetime_format: "%Y年%-m月%-d日 %p %-I:%M"
+    notifications:
+      before_event_reminder: "%{title} 即將開始。"
+      after_event_reminder: "%{title} 已結束。"
+      ongoing_event_reminder: "%{title} 進行中。"
     errors:
       bulk_invite:
+        max_invitees: "已建立前 %{max_invitees} 位受邀者。請嘗試將檔案分割成較小的部分。"
         error: "上傳檔案有錯誤，請再試一次。"
+      models:
+        event:
+          only_one_event: "一篇貼文只能有一個活動。"
+          must_be_in_first_post: "活動只能位於主題的第一篇貼文。"
+          raw_invitees_length: "活動最多只能有 %{count} 位使用者／群組。"
+          raw_invitees:
+            only_group: "活動只接受群組名稱。"
+          ends_at_before_starts_at: "活動不能在開始前結束。"
+          max_attendees_reached: "此活動名額已滿。"
+          start_must_be_present_and_a_valid_date: "活動需要有效的開始日期。"
+          end_must_be_a_valid_date: "結束日期必須是有效日期。"
+          invalid_recurrence: "重複週期必須是以下其中一項：every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday。"
+          invalid_timezone: "無法辨識時區。"
+          invalid_url: "URL 必須是有效的網址。"
+          acting_user_not_allowed_to_create_event: "目前的使用者無權建立活動。"
+          acting_user_not_allowed_to_act_on_this_event: "目前的使用者無權對此活動執行操作。"
+          invalid_allowed_groups: "允許的群組無效。"
+          acting_user_not_allowed_to_invite_these_groups: "目前的使用者無權邀請這些群組。"
+          custom_field_is_invalid: "不允許使用自訂欄位 `%{field}`。"
+          name:
+            length: "活動名稱長度必須介於 %{minimum} 到 %{maximum} 個字元之間。"
+  discourse_push_notifications:
+    popup:
+      event_reminder: "活動提醒"

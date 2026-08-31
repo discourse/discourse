@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    enable_markdown_footnotes: 在此網站啟用註腳 Markdown
+    display_footnotes_inline: 啟用註腳的行內展開功能
