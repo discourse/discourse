@@ -6,6 +6,7 @@ import Owner, { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
+  type FloatCloseOptions,
   type FloatKitTrigger,
   MENU,
   type MenuOptions,
@@ -101,7 +102,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async close(options = { focusTrigger: true }) {
+  async close(options: FloatCloseOptions = {}) {
     this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
@@ -119,7 +120,10 @@ export default class DMenuInstance extends FloatKitInstance {
     // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
     // closing is animated, so by now the click may have deliberately focused something else,
     // and only focus left with no owner is ours to restore.
-    if (options.focusTrigger || (ownedFocus && this.#focusIsUnowned)) {
+    if (
+      (options.focusTrigger ?? true) ||
+      (ownedFocus && this.#focusIsUnowned)
+    ) {
       this.triggerElement?.focus();
     }
 
