@@ -612,6 +612,12 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    begin
+      RateLimiter.new(nil, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
+    rescue RateLimiter::LimitExceeded
+      return render json: failed_json.merge(errors: [I18n.t("rate_limiter.slow_down")])
+    end
+
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
