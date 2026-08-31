@@ -35,7 +35,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.once
     end
 
-    it "expires the cached token before its reported expiry" do
+    it "expires the cached token one minute before its reported expiry" do
       stub_request(:post, token_url).to_return(
         status: 200,
         body: { access_token: "access-token", expires_in: 120 }.to_json,
