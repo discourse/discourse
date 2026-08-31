@@ -151,6 +151,11 @@ module("Component | PollUiBuilder", function (hooks) {
       .dom(".insert-poll")
       .isDisabled("Insert button disabled when no options specified");
 
+    await fillIn(".poll-option-value input", "   ");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("Insert button disabled for a whitespace-only option");
+
     await fillIn(".poll-option-value input", "a");
     assert
       .dom(".insert-poll")

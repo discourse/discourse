@@ -10,7 +10,6 @@ import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import { bind } from "discourse/lib/decorators";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -182,8 +181,7 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get pollOptionsCount() {
-    return (this.pollOptions || []).filter((option) => option.value.length > 0)
-      .length;
+    return this.pollOptions.filter((option) => option.value.trim()).length;
   }
 
   get siteGroups() {
@@ -197,113 +195,61 @@ export default class PollUiBuilderModal extends Component {
     );
   }
 
-  @bind
-  enforceMinMaxValues() {
-    if (this.isMultiple) {
-      if (
-        this.pollMin <= 0 ||
-        this.pollMin >= this.pollMax ||
-        this.pollMin >= this.pollOptionsCount
-      ) {
-        this.pollMin = this.pollOptionsCount > 0 ? 1 : 0;
-      }
+  get #pollOutput() {
+    const attrs = buildBBCodeAttrs(this.#pollAttrs);
+    const title = this.pollTitle
+      ? `${"#".repeat(this.args.model.poll?.titleLevel ?? 1)} ${this.pollTitle
+          .trim()
+          .replaceAll("\n", "<br>")}\n`
+      : "";
+    const options = this.isNumber
+      ? ""
+      : this.pollOptions
+          .map((option) => option.value.trim())
+          .filter(Boolean)
+          .map((option) => `* ${indentContinuationLines(option)}\n`)
+          .join("");
 
-      if (
-        this.pollMax <= 0 ||
-        this.pollMin >= this.pollMax ||
-        this.pollMax > this.pollOptionsCount
-      ) {
-        this.pollMax = this.pollOptionsCount;
-      }
-    }
+    return `[poll${attrs ? ` ${attrs}` : ""}]\n${title}${options}[/poll]\n`;
   }
 
-  get pollOutput() {
-    let pollHeader = "[poll";
-    let output = "";
+  get #pollAttrs() {
+    const poll = this.args.model.poll;
+    const existingPolls = poll
+      ? null
+      : this.args.model.toolbarEvent
+          .getText()
+          .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
+    const originalClose = poll?.close;
+    let close = null;
 
-    if (this.args.model.poll) {
-      if (this.args.model.poll.name) {
-        pollHeader += ` ${buildBBCodeAttrs({ name: this.args.model.poll.name })}`;
-      }
-    } else {
-      const match = this.args.model.toolbarEvent
-        .getText()
-        .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
-
-      if (match) {
-        pollHeader += ` name=poll${match.length + 1}`;
-      }
-    }
-
-    let step = this.pollStep;
-    if (step < 1) {
-      step = 1;
-    }
-
-    if (this.pollType) {
-      pollHeader += ` type=${this.pollType}`;
-    }
-    if (this.pollResult) {
-      pollHeader += ` results=${this.pollResult}`;
-    }
-    if (
-      this.pollMin !== null &&
-      this.pollMin !== "" &&
-      this.pollType !== REGULAR_POLL_TYPE
-    ) {
-      pollHeader += ` min=${this.pollMin}`;
-    }
-    if (this.pollMax && this.pollType !== REGULAR_POLL_TYPE) {
-      pollHeader += ` max=${this.pollMax}`;
-    }
-    if (this.pollType === NUMBER_POLL_TYPE) {
-      pollHeader += ` step=${step}`;
-    }
-    pollHeader += ` public=${this.publicPoll ? "true" : "false"}`;
-    if (this.chartType && this.pollType !== NUMBER_POLL_TYPE) {
-      pollHeader += ` chartType=${this.chartType}`;
-    }
-    if (this.dynamic) {
-      pollHeader += ` dynamic=true`;
-    }
-    if (this.pollGroups?.length > 0) {
-      pollHeader += ` groups=${this.pollGroups}`;
-    }
     if (this.pollAutoClose) {
-      const originalClose = this.args.model.poll?.close;
-      const close =
+      close =
         originalClose && moment(originalClose).isSame(this.pollAutoClose)
           ? originalClose
           : this.pollAutoClose.toISOString();
-      pollHeader += ` close=${close}`;
-    }
-    for (const attr of ["status", "order"]) {
-      if (this.args.model.poll?.[attr]) {
-        pollHeader += ` ${buildBBCodeAttrs({ [attr]: this.args.model.poll[attr] })}`;
-      }
     }
 
-    pollHeader += "]";
-    output += `${pollHeader}\n`;
-
-    if (this.pollTitle) {
-      const titleMarkup = "#".repeat(this.args.model.poll?.titleLevel ?? 1);
-      output += `${titleMarkup} ${this.pollTitle
-        .trim()
-        .replaceAll("\n", "<br>")}\n`;
-    }
-
-    if (this.pollOptions.length > 0 && this.pollType !== NUMBER_POLL_TYPE) {
-      this.pollOptions.forEach((option) => {
-        if (option.value.length > 0) {
-          output += `* ${indentContinuationLines(option.value.trim())}\n`;
-        }
-      });
-    }
-
-    output += "[/poll]\n";
-    return output;
+    return {
+      name:
+        poll?.name ??
+        (existingPolls ? `poll${existingPolls.length + 1}` : null),
+      type: this.pollType || null,
+      results: this.pollResult || null,
+      min:
+        !this.isRegular && this.pollMin !== null && this.pollMin !== ""
+          ? String(this.pollMin)
+          : null,
+      max: !this.isRegular && this.pollMax ? String(this.pollMax) : null,
+      step: this.isNumber ? Math.max(Number(this.pollStep) || 1, 1) : null,
+      public: String(this.publicPoll),
+      chartType: !this.isNumber && this.chartType ? this.chartType : null,
+      dynamic: this.dynamic ? "true" : null,
+      groups: this.pollGroups?.length ? this.pollGroups.join(",") : null,
+      close,
+      status: poll?.status,
+      order: poll?.order,
+    };
   }
 
   get minNumOfOptionsValidation() {
@@ -402,29 +348,29 @@ export default class PollUiBuilderModal extends Component {
   @action
   onChangePollMin(event) {
     this.pollMin = event.target.value;
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
   onChangePollMax(event) {
     this.pollMax = event.target.value;
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
-  onOptionsTextChange(e) {
-    this.pollOptions = optionsFromText(e.target.value).map((value) =>
+  onOptionsTextChange(event) {
+    this.pollOptions = optionsFromText(event.target.value).map((value) =>
       trackedObject({ value })
     );
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
   insertPoll() {
     if (this.args.model.onSave) {
-      this.args.model.onSave(this.pollOutput);
+      this.args.model.onSave(this.#pollOutput);
     } else {
-      this.args.model.toolbarEvent.addText(this.pollOutput);
+      this.args.model.toolbarEvent.addText(this.#pollOutput);
     }
     this.args.closeModal();
   }
@@ -442,7 +388,7 @@ export default class PollUiBuilderModal extends Component {
   @action
   updateValue(option, event) {
     option.value = event.target.value;
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
@@ -477,7 +423,7 @@ export default class PollUiBuilderModal extends Component {
       const value = option.value || "";
 
       option.value = value.slice(0, start) + markup + value.slice(end);
-      this.enforceMinMaxValues();
+      this.#enforceMinMaxValues();
 
       requestAnimationFrame(() => {
         input.setSelectionRange(start + markup.length, start + markup.length);
@@ -493,13 +439,13 @@ export default class PollUiBuilderModal extends Component {
 
     const option = trackedObject({ value: "" });
     this.pollOptions.splice(atIndex, 0, option);
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
   removeOption(option) {
     removeValueFromArray(this.pollOptions, option);
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
@@ -509,12 +455,32 @@ export default class PollUiBuilderModal extends Component {
       this.pollMax = this.siteSettings.poll_maximum_options;
     }
     this.pollType = pollType;
-    this.enforceMinMaxValues();
+    this.#enforceMinMaxValues();
   }
 
   @action
   togglePublic() {
     this.publicPoll = !this.publicPoll;
+  }
+
+  #enforceMinMaxValues() {
+    if (this.isMultiple) {
+      if (
+        this.pollMin <= 0 ||
+        this.pollMin >= this.pollMax ||
+        this.pollMin >= this.pollOptionsCount
+      ) {
+        this.pollMin = this.pollOptionsCount > 0 ? 1 : 0;
+      }
+
+      if (
+        this.pollMax <= 0 ||
+        this.pollMin >= this.pollMax ||
+        this.pollMax > this.pollOptionsCount
+      ) {
+        this.pollMax = this.pollOptionsCount;
+      }
+    }
   }
 
   <template>
