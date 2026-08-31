@@ -528,7 +528,9 @@ module NestedReplies
           boundary_parents.flat_map { |post| tree_data[:children_map].fetch(post.post_number, []) }
         return tree_data if boundary_parents.empty?
       end
-      boundary_parents.select! { |post| tree_data[:children_map].key?(post.post_number) }
+      # Non-destructive: at boundary_depth 0 this is still the caller's own array.
+      boundary_parents =
+        boundary_parents.select { |post| tree_data[:children_map].key?(post.post_number) }
       return tree_data if boundary_parents.empty?
 
       descendant_numbers_by_parent =
@@ -555,10 +557,14 @@ module NestedReplies
 
     def reachable_tree_posts(starting_posts, children_map)
       posts = []
+      # A reply_to_post_number cycle would otherwise make this walk unbounded.
+      seen = Set.new
       pending = starting_posts.dup
 
       until pending.empty?
         post = pending.shift
+        next unless seen.add?(post.post_number)
+
         posts << post
         pending.concat(children_map.fetch(post.post_number, []))
       end

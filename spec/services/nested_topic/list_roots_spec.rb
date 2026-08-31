@@ -107,6 +107,17 @@ RSpec.describe NestedTopic::ListRoots do
         )
         expect(boundary_json[:children].map { |post_json| post_json[:children] }.uniq).to eq([[]])
       end
+
+      it "keeps roots without replies when the boundary is the root level" do
+        SiteSetting.nested_replies_max_depth = 1
+        lonely = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        chatty = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: chatty.post_number)
+
+        response = described_class.call(params: { sort: "old", page: 0 }, **dependencies)[:response]
+
+        expect(response[:roots].map { |root_json| root_json[:id] }).to eq([lonely.id, chatty.id])
+      end
     end
 
     context "when staff views root posts with official notices" do
