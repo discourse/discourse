@@ -49,3 +49,27 @@ export function selectPreviewSource(tr, TextSelection, from) {
     ? tr
     : tr.setSelection(TextSelection.create(tr.doc, pos)).scrollIntoView();
 }
+
+/** Identifier of the menu the preview block's toolbar is shown in. */
+export const TOOLBAR_IDENTIFIER = "composer-preview-toolbar";
+
+const nodeViews = new WeakMap();
+
+/**
+ * Registers the node view rendering a preview block, so the toolbar plugin can
+ * reach the controls and the source toggle of the block a selection is in.
+ *
+ * @param {HTMLElement} dom the node view's outer element
+ * @param {object} nodeView
+ */
+export function registerPreviewNodeView(dom, nodeView) {
+  nodeViews.set(dom, nodeView);
+}
+
+/**
+ * @param {HTMLElement} dom the node view's outer element
+ * @returns {object|undefined} the node view registered for it
+ */
+export function previewNodeViewFor(dom) {
+  return nodeViews.get(dom);
+}

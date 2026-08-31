@@ -3,7 +3,6 @@ import {
   previewSourceNode,
   selectPreviewSource,
 } from "discourse/lib/composer/preview-block";
-import { i18n } from "discourse-i18n";
 import GraphvizFullscreen from "../components/graphviz-fullscreen";
 import GraphvizPreview from "../components/graphviz-preview";
 
@@ -23,12 +22,12 @@ const extension = {
     graphviz: {
       attrs: { engine: { default: "dot" } },
       group: "block",
-      // isolating keeps the text around it from merging into the source
       content: "preview_source",
       // the node view owns the source, so the editor moves over the block as a
       // unit rather than stepping into text it is not showing
       atom: true,
       defining: true,
+      // keeps the text around it from merging into the source
       isolating: true,
       selectable: true,
       createGapCursor: true,
@@ -50,6 +49,18 @@ const extension = {
         { class: "graphviz", "data-engine": node.attrs.engine },
         0,
       ],
+      previewControls: [
+        {
+          id: "graphviz-fullscreen",
+          icon: "discourse-expand",
+          title: "graphviz.fullscreen",
+          className: "composer-preview-toolbar__graphviz-fullscreen",
+          action: ({ node, context }) =>
+            context.modal.show(GraphvizFullscreen, {
+              model: { src: node.textContent, engine: node.attrs.engine },
+            }),
+        },
+      ],
     },
   },
 
@@ -57,21 +68,7 @@ const extension = {
     graphviz: {
       component: PreviewNodeView,
       hasContent: true,
-      options: {
-        preview: GraphvizPreview,
-        controls: [
-          {
-            icon: "discourse-expand",
-            get label() {
-              return i18n("graphviz.fullscreen");
-            },
-            action: ({ node, context }) =>
-              context.modal.show(GraphvizFullscreen, {
-                model: { src: node.textContent, engine: node.attrs.engine },
-              }),
-          },
-        ],
-      },
+      options: { preview: GraphvizPreview },
     },
   },
 

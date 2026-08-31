@@ -1,0 +1,312 @@
+import { trackedObject } from "@ember/reactive/collections";
+import { NodeSelection } from "prosemirror-state";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
+import {
+  previewNodeViewFor,
+  TOOLBAR_IDENTIFIER,
+} from "discourse/lib/composer/preview-block";
+import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import { rovingButtonBar } from "discourse/lib/roving-button-bar";
+
+const MENU_PADDING = 8;
+
+/**
+ * Finds the preview block a selection acts on: either one selected as a node,
+ * or the one whose source the caret is in, so the toolbar stays up while the
+ * source is being edited.
+ *
+ * @param {import("prosemirror-state").EditorState} state
+ * @returns {{ node: import("prosemirror-model").Node, pos: number }|null}
+ */
+export function activePreviewBlock({ selection, schema }) {
+  const previewSource = schema.nodes.preview_source;
+
+  if (!previewSource) {
+    return null;
+  }
+
+  if (
+    selection instanceof NodeSelection &&
+    selection.node.firstChild?.type === previewSource
+  ) {
+    return { node: selection.node, pos: selection.from };
+  }
+
+  const { $head } = selection;
+
+  for (let depth = $head.depth; depth > 0; depth--) {
+    const node = $head.node(depth);
+
+    if (node.firstChild?.type === previewSource) {
+      return { node, pos: $head.before(depth) };
+    }
+  }
+
+  return null;
+}
+
+class PreviewToolbar extends ToolbarBase {
+  constructor(opts = {}) {
+    super(opts);
+
+    opts.controls.forEach((control) => {
+      this.addButton({
+        ...control,
+        action: () => opts.runControl(control),
+      });
+    });
+
+    this.addButton({
+      id: "preview-show-source",
+      icon: "code",
+      title: "composer.preview_node.show_source",
+      className: "composer-preview-toolbar__show-source",
+      condition: () => !opts.isShowingSource(),
+      action: opts.toggleSource,
+    });
+
+    this.addButton({
+      id: "preview-show-preview",
+      icon: "eye",
+      title: "composer.preview_node.show_preview",
+      className: "composer-preview-toolbar__show-preview",
+      condition: () => opts.isShowingSource(),
+      action: opts.toggleSource,
+    });
+  }
+}
+
+class PreviewToolbarPluginView {
+  #menuInstance;
+  #menuTrigger;
+  #replacedToolbar;
+  #toolbars = new Map();
+  #toolbar;
+  #state;
+
+  #view;
+  #getContext;
+
+  constructor({ getContext }) {
+    this.#getContext = getContext;
+  }
+
+  update(view) {
+    this.#view = view;
+
+    const active = activePreviewBlock(view.state);
+
+    if (!active) {
+      // Don't tear down while a toolbar button is focused.
+      if (!this.#menuInstance?.content?.contains(document.activeElement)) {
+        this.#resetToolbar();
+      }
+      return;
+    }
+
+    this.#updateState(active);
+    this.#displayToolbar();
+  }
+
+  #resetToolbar() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#menuTrigger = null;
+
+    if (this.#replacedToolbar) {
+      this.#getContext().replaceToolbar(null, this.#replacedToolbar);
+      this.#replacedToolbar = null;
+    }
+  }
+
+  #updateState({ node, pos }) {
+    if (!this.#state) {
+      this.#state = trackedObject({ pos });
+    } else {
+      this.#state.pos = pos;
+    }
+
+    this.#toolbar = this.#toolbarFor(node.type);
+  }
+
+  // one toolbar per node type: the buttons a feature contributes are fixed, and
+  // everything they act on is resolved from the selection when they run
+  #toolbarFor(type) {
+    let toolbar = this.#toolbars.get(type.name);
+
+    if (!toolbar) {
+      toolbar = new PreviewToolbar({
+        controls: type.spec.previewControls ?? [],
+        runControl: (control) => this.#runControl(control),
+        toggleSource: () => this.#nodeView()?.toggleSource(),
+        isShowingSource: () => !!this.#nodeView()?.showingSource,
+      });
+
+      toolbar.rovingButtonBar = this.#rovingButtonBar.bind(this);
+      this.#toolbars.set(type.name, toolbar);
+    }
+
+    return toolbar;
+  }
+
+  #nodeView() {
+    const dom = this.#view.nodeDOM(this.#state.pos);
+
+    return dom instanceof HTMLElement ? previewNodeViewFor(dom) : undefined;
+  }
+
+  #runControl(control) {
+    const nodeView = this.#nodeView();
+    const getPos = () => nodeView?.getPos();
+    const pos = getPos();
+
+    if (pos === undefined) {
+      return;
+    }
+
+    control.action({
+      node: this.#view.state.doc.nodeAt(pos),
+      view: this.#view,
+      getPos,
+      context: this.#getContext(),
+    });
+  }
+
+  #rovingButtonBar(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      this.#view.focus();
+      return false;
+    }
+    return rovingButtonBar(event);
+  }
+
+  #displayToolbar() {
+    if (this.#getContext().capabilities.viewport.sm) {
+      this.#showFloatingToolbar();
+    } else if (this.#replacedToolbar !== this.#toolbar) {
+      // replacing again on every transaction would re-render the whole bar for
+      // each keystroke typed into the source
+      this.#getContext().replaceToolbar(this.#toolbar);
+      this.#replacedToolbar = this.#toolbar;
+    }
+  }
+
+  async #showFloatingToolbar() {
+    const trigger = this.#view.nodeDOM(this.#state.pos);
+
+    if (!(trigger instanceof HTMLElement)) {
+      return;
+    }
+
+    // claimed before the await below: two updates in one microtask would
+    // otherwise each create an instance, and the first would be orphaned
+    if (this.#menuTrigger === trigger) {
+      return;
+    }
+
+    this.#menuInstance?.destroy();
+    this.#menuTrigger = trigger;
+
+    this.#menuInstance = await this.#getContext().menu.newInstance(trigger, {
+      identifier: TOOLBAR_IDENTIFIER,
+      component: ToolbarButtons,
+      placement: "top-end",
+      fallbackPlacements: ["top-end"],
+      padding: MENU_PADDING,
+      data: this.#toolbar,
+      portalOutletElement: trigger,
+      closeOnClickOutside: false,
+      closeOnEscape: false,
+      closeOnScroll: false,
+      trapTab: false,
+      offset({ rects }) {
+        return {
+          mainAxis: -MENU_PADDING - rects.floating.height,
+          crossAxis: -MENU_PADDING,
+        };
+      },
+      limitShift: {
+        offset: ({ rects }) => ({
+          crossAxis: Math.min(
+            rects.floating.height + 2 * MENU_PADDING,
+            rects.reference.height - MENU_PADDING
+          ),
+        }),
+      },
+    });
+
+    await this.#menuInstance.show();
+  }
+
+  focusToolbar() {
+    const focusable = this.#menuInstance?.content?.querySelector(
+      'button, a, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (!focusable) {
+      return false;
+    }
+
+    focusable.focus();
+
+    return true;
+  }
+
+  destroy() {
+    this.#resetToolbar();
+    this.#toolbars.clear();
+    this.#toolbar = null;
+  }
+}
+
+/**
+ * Toolbar for the block a `preview_source` belongs to, shown while it is
+ * selected or its source is being edited.
+ *
+ * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
+ */
+const extension = {
+  plugins: ({ pmState: { Plugin }, getContext }) => {
+    let pluginView;
+
+    return new Plugin({
+      props: {
+        handleKeyDown(view, event) {
+          if (event.key !== "Tab" || event.shiftKey) {
+            return false;
+          }
+
+          const { selection, schema } = view.state;
+          const previewSource = schema.nodes.preview_source;
+
+          // only from the selected block: inside the source, Tab is typing
+          if (
+            !previewSource ||
+            !(selection instanceof NodeSelection) ||
+            selection.node.firstChild?.type !== previewSource
+          ) {
+            return false;
+          }
+
+          // through this editor's own toolbar, so a second editor on the page
+          // cannot take the focus
+          if (!pluginView?.focusToolbar()) {
+            return false;
+          }
+
+          event.preventDefault();
+
+          return true;
+        },
+      },
+
+      view() {
+        pluginView = new PreviewToolbarPluginView({ getContext });
+        return pluginView;
+      },
+    });
+  },
+};
+
+export default extension;

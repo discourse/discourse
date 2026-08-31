@@ -344,6 +344,7 @@
   // one cell, so the block keeps its footprint when they are swapped and the
   // document below it does not move.
   .composer-preview-node {
+    position: relative;
     display: grid;
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
@@ -369,6 +370,14 @@
       margin: 0;
       height: 100%;
       overflow: auto;
+
+      // the code element paints the source's backdrop, so it has to fill the row
+      // the taller face sized — overriding the cap code blocks carry elsewhere
+      code {
+        box-sizing: border-box;
+        min-height: 100%;
+        max-height: none;
+      }
     }
 
     .composer-preview-node__preview {
@@ -379,37 +388,6 @@
       // editor's own display rules would otherwise override that
       [hidden] {
         display: none;
-      }
-    }
-
-    .composer-preview-node__controls {
-      z-index: 1;
-      justify-self: end;
-      align-self: start;
-      display: flex;
-      gap: var(--space-half);
-      margin: var(--space-1);
-      border-radius: var(--d-border-radius);
-      background-color: var(--secondary);
-      box-shadow: var(--shadow-card);
-    }
-
-    html.no-touch & .composer-preview-node__controls {
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-
-    html.no-touch &:hover .composer-preview-node__controls,
-    html.no-touch &:focus-within .composer-preview-node__controls {
-      opacity: 1;
-    }
-
-    .composer-preview-node__control {
-      color: var(--primary-medium);
-
-      &:hover,
-      &:focus-visible {
-        color: var(--primary);
       }
     }
   }
@@ -441,6 +419,7 @@
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
 .fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-preview-toolbar"],
 .fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");

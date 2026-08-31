@@ -15,6 +15,9 @@ const extension = {
       content: "text*",
       code: true,
       defining: true,
+      // the block around it is the unit to select, so a click that would select
+      // the source resolves to its parent instead
+      selectable: false,
       marks: "",
       parseDOM: [{ tag: "pre.preview-source", preserveWhitespace: "full" }],
       toDOM: () => ["pre", { class: "preview-source" }, ["code", 0]],
