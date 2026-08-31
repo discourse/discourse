@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -38,6 +38,13 @@ const ModalWithMenu = <template>
       </:content>
     </DMenu>
   </DModal>
+</template>;
+
+const CloseMenuWithData = <template>
+  <DButton
+    class="close-with-data"
+    @action={{fn @close (hash data=(hash saved=true))}}
+  />
 </template>;
 
 module("Integration | Component | FloatKit | DMenu", function (hooks) {
@@ -347,8 +354,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("@onClose", async function (assert) {
-    this.test = false;
-    this.onClose = () => (this.test = true);
+    const notClosed = Symbol("not closed");
+    this.closeData = notClosed;
+    this.onClose = (data) => (this.closeData = data);
 
     await render(
       <template><DMenu @inline={{true}} @onClose={{this.onClose}} /></template>
@@ -356,7 +364,60 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
     await close();
 
-    assert.true(this.test);
+    assert.strictEqual(
+      this.closeData,
+      undefined,
+      "an ordinary close supplies no data"
+    );
+  });
+
+  test("a service-created menu component can close with data", async function (assert) {
+    let closeData;
+
+    await render(
+      <template>
+        <button type="button" class="menu-trigger">Open</button>
+        <DMenus />
+      </template>
+    );
+
+    await getOwner(this)
+      .lookup("service:menu")
+      .show(find(".menu-trigger"), {
+        component: CloseMenuWithData,
+        onClose: (data) => (closeData = data),
+      });
+    await click(".close-with-data");
+
+    assert.deepEqual(
+      closeData,
+      { saved: true },
+      "onClose receives the data supplied by the rendered component"
+    );
+  });
+
+  test("close data preserves the default trigger focus", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      <template>
+        <button type="button" class="outside-button">Outside</button>
+        <DMenu
+          @onRegisterApi={{this.onRegisterApi}}
+          @inline={{true}}
+          @label="Open"
+        />
+      </template>
+    );
+
+    await open();
+    await focus(".outside-button");
+    await this.api.close({ data: { saved: true } });
+
+    assert
+      .dom(".fk-d-menu__trigger")
+      .isFocused("supplying only data still restores focus to the trigger");
   });
 
   test("-expanded class", async function (assert) {
