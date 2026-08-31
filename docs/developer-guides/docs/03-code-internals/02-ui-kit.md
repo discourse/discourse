@@ -42,8 +42,6 @@ import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 </template>
 ```
 
-`DButton` resolves `@label` through i18n and shows a spinner while `@isLoading` is true; `dIcon` renders an icon by ID; `dAutoFocus` focuses the input, selecting its text, when it renders.
-
 `discourse/components/*`, `discourse/helpers/*`, and `discourse/modifiers/*` are still where domain-specific, non-shareable components live; only the reusable primitives were moved into the kit. The old paths of the moved ones (`discourse/components/d-button`, `discourse/helpers/d-icon`, and so on) still resolve through the shims in `frontend/discourse/app/ui-kit-shims.js`, so existing plugins keep working, but new code should import them from `discourse/ui-kit/...` directly.
 
 Do not import anything from a `-internals` directory, wherever it appears (`discourse/ui-kit/-internals/...`, `discourse/lib/-internals/...`, and so on). Those modules are private implementation details of the primitives that wrap them: they are not part of the public API and can be renamed, reshaped, or removed without notice or a deprecation cycle. If a primitive does not expose what you need, extend the primitive rather than reaching past it.
