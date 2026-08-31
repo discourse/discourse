@@ -66,7 +66,6 @@ export default class AdminReportTableSummary extends Component {
       start_date: this.date,
       end_date: this.date,
       limit: SUMMARY_LIMIT,
-      cache: true,
       include_related_items: true,
     };
 

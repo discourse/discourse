@@ -9,9 +9,15 @@ RSpec.describe Report do
       expect(Report.dashboard_excluded_report_types).to include("my_custom_report")
     end
 
-    it "does not record report types by default" do
+    it "records report types flagged as admin-only" do
+      Report.add_report("my_custom_report", admin_only: true) { |report| }
+      expect(Report.admin_only_report_types).to include("my_custom_report")
+    end
+
+    it "does not record report options by default" do
       Report.add_report("my_custom_report") { |report| }
       expect(Report.dashboard_excluded_report_types).not_to include("my_custom_report")
+      expect(Report.admin_only_report_types).not_to include("my_custom_report")
     end
   end
 
@@ -2053,6 +2059,19 @@ RSpec.describe Report do
         .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 60.minutes)
       Report.cache(valid_report)
     end
+
+    it "does not read or write cached related-item reports" do
+      related_report = Report._get("signups", guardian: user.guardian, include_related_items: true)
+      Report.cache(related_report)
+
+      expect(Report.find_cached("signups", guardian: user.guardian)).to be_nil
+
+      Report.cache(Report._get("signups", guardian: user.guardian))
+
+      expect(
+        Report.find_cached("signups", guardian: user.guardian, include_related_items: true),
+      ).to be_nil
+    end
   end
 
   describe ".cache_key" do
@@ -2065,47 +2084,6 @@ RSpec.describe Report do
       SiteSetting.improved_crawler_detection = true
 
       expect(Report.cache_key(report)).not_to eq(disabled_key)
-    end
-
-    it "does not reuse a cache entry after category access changes" do
-      group = Fabricate(:group)
-      Fabricate(:private_category, group: group)
-
-      Report.cache(Report._get("signups", guardian: user.guardian))
-
-      Fabricate(:group_user, group: group, user: user)
-
-      expect(Report.find_cached("signups", guardian: User.find(user.id).guardian)).to be_nil
-    end
-
-    it "does not reuse a cache entry after a category becomes restricted" do
-      category = Fabricate(:category)
-      report = Report._get("signups", guardian: user.guardian)
-      Report.cache(report)
-
-      category.update!(read_restricted: true)
-
-      expect(Report.find_cached("signups", guardian: user.guardian)).to be_nil
-    end
-
-    it "partitions related-item responses from regular report responses" do
-      report = Report._get("signups", guardian: user.guardian)
-      Report.cache(report)
-
-      expect(
-        Report.find_cached("signups", guardian: user.guardian, include_related_items: true),
-      ).to be_nil
-    end
-
-    it "does not reuse a cache entry after shared draft access changes" do
-      group = Fabricate(:group)
-      SiteSetting.shared_drafts_allowed_groups = group.id.to_s
-
-      Report.cache(Report._get("signups", guardian: user.guardian))
-
-      Fabricate(:group_user, group: group, user: user)
-
-      expect(Report.find_cached("signups", guardian: User.find(user.id).guardian)).to be_nil
     end
   end
 

@@ -21,6 +21,13 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     )
   end
 
+  it "is registered as an admin-only report" do
+    expect(Report.hidden?("accepted_solutions", guardian: Fabricate(:admin).guardian)).to be(false)
+    expect(Report.hidden?("accepted_solutions", guardian: Fabricate(:moderator).guardian)).to be(
+      true,
+    )
+  end
+
   it "counts accepted solutions across all categories when no filter is given" do
     solved_topic_in(Fabricate(:category))
     solved_topic_in(Fabricate(:category))

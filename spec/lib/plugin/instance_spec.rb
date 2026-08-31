@@ -391,11 +391,12 @@ TEXT
   describe "#add_report" do
     after { Report.remove_report("readers") }
 
-    it "adds a report" do
+    it "adds an admin-only report" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.add_report("readers") {}
+      plugin.add_report("readers", admin_only: true) {}
 
       expect(Report.respond_to?(:report_readers)).to eq(true)
+      expect(Report.admin_only_report_types).to include("readers")
     end
   end
 

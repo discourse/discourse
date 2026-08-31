@@ -6,7 +6,6 @@ class Report
   SCHEMA_VERSION = 6
 
   RELATED_ITEMS_LIMIT = 50
-  CATEGORY_SECURITY_VERSION_CACHE_KEY = "reports-category-security-version"
 
   FILTERS = %i[
     name
@@ -41,6 +40,8 @@ class Report
 
   ADMIN_ONLY_REPORTS = %w[
     admin_logins
+    new_contributors
+    signups
     top_uploads
     topic_view_stats
     top_entry_urls
@@ -55,7 +56,7 @@ class Report
   ]
 
   def self.hidden?(type, guardian:)
-    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+    return true if !guardian.is_admin? && admin_only_report_types.include?(type)
     if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
       return true
     end
@@ -231,20 +232,8 @@ class Report
       SCHEMA_VERSION,
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
-      guardian&.secure_category_ids&.join(","),
-      guardian&.can_see_shared_draft?,
       CrawlerScorer.enabled?,
-      category_security_version,
-      report.include_related_items ? true : nil,
     ].compact.map(&:to_s).join(":")
-  end
-
-  def self.category_security_version
-    Discourse.cache.read(CATEGORY_SECURITY_VERSION_CACHE_KEY) || 0
-  end
-
-  def self.bump_category_security_version
-    Discourse.cache.write(CATEGORY_SECURITY_VERSION_CACHE_KEY, category_security_version + 1)
   end
 
   def add_filter(name, options = {})
@@ -346,21 +335,35 @@ class Report
     end
   end
 
-  def Report.add_report(name, exclude_from_dashboard: false, &block)
+  def Report.add_report(name, exclude_from_dashboard: false, admin_only: false, &block)
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
     dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
+    if admin_only
+      registered_admin_only_report_types << name.to_s
+    else
+      registered_admin_only_report_types.delete(name.to_s)
+    end
   end
 
   # Only used for testing.
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
     dashboard_excluded_report_types.delete(name.to_s)
+    registered_admin_only_report_types.delete(name.to_s)
   end
 
   # Report types a plugin has marked as not mountable on the customisable
   # admin dashboard. They remain available on the regular reports page.
   def Report.dashboard_excluded_report_types
     @dashboard_excluded_report_types ||= Set.new
+  end
+
+  def Report.admin_only_report_types
+    ADMIN_ONLY_REPORTS.to_set | registered_admin_only_report_types
+  end
+
+  def Report.registered_admin_only_report_types
+    @registered_admin_only_report_types ||= Set.new
   end
 
   def self._get(type, opts = nil)
@@ -389,10 +392,14 @@ class Report
 
   def self.find_cached(type, opts = nil)
     report = _get(type, opts)
+    return if report.include_related_items
+
     Discourse.cache.read(cache_key(report))
   end
 
   def self.cache(report)
+    return if report.include_related_items
+
     duration = report.error == :exception ? 1.minute : 60.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end

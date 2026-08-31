@@ -74,8 +74,8 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
       );
     assert.strictEqual(
       requestParams.cache,
-      "true",
-      "lets the server cache the summary report"
+      undefined,
+      "does not request caching for the related-item payload"
     );
     assert.strictEqual(
       requestParams.include_related_items,

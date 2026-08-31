@@ -398,11 +398,14 @@ RSpec.describe Admin::ReportsController do
           it "only includes related items when requested" do
             Fabricate(:user, created_at: 1.hour.ago)
 
-            get "/admin/reports/signups.json"
+            get "/admin/reports/signups.json", params: { cache: true }
             expect(response.parsed_body["report"]).not_to have_key("related_items")
 
-            get "/admin/reports/signups.json", params: { include_related_items: true }
+            get "/admin/reports/signups.json", params: { cache: true, include_related_items: true }
             expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
+
+            get "/admin/reports/signups.json", params: { cache: true }
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
           end
         end
 
