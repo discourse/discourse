@@ -7,20 +7,91 @@
 zh_TW:
   admin_js:
     admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse Solved"
       dashboard:
         highlights:
           kpi:
             accepted_solutions:
               label: "接受的解決方案"
+              tooltip: "有貼文被標示為解答的主題數量。"
         sections:
           support:
+            title: "支援"
+            fetch_error: "無法載入支援資料。"
+            save_error: "無法儲存您下次要使用的選取項目。"
+            headline:
+              titles:
+                insufficient_activity: "尚無足夠的支援活動"
+                resolution_rate_and_first_reply_time_improved: "在所選期間，解決率與首次回覆時間皆已改善"
+                resolution_rate_improved: "在所選期間，解決率已改善"
+                first_reply_time_decreased: "在所選期間，首次回覆時間已縮短"
+                resolution_rate_and_first_reply_time_declined: "在所選期間，解決率與首次回覆時間皆已下降"
+                resolution_rate_decreased: "在所選期間，解決率已下降"
+                first_reply_time_increased: "在所選期間，首次回覆時間已增加"
+                support_steady: "在所選期間，支援狀況保持穩定"
+              summaries:
+                insufficient_activity: "此期間尚無支援活動。主題開始出現後，您就能看到社群如何處理它們。"
+                more_answers_and_faster_replies: "更多問題獲得解答，而且回覆速度更快。"
+                more_answers_but_slower_replies: "更多問題獲得解答，但首次回覆時間增加了。"
+                more_answers_first_reply_time_flat: "更多問題獲得解答，但首次回覆時間維持不變。"
+                faster_replies_but_lower_resolution_rate: "成員得到回覆的速度更快，但解決率已下降。"
+                faster_replies_resolution_rate_steady: "成員得到回覆的速度更快，但解決率維持不變。"
+                fewer_answers_and_slower_replies: "成員獲得的解答變少，等待首次回覆的時間也更長。"
+                fewer_answers_first_reply_time_steady: "成員獲得的解答變少，但首次回覆時間維持不變。"
+                slower_replies_resolution_rate_steady: "成員等待首次回覆的時間更長，但解決率維持不變。"
+                resolution_rate_and_first_reply_time_steady: "解決率與首次回覆時間沒有顯著變化。"
+                more_answers: "更多問題獲得解答。"
+                fewer_answers: "成員獲得的解答變少。"
+                resolution_rate_steady: "解決率沒有顯著變化。"
+                faster_replies: "成員得到回覆的速度更快。"
+                slower_replies: "成員等待首次回覆的時間更長。"
+                first_reply_time_steady: "首次回覆時間沒有顯著變化。"
+              cta:
+                unanswered: "查看尚未解答的主題，了解哪些主題可由您處理。"
+                in_progress: "查看處理中的主題，確認是否有應標示為解答的回覆。"
+                in_progress_and_unanswered: "檢視處理中與尚未解答的主題，確保成員能及時獲得回覆。"
+            kpi:
+              resolution_rate:
+                label: "解決率"
+                tooltip: "已解決的開放支援主題百分比。"
+              staff_involvement:
+                label: "工作人員參與度"
+                tooltip: "由工作人員發出首次回覆的開放支援主題百分比。"
+              avg_first_reply:
+                label: "平均首次回覆"
+                tooltip: "支援主題發佈到收到首次回覆之間的平均時間。"
+            outcomes:
+              title: "主題結果"
+              resolved:
+                label: "已解決"
+                tooltip: "被標示為已解決的主題數量。"
+              in_progress:
+                label: "處理中"
+                tooltip: "至少有一則回覆的主題數量。"
+              unanswered:
+                label: "尚未解答"
+                tooltip: "沒有任何回覆的主題數量。"
             answerers:
+              title: "誰在回答？"
+              empty: "此期間沒有回覆。"
               staff: "管理員"
+              leader: "核心成員"
+              regular: "一般會員"
               member: "成員"
               basic: "初級使用者"
             response_time:
+              title: "回覆時間分布"
               buckets:
                 lt_1h: "< 1 小時"
+                "1_4h": "1–4 小時"
+                "4_24h": "4–24 小時"
+                gt_24h: "> 24 小時"
+              trend:
+                faster: "快 %{duration}"
+                slower: "慢 %{duration}"
+                tooltip: "平均回覆時間趨勢。"
   js:
     notifications:
       alt:
@@ -30,7 +101,11 @@ zh_TW:
     solutions: "解決方案"
     solved:
       title: "已解決"
+      notify_on_solved: "當我正在追蹤或觀看的主題被解決時通知我。僅適用於允許解答的分類中的主題。"
       allow_accepted_answers: "允許主題擁有者與管理員標示回覆為解決方式"
+      solved_topics_auto_close_hours: "主題被標示為已解決後，在最後一次回覆後（n）小時自動關閉主題。"
+      notify_on_staff_accept_solved: "工作人員標示解答時通知主題建立者"
+      empty_box_on_unsolved: "在支援的佈景主題中，於主題列表顯示未解決的主題狀態"
       accept_answer: "選擇此回覆是否解決了問題"
       accepted_description: "這是本主題被接受的答案"
       has_no_accepted_answer: "這個主題沒有解決方式"
@@ -39,6 +114,7 @@ zh_TW:
       solution: "解決方式"
       solution_summary:
         other: "解決方案"
+      accepted_answer_solver_info: "由 %{user} 在 %{post} 中提供"
       accepted_answer_post_number: "貼文 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -48,15 +124,39 @@ zh_TW:
       no_solved_topics_title: "您還沒有解決過任何主題"
       no_solved_topics_title_others: "%{username} 尚未解決任何主題"
       no_solved_topics_body: "當您對某個主題提供有用的回覆時，主題擁有者或工作人員可能會選取您的回覆作為解決方案。"
+      marked_solved_by: "由 %{user} 接受"
+      confirm_move_solution_title: "移動解答貼文"
+      confirm_move_solution:
+        other: "您選取的貼文中有一篇被標示為此主題的解答。若移動它，主題會更新為未解決。"
+      move_post_confirm:
+        other: "移動貼文"
       move_post_cancel: "取消"
+      dont_show_again: "知道了，不要再顯示此訊息"
+      confirm_solved_removal_title: "解答將被移除"
+      confirm_solved_removal: "此變更將停用此主題的解答功能，並移除已接受的解答。"
       confirm_solved_removal_confirm: "確認"
       confirm_solved_removal_cancel: "取消"
       shared_issue:
+        label: "我也是"
         label_with_count: "%{label} (%{count})"
+        title: "我也遇到這個問題"
+        author_title: "您建立了此主題"
+        closed_title: "此主題已關閉"
+        archived_title: "此主題已封存"
       no_answer:
         title: 您的問題已得到解答嗎？
         description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
+      notification:
+        title: "您的貼文已被標示為解答"
+        topic_solved_title: "主題已解決"
+      topic_notifications:
+        tracking:
+          description: "若有人提及您的 @name、回覆您，或主題已解決，您會收到通知。此主題會顯示新回覆數。"
+        watching:
+          description: "您會收到此主題每一則新回覆及主題已解決時的通知。此主題會顯示新回覆數。"
+      category_type_support:
+        title: "支援"
     topic_statuses:
       solved:
         help: "這個主題有解決方式"
@@ -69,6 +169,13 @@ zh_TW:
       web_hooks:
         solved_event:
           group_name: "已解決的事件"
+          accepted_solution: "當使用者將貼文標示為已接受的解答時"
+          unaccepted_solution: "當使用者將貼文取消標示為已接受的解答時"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: 接受／取消接受解答。
     discourse_automation:
       triggerables:
         first_accepted_solution:

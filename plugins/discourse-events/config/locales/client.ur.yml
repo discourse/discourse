@@ -57,6 +57,8 @@ ur:
         status: "سٹیٹس"
       upcoming_events_list:
         all_day: "سارا دن"
+      preview:
+        more_than_one_event: "آپ ایک سے زیادہ ایونٹ نہیں رکھ سکتے۔"
       models:
         event:
           expired: "میعاد ختم ہوگئی"

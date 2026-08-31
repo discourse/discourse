@@ -53,7 +53,7 @@ ur:
           topic_unvote: "جب صارف کسی موضوع پر ووٹ نہیں دیتا ہے"
     discourse_workflows:
       node_unavailable:
-        requires_topic_voting: "موضوع کی ووٹنگ کو فعال ہونی چاہیے"
+        requires_topic_voting: "موضوع کی ووٹنگ فعال ہونی چاہیے"
       nodes:
         "trigger:topic_received_vote": "موضوع کو ووٹ ملا"
       node_descriptions:

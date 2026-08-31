@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    discourse_captcha:
+      missing_token: "請完成 CAPTCHA 驗證。"
+      verification_failed: "CAPTCHA 驗證失敗，請再試一次。"
+      placeholder: 預留位置
+      contact_system_administrator: "CAPTCHA 服務供應商發生問題。如果問題持續發生，請聯絡系統管理員。"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse CAPTCHA"

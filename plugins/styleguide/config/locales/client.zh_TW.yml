@@ -5,38 +5,290 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse 樣式指南"
   js:
     styleguide:
       title: "風格指南"
+      welcome: "若要開始，請從導覽選單選擇一個區段。"
       example:
+        toggle_code: "切換程式碼範例"
+        try_this: "試試看："
+        code_region: "原始碼片段：%{title}"
         kind:
           component: "元件"
+          modifier: "修飾詞"
+          service: "服務"
       categories:
+        syntax: 語法
         atoms: 原子
         molecules: 分子
+        organisms: 有機體
       sections:
+        bem:
+          title: "BEM"
         typography:
+          title: "排版"
           example: "歡迎來到 Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "日期／時間輸入欄位"
+        menus:
+          title: "選單"
+        multi_select:
+          title: "多重選取"
+        toasts:
+          title: "提示訊息"
+        font_scale:
+          title: "字型系統"
         colors:
           title: "顏色"
+        dialog:
+          title: "對話框"
+        drag_and_drop:
+          title: "拖放"
+          description: "共用的拖曳、放置、調整大小與手勢基礎元件，每張卡片各呈現一項功能。"
+          groups:
+            aria_label: "拖放群組"
+            basics:
+              title: "基本概念"
+              description: "相符的術語，以及目標回報的位置。"
+            sources:
+              title: "來源"
+              description: "可拖曳元素會附加、顯示與允許的內容。"
+            targets:
+              title: "目標"
+              description: "目標如何判斷放置的項目是否屬於自己。"
+            outside:
+              title: "從外部"
+              description: "瀏覽器開始拖曳的內容，可能來自此頁面或另一個視窗。"
+            reacting:
+              title: "回應"
+              description: "不擁有放置目標時如何回應拖曳。"
+            resize:
+              title: "調整大小"
+              description: "讓使用者以鍵盤或指標變更大小。"
+            gestures:
+              title: "其他手勢"
+              description: "不傳遞任何內容的指標與觸控手勢。"
+          nothing_yet: "尚無內容。"
+          drag_me: "拖曳我"
+          drop_here: "放到這裡"
+          a_card: "一張卡片"
+          a_note: "一則備註"
+          cards_only: "僅接受卡片"
+          landed: "已放置：%{label}"
+          reported_position: "回報的位置：%{position}"
+          positions:
+            above: "上方"
+            below: "下方"
+            left: "左側"
+            right: "右側"
+            inside: "內部"
+          types_title: "依類型比對"
+          types_description: "`dDragAndDropSource` 會命名一種型別，而 `dDragAndDropTarget` 會依此篩選。目標只會對其 accepts 清單中的型別啟用；其他項目會直接從它上方拖過。"
+          types_try_this: "將每個籌碼拖到區域上，僅會帶走卡片。"
+          types_note: "省略 accepts 會接受所有已註冊的來源，但這很少是實際介面所需的行為。"
+          positions_title: "放置位置"
+          positions_description: "相容的拖曳經過時，`dDragAndDropTarget` 會剛好套用其中一個類別：四個同層位置加上一個容器位置。"
+          positions_note: "位置是邏輯性的。在由右至左的列中，before 仍表示閱讀順序的起點，類別會切換為 --drag-right，因此指示器會維持在指標下方。"
+          axis_title: "跨向測量"
+          axis_description: "`dDragAndDropTarget` 接受一個軸向，選擇用來判斷 before 與 after 的中點。一列欄位會水平測量。"
+          axis_try_this: "將內容放到單一欄位的左、右兩半，並比較回報的位置。"
+          fixed_position_title: "固定位置"
+          fixed_position_description: "指定 position 的 `dDragAndDropTarget` 會完全略過中點，且一律回報該位置。"
+          fixed_position_try_this: "放在底部邊緣，仍會回報 before。"
+          always_before: "一律回報 before"
+          handle_title: "以控制點拖曳"
+          handle_description: "`dDragAndDropSource` 接受 dragHandle，用以限制可開始拖曳的位置，讓元素其餘部分仍可選取，也讓原本要捲動的觸控按壓仍可捲動。"
+          handle_try_this: "用指標選取文字，然後拖曳握把。"
+          handle_note: "列仍是拖曳主體：它保有 data-drag-source、是目標的 source.element，也是預覽所擷取的對象。請以 data-drag-source 進行樣式設定與斷言，絕不要使用 draggable。"
+          handle_landed: "已放下的是列，不是握把。"
+          selectable_text: "可選取的文字"
+          preview_title: "自訂預覽"
+          preview_description: "`dDragAndDropSource` 接受 dragPreview 繪製函式，會將預覽掛載到隔離的離屏容器，避免來源周圍的內容滲入拖曳影像。"
+          preview_try_this: "拖曳籌碼，看看什麼會跟著指標移動。"
+          preview_badge: "自訂預覽"
+          disabled_title: "解除來源連結"
+          disabled_description: "`dDragAndDropSource` 接受 disabled，會解除註冊。要停止元素可被拖曳，應使用此設定而不是控制點。"
+          disabled_try_this: "將它關閉，嘗試拖曳後再重新開啟。"
+          draggable: "可拖曳"
+          effect_title: "宣告效果"
+          effect_description: "`dDragAndDropTarget` 透過 dropEffect 命名將執行的操作，拖曳會在其目標紀錄上攜帶該效果。"
+          effect_try_this: "放到每個區域上，並比較記錄的效果。"
+          effect_note: "來源的 effectAllowed 會宣告允許的項目，但這裡不會強制兩者配對：目標可以要求來源從未允許的效果，也不會遭到拒絕。請自行保持兩者一致。"
+          asks_for_copy: "要求複製"
+          asks_for_move: "要求移動"
+          recorded_effect: "記錄的效果：%{effect}"
+          nesting_title: "巢狀目標"
+          nesting_description: "`dDragAndDropTarget` 會將回呼交給指標下方最深層的已接受目標，因此一次放置絕不會被處理兩次。"
+          nesting_try_this: "先放到內部區域，再放到周圍的外部區域。"
+          nesting_note: "代價是子孫目標一接手拖曳，祖先就會停止顯示指示。必須持續亮起的容器應改為從服務渲染。"
+          outer: "外部"
+          inner: "內部"
+          received_by: "接收者：%{name}"
+          accepts_self_title: "拒絕自身"
+          accepts_self_description: "`dDragAndDropTarget` 接受 acceptsSelf。既是來源又是目標的元素預設會接受自己的放置，因為這通常具有意義。"
+          accepts_self_try_this: "將卡片放到自己身上，再放到另一張卡片上。"
+          accepts_self_note: "比較是針對拖曳主體，因此用控制點拖曳的列仍會辨識為自身。"
+          card_a: "卡片 A"
+          card_b: "卡片 B"
+          dropped_card: "已放下卡片 %{name}"
+          can_drop_title: "依承載資料拒絕"
+          can_drop_description: "`dDragAndDropTarget` 接受 canDrop，這是會檢查承載資料、在放置前拒絕它的同步閘門。"
+          can_drop_try_this: "將每個籌碼拖過區域。鎖定的籌碼永遠不會被接受。"
+          unlocked: "已解鎖"
+          locked: "已鎖定"
+          unlocked_only: "僅限已解鎖"
+          adoption_title: "採用頁面內容"
+          adoption_description: "`dDragAndDropTarget` 接受 adopts。瀏覽器可從連結等一般內容開始拖曳，這些內容不會註冊來源，而採用機制讓目標也能接收它們。"
+          adoption_try_this: "將上方連結拖入區域。"
+          adoption_note: "採用會針對整個頁面解析一次，而非每個目標各自解析：第一個述詞相符的有效採用項目會命名拖曳。共用名稱的兩個採用項目必須共用述詞。"
+          a_link: "此頁面的連結"
+          drop_a_link: "將連結放到這裡"
+          external_title: "來自外部的放置"
+          external_description: "`dDragAndDropExternalTarget` 接受從另一個視窗或應用程式拖入的承載資料。它絕不會看到從此頁面開始的拖曳。"
+          external_try_this: "將另一個分頁的連結或桌面的檔案拖入區域。"
+          external_note: "這不是上傳流程。放到此處的檔案不會進入上傳驗證、進度或上傳紀錄。"
+          from_outside: "從視窗外放入"
+          external_axis_title: "外部插槽"
+          external_axis_description: "指定軸向的 `dDragAndDropExternalTarget` 會和元素目標一樣，從指標解析位置。"
+          external_axis_try_this: "將物件放在靠近頂端邊緣處，再放在靠近底部處。"
+          external_axis_note: "沒有 position 或 axis 時，目標是一個目的地而非插槽：回呼會收到 null 位置，指示器則是單一的 --drag-over-external 類別。"
+          a_slot: "插槽，不是目的地"
+          monitor_title: "監看每次拖曳"
+          monitor_description: "`dDragAndDropMonitor` 會對任何位置發生的拖曳作出反應，但自身不會成為放置目標。"
+          monitor_try_this: "拖曳籌碼並觀察紀錄，不論是否將它放到區域上。"
+          monitor_note: "元素僅用來錨定修飾詞的生命週期；監控器是全域的。"
+          service_title: "從狀態渲染"
+          service_description: "`dragAndDrop` 服務會將進行中的拖曳公開為追蹤狀態，因此介面無需連接任何回呼就能自行準備。"
+          service_try_this: "開始拖曳籌碼並觀察面板，不要放下。"
+          service_note: "服務與目標的讀取方向相反：空白或缺少的篩選條件不會符合任何項目，因為尚未決定的呼叫端不應為每次拖曳亮起。"
+          armed: "一張卡片正在移動"
+          idle: "閒置"
+          auto_scroll_title: "拖曳時捲動"
+          auto_scroll_description: "`dDragAndDropAutoScroll` 會在拖曳靠近容器邊緣時捲動容器，讓折疊下方的列仍可觸及。"
+          auto_scroll_try_this: "將籌碼拖到清單底部邊緣並停留在那裡。"
+          dwell_title: "停留以顯示"
+          dwell_description: "`dDragDwell` 會在拖曳於元素上方停留一段時間後觸發回呼，但不會讓元素成為放置目標。"
+          dwell_try_this: "將籌碼拖過摺疊的資料夾，停留到它開啟後再放到裡面；或拖離並看它再次關閉。"
+          dwell_note: "每次停留只會觸發一次，並開啟資料夾。將籌碼放到裡面會保持開啟；拖離或結束拖曳則會關閉由停留開啟的資料夾。"
+          dwell_filed:
+            other: "已歸檔 %{count} 個籌碼"
+          dwell_expand: "顯示列"
+          dwell_collapse: "隱藏列"
+          row: "第 %{number} 列"
+          separator_title: "在區域間調整大小"
+          separator_description: "`DResizeSeparator` 是首選元件。它包裝 `dResizeEdge` 修飾詞，並加入分隔線合約：角色、單一定位點，以及即時宣告的數值。"
+          separator_try_this: "拖曳分隔線，然後將焦點移至它並使用方向鍵。"
+          separator_note: "必須提供標籤：沒有無障礙名稱的可聚焦分隔線只會被宣告為空泛的分隔器，無法說明它調整的是什麼。"
+          separator_label: "調整窗格大小"
+          left_pane: "左側"
+          right_pane: "右側"
+          edge_title: "使用自訂元素調整大小"
+          edge_description: "`dResizeEdge` 是 `DResizeSeparator` 底層的修飾詞。它只負責互動，其他都不負責，因此角色、定位點與宣告數值需由您提供。"
+          edge_try_this: "拖曳分隔線，然後將焦點移至它並使用方向鍵。它的行為相同；差異在於標記必須負責的內容。"
+          edge_note: "只有在元素與其語意已由您提供時才使用它。本範例明列的所有內容，都是該元件原本會提供的。"
+          edge_label: "調整窗格大小"
+          handles_title: "調整方塊大小"
+          handles_description: "`DResizeHandles` 是會繪製方塊邊緣與角落的元件，並回報指標幾何資訊，供使用者轉換為尺寸。"
+          handles_try_this: "拖曳任何邊緣或角落。"
+          handles_note: "請勿為二維調整大小指定分隔線角色。它沒有單一數值可宣告，因此該角色會描述不存在的控制項。"
+          pointer_drag_title: "追蹤指標"
+          pointer_drag_description: "`dPointerDrag` 可在單一元素上按下、移動與放開。它不傳遞任何內容，也沒有目標。"
+          pointer_drag_try_this: "沿著軌道拖曳旋鈕。"
+          pointer_drag_note: "請務必處理取消回呼。否則瀏覽器中斷的手勢，會讓開始時開啟的內容持續開啟。"
+          knob: "旋鈕"
+          swipe_title: "偵測快速滑動"
+          swipe_description: "`dSwipe` 會回報帶有速度的一個離散方向，而非隨指標移動的值。"
+          swipe_try_this: "在觸控螢幕上橫越面板滑動。"
+          swipe_note: "若數值必須持續追蹤指標，請改用指標拖曳。"
+          swipe_here: "在我身上滑動"
+          swiped: "已朝 %{direction} 滑動"
         icons:
           title: "圖標"
+          full_list: "查看完整 Font Awesome 圖示清單"
+        forms:
+          title: "表單"
         buttons:
           title: "按鈕"
         dropdowns:
           title: "下拉選單"
         categories:
           title: "分類"
+        bread_crumbs:
+          title: "麵包屑"
         navigation:
           title: "導航"
+        navigation_bar:
+          title: "導覽列"
+        navigation_stacked:
+          title: "堆疊式導覽"
         categories_list:
           title: "分類清單"
+        topic_link:
+          title: "主題連結與狀態"
+        topic_list_item:
+          title: "主題清單項目"
+        topic_statuses:
+          title: "主題狀態"
+        topic_list:
+          title: "主題清單"
+        basic_topic_list:
+          title: "基本主題清單"
+        signup_cta:
+          title: "註冊行動呼籲"
         topic_timer_info:
           title: "話題計時器"
+        topic_footer_buttons:
+          title: "主題頁尾按鈕"
+        topic_notifications:
+          title: "主題通知"
         post:
           title: "貼文"
+        post_list:
+          title: "貼文清單"
+          empty_example: "<PostList /> 空白狀態"
+          populated_example: "<PostList /> 有內容狀態"
+        post_oneboxes:
+          title: "貼文 Onebox"
+        topic_map:
+          title: "主題地圖"
+        site_header:
+          title: "網站頁首"
         more_topics:
           title: "更多話題"
+        post_menu:
+          title: "貼文選單"
+        docked_composer:
+          title: "停駐式撰寫器"
+        modal:
+          title: "互動視窗"
+          header: "互動視窗標題"
+          footer: "互動視窗頁尾"
+          open: "開啟互動視窗"
+        user_about:
+          title: "使用者簡介方塊"
+        header_icons:
+          title: "頁首圖示"
+        spinners:
+          title: "載入指示器"
+        otp:
+          title: "一次性密碼"
+        empty_state:
+          title: "空白狀態"
         tooltips:
+          title: "工具提示"
           description: "簡述"
           header: "頁首"
+          hover_to_see: "將游標停留以查看工具提示"
+        char_counter:
+          title: "字元計數器"
+          placeholder: "在此輸入文字…"
+        combo_button:
+          title: "組合按鈕"
+        segmented_control:
+          title: "分段控制項（按鈕切換群組）"

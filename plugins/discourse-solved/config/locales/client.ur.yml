@@ -54,7 +54,7 @@ ur:
               leader: "مقتدر"
               regular: "معتبر"
               member: "ممبران"
-              basic: "بنیادی"
+              basic: "آشنا"
             response_time:
               title: "جوابی وقت کی تقسیم"
               buckets:
