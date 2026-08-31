@@ -29,6 +29,10 @@ Status legend: ☐ pending · ◐ in progress · ☑ done
   feedback on the sandbox (dev topic #188731), tracked within Phase 1. Read it before touching
   `DSelect` announcements: it carries the "express states, announce events" rule, the
   announcement inventory, and the diagnoses that turned out to be wrong.
+- [`A11Y-TEST-TIERS.md`](A11Y-TEST-TIERS.md) — the four automated a11y tiers, what each one can and
+  cannot see, and the mutation test proving the QUnit tier is blind to the defect the system-spec
+  tier catches. Read it before adding an a11y assertion, so it lands in the tier that can actually
+  observe the thing.
 
 ## Roadmap-numbering note
 
