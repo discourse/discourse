@@ -37,6 +37,8 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
     post "reply" => "discoveries#reply"
+    get "recent" => "discoveries#recent"
+    delete "recent" => "discoveries#clear_recent"
     post "continue-convo" => "discoveries#continue_convo"
   end
 

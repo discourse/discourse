@@ -321,6 +321,9 @@ importers:
       diff:
         specifier: ^9.0.0
         version: 9.0.0
+      dom-accessibility-api:
+        specifier: ^0.7.1
+        version: 0.7.1
       ember-curry-component:
         specifier: ^0.5.0
         version: 0.5.0(@babel/core@7.29.7)(@glint/template@1.7.8)
@@ -4326,6 +4329,9 @@ packages:
   docopt@0.6.2:
     resolution: {integrity: sha512-NqTbaYeE4gA/wU1hdKFdU+AFahpDOpgGLzHP42k6H6DKExJd0A55KEVWYhL9FEmHmgeLvEU2vuKXDuU+4yToOw==}
     engines: {node: '>=0.10.0'}
+
+  dom-accessibility-api@0.7.1:
+    resolution: {integrity: sha512-vdnCeZD+3wZ+8h8xXL/ZtBlvvoobOFyPzSiIfO6sGOZDqjFx4aLMAjZhl4rawj5xYz3UwP6Tgvyh0iH4IOCVnQ==}
 
   dom-element-descriptors@0.5.1:
     resolution: {integrity: sha512-DLayMRQ+yJaziF4JJX1FMjwjdr7wdTr1y9XvZ+NfHELfOMcYDnCHneAYXAS4FT1gLILh4V0juMZohhH1N5FsoQ==}
@@ -12410,6 +12416,8 @@ snapshots:
   diff@9.0.0: {}
 
   docopt@0.6.2: {}
+
+  dom-accessibility-api@0.7.1: {}
 
   dom-element-descriptors@0.5.1: {}
 

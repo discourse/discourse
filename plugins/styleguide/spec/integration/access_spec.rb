@@ -67,3 +67,28 @@ RSpec.describe "SiteSetting.styleguide_enabled" do
     end
   end
 end
+
+RSpec.describe "Styleguide site capability" do
+  before do
+    SiteSetting.styleguide_enabled = true
+    SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:admins]
+  end
+
+  it "reflects whether the visitor can access the styleguide" do
+    sign_in(Fabricate(:admin))
+    get "/site.json"
+    expect(response.parsed_body["can_see_styleguide"]).to eq(true)
+
+    sign_in(Fabricate(:user))
+    get "/site.json"
+    expect(response.parsed_body["can_see_styleguide"]).to eq(false)
+  end
+
+  it "is omitted when the plugin is disabled" do
+    SiteSetting.styleguide_enabled = false
+
+    get "/site.json"
+
+    expect(response.parsed_body).not_to have_key("can_see_styleguide")
+  end
+end
