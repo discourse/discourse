@@ -1,5 +1,4 @@
 import type { DRovingFocusConfig } from "./config";
-import type RovingFocusDiagnostics from "./diagnostics";
 import type ItemScope from "./item-scope";
 import { scan, step, type StepOutcome, stepRow } from "./navigation";
 import TypeAhead from "./type-ahead";
@@ -24,7 +23,7 @@ export interface KeyboardContext {
   scope: ItemScope;
   controller: HTMLElement | null;
   api: DRovingFocusApi;
-  diagnostics: RovingFocusDiagnostics;
+  warnWindowed?: () => void;
   current(items: HTMLElement[]): HTMLElement | null;
   columnCount(): number;
   activate(item: HTMLElement): void;
@@ -65,7 +64,7 @@ export default class KeyboardRouter {
         currentIndex: (items) => this.#currentIndex(items, context),
         activate: context.activate,
         reannounce: () => void context.api.reannounceActive(),
-        warnWindowed: () => context.diagnostics.warnWindowedTypeAhead(),
+        warnWindowed: context.warnWindowed,
       })
     ) {
       return;

@@ -23,7 +23,7 @@ export interface TypeAheadContext {
   currentIndex: (items: HTMLElement[]) => number;
   activate: (item: HTMLElement) => void;
   reannounce: () => void;
-  warnWindowed: () => void;
+  warnWindowed?: () => void;
 }
 
 /** Matches buffered printable input against item accessible names. */
@@ -66,7 +66,7 @@ export default class TypeAhead {
       context.logicalCount != null &&
       context.logicalCount > context.mountedCount()
     ) {
-      context.warnWindowed();
+      context.warnWindowed?.();
       return true;
     }
     const repeated =

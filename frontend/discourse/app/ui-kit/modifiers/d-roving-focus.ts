@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
@@ -9,7 +10,7 @@ import {
   type DRovingFocusConfig,
   normalizeConfig,
 } from "./d-roving-focus/config";
-import RovingFocusDiagnostics from "./d-roving-focus/diagnostics";
+import createRovingFocusDiagnostics from "./d-roving-focus/diagnostics";
 import ItemScope from "./d-roving-focus/item-scope";
 import KeyboardRouter from "./d-roving-focus/keyboard";
 import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant";
@@ -152,7 +153,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #hasRun = false;
 
   /** Owns the once-per-group development diagnostics. */
-  #diagnostics = new RovingFocusDiagnostics();
+  #diagnostics = DEBUG ? createRovingFocusDiagnostics() : undefined;
 
   /**
    * Monotonic counter behind minted ids. Never reset, so an id cannot be reissued to a second
@@ -222,7 +223,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       scope: this.#scope,
       controller: this.#listenElement,
       api: this.#api,
-      diagnostics: this.#diagnostics,
+      warnWindowed: DEBUG
+        ? () => this.#diagnostics!.warnWindowedTypeAhead()
+        : undefined,
       current: (items) => this.#currentElement(items),
       columnCount: () => this.#columnCount(),
       activate: (item) => this.#setActive(item),
@@ -399,9 +402,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
 
     if (this.#mode === "active-descendant") {
-      this.#diagnostics.warnMissingFocusIndicator(
-        Boolean(config.activeClass || config.onActiveChange)
-      );
+      if (DEBUG) {
+        this.#diagnostics!.warnMissingFocusIndicator(
+          Boolean(config.activeClass || config.onActiveChange)
+        );
+      }
       this.#reconcileActive(resetKeyChanged);
     } else {
       this.#rovingStrategy?.seed(resetKeyChanged);
@@ -522,8 +527,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
             .replace(/\[[^\]]*\]/g, " ")
             .split(/\s+/)
             .filter((token) => token && token !== "subgrid").length || 1;
-    if (count === 1) {
-      this.#diagnostics.warnUndetectedSecondAxis(style);
+    if (DEBUG && count === 1) {
+      this.#diagnostics!.warnUndetectedSecondAxis(style);
     }
     return count;
   }
@@ -550,10 +555,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #setActive(target: HTMLElement, pointer = false): void {
     if (this.#mode === "active-descendant") {
       this.#activeStrategy!.activate(target);
-      this.#diagnostics.warnUnreachableActiveDescendant(
-        this.#listenElement,
-        target
-      );
+      if (DEBUG) {
+        this.#diagnostics!.warnUnreachableActiveDescendant(
+          this.#listenElement,
+          target
+        );
+      }
     } else {
       this.#rovingStrategy?.activate(target);
     }

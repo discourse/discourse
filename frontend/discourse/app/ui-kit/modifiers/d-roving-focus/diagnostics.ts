@@ -1,7 +1,16 @@
-import { runInDebug } from "@ember/debug";
+import { DEBUG } from "@glimmer/env";
 
-/** Emits each development-only configuration diagnostic at most once per group. */
-export default class RovingFocusDiagnostics {
+/** Creates the development-only diagnostics for one group. */
+export default function createRovingFocusDiagnostics():
+  | RovingFocusDiagnostics
+  | undefined {
+  if (DEBUG) {
+    return new RovingFocusDiagnostics();
+  }
+}
+
+/** Emits each configuration diagnostic at most once per group. */
+class RovingFocusDiagnostics {
   #warnedWindowedTypeAhead = false;
   #warnedUndetectedSecondAxis = false;
   #warnedNoIndicator = false;
@@ -9,18 +18,16 @@ export default class RovingFocusDiagnostics {
 
   /** Warns once when type-ahead is declined for a partially mounted data set. */
   warnWindowedTypeAhead(): void {
-    runInDebug(() => {
-      if (this.#warnedWindowedTypeAhead) {
-        return;
-      }
-      this.#warnedWindowedTypeAhead = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        `dRovingFocus: typeAhead is declined because logicalCount exceeds the mounted rows. A ` +
-          `search over part of the set answers with a nearer match while a truer one sits ` +
-          `off-window. Search the full data from the consumer instead.`
-      );
-    });
+    if (this.#warnedWindowedTypeAhead) {
+      return;
+    }
+    this.#warnedWindowedTypeAhead = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      `dRovingFocus: typeAhead is declined because logicalCount exceeds the mounted rows. A ` +
+        `search over part of the set answers with a nearer match while a truer one sits ` +
+        `off-window. Search the full data from the consumer instead.`
+    );
   }
 
   /** Warns once when active-descendant mode has no visible indicator mechanism. */
@@ -28,18 +35,16 @@ export default class RovingFocusDiagnostics {
     if (hasIndicator) {
       return;
     }
-    runInDebug(() => {
-      if (this.#warnedNoIndicator) {
-        return;
-      }
-      this.#warnedNoIndicator = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        `dRovingFocus: focusStrategy="active-descendant" with neither activeClass nor onActiveChange, so ` +
-          `nothing marks the active item and the cursor is invisible. Pass activeClass, or ` +
-          `render the highlight yourself from onActiveChange.`
-      );
-    });
+    if (this.#warnedNoIndicator) {
+      return;
+    }
+    this.#warnedNoIndicator = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      `dRovingFocus: focusStrategy="active-descendant" with neither activeClass nor onActiveChange, so ` +
+        `nothing marks the active item and the cursor is invisible. Pass activeClass, or ` +
+        `render the highlight yourself from onActiveChange.`
+    );
   }
 
   /** Warns once when a two-dimensional layout exposes no measurable column tracks. */
@@ -51,19 +56,17 @@ export default class RovingFocusDiagnostics {
     if (!wrappingFlex && !multiColumn) {
       return;
     }
-    runInDebug(() => {
-      if (this.#warnedUndetectedSecondAxis) {
-        return;
-      }
-      this.#warnedUndetectedSecondAxis = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        `dRovingFocus: orientation="grid" on a ${
-          wrappingFlex ? "wrapping flex" : "multi-column"
-        } container, which publishes no column track list, so the group navigates on one axis. ` +
-          `Lay it out with CSS grid to get the second axis.`
-      );
-    });
+    if (this.#warnedUndetectedSecondAxis) {
+      return;
+    }
+    this.#warnedUndetectedSecondAxis = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      `dRovingFocus: orientation="grid" on a ${
+        wrappingFlex ? "wrapping flex" : "multi-column"
+      } container, which publishes no column track list, so the group navigates on one axis. ` +
+        `Lay it out with CSS grid to get the second axis.`
+    );
   }
 
   /** Warns once when ARIA does not permit the controller to reference the active item. */
@@ -74,20 +77,18 @@ export default class RovingFocusDiagnostics {
     if (!controller || this.#isReachable(controller, target)) {
       return;
     }
-    runInDebug(() => {
-      if (this.#warnedUnreachableActiveDescendant) {
-        return;
-      }
-      this.#warnedUnreachableActiveDescendant = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        `dRovingFocus: the controller points aria-activedescendant at an item it does not ` +
-          `contain, does not aria-own, and does not reach through aria-controls, which ARIA ` +
-          `does not permit. Assistive technology will not follow the cursor. Put the items ` +
-          `inside the controller, or add aria-owns, or give a combobox/textbox/searchbox ` +
-          `controller an aria-controls pointing at the list.`
-      );
-    });
+    if (this.#warnedUnreachableActiveDescendant) {
+      return;
+    }
+    this.#warnedUnreachableActiveDescendant = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      `dRovingFocus: the controller points aria-activedescendant at an item it does not ` +
+        `contain, does not aria-own, and does not reach through aria-controls, which ARIA ` +
+        `does not permit. Assistive technology will not follow the cursor. Put the items ` +
+        `inside the controller, or add aria-owns, or give a combobox/textbox/searchbox ` +
+        `controller an aria-controls pointing at the list.`
+    );
   }
 
   #isReachable(controller: HTMLElement, target: HTMLElement): boolean {
