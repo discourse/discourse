@@ -25,13 +25,18 @@ module Reports::NewContributors
 
       data.each { |key, value| report.data << { x: key, y: value } }
 
-      return if !report.include_related_items || report.guardian.blank?
+      return if !report.include_related_items
 
       users =
         User
           .real
           .preload(:user_stat)
-          .with_first_post_created_between(report.start_date, report.end_date)
+          .joins(:user_stat)
+          .where(
+            "user_stats.first_post_created_at > ? AND user_stats.first_post_created_at < ?",
+            report.start_date,
+            report.end_date,
+          )
           .order("user_stats.first_post_created_at DESC")
 
       report.related_items_totals = { users: users.count }

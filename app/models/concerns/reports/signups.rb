@@ -22,7 +22,7 @@ module Reports::Signups
         report_about report, User.real, :count_by_signup_date
       end
 
-      return if !report.include_related_items || report.guardian.blank?
+      return if !report.include_related_items
 
       users = User.real.where(created_at: report.start_date..report.end_date)
       users =

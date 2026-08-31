@@ -1,10 +1,11 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminReportRelatedItems from "discourse/admin/components/admin-report-related-items";
+import AdminReportTableSummary from "discourse/admin/components/admin-report-table-summary";
 import { adminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import SolvedAdminReportTableSummary from "discourse/plugins/discourse-solved/discourse/components/solved-admin-report-table-summary";
+import SolvedAdminReportTableSummaryItem from "discourse/plugins/discourse-solved/discourse/components/solved-admin-report-table-summary-item";
 
 module(
   "Integration | Component | Solved admin report related items",
@@ -124,7 +125,7 @@ module(
         );
     });
 
-    test("uses the table summary component registered for the report", async function (assert) {
+    test("uses the table summary item registered for the report", async function (assert) {
       let requestParams;
 
       pretender.get("/admin/reports/accepted_solutions", (request) => {
@@ -162,25 +163,27 @@ module(
       });
 
       const renderer = adminReportRelatedItemsRenderer("accepted_solutions");
-
-      this.set("tableSummaryComponent", renderer.tableSummaryComponent);
+      this.set("tableSummary", renderer.tableSummary);
 
       await render(
         <template>
-          {{component
-            this.tableSummaryComponent
-            date="2026-08-18"
-            formattedValue="1"
-          }}
+          <AdminReportTableSummary
+            @date="2026-08-18"
+            @formattedValue="1"
+            @itemComponent={{this.tableSummary.itemComponent}}
+            @itemsKey={{this.tableSummary.itemsKey}}
+            @reportType="accepted_solutions"
+            @titleKey={{this.tableSummary.titleKey}}
+          />
         </template>
       );
 
       await click(".admin-report-table-summary");
 
       assert.strictEqual(
-        renderer.tableSummaryComponent,
-        SolvedAdminReportTableSummary,
-        "uses the registered Solved component"
+        renderer.tableSummary.itemComponent,
+        SolvedAdminReportTableSummaryItem,
+        "uses the registered Solved item component"
       );
       assert
         .dom(".admin-report-table-summary")
@@ -213,67 +216,6 @@ module(
         "true",
         "requests the related-item payload"
       );
-    });
-
-    test("retries the table summary after an error", async function (assert) {
-      let requestCount = 0;
-
-      pretender.get("/admin/reports/accepted_solutions", () => {
-        requestCount++;
-
-        if (requestCount === 1) {
-          return response(500, {});
-        }
-
-        return response({
-          report: {
-            related_items: {
-              solved_topics: [
-                {
-                  topic: {
-                    title: "Composer loses draft when switching categories",
-                    url: "/t/composer-loses-draft-when-switching-categories/1",
-                  },
-                  solved_by_users: [],
-                },
-              ],
-            },
-          },
-        });
-      });
-
-      const renderer = adminReportRelatedItemsRenderer("accepted_solutions");
-      this.set("tableSummaryComponent", renderer.tableSummaryComponent);
-
-      await render(
-        <template>
-          {{component
-            this.tableSummaryComponent
-            date="2026-08-18"
-            formattedValue="1"
-          }}
-        </template>
-      );
-
-      await click(".admin-report-table-summary");
-
-      assert
-        .dom(".admin-report-table-summary__message")
-        .hasText(
-          "Couldn't load the summary.",
-          "shows the failed request state"
-        );
-
-      await click(".admin-report-table-summary");
-      await click(".admin-report-table-summary");
-
-      assert.strictEqual(requestCount, 2, "retries when the menu reopens");
-      assert
-        .dom(".solved-admin-report-table-summary__topic-link")
-        .hasText(
-          "Composer loses draft when switching categories",
-          "shows the retried response"
-        );
     });
   }
 );

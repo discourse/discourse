@@ -36,9 +36,11 @@ export default class AdminReportTableSummary extends Component {
   }
 
   get title() {
-    return i18n("admin.reports.related_items.table_summary.users_title", {
-      date: this.dateLabel,
-    });
+    return i18n(
+      this.args.titleKey ||
+        "admin.reports.related_items.table_summary.users_title",
+      { date: this.dateLabel }
+    );
   }
 
   get hasItems() {
@@ -47,6 +49,10 @@ export default class AdminReportTableSummary extends Component {
 
   get itemsAreTruncated() {
     return this.items.length < this.total;
+  }
+
+  get itemsKey() {
+    return this.args.itemsKey || "users";
   }
 
   userProfilePath(user) {
@@ -77,9 +83,10 @@ export default class AdminReportTableSummary extends Component {
       const response = await ajax(`/admin/reports/${this.args.reportType}`, {
         data,
       });
-      this.items = response.report.related_items?.users || [];
+      this.items = response.report.related_items?.[this.itemsKey] || [];
       this.total =
-        response.report.related_items_totals?.users ?? this.items.length;
+        response.report.related_items_totals?.[this.itemsKey] ??
+        this.items.length;
     } catch {
       this.hasError = true;
       this.items = null;
@@ -129,26 +136,30 @@ export default class AdminReportTableSummary extends Component {
             <ul class="admin-report-table-summary__list">
               {{#each this.items as |item|}}
                 <li class="admin-report-table-summary__item">
-                  <a
-                    class="admin-report-table-summary__user-link"
-                    href={{this.userProfilePath item.user}}
-                  >
-                    {{dAvatar
-                      item.user
-                      imageSize="small"
-                      extraClasses="admin-report-table-summary__avatar"
-                    }}
-                    <span class="admin-report-table-summary__user-identity">
-                      <span class="admin-report-table-summary__username">
-                        {{formatUsername item.user.username}}
-                      </span>
-                      {{#if item.user.name}}
-                        <span class="admin-report-table-summary__name">
-                          {{item.user.name}}
+                  {{#if @itemComponent}}
+                    {{component @itemComponent item=item}}
+                  {{else}}
+                    <a
+                      class="admin-report-table-summary__user-link"
+                      href={{this.userProfilePath item.user}}
+                    >
+                      {{dAvatar
+                        item.user
+                        imageSize="small"
+                        extraClasses="admin-report-table-summary__avatar"
+                      }}
+                      <span class="admin-report-table-summary__user-identity">
+                        <span class="admin-report-table-summary__username">
+                          {{formatUsername item.user.username}}
                         </span>
-                      {{/if}}
-                    </span>
-                  </a>
+                        {{#if item.user.name}}
+                          <span class="admin-report-table-summary__name">
+                            {{item.user.name}}
+                          </span>
+                        {{/if}}
+                      </span>
+                    </a>
+                  {{/if}}
                 </li>
               {{/each}}
             </ul>

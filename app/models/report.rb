@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 6
+  SCHEMA_VERSION = 5
 
   RELATED_ITEMS_LIMIT = 50
 
@@ -54,11 +54,8 @@ class Report
     top_referrers_by_browser_pageviews
   ]
 
-  def self.hidden?(type, guardian:, include_related_items: false)
-    if !guardian.is_admin?
-      return true if ADMIN_ONLY_REPORTS.include?(type)
-      return true if include_related_items && admin_only_related_items_report_types.include?(type)
-    end
+  def self.hidden?(type, guardian:)
+    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
     if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
       return true
     end
@@ -385,11 +382,13 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
-    report.include_related_items = opts[:include_related_items] if opts[:include_related_items]
     report.guardian = opts[:guardian] if opts[:guardian]
     report.current_user = opts[:current_user] if opts[:current_user]
     report.current_user ||= report.guardian&.user
     report.guardian ||= report.current_user&.guardian
+    report.include_related_items =
+      opts[:include_related_items] &&
+        (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type)

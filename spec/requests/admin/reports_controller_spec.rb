@@ -256,7 +256,10 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["reports"][0]["type"]).to eq("signups")
-        expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][1]["type"]).to eq("new_contributors")
+        expect(
+          response.parsed_body["reports"].filter_map { |report| report["related_items"] },
+        ).to be_empty
       end
 
       it "redacts suspicious login IP addresses when IP viewing is disabled" do
@@ -522,7 +525,8 @@ RSpec.describe Admin::ReportsController do
 
         get "/admin/reports/signups.json", params: { include_related_items: true }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]).not_to have_key("related_items")
       end
 
       context "when moderators cannot view IPs" do

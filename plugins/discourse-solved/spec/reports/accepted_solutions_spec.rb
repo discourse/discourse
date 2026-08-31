@@ -22,16 +22,13 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
   end
 
   it "restricts related items to admins while retaining moderator access to aggregates" do
+    solved_topic_in(Fabricate(:category))
     moderator_guardian = Fabricate(:moderator).guardian
+    report = build(guardian: moderator_guardian)
 
-    expect(Report.hidden?("accepted_solutions", guardian: moderator_guardian)).to be(false)
-    expect(
-      Report.hidden?(
-        "accepted_solutions",
-        guardian: moderator_guardian,
-        include_related_items: true,
-      ),
-    ).to be(true)
+    expect(report.data.sum { |point| point[:y] }).to eq(1)
+    expect(report.related_items).to be_nil
+    expect(report.related_items_totals).to be_nil
   end
 
   it "counts accepted solutions across all categories when no filter is given" do
@@ -105,30 +102,16 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
   end
 
   it "only includes solved topic details visible to the report guardian" do
+    SiteSetting.suppress_secured_categories_from_admin = true
     private_topic = solved_topic_in(Fabricate(:private_category, group: Fabricate(:group)))
     visible_topic = solved_topic_in(Fabricate(:category))
-    moderator = Fabricate(:moderator)
+    admin = Fabricate(:admin)
 
-    expect(moderator.guardian.can_see_topic?(private_topic)).to be(false)
+    expect(admin.guardian.can_see_topic?(private_topic)).to be(false)
 
-    report = build(guardian: moderator.guardian)
+    report = build(guardian: admin.guardian)
 
     expect(report.total).to eq(2)
-    expect(report.related_items_totals).to eq(solved_topics: 1)
-    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
-      [visible_topic.title],
-    )
-  end
-
-  it "excludes shared drafts the report guardian cannot see from the list and the total" do
-    category = Fabricate(:category)
-    visible_topic = solved_topic_in(category)
-    Fabricate(:shared_draft, topic: solved_topic_in(category))
-    SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-    moderator = Fabricate(:moderator)
-
-    report = build(guardian: moderator.guardian)
-
     expect(report.related_items_totals).to eq(solved_topics: 1)
     expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
       [visible_topic.title],

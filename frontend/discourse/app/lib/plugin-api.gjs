@@ -3664,7 +3664,10 @@ class _PluginApi {
    * @param {String} reportType - The report's identifier
    * @param {Object} renderer - The related-item renderer configuration
    * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
-   * @param {Class} [renderer.tableSummaryComponent] - Component for a table cell summary
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
    */
   registerAdminReportRelatedItemsRenderer(reportType, renderer) {
     registerAdminReportRelatedItemsRenderer(reportType, renderer);

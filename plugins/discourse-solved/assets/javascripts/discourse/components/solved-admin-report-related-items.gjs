@@ -36,10 +36,6 @@ export default class SolvedAdminReportRelatedItems extends Component {
     return userPath(user.username);
   }
 
-  solvedByUsers(item) {
-    return item.solved_by_users || (item.solved_by ? [item.solved_by] : []);
-  }
-
   <template>
     {{#if this.solvedTopics.length}}
       <section
@@ -89,7 +85,7 @@ export default class SolvedAdminReportRelatedItems extends Component {
                   </a>
                 </td>
                 <td class="solved-admin-report-related-items__solved-by-cell">
-                  {{#let (this.solvedByUsers item) as |users|}}
+                  {{#let item.solved_by_users as |users|}}
                     {{#if users.length}}
                       <div
                         class="solved-admin-report-related-items__solved-by-users"

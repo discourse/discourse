@@ -208,13 +208,10 @@ after_initialize do
           .count
     end
 
-    next if !report.include_related_items || report.guardian.blank?
+    next if !report.include_related_items
 
     guardian = report.guardian
     solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
-    if !guardian.can_see_shared_draft?
-      solved_topics = solved_topics.where.not(topic_id: SharedDraft.select(:topic_id))
-    end
 
     report.related_items_totals = { solved_topics: solved_topics.count }
 
@@ -245,7 +242,6 @@ after_initialize do
               title: topic.title,
               url: topic.relative_url,
             },
-            solved_by: solved_by_users.first,
             solved_by_users:,
             category:
               if category

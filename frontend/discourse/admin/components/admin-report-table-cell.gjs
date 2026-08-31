@@ -68,8 +68,8 @@ export default class AdminReportTableCell extends Component {
   }
 
   @computed("reportType")
-  get relatedItemsSummaryComponent() {
-    return this.relatedItemsRenderer?.tableSummaryComponent;
+  get relatedItemsSummary() {
+    return this.relatedItemsRenderer?.tableSummary;
   }
 
   <template>
@@ -80,13 +80,16 @@ export default class AdminReportTableCell extends Component {
     >
       {{#if this.hasRelatedItemsSummary}}
         {{#if this.relatedItemsRenderer}}
-          {{#if this.relatedItemsSummaryComponent}}
-            {{component
-              this.relatedItemsSummaryComponent
-              date=this.data.x
-              formattedValue=this.formattedValue
-              reportFilters=this.reportFilters
-            }}
+          {{#if this.relatedItemsSummary}}
+            <AdminReportTableSummary
+              @date={{this.data.x}}
+              @formattedValue={{this.formattedValue}}
+              @itemComponent={{this.relatedItemsSummary.itemComponent}}
+              @itemsKey={{this.relatedItemsSummary.itemsKey}}
+              @reportType={{this.reportType}}
+              @reportFilters={{this.reportFilters}}
+              @titleKey={{this.relatedItemsSummary.titleKey}}
+            />
           {{else}}
             {{trustHTML this.formattedValue}}
           {{/if}}

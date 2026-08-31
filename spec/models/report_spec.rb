@@ -632,6 +632,23 @@ RSpec.describe Report do
       expect(report.related_items_totals).to be_nil
     end
 
+    it "skips related items when the guardian is not an admin" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          guardian: Fabricate(:moderator).guardian,
+          include_related_items: true,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
+    end
+
     it "skips related items unless they are requested" do
       Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
 
@@ -2061,16 +2078,15 @@ RSpec.describe Report do
     end
 
     it "does not read or write cached related-item reports" do
-      related_report = Report._get("signups", guardian: user.guardian, include_related_items: true)
+      guardian = Discourse.system_user.guardian
+      related_report = Report._get("signups", guardian:, include_related_items: true)
       Report.cache(related_report)
 
-      expect(Report.find_cached("signups", guardian: user.guardian)).to be_nil
+      expect(Report.find_cached("signups", guardian:)).to be_nil
 
-      Report.cache(Report._get("signups", guardian: user.guardian))
+      Report.cache(Report._get("signups", guardian:))
 
-      expect(
-        Report.find_cached("signups", guardian: user.guardian, include_related_items: true),
-      ).to be_nil
+      expect(Report.find_cached("signups", guardian:, include_related_items: true)).to be_nil
     end
   end
 
@@ -2358,14 +2374,6 @@ RSpec.describe Report do
         end
       end
 
-      it "returns false for reports with admin-only related items" do
-        Report::ADMIN_ONLY_RELATED_ITEMS_REPORTS.each do |report_type|
-          expect(
-            Report.hidden?(report_type, guardian: admin_guardian, include_related_items: true),
-          ).to eq(false)
-        end
-      end
-
       it "returns false for IP reports" do
         SiteSetting.moderators_view_ips = false
 
@@ -2383,15 +2391,6 @@ RSpec.describe Report do
       it "returns true for admin-only reports" do
         Report::ADMIN_ONLY_REPORTS.each do |report_type|
           expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
-        end
-      end
-
-      it "only hides identity-level data for reports with admin-only related items" do
-        Report::ADMIN_ONLY_RELATED_ITEMS_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(false)
-          expect(
-            Report.hidden?(report_type, guardian: moderator_guardian, include_related_items: true),
-          ).to eq(true)
         end
       end
 

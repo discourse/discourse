@@ -20,11 +20,7 @@ class Admin::ReportsController < Admin::StaffController
         report = nil
         report = Report.find_cached(report_type, args) if report_params[:cache]
 
-        if Report.hidden?(
-             report_type,
-             guardian: guardian,
-             include_related_items: args[:include_related_items],
-           )
+        if Report.hidden?(report_type, guardian: guardian)
           report = Report._get(report_type, args)
           report.error = :not_found
         end
@@ -57,13 +53,7 @@ class Admin::ReportsController < Admin::StaffController
     args = parse_params(params)
     args[:guardian] = guardian
 
-    if Report.hidden?(
-         report_type,
-         guardian: guardian,
-         include_related_items: args[:include_related_items],
-       )
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     report = nil
     report = Report.find_cached(report_type, args) if params[:cache]

@@ -303,15 +303,6 @@ class User < ActiveRecord::Base
           )
         end
 
-  scope :with_first_post_created_between,
-        ->(start_date, end_date) do
-          joins(:user_stat).where(
-            "user_stats.first_post_created_at > ? AND user_stats.first_post_created_at < ?",
-            start_date,
-            end_date,
-          )
-        end
-
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
   # may want to create an index on (active, silence, suspended_till)?
@@ -1572,16 +1563,17 @@ class User < ActiveRecord::Base
   end
 
   def self.count_by_first_post(start_date = nil, end_date = nil)
-    result =
-      if start_date && end_date
-        with_first_post_created_between(start_date, end_date)
-      else
-        joins(:user_stat)
-      end
+    result = joins("INNER JOIN user_stats AS us ON us.user_id = users.id")
 
     if start_date && end_date
-      result = result.group("date(user_stats.first_post_created_at)")
-      result = result.order("date(user_stats.first_post_created_at)")
+      result = result.group("date(us.first_post_created_at)")
+      result =
+        result.where(
+          "us.first_post_created_at > ? AND us.first_post_created_at < ?",
+          start_date,
+          end_date,
+        )
+      result = result.order("date(us.first_post_created_at)")
     end
 
     result.count
