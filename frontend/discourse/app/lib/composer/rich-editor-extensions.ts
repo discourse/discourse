@@ -210,6 +210,8 @@ export interface GlimmerNodeViewDescriptor {
   name?: string;
   /** Whether the node view exposes editable child content. */
   hasContent?: boolean;
+  /** Passed to the component as `@options`. */
+  options?: Record<string, unknown>;
   /** Determines whether the node view should be rendered. */
   shouldRender?: (params: {
     /** Node represented by the view. */

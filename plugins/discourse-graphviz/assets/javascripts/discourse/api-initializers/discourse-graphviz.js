@@ -1,5 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
 import GraphvizInline from "../components/graphviz-inline";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 function applyGraphviz(element, helper) {
   const src = element.textContent.trim();
@@ -17,6 +18,8 @@ function applyGraphviz(element, helper) {
 }
 
 export default apiInitializer((api) => {
+  api.registerRichEditorExtension(richEditorExtension);
+
   api.decorateCookedElement((element, helper) => {
     element
       .querySelectorAll("div.graphviz")
