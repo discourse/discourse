@@ -3,6 +3,7 @@
 require "optparse"
 require "shellwords"
 require "json"
+require "digest"
 require "fileutils"
 require "socket"
 require "uri"
@@ -13,6 +14,14 @@ require_relative "../lib/chrome_installed_checker"
 class QunitRunner
   DEFAULT_BROWSER_START_TIMEOUT = 45
   DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+
+  # Base ports for the three servers a run needs. Each checkout claims one slot in every band,
+  # so runs from different checkouts never contend for the same port. The bands must not
+  # overlap, which caps the number of slots.
+  DEVTOOLS_PORT_BASE = 3_001
+  RAILS_PORT_BASE = 4_566
+  TESTEM_PORT_BASE = 7_357
+  PORT_BAND_SIZE = 250
 
   def initialize(args)
     @file_paths = []
@@ -282,6 +291,15 @@ class QunitRunner
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
 
+    # On CI a run owns its container, so nothing else can claim these ports. Leave them alone
+    # there and let the existing fallbacks handle it: ember-cli's own port finder for testem, and
+    # the CI branch in testem.js for the browser.
+    if !ENV["CI"]
+      testem_port =
+        next_available_port(ENV["QUNIT_TESTEM_PORT"] || (TESTEM_PORT_BASE + port_offset))
+      env["QUNIT_REMOTE_DEBUGGING_PORT"] = devtools_port(parallel).to_s
+    end
+
     query = build_query
 
     args = []
@@ -290,9 +308,11 @@ class QunitRunner
     if @qunit_path
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
       args += %w[pnpm testem ci -f testem.js]
+      args += ["--port", testem_port.to_s] if testem_port
       args += ["--parallel", parallel.to_s] if parallel
     else
       args = %w[pnpm ember exam]
+      args += ["--test-port", testem_port.to_s] if testem_port
       args += ["--query", query] if query && !query.empty?
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
@@ -402,7 +422,7 @@ class QunitRunner
     ensure_pnpm_installed!
     install_node_dependencies!
 
-    @rails_port = next_available_port(4_566)
+    @rails_port = next_available_port(ENV["TEST_SERVER_PORT"] || (RAILS_PORT_BASE + port_offset))
     server_env = build_server_environment(@rails_port)
     server_pid = nil
     log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
@@ -456,18 +476,46 @@ class QunitRunner
     abort err.message
   end
 
+  # Derives this checkout's slot within each port band. Runs started at the same moment from
+  # different checkouts would otherwise all probe the same base port, find it free, and race to
+  # bind it: the probe and the bind are seconds apart, so the loser fails with EADDRINUSE.
+  # Deriving the slot from the path keeps each checkout on its own port, and keeps that port
+  # stable so it stays a predictable address to attach a debugger to.
+  def port_offset
+    @port_offset ||= Digest::MD5.hexdigest(rails_root).to_i(16) % PORT_BAND_SIZE
+  end
+
+  # Every browser a run launches receives the same argument list, so a fixed port would have all
+  # workers of a parallel run fight over it. A parallel run has no single browser to attach to
+  # anyway, so let the OS assign a port to each one.
+  def devtools_port(parallel)
+    return 0 if parallel
+
+    next_available_port(ENV["QUNIT_REMOTE_DEBUGGING_PORT"] || (DEVTOOLS_PORT_BASE + port_offset))
+  end
+
   def next_available_port(start_port)
-    port = (ENV["TEST_SERVER_PORT"] || start_port).to_i
+    port = start_port.to_i
     port += 1 while !port_available?(port)
     port
   end
 
   def port_available?(port)
-    server = TCPServer.open(port)
+    %w[127.0.0.1 ::1].all? { |host| bindable?(host, port) }
+  end
+
+  # Probes both loopback families, because a server that binds only one of them still makes the
+  # port unusable for a server that binds the other: Chrome's debugging port has been observed
+  # listening on 127.0.0.1 in one run and [::1] in another.
+  def bindable?(host, port)
+    server = TCPServer.open(host, port)
     server.close
     true
   rescue Errno::EADDRINUSE
     false
+  rescue Errno::EADDRNOTAVAIL, SocketError
+    # This machine cannot bind the family at all, so nothing can be listening on it either.
+    true
   end
 
   def build_server_environment(server_port)
@@ -711,4 +759,4 @@ class QunitRunner
   end
 end
 
-QunitRunner.new(ARGV).run
+QunitRunner.new(ARGV).run if $PROGRAM_NAME == __FILE__
