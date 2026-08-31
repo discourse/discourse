@@ -1,4 +1,5 @@
 const MAX_PENDING_OPTIMISTIC_UPDATES = 100;
+const OPTIMISTIC_UPDATE_TTL = 30_000;
 const pendingOptimisticUpdates = new Map();
 
 function removeOptimisticPostUpdate(token) {
@@ -7,8 +8,8 @@ function removeOptimisticPostUpdate(token) {
     return;
   }
 
+  clearTimeout(update.timeout);
   pendingOptimisticUpdates.delete(token);
-  update.resolve();
 }
 
 export function registerOptimisticPostUpdate(token) {
@@ -18,40 +19,29 @@ export function registerOptimisticPostUpdate(token) {
     removeOptimisticPostUpdate(pendingOptimisticUpdates.keys().next().value);
   }
 
-  let resolve;
-  const reconciled = new Promise((promiseResolve) => {
-    resolve = promiseResolve;
-  });
-  const update = {
-    complete() {
-      if (update.completed) {
-        return;
-      }
-
-      update.completed = true;
-      resolve();
-      queueMicrotask(() => {
-        if (pendingOptimisticUpdates.get(token) === update) {
-          pendingOptimisticUpdates.delete(token);
-        }
-      });
-    },
-    completed: false,
-    resolve,
-  };
+  const update = {};
   pendingOptimisticUpdates.set(token, update);
 
   return {
-    reconciled,
+    startExpiration() {
+      if (!pendingOptimisticUpdates.has(token) || update.timeout) {
+        return;
+      }
+
+      update.timeout = setTimeout(
+        () => removeOptimisticPostUpdate(token),
+        OPTIMISTIC_UPDATE_TTL
+      );
+    },
     unregister: () => removeOptimisticPostUpdate(token),
   };
 }
 
 export function consumeOptimisticPostUpdate(token) {
-  const update = token && pendingOptimisticUpdates.get(token);
-  if (!update) {
-    return;
+  if (!token || !pendingOptimisticUpdates.has(token)) {
+    return false;
   }
 
-  return update.complete;
+  removeOptimisticPostUpdate(token);
+  return true;
 }

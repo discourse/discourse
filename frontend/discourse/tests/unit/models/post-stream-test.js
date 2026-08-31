@@ -897,6 +897,7 @@ module("Unit | Model | post-stream", function (hooks) {
     const post = store.createRecord("post", {
       id: 1,
       post_number: 1,
+      cooked: "first",
       updated_at: "2026-08-28T08:00:02.000Z",
     });
     postStream.appendPost(post);
@@ -907,7 +908,8 @@ module("Unit | Model | post-stream", function (hooks) {
       return response({
         id: 1,
         post_number: 1,
-        updated_at: "2026-08-28T08:00:03.000Z",
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:02.000Z",
       });
     });
 
@@ -921,6 +923,78 @@ module("Unit | Model | post-stream", function (hooks) {
 
     await postStream.triggerChangedPost(1, "2026-08-28T08:00:03.000Z");
     assert.strictEqual(requestCount, 1, "a newer event refreshes the post");
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "the response is accepted when its persisted timestamp predates the event"
+    );
+  });
+
+  test("refreshPost accepts an unchanged timestamp", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        version: 2,
+        updated_at: "2026-08-28T08:00:01.000Z",
+      })
+    );
+
+    pretender.get("/posts/1", () => {
+      return response({
+        id: 1,
+        post_number: 1,
+        version: 1,
+        updated_at: "2026-08-28T08:00:01.000Z",
+      });
+    });
+
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).version,
+      1,
+      "the authoritative state is stored"
+    );
+  });
+
+  test("refreshPost ignores responses older than the loaded post", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 1,
+      cooked: "first",
+      updated_at: "2026-08-28T08:00:01.000Z",
+    });
+    postStream.appendPost(post);
+    let resolveRequest;
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolve) => (resolveRequest = resolve));
+    });
+
+    const refresh = postStream.refreshPost(1);
+    await waitUntil(() => resolveRequest);
+    post.updated_at = "2026-08-28T08:00:03.000Z";
+    post.cooked = "third";
+    resolveRequest(
+      response({
+        id: 1,
+        post_number: 1,
+        cooked: "second",
+        updated_at: "2026-08-28T08:00:02.000Z",
+      })
+    );
+    await refresh;
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "the newer loaded state is retained"
+    );
   });
 
   test("triggerChangedPost keeps the newest concurrent response", async function (assert) {
@@ -957,7 +1031,7 @@ module("Unit | Model | post-stream", function (hooks) {
         id: 1,
         post_number: 1,
         cooked: "third",
-        updated_at: "2026-08-28T08:00:03.000Z",
+        updated_at: "2026-08-28T08:00:01.000Z",
       })
     );
     await newerRequest;
@@ -966,7 +1040,7 @@ module("Unit | Model | post-stream", function (hooks) {
         id: 1,
         post_number: 1,
         cooked: "second",
-        updated_at: "2026-08-28T08:00:02.000Z",
+        updated_at: "2026-08-28T08:00:01.000Z",
       })
     );
     await olderRequest;
@@ -974,13 +1048,117 @@ module("Unit | Model | post-stream", function (hooks) {
     const loadedPost = postStream.findLoadedPost(1);
     assert.strictEqual(
       loadedPost.updated_at,
-      "2026-08-28T08:00:03.000Z",
-      "the timestamp does not regress"
+      "2026-08-28T08:00:01.000Z",
+      "response ordering does not depend on persisted timestamps"
     );
     assert.strictEqual(
       loadedPost.cooked,
       "third",
       "the cooked HTML stays current"
+    );
+  });
+
+  test("refreshPost falls back when a newer request fails", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const olderRequest = postStream.refreshPost(1);
+    const newerRequest = postStream.refreshPost(1);
+    await waitUntil(() => resolveRequests.length === 2);
+
+    assert.strictEqual(
+      olderRequest,
+      newerRequest,
+      "concurrent callers share the reconciliation promise"
+    );
+    resolveRequests[0](response({ id: 1, post_number: 1, cooked: "second" }));
+    resolveRequests[1](response(500, { errors: ["failed"] }));
+    await newerRequest;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "the successful older response is used as a fallback"
+    );
+  });
+
+  test("refreshPost clears a failed batch", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+
+    pretender.get("/posts/1", () => response(500, { errors: ["failed"] }));
+    await assert.rejects(postStream.refreshPost(1), "the failed batch rejects");
+
+    pretender.get("/posts/1", () =>
+      response({ id: 1, post_number: 1, cooked: "second" })
+    );
+    await postStream.refreshPost(1);
+
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "second",
+      "a later refresh can succeed"
+    );
+  });
+
+  test("refreshPost keeps authoritative cooked content when requests overlap", async function (assert) {
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
+    postStream.appendPost(
+      store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        cooked: "first",
+      })
+    );
+    const resolveRequests = [];
+
+    pretender.get("/posts/1", () => {
+      return new Promise((resolveRequest) => {
+        resolveRequests.push(resolveRequest);
+      });
+    });
+
+    const fullRefresh = postStream.refreshPost(1);
+    const preservingRefresh = postStream.refreshPost(1, {
+      preserveCooked: true,
+    });
+    await waitUntil(() => resolveRequests.length === 2);
+
+    resolveRequests[1](response({ id: 1, post_number: 1, cooked: "third" }));
+    await preservingRefresh;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "a full refresh keeps cooked content authoritative for the batch"
+    );
+
+    resolveRequests[0](response({ id: 1, post_number: 1, cooked: "second" }));
+    await fullRefresh;
+    assert.strictEqual(
+      postStream.findLoadedPost(1).cooked,
+      "third",
+      "the older response is ignored"
     );
   });
 

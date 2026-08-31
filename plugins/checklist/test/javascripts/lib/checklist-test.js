@@ -13,9 +13,9 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializers/checklist";
 
 let decoratorCleanup;
-let holdConfirmation;
 let holdRequest;
-let releaseConfirmation;
+let initialRaw;
+let postModel;
 let releaseRequest;
 let requests;
 let retryableConflicts;
@@ -29,6 +29,7 @@ function nextUpdatedAt() {
 }
 
 async function prepare(raw, { canEdit = true } = {}) {
+  initialRaw = raw;
   const cooked = await cook(raw, {
     siteSettings: {
       checklist_enabled: true,
@@ -36,12 +37,14 @@ async function prepare(raw, { canEdit = true } = {}) {
     },
   });
 
-  const model = Post.create({
+  postModel = Post.create({
     id: 42,
     can_edit: canEdit,
+    cooked: cooked.toString(),
+    raw,
     updated_at: "2026-08-27T08:00:00.000Z",
   });
-  const decoratorHelper = { getModel: () => model };
+  const decoratorHelper = { getModel: () => postModel };
   const element = document.createElement("div");
   element.innerHTML = cooked.toString();
   decoratorCleanup = checklistSyntax(element, decoratorHelper);
@@ -59,6 +62,7 @@ acceptance("checklist", function (needs) {
       if (retryableConflicts.length > 0) {
         return helper.response(409, {
           errors: ["The post changed"],
+          raw: "server conflict raw",
           retryable: true,
           updated_at: retryableConflicts.shift(),
         });
@@ -68,19 +72,15 @@ acceptance("checklist", function (needs) {
         return helper.response(422, {});
       }
 
+      const updatedAt = nextUpdatedAt();
       const response = {
+        cooked: `authoritative cooked ${responseSequence}`,
+        raw: `authoritative raw ${responseSequence}`,
         revised: responseRevised,
-        updated_at: nextUpdatedAt(),
+        updated_at: updatedAt,
       };
       if (responseRevised) {
-        const completeReconciliation = consumeOptimisticPostUpdate(
-          body.mutation_id
-        );
-        if (holdConfirmation) {
-          releaseConfirmation = completeReconciliation;
-        } else {
-          completeReconciliation();
-        }
+        consumeOptimisticPostUpdate(body.mutation_id);
       }
       if (holdRequest) {
         return new Promise((resolve) => {
@@ -94,9 +94,9 @@ acceptance("checklist", function (needs) {
 
   needs.hooks.beforeEach(function () {
     decoratorCleanup = null;
-    holdConfirmation = false;
     holdRequest = false;
-    releaseConfirmation = null;
+    initialRaw = null;
+    postModel = null;
     releaseRequest = null;
     requests = [];
     retryableConflicts = [];
@@ -107,7 +107,6 @@ acceptance("checklist", function (needs) {
 
   needs.hooks.afterEach(function () {
     decoratorCleanup?.();
-    releaseConfirmation?.();
     releaseRequest?.();
     document.querySelector("#ember-testing").innerHTML = "";
   });
@@ -153,10 +152,65 @@ Actual checkboxes:
             checked: false,
           },
         ],
+        expected_raw: initialRaw,
         expected_updated_at: "2026-08-27T08:00:00.000Z",
         mutation_id: requests[0].mutation_id,
       },
       "the server receives the checkbox's rendered position and desired state"
+    );
+  });
+
+  test("defers authoritative cooked content until teardown", async function (assert) {
+    const [checkbox] = await prepare("[ ] first");
+    const initialCooked = postModel.cooked;
+
+    await click(checkbox);
+
+    assert.strictEqual(
+      postModel.raw,
+      "authoritative raw 1",
+      "raw content is reconciled"
+    );
+    assert.strictEqual(
+      postModel.cooked,
+      initialCooked,
+      "the visible cooked subtree is not rerendered"
+    );
+    assert.true(checkbox.isConnected, "the decorated control stays connected");
+
+    decoratorCleanup();
+    decoratorCleanup = null;
+    await settled();
+    assert.strictEqual(
+      postModel.cooked,
+      "authoritative cooked 1",
+      "cooked content is stored for the next render"
+    );
+  });
+
+  test("does not apply a response older than the loaded post", async function (assert) {
+    holdRequest = true;
+    const [checkbox] = await prepare("[ ] first");
+
+    checkbox.click();
+    await waitUntil(() => releaseRequest);
+    postModel.updated_at = "2026-08-27T08:00:09.000Z";
+    postModel.raw = "newer raw";
+    postModel.cooked = "newer cooked";
+    releaseRequest();
+    releaseRequest = null;
+    await settled();
+
+    assert.strictEqual(postModel.raw, "newer raw", "raw does not regress");
+    assert.strictEqual(
+      postModel.cooked,
+      "newer cooked",
+      "cooked does not regress"
+    );
+    assert.strictEqual(
+      postModel.updated_at,
+      "2026-08-27T08:00:09.000Z",
+      "the timestamp does not regress"
     );
   });
 
@@ -179,9 +233,8 @@ Actual checkboxes:
 
     await click(checkbox);
 
-    assert.strictEqual(
+    assert.false(
       consumeOptimisticPostUpdate(requests[0].mutation_id),
-      undefined,
       "a no-op response leaves no pending token"
     );
   });
@@ -307,14 +360,14 @@ Actual checkboxes:
     );
   });
 
-  test("waits for page reconciliation before sending another checkbox", async function (assert) {
-    holdConfirmation = true;
+  test("waits for the active request before sending another checkbox", async function (assert) {
+    holdRequest = true;
     const [first, second, third] = await prepare(
       "[ ] first\n[ ] second\n[ ] third"
     );
 
     first.click();
-    await waitUntil(() => releaseConfirmation);
+    await waitUntil(() => releaseRequest);
     second.click();
     third.click();
 
@@ -326,17 +379,17 @@ Actual checkboxes:
       .hasAttribute(
         "aria-busy",
         "true",
-        "the first item remains busy until its revision reaches the page"
+        "the first item remains busy until its request completes"
       );
     assert.strictEqual(
       requests.length,
       1,
-      "the second request waits after the first HTTP response"
+      "the second request waits for the first response"
     );
 
-    holdConfirmation = false;
-    releaseConfirmation();
-    releaseConfirmation = null;
+    holdRequest = false;
+    releaseRequest();
+    releaseRequest = null;
     await waitUntil(() => requests.length === 2);
 
     assert.deepEqual(
@@ -345,6 +398,11 @@ Actual checkboxes:
       ),
       [[0], [1, 2]],
       "the first change is immediate and the backlog is one batch"
+    );
+    assert.strictEqual(
+      requests[1].expected_raw,
+      "authoritative raw 1",
+      "the second request uses the first response's raw"
     );
     assert.strictEqual(
       requests[1].expected_updated_at,
@@ -361,9 +419,8 @@ Actual checkboxes:
     second.click();
     await waitUntil(() => requests.length === 1);
     decoratorCleanup();
-    assert.strictEqual(
+    assert.false(
       consumeOptimisticPostUpdate(requests[0].mutation_id),
-      undefined,
       "the detached decoration unregisters its in-flight mutation"
     );
     releaseRequest();
@@ -373,6 +430,16 @@ Actual checkboxes:
       requests.length,
       1,
       "detached controls do not send stale queued changes"
+    );
+    assert.strictEqual(
+      postModel.raw,
+      "authoritative raw 1",
+      "the detached model retains the confirmed raw content"
+    );
+    assert.strictEqual(
+      postModel.cooked,
+      "authoritative cooked 1",
+      "the detached model retains the confirmed cooked content"
     );
   });
 
@@ -398,6 +465,11 @@ Actual checkboxes:
       ),
       [[0], [0], [1, 2]],
       "the failed batch is retried before the accumulated backlog"
+    );
+    assert.strictEqual(
+      requests[1].expected_raw,
+      "server conflict raw",
+      "the retry uses the server's authoritative raw"
     );
     assert.strictEqual(
       requests[1].expected_updated_at,
@@ -486,6 +558,31 @@ Actual checkboxes:
     assert
       .dom(checkbox)
       .hasAttribute("aria-label", "Checklist item", "the empty item is named");
+  });
+
+  test("does not make quoted checkboxes interactive", async function (assert) {
+    const [quoted, own] = await prepare(
+      '[quote="Other user"]\n[ ] quoted task\n[/quote]\n\n[ ] own task'
+    );
+
+    assert
+      .dom(quoted)
+      .hasAttribute(
+        "aria-readonly",
+        "true",
+        "the quoted checkbox is read-only"
+      );
+    assert.dom(quoted).doesNotHaveAttribute("tabindex");
+    await click(quoted);
+    assert.strictEqual(requests.length, 0, "the quote sends no request");
+
+    await click(own);
+    assert.strictEqual(requests.length, 1, "the post's own checkbox toggles");
+    assert.strictEqual(
+      requests[0].toggles[0].checkbox_index,
+      1,
+      "the rendered index still includes quoted checkboxes"
+    );
   });
 
   test("permanent and read-only checkboxes are not interactive", async function (assert) {

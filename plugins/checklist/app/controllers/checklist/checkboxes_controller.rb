@@ -13,7 +13,12 @@ module Checklist
         on_success do |post:, resolved_toggles:|
           revised =
             resolved_toggles.any? { |toggle| toggle.checkbox.checked? != toggle.request[:checked] }
-          render json: { updated_at: post.updated_at, revised: }
+          render json: {
+                   cooked: post.cooked,
+                   raw: post.raw,
+                   revised:,
+                   updated_at: post.updated_at.iso8601(3),
+                 }
         end
         on_failed_contract do |contract|
           render json: failed_json.merge(errors: contract.errors.full_messages),
@@ -51,17 +56,16 @@ module Checklist
     end
 
     def checklist_conflict_retryable?(post, params)
-      Checklist::ToggleCheckbox.retryable_conflict?(
-        post:,
-        expected_updated_at: params.expected_updated_at,
-      )
+      Checklist::ToggleCheckbox.retryable_conflict?(post:, expected_raw: params.expected_raw)
     end
 
     def render_checklist_conflict(post, retryable: false)
+      post.reload
       render json:
                failed_json.merge(
                  errors: [I18n.t("checklist.checkboxes_changed")],
-                 updated_at: post.reload.updated_at.iso8601(3),
+                 raw: post.raw,
+                 updated_at: post.updated_at.iso8601(3),
                  retryable:,
                ),
              status: :conflict

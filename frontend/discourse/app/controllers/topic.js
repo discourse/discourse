@@ -2080,9 +2080,11 @@ export default class TopicController extends Controller {
 
     switch (data.type) {
       case "acted":
-        postStream.triggerChangedPost(data.id, data.updated_at, {
-          preserveCooked: true,
-        });
+        void postStream
+          .triggerChangedPost(data.id, data.updated_at, {
+            preserveCooked: true,
+          })
+          .catch(() => {});
         break;
       case "read": {
         postStream.triggerReadPost(data.id, data.readers_count);
@@ -2100,21 +2102,10 @@ export default class TopicController extends Controller {
       }
       case "revised":
       case "rebaked": {
-        const completeReconciliation = consumeOptimisticPostUpdate(
-          data.preserve_cooked_token
-        );
-        if (completeReconciliation) {
-          const post = postStream.findLoadedPost(data.id);
-          if (
-            post &&
-            (!post.updated_at ||
-              Date.parse(data.updated_at) >= Date.parse(post.updated_at))
-          ) {
-            post.updated_at = new Date(data.updated_at).toISOString();
-          }
-          completeReconciliation();
-        } else {
-          postStream.triggerChangedPost(data.id, data.updated_at);
+        if (!consumeOptimisticPostUpdate(data.preserve_cooked_token)) {
+          void postStream
+            .triggerChangedPost(data.id, data.updated_at)
+            .catch(() => {});
         }
         break;
       }
@@ -2127,7 +2118,7 @@ export default class TopicController extends Controller {
         break;
       }
       case "recovered": {
-        postStream.triggerRecoveredPost(data.id);
+        void postStream.triggerRecoveredPost(data.id).catch(() => {});
         break;
       }
       case "created": {

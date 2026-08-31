@@ -12,6 +12,7 @@ module Checklist
     params do
       attribute :post_id, :integer
       attribute :toggles, :array
+      attribute :expected_raw, :string
       attribute :expected_updated_at, :string
       attribute :mutation_id, :string
 
@@ -30,6 +31,7 @@ module Checklist
 
       validates :post_id, presence: true
       validates :toggles, presence: true, length: { maximum: MAX_BATCH_SIZE }
+      validates :expected_raw, presence: true
       validates :expected_updated_at, presence: true
       validates :mutation_id, presence: true, length: { maximum: 100 }
       validate :toggles_are_valid, if: -> { toggles.present? }
@@ -46,9 +48,8 @@ module Checklist
               toggle[:checkbox_source].length <= 30
           valid_checked = [true, false].include?(toggle[:checked])
 
-          if !valid_index || (!valid_source && !valid_count) || !valid_checked
-            errors.add(:toggles, :invalid)
-          end
+          valid_target = toggle[:checkbox_source].present? ? valid_source : valid_count
+          errors.add(:toggles, :invalid) if !valid_index || !valid_target || !valid_checked
         end
       end
 
@@ -74,20 +75,8 @@ module Checklist
       step :revise_post
     end
 
-    def self.retryable_conflict?(post:, expected_updated_at:)
-      expected_at = Time.iso8601(expected_updated_at)
-      first_raw_revision =
-        post
-          .revisions
-          .where("post_revisions.updated_at > ?", expected_at)
-          .order(:updated_at)
-          .find { |revision| revision.modifications["raw"].present? }
-      return false if first_raw_revision.nil?
-
-      previous_raw = first_raw_revision.modifications["raw"].first
-      normalize_checkbox_states(previous_raw) == normalize_checkbox_states(post.reload.raw)
-    rescue ArgumentError
-      false
+    def self.retryable_conflict?(post:, expected_raw:)
+      normalize_checkbox_states(expected_raw) == normalize_checkbox_states(post.reload.raw)
     end
 
     def self.normalize_checkbox_states(raw)
@@ -111,8 +100,9 @@ module Checklist
 
     def post_unchanged(post:, params:)
       expected = Time.iso8601(params.expected_updated_at)
-      (expected.to_r * 1000).floor == (post.updated_at.to_time.to_r * 1000).floor
-    rescue ArgumentError
+      post.raw == params.expected_raw &&
+        (expected.to_r * 1000).floor == (post.updated_at.to_time.to_r * 1000).floor
+    rescue ArgumentError, TypeError
       false
     end
 

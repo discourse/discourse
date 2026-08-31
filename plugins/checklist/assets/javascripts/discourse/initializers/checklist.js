@@ -1,3 +1,4 @@
+import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -8,6 +9,16 @@ import richEditorExtension from "../../lib/rich-editor-extension";
 
 const MINIMUM_SPINNER_DURATION = 200;
 const MAX_CONFLICT_RETRIES = 2;
+
+function timestampIsOlder(candidate, reference) {
+  const candidateTime = Date.parse(candidate);
+  const referenceTime = Date.parse(reference);
+  return (
+    !Number.isNaN(candidateTime) &&
+    !Number.isNaN(referenceTime) &&
+    candidateTime < referenceTime
+  );
+}
 
 function setCheckboxState(checkbox, checked) {
   checkbox.classList.toggle("checked", checked);
@@ -41,7 +52,7 @@ function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
   if (siteSettings.checklist_enabled) {
-    api.decorateCookedElement(checklistSyntax);
+    api.decorateCookedElement(checklistSyntax, { onlyStream: true });
     api.registerRichEditorExtension(richEditorExtension);
 
     api.addComposerToolbarPopupMenuOption({
@@ -123,13 +134,16 @@ function configureAccessibility(box, editable) {
   }
 }
 
-function addToggleBehavior(boxes, postModel) {
+function addToggleBehavior(boxes, postModel, allBoxes = boxes) {
+  const renderedIndexes = new Map(allBoxes.map((box, index) => [box, index]));
   const confirmedStates = boxes.map((box) => box.classList.contains("checked"));
   const pendingStates = new Map();
   const spinnerStates = new Map();
   const cleanups = [];
+  let expectedRaw = postModel.raw;
   let expectedUpdatedAt = postModel.updated_at;
   let active = true;
+  let deferredCooked;
   let saving = false;
   let unregisterInFlightOptimisticUpdate;
 
@@ -205,24 +219,27 @@ function addToggleBehavior(boxes, postModel) {
         });
 
         const mutationId = crypto.randomUUID();
-        const { reconciled, unregister: unregisterOptimisticUpdate } =
-          registerOptimisticPostUpdate(mutationId);
+        const {
+          startExpiration: startOptimisticUpdateExpiration,
+          unregister: unregisterOptimisticUpdate,
+        } = registerOptimisticPostUpdate(mutationId);
         unregisterInFlightOptimisticUpdate = unregisterOptimisticUpdate;
         const toggles = batch.states.map(([index, checked]) => {
           const checkboxSource = boxes[index].dataset.chkSrc;
           const toggle = {
-            checkbox_index: index,
+            checkbox_index: renderedIndexes.get(boxes[index]),
             checkbox_source: checkboxSource,
             checked,
           };
           if (!checkboxSource) {
-            toggle.checkbox_count = boxes.length;
+            toggle.checkbox_count = allBoxes.length;
           }
           return toggle;
         });
         const data = {
           post_id: postModel.id,
           toggles,
+          expected_raw: expectedRaw,
           expected_updated_at: expectedUpdatedAt,
           mutation_id: mutationId,
         };
@@ -233,13 +250,32 @@ function addToggleBehavior(boxes, postModel) {
             contentType: "application/json",
             data: JSON.stringify(data),
           });
-          postModel.updated_at = response.updated_at;
+          const responseIsStale = timestampIsOlder(
+            response.updated_at,
+            postModel.updated_at
+          );
+          if (!responseIsStale) {
+            postModel.updated_at = response.updated_at;
+          }
 
-          if (!response.revised) {
+          if (response.revised) {
+            startOptimisticUpdateExpiration();
+          } else {
             unregisterOptimisticUpdate();
           }
-          await reconciled;
           unregisterInFlightOptimisticUpdate = undefined;
+
+          if (!responseIsStale && (!active || pendingStates.size === 0)) {
+            postModel.raw = response.raw;
+            if (active) {
+              deferredCooked = {
+                cooked: response.cooked,
+                updatedAt: response.updated_at,
+              };
+            } else {
+              postModel.cooked = response.cooked;
+            }
+          }
 
           if (!active) {
             break;
@@ -251,6 +287,7 @@ function addToggleBehavior(boxes, postModel) {
               pendingStates.delete(index);
             }
           });
+          expectedRaw = response.raw;
           expectedUpdatedAt = response.updated_at;
         } catch (error) {
           unregisterInFlightOptimisticUpdate = undefined;
@@ -264,11 +301,15 @@ function addToggleBehavior(boxes, postModel) {
           if (
             error.jqXHR?.status === 409 &&
             conflict?.retryable &&
+            conflict.raw &&
             conflict.updated_at &&
             batch.conflictRetries < MAX_CONFLICT_RETRIES
           ) {
+            expectedRaw = conflict.raw;
             expectedUpdatedAt = conflict.updated_at;
-            postModel.updated_at = conflict.updated_at;
+            if (!timestampIsOlder(conflict.updated_at, postModel.updated_at)) {
+              postModel.updated_at = conflict.updated_at;
+            }
             retryBatch = {
               states: batch.states,
               conflictRetries: batch.conflictRetries + 1,
@@ -278,6 +319,10 @@ function addToggleBehavior(boxes, postModel) {
 
           pendingStates.clear();
           restoreConfirmedStates();
+          const postStream = postModel.topic?.postStream;
+          if (postStream) {
+            void postStream.refreshPost(postModel.id).catch(() => {});
+          }
           popupAjaxError(error);
           break;
         } finally {
@@ -351,6 +396,16 @@ function addToggleBehavior(boxes, postModel) {
       }
     });
     cleanups.forEach((cleanup) => cleanup());
+
+    const cookedUpdate = deferredCooked;
+    deferredCooked = undefined;
+    if (cookedUpdate) {
+      schedule("afterRender", () => {
+        if (!timestampIsOlder(cookedUpdate.updatedAt, postModel.updated_at)) {
+          postModel.cooked = cookedUpdate.cooked;
+        }
+      });
+    }
   };
 }
 
@@ -360,11 +415,15 @@ export function checklistSyntax(elem, postDecorator) {
 
   const postModel = postDecorator?.getModel();
   const editable = postModel?.can_edit === true;
+  const interactiveBoxes = boxes.filter((box) => !box.closest("aside.quote"));
+  const interactiveBoxSet = new Set(interactiveBoxes);
 
-  boxes.forEach((box) => configureAccessibility(box, editable));
+  boxes.forEach((box) =>
+    configureAccessibility(box, editable && interactiveBoxSet.has(box))
+  );
 
   if (editable) {
-    return addToggleBehavior(boxes, postModel);
+    return addToggleBehavior(interactiveBoxes, postModel, boxes);
   }
 }
 

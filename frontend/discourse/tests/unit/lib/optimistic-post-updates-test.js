@@ -1,65 +1,59 @@
 import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   consumeOptimisticPostUpdate,
   registerOptimisticPostUpdate,
 } from "discourse/lib/optimistic-post-updates";
 
 module("Unit | Lib | optimistic-post-updates", function () {
-  test("reconciliation is completed only once by the originating event", async function (assert) {
-    const { reconciled } = registerOptimisticPostUpdate("originating-mutation");
-    let pageReconciled = false;
-    void reconciled.then(() => (pageReconciled = true));
-
-    assert.strictEqual(
-      consumeOptimisticPostUpdate(),
-      undefined,
-      "an event without a token is not optimistic"
-    );
-    assert.strictEqual(
-      consumeOptimisticPostUpdate("another-mutation"),
-      undefined,
-      "another client's token is not consumed"
-    );
-
-    const completeReconciliation = consumeOptimisticPostUpdate(
-      "originating-mutation"
-    );
-    assert.strictEqual(
-      typeof completeReconciliation,
-      "function",
-      "the originating event claims the pending update"
-    );
-    assert.strictEqual(
-      consumeOptimisticPostUpdate("originating-mutation"),
-      completeReconciliation,
-      "duplicate synchronous listeners share the reconciliation"
-    );
+  test("only the originating event consumes an update", function (assert) {
+    registerOptimisticPostUpdate("originating-mutation");
 
     assert.false(
-      pageReconciled,
-      "claiming the event does not complete page reconciliation"
+      consumeOptimisticPostUpdate(),
+      "an event without a token is not optimistic"
     );
-    completeReconciliation();
-    await reconciled;
-    assert.true(pageReconciled, "the event completes page reconciliation");
-    assert.strictEqual(
+    assert.false(
+      consumeOptimisticPostUpdate("another-mutation"),
+      "another client's token is not consumed"
+    );
+    assert.true(
       consumeOptimisticPostUpdate("originating-mutation"),
-      undefined,
-      "the completed token cannot be replayed by a later event"
+      "the originating event consumes the pending update"
+    );
+    assert.false(
+      consumeOptimisticPostUpdate("originating-mutation"),
+      "the token cannot be replayed"
     );
   });
 
-  test("unregistering completes pending reconciliation", async function (assert) {
-    const { reconciled, unregister } =
-      registerOptimisticPostUpdate("failed-mutation");
+  test("unregisters a pending update", function (assert) {
+    const { unregister } = registerOptimisticPostUpdate("failed-mutation");
 
     unregister();
-    await reconciled;
 
-    assert.strictEqual(
+    assert.false(
       consumeOptimisticPostUpdate("failed-mutation"),
-      undefined,
       "the mutation is no longer pending"
     );
+  });
+
+  test("starts expiration after the mutation request finishes", function (assert) {
+    const clock = sinon.useFakeTimers();
+    registerOptimisticPostUpdate("in-flight");
+
+    clock.tick(30_000);
+    assert.true(
+      consumeOptimisticPostUpdate("in-flight"),
+      "an in-flight mutation retains its token"
+    );
+
+    registerOptimisticPostUpdate("lost-event").startExpiration();
+    clock.tick(30_000);
+    assert.false(
+      consumeOptimisticPostUpdate("lost-event"),
+      "a lost event does not retain a completed mutation's token"
+    );
+    clock.restore();
   });
 });

@@ -13,6 +13,7 @@ RSpec.describe Checklist::ToggleCheckbox do
         described_class.new(
           post_id: 1,
           toggles:,
+          expected_raw: "[ ] task",
           expected_updated_at: Time.zone.now.iso8601,
           mutation_id: "mutation",
         )
@@ -20,6 +21,7 @@ RSpec.describe Checklist::ToggleCheckbox do
       expect(contract).not_to be_valid
       expect(contract.errors[:toggles]).to be_present
     end
+    it { is_expected.to validate_presence_of(:expected_raw) }
     it { is_expected.to validate_presence_of(:expected_updated_at) }
     it { is_expected.to validate_presence_of(:mutation_id) }
     it { is_expected.to validate_length_of(:mutation_id).is_at_most(100) }
@@ -37,6 +39,7 @@ RSpec.describe Checklist::ToggleCheckbox do
       {
         post_id:,
         toggles: [{ checkbox_index:, checkbox_count:, checkbox_source:, checked: }],
+        expected_raw:,
         expected_updated_at:,
         mutation_id:,
       }
@@ -47,11 +50,18 @@ RSpec.describe Checklist::ToggleCheckbox do
     let(:checkbox_count) { 2 }
     let(:checkbox_source) { nil }
     let(:checked) { true }
+    let(:expected_raw) { post.raw }
     let(:expected_updated_at) { post.updated_at.iso8601(3) }
     let(:mutation_id) { "mutation-123" }
 
     context "when the contract is invalid" do
       let(:checkbox_index) { -1 }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when a malformed source is provided with a valid count" do
+      let(:checkbox_source) { "invalid" }
 
       it { is_expected.to fail_a_contract }
     end
@@ -125,6 +135,7 @@ RSpec.describe Checklist::ToggleCheckbox do
             { checkbox_index: 0, checkbox_source: "0:0", checked: true },
             { checkbox_index: 2, checkbox_source: "2:0", checked: true },
           ],
+          expected_raw: post.raw,
           expected_updated_at: post.updated_at.iso8601(3),
           mutation_id:,
         }
@@ -146,6 +157,7 @@ RSpec.describe Checklist::ToggleCheckbox do
             { checkbox_index: 0, checkbox_source: "0:0", checked: true },
             { checkbox_index: 1, checkbox_count: 2, checked: false },
           ],
+          expected_raw: post.raw,
           expected_updated_at: post.updated_at.iso8601(3),
           mutation_id:,
         }

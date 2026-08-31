@@ -84,6 +84,7 @@ export default class PostStream extends RestModel {
   @autoTrackedArray userFilters = [];
 
   _identityMap = {};
+  _pendingPostRefreshes = new Map();
 
   @dependentKeyCompat
   get loading() {
@@ -806,7 +807,7 @@ export default class PostStream extends RestModel {
     const existing = this._identityMap[postId];
 
     if (existing) {
-      return this.triggerChangedPost(postId, new Date());
+      return this.refreshPost(postId);
     }
 
     // need to insert into stream
@@ -863,50 +864,111 @@ export default class PostStream extends RestModel {
   }
 
   /**
+   * Fetches and stores the authoritative state of a loaded post.
+   *
+   * @param {number} postId - The ID of the post to refresh
+   * @param {Object} opts - Additional options for refreshing the post
+   * @param {boolean} [opts.preserveCooked] - Whether to preserve the cooked HTML content
+   * @returns {Promise} A promise that resolves when the post has been refreshed
+   */
+  refreshPost(postId, opts = {}) {
+    opts ||= {};
+
+    const existing = this._identityMap[postId];
+    if (!existing) {
+      return Promise.resolve();
+    }
+    postId = existing.id;
+
+    let refreshState = this._pendingPostRefreshes.get(postId);
+    if (!refreshState) {
+      let resolve;
+      let reject;
+      const reconciled = new Promise((promiseResolve, promiseReject) => {
+        resolve = promiseResolve;
+        reject = promiseReject;
+      });
+      refreshState = {
+        preserveCooked: true,
+        reconciled,
+        reject,
+        requests: [],
+        resolve,
+      };
+      this._pendingPostRefreshes.set(postId, refreshState);
+    }
+
+    refreshState.preserveCooked &&= Boolean(opts.preserveCooked);
+    const refresh = { status: "pending" };
+    refreshState.requests.push(refresh);
+
+    void ajax(`/posts/${postId}`).then(
+      (data) => {
+        refresh.data = data;
+        refresh.status = "succeeded";
+        this._reconcilePostRefresh(postId, refreshState);
+      },
+      (error) => {
+        refresh.error = error;
+        refresh.status = "failed";
+        this._reconcilePostRefresh(postId, refreshState);
+      }
+    );
+
+    return refreshState.reconciled;
+  }
+
+  _reconcilePostRefresh(postId, refreshState) {
+    if (this._pendingPostRefreshes.get(postId) !== refreshState) {
+      return;
+    }
+
+    for (
+      let requestIndex = refreshState.requests.length - 1;
+      requestIndex >= 0;
+      requestIndex--
+    ) {
+      const refresh = refreshState.requests[requestIndex];
+      if (refresh.status === "pending") {
+        return;
+      }
+
+      if (refresh.status === "succeeded") {
+        const latest = this._identityMap[postId];
+        if (
+          latest &&
+          comparePostTimestamps(refresh.data.updated_at, latest.updated_at) >= 0
+        ) {
+          if (refreshState.preserveCooked) {
+            refresh.data.cooked = latest.cooked;
+          }
+          this.storePost(this.store.createRecord("post", refresh.data));
+        }
+
+        this._pendingPostRefreshes.delete(postId);
+        refreshState.resolve();
+        return;
+      }
+    }
+
+    this._pendingPostRefreshes.delete(postId);
+    refreshState.reject(refreshState.requests.at(-1).error);
+  }
+
+  /**
    * Updates a post in the stream when it has been changed on the server.
    *
    * @param {number} postId - The ID of the post to update
-   * @param {string} updatedAt - The timestamp when the post was last updated
+   * @param {string} updatedAt - The time when the change event was published
    * @param {Object} opts - Additional options for updating the post
    * @param {boolean} [opts.preserveCooked] - Whether to preserve the cooked HTML content
    * @returns {Promise} A promise that resolves when the post has been updated
    */
   async triggerChangedPost(postId, updatedAt, opts = {}) {
-    opts ||= {};
-
-    if (!postId) {
-      return;
-    }
-
     const existing = this._identityMap[postId];
-    const hasChanged =
-      existing && comparePostTimestamps(updatedAt, existing.updated_at) > 0;
 
-    // Only fetch and update if the post exists and the event is newer.
-    if (hasChanged) {
-      // Fetch the latest post data from the server
-      const updatedData = await ajax(`/posts/${postId}`);
-      const latest = this._identityMap[postId];
-      if (
-        !latest ||
-        comparePostTimestamps(updatedData.updated_at, updatedAt) < 0 ||
-        comparePostTimestamps(updatedData.updated_at, latest.updated_at) <= 0
-      ) {
-        return;
-      }
-
-      // Preserve the existing cooked HTML content if requested
-      if (opts.preserveCooked) {
-        updatedData.cooked = latest.cooked;
-      }
-
-      // Create a new post record with updated data and store it in the identity map.
-      // Creating a new record will update the existing one in the map, which will then
-      // trigger re-rendering of UI components that use the tracked data that was updated.
-      const updatedPost = this.store.createRecord("post", updatedData);
-
-      // Update the post in the post stream's identity map
-      this.storePost(updatedPost);
+    if (existing && comparePostTimestamps(updatedAt, existing.updated_at) > 0) {
+      return this.refreshPost(postId, opts);
     }
   }
 

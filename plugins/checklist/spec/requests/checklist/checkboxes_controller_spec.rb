@@ -14,6 +14,7 @@ RSpec.describe Checklist::CheckboxesController do
       {
         post_id: post.id,
         toggles: [toggle],
+        expected_raw: post.raw,
         expected_updated_at: post.updated_at.iso8601(3),
         mutation_id: "mutation-123",
       }
@@ -34,9 +35,12 @@ RSpec.describe Checklist::CheckboxesController do
         put "/checklist/toggle.json", params: params
 
         expect(response.status).to eq(200)
+        post.reload
         expect(response.parsed_body).to include(
-          "updated_at" => post.reload.updated_at.iso8601(3),
+          "cooked" => post.cooked,
+          "raw" => "- [x] first\n- [x] second",
           "revised" => true,
+          "updated_at" => post.updated_at.iso8601(3),
         )
         expect(post.raw).to eq("- [x] first\n- [x] second")
       end
@@ -79,12 +83,13 @@ RSpec.describe Checklist::CheckboxesController do
           force_new_version: true,
         )
         expected_updated_at = post.reload.updated_at.iso8601(3)
+        expected_raw = post.raw
         freeze_time(1.second.from_now) do
           PostRevisor.new(post).revise!(user, { raw: "- [x] first\n- [ ] second" })
         end
         expect(post.reload.revisions.one?).to eq(true)
 
-        put "/checklist/toggle.json", params: params.merge(expected_updated_at:)
+        put "/checklist/toggle.json", params: params.merge(expected_raw:, expected_updated_at:)
 
         expect(response.status).to eq(409)
         expect(response.parsed_body).to include(
@@ -94,13 +99,32 @@ RSpec.describe Checklist::CheckboxesController do
         )
       end
 
+      it "returns a retryable 409 for checklist-only grace-period edits" do
+        expected_updated_at = post.updated_at.iso8601(3)
+        expected_raw = post.raw
+        freeze_time(1.second.from_now) do
+          PostRevisor.new(post).revise!(user, { raw: "- [x] first\n- [x] second" })
+        end
+        expect(post.reload.revisions).to be_empty
+
+        put "/checklist/toggle.json", params: params.merge(expected_raw:, expected_updated_at:)
+
+        expect(response.status).to eq(409)
+        expect(response.parsed_body).to include(
+          "raw" => post.raw,
+          "retryable" => true,
+          "updated_at" => post.updated_at.iso8601(3),
+        )
+      end
+
       it "returns a non-retryable 409 after other post changes" do
         SiteSetting.post_edit_time_limit = 0
         post.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
         expected_updated_at = post.reload.updated_at.iso8601(3)
+        expected_raw = post.raw
         PostRevisor.new(post).revise!(user, { raw: "intro\n#{post.raw}" }, force_new_version: true)
 
-        put "/checklist/toggle.json", params: params.merge(expected_updated_at:)
+        put "/checklist/toggle.json", params: params.merge(expected_raw:, expected_updated_at:)
 
         expect(response.status).to eq(409)
         expect(response.parsed_body).to include(
