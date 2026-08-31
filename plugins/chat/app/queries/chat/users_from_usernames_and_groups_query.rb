@@ -11,8 +11,8 @@ module Chat
         .left_outer_joins(:groups)
         .where(user_options: opts)
         .where(
-          "username IN (?) OR (groups.name IN (?) AND group_users.user_id IS NOT NULL)",
-          usernames&.map(&:to_s),
+          "users.username_lower IN (?) OR (groups.name IN (?) AND group_users.user_id IS NOT NULL)",
+          usernames&.map { |username| User.normalize_username(username.to_s) },
           groups&.map(&:to_s),
         )
         .where.not(id: excluded_user_ids)

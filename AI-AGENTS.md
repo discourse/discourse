@@ -16,6 +16,7 @@ Discourse is large with long history. Understand context before changes.
 ### JavaScript and UI
 - No empty backing classes for template-only components unless requested
 - Build UI from the ui-kit primitives (`frontend/discourse/app/ui-kit`: `d-*` components, `helpers/`, `modifiers/`) rather than hand-rolling controls, layout, or behaviour; new shared, domain-free primitives go there. See ./docs/developer-guides/docs/03-code-internals/02-ui-kit.md
+- Use the skill at `.skills/discourse-frontend-conventions` when writing or reviewing JS/TS/Glimmer classes and templates (private members, member ordering, comments, invocation ordering)
 - Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/22-form-kit.md (`frontend/discourse/app/form-kit`)
 - Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/26-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
@@ -26,6 +27,7 @@ Discourse is large with long history. Understand context before changes.
 - Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
 - In the frontend, typescript is typically used for platform-level code, javascript for business-logic
 - Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
+- Use the skill at `.skills/discourse-writing-typescript` when authoring .ts/.gts or converting .js/.gjs to TypeScript
 - Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
 - In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 

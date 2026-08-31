@@ -197,6 +197,34 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(described_class.encode(upload_ids: [missing_id], max_pixels: MAX_PIXELS)).to be_empty
   end
 
+  it "records skipped images into a caller supplied collector" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    skips = []
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS, skips: skips)
+
+    expect(encoded).to be_empty
+    expect(skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+    expect(skips.first[:filename]).to eq("avatar.jxl")
+    expect(skips.first[:message]).to include("unsupported image format")
+  end
+
+  it "reaches the collector a prompt was handed" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    execution_context = DiscourseAi::Completions::ExecutionContext.new
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "system",
+        messages: [{ type: :user, content: ["look", { upload_id: upload.id }] }],
+      )
+    prompt.upload_skips = execution_context.upload_skips
+
+    prompt.encoded_uploads(prompt.messages.last)
+
+    expect(execution_context.upload_skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+  end
+
   it "only claims formats ImageMagick can decode" do
     described_class::SUPPORTED_IMAGE_EXTENSIONS.each do |extension|
       expect(extension).to match(OptimizedImage::IM_DECODERS)

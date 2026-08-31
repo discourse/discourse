@@ -467,6 +467,7 @@ en:
         since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
+      open_styleguide: "Open styleguide"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
@@ -4006,10 +4007,11 @@ en:
         search_icon: "Search icon near profile avatar"
 
       type:
-        default: "Topics/posts"
+        label: "Search type"
+        default: "Posts"
         users: "Users"
         categories: "Categories"
-        categories_and_tags: "Categories/tags"
+        categories_and_tags: "Categories & tags"
 
       context:
         user: "Search posts by @%{username}"

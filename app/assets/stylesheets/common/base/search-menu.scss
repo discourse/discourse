@@ -131,7 +131,7 @@
 
       .clear-recent-searches {
         cursor: pointer;
-        color: var(--primary-low-mid);
+        color: var(--tertiary);
       }
     }
   }
@@ -214,6 +214,17 @@
 
     .search-menu-recent {
       @include separator;
+
+      .d-icon-magnifying-glass {
+        font-size: var(--font-down-1);
+      }
+
+      .btn.clear-recent-searches {
+        --d-button-transparent-text-color: var(--tertiary);
+        padding-inline: var(--space-4);
+        width: 100%;
+        justify-content: start;
+      }
     }
   }
 
@@ -420,6 +431,10 @@
     height: var(--space-3); // 12px
     border-width: var(--space-half); // 2px
     margin: 0 $hpad 0 0;
+  }
+
+  .clear-search {
+    padding-inline: var(--space-2);
   }
 
   .show-advanced-search,

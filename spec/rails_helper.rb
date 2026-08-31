@@ -93,6 +93,7 @@ RSpec.configure do |config|
   config.include OneboxHelpers
   config.include FastImageHelpers
   config.include ServiceMatchers
+  config.include JsonApiKitMatchers, type: :resource
   config.include I18nHelpers
   config.include TimeHelpers
   config.include AuthHelpers

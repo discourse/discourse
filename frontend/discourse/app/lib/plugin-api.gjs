@@ -3383,9 +3383,16 @@ class _PluginApi {
    * @param {string} translationKey
    * @param {string} searchTypeId
    * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   * @param {Object} [options]
+   * @param {string} [options.after] - Id of the search type this one should follow; appended last when omitted or unknown.
    */
-  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
-    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc, options) {
+    registerFullPageSearchType(
+      translationKey,
+      searchTypeId,
+      searchFunc,
+      options
+    );
   }
 
   /**
