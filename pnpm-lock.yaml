@@ -981,6 +981,16 @@ importers:
         specifier: npm:@discourse/types@2026.6.0-06d03da3
         version: '@discourse/types@2026.6.0-06d03da3'
 
+  plugins/voice:
+    dependencies:
+      discourse:
+        specifier: npm:@discourse/types@*
+        version: '@discourse/types@2026.9.0-eb242063'
+    devDependencies:
+      playwright:
+        specifier: ^1.59.1
+        version: 1.59.1
+
   themes/horizon:
     dependencies:
       discourse:
@@ -1860,6 +1870,10 @@ packages:
 
   '@discourse/types@2026.6.0-06d03da3':
     resolution: {integrity: sha512-2ER4lt8lFtFNcuyj7Y0Ry8RMLFPBYDfix8TNCh4TKP3FKlCMv+FzvDJ6Ix+CFBTqvh4KJ4uR/oCGYR3Q45yQow==}
+    engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
+
+  '@discourse/types@2026.9.0-eb242063':
+    resolution: {integrity: sha512-u1KukGjlYXg6owV5WNWc4oCVWATBu0MZPHxBotZ3581hv5+atHtdHwjKFLA7b8pwJe9gZrJc9Pmcc9axk3g4Tg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -9618,6 +9632,8 @@ snapshots:
   '@discourse/resize@2.1.1': {}
 
   '@discourse/types@2026.6.0-06d03da3': {}
+
+  '@discourse/types@2026.9.0-eb242063': {}
 
   '@discourse/webp@1.5.0':
     dependencies:
