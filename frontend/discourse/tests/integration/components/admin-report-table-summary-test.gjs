@@ -82,6 +82,11 @@ module("Integration | Component | AdminReportTableSummary", function (hooks) {
       "true",
       "requests the related-item payload"
     );
+    assert.deepEqual(
+      requestParams.facets,
+      ["related_items"],
+      "requests only the related-items facet"
+    );
   });
 
   test("retries loading after an error", async function (assert) {

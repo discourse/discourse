@@ -342,11 +342,7 @@ class Report
   )
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
     dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
-    if admin_only_related_items
-      registered_admin_only_related_items_report_types << name.to_s
-    else
-      registered_admin_only_related_items_report_types.delete(name.to_s)
-    end
+    registered_admin_only_related_items_report_types << name.to_s if admin_only_related_items
   end
 
   # Only used for testing.

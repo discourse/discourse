@@ -193,12 +193,15 @@ after_initialize do
       .order("DATE(discourse_solved_solved_topics.created_at)")
       .count
       .each { |date, count| report.data << { x: date, y: count } }
-    report.total = accepted_solutions.count
-    report.prev30Days =
-      accepted_solutions
-        .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
-        .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
-        .count
+    report.total = accepted_solutions.count if report.facets.include?(:total)
+
+    if report.facets.include?(:prev30Days)
+      report.prev30Days =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
+          .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
+          .count
+    end
 
     if report.facets.include?(:prev_period)
       report.prev_period =

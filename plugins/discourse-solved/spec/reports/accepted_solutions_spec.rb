@@ -10,13 +10,14 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     topic
   end
 
-  def build(filters: {}, guardian: Discourse.system_user.guardian)
+  def build(filters: {}, guardian: Discourse.system_user.guardian, facets: nil)
     Report.find(
       "accepted_solutions",
       start_date: 2.days.ago,
       end_date: Time.current,
       filters:,
       guardian:,
+      facets:,
       include_related_items: true,
     )
   end
@@ -44,6 +45,16 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     solved_topic_in(category, created_at: 3.days.ago)
 
     expect(build.total).to eq(2)
+  end
+
+  it "only calculates requested facets" do
+    solved_topic_in(Fabricate(:category))
+
+    report = build(facets: [:related_items])
+
+    expect(report.total).to be_nil
+    expect(report.prev30Days).to be_nil
+    expect(report.related_items_totals).to eq(solved_topics: 1)
   end
 
   it "includes the solved topic, answer author, and category" do

@@ -11,6 +11,8 @@ RSpec.describe Report do
 
     it "records report types with admin-only related items" do
       Report.add_report("my_custom_report", admin_only_related_items: true) { |report| }
+      Report.add_report("my_custom_report") { |report| }
+
       expect(Report.admin_only_related_items_report_types).to include("my_custom_report")
     end
 

@@ -49,11 +49,10 @@ class Admin::ReportsController < Admin::StaffController
     report_type = params[:type]
 
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
+    raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     args = parse_params(params)
     args[:guardian] = guardian
-
-    raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     report = nil
     report = Report.find_cached(report_type, args) if params[:cache]
