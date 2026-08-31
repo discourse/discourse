@@ -5,8 +5,5 @@
   },
   "dependencies": {
     "discourse": "npm:@discourse/types@*"
-  },
-  "devDependencies": {
-    "playwright": "^1.59.1"
   }
 }

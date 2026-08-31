@@ -1,9 +1,0 @@
-node_modules
-.eslintcache
-/gems
-/auto_generated
-.env
-# Symlinks into the discourse_voice_assets gem, created at plugin activation
-/public/javascripts
-/.local
-/tmp
