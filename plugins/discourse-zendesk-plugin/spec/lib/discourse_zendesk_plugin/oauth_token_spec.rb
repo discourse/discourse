@@ -135,28 +135,28 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
           { status: 200, body: { access_token: "second-token", expires_in: 1800 }.to_json },
         )
 
-      expect(oauth_token.access_token).to eq("first-token")
+      access_token = oauth_token.access_token
+      expect(access_token).to eq("first-token")
 
-      oauth_token.invalidate
+      oauth_token.invalidate(access_token)
 
       expect(oauth_token.access_token).to eq("second-token")
       expect(token_request).to have_been_requested.twice
     end
 
-    it "does not remove a newer cached token when its access token is stale" do
-      stale_oauth_token = described_class.new
+    it "does not remove the cached token when it differs from the token being invalidated" do
       token_request =
         stub_request(:post, token_url).to_return(
           { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
           { status: 200, body: { access_token: "second-token", expires_in: 1800 }.to_json },
         )
 
-      expect(oauth_token.access_token).to eq("first-token")
-      expect(stale_oauth_token.access_token).to eq("first-token")
-      oauth_token.invalidate
+      access_token = oauth_token.access_token
+      expect(access_token).to eq("first-token")
+      oauth_token.invalidate(access_token)
       expect(oauth_token.access_token).to eq("second-token")
 
-      stale_oauth_token.invalidate
+      oauth_token.invalidate(access_token)
 
       expect(described_class.new.access_token).to eq("second-token")
       expect(token_request).to have_been_requested.twice

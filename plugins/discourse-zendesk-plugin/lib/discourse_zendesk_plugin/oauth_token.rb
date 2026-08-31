@@ -42,14 +42,14 @@ module DiscourseZendeskPlugin
     end
 
     def access_token
-      @access_token = Discourse.cache.read(cache_key).presence || request_access_token
+      Discourse.cache.read(cache_key).presence || request_access_token
     end
 
-    def invalidate
+    def invalidate(access_token)
       INVALIDATE_SCRIPT.eval(
         Discourse.cache.redis,
         [Discourse.cache.redis.namespace_key(Discourse.cache.normalize_key(cache_key))],
-        [Marshal.dump(@access_token)],
+        [Marshal.dump(access_token)],
       )
     end
 

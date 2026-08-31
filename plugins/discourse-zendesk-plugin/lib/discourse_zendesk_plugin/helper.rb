@@ -20,13 +20,14 @@ module DiscourseZendeskPlugin
 
     def zendesk_client
       oauth_token = DiscourseZendeskPlugin::OAuthToken.new if Helper.oauth_configured?
+      oauth_access_token = oauth_token.access_token if oauth_token
 
       client =
         ::ZendeskAPI::Client.new do |config|
           config.url = SiteSetting.zendesk_url
 
           if oauth_token
-            config.access_token = oauth_token.access_token
+            config.access_token = oauth_access_token
           else
             config.username = SiteSetting.zendesk_jobs_email
             config.token = SiteSetting.zendesk_jobs_api_token
@@ -36,7 +37,7 @@ module DiscourseZendeskPlugin
       if oauth_token
         client.insert_callback do |environment|
           if invalid_oauth_token_response?(environment)
-            oauth_token.invalidate
+            oauth_token.invalidate(oauth_access_token)
             raise InvalidOAuthTokenError, "Zendesk rejected the OAuth access token"
           end
         end
