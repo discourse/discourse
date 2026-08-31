@@ -71,19 +71,31 @@ RSpec.describe Checklist::CheckboxLocator do
       )
     end
 
-    it "excludes checkboxes copied into quote asides" do
+    it "excludes sourced quote checkboxes but maps anonymous quote checkboxes" do
       raw = <<~MARKDOWN
         [quote="Other user"]
-        [ ] quoted
+        [ ] attributed quote
+        [/quote]
+
+        [quote=", post: 1"]
+        [ ] post quote
+        [/quote]
+
+        [quote]
+        [ ] anonymous quote
         [/quote]
 
         [ ] own
       MARKDOWN
 
-      location = locate(raw, 0)
+      anonymous_quote = locate(raw, 0)
+      own = locate(raw, 1)
 
-      expect(location.count).to eq(1)
-      expect(location.checkbox.replace_in(raw, checked: true)).to end_with("[x] own\n")
+      expect(anonymous_quote.count).to eq(2)
+      expect(anonymous_quote.checkbox.replace_in(raw, checked: true)).to include(
+        "[x] anonymous quote",
+      )
+      expect(own.checkbox.replace_in(raw, checked: true)).to end_with("[x] own\n")
     end
 
     it "maps checkboxes in blockquotes, lists, and table cells" do

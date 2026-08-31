@@ -592,29 +592,49 @@ Actual checkboxes:
       .hasAttribute("aria-label", "Checklist item", "the empty item is named");
   });
 
-  test("does not make quoted checkboxes interactive", async function (assert) {
-    const [quoted, own] = await prepare(
-      '[quote="Other user"]\n[ ] quoted task\n[/quote]\n\n[ ] own task'
+  test("only anonymous quote checkboxes are interactive", async function (assert) {
+    const [attributedQuote, postQuote, anonymousQuote, own] = await prepare(
+      '[quote="Other user"]\n[ ] attributed task\n[/quote]\n\n[quote=", post: 1"]\n[ ] post task\n[/quote]\n\n[quote]\n[ ] anonymous task\n[/quote]\n\n[ ] own task'
     );
 
-    assert
-      .dom(quoted)
-      .hasAttribute(
-        "aria-readonly",
-        "true",
-        "the quoted checkbox is read-only"
-      );
-    assert.dom(quoted).doesNotHaveAttribute("tabindex");
-    await click(quoted);
-    assert.strictEqual(requests.length, 0, "the quote sends no request");
+    for (const [quote, label] of [
+      [attributedQuote, "attributed"],
+      [postQuote, "post"],
+    ]) {
+      assert
+        .dom(quote)
+        .hasAttribute(
+          "aria-readonly",
+          "true",
+          `the ${label} quote checkbox is read-only`
+        );
+      assert
+        .dom(quote)
+        .doesNotHaveAttribute(
+          "tabindex",
+          `the ${label} quote checkbox is not focusable`
+        );
+      await click(quote);
+    }
+    assert.strictEqual(requests.length, 0, "sourced quotes send no request");
 
-    await click(own);
-    assert.strictEqual(requests.length, 1, "the post's own checkbox toggles");
+    assert
+      .dom(anonymousQuote)
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "the anonymous quote checkbox is interactive"
+      );
+    await click(anonymousQuote);
+    assert.strictEqual(requests.length, 1, "the anonymous quote toggles");
     assert.strictEqual(
       requests[0].toggles[0].checkbox_index,
       0,
-      "quoted checkboxes are excluded from the rendered index"
+      "sourced quote checkboxes are excluded from the rendered index"
     );
+
+    await click(own);
+    assert.strictEqual(requests.length, 2, "the post's own checkbox toggles");
   });
 
   test("permanent and read-only checkboxes are not interactive", async function (assert) {
