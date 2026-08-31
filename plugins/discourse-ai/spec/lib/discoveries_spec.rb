@@ -182,6 +182,24 @@ describe DiscourseAi::Discoveries do
       expect(described_class.cached_result_for(user:, request_id:)).to be_nil
     end
 
+    it "keeps follow-up context when topic metadata changes" do
+      request_id = SecureRandom.uuid
+      described_class.store_result(
+        user_id: user.id,
+        request_id:,
+        query: "plugin setup",
+        answer: "A useful answer.",
+        sources: [{ "post_id" => post.id, "topic_id" => post.topic_id }],
+        agent_id: ai_agent.id,
+      )
+
+      post.topic.update!(title: "Renamed plugin setup topic")
+
+      result = described_class.cached_result_for(user:, request_id:)
+      expect(result).to include("query" => "plugin setup", "answer" => "A useful answer.")
+      expect(result.fetch("sources").first.fetch("title")).to eq("Renamed plugin setup topic")
+    end
+
     it "keeps source-only context for follow-up without generated prose" do
       request_id = SecureRandom.uuid
       described_class.store_result(

@@ -170,7 +170,6 @@ module DiscourseAi
               topic_id: topic.id,
               category_id: topic.category_id,
               post_updated_at: post.updated_at.iso8601(6),
-              topic_updated_at: topic.updated_at.iso8601(6),
             }
           end
         return if stored_sources.length != sources.length
@@ -204,8 +203,7 @@ module DiscourseAi
               topic && topic.id == source["topic_id"] && topic.archetype == Archetype.default &&
                 topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
                 topic.category_id == source["category_id"] &&
-                post.updated_at.iso8601(6) == source["post_updated_at"] &&
-                topic.updated_at.iso8601(6) == source["topic_updated_at"]
+                post.updated_at.iso8601(6) == source["post_updated_at"]
 
             if visible
               visible_sources << source.merge("title" => topic.title, "url" => post.full_url)
