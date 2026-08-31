@@ -55,7 +55,7 @@ acceptance("Design wizard - admin launch", function (needs) {
 
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     can_run_design_wizard: true,
   });
 
@@ -221,7 +221,7 @@ acceptance("Design wizard - customized site", function (needs) {
   // past what the wizard can express
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     can_run_design_wizard: false,
   });
 
