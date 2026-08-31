@@ -128,7 +128,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
   end
 
   describe "#invalidate" do
-    it "causes the next access to request a new token" do
+    it "removes its access token from the cache" do
       token_request =
         stub_request(:post, token_url).to_return(
           { status: 200, body: { access_token: "first-token", expires_in: 1800 }.to_json },
@@ -143,7 +143,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       expect(token_request).to have_been_requested.twice
     end
 
-    it "preserves a newer cached token when a stale instance invalidates the previous token" do
+    it "does not remove a newer cached token when its access token is stale" do
       stale_oauth_token = described_class.new
       token_request =
         stub_request(:post, token_url).to_return(
