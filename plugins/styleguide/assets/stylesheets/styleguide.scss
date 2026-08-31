@@ -962,3 +962,54 @@
     padding: var(--space-1) var(--space-4) var(--space-1) 0;
   }
 }
+
+.styleguide-virtual-list {
+  /* The border goes on a wrapper, never on the scroll element: box spacing there
+     offsets the engine's measured total from the DOM scroll height. */
+  border: 1px solid var(--primary-low);
+
+  .d-virtual-list {
+    height: 400px;
+  }
+
+  &--tall .d-virtual-list {
+    height: 600px;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__row {
+    /* Border-box so the declared height IS the measured height. Under the default
+       content-box the border makes each row a pixel taller than the estimate, and
+       the total drifts upward as rows are measured. */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+
+    &--selected {
+      background: var(--tertiary-low);
+      font-weight: bold;
+    }
+  }
+
+  &__vrow {
+    /* Intrinsic height rather than a fixed one, so wrapped text of varying length
+       gives each row a different height and forces re-measurement. */
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+    line-height: 1.4;
+  }
+}
