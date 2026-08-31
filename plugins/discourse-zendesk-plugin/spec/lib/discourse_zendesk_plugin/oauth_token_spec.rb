@@ -101,7 +101,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       )
     end
 
-    it "raises a non-permanent request error for server failures" do
+    it "raises RequestError for server failures" do
       stub_request(:post, token_url).to_return(status: 500)
 
       expect { oauth_token.access_token }.to raise_error do |error|
@@ -109,7 +109,7 @@ RSpec.describe DiscourseZendeskPlugin::OAuthToken do
       end
     end
 
-    it "raises a non-permanent request error for rate limits" do
+    it "raises RequestError for rate limits" do
       stub_request(:post, token_url).to_return(status: 429)
 
       expect { oauth_token.access_token }.to raise_error do |error|
