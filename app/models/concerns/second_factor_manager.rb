@@ -61,7 +61,7 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps&.any?
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps.any?
   end
 
   def backup_codes_enabled?
