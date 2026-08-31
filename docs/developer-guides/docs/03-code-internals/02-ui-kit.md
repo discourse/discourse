@@ -140,15 +140,16 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 
 ## Modifiers
 
-| Modifier                                                                          | Use it for                                                                               |
-| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `d-auto-focus`                                                                    | Focus an element when it renders.                                                        |
-| `d-trap-tab`                                                                      | Keep keyboard focus inside a dialog.                                                     |
-| `d-tab-to-sibling`                                                                | Make Tab move focus between sibling elements.                                            |
-| `d-close-on-click-outside`                                                        | Dismiss an overlay when the user clicks elsewhere.                                       |
-| `d-on-resize`, `d-observe-intersection`, `d-scroll-into-view`                     | React to layout and visibility.                                                          |
-| `d-autocomplete`                                                                  | Attach an autocomplete popup to a text input.                                            |
-| `d-swipe`, `d-pointer-drag`, `d-resize-edge`, `d-drag-dwell`, `d-drag-and-drop-*` | Gestures. See [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md). |
+| Modifier                                                                          | Use it for                                                                                                                                                                                                                               |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `d-auto-focus`                                                                    | Focus an element when it renders.                                                                                                                                                                                                        |
+| `d-trap-tab`                                                                      | Keep keyboard focus inside a dialog.                                                                                                                                                                                                     |
+| `d-tab-to-sibling`                                                                | Make Tab move focus between sibling elements.                                                                                                                                                                                            |
+| `d-roving-focus`                                                                  | Arrow-key navigation over a group of items (a toolbar, listbox, menu, or tree) with a single tab stop, via roving tabindex or `aria-activedescendant`. See [Roving focus](https://meta.discourse.org/styleguide/molecules/roving-focus). |
+| `d-close-on-click-outside`                                                        | Dismiss an overlay when the user clicks elsewhere.                                                                                                                                                                                       |
+| `d-on-resize`, `d-observe-intersection`, `d-scroll-into-view`                     | React to layout and visibility.                                                                                                                                                                                                          |
+| `d-autocomplete`                                                                  | Attach an autocomplete popup to a text input.                                                                                                                                                                                            |
+| `d-swipe`, `d-pointer-drag`, `d-resize-edge`, `d-drag-dwell`, `d-drag-and-drop-*` | Gestures. See [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md).                                                                                                                                                 |
 
 # Adding a primitive
 
@@ -162,6 +163,7 @@ When you add one:
 - **Use BEM class names rooted at the component name** (older primitives predate this rule; new ones must follow it), `d-<name>`, `d-<name>__part`, `d-<name>--modifier`, and put the stylesheet at `app/assets/stylesheets/common/components/d-<name>.scss`, registered in `_index.scss`. Use colour and spacing tokens only; no hard-coded colours. See [CSS guidelines](26-css-guidelines-bem.md).
 - **Prefer named blocks over boolean arguments** when the consumer supplies content, and yield a small API object when the consumer needs to call back into the component.
 - **Take strings already translated.** A primitive receives display text as a plain `string` argument (`@label`, `@title`) that the consumer has already passed through `i18n()`; it never resolves translation keys itself. The kit does not know which locale file a consumer's key lives in, and a key-taking argument forces a parallel `@translatedX` argument for every string. `d-resize-separator.gts` documents its `label` this way. `DButton`'s `@label`-as-key plus `@translatedLabel` pair predates this rule; do not copy it.
+- **Gate development-only warnings and assertions on `DEBUG`** from `@glimmer/env`. It is a build-time constant, so the gated code and its messages are stripped from production bundles; `d-resize-handles.gts` and `modifiers/d-roving-focus/diagnostics.ts` do this.
 - **Do not mention plugins or specific libraries** in its docs or comments; describe the mechanism instead.
 
 ## Splitting a large primitive
