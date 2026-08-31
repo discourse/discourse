@@ -99,7 +99,7 @@ module("Unit | Lib | smooth-streamer", function (hooks) {
       "the remaining answer is not revealed in one jump"
     );
 
-    await new Promise((resolve) => later(resolve, 250));
+    await settled();
 
     assert.false(streamer.isStreaming, "animation ends after catching up");
     assert.strictEqual(streamer.renderedText, finalText);
