@@ -58,6 +58,40 @@ module(
       );
     });
 
+    test("rovingApi: focusIndex clamps finite integers to the item range", async function (assert) {
+      let api = null;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus itemSelector="[role=option]" onRegisterApi=register}}
+          >
+            <button class="a" role="option">A</button>
+            <button class="b" role="option">B</button>
+            <button class="c" role="option">C</button>
+          </div>
+        </template>
+      );
+
+      assert.true(
+        api.focusIndex(999),
+        "an integer beyond the end still lands on a group item"
+      );
+      assert
+        .dom(".c")
+        .isFocused("an index beyond the end clamps to the last item");
+
+      assert.true(
+        api.focusIndex(-5),
+        "an integer before the start still lands on a group item"
+      );
+      assert
+        .dom(".a")
+        .isFocused("an index before the start clamps to the first item");
+    });
+
     test("rovingApi: focusNext moves once then returns edge without firing callbacks", async function (assert) {
       let api = null;
       const changes = [];
@@ -530,11 +564,6 @@ module(
         [],
         "grid focusNext api calls suppress onBoundary"
       );
-      assert.deepEqual(
-        boundaries,
-        [],
-        "grid focusNext api calls suppress onBoundary"
-      );
     });
 
     test("rovingApi: focusPrevious honors horizontal and vertical axes in a grid", async function (assert) {
@@ -651,11 +680,13 @@ module(
 
       await render(
         <template>
-          <input class="controller" role="combobox" />
+          <input class="controller" role="combobox" aria-controls="rf-lb" />
           <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               onRegisterApi=register

@@ -26,7 +26,9 @@ require_relative "lib/discourse_wireframe/engine"
 require_relative "lib/discourse_wireframe/plugin_setup/icons"
 require_relative "lib/discourse_wireframe/plugin_setup/draft_cleanup"
 require_relative "lib/discourse_wireframe/plugin_setup/homepage"
+require_relative "lib/discourse_wireframe/plugin_setup/access"
 
 DiscourseWireframe::PluginSetup::Icons.apply(self)
 DiscourseWireframe::PluginSetup::DraftCleanup.apply(self)
 DiscourseWireframe::PluginSetup::Homepage.apply(self)
+DiscourseWireframe::PluginSetup::Access.apply(self)

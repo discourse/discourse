@@ -16,11 +16,18 @@ module(
 
       await render(
         <template>
-          <div class="controller" role="combobox" tabindex="0"></div>
           <div
+            class="controller"
+            role="combobox"
+            aria-controls="rf-lb"
+            tabindex="0"
+          ></div>
+          <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
@@ -74,11 +81,18 @@ module(
 
       await render(
         <template>
-          <div class="controller" role="combobox" tabindex="0"></div>
           <div
+            class="controller"
+            role="combobox"
+            aria-controls="rf-lb"
+            tabindex="0"
+          ></div>
+          <div
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
-              selectionMode="active"
+              focusStrategy="active-descendant"
+              entryFocus="none"
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"

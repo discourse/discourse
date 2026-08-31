@@ -82,5 +82,26 @@ RSpec.describe NestedTopic::ListChildren do
         response[:children].each { |child| expect(child[:children]).to eq([]) }
       end
     end
+
+    context "when the requested depth is one level above the cap" do
+      before do
+        SiteSetting.nested_replies_cap_nesting_depth = true
+        SiteSetting.nested_replies_max_depth = 3
+      end
+
+      let(:params) do
+        { parent_post_number: parent_post.post_number, sort: "old", page: 0, depth: 2 }
+      end
+
+      it "returns children that have no replies of their own" do
+        leaf =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent_post.post_number)
+        branch =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent_post.post_number)
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: branch.post_number)
+
+        expect(result[:response][:children].map { |child| child[:id] }).to eq([leaf.id, branch.id])
+      end
+    end
   end
 end

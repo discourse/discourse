@@ -6,20 +6,13 @@ import type SiteSettingsService from "discourse/services/site-settings";
 // TODO(devxp-typescript-pending): replace this local augmentation once core
 // exposes a typed extension mechanism for plugin site settings.
 interface WireframeSiteSettingsService extends SiteSettingsService {
-  /** Group IDs allowed to use the editor, serialized with pipe separators. */
-  wireframe_allowed_groups: string;
   /** Whether the wireframe editor is enabled. */
   wireframe_enabled: boolean;
 }
 
-// TODO(devxp-typescript-pending): use the core type directly once it declares
-// the `groups` payload added by CurrentUserSerializer.
 interface CurrentUserService extends User {
-  /** Groups the current user belongs to. */
-  groups?: Array<{
-    /** Numeric group ID. */
-    id: number;
-  }>;
+  /** Whether the server authorizes this user to open the wireframe editor. */
+  can_use_wireframe: boolean;
 }
 
 /**
@@ -37,7 +30,7 @@ interface CurrentUserService extends User {
  * graph acyclic.
  */
 export default class WireframeEditModeService extends Service {
-  /** Signed-in user whose staff and group memberships determine eligibility. */
+  /** Signed-in user with the server-computed editor capability. */
   @service declare currentUser: CurrentUserService | null;
   /** Plugin settings that enable and scope editor access. */
   @service declare siteSettings: WireframeSiteSettingsService;
@@ -50,9 +43,9 @@ export default class WireframeEditModeService extends Service {
 
   /**
    * Whether the current user is allowed to use the editor. Staff are always
-   * allowed. Non-staff users must belong to at least one of the groups listed
-   * in the `wireframe_allowed_groups` site setting. The plugin must also be
-   * enabled via `wireframe_enabled`.
+   * allowed; for everyone else, the server computes the capability from
+   * complete group membership. The plugin must also be enabled via
+   * `wireframe_enabled`.
    *
    */
   get canEdit(): boolean {
@@ -65,18 +58,7 @@ export default class WireframeEditModeService extends Service {
     if (this.currentUser.staff) {
       return true;
     }
-    // Group-list site settings serialize as a pipe-delimited string of group
-    // ids ("1|11|41"). Empty values produce empty strings, hence the filter.
-    const allowed = (this.siteSettings.wireframe_allowed_groups || "")
-      .split("|")
-      .filter(Boolean);
-    if (allowed.length === 0) {
-      return false;
-    }
-    const userGroupIds = (this.currentUser.groups || []).map((g) =>
-      String(g.id)
-    );
-    return allowed.some((id) => userGroupIds.includes(String(id)));
+    return this.currentUser.can_use_wireframe;
   }
 
   /**

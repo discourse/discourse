@@ -204,10 +204,11 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
         class="wireframe-block-picker__results"
         role="listbox"
         {{dRovingFocus
-          selectionMode="active"
+          focusStrategy="active-descendant"
           controllerElement=this.searchInput
           itemSelector=".wireframe-block-tile"
           itemsKey=this.searchTerm
+          entryFocus="none"
           activeClass="--active"
           onActivate=this.activate
         }}

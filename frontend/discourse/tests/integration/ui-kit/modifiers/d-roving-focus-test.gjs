@@ -241,6 +241,44 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .isFocused("Home from an embedded input does not jump to the first item");
   });
 
+  test("focus mode: arrows from a control outside any item are left alone", async function (assert) {
+    // A container may hold focusable controls that are neither items nor inside
+    // one: a row's own switch sitting beside the handle that is the cursor's
+    // item. An arrow pressed there belongs to nothing this group owns, so the
+    // cursor must stay put and focus must not be pulled onto an item.
+    await render(
+      <template>
+        <ul {{dRovingFocus orientation="vertical" itemSelector=".handle"}}>
+          <li>
+            <button class="handle a" type="button">A</button>
+            <button
+              class="switch-a"
+              type="button"
+              role="switch"
+              aria-checked="false"
+            ></button>
+          </li>
+          <li>
+            <button class="handle b" type="button">B</button>
+            <input class="check-b" type="checkbox" />
+          </li>
+        </ul>
+      </template>
+    );
+
+    await focus(".switch-a");
+    await triggerKeyEvent(".switch-a", "keydown", "ArrowDown");
+    assert
+      .dom(".switch-a")
+      .isFocused("ArrowDown from a switch beside an item does not navigate");
+
+    await focus(".check-b");
+    await triggerKeyEvent(".check-b", "keydown", "ArrowUp");
+    assert
+      .dom(".check-b")
+      .isFocused("ArrowUp from a checkbox beside an item does not navigate");
+  });
+
   test("Enter and Space activate; other keys do not", async function (assert) {
     let activated = [];
     const onActivate = (el) => activated.push(el.className);
@@ -283,11 +321,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onRegisterApi=register
@@ -350,11 +390,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onRegisterApi=register
@@ -384,11 +426,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: focus stays on the controller, aria-activedescendant tracks", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -430,11 +474,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onActivate=(fn onActivate)
@@ -469,16 +515,18 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <button
           class="refilter"
           type="button"
           {{on "click" refilter}}
         >x</button>
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             itemsKey=state.key
@@ -514,18 +562,19 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .hasAttribute("id", activeId, "ArrowDown reseeds the first live option");
   });
 
-  test("active mode: autoActivateFirst highlights the first item on insert", async function (assert) {
+  test("active mode: entryFocus=first highlights the first item on insert", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -559,15 +608,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="id" as |item|}}
@@ -612,15 +662,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="id" as |item|}}
@@ -663,19 +714,19 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
-  test("active mode: autoActivateSelected prefers the selected item over the first", async function (assert) {
+  test("active mode: entryFocus=selected-or-first prefers the selected item over the first", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
-            autoActivateSelected=true
+            entryFocus="selected-or-first"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -697,21 +748,21 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").hasAttribute("id", activeId);
   });
 
-  test("active mode: autoActivateSelected seeds a list that would otherwise start with no cursor", async function (assert) {
-    // `autoActivateFirst` is deliberately false for lists that wait for the user to act. That
-    // rule exists to avoid highlighting an arbitrary row; a restored selection is not arbitrary.
+  test("active mode: entryFocus=selected-or-none restores a selection without seeding a first item", async function (assert) {
+    // A list that waits for the reader to act takes no first-item fallback. That rule exists to
+    // avoid highlighting an arbitrary row; a restored selection is not arbitrary.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=false
-            autoActivateSelected=true
+            entryFocus="selected-or-none"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -723,19 +774,19 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").hasClass("--active", "the selection is restored");
   });
 
-  test("active mode: autoActivateSelected leaves the cursor empty when nothing is selected", async function (assert) {
+  test("active mode: entryFocus=selected-or-none leaves the cursor empty when nothing is selected", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=false
-            autoActivateSelected=true
+            entryFocus="selected-or-none"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -754,7 +805,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
-  test("active mode: autoActivateSelected does not move a cursor the user has set", async function (assert) {
+  test("active mode: entryFocus=selected-or-first does not move a cursor the user has set", async function (assert) {
     // `itemsKey` is what makes this test mean what its name says: without a reconcile after the
     // arrow key, nothing could possibly drag the cursor back and the assertion would only be
     // restating that ArrowDown moved it.
@@ -764,17 +815,17 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
             itemsKey=state.key
-            autoActivateFirst=true
-            autoActivateSelected=true
+            entryFocus="selected-or-first"
           }}
         >
           <button class="a" role="option" aria-selected="false">A</button>
@@ -803,7 +854,117 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .doesNotHaveClass("--active", "and the preference does not drag it back");
   });
 
-  test("active mode: autoActivateFirst re-seeds the first item when the set changes", async function (assert) {
+  test("active mode: itemsKey preserves a survivor but resetKey re-seeds the first item", async function (assert) {
+    const state = new (class {
+      @tracked itemsKey = 0;
+      @tracked resetKey = 0;
+    })();
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+            itemsKey=state.itemsKey
+            resetKey=state.resetKey
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    assert.dom(".b").hasClass("--active", "the reader placed the cursor on b");
+
+    state.itemsKey++;
+    await settled();
+
+    assert
+      .dom(".b")
+      .hasClass(
+        "--active",
+        "an ordinary item reconciliation keeps the surviving cursor"
+      );
+
+    state.resetKey++;
+    await settled();
+
+    assert
+      .dom(".a")
+      .hasClass(
+        "--active",
+        "a new question applies the first-item entry policy afresh"
+      );
+    assert
+      .dom(".b")
+      .doesNotHaveClass(
+        "--active",
+        "the survivor does not outrank an explicit reset"
+      );
+  });
+
+  test("active mode: resetKey re-seeds a marked row under selected-or-first", async function (assert) {
+    const state = new (class {
+      @tracked resetKey = 0;
+    })();
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="selected-or-first"
+            resetKey=state.resetKey
+          }}
+        >
+          <button class="a" role="option" aria-selected="false">A</button>
+          <button class="b" role="option" aria-selected="true">B</button>
+          <button class="c" role="option" aria-selected="false">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    assert
+      .dom(".c")
+      .hasClass("--active", "the reader moved past the selection");
+
+    state.resetKey++;
+    await settled();
+
+    assert
+      .dom(".b")
+      .hasClass(
+        "--active",
+        "a new question restores the marked row before considering the first"
+      );
+    assert
+      .dom(".c")
+      .doesNotHaveClass(
+        "--active",
+        "a surviving cursor does not carry across an explicit reset"
+      );
+  });
+
+  test("active mode: entryFocus=first re-seeds the first item when the set changes", async function (assert) {
     class State {
       @tracked items = ["a", "b", "c"];
       @tracked key = 0;
@@ -816,21 +977,22 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <button
           class="refilter"
           type="button"
           {{on "click" refilter}}
         >x</button>
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             itemsKey=state.key
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           {{#each state.items key="@identity" as |item|}}
@@ -855,14 +1017,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".opt-x").hasAttribute("id", activeId);
   });
 
-  test("active mode: without autoActivateFirst nothing is highlighted until an Arrow key", async function (assert) {
+  test("active mode: entryFocus=none highlights nothing until an Arrow key", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -885,11 +1049,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -930,11 +1096,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -975,11 +1143,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             onActivate=(fn onActivate)
@@ -1010,11 +1180,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: first ArrowUp seeds the last option", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1032,6 +1204,67 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert
       .dom(".c")
       .hasClass("--active", "ArrowUp from no highlight seeds the last option");
+  });
+
+  test("active mode: onBoundary reports only vertical group exits", async function (assert) {
+    const boundaries = [];
+    const onBoundary = (direction, axis) => boundaries.push([direction, axis]);
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+            wrap=false
+            onBoundary=onBoundary
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      boundaries,
+      [["forward", "vertical"]],
+      "leaving the last option reports a forward vertical boundary"
+    );
+
+    await triggerKeyEvent(".search", "keydown", "ArrowRight");
+    await triggerKeyEvent(".search", "keydown", "ArrowLeft");
+
+    assert.deepEqual(
+      boundaries,
+      [["forward", "vertical"]],
+      "horizontal caret keys never masquerade as listbox boundaries"
+    );
+    assert
+      .dom(".b")
+      .hasClass("--active", "horizontal caret keys leave the cursor in place");
+
+    await triggerKeyEvent(".search", "keydown", "ArrowUp");
+    await triggerKeyEvent(".search", "keydown", "ArrowUp");
+
+    assert.deepEqual(
+      boundaries,
+      [
+        ["forward", "vertical"],
+        ["backward", "vertical"],
+      ],
+      "leaving the first option reports a backward vertical boundary"
+    );
   });
 
   test("focus mode with tabStop=false: every item is -1, never a tab stop", async function (assert) {
@@ -1069,6 +1302,111 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .dom(".b")
       .hasAttribute("tabindex", "-1", "the focused item stays -1, never 0");
     assert.dom(".a").hasAttribute("tabindex", "-1");
+  });
+
+  test("focus mode: entryFocus=none deliberately leaves no tab stop", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" entryFocus="none"}}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "without an entry fallback the first row stays out of the tab sequence"
+      );
+    assert
+      .dom(".b")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "without an entry fallback no later row becomes an accidental tab stop"
+      );
+    assert
+      .dom('[role="option"][tabindex="0"]')
+      .doesNotExist("the group deliberately contributes no tab stop");
+  });
+
+  test("focus mode: selected-or-none supplies a tab stop only for a marked row", async function (assert) {
+    await render(
+      <template>
+        <div
+          class="unmarked"
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            entryFocus="selected-or-none"
+          }}
+        >
+          <button
+            class="unmarked-a"
+            role="option"
+            aria-selected="false"
+          >A</button>
+          <button
+            class="unmarked-b"
+            role="option"
+            aria-selected="false"
+          >B</button>
+        </div>
+        <div
+          class="marked"
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            entryFocus="selected-or-none"
+          }}
+        >
+          <button
+            class="marked-a"
+            role="option"
+            aria-selected="false"
+          >A</button>
+          <button class="marked-b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".unmarked-a")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "an unmarked first row cannot become the missing selection"
+      );
+    assert
+      .dom(".unmarked-b")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "no later unmarked row is used as a fallback either"
+      );
+    assert
+      .dom('.unmarked [tabindex="0"]')
+      .doesNotExist("an unmarked group deliberately contributes no tab stop");
+    assert
+      .dom(".marked-b")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "a real selection restores the group's tab stop"
+      );
+    assert
+      .dom(".marked-a")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "the first row does not outrank the restored selection"
+      );
   });
 
   test("focus mode: onBoundary fires at a horizontal edge with the travel direction", async function (assert) {
@@ -1444,12 +1782,14 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode steps one item at a time even over a grid", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           style="display: grid; grid-template-columns: repeat(3, 40px);"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1600,11 +1940,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: keys mid-composition leave the highlight alone", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
@@ -1689,11 +2031,13 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // would leave the group with no working arrow key and therefore no way to seed a cursor.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
+            entryFocus="none"
             orientation="horizontal"
             controllerElement=".search"
             itemSelector="[role=option]"
@@ -1770,6 +2114,113 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         "the tab stop the author placed is preserved rather than relocated to the first item"
       );
     assert.dom(".a").hasAttribute("tabindex", "-1");
+  });
+
+  test("focus mode: re-seeding prefers the item holding DOM focus over an authored tab stop", async function (assert) {
+    const state = new (class {
+      @tracked showEarlier = false;
+      @tracked itemsKey = 0;
+    })();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.itemsKey}}
+        >
+          <button class="start" role="option">Start</button>
+          {{#if state.showEarlier}}
+            <button
+              class="authored"
+              role="option"
+              tabindex="0"
+            >Authored</button>
+          {{/if}}
+          <button class="middle" role="option">Middle</button>
+          <button class="end" role="option">End</button>
+        </div>
+      </template>
+    );
+
+    await focus(".middle");
+    state.showEarlier = true;
+    state.itemsKey++;
+    await settled();
+
+    assert
+      .dom(".middle")
+      .isFocused(
+        "the row containing DOM focus remains the reader's current position"
+      );
+    assert
+      .dom(".middle")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "the tab stop follows the focused row through reconciliation"
+      );
+    assert
+      .dom(".authored")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "an earlier authored zero is demoted instead of stealing the established cursor"
+      );
+  });
+
+  test("focus mode: itemsKey preserves a survivor but resetKey re-picks the tab stop", async function (assert) {
+    const state = new (class {
+      @tracked itemsKey = 0;
+      @tracked resetKey = 0;
+    })();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            entryFocus="first"
+            itemsKey=state.itemsKey
+            resetKey=state.resetKey
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".c");
+    state.itemsKey++;
+    await settled();
+
+    assert
+      .dom(".c")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "an ordinary item reconciliation keeps the surviving tab stop"
+      );
+
+    state.resetKey++;
+    await settled();
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "a new question applies the first-item entry policy afresh"
+      );
+    assert
+      .dom(".c")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "the surviving row no longer owns the tab stop after a reset"
+      );
   });
 
   test("focus mode: a shifted key is left for text selection", async function (assert) {
@@ -2099,6 +2550,54 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .hasAttribute("tabindex", "-1", "and the first item is not");
   });
 
+  test("focus mode: entryFocus=first ignores a marked item", async function (assert) {
+    await render(
+      <template>
+        {{! Deliberately unroled: the modifier reads no roles, and the lint rule forbids
+          buttons inside a toolbar role even though that is what the pattern is made of. }}
+        <div
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[data-control]"
+            entryFocus="first"
+          }}
+        >
+          <button class="a" data-control>A</button>
+          <button class="b" data-control aria-current="page">B</button>
+          <button class="c" data-control>C</button>
+        </div>
+      </template>
+    );
+
+    // Toolbar and menubar enter on the first control unconditionally. A button marking the
+    // current view is not a selection, and must not take the tab stop off the first one.
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "0", "the first control keeps the tab stop");
+    assert
+      .dom(".b")
+      .hasAttribute("tabindex", "-1", "the marked control does not steal it");
+  });
+
+  test("focus mode: the tab stop prefers the checked radio over the first", async function (assert) {
+    await render(
+      <template>
+        <div role="radiogroup" {{dRovingFocus itemSelector="[role=radio]"}}>
+          <button class="a" role="radio" aria-checked="false">A</button>
+          <button class="b" role="radio" aria-checked="true">B</button>
+          <button class="c" role="radio" aria-checked="false">C</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasAttribute("tabindex", "0", "the checked radio is the tab stop");
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "-1", "and the first radio is not");
+  });
+
   test("focus mode: an item inside a disabled fieldset is not a target", async function (assert) {
     await render(
       <template>
@@ -2124,6 +2623,444 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 
+  test("focus mode: an inert item is not a target", async function (assert) {
+    await render(
+      <template>
+        <div {{dRovingFocus itemSelector=".opt"}}>
+          <button class="opt a" type="button">A</button>
+          <button class="opt b" type="button" inert>B</button>
+          <button class="opt c" type="button">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(".c")
+      .isFocused("an inert button cannot take focus, so it is skipped");
+  });
+
+  test("focus mode: clicking an item moves the tab stop onto it", async function (assert) {
+    await render(
+      <template>
+        <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "0", "the first item starts as the tab stop");
+
+    await click(".c");
+
+    assert
+      .dom(".c")
+      .hasAttribute("tabindex", "0", "the clicked item becomes the tab stop");
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "-1", "and the previous holder gives it up");
+  });
+
+  test("focus mode: focus arriving without a pointer also moves the tab stop", async function (assert) {
+    await render(
+      <template>
+        <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".c");
+
+    // Programmatic focus, with no pointer event at all: a fix that only widened the pointer
+    // handler would leave the tab stop behind here.
+    assert
+      .dom(".c")
+      .hasAttribute("tabindex", "0", "the focused item becomes the tab stop");
+    assert.dom(".a").hasAttribute("tabindex", "-1");
+  });
+
+  // Focus persistence. Removals are driven straight through tracked state rather than by
+  // clicking a button, because clicking one moves focus onto it and would hide the very
+  // condition these tests turn on: focus falling to the body.
+  class RemovableItems {
+    @tracked items = ["a", "b", "c"];
+    @tracked key = 0;
+
+    remove(name) {
+      this.items = this.items.filter((item) => item !== name);
+      this.key++;
+    }
+  }
+
+  test("focus mode: removing the focused item moves focus to the one that follows", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.remove("b");
+    await settled();
+
+    assert
+      .dom(".opt-c")
+      .isFocused("focus lands on the item that took the removed one's place");
+  });
+
+  test("focus mode: restoreLostFocus=false leaves a removed cursor on the body", async function (assert) {
+    const state = new (class {
+      @tracked items = ["a", "b", "c"];
+      @tracked itemsKey = 0;
+    })();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            itemsKey=state.itemsKey
+            restoreLostFocus=false
+          }}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.items = state.items.filter((item) => item !== "b");
+    state.itemsKey++;
+    await settled();
+
+    assert.strictEqual(
+      document.activeElement,
+      document.body,
+      "the opt-out leaves focus lost for the consumer to place elsewhere"
+    );
+  });
+
+  test("focus mode: a removal declined by the opt-out is forgotten, not deferred", async function (assert) {
+    const state = new (class {
+      @tracked items = ["a", "b", "c"];
+      @tracked itemsKey = 0;
+      @tracked restore = false;
+    })();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            itemsKey=state.itemsKey
+            restoreLostFocus=state.restore
+          }}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.items = state.items.filter((item) => item !== "b");
+    state.itemsKey++;
+    await settled();
+
+    state.restore = true;
+    state.itemsKey++;
+    await settled();
+
+    assert.strictEqual(
+      document.activeElement,
+      document.body,
+      "enabling restoration later must not act on a removal that was declined at the time"
+    );
+  });
+
+  test("focus mode: removing the focused last item falls back to the previous one", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-c");
+    state.remove("c");
+    await settled();
+
+    assert
+      .dom(".opt-b")
+      .isFocused("there is no following item, so the cursor steps back");
+  });
+
+  test("focus mode: a removal does not reclaim focus the reader moved away", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <button class="outside" type="button">outside</button>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    await focus(".outside");
+    state.remove("b");
+    await settled();
+
+    // The whole feature turns on focus having been LOST, not merely on an item disappearing.
+    // Without that condition this steals focus back out of wherever the reader went.
+    assert
+      .dom(".outside")
+      .isFocused("focus deliberately moved out of the group is left alone");
+  });
+
+  test("focus mode: removing an item the reader is not on leaves focus where it is", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-c");
+    state.remove("a");
+    await settled();
+
+    assert
+      .dom(".opt-c")
+      .isFocused("an unrelated removal is not an occasion to move the cursor");
+  });
+
+  test("focus mode: replacing the whole item set does not move focus", async function (assert) {
+    class State {
+      @tracked items = ["a", "b", "c"];
+      @tracked key = 0;
+    }
+    const state = new State();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.items = ["x", "y", "z"];
+    state.key++;
+    await settled();
+
+    // Every previous item is gone, so this is a new question rather than a deletion. Seeding
+    // never yanks focus on a re-render, and restoring here would drop the reader into a result
+    // set they never navigated to.
+    assert
+      .dom(".opt-x")
+      .isNotFocused("a wholesale replacement is not a removal to recover from");
+    assert
+      .dom(".opt-y")
+      .isNotFocused("and no other member of the new set takes focus either");
+  });
+
+  test("active mode with no focus indicator at all warns", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            entryFocus="none"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // In active mode DOM focus stays on the controller, so with neither activeClass nor
+    // onActiveChange there is nothing drawing a focus indicator anywhere.
+    assert.true(
+      warn.called,
+      "a group that can render no focus indicator says so"
+    );
+  });
+
+  test("active mode: fallbackSkipsMarked seeds past a marked first item", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="true">A</button>
+          <button class="b" role="option" aria-selected="false">B</button>
+        </div>
+      </template>
+    );
+
+    // Seeding the held row would arm the very first Enter to discard it, in a group whose
+    // activation toggles.
+    assert
+      .dom(".b")
+      .hasClass("--active", "the fallback lands past the marked row");
+    assert.dom(".a").doesNotHaveClass("--active");
+  });
+
+  test("active mode warns when the cursor is unreachable from the controller", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        {{! No aria-controls and no aria-owns, so the list is a sibling the controller has no
+          permitted relationship with. }}
+        <input class="lonely" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".lonely"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    assert.true(
+      warn.called,
+      "an activedescendant that ARIA does not let the controller reach is reported"
+    );
+  });
+
+  test("active mode does not warn when aria-owns reaches the cursor", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <input class="owner" role="combobox" aria-owns="owned-option" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".owner"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+          }}
+        >
+          <button id="owned-option" class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // Containment is not the only permitted relationship, so a sibling list that is explicitly
+    // owned must pass.
+    assert.false(warn.called, "aria-owns is one of the three ARIA permits");
+  });
+
+  test("active mode does not warn when the consumer renders its own indicator", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+    const noop = () => {};
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            entryFocus="none"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            onActiveChange=noop
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // Reporting the cursor is the other legitimate way to draw the indicator, so only the
+    // absence of both is a problem.
+    assert.false(
+      warn.called,
+      "reporting the cursor is indicator enough; only the absence of both is a problem"
+    );
+  });
+
   test("active mode: a changed activeClass is removed from the row that had it", async function (assert) {
     const state = new (class {
       @tracked cls = "--active";
@@ -2131,15 +3068,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass=state.cls
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2159,22 +3097,22 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .doesNotHaveClass("--active", "and the previous one is swept off");
   });
 
-  test("switching selectionMode leaves no state from the previous mode", async function (assert) {
+  test("switching focusStrategy leaves no state from the previous mode", async function (assert) {
     const state = new (class {
-      @tracked mode = "active";
+      @tracked mode = "active-descendant";
     })();
 
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
           role="listbox"
           {{dRovingFocus
-            selectionMode=state.mode
+            focusStrategy=state.mode
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2185,7 +3123,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".a").hasClass("--active", "active mode seeded a highlight");
 
-    state.mode = "focus";
+    state.mode = "roving-tabindex";
     await settled();
 
     assert
@@ -2202,15 +3140,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   test("active mode: a non-primary pointer press does not move the cursor", async function (assert) {
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option">A</button>
@@ -2226,6 +3165,48 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert
       .dom(".a")
       .hasClass("--active", "a right-click leaves the cursor where it was");
+  });
+
+  test("active mode: onActiveChange identifies pointer and keyboard placement", async function (assert) {
+    const changes = [];
+    const onActiveChange = (item, meta) =>
+      changes.push([item?.dataset.label ?? null, meta]);
+
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-lb" />
+        <div
+          id="rf-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            entryFocus="first"
+            onActiveChange=onActiveChange
+          }}
+        >
+          <button class="a" role="option" data-label="a">A</button>
+          <button class="b" role="option" data-label="b">B</button>
+          <button class="c" role="option" data-label="c">C</button>
+        </div>
+      </template>
+    );
+
+    changes.length = 0;
+    await focus(".search");
+    await triggerEvent(".b", "mousedown", { button: 0 });
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      changes,
+      [
+        ["b", { pointer: true }],
+        ["c", { pointer: false }],
+      ],
+      "pointer placement can stay visually quiet while the following keyboard move is revealed"
+    );
   });
 
   test("focusIndex reports failure for an index that is not a number", async function (assert) {
@@ -2257,15 +3238,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // author's own tabindex values are stripped and items they excluded become tab stops.
     await render(
       <template>
-        <input class="search" role="combobox" />
+        <input class="search" role="combobox" aria-controls="rf-lb" />
         <div
+          id="rf-lb"
           role="listbox"
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            autoActivateFirst=true
+            entryFocus="first"
           }}
         >
           <button class="a" role="option" tabindex="-1">A</button>
@@ -2506,6 +3488,434 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       [],
       "a disabled row is not activatable, however the cursor came to rest on it"
     );
+  });
+
+  test('disabledItems="focusable" lets the cursor reach an aria-disabled item', async function (assert) {
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" aria-disabled="true">B</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item c">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "b",
+        "moving focus is how a screen reader user discovers the control is there at all"
+      );
+  });
+
+  test('disabledItems="focusable" still refuses to activate the item', async function (assert) {
+    const activated = [];
+    const onActivate = (item) => activated.push(item.className);
+
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+            onActivate=onActivate
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" aria-disabled="true">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".b");
+    await triggerKeyEvent(".b", "keydown", "Enter");
+
+    assert.deepEqual(
+      activated,
+      [],
+      "reachable and activatable are separate, so the policy widens only the first"
+    );
+  });
+
+  test('disabledItems="focusable" cannot resurrect a natively disabled control', async function (assert) {
+    await render(
+      <template>
+        <div
+          role="toolbar"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            disabledItems="focusable"
+          }}
+        >
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item a">A</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item b" disabled>B</button>
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <button class="item c">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "c",
+        "the platform refuses focus to a disabled control, so no policy here can offer it"
+      );
+  });
+
+  test("onCrossAxis reports the horizontal arrows a vertical group does not use", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction, item) =>
+      seen.push(`${direction}:${item.className}`);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+          <button class="item b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+
+    assert.deepEqual(
+      seen,
+      ["forward:item a", "backward:item a"],
+      "the resting item comes with the direction, so the consumer need not re-read activeElement"
+    );
+  });
+
+  test("onCrossAxis mirrors its direction in a right-to-left group", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          dir="rtl"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+
+    assert.deepEqual(
+      seen,
+      ["forward"],
+      "the arrow pointing at where children would be is the forward one, whichever key that is"
+    );
+  });
+
+  test("onCrossAxis reports the vertical arrows a horizontal group does not use", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          dir="rtl"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      seen,
+      ["forward"],
+      "a menubar opens its submenu downward, and the vertical axis never mirrors"
+    );
+  });
+
+  test("onCrossAxis prevents the default only when the consumer says it acted", async function (assert) {
+    const handled = [];
+    const onCrossAxis = (direction) => {
+      handled.push(direction);
+      return direction === "forward";
+    };
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    const item = document.querySelector(".a");
+
+    const acted = new KeyboardEvent("keydown", {
+      key: "ArrowRight",
+      bubbles: true,
+      cancelable: true,
+    });
+    item.dispatchEvent(acted);
+
+    const declined = new KeyboardEvent("keydown", {
+      key: "ArrowLeft",
+      bubbles: true,
+      cancelable: true,
+    });
+    item.dispatchEvent(declined);
+
+    assert.true(acted.defaultPrevented, "a handled key is consumed");
+    assert.false(
+      declined.defaultPrevented,
+      "an unhandled one keeps bubbling, which is what a leaf node or an already-collapsed row needs"
+    );
+  });
+
+  test("onCrossAxis never fires for a grid, which navigates both axes", async function (assert) {
+    const seen = [];
+    const onCrossAxis = (direction) => seen.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="grid"
+            itemSelector=".item"
+            onCrossAxis=onCrossAxis
+          }}
+        >
+          <button class="item a" role="option">A</button>
+          <button class="item b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    await triggerKeyEvent(".b", "keydown", "ArrowDown");
+
+    assert.deepEqual(
+      seen,
+      [],
+      "there is no unused axis to report, so a grid consumer never has to distinguish one"
+    );
+  });
+
+  test("fallbackSkipsMarked seeds the tab stop past a marked item", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          aria-multiselectable="true"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-selected="true">A</button>
+          <button class="item b" role="option" aria-selected="false">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "activation toggles in a multi-select list, so entry avoids arming the first Enter to remove a value"
+      );
+  });
+
+  test("fallbackSkipsMarked does not skip a restored selection", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          aria-multiselectable="true"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="selected-or-first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-selected="false">A</button>
+          <button class="item b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "the reader's marked row is restored before the first-item fallback is considered"
+      );
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "skipping marked fallbacks does not replace an existing selection with the first row"
+      );
+  });
+
+  test("fallbackSkipsMarked still seeds when every item is marked", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          aria-multiselectable="true"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-selected="true">A</button>
+          <button class="item b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "an empty seed would take the group out of the tab sequence entirely, which is worse than seeding a marked item"
+      );
+  });
+
+  test("entry ignores aria-current tokens that mean not current", async function (assert) {
+    const emptyToken = "";
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".item"
+            entryFocus="selected-or-first"
+          }}
+        >
+          <button
+            class="item a"
+            role="option"
+            aria-current={{emptyToken}}
+          >A</button>
+          <button class="item b" role="option" aria-current="false">B</button>
+          <button class="item c" role="option" aria-current="page">C</button>
+          <button class="item d" role="option">D</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute(
+        "aria-current",
+        "",
+        "the empty token is genuinely present on the first row"
+      );
+    assert
+      .dom(".c")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "only a token that means current marks the row the entry seed prefers"
+      );
+  });
+
+  test("fallbackSkipsMarked does not treat aria-current=false as marked", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" aria-controls="rf-current-lb" />
+        <div
+          id="rf-current-lb"
+          role="listbox"
+          {{dRovingFocus
+            focusStrategy="active-descendant"
+            controllerElement=".search"
+            itemSelector=".item"
+            activeClass="--active"
+            entryFocus="first"
+            fallbackSkipsMarked=true
+          }}
+        >
+          <button class="item a" role="option" aria-current="false">A</button>
+          <button class="item b" role="option" aria-current="false">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasClass(
+        "--active",
+        "rows that only say they are not current leave the fallback free to seed"
+      );
   });
 
   test("changing itemSelector releases the items it no longer matches", async function (assert) {

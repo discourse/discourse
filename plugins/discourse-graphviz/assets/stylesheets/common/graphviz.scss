@@ -11,6 +11,11 @@ div.graphviz.is-loading,
   }
 }
 
+// floor for a diagram not yet typed; the block supplies the frame
+.composer-graphviz-node .composer-preview-node__preview {
+  min-height: 3em;
+}
+
 // Hide the raw DOT source until the client replaces the placeholder.
 div.graphviz.is-loading {
   font-size: 0;

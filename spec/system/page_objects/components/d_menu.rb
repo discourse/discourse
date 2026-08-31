@@ -37,7 +37,7 @@ module PageObjects
         if @identifier.nil?
           "#d-menu-portals"
         else
-          "#d-menu-portals [data-identifier=\"#{@identifier}\"]"
+          "[data-content][data-identifier=\"#{@identifier}\"]"
         end
       end
 

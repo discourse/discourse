@@ -46,6 +46,12 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Quiet (one sentence, no heading)"
+          balanced: "Balanced (one short paragraph)"
+          detailed: "Detailed (two or three short paragraphs)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
@@ -347,9 +353,12 @@ en:
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
-          discoveries: "Discoveries"
+          discoveries: "Discover (deprecated)"
+          ask_ai: "Ask AI"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
@@ -1457,16 +1466,16 @@ en:
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:
-          toggle: "AI results"
-          unavailable: "AI results unavailable"
-          zero_results_expanded: "Zero results found, showing %{count} AI results"
+          toggle: "Related results"
+          unavailable: "Related results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} related results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
-          invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          invalid_sort: "Search results must be sorted by relevance to display related results"
           not_submitted: "Submit a search to enable AI results"
           no_results: "No AI results found for this search"
-        semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
-        ai_generated_result: "Search result found using AI"
+        semantic_search_unavailable_tooltip: "Search results must be sorted by relevance to display related results"
+        ai_generated_result: "Related search result found using AI"
         ai_results_notice:
           no_results: "No exact matches, but here are some related results."
           few_results:
@@ -1630,21 +1639,52 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discobot discoveries"
-        regular_results: "Topics"
-        tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        main_title: "Ask AI"
         loading_convo: "Loading conversation"
-        collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
+        timed_out: "Ask AI took too long to complete this search. Try again or use Search."
+        request_failed: "Ask AI could not start this search. Try again or use Search."
+        no_answer: "AI couldn’t find a clear answer. Ask the community."
+        create_topic: "Create topic"
+        answer_ready: "Ask AI answer ready."
         user_setting: "Enable AI search discoveries"
-        tooltip:
-          header: "AI powered search"
-          content: "Natural language search powered by %{model}"
-          actions:
-            info: "How does it work?"
-            disable: "Disable"
-
+        legacy:
+          main_title: "Discobot discoveries"
+          regular_results: "Topics"
+          tell_me_more: "Tell me more..."
+          continue_convo: "Continue conversation..."
+          loading_convo: "Loading conversation"
+          collapse: "Collapse"
+          timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+          tooltip:
+            header: "AI powered search"
+            content: "Natural language search powered by %{model}"
+            actions:
+              info: "How does it work?"
+              disable: "Disable"
+        search_placeholder: "Search or Ask AI"
+        search_type: "AI"
+        ask_button: "Ask"
+        tip_ask: "asks AI instead of searching"
+        tip_search: "searches instead of asking AI"
+        make_default: "Make AI my default search option"
+        dismiss_default_preference: "Hide this setting"
+        default_preference_dismissed: "This setting is also available in your user preferences"
+        shortcut_hint: "or %{shortcut}"
+        advanced_with_shortcut: "Open advanced search (%{shortcut})"
+        search_all_topics: "All topics"
+        search_this_topic: "This topic"
+        search_in_context: "In %{name}"
+        search_group_messages: "Messages in %{group}"
+        search_user_posts: "Posts by %{username}"
+        search_messages: "Messages"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Related topics"
+          show_all_matching: "Show all matching topics"
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:

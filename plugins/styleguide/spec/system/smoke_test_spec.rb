@@ -35,6 +35,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
+      { href: "/molecules/roving-focus", title: "Roving focus" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
@@ -44,6 +45,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
+      { href: "/molecules/virtual-list", title: "Virtual list" },
     ],
     "organisms" => [
       { href: "/organisms/post", title: "Post" },

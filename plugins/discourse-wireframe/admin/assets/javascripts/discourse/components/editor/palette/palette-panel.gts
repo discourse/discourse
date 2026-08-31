@@ -434,10 +434,11 @@ export default class PalettePanel extends Component {
           role="listbox"
           aria-label={{i18n "wireframe.palette.list_label"}}
           {{dRovingFocus
-            selectionMode="active"
+            focusStrategy="active-descendant"
             controllerElement=this.searchInput
             itemSelector=".wireframe-block-tile, .wireframe-block-row"
             itemsKey=this.searchTerm
+            entryFocus="none"
             activeClass="--active"
             onActivate=this.activateRow
           }}

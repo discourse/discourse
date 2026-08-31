@@ -27,12 +27,6 @@
         };
       </script>
 
-      <%= tag.iframe srcdoc: tag.script(
-        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
-        nonce: csp_nonce_placeholder,
-        type: "module",
-      ), style: "display: none;" %>
-
       <%= preload_script "test-support" %>
 
       <%= render "layouts/plugin_js",
@@ -95,8 +89,16 @@
       </script>
 
       <%= preload_script "test-entrypoint", type_module: true %>
+
+      <%# Kept out of the head: an iframe there ends head parsing early and demotes every later stylesheet to the body, where it no longer blocks the entrypoint. %>
+      <%= tag.iframe srcdoc: tag.script(
+        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
+        nonce: csp_nonce_placeholder,
+        type: "module",
+      ), style: "display: none;" %>
     <%- end %>
 
+    <%# Stays last on purpose: the test runner injects its own stylesheet into the head at runtime, and this one must follow it in the cascade to restyle the runner. %>
     <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
   </body>
 </html>

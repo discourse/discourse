@@ -1,6 +1,42 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::Llm do
+  describe "upload skips" do
+    fab!(:vision_model) { Fabricate(:anthropic_model, vision_enabled: true) }
+
+    it "hands the execution context's collector to the prompt it is about to translate" do
+      upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+      execution_context = DiscourseAi::Completions::ExecutionContext.new
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "system",
+          messages: [{ type: :user, content: ["look", { upload_id: upload.id }] }],
+        )
+
+      stub_request(:post, "https://api.anthropic.com/v1/messages").to_return(
+        body: {
+          id: "msg_1",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "done" }],
+          model: "claude-3-opus",
+          usage: {
+            input_tokens: 1,
+            output_tokens: 1,
+          },
+        }.to_json,
+      )
+
+      vision_model.to_llm.generate(
+        prompt,
+        user: Discourse.system_user,
+        execution_context: execution_context,
+      )
+
+      expect(execution_context.upload_skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+    end
+  end
+
   fab!(:user)
   fab!(:model, :llm_model)
 

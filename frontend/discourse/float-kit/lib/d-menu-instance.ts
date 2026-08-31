@@ -6,6 +6,7 @@ import Owner, { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import {
+  type FloatCloseOptions,
   type FloatKitTrigger,
   MENU,
   type MenuOptions,
@@ -13,18 +14,15 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
-import type ModalService from "discourse/services/modal";
 
 /**
  * The concrete float instance backing a menu. It holds the menu's options,
  * open/close state, and portal outlet, and implements the trigger and lifecycle
  * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
- * it closes and, on mobile, closes through the modal service when it was shown
- * as a modal.
+ * it closes.
  */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
-  @service declare modal: ModalService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;
@@ -104,7 +102,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async close(options = { focusTrigger: true }) {
+  async close(options: FloatCloseOptions = {}) {
     this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
@@ -116,17 +114,16 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await animateClosing(this.content);
 
-    if (this.renderInModal && this.expanded) {
-      await this.modal.close();
-    }
-
     await this.menu.close(this);
 
     // A caller that closes without asking for the trigger to be refocused (a click outside,
     // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
     // closing is animated, so by now the click may have deliberately focused something else,
     // and only focus left with no owner is ours to restore.
-    if (options.focusTrigger || (ownedFocus && this.#focusIsUnowned)) {
+    if (
+      (options.focusTrigger ?? true) ||
+      (ownedFocus && this.#focusIsUnowned)
+    ) {
       this.triggerElement?.focus();
     }
 
