@@ -53,10 +53,10 @@ module DiscourseDev
 
         rows << [
           date,
-          ::ApplicationRequest.req_types[:page_view_logged_in_browser],
+          ::ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
           logged_in_browser,
         ]
-        rows << [date, ::ApplicationRequest.req_types[:page_view_anon_browser], anon_browser]
+        rows << [date, ::ApplicationRequest.req_types[:page_view_anon_browser_beacon], anon_browser]
         rows << [date, ::ApplicationRequest.req_types[:page_view_crawler], crawler]
         rows << [date, ::ApplicationRequest.req_types[:page_view_logged_in], logged_in_legacy]
         rows << [date, ::ApplicationRequest.req_types[:page_view_anon], anon_legacy]

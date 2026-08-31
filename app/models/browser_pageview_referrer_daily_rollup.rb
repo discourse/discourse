@@ -21,7 +21,6 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
       FROM browser_pageview_events
       WHERE created_at >= :start_date
         AND created_at < :end_date
-        AND #{BrowserPageviewEvent.rollup_source_condition}
       GROUP BY date, normalized_referrer
       ON CONFLICT (date, normalized_referrer) DO UPDATE
       SET count = EXCLUDED.count,
@@ -47,7 +46,6 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
         FROM browser_pageview_events e
         WHERE e.created_at >= d.date
           AND e.created_at < d.date + 1
-          AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
       )
     SQL
     return if dates.empty?

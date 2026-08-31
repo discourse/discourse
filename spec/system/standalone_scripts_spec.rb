@@ -98,12 +98,12 @@ describe "Standalone scripts" do
   end
 
   describe "pageview.js" do
-    it "sends a pageview tracking request on a non-ember page" do
+    it "sends a beacon pageview tracking request on a non-ember page" do
       pageview_requests = []
       page.driver.with_playwright_page do |pw_page|
         pw_page.on(
           "request",
-          ->(request) { pageview_requests << request.url if request.url.include?("/pageview") },
+          ->(request) { pageview_requests << request.url if request.url.end_with?("/srv/pv") },
         )
       end
 
@@ -119,9 +119,7 @@ describe "Standalone scripts" do
       page.driver.with_playwright_page do |pw_page|
         pw_page.on(
           "request",
-          lambda do |request|
-            tracking_requests << request.url if request.url.match?(%r{/(pageview|srv/pv)$})
-          end,
+          lambda { |request| tracking_requests << request.url if request.url.end_with?("/srv/pv") },
         )
       end
 

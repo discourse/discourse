@@ -7,8 +7,6 @@ module Jobs
     cluster_concurrency 1
 
     def execute(_args)
-      return if !SiteSetting.persist_browser_pageview_events
-
       aggregate_pageviews
       aggregate_engagement
       aggregate_crawlers
@@ -97,10 +95,7 @@ module Jobs
     end
 
     def earliest_event_date
-      BrowserPageviewEvent
-        .where(BrowserPageviewEvent.rollup_source_condition)
-        .minimum(:created_at)
-        &.to_date
+      BrowserPageviewEvent.minimum(:created_at)&.to_date
     end
 
     def backfill_referrers(recompute_entry_urls:)
@@ -133,7 +128,6 @@ module Jobs
         SELECT id, referrer
         FROM browser_pageview_events
         WHERE referrer IS NOT NULL
-          AND #{BrowserPageviewEvent.rollup_source_condition}
           AND (
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
@@ -185,7 +179,6 @@ module Jobs
           FROM browser_pageview_events e
           WHERE e.created_at >= touched_dates.date
             AND e.created_at < touched_dates.date + 1
-            AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
             AND e.referrer IS NOT NULL
             AND NOT EXISTS (
               SELECT 1
@@ -259,7 +252,6 @@ module Jobs
             FROM browser_pageview_events events
             WHERE events.created_at >= touched_dates.date
               AND events.created_at < touched_dates.date + 1
-              AND #{BrowserPageviewEvent.rollup_source_condition(table: "events")}
               AND (
                 (
                   (
@@ -322,7 +314,6 @@ module Jobs
           SELECT id, user_agent
           FROM browser_pageview_events
           WHERE created_at >= :retention_cutoff
-            AND #{BrowserPageviewEvent.rollup_source_condition}
             AND browser IS NULL
           ORDER BY created_at DESC, id DESC
           LIMIT :limit
@@ -335,7 +326,6 @@ module Jobs
           SELECT id, url
           FROM browser_pageview_events
           WHERE created_at >= :retention_cutoff
-            AND #{BrowserPageviewEvent.rollup_source_condition}
             AND (
               normalized_url_version IS NULL
               OR normalized_url_version < :version

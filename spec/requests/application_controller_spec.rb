@@ -1240,8 +1240,6 @@ RSpec.describe ApplicationController do
       Middleware::AnonymousCache.enable_anon_cache
       Middleware::AnonymousCache.clear_all_cache!
 
-      SiteSetting.trigger_browser_pageview_events = true
-
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")

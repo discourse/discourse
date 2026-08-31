@@ -2152,7 +2152,6 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -18971,17 +18970,10 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
--- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
-
-
---
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (browser IS NULL);
 
 
 --
@@ -18989,6 +18981,13 @@ CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING bt
 --
 
 CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events USING btree (created_at, country_code);
+
+
+--
+-- Name: idx_bpe_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC);
 
 
 --
@@ -25077,8 +25076,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260903195501'),
 ('20260903065141'),
 ('20260902150024'),
+('20260902075239'),
 ('20260901020329'),
 ('20260831162602'),
+('20260831011904'),
+('20260831011842'),
+('20260831011840'),
+('20260831011839'),
+('20260831011836'),
 ('20260828145150'),
 ('20260827064809'),
 ('20260826133816'),
@@ -27577,4 +27582,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
