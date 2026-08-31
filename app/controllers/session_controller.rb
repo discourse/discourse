@@ -923,6 +923,7 @@ class SessionController < ApplicationController
       on_failed_policy(:required_full_name_provided) do
         render json: { error: I18n.t("login.missing_full_name") }
       end
+      on_model_errors(:user) { |user| render json: login_code_account_error(user) }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
@@ -1026,6 +1027,20 @@ class SessionController < ApplicationController
 
   def invalid_login_code
     { error: I18n.t("email_login_code.invalid_code") }
+  end
+
+  def login_code_account_error(user)
+    ip_error =
+      user.errors.find do |error|
+        error.attribute == :ip_address &&
+          error.type.in?(%i[blocked max_new_accounts_per_registration_ip])
+      end
+
+    if ip_error
+      { error: I18n.t("email_login_code.account_creation_failed") }
+    else
+      invalid_login_code
+    end
   end
 
   def invalid_credentials

@@ -1098,6 +1098,7 @@ en:
 
   email_login_code:
     invalid_code: "That code is incorrect or has expired. Request a new code and try again."
+    account_creation_failed: "We couldn't create your account. Please try again later or contact a staff member."
 
   browsers:
     android_browser: "Android Browser"
