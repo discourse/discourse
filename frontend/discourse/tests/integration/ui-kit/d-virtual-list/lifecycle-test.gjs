@@ -1,6 +1,14 @@
 import { tracked } from "@glimmer/tracking";
-import { find, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  find,
+  render,
+  resetOnerror,
+  settled,
+  setupOnerror,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   disableVirtualization,
@@ -162,11 +170,92 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
     );
   });
 
-  // `@setSize` exists for a windowed view onto an unbounded stream, where the
-  // backing array length is not the real total and -1 means indeterminable.
+  // `@setSize` exists for a backing array that is a loaded prefix of a larger
+  // known set, where the array length undercounts the real total.
   test("lifecycle pin: an explicit setSize overrides the item count", async function (assert) {
     const items = buildRows(3);
+    const total = 500;
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 400px;
+            overflow-y: auto;
+          }
+        </style>
+        <DVirtualList
+          @items={{items}}
+          @key="id"
+          @estimateSize={{estimate}}
+          @role="listbox"
+          @itemRole="option"
+          @setSize={{total}}
+          as |item|
+        >
+          <span>{{item.text}}</span>
+        </DVirtualList>
+      </template>
+    );
+
+    assert
+      .dom(".d-virtual-list__item")
+      .hasAttribute(
+        "aria-setsize",
+        "500",
+        "the consumer's declared total wins over the backing array length"
+      );
+  });
+
+  test("lifecycle pin: setSize is omitted for a role that does not define it", async function (assert) {
+    const items = buildRows(3);
+    const total = 500;
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 400px;
+            overflow-y: auto;
+          }
+        </style>
+        <DVirtualList
+          @items={{items}}
+          @key="id"
+          @estimateSize={{estimate}}
+          @setSize={{total}}
+          as |item|
+        >
+          <span>{{item.text}}</span>
+        </DVirtualList>
+      </template>
+    );
+
+    assert
+      .dom(".d-virtual-list__item")
+      .doesNotHaveAttribute(
+        "aria-setsize",
+        "a row with no position-aware role carries no set size"
+      );
+  });
+
+  // ARIA's "unknown total" sentinel has no consistent screen reader support,
+  // so the primitive refuses it rather than letting it reach AT.
+  test("lifecycle pin: a negative setSize is refused rather than published", async function (assert) {
+    const consoleError = sinon.stub(console, "error");
+    const items = buildRows(3);
     const unbounded = -1;
+    let errors = 0;
+
+    setupOnerror((error) => {
+      assert.true(
+        error.message.includes("omit `@setSize`"),
+        "the assertion tells the consumer what to do instead"
+      );
+      errors++;
+    });
 
     await render(
       <template>
@@ -191,18 +280,17 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
       </template>
     );
 
-    assert
-      .dom(".d-virtual-list__item")
-      .hasAttribute(
-        "aria-setsize",
-        "-1",
-        "the consumer's declared total wins over the backing array length"
-      );
+    assert.strictEqual(errors, 1, "the sentinel is reported once");
+
+    resetOnerror();
+    consoleError.restore();
   });
 
-  test("lifecycle pin: setSize is omitted for a role that does not define it", async function (assert) {
+  test("lifecycle pin: a setSize below the loaded count is floored to it", async function (assert) {
+    // A declared total the loaded rows already exceed would push aria-posinset
+    // past aria-setsize, so the loaded count wins.
     const items = buildRows(3);
-    const unbounded = -1;
+    const staleTotal = 2;
 
     await render(
       <template>
@@ -217,7 +305,9 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           @items={{items}}
           @key="id"
           @estimateSize={{estimate}}
-          @setSize={{unbounded}}
+          @role="listbox"
+          @itemRole="option"
+          @setSize={{staleTotal}}
           as |item|
         >
           <span>{{item.text}}</span>
@@ -227,9 +317,10 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
 
     assert
       .dom(".d-virtual-list__item")
-      .doesNotHaveAttribute(
+      .hasAttribute(
         "aria-setsize",
-        "a row with no position-aware role carries no set size"
+        "3",
+        "no position can exceed the published set size"
       );
   });
 });

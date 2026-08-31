@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
@@ -345,8 +346,12 @@ interface DVirtualListSignature<T> {
      */
     itemRole?: string;
     /**
-     * Overrides `aria-setsize`. Only needed when `@items` is itself a window
-     * over an unbounded stream, where the true total is unknowable: pass `-1`.
+     * Overrides `aria-setsize`, for when `@items` is a loaded prefix of a
+     * larger known set.
+     *
+     * Omit it when the total is unknown: ARIA's `-1` sentinel is handled
+     * inconsistently by screen readers, so negative values are refused and the
+     * loaded count is published instead.
      */
     setSize?: number;
     /** Receives the imperative handle once mounted. */
@@ -584,15 +589,24 @@ export default class DVirtualList<T> extends Component<
   }
 
   /**
-   * The true total, which is exactly what a windowed list must publish: the DOM
-   * count is a lie, and `-1` ("indeterminable") throws away a number we have.
-   * Consumers windowing an unbounded stream pass `@setSize={{-1}}` explicitly.
+   * The published total: `@setSize` when given, floored at the loaded count
+   * so no `aria-posinset` can exceed it. The ARIA `-1` sentinel has no
+   * consistent screen reader implementation, so it is refused.
    */
   get setSize() {
     if (!this.positionAwareItems) {
       return undefined;
     }
-    return this.args.setSize ?? this.args.items.length;
+
+    assert(
+      'DVirtualList: `aria-setsize="-1"` has no consistent screen reader ' +
+        "implementation; omit `@setSize` when the total is unknown and let " +
+        "the loaded count stand",
+      (this.args.setSize ?? 0) >= 0
+    );
+
+    const loaded = this.args.items.length;
+    return Math.max(this.args.setSize ?? loaded, loaded);
   }
 
   @action
