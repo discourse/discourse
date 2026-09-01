@@ -47,8 +47,12 @@ module DiscourseDataExplorer
         return { error: e, duration_nanos: 0 }
       end
 
-      # a parameter value could otherwise break out of a comment
-      executable_sql = interpolate_params(strip_comments(query.sql), query_args)
+      executable_sql = strip_comments(query.sql)
+      if params_in_dollar_quoted_literal?(executable_sql, query_args)
+        err = ValidationError.new("Parameters cannot be used inside dollar-quoted literals")
+        return { error: err, duration_nanos: 0 }
+      end
+      executable_sql = interpolate_params(executable_sql, query_args)
 
       time_start, time_end, explain, err, result = nil
       begin
@@ -109,7 +113,56 @@ module DiscourseDataExplorer
       # not DB.param_encoder, which quotes some types differently
       encoder = MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection)
       values = params.transform_keys(&:to_s)
-      sql.gsub(PARAM_REGEX) { values.key?($1) ? encoder.quote_val(values[$1]) : $& }
+      replace_params = ->(fragment) do
+        fragment.gsub(PARAM_REGEX) { values.key?($1) ? encoder.quote_val(values[$1]) : $& }
+      end
+      scanner = StringScanner.new(sql)
+      result = +""
+
+      until scanner.eos?
+        if scanner.match?(/'/)
+          # backslash escapes only apply to E'' strings
+          pattern = result.match?(/(?<![\w"])[eE]\z/) ? /'(?:''|[^'\\]|\\.)*'/m : /'(?:''|[^'])*'/
+          result << replace_params.call(scanner.scan(pattern) || scan_rest(scanner))
+        elsif scanner.match?(/"/)
+          result << replace_params.call(scanner.scan(/"(?:""|[^"])*"/) || scan_rest(scanner))
+        elsif scanner.match?(/\$\w*\$/)
+          result << (scanner.scan(/\$(\w*)\$.*?\$\1\$/m) || scan_rest(scanner))
+        else
+          result << replace_params.call(scanner.scan(/[^'"$]+/) || scanner.getch)
+        end
+      end
+
+      result
+    end
+
+    def self.params_in_dollar_quoted_literal?(sql, params)
+      values = params.transform_keys(&:to_s)
+      scanner = StringScanner.new(sql)
+
+      until scanner.eos?
+        if scanner.match?(/'/)
+          # backslash escapes only apply to E'' strings
+          pattern =
+            (
+              if scanner.string[0...scanner.pos].match?(/(?<![\w"])[eE]\z/)
+                /'(?:''|[^'\\]|\\.)*'/m
+              else
+                /'(?:''|[^'])*'/
+              end
+            )
+          scanner.scan(pattern) || scan_rest(scanner)
+        elsif scanner.match?(/"/)
+          scanner.scan(/"(?:""|[^"])*"/) || scan_rest(scanner)
+        elsif scanner.match?(/\$\w*\$/)
+          literal = scanner.scan(/\$(\w*)\$.*?\$\1\$/m) || scan_rest(scanner)
+          return true if literal.scan(PARAM_REGEX).any? { |parameter| values.key?(parameter.first) }
+        else
+          scanner.getch
+        end
+      end
+
+      false
     end
 
     # Literals, quoted identifiers, and dollar-quoted strings are left untouched,

@@ -27,6 +27,16 @@ describe DiscourseDataExplorer::DataExplorer do
     end
   end
 
+  describe ".params_in_dollar_quoted_literal?" do
+    it "ignores dollar quote syntax inside a standard string literal" do
+      sql = "SELECT '$sql$:value$sql$'"
+
+      expect(
+        described_class.params_in_dollar_quoted_literal?(sql, { value: "expected value" }),
+      ).to eq(false)
+    end
+  end
+
   describe ".run_query" do
     fab!(:topic)
 
