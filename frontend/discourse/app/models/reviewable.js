@@ -22,6 +22,7 @@ export default class Reviewable extends RestModel {
     return json;
   }
 
+  @tracked author_penalties;
   @tracked blank_post;
   @tracked bundled_actions;
   @tracked can_edit;

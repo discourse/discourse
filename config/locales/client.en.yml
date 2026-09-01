@@ -1227,7 +1227,17 @@ en:
         view_conversation: "view PM"
         note_added: "Moderator note"
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
+        author_silenced_by: "Author silenced by %{username} · %{relativeDate}"
+        author_silenced_automatically: "Author silenced automatically · %{relativeDate}"
+        author_suspended_by: "Author suspended by %{username} · %{relativeDate}"
+        author_suspended_automatically: "Author suspended automatically · %{relativeDate}"
         no_events: "No timeline events to display"
+      author_penalty:
+        effect:
+          retains_silence: "The author stays silenced."
+          retains_suspension: "The author stays suspended."
+          retains_silence_and_suspension: "The author stays silenced and suspended."
+          lifts_silence: "The author will be unsilenced."
       notes:
         add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"
@@ -1914,7 +1924,6 @@ en:
       admin: "%{user} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      silenced_tooltip: "This user is silenced"
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
