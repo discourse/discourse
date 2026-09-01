@@ -115,7 +115,13 @@ class DiscourseVipsWorker
           begin
             image = Vips::Image.new_from_file(input_path, access: :sequential)
             if image.has_alpha?
-              alpha_weighted_components(normalize_color(image))
+              alpha_weighted_components(image)
+            elsif %i[float double].include?(image.format)
+              normalize_color(image)
+                .thumbnail_image(1, height: 1, size: :force)
+                .getpoint(0, 0)
+                .first(3)
+                .map(&:round)
             else
               thumbnail = Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
               normalize_color(thumbnail).getpoint(0, 0).first(3).map(&:round)
@@ -130,17 +136,18 @@ class DiscourseVipsWorker
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
-      image *= 255 if %i[float double].include?(image.format)
+      image = (image * 255).round(:rint) if %i[float double].include?(image.format)
       image.cast(:uchar, shift: true)
     end
     private_class_method :normalize_color
 
     def self.alpha_weighted_components(image)
       alpha = image[image.bands - 1]
-      weighted_colors = image.extract_band(0, n: 3) * alpha
+      colors = normalize_color(image.extract_band(0, n: image.bands - 1))
+      weighted_colors = colors * alpha
       statistics = alpha.bandjoin(weighted_colors).stats
       alpha_sum = statistics.getpoint(2, 1).first
-      return [0, 0, 0] if alpha_sum.zero?
+      return 0, 0, 0 if alpha_sum.zero?
 
       3.times.map { |band| (statistics.getpoint(2, band + 2).first / alpha_sum).round }
     end

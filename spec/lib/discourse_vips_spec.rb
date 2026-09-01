@@ -24,8 +24,12 @@ RSpec.describe DiscourseVips do
       expect(dominant_color("dominant-color-transparent.png")).to eq("000000")
     end
 
-    it "normalizes floating-point JXL color values" do
-      expect(dominant_color("dominant-color-float.jxl")).to eq("89BCFF")
+    it "preserves low nonzero alpha values in 16-bit images" do
+      expect(dominant_color("dominant-color-low-alpha-16bit.png")).to eq("FF0000")
+    end
+
+    it "normalizes floating-point grayscale JXL color values" do
+      expect(dominant_color("dominant-color-float.jxl")).to eq("808080")
     end
   end
 

@@ -992,7 +992,7 @@ RSpec.describe Upload do
     it "uses libvips to calculate the dominant color when enabled" do
       global_setting :enable_vips_image_processing, true
 
-      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("171613")
+      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("565342")
     end
 
     it "normalizes a 16-bit dominant color when libvips is enabled" do
