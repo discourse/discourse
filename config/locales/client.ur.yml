@@ -6535,21 +6535,39 @@ ur:
         apply: "لاگو کریں"
         view_more: "مزید دیکھیں"
         cards:
+          acquisition: "حصولی"
           pages: "صفحات"
           visitors: "زائرین"
+        dimensions:
+          referrers: "حوالہ دہندہ"
+          countries: "ممالک"
+          networks: "نیٹ ورکس"
+          top_urls: "سرفہرست URLs"
+          entry_urls: "شروعاتی URLs"
+          browsers: "براؤزر"
+          ip_addresses: "IP ایڈریس"
         filters:
+          traffic_type: "ٹریفک کی قسم"
           top_url: "سرفہرست URL"
+          entry_url: "شروعاتی URL"
           referrer: "حوالہ دہندہ"
           country: "ملک"
           network: "نیٹ ورک"
           browser: "براؤزر"
           ip: "IP ایڈریس"
         metrics:
+          distinct_sessions:
+            label: "الگ تھلگ سیشنز"
           logged_in_share:
             label: "لاگ ان شدہ شراکت"
+          bounce_rate:
+            label: "واپسی کی شرح"
+          average_session_duration:
+            label: "سیشن کا اوسط دورانیہ"
         series:
           logged_in_human: "لاگ ان شدہ"
           anonymous_human: "گمنام"
+          likely_crawler: "ممکنہ کرالر"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا:"
@@ -6670,8 +6688,10 @@ ur:
               status: "حیثیت"
             trending:
               title: "رجحان ساز تلاشیں"
+              empty: "اس عرصے میں کوئی تلاشیں نہیں۔"
             content_gaps:
               title: "مواد کا خلاء"
+              empty: "اس عرصے میں مواد کا فرق نہیں ہے۔"
               badge:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
@@ -6679,7 +6699,9 @@ ur:
           header_action: "منتظمی"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
           add: "رپورٹ شامل کریں"
+          remove: "رپورٹ ہٹائیں"
           no_data: "دکھانے کے لیے کچھ نہیں"
+          report_error: "یہ رپورٹ لوڈ نہیں ہو سکی"
           modal:
             title: "رپورٹس کا انتظام کریں"
             search_placeholder: "رپورٹس کی تلاش"
@@ -6706,6 +6728,8 @@ ur:
           kpi:
             new_signups:
               label: "نئے جڑنے والے"
+            dau_mau:
+              label: "مخلصی DAU / MAU"
             new_contributors:
               label: "نئے شراکت دار"
               tooltip: "اپنی پہلی پوسٹ کرنے والے اراکین کی تعداد۔"
@@ -6715,7 +6739,9 @@ ur:
             last_7_days: "گزشتہ 7 دنوں کے مقابلے میں"
             last_30_days: "گزشتہ 30 دنوں کے مقابلے میں"
             last_3_months: "گزشتہ 3 ماہ کے مقابلے میں"
+            previous_period: "بمقابلہ پچھلی مدت"
         site_traffic:
+          fetch_error: "فورم ٹریفک لوڈ نہیں ہو سکی۔ صفحہ کو ریفریش کرنے کی کوشش کریں۔"
           headline:
             last_7_days:
               one: "گزشتہ 7 دنوں میں %{formatted_count} دورہ"
@@ -6726,6 +6752,9 @@ ur:
             last_3_months:
               one: "گزشتہ 3 ماہ میں %{formatted_count} دورہ"
               other: "گزشتہ 3 ماہ میں %{formatted_count} دورے"
+          trend:
+            up: "%{percent} اوپر"
+            down: "%{percent} نیچے"
           comparison_tooltip:
             previous_7_days: "گزشتہ 7 دنوں کے مقابلے میں (%{start} – %{end})"
             previous_30_days: "گزشتہ 30 دنوں کے مقابلے میں (%{start} – %{end})"
@@ -6733,6 +6762,10 @@ ur:
           kpi:
             logged_in_share:
               label: "لاگ ان شدہ شراکت"
+            direct_traffic:
+              label: "براہ راست ٹریفک"
+            bounce_rate:
+              label: "واپسی کی شرح"
           top_countries:
             title: "سرفہرست ممالک"
             empty: "اس مدت کے لیے کسی ملک کا ریکارڈ نہیں ہے۔"
@@ -6741,6 +6774,8 @@ ur:
             title: "سرفہرست حوالہ دہندگان"
             empty: "اس مدت کے لیے حوالہ دہندگان کا کوئی ریکارڈ نہیں۔"
             error: "سرفہرست حوالہ دہندگان کو لوڈ نہیں کیا جا سکا۔ صفحہ کو ریفریش کرنے کی کوشش کریں۔"
+          top_entry_urls:
+            title: "سرفہرست شروعاتی URLs"
           series:
             logged_in: "لاگ ان شدہ"
             anonymous: "گمنام"
@@ -7096,6 +7131,7 @@ ur:
           user_destroyed: "رکن حذف ہو گیا"
           user_suspended: "رکن کو معطل کر دیا گیا"
           user_unsuspended: "رکن کو بحال کر دیا گیا"
+          user_anonymized: "صارف گمنام ہے"
         reviewable_event:
           group_name: "قابلِ جائزہ ایونٹس"
           reviewable_created: "قابلِ جائزہ آئٹم تیار ہے"
@@ -7391,6 +7427,8 @@ ur:
             title: "رنگ"
           save_changes: "تبدیلیاں محفوظ کریں"
           unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
+          copy_of: "%{name} کی نقل"
+          copy_created: '"%{name}" کی ایک نئی نقل بنائی گئی ہے'
           delete_confirm: "کیا آپ کو یقین ہے کہ آپ یہ رنگوں کی پیلٹ حذف کرنا چاہتے ہیں؟"
       plugins:
         title: "پلَگ اِنز"
@@ -7419,7 +7457,11 @@ ur:
         sidebar: "سائڈبار"
         header_dropdown: "ہیڈر ڈراپ ڈاؤن"
         legacy: "میراث"
+      homepage:
+        top_menu_default: "سرفہرست مینو میں پہلی اکائی"
       duplicate_topic_titles:
+        disallowed: "غیر مجاز"
+        allowed_across_categories: "تمام زمروں میں اجازت ہے"
         allowed: "اجازت یافتہ"
       backups:
         title: "بیک اَپس"
@@ -7520,6 +7562,7 @@ ur:
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
+        theme_owner: "ملکیت:"
         email_templates:
           title: "اِی میل"
           subject: "موضوع"
@@ -7527,7 +7570,10 @@ ur:
           body: "متن"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
+          search_templates: "فلٹر کریں بذریعہ اسم سانچہ..."
+          no_templates_found: "کوئی سانچے آپ کے فلٹرز سے مماثل نہیں۔"
           edit: "ترمیم کریں"
+          back: "سانچوں پر واپسی"
         component:
           all_filter: "تمام"
           used_filter: "استعمال شدہ"
@@ -7536,6 +7582,7 @@ ur:
           disabled_filter: "غیر فعال"
           updates_available_filter: "اپ ڈیٹس دستیاب"
         theme:
+          filter_by: "فلٹر منجانب"
           theme: "تھیم"
           component: "جزو"
           components: "اجزاء"
@@ -7550,6 +7597,7 @@ ur:
           beginners_guide_title: "Discourse تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
           developers_guide_title: "Discourse تِھیمز کیلئے ڈویلپر رہنمائی"
           browse_themes: "کمیونٹی تِھیمز دیکھیں"
+          install_more_themes: "مزید تھیمز انسٹال کریں"
           customize_desc: "مرضی کے مطابق بنائیں:"
           title: "تِھیمز"
           components_description: "اجزاء چھوٹی تبدیلیاں ہیں جو آپ کے فورم ڈیزائن کے انداز کے مخصوص عناصر کو تبدیل کرنے کے لیے تھیمز میں شامل کی جا سکتی ہیں۔"
@@ -7642,6 +7690,7 @@ ur:
           install_upload: "آپ کی ڈیوائس سے"
           install_git_repo: "گِٹ رِیپَوزِٹَری میں سے"
           install_create: "نیا بنائیں"
+          installing_message: "آپکے نئے تھیم کی ترتیب چل رہی ہے…"
           duplicate_remote_theme: "تھیم کا جزو \"%{name}\" پہلے ہی انسٹال ہے، کیا آپ واقعی ایک اور کاپی انسٹال کرنا چاہتے ہیں؟"
           about_theme: "بارے میں"
           license: "لائسنس"
@@ -7657,20 +7706,40 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
+          update_to_latest: "تازہ ترین میں اپ ڈیٹ"
           check_for_updates: "اپ ڈیٹس کے لیے چیک کریں"
           updating: "اپڈیٹ ہو رہا ہے۔۔۔"
+          update_success: "%{theme} اپ ڈیٹ مکمل"
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
+          up_to_date_branch: "تھیم %{branch} کے ساتھ اپ ڈیٹ ہے، آخری بار دیکھا گیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
+          change_source:
+            button: "ماخذ بدلیں"
+            title: "تھیم کا ماخذ بدلیں"
+            repository_url: "ریپوزیٹری URL"
+            branch: "برانچ"
+            updating: "تھیم ماخذ اپ ڈیٹ ہو رہا..."
+            update: "ماخذ کو اپ ڈیٹ کریں"
+            has_existing_key: "اس تھیم میں ایک موجودہ SSH کنجی تشکیل دی گئی ہے۔"
+            generate_new_key: "نئی SSH کنجی بنائیں"
+            keep_existing_key: "موجودہ SSH کنجی ہی رکھیں"
           add: "شامل کریں"
+          theme_settings: "حسب ضرورت تھیم کی ترتیبات"
+          edit_objects_theme_setting: "ترتیبات ایڈیٹر"
           overriden_site_settings_explanation: "سائٹ کی ترتیبات تھیم اپنی مرضی کے مطابق کر سکتی ہیں۔ سائٹ سیٹنگ کی ڈیفالٹ ویلیو پر بحال کرنے کے لیے ری سیٹ پر کلک کریں۔ آپ <a href='%{themeSiteSettingsConfigUrl}'>تھیم سائٹ سیٹنگز کنفیگریشن پیج</a>پر تھیمز کے ذریعے سائٹ کی تمام ترتیبات کو اوور رائیڈ ہوتے دیکھ سکتے ہیں۔"
           no_settings: "اِس تھیم کی کوئی ترتیبات نہیں ہیں۔"
+          theme_translations: "تھیم کے تراجم"
           empty: "کوئی اشیاء نہیں"
           commits_behind:
             one: "تِھیم %{count} کَمِٹ پیچھے ہے!"
             other: "تِھیم %{count} کَمِٹس پیچھے ہے!"
+          commits_behind_branch:
+            one: "یہ تھیم %{branch} سے %{count} کمٹ پیچھے ہے"
+            other: "یہ تھیم %{branch} سے %{count} کمٹس پیچھے ہے"
           compare_commits: "(نئے کَمِٹس دیکھیں)"
           remote_theme_edits: "اگر آپ اس تھیم میں ترمیم کرنا چاہتے ہیں، تو آپ کو <a href='%{repoURL}' target='_blank'>اس کے ریپوزٹری پرتبدیلی درج کروانا ہوگی</a>"
           repo_unreachable: "اِس تِھیم کی گِٹ رِیپَوزِٹَری سے رابطہ نہیں کیا جا سکا۔ تکنیکی خرابی کا پیغام:"
+          built_in_description: "یہ تھیم پہلے سے انسٹال ہے اور اسے اپنی مرضی کے مطابق یا مٹایا نہیں جا سکتا"
           imported_from_archive: "یہ تھیم زپ فائل سے درآمد کی گئی تھی۔"
           scss:
             text: "CSS"
@@ -7727,8 +7796,14 @@ ur:
           title: "رنگ"
           edit: "ترمیم کریں"
           view: "مشاهده"
+          from_theme: "بذریعہ تھیم: %{name}"
           filters:
             all: "تمام"
+            user_selectable: "صارف کے قابل انتخاب"
+            from_theme: "بذریعہ تھیم"
+          default_light_badge:
+            text: "ڈیفالٹ لائیٹ"
+            reset: "فلٹرز ری سیٹ کریں"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
           undo: "کالعدم کریں"
@@ -7793,9 +7868,11 @@ ur:
         templates_title: "ای میل کے سانچے"
         preview_digest: "خلاصے کی جھلک دیکھیں"
         advanced_test:
+          title: "اعلی درجے کی جانچ"
           desc: "ملاحظہ کریں کہ کس طرح ڈِسکورس موصول ای میلز کو پراسس کرتا ہے۔ ای میل کو صحیح پراسس کرنے کے قابل ہونے کیلئے، براہ مہربانی پورے اصل ای میل پیغام کو نیچے پیسٹ کریں۔"
           email: "اصل پیغام"
           run: "ٹیسٹ چلائیں"
+          text: "منتخب شدہ متن"
           elided: "کٹا ہوا متن"
         sending_test: "ٹیسٹ ای میل بھیجی جا رہی ہے…"
         error: "<b>خرابی</b> - %{server_error}"
@@ -7810,6 +7887,7 @@ ur:
         user: "صارف"
         email_type: "نوع ای میل"
         details_title: "ای میل کی تفصیلات دیکھیں"
+        to_address: "پر بھیجا"
         test_email_address: "ٹیسٹ کرنے کے لیے اِیمیل ایڈریس"
         send_test: "ٹیسٹ ای میل بھیجیں"
         sent_test: "بھیج دی گئی!"
@@ -7871,6 +7949,7 @@ ur:
           delete_topic: "موضوع مٹادیا گیا۔"
           post_approved: "منظورشدہ پوسٹ"
       logs:
+        title: "لاگز اور اسکریننگ"
         description: "لاگز اور اسکریننگ آپ کو اپنی کمیونٹی کی نگرانی اور انتظام کرنے کی سہولت دیتے ہیں تاکہ یہ محفوظ اور بااحترام رہے۔ آپ عملے کے تمام اقدامات کے لاگز دیکھ سکتے ہیں، لاگز میں تلاش کر سکتے ہیں، اور صارف اسکریننگ کی ترتیب کر سکتے ہیں۔"
         nav_title: "لاگز"
         action: "عمل"
@@ -7891,6 +7970,7 @@ ur:
         staff_actions:
           all: "تمام"
           filter: "فِلٹر:"
+          title: "عملے کی کارروائیاں"
           clear_filters: "سب کچھ دکھائیں"
           staff_user: "صارف"
           target_user: "ہدف صارف"
@@ -7941,6 +8021,7 @@ ur:
             revoke_moderation: "نگرانی منسوخ"
             backup_create: "بیک اَپ بنایا"
             deleted_tag: "مٹایا گیا ٹیگ"
+            update_directory_columns: "ڈائرکٹری کالموں کو اپ ڈیٹ کریں"
             deleted_unused_tags: "حذف کردہ غیر استعمال شدہ ٹیگز"
             renamed_tag: "نام تبدیل کیا گیا ٹیگ"
             revoke_email: "اِیمیل منسوخ کریں"
@@ -8000,12 +8081,39 @@ ur:
             delete_group: "گروپ حذف کریں"
             watched_word_create: "دیکھا ہوا لفظ شامل کریں"
             watched_word_destroy: "دیکھا ہوا لفظ حذف کریں"
+            create_public_sidebar_section: "عوامی سائڈبار سیکشن بنائیں"
             update_public_sidebar_section: "عوامی سائڈبار سیکشن اپ ڈیٹ"
+            destroy_public_sidebar_section: "عوامی سائڈبار سیکشن مٹائیں"
+            reset_bounce_score: "واپسی کی شرح ریسٹ کریں"
             toggle_flag: "فلیگ ٹوگل کریں"
+            move_flag: "فلیگ بدلا"
+            create_flag: "فلیگ بنایا"
+            update_flag: "فلیگ اپ ڈیٹ"
+            delete_flag: "فلیگ مٹایا"
+            custom_emoji_create: "حسب ضرورت ایموجی بنائی"
+            custom_emoji_destroy: "حسب ضرورت ایموجی کو مٹائی"
+            delete_post_permanently: "دھاگہ مستقل طور پر مٹایا"
+            delete_topic_permanently: "موضوع مستقل طور پر مٹایا"
+            tag_group_create: "ٹیگ گروپ بنایا"
+            tag_group_destroy: "ٹیگ گروپ مٹایا"
+            tag_group_change: "ٹیگ گروپ بدلا"
+            delete_associated_accounts: "متعلقہ اکاؤنٹس مٹائے"
             change_theme_site_setting: "تھیم سائٹ کی ترتیب کی تبدیلی"
             stop_impersonating: "نقالی کرنا بند کریں"
+            upcoming_change_toggled: "آنے والی تبدیلی ٹوگل کی"
+            upcoming_change_available: "آنے والی تبدیلی دستیاب"
+            change_site_setting_groups: "فورم کی ترتیباتی گروپس بدلے"
+            discourse_id_regenerate_credentials: "ڈسکورس ID اسناد کو دوبارہ تخلیق کیا"
+            configure_category_type: "زمرہ کی قسم تشکیل دی"
+            unconfigure_category_type: "زمرہ کی قسم کو غیر تشکیل کیا"
+            change_access_control_list_permissions: "رسائی کنٹرول لسٹ کی اجازتوں کی تبدیلی"
+            admin_onboarding_step_completed: "منظمی آن بورڈنگ مرحلہ مکمل"
+            admin_onboarding_completed: "منظمی آن بورڈنگ مکمل"
+            admin_onboarding_dismissed: "منظمی آن بورڈنگ خارج"
         screened_emails:
+          title: "اسکرین شدہ ای میلز"
           description: "جب کوئی نیا اکاؤنٹ بنانے کی کوشش کرے گا، تو مندرجہ ذیل اِیمیل ایڈریسوں کو چیک کیا جائے گا اور رجسٹریشن بلاک، یا کوئی اور کارروائی کی جائے گی۔"
+          email: "ای میل"
           actions:
             allow: "اجازت دیں"
         screened_urls:
@@ -8020,6 +8128,7 @@ ur:
           actions:
             block: "بلاک کریں"
             do_nothing: "اجازت دیں"
+            allow_admin: "منتظم کو اجازت دیں"
           form:
             label: "نیا:"
             ip_address: "IP ایڈریس"
@@ -8029,6 +8138,7 @@ ur:
             text: "رول اَپ"
             title: "نئے subnet بین اندراجات بناتا ہے اگر کم از کم 'min_ban_entries_for_roll_up' اندراجات موجود ہوں۔"
         search_logs:
+          title: "تلاش کے لاگز"
           term: "اصطلاح"
           searches: "سرچز"
           click_through_rate: "CTR"
@@ -8037,13 +8147,21 @@ ur:
             header: "ہَیڈر"
             full_page: "مکمل صفحہ"
             click_through_only: "تمام (صرف کلِک تھرُو)"
+            non_staff_only: "غیر عملہ صارفین"
+            human_only: "عملہ اور کرالر کو چھوڑ کر"
+          header_search_results: "ہیڈر تلاش کے نتائج"
+        logster:
+          title: "خرابی کے لاگز"
       watched_words:
         search: "سرچ"
         clear_filter: "صاف کریں"
         show_words:
           one: "%{count} لفظ دکھائیں۔"
           other: "%{count} الفاظ دکھائیں"
+        case_sensitive: "(حرفی قید)"
+        html: "(html)"
         download: ڈاؤن لوڈ
+        clear_all: سبھی ہٹائیں
         clear_all_confirm: "کیا آپ واقعی %{action} ایکشن کے لیے دیکھے گئے تمام الفاظ کو صاف کرنا چاہتے ہیں؟"
         invalid_regex: 'دیکھا ہوا لفظ "%{word}" ایک غلط ریگولر ایکسپریشن ہے۔'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">دیکھے گئے الفاظ ریگولر ایکسپریشنز ہیں</a> اور وہ خود بخود الفاظ کی حدود کو شامل نہیں کرتے ہیں۔ اگر آپ چاہتے ہیں کہ ریگولر ایکسپریشن پورے الفاظ سے مماثل ہو، تو اپنے ریگولر ایکسپریشن کے شروع اور آخر میں <code>\b</code> شامل کریں۔'
@@ -8110,12 +8228,23 @@ ur:
               key: "زیادہ سے زیادہ"
             type:
               key: "قِسم"
+              type: "اسٹرنگ"
+        preview_modal:
+          title: "سانچہ دیکھیں"
         field_placeholders:
+          validations: "یہاں توثیق درج کریں"
+          id: "آئی-ڈی"
+          label: "یہاں لیبل درج کریں"
+          placeholder: "یہاں پلیس ہولڈر درج کریں"
+          none_label: "ایک کو منتخب کریں"
           choices:
             first: "اختيار 1"
             second: "اختيار 2"
             third: "اختيار 3"
         edit_category:
+          toggle_freeform: "فارم کے سانچے غیر فعال"
+          toggle_form_template: "فارم کے سانچے فعال"
+          select_template: "فارم سانچے کا انتخاب"
           select_template_help: "فارم کے ٹیمپلیٹس کو شامل/ترمیم کریں"
       impersonate:
         title: "نقالی"
@@ -8132,18 +8261,46 @@ ur:
         active: "فعال"
         status: "حیثیت"
         show_emails: "ای میلیں دکھائیں"
+        hide_emails: "ای میلز چھپائیں"
+        silence_reason: "خاموش کرنے کی وجہ"
+        suspend_reason: "معطل کرنے کی وجہ"
         bulk_actions:
+          title: "حجمی عوامل"
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
+          staff_cant_be_actioned: "اس صارف کو حذف یا معطل نہیں کیا جا سکتا کیونکہ وہ عملے کے رکن ہیں۔"
+          no_users_can_be_deleted: "منتخب کردہ صارفین میں سے کسی کو بھی مٹایا نہیں جا سکتا۔"
+          no_users_can_be_suspended: "منتخب کردہ صارفین میں سے کسی کو بھی معطل نہیں کیا جا سکتا۔"
           suspend:
+            label: "صارفین معطل کریں…"
             confirmation_modal:
               close: "بند کریں"
               confirm: "معطل کریں"
+              title:
+                one: "%{count} صارف کو معطل کریں"
+                other: "%{count} صارفین کو معطل کریں"
+              bulk_suspend_starting: "حجمعی معطلی کی شروعات…"
+              user_suspend_succeeded: "[%{position}/%{total}] نے کامیابی سے @%{username} معطل کیا"
+              user_suspend_failed: "[%{position}/%{total}] کو @%{username} معطل کرنے میں کامیابی نہیں ہوئی وجہ - %{error}"
+              bulk_suspend_finished: "حجمی معطلی کی کارروائی مکمل۔"
+              failed_to_suspend_users: "درج ذیل صارفین کو معطل کرنے میں ناکامی:"
           delete:
             label: "حذف اراکین…"
             confirmation_modal:
+              confirmation_phrase:
+                one: "%{count} صارف مٹائیں"
+                other: "%{count} صارفین مٹائیں"
               close: "بند کریں"
               confirm: "مٹائیں"
+              title:
+                one: "%{count} صارف مٹائیں"
+                other: "%{count} صارفین مٹائیں"
+              bulk_delete_starting: "مجموعی مٹانے کی کاروائی کی شروعات…"
+              block_ip_and_email: "تمام منتخب صارفین کے IP اور ای میلز کو مسدود کریں"
+              user_delete_succeeded: "[%{position}/%{total}] نے کامیابی سے @%{username} مٹادیا"
+              user_delete_failed: "[%{position}/%{total}] کو @%{username} مٹانے میں کامیابی نہیں ہوئی وجہ - %{error}"
+              bulk_delete_finished: "حجمی مٹانے کی کارروائی مکمل۔"
+              failed_to_delete_users: "درج ذیل صارفین کو مٹانے میں ناکامی:"
         nav:
           new: "نئے"
           active: "فعال"
@@ -8152,6 +8309,7 @@ ur:
           silenced: "خاموش"
           staged: "عارضی"
         activation_filter:
+          label: "فعالیت کی حیثیت"
           all: "تمام اراکین"
           activated: "فعال"
           not_activated: "فعال نہیں"
@@ -8166,7 +8324,10 @@ ur:
           regular: "فعالیت کے درجہ 3 پہ اراکین (مستقل)"
           leader: "فعالیت کے درجہ 4 پہ اراکین (رہبر)"
           staff: "سٹاف"
+          admins: "منتظم صارفین"
           moderators: "نگرانوں"
+          silenced: "خاموش کردہ صارفین"
+          suspended: "معطل کردہ صارفین"
         not_verified: "غیر تصدیق شدہ"
         check_email:
           title: "اِس صارف کا اِیمیل ایڈریس ظاہر کریں"
@@ -8174,9 +8335,13 @@ ur:
         check_sso:
           title: "SSO پے لوڈ کو ظاہر کریں"
           text: "دکھائیں"
+        delete_associated_accounts:
+          title: "اس صارف کے تمام منسلک اکاؤنٹس کو مٹائیں"
+          text: "منسلک اکاؤنٹس مٹائیں"
       user:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا %{error}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا %{error}"
+        suspend_duration: "صارف کو اس مدت تک معطل کریں:"
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
@@ -8187,6 +8352,7 @@ ur:
           combative: "بہت جنگجو"
           in_wrong_place: "غلط جگہ پر"
           no_constructive_purpose: "کمیونٹی میں اختلاف پیدا کرنے کے علاوہ ان کے اعمال کا کوئی تعمیری مقصد نہیں"
+          custom: "حسب ضرورت…"
         suspend_message: "ای میل پیغام"
         suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"
@@ -8199,13 +8365,16 @@ ur:
         silence_message: "ای میل پیغام"
         silence_message_placeholder: "(ڈیفالٹ پیغام بھیجنے کیلئے خالی چھوڑ دیں)"
         suspended_until: "(%{until} تک)"
+        suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
+        cant_silence: "یہ صارف خاموش نہیں کیا جا سکتا"
         delete_posts_failed: "پوسٹس مٹانے میں ایک مسئلہ پیش آیا۔"
         post_edits: "دھاگے کی ترامیم"
         view_edits: "ترامیم دیکھیں"
         penalty_post_actions: "آپ اِس مُنسلِک پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
         penalty_post_delete: "دھاگہ حذف کریں"
         penalty_post_delete_replies: "دھاگہ حذف کریں + جوابات کو بھی"
+        penalty_post_delete_all: "صارف کے تمام موضوعات + کوئی بھی جوابات مٹائیں"
         penalty_post_edit: "پوسٹ میں ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"
@@ -8437,8 +8606,13 @@ ur:
         requirement:
           optional:
             title: "اختیاری"
+        searchable:
+          title: "قابل تلاش"
+          enabled: "قابل تلاش"
+          disabled: "قابل تلاش نہیں"
         field_types:
           text: "ٹیکسٹ"
+          textarea: "متن کا حلقہ"
           date: "تاریخ"
           confirm: "تصدیق"
           dropdown: "ڈراپ ڈاؤن"
@@ -8453,9 +8627,16 @@ ur:
         go_back: "واپس سَرچ پر"
         recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
+        show_outdated: "صرف پرانا/غلط دکھائیں"
+        show_untranslated: "صرف بغیر ترجمہ والی دکھائیں"
+        only_show_selected_locale: "صرف منتخب زبان میں نتائج دکھائیں"
         locale: "زبان:"
         more_than_50_results: "50 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں۔"
+        no_results: "کوئی مماثل فورم متن نہیں ملا"
+        interpolation_key_used: "پہلے ہی استعمال شدہ"
         outdated:
+          old_default: "پرانا ڈیفالٹ"
+          new_default: "نیا ڈیفالٹ"
           dismiss: "بر خاست کریں"
       settings:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
@@ -8464,10 +8645,21 @@ ur:
         none: "کوئی نہیں"
         save: "محفوظ کریں"
         cancel: "منسوخ"
+        not_found: "ترتیبات نہیں ملیں"
       site_settings:
+        title: "سائٹ کی ترتیبات"
         depends_on_values_notice:
           one: "یہ ترتیب صرف اس وقت لاگو ہوتی ہیں جب %{dependencyLinks} کو مطابقت پذیر قدر پر سیٹ کیا گیا ہو۔"
           other: "یہ ترتیب صرف اس وقت لاگو ہوتی ہے جب %{dependencyLinks} کو مطابقت پذیر اقدار پر سیٹ کیا گیا ہو۔"
+        discard:
+          one: "تبدیلی مسترد کریں"
+          other: "تبدیلیوں کو مسترد کریں"
+        save:
+          one: "تبدیلی محفوظ کریں"
+          other: "تمام تبدیلیاں محفوظ کریں"
+        dirty_banner:
+          one: "آپ کی <b>%{count}</b> غیر محفوظ تبدیلی ہے"
+          other: "آپ کی <b>%{count}</b> غیر محفوظ تبدیلیاں ہیں"
         emoji_list:
           invalid_input: "ایموجی لسٹ میں صرف درست ایموجی نام ہونے چاہئیں، جیسے: گلے ملنا"
           add_emoji_button:
@@ -8483,7 +8675,11 @@ ur:
           empty: "ابھی تک کوئی تصویریں نہیں ہیں۔ براہ مہربانی ایک اَپ لوڈ کریں۔"
           upload:
             label: "اَپ لوڈ"
+            title: "تصاویر اپ لوڈ کریں"
         download_file: "ڈاؤن لوڈ"
+        upload_restrictions:
+          extensions: "قبول شدہ: %{extensions}"
+          max_size: "زیادہ سے زیادہ: %{size}"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
         table_column_heading:
@@ -8495,6 +8691,7 @@ ur:
           basic: "بنیادی سَیٹ اَپ"
           users: "اراکین"
           posting: "پوسٹ کرنا"
+          content_localization: "مواد کی لوکلائزیشن"
           email: "اِیمیل"
           files: "فائلیں"
           trust: "فعالیت کے درجات"
@@ -8518,17 +8715,37 @@ ur:
           groups: "گروپس"
           dashboard: "ڈَیش بورڈ"
           navigation: "نیویگیشن"
+          experimental: "تجرباتی"
         secret_list:
           invalid_input: "اِن پُٹ فیلڈز خالی یا عمودی بار کے حرف پر مشتمل نہیں ہو سکتیں۔"
+          already_exists: "%{key} کا اندراج پہلے ہی موجود ہے۔"
         default_categories:
           modal_yes: "جی ہاں"
           modal_no: "نہیں، صرف آگے بڑھتے ہوئے تبدیلی کا اطلاق کریں"
+        simple_list:
+          add_item: "آئٹم شامل کریں…"
         json_schema:
           edit: ایڈیٹر لانچ کریں
           modal_title: "%{name}میں ترمیم"
         file_types_list:
           add_image_types: "تصاویر"
+          add_video_types: "ویڈیوز"
+          add_audio_types: "صوتی"
+          add_document_types: "دستاویزات"
           add_types_title: "ایکسٹینشنز کی اجازت دیں %{types}"
+          add_types_toast: "%{types} فائل کی اقسام شامل کی گئی"
+        mandatory_group: "گروپ لازمی ہے"
+        requires_confirmation_messages:
+          default:
+            confirm: "ہاں، میں پر یقین ہوں"
+          min_password_length:
+            confirm: "ہاں، پاس ورڈ پالیسی کو اپ ڈیٹ کریں"
+          min_admin_password_length:
+            confirm: "ہاں، پاس ورڈ پالیسی کو اپ ڈیٹ کریں"
+          password_unique_characters:
+            confirm: "ہاں، پاس ورڈ پالیسی کو اپ ڈیٹ کریں"
+          block_common_passwords:
+            confirm: "ہاں، پاس ورڈ پالیسی کو اپ ڈیٹ کریں"
       badges:
         status: حیثیت
         title: تمغات
@@ -8633,15 +8850,34 @@ ur:
         settings: "ترتیبات"
         export: "برآمد"
         import: "درآمد"
+        import_confirm: "درآمد کی تصدیق"
+        import_unchanged_count: "%{count} کوئی تبدیلی نہیں"
+        import_will_skip: "تبدیل نہیں ہوا - چھوڑیں"
+        import_incoming_alt: "درآمدی: %{name}"
+        import_existing_alt: "موجودہ: %{name}"
+        import_existing_group_alt: "موجودہ گروپ"
+        import_use_incoming: "نیا استعمال کریں"
+        import_keep_existing: "موجودہ رکھیں"
         import_category:
           new: "نئے"
+          conflict: "تنازعات"
+          invalid: "خرابیاں"
+        select_all: "تمام ایموجیز کو منتخب کریں"
+        select: "%{name} کو منتخب کریں"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         delete: "مٹائیں"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
+        host: "اجازت یافتہ ہَوسٹ"
+        allowed_paths: "پاتھ کی اجازت کی فہرست"
         edit: "ترمیم کریں"
+        category: "زمرہ میں لکھیں"
+        tags: "موضوع کے ٹیگز"
+        post_author: "دھاگہ کا مصنف"
+        add_host: "ہَوسٹ شامل کریں"
         posts_and_topics: "دھاگوں اور موضوعات کی ترتیب"
+        crawlers: "کرالرز کی ترتیب"
         crawlers_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
         embed_by_username: "ٹاپک کی تخلیق کیلئے اسمِ صارف"
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
@@ -8653,9 +8889,13 @@ ur:
         allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "محفوظ کریں"
         posts_and_topics_settings_saved: "دھاگوں اور موضوعات کی ترتیبات محفوظ ہوئی"
+        crawler_settings_saved: "کرالر کی ترتیبات محفوظ"
         host_form:
+          add_header: "ہَوسٹ شامل کریں"
+          edit_header: "پوسٹ میں ترمیم کریں"
           save: "محفوظ کریں"
         nav:
+          hosts: "ہوسٹس"
           settings: "ترتیبات"
           posts_and_topics: "دھاگے اور موضوعات"
           crawlers: "کرالرز"
@@ -8672,11 +8912,13 @@ ur:
         tag_name: "ٹیگ کا نام"
         tag_title: "ٹیگ"
         external_url: "بیرونی یا متعلقہ URL"
+        user_id: "صارف آئی ڈی"
         user_title: "صارف"
         username: "اسمِ صارف"
         destination: "منزل"
         copy_to_clipboard: "مستقل رابطہ کو کلپ بورڈ میں کاپی کریں"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟
+        more_options: "مزید اختیارات"
         nav:
           settings: "ترتیبات"
           permalinks: "دائمی لِنکس"
@@ -8693,3 +8935,6 @@ ur:
           categories: "زمرہ جات"
           topics: "موضوعات"
           replace: "بدلیں"
+  wizard_js:
+    wizard:
+      jump_in: "آئیں چلیں!"
