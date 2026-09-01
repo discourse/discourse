@@ -5,9 +5,9 @@ require_relative "support"
 RSpec.describe "a listing read from a cursor" do
   include_context "with a listing of topics"
 
-  let(:sort) { { created_at: :asc } }
+  let(:sort) { { createdAt: :asc } }
   let(:cursor) { cursor_for(middle) }
-  let(:sorted_listing) { listing_of({ sort:, page: { item_cursors: true } }) }
+  let(:sorted_listing) { listing_of({ sort:, page: { itemCursors: true } }) }
 
   describe "the cursor of a row" do
     it "is left out unless the request asks for it" do
@@ -68,8 +68,8 @@ RSpec.describe "a listing read from a cursor" do
     end
   end
 
-  context "when the sort is created_at desc" do
-    let(:sort) { { created_at: :desc } }
+  context "when the sort is createdAt desc" do
+    let(:sort) { { createdAt: :desc } }
     let(:params) { { sort:, page: { after: cursor }, fields: { topics: [:title] } } }
 
     it "returns the rows after the cursor" do
@@ -83,7 +83,7 @@ RSpec.describe "a listing read from a cursor" do
 
   context "when the cursor comes from a backwards page" do
     let(:cursor) do
-      cursor_at(0, listing_of({ sort:, page: { before: super(), item_cursors: true } }))
+      cursor_at(0, listing_of({ sort:, page: { before: super(), itemCursors: true } }))
     end
     let(:params) { { sort:, page: { after: cursor }, fields: { topics: [:title] } } }
 
@@ -109,14 +109,14 @@ RSpec.describe "a listing read from a cursor" do
     end
   end
 
-  context "when the sort is last_posted_at and one row holds none" do
+  context "when the sort is lastPostedAt and one row holds none" do
     fab!(:never_posted) do
       Fabricate(:topic, title: "Nothing has been posted here", last_posted_at: nil)
     end
 
     before { [oldest, middle, newest].each { it.update_columns(last_posted_at: it.created_at) } }
 
-    let(:sort) { { last_posted_at: :asc } }
+    let(:sort) { { lastPostedAt: :asc } }
 
     context "when the cursor comes from the last row holding a value" do
       let(:cursor) { cursor_for(newest) }
@@ -148,10 +148,10 @@ RSpec.describe "a listing read from a cursor" do
       end
     end
 
-    context "when the request sorts by created_at" do
+    context "when the request sorts by createdAt" do
       let(:cursor) { cursor_for(never_posted) }
       let(:params) do
-        { sort: { created_at: :asc }, page: { after: cursor }, fields: { topics: [:title] } }
+        { sort: { createdAt: :asc }, page: { after: cursor }, fields: { topics: [:title] } }
       end
 
       it "refuses the cursor" do
@@ -168,7 +168,7 @@ RSpec.describe "a listing read from a cursor" do
 
   context "when the cursor comes from another sort of the same shape" do
     let(:cursor) { cursor_of_record(middle, sort: { title: :asc }) }
-    let(:params) { { sort: { created_at: :asc }, page: { after: cursor } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { after: cursor } } }
 
     it "refuses the cursor" do
       expect(rendered_error).to eq(

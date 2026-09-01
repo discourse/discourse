@@ -9,14 +9,14 @@ RSpec.describe "a refused request" do
 
   describe "the sort parameter" do
     context "when the sort is a list" do
-      let(:params) { { sort: %w[created_at] } }
+      let(:params) { { sort: %w[createdAt] } }
 
       it "refuses the sort" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Invalid sort parameter",
-              detail: "sort must be a comma-separated list, as in sort=-created_at.",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
               parameter: "sort",
             ),
           ],
@@ -57,13 +57,19 @@ RSpec.describe "a refused request" do
 
       it "answers the status 400" do
         expect(
-          JsonApiKit::Document::Collection.for(params, resource:, guardian:, urls:).status,
+          JsonApiKit::Document::Collection.for(
+            params,
+            resource:,
+            guardian:,
+            urls:,
+            glossary:,
+          ).status,
         ).to eq("400")
       end
     end
 
     context "when the sort direction is neither asc nor desc" do
-      let(:params) { { sort: { created_at: :sideways } } }
+      let(:params) { { sort: { createdAt: :sideways } } }
 
       it "refuses the sort" do
         expect(document).to eq(
@@ -79,7 +85,7 @@ RSpec.describe "a refused request" do
     end
 
     context "when an unknown sort direction comes with an anchor" do
-      let(:params) { { sort: { created_at: :sideways }, page: { anchor: { id: middle.id } } } }
+      let(:params) { { sort: { createdAt: :sideways }, page: { anchor: { id: middle.id } } } }
 
       it "refuses the sort alone" do
         expect(document).to eq(
@@ -95,7 +101,7 @@ RSpec.describe "a refused request" do
     end
 
     context "when an unknown sort direction comes with a cursor" do
-      let(:params) { { sort: { created_at: :sideways }, page: { after: cursor } } }
+      let(:params) { { sort: { createdAt: :sideways }, page: { after: cursor } } }
 
       it "refuses the sort alone" do
         expect(document).to eq(
@@ -111,14 +117,14 @@ RSpec.describe "a refused request" do
     end
 
     context "when a sort sent as a list comes with an anchor" do
-      let(:params) { { sort: %w[created_at], page: { anchor: { id: middle.id } } } }
+      let(:params) { { sort: %w[createdAt], page: { anchor: { id: middle.id } } } }
 
       it "refuses the sort alone" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Invalid sort parameter",
-              detail: "sort must be a comma-separated list, as in sort=-created_at.",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
               parameter: "sort",
             ),
           ],
@@ -159,7 +165,7 @@ RSpec.describe "a refused request" do
     end
 
     context "when a request for one record has a sort" do
-      let(:params) { { sort: { created_at: :asc } } }
+      let(:params) { { sort: { createdAt: :asc } } }
 
       it "refuses the sort" do
         expect(one_document(middle.id)).to eq(
@@ -295,7 +301,7 @@ RSpec.describe "a refused request" do
 
   describe "an unknown parameter" do
     context "when the parameter is at the top level" do
-      let(:params) { { sorts: { created_at: :asc } } }
+      let(:params) { { sorts: { createdAt: :asc } } }
 
       it "refuses the parameter" do
         expect(document).to eq(
@@ -420,7 +426,7 @@ RSpec.describe "a refused request" do
       let(:params) do
         {
           sort: {
-            created_at: :asc,
+            createdAt: :asc,
           },
           page: {
             after: cursor_of_record(middle, sort: { title: :asc }),
@@ -464,14 +470,14 @@ RSpec.describe "a refused request" do
 
   describe "the window parameters" do
     context "when the request has no anchor" do
-      let(:params) { { page: { before_size: 2, after_size: 2 } } }
+      let(:params) { { page: { beforeSize: 2, afterSize: 2 } } }
 
       it "refuses the window" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Anchor is required",
-              detail: "page[before_size], page[after_size] need an anchor.",
+              detail: "page[beforeSize], page[afterSize] need an anchor.",
               parameter: "page[anchor]",
             ),
           ],
@@ -483,14 +489,14 @@ RSpec.describe "a refused request" do
       let(:params) do
         {
           sort: {
-            created_at: :asc,
+            createdAt: :asc,
           },
           page: {
             anchor: {
               id: middle.id,
             },
-            before_size: 3_000,
-            after_size: 3_000,
+            beforeSize: 3_000,
+            afterSize: 3_000,
           },
         }
       end
@@ -501,7 +507,7 @@ RSpec.describe "a refused request" do
             refusal(
               title: "Window is too large",
               detail: "A window of 6001 rows exceeds the maximum of 100.",
-              parameter: "page[before_size]",
+              parameter: "page[beforeSize]",
               links: {
                 type: profile_link("max-size-exceeded"),
               },
@@ -518,16 +524,7 @@ RSpec.describe "a refused request" do
 
     context "when the window is empty" do
       let(:params) do
-        {
-          page: {
-            anchor: {
-              id: middle.id,
-            },
-            before_size: 0,
-            after_size: 0,
-            include_anchor: false,
-          },
-        }
+        { page: { anchor: { id: middle.id }, beforeSize: 0, afterSize: 0, includeAnchor: false } }
       end
 
       it "refuses the window" do
@@ -536,7 +533,7 @@ RSpec.describe "a refused request" do
             refusal(
               title: "Window is empty",
               detail: "A window must be at least 1 row.",
-              parameter: "page[before_size]",
+              parameter: "page[beforeSize]",
             ),
           ],
         )
@@ -544,15 +541,15 @@ RSpec.describe "a refused request" do
     end
 
     context "when a side of the window is negative" do
-      let(:params) { { page: { anchor: { id: middle.id }, before_size: -1, after_size: 2 } } }
+      let(:params) { { page: { anchor: { id: middle.id }, beforeSize: -1, afterSize: 2 } } }
 
       it "refuses the window" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Window size is negative",
-              detail: "page[before_size] must be 0 or greater.",
-              parameter: "page[before_size]",
+              detail: "page[beforeSize] must be 0 or greater.",
+              parameter: "page[beforeSize]",
             ),
           ],
         )
@@ -560,15 +557,15 @@ RSpec.describe "a refused request" do
     end
 
     context "when a side of the window is not a number" do
-      let(:params) { { page: { anchor: { id: middle.id }, after_size: "two" } } }
+      let(:params) { { page: { anchor: { id: middle.id }, afterSize: "two" } } }
 
       it "refuses the window" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Window size is not an integer",
-              detail: "page[after_size] must be an integer.",
-              parameter: "page[after_size]",
+              detail: "page[afterSize] must be an integer.",
+              parameter: "page[afterSize]",
             ),
           ],
         )
@@ -626,7 +623,7 @@ RSpec.describe "a refused request" do
     end
 
     context "when the anchor value is not a number" do
-      let(:params) { { sort: { created_at: :asc }, page: { anchor: { id: "not a number" } } } }
+      let(:params) { { sort: { createdAt: :asc }, page: { anchor: { id: "not a number" } } } }
 
       it "refuses the anchor value" do
         expect(document).to eq(
@@ -642,7 +639,7 @@ RSpec.describe "a refused request" do
     end
 
     context "when no row has the anchor id" do
-      let(:params) { { sort: { created_at: :asc }, page: { anchor: { id: -1 } } } }
+      let(:params) { { sort: { createdAt: :asc }, page: { anchor: { id: -1 } } } }
 
       it "refuses the anchor value" do
         expect(document).to eq(
@@ -658,14 +655,14 @@ RSpec.describe "a refused request" do
     end
 
     context "when the anchor is not the sort" do
-      let(:params) { { sort: { created_at: :asc }, page: { anchor: { title: middle.title } } } }
+      let(:params) { { sort: { createdAt: :asc }, page: { anchor: { title: middle.title } } } }
 
       it "refuses the anchor" do
         expect(document).to eq(
           errors: [
             refusal(
               title: "Anchor does not match the sort",
-              detail: "The anchor is title, but this request sorts by created_at.",
+              detail: "The anchor is title, but this request sorts by createdAt.",
               parameter: "page[anchor][title]",
             ),
           ],

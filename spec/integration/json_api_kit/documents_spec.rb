@@ -6,7 +6,7 @@ RSpec.describe "a rendered document" do
   include_context "with a listing of topics"
 
   describe "a listing" do
-    let(:params) { { sort: { created_at: :asc }, page: { size: 1 } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { size: 1 } } }
     let(:query) { { "page" => { "size" => "1" } } }
 
     it "renders the first page of the listing" do
@@ -20,7 +20,7 @@ RSpec.describe "a rendered document" do
     context "when all parameters are strings" do
       let(:params) do
         {
-          "sort" => "created_at",
+          "sort" => "createdAt",
           "include" => "user",
           "fields" => {
             "topics" => "title,user",
@@ -55,7 +55,7 @@ RSpec.describe "a rendered document" do
     end
 
     context "when the page holds the last row of the listing" do
-      let(:params) { { sort: { created_at: :asc }, page: { size: 5 } } }
+      let(:params) { { sort: { createdAt: :asc }, page: { size: 5 } } }
       let(:query) { { "page" => { "size" => "5" } } }
 
       it "links to no page after it" do
@@ -69,7 +69,7 @@ RSpec.describe "a rendered document" do
 
     context "when the page follows another page" do
       let(:params) do
-        { sort: { created_at: :asc }, page: { size: 1, after: cursor_of_record(oldest) } }
+        { sort: { createdAt: :asc }, page: { size: 1, after: cursor_of_record(oldest) } }
       end
       let(:query) { { "page" => { "size" => "1", "after" => cursor_of_record(oldest) } } }
 
@@ -88,7 +88,7 @@ RSpec.describe "a rendered document" do
 
     context "when the listing holds no row" do
       let(:params) do
-        { sort: { created_at: :asc }, filter: { title: "No topic carries this title" } }
+        { sort: { createdAt: :asc }, filter: { title: "No topic carries this title" } }
       end
       let(:query) { {} }
 
@@ -165,7 +165,7 @@ RSpec.describe "a rendered document" do
 
   describe "the status of a document" do
     subject(:status) do
-      JsonApiKit::Document::Collection.for(params, resource:, guardian:, urls:).status
+      JsonApiKit::Document::Collection.for(params, resource:, guardian:, urls:, glossary:).status
     end
 
     it "answers 200 for a rendered listing" do
@@ -174,7 +174,14 @@ RSpec.describe "a rendered document" do
 
     context "when the document holds one record" do
       subject(:status) do
-        JsonApiKit::Document::Individual.for(middle.id, params, resource:, guardian:, urls:).status
+        JsonApiKit::Document::Individual.for(
+          middle.id,
+          params,
+          resource:,
+          guardian:,
+          urls:,
+          glossary:,
+        ).status
       end
 
       it "answers 200 for a rendered record" do
@@ -184,7 +191,14 @@ RSpec.describe "a rendered document" do
 
     context "when no record has that id" do
       subject(:status) do
-        JsonApiKit::Document::Individual.for(-1, params, resource:, guardian:, urls:).status
+        JsonApiKit::Document::Individual.for(
+          -1,
+          params,
+          resource:,
+          guardian:,
+          urls:,
+          glossary:,
+        ).status
       end
 
       it "answers 404 for a not found error" do
