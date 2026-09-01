@@ -134,6 +134,8 @@ export default class DashboardReports extends Component {
 
   measureCard = (handle) => handle.closest(".db-report__card");
 
+  canResize = (card) => this.canEdit && !card.isLoading;
+
   columnFor = (key) => this.cardColumns.get(key);
 
   followRectFor = (key) =>
@@ -521,7 +523,7 @@ export default class DashboardReports extends Component {
                   {{/if}}
                 </DConditionalLoadingSpinner>
               </div>
-              {{#if this.canEdit}}
+              {{#if (this.canResize card)}}
                 <DResizeHandles
                   @directions={{this.handleDirectionsFor card}}
                   @handleClass="db-report__resize-handle"
