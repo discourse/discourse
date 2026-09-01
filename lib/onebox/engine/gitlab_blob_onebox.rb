@@ -5,7 +5,8 @@ require_relative "../mixins/git_blob_onebox"
 module Onebox
   module Engine
     class GitlabBlobOnebox
-      include Onebox::Mixins::GitBlobOnebox
+      # GitBlobOnebox's inclusion hook calls git_regexp.
+      # rubocop:disable Layout/ClassStructure
       class << self
         def git_regexp
           %r{^https?://(?:www\.)?gitlab\.com/.*/blob/.*}
@@ -15,6 +16,9 @@ module Onebox
           "gitlabblob"
         end
       end
+
+      include Onebox::Mixins::GitBlobOnebox
+      # rubocop:enable Layout/ClassStructure
 
       def i18n
         {
