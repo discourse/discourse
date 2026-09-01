@@ -151,6 +151,19 @@ async function discardPlatformSubscription(subscription) {
   }
 }
 
+// The POST recreates the server row, so a disable that landed while it was in
+// flight has to be replayed against it: `unsubscribe()` has already invalidated
+// the platform subscription, leaving no other handle on that row.
+async function confirmResync(user, subscription) {
+  if (getSubscriptionIntent(user) === "off") {
+    await retireServerSubscription(subscription);
+    return null;
+  }
+
+  markEndpointConfirmed(user, subscription);
+  return "subscribed";
+}
+
 // Returns "subscribed" when the server knows about a working subscription,
 // "unconfirmed" when the device still has the one it was told about earlier but
 // the resync could not reach the server, "lost" when the user has to opt in
@@ -211,8 +224,7 @@ export async function reconcileSubscription(
 
   if (subscription) {
     if (await resyncSubscriptionWithServer(subscription)) {
-      markEndpointConfirmed(user, subscription);
-      return "subscribed";
+      return await confirmResync(user, subscription);
     }
 
     // A failed request is not proof the row is missing, so an endpoint the
@@ -238,8 +250,7 @@ export async function reconcileSubscription(
   }
 
   if (await resyncSubscriptionWithServer(subscription)) {
-    markEndpointConfirmed(user, subscription);
-    return "subscribed";
+    return await confirmResync(user, subscription);
   }
 
   // Left in place: only one subscription exists per origin, so discarding it can

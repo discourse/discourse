@@ -99,6 +99,26 @@ module(
       );
     });
 
+    test("assumes push delivers while reconciliation is still in flight", async function (assert) {
+      let finishReconciliation;
+      const instance = build(null);
+      instance.desktopNotifications.reconcilePushSubscription = () =>
+        new Promise((resolve) => (finishReconciliation = resolve));
+
+      const pending = reconcile(instance);
+
+      assert.strictEqual(
+        getPushTransport(),
+        "delivering",
+        "a notification arriving during the boot round trip would be shown twice"
+      );
+
+      finishReconciliation("subscribed");
+      await pending;
+
+      assert.strictEqual(getPushTransport(), "delivering");
+    });
+
     test("leaves the stored preference in charge when push was never wanted", async function (assert) {
       setPushTransport("delivering");
       const instance = build(null, { pushIntent: null });

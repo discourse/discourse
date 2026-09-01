@@ -413,6 +413,33 @@ module(
       assert.strictEqual(getSubscriptionIntent(user), "subscribed");
     });
 
+    test("retires a row the resync recreated after the user opted out", async function (assert) {
+      setSubscriptionIntent(user, "subscribed");
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
+      pretender.post("/push_notifications/subscribe", (request) => {
+        subscribeRequests.push(parsePostData(request.requestBody));
+        // the user hits disable while the resync POST is in flight
+        setSubscriptionIntent(user, "off");
+        return response({ success: "OK" });
+      });
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(result, null, "the opt-out stands");
+      assert.strictEqual(getSubscriptionIntent(user), "off");
+
+      await settled();
+      assert.deepEqual(
+        unsubscribeRequests,
+        [{ subscription: { endpoint: "existing" } }],
+        "the recreated row is retired; the platform subscription is already gone, so nothing else can reach it"
+      );
+    });
+
     test("retries retiring the server subscription when the user turned push off", async function (assert) {
       setSubscriptionIntent(user, "off");
       pushManager.subscription = {

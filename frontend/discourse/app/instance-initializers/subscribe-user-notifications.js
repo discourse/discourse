@@ -117,7 +117,18 @@ export class SubscribeUserNotificationsInit {
   }
 
   reconcileTransports() {
-    this.pushReconciliation ??= this.desktopNotifications
+    if (this.pushReconciliation) {
+      return this.pushReconciliation;
+    }
+
+    // Until reconciliation reports back, the stored intent is the only evidence
+    // there is. Assuming push delivers keeps a notification arriving during the
+    // round trip from being shown twice.
+    if (this.desktopNotifications.pushIntent === "subscribed") {
+      setPushTransport("delivering");
+    }
+
+    this.pushReconciliation = this.desktopNotifications
       .reconcilePushSubscription()
       .catch((e) => {
         // eslint-disable-next-line no-console
