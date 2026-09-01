@@ -409,22 +409,21 @@ RSpec.describe Admin::ReportsController do
           Fabricate(:topic)
           get "/admin/reports/topics.json"
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["report"]["total"]).to eq(1)
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["total"]).to eq(1)
+        end
 
-          it "only includes related items when requested" do
-            Fabricate(:user, created_at: 1.hour.ago)
+        it "only includes related items when requested" do
+          Fabricate(:user, created_at: 1.hour.ago)
 
-            get "/admin/reports/signups.json", params: { cache: true }
-            expect(response.parsed_body["report"]).not_to have_key("related_items")
+          get "/admin/reports/signups.json", params: { cache: true }
+          expect(response.parsed_body["report"]).not_to have_key("related_items")
 
-            get "/admin/reports/signups.json", params: { cache: true, include_related_items: true }
-            expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
+          get "/admin/reports/signups.json", params: { cache: true, include_related_items: true }
+          expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
 
-            get "/admin/reports/signups.json", params: { cache: true }
-            expect(response.parsed_body["report"]).not_to have_key("related_items")
-          end
+          get "/admin/reports/signups.json", params: { cache: true }
+          expect(response.parsed_body["report"]).not_to have_key("related_items")
         end
       end
 

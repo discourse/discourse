@@ -72,6 +72,7 @@ describe Jobs::Chat::ProcessMessage do
 
   describe "pull hotlinked images" do
     let(:image_url) { "https://example.com/img.png" }
+
     fab!(:hotlinked_message) do
       Fabricate(:chat_message, message: "![](https://example.com/img.png)")
     end

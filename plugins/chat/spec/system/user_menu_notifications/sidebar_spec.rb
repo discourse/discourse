@@ -116,7 +116,7 @@ RSpec.describe "User menu notifications | sidebar" do
       end
 
       context "when @username" do
-        let!(:message) do
+        let(:message) do
           Fabricate(
             :chat_message,
             chat_channel: channel_1,
@@ -127,6 +127,7 @@ RSpec.describe "User menu notifications | sidebar" do
         end
 
         it "shows a mention notification" do
+          message
           visit("/discuss")
 
           find(".header-dropdown-toggle.current-user").click
@@ -147,7 +148,7 @@ RSpec.describe "User menu notifications | sidebar" do
               :chat_message,
               thread: Fabricate(:chat_thread, channel: channel_1),
               user: other_user,
-              message: "thread mention @#{current_user.username}",
+              message: "this is fine @#{current_user.username}",
               use_service: true,
             )
           visit("/discuss")

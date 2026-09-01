@@ -22,18 +22,15 @@ RSpec.describe Jobs::Voice::ReconcileRecordings do
     end
     Voice::Room.reset_column_information
     Voice::Recording.reset_column_information
-  end
-
-  fab!(:user)
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"
     SiteSetting.voice_livekit_recording_enabled = true
   end
+
+  fab!(:user)
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   def create_stuck_recording
     Voice::Recording.create!(

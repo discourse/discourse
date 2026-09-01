@@ -7,9 +7,8 @@ RSpec.describe Voice::DefaultRoomSeeder do
     ActiveRecord::Migration.suppress_messages do
       CreateVoiceRooms.new.change unless ActiveRecord::Base.connection.table_exists?(:voice_rooms)
     end
+    wipe_rooms!
   end
-
-  before { wipe_rooms! }
 
   it "creates a Watercooler room when voice is enabled and no rooms exist" do
     SiteSetting.voice_enabled = true

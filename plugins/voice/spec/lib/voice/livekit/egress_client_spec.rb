@@ -17,16 +17,13 @@ RSpec.describe Voice::Livekit::EgressClient do
       end
     end
     Voice::Room.reset_column_information
-  end
-
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"
   end
+
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   def twirp_stub(method)
     stub_request(:post, "https://livekit.example.com/twirp/livekit.Egress/#{method}")

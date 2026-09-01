@@ -149,7 +149,7 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
     end
 
     context "when channel is a category one" do
-      fab!(:channel) { Fabricate(:chat_channel, status: status) }
+      let(:channel) { Fabricate(:chat_channel, status: status) }
 
       context "when channel is closed" do
         let(:status) { :closed }

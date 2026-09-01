@@ -13,17 +13,14 @@ RSpec.describe Voice::PageController do
         Voice::Room.reset_column_information
       end
     end
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
   end
 
   fab!(:staff, :admin)
   fab!(:user)
   fab!(:room) { Fabricate(:voice_room, creator: staff, public: true) }
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-  end
 
   describe "#show" do
     it "renders the app shell for a visible room" do

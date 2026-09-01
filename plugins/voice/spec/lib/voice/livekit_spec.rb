@@ -21,17 +21,14 @@ RSpec.describe Voice::Livekit do
       end
     end
     Voice::Room.reset_column_information
-  end
-
-  fab!(:user)
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"
   end
+
+  fab!(:user)
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   def decoded_token
     token = described_class.mint_token(user: user, room: room, guardian: user.guardian)
