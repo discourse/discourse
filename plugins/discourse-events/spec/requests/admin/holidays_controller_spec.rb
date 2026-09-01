@@ -5,12 +5,12 @@ module Admin::DiscourseEvents
     fab!(:admin) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:member, :user)
 
+    let(:discourse_events_enabled) { true }
+
     before { SiteSetting.discourse_events_enabled = discourse_events_enabled }
 
     describe "#index" do
       context "when the calendar plugin is enabled" do
-        let(:discourse_events_enabled) { true }
-
         before { sign_in(admin) }
 
         it "returns a list of holidays for a given region" do

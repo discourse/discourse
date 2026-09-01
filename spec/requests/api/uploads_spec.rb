@@ -103,11 +103,10 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        around do |example|
+        let(:complete_external_upload_setup) do
           ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
           ExternalUploadManager.any_instance.stubs(:destroy!)
           external_stub.update(unique_identifier: unique_identifier)
-          example.run
         end
 
         tags "Uploads"
@@ -134,7 +133,10 @@ RSpec.describe "uploads" do
           expected_response_schema = load_spec_schema("upload_create_response")
           schema(expected_response_schema)
 
-          let(:params) { { "unique_identifier" => unique_identifier } }
+          let(:params) do
+            complete_external_upload_setup
+            { "unique_identifier" => unique_identifier }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -146,7 +148,7 @@ RSpec.describe "uploads" do
 
     path "/uploads/create-multipart.json" do
       post "Creates a multipart external upload" do
-        around do |example|
+        let(:create_multipart_upload_setup) do
           ExternalUploadManager.stubs(:create_direct_multipart_upload).returns(
             {
               external_upload_identifier: "66e86218-80d9-4bda-b4d5-2b6def968705",
@@ -155,7 +157,6 @@ RSpec.describe "uploads" do
                 "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
             },
           )
-          example.run
         end
 
         tags "Uploads"
@@ -177,6 +178,7 @@ RSpec.describe "uploads" do
           schema(expected_response_schema)
 
           let(:params) do
+            create_multipart_upload_setup
             {
               "file_name" => "test.png",
               "upload_type" => "composer",
@@ -201,10 +203,9 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        around do |example|
+        let(:batch_presign_multipart_parts_setup) do
           stub_s3_store
           external_stub.update(unique_identifier: unique_identifier)
-          example.run
         end
 
         tags "Uploads"
@@ -237,6 +238,7 @@ RSpec.describe "uploads" do
           schema(expected_response_schema)
 
           let(:params) do
+            batch_presign_multipart_parts_setup
             {
               "part_numbers" => [1, 2, 3],
               "unique_identifier" => "66e86218-80d9-4bda-b4d5-2b6def968705",
@@ -257,14 +259,13 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        around do |example|
+        let(:abort_multipart_upload_setup) do
           stub_s3_store
           external_stub.update(
             unique_identifier: unique_identifier,
             external_upload_identifier:
               "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
           )
-          example.run
         end
 
         tags "Uploads"
@@ -287,6 +288,7 @@ RSpec.describe "uploads" do
           schema(expected_response_schema)
 
           let(:params) do
+            abort_multipart_upload_setup
             {
               "external_upload_identifier" =>
                 "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
@@ -307,12 +309,11 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        around do |example|
+        let(:complete_multipart_upload_setup) do
           ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
           ExternalUploadManager.any_instance.stubs(:destroy!)
           stub_s3_store
           external_stub.update(unique_identifier: unique_identifier)
-          example.run
         end
 
         tags "Uploads"
@@ -337,6 +338,7 @@ RSpec.describe "uploads" do
           schema(expected_response_schema)
 
           let(:params) do
+            complete_multipart_upload_setup
             {
               "unique_identifier" => unique_identifier,
               "parts" => [{ "part_number" => 1, "etag" => "0c376dcfcc2606f4335bbc732de93344" }],

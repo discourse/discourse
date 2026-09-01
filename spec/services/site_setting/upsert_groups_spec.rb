@@ -47,6 +47,8 @@ RSpec.describe SiteSetting::UpsertGroups do
     end
 
     context "when allow_enabled_for is [everyone]" do
+      let(:setting) { "enable_form_templates" }
+
       before do
         mock_upcoming_change_metadata(
           enable_form_templates: {
@@ -69,6 +71,8 @@ RSpec.describe SiteSetting::UpsertGroups do
     end
 
     context "when allow_enabled_for is [staff]" do
+      let(:setting) { "enable_form_templates" }
+
       before do
         mock_upcoming_change_metadata(
           enable_form_templates: {
@@ -95,6 +99,8 @@ RSpec.describe SiteSetting::UpsertGroups do
     end
 
     context "when allow_enabled_for is [staff, specific_groups]" do
+      let(:setting) { "enable_form_templates" }
+
       before do
         mock_upcoming_change_metadata(
           enable_form_templates: {

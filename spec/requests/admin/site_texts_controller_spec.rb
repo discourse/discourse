@@ -299,6 +299,13 @@ RSpec.describe Admin::SiteTextsController do
       context "with overridden translation not in original translation" do
         before do
           I18n.backend.store_translations(
+            :en,
+            colour: {
+              one: "%{count} colour",
+              other: "%{count} colours",
+            },
+          )
+          I18n.backend.store_translations(
             :ru,
             colour: {
               few: "%{count} цвета",

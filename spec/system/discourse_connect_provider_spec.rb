@@ -70,8 +70,10 @@ describe "Discourse Connect Provider" do
   end
 
   context "with two-factor authentication" do
+    let(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+
     before do
-      Fabricate(:user_second_factor_totp, user: user)
+      user_second_factor
       Fabricate(:user_second_factor_backup, user: user)
     end
 

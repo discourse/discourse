@@ -260,14 +260,13 @@ RSpec.describe PostActionUsersController do
   end
 
   describe "when a plugin registers the :post_action_users_list modifier" do
-    fab!(:post_action_1) { PostActionCreator.like(Fabricate(:user), post).post_action }
-
-    before { PostActionCreator.like(Fabricate(:user), post).post_action }
+    let(:post_action_1) { PostActionCreator.like(Fabricate(:user), post).post_action }
 
     after { DiscoursePluginRegistry.clear_modifiers! }
 
     it "allows the plugin to modify the post action query" do
       excluded_post_action_ids = [post_action_1.id]
+      PostActionCreator.like(Fabricate(:user), post)
       Plugin::Instance
         .new
         .register_modifier(:post_action_users_list) do |query, modifier_post|

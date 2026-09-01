@@ -147,7 +147,7 @@ RSpec.describe "User menu notifications | sidebar" do
               :chat_message,
               thread: Fabricate(:chat_thread, channel: channel_1),
               user: other_user,
-              message: "this is fine @#{current_user.username}",
+              message: "thread mention @#{current_user.username}",
               use_service: true,
             )
           visit("/discuss")
