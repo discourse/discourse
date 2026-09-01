@@ -249,7 +249,6 @@ module DiscourseAi
             SettingsExplorer => -4,
             Researcher => -5,
             Creative => -6,
-            DiscourseHelper => -8,
             GithubHelper => -9,
             WebArtifactCreator => -10,
             Summarizer => -11,

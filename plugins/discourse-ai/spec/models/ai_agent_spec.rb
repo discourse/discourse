@@ -140,7 +140,6 @@ RSpec.describe AiAgent do
     {
       DiscourseAi::Agents::Creative => "low",
       DiscourseAi::Agents::General => "low",
-      DiscourseAi::Agents::DiscourseHelper => "low",
       DiscourseAi::Agents::SqlHelper => "medium",
       DiscourseAi::Agents::ForumResearcher => "high",
     }.each do |klass, effort|

@@ -533,9 +533,6 @@ en:
         dall_e3:
           name: "DALL-E 3"
           description: "AI Bot specialized in generating images using DALL-E 3"
-        discourse_helper:
-          name: "Discourse Helper"
-          description: "AI Bot specialized in helping with Discourse related tasks"
         discourse_admin_assistant:
           name: "Discourse Admin Assistant"
           description: "AI Bot that answers Discourse questions and helps administrators manage site settings"
