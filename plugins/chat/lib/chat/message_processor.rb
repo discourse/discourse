@@ -5,7 +5,7 @@ module Chat
     include ::CookedProcessorMixin
     IMG_FILETYPES = %w[jpg jpeg gif png heic heif webp]
 
-    attr_reader :used_hotlinked_media_ids
+    attr_reader :stale_hotlinked_media_ids
 
     def initialize(chat_message, opts = {})
       @model = chat_message
@@ -14,6 +14,7 @@ module Chat
       @size_cache = {}
       @opts = opts
       @used_hotlinked_media_ids = Set.new
+      @stale_hotlinked_media_ids = []
 
       cook_opts = {
         user_id: chat_message.last_editor_id,
@@ -35,23 +36,46 @@ module Chat
 
     # Unlike posts, chat keeps the hotlinked src when a download fails or is too large.
     def process_hotlinked_image(img)
-      normalized_src =
-        Chat::MessageHotlinkedMedia.normalize_src(HotlinkedMedia.download_src_for(img))
-      info = hotlinked_media_map[normalized_src]
-      used_hotlinked_media_ids << info.id if info
+      download_src = HotlinkedMedia.download_src_for(img)
+      info = hotlinked_media_map[Chat::MessageHotlinkedMedia.normalize_src(download_src)]
+      @used_hotlinked_media_ids << info.id if info
 
       if info&.downloaded? && (upload = info.upload)
         img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
         img["data-base62-sha1"] = upload.base62_sha1
         img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
         img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+        img.delete(PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR)
       end
 
       true
     end
 
     def process_hotlinked_images
-      extract_images.each { |img| process_hotlinked_image(img) }
+      images = extract_images
+      # snapshot the tracked rows here rather than at sweep time, so a row the
+      # pull job inserts while we work is not carried away as unused
+      tracked_ids = hotlinked_media_map.each_value.map(&:id)
+      images.each { |img| process_hotlinked_image(img) }
+      @stale_hotlinked_media_ids = tracked_ids - @used_hotlinked_media_ids.to_a
+    end
+
+    # The pull job costs a job slot, a lock and a disk check per message, so let
+    # the cook decide whether there is anything for it to do. Mirrors the job's
+    # own loop: anything looser enqueues for nothing, anything tighter leaves an
+    # image hotlinked for good.
+    def hotlinked_media_pending?
+      HotlinkedMedia
+        .extract_candidates(@doc)
+        .any? do |node|
+          next false if node.name != "img"
+
+          download_src = HotlinkedMedia.download_src_for(node)
+          next false if !Chat::MessageHotlinkedMedia.downloadable?(download_src)
+
+          normalized_src = Chat::MessageHotlinkedMedia.normalize_src(download_src)
+          !hotlinked_media_map.key?(normalized_src)
+        end
     end
 
     def process_thumbnails
@@ -92,23 +116,35 @@ module Chat
         .css("img")
         .each do |img|
           if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
-               img["data-base62-sha1"].blank? || img.ancestors(".onebox, .onebox-body").any?
+               img["data-base62-sha1"].blank? || img.classes.include?("onebox") ||
+               img.ancestors(".onebox, .onebox-body").any?
             next
           end
 
-          sha1 = Upload.sha1_from_base62_encoded(img["data-base62-sha1"])
-          if upload = Upload.find_by(sha1: sha1)
-            img["data-large-src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-            img["data-download-href"] = upload.short_path
-            img["data-target-width"] = upload.width
-            img["data-target-height"] = upload.height
-            img["class"] = "#{img["class"]} lightbox".strip
-          end
+          upload = upload_for_base62_sha1(img["data-base62-sha1"])
+          next if upload.blank?
+
+          img["data-large-src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+          img["data-download-href"] = upload.short_path
+          img["data-target-width"] = upload.width
+          img["data-target-height"] = upload.height
+          img["class"] = "#{img["class"]} lightbox".strip
         end
     end
 
     def hotlinked_media_map
       @hotlinked_media_map ||= @model.hotlinked_media.preload(:upload).index_by(&:url)
+    end
+
+    def upload_for_base62_sha1(base62_sha1)
+      hotlinked_uploads.fetch(base62_sha1) do
+        Upload.find_by(sha1: Upload.sha1_from_base62_encoded(base62_sha1))
+      end
+    end
+
+    def hotlinked_uploads
+      @hotlinked_uploads ||=
+        hotlinked_media_map.each_value.filter_map(&:upload).index_by(&:base62_sha1)
     end
 
     def large_images

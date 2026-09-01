@@ -105,6 +105,21 @@ RSpec.describe Chat::MessageProcessor do
       end
     end
 
+    it "clears both blocked-hotlinked attributes once the image is localized" do
+      create_downloaded_record(message)
+      Chat::Message.stubs(:cook).returns(<<~HTML)
+        <p><img #{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}="#{image_url}" #{PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR}="#{image_url} 2x"></p>
+      HTML
+
+      processor = described_class.new(message)
+      processor.run!
+
+      img = processor.instance_variable_get(:@doc).at_css("img")
+      expect(img["src"]).to eq(UrlHelper.cook_url(upload.url, secure: upload.secure?))
+      expect(img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR]).to be_nil
+      expect(img[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR]).to be_nil
+    end
+
     it "leaves the hotlinked src for failed or oversized downloads" do
       Chat::MessageHotlinkedMedia.create!(
         chat_message: message,
@@ -145,6 +160,19 @@ RSpec.describe Chat::MessageProcessor do
       expect(img["data-download-href"]).to eq(upload.short_path)
       expect(img["data-target-width"]).to eq(upload.width.to_s)
       expect(img["data-target-height"]).to eq(upload.height.to_s)
+    end
+
+    it "does not lightbox an image the onebox engine already wrapped" do
+      cooked_html =
+        "<p><img class=\"onebox\" src=\"#{upload.url}\" data-base62-sha1=\"#{base62}\"></p>"
+
+      Chat::Message.stubs(:cook).returns(cooked_html)
+      processor = described_class.new(message)
+
+      processor.run!
+
+      img = processor.instance_variable_get(:@doc).at_css("img")
+      expect(img["class"]).not_to include("lightbox")
     end
 
     context "with secure uploads enabled" do

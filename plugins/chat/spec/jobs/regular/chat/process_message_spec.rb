@@ -71,22 +71,87 @@ describe Jobs::Chat::ProcessMessage do
   end
 
   describe "pull hotlinked images" do
+    let(:image_url) { "https://example.com/img.png" }
+    fab!(:hotlinked_message) do
+      Fabricate(:chat_message, message: "![](https://example.com/img.png)")
+    end
+
     it "enqueues the pull job when download_remote_images_to_local is enabled" do
       SiteSetting.download_remote_images_to_local = true
 
       expect_enqueued_with(
         job: Jobs::Chat::PullHotlinkedImages,
         args: {
-          chat_message_id: chat_message.id,
+          chat_message_id: hotlinked_message.id,
         },
-      ) { described_class.new.execute(chat_message_id: chat_message.id) }
+      ) { described_class.new.execute(chat_message_id: hotlinked_message.id) }
+    end
+
+    # the job costs a slot, a lock and a disk check, and the overwhelming
+    # majority of messages have nothing external in them
+    it "does not enqueue the pull job for a message with nothing to fetch" do
+      SiteSetting.download_remote_images_to_local = true
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: chat_message.id)
+      end
+    end
+
+    it "does not enqueue the pull job when tracked media is localized during processing" do
+      SiteSetting.download_remote_images_to_local = true
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: hotlinked_message,
+        url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+        status: :downloaded,
+        upload: Fabricate(:upload),
+      )
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
+      end
+    end
+
+    it "does not enqueue the pull job for tracked media with a terminal failure" do
+      SiteSetting.download_remote_images_to_local = true
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: hotlinked_message,
+        url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+        status: :too_large,
+      )
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
+      end
+    end
+
+    it "enqueues the pull job for a local upload URL that resolves to nothing" do
+      SiteSetting.download_remote_images_to_local = true
+      orphan_url = "#{Discourse.base_url}/uploads/default/original/1X/#{SecureRandom.hex(20)}.png"
+      message = Fabricate(:chat_message, message: "![](#{orphan_url})")
+
+      expect_enqueued_with(
+        job: Jobs::Chat::PullHotlinkedImages,
+        args: {
+          chat_message_id: message.id,
+        },
+      ) { described_class.new.execute(chat_message_id: message.id) }
+    end
+
+    it "does not enqueue the pull job for an image that is already a local upload" do
+      SiteSetting.download_remote_images_to_local = true
+      upload = Fabricate(:upload)
+      message = Fabricate(:chat_message, message: "![](#{upload.url})")
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: message.id)
+      end
     end
 
     it "does not enqueue the pull job when download_remote_images_to_local is disabled" do
       SiteSetting.download_remote_images_to_local = false
 
       expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
-        described_class.new.execute(chat_message_id: chat_message.id)
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
       end
     end
 
@@ -95,7 +160,7 @@ describe Jobs::Chat::ProcessMessage do
       SiteSetting.chat_allow_uploads = false
 
       expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
-        described_class.new.execute(chat_message_id: chat_message.id)
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
       end
     end
 
@@ -127,10 +192,13 @@ describe Jobs::Chat::ProcessMessage do
     # the two jobs enqueueing each other
     it "does not enqueue the pull job when it was the pull job that asked for the re-cook" do
       SiteSetting.download_remote_images_to_local = true
+      # the check walks the doc and resolves every local upload URL, so don't
+      # pay for it when the answer is already ignored
+      Chat::MessageProcessor.any_instance.expects(:hotlinked_media_pending?).never
 
       expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
         described_class.new.execute(
-          chat_message_id: chat_message.id,
+          chat_message_id: hotlinked_message.id,
           skip_pull_hotlinked_images: true,
         )
       end
@@ -152,6 +220,33 @@ describe Jobs::Chat::ProcessMessage do
     expect { described_class.new.execute(chat_message_id: message.id) }.to change {
       Chat::MessageHotlinkedMedia.exists?(record.id)
     }.from(true).to(false)
+  end
+
+  # the pull job inserts rows while we cook, so sweeping everything the cook did
+  # not use would carry away a row that did not exist yet when it read them
+  it "keeps hotlinked media inserted after the cook read the tracked rows" do
+    image_url = "https://example.com/late.png"
+    message = Fabricate(:chat_message, message: "![](#{image_url})")
+    record = nil
+    insert_late_row =
+      Proc.new do
+        record ||=
+          Chat::MessageHotlinkedMedia.create!(
+            chat_message: message,
+            url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+            status: :downloaded,
+            upload: Fabricate(:upload),
+          )
+      end
+
+    DiscourseEvent.on(:chat_message_processed, &insert_late_row)
+    begin
+      described_class.new.execute(chat_message_id: message.id)
+    ensure
+      DiscourseEvent.off(:chat_message_processed, &insert_late_row)
+    end
+
+    expect(Chat::MessageHotlinkedMedia.exists?(record.id)).to eq(true)
   end
 
   describe "skip_notifications" do

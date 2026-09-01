@@ -4,6 +4,8 @@ module Jobs
   module Chat
     class ProcessMessage < ::Jobs::Base
       def execute(args = {})
+        hotlinked_media_pending = false
+
         ::DistributedMutex.synchronize(
           "jobs_chat_process_message_#{args[:chat_message_id]}",
           validity: 10.minutes,
@@ -28,10 +30,13 @@ module Jobs
             )
           end
 
-          chat_message
-            .hotlinked_media
-            .where.not(id: processor.used_hotlinked_media_ids.to_a)
-            .destroy_all
+          stale_ids = processor.stale_hotlinked_media_ids
+          chat_message.hotlinked_media.where(id: stale_ids).destroy_all if stale_ids.present?
+          # the pull job's own re-cook comes back with skip_pull set, and the
+          # check walks the doc and resolves every local upload URL
+          if !args[:skip_pull_hotlinked_images]
+            hotlinked_media_pending = processor.hotlinked_media_pending?
+          end
 
           # we don't process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
@@ -52,7 +57,7 @@ module Jobs
 
         # outside the mutex: the pull job re-cooks through this job, and would
         # block on the lock we still hold whenever jobs run inline
-        if !args[:skip_pull_hotlinked_images] && SiteSetting.download_remote_images_to_local? &&
+        if hotlinked_media_pending && SiteSetting.download_remote_images_to_local? &&
              SiteSetting.chat_allow_uploads?
           ::Jobs.enqueue(::Jobs::Chat::PullHotlinkedImages, chat_message_id: args[:chat_message_id])
         end
