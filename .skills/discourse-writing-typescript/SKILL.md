@@ -355,14 +355,14 @@ on template imports). Reword to plain prose. JS-body `//` and `/* */` are fine.
   {Function}`), not a reason to loosen the primitive. Precision rarely forces a consumer
   chase: a param typed `(x: T) => void` still accepts a consumer's `() => void`.
 
-## Lint hazard: member ordering can split comments
+## Lint hazard: member ordering moves arrow-function fields
 
-`sort-class-members` (via `bin/lint`) reorders class members and can **split a comment that
-was attached to a member it moves**: an arrow-function field (`foo = () => ...`) sorts into
-the *field* bucket, landing between another field and its leading comment. When **authoring
-new** code, prefer `@action` methods over arrow-function fields for template-referenced
-callbacks (auto-bound AND sorted into the methods bucket). **Re-read the file after
-`bin/lint --fix`** to confirm no comment got orphaned or split.
+`discourse/sort-class-members` (via `bin/lint`) reorders class members. Its autofix moves a
+member together with its comments and decorators, but an arrow-function field
+(`foo = () => ...`) sorts into the *field* bucket, far from the methods it belongs with. When
+**authoring new** code, prefer `@action` methods over arrow-function fields for
+template-referenced callbacks (auto-bound AND sorted into the methods bucket). **Re-read the
+file after `bin/lint --fix`** to confirm the placement still reads well.
 
 ## Verification (all three, in order)
 
