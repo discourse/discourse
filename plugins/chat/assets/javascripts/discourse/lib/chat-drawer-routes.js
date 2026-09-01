@@ -1,0 +1,16 @@
+// Barrel for the drawer's route components, so `chat-drawer-router` can pull them in with a
+// single dynamic import. The drawer outlet renders on every page, so importing these eagerly
+// would put most of chat's UI in the bundle for every request.
+export { default as Browse } from "../components/chat/drawer-routes/browse.gjs";
+export { default as Channel } from "../components/chat/drawer-routes/channel.gjs";
+export { default as ChannelMembers } from "../components/chat/drawer-routes/channel-members.gjs";
+export { default as ChannelPins } from "../components/chat/drawer-routes/channel-pins.gjs";
+export { default as ChannelPreferences } from "../components/chat/drawer-routes/channel-preferences.gjs";
+export { default as ChannelSettings } from "../components/chat/drawer-routes/channel-settings.gjs";
+export { default as ChannelThread } from "../components/chat/drawer-routes/channel-thread.gjs";
+export { default as ChannelThreads } from "../components/chat/drawer-routes/channel-threads.gjs";
+export { default as Channels } from "../components/chat/drawer-routes/channels.gjs";
+export { default as DirectMessages } from "../components/chat/drawer-routes/direct-messages.gjs";
+export { default as Search } from "../components/chat/drawer-routes/search.gjs";
+export { default as StarredChannels } from "../components/chat/drawer-routes/starred-channels.gjs";
+export { default as Threads } from "../components/chat/drawer-routes/threads.gjs";

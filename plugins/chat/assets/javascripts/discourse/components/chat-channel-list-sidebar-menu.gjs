@@ -9,11 +9,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import {
   CHAT_CHANNEL_LIST_FILTERS,
   CHAT_CHANNEL_LIST_SORTS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
+import showNewMessageModal from "discourse/plugins/chat/discourse/lib/show-new-message-modal";
 import ChatChannelListFilterMenu from "./chat-channel-list-filter-menu.gjs";
 import ChatChannelListSortMenu from "./chat-channel-list-sort-menu.gjs";
 
@@ -111,7 +111,7 @@ export default class ChatChannelListSidebarMenu extends Component {
 
   @action
   openNewGroupChat() {
-    this.modal.show(ChatModalNewMessage, {
+    showNewMessageModal(this.modal, {
       model: { initialMode: MODES.new_group },
     });
     this.args.close?.();
@@ -119,7 +119,7 @@ export default class ChatChannelListSidebarMenu extends Component {
 
   @action
   openNewMessage() {
-    this.modal.show(ChatModalNewMessage);
+    showNewMessageModal(this.modal);
     this.args.close?.();
   }
 
