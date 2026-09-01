@@ -28,6 +28,26 @@ module HotlinkedMedia
     src
   end
 
+  # Whether +src+ points somewhere this site does not serve, and so is a
+  # candidate for downloading. Cheap by design: no database or network access.
+  def self.remote_src?(src)
+    return false if src.blank?
+    return false if src.downcase.start_with?("data:")
+    return false if src.start_with?("/") && !src.start_with?("//")
+    return false if Discourse.store.has_been_uploaded?(src)
+
+    !PostHotlinkedMedia.normalize_src(src).start_with?(*local_bases)
+  end
+
+  def self.local_bases
+    [
+      Discourse.base_url.presence,
+      Discourse.asset_host.presence,
+      SiteSetting.external_emoji_url.presence,
+    ].compact.map { |base| PostHotlinkedMedia.normalize_src(base) }
+  end
+  private_class_method :local_bases
+
   # Downloads +src+ for +user_id+, returning [status, upload]. The status is the
   # one to record against the target; upload is nil unless it is :downloaded.
   def self.download(src, user_id, tmp_file_name:)

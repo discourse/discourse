@@ -10,8 +10,6 @@ module Jobs
         raise Discourse::InvalidParameters.new(:chat_message_id) if @chat_message_id.blank?
         return if !SiteSetting.chat_allow_uploads?
 
-        disable_if_low_on_disk_space
-
         if Jobs.run_immediately?
           pull
         else
@@ -41,7 +39,7 @@ module Jobs
             next if node.name != "img"
 
             download_src = HotlinkedMedia.download_src_for(node)
-            next if !should_download?(download_src)
+            next if !::Chat::MessageHotlinkedMedia.downloadable?(download_src)
 
             normalized_src = ::Chat::MessageHotlinkedMedia.normalize_src(download_src)
             if (existing = hotlinked_map[normalized_src])
@@ -50,6 +48,8 @@ module Jobs
               needs_recook = true if existing.downloaded? && existing.upload
               next
             end
+
+            next if !enough_disk_space?
 
             status, upload =
               HotlinkedMedia.download(
@@ -85,7 +85,9 @@ module Jobs
           <<~SQL,
           INSERT INTO chat_message_hotlinked_media (chat_message_id, url, status, upload_id, created_at, updated_at)
           VALUES (:chat_message_id, :url, :status, :upload_id, NOW(), NOW())
-          ON CONFLICT (chat_message_id, md5(url)) DO NOTHING
+          ON CONFLICT (chat_message_id, md5(url)) DO UPDATE
+          SET status = EXCLUDED.status, upload_id = EXCLUDED.upload_id, updated_at = NOW()
+          WHERE chat_message_hotlinked_media.upload_id IS NULL AND EXCLUDED.upload_id IS NOT NULL
         SQL
           chat_message_id: chat_message.id,
           url: normalized_src,
@@ -95,40 +97,13 @@ module Jobs
         ::Chat::MessageHotlinkedMedia.find_by(chat_message_id: chat_message.id, url: normalized_src)
       end
 
-      def should_download?(src)
-        return false if src.blank?
-        return false if !SiteSetting.download_remote_images_to_local?
-        return false if !SiteSetting.chat_allow_uploads?
-        return false if src.start_with?("data:")
-        # Downloading these means signing an S3 path for the underlying upload.
-        # Posts gate that on the author seeing the access-control post; chat
-        # messages have none, so there is nothing to authorize against.
-        return false if Upload.secure_uploads_url?(src)
+      # `df` forks a process, so only pay for it once there is something to
+      # download; the overwhelming majority of messages have nothing.
+      def enough_disk_space?
+        return @enough_disk_space if defined?(@enough_disk_space)
 
-        local_bases =
-          [
-            Discourse.base_url,
-            Discourse.asset_host,
-            SiteSetting.external_emoji_url.presence,
-          ].compact.map { |s| ::Chat::MessageHotlinkedMedia.normalize_src(s) }
-
-        if Discourse.store.has_been_uploaded?(src) ||
-             ::Chat::MessageHotlinkedMedia.normalize_src(src).start_with?(*local_bases) ||
-             src =~ %r{\A/[^/]}i
-          return false if src !~ %r{/uploads/}
-          # pass nil: chat messages have no access-control post to reuse against
-          upload = Upload.consider_for_reuse(Upload.get_from_url(src), nil)
-          return !upload.present?
-        end
-
-        begin
-          uri = URI.parse(src)
-        rescue URI::Error
-          return false
-        end
-        return false if uri.hostname.blank?
-
-        SiteSetting.should_download_images?(src)
+        disable_if_low_on_disk_space
+        @enough_disk_space = SiteSetting.download_remote_images_to_local?
       end
 
       def disable_if_low_on_disk_space
