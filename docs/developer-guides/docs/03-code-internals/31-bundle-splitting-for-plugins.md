@@ -109,6 +109,16 @@ Route maps are statically analyzed during the build, so it's important for them 
 
 This means no conditionals, no loops, and no values read from settings, services, or imports. If the build cannot parse your map, your plugin will fail to compile.
 
+## Compatibility
+
+When using staticModules, you should avoid using these legacy Ember features:
+
+- `templateName`/`controllerName` overrides in routes
+
+- Injecting controllers or routes via `@controller` or `.lookup()`
+
+- Loading components via `.lookup()`
+
 ## Verification
 
 Generated bundles are listed in `app/assets/generated/<your-plugin>/manifest.json` after a build. Discourse will preload the right bundle when a user lands directly on your page.
