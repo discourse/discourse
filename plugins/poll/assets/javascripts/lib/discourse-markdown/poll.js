@@ -32,8 +32,18 @@ function addNumberListItems(state, pollTokens, min, max, step, maximumOptions) {
   ) {
     pollTokens.push(new state.Token("list_item_open", "li", 1));
 
-    let token = new state.Token("text", "", 0);
+    // hidden paragraphs leave the rendered output untouched while giving
+    // parsers with stricter list item content the block they require
+    let token = new state.Token("paragraph_open", "p", 1);
+    token.hidden = true;
+    pollTokens.push(token);
+
+    token = new state.Token("text", "", 0);
     token.content = String(i);
+    pollTokens.push(token);
+
+    token = new state.Token("paragraph_close", "p", -1);
+    token.hidden = true;
     pollTokens.push(token);
 
     pollTokens.push(new state.Token("list_item_close", "li", -1));

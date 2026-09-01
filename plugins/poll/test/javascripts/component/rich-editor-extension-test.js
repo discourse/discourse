@@ -12,10 +12,9 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      resetRichEditorExtensions().then(() => {
-        registerRichEditorExtension(richEditorExtension);
-      });
+    hooks.beforeEach(async function () {
+      await resetRichEditorExtensions();
+      registerRichEditorExtension(richEditorExtension);
     });
 
     const voters =
@@ -46,6 +45,21 @@ module(
         "[poll chartType=bar]\n* Option 1\n* Option 2\n[/poll]",
         `<div class="poll" data-poll-chart-type="bar"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
         "[poll chartType=bar]\n* Option 1\n* Option 2\n\n[/poll]\n\n",
+      ],
+      "closed poll with a set option order": [
+        "[poll status=closed order=asc]\n* Option 1\n* Option 2\n[/poll]",
+        `<div class="poll" data-poll-status="closed" data-poll-order="asc"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
+        "[poll status=closed order=asc]\n* Option 1\n* Option 2\n\n[/poll]\n\n",
+      ],
+      "number poll": [
+        "[poll type=number min=0 max=4 step=2]\n[/poll]",
+        `<div class="poll" data-poll-type="number" data-poll-max="4" data-poll-min="0" data-poll-step="2"><ul data-tight="true"><li><p>0</p></li><li><p>2</p></li><li><p>4</p></li></ul>${voters}</div>`,
+        "[poll type=number max=4 min=0 step=2]\n[/poll]\n\n",
+      ],
+      "number poll with a title": [
+        "[poll type=number min=1 max=2]\n# How many?\n[/poll]",
+        `<div class="poll" data-poll-type="number" data-poll-max="2" data-poll-min="1"><h1>How many?</h1><ul data-tight="true"><li><p>1</p></li><li><p>2</p></li></ul>${voters}</div>`,
+        "[poll type=number max=2 min=1]\n# How many?\n\n[/poll]\n\n",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {

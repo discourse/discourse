@@ -15,6 +15,9 @@ const extension = {
         max: { default: null },
         min: { default: null },
         dynamic: { default: null },
+        status: { default: null },
+        order: { default: null },
+        step: { default: null },
       },
       content: "heading? bullet_list poll_info?",
       group: "block",
@@ -35,6 +38,9 @@ const extension = {
             dynamic: dom.getAttribute("data-poll-dynamic"),
             max: dom.getAttribute("data-poll-max"),
             min: dom.getAttribute("data-poll-min"),
+            status: dom.getAttribute("data-poll-status"),
+            order: dom.getAttribute("data-poll-order"),
+            step: dom.getAttribute("data-poll-step"),
           }),
         },
       ],
@@ -52,6 +58,9 @@ const extension = {
           "data-poll-dynamic": node.attrs.dynamic,
           "data-poll-max": node.attrs.max,
           "data-poll-min": node.attrs.min,
+          "data-poll-status": node.attrs.status,
+          "data-poll-order": node.attrs.order,
+          "data-poll-step": node.attrs.step,
         },
         0,
       ],
@@ -70,6 +79,8 @@ const extension = {
       getAttrs: (token) => ({
         ...token.poll_attrs,
         name: token.poll_attrs.name === "poll" ? null : token.poll_attrs.name,
+        status:
+          token.poll_attrs.status === "open" ? null : token.poll_attrs.status,
       }),
     },
     poll_container: { ignore: true },
@@ -87,7 +98,14 @@ const extension = {
     poll(state, node) {
       const attrs = buildBBCodeAttrs(node.attrs);
       state.write(`[poll${attrs ? ` ${attrs}` : ""}]\n`);
-      state.renderContent(node);
+      if (node.attrs.type === "number") {
+        // options are generated from the range, they are not authored content
+        if (node.firstChild?.type.name === "heading") {
+          state.render(node.firstChild, node, 0);
+        }
+      } else {
+        state.renderContent(node);
+      }
       state.write("[/poll]\n\n");
     },
     poll_info() {},
