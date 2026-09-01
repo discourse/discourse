@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { measuredMin } from "discourse/lib/resize-measurements";
 import { i18n } from "discourse-i18n";
@@ -18,6 +17,7 @@ import {
   dataExplorerStore,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import { UNGRANTABLE_GROUP_IDS } from "discourse/plugins/discourse-data-explorer/discourse/lib/ungrantable-groups";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
@@ -141,11 +141,9 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get groupOptions() {
-    return this.groups
-      .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
-      .map((g) => {
-        return { id: g.id, name: g.name };
-      });
+    return (this.groups ?? []).filter(
+      (g) => !UNGRANTABLE_GROUP_IDS.includes(g.id)
+    );
   }
 
   get hasResults() {

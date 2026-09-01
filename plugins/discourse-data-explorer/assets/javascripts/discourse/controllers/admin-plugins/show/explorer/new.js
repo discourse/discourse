@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
@@ -14,6 +13,7 @@ import {
   rememberedMode,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import { UNGRANTABLE_GROUP_IDS } from "discourse/plugins/discourse-data-explorer/discourse/lib/ungrantable-groups";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
 
@@ -52,7 +52,9 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   get groupOptions() {
-    return (this.groups ?? []).filter((g) => g.id !== AUTO_GROUPS.everyone.id);
+    return (this.groups ?? []).filter(
+      (g) => !UNGRANTABLE_GROUP_IDS.includes(g.id)
+    );
   }
 
   get viewItems() {
