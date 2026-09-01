@@ -63,10 +63,19 @@ module DiscourseAi
       # if the user filtered the results or index is a bit out of date
       OVER_SELECTION_FACTOR = 4
 
-      def search_for_topics(query, page = 1, hyde: true)
-        max_results_per_page = 100
-        limit = [Search.per_filter, max_results_per_page].min + 1
-        offset = (page - 1) * limit
+      MAX_RESULTS_PER_PAGE = 100
+
+      # callers share this so that the page size used to query and the page size used to
+      # collect results cannot drift apart
+      def self.page_size(per_page = nil)
+        max = [Search.per_filter, MAX_RESULTS_PER_PAGE].min
+        per_page ? per_page.clamp(1, max) : max
+      end
+
+      def search_for_topics(query, page = 1, hyde: true, per_page: nil)
+        page_size = self.class.page_size(per_page)
+        limit = page_size + 1
+        offset = (page - 1) * page_size
         search = Search.new(query, { guardian: guardian })
         search_term = search.term
 
@@ -85,11 +94,13 @@ module DiscourseAi
 
         schema = DiscourseAi::Embeddings::Schema.for(Topic)
 
+        # paginate the filtered rows rather than the candidate list, so that rows
+        # dropped by the filters below cannot be skipped or repeated across pages
         candidate_topic_ids =
           schema.asymmetric_similarity_search(
             search_embedding,
-            limit: over_selection_limit,
-            offset: offset,
+            limit: over_selection_limit + offset,
+            offset: 0,
           ).map(&:topic_id)
 
         semantic_results =
@@ -99,6 +110,7 @@ module DiscourseAi
             .where("topics.visible")
             .where(topic_id: candidate_topic_ids, post_number: 1)
             .order("array_position(ARRAY#{candidate_topic_ids}, posts.topic_id)")
+            .offset(offset)
             .limit(limit)
 
         query_filter_results = search.apply_filters(semantic_results)

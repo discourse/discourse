@@ -16,6 +16,8 @@ module DiscourseAi
       # in addition to per-IP limits.
       MAX_ANON_SEARCHES_PER_MINUTE = 60
 
+      MAX_PAGE = 10
+
       def search
         query = params[:q].to_s
         use_hyde = SiteSetting.ai_embeddings_semantic_search_use_hyde
@@ -29,6 +31,11 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:q)
         end
 
+        page = positive_integer_param(:page) || 1
+        raise Discourse::InvalidParameters.new(:page) if page > MAX_PAGE
+        per_page =
+          DiscourseAi::Embeddings::SemanticSearch.page_size(positive_integer_param(:per_page))
+
         grouped_results =
           Search::GroupedSearchResults.new(
             type_filter: SEMANTIC_SEARCH_TYPE,
@@ -36,6 +43,7 @@ module DiscourseAi
             search_context: guardian,
             use_pg_headlines_for_excerpt: false,
             can_lazy_load_categories: guardian.can_lazy_load_categories?,
+            per_page: per_page,
           )
 
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
@@ -67,7 +75,7 @@ module DiscourseAi
         hijack do
           begin
             semantic_search
-              .search_for_topics(query, _page = 1, hyde: use_hyde)
+              .search_for_topics(query, page, hyde: use_hyde, per_page: per_page)
               .each { |topic_post| grouped_results.add(topic_post) }
           rescue Discourse::InvalidAccess
             return render_json_error(I18n.t("invalid_access"), status: 403)
@@ -119,6 +127,17 @@ module DiscourseAi
       end
 
       private
+
+      def positive_integer_param(name)
+        value = params[name]
+        return if value.blank?
+
+        if !value.is_a?(String) || value.to_i.to_s != value || value.to_i < 1
+          raise Discourse::InvalidParameters.new(name)
+        end
+
+        value.to_i
+      end
 
       # Applies both per-IP and global anonymous rate limits, following the same
       # pattern as SearchController#rate_limit_search. The per-IP limit prevents

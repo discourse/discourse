@@ -273,6 +273,71 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
         end
       end
     end
+
+    context "when paginating results" do
+      def index_with(target, embedding)
+        stub_request(:post, "https://api.openai.com/v1/embeddings").to_return(
+          status: 200,
+          body: JSON.dump({ data: [{ embedding: embedding }] }),
+        )
+
+        DiscourseAi::Embeddings::Vector.instance.generate_representation_from(target)
+      end
+
+      # distinct embeddings keep the relevance order, and so the page boundaries, deterministic
+      before do
+        index_with(topic, [0.049382] * 1536)
+        index_with(topic_in_subcategory, ([0.1] * 768) + ([-0.1] * 768))
+        stub_embedding("test")
+      end
+
+      it "returns the next set of results when `page` is given" do
+        SiteSetting.search_page_size = 1
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"].map { |result| result["id"] }).to eq([topic.id])
+        expect(response.parsed_body["grouped_search_result"]["more_full_page_results"]).to eq(true)
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&page=2"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"].map { |result| result["id"] }).to eq(
+          [topic_in_subcategory.id],
+        )
+        expect(response.parsed_body["grouped_search_result"]["more_full_page_results"]).to eq(nil)
+      end
+
+      it "narrows a page to `per_page` without changing the site page size" do
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&per_page=1"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"].map { |result| result["id"] }).to eq([topic.id])
+        expect(response.parsed_body["grouped_search_result"]["more_full_page_results"]).to eq(true)
+      end
+
+      it "ignores a `per_page` above the site page size" do
+        SiteSetting.search_page_size = 1
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&per_page=50"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topics"].map { |result| result["id"] }).to eq([topic.id])
+      end
+
+      it "returns 400 for a malformed or out of range `page` or `per_page`" do
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&page=0"
+        expect(response.status).to eq(400)
+
+        out_of_range = described_class::MAX_PAGE + 1
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&page=#{out_of_range}"
+        expect(response.status).to eq(400)
+
+        get "/discourse-ai/embeddings/semantic-search.json?q=test&hyde=false&per_page=abc"
+        expect(response.status).to eq(400)
+      end
+    end
   end
 
   context "when embedding API fails" do
