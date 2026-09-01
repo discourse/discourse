@@ -58,37 +58,39 @@ module DiscourseAi
   # @param agent_klass [Class] a subclass of {DiscourseAi::Agents::Agent}
   # @param enabled_by_setting [String, nil] site setting that gates this feature
   # @param plugin [Plugin::Instance] the plugin instance registering the feature
-  def self.register_feature(module_name:, feature:, agent_klass:, enabled_by_setting: nil, plugin:)
-    area = "ai-features/#{module_name}"
-    plugin.register_site_setting_area(area)
+  class << self
+    def register_feature(module_name:, feature:, agent_klass:, enabled_by_setting: nil, plugin:)
+      area = "ai-features/#{module_name}"
+      plugin.register_site_setting_area(area)
 
-    setting_name = "#{module_name}_#{feature}_agent"
-    SiteSetting.send(
-      :setting,
-      setting_name.to_sym,
-      DiscourseAi::Agents::Agent.external_agent_id(agent_klass).to_s,
-      type: "enum",
-      enum: "DiscourseAi::Configuration::AgentEnumerator",
-      depends_on: ["discourse_ai_enabled", enabled_by_setting].compact,
-      depends_behavior: "hidden",
-      area: area,
-    )
+      setting_name = "#{module_name}_#{feature}_agent"
+      SiteSetting.send(
+        :setting,
+        setting_name.to_sym,
+        DiscourseAi::Agents::Agent.external_agent_id(agent_klass).to_s,
+        type: "enum",
+        enum: "DiscourseAi::Configuration::AgentEnumerator",
+        depends_on: ["discourse_ai_enabled", enabled_by_setting].compact,
+        depends_behavior: "hidden",
+        area: area,
+      )
 
-    if enabled_by_setting.present?
-      key = enabled_by_setting.to_sym
-      existing = SiteSetting.areas[key]
-      SiteSetting.areas[key] = existing ? (Array.wrap(existing) | [area]) : area
+      if enabled_by_setting.present?
+        key = enabled_by_setting.to_sym
+        existing = SiteSetting.areas[key]
+        SiteSetting.areas[key] = existing ? (Array.wrap(existing) | [area]) : area
+      end
+
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: module_name,
+          feature: feature,
+          agent_klass: agent_klass,
+          enabled_by_setting: enabled_by_setting,
+          visible: true,
+        },
+        plugin,
+      )
     end
-
-    DiscoursePluginRegistry.register_external_ai_feature(
-      {
-        module_name: module_name,
-        feature: feature,
-        agent_klass: agent_klass,
-        enabled_by_setting: enabled_by_setting,
-        visible: true,
-      },
-      plugin,
-    )
   end
 end

@@ -31,21 +31,23 @@ module Migrations
         # @param suspended_till    [Time, nil]
         #
         # @return [void]
-        def self.create(
-          user_id:,
-          suspended_at:,
-          reason: nil,
-          suspended_by_id: nil,
-          suspended_till: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            user_id,
-            Migrations::Database.format_datetime(suspended_at),
-            reason,
-            suspended_by_id,
-            Migrations::Database.format_datetime(suspended_till),
+        class << self
+          def create(
+            user_id:,
+            suspended_at:,
+            reason: nil,
+            suspended_by_id: nil,
+            suspended_till: nil
           )
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              user_id,
+              Migrations::Database.format_datetime(suspended_at),
+              reason,
+              suspended_by_id,
+              Migrations::Database.format_datetime(suspended_till),
+            )
+          end
         end
       end
     end

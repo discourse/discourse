@@ -1,27 +1,29 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  def self.build(section_ids:, current_user:, start_date:, end_date:, parallel: true)
-    new(
-      section_ids: section_ids,
-      current_user: current_user,
-      start_date: start_date,
-      end_date: end_date,
-    ).build(parallel: parallel)
-  end
+  class << self
+    def build(section_ids:, current_user:, start_date:, end_date:, parallel: true)
+      new(
+        section_ids: section_ids,
+        current_user: current_user,
+        start_date: start_date,
+        end_date: end_date,
+      ).build(parallel: parallel)
+    end
 
-  def self.pool_size
-    desired =
-      AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
-        DiscoursePluginRegistry.admin_dashboard_sections.size
+    def pool_size
+      desired =
+        AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
+          DiscoursePluginRegistry.admin_dashboard_sections.size
 
-    available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
-    [desired, available].min
-  end
+      available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
+      [desired, available].min
+    end
 
-  def self.thread_pool
-    @thread_pool ||=
-      Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
+    def thread_pool
+      @thread_pool ||=
+        Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
+    end
   end
 
   def initialize(section_ids:, current_user:, start_date:, end_date:)

@@ -13,33 +13,35 @@ module DiscourseAi
           spam_silence
         ].freeze
 
-        def self.signature
-          {
-            name: name,
-            description: "Flags the current post for review when flag_post is true.",
-            parameters: [
-              {
-                name: "flag_post",
-                description: "Whether the post should be flagged",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the post should be flagged",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Flags the current post for review when flag_post is true.",
+              parameters: [
+                {
+                  name: "flag_post",
+                  description: "Whether the post should be flagged",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the post should be flagged",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.accepted_options
-          [option(:flag_type, type: :enum, values: FLAG_TYPES, default: "review")]
-        end
+          def accepted_options
+            [option(:flag_type, type: :enum, values: FLAG_TYPES, default: "review")]
+          end
 
-        def self.name
-          "flag_post"
+          def name
+            "flag_post"
+          end
         end
 
         def flag_post

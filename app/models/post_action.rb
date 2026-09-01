@@ -20,48 +20,49 @@ class PostAction < ActiveRecord::Base
   after_save :update_counters
   validate :ensure_unique_actions, on: :create
 
-  def self.counts_for(collection, user)
-    return {} if collection.blank? || !user
+  class << self
+    def counts_for(collection, user)
+      return {} if collection.blank? || !user
 
-    collection_ids = collection.map(&:id)
-    user_id = user.try(:id) || 0
+      collection_ids = collection.map(&:id)
+      user_id = user.try(:id) || 0
 
-    post_actions = PostAction.where(post_id: collection_ids, user_id: user_id)
+      post_actions = PostAction.where(post_id: collection_ids, user_id: user_id)
 
-    user_actions = {}
-    post_actions.each do |post_action|
-      user_actions[post_action.post_id] ||= {}
-      user_actions[post_action.post_id][post_action.post_action_type_id] = post_action
+      user_actions = {}
+      post_actions.each do |post_action|
+        user_actions[post_action.post_id] ||= {}
+        user_actions[post_action.post_id][post_action.post_action_type_id] = post_action
+      end
+
+      user_actions
     end
 
-    user_actions
-  end
+    def ignored_user_like_counts_for(posts, user)
+      return {} if posts.blank? || user.blank?
 
-  def self.ignored_user_like_counts_for(posts, user)
-    return {} if posts.blank? || user.blank?
+      ignored_ids = user.ignored_user_ids
+      return {} if ignored_ids.empty?
 
-    ignored_ids = user.ignored_user_ids
-    return {} if ignored_ids.empty?
+      PostAction
+        .where(
+          post_id: posts.map(&:id),
+          user_id: ignored_ids,
+          post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+          deleted_at: nil,
+        )
+        .group(:post_id)
+        .count
+    end
 
-    PostAction
-      .where(
-        post_id: posts.map(&:id),
-        user_id: ignored_ids,
-        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
-        deleted_at: nil,
-      )
-      .group(:post_id)
-      .count
-  end
+    def lookup_for(user, topics, post_action_type_id)
+      return if topics.blank?
+      # in critical path 2x faster than AR
+      #
+      topic_ids = topics.map(&:id)
+      map = {}
 
-  def self.lookup_for(user, topics, post_action_type_id)
-    return if topics.blank?
-    # in critical path 2x faster than AR
-    #
-    topic_ids = topics.map(&:id)
-    map = {}
-
-    builder = DB.build <<~SQL
+      builder = DB.build <<~SQL
       SELECT p.topic_id, p.post_number
       FROM post_actions pa
       JOIN posts p ON pa.post_id = p.id
@@ -72,45 +73,64 @@ class PostAction < ActiveRecord::Base
       ORDER BY p.topic_id, p.post_number
     SQL
 
-    builder
-      .query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids)
-      .each { |row| (map[row.topic_id] ||= []) << row.post_number }
+      builder
+        .query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids)
+        .each { |row| (map[row.topic_id] ||= []) << row.post_number }
 
-    map
-  end
-
-  def self.count_per_day_for_type(post_action_type, opts = nil)
-    opts ||= {}
-    result = unscoped.where(post_action_type_id: post_action_type)
-    result =
-      result.where(
-        "post_actions.created_at >= ?",
-        opts[:start_date] || (opts[:since_days_ago] || 30).days.ago,
-      )
-    result = result.where("post_actions.created_at <= ?", opts[:end_date]) if opts[:end_date]
-    if opts[:category_id]
-      if opts[:include_subcategories]
-        result =
-          result.joins(post: :topic).where(
-            "topics.category_id IN (?)",
-            Category.subcategory_ids(opts[:category_id]),
-          )
-      else
-        result = result.joins(post: :topic).where("topics.category_id = ?", opts[:category_id])
-      end
+      map
     end
 
-    if opts[:group_ids]
+    def count_per_day_for_type(post_action_type, opts = nil)
+      opts ||= {}
+      result = unscoped.where(post_action_type_id: post_action_type)
       result =
-        result
-          .joins("INNER JOIN users ON users.id = post_actions.user_id")
-          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
-          .where("group_users.group_id IN (?)", opts[:group_ids])
-    end
+        result.where(
+          "post_actions.created_at >= ?",
+          opts[:start_date] || (opts[:since_days_ago] || 30).days.ago,
+        )
+      result = result.where("post_actions.created_at <= ?", opts[:end_date]) if opts[:end_date]
+      if opts[:category_id]
+        if opts[:include_subcategories]
+          result =
+            result.joins(post: :topic).where(
+              "topics.category_id IN (?)",
+              Category.subcategory_ids(opts[:category_id]),
+            )
+        else
+          result = result.joins(post: :topic).where("topics.category_id = ?", opts[:category_id])
+        end
+      end
 
-    result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
+      if opts[:group_ids]
+        result =
+          result
+            .joins("INNER JOIN users ON users.id = post_actions.user_id")
+            .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+            .where("group_users.group_id IN (?)", opts[:group_ids])
+      end
+
+      result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
+    end
   end
 
+  class << self
+    def limit_action!(user, post, post_action_type_id)
+      RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
+    end
+
+    def copy(original_post, target_post)
+      cols_to_copy = (column_names - %w[id post_id]).join(", ")
+
+      DB.exec <<~SQL
+    INSERT INTO post_actions(post_id, #{cols_to_copy})
+    SELECT #{target_post.id}, #{cols_to_copy}
+    FROM post_actions
+    WHERE post_id = #{original_post.id}
+    SQL
+
+      target_post.post_actions.each { |post_action| post_action.update_counters }
+    end
+  end
   def add_moderator_post_if_needed(moderator, disposition, delete_post = false)
     return if !SiteSetting.auto_respond_to_flag_actions
     return if related_post.nil? || related_post.topic.nil?
@@ -134,23 +154,6 @@ class PostAction < ActiveRecord::Base
         regular_post_type: Post.types[:regular],
       )
       .exists?
-  end
-
-  def self.limit_action!(user, post, post_action_type_id)
-    RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
-  end
-
-  def self.copy(original_post, target_post)
-    cols_to_copy = (column_names - %w[id post_id]).join(", ")
-
-    DB.exec <<~SQL
-    INSERT INTO post_actions(post_id, #{cols_to_copy})
-    SELECT #{target_post.id}, #{cols_to_copy}
-    FROM post_actions
-    WHERE post_id = #{original_post.id}
-    SQL
-
-    target_post.post_actions.each { |post_action| post_action.update_counters }
   end
 
   def remove_act!(user)

@@ -32,14 +32,16 @@ module Migrations
         # @return [void]
         #
         # @see Migrations::Database::IntermediateDB::Enums::SiteSettingImportMode
-        def self.create(name:, import_mode:, last_changed_at: nil, value: nil)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            name,
-            import_mode,
-            Migrations::Database.format_datetime(last_changed_at),
-            value,
-          )
+        class << self
+          def create(name:, import_mode:, last_changed_at: nil, value: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              name,
+              import_mode,
+              Migrations::Database.format_datetime(last_changed_at),
+              value,
+            )
+          end
         end
       end
     end

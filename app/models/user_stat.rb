@@ -3,20 +3,23 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
-  def self.ensure_consistency!(last_seen = 1.hour.ago)
-    reset_bounce_scores
-    update_distinct_badge_count
-    update_view_counts(last_seen)
-    update_first_unread(last_seen)
-    update_first_unread_pm(last_seen)
-  end
-
   UPDATE_UNREAD_MINUTES_AGO = 10
   UPDATE_UNREAD_USERS_LIMIT = 10_000
+  MAX_TIME_READ_DIFF = 100
+  class << self
+    def ensure_consistency!(last_seen = 1.hour.ago)
+      reset_bounce_scores
+      update_distinct_badge_count
+      update_view_counts(last_seen)
+      update_first_unread(last_seen)
+      update_first_unread_pm(last_seen)
+    end
+  end
 
-  def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(
-      <<~SQL,
+  class << self
+    def update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+      DB.exec(
+        <<~SQL,
     UPDATE user_stats us
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
@@ -62,16 +65,16 @@ class UserStat < ActiveRecord::Base
     ) AS Z
     WHERE us.user_id = Z.user_id
     SQL
-      archetype: Archetype.private_message,
-      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
-      last_seen: last_seen,
-      limit: limit,
-      whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
-    )
-  end
+        archetype: Archetype.private_message,
+        now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+        last_seen: last_seen,
+        limit: limit,
+        whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
+      )
+    end
 
-  def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+    def update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+      DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -138,23 +141,23 @@ class UserStat < ActiveRecord::Base
       ) Y
       WHERE Y.user_id = us.user_id
     SQL
-  end
+    end
 
-  def self.reset_bounce_scores
-    UserStat
-      .where("reset_bounce_score_after < now()")
-      .where("bounce_score > 0")
-      .update_all(bounce_score: 0)
-  end
+    def reset_bounce_scores
+      UserStat
+        .where("reset_bounce_score_after < now()")
+        .where("bounce_score > 0")
+        .update_all(bounce_score: 0)
+    end
 
-  # Updates the denormalized view counts for all users
-  def self.update_view_counts(last_seen = 1.hour.ago)
-    # NOTE: we only update the counts for users we have seen in the last hour
-    #  this avoids a very expensive query that may run on the entire user base
-    #  we also ensure we only touch the table if data changes
+    # Updates the denormalized view counts for all users
+    def update_view_counts(last_seen = 1.hour.ago)
+      # NOTE: we only update the counts for users we have seen in the last hour
+      #  this avoids a very expensive query that may run on the entire user base
+      #  we also ensure we only touch the table if data changes
 
-    # Update denormalized topics_entered
-    DB.exec(<<~SQL, seen_at: last_seen)
+      # Update denormalized topics_entered
+      DB.exec(<<~SQL, seen_at: last_seen)
       UPDATE user_stats SET topics_entered = X.c
        FROM
       (SELECT v.user_id, COUNT(topic_id) AS c
@@ -168,8 +171,8 @@ class UserStat < ActiveRecord::Base
         X.c <> topics_entered
     SQL
 
-    # Update denormalized posts_read_count
-    DB.exec(<<~SQL, seen_at: last_seen)
+      # Update denormalized posts_read_count
+      DB.exec(<<~SQL, seen_at: last_seen)
       WITH filtered_users AS (
         SELECT id FROM users u
         JOIN user_stats ON user_id = u.id
@@ -188,12 +191,12 @@ class UserStat < ActiveRecord::Base
       WHERE X.user_id = user_stats.user_id
       AND X.c <> posts_read_count
     SQL
-  end
+    end
 
-  def self.update_distinct_badge_count(user_ids = [])
-    user_ids = user_ids.join(", ")
+    def update_distinct_badge_count(user_ids = [])
+      user_ids = user_ids.join(", ")
 
-    sql = <<~SQL
+      sql = <<~SQL
       UPDATE user_stats
       SET distinct_badge_count = x.distinct_badge_count
       FROM (
@@ -207,29 +210,27 @@ class UserStat < ActiveRecord::Base
       #{"AND user_stats.user_id IN (#{user_ids})" if !user_ids.empty?}
     SQL
 
-    DB.exec sql
+      DB.exec sql
+    end
   end
 
-  def update_distinct_badge_count
-    self.class.update_distinct_badge_count([user_id])
-  end
-
-  def self.update_draft_count(user_id = nil)
-    if user_id.present?
-      draft_count = DB.query_single(<<~SQL, user_id: user_id).first
+  class << self
+    def update_draft_count(user_id = nil)
+      if user_id.present?
+        draft_count = DB.query_single(<<~SQL, user_id: user_id).first
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
         RETURNING draft_count
       SQL
 
-      MessageBus.publish(
-        "/user-drafts/#{user_id}",
-        { draft_count: draft_count },
-        user_ids: [user_id],
-      )
-    else
-      DB.exec <<~SQL
+        MessageBus.publish(
+          "/user-drafts/#{user_id}",
+          { draft_count: draft_count },
+          user_ids: [user_id],
+        )
+      else
+        DB.exec <<~SQL
         UPDATE user_stats
         SET draft_count = new_user_stats.draft_count
         FROM (SELECT user_stats.user_id, COUNT(drafts.id) draft_count
@@ -239,7 +240,39 @@ class UserStat < ActiveRecord::Base
         WHERE user_stats.user_id = new_user_stats.user_id
           AND user_stats.draft_count <> new_user_stats.draft_count
       SQL
+      end
     end
+  end
+  # attempt to add total read time to user based on previous time this was called
+  class << self
+    def update_time_read!(id)
+      if last_seen = last_seen_cached(id)
+        diff = (Time.now.to_f - last_seen.to_f).round
+        if diff > 0 && diff < MAX_TIME_READ_DIFF
+          update_args = ["time_read = time_read + ?", diff]
+          UserStat.where(user_id: id).update_all(update_args)
+          UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
+        end
+      end
+      cache_last_seen(id, Time.now.to_f)
+    end
+  end
+  class << self
+    def last_seen_key(id)
+      # frozen
+      -"user-last-seen:#{id}"
+    end
+
+    def last_seen_cached(id)
+      Discourse.redis.get(last_seen_key(id))
+    end
+
+    def cache_last_seen(id, val)
+      Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
+    end
+  end
+  def update_distinct_badge_count
+    self.class.update_distinct_badge_count([user_id])
   end
 
   # topic_reply_count is a count of posts in other users' topics
@@ -266,39 +299,12 @@ class UserStat < ActiveRecord::Base
     user.posts.exists?
   end
 
-  MAX_TIME_READ_DIFF = 100
-  # attempt to add total read time to user based on previous time this was called
-  def self.update_time_read!(id)
-    if last_seen = last_seen_cached(id)
-      diff = (Time.now.to_f - last_seen.to_f).round
-      if diff > 0 && diff < MAX_TIME_READ_DIFF
-        update_args = ["time_read = time_read + ?", diff]
-        UserStat.where(user_id: id).update_all(update_args)
-        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
-      end
-    end
-    cache_last_seen(id, Time.now.to_f)
-  end
-
   def update_time_read!
     UserStat.update_time_read!(id)
   end
 
   def reset_bounce_score!
     update_columns(reset_bounce_score_after: nil, bounce_score: 0)
-  end
-
-  def self.last_seen_key(id)
-    # frozen
-    -"user-last-seen:#{id}"
-  end
-
-  def self.last_seen_cached(id)
-    Discourse.redis.get(last_seen_key(id))
-  end
-
-  def self.cache_last_seen(id, val)
-    Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
   def update_pending_posts

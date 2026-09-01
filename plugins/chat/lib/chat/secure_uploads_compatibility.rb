@@ -9,16 +9,18 @@ module Chat
     #
     # The env var DISCOURSE_ALLOW_UNSECURE_CHAT_UPLOADS can be set to keep
     # it enabled, but this is strongly advised against.
-    def self.update_settings
-      if SiteSetting.secure_uploads && SiteSetting.chat_allow_uploads &&
-           !GlobalSetting.allow_unsecure_chat_uploads
-        SiteSetting.chat_allow_uploads = false
-        StaffActionLogger.new(Discourse.system_user).log_site_setting_change(
-          "chat_allow_uploads",
-          true,
-          false,
-          context: "Disabled because secure_uploads is enabled",
-        )
+    class << self
+      def update_settings
+        if SiteSetting.secure_uploads && SiteSetting.chat_allow_uploads &&
+             !GlobalSetting.allow_unsecure_chat_uploads
+          SiteSetting.chat_allow_uploads = false
+          StaffActionLogger.new(Discourse.system_user).log_site_setting_change(
+            "chat_allow_uploads",
+            true,
+            false,
+            context: "Disabled because secure_uploads is enabled",
+          )
+        end
       end
     end
   end

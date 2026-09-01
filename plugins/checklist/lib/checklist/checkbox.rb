@@ -7,8 +7,10 @@ module Checklist
 
     attr_reader :offset, :segment
 
-    def self.permanent
-      new(offset: nil, segment: nil, permanent: true)
+    class << self
+      def permanent
+        new(offset: nil, segment: nil, permanent: true)
+      end
     end
 
     def initialize(offset:, segment:, permanent: false)

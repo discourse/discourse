@@ -85,33 +85,123 @@ class ThemeField < ActiveRecord::Base
           where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
         end
 
-  def self.types
-    @types ||=
-      Enum.new(
-        html: 0,
-        scss: 1,
-        theme_upload_var: 2,
-        theme_color_var: 3, # No longer used
-        theme_var: 4, # No longer used
-        yaml: 5,
-        js: 6,
-        theme_screenshot_upload_var: 7,
-        json: 8,
-      )
-  end
+  FILE_MATCHERS = [
+    ThemeFileMatcher.new(
+      regex:
+        %r{\A(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html\z},
+      targets: %i[mobile desktop common],
+      names: %w[head_tag header after_header body_tag footer],
+      types: :html,
+      canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},
+      targets: %i[mobile desktop common],
+      names: "scss",
+      types: :scss,
+      canonical: ->(h) { "#{h[:target]}/#{h[:target]}.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Acommon/embedded\.scss\z},
+      targets: :common,
+      names: "embedded_scss",
+      types: :scss,
+      canonical: ->(h) { "common/embedded.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Acommon/color_definitions\.scss\z},
+      targets: :common,
+      names: "color_definitions",
+      types: :scss,
+      canonical: ->(h) { "common/color_definitions.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\A(?:scss|stylesheets)/(?<name>.+)\.scss\z},
+      targets: :extra_scss,
+      names: nil,
+      types: :scss,
+      canonical: ->(h) { "stylesheets/#{h[:name]}.scss" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Ajavascripts/(?<name>.+)\z},
+      targets: :extra_js,
+      names: nil,
+      types: :js,
+      canonical: ->(h) { "javascripts/#{h[:name]}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Atest/(?<name>.+)\z},
+      targets: :tests_js,
+      names: nil,
+      types: :js,
+      canonical: ->(h) { "test/#{h[:name]}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /\Aabout\.json\z/,
+      names: "about",
+      types: :json,
+      targets: :about,
+      canonical: ->(h) { "about.json" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /\Asettings\.ya?ml\z/,
+      names: "yaml",
+      types: :yaml,
+      targets: :settings,
+      canonical: ->(h) { "settings.yml" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Alocales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml\z},
+      names: I18n.available_locales.map(&:to_s),
+      types: :yaml,
+      targets: :translations,
+      canonical: ->(h) { "locales/#{h[:name]}.yml" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
+      names: nil,
+      types: :theme_upload_var,
+      targets: :common,
+      canonical: ->(h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Amigrations/settings/(?<name>[^/]+)\.js\z},
+      names: nil,
+      types: :js,
+      targets: :migrations,
+      canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
+    ),
+  ]
+  JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript]
+  class << self
+    def types
+      @types ||=
+        Enum.new(
+          html: 0,
+          scss: 1,
+          theme_upload_var: 2,
+          theme_color_var: 3, # No longer used
+          theme_var: 4, # No longer used
+          yaml: 5,
+          js: 6,
+          theme_screenshot_upload_var: 7,
+          json: 8,
+        )
+    end
 
-  def self.theme_var_type_ids
-    @theme_var_type_ids ||= [2]
-  end
+    def theme_var_type_ids
+      @theme_var_type_ids ||= [2]
+    end
 
-  def self.css_theme_type_ids
-    @css_theme_type_ids ||= [0, 1]
-  end
+    def css_theme_type_ids
+      @css_theme_type_ids ||= [0, 1]
+    end
 
-  def self.force_recompilation!
-    find_each do |field|
-      field.compiler_version = 0
-      field.ensure_baked!
+    def force_recompilation!
+      find_each do |field|
+        field.compiler_version = 0
+        field.ensure_baked!
+      end
     end
   end
 
@@ -123,6 +213,43 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :theme
 
+  class << self
+    def guess_type(name:, target:)
+      if basic_targets.include?(target.to_s) && html_fields.include?(name.to_s)
+        types[:html]
+      elsif basic_targets.include?(target.to_s) && scss_fields.include?(name.to_s)
+        types[:scss]
+      elsif target.to_s == "extra_scss"
+        types[:scss]
+      elsif %w[migrations extra_js].include?(target.to_s)
+        types[:js]
+      elsif target.to_s == "settings" || target.to_s == "translations"
+        types[:yaml]
+      end
+    end
+
+    def html_fields
+      @html_fields ||= %w[body_tag head_tag header footer after_header embedded_header]
+    end
+
+    def scss_fields
+      @scss_fields ||= %w[scss embedded_scss color_definitions]
+    end
+
+    def basic_targets
+      @basic_targets ||= %w[common desktop mobile]
+    end
+  end
+  class << self
+    def opts_from_file_path(filename)
+      FILE_MATCHERS.each do |matcher|
+        if opts = matcher.opts_from_filename(filename)
+          return opts
+        end
+      end
+      nil
+    end
+  end
   def process_html(html)
     errors = []
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
@@ -297,32 +424,6 @@ class ThemeField < ActiveRecord::Base
     end
 
     self.error = errors.join("\n").presence
-  end
-
-  def self.guess_type(name:, target:)
-    if basic_targets.include?(target.to_s) && html_fields.include?(name.to_s)
-      types[:html]
-    elsif basic_targets.include?(target.to_s) && scss_fields.include?(name.to_s)
-      types[:scss]
-    elsif target.to_s == "extra_scss"
-      types[:scss]
-    elsif %w[migrations extra_js].include?(target.to_s)
-      types[:js]
-    elsif target.to_s == "settings" || target.to_s == "translations"
-      types[:yaml]
-    end
-  end
-
-  def self.html_fields
-    @html_fields ||= %w[body_tag head_tag header footer after_header embedded_header]
-  end
-
-  def self.scss_fields
-    @scss_fields ||= %w[scss embedded_scss color_definitions]
-  end
-
-  def self.basic_targets
-    @basic_targets ||= %w[common desktop mobile]
   end
 
   def basic_html_field?
@@ -517,94 +618,6 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  FILE_MATCHERS = [
-    ThemeFileMatcher.new(
-      regex:
-        %r{\A(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html\z},
-      targets: %i[mobile desktop common],
-      names: %w[head_tag header after_header body_tag footer],
-      types: :html,
-      canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},
-      targets: %i[mobile desktop common],
-      names: "scss",
-      types: :scss,
-      canonical: ->(h) { "#{h[:target]}/#{h[:target]}.scss" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Acommon/embedded\.scss\z},
-      targets: :common,
-      names: "embedded_scss",
-      types: :scss,
-      canonical: ->(h) { "common/embedded.scss" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Acommon/color_definitions\.scss\z},
-      targets: :common,
-      names: "color_definitions",
-      types: :scss,
-      canonical: ->(h) { "common/color_definitions.scss" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\A(?:scss|stylesheets)/(?<name>.+)\.scss\z},
-      targets: :extra_scss,
-      names: nil,
-      types: :scss,
-      canonical: ->(h) { "stylesheets/#{h[:name]}.scss" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Ajavascripts/(?<name>.+)\z},
-      targets: :extra_js,
-      names: nil,
-      types: :js,
-      canonical: ->(h) { "javascripts/#{h[:name]}" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Atest/(?<name>.+)\z},
-      targets: :tests_js,
-      names: nil,
-      types: :js,
-      canonical: ->(h) { "test/#{h[:name]}" },
-    ),
-    ThemeFileMatcher.new(
-      regex: /\Aabout\.json\z/,
-      names: "about",
-      types: :json,
-      targets: :about,
-      canonical: ->(h) { "about.json" },
-    ),
-    ThemeFileMatcher.new(
-      regex: /\Asettings\.ya?ml\z/,
-      names: "yaml",
-      types: :yaml,
-      targets: :settings,
-      canonical: ->(h) { "settings.yml" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Alocales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml\z},
-      names: I18n.available_locales.map(&:to_s),
-      types: :yaml,
-      targets: :translations,
-      canonical: ->(h) { "locales/#{h[:name]}.yml" },
-    ),
-    ThemeFileMatcher.new(
-      regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
-      names: nil,
-      types: :theme_upload_var,
-      targets: :common,
-      canonical: ->(h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" },
-    ),
-    ThemeFileMatcher.new(
-      regex: %r{\Amigrations/settings/(?<name>[^/]+)\.js\z},
-      names: nil,
-      types: :js,
-      targets: :migrations,
-      canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
-    ),
-  ]
-
   # For now just work for standard fields
   def file_path
     FILE_MATCHERS.each do |matcher|
@@ -619,15 +632,6 @@ class ThemeField < ActiveRecord::Base
       end
     end
     nil # Not a file (e.g. a theme variable/color)
-  end
-
-  def self.opts_from_file_path(filename)
-    FILE_MATCHERS.each do |matcher|
-      if opts = matcher.opts_from_filename(filename)
-        return opts
-      end
-    end
-    nil
   end
 
   def dependent_fields
@@ -691,8 +695,6 @@ class ThemeField < ActiveRecord::Base
   end
 
   private
-
-  JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript]
 
   def inline_javascript?(node)
     if node["src"].present?

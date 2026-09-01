@@ -2,10 +2,17 @@
 
 module DiscourseDataExplorer
   class AiQueryGenerator < DiscourseAi::Agents::Agent
-    def self.default_enabled
-      false
+    class << self
+      def default_enabled
+        false
+      end
     end
 
+    class << self
+      def max_turn_tokens
+        100_000
+      end
+    end
     def tools
       [
         DiscourseAi::Agents::Tools::DbSchema,
@@ -13,10 +20,6 @@ module DiscourseDataExplorer
         DiscourseDataExplorer::Tools::RunSql,
         DiscourseDataExplorer::Tools::SubmitQuery,
       ]
-    end
-
-    def self.max_turn_tokens
-      100_000
     end
 
     def system_prompt

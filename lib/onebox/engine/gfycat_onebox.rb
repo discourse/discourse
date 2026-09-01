@@ -10,8 +10,10 @@ module Onebox
       always_https
 
       # This engine should have priority over AllowlistedGenericOnebox.
-      def self.priority
-        1
+      class << self
+        def priority
+          1
+        end
       end
 
       def to_html

@@ -24,6 +24,28 @@ BYPASS_DISABLE_TYPES = %w[
 
 module Email
   class Sender
+    class << self
+      def host_for(base_url)
+        host = "localhost"
+        if base_url.present?
+          begin
+            uri = URI.parse(base_url)
+            host = uri.host.downcase if uri.host.present?
+          rescue URI::Error
+          end
+        end
+        host
+      end
+    end
+    class << self
+      def bounceable_reply_address?
+        SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+      end
+
+      def bounce_address(bounce_key)
+        SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{bounce_key}")
+      end
+    end
     def initialize(message, email_type, user = nil)
       @message = message
       @message_attachments_index = {}
@@ -339,18 +361,6 @@ module Email
       @bcc_addresses ||= @message.try(:bcc) || []
     end
 
-    def self.host_for(base_url)
-      host = "localhost"
-      if base_url.present?
-        begin
-          uri = URI.parse(base_url)
-          host = uri.host.downcase if uri.host.present?
-        rescue URI::Error
-        end
-      end
-      host
-    end
-
     private
 
     def digest_posts
@@ -559,14 +569,6 @@ module Email
       end
 
       PostReplyKey.create_or_find_by!(post_id: post_id, user_id: user_id).reply_key
-    end
-
-    def self.bounceable_reply_address?
-      SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
-    end
-
-    def self.bounce_address(bounce_key)
-      SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{bounce_key}")
     end
 
     ##

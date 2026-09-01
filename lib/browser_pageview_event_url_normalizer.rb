@@ -35,66 +35,72 @@ class BrowserPageviewEventUrlNormalizer
 
   MAX_LENGTH = 2000
 
-  def self.normalize_referrer(raw)
-    uri = parse_uri(raw)
-    return nil if uri.nil?
+  class << self
+    def normalize_referrer(raw)
+      uri = parse_uri(raw)
+      return nil if uri.nil?
 
-    host = normalize_host(uri.host)
-    return nil if host.blank?
+      host = normalize_host(uri.host)
+      return nil if host.blank?
 
-    path = normalized_path(uri)
-    filtered_query = filter_query(uri.query)
-    query_str = filtered_query.empty? ? "" : "?#{filtered_query}"
+      path = normalized_path(uri)
+      filtered_query = filter_query(uri.query)
+      query_str = filtered_query.empty? ? "" : "?#{filtered_query}"
 
-    "#{host}#{path}#{query_str}".byteslice(0, MAX_LENGTH).scrub("")
-  end
+      "#{host}#{path}#{query_str}".byteslice(0, MAX_LENGTH).scrub("")
+    end
 
-  def self.normalize_site_path(raw)
-    uri = parse_uri(raw)
-    return nil if uri.nil?
-    return nil if uri.scheme.present? && (!%w[http https].include?(uri.scheme) || uri.host.blank?)
+    def normalize_site_path(raw)
+      uri = parse_uri(raw)
+      return nil if uri.nil?
+      return nil if uri.scheme.present? && (!%w[http https].include?(uri.scheme) || uri.host.blank?)
 
-    path = normalized_path(uri)
-    path = "/#{path}" if !path.start_with?("/")
-    path = "/" if path.blank?
-    path.byteslice(0, MAX_LENGTH).scrub("")
-  end
+      path = normalized_path(uri)
+      path = "/#{path}" if !path.start_with?("/")
+      path = "/" if path.blank?
+      path.byteslice(0, MAX_LENGTH).scrub("")
+    end
 
-  def self.normalize_host(host)
-    return nil if host.blank?
-    normalized = Addressable::URI.parse("http://#{host}").normalized_host
-    return nil if normalized.blank?
-    normalized.delete_prefix("www.").delete_suffix(".")
-  rescue Addressable::URI::InvalidURIError
-    nil
-  end
+    def normalize_host(host)
+      return nil if host.blank?
+      normalized = Addressable::URI.parse("http://#{host}").normalized_host
+      return nil if normalized.blank?
+      normalized.delete_prefix("www.").delete_suffix(".")
+    rescue Addressable::URI::InvalidURIError
+      nil
+    end
 
-  # Filters the raw query string so original percent-encoding is preserved
-  # (avoids %20/+ duplicate groupings for rows pointing at the same URL).
-  def self.filter_query(query)
-    return "" if query.blank?
+    # Filters the raw query string so original percent-encoding is preserved
+    # (avoids %20/+ duplicate groupings for rows pointing at the same URL).
+    def filter_query(query)
+      return "" if query.blank?
 
-    query
-      .split("&")
-      .reject do |pair|
-        key = pair.split("=", 2).first.to_s
-        TRACKING_PARAMS.include?(key)
-      end
-      .join("&")
+      query
+        .split("&")
+        .reject do |pair|
+          key = pair.split("=", 2).first.to_s
+          TRACKING_PARAMS.include?(key)
+        end
+        .join("&")
+    end
   end
   private_class_method :filter_query
 
-  def self.normalized_path(uri)
-    uri.path.to_s.sub(%r{/+\z}, "")
+  class << self
+    def normalized_path(uri)
+      uri.path.to_s.sub(%r{/+\z}, "")
+    end
   end
   private_class_method :normalized_path
 
-  def self.parse_uri(raw)
-    return nil if raw.blank?
+  class << self
+    def parse_uri(raw)
+      return nil if raw.blank?
 
-    Addressable::URI.parse(raw.to_s.strip)
-  rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
-    nil
+      Addressable::URI.parse(raw.to_s.strip)
+    rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
+      nil
+    end
   end
   private_class_method :parse_uri
 end

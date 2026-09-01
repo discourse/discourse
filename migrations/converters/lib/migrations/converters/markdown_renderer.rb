@@ -66,21 +66,6 @@ module Migrations
       }.freeze
       private_constant :MENTION_TYPES
 
-      # @param format [Symbol] one of {FORMATS}.
-      # @param embeds [#upload, #quote, #mention, #link, nil] the embed collector;
-      #   when nil the embeds render natively.
-      # @param defer [Array<Symbol>] which embed kinds to defer (default
-      #   {DEFAULT_DEFER}). Ignored when `embeds` is nil.
-      def initialize(format: :bbcode, embeds: nil, defer: DEFAULT_DEFER)
-        @format = format.to_sym
-        raise UnknownFormat, "Unknown source format: #{format}" unless FORMATS.key?(@format)
-
-        require FORMATS.fetch(@format)
-
-        @embeds = embeds
-        @renderer = embeds ? build_deferring_renderer(defer) : nil
-      end
-
       # Markbridge's default rules cover CommonMark legality only: they unwrap a
       # link nested in a link and hoist block or multi-line-code content out of
       # an inline container. A linked image is legal CommonMark and Discourse
@@ -96,12 +81,32 @@ module Migrations
       # label text inside a link anyway.
       #
       # Built once; safe to share, the frozen normalizer keeps no per-run state.
-      def self.normalizer
-        @normalizer ||=
-          Markbridge::Normalizer
-            .default
-            .rule(parent: Markbridge::AST::Url, child: Markbridge::AST::Mention, strategy: :textify)
-            .freeze
+      class << self
+        def normalizer
+          @normalizer ||=
+            Markbridge::Normalizer
+              .default
+              .rule(
+                parent: Markbridge::AST::Url,
+                child: Markbridge::AST::Mention,
+                strategy: :textify,
+              )
+              .freeze
+        end
+      end
+      # @param format [Symbol] one of {FORMATS}.
+      # @param embeds [#upload, #quote, #mention, #link, nil] the embed collector;
+      #   when nil the embeds render natively.
+      # @param defer [Array<Symbol>] which embed kinds to defer (default
+      #   {DEFAULT_DEFER}). Ignored when `embeds` is nil.
+      def initialize(format: :bbcode, embeds: nil, defer: DEFAULT_DEFER)
+        @format = format.to_sym
+        raise UnknownFormat, "Unknown source format: #{format}" unless FORMATS.key?(@format)
+
+        require FORMATS.fetch(@format)
+
+        @embeds = embeds
+        @renderer = embeds ? build_deferring_renderer(defer) : nil
       end
 
       # @param source [String] the source post body.

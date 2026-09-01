@@ -47,6 +47,30 @@ class ImportScripts::Lithium < ImportScripts::Base
 
   USERNAME_MAPPINGS = { admins: "admin_user" }.with_indifferent_access
 
+  SMILEY_SUBS = {
+    "smileyhappy" => "smiley",
+    "smileyindifferent" => "neutral_face",
+    "smileymad" => "angry",
+    "smileysad" => "cry",
+    "smileysurprised" => "dizzy_face",
+    "smileytongue" => "stuck_out_tongue",
+    "smileyvery-happy" => "grin",
+    "smileywink" => "wink",
+    "smileyfrustrated" => "confounded",
+    "smileyembarrassed" => "flushed",
+    "smileylol" => "laughing",
+    "cathappy" => "smiley_cat",
+    "catindifferent" => "cat",
+    "catmad" => "smirk_cat",
+    "catsad" => "crying_cat_face",
+    "catsurprised" => "scream_cat",
+    "cattongue" => "stuck_out_tongue",
+    "catvery-happy" => "smile_cat",
+    "catwink" => "wink",
+    "catfrustrated" => "grumpycat",
+    "catembarrassed" => "kissing_cat",
+    "catlol" => "joy_cat",
+  }
   def initialize
     super
 
@@ -540,31 +564,6 @@ class ImportScripts::Lithium < ImportScripts::Base
       end
     end
   end
-
-  SMILEY_SUBS = {
-    "smileyhappy" => "smiley",
-    "smileyindifferent" => "neutral_face",
-    "smileymad" => "angry",
-    "smileysad" => "cry",
-    "smileysurprised" => "dizzy_face",
-    "smileytongue" => "stuck_out_tongue",
-    "smileyvery-happy" => "grin",
-    "smileywink" => "wink",
-    "smileyfrustrated" => "confounded",
-    "smileyembarrassed" => "flushed",
-    "smileylol" => "laughing",
-    "cathappy" => "smiley_cat",
-    "catindifferent" => "cat",
-    "catmad" => "smirk_cat",
-    "catsad" => "crying_cat_face",
-    "catsurprised" => "scream_cat",
-    "cattongue" => "stuck_out_tongue",
-    "catvery-happy" => "smile_cat",
-    "catwink" => "wink",
-    "catfrustrated" => "grumpycat",
-    "catembarrassed" => "kissing_cat",
-    "catlol" => "joy_cat",
-  }
 
   def import_likes
     puts "\nimporting likes..."

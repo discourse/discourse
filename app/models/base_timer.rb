@@ -5,62 +5,62 @@ class BaseTimer < ActiveRecord::Base
 
   self.ignored_columns = ["topic_id"]
 
-  MAX_DURATION_MINUTES = 20.years.to_i / 60
-
   include Trashable
+  MAX_DURATION_MINUTES = 20.years.to_i / 60
 
   validates :status_type, presence: true
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :duration_in_range?
 
+  class << self
+    def type_job_map
+      {
+        close: :close_topic,
+        open: :open_topic,
+        publish_to_category: :publish_topic_to_category,
+        delete: :delete_topic,
+        reminder: :topic_reminder,
+        bump: :bump_topic,
+        delete_replies: :delete_replies,
+        silent_close: :close_topic,
+        clear_slow_mode: :clear_slow_mode,
+      }
+    end
+
+    def types
+      @types ||=
+        Enum.new(
+          close: 1,
+          open: 2,
+          publish_to_category: 3,
+          delete: 4,
+          reminder: 5,
+          bump: 6,
+          delete_replies: 7,
+          silent_close: 8,
+          clear_slow_mode: 9,
+        )
+    end
+
+    def public_types
+      @_public_types ||= types.except(:reminder, :clear_slow_mode)
+    end
+
+    def private_types
+      @_private_types ||= types.only(:reminder, :clear_slow_mode)
+    end
+
+    def destructive_types
+      @_destructive_types ||= types.only(:delete, :delete_replies)
+    end
+  end
   def status_type_name
     self.class.types[status_type]
   end
 
   def enqueue_typed_job(time: nil)
     send("schedule_auto_#{status_type_name}_job")
-  end
-
-  def self.type_job_map
-    {
-      close: :close_topic,
-      open: :open_topic,
-      publish_to_category: :publish_topic_to_category,
-      delete: :delete_topic,
-      reminder: :topic_reminder,
-      bump: :bump_topic,
-      delete_replies: :delete_replies,
-      silent_close: :close_topic,
-      clear_slow_mode: :clear_slow_mode,
-    }
-  end
-
-  def self.types
-    @types ||=
-      Enum.new(
-        close: 1,
-        open: 2,
-        publish_to_category: 3,
-        delete: 4,
-        reminder: 5,
-        bump: 6,
-        delete_replies: 7,
-        silent_close: 8,
-        clear_slow_mode: 9,
-      )
-  end
-
-  def self.public_types
-    @_public_types ||= types.except(:reminder, :clear_slow_mode)
-  end
-
-  def self.private_types
-    @_private_types ||= types.only(:reminder, :clear_slow_mode)
-  end
-
-  def self.destructive_types
-    @_destructive_types ||= types.only(:delete, :delete_replies)
   end
 
   def public_type?

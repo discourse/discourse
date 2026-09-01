@@ -2,18 +2,20 @@
 
 module TurboTests
   class Reporter
-    def self.from_config(formatter_config, start_time, max_timings_count: nil)
-      reporter = new(start_time:, max_timings_count:)
+    class << self
+      def from_config(formatter_config, start_time, max_timings_count: nil)
+        reporter = new(start_time:, max_timings_count:)
 
-      formatter_config.each do |config|
-        name, outputs = config.values_at(:name, :outputs)
+        formatter_config.each do |config|
+          name, outputs = config.values_at(:name, :outputs)
 
-        outputs.map! { |filename| filename == "-" ? STDOUT : File.open(filename, "w") }
+          outputs.map! { |filename| filename == "-" ? STDOUT : File.open(filename, "w") }
 
-        reporter.add(name, outputs)
+          reporter.add(name, outputs)
+        end
+
+        reporter
       end
-
-      reporter
     end
 
     attr_reader :pending_examples

@@ -274,32 +274,46 @@ module DiscourseWorkflows
             "moderate moderation unlist unlisted topic visibility invisible",
         }.freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Lists available Discourse workflow node types with versions, parameters, capabilities, output contracts, and examples.",
-            parameters: [
-              {
-                name: "query",
-                description: "Optional search terms for node type, name, group, or parameter names",
-                type: "string",
-                required: false,
-              },
-              {
-                name: "include_examples",
-                description: "Whether to include curated examples for matching nodes",
-                type: "boolean",
-                required: false,
-              },
-            ],
-          }
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Lists available Discourse workflow node types with versions, parameters, capabilities, output contracts, and examples.",
+              parameters: [
+                {
+                  name: "query",
+                  description:
+                    "Optional search terms for node type, name, group, or parameter names",
+                  type: "string",
+                  required: false,
+                },
+                {
+                  name: "include_examples",
+                  description: "Whether to include curated examples for matching nodes",
+                  type: "boolean",
+                  required: false,
+                },
+              ],
+            }
+          end
+
+          def name
+            "workflow_node_catalog"
+          end
         end
 
-        def self.name
-          "workflow_node_catalog"
+        class << self
+          def query_terms(query)
+            query
+              .to_s
+              .downcase
+              .scan(/[a-z0-9_:-]+/)
+              .map { |term| term.delete_prefix("type:") }
+              .reject { |term| QUERY_STOP_WORDS.include?(term) }
+              .uniq
+          end
         end
-
         def invoke
           return not_allowed_response if !ensure_can_manage_workflows!
 
@@ -315,16 +329,6 @@ module DiscourseWorkflows
             end
 
           { status: "success", nodes: nodes }
-        end
-
-        def self.query_terms(query)
-          query
-            .to_s
-            .downcase
-            .scan(/[a-z0-9_:-]+/)
-            .map { |term| term.delete_prefix("type:") }
-            .reject { |term| QUERY_STOP_WORDS.include?(term) }
-            .uniq
         end
 
         private

@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class Solutions < Scorable
-    def self.enabled?(leaderboard: nil)
-      defined?(DiscourseSolved) && SiteSetting.solved_enabled && super
-    end
+    class << self
+      def enabled?(leaderboard: nil)
+        defined?(DiscourseSolved) && SiteSetting.solved_enabled && super
+      end
 
-    def self.scorable_key
-      "solution"
-    end
+      def scorable_key
+        "solution"
+      end
 
-    def self.category_filter(leaderboard: nil)
-      return "" if scorable_category_list(leaderboard:).empty?
+      def category_filter(leaderboard: nil)
+        return "" if scorable_category_list(leaderboard:).empty?
 
-      <<~SQL
+        <<~SQL
         AND topics.category_id IN (#{scorable_category_list(leaderboard:)})
       SQL
-    end
+      end
 
-    def self.query(leaderboard: nil)
-      <<~SQL
+      def query(leaderboard: nil)
+        <<~SQL
         SELECT
           posts.user_id AS user_id,
           date_trunc('day', dsta.created_at) AS date,
@@ -41,6 +42,7 @@ module DiscourseGamification
         GROUP BY
           1, 2
       SQL
+      end
     end
   end
 end

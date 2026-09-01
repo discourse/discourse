@@ -3,28 +3,34 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
-  def self.queue_for_review_if_possible(post, created_or_edited_by)
-    return unless SiteSetting.review_every_post
-    return if post.post_type != Post.types[:regular] || post.topic.private_message?
-    return if Reviewable.pending.where(target: post).exists?
-    if created_or_edited_by.bot? || created_or_edited_by.staff? ||
-         created_or_edited_by.has_trust_level?(TrustLevel[4])
-      return
+  class << self
+    def queue_for_review_if_possible(post, created_or_edited_by)
+      return unless SiteSetting.review_every_post
+      return if post.post_type != Post.types[:regular] || post.topic.private_message?
+      return if Reviewable.pending.where(target: post).exists?
+      if created_or_edited_by.bot? || created_or_edited_by.staff? ||
+           created_or_edited_by.has_trust_level?(TrustLevel[4])
+        return
+      end
+      queue_for_review(post)
     end
-    queue_for_review(post)
-  end
 
-  def self.queue_for_review(post)
-    system_user = Discourse.system_user
+    def queue_for_review(post)
+      system_user = Discourse.system_user
 
-    needs_review!(
-      target: post,
-      topic: post.topic,
-      created_by: system_user,
-      reviewable_by_moderator: true,
-      potential_spam: false,
-    ).tap do |reviewable|
-      reviewable.add_score(system_user, ReviewableScore.types[:needs_approval], force_review: true)
+      needs_review!(
+        target: post,
+        topic: post.topic,
+        created_by: system_user,
+        reviewable_by_moderator: true,
+        potential_spam: false,
+      ).tap do |reviewable|
+        reviewable.add_score(
+          system_user,
+          ReviewableScore.types[:needs_approval],
+          force_review: true,
+        )
+      end
     end
   end
 

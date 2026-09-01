@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class UserRequiredFieldsVersion < ActiveRecord::Base
-  def self.current = maximum(:id) || 0
+  class << self
+    def current = maximum(:id) || 0
+  end
 end
 
 # == Schema Information

@@ -3,8 +3,10 @@
 class ApplicationLayoutPreloader
   include ReadOnlyMixin
 
-  def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
+  class << self
+    def banner_json_cache
+      @banner_json_cache ||= DistributedCache.new("banner_json")
+    end
   end
 
   def initialize(guardian:, theme_id:, theme_target:, login_method:)

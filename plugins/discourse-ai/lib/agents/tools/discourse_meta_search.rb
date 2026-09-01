@@ -74,6 +74,23 @@ module DiscourseAi
           end
         end
 
+        class << self
+          def categories
+            return @categories if defined?(@categories)
+
+            url = "https://meta.discourse.org/site.json"
+            json = JSON.parse(Net::HTTP.get(URI(url)))
+            @categories =
+              json["categories"]
+                .map do |c|
+                  [
+                    c["id"],
+                    { "name" => c["name"], "parent_category_id" => c["parent_category_id"] },
+                  ]
+                end
+                .to_h
+          end
+        end
         def search_args
           parameters.slice(:category, :user, :order, :max_posts, :tags, :before, :after, :status)
         end
@@ -152,19 +169,6 @@ module DiscourseAi
         end
 
         protected
-
-        def self.categories
-          return @categories if defined?(@categories)
-
-          url = "https://meta.discourse.org/site.json"
-          json = JSON.parse(Net::HTTP.get(URI(url)))
-          @categories =
-            json["categories"]
-              .map do |c|
-                [c["id"], { "name" => c["name"], "parent_category_id" => c["parent_category_id"] }]
-              end
-              .to_h
-        end
 
         def description_args
           {

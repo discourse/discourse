@@ -5,15 +5,16 @@ require_relative "../mixins/git_blob_onebox"
 module Onebox
   module Engine
     class GitlabBlobOnebox
-      def self.git_regexp
-        %r{^https?://(?:www\.)?gitlab\.com/.*/blob/.*}
-      end
-
-      def self.onebox_name
-        "gitlabblob"
-      end
-
       include Onebox::Mixins::GitBlobOnebox
+      class << self
+        def git_regexp
+          %r{^https?://(?:www\.)?gitlab\.com/.*/blob/.*}
+        end
+
+        def onebox_name
+          "gitlabblob"
+        end
+      end
 
       def i18n
         {

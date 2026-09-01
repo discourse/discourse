@@ -239,6 +239,12 @@ module OmniAuth
         }.merge(token_params.to_hash(symbolize_keys: true))
       end
 
+      def build_access_token
+        return super if options.use_userinfo
+        response =
+          client.request(:post, options[:client_options][:token_url], body: get_token_options)
+        ::OAuth2::AccessToken.from_hash(client, response.parsed)
+      end
       def prune!(hash)
         hash.delete_if do |_, v|
           prune!(v) if v.is_a?(Hash)
@@ -247,13 +253,6 @@ module OmniAuth
       end
 
       protected
-
-      def build_access_token
-        return super if options.use_userinfo
-        response =
-          client.request(:post, options[:client_options][:token_url], body: get_token_options)
-        ::OAuth2::AccessToken.from_hash(client, response.parsed)
-      end
     end
   end
 end

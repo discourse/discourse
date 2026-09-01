@@ -84,8 +84,10 @@ RSpec.describe DiscourseWorkflows::CredentialDataValidator do
     it "ignores non-required fields" do
       type_class =
         Class.new do
-          def self.property_schema
-            { foo: { type: :string, required: true }, bar: { type: :string } }
+          class << self
+            def property_schema
+              { foo: { type: :string, required: true }, bar: { type: :string } }
+            end
           end
         end
 
@@ -95,7 +97,12 @@ RSpec.describe DiscourseWorkflows::CredentialDataValidator do
     end
 
     it "returns empty array when schema is empty" do
-      type_class = Class.new { def self.property_schema = {} }
+      type_class =
+        Class.new do
+          class << self
+            def property_schema = {}
+          end
+        end
 
       result = described_class.call(credential_type: type_class, data: { "anything" => "x" })
 
@@ -103,7 +110,12 @@ RSpec.describe DiscourseWorkflows::CredentialDataValidator do
     end
 
     it "returns empty array when schema is nil" do
-      type_class = Class.new { def self.property_schema = nil }
+      type_class =
+        Class.new do
+          class << self
+            def property_schema = nil
+          end
+        end
 
       result = described_class.call(credential_type: type_class, data: {})
 

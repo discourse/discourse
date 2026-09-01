@@ -142,16 +142,18 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
   context "with different data types" do
     class TestEnumClass
-      def self.valid_value?(v)
-        values.include?(v)
-      end
+      class << self
+        def valid_value?(v)
+          values.include?(v)
+        end
 
-      def self.values
-        ["en"]
-      end
+        def values
+          ["en"]
+        end
 
-      def self.translate_names?
-        false
+        def translate_names?
+          false
+        end
       end
     end
 
@@ -169,8 +171,10 @@ RSpec.describe SiteSettings::TypeSupervisor do
     end
 
     class TestJsonSchemaClass
-      def self.schema
-        { type: "array", items: { type: "object", properties: { name: { type: "string" } } } }
+      class << self
+        def schema
+          { type: "array", items: { type: "object", properties: { name: { type: "string" } } } }
+        end
       end
     end
 
@@ -492,16 +496,18 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
   describe ".type_hash" do
     class TestEnumClass2
-      def self.valid_value?(v)
-        values.include?(v)
-      end
+      class << self
+        def valid_value?(v)
+          values.include?(v)
+        end
 
-      def self.values
-        %w[a b]
-      end
+        def values
+          %w[a b]
+        end
 
-      def self.translate_names?
-        false
+        def translate_names?
+          false
+        end
       end
     end
 
@@ -649,20 +655,22 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
   describe "list type with enum class" do
     class TestListEnumClass
-      def self.valid_value?(v)
-        v.to_s.split("|").all? { |item| valid_items.include?(item) }
-      end
+      class << self
+        def valid_value?(v)
+          v.to_s.split("|").all? { |item| valid_items.include?(item) }
+        end
 
-      def self.valid_items
-        %w[item1 item2 item3]
-      end
+        def valid_items
+          %w[item1 item2 item3]
+        end
 
-      def self.values
-        valid_items.map { |item| { name: item.titleize, value: item } }
-      end
+        def values
+          valid_items.map { |item| { name: item.titleize, value: item } }
+        end
 
-      def self.translate_names?
-        true
+        def translate_names?
+          true
+        end
       end
     end
 

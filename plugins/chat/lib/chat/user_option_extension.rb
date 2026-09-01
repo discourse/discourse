@@ -2,62 +2,64 @@
 
 module Chat
   module UserOptionExtension
-    def self.prepended(base)
-      def base.chat_email_frequencies
-        @chat_email_frequencies ||= { never: 0, when_away: 1 }
-      end
+    class << self
+      def prepended(base)
+        def base.chat_email_frequencies
+          @chat_email_frequencies ||= { never: 0, when_away: 1 }
+        end
 
-      # Avoid attempting to override when autoloading
-      if !base.method_defined?(:send_chat_email_never?)
-        base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
-      end
+        # Avoid attempting to override when autoloading
+        if !base.method_defined?(:send_chat_email_never?)
+          base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
+        end
 
-      def base.chat_header_indicator_preferences
-        @chat_header_indicator_preferences ||= {
-          all_new: 0,
-          dm_and_mentions: 1,
-          never: 2,
-          only_mentions: 3,
-        }
-      end
+        def base.chat_header_indicator_preferences
+          @chat_header_indicator_preferences ||= {
+            all_new: 0,
+            dm_and_mentions: 1,
+            never: 2,
+            only_mentions: 3,
+          }
+        end
 
-      # Avoid attempting to override when autoloading
-      if !base.method_defined?(:chat_header_indicator_never?)
-        base.enum :chat_header_indicator_preference,
-                  base.chat_header_indicator_preferences,
-                  prefix: "chat_header_indicator"
-      end
+        # Avoid attempting to override when autoloading
+        if !base.method_defined?(:chat_header_indicator_never?)
+          base.enum :chat_header_indicator_preference,
+                    base.chat_header_indicator_preferences,
+                    prefix: "chat_header_indicator"
+        end
 
-      def base.chat_separate_sidebar_mode
-        @chat_separate_sidebar_mode ||= { default: 0, never: 1, always: 2, fullscreen: 3 }
-      end
+        def base.chat_separate_sidebar_mode
+          @chat_separate_sidebar_mode ||= { default: 0, never: 1, always: 2, fullscreen: 3 }
+        end
 
-      # Avoid attempting to override when autoloading
-      if !base.method_defined?(:chat_separate_sidebar_mode_default?)
-        base.enum :chat_separate_sidebar_mode,
-                  base.chat_separate_sidebar_mode,
-                  prefix: "chat_separate_sidebar_mode"
-      end
+        # Avoid attempting to override when autoloading
+        if !base.method_defined?(:chat_separate_sidebar_mode_default?)
+          base.enum :chat_separate_sidebar_mode,
+                    base.chat_separate_sidebar_mode,
+                    prefix: "chat_separate_sidebar_mode"
+        end
 
-      if !base.method_defined?(:show_thread_title_prompts?)
-        base.attribute :show_thread_title_prompts, :boolean, default: true
-      end
+        if !base.method_defined?(:show_thread_title_prompts?)
+          base.attribute :show_thread_title_prompts, :boolean, default: true
+        end
 
-      if !base.method_defined?(:chat_announce_new_messages?)
-        base.attribute :chat_announce_new_messages, :boolean, default: true
-      end
+        if !base.method_defined?(:chat_announce_new_messages?)
+          base.attribute :chat_announce_new_messages, :boolean, default: true
+        end
 
-      if !base.method_defined?(:chat_new_message_sound?)
-        base.attribute :chat_new_message_sound, :boolean, default: false
-      end
+        if !base.method_defined?(:chat_new_message_sound?)
+          base.attribute :chat_new_message_sound, :boolean, default: false
+        end
 
-      if !base.method_defined?(:chat_quick_reaction_type_frequent?)
-        base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
-      end
+        if !base.method_defined?(:chat_quick_reaction_type_frequent?)
+          base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
+        end
 
-      if !base.method_defined?(:chat_send_shortcut)
-        base.define_method(:chat_send_shortcut) { send_shortcut }
-        base.define_method(:chat_send_shortcut=) { |value| self.send_shortcut = value }
+        if !base.method_defined?(:chat_send_shortcut)
+          base.define_method(:chat_send_shortcut) { send_shortcut }
+          base.define_method(:chat_send_shortcut=) { |value| self.send_shortcut = value }
+        end
       end
     end
   end

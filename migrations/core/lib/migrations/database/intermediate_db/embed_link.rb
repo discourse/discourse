@@ -48,33 +48,35 @@ module Migrations
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
         # @see Migrations::Database::IntermediateDB::Enums::LinkTarget
-        def self.create(
-          owner_id:,
-          owner_type:,
-          placeholder:,
-          target_id: nil,
-          target_name: nil,
-          target_post_number: nil,
-          target_suffix: nil,
-          target_topic_id: nil,
-          target_type: nil,
-          text: nil,
-          url: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            owner_id,
-            owner_type,
-            placeholder,
-            target_id,
-            target_name,
-            target_post_number,
-            target_suffix,
-            target_topic_id,
-            target_type,
-            text,
-            url,
+        class << self
+          def create(
+            owner_id:,
+            owner_type:,
+            placeholder:,
+            target_id: nil,
+            target_name: nil,
+            target_post_number: nil,
+            target_suffix: nil,
+            target_topic_id: nil,
+            target_type: nil,
+            text: nil,
+            url: nil
           )
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              owner_id,
+              owner_type,
+              placeholder,
+              target_id,
+              target_name,
+              target_post_number,
+              target_suffix,
+              target_topic_id,
+              target_type,
+              text,
+              url,
+            )
+          end
         end
       end
     end

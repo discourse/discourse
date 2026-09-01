@@ -14,9 +14,11 @@ class CustomEmoji < ActiveRecord::Base
   validates :upload_id, presence: true
   validates :user_id, presence: true
 
-  def self.normalize_group(group)
-    normalized = group.to_s.strip.downcase.presence
-    normalized == DEFAULT_GROUP ? nil : normalized
+  class << self
+    def normalize_group(group)
+      normalized = group.to_s.strip.downcase.presence
+      normalized == DEFAULT_GROUP ? nil : normalized
+    end
   end
 
   before_validation :set_default_user_id, on: :create

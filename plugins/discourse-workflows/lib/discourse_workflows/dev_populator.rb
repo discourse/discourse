@@ -5,8 +5,10 @@ module DiscourseWorkflows
     MANUAL_LOG_WORKFLOW_NAME = "Example: Log manual trigger"
     TOPIC_BUTTON_WORKFLOW_NAME = "Example: Topic admin reply button"
 
-    def self.populate!
-      new.populate!
+    class << self
+      def populate!
+        new.populate!
+      end
     end
 
     def populate!

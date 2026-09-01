@@ -33,129 +33,132 @@ module DiscourseWorkflows
     TERMINAL_STATUSES_FOR_PURGE = %i[success error rate_limited skipped].freeze
     PURGE_BATCH_SIZE = 5_000
 
-    def self.admin_execution_url(workflow_id, execution_id)
-      "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/" \
-        "#{workflow_id}/executions/#{execution_id}"
-    end
+    class << self
+      def admin_execution_url(workflow_id, execution_id)
+        "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/" \
+          "#{workflow_id}/executions/#{execution_id}"
+      end
 
-    def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
-      transaction do
-        create!(
-          workflow: workflow,
-          workflow_version_id: workflow.version_id,
-          trigger_node_id: trigger_node_id,
-          trigger_data: trigger_data,
-          status: :pending,
-          execution_mode: :manual,
-        ).tap do |execution|
-          ExecutionData.create!(
-            execution: execution,
-            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+      def create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
+        transaction do
+          create!(
+            workflow: workflow,
+            workflow_version_id: workflow.version_id,
+            trigger_node_id: trigger_node_id,
+            trigger_data: trigger_data,
+            status: :pending,
+            execution_mode: :manual,
+          ).tap do |execution|
+            ExecutionData.create!(
+              execution: execution,
+              workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+            )
+          end
+        end.tap do |execution|
+          ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+        end
+      end
+
+      def create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
+        transaction do
+          create!(
+            workflow: workflow,
+            workflow_version_id: workflow.version_id,
+            trigger_node_id: node_id,
+            trigger_data: trigger_data,
+            status: :pending,
+            execution_mode: :manual,
+          ).tap do |execution|
+            ExecutionData.create!(
+              execution: execution,
+              workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+              data: {
+                "entries" => {
+                },
+                "context" => {
+                },
+                "node_contexts" => {
+                },
+                "run_data" => run_data,
+              },
+            )
+          end
+        end.tap do |execution|
+          ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+        end
+      end
+
+      def purge_old
+        retention_days = SiteSetting.workflow_executions_retention_days
+        return if retention_days <= 0
+
+        cutoff = retention_days.days.ago
+        terminal_ids = statuses.values_at(*TERMINAL_STATUSES_FOR_PURGE)
+
+        loop do
+          ids =
+            where(status: terminal_ids)
+              .where("created_at < ?", cutoff)
+              .limit(PURGE_BATCH_SIZE)
+              .pluck(:id)
+          break if ids.empty?
+
+          ExecutionData.where(execution_id: ids).delete_all
+          WorkflowCallRun.remove_execution_references(ids)
+          where(id: ids).delete_all
+        end
+      end
+
+      def claim_for_resume(execution, resume_token: nil)
+        scope = where(id: execution.id, status: :waiting)
+        scope = scope.where(resume_token: resume_token) if resume_token
+
+        now = Time.current
+        affected = scope.update_all(status: statuses[:running], updated_at: now)
+        return nil if affected.zero?
+
+        execution.status = :running
+        execution.updated_at = now
+        ExecutionProgressPublisher.publish(execution)
+        execution
+      end
+
+      def claim_pending(execution)
+        now = Time.current
+        affected =
+          where(id: execution.id, status: :pending).update_all(
+            status: statuses[:running],
+            started_at: now,
+            updated_at: now,
           )
-        end
-      end.tap do |execution|
-        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+        return nil if affected.zero?
+
+        execution.status = :running
+        execution.started_at = now
+        execution.updated_at = now
+        ExecutionProgressPublisher.publish(execution)
+        execution
       end
-    end
 
-    def self.create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
-      transaction do
-        create!(
-          workflow: workflow,
-          workflow_version_id: workflow.version_id,
-          trigger_node_id: node_id,
-          trigger_data: trigger_data,
-          status: :pending,
-          execution_mode: :manual,
-        ).tap do |execution|
-          ExecutionData.create!(
-            execution: execution,
-            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
-            data: {
-              "entries" => {
-              },
-              "context" => {
-              },
-              "node_contexts" => {
-              },
-              "run_data" => run_data,
-            },
-          )
-        end
-      end.tap do |execution|
-        ExecutionProgressPublisher.publish_created(execution, workflow_name: workflow.name)
+      def compute_run_time_ms(steps)
+        waiting_types = NodeType.waiting_identifiers
+        timed =
+          steps.select do |s|
+            step_field(s, :started_at) && step_field(s, :finished_at) &&
+              waiting_types.exclude?(step_field(s, :node_type))
+          end
+        return if timed.empty?
+        total =
+          timed.sum do |s|
+            Time.parse(step_field(s, :finished_at).to_s) -
+              Time.parse(step_field(s, :started_at).to_s)
+          end
+        (total * 1000).round
       end
-    end
 
-    def self.purge_old
-      retention_days = SiteSetting.workflow_executions_retention_days
-      return if retention_days <= 0
-
-      cutoff = retention_days.days.ago
-      terminal_ids = statuses.values_at(*TERMINAL_STATUSES_FOR_PURGE)
-
-      loop do
-        ids =
-          where(status: terminal_ids)
-            .where("created_at < ?", cutoff)
-            .limit(PURGE_BATCH_SIZE)
-            .pluck(:id)
-        break if ids.empty?
-
-        ExecutionData.where(execution_id: ids).delete_all
-        WorkflowCallRun.remove_execution_references(ids)
-        where(id: ids).delete_all
+      def step_field(step, key)
+        step.is_a?(Hash) ? step[key.to_s] : step.public_send(key)
       end
-    end
-
-    def self.claim_for_resume(execution, resume_token: nil)
-      scope = where(id: execution.id, status: :waiting)
-      scope = scope.where(resume_token: resume_token) if resume_token
-
-      now = Time.current
-      affected = scope.update_all(status: statuses[:running], updated_at: now)
-      return nil if affected.zero?
-
-      execution.status = :running
-      execution.updated_at = now
-      ExecutionProgressPublisher.publish(execution)
-      execution
-    end
-
-    def self.claim_pending(execution)
-      now = Time.current
-      affected =
-        where(id: execution.id, status: :pending).update_all(
-          status: statuses[:running],
-          started_at: now,
-          updated_at: now,
-        )
-      return nil if affected.zero?
-
-      execution.status = :running
-      execution.started_at = now
-      execution.updated_at = now
-      ExecutionProgressPublisher.publish(execution)
-      execution
-    end
-
-    def self.compute_run_time_ms(steps)
-      waiting_types = NodeType.waiting_identifiers
-      timed =
-        steps.select do |s|
-          step_field(s, :started_at) && step_field(s, :finished_at) &&
-            waiting_types.exclude?(step_field(s, :node_type))
-        end
-      return if timed.empty?
-      total =
-        timed.sum do |s|
-          Time.parse(step_field(s, :finished_at).to_s) - Time.parse(step_field(s, :started_at).to_s)
-        end
-      (total * 1000).round
-    end
-
-    def self.step_field(step, key)
-      step.is_a?(Hash) ? step[key.to_s] : step.public_send(key)
     end
     private_class_method :step_field
 

@@ -23,8 +23,10 @@ module Migrations
         # @param normalization   [String]
         #
         # @return [void]
-        def self.create(normalization:)
-          Migrations::Database::IntermediateDB.insert(SQL, normalization)
+        class << self
+          def create(normalization:)
+            Migrations::Database::IntermediateDB.insert(SQL, normalization)
+          end
         end
       end
     end

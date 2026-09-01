@@ -44,14 +44,6 @@ class Auth::DefaultCurrentUserProvider
 
   TOKEN_SIZE = 32
 
-  def self.shared_session_redis_key(key)
-    "shared_session_user_auth_token_id:#{key}"
-  end
-
-  def self.store_shared_session_key(key, token_id)
-    Discourse.redis.setex(shared_session_redis_key(key), 7.days, token_id)
-  end
-
   PARAMETER_API_PATTERNS = [
     RouteMatcher.new(
       methods: :get,
@@ -75,23 +67,34 @@ class Auth::DefaultCurrentUserProvider
     RouteMatcher.new(methods: :get, actions: "users#bookmarks", formats: :ics),
     RouteMatcher.new(methods: :post, actions: "admin/email#handle_mail", formats: nil),
   ]
+  class << self
+    def shared_session_redis_key(key)
+      "shared_session_user_auth_token_id:#{key}"
+    end
 
-  def self.find_v0_auth_cookie(request)
-    cookie = request.cookies[TOKEN_COOKIE]
-
-    cookie if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
+    def store_shared_session_key(key, token_id)
+      Discourse.redis.setex(shared_session_redis_key(key), 7.days, token_id)
+    end
   end
 
-  def self.find_v1_auth_cookie(env)
-    return env[DECRYPTED_AUTH_COOKIE] if env.key?(DECRYPTED_AUTH_COOKIE)
-
-    env[DECRYPTED_AUTH_COOKIE] = begin
-      request = ActionDispatch::Request.new(env)
+  class << self
+    def find_v0_auth_cookie(request)
       cookie = request.cookies[TOKEN_COOKIE]
 
-      # don't even initialize a cookie jar if we don't have a cookie at all
-      if cookie&.valid_encoding? && cookie.present?
-        request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
+      cookie if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
+    end
+
+    def find_v1_auth_cookie(env)
+      return env[DECRYPTED_AUTH_COOKIE] if env.key?(DECRYPTED_AUTH_COOKIE)
+
+      env[DECRYPTED_AUTH_COOKIE] = begin
+        request = ActionDispatch::Request.new(env)
+        cookie = request.cookies[TOKEN_COOKIE]
+
+        # don't even initialize a cookie jar if we don't have a cookie at all
+        if cookie&.valid_encoding? && cookie.present?
+          request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
+        end
       end
     end
   end

@@ -3,8 +3,10 @@
 module DiscourseAi
   module Agents
     class SentimentClassifier < Agent
-      def self.default_enabled
-        false
+      class << self
+        def default_enabled
+          false
+        end
       end
 
       def system_prompt

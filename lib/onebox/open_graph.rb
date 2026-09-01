@@ -2,6 +2,7 @@
 
 module Onebox
   class OpenGraph < Normalizer
+    COLLECTIONS = %i[article_section article_section_color article_tag]
     def initialize(doc)
       @data = extract(doc)
     end
@@ -21,8 +22,6 @@ module Onebox
     end
 
     private
-
-    COLLECTIONS = %i[article_section article_section_color article_tag]
 
     def extract(doc)
       return {} if doc.blank?

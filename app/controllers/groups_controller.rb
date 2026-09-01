@@ -41,6 +41,9 @@ class GroupsController < ApplicationController
   }
   ADD_MEMBERS_LIMIT = 1000
 
+  MEMBERS_MAX_PAGE_SIZE = 1_000
+  MEMBERS_DEFAULT_PAGE_SIZE = 50
+  MAX_NOTIFIED_OWNERS = 20
   def index
     unless SiteSetting.enable_group_directory? || current_user&.staff?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
@@ -275,9 +278,6 @@ class GroupsController < ApplicationController
 
     render "posts/latest", formats: [:rss]
   end
-
-  MEMBERS_MAX_PAGE_SIZE = 1_000
-  MEMBERS_DEFAULT_PAGE_SIZE = 50
 
   def members
     group = find_group(:name)
@@ -610,8 +610,6 @@ class GroupsController < ApplicationController
       GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
     end
   end
-
-  MAX_NOTIFIED_OWNERS = 20
 
   def request_membership
     params.require(:reason)

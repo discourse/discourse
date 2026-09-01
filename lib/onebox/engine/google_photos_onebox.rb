@@ -9,8 +9,10 @@ module Onebox
       matches_domain("photos.google.com", "photos.app.goo.gl")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/.*$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/.*$})
+        end
       end
 
       def to_html

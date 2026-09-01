@@ -20,6 +20,13 @@ class Plugin::Metadata
     label: 20,
   }
 
+  class << self
+    def parse(text)
+      metadata = new
+      text.each_line { |line| break unless metadata.parse_line(line) }
+      metadata
+    end
+  end
   def meta_topic_id=(value)
     @meta_topic_id =
       begin
@@ -27,12 +34,6 @@ class Plugin::Metadata
       rescue StandardError
         nil
       end
-  end
-
-  def self.parse(text)
-    metadata = new
-    text.each_line { |line| break unless metadata.parse_line(line) }
-    metadata
   end
 
   def official?

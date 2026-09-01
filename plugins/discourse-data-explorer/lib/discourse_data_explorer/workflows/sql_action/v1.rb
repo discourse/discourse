@@ -110,33 +110,35 @@ module DiscourseDataExplorer
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "queries"
-            queries.select { |query| context.matches_filter?(query[:name]) }
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "queries"
+              queries.select { |query| context.matches_filter?(query[:name]) }
+            end
           end
-        end
 
-        def self.queries
-          persisted = DiscourseDataExplorer::Query.where(hidden: false).order(:name).to_a
+          def queries
+            persisted = DiscourseDataExplorer::Query.where(hidden: false).order(:name).to_a
 
-          persisted_ids = persisted.map(&:id).to_set
+            persisted_ids = persisted.map(&:id).to_set
 
-          unpersisted_defaults =
-            DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
-              next if persisted_ids.include?(attributes[:id])
-              DiscourseDataExplorer::Query.new(
-                id: attributes[:id],
-                name: attributes[:name],
-                sql: attributes[:sql],
-              ) { |q| q.user_id = Discourse::SYSTEM_USER_ID }
-            end
+            unpersisted_defaults =
+              DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
+                next if persisted_ids.include?(attributes[:id])
+                DiscourseDataExplorer::Query.new(
+                  id: attributes[:id],
+                  name: attributes[:name],
+                  sql: attributes[:sql],
+                ) { |q| q.user_id = Discourse::SYSTEM_USER_ID }
+              end
 
-          (persisted + unpersisted_defaults)
-            .sort_by(&:name)
-            .map do |q|
-              { id: q.id, name: q.name, params: q.params.reject(&:internal?).map(&:to_hash) }
-            end
+            (persisted + unpersisted_defaults)
+              .sort_by(&:name)
+              .map do |q|
+                { id: q.id, name: q.name, params: q.params.reject(&:internal?).map(&:to_hash) }
+              end
+          end
         end
 
         def execute(exec_ctx)

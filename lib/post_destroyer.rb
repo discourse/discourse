@@ -5,35 +5,36 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
-  def self.destroy_old_hidden_posts
-    Post
-      .where(deleted_at: nil, hidden: true)
-      .where("hidden_at < ?", 30.days.ago)
-      .find_each do |post|
-        PostDestroyer.new(
-          Discourse.system_user,
-          post,
-          context: "Automatically destroyed hidden posts",
-        ).destroy
-      end
-  end
+  class << self
+    def destroy_old_hidden_posts
+      Post
+        .where(deleted_at: nil, hidden: true)
+        .where("hidden_at < ?", 30.days.ago)
+        .find_each do |post|
+          PostDestroyer.new(
+            Discourse.system_user,
+            post,
+            context: "Automatically destroyed hidden posts",
+          ).destroy
+        end
+    end
 
-  def self.destroy_stubs
-    context = I18n.t("remove_posts_deleted_by_author")
+    def destroy_stubs
+      context = I18n.t("remove_posts_deleted_by_author")
 
-    # exclude deleted topics and posts that are actively flagged
-    Post
-      .where(deleted_at: nil, user_deleted: true)
-      .where(
-        "NOT EXISTS (
+      # exclude deleted topics and posts that are actively flagged
+      Post
+        .where(deleted_at: nil, user_deleted: true)
+        .where(
+          "NOT EXISTS (
             SELECT 1 FROM topics t
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )",
-      )
-      .where("updated_at < ?", SiteSetting.delete_removed_posts_after.hours.ago)
-      .where(
-        "NOT EXISTS (
+        )
+        .where("updated_at < ?", SiteSetting.delete_removed_posts_after.hours.ago)
+        .where(
+          "NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
                   WHERE pa.post_id = posts.id
@@ -41,21 +42,24 @@ class PostDestroyer
                     AND pa.deferred_at IS NULL
                     AND pa.post_action_type_id IN (?)
               )",
-        PostActionType.notify_flag_type_ids,
-      )
-      .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
-  end
-
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
-    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
-    replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
-
-    options = { defer_flags: defer_reply_flags }
-    if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
+          PostActionType.notify_flag_type_ids,
+        )
+        .find_each do |post|
+          PostDestroyer.new(Discourse.system_user, post, context: context).destroy
+        end
     end
-    replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
+
+    def delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+      reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+      replies = Post.where(id: reply_ids.map { |r| r[:id] })
+      PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+
+      options = { defer_flags: defer_reply_flags }
+      if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+        options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
+      end
+      replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
+    end
   end
 
   def initialize(user, post, opts = {})

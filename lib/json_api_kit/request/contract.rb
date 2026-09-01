@@ -17,9 +17,8 @@ module JsonApiKit
         end
       end
 
-      INDIFFERENT_HASH = IndifferentHashType.new
-
       include RawAttributes
+      INDIFFERENT_HASH = IndifferentHashType.new
 
       validate :check_shapes
       validate :check_unknown_parameters

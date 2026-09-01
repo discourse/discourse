@@ -9,20 +9,22 @@ module DiscourseAi
 
         attr_reader :name, :description, :type, :required, :enum, :item_type
 
-        def self.from_hash(hash)
-          extra_keys = hash.keys - ALLOWED_KEYS
-          if !extra_keys.empty?
-            raise ArgumentError, "Unexpected keys in parameter definition: #{extra_keys}"
-          end
+        class << self
+          def from_hash(hash)
+            extra_keys = hash.keys - ALLOWED_KEYS
+            if !extra_keys.empty?
+              raise ArgumentError, "Unexpected keys in parameter definition: #{extra_keys}"
+            end
 
-          new(
-            name: hash[:name],
-            description: hash[:description],
-            type: hash[:type],
-            required: hash[:required],
-            enum: hash[:enum],
-            item_type: hash[:item_type],
-          )
+            new(
+              name: hash[:name],
+              description: hash[:description],
+              type: hash[:type],
+              required: hash[:required],
+              enum: hash[:enum],
+              item_type: hash[:item_type],
+            )
+          end
         end
 
         def initialize(name:, description:, type:, required: false, enum: nil, item_type: nil)
@@ -95,53 +97,37 @@ module DiscourseAi
         end
       end
 
-      def parameters_json_schema
-        return @json_schema if @json_schema
-
-        properties = {}
-        required = []
-
-        result = { type: "object", properties: properties, required: required }
-
-        parameters.each do |param|
-          name = param.name
-          required << name if param.required
-          properties[name] = { type: param.type, description: param.description }
-          properties[name][:items] = { type: param.item_type || :string } if param.type == :array
-          properties[name][:enum] = param.enum if param.enum
-        end
-
-        result
-      end
-
-      attr_reader :name, :description, :parameters, :json_schema
-
-      def self.from_hash(hash)
-        allowed_keys = %i[name description parameters json_schema]
-        extra_keys = hash.keys - allowed_keys
-        if !extra_keys.empty?
-          raise ArgumentError, "Unexpected keys in tool definition: #{extra_keys}"
-        end
-
-        if hash[:json_schema]
-          return(
-            new(name: hash[:name], description: hash[:description], json_schema: hash[:json_schema])
-          )
-        end
-
-        params = hash[:parameters] || []
-        parameter_objects =
-          params.map do |param|
-            if param.is_a?(Hash)
-              ParameterDefinition.from_hash(param)
-            else
-              param
-            end
+      class << self
+        def from_hash(hash)
+          allowed_keys = %i[name description parameters json_schema]
+          extra_keys = hash.keys - allowed_keys
+          if !extra_keys.empty?
+            raise ArgumentError, "Unexpected keys in tool definition: #{extra_keys}"
           end
 
-        new(name: hash[:name], description: hash[:description], parameters: parameter_objects)
-      end
+          if hash[:json_schema]
+            return(
+              new(
+                name: hash[:name],
+                description: hash[:description],
+                json_schema: hash[:json_schema],
+              )
+            )
+          end
 
+          params = hash[:parameters] || []
+          parameter_objects =
+            params.map do |param|
+              if param.is_a?(Hash)
+                ParameterDefinition.from_hash(param)
+              else
+                param
+              end
+            end
+
+          new(name: hash[:name], description: hash[:description], parameters: parameter_objects)
+        end
+      end
       def initialize(name:, description:, parameters: [], json_schema: nil)
         raise ArgumentError, "name must be a string" if !name.is_a?(String) || name.empty?
 
@@ -170,6 +156,26 @@ module DiscourseAi
         @description = description
         @parameters = parameters
       end
+      def parameters_json_schema
+        return @json_schema if @json_schema
+
+        properties = {}
+        required = []
+
+        result = { type: "object", properties: properties, required: required }
+
+        parameters.each do |param|
+          name = param.name
+          required << name if param.required
+          properties[name] = { type: param.type, description: param.description }
+          properties[name][:items] = { type: param.item_type || :string } if param.type == :array
+          properties[name][:enum] = param.enum if param.enum
+        end
+
+        result
+      end
+
+      attr_reader :name, :description, :parameters, :json_schema
 
       def to_h
         return { name: @name, description: @description, json_schema: @json_schema } if @json_schema

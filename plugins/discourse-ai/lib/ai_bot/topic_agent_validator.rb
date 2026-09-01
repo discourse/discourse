@@ -3,8 +3,10 @@
 module DiscourseAi
   module AiBot
     class TopicAgentValidator
-      def self.validate(topic, topic_creator)
-        new(topic, topic_creator).validate
+      class << self
+        def validate(topic, topic_creator)
+          new(topic, topic_creator).validate
+        end
       end
 
       def initialize(topic, topic_creator)

@@ -5,7 +5,9 @@ module JsonApiKit
     class Readable
       ALWAYS = ->(_guardian) { true }
 
-      def self.for(rule) = (rule.arity == 2 ? PerRecord : PerUser).new(rule)
+      class << self
+        def for(rule) = (rule.arity == 2 ? PerRecord : PerUser).new(rule)
+      end
 
       def initialize(rule)
         @rule = rule

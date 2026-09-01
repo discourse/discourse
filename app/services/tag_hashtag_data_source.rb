@@ -4,99 +4,103 @@
 # results when looking up a tag slug via markdown or searching for
 # tags via the # autocomplete character.
 class TagHashtagDataSource
-  def self.enabled?
-    SiteSetting.tagging_enabled
-  end
+  class << self
+    def enabled?
+      SiteSetting.tagging_enabled
+    end
 
-  def self.icon
-    "tag"
-  end
+    def icon
+      "tag"
+    end
 
-  def self.type
-    "tag"
-  end
+    def type
+      "tag"
+    end
 
-  def self.style_type
-    "icon"
-  end
+    def style_type
+      "icon"
+    end
 
-  def self.tag_to_hashtag_item(tag, guardian)
-    topic_count_column = Tag.topic_count_column(guardian)
+    def tag_to_hashtag_item(tag, guardian)
+      topic_count_column = Tag.topic_count_column(guardian)
 
-    tag =
-      Tag.new(
-        tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
-      ) if tag.is_a?(Hash)
+      tag =
+        Tag.new(
+          tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
+        ) if tag.is_a?(Hash)
 
-    HashtagAutocompleteService::HashtagItem.new.tap do |item|
-      item.text = tag.name
-      item.secondary_text = "x#{tag.public_send(topic_count_column)}"
-      item.description = tag.description
-      item.slug = tag.name
-      item.relative_url = tag.url
-      item.icon = icon
-      item.style_type = style_type
-      item.id = tag.id
+      HashtagAutocompleteService::HashtagItem.new.tap do |item|
+        item.text = tag.name
+        item.secondary_text = "x#{tag.public_send(topic_count_column)}"
+        item.description = tag.description
+        item.slug = tag.name
+        item.relative_url = tag.url
+        item.icon = icon
+        item.style_type = style_type
+        item.id = tag.id
+      end
     end
   end
   private_class_method :tag_to_hashtag_item
 
-  def self.lookup(guardian, slugs)
-    DiscourseTagging
-      .filter_visible(Tag.where_name(slugs), guardian)
-      .map { |tag| tag_to_hashtag_item(tag, guardian) }
-  end
+  class << self
+    def lookup(guardian, slugs)
+      DiscourseTagging
+        .filter_visible(Tag.where_name(slugs), guardian)
+        .map { |tag| tag_to_hashtag_item(tag, guardian) }
+    end
 
-  def self.search(
-    guardian,
-    term,
-    limit,
-    condition = HashtagAutocompleteService.search_conditions[:contains]
-  )
-    tags_with_counts, _ =
-      DiscourseTagging.filter_allowed_tags(
-        guardian,
-        term: term,
-        term_type:
-          (
-            if condition == HashtagAutocompleteService.search_conditions[:starts_with]
-              DiscourseTagging.term_types[:starts_with]
-            else
-              DiscourseTagging.term_types[:contains]
-            end
-          ),
-        with_context: true,
-        limit: limit,
-        order_search_results: true,
-      )
+    def search(
+      guardian,
+      term,
+      limit,
+      condition = HashtagAutocompleteService.search_conditions[:contains]
+    )
+      tags_with_counts, _ =
+        DiscourseTagging.filter_allowed_tags(
+          guardian,
+          term: term,
+          term_type:
+            (
+              if condition == HashtagAutocompleteService.search_conditions[:starts_with]
+                DiscourseTagging.term_types[:starts_with]
+              else
+                DiscourseTagging.term_types[:contains]
+              end
+            ),
+          with_context: true,
+          limit: limit,
+          order_search_results: true,
+        )
 
-    tags_with_counts = Tag.with_localizations(tags_with_counts)
+      tags_with_counts = Tag.with_localizations(tags_with_counts)
 
-    TagsController
-      .tag_counts_json(tags_with_counts, guardian)
-      .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, guardian) }
-  end
+      TagsController
+        .tag_counts_json(tags_with_counts, guardian)
+        .take(limit)
+        .map { |tag| tag_to_hashtag_item(tag, guardian) }
+    end
 
-  def self.search_sort(search_results, _)
-    search_results.sort_by { |item| item.text.downcase }
-  end
+    def search_sort(search_results, _)
+      search_results.sort_by { |item| item.text.downcase }
+    end
 
-  def self.search_without_term(guardian, limit)
-    tags_with_counts, _ =
-      DiscourseTagging.filter_allowed_tags(
-        guardian,
-        with_context: true,
-        limit: limit,
-        order_popularity: true,
-        excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
-      )
+    def search_without_term(guardian, limit)
+      tags_with_counts, _ =
+        DiscourseTagging.filter_allowed_tags(
+          guardian,
+          with_context: true,
+          limit: limit,
+          order_popularity: true,
+          excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
+        )
 
-    tags_with_counts = Tag.with_localizations(tags_with_counts)
+      tags_with_counts = Tag.with_localizations(tags_with_counts)
 
-    TagsController
-      .tag_counts_json(tags_with_counts, guardian)
-      .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, guardian) }
+      TagsController
+        .tag_counts_json(tags_with_counts, guardian)
+        .take(limit)
+        .map { |tag| tag_to_hashtag_item(tag, guardian) }
+    end
   end
 end

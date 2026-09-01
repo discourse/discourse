@@ -24,14 +24,16 @@ module Migrations
       # is enough on any machine — reserving more would just waste worker slots.
       RESERVED_CORES = 1
 
-      def self.available(reserved: RESERVED_CORES)
-        [usable_cpus - reserved, 1].max
-      end
+      class << self
+        def available(reserved: RESERVED_CORES)
+          [usable_cpus - reserved, 1].max
+        end
 
-      # The CFS quota can be fractional (e.g. `--cpus=1.5`), so floor it; never
-      # report fewer than one usable CPU.
-      def self.usable_cpus
-        [[Etc.nprocessors, Concurrent.available_processor_count.floor].min, 1].max
+        # The CFS quota can be fractional (e.g. `--cpus=1.5`), so floor it; never
+        # report fewer than one usable CPU.
+        def usable_cpus
+          [[Etc.nprocessors, Concurrent.available_processor_count.floor].min, 1].max
+        end
       end
     end
   end

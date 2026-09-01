@@ -8,17 +8,19 @@ class EmailChangeRequest < ActiveRecord::Base
 
   validates :new_email, presence: true, format: { with: EmailAddressValidator.email_regex }
 
-  def self.states
-    @states ||= Enum.new(authorizing_old: 1, authorizing_new: 2, complete: 3)
-  end
+  class << self
+    def states
+      @states ||= Enum.new(authorizing_old: 1, authorizing_new: 2, complete: 3)
+    end
 
-  def self.find_by_new_token(token)
-    EmailChangeRequest
-      .joins(
-        "INNER JOIN email_tokens ON email_tokens.id = email_change_requests.new_email_token_id",
-      )
-      .where("email_tokens.token_hash = ?", EmailToken.hash_token(token))
-      .last
+    def find_by_new_token(token)
+      EmailChangeRequest
+        .joins(
+          "INNER JOIN email_tokens ON email_tokens.id = email_change_requests.new_email_token_id",
+        )
+        .where("email_tokens.token_hash = ?", EmailToken.hash_token(token))
+        .last
+    end
   end
 
   def requested_by_admin?

@@ -4,8 +4,10 @@ class AdminDashboardSystem
   STORAGE_REPORT = "storage_stats"
   private_constant :STORAGE_REPORT
 
-  def self.build(guardian:)
-    new(guardian: guardian).build
+  class << self
+    def build(guardian:)
+      new(guardian: guardian).build
+    end
   end
 
   def initialize(guardian:)

@@ -25,18 +25,20 @@ module Migrations
       MAX_BYTES = 8 * 1024 # 8 KiB
 
       # Fills a fresh queue with the indices `0...count`.
-      def self.filled(count)
-        reader, writer = IO.pipe
-        # Guard so a bad caller fails loudly instead of deadlocking on a full pipe.
-        if count * WIDTH > MAX_BYTES
-          reader.close
-          writer.close
-          raise ArgumentError, "ChunkQueue can't hold #{count} chunks in the pipe buffer"
-        end
+      class << self
+        def filled(count)
+          reader, writer = IO.pipe
+          # Guard so a bad caller fails loudly instead of deadlocking on a full pipe.
+          if count * WIDTH > MAX_BYTES
+            reader.close
+            writer.close
+            raise ArgumentError, "ChunkQueue can't hold #{count} chunks in the pipe buffer"
+          end
 
-        count.times { |index| writer.write(format("%0#{WIDTH}d", index)) }
-        writer.close
-        new(reader)
+          count.times { |index| writer.write(format("%0#{WIDTH}d", index)) }
+          writer.close
+          new(reader)
+        end
       end
 
       def initialize(reader)

@@ -7,16 +7,18 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      def self.domains
-        %w[
-          stackexchange.com
-          stackoverflow.com
-          superuser.com
-          serverfault.com
-          askubuntu.com
-          stackapps.com
-          mathoverflow.net
-        ].map { |domain| Regexp.escape(domain) }
+      class << self
+        def domains
+          %w[
+            stackexchange.com
+            stackoverflow.com
+            superuser.com
+            serverfault.com
+            askubuntu.com
+            stackapps.com
+            mathoverflow.net
+          ].map { |domain| Regexp.escape(domain) }
+        end
       end
 
       matches_regexp(

@@ -4,12 +4,14 @@ module DiscourseAi
   module AiBot
     class PostStreamer
       # test only
-      def self.on_callback=(on_callback)
-        @on_callback = on_callback
-      end
+      class << self
+        def on_callback=(on_callback)
+          @on_callback = on_callback
+        end
 
-      def self.on_callback
-        @on_callback
+        def on_callback
+          @on_callback
+        end
       end
 
       def initialize(delay: 0.5)

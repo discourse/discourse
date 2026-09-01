@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class AdminDashboardGeneralData < AdminDashboardData
+  class << self
+    def stats_cache_key
+      "general-dashboard-data-#{Report::SCHEMA_VERSION}"
+    end
+  end
   def get_json
     days_since_update =
       Discourse.last_commit_date ? ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i : nil
@@ -10,9 +15,5 @@ class AdminDashboardGeneralData < AdminDashboardData
       release_notes_link:
         "https://meta.discourse.org/c/announcements/67?tags=release-notes&before=#{days_since_update}",
     }
-  end
-
-  def self.stats_cache_key
-    "general-dashboard-data-#{Report::SCHEMA_VERSION}"
   end
 end

@@ -8,45 +8,62 @@ require_relative "console_formatter"
 module DiscourseAi
   module Evals
     class Recorder
-      def self.with_cassette(
-        an_eval,
-        agent_key: nil,
-        output: $stdout,
-        total_targets: 1,
-        formatter: nil,
-        announce_formatter: true,
-        finalize_formatter: true
-      )
-        logs_dir = File.join(__dir__, "../log")
-        FileUtils.mkdir_p(logs_dir)
-
-        now = Time.now.strftime("%Y%m%d-%H%M%S")
-        normalized_key = normalize_agent_key(agent_key)
-        agent_segment = sanitized_agent_key(normalized_key)
-        base_filename = [an_eval.id, agent_segment, now].compact.join("-")
-        structured_log_filename = "#{base_filename}.json"
-        log_filename = "#{base_filename}.log"
-
-        log_path = File.expand_path(File.join(logs_dir, log_filename))
-        structured_log_path = File.expand_path(File.join(logs_dir, structured_log_filename))
-
-        logger = Logger.new(File.open(log_path, "a"))
-        structured_logger = StructuredLogger.new(structured_log_path)
-
-        new(
+      class << self
+        def with_cassette(
           an_eval,
-          logger,
-          log_path,
-          structured_logger,
-          total_targets: total_targets,
-          formatter: formatter,
-          announce_formatter: announce_formatter,
-          finalize_formatter: finalize_formatter,
-          agent_key: normalized_key,
-          output: output,
-        ).tap { |recorder| recorder.running }
+          agent_key: nil,
+          output: $stdout,
+          total_targets: 1,
+          formatter: nil,
+          announce_formatter: true,
+          finalize_formatter: true
+        )
+          logs_dir = File.join(__dir__, "../log")
+          FileUtils.mkdir_p(logs_dir)
+
+          now = Time.now.strftime("%Y%m%d-%H%M%S")
+          normalized_key = normalize_agent_key(agent_key)
+          agent_segment = sanitized_agent_key(normalized_key)
+          base_filename = [an_eval.id, agent_segment, now].compact.join("-")
+          structured_log_filename = "#{base_filename}.json"
+          log_filename = "#{base_filename}.log"
+
+          log_path = File.expand_path(File.join(logs_dir, log_filename))
+          structured_log_path = File.expand_path(File.join(logs_dir, structured_log_filename))
+
+          logger = Logger.new(File.open(log_path, "a"))
+          structured_logger = StructuredLogger.new(structured_log_path)
+
+          new(
+            an_eval,
+            logger,
+            log_path,
+            structured_logger,
+            total_targets: total_targets,
+            formatter: formatter,
+            announce_formatter: announce_formatter,
+            finalize_formatter: finalize_formatter,
+            agent_key: normalized_key,
+            output: output,
+          ).tap { |recorder| recorder.running }
+        end
       end
 
+      class << self
+        def normalize_agent_key(key)
+          stripped = key.to_s.strip
+          stripped = "default" if stripped.empty?
+          stripped
+        end
+
+        def sanitized_agent_key(key)
+          stripped = key.to_s.strip
+          stripped = "default" if stripped.empty?
+
+          slug = stripped.gsub(/[^a-zA-Z0-9]+/, "-").gsub(/-+/, "-").gsub(/^-|-$/, "")
+          slug.empty? ? "default" : slug.downcase
+        end
+      end
       def initialize(
         an_eval,
         logger,
@@ -266,20 +283,6 @@ module DiscourseAi
                   :formatter,
                   :announce_formatter,
                   :finalize_formatter
-
-      def self.normalize_agent_key(key)
-        stripped = key.to_s.strip
-        stripped = "default" if stripped.empty?
-        stripped
-      end
-
-      def self.sanitized_agent_key(key)
-        stripped = key.to_s.strip
-        stripped = "default" if stripped.empty?
-
-        slug = stripped.gsub(/[^a-zA-Z0-9]+/, "-").gsub(/-+/, "-").gsub(/^-|-$/, "")
-        slug.empty? ? "default" : slug.downcase
-      end
 
       def comparison_header(eval_case_id, mode_label, agent_key, summary: false)
         header = "=== Comparison (#{mode_label}"

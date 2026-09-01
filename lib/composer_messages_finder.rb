@@ -1,15 +1,25 @@
 # frozen_string_literal: true
 
 class ComposerMessagesFinder
+  class << self
+    def check_methods
+      @check_methods ||= instance_methods.find_all { |m| m =~ /\Acheck\_/ }
+    end
+  end
+  class << self
+    def user_not_seen_in_a_while(usernames)
+      User
+        .where(username_lower: usernames)
+        .where("last_seen_at < ?", SiteSetting.pm_warn_user_last_seen_months_ago.months.ago)
+        .pluck(:username)
+        .sort
+    end
+  end
   def initialize(user, details)
     @user = user
     @details = details
     @topic = Topic.find_by(id: details[:topic_id]) if details[:topic_id]
     @topic = nil if @topic && !@user.guardian.can_see?(@topic)
-  end
-
-  def self.check_methods
-    @check_methods ||= instance_methods.find_all { |m| m =~ /\Acheck\_/ }
   end
 
   def find
@@ -172,14 +182,6 @@ class ComposerMessagesFinder
       extraClass: "urgent",
       body: PrettyText.cook(I18n.t("education.dont_feed_the_trolls")),
     }
-  end
-
-  def self.user_not_seen_in_a_while(usernames)
-    User
-      .where(username_lower: usernames)
-      .where("last_seen_at < ?", SiteSetting.pm_warn_user_last_seen_months_ago.months.ago)
-      .pluck(:username)
-      .sort
   end
 
   private

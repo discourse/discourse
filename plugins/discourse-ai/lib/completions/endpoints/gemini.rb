@@ -21,8 +21,10 @@ module DiscourseAi
         LOW_HIGH_THINKING_LEVEL_BY_EFFORT =
           THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT.merge("medium" => "high").freeze
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "google"
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "google"
+          end
         end
 
         def default_options

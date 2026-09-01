@@ -33,23 +33,25 @@ module Migrations
         # @param provider_uid    [String]
         #
         # @return [void]
-        def self.create(
-          user_id:,
-          provider_name:,
-          created_at: nil,
-          info: nil,
-          last_used: nil,
-          provider_uid:
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            user_id,
-            provider_name,
-            Migrations::Database.format_datetime(created_at),
-            Migrations::Database.to_json(info),
-            Migrations::Database.format_datetime(last_used),
-            provider_uid,
+        class << self
+          def create(
+            user_id:,
+            provider_name:,
+            created_at: nil,
+            info: nil,
+            last_used: nil,
+            provider_uid:
           )
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              user_id,
+              provider_name,
+              Migrations::Database.format_datetime(created_at),
+              Migrations::Database.to_json(info),
+              Migrations::Database.format_datetime(last_used),
+              provider_uid,
+            )
+          end
         end
       end
     end

@@ -5,22 +5,24 @@
 # in the user/activity/bookmarks page.
 
 class BookmarkQuery
-  def self.on_preload(&blk)
-    (@preload ||= Set.new) << blk
-  end
+  class << self
+    def on_preload(&blk)
+      (@preload ||= Set.new) << blk
+    end
 
-  def self.preload(bookmarks, object)
-    preload_polymorphic_associations(bookmarks, object.guardian)
-    @preload.each { |preload| preload.call(bookmarks, object) } if @preload
-  end
+    def preload(bookmarks, object)
+      preload_polymorphic_associations(bookmarks, object.guardian)
+      @preload.each { |preload| preload.call(bookmarks, object) } if @preload
+    end
 
-  # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
-  # life easier, which conditionally chooses the bookmark serializer to use based
-  # on the type, and we want the associations all loaded ahead of time to make
-  # sure we are not doing N+1s.
-  def self.preload_polymorphic_associations(bookmarks, guardian)
-    Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
-      registered_bookmarkable.perform_preload(bookmarks, guardian)
+    # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
+    # life easier, which conditionally chooses the bookmark serializer to use based
+    # on the type, and we want the associations all loaded ahead of time to make
+    # sure we are not doing N+1s.
+    def preload_polymorphic_associations(bookmarks, guardian)
+      Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
+        registered_bookmarkable.perform_preload(bookmarks, guardian)
+      end
     end
   end
 

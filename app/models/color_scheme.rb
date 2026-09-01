@@ -309,37 +309,46 @@ class ColorScheme < ActiveRecord::Base
     love
   ].freeze
 
-  def self.base_color_scheme_colors
-    base_with_hash = []
+  BASE_COLORS_FILE = "#{Rails.root.join("app/assets/stylesheets/common/foundation/colors.scss")}"
+  COLOR_TRANSFORMATION_FILE =
+    "#{Rails.root.join("app/assets/stylesheets/common/foundation/color_transformations.scss")}"
+  class << self
+    def base_color_scheme_colors
+      base_with_hash = []
 
-    base_colors.each { |name, color| base_with_hash << { name: name, hex: "#{color}" } }
+      base_colors.each { |name, color| base_with_hash << { name: name, hex: "#{color}" } }
 
-    list = [
-      { id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME, colors: base_with_hash },
-    ]
+      list = [
+        {
+          id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME],
+          name: LIGHT_PALETTE_NAME,
+          colors: base_with_hash,
+        },
+      ]
 
-    BUILT_IN_SCHEMES.each do |k, v|
-      colors = []
-      v.each { |name, color| colors << { name: name, hex: "#{color}" } }
-      list.push(id: NAMES_TO_ID_MAP[k.to_s], name: k.to_s, colors: colors)
+      BUILT_IN_SCHEMES.each do |k, v|
+        colors = []
+        v.each { |name, color| colors << { name: name, hex: "#{color}" } }
+        list.push(id: NAMES_TO_ID_MAP[k.to_s], name: k.to_s, colors: colors)
+      end
+
+      list
     end
 
-    list
-  end
+    def hex_cache
+      @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
+    end
 
-  def self.hex_cache
-    @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
-  end
+    def valid_ids_cache
+      @valid_ids_cache ||= DistributedCache.new("color_scheme_valid_ids")
+    end
 
-  def self.valid_ids_cache
-    @valid_ids_cache ||= DistributedCache.new("color_scheme_valid_ids")
-  end
-
-  # Used on the hot anonymous cache path (Middleware::AnonymousCache), so the
-  # set of valid ids is cached in-process to avoid a DB query per request.
-  def self.valid_id(id)
-    id = Integer(id, exception: false)
-    id if id && valid_ids_cache.defer_get_set("ids") { pluck(:id).to_set }.include?(id)
+    # Used on the hot anonymous cache path (Middleware::AnonymousCache), so the
+    # set of valid ids is cached in-process to avoid a DB query per request.
+    def valid_id(id)
+      id = Integer(id, exception: false)
+      id if id && valid_ids_cache.defer_get_set("ids") { pluck(:id).to_set }.include?(id)
+    end
   end
 
   default_scope { where(remote_copy: false) }
@@ -363,116 +372,142 @@ class ColorScheme < ActiveRecord::Base
   validate :no_edits_for_remote_copies, on: :update
   validates_associated :color_scheme_colors
 
-  BASE_COLORS_FILE = "#{Rails.root.join("app/assets/stylesheets/common/foundation/colors.scss")}"
-  COLOR_TRANSFORMATION_FILE =
-    "#{Rails.root.join("app/assets/stylesheets/common/foundation/color_transformations.scss")}"
-
   @mutex = Mutex.new
 
-  def self.base_colors
-    return @base_colors if @base_colors
-    @mutex.synchronize do
+  class << self
+    def base_colors
       return @base_colors if @base_colors
-      base_colors = {}
-      File
-        .readlines(BASE_COLORS_FILE)
-        .each do |line|
-          matches = /\$([\w]+):\s*#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?:[;]|\s)/.match(line.strip)
-          base_colors[matches[1]] = matches[2] if matches
-        end
-      @base_colors = base_colors
+      @mutex.synchronize do
+        return @base_colors if @base_colors
+        base_colors = {}
+        File
+          .readlines(BASE_COLORS_FILE)
+          .each do |line|
+            matches = /\$([\w]+):\s*#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?:[;]|\s)/.match(line.strip)
+            base_colors[matches[1]] = matches[2] if matches
+          end
+        @base_colors = base_colors
+      end
+      @base_colors
     end
-    @base_colors
-  end
 
-  def self.color_transformation_variables
-    return @transformation_variables if @transformation_variables
-    @mutex.synchronize do
+    def color_transformation_variables
       return @transformation_variables if @transformation_variables
-      transformation_variables = []
-      File
-        .readlines(COLOR_TRANSFORMATION_FILE)
-        .each do |line|
-          matches = /\$([\w\-_]+):.*/.match(line.strip)
-          transformation_variables.append(matches[1]) if matches
-        end
-      @transformation_variables = transformation_variables
+      @mutex.synchronize do
+        return @transformation_variables if @transformation_variables
+        transformation_variables = []
+        File
+          .readlines(COLOR_TRANSFORMATION_FILE)
+          .each do |line|
+            matches = /\$([\w\-_]+):.*/.match(line.strip)
+            transformation_variables.append(matches[1]) if matches
+          end
+        @transformation_variables = transformation_variables
+      end
+      @transformation_variables
     end
-    @transformation_variables
-  end
 
-  def self.base_color_schemes
-    base_color_scheme_colors.map do |hash|
-      scheme =
-        new(
-          id: hash[:id],
-          name: I18n.t("color_schemes.#{hash[:name].downcase.gsub(" ", "_")}"),
-          base_scheme_id: hash[:id],
-        )
-      scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
-      scheme.is_base = true
-      scheme.is_builtin_default = hash[:id] == NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
-      scheme
-    end
-  end
-
-  def self.base
-    @base_color_scheme ||=
-      begin
-        scheme = new(id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME)
-        scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
+    def base_color_schemes
+      base_color_scheme_colors.map do |hash|
+        scheme =
+          new(
+            id: hash[:id],
+            name: I18n.t("color_schemes.#{hash[:name].downcase.gsub(" ", "_")}"),
+            base_scheme_id: hash[:id],
+          )
+        scheme.colors = hash[:colors].map { |k| { name: k[:name], hex: k[:hex] } }
         scheme.is_base = true
-        scheme.is_builtin_default = true
-        scheme.define_singleton_method(:name) do
-          I18n.t("admin_js.admin.customize.theme.default_light_scheme")
-        end
+        scheme.is_builtin_default = hash[:id] == NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME]
         scheme
       end
+    end
+
+    def base
+      @base_color_scheme ||=
+        begin
+          scheme = new(id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME)
+          scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
+          scheme.is_base = true
+          scheme.is_builtin_default = true
+          scheme.define_singleton_method(:name) do
+            I18n.t("admin_js.admin.customize.theme.default_light_scheme")
+          end
+          scheme
+        end
+    end
+
+    def is_base?(scheme_name)
+      base_color_scheme_colors.map { |c| c[:id] }.include?(scheme_name)
+    end
+
+    # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
+    def create_from_base(params)
+      new_color_scheme = new(name: params[:name])
+      new_color_scheme.via_wizard = true if params[:via_wizard]
+      new_color_scheme.base_scheme_id = params[:base_scheme_id]
+
+      scheme_name = NAMES_TO_ID_MAP.invert[params[:base_scheme_id]]
+
+      colors =
+        BUILT_IN_SCHEMES[scheme_name.to_sym]&.map do |name, hex|
+          { name: name, hex: hex }
+        end if params[:base_scheme_id]
+      colors ||= base.colors_hashes
+
+      # Override base values
+      params[:colors].each do |name, hex|
+        c = colors.find { |x| x[:name].to_s == name.to_s }
+        c[:hex] = hex
+      end if params[:colors]
+
+      new_color_scheme.colors = colors
+      new_color_scheme.skip_publish if params[:skip_publish]
+      new_color_scheme.save
+      new_color_scheme
+    end
+
+    def lookup_hex_for_name(name, scheme_id = nil)
+      enabled_color_scheme = find_by(id: scheme_id) if scheme_id
+      enabled_color_scheme ||= Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
+      color_record = (enabled_color_scheme || base).colors.find { |c| c.name == name }
+      return if !color_record
+      color_record.hex
+    end
+
+    def hex_for_name(name, scheme_id = nil)
+      cache_key = scheme_id ? "#{name}_#{scheme_id}" : name
+      hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id) }
+    end
   end
 
-  def self.is_base?(scheme_name)
-    base_color_scheme_colors.map { |c| c[:id] }.include?(scheme_name)
+  class << self
+    def publish_discourse_stylesheets!(id = nil)
+      Stylesheet::Manager.clear_color_scheme_cache!
+
+      theme_ids = []
+      if id
+        theme_ids = Theme.where(color_scheme_id: id).pluck(:id)
+      else
+        theme_ids = Theme.all.pluck(:id)
+      end
+      if theme_ids.present?
+        Stylesheet::Manager.cache.clear
+
+        Theme.notify_theme_change(
+          theme_ids,
+          with_scheme: true,
+          clear_manager_cache: false,
+          all_themes: true,
+        )
+      end
+    end
+
+    def sort_colors(hash)
+      sorted = hash.slice(*COLORS_ORDER)
+      sorted.merge!(hash.except(*COLORS_ORDER)) if sorted.size < hash.size
+      sorted
+    end
   end
-
-  # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
-  def self.create_from_base(params)
-    new_color_scheme = new(name: params[:name])
-    new_color_scheme.via_wizard = true if params[:via_wizard]
-    new_color_scheme.base_scheme_id = params[:base_scheme_id]
-
-    scheme_name = NAMES_TO_ID_MAP.invert[params[:base_scheme_id]]
-
-    colors =
-      BUILT_IN_SCHEMES[scheme_name.to_sym]&.map { |name, hex| { name: name, hex: hex } } if params[
-      :base_scheme_id
-    ]
-    colors ||= base.colors_hashes
-
-    # Override base values
-    params[:colors].each do |name, hex|
-      c = colors.find { |x| x[:name].to_s == name.to_s }
-      c[:hex] = hex
-    end if params[:colors]
-
-    new_color_scheme.colors = colors
-    new_color_scheme.skip_publish if params[:skip_publish]
-    new_color_scheme.save
-    new_color_scheme
-  end
-
-  def self.lookup_hex_for_name(name, scheme_id = nil)
-    enabled_color_scheme = find_by(id: scheme_id) if scheme_id
-    enabled_color_scheme ||= Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
-    color_record = (enabled_color_scheme || base).colors.find { |c| c.name == name }
-    return if !color_record
-    color_record.hex
-  end
-
-  def self.hex_for_name(name, scheme_id = nil)
-    cache_key = scheme_id ? "#{name}_#{scheme_id}" : name
-    hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id) }
-  end
-
   def colors=(arr)
     @colors_by_name = nil
     arr.each { |c| color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex]) }
@@ -536,33 +571,6 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     self.class.publish_discourse_stylesheets!(id) if id
-  end
-
-  def self.publish_discourse_stylesheets!(id = nil)
-    Stylesheet::Manager.clear_color_scheme_cache!
-
-    theme_ids = []
-    if id
-      theme_ids = Theme.where(color_scheme_id: id).pluck(:id)
-    else
-      theme_ids = Theme.all.pluck(:id)
-    end
-    if theme_ids.present?
-      Stylesheet::Manager.cache.clear
-
-      Theme.notify_theme_change(
-        theme_ids,
-        with_scheme: true,
-        clear_manager_cache: false,
-        all_themes: true,
-      )
-    end
-  end
-
-  def self.sort_colors(hash)
-    sorted = hash.slice(*COLORS_ORDER)
-    sorted.merge!(hash.except(*COLORS_ORDER)) if sorted.size < hash.size
-    sorted
   end
 
   def dump_caches

@@ -16,8 +16,10 @@ module Chat
          },
          scopes: false
 
-    def self.normalize_src(src, reset_scheme: true)
-      PostHotlinkedMedia.normalize_src(src, reset_scheme: reset_scheme)
+    class << self
+      def normalize_src(src, reset_scheme: true)
+        PostHotlinkedMedia.normalize_src(src, reset_scheme: reset_scheme)
+      end
     end
 
     # Whether the pull job would fetch +src+. The cook consults this too, to

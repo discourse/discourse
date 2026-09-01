@@ -107,69 +107,83 @@ class ProblemCheck
   # value, since the index considers NULLs to be distinct.
   NO_TARGET = "__NULL__"
 
-  def self.[](key)
-    key = key.to_sym
+  class << self
+    def [](key)
+      key = key.to_sym
 
-    checks.find { |c| c.identifier == key }
-  end
+      checks.find { |c| c.identifier == key }
+    end
 
-  def self.checks
-    Collection.new(DiscoursePluginRegistry.problem_checks.concat(CORE_PROBLEM_CHECKS))
-  end
+    def checks
+      Collection.new(DiscoursePluginRegistry.problem_checks.concat(CORE_PROBLEM_CHECKS))
+    end
 
-  def self.scheduled
-    Collection.new(checks.select(&:scheduled?))
-  end
+    def scheduled
+      Collection.new(checks.select(&:scheduled?))
+    end
 
-  def self.realtime
-    Collection.new(checks.select(&:realtime?))
-  end
+    def realtime
+      Collection.new(checks.select(&:realtime?))
+    end
 
-  def self.identifier
-    name.demodulize.underscore.to_sym
+    def identifier
+      name.demodulize.underscore.to_sym
+    end
   end
   delegate :identifier, to: :class
 
-  def self.enabled?
-    enabled
+  class << self
+    def enabled?
+      enabled
+    end
   end
   delegate :enabled?, to: :class
 
-  def self.scheduled?
-    perform_every.present?
+  class << self
+    def scheduled?
+      perform_every.present?
+    end
   end
   delegate :scheduled?, to: :class
 
-  def self.realtime?
-    !scheduled? && !inline?
+  class << self
+    def realtime?
+      !scheduled? && !inline?
+    end
   end
   delegate :realtime?, to: :class
 
-  def self.inline?
-    inline
+  class << self
+    def inline?
+      inline
+    end
   end
   delegate :inline?, to: :class
 
-  def self.targeted?
-    targets.call != [ProblemCheck::NO_TARGET]
+  class << self
+    def targeted?
+      targets.call != [ProblemCheck::NO_TARGET]
+    end
   end
   delegate :targeted?, to: :class
 
-  def self.each_target(&)
-    targets.call.each(&)
-  end
-
-  def self.cleanup_trackers
-    # A disabled check never runs, so it can't clear its own trackers/notices.
-    unless enabled?
-      ProblemCheckTracker.where(identifier:).destroy_all
-      return
+  class << self
+    def each_target(&)
+      targets.call.each(&)
     end
 
-    current_targets = targets.call
-    return if current_targets.empty?
+    def cleanup_trackers
+      # A disabled check never runs, so it can't clear its own trackers/notices.
+      unless enabled?
+        ProblemCheckTracker.where(identifier:).destroy_all
+        return
+      end
 
-    ProblemCheckTracker.where(identifier:).where.not(target: current_targets).destroy_all
+      current_targets = targets.call
+      return if current_targets.empty?
+
+      ProblemCheckTracker.where(identifier:).where.not(target: current_targets).destroy_all
+    end
   end
 
   def initialize(target = NO_TARGET)

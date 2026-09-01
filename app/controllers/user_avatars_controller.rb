@@ -10,6 +10,10 @@ class UserAvatarsController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[show show_letter show_proxy_letter]
 
+  PROXY_PATH = Rails.root + "tmp/avatar_proxy"
+  PROXY_CACHE_MAX_ENTRIES = 10_000
+  PROXY_CACHE_EVICT_COUNT = 1000
+
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
     guardian.ensure_can_edit!(user)
@@ -168,10 +172,6 @@ class UserAvatarsController < ApplicationController
   def max_file_size
     1.megabyte
   end
-
-  PROXY_PATH = Rails.root + "tmp/avatar_proxy"
-  PROXY_CACHE_MAX_ENTRIES = 10_000
-  PROXY_CACHE_EVICT_COUNT = 1000
 
   def proxy_avatar(url, last_modified)
     url = (SiteSetting.force_https ? "https:" : "http:") + url if url[0..1] == "//"

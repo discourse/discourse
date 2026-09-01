@@ -38,22 +38,26 @@ RSpec.describe Jobs::ReindexSearch do
 
   describe "rebuild_posts" do
     class FakeIndexer
-      def self.index(post, force:)
-        get_posts.push(post)
-      end
+      class << self
+        def index(post, force:)
+          get_posts.push(post)
+        end
 
-      def self.posts
-        get_posts
-      end
+        def posts
+          get_posts
+        end
 
-      def self.reset
-        get_posts.clear
+        def reset
+          get_posts.clear
+        end
       end
 
       private
 
-      def self.get_posts
-        @posts ||= []
+      class << self
+        def get_posts
+          @posts ||= []
+        end
       end
     end
 
@@ -98,17 +102,19 @@ RSpec.describe Jobs::ReindexSearch do
     let(:plugin) { Plugin::Instance.new }
     let(:mock_model_class) do
       Class.new do
-        def self.name
-          "TestModel"
-        end
+        class << self
+          def name
+            "TestModel"
+          end
 
-        def self.table_name
-          "test_models"
-        end
+          def table_name
+            "test_models"
+          end
 
-        def self.find_by(id:)
-          return nil unless id == 1
-          new(id: id)
+          def find_by(id:)
+            return nil unless id == 1
+            new(id: id)
+          end
         end
 
         def initialize(id:)

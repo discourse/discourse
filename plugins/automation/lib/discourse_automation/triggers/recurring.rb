@@ -13,111 +13,113 @@ module DiscourseAutomation
         { id: "year", name: "discourse_automation.triggerables.recurring.frequencies.year" },
       ]
 
-      def self.setup_pending_automation(automation, fields, previous_fields)
-        start_date = fields.dig("start_date", "value")
-        interval = fields.dig("recurrence", "value", "interval")
-        frequency = fields.dig("recurrence", "value", "frequency")
+      class << self
+        def setup_pending_automation(automation, fields, previous_fields)
+          start_date = fields.dig("start_date", "value")
+          interval = fields.dig("recurrence", "value", "interval")
+          frequency = fields.dig("recurrence", "value", "frequency")
 
-        # this case is not possible in practice but better be safe
-        if !start_date || !interval || !frequency
-          automation.pending_automations.destroy_all
-          return
-        end
-
-        previous_start_date = previous_fields&.dig("start_date", "value")
-        previous_interval = previous_fields&.dig("recurrence", "value", "interval")
-        previous_frequency = previous_fields&.dig("recurrence", "value", "frequency")
-
-        if previous_start_date != start_date || previous_interval != interval ||
-             previous_frequency != frequency
-          automation.pending_automations.destroy_all
-        elsif automation.pending_automations.present?
-          log_debugging_info(
-            id: automation.id,
-            start_date:,
-            interval:,
-            frequency:,
-            previous_start_date:,
-            previous_interval:,
-            previous_frequency:,
-            now: Time.zone.now,
-          )
-          return
-        end
-
-        start_date = Time.parse(start_date)
-        now = Time.zone.now
-        interval = interval.to_i
-
-        if start_date > now
-          automation.pending_automations.create!(execute_at: start_date)
-          return
-        end
-
-        byday = start_date.strftime("%A").upcase[0, 2]
-        interval_end = interval + 1
-
-        next_trigger_date =
-          case frequency
-          when "minute"
-            (now + interval.minute).beginning_of_minute
-          when "hour"
-            (now + interval.hour).beginning_of_hour
-          when "day"
-            RRule::Rule
-              .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
-              .between(now, now + interval_end.days)
-              .find { |date| date > now }
-          when "weekday"
-            max_weekends = (interval_end.to_f / 5).ceil
-            RRule::Rule
-              .new("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
-              .between(now.end_of_day, now + max_weekends.weeks)
-              .drop(interval - 1)
-              .find { |date| date > now }
-          when "week"
-            RRule::Rule
-              .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
-              .between(now.end_of_week, now + interval_end.weeks)
-              .find { |date| date > now }
-          when "month"
-            months_elapsed = (now.year - start_date.year) * 12 + (now.month - start_date.month)
-            steps = (months_elapsed.to_f / interval).ceil * interval
-            next_date = start_date + steps.months
-            next_date = start_date + (steps += interval).months while next_date <= now
-            next_date
-          when "year"
-            RRule::Rule
-              .new("FREQ=YEARLY;INTERVAL=#{interval}", dtstart: start_date)
-              .between(now, now + interval_end.years)
-              .find { |date| date > now }
+          # this case is not possible in practice but better be safe
+          if !start_date || !interval || !frequency
+            automation.pending_automations.destroy_all
+            return
           end
 
-        if next_trigger_date
-          automation.pending_automations.create!(execute_at: next_trigger_date)
-        else
-          log_debugging_info(
-            id: automation.id,
-            start_date:,
-            interval:,
-            frequency:,
-            previous_start_date:,
-            previous_interval:,
-            previous_frequency:,
-            byday:,
-            interval_end:,
-            next_trigger_date:,
-            now:,
-          )
-          nil
-        end
-      end
+          previous_start_date = previous_fields&.dig("start_date", "value")
+          previous_interval = previous_fields&.dig("recurrence", "value", "interval")
+          previous_frequency = previous_fields&.dig("recurrence", "value", "frequency")
 
-      def self.log_debugging_info(context)
-        return if !SiteSetting.discourse_automation_enable_recurring_debug
-        str = "scheduling recurring automation debug: "
-        str += context.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")
-        DiscourseAutomation::Logger.warn(str)
+          if previous_start_date != start_date || previous_interval != interval ||
+               previous_frequency != frequency
+            automation.pending_automations.destroy_all
+          elsif automation.pending_automations.present?
+            log_debugging_info(
+              id: automation.id,
+              start_date:,
+              interval:,
+              frequency:,
+              previous_start_date:,
+              previous_interval:,
+              previous_frequency:,
+              now: Time.zone.now,
+            )
+            return
+          end
+
+          start_date = Time.parse(start_date)
+          now = Time.zone.now
+          interval = interval.to_i
+
+          if start_date > now
+            automation.pending_automations.create!(execute_at: start_date)
+            return
+          end
+
+          byday = start_date.strftime("%A").upcase[0, 2]
+          interval_end = interval + 1
+
+          next_trigger_date =
+            case frequency
+            when "minute"
+              (now + interval.minute).beginning_of_minute
+            when "hour"
+              (now + interval.hour).beginning_of_hour
+            when "day"
+              RRule::Rule
+                .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
+                .between(now, now + interval_end.days)
+                .find { |date| date > now }
+            when "weekday"
+              max_weekends = (interval_end.to_f / 5).ceil
+              RRule::Rule
+                .new("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
+                .between(now.end_of_day, now + max_weekends.weeks)
+                .drop(interval - 1)
+                .find { |date| date > now }
+            when "week"
+              RRule::Rule
+                .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
+                .between(now.end_of_week, now + interval_end.weeks)
+                .find { |date| date > now }
+            when "month"
+              months_elapsed = (now.year - start_date.year) * 12 + (now.month - start_date.month)
+              steps = (months_elapsed.to_f / interval).ceil * interval
+              next_date = start_date + steps.months
+              next_date = start_date + (steps += interval).months while next_date <= now
+              next_date
+            when "year"
+              RRule::Rule
+                .new("FREQ=YEARLY;INTERVAL=#{interval}", dtstart: start_date)
+                .between(now, now + interval_end.years)
+                .find { |date| date > now }
+            end
+
+          if next_trigger_date
+            automation.pending_automations.create!(execute_at: next_trigger_date)
+          else
+            log_debugging_info(
+              id: automation.id,
+              start_date:,
+              interval:,
+              frequency:,
+              previous_start_date:,
+              previous_interval:,
+              previous_frequency:,
+              byday:,
+              interval_end:,
+              next_trigger_date:,
+              now:,
+            )
+            nil
+          end
+        end
+
+        def log_debugging_info(context)
+          return if !SiteSetting.discourse_automation_enable_recurring_debug
+          str = "scheduling recurring automation debug: "
+          str += context.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")
+          DiscourseAutomation::Logger.warn(str)
+        end
       end
     end
   end

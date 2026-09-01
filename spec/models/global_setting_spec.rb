@@ -3,8 +3,10 @@
 require "tempfile"
 
 class GlobalSetting
-  def self.reset_secret_key_base!
-    @safe_secret_key_base = nil
+  class << self
+    def reset_secret_key_base!
+      @safe_secret_key_base = nil
+    end
   end
 end
 

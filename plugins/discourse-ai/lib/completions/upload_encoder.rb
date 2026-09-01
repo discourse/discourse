@@ -8,66 +8,68 @@ module DiscourseAi
       JPEG_EXTENSIONS = %w[jpg jpeg].freeze
       SUPPORTED_IMAGE_EXTENSIONS = (JPEG_EXTENSIONS + %w[png gif webp avif]).freeze
 
-      def self.supported_image_upload?(upload)
-        image_extension?(upload.extension&.downcase)
-      end
+      class << self
+        def supported_image_upload?(upload)
+          image_extension?(upload.extension&.downcase)
+        end
 
-      def self.image?(upload)
-        extension = upload.extension.to_s.delete_prefix(".").downcase
-        return true if FileHelper.supported_images.include?(extension)
+        def image?(upload)
+          extension = upload.extension.to_s.delete_prefix(".").downcase
+          return true if FileHelper.supported_images.include?(extension)
 
-        filename = upload.original_filename.to_s
-        filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
+          filename = upload.original_filename.to_s
+          filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
 
-        MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
-      end
+          MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
+        end
 
-      def self.encode(
-        upload_ids:,
-        max_pixels:,
-        allowed_kinds: [:image],
-        allowed_attachment_types: nil,
-        skips: nil
-      )
-        allowed_attachment_types = normalize_attachment_types(allowed_attachment_types)
-        skips ||= []
-        uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+        def encode(
+          upload_ids:,
+          max_pixels:,
+          allowed_kinds: [:image],
+          allowed_attachment_types: nil,
+          skips: nil
+        )
+          allowed_attachment_types = normalize_attachment_types(allowed_attachment_types)
+          skips ||= []
+          uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
 
-        upload_ids.filter_map do |upload_id|
-          upload = uploads_by_id[upload_id]
-          next if upload.blank?
+          upload_ids.filter_map do |upload_id|
+            upload = uploads_by_id[upload_id]
+            next if upload.blank?
 
-          extension = upload.extension&.downcase
-          kind = image_extension?(extension) ? :image : :document
+            extension = upload.extension&.downcase
+            kind = image_extension?(extension) ? :image : :document
 
-          if kind == :document && image?(upload)
-            log_image_upload_skip(
-              skips,
-              upload,
-              "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_EXTENSIONS.join(", ")}",
-            )
-            next
+            if kind == :document && image?(upload)
+              log_image_upload_skip(
+                skips,
+                upload,
+                "unsupported image format, supported formats are: #{SUPPORTED_IMAGE_EXTENSIONS.join(", ")}",
+              )
+              next
+            end
+
+            next if allowed_kinds.exclude?(kind)
+
+            if kind == :document
+              mime_type =
+                MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
+                  "application/octet-stream"
+
+              attachment_type = DocumentEncoder.attachment_type_for(upload.extension, mime_type)
+              next if allowed_attachment_types&.exclude?(attachment_type)
+
+              next DocumentEncoder.encode(upload, mime_type, attachment_type, skips)
+            end
+
+            if upload.width.to_i == 0 || upload.height.to_i == 0
+              log_image_upload_skip(skips, upload, "image dimensions are unknown")
+              next
+            end
+
+            encode_image(upload, transcode_format(extension), max_pixels, skips)
           end
-
-          next if allowed_kinds.exclude?(kind)
-
-          if kind == :document
-            mime_type =
-              MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
-                "application/octet-stream"
-
-            attachment_type = DocumentEncoder.attachment_type_for(upload.extension, mime_type)
-            next if allowed_attachment_types&.exclude?(attachment_type)
-
-            next DocumentEncoder.encode(upload, mime_type, attachment_type, skips)
-          end
-
-          if upload.width.to_i == 0 || upload.height.to_i == 0
-            log_image_upload_skip(skips, upload, "image dimensions are unknown")
-            next
-          end
-
-          encode_image(upload, transcode_format(extension), max_pixels, skips)
         end
       end
 

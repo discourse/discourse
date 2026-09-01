@@ -78,6 +78,8 @@ module DiscourseWorkflows
 
       MAX_TOTAL_SIZE_BYTES = 50.megabytes
 
+      SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
+      MAX_LIMIT = 100
       class << self
         def within_storage_limit?
           Storage.total_size_bytes < MAX_TOTAL_SIZE_BYTES
@@ -103,9 +105,6 @@ module DiscourseWorkflows
           Storage.drop_table!(data_table_id)
         end
       end
-
-      SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
-      MAX_LIMIT = 100
 
       attr_reader :data_table
 

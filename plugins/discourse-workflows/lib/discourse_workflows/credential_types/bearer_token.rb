@@ -3,16 +3,18 @@
 module DiscourseWorkflows
   module CredentialTypes
     class BearerToken
-      def self.identifier
-        "bearer_token"
-      end
+      class << self
+        def identifier
+          "bearer_token"
+        end
 
-      def self.display_name
-        "Bearer Token"
-      end
+        def display_name
+          "Bearer Token"
+        end
 
-      def self.property_schema
-        { token: { type: :string, required: true, ui: { control: :password } } }
+        def property_schema
+          { token: { type: :string, required: true, ui: { control: :password } } }
+        end
       end
     end
   end

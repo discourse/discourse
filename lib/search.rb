@@ -7,247 +7,319 @@ class Search
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
-  def self.on_preload(&blk)
-    (@preload ||= Set.new) << blk
-  end
-
-  def self.preload(results, object)
-    @preload.each { |preload| preload.call(results, object) } if @preload
-  end
-
-  def self.per_facet
-    5
-  end
-
-  def self.per_filter
-    SiteSetting.search_page_size
-  end
-
-  def self.facets
-    %w[topic category user private_messages tags all_topics exclude_topics]
-  end
-
   # Patterns that bypass minimum search term length because they
   # produce meaningful results on their own. Note: 't' (in:title) is
   # intentionally excluded - it modifies where to search but still
   # requires actual search terms.
   MIN_LENGTH_BYPASS_PATTERN =
     /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+  BEFORE_ADVANCED_FILTER_NAME = "before"
+  AFTER_ADVANCED_FILTER_NAME = "after"
+  PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
+  # Limited for performance reasons since `TS_HEADLINE` is slow when the text
+  # document is too long.
+  MAX_LENGTH_FOR_HEADLINE = 2500
+  class << self
+    def on_preload(&blk)
+      (@preload ||= Set.new) << blk
+    end
 
-  def self.min_length_bypass?(term)
-    return false if term.blank?
-    MIN_LENGTH_BYPASS_PATTERN.match?(term)
-  end
+    def preload(results, object)
+      @preload.each { |preload| preload.call(results, object) } if @preload
+    end
 
-  def self.ts_config(locale = SiteSetting.default_locale)
-    # if adding a text search configuration, you should check PG beforehand:
-    # SELECT cfgname FROM pg_ts_config;
-    # As an aside, dictionaries can be listed by `\dFd`, the
-    # physical locations are in /usr/share/postgresql/<version>/tsearch_data.
-    # But it may not appear there based on pg extension configuration.
-    # base docker config
-    #
-    case locale.split("_")[0].to_sym
-    when :da
-      "danish"
-    when :nl
-      "dutch"
-    when :en
-      "english"
-    when :fi
-      "finnish"
-    when :fr
-      "french"
-    when :de
-      "german"
-    when :hu
-      "hungarian"
-    when :it
-      "italian"
-    when :nb
-      "norwegian"
-    when :pt
-      "portuguese"
-    when :ro
-      "romanian"
-    when :ru
-      "russian"
-    when :es
-      "spanish"
-    when :sv
-      "swedish"
-    when :tr
-      "turkish"
-    else
-      "simple" # use the 'simple' stemmer for other languages
+    def per_facet
+      5
+    end
+
+    def per_filter
+      SiteSetting.search_page_size
+    end
+
+    def facets
+      %w[topic category user private_messages tags all_topics exclude_topics]
     end
   end
 
-  def self.unaccent(str)
-    if SiteSetting.search_ignore_accents
-      DB.query("SELECT unaccent(:str)", str: str)[0].unaccent
-    else
-      str
+  class << self
+    def min_length_bypass?(term)
+      return false if term.blank?
+      MIN_LENGTH_BYPASS_PATTERN.match?(term)
     end
-  end
 
-  def self.wrap_unaccent(expr)
-    SiteSetting.search_ignore_accents ? "unaccent(#{expr})" : expr
-  end
+    def ts_config(locale = SiteSetting.default_locale)
+      # if adding a text search configuration, you should check PG beforehand:
+      # SELECT cfgname FROM pg_ts_config;
+      # As an aside, dictionaries can be listed by `\dFd`, the
+      # physical locations are in /usr/share/postgresql/<version>/tsearch_data.
+      # But it may not appear there based on pg extension configuration.
+      # base docker config
+      #
+      case locale.split("_")[0].to_sym
+      when :da
+        "danish"
+      when :nl
+        "dutch"
+      when :en
+        "english"
+      when :fi
+        "finnish"
+      when :fr
+        "french"
+      when :de
+        "german"
+      when :hu
+        "hungarian"
+      when :it
+        "italian"
+      when :nb
+        "norwegian"
+      when :pt
+        "portuguese"
+      when :ro
+        "romanian"
+      when :ru
+        "russian"
+      when :es
+        "spanish"
+      when :sv
+        "swedish"
+      when :tr
+        "turkish"
+      else
+        "simple" # use the 'simple' stemmer for other languages
+      end
+    end
 
-  def self.segment_chinese?
-    %w[zh_TW zh_CN].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese
-  end
+    def unaccent(str)
+      if SiteSetting.search_ignore_accents
+        DB.query("SELECT unaccent(:str)", str: str)[0].unaccent
+      else
+        str
+      end
+    end
 
-  def self.segment_japanese?
-    SiteSetting.default_locale == "ja" || SiteSetting.search_tokenize_japanese
-  end
+    def wrap_unaccent(expr)
+      SiteSetting.search_ignore_accents ? "unaccent(#{expr})" : expr
+    end
 
-  def self.japanese_punctuation_regexp
-    # Regexp adapted from https://github.com/6/tiny_segmenter/blob/15a5b825993dfd2c662df3766f232051716bef5b/lib/tiny_segmenter.rb#L7
-    @japanese_punctuation_regexp ||=
-      Regexp.compile("[-–—―.。・（）()［］｛｝{}【】⟨⟩、､,，،…‥〽「」『』〜~！!：:？?\"'|_＿“”‘’;/⁄／«»]")
-  end
+    def segment_chinese?
+      %w[zh_TW zh_CN].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese
+    end
 
-  def self.clean_term(term)
-    term = term.to_s.dup
+    def segment_japanese?
+      SiteSetting.default_locale == "ja" || SiteSetting.search_tokenize_japanese
+    end
 
-    # Removes any zero-width characters from search terms
-    term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
+    def japanese_punctuation_regexp
+      # Regexp adapted from https://github.com/6/tiny_segmenter/blob/15a5b825993dfd2c662df3766f232051716bef5b/lib/tiny_segmenter.rb#L7
+      @japanese_punctuation_regexp ||=
+        Regexp.compile("[-–—―.。・（）()［］｛｝{}【】⟨⟩、､,，،…‥〽「」『』〜~！!：:？?\"'|_＿“”‘’;/⁄／«»]")
+    end
 
-    # Replace curly quotes to regular quotes
-    term.gsub!(/[\u201c\u201d]/, '"')
+    def clean_term(term)
+      term = term.to_s.dup
 
-    # Replace fancy apostophes to regular apostophes
-    term.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+      # Removes any zero-width characters from search terms
+      term.gsub!(/[\u200B-\u200D\uFEFF]/, "")
 
-    term
-  end
+      # Replace curly quotes to regular quotes
+      term.gsub!(/[\u201c\u201d]/, '"')
 
-  def self.prepare_data(search_data, purpose = nil)
-    data = search_data.dup
-    data.force_encoding("UTF-8")
-    data = clean_term(data)
+      # Replace fancy apostophes to regular apostophes
+      term.gsub!(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
 
-    if purpose != :topic && need_segmenting?(data)
-      if segment_chinese?
-        require "cppjieba_rb" unless defined?(CppjiebaRb)
+      term
+    end
 
-        segmented_data = []
+    def prepare_data(search_data, purpose = nil)
+      data = search_data.dup
+      data.force_encoding("UTF-8")
+      data = clean_term(data)
 
-        # We need to split up the string here because Cppjieba has a bug where text starting with numeric chars will
-        # be split into two segments. For example, '123abc' becomes '123' and 'abc' after segmentation.
-        data.scan(/(?<chinese>[\p{Han}。,、“”《》…\.:?!;()]+)|([^\p{Han}]+)/) do
-          match_data = $LAST_MATCH_INFO
+      if purpose != :topic && need_segmenting?(data)
+        if segment_chinese?
+          require "cppjieba_rb" unless defined?(CppjiebaRb)
 
-          if match_data[:chinese]
-            segments = CppjiebaRb.segment(match_data.to_s, mode: :mix)
+          segmented_data = []
 
-            segments = CppjiebaRb.filter_stop_word(segments) if ts_config != "english"
+          # We need to split up the string here because Cppjieba has a bug where text starting with numeric chars will
+          # be split into two segments. For example, '123abc' becomes '123' and 'abc' after segmentation.
+          data.scan(/(?<chinese>[\p{Han}。,、“”《》…\.:?!;()]+)|([^\p{Han}]+)/) do
+            match_data = $LAST_MATCH_INFO
 
-            segments = segments.filter { |s| s.present? }
-            segmented_data << segments.join(" ")
-          else
-            segmented_data << match_data.to_s.squish
+            if match_data[:chinese]
+              segments = CppjiebaRb.segment(match_data.to_s, mode: :mix)
+
+              segments = CppjiebaRb.filter_stop_word(segments) if ts_config != "english"
+
+              segments = segments.filter { |s| s.present? }
+              segmented_data << segments.join(" ")
+            else
+              segmented_data << match_data.to_s.squish
+            end
+          end
+
+          data = segmented_data.join(" ")
+        elsif segment_japanese?
+          data.gsub!(japanese_punctuation_regexp, " ")
+          data = TinyJapaneseSegmenter.segment(data)
+          data = data.filter { |s| s.present? }
+          data = data.join(" ")
+        else
+          data.squish!
+        end
+      end
+
+      data.gsub!(/\S+/) do |str|
+        if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
+          begin
+            uri = URI.parse(Regexp.last_match[1])
+            uri.query = nil
+            str = uri.to_s
+          rescue URI::Error
+            # don't fail if uri does not parse
           end
         end
 
-        data = segmented_data.join(" ")
-      elsif segment_japanese?
-        data.gsub!(japanese_punctuation_regexp, " ")
-        data = TinyJapaneseSegmenter.segment(data)
-        data = data.filter { |s| s.present? }
-        data = data.join(" ")
-      else
-        data.squish!
+        str
+      end
+
+      data
+    end
+
+    def word_to_date(str)
+      return Time.zone.now.beginning_of_day.days_ago(str.to_i) if str =~ /\A[0-9]{1,3}\z/
+
+      if str =~ /\A([12][0-9]{3})(-([0-1]?[0-9]))?(-([0-3]?[0-9]))?\z/
+        year = $1.to_i
+        month = $2 ? $3.to_i : 1
+        day = $4 ? $5.to_i : 1
+
+        return if day == 0 || month == 0 || day > 31 || month > 12
+
+        return(
+          begin
+            Time.zone.parse("#{year}-#{month}-#{day}")
+          rescue ArgumentError
+          end
+        )
+      end
+
+      return Time.zone.now.beginning_of_day.yesterday if str.downcase == "yesterday"
+
+      titlecase = str.downcase.titlecase
+
+      if Date::DAYNAMES.include?(titlecase)
+        return Time.zone.now.beginning_of_week(str.downcase.to_sym)
+      end
+
+      if idx = Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase)
+        delta = Time.zone.now.month - idx
+        delta += 12 if delta < 0
+        Time.zone.now.beginning_of_month.months_ago(delta)
       end
     end
 
-    data.gsub!(/\S+/) do |str|
-      if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
-        begin
-          uri = URI.parse(Regexp.last_match[1])
-          uri.query = nil
-          str = uri.to_s
-        rescue URI::Error
-          # don't fail if uri does not parse
+    def min_post_id_no_cache
+      return 0 unless SiteSetting.search_prefer_recent_posts?
+
+      offset, has_more =
+        Post
+          .unscoped
+          .order("id desc")
+          .offset(SiteSetting.search_recent_posts_size - 1)
+          .limit(2)
+          .pluck(:id)
+
+      has_more ? offset : 0
+    end
+
+    def min_post_id(opts = nil)
+      return 0 unless SiteSetting.search_prefer_recent_posts?
+
+      # It can be quite slow to count all the posts so let's cache it
+      Discourse
+        .cache
+        .fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
+          min_post_id_no_cache
         end
-      end
-
-      str
     end
 
-    data
-  end
-
-  def self.word_to_date(str)
-    return Time.zone.now.beginning_of_day.days_ago(str.to_i) if str =~ /\A[0-9]{1,3}\z/
-
-    if str =~ /\A([12][0-9]{3})(-([0-1]?[0-9]))?(-([0-3]?[0-9]))?\z/
-      year = $1.to_i
-      month = $2 ? $3.to_i : 1
-      day = $4 ? $5.to_i : 1
-
-      return if day == 0 || month == 0 || day > 31 || month > 12
-
-      return(
-        begin
-          Time.zone.parse("#{year}-#{month}-#{day}")
-        rescue ArgumentError
-        end
-      )
+    def need_segmenting?(data)
+      return false if data.match?(/\A\d+\z/)
+      !URI.parse(data).path.to_s.start_with?("/")
+    rescue URI::InvalidURIError
+      true
     end
-
-    return Time.zone.now.beginning_of_day.yesterday if str.downcase == "yesterday"
-
-    titlecase = str.downcase.titlecase
-
-    if Date::DAYNAMES.include?(titlecase)
-      return Time.zone.now.beginning_of_week(str.downcase.to_sym)
-    end
-
-    if idx = Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase)
-      delta = Time.zone.now.month - idx
-      delta += 12 if delta < 0
-      Time.zone.now.beginning_of_month.months_ago(delta)
-    end
-  end
-
-  def self.min_post_id_no_cache
-    return 0 unless SiteSetting.search_prefer_recent_posts?
-
-    offset, has_more =
-      Post
-        .unscoped
-        .order("id desc")
-        .offset(SiteSetting.search_recent_posts_size - 1)
-        .limit(2)
-        .pluck(:id)
-
-    has_more ? offset : 0
-  end
-
-  def self.min_post_id(opts = nil)
-    return 0 unless SiteSetting.search_prefer_recent_posts?
-
-    # It can be quite slow to count all the posts so let's cache it
-    Discourse
-      .cache
-      .fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
-        min_post_id_no_cache
-      end
-  end
-
-  def self.need_segmenting?(data)
-    return false if data.match?(/\A\d+\z/)
-    !URI.parse(data).path.to_s.start_with?("/")
-  rescue URI::InvalidURIError
-    true
   end
 
   attr_accessor :term
   attr_reader :clean_term, :guardian
 
+  class << self
+    def execute(term, opts = nil)
+      new(term, opts).execute
+    end
+  end
+  class << self
+    def advanced_order(trigger, enabled: -> { true }, &block)
+      advanced_orders[trigger] = { block:, enabled: }
+    end
+
+    def advanced_orders
+      @advanced_orders ||= {}
+    end
+
+    def advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
+      case_insensitive_matcher = Regexp.new(trigger.source, trigger.options | Regexp::IGNORECASE)
+      advanced_filters[trigger] = { block:, name:, enabled:, case_insensitive_matcher: }
+    end
+
+    def advanced_filters
+      @advanced_filters ||= {}
+    end
+
+    def custom_topic_eager_load(tables = nil, enabled: -> { true }, &block)
+      (@custom_topic_eager_loads ||= []) << { tables:, block:, enabled: }
+    end
+
+    def custom_topic_eager_loads
+      Array.wrap(@custom_topic_eager_loads)
+    end
+  end
+  class << self
+    def default_ts_config
+      "'#{Search.ts_config}'"
+    end
+  end
+  class << self
+    def ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil, prefix_match: true)
+      to_tsquery(
+        ts_config: ts_config,
+        term: set_tsquery_weight_filter(term, weight_filter, prefix_match: prefix_match),
+      )
+    end
+
+    def to_tsquery(ts_config: nil, term:, joiner: nil)
+      ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
+      escaped_term = "'#{escape_string(unaccent(term))}'"
+      tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+      # PG 14 and up default to using the followed by operator
+      # this restores the old behavior
+      tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
+      tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
+      tsquery
+    end
+
+    def set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
+      "'#{escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
+    end
+
+    def escape_string(term)
+      PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
+    end
+  end
   def initialize(term, opts = nil)
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
@@ -322,10 +394,6 @@ class Search
     @opts[:search_type] == :full_page || Topic === @search_context
   end
 
-  def self.execute(term, opts = nil)
-    new(term, opts).execute
-  end
-
   # Query a term
   def execute(readonly_mode: Discourse.readonly_mode?)
     if log_query?(readonly_mode)
@@ -378,31 +446,6 @@ class Search
     trigger_user_search_event(readonly_mode)
 
     @results
-  end
-
-  def self.advanced_order(trigger, enabled: -> { true }, &block)
-    advanced_orders[trigger] = { block:, enabled: }
-  end
-
-  def self.advanced_orders
-    @advanced_orders ||= {}
-  end
-
-  def self.advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
-    case_insensitive_matcher = Regexp.new(trigger.source, trigger.options | Regexp::IGNORECASE)
-    advanced_filters[trigger] = { block:, name:, enabled:, case_insensitive_matcher: }
-  end
-
-  def self.advanced_filters
-    @advanced_filters ||= {}
-  end
-
-  def self.custom_topic_eager_load(tables = nil, enabled: -> { true }, &block)
-    (@custom_topic_eager_loads ||= []) << { tables:, block:, enabled: }
-  end
-
-  def self.custom_topic_eager_loads
-    Array.wrap(@custom_topic_eager_loads)
   end
 
   advanced_filter(/\Ain:personal-direct\z/i) do |posts|
@@ -784,8 +827,6 @@ class Search
     end
   end
 
-  BEFORE_ADVANCED_FILTER_NAME = "before"
-
   advanced_filter(/\Abefore:(.*)\z/i, name: BEFORE_ADVANCED_FILTER_NAME) do |posts, match|
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
@@ -793,8 +834,6 @@ class Search
       posts
     end
   end
-
-  AFTER_ADVANCED_FILTER_NAME = "after"
 
   advanced_filter(/\Aafter:(.*)\z/i, name: AFTER_ADVANCED_FILTER_NAME) do |posts, match|
     if date = Search.word_to_date(match)
@@ -1220,8 +1259,6 @@ class Search
     end
   end
 
-  PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
-
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts =
       Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
@@ -1450,38 +1487,8 @@ class Search
     SQL
   end
 
-  def self.default_ts_config
-    "'#{Search.ts_config}'"
-  end
-
   def default_ts_config
     self.class.default_ts_config
-  end
-
-  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil, prefix_match: true)
-    to_tsquery(
-      ts_config: ts_config,
-      term: set_tsquery_weight_filter(term, weight_filter, prefix_match: prefix_match),
-    )
-  end
-
-  def self.to_tsquery(ts_config: nil, term:, joiner: nil)
-    ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    escaped_term = "'#{escape_string(unaccent(term))}'"
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
-    # PG 14 and up default to using the followed by operator
-    # this restores the old behavior
-    tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
-    tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
-    tsquery
-  end
-
-  def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
-    "'#{escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
-  end
-
-  def self.escape_string(term)
-    PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
   def ts_query(ts_config = nil, weight_filter: nil, prefix_match: true)
@@ -1605,10 +1612,6 @@ class Search
 
     query.includes(topic: topic_eager_loads)
   end
-
-  # Limited for performance reasons since `TS_HEADLINE` is slow when the text
-  # document is too long.
-  MAX_LENGTH_FOR_HEADLINE = 2500
 
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt

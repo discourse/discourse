@@ -4,6 +4,12 @@ module Jobs
   class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: "low"
 
+    # Error classes live on HotlinkedMediaDownloader now; these aliases keep the
+    # `rescue ImageTooLargeError` call sites in the
+    # PullUserProfileHotlinkedImages subclass working unchanged.
+    ImageTooLargeError = HotlinkedMediaDownloader::ImageTooLargeError
+    ImageBrokenError = HotlinkedMediaDownloader::ImageBrokenError
+    UploadCreateError = HotlinkedMediaDownloader::UploadCreateError
     def execute(args)
       disable_if_low_on_disk_space
 
@@ -77,13 +83,6 @@ module Jobs
         Jobs.enqueue_in(update_raw_delay, :update_hotlinked_raw, post_id: post.id)
       end
     end
-
-    # Error classes live on HotlinkedMediaDownloader now; these aliases keep the
-    # `rescue ImageTooLargeError` call sites in the
-    # PullUserProfileHotlinkedImages subclass working unchanged.
-    ImageTooLargeError = HotlinkedMediaDownloader::ImageTooLargeError
-    ImageBrokenError = HotlinkedMediaDownloader::ImageBrokenError
-    UploadCreateError = HotlinkedMediaDownloader::UploadCreateError
 
     def attempt_download(src, user_id)
       HotlinkedMediaDownloader.download(src, user_id, tmp_file_name: "discourse-hotlinked")

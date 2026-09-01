@@ -5,128 +5,131 @@ module DiscourseAi
     class PostClassification
       include Constants
 
-      def self.backfill_query(from_post_id: nil, max_age_days: nil)
-        available_classifier_names = active_classifier_names
-        return Post.none if available_classifier_names.blank?
+      CONCURRENT_CLASSFICATIONS = 40
+      CONCURRENT_AGENT_CLASSIFICATIONS = 5
+      class << self
+        def backfill_query(from_post_id: nil, max_age_days: nil)
+          available_classifier_names = active_classifier_names
+          return Post.none if available_classifier_names.blank?
 
-        queries =
-          available_classifier_names.map do |classifier_name|
-            quoted_classifier_name = ActiveRecord::Base.connection.quote(classifier_name)
+          queries =
+            available_classifier_names.map do |classifier_name|
+              quoted_classifier_name = ActiveRecord::Base.connection.quote(classifier_name)
 
-            base_query =
-              Post
-                .includes(:sentiment_classifications)
-                .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-                .where(post_type: Post.types[:regular])
-                .where.not(topics: { archetype: Archetype.private_message })
-                .where(posts: { deleted_at: nil })
-                .where(topics: { deleted_at: nil })
-                .joins(<<~SQL)
+              base_query =
+                Post
+                  .includes(:sentiment_classifications)
+                  .joins("INNER JOIN topics ON topics.id = posts.topic_id")
+                  .where(post_type: Post.types[:regular])
+                  .where.not(topics: { archetype: Archetype.private_message })
+                  .where(posts: { deleted_at: nil })
+                  .where(topics: { deleted_at: nil })
+                  .joins(<<~SQL)
                 LEFT JOIN classification_results crs
                   ON crs.target_id = posts.id
                   AND crs.target_type = 'Post'
                   AND crs.classification_type = 'sentiment'
                   AND crs.model_used = #{quoted_classifier_name}
               SQL
-                .where("crs.id IS NULL")
+                  .where("crs.id IS NULL")
 
-            base_query =
-              base_query.where("posts.id >= ?", from_post_id.to_i) if from_post_id.present?
-
-            if max_age_days.present?
               base_query =
-                base_query.where(
-                  "posts.created_at > current_date - INTERVAL '#{max_age_days.to_i} DAY'",
-                )
+                base_query.where("posts.id >= ?", from_post_id.to_i) if from_post_id.present?
+
+              if max_age_days.present?
+                base_query =
+                  base_query.where(
+                    "posts.created_at > current_date - INTERVAL '#{max_age_days.to_i} DAY'",
+                  )
+              end
+
+              base_query
             end
 
-            base_query
+          unioned_queries = queries.map(&:to_sql).join(" UNION ")
+
+          Post.from(Arel.sql("(#{unioned_queries}) as posts"))
+        end
+
+        def active_classifier_names
+          new.classifiers.map { |classifier| classifier[:model_name] }
+        end
+
+        def active_model_name_for(classification_type)
+          classification_type = classification_type.to_s
+
+          if strategy_for(classification_type) == Constants::AGENT_STRATEGY
+            return(
+              if classification_type == "sentiment"
+                Constants::SENTIMENT_AGENT_MODEL
+              else
+                Constants::EMOTION_AGENT_MODEL
+              end
+            )
           end
 
-        unioned_queries = queries.map(&:to_sql).join(" UNION ")
+          configured_model_name_for(classification_type) ||
+            default_model_name_for(classification_type)
+        end
 
-        Post.from(Arel.sql("(#{unioned_queries}) as posts"))
-      end
+        def configured_model_name_for(classification_type)
+          configs = DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values
+          return if configs.blank?
 
-      def self.active_classifier_names
-        new.classifiers.map { |classifier| classifier[:model_name] }
-      end
+          classification_type = classification_type.to_s
 
-      def self.active_model_name_for(classification_type)
-        classification_type = classification_type.to_s
-
-        if strategy_for(classification_type) == Constants::AGENT_STRATEGY
-          return(
-            if classification_type == "sentiment"
-              Constants::SENTIMENT_AGENT_MODEL
-            else
-              Constants::EMOTION_AGENT_MODEL
+          explicitly_typed_config =
+            configs.find do |config|
+              config.respond_to?(:classification_type) &&
+                config.classification_type.to_s == classification_type
             end
-          )
+          return explicitly_typed_config.model_name if explicitly_typed_config.present?
+
+          default_config =
+            configs.find do |config|
+              config.model_name == default_model_name_for(classification_type)
+            end
+          return default_config.model_name if default_config.present?
+
+          configs
+            .find { |config| classification_type_for(config) == classification_type }
+            &.model_name || untyped_custom_model_name(configs, classification_type)
         end
 
-        configured_model_name_for(classification_type) ||
-          default_model_name_for(classification_type)
-      end
+        def untyped_custom_model_name(configs, classification_type)
+          return if classification_type != "sentiment"
 
-      def self.configured_model_name_for(classification_type)
-        configs = DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values
-        return if configs.blank?
+          untyped_configs = configs.select { |config| classification_type_for(config).blank? }
+          untyped_configs.one? ? untyped_configs.first.model_name : nil
+        end
 
-        classification_type = classification_type.to_s
-
-        explicitly_typed_config =
-          configs.find do |config|
-            config.respond_to?(:classification_type) &&
-              config.classification_type.to_s == classification_type
+        def default_model_name_for(classification_type)
+          if classification_type.to_s == "sentiment"
+            Constants::SENTIMENT_MODEL
+          else
+            Constants::EMOTION_MODEL
           end
-        return explicitly_typed_config.model_name if explicitly_typed_config.present?
-
-        default_config =
-          configs.find { |config| config.model_name == default_model_name_for(classification_type) }
-        return default_config.model_name if default_config.present?
-
-        configs
-          .find { |config| classification_type_for(config) == classification_type }
-          &.model_name || untyped_custom_model_name(configs, classification_type)
-      end
-
-      def self.untyped_custom_model_name(configs, classification_type)
-        return if classification_type != "sentiment"
-
-        untyped_configs = configs.select { |config| classification_type_for(config).blank? }
-        untyped_configs.one? ? untyped_configs.first.model_name : nil
-      end
-
-      def self.default_model_name_for(classification_type)
-        if classification_type.to_s == "sentiment"
-          Constants::SENTIMENT_MODEL
-        else
-          Constants::EMOTION_MODEL
-        end
-      end
-
-      def self.classification_type_for(config)
-        if config.respond_to?(:classification_type) && config.classification_type.present?
-          return config.classification_type.to_s
         end
 
-        return "sentiment" if config.model_name == Constants::SENTIMENT_MODEL
-        return "emotion" if config.model_name == Constants::EMOTION_MODEL
+        def classification_type_for(config)
+          if config.respond_to?(:classification_type) && config.classification_type.present?
+            return config.classification_type.to_s
+          end
 
-        nil
-      end
+          return "sentiment" if config.model_name == Constants::SENTIMENT_MODEL
+          return "emotion" if config.model_name == Constants::EMOTION_MODEL
 
-      def self.strategy_for(classification_type)
-        if classification_type.to_s == "sentiment"
-          SiteSetting.ai_sentiment_sentiment_classification_strategy
-        else
-          SiteSetting.ai_sentiment_emotion_classification_strategy
+          nil
+        end
+
+        def strategy_for(classification_type)
+          if classification_type.to_s == "sentiment"
+            SiteSetting.ai_sentiment_sentiment_classification_strategy
+          else
+            SiteSetting.ai_sentiment_emotion_classification_strategy
+          end
         end
       end
-
-      CONCURRENT_CLASSFICATIONS = 40
-      CONCURRENT_AGENT_CLASSIFICATIONS = 5
 
       def bulk_classify!(relation)
         available_classifiers = classifiers

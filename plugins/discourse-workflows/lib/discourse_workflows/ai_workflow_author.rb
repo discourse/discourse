@@ -9,8 +9,10 @@ module DiscourseWorkflows
       DiscourseAi::Agents::Tools::Time
     ].freeze
 
-    def self.max_turn_tokens
-      100_000
+    class << self
+      def max_turn_tokens
+        100_000
+      end
     end
 
     def tools

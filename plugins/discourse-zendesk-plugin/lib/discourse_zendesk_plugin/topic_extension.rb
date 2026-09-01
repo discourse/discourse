@@ -2,8 +2,10 @@
 
 module DiscourseZendeskPlugin
   module TopicExtension
-    def self.prepended(base)
-      base.after_update :publish_to_zendesk
+    class << self
+      def prepended(base)
+        base.after_update :publish_to_zendesk
+      end
     end
 
     private

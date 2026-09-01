@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
 class DiscourseAutomation::StalledTopicFinder
-  def self.call(stalled_date, tags: nil, categories: nil)
-    sql = <<~SQL
+  class << self
+    def call(stalled_date, tags: nil, categories: nil)
+      sql = <<~SQL
       SELECT t.id
       FROM topics t
     SQL
 
-    sql += <<~SQL if tags.present?
+      sql += <<~SQL if tags.present?
         JOIN topic_tags ON topic_tags.topic_id = t.id
         JOIN tags
           ON tags.name IN (:tags)
           AND tags.id = topic_tags.tag_id
       SQL
 
-    sql += <<~SQL
+      sql += <<~SQL
       WHERE t.deleted_at IS NULL
       AND t.posts_count > 0
       AND t.archetype != 'private_message'
@@ -31,14 +32,15 @@ class DiscourseAutomation::StalledTopicFinder
       )
     SQL
 
-    sql += <<~SQL if categories.present?
+      sql += <<~SQL if categories.present?
         AND t.category_id IN (:categories)
       SQL
 
-    sql += <<~SQL
+      sql += <<~SQL
       LIMIT 250
     SQL
 
-    DB.query(sql, categories: categories, tags: tags, stalled_date: stalled_date)
+      DB.query(sql, categories: categories, tags: tags, stalled_date: stalled_date)
+    end
   end
 end

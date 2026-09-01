@@ -85,121 +85,133 @@ class AiAgent < ActiveRecord::Base
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
 
-  def self.agent_cache
-    @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
+  class << self
+    def agent_cache
+      @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
+    end
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
 
-  def self.all_agents(enabled_only: true)
-    agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+  class << self
+    def all_agents(enabled_only: true)
+      agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
 
-    if enabled_only
-      agent_cache[:value].select { |p| p.enabled }
-    else
-      agent_cache[:value]
+      if enabled_only
+        agent_cache[:value].select { |p| p.enabled }
+      else
+        agent_cache[:value]
+      end
     end
-  end
 
-  def self.subagent_tool_token_count
-    agent_cache[:subagent_tool_token_count] ||= begin
-      tokenizer = DiscourseAi::Tokenizer::OpenAiCl100kTokenizer
-      catalog =
-        AiAgent
-          .ordered
-          .limit(MAX_AGENTS_PER_SITE)
-          .pluck(:id, :name, :description)
-          .sort_by do |id, name, description|
-            -tokenizer.size("#{id}: #{name} #{description.to_s.truncate(300)}")
+    def subagent_tool_token_count
+      agent_cache[:subagent_tool_token_count] ||= begin
+        tokenizer = DiscourseAi::Tokenizer::OpenAiCl100kTokenizer
+        catalog =
+          AiAgent
+            .ordered
+            .limit(MAX_AGENTS_PER_SITE)
+            .pluck(:id, :name, :description)
+            .sort_by do |id, name, description|
+              -tokenizer.size("#{id}: #{name} #{description.to_s.truncate(300)}")
+            end
+            .first(MAX_SUBAGENTS)
+            .to_h { |id, name, description| [id, { name: name, description: description }] }
+
+        DiscourseAi::Agents::Tools::SpawnAgent.class_instance_from_catalog(nil, catalog).token_count
+      end
+    end
+
+    def all_agent_records(enabled_only: true)
+      agent_cache[:records] ||= AiAgent
+        .ordered
+        .includes(:user, ai_agent_mcp_servers: :ai_mcp_server)
+        .all
+        .limit(MAX_AGENTS_PER_SITE)
+        .to_a
+
+      if enabled_only
+        agent_cache[:records].select(&:enabled)
+      else
+        agent_cache[:records]
+      end
+    end
+
+    def find_by_id_from_cache(agent_id)
+      return nil if agent_id.nil?
+
+      # Try to find in record cache first
+      cached_agent = all_agent_records(enabled_only: false).find { |p| p.id == agent_id.to_i }
+      return cached_agent if cached_agent
+
+      # Fallback to database if not found in cache (e.g., in tests or if cache is stale)
+      find_by(id: agent_id.to_i)
+    end
+
+    def agent_users(user: nil)
+      agent_users =
+        agent_cache[:agent_users] ||= AiAgent
+          .where(enabled: true)
+          .joins(:user)
+          .map do |agent|
+            {
+              id: agent.id,
+              user_id: agent.user_id,
+              username: agent.user.username_lower,
+              allowed_group_ids: agent.allowed_group_ids,
+              default_llm_id: agent.default_llm_id,
+              force_default_llm: agent.force_default_llm,
+              allow_chat_channel_mentions: agent.allow_chat_channel_mentions,
+              allow_chat_direct_messages: agent.allow_chat_direct_messages,
+              allow_topic_mentions: agent.allow_topic_mentions,
+              allow_personal_messages: agent.allow_personal_messages,
+            }
           end
-          .first(MAX_SUBAGENTS)
-          .to_h { |id, name, description| [id, { name: name, description: description }] }
 
-      DiscourseAi::Agents::Tools::SpawnAgent.class_instance_from_catalog(nil, catalog).token_count
+      if user
+        agent_users.select { |agent_user| user.in_any_groups?(agent_user[:allowed_group_ids]) }
+      else
+        agent_users
+      end
     end
-  end
 
-  def self.all_agent_records(enabled_only: true)
-    agent_cache[:records] ||= AiAgent
-      .ordered
-      .includes(:user, ai_agent_mcp_servers: :ai_mcp_server)
-      .all
-      .limit(MAX_AGENTS_PER_SITE)
-      .to_a
+    def allowed_modalities(
+      user: nil,
+      allow_chat_channel_mentions: false,
+      allow_chat_direct_messages: false,
+      allow_topic_mentions: false,
+      allow_personal_messages: false
+    )
+      index =
+        "modality-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
 
-    if enabled_only
-      agent_cache[:records].select(&:enabled)
-    else
-      agent_cache[:records]
-    end
-  end
-
-  def self.find_by_id_from_cache(agent_id)
-    return nil if agent_id.nil?
-
-    # Try to find in record cache first
-    cached_agent = all_agent_records(enabled_only: false).find { |p| p.id == agent_id.to_i }
-    return cached_agent if cached_agent
-
-    # Fallback to database if not found in cache (e.g., in tests or if cache is stale)
-    find_by(id: agent_id.to_i)
-  end
-
-  def self.agent_users(user: nil)
-    agent_users =
-      agent_cache[:agent_users] ||= AiAgent
-        .where(enabled: true)
-        .joins(:user)
-        .map do |agent|
-          {
-            id: agent.id,
-            user_id: agent.user_id,
-            username: agent.user.username_lower,
-            allowed_group_ids: agent.allowed_group_ids,
-            default_llm_id: agent.default_llm_id,
-            force_default_llm: agent.force_default_llm,
-            allow_chat_channel_mentions: agent.allow_chat_channel_mentions,
-            allow_chat_direct_messages: agent.allow_chat_direct_messages,
-            allow_topic_mentions: agent.allow_topic_mentions,
-            allow_personal_messages: agent.allow_personal_messages,
-          }
+      agents =
+        agent_cache[index.to_sym] ||= agent_users.select do |agent|
+          next true if allow_chat_channel_mentions && agent[:allow_chat_channel_mentions]
+          next true if allow_chat_direct_messages && agent[:allow_chat_direct_messages]
+          next true if allow_topic_mentions && agent[:allow_topic_mentions]
+          next true if allow_personal_messages && agent[:allow_personal_messages]
+          false
         end
 
-    if user
-      agent_users.select { |agent_user| user.in_any_groups?(agent_user[:allowed_group_ids]) }
-    else
-      agent_users
-    end
-  end
-
-  def self.allowed_modalities(
-    user: nil,
-    allow_chat_channel_mentions: false,
-    allow_chat_direct_messages: false,
-    allow_topic_mentions: false,
-    allow_personal_messages: false
-  )
-    index =
-      "modality-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
-
-    agents =
-      agent_cache[index.to_sym] ||= agent_users.select do |agent|
-        next true if allow_chat_channel_mentions && agent[:allow_chat_channel_mentions]
-        next true if allow_chat_direct_messages && agent[:allow_chat_direct_messages]
-        next true if allow_topic_mentions && agent[:allow_topic_mentions]
-        next true if allow_personal_messages && agent[:allow_personal_messages]
-        false
+      if user
+        agents.select { |u| user.in_any_groups?(u[:allowed_group_ids]) }
+      else
+        agents
       end
-
-    if user
-      agents.select { |u| user.in_any_groups?(u[:allowed_group_ids]) }
-    else
-      agents
     end
   end
 
   after_commit :bump_cache
 
+  class << self
+    def detach_user!(user_id)
+      return if where(user_id: user_id).update_all(user_id: nil) == 0
+
+      agent_cache.flush!
+      DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+    end
+  end
   def bump_cache
     self.class.agent_cache.flush!
     return if !DiscourseAi::AiHelper::Assistant.prompt_agent_ids.include?(id)
@@ -417,13 +429,6 @@ class AiAgent < ActiveRecord::Base
       define_method(:response_format) { @ai_agent&.response_format }
       define_method(:examples) { @ai_agent&.examples }
     end
-  end
-
-  def self.detach_user!(user_id)
-    return if where(user_id: user_id).update_all(user_id: nil) == 0
-
-    agent_cache.flush!
-    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
   end
 
   def supports_bot_user?

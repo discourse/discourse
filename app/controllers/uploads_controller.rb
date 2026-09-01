@@ -22,6 +22,75 @@ class UploadsController < ApplicationController
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
+  class << self
+    def serialize_upload(data)
+      # as_json.as_json is not a typo... as_json in AM serializer returns keys as symbols, we need them
+      # as strings here
+      serialized = UploadSerializer.new(data, root: nil).as_json.as_json if Upload === data
+      serialized ||= (data || {}).as_json
+    end
+
+    def create_upload(
+      current_user:,
+      file:,
+      url:,
+      type:,
+      for_private_message:,
+      for_site_setting:,
+      site_setting_name: nil,
+      pasted:,
+      is_api:,
+      retain_hours:
+    )
+      if file.nil?
+        if url.present? && is_api
+          maximum_upload_size = [
+            SiteSetting.max_image_size_kb,
+            UploadsController.max_attachment_size_for_user(current_user),
+          ].max.kilobytes
+          tempfile =
+            begin
+              FileHelper.download(
+                url,
+                follow_redirect: true,
+                max_file_size: maximum_upload_size,
+                tmp_file_name: "discourse-upload-#{type}",
+              )
+            rescue StandardError
+              nil
+            end
+          filename = File.basename(URI.parse(url).path)
+        end
+      else
+        tempfile = file.tempfile
+        filename = file.original_filename
+      end
+
+      return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
+
+      opts = { type:, for_private_message:, for_site_setting:, site_setting_name:, pasted: }
+
+      upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
+
+      if upload.errors.empty? && current_user.admin?
+        upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
+      end
+
+      upload.errors.empty? ? upload : { errors: upload.errors.to_hash.values.flatten }
+    ensure
+      tempfile&.close!
+    end
+  end
+  class << self
+    def max_attachment_size_for_user(user)
+      if user.id == Discourse::SYSTEM_USER_ID &&
+           !SiteSetting.system_user_max_attachment_size_kb.zero?
+        SiteSetting.system_user_max_attachment_size_kb
+      else
+        SiteSetting.max_attachment_size_kb
+      end
+    end
+  end
   def create
     # capture current user for block later on
     me = current_user
@@ -300,73 +369,7 @@ class UploadsController < ApplicationController
     raise Discourse::InvalidParameters.new("XHR not allowed")
   end
 
-  def self.serialize_upload(data)
-    # as_json.as_json is not a typo... as_json in AM serializer returns keys as symbols, we need them
-    # as strings here
-    serialized = UploadSerializer.new(data, root: nil).as_json.as_json if Upload === data
-    serialized ||= (data || {}).as_json
-  end
-
-  def self.create_upload(
-    current_user:,
-    file:,
-    url:,
-    type:,
-    for_private_message:,
-    for_site_setting:,
-    site_setting_name: nil,
-    pasted:,
-    is_api:,
-    retain_hours:
-  )
-    if file.nil?
-      if url.present? && is_api
-        maximum_upload_size = [
-          SiteSetting.max_image_size_kb,
-          UploadsController.max_attachment_size_for_user(current_user),
-        ].max.kilobytes
-        tempfile =
-          begin
-            FileHelper.download(
-              url,
-              follow_redirect: true,
-              max_file_size: maximum_upload_size,
-              tmp_file_name: "discourse-upload-#{type}",
-            )
-          rescue StandardError
-            nil
-          end
-        filename = File.basename(URI.parse(url).path)
-      end
-    else
-      tempfile = file.tempfile
-      filename = file.original_filename
-    end
-
-    return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
-
-    opts = { type:, for_private_message:, for_site_setting:, site_setting_name:, pasted: }
-
-    upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
-
-    if upload.errors.empty? && current_user.admin?
-      upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
-    end
-
-    upload.errors.empty? ? upload : { errors: upload.errors.to_hash.values.flatten }
-  ensure
-    tempfile&.close!
-  end
-
   private
-
-  def self.max_attachment_size_for_user(user)
-    if user.id == Discourse::SYSTEM_USER_ID && !SiteSetting.system_user_max_attachment_size_kb.zero?
-      SiteSetting.system_user_max_attachment_size_kb
-    else
-      SiteSetting.max_attachment_size_kb
-    end
-  end
 
   # We can preemptively check size for attachments, but not for (most) images
   # as they may be further reduced in size by UploadCreator (at this point

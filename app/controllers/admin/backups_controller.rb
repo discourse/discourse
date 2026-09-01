@@ -24,6 +24,11 @@ class Admin::BackupsController < Admin::AdminController
                          :abort_multipart,
                          :batch_presign_multipart_parts
 
+  class << self
+    def serialize_upload(_upload)
+      {} # noop, the backup does not create an upload record
+    end
+  end
   def index
     respond_to do |format|
       format.html do
@@ -293,10 +298,6 @@ class Admin::BackupsController < Admin::AdminController
               I18n.t("backup.invalid_filename"),
             )
     end
-  end
-
-  def self.serialize_upload(_upload)
-    {} # noop, the backup does not create an upload record
   end
 
   def create_direct_multipart_upload

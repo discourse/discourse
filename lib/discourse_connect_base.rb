@@ -61,38 +61,41 @@ class DiscourseConnectBase
     suppress_welcome_message
   ]
 
-  def self.nonce_expiry_time
-    @nonce_expiry_time ||= 30.minutes
-  end
+  class << self
+    def nonce_expiry_time
+      @nonce_expiry_time ||= 30.minutes
+    end
 
-  def self.nonce_expiry_time=(v)
-    @nonce_expiry_time = v
-  end
+    def nonce_expiry_time=(v)
+      @nonce_expiry_time = v
+    end
 
-  def self.used_nonce_expiry_time
-    24.hours
+    def used_nonce_expiry_time
+      24.hours
+    end
   end
 
   attr_accessor(*ACCESSORS)
   attr_writer :sso_secret, :sso_url
 
-  def self.sso_secret
-    raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
-  end
+  class << self
+    def sso_secret
+      raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
+    end
 
-  def self.sso_url
-    raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
-  end
+    def sso_url
+      raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
+    end
 
-  def self.parse(payload, sso_secret = nil, **init_kwargs)
-    sso = new(**init_kwargs)
-    sso.sso_secret = sso_secret if sso_secret
+    def parse(payload, sso_secret = nil, **init_kwargs)
+      sso = new(**init_kwargs)
+      sso.sso_secret = sso_secret if sso_secret
 
-    raise BlankSecretError if sso.sso_secret.blank?
+      raise BlankSecretError if sso.sso_secret.blank?
 
-    parsed = Rack::Utils.parse_query(payload)
+      parsed = Rack::Utils.parse_query(payload)
 
-    raise PayloadParseError.new(<<~MSG) if parsed["sso"] =~ %r{[^a-zA-Z0-9=\r\n/+]}m
+      raise PayloadParseError.new(<<~MSG) if parsed["sso"] =~ %r{[^a-zA-Z0-9=\r\n/+]}m
         The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters.
         
         Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64.
@@ -100,13 +103,13 @@ class DiscourseConnectBase
         sso: #{parsed["sso"]}
       MSG
 
-    decoded = Base64.decode64(parsed["sso"])
-    decoded_hash = Rack::Utils.parse_query(decoded)
+      decoded = Base64.decode64(parsed["sso"])
+      decoded_hash = Rack::Utils.parse_query(decoded)
 
-    expected_sig = sso.sign(parsed["sso"])
+      expected_sig = sso.sign(parsed["sso"])
 
-    if !ActiveSupport::SecurityUtils.secure_compare(expected_sig, parsed["sig"].to_s)
-      raise SignatureError, <<~MSG
+      if !ActiveSupport::SecurityUtils.secure_compare(expected_sig, parsed["sig"].to_s)
+        raise SignatureError, <<~MSG
         Bad signature for payload
 
         sso: #{parsed["sso"]}
@@ -115,24 +118,30 @@ class DiscourseConnectBase
         
         expected sig: #{expected_sig}
         MSG
-    end
-
-    ACCESSORS.each do |k|
-      val = decoded_hash[k.to_s]
-      val = val.to_i if FIXNUMS.include? k
-      val = %w[true false].include?(val) ? val == "true" : nil if BOOLS.include? k
-      sso.public_send("#{k}=", val)
-    end
-
-    decoded_hash.each do |k, v|
-      if field = k[/\Acustom\.(.+)\z/, 1]
-        sso.custom_fields[field] = v
       end
-    end
 
-    sso
+      ACCESSORS.each do |k|
+        val = decoded_hash[k.to_s]
+        val = val.to_i if FIXNUMS.include? k
+        val = %w[true false].include?(val) ? val == "true" : nil if BOOLS.include? k
+        sso.public_send("#{k}=", val)
+      end
+
+      decoded_hash.each do |k, v|
+        if field = k[/\Acustom\.(.+)\z/, 1]
+          sso.custom_fields[field] = v
+        end
+      end
+
+      sso
+    end
   end
 
+  class << self
+    def sign(payload, secret)
+      OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+    end
+  end
   def diagnostics
     DiscourseConnectBase::ACCESSORS.map { |a| "#{a}: #{public_send(a)}" }.join("\n")
   end
@@ -147,10 +156,6 @@ class DiscourseConnectBase
 
   def custom_fields
     @custom_fields ||= {}
-  end
-
-  def self.sign(payload, secret)
-    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
   end
 
   def sign(payload, secret = nil)

@@ -4,57 +4,60 @@ module DiscourseAi
   module Agents
     module Tools
       class MovePosts < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Moves posts from one topic to another existing topic, or to a new topic.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the source topic containing the posts to move",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "post_ids",
-                description: "Array of post IDs to move",
-                type: "array",
-                item_type: "integer",
-                required: true,
-              },
-              {
-                name: "destination_topic_id",
-                description:
-                  "The ID of the existing topic to move posts to. Either this or new_title must be provided.",
-                type: "integer",
-              },
-              {
-                name: "new_title",
-                description:
-                  "Title for a new topic to create and move posts into. Either this or destination_topic_id must be provided.",
-                type: "string",
-              },
-              {
-                name: "category_id",
-                description: "Category ID for the new topic (only used with new_title)",
-                type: "integer",
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the posts are being moved",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Moves posts from one topic to another existing topic, or to a new topic.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the source topic containing the posts to move",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "post_ids",
+                  description: "Array of post IDs to move",
+                  type: "array",
+                  item_type: "integer",
+                  required: true,
+                },
+                {
+                  name: "destination_topic_id",
+                  description:
+                    "The ID of the existing topic to move posts to. Either this or new_title must be provided.",
+                  type: "integer",
+                },
+                {
+                  name: "new_title",
+                  description:
+                    "Title for a new topic to create and move posts into. Either this or destination_topic_id must be provided.",
+                  type: "string",
+                },
+                {
+                  name: "category_id",
+                  description: "Category ID for the new topic (only used with new_title)",
+                  type: "integer",
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the posts are being moved",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "move_posts"
-        end
+          def name
+            "move_posts"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

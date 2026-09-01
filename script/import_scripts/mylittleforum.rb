@@ -87,6 +87,51 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   SiteSetting.disable_emails = "non-staff"
   SiteSetting.force_hostname = FORCE_HOSTNAME if FORCE_HOSTNAME
 
+  def initialize
+    print_warning("Importing data after #{IMPORT_AFTER}") if IMPORT_AFTER > "1970-01-01"
+
+    super
+    @htmlentities = HTMLEntities.new
+    begin
+      @client =
+        Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
+    rescue Exception => e
+      puts "=" * 50
+      puts e.message
+      puts <<~TEXT
+        Cannot log in to database.
+
+        Hostname: #{DB_HOST}
+        Username: #{DB_USER}
+        Password: #{DB_PW}
+        database: #{DB_NAME}
+
+        You should set these variables:
+
+        export DB_HOST="localhost"
+        export DB_NAME="mylittleforum"
+        export DB_PW=""
+        export DB_USER="root"
+        export TABLE_PREFIX="forum_"
+        export IMPORT_AFTER="1970-01-01"
+        export IMAGE_BASE="http://www.example.com/forum"
+        export BASE="forum"
+
+        Exiting.
+      TEXT
+      exit
+    end
+
+    @parent_category_id = resolve_parent_category_id
+    build_legacy_link_rewriter
+
+    # uploads
+    @script_dir = File.expand_path(File.dirname(__FILE__))
+    @upload_map_path = File.join(@script_dir, "mlf_upload_map.json")
+    @missing_uploads_path = File.join(@script_dir, "mlf_missing_uploads.txt")
+    @upload_map = load_upload_map(@upload_map_path)
+    build_legacy_upload_rewriter
+  end
   def get_site_settings_for_import
     settings = super
 
@@ -132,52 +177,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     end
 
     parent.id
-  end
-
-  def initialize
-    print_warning("Importing data after #{IMPORT_AFTER}") if IMPORT_AFTER > "1970-01-01"
-
-    super
-    @htmlentities = HTMLEntities.new
-    begin
-      @client =
-        Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
-    rescue Exception => e
-      puts "=" * 50
-      puts e.message
-      puts <<~TEXT
-        Cannot log in to database.
-
-        Hostname: #{DB_HOST}
-        Username: #{DB_USER}
-        Password: #{DB_PW}
-        database: #{DB_NAME}
-
-        You should set these variables:
-
-        export DB_HOST="localhost"
-        export DB_NAME="mylittleforum"
-        export DB_PW=""
-        export DB_USER="root"
-        export TABLE_PREFIX="forum_"
-        export IMPORT_AFTER="1970-01-01"
-        export IMAGE_BASE="http://www.example.com/forum"
-        export BASE="forum"
-
-        Exiting.
-      TEXT
-      exit
-    end
-
-    @parent_category_id = resolve_parent_category_id
-    build_legacy_link_rewriter
-
-    # uploads
-    @script_dir = File.expand_path(File.dirname(__FILE__))
-    @upload_map_path = File.join(@script_dir, "mlf_upload_map.json")
-    @missing_uploads_path = File.join(@script_dir, "mlf_missing_uploads.txt")
-    @upload_map = load_upload_map(@upload_map_path)
-    build_legacy_upload_rewriter
   end
 
   def execute

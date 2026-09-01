@@ -4,40 +4,42 @@ module DiscourseAi
   module Agents
     module Tools
       class Image < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Renders an image from the description (remove all connector words, keep it to 40 words or less). Despite being a text based bot you can generate images! (when user asks to draw, paint or other synonyms try this)",
-            parameters: [
-              {
-                name: "prompts",
-                description:
-                  "The prompts used to generate or create or draw the image (40 words or less, be creative) up to 4 prompts",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-              {
-                name: "seeds",
-                description:
-                  "The seed used to generate the image (optional) - can be used to retain image style on amended prompts",
-                type: "array",
-                item_type: "integer",
-              },
-              {
-                name: "aspect_ratio",
-                description: "The aspect ratio of the image (optional defaults to 1:1)",
-                type: "string",
-                required: false,
-                enum: %w[16:9 1:1 21:9 2:3 3:2 4:5 5:4 9:16 9:21],
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Renders an image from the description (remove all connector words, keep it to 40 words or less). Despite being a text based bot you can generate images! (when user asks to draw, paint or other synonyms try this)",
+              parameters: [
+                {
+                  name: "prompts",
+                  description:
+                    "The prompts used to generate or create or draw the image (40 words or less, be creative) up to 4 prompts",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+                {
+                  name: "seeds",
+                  description:
+                    "The seed used to generate the image (optional) - can be used to retain image style on amended prompts",
+                  type: "array",
+                  item_type: "integer",
+                },
+                {
+                  name: "aspect_ratio",
+                  description: "The aspect ratio of the image (optional defaults to 1:1)",
+                  type: "string",
+                  required: false,
+                  enum: %w[16:9 1:1 21:9 2:3 3:2 4:5 5:4 9:16 9:21],
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "image"
+          def name
+            "image"
+          end
         end
 
         def initialize(*args, **kwargs)

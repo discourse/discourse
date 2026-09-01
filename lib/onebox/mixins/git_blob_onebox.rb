@@ -3,12 +3,14 @@
 module Onebox
   module Mixins
     module GitBlobOnebox
-      def self.included(klass)
-        klass.include(Onebox::Engine)
-        klass.include(Onebox::LayoutSupport)
-        klass.matches_regexp(klass.git_regexp)
-        klass.always_https
-        klass.include(InstanceMethods)
+      class << self
+        def included(klass)
+          klass.include(Onebox::Engine)
+          klass.include(Onebox::LayoutSupport)
+          klass.matches_regexp(klass.git_regexp)
+          klass.always_https
+          klass.include(InstanceMethods)
+        end
       end
 
       EXPAND_AFTER = 0b001

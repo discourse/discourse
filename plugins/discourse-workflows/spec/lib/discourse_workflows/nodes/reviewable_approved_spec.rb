@@ -16,8 +16,10 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
       plugin_instance = Plugin::Instance.new
       plugin_reviewable_type =
         Class.new(Reviewable) do
-          def self.name
-            "CustomReviewableType"
+          class << self
+            def name
+              "CustomReviewableType"
+            end
           end
         end
 

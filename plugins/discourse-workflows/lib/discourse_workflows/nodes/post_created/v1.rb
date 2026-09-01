@@ -51,14 +51,16 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "groups"
-            ::Group
-              .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "groups"
+              ::Group
+                .order(:name)
+                .pluck(:id, :name)
+                .select { |_, name| context.matches_filter?(name) }
+                .map { |id, name| { id:, name: } }
+            end
           end
         end
 

@@ -4,15 +4,16 @@ module DiscourseChatIntegration::Provider::SlackProvider
   class SlackMessageFormatter < Nokogiri::XML::SAX::Document
     attr_reader :excerpt
 
+    class << self
+      def format(html = "")
+        me = new
+        parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8.to_s)
+        parser.parse(html)
+        me.excerpt
+      end
+    end
     def initialize
       @excerpt = +""
-    end
-
-    def self.format(html = "")
-      me = new
-      parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8.to_s)
-      parser.parse(html)
-      me.excerpt
     end
 
     def start_element(name, attributes = [])

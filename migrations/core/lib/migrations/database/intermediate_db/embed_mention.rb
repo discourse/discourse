@@ -38,23 +38,25 @@ module Migrations
         #
         # @see Migrations::Database::IntermediateDB::Enums::MentionType
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        def self.create(
-          mention_type: nil,
-          name: nil,
-          owner_id:,
-          owner_type:,
-          placeholder:,
-          target_id: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            mention_type,
-            name,
-            owner_id,
-            owner_type,
-            placeholder,
-            target_id,
+        class << self
+          def create(
+            mention_type: nil,
+            name: nil,
+            owner_id:,
+            owner_type:,
+            placeholder:,
+            target_id: nil
           )
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              mention_type,
+              name,
+              owner_id,
+              owner_type,
+              placeholder,
+              target_id,
+            )
+          end
         end
       end
     end

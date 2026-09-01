@@ -37,16 +37,16 @@ class ImportScripts::Jive < ImportScripts::Base
   end
 
   class RowResolver
-    def load(row)
-      @row = row
+    class << self
+      def create(cols)
+        Class.new(RowResolver).new(cols)
+      end
     end
-
-    def self.create(cols)
-      Class.new(RowResolver).new(cols)
-    end
-
     def initialize(cols)
       cols.each_with_index { |col, idx| self.class.public_send(:define_method, col) { @row[idx] } }
+    end
+    def load(row)
+      @row = row
     end
   end
 

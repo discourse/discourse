@@ -3,8 +3,10 @@
 module AdminDashboard
   module Reports
     class Section
-      def self.build(guardian:, search: nil)
-        new(guardian: guardian, search: search).build
+      class << self
+        def build(guardian:, search: nil)
+          new(guardian: guardian, search: search).build
+        end
       end
 
       def initialize(guardian:, search: nil)

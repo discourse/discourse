@@ -1,31 +1,33 @@
 # frozen_string_literal: true
 
 class TopicViewDetailsSerializer < ApplicationSerializer
-  def self.can_attributes
-    %i[
-      can_move_posts
-      can_delete
-      can_permanently_delete
-      can_recover
-      can_remove_allowed_users
-      can_invite_to
-      can_invite_via_email
-      can_create_post
-      can_reply_as_new_topic
-      can_flag_topic
-      can_convert_topic
-      can_review_topic
-      can_edit_tags
-      can_publish_page
-      can_close_topic
-      can_archive_topic
-      can_split_merge_topic
-      can_edit_staff_notes
-      can_toggle_topic_visibility
-      can_pin_unpin_topic
-      can_banner_topic
-      can_moderate_category
-    ]
+  class << self
+    def can_attributes
+      %i[
+        can_move_posts
+        can_delete
+        can_permanently_delete
+        can_recover
+        can_remove_allowed_users
+        can_invite_to
+        can_invite_via_email
+        can_create_post
+        can_reply_as_new_topic
+        can_flag_topic
+        can_convert_topic
+        can_review_topic
+        can_edit_tags
+        can_publish_page
+        can_close_topic
+        can_archive_topic
+        can_split_merge_topic
+        can_edit_staff_notes
+        can_toggle_topic_visibility
+        can_pin_unpin_topic
+        can_banner_topic
+        can_moderate_category
+      ]
+    end
   end
 
   # NOTE: `can_edit` is defined as an attribute because we explicitly want

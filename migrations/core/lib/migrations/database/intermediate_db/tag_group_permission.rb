@@ -29,14 +29,16 @@ module Migrations
         # @param created_at        [Time, nil]
         #
         # @return [void]
-        def self.create(tag_group_id:, group_id:, permission_type:, created_at: nil)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            tag_group_id,
-            group_id,
-            permission_type,
-            Migrations::Database.format_datetime(created_at),
-          )
+        class << self
+          def create(tag_group_id:, group_id:, permission_type:, created_at: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              tag_group_id,
+              group_id,
+              permission_type,
+              Migrations::Database.format_datetime(created_at),
+            )
+          end
         end
       end
     end

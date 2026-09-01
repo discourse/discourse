@@ -22,6 +22,34 @@ module DiscourseWorkflows
                   :finished_at
       attr_accessor :metadata
 
+      class << self
+        def from_h(hash)
+          new(
+            node_id: hash["node_id"],
+            node_name: hash["node_name"],
+            node_type: hash["node_type"],
+            position: hash["position"] || 0,
+            input: hash["input"],
+            status: hash["status"] || RUNNING,
+            output: hash["output"],
+            error: hash["error"],
+            started_at: hash["started_at"],
+            finished_at: hash["finished_at"],
+            metadata: hash["metadata"],
+          )
+        end
+
+        def build(node:, position:, input:, **kwargs)
+          new(
+            node_id: node.id,
+            node_name: node.name,
+            node_type: node.type,
+            position: position,
+            input: input,
+            **kwargs,
+          )
+        end
+      end
       def initialize(
         node_id:,
         node_name:,
@@ -111,33 +139,6 @@ module DiscourseWorkflows
         h["error"] = error if error
         h["metadata"] = metadata if metadata
         h
-      end
-
-      def self.from_h(hash)
-        new(
-          node_id: hash["node_id"],
-          node_name: hash["node_name"],
-          node_type: hash["node_type"],
-          position: hash["position"] || 0,
-          input: hash["input"],
-          status: hash["status"] || RUNNING,
-          output: hash["output"],
-          error: hash["error"],
-          started_at: hash["started_at"],
-          finished_at: hash["finished_at"],
-          metadata: hash["metadata"],
-        )
-      end
-
-      def self.build(node:, position:, input:, **kwargs)
-        new(
-          node_id: node.id,
-          node_name: node.name,
-          node_type: node.type,
-          position: position,
-          input: input,
-          **kwargs,
-        )
       end
     end
   end

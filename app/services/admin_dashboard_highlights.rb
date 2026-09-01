@@ -11,15 +11,17 @@ class AdminDashboardHighlights
     new_contributors: "new_contributors",
   }.freeze
 
-  def self.build(start_date:, end_date:)
-    new(start_date: start_date, end_date: end_date).build
-  end
+  class << self
+    def build(start_date:, end_date:)
+      new(start_date: start_date, end_date: end_date).build
+    end
 
-  def self.enabled_kpis
-    core_kpis = KPI_REPORTS.map { |type, report| { type: type, report: report } }
+    def enabled_kpis
+      core_kpis = KPI_REPORTS.map { |type, report| { type: type, report: report } }
 
-    (core_kpis + DiscoursePluginRegistry.admin_dashboard_highlight_kpis).reject do |kpi|
-      kpi[:enabled].respond_to?(:call) && !kpi[:enabled].call
+      (core_kpis + DiscoursePluginRegistry.admin_dashboard_highlight_kpis).reject do |kpi|
+        kpi[:enabled].respond_to?(:call) && !kpi[:enabled].call
+      end
     end
   end
 

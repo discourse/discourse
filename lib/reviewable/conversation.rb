@@ -8,20 +8,21 @@ class Reviewable < ActiveRecord::Base
       include ActiveModel::Serialization
       attr_reader :id, :user, :excerpt
 
+      class << self
+        def excerpt(cooked)
+          excerpt = ::Post.excerpt(cooked, 250, keep_emoji_images: true)
+          # remove the first link if it's the first node
+          fragment = Nokogiri::HTML5.fragment(excerpt)
+          if fragment.children.first == fragment.css("a:first").first && fragment.children.first
+            fragment.children.first.remove
+          end
+          fragment.to_html.strip
+        end
+      end
       def initialize(post)
         @user = post.user
         @id = post.id
         @excerpt = self.class.excerpt(post.cooked)
-      end
-
-      def self.excerpt(cooked)
-        excerpt = ::Post.excerpt(cooked, 250, keep_emoji_images: true)
-        # remove the first link if it's the first node
-        fragment = Nokogiri::HTML5.fragment(excerpt)
-        if fragment.children.first == fragment.css("a:first").first && fragment.children.first
-          fragment.children.first.remove
-        end
-        fragment.to_html.strip
       end
     end
 

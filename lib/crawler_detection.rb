@@ -3,109 +3,115 @@
 module CrawlerDetection
   WAYBACK_MACHINE_URL = "archive.org"
 
-  def self.to_matcher(string, type: nil)
-    escaped = string.split("|").map { |agent| Regexp.escape(agent) }.join("|")
+  class << self
+    def to_matcher(string, type: nil)
+      escaped = string.split("|").map { |agent| Regexp.escape(agent) }.join("|")
 
-    if type == :real && Rails.env.test?
-      # we need this bypass so we properly render views
-      escaped << "|Rails Testing"
+      if type == :real && Rails.env.test?
+        # we need this bypass so we properly render views
+        escaped << "|Rails Testing"
+      end
+
+      Regexp.new(escaped, Regexp::IGNORECASE)
     end
 
-    Regexp.new(escaped, Regexp::IGNORECASE)
-  end
+    def crawler?(user_agent, via_header = nil)
+      if user_agent.nil? || user_agent&.include?(WAYBACK_MACHINE_URL) ||
+           via_header&.include?(WAYBACK_MACHINE_URL)
+        return true
+      end
 
-  def self.crawler?(user_agent, via_header = nil)
-    if user_agent.nil? || user_agent&.include?(WAYBACK_MACHINE_URL) ||
-         via_header&.include?(WAYBACK_MACHINE_URL)
-      return true
-    end
+      # this is done to avoid regenerating regexes
+      @non_crawler_matchers ||= {}
+      @matchers ||= {}
 
-    # this is done to avoid regenerating regexes
-    @non_crawler_matchers ||= {}
-    @matchers ||= {}
-
-    possibly_real =
-      (
-        @non_crawler_matchers[SiteSetting.non_crawler_user_agents] ||= to_matcher(
-          SiteSetting.non_crawler_user_agents,
-          type: :real,
+      possibly_real =
+        (
+          @non_crawler_matchers[SiteSetting.non_crawler_user_agents] ||= to_matcher(
+            SiteSetting.non_crawler_user_agents,
+            type: :real,
+          )
         )
-      )
 
-    if user_agent.match?(possibly_real)
-      known_bots =
-        (@matchers[SiteSetting.crawler_user_agents] ||= to_matcher(SiteSetting.crawler_user_agents))
-      if user_agent.match?(known_bots)
-        bypass =
+      if user_agent.match?(possibly_real)
+        known_bots =
           (
-            @matchers[SiteSetting.crawler_check_bypass_agents] ||= to_matcher(
-              SiteSetting.crawler_check_bypass_agents,
+            @matchers[SiteSetting.crawler_user_agents] ||= to_matcher(
+              SiteSetting.crawler_user_agents,
             )
           )
-        !user_agent.match?(bypass)
+        if user_agent.match?(known_bots)
+          bypass =
+            (
+              @matchers[SiteSetting.crawler_check_bypass_agents] ||= to_matcher(
+                SiteSetting.crawler_check_bypass_agents,
+              )
+            )
+          !user_agent.match?(bypass)
+        else
+          false
+        end
       else
-        false
+        true
       end
-    else
-      true
-    end
-  end
-
-  def self.crawler_ip?(ip)
-    return false if ip.blank?
-    asn = DiscourseIpInfo.get(ip)[:asn]
-    return false if asn.blank?
-    SiteSetting.crawler_asns_map.include?(asn.to_s)
-  end
-
-  def self.show_browser_update?(user_agent)
-    return false if SiteSetting.browser_update_user_agents.blank?
-
-    @browser_update_matchers ||= {}
-    matcher =
-      @browser_update_matchers[SiteSetting.browser_update_user_agents] ||= to_matcher(
-        SiteSetting.browser_update_user_agents,
-      )
-    user_agent.match?(matcher)
-  end
-
-  def self.crawler_layout_request?(request)
-    return false if request.blank?
-    return false if request.user_agent.blank?
-    return false if request.media_type.present? && !request.media_type.include?("html")
-    return false if %w[json rss].include?(request.params[:format].to_s)
-
-    (SiteSetting.enable_escaped_fragments? && request.params.key?("_escaped_fragment_")) ||
-      request.params.key?("print") || show_browser_update?(request.user_agent) ||
-      crawler?(request.user_agent, request.headers["HTTP_VIA"])
-  end
-
-  # Given a user_agent that returns true from crawler?, should its request be allowed?
-  def self.allow_crawler?(user_agent)
-    if SiteSetting.allowed_crawler_user_agents.blank? &&
-         SiteSetting.blocked_crawler_user_agents.blank?
-      return true
     end
 
-    @allowlisted_matchers ||= {}
-    @blocklisted_matchers ||= {}
+    def crawler_ip?(ip)
+      return false if ip.blank?
+      asn = DiscourseIpInfo.get(ip)[:asn]
+      return false if asn.blank?
+      SiteSetting.crawler_asns_map.include?(asn.to_s)
+    end
 
-    if SiteSetting.allowed_crawler_user_agents.present?
-      allowlisted =
-        @allowlisted_matchers[SiteSetting.allowed_crawler_user_agents] ||= to_matcher(
-          SiteSetting.allowed_crawler_user_agents,
+    def show_browser_update?(user_agent)
+      return false if SiteSetting.browser_update_user_agents.blank?
+
+      @browser_update_matchers ||= {}
+      matcher =
+        @browser_update_matchers[SiteSetting.browser_update_user_agents] ||= to_matcher(
+          SiteSetting.browser_update_user_agents,
         )
-      !user_agent.nil? && user_agent.match?(allowlisted)
-    else
-      blocklisted =
-        @blocklisted_matchers[SiteSetting.blocked_crawler_user_agents] ||= to_matcher(
-          SiteSetting.blocked_crawler_user_agents,
-        )
-      user_agent.nil? || !user_agent.match?(blocklisted)
+      user_agent.match?(matcher)
     end
-  end
 
-  def self.is_blocked_crawler?(user_agent)
-    crawler?(user_agent) && !allow_crawler?(user_agent)
+    def crawler_layout_request?(request)
+      return false if request.blank?
+      return false if request.user_agent.blank?
+      return false if request.media_type.present? && !request.media_type.include?("html")
+      return false if %w[json rss].include?(request.params[:format].to_s)
+
+      (SiteSetting.enable_escaped_fragments? && request.params.key?("_escaped_fragment_")) ||
+        request.params.key?("print") || show_browser_update?(request.user_agent) ||
+        crawler?(request.user_agent, request.headers["HTTP_VIA"])
+    end
+
+    # Given a user_agent that returns true from crawler?, should its request be allowed?
+    def allow_crawler?(user_agent)
+      if SiteSetting.allowed_crawler_user_agents.blank? &&
+           SiteSetting.blocked_crawler_user_agents.blank?
+        return true
+      end
+
+      @allowlisted_matchers ||= {}
+      @blocklisted_matchers ||= {}
+
+      if SiteSetting.allowed_crawler_user_agents.present?
+        allowlisted =
+          @allowlisted_matchers[SiteSetting.allowed_crawler_user_agents] ||= to_matcher(
+            SiteSetting.allowed_crawler_user_agents,
+          )
+        !user_agent.nil? && user_agent.match?(allowlisted)
+      else
+        blocklisted =
+          @blocklisted_matchers[SiteSetting.blocked_crawler_user_agents] ||= to_matcher(
+            SiteSetting.blocked_crawler_user_agents,
+          )
+        user_agent.nil? || !user_agent.match?(blocklisted)
+      end
+    end
+
+    def is_blocked_crawler?(user_agent)
+      crawler?(user_agent) && !allow_crawler?(user_agent)
+    end
   end
 end

@@ -2,16 +2,17 @@
 
 module DiscourseGamification
   class TopicCreated < Scorable
-    def self.category_filter(leaderboard: nil)
-      return "" if scorable_category_list(leaderboard:).empty?
+    class << self
+      def category_filter(leaderboard: nil)
+        return "" if scorable_category_list(leaderboard:).empty?
 
-      <<~SQL
+        <<~SQL
         AND t.category_id IN (#{scorable_category_list(leaderboard:)})
       SQL
-    end
+      end
 
-    def self.query(leaderboard: nil)
-      <<~SQL
+      def query(leaderboard: nil)
+        <<~SQL
         SELECT
           t.user_id AS user_id,
           date_trunc('day', t.created_at) AS date,
@@ -26,6 +27,7 @@ module DiscourseGamification
         GROUP BY
           1, 2
       SQL
+      end
     end
   end
 end

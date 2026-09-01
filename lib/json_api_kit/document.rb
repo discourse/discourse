@@ -2,21 +2,25 @@
 
 module JsonApiKit
   class Document
-    def self.build(parameters, resource:, urls:)
-      contract_class
-        .new(
-          **parameters.to_hash.deep_dup,
-          options: {
-            resource:,
-            raw_parameters: parameters.with_indifferent_access,
-          },
-        )
-        .then do |contract|
-          next Errors.new(*Request::Contract::Mapper.new(contract.errors).to_a) if contract.invalid?
-          new(yield(contract.to_hash), urls:).tap(&:to_h)
-        end
-    rescue Error => error
-      Errors.new(error)
+    class << self
+      def build(parameters, resource:, urls:)
+        contract_class
+          .new(
+            **parameters.to_hash.deep_dup,
+            options: {
+              resource:,
+              raw_parameters: parameters.with_indifferent_access,
+            },
+          )
+          .then do |contract|
+            if contract.invalid?
+              next Errors.new(*Request::Contract::Mapper.new(contract.errors).to_a)
+            end
+            new(yield(contract.to_hash), urls:).tap(&:to_h)
+          end
+      rescue Error => error
+        Errors.new(error)
+      end
     end
     private_class_method :build
 

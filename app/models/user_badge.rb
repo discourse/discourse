@@ -68,15 +68,16 @@ class UserBadge < ActiveRecord::Base
     DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
   end
 
-  def self.ensure_consistency!(user_ids = [])
-    update_featured_ranks!(user_ids)
-  end
+  class << self
+    def ensure_consistency!(user_ids = [])
+      update_featured_ranks!(user_ids)
+    end
 
-  def self.update_featured_ranks!(user_ids = [])
-    user_ids = user_ids.join(", ")
-    has_user_ids = !user_ids.empty?
+    def update_featured_ranks!(user_ids = [])
+      user_ids = user_ids.join(", ")
+      has_user_ids = !user_ids.empty?
 
-    query = <<~SQL
+      query = <<~SQL
       WITH featured_tl_badge AS -- Find the best trust level badge for each user
       (
         SELECT user_id, max(badge_id) as badge_id
@@ -110,11 +111,12 @@ class UserBadge < ActiveRecord::Base
       FROM ranks WHERE ranks.badge_id = user_badges.badge_id AND ranks.user_id = user_badges.user_id AND featured_rank IS DISTINCT FROM rank_number
     SQL
 
-    DB.exec query
-  end
+      DB.exec query
+    end
 
-  def self.trigger_user_badge_granted_event(badge_id, user_id)
-    DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id)
+    def trigger_user_badge_granted_event(badge_id, user_id)
+      DiscourseEvent.trigger(:user_badge_granted, badge_id, user_id)
+    end
   end
 
   private

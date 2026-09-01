@@ -6,65 +6,66 @@ class DirectoryItem < ActiveRecord::Base
 
   @@plugin_queries = []
 
-  def self.period_types
-    @types ||= Enum.new(all: 1, yearly: 2, monthly: 3, weekly: 4, daily: 5, quarterly: 6)
-  end
+  class << self
+    def period_types
+      @types ||= Enum.new(all: 1, yearly: 2, monthly: 3, weekly: 4, daily: 5, quarterly: 6)
+    end
 
-  def self.refresh!
-    period_types.each_key { |p| refresh_period!(p) }
-  end
+    def refresh!
+      period_types.each_key { |p| refresh_period!(p) }
+    end
 
-  def self.last_updated_at(period_type)
-    val = Discourse.redis.get("directory_#{period_type}")
-    return nil if val.nil?
+    def last_updated_at(period_type)
+      val = Discourse.redis.get("directory_#{period_type}")
+      return nil if val.nil?
 
-    Time.zone.at(val.to_i)
-  end
+      Time.zone.at(val.to_i)
+    end
 
-  def self.add_plugin_query(details)
-    @@plugin_queries << details
-  end
+    def add_plugin_query(details)
+      @@plugin_queries << details
+    end
 
-  def self.clear_plugin_queries
-    @@plugin_queries = []
-  end
+    def clear_plugin_queries
+      @@plugin_queries = []
+    end
 
-  def self.period_directory_data(period_type)
-    query =
-      with_prepare_refresh_period_cte do |cte|
-        "SELECT * FROM #{cte} ORDER BY likes_received DESC, likes_given DESC, topic_count DESC, post_count DESC"
-      end
-    DB.query(query, period_query_args(period_type))
-  end
+    def period_directory_data(period_type)
+      query =
+        with_prepare_refresh_period_cte do |cte|
+          "SELECT * FROM #{cte} ORDER BY likes_received DESC, likes_given DESC, topic_count DESC, post_count DESC"
+        end
+      DB.query(query, period_query_args(period_type))
+    end
 
-  def self.refresh_period!(period_type, force: false)
-    DiscourseEvent.trigger("before_directory_refresh")
-    Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)
+    def refresh_period!(period_type, force: false)
+      DiscourseEvent.trigger("before_directory_refresh")
+      Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)
 
-    # Don't calculate it if the user directory is disabled
-    return unless SiteSetting.enable_user_directory? || force
+      # Don't calculate it if the user directory is disabled
+      return unless SiteSetting.enable_user_directory? || force
 
-    ActiveRecord::Base.transaction do
-      # Delete records that belonged to users who have been deleted
-      DB.exec(
-        "DELETE FROM directory_items
+      ActiveRecord::Base.transaction do
+        # Delete records that belonged to users who have been deleted
+        DB.exec(
+          "DELETE FROM directory_items
                 USING directory_items di
                 LEFT JOIN users u ON (u.id = user_id AND u.active AND u.silenced_till IS NULL AND u.id > 0)
                 WHERE di.id = directory_items.id AND
                       u.id IS NULL AND
                       di.period_type = :period_type",
-        period_type: period_types[period_type],
-      )
+          period_type: period_types[period_type],
+        )
 
-      # Create user records for newer users who don't yet have a directory item
-      add_missing_users(period_type)
-      query_args = period_query_args(period_type)
+        # Create user records for newer users who don't yet have a directory item
+        add_missing_users(period_type)
+        query_args = period_query_args(period_type)
 
-      # Calculate new values and update records
-      #
-      # TODO
-      # WARNING: post_count is a wrong name, it should be reply_count (excluding topic post)
-      update_query = with_prepare_refresh_period_cte { |cte| <<~SQL }
+        # Calculate new values and update records
+        #
+        # TODO
+        # WARNING: post_count is a wrong name, it should be reply_count (excluding topic post)
+        update_query = with_prepare_refresh_period_cte { |cte| <<~SQL }
           UPDATE directory_items di
           SET
             likes_received = #{cte}.likes_received,
@@ -87,11 +88,11 @@ class DirectoryItem < ActiveRecord::Base
             di.post_count <> #{cte}.post_count
           )
         SQL
-      DB.exec(update_query, query_args)
+        DB.exec(update_query, query_args)
 
-      @@plugin_queries.each { |plugin_query| DB.exec(plugin_query, query_args) }
+        @@plugin_queries.each { |plugin_query| DB.exec(plugin_query, query_args) }
 
-      DB.exec <<~SQL if period_type == :all
+        DB.exec <<~SQL if period_type == :all
           UPDATE user_stats s
           SET likes_given         = d.likes_given,
               likes_received      = d.likes_received,
@@ -107,16 +108,16 @@ class DirectoryItem < ActiveRecord::Base
               s.post_count          <> d.post_count
             )
         SQL
+      end
     end
-  end
 
-  # Passes the name of the CTE to be used in the final query,
-  # then the caller returns what the _bottom_ part of the query should be,
-  # using the CTE name provided.
-  def self.with_prepare_refresh_period_cte
-    cte_name = "directory_cte"
-    final_query = yield cte_name
-    <<~SQL
+    # Passes the name of the CTE to be used in the final query,
+    # then the caller returns what the _bottom_ part of the query should be,
+    # using the CTE name provided.
+    def with_prepare_refresh_period_cte
+      cte_name = "directory_cte"
+      final_query = yield cte_name
+      <<~SQL
       WITH eligible_users AS (
         SELECT id
         FROM users
@@ -154,38 +155,38 @@ class DirectoryItem < ActiveRecord::Base
       )
       #{final_query}
     SQL
-  end
+    end
 
-  def self.period_query_args(period_type)
-    since =
-      case period_type
-      when :daily
-        1.day.ago
-      when :weekly
-        1.week.ago
-      when :monthly
-        1.month.ago
-      when :quarterly
-        3.months.ago
-      when :yearly
-        1.year.ago
-      else
-        1000.years.ago
-      end
+    def period_query_args(period_type)
+      since =
+        case period_type
+        when :daily
+          1.day.ago
+        when :weekly
+          1.week.ago
+        when :monthly
+          1.month.ago
+        when :quarterly
+          3.months.ago
+        when :yearly
+          1.year.ago
+        else
+          1000.years.ago
+        end
 
-    {
-      period_type: period_types[period_type],
-      since: since,
-      like_type: UserAction::LIKE,
-      was_liked_type: UserAction::WAS_LIKED,
-      new_topic_type: UserAction::NEW_TOPIC,
-      reply_type: UserAction::REPLY,
-      regular_post_type: Post.types[:regular],
-    }
-  end
+      {
+        period_type: period_types[period_type],
+        since: since,
+        like_type: UserAction::LIKE,
+        was_liked_type: UserAction::WAS_LIKED,
+        new_topic_type: UserAction::NEW_TOPIC,
+        reply_type: UserAction::REPLY,
+        regular_post_type: Post.types[:regular],
+      }
+    end
 
-  def self.recent_user_actions_subquery
-    <<~SQL
+    def recent_user_actions_subquery
+      <<~SQL
       WITH visible_topics AS (
         SELECT t.id
         FROM topics t
@@ -213,16 +214,17 @@ class DirectoryItem < ActiveRecord::Base
       WHERE ua.created_at > :since
       GROUP BY ua.user_id
     SQL
-  end
+    end
 
-  def self.add_missing_users_all_periods
-    period_types.each_key { |p| add_missing_users(p) }
-  end
+    def add_missing_users_all_periods
+      period_types.each_key { |p| add_missing_users(p) }
+    end
 
-  def self.add_missing_users(period_type)
-    column_names = DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
-    DB.exec(
-      "INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
+    def add_missing_users(period_type)
+      column_names =
+        DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
+      DB.exec(
+        "INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
               SELECT :period_type, u.id, #{Array.new(column_names.count, 0).join(", ")}
               FROM users u
               LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
@@ -233,8 +235,9 @@ class DirectoryItem < ActiveRecord::Base
               )
               #{SiteSetting.must_approve_users ? "AND u.approved" : ""}
             ",
-      period_type: period_types[period_type],
-    )
+        period_type: period_types[period_type],
+      )
+    end
   end
 end
 

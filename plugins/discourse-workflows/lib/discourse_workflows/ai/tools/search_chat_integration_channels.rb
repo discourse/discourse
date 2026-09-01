@@ -6,29 +6,31 @@ module DiscourseWorkflows
       class SearchChatIntegrationChannels < Base
         MAX_RESULTS = 20
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Searches configured external chat integration channels and returns provider names, channel labels, and IDs for workflow parameters.",
-            parameters: [
-              {
-                name: "query",
-                description: "Partial provider or channel name to search for",
-                type: "string",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Searches configured external chat integration channels and returns provider names, channel labels, and IDs for workflow parameters.",
+              parameters: [
+                {
+                  name: "query",
+                  description: "Partial provider or channel name to search for",
+                  type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "search_chat_integration_channels"
-        end
+          def name
+            "search_chat_integration_channels"
+          end
 
-        def self.available?
-          defined?(DiscourseWorkflows::Nodes::ChatIntegrationChannelSelection) &&
-            defined?(SiteSetting.chat_integration_enabled) && SiteSetting.chat_integration_enabled
+          def available?
+            defined?(DiscourseWorkflows::Nodes::ChatIntegrationChannelSelection) &&
+              defined?(SiteSetting.chat_integration_enabled) && SiteSetting.chat_integration_enabled
+          end
         end
 
         def invoke

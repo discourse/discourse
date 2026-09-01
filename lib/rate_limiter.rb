@@ -4,35 +4,35 @@
 class RateLimiter
   attr_reader :max, :secs, :user, :key, :error_code
 
-  def self.key_prefix
-    "l-rate-limit3:"
-  end
+  class << self
+    def key_prefix
+      "l-rate-limit3:"
+    end
 
-  def self.disable
-    @disabled = true
-  end
+    def disable
+      @disabled = true
+    end
 
-  def self.enable
-    @disabled = false
+    def enable
+      @disabled = false
+    end
   end
 
   disable if Rails.env.profile?
 
   # We don't observe rate limits in test mode
-  def self.disabled?
-    @disabled
-  end
+  class << self
+    def disabled?
+      @disabled
+    end
 
-  def self.clear_all_global!
-    Discourse
-      .redis
-      .without_namespace
-      .keys("GLOBAL::#{key_prefix}*")
-      .each { |k| Discourse.redis.without_namespace.del k }
-  end
-
-  def build_key(type)
-    "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
+    def clear_all_global!
+      Discourse
+        .redis
+        .without_namespace
+        .keys("GLOBAL::#{key_prefix}*")
+        .each { |k| Discourse.redis.without_namespace.del k }
+    end
   end
 
   def initialize(
@@ -62,6 +62,9 @@ class RateLimiter
       @max = @staff_limit[:max]
       @secs = @staff_limit[:secs].to_i
     end
+  end
+  def build_key(type)
+    "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
   def clear!

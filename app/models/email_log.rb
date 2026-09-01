@@ -48,45 +48,46 @@ class EmailLog < ActiveRecord::Base
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
   end
 
-  def topic
-    @topic ||= topic_id.present? ? Topic.find_by(id: topic_id) : post&.topic
-  end
+  class << self
+    def unique_email_per_post(post, user)
+      return yield unless post && user
 
-  def self.unique_email_per_post(post, user)
-    return yield unless post && user
-
-    DistributedMutex.synchronize("email_log_#{post.id}_#{user.id}") do
-      if where(post_id: post.id, user_id: user.id).exists?
-        nil
-      else
-        yield
+      DistributedMutex.synchronize("email_log_#{post.id}_#{user.id}") do
+        if where(post_id: post.id, user_id: user.id).exists?
+          nil
+        else
+          yield
+        end
       end
     end
-  end
 
-  def self.reached_max_emails?(user, email_type = nil)
-    if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
-      return false
+    def reached_max_emails?(user, email_type = nil)
+      if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
+        return false
+      end
+
+      count = where("created_at > ?", 1.day.ago).where(user_id: user.id).count
+
+      count >= SiteSetting.max_emails_per_day_per_user
     end
 
-    count = where("created_at > ?", 1.day.ago).where(user_id: user.id).count
+    def count_per_day(start_date, end_date)
+      where("created_at BETWEEN ? AND ?", start_date, end_date)
+        .group("DATE(created_at)")
+        .order("DATE(created_at)")
+        .count
+    end
 
-    count >= SiteSetting.max_emails_per_day_per_user
+    def for(reply_key)
+      find_by(reply_key: reply_key)
+    end
+
+    def last_sent_email_address
+      where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
+    end
   end
-
-  def self.count_per_day(start_date, end_date)
-    where("created_at BETWEEN ? AND ?", start_date, end_date)
-      .group("DATE(created_at)")
-      .order("DATE(created_at)")
-      .count
-  end
-
-  def self.for(reply_key)
-    find_by(reply_key: reply_key)
-  end
-
-  def self.last_sent_email_address
-    where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
+  def topic
+    @topic ||= topic_id.present? ? Topic.find_by(id: topic_id) : post&.topic
   end
 
   def bounce_key

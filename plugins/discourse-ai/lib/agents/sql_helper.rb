@@ -3,40 +3,41 @@
 module DiscourseAi
   module Agents
     class SqlHelper < Agent
-      def thinking_effort
-        "medium"
-      end
+      class << self
+        def schema
+          return @schema if defined?(@schema)
 
-      def self.schema
-        return @schema if defined?(@schema)
+          tables = Hash.new
+          priority_tables = %w[
+            posts
+            topics
+            notifications
+            users
+            user_actions
+            user_emails
+            categories
+            groups
+          ]
 
-        tables = Hash.new
-        priority_tables = %w[
-          posts
-          topics
-          notifications
-          users
-          user_actions
-          user_emails
-          categories
-          groups
-        ]
-
-        DB.query(<<~SQL).each { |row| (tables[row.table_name] ||= []) << row.column_name }
+          DB.query(<<~SQL).each { |row| (tables[row.table_name] ||= []) << row.column_name }
         select table_name, column_name from information_schema.columns
         where table_schema = 'public'
         order by table_name
       SQL
 
-        priority = +priority_tables.map { |name| "#{name}(#{tables[name].join(",")})" }.join("\n")
+          priority = +priority_tables.map { |name| "#{name}(#{tables[name].join(",")})" }.join("\n")
 
-        other_tables = +""
-        tables.each do |table_name, _|
-          next if priority_tables.include?(table_name)
-          other_tables << "#{table_name} "
+          other_tables = +""
+          tables.each do |table_name, _|
+            next if priority_tables.include?(table_name)
+            other_tables << "#{table_name} "
+          end
+
+          @schema = { priority_tables: priority, other_tables: other_tables }
         end
-
-        @schema = { priority_tables: priority, other_tables: other_tables }
+      end
+      def thinking_effort
+        "medium"
       end
 
       def tools

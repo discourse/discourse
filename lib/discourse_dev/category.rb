@@ -6,6 +6,11 @@ require "faker"
 
 module DiscourseDev
   class Category < Record
+    class << self
+      def random
+        super(::Category)
+      end
+    end
     def initialize
       super(::Category, DiscourseDev.config.category[:count])
       @parent_category_ids = ::Category.where(parent_category_id: nil).pluck(:id)
@@ -50,10 +55,6 @@ module DiscourseDev
 
         @parent_category_ids << category.id if category.parent_category_id.blank?
       end
-    end
-
-    def self.random
-      super(::Category)
     end
   end
 end

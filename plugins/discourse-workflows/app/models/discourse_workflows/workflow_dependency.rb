@@ -26,144 +26,146 @@ module DiscourseWorkflows
             )
           end
 
-    def self.cache
-      @cache ||= DistributedCache.new("discourse_workflows_dependencies")
-    end
-
-    def self.clear_cache!
-      cache.clear
-    end
-
-    def self.cached_topic_admin_buttons
-      cached_published_triggers("trigger:topic_admin_button").map do |published_trigger|
-        {
-          trigger_node_id: published_trigger.trigger_node_id,
-          workflow_id: published_trigger.workflow_id,
-          label: NodeData.parameters(published_trigger.trigger_node)["label"],
-          icon: NodeData.parameters(published_trigger.trigger_node)["icon"],
-        }
+    class << self
+      def cache
+        @cache ||= DistributedCache.new("discourse_workflows_dependencies")
       end
-    end
 
-    def self.cached_post_buttons
-      cached_published_triggers("trigger:post_button").map do |published_trigger|
-        parameters = NodeData.parameters(published_trigger.trigger_node)
-        {
-          trigger_node_id: published_trigger.trigger_node_id,
-          workflow_id: published_trigger.workflow_id,
-          label: parameters["label"],
-          icon: parameters["icon"],
-          post_number: DiscourseWorkflows::Nodes::PostButton::V1.resolved_post_number(parameters),
-          position: DiscourseWorkflows::Nodes::PostButton::V1.resolved_position(parameters),
-          confirmation: parameters["confirmation"] == true,
-          confirmation_message: parameters["confirmation_message"].presence,
-          group_ids: DiscourseWorkflows::Nodes::PostButton::V1.normalized_group_ids(parameters),
-        }
+      def clear_cache!
+        cache.clear
       end
-    end
 
-    def self.post_buttons_for(user)
-      return [] if user.blank?
-
-      cached_post_buttons.filter_map do |post_button|
-        next if post_button[:group_ids].blank?
-        next if !user.in_any_groups?(post_button[:group_ids])
-
-        post_button.except(:group_ids)
-      end
-    end
-
-    def self.active_node_types
-      cached_dependency_index[:active_node_types].to_set
-    end
-
-    def self.cached_published_triggers(trigger_type)
-      Array(
-        cached_dependency_index[:published_triggers_by_type][trigger_type],
-      ).map do |published_trigger|
-        DiscourseWorkflows::CachedPublishedTrigger.from_hash(published_trigger)
-      end
-    end
-
-    def self.cached_user_modals?
-      cached_dependency_index[:referenced_node_types].include?(
-        DiscourseWorkflows::Nodes::Modal::V1.identifier,
-      )
-    end
-
-    def self.workflows_referencing(type, key)
-      joins(:workflow)
-        .where(dependency_type: type, dependency_key: key.to_s)
-        .where(
-          "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
-            "(discourse_workflows_workflows.version_id, " \
-            "discourse_workflows_workflows.active_version_id)",
-        )
-        .select(:workflow_id)
-    end
-
-    def self.cached_dependency_index
-      cache.defer_get_set(DEPENDENCY_INDEX_CACHE_KEY) do
-        rows = active_node_type_rows
-        versions_by_id =
-          WorkflowVersion.where(
-            version_id: rows.map { |row| row[:workflow_version_id] }.uniq,
-          ).index_by(&:version_id)
-
-        {
-          active_node_types: rows.map { |row| row[:node_type] }.uniq,
-          referenced_node_types: referenced_node_types,
-          published_triggers_by_type: published_triggers_by_type(rows, versions_by_id),
-        }
-      end
-    end
-
-    def self.active_node_type_rows
-      of_type("node_type")
-        .on_active_version
-        .pluck(:dependency_key, :workflow_id, :workflow_version_id, :node_id)
-        .map do |node_type, workflow_id, workflow_version_id, node_id|
+      def cached_topic_admin_buttons
+        cached_published_triggers("trigger:topic_admin_button").map do |published_trigger|
           {
-            node_type: node_type,
-            workflow_id: workflow_id,
-            workflow_version_id: workflow_version_id,
-            node_id: node_id,
+            trigger_node_id: published_trigger.trigger_node_id,
+            workflow_id: published_trigger.workflow_id,
+            label: NodeData.parameters(published_trigger.trigger_node)["label"],
+            icon: NodeData.parameters(published_trigger.trigger_node)["icon"],
           }
         end
-    end
+      end
 
-    def self.referenced_node_types
-      of_type("node_type")
-        .joins(:workflow)
-        .where(
-          "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
-            "(discourse_workflows_workflows.version_id, " \
-            "discourse_workflows_workflows.active_version_id)",
+      def cached_post_buttons
+        cached_published_triggers("trigger:post_button").map do |published_trigger|
+          parameters = NodeData.parameters(published_trigger.trigger_node)
+          {
+            trigger_node_id: published_trigger.trigger_node_id,
+            workflow_id: published_trigger.workflow_id,
+            label: parameters["label"],
+            icon: parameters["icon"],
+            post_number: DiscourseWorkflows::Nodes::PostButton::V1.resolved_post_number(parameters),
+            position: DiscourseWorkflows::Nodes::PostButton::V1.resolved_position(parameters),
+            confirmation: parameters["confirmation"] == true,
+            confirmation_message: parameters["confirmation_message"].presence,
+            group_ids: DiscourseWorkflows::Nodes::PostButton::V1.normalized_group_ids(parameters),
+          }
+        end
+      end
+
+      def post_buttons_for(user)
+        return [] if user.blank?
+
+        cached_post_buttons.filter_map do |post_button|
+          next if post_button[:group_ids].blank?
+          next if !user.in_any_groups?(post_button[:group_ids])
+
+          post_button.except(:group_ids)
+        end
+      end
+
+      def active_node_types
+        cached_dependency_index[:active_node_types].to_set
+      end
+
+      def cached_published_triggers(trigger_type)
+        Array(
+          cached_dependency_index[:published_triggers_by_type][trigger_type],
+        ).map do |published_trigger|
+          DiscourseWorkflows::CachedPublishedTrigger.from_hash(published_trigger)
+        end
+      end
+
+      def cached_user_modals?
+        cached_dependency_index[:referenced_node_types].include?(
+          DiscourseWorkflows::Nodes::Modal::V1.identifier,
         )
-        .distinct
-        .pluck(:dependency_key)
-    end
+      end
 
-    def self.published_triggers_by_type(rows, versions_by_id)
-      rows.each_with_object({}) do |row, published_triggers|
-        node_type = row[:node_type]
-        next if !node_type.start_with?("trigger:")
-
-        trigger_node =
-          versions_by_id[row[:workflow_version_id]]&.nodes&.find do |candidate|
-            candidate["id"] == row[:node_id].to_s
-          end
-        next unless trigger_node&.dig("type") == node_type
-
-        cached_trigger =
-          DiscourseWorkflows::CachedPublishedTrigger.new(
-            workflow_id: row[:workflow_id],
-            workflow_version_id: row[:workflow_version_id],
-            trigger_node: trigger_node.deep_dup,
+      def workflows_referencing(type, key)
+        joins(:workflow)
+          .where(dependency_type: type, dependency_key: key.to_s)
+          .where(
+            "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
+              "(discourse_workflows_workflows.version_id, " \
+              "discourse_workflows_workflows.active_version_id)",
           )
+          .select(:workflow_id)
+      end
 
-        published_triggers[node_type] ||= []
-        published_triggers[node_type] << cached_trigger.to_h
+      def cached_dependency_index
+        cache.defer_get_set(DEPENDENCY_INDEX_CACHE_KEY) do
+          rows = active_node_type_rows
+          versions_by_id =
+            WorkflowVersion.where(
+              version_id: rows.map { |row| row[:workflow_version_id] }.uniq,
+            ).index_by(&:version_id)
+
+          {
+            active_node_types: rows.map { |row| row[:node_type] }.uniq,
+            referenced_node_types: referenced_node_types,
+            published_triggers_by_type: published_triggers_by_type(rows, versions_by_id),
+          }
+        end
+      end
+
+      def active_node_type_rows
+        of_type("node_type")
+          .on_active_version
+          .pluck(:dependency_key, :workflow_id, :workflow_version_id, :node_id)
+          .map do |node_type, workflow_id, workflow_version_id, node_id|
+            {
+              node_type: node_type,
+              workflow_id: workflow_id,
+              workflow_version_id: workflow_version_id,
+              node_id: node_id,
+            }
+          end
+      end
+
+      def referenced_node_types
+        of_type("node_type")
+          .joins(:workflow)
+          .where(
+            "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
+              "(discourse_workflows_workflows.version_id, " \
+              "discourse_workflows_workflows.active_version_id)",
+          )
+          .distinct
+          .pluck(:dependency_key)
+      end
+
+      def published_triggers_by_type(rows, versions_by_id)
+        rows.each_with_object({}) do |row, published_triggers|
+          node_type = row[:node_type]
+          next if !node_type.start_with?("trigger:")
+
+          trigger_node =
+            versions_by_id[row[:workflow_version_id]]&.nodes&.find do |candidate|
+              candidate["id"] == row[:node_id].to_s
+            end
+          next unless trigger_node&.dig("type") == node_type
+
+          cached_trigger =
+            DiscourseWorkflows::CachedPublishedTrigger.new(
+              workflow_id: row[:workflow_id],
+              workflow_version_id: row[:workflow_version_id],
+              trigger_node: trigger_node.deep_dup,
+            )
+
+          published_triggers[node_type] ||= []
+          published_triggers[node_type] << cached_trigger.to_h
+        end
       end
     end
   end

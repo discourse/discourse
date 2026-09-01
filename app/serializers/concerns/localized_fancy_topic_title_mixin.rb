@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 module LocalizedFancyTopicTitleMixin
-  def self.included(klass)
-    klass.attributes :fancy_title
-    klass.attributes :fancy_title_localized
-    klass.attributes :locale
+  class << self
+    def included(klass)
+      klass.attributes :fancy_title
+      klass.attributes :fancy_title_localized
+      klass.attributes :locale
+    end
   end
 
   def fancy_title

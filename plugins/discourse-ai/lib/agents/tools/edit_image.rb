@@ -4,32 +4,34 @@ module DiscourseAi
   module Agents
     module Tools
       class EditImage < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Edits images based on supplied descriptions and context images",
-            parameters: [
-              {
-                name: "prompt",
-                description:
-                  "instructions for the image to be edited (5000 chars or less, be creative)",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "image_urls",
-                description:
-                  "The images to provides as context for the edit (minimum 1, maximum 10), use the short url eg: upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Edits images based on supplied descriptions and context images",
+              parameters: [
+                {
+                  name: "prompt",
+                  description:
+                    "instructions for the image to be edited (5000 chars or less, be creative)",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "image_urls",
+                  description:
+                    "The images to provides as context for the edit (minimum 1, maximum 10), use the short url eg: upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "edit_image"
+          def name
+            "edit_image"
+          end
         end
 
         def prompt

@@ -6,61 +6,9 @@ module Jobs
 
     cluster_concurrency 1
 
-    def execute(args = {})
-      return unless SiteSetting.nested_replies_enabled
-
-      args ||= {}
-      topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
-      return if topic_ids.empty?
-
-      topic_ids.each { |topic_id| self.class.backfill_topic(topic_id) }
-    end
-
-    private
-
-    def topic_ids_missing_stats(category_id: nil)
-      category_id = category_id.to_i
-      category_filter = category_id.positive? ? "AND t.category_id = :category_id" : ""
-
-      DB.query_single(
-        <<~SQL,
-          SELECT t.id
-          FROM topics t
-          LEFT JOIN nested_topics nt ON nt.topic_id = t.id
-          INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
-          LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
-          WHERE t.deleted_at IS NULL
-            AND t.archetype = :archetype
-            AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
-            #{category_filter}
-            AND (
-              s.post_id IS NULL
-              OR EXISTS (
-                SELECT 1
-                FROM posts child
-                INNER JOIN posts parent
-                  ON parent.topic_id = child.topic_id
-                 AND parent.post_number = child.reply_to_post_number
-                LEFT JOIN nested_view_post_stats parent_stats
-                  ON parent_stats.post_id = parent.id
-                WHERE child.topic_id = t.id
-                  AND child.reply_to_post_number IS NOT NULL
-                  AND child.post_number > 1
-                  AND parent_stats.post_id IS NULL
-              )
-            )
-          ORDER BY t.id DESC
-          LIMIT :batch_size
-        SQL
-        archetype: Archetype.default,
-        batch_size: SiteSetting.nested_replies_backfill_batch_size,
-        category_id: category_id,
-        nested_replies_default: SiteSetting.nested_replies_default,
-      )
-    end
-
-    def self.backfill_topic(topic_id)
-      DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
+    class << self
+      def backfill_topic(topic_id)
+        DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
         WITH RECURSIVE
         edges AS (
           SELECT post_number, reply_to_post_number, post_type
@@ -131,6 +79,59 @@ module Jobs
           whisper_total_descendant_count = GREATEST(EXCLUDED.whisper_total_descendant_count, nested_view_post_stats.whisper_total_descendant_count),
           updated_at = NOW()
       SQL
+      end
+    end
+    def execute(args = {})
+      return unless SiteSetting.nested_replies_enabled
+
+      args ||= {}
+      topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
+      return if topic_ids.empty?
+
+      topic_ids.each { |topic_id| self.class.backfill_topic(topic_id) }
+    end
+
+    private
+
+    def topic_ids_missing_stats(category_id: nil)
+      category_id = category_id.to_i
+      category_filter = category_id.positive? ? "AND t.category_id = :category_id" : ""
+
+      DB.query_single(
+        <<~SQL,
+          SELECT t.id
+          FROM topics t
+          LEFT JOIN nested_topics nt ON nt.topic_id = t.id
+          INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
+          LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
+          WHERE t.deleted_at IS NULL
+            AND t.archetype = :archetype
+            AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
+            #{category_filter}
+            AND (
+              s.post_id IS NULL
+              OR EXISTS (
+                SELECT 1
+                FROM posts child
+                INNER JOIN posts parent
+                  ON parent.topic_id = child.topic_id
+                 AND parent.post_number = child.reply_to_post_number
+                LEFT JOIN nested_view_post_stats parent_stats
+                  ON parent_stats.post_id = parent.id
+                WHERE child.topic_id = t.id
+                  AND child.reply_to_post_number IS NOT NULL
+                  AND child.post_number > 1
+                  AND parent_stats.post_id IS NULL
+              )
+            )
+          ORDER BY t.id DESC
+          LIMIT :batch_size
+        SQL
+        archetype: Archetype.default,
+        batch_size: SiteSetting.nested_replies_backfill_batch_size,
+        category_id: category_id,
+        nested_replies_default: SiteSetting.nested_replies_default,
+      )
     end
   end
 end

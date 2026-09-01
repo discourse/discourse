@@ -5,6 +5,7 @@ module PageObjects
     class AdminDashboardSupport < PageObjects::Components::Base
       SELECTOR = ".db-main [data-section-id='support']"
 
+      CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .multiple-categories-selector"
       def has_section?
         has_css?(SELECTOR)
       end
@@ -43,8 +44,6 @@ module PageObjects
       def has_no_category_filter?
         has_no_css?("#{SELECTOR} .db-support__filter")
       end
-
-      CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .multiple-categories-selector"
 
       def category_filter
         PageObjects::Components::SelectKit.new(CATEGORY_FILTER)

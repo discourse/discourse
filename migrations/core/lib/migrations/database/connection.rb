@@ -12,20 +12,22 @@ module Migrations
       # `journal_mode` defaults to WAL for the run DB. A shard passes "off": it has a
       # single writer, is never read while written, and is thrown away on any
       # failure, so it needs no journal.
-      def self.open_database(path:, journal_mode: "wal")
-        path = File.expand_path(path, Migrations.root_path)
-        FileUtils.mkdir_p(File.dirname(path))
+      class << self
+        def open_database(path:, journal_mode: "wal")
+          path = File.expand_path(path, Migrations.root_path)
+          FileUtils.mkdir_p(File.dirname(path))
 
-        db = Extralite::Database.new(path)
-        db.pragma(
-          busy_timeout: 60_000, # 60 seconds
-          journal_mode:,
-          synchronous: "off",
-          temp_store: "memory",
-          locking_mode: "normal",
-          cache_size: -10_000, # 10_000 pages
-        )
-        db
+          db = Extralite::Database.new(path)
+          db.pragma(
+            busy_timeout: 60_000, # 60 seconds
+            journal_mode:,
+            synchronous: "off",
+            temp_store: "memory",
+            locking_mode: "normal",
+            cache_size: -10_000, # 10_000 pages
+          )
+          db
+        end
       end
 
       attr_reader :db, :path

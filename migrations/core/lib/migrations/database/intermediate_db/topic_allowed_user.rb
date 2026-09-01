@@ -27,13 +27,15 @@ module Migrations
         # @param created_at   [Time, nil]
         #
         # @return [void]
-        def self.create(topic_id:, user_id:, created_at: nil)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            topic_id,
-            user_id,
-            Migrations::Database.format_datetime(created_at),
-          )
+        class << self
+          def create(topic_id:, user_id:, created_at: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              topic_id,
+              user_id,
+              Migrations::Database.format_datetime(created_at),
+            )
+          end
         end
       end
     end

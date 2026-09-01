@@ -3,12 +3,14 @@
 require "uri"
 
 class TopicLink < ActiveRecord::Base
-  def self.max_domain_length
-    100
-  end
+  class << self
+    def max_domain_length
+      100
+    end
 
-  def self.max_url_length
-    500
+    def max_url_length
+      500
+    end
   end
 
   belongs_to :topic
@@ -29,14 +31,10 @@ class TopicLink < ActiveRecord::Base
 
   after_commit :crawl_link_title
 
-  # Make sure a topic can't link to itself
-  def link_to_self
-    errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
-  end
-
-  def self.topic_map(guardian, topic_id)
-    # Sam: complicated reports are really hard in AR
-    builder = DB.build(<<~SQL)
+  class << self
+    def topic_map(guardian, topic_id)
+      # Sam: complicated reports are really hard in AR
+      builder = DB.build(<<~SQL)
       SELECT ftl.url,
              COALESCE(ft.title, ftl.title) AS title,
              ftl.link_topic_id,
@@ -56,37 +54,37 @@ class TopicLink < ActiveRecord::Base
       LIMIT 51
     SQL
 
-    builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
-    apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
-    apply_link_visibility_filters(
-      builder,
-      link: "ftl",
-      target_topic: "ft",
-      target_posts: "target_posts",
-    )
-    builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
-    builder.where(
-      "COALESCE(ft.archetype, 'regular') <> :archetype",
-      archetype: Archetype.private_message,
-    )
-    builder.where("clicks > 0")
+      builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
+      apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
+      apply_link_visibility_filters(
+        builder,
+        link: "ftl",
+        target_topic: "ft",
+        target_posts: "target_posts",
+      )
+      builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
+      builder.where(
+        "COALESCE(ft.archetype, 'regular') <> :archetype",
+        archetype: Archetype.private_message,
+      )
+      builder.where("clicks > 0")
 
-    builder.secure_category(guardian.secure_category_ids)
+      builder.secure_category(guardian.secure_category_ids)
 
-    builder.query
-  end
+      builder.query
+    end
 
-  def self.counts_for(guardian, topic, posts)
-    return {} if posts.blank?
+    def counts_for(guardian, topic, posts)
+      return {} if posts.blank?
 
-    post_ids = visible_source_post_ids(guardian, topic, posts)
-    return {} if post_ids.blank?
+      post_ids = visible_source_post_ids(guardian, topic, posts)
+      return {} if post_ids.blank?
 
-    # Sam: this is not tidy in AR and also happens to be a critical path
-    # for topic view
-    builder =
-      DB.build(
-        "SELECT
+      # Sam: this is not tidy in AR and also happens to be a critical path
+      # for topic view
+      builder =
+        DB.build(
+          "SELECT
                       l.post_id,
                       l.url,
                       l.clicks,
@@ -101,152 +99,146 @@ class TopicLink < ActiveRecord::Base
               /*left_join*/
               /*where*/
               ORDER BY reflection ASC, clicks DESC",
-      )
+        )
 
-    apply_link_visibility_filters(
-      builder,
-      link: "l",
-      target_topic: "t",
-      target_posts: "target_posts",
-    )
-    builder.where(
-      "COALESCE(t.archetype, 'regular') <> :archetype",
-      archetype: Archetype.private_message,
-    )
-
-    if guardian.authenticated?
-      builder.left_join(
-        "topic_users AS tu ON (t.id = tu.topic_id AND tu.user_id = #{guardian.user.id.to_i})",
+      apply_link_visibility_filters(
+        builder,
+        link: "l",
+        target_topic: "t",
+        target_posts: "target_posts",
       )
       builder.where(
-        "COALESCE(tu.notification_level,1) > :muted",
-        muted: TopicUser.notification_levels[:muted],
+        "COALESCE(t.archetype, 'regular') <> :archetype",
+        archetype: Archetype.private_message,
       )
-    end
 
-    # not certain if pluck is right, cause it may interfere with caching
-    builder.where("l.post_id in (:post_ids)", post_ids: post_ids)
-    builder.secure_category(guardian.secure_category_ids)
-
-    result = {}
-    builder.query.each do |l|
-      result[l.post_id] ||= []
-      result[l.post_id] << {
-        url: l.url,
-        clicks: l.clicks,
-        title: l.title,
-        internal: l.internal,
-        reflection: l.reflection,
-      }
-    end
-    result
-  end
-
-  def self.extract_from(post)
-    return if post.blank? || post.whisper? || post.user_id.blank? || post.deleted_at.present?
-
-    guardian = post.acting_user.guardian
-    current_urls = []
-    reflected_ids = []
-
-    PrettyText
-      .extract_links(post.cooked)
-      .map do |u|
-        uri = UrlHelper.relaxed_parse(u.url)
-        [u, uri]
-      end
-      .reject { |_, p| p.nil? || "mailto" == p.scheme }
-      .uniq { |_, p| p }
-      .each do |link, parsed|
-        TopicLink.transaction do
-          url, reflected_id = ensure_entry_for(post, link, parsed, guardian)
-          current_urls << url unless url.nil?
-          reflected_ids << reflected_id unless reflected_id.nil?
-        rescue URI::Error
-          # if the URI is invalid, don't store it.
-        rescue ActionController::RoutingError
-          # If we can't find the route, no big deal
-        end
-      end
-
-    cleanup_entries(post, current_urls, reflected_ids)
-  end
-
-  def self.crawl_link_title(topic_link_id)
-    Jobs.enqueue(:crawl_topic_link, topic_link_id: topic_link_id)
-  end
-
-  def crawl_link_title
-    TopicLink.crawl_link_title(id)
-  end
-
-  def self.duplicate_lookup(topic, guardian = Guardian.new)
-    results =
-      TopicLink
-        .includes(:post, :user, :link_topic, link_post: :topic)
-        .joins(:post, :user)
-        .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
-        .where(topic_id: topic.id, reflection: false)
-        .where(
-          posts: {
-            deleted_at: nil,
-            hidden: false,
-            post_type: Topic.visible_post_types(guardian.user),
-          },
+      if guardian.authenticated?
+        builder.left_join(
+          "topic_users AS tu ON (t.id = tu.topic_id AND tu.user_id = #{guardian.user.id.to_i})",
         )
-        .last(200)
-
-    lookup = {}
-    results.each do |tl|
-      if tl.internal? &&
-           (
-             (tl.link_topic_id && !guardian.can_see?(tl.link_topic)) ||
-               (tl.link_post_id && !guardian.can_see?(tl.link_post))
-           )
-        next
+        builder.where(
+          "COALESCE(tu.notification_level,1) > :muted",
+          muted: TopicUser.notification_levels[:muted],
+        )
       end
 
-      normalized = tl.url.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
-      lookup[normalized] = {
-        domain: tl.domain,
-        username: tl.user.username_lower,
-        posted_at: tl.post.created_at,
-        post_number: tl.post.post_number,
-      }
+      # not certain if pluck is right, cause it may interfere with caching
+      builder.where("l.post_id in (:post_ids)", post_ids: post_ids)
+      builder.secure_category(guardian.secure_category_ids)
+
+      result = {}
+      builder.query.each do |l|
+        result[l.post_id] ||= []
+        result[l.post_id] << {
+          url: l.url,
+          clicks: l.clicks,
+          title: l.title,
+          internal: l.internal,
+          reflection: l.reflection,
+        }
+      end
+      result
     end
 
-    lookup
+    def extract_from(post)
+      return if post.blank? || post.whisper? || post.user_id.blank? || post.deleted_at.present?
+
+      guardian = post.acting_user.guardian
+      current_urls = []
+      reflected_ids = []
+
+      PrettyText
+        .extract_links(post.cooked)
+        .map do |u|
+          uri = UrlHelper.relaxed_parse(u.url)
+          [u, uri]
+        end
+        .reject { |_, p| p.nil? || "mailto" == p.scheme }
+        .uniq { |_, p| p }
+        .each do |link, parsed|
+          TopicLink.transaction do
+            url, reflected_id = ensure_entry_for(post, link, parsed, guardian)
+            current_urls << url unless url.nil?
+            reflected_ids << reflected_id unless reflected_id.nil?
+          rescue URI::Error
+            # if the URI is invalid, don't store it.
+          rescue ActionController::RoutingError
+            # If we can't find the route, no big deal
+          end
+        end
+
+      cleanup_entries(post, current_urls, reflected_ids)
+    end
+
+    def crawl_link_title(topic_link_id)
+      Jobs.enqueue(:crawl_topic_link, topic_link_id: topic_link_id)
+    end
   end
+  class << self
+    def duplicate_lookup(topic, guardian = Guardian.new)
+      results =
+        TopicLink
+          .includes(:post, :user, :link_topic, link_post: :topic)
+          .joins(:post, :user)
+          .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+          .where(topic_id: topic.id, reflection: false)
+          .where(
+            posts: {
+              deleted_at: nil,
+              hidden: false,
+              post_type: Topic.visible_post_types(guardian.user),
+            },
+          )
+          .last(200)
 
-  def self.visible_source_post_ids(guardian, topic, posts)
-    return posts.map(&:id) if guardian.can_see_all_hidden_posts?(topic&.category)
+      lookup = {}
+      results.each do |tl|
+        if tl.internal? &&
+             (
+               (tl.link_topic_id && !guardian.can_see?(tl.link_topic)) ||
+                 (tl.link_post_id && !guardian.can_see?(tl.link_post))
+             )
+          next
+        end
 
-    posts.filter_map { |post| post.id if !post.hidden? || guardian.can_see_hidden_post?(post) }
+        normalized = tl.url.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
+        lookup[normalized] = {
+          domain: tl.domain,
+          username: tl.user.username_lower,
+          posted_at: tl.post.created_at,
+          post_number: tl.post.post_number,
+        }
+      end
+
+      lookup
+    end
+
+    def visible_source_post_ids(guardian, topic, posts)
+      return posts.map(&:id) if guardian.can_see_all_hidden_posts?(topic&.category)
+
+      posts.filter_map { |post| post.id if !post.hidden? || guardian.can_see_hidden_post?(post) }
+    end
   end
-  private_class_method :visible_source_post_ids
-
-  def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
-    builder.where(<<~SQL)
+  class << self
+    def apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
+      builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
       AND (#{target_topic}.id IS NULL OR #{target_topic}.visible = true)
       AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
+    end
   end
-  private_class_method :apply_link_visibility_filters
-
-  def self.apply_source_post_visibility_filters(builder, guardian, source_post:)
-    builder.where("#{source_post}.deleted_at IS NULL")
-    builder.where(
-      "#{source_post}.post_type IN (:visible_post_types)",
-      visible_post_types: Topic.visible_post_types(guardian.user),
-    )
-    builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
+  class << self
+    def apply_source_post_visibility_filters(builder, guardian, source_post:)
+      builder.where("#{source_post}.deleted_at IS NULL")
+      builder.where(
+        "#{source_post}.post_type IN (:visible_post_types)",
+        visible_post_types: Topic.visible_post_types(guardian.user),
+      )
+      builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
+    end
   end
-  private_class_method :apply_source_post_visibility_filters
-
-  private
-
   # This pattern is used to create topic links very efficiently with minimal
   # errors under heavy concurrent use
   #
@@ -258,22 +250,23 @@ class TopicLink < ActiveRecord::Base
   # Usually we would rely on ActiveRecord but in this case we have had lots of churn
   # around creation of topic links leading to hard to debug log messages in production
   #
-  def self.safe_create_topic_link(
-    post_id:,
-    user_id:,
-    topic_id:,
-    url:,
-    domain: nil,
-    internal: false,
-    link_topic_id: nil,
-    link_post_id: nil,
-    quote: false,
-    extension: nil,
-    reflection: false
-  )
-    domain ||= Discourse.current_hostname
+  class << self
+    def safe_create_topic_link(
+      post_id:,
+      user_id:,
+      topic_id:,
+      url:,
+      domain: nil,
+      internal: false,
+      link_topic_id: nil,
+      link_post_id: nil,
+      quote: false,
+      extension: nil,
+      reflection: false
+    )
+      domain ||= Discourse.current_hostname
 
-    sql = <<~SQL
+      sql = <<~SQL
       WITH new_row AS(
         INSERT INTO topic_links(
           post_id,
@@ -313,148 +306,165 @@ class TopicLink < ActiveRecord::Base
       ), (SELECT id FROM new_row) IS NOT NULL
     SQL
 
-    topic_link_id, new_record =
-      DB.query_single(
-        sql,
-        post_id: post_id,
-        user_id: user_id,
-        topic_id: topic_id,
+      topic_link_id, new_record =
+        DB.query_single(
+          sql,
+          post_id: post_id,
+          user_id: user_id,
+          topic_id: topic_id,
+          url: url,
+          domain: domain,
+          internal: internal,
+          link_topic_id: link_topic_id,
+          link_post_id: link_post_id,
+          quote: quote,
+          extension: extension,
+          reflection: reflection,
+          now: Time.now,
+        )
+
+      DB.after_commit { crawl_link_title(topic_link_id) } if new_record
+
+      topic_link_id
+    end
+
+    def ensure_entry_for(post, link, parsed, guardian)
+      url = link.url
+      internal = false
+      topic_id = nil
+      post_number = nil
+      topic = nil
+
+      if upload = Upload.get_from_url(url)
+        internal = Discourse.store.internal?
+        # Store the same URL that will be used in the cooked version of the post
+        url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+      elsif route = Discourse.route_for(parsed.to_s[...TopicLink.max_url_length])
+        # this is a special case for the silent flag
+        # in internal links
+        return nil if parsed&.query&.split("&")&.include?("silent=true")
+
+        internal = true
+
+        # We aren't interested in tracking internal links to users
+        return nil if route[:controller] == "users"
+
+        topic_id = route[:topic_id]
+        topic_slug = route[:slug]
+        post_number = route[:post_number] || 1
+
+        if route[:controller] == "topics" && route[:action] == "show"
+          topic_id ||= route[:id]
+          topic_slug ||= route[:id]
+        end
+
+        topic = Topic.find_by(id: topic_id) if topic_id
+        topic ||= Topic.find_by(slug: topic_slug) if topic_slug.present?
+        target_visible = topic.present? && guardian.can_see?(topic)
+
+        if target_visible
+          url = +"#{Discourse.base_url_no_prefix}#{topic.relative_url}"
+          url << "/#{post_number}" if post_number.to_i > 1
+        elsif topic.blank?
+          topic_id = nil
+        end
+      end
+
+      # Skip linking to ourselves
+      return nil if topic&.id == post.topic_id
+
+      reflected_post = nil
+      if post_number && topic
+        reflected_post = Post.find_by(topic_id: topic.id, post_number: post_number.to_i)
+      end
+
+      url = url[0...TopicLink.max_url_length]
+      return nil if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
+
+      file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? ||
+        File.extname(parsed.path).empty?
+
+      safe_create_topic_link(
+        post_id: post.id,
+        user_id: post.user_id,
+        topic_id: post.topic_id,
         url: url,
-        domain: domain,
+        domain: parsed.host,
         internal: internal,
-        link_topic_id: link_topic_id,
-        link_post_id: link_post_id,
-        quote: quote,
-        extension: extension,
-        reflection: reflection,
-        now: Time.now,
+        link_topic_id: topic&.id,
+        link_post_id: reflected_post&.id,
+        quote: link.is_quote,
+        extension: file_extension,
       )
 
-    DB.after_commit { crawl_link_title(topic_link_id) } if new_record
+      reflected_id = nil
 
-    topic_link_id
-  end
+      # Create the reflection if we can
+      if target_visible && post.topic && topic.archetype != "private_message" &&
+           post.topic.archetype != "private_message" && post.topic.visible?
+        prefix = Discourse.base_url_no_prefix
+        reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
 
-  def self.ensure_entry_for(post, link, parsed, guardian)
-    url = link.url
-    internal = false
-    topic_id = nil
-    post_number = nil
-    topic = nil
-
-    if upload = Upload.get_from_url(url)
-      internal = Discourse.store.internal?
-      # Store the same URL that will be used in the cooked version of the post
-      url = UrlHelper.cook_url(upload.url, secure: upload.secure?)
-    elsif route = Discourse.route_for(parsed.to_s[...TopicLink.max_url_length])
-      # this is a special case for the silent flag
-      # in internal links
-      return nil if parsed&.query&.split("&")&.include?("silent=true")
-
-      internal = true
-
-      # We aren't interested in tracking internal links to users
-      return nil if route[:controller] == "users"
-
-      topic_id = route[:topic_id]
-      topic_slug = route[:slug]
-      post_number = route[:post_number] || 1
-
-      if route[:controller] == "topics" && route[:action] == "show"
-        topic_id ||= route[:id]
-        topic_slug ||= route[:id]
+        reflected_id =
+          safe_create_topic_link(
+            user_id: post.user_id,
+            topic_id: topic&.id,
+            post_id: reflected_post&.id,
+            url: reflected_url,
+            domain: Discourse.current_hostname,
+            reflection: true,
+            internal: true,
+            link_topic_id: post.topic_id,
+            link_post_id: post.id,
+          )
       end
 
-      topic = Topic.find_by(id: topic_id) if topic_id
-      topic ||= Topic.find_by(slug: topic_slug) if topic_slug.present?
-      target_visible = topic.present? && guardian.can_see?(topic)
-
-      if target_visible
-        url = +"#{Discourse.base_url_no_prefix}#{topic.relative_url}"
-        url << "/#{post_number}" if post_number.to_i > 1
-      elsif topic.blank?
-        topic_id = nil
-      end
+      [url, reflected_id]
     end
 
-    # Skip linking to ourselves
-    return nil if topic&.id == post.topic_id
-
-    reflected_post = nil
-    if post_number && topic
-      reflected_post = Post.find_by(topic_id: topic.id, post_number: post_number.to_i)
-    end
-
-    url = url[0...TopicLink.max_url_length]
-    return nil if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
-
-    file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? ||
-      File.extname(parsed.path).empty?
-
-    safe_create_topic_link(
-      post_id: post.id,
-      user_id: post.user_id,
-      topic_id: post.topic_id,
-      url: url,
-      domain: parsed.host,
-      internal: internal,
-      link_topic_id: topic&.id,
-      link_post_id: reflected_post&.id,
-      quote: link.is_quote,
-      extension: file_extension,
-    )
-
-    reflected_id = nil
-
-    # Create the reflection if we can
-    if target_visible && post.topic && topic.archetype != "private_message" &&
-         post.topic.archetype != "private_message" && post.topic.visible?
-      prefix = Discourse.base_url_no_prefix
-      reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
-
-      reflected_id =
-        safe_create_topic_link(
-          user_id: post.user_id,
-          topic_id: topic&.id,
-          post_id: reflected_post&.id,
-          url: reflected_url,
-          domain: Discourse.current_hostname,
-          reflection: true,
-          internal: true,
-          link_topic_id: post.topic_id,
-          link_post_id: post.id,
-        )
-    end
-
-    [url, reflected_id]
-  end
-
-  def self.cleanup_entries(post, current_urls, current_reflected_ids)
-    # Remove links that aren't there anymore
-    if current_urls.present?
-      TopicLink.where(
-        "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
-        urls: current_urls,
-        post_id: post.id,
-      ).delete_all
-
-      current_reflected_ids.compact!
-      if current_reflected_ids.present?
+    def cleanup_entries(post, current_urls, current_reflected_ids)
+      # Remove links that aren't there anymore
+      if current_urls.present?
         TopicLink.where(
-          "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-          reflected_ids: current_reflected_ids,
+          "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
+          urls: current_urls,
           post_id: post.id,
         ).delete_all
+
+        current_reflected_ids.compact!
+        if current_reflected_ids.present?
+          TopicLink.where(
+            "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+            reflected_ids: current_reflected_ids,
+            post_id: post.id,
+          ).delete_all
+        else
+          TopicLink.where("link_post_id = :post_id AND reflection", post_id: post.id).delete_all
+        end
       else
-        TopicLink.where("link_post_id = :post_id AND reflection", post_id: post.id).delete_all
+        TopicLink.where(
+          "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+          post_id: post.id,
+        ).delete_all
       end
-    else
-      TopicLink.where(
-        "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
-        post_id: post.id,
-      ).delete_all
     end
   end
+  # Make sure a topic can't link to itself
+  def link_to_self
+    errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
+  end
+
+  def crawl_link_title
+    TopicLink.crawl_link_title(id)
+  end
+
+  private_class_method :visible_source_post_ids
+
+  private_class_method :apply_link_visibility_filters
+
+  private_class_method :apply_source_post_visibility_filters
+
+  private
 end
 
 # == Schema Information

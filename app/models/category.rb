@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Category < ActiveRecord::Base
-  RESERVED_SLUGS = ["none"]
-
-  self.ignored_columns = [:reviewable_by_group_id]
-
   include Searchable
   include Positionable
   include HasCustomFields
@@ -12,6 +8,9 @@ class Category < ActiveRecord::Base
   include AnonCacheInvalidator
   include HasDestroyedWebHook
   include Localizable
+  RESERVED_SLUGS = ["none"]
+
+  self.ignored_columns = [:reviewable_by_group_id]
 
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
@@ -82,6 +81,401 @@ class Category < ActiveRecord::Base
   accepts_nested_attributes_for :category_setting, update_only: true
   accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
+  TOPIC_CREATION_PERMISSIONS = [:full]
+  POST_CREATION_PERMISSIONS = %i[create_post full]
+  class << self
+    def normalize_sql(expr)
+      "lower(unaccent(#{expr}))"
+    end
+
+    def preload_user_fields!(guardian, categories)
+      category_ids = categories.map(&:id)
+
+      # Load notification levels
+      notification_levels = CategoryUser.notification_levels_for(guardian.user)
+      notification_levels.default = CategoryUser.default_notification_level
+
+      # Load permissions
+      allowed_topic_create_ids =
+        if !guardian.is_admin? && !guardian.is_anonymous?
+          Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
+        end
+
+      # Load subcategory counts (used to fill has_children property)
+      subcategory_count =
+        Category
+          .secured(guardian)
+          .where.not(parent_category_id: nil)
+          .group(:parent_category_id)
+          .count
+
+      # Update category attributes
+      categories.each do |category|
+        category.notification_level = notification_levels[category[:id]]
+
+        category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
+          allowed_topic_create_ids&.include?(category[:id])
+
+        category.has_children = subcategory_count.key?(category[:id])
+
+        category.subcategory_count = subcategory_count[category[:id]] if category.has_children
+      end
+    end
+
+    def set_permission!(guardian, category)
+      category.permission =
+        if guardian.is_admin? || Category.topic_create_allowed(guardian).exists?(id: category.id)
+          CategoryGroup.permission_types[:full]
+        elsif guardian.can_post_in_category?(category)
+          CategoryGroup.permission_types[:create_post]
+        elsif guardian.can_see_category?(category)
+          CategoryGroup.permission_types[:readonly]
+        end
+
+      category
+    end
+
+    def ancestors_of(category_ids)
+      ancestor_ids = []
+
+      SiteSetting.max_category_nesting.times do
+        category_ids =
+          where(id: category_ids)
+            .where.not(parent_category_id: nil)
+            .pluck("DISTINCT parent_category_id")
+
+        ancestor_ids.concat(category_ids)
+
+        break if category_ids.empty?
+      end
+
+      where(id: ancestor_ids)
+    end
+
+    def topic_id_cache
+      @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+    end
+
+    def topic_ids
+      topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    end
+
+    def reset_topic_ids_cache
+      topic_id_cache.clear
+    end
+  end
+  # Accepts an array of slugs with each item in the array
+  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+  # category nesting hierarchy, nil is returned.
+  #
+  # When only a single slug is provided, the category id of all the categories with that slug is returned.
+  class << self
+    def ids_from_slugs(slugs)
+      return [] if slugs.blank?
+
+      params = {}
+      params_index = 0
+
+      sqls =
+        slugs.map do |slug|
+          category_slugs =
+            slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(it, "") }
+
+          sql = ""
+
+          if category_slugs.length == 1
+            params[:"slug_#{params_index}"] = category_slugs.first
+            sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
+            params_index += 1
+          else
+            category_slugs.each_with_index do |category_slug, index|
+              params[:"slug_#{params_index}"] = category_slug
+
+              sql =
+                if index == 0
+                  "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
+                else
+                  "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
+                end
+
+              params_index += 1
+            end
+          end
+
+          sql
+        end
+
+      DB.query_single(sqls.join("\nUNION ALL\n"), params)
+    end
+  end
+  class << self
+    def subcategory_ids(category_id)
+      @@subcategory_ids.defer_get_set(category_id.to_s) do
+        sql = <<~SQL
+            WITH RECURSIVE subcategories AS (
+                SELECT :category_id id, 1 depth
+                UNION
+                SELECT categories.id, (subcategories.depth + 1) depth
+                FROM categories
+                JOIN subcategories ON subcategories.id = categories.parent_category_id
+                WHERE subcategories.depth < :max_category_nesting
+            )
+            SELECT id FROM subcategories
+          SQL
+        DB.query_single(
+          sql,
+          category_id: category_id,
+          max_category_nesting: SiteSetting.max_category_nesting,
+        )
+      end
+    end
+
+    def clear_subcategory_ids
+      @@subcategory_ids.clear
+    end
+  end
+  class << self
+    def scoped_to_permissions(guardian, permission_types)
+      if guardian.try(:is_admin?)
+        all
+      elsif !guardian || guardian.anonymous?
+        if permission_types.include?(:readonly)
+          where("NOT categories.read_restricted")
+        else
+          where("1 = 0")
+        end
+      else
+        permissions = permission_types.map { |p| CategoryGroup.permission_types[p] }
+        where(
+          "(:staged AND LENGTH(COALESCE(email_in, '')) > 0 AND email_in_allow_strangers)
+          OR categories.id NOT IN (SELECT category_id FROM category_groups)
+          OR categories.id IN (
+                SELECT category_id
+                  FROM category_groups
+                 WHERE permission_type IN (:permissions)
+                   AND (group_id = :everyone OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
+             )",
+          staged: guardian.is_staged?,
+          permissions: permissions,
+          user_id: guardian.user.id,
+          everyone: Group::AUTO_GROUPS[:everyone],
+        )
+      end
+    end
+
+    def update_stats
+      topics_with_post_count =
+        Topic
+          .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
+          .where(
+            "topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)",
+          )
+          .group("topics.category_id")
+          .visible
+          .to_sql
+
+      DB.exec <<~SQL
+      UPDATE categories c
+         SET topic_count = COALESCE(x.topic_count, 0),
+             post_count = COALESCE(x.post_count, 0)
+        FROM (
+              SELECT ccc.id as category_id, stats.topic_count, stats.post_count
+              FROM categories ccc
+              LEFT JOIN (#{topics_with_post_count}) stats
+              ON stats.category_id = ccc.id
+             ) x
+       WHERE x.category_id = c.id
+         AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
+    SQL
+
+      Category.find_each do |c|
+        topics = c.topics.visible
+        topics = topics.where.not(id: c.topic_id) if c.topic_id
+
+        # Combine time-based topic counts into a single query
+        topic_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM topics
+        WHERE category_id = :category_id
+          AND visible = true
+          AND deleted_at IS NULL
+          #{c.topic_id ? "AND id != :topic_id" : ""}
+      SQL
+
+        c.topics_year = topic_counts[0]
+        c.topics_month = topic_counts[1]
+        c.topics_week = topic_counts[2]
+        c.topics_day = topic_counts[3]
+
+        # Combine time-based post counts into a single query
+        post_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM posts
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE topics.category_id = :category_id
+          AND topics.visible = true
+          AND posts.deleted_at IS NULL
+          AND posts.user_deleted = false
+          AND posts.post_type <> #{Post.types[:small_action]}
+          #{c.topic_id ? "AND topics.id != :topic_id" : ""}
+      SQL
+
+        c.posts_year = post_counts[0]
+        c.posts_month = post_counts[1]
+        c.posts_week = post_counts[2]
+        c.posts_day = post_counts[3]
+
+        c.save if c.changed?
+      end
+    end
+  end
+  # Internal: Generate the text of post prompting to enter category description.
+  class << self
+    def post_template
+      I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
+    end
+  end
+  class << self
+    def first_paragraph_description(cooked)
+      doc = Nokogiri::HTML5.fragment(cooked)
+      doc.css("img").remove
+      doc.css("p").first&.inner_html&.strip
+    end
+  end
+  class << self
+    def resolve_permissions(permissions)
+      read_restricted = true
+
+      everyone = Group::AUTO_GROUPS[:everyone]
+      full = CategoryGroup.permission_types[:full]
+
+      mapped =
+        permissions.map do |group, permission|
+          group_id = Group.group_id_from_param(group)
+          permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
+
+          [group_id, permission]
+        end
+
+      mapped.each do |group, permission|
+        return false, [] if group == everyone && permission == full
+
+        read_restricted = false if group == everyone
+      end
+
+      [read_restricted, mapped]
+    end
+  end
+  class << self
+    def auto_bump_topic!
+      Category
+        .joins(:category_setting)
+        .where("category_settings.num_auto_bump_daily > 0")
+        .shuffle
+        .any?(&:auto_bump_topic!)
+    end
+  end
+  class << self
+    def query_parent_category(parent_slug)
+      encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method ==
+        "encoded"
+      where(slug: encoded_parent_slug || parent_slug, parent_category_id: nil).pick(:id) ||
+        where(id: parent_slug.to_i).pick(:id)
+    end
+
+    def query_category(slug_or_id, parent_category_id)
+      encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == "encoded"
+      where(slug: encoded_slug_or_id || slug_or_id, parent_category_id: parent_category_id).first ||
+        where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
+    end
+
+    def find_by_email(email)
+      where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
+    end
+  end
+  class << self
+    def find_by_slug_path(slug_path)
+      return nil if slug_path.empty?
+      return nil if slug_path.size > SiteSetting.max_category_nesting
+
+      slug_path.map! { |slug| CGI.escape(slug.downcase) }
+
+      query =
+        slug_path.inject(nil) do |parent_id, slug|
+          category = Category.where(slug: slug, parent_category_id: parent_id)
+
+          if match_id = /\A(\d+)-category/.match(slug).presence
+            category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
+          end
+
+          category.select(:id)
+        end
+
+      Category.find_by_id(query)
+    end
+
+    def find_by_slug_path_with_id(slug_path_with_id)
+      slug_path = slug_path_with_id.split("/")
+
+      if slug_path.last =~ /\A\d+\Z/
+        id = slug_path.pop.to_i
+        Category.find_by_id(id)
+      else
+        Category.find_by_slug_path(slug_path)
+      end
+    end
+
+    def find_by_slug(category_slug, parent_category_slug = nil)
+      return nil if category_slug.nil?
+
+      find_by_slug_path([parent_category_slug, category_slug].compact)
+    end
+  end
+  class << self
+    def ensure_consistency!
+      sql = <<~SQL
+      SELECT t.id FROM topics t
+      JOIN categories c ON c.topic_id = t.id
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.post_number = 1
+      WHERE p.id IS NULL
+    SQL
+
+      DB.query_single(sql).each { |id| Topic.with_deleted.find_by(id: id).destroy! }
+
+      sql = <<~SQL
+      UPDATE categories c
+      SET topic_id = NULL
+      WHERE c.id IN (
+        SELECT c2.id FROM categories c2
+        LEFT JOIN topics t ON t.id = c2.topic_id AND t.deleted_at IS NULL
+        WHERE t.id IS NULL AND c2.topic_id IS NOT NULL
+      )
+    SQL
+
+      DB.exec(sql)
+
+      Category
+        .joins("LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL")
+        .where.not(id: SiteSetting.uncategorized_category_id)
+        .where(topics: { id: nil })
+        .find_each { |category| category.create_category_definition }
+    end
+
+    def hashtag_ref_from(slug:, parent_category_id:)
+      parent_slug =
+        Category.where(id: parent_category_id).pick(:slug) if parent_category_id.present?
+      [parent_slug, slug].compact.join(Category::SLUG_REF_SEPARATOR)
+    end
+  end
   def nested_replies_conversion_completed?
     !!ActiveModel::Type::Boolean.new.cast(
       custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD],
@@ -222,9 +616,6 @@ class Category < ActiveRecord::Base
           end
         end
 
-  TOPIC_CREATION_PERMISSIONS = [:full]
-  POST_CREATION_PERMISSIONS = %i[create_post full]
-
   scope :topic_create_allowed,
         ->(guardian) do
           scoped = scoped_to_permissions(guardian, TOPIC_CREATION_PERMISSIONS)
@@ -313,82 +704,6 @@ class Category < ActiveRecord::Base
 
   enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
-  def self.normalize_sql(expr)
-    "lower(unaccent(#{expr}))"
-  end
-
-  def self.preload_user_fields!(guardian, categories)
-    category_ids = categories.map(&:id)
-
-    # Load notification levels
-    notification_levels = CategoryUser.notification_levels_for(guardian.user)
-    notification_levels.default = CategoryUser.default_notification_level
-
-    # Load permissions
-    allowed_topic_create_ids =
-      if !guardian.is_admin? && !guardian.is_anonymous?
-        Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
-      end
-
-    # Load subcategory counts (used to fill has_children property)
-    subcategory_count =
-      Category.secured(guardian).where.not(parent_category_id: nil).group(:parent_category_id).count
-
-    # Update category attributes
-    categories.each do |category|
-      category.notification_level = notification_levels[category[:id]]
-
-      category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
-        allowed_topic_create_ids&.include?(category[:id])
-
-      category.has_children = subcategory_count.key?(category[:id])
-
-      category.subcategory_count = subcategory_count[category[:id]] if category.has_children
-    end
-  end
-
-  def self.set_permission!(guardian, category)
-    category.permission =
-      if guardian.is_admin? || Category.topic_create_allowed(guardian).exists?(id: category.id)
-        CategoryGroup.permission_types[:full]
-      elsif guardian.can_post_in_category?(category)
-        CategoryGroup.permission_types[:create_post]
-      elsif guardian.can_see_category?(category)
-        CategoryGroup.permission_types[:readonly]
-      end
-
-    category
-  end
-
-  def self.ancestors_of(category_ids)
-    ancestor_ids = []
-
-    SiteSetting.max_category_nesting.times do
-      category_ids =
-        where(id: category_ids)
-          .where.not(parent_category_id: nil)
-          .pluck("DISTINCT parent_category_id")
-
-      ancestor_ids.concat(category_ids)
-
-      break if category_ids.empty?
-    end
-
-    where(id: ancestor_ids)
-  end
-
-  def self.topic_id_cache
-    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
-  end
-
-  def self.topic_ids
-    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
-  end
-
-  def self.reset_topic_ids_cache
-    topic_id_cache.clear
-  end
-
   def reset_topic_ids_cache
     Category.reset_topic_ids_cache
   end
@@ -415,76 +730,7 @@ class Category < ActiveRecord::Base
     errors.add(:emoji, :invalid) if emoji.present? && !Emoji.exists?(emoji)
   end
 
-  # Accepts an array of slugs with each item in the array
-  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
-  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
-  # category nesting hierarchy, nil is returned.
-  #
-  # When only a single slug is provided, the category id of all the categories with that slug is returned.
-  def self.ids_from_slugs(slugs)
-    return [] if slugs.blank?
-
-    params = {}
-    params_index = 0
-
-    sqls =
-      slugs.map do |slug|
-        category_slugs =
-          slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(it, "") }
-
-        sql = ""
-
-        if category_slugs.length == 1
-          params[:"slug_#{params_index}"] = category_slugs.first
-          sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
-          params_index += 1
-        else
-          category_slugs.each_with_index do |category_slug, index|
-            params[:"slug_#{params_index}"] = category_slug
-
-            sql =
-              if index == 0
-                "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
-              else
-                "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
-              end
-
-            params_index += 1
-          end
-        end
-
-        sql
-      end
-
-    DB.query_single(sqls.join("\nUNION ALL\n"), params)
-  end
-
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
-
-  def self.subcategory_ids(category_id)
-    @@subcategory_ids.defer_get_set(category_id.to_s) do
-      sql = <<~SQL
-            WITH RECURSIVE subcategories AS (
-                SELECT :category_id id, 1 depth
-                UNION
-                SELECT categories.id, (subcategories.depth + 1) depth
-                FROM categories
-                JOIN subcategories ON subcategories.id = categories.parent_category_id
-                WHERE subcategories.depth < :max_category_nesting
-            )
-            SELECT id FROM subcategories
-          SQL
-      DB.query_single(
-        sql,
-        category_id: category_id,
-        max_category_nesting: SiteSetting.max_category_nesting,
-      )
-    end
-  end
-
-  def self.clear_subcategory_ids
-    @@subcategory_ids.clear
-  end
 
   def clear_subcategory_ids
     Category.clear_subcategory_ids
@@ -492,108 +738,6 @@ class Category < ActiveRecord::Base
 
   def top_level?
     parent_category_id.nil?
-  end
-
-  def self.scoped_to_permissions(guardian, permission_types)
-    if guardian.try(:is_admin?)
-      all
-    elsif !guardian || guardian.anonymous?
-      if permission_types.include?(:readonly)
-        where("NOT categories.read_restricted")
-      else
-        where("1 = 0")
-      end
-    else
-      permissions = permission_types.map { |p| CategoryGroup.permission_types[p] }
-      where(
-        "(:staged AND LENGTH(COALESCE(email_in, '')) > 0 AND email_in_allow_strangers)
-          OR categories.id NOT IN (SELECT category_id FROM category_groups)
-          OR categories.id IN (
-                SELECT category_id
-                  FROM category_groups
-                 WHERE permission_type IN (:permissions)
-                   AND (group_id = :everyone OR group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id))
-             )",
-        staged: guardian.is_staged?,
-        permissions: permissions,
-        user_id: guardian.user.id,
-        everyone: Group::AUTO_GROUPS[:everyone],
-      )
-    end
-  end
-
-  def self.update_stats
-    topics_with_post_count =
-      Topic
-        .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
-        .where(
-          "topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)",
-        )
-        .group("topics.category_id")
-        .visible
-        .to_sql
-
-    DB.exec <<~SQL
-      UPDATE categories c
-         SET topic_count = COALESCE(x.topic_count, 0),
-             post_count = COALESCE(x.post_count, 0)
-        FROM (
-              SELECT ccc.id as category_id, stats.topic_count, stats.post_count
-              FROM categories ccc
-              LEFT JOIN (#{topics_with_post_count}) stats
-              ON stats.category_id = ccc.id
-             ) x
-       WHERE x.category_id = c.id
-         AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
-    SQL
-
-    Category.find_each do |c|
-      topics = c.topics.visible
-      topics = topics.where.not(id: c.topic_id) if c.topic_id
-
-      # Combine time-based topic counts into a single query
-      topic_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
-        SELECT
-          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 year') AS year,
-          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 month') AS month,
-          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 week') AS week,
-          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 day') AS day
-        FROM topics
-        WHERE category_id = :category_id
-          AND visible = true
-          AND deleted_at IS NULL
-          #{c.topic_id ? "AND id != :topic_id" : ""}
-      SQL
-
-      c.topics_year = topic_counts[0]
-      c.topics_month = topic_counts[1]
-      c.topics_week = topic_counts[2]
-      c.topics_day = topic_counts[3]
-
-      # Combine time-based post counts into a single query
-      post_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
-        SELECT
-          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 year') AS year,
-          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 month') AS month,
-          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 week') AS week,
-          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 day') AS day
-        FROM posts
-        INNER JOIN topics ON topics.id = posts.topic_id
-        WHERE topics.category_id = :category_id
-          AND topics.visible = true
-          AND posts.deleted_at IS NULL
-          AND posts.user_deleted = false
-          AND posts.post_type <> #{Post.types[:small_action]}
-          #{c.topic_id ? "AND topics.id != :topic_id" : ""}
-      SQL
-
-      c.posts_year = post_counts[0]
-      c.posts_month = post_counts[1]
-      c.posts_week = post_counts[2]
-      c.posts_day = post_counts[3]
-
-      c.save if c.changed?
-    end
   end
 
   def visible_posts
@@ -605,11 +749,6 @@ class Category < ActiveRecord::Base
         .where("posts.deleted_at IS NULL")
         .where("posts.user_deleted = false")
     topic_id ? query.where.not(topics: { id: topic_id }) : query
-  end
-
-  # Internal: Generate the text of post prompting to enter category description.
-  def self.post_template
-    I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
 
   def create_category_definition
@@ -659,12 +798,6 @@ class Category < ActiveRecord::Base
     else
       topic_only_relative_url.try(:relative_url)
     end
-  end
-
-  def self.first_paragraph_description(cooked)
-    doc = Nokogiri::HTML5.fragment(cooked)
-    doc.css("img").remove
-    doc.css("p").first&.inner_html&.strip
   end
 
   def description_text
@@ -888,29 +1021,6 @@ class Category < ActiveRecord::Base
     end
   end
 
-  def self.resolve_permissions(permissions)
-    read_restricted = true
-
-    everyone = Group::AUTO_GROUPS[:everyone]
-    full = CategoryGroup.permission_types[:full]
-
-    mapped =
-      permissions.map do |group, permission|
-        group_id = Group.group_id_from_param(group)
-        permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
-
-        [group_id, permission]
-      end
-
-    mapped.each do |group, permission|
-      return false, [] if group == everyone && permission == full
-
-      read_restricted = false if group == everyone
-    end
-
-    [read_restricted, mapped]
-  end
-
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
     RateLimiter.new(nil, "auto_bump_limit_#{id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
@@ -918,14 +1028,6 @@ class Category < ActiveRecord::Base
 
   def clear_auto_bump_cache!
     auto_bump_limiter&.clear!
-  end
-
-  def self.auto_bump_topic!
-    Category
-      .joins(:category_setting)
-      .where("category_settings.num_auto_bump_daily > 0")
-      .shuffle
-      .any?(&:auto_bump_topic!)
   end
 
   # will automatically bump a single topic
@@ -1059,22 +1161,6 @@ class Category < ActiveRecord::Base
     update(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
   end
 
-  def self.query_parent_category(parent_slug)
-    encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    where(slug: encoded_parent_slug || parent_slug, parent_category_id: nil).pick(:id) ||
-      where(id: parent_slug.to_i).pick(:id)
-  end
-
-  def self.query_category(slug_or_id, parent_category_id)
-    encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == "encoded"
-    where(slug: encoded_slug_or_id || slug_or_id, parent_category_id: parent_category_id).first ||
-      where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
-  end
-
-  def self.find_by_email(email)
-    where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
-  end
-
   def has_children?
     return @has_children if defined?(@has_children)
     @has_children = id && Category.where(parent_category_id: id).exists?
@@ -1159,43 +1245,6 @@ class Category < ActiveRecord::Base
     category_moderation_groups.pluck(:group_id)
   end
 
-  def self.find_by_slug_path(slug_path)
-    return nil if slug_path.empty?
-    return nil if slug_path.size > SiteSetting.max_category_nesting
-
-    slug_path.map! { |slug| CGI.escape(slug.downcase) }
-
-    query =
-      slug_path.inject(nil) do |parent_id, slug|
-        category = Category.where(slug: slug, parent_category_id: parent_id)
-
-        if match_id = /\A(\d+)-category/.match(slug).presence
-          category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
-        end
-
-        category.select(:id)
-      end
-
-    Category.find_by_id(query)
-  end
-
-  def self.find_by_slug_path_with_id(slug_path_with_id)
-    slug_path = slug_path_with_id.split("/")
-
-    if slug_path.last =~ /\A\d+\Z/
-      id = slug_path.pop.to_i
-      Category.find_by_id(id)
-    else
-      Category.find_by_slug_path(slug_path)
-    end
-  end
-
-  def self.find_by_slug(category_slug, parent_category_slug = nil)
-    return nil if category_slug.nil?
-
-    find_by_slug_path([parent_category_slug, category_slug].compact)
-  end
-
   def subcategory_list_includes_topics?
     subcategory_list_style.to_s.end_with?("with_featured_topics")
   end
@@ -1232,40 +1281,6 @@ class Category < ActiveRecord::Base
 
       check_permissions_compatibility(parent_permissions, child_permissions)
     end
-  end
-
-  def self.ensure_consistency!
-    sql = <<~SQL
-      SELECT t.id FROM topics t
-      JOIN categories c ON c.topic_id = t.id
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.post_number = 1
-      WHERE p.id IS NULL
-    SQL
-
-    DB.query_single(sql).each { |id| Topic.with_deleted.find_by(id: id).destroy! }
-
-    sql = <<~SQL
-      UPDATE categories c
-      SET topic_id = NULL
-      WHERE c.id IN (
-        SELECT c2.id FROM categories c2
-        LEFT JOIN topics t ON t.id = c2.topic_id AND t.deleted_at IS NULL
-        WHERE t.id IS NULL AND c2.topic_id IS NOT NULL
-      )
-    SQL
-
-    DB.exec(sql)
-
-    Category
-      .joins("LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL")
-      .where.not(id: SiteSetting.uncategorized_category_id)
-      .where(topics: { id: nil })
-      .find_each { |category| category.create_category_definition }
-  end
-
-  def self.hashtag_ref_from(slug:, parent_category_id:)
-    parent_slug = Category.where(id: parent_category_id).pick(:slug) if parent_category_id.present?
-    [parent_slug, slug].compact.join(Category::SLUG_REF_SEPARATOR)
   end
 
   def slug_path(parent_ids = Set.new)

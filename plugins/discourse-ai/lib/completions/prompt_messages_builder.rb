@@ -12,354 +12,359 @@ module DiscourseAi
       attr_reader :chat_context_posts
       attr_accessor :topic
 
-      def self.messages_from_chat(
-        message,
-        channel:,
-        context_post_ids:,
-        max_messages:,
-        context_token_budget: nil,
-        tokenizer: nil,
-        include_uploads: nil,
-        include_image_uploads: nil,
-        include_document_uploads: nil,
-        allowed_attachment_types: nil,
-        bot_user_ids:,
-        instruction_message: nil
-      )
-        include_image_uploads, include_document_uploads =
-          normalize_upload_inclusion(
-            include_uploads,
-            include_image_uploads,
-            include_document_uploads,
-          )
-        include_thread_titles = !channel.direct_message_channel? && !message.thread_id
+      class << self
+        def messages_from_chat(
+          message,
+          channel:,
+          context_post_ids:,
+          max_messages:,
+          context_token_budget: nil,
+          tokenizer: nil,
+          include_uploads: nil,
+          include_image_uploads: nil,
+          include_document_uploads: nil,
+          allowed_attachment_types: nil,
+          bot_user_ids:,
+          instruction_message: nil
+        )
+          include_image_uploads, include_document_uploads =
+            normalize_upload_inclusion(
+              include_uploads,
+              include_image_uploads,
+              include_document_uploads,
+            )
+          include_thread_titles = !channel.direct_message_channel? && !message.thread_id
 
-        current_id = message.id
-        messages = nil
+          current_id = message.id
+          messages = nil
 
-        if !message.thread_id && channel.direct_message_channel?
-          messages = [message]
-        elsif !channel.direct_message_channel? && !message.thread_id
-          messages =
-            Chat::Message
-              .includes(:user, :uploads, :thread)
-              .joins("left join chat_threads on chat_threads.id = chat_messages.thread_id")
-              .where(chat_channel_id: channel.id)
-              .where(
-                "chat_messages.thread_id IS NULL OR chat_threads.original_message_id = chat_messages.id",
-              )
-              .order(id: :desc)
-              .limit(max_messages)
-              .to_a
-              .reverse
-        end
+          if !message.thread_id && channel.direct_message_channel?
+            messages = [message]
+          elsif !channel.direct_message_channel? && !message.thread_id
+            messages =
+              Chat::Message
+                .includes(:user, :uploads, :thread)
+                .joins("left join chat_threads on chat_threads.id = chat_messages.thread_id")
+                .where(chat_channel_id: channel.id)
+                .where(
+                  "chat_messages.thread_id IS NULL OR chat_threads.original_message_id = chat_messages.id",
+                )
+                .order(id: :desc)
+                .limit(max_messages)
+                .to_a
+                .reverse
+          end
 
-        messages ||=
-          ChatSDK::Thread.last_messages(
-            thread_id: message.thread_id,
-            guardian: Discourse.system_user.guardian,
-            page_size: max_messages,
-          )
+          messages ||=
+            ChatSDK::Thread.last_messages(
+              thread_id: message.thread_id,
+              guardian: Discourse.system_user.guardian,
+              page_size: max_messages,
+            )
 
-        builder = new
+          builder = new
 
-        guardian = Guardian.new(message.user)
-        if context_post_ids
-          builder.set_chat_context_posts(
-            context_post_ids,
-            guardian,
-            include_image_uploads: include_image_uploads,
-            include_document_uploads: include_document_uploads,
-            allowed_attachment_types: allowed_attachment_types,
-          )
-        end
-
-        messages.each do |m|
-          # restore stripped message
-          m.message = instruction_message if m.id == current_id && instruction_message
-
-          if bot_user_ids.include?(m.user_id)
-            builder.push(type: :model, content: m.message)
-          else
-            upload_ids =
-              filtered_upload_ids_from_uploads(
-                m.uploads,
-                include_image_uploads: include_image_uploads,
-                include_document_uploads: include_document_uploads,
-                allowed_attachment_types: allowed_attachment_types,
-                guardian: guardian,
-              )
-            mapped_message = m.message
-
-            thread_title = nil
-            thread_title = m.thread&.title if include_thread_titles && m.thread_id
-            mapped_message = "(#{thread_title})\n#{m.message}" if thread_title
-
-            if m.uploads.present?
-              mapped_message =
-                "#{mapped_message} -- uploaded(#{m.uploads.map(&:short_url).join(", ")})"
-            end
-
-            builder.push(
-              type: :user,
-              content: mapped_message,
-              id: m.user.username,
-              upload_ids: upload_ids,
+          guardian = Guardian.new(message.user)
+          if context_post_ids
+            builder.set_chat_context_posts(
+              context_post_ids,
+              guardian,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
             )
           end
+
+          messages.each do |m|
+            # restore stripped message
+            m.message = instruction_message if m.id == current_id && instruction_message
+
+            if bot_user_ids.include?(m.user_id)
+              builder.push(type: :model, content: m.message)
+            else
+              upload_ids =
+                filtered_upload_ids_from_uploads(
+                  m.uploads,
+                  include_image_uploads: include_image_uploads,
+                  include_document_uploads: include_document_uploads,
+                  allowed_attachment_types: allowed_attachment_types,
+                  guardian: guardian,
+                )
+              mapped_message = m.message
+
+              thread_title = nil
+              thread_title = m.thread&.title if include_thread_titles && m.thread_id
+              mapped_message = "(#{thread_title})\n#{m.message}" if thread_title
+
+              if m.uploads.present?
+                mapped_message =
+                  "#{mapped_message} -- uploaded(#{m.uploads.map(&:short_url).join(", ")})"
+              end
+
+              builder.push(
+                type: :user,
+                content: mapped_message,
+                id: m.user.username,
+                upload_ids: upload_ids,
+              )
+            end
+          end
+
+          builder.trim_to_token_budget!(context_token_budget, tokenizer:)
+
+          builder.to_a(
+            limit: max_messages,
+            style: channel.direct_message_channel? ? :chat_with_context : :chat,
+          )
         end
 
-        builder.trim_to_token_budget!(context_token_budget, tokenizer:)
-
-        builder.to_a(
-          limit: max_messages,
-          style: channel.direct_message_channel? ? :chat_with_context : :chat,
+        def messages_from_post(
+          post,
+          style: nil,
+          max_posts:,
+          context_token_budget: nil,
+          tokenizer: nil,
+          bot_usernames:,
+          include_uploads: nil,
+          include_image_uploads: nil,
+          include_document_uploads: nil,
+          allowed_attachment_types: nil
         )
-      end
+          include_image_uploads, include_document_uploads =
+            normalize_upload_inclusion(
+              include_uploads,
+              include_image_uploads,
+              include_document_uploads,
+            )
 
-      def self.messages_from_post(
-        post,
-        style: nil,
-        max_posts:,
-        context_token_budget: nil,
-        tokenizer: nil,
-        bot_usernames:,
-        include_uploads: nil,
-        include_image_uploads: nil,
-        include_document_uploads: nil,
-        allowed_attachment_types: nil
-      )
-        include_image_uploads, include_document_uploads =
-          normalize_upload_inclusion(
-            include_uploads,
-            include_image_uploads,
-            include_document_uploads,
-          )
+          # Pay attention to the `post_number <= ?` here.
+          # We want to inject the last post as context because they are translated differently.
 
-        # Pay attention to the `post_number <= ?` here.
-        # We want to inject the last post as context because they are translated differently.
+          post_types = [Post.types[:regular]]
+          post_types << Post.types[:whisper] if post.post_type == Post.types[:whisper]
 
-        post_types = [Post.types[:regular]]
-        post_types << Post.types[:whisper] if post.post_type == Post.types[:whisper]
-
-        context =
-          post
-            .topic
-            .posts
-            .joins(:user)
-            .joins("LEFT JOIN post_custom_prompts ON post_custom_prompts.post_id = posts.id")
-            .where("post_number <= ?", post.post_number)
-            .order("post_number desc")
-            .where("post_type in (?)", post_types)
-            .limit(max_posts)
-            .pluck(
-              "posts.raw",
-              "users.username",
-              "post_custom_prompts.custom_prompt",
-              "(
+          context =
+            post
+              .topic
+              .posts
+              .joins(:user)
+              .joins("LEFT JOIN post_custom_prompts ON post_custom_prompts.post_id = posts.id")
+              .where("post_number <= ?", post.post_number)
+              .order("post_number desc")
+              .where("post_type in (?)", post_types)
+              .limit(max_posts)
+              .pluck(
+                "posts.raw",
+                "users.username",
+                "post_custom_prompts.custom_prompt",
+                "(
                   SELECT array_agg(ref.upload_id)
                   FROM upload_references ref
                   JOIN uploads u ON u.id = ref.upload_id
                   WHERE ref.target_type = 'Post' AND ref.target_id = posts.id
                ) as upload_ids",
-              "posts.created_at",
-            )
+                "posts.created_at",
+              )
 
-        builder = new
-        builder.topic = post.topic
-        guardian = Guardian.new(post.user)
+          builder = new
+          builder.topic = post.topic
+          guardian = Guardian.new(post.user)
 
-        context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
-          filtered_upload_ids =
-            filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: include_image_uploads,
-              include_document_uploads: include_document_uploads,
-              allowed_attachment_types: allowed_attachment_types,
-              guardian: guardian,
-            )
-          remaining_upload_ids = Array(filtered_upload_ids).dup
-          uploads_by_id = Upload.where(id: remaining_upload_ids).index_by(&:id)
+          context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
+            filtered_upload_ids =
+              filtered_upload_ids_for_prompt(
+                upload_ids,
+                include_image_uploads: include_image_uploads,
+                include_document_uploads: include_document_uploads,
+                allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
+              )
+            remaining_upload_ids = Array(filtered_upload_ids).dup
+            uploads_by_id = Upload.where(id: remaining_upload_ids).index_by(&:id)
 
-          custom_prompt_translation =
-            Proc.new do |message|
-              # We can't keep backwards-compatibility for stored functions.
-              # Tool syntax requires a tool_call_id which we don't have.
-              if message[2] != "function"
-                custom_context = {
-                  content: message[0],
-                  type: message[2].present? ? message[2].to_sym : :model,
-                }
+            custom_prompt_translation =
+              Proc.new do |message|
+                # We can't keep backwards-compatibility for stored functions.
+                # Tool syntax requires a tool_call_id which we don't have.
+                if message[2] != "function"
+                  custom_context = {
+                    content: message[0],
+                    type: message[2].present? ? message[2].to_sym : :model,
+                  }
 
-                custom_context[:id] = message[1] if custom_context[:type] != :model
-                custom_context[:name] = message[3] if message[3]
+                  custom_context[:id] = message[1] if custom_context[:type] != :model
+                  custom_context[:name] = message[3] if message[3]
 
-                thinking = message[4]
-                custom_context[:thinking] = thinking if thinking
-                provider_data = message[5]
-                custom_context[:provider_data] = provider_data if provider_data.is_a?(Hash)
-                custom_context[:created_at] = created_at
+                  thinking = message[4]
+                  custom_context[:thinking] = thinking if thinking
+                  provider_data = message[5]
+                  custom_context[:provider_data] = provider_data if provider_data.is_a?(Hash)
+                  custom_context[:created_at] = created_at
 
-                if custom_context[:type] == :model && remaining_upload_ids.present?
-                  content_text = message_text(custom_context[:content])
-                  referenced_upload_ids =
-                    remaining_upload_ids.select do |upload_id|
-                      upload = uploads_by_id[upload_id]
-                      upload && content_text.include?(upload.short_url)
+                  if custom_context[:type] == :model && remaining_upload_ids.present?
+                    content_text = message_text(custom_context[:content])
+                    referenced_upload_ids =
+                      remaining_upload_ids.select do |upload_id|
+                        upload = uploads_by_id[upload_id]
+                        upload && content_text.include?(upload.short_url)
+                      end
+                    if referenced_upload_ids.present?
+                      custom_context[:upload_ids] = referenced_upload_ids
+                      remaining_upload_ids -= referenced_upload_ids
                     end
-                  if referenced_upload_ids.present?
-                    custom_context[:upload_ids] = referenced_upload_ids
-                    remaining_upload_ids -= referenced_upload_ids
                   end
-                end
 
-                builder.push(**custom_context)
+                  builder.push(**custom_context)
+                end
               end
+
+            if custom_prompt.present?
+              custom_prompt.each(&custom_prompt_translation)
+            else
+              context = { content: raw, type: (bot_usernames.include?(username) ? :model : :user) }
+
+              context[:id] = username if context[:type] == :user
+
+              context[:upload_ids] = filtered_upload_ids
+              context[:created_at] = created_at
+
+              builder.push(**context)
+            end
+          end
+
+          builder.trim_to_token_budget!(context_token_budget, tokenizer:)
+
+          builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
+        end
+
+        def message_text(value)
+          case value
+          when Hash
+            message_text(value[:content] || value["content"])
+          when Array
+            value.map { |item| message_text(item) }.join
+          else
+            value.to_s
+          end
+        end
+
+        # Finds the last compression checkpoint: a bot-authored :user message
+        # (blank id) wrapped in the compressed context markers, acknowledged by
+        # the :model message that follows it.
+        def compression_checkpoint_index(messages)
+          (messages.length - 2).downto(0) do |index|
+            message = messages[index]
+            next if message[:type] != :user
+            next if message[:id].present?
+            next if !message_text(message).start_with?(COMPRESSED_CONTEXT_PREFIX)
+
+            next_message = messages[index + 1]
+            if next_message[:type] != :model || message_text(next_message) != COMPRESSED_CONTEXT_ACK
+              next
             end
 
-          if custom_prompt.present?
-            custom_prompt.each(&custom_prompt_translation)
-          else
-            context = { content: raw, type: (bot_usernames.include?(username) ? :model : :user) }
-
-            context[:id] = username if context[:type] == :user
-
-            context[:upload_ids] = filtered_upload_ids
-            context[:created_at] = created_at
-
-            builder.push(**context)
-          end
-        end
-
-        builder.trim_to_token_budget!(context_token_budget, tokenizer:)
-
-        builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
-      end
-
-      def self.message_text(value)
-        case value
-        when Hash
-          message_text(value[:content] || value["content"])
-        when Array
-          value.map { |item| message_text(item) }.join
-        else
-          value.to_s
-        end
-      end
-
-      # Finds the last compression checkpoint: a bot-authored :user message
-      # (blank id) wrapped in the compressed context markers, acknowledged by
-      # the :model message that follows it.
-      def self.compression_checkpoint_index(messages)
-        (messages.length - 2).downto(0) do |index|
-          message = messages[index]
-          next if message[:type] != :user
-          next if message[:id].present?
-          next if !message_text(message).start_with?(COMPRESSED_CONTEXT_PREFIX)
-
-          next_message = messages[index + 1]
-          if next_message[:type] != :model || message_text(next_message) != COMPRESSED_CONTEXT_ACK
-            next
+            return index
           end
 
-          return index
+          nil
         end
 
-        nil
-      end
-
-      def self.normalize_upload_inclusion(
-        include_uploads,
-        include_image_uploads,
-        include_document_uploads
-      )
-        include_image_uploads = include_uploads if include_image_uploads.nil?
-        include_document_uploads = include_uploads if include_document_uploads.nil?
-
-        [!!include_image_uploads, !!include_document_uploads]
-      end
-
-      def self.filtered_upload_ids_for_prompt(
-        upload_ids,
-        include_image_uploads:,
-        include_document_uploads:,
-        guardian:,
-        allowed_attachment_types: nil
-      )
-        return if !include_image_uploads && !include_document_uploads
-        return if upload_ids.blank?
-
-        upload_ids = Array(upload_ids).compact.map(&:to_i)
-        uploads_by_id = uploads_for_prompt(upload_ids).index_by(&:id)
-
-        filtered_upload_ids_from_uploads(
-          upload_ids.filter_map { |upload_id| uploads_by_id[upload_id] },
-          include_image_uploads: include_image_uploads,
-          include_document_uploads: include_document_uploads,
-          allowed_attachment_types: allowed_attachment_types,
-          guardian: guardian,
+        def normalize_upload_inclusion(
+          include_uploads,
+          include_image_uploads,
+          include_document_uploads
         )
-      end
+          include_image_uploads = include_uploads if include_image_uploads.nil?
+          include_document_uploads = include_uploads if include_document_uploads.nil?
 
-      # Upload#access_control_post is deliberately wrapped in Post.unscoped so a deleted
-      # post still hides its uploads; a bare includes would bypass that and expose them
-      def self.uploads_for_prompt(upload_ids)
-        Post.unscoped { Upload.where(id: upload_ids).includes(:access_control_post).to_a }
-      end
+          [!!include_image_uploads, !!include_document_uploads]
+        end
 
-      def self.filtered_upload_ids_from_uploads(
-        uploads,
-        include_image_uploads:,
-        include_document_uploads:,
-        guardian:,
-        allowed_attachment_types: nil
-      )
-        return if !include_image_uploads && !include_document_uploads
-        return if uploads.blank?
+        def filtered_upload_ids_for_prompt(
+          upload_ids,
+          include_image_uploads:,
+          include_document_uploads:,
+          guardian:,
+          allowed_attachment_types: nil
+        )
+          return if !include_image_uploads && !include_document_uploads
+          return if upload_ids.blank?
 
-        uploads
-          .select do |upload|
-            upload_allowed_for_prompt?(
-              upload,
-              include_image_uploads: include_image_uploads,
-              include_document_uploads: include_document_uploads,
-              allowed_attachment_types: allowed_attachment_types,
-              guardian: guardian,
+          upload_ids = Array(upload_ids).compact.map(&:to_i)
+          uploads_by_id = uploads_for_prompt(upload_ids).index_by(&:id)
+
+          filtered_upload_ids_from_uploads(
+            upload_ids.filter_map { |upload_id| uploads_by_id[upload_id] },
+            include_image_uploads: include_image_uploads,
+            include_document_uploads: include_document_uploads,
+            allowed_attachment_types: allowed_attachment_types,
+            guardian: guardian,
+          )
+        end
+
+        # Upload#access_control_post is deliberately wrapped in Post.unscoped so a deleted
+        # post still hides its uploads; a bare includes would bypass that and expose them
+        def uploads_for_prompt(upload_ids)
+          Post.unscoped { Upload.where(id: upload_ids).includes(:access_control_post).to_a }
+        end
+
+        def filtered_upload_ids_from_uploads(
+          uploads,
+          include_image_uploads:,
+          include_document_uploads:,
+          guardian:,
+          allowed_attachment_types: nil
+        )
+          return if !include_image_uploads && !include_document_uploads
+          return if uploads.blank?
+
+          uploads
+            .select do |upload|
+              upload_allowed_for_prompt?(
+                upload,
+                include_image_uploads: include_image_uploads,
+                include_document_uploads: include_document_uploads,
+                allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
+              )
+            end
+            .map(&:id)
+            .presence
+        end
+
+        def upload_allowed_for_prompt?(
+          upload,
+          include_image_uploads:,
+          include_document_uploads:,
+          guardian:,
+          allowed_attachment_types: nil
+        )
+          type_allowed =
+            if UploadEncoder.image?(upload)
+              include_image_uploads && UploadEncoder.supported_image_upload?(upload)
+            else
+              include_document_uploads &&
+                document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
+            end
+          return false if !type_allowed
+
+          guardian.can_see_upload?(upload)
+        end
+
+        def document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
+          allowed_attachment_types = LlmModel.normalize_attachment_types(allowed_attachment_types)
+          return false if allowed_attachment_types.blank?
+
+          mime_type =
+            MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
+              "application/octet-stream"
+          attachment_type =
+            DiscourseAi::Completions::DocumentEncoder.attachment_type_for(
+              upload.extension,
+              mime_type,
             )
-          end
-          .map(&:id)
-          .presence
-      end
-
-      def self.upload_allowed_for_prompt?(
-        upload,
-        include_image_uploads:,
-        include_document_uploads:,
-        guardian:,
-        allowed_attachment_types: nil
-      )
-        type_allowed =
-          if UploadEncoder.image?(upload)
-            include_image_uploads && UploadEncoder.supported_image_upload?(upload)
-          else
-            include_document_uploads &&
-              document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
-          end
-        return false if !type_allowed
-
-        guardian.can_see_upload?(upload)
-      end
-
-      def self.document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
-        allowed_attachment_types = LlmModel.normalize_attachment_types(allowed_attachment_types)
-        return false if allowed_attachment_types.blank?
-
-        mime_type =
-          MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
-            "application/octet-stream"
-        attachment_type =
-          DiscourseAi::Completions::DocumentEncoder.attachment_type_for(upload.extension, mime_type)
-        allowed_attachment_types.include?(attachment_type)
+          allowed_attachment_types.include?(attachment_type)
+        end
       end
 
       def initialize

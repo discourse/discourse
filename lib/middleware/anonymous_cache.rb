@@ -11,59 +11,62 @@ module Middleware
   class AnonymousCache
     CACHEABLE_ENV = "discourse.anonymous_cache.cacheable"
 
-    def self.cache_key_segments
-      @@cache_key_segments ||= {
-        m: "key_is_mobile?",
-        c: "key_is_crawler?",
-        o: "key_is_old_browser?",
-        d: "key_is_modern_mobile_device?",
-        b: "key_has_brotli?",
-        t: "key_cache_theme_ids",
-        ca: "key_compress_anon",
-        l: "key_locale",
-        lat: "key_automatically_translate",
-        cm: "key_forced_color_mode",
-        cs: "key_color_scheme_id",
-        ds: "key_dark_scheme_id",
-      }
-    end
-
-    # Compile a string builder method that will be called to create
-    # an anonymous cache key
-    def self.compile_key_builder
-      method = +"def self.__compiled_key_builder(h)\n  \""
-      cache_key_segments.each do |k, v|
-        raise "Invalid key name" unless k =~ /\A[a-z]+\z/
-        raise "Invalid method name" unless v =~ /\Akey_[a-z_\?]+\z/
-        method << "|#{k}=#\{h.#{v}}"
+    PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
+    class << self
+      def cache_key_segments
+        @@cache_key_segments ||= {
+          m: "key_is_mobile?",
+          c: "key_is_crawler?",
+          o: "key_is_old_browser?",
+          d: "key_is_modern_mobile_device?",
+          b: "key_has_brotli?",
+          t: "key_cache_theme_ids",
+          ca: "key_compress_anon",
+          l: "key_locale",
+          lat: "key_automatically_translate",
+          cm: "key_forced_color_mode",
+          cs: "key_color_scheme_id",
+          ds: "key_dark_scheme_id",
+        }
       end
-      method << "\"\nend"
-      eval(method) # rubocop:disable Security/Eval
-      @@compiled = true
-    end
 
-    def self.build_cache_key(helper)
-      compile_key_builder unless defined?(@@compiled)
-      __compiled_key_builder(helper)
-    end
-
-    def self.anon_cache(env, duration)
-      env["ANON_CACHE_DURATION"] = duration
-    end
-
-    def self.clear_all_cache!
-      if Rails.env.production?
-        raise "for perf reasons, clear_all_cache! cannot be used in production."
+      # Compile a string builder method that will be called to create
+      # an anonymous cache key
+      def compile_key_builder
+        method = +"def self.__compiled_key_builder(h)\n  \""
+        cache_key_segments.each do |k, v|
+          raise "Invalid key name" unless k =~ /\A[a-z]+\z/
+          raise "Invalid method name" unless v =~ /\Akey_[a-z_\?]+\z/
+          method << "|#{k}=#\{h.#{v}}"
+        end
+        method << "\"\nend"
+        eval(method) # rubocop:disable Security/Eval
+        @@compiled = true
       end
-      Discourse.redis.keys("ANON_CACHE_*").each { |k| Discourse.redis.del(k) }
-    end
 
-    def self.disable_anon_cache
-      @@disabled = true
-    end
+      def build_cache_key(helper)
+        compile_key_builder unless defined?(@@compiled)
+        __compiled_key_builder(helper)
+      end
 
-    def self.enable_anon_cache
-      @@disabled = false
+      def anon_cache(env, duration)
+        env["ANON_CACHE_DURATION"] = duration
+      end
+
+      def clear_all_cache!
+        if Rails.env.production?
+          raise "for perf reasons, clear_all_cache! cannot be used in production."
+        end
+        Discourse.redis.keys("ANON_CACHE_*").each { |k| Discourse.redis.del(k) }
+      end
+
+      def disable_anon_cache
+        @@disabled = true
+      end
+
+      def enable_anon_cache
+        @@disabled = false
+      end
     end
 
     # This gives us an API to insert anonymous cache segments
@@ -78,6 +81,8 @@ module Middleware
         return current
       LUA
 
+      MIN_TIME_TO_CHECK = 0.05
+      ADP = "action_dispatch.request.parameters"
       def initialize(env, request = nil)
         @env = env
         @user_agent = HttpUserAgentEncoder.ensure_utf8(@env[USER_AGENT])
@@ -269,9 +274,6 @@ module Middleware
         !logged_in_anon_limiter.performed!(raise_error: false)
       end
 
-      MIN_TIME_TO_CHECK = 0.05
-      ADP = "action_dispatch.request.parameters"
-
       def should_force_anonymous?
         if (queue_time = @env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]) && get?
           if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
@@ -379,8 +381,6 @@ module Middleware
     def initialize(app, settings = {})
       @app = app
     end
-
-    PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
 
     def call(env)
       env[CACHEABLE_ENV] = false

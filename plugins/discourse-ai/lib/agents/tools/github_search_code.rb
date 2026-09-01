@@ -11,43 +11,50 @@ module DiscourseAi
         PER_PAGE = 30
         MAX_ALLOWED_PAGE = (MAX_GH_RESULTS / PER_PAGE.to_f).ceil
 
-        def self.signature
-          {
-            name: name,
-            description: "Searches for code in a GitHub repository",
-            parameters: [
-              {
-                name: "repo",
-                description: "The repository name in the format 'owner/repo'",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "query",
-                description: "The search query (e.g., a function name, variable, or code snippet)",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "page",
-                description: "Results page to retrieve (GitHub returns up to 30 results per page)",
-                type: "integer",
-                required: false,
-              },
-              {
-                name: "ignore_paths",
-                description:
-                  "File path prefixes to exclude from results (e.g., ['config/locales/', 'spec/'])",
-                type: "array",
-                item_type: "string",
-                required: false,
-              },
-            ],
-          }
-        end
+        # Cap blob fetches to avoid excessive API calls for line-number enrichment.
+        # Files beyond this limit still appear in results but without line numbers.
+        MAX_BLOB_FETCHES = 10
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Searches for code in a GitHub repository",
+              parameters: [
+                {
+                  name: "repo",
+                  description: "The repository name in the format 'owner/repo'",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "query",
+                  description:
+                    "The search query (e.g., a function name, variable, or code snippet)",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "page",
+                  description:
+                    "Results page to retrieve (GitHub returns up to 30 results per page)",
+                  type: "integer",
+                  required: false,
+                },
+                {
+                  name: "ignore_paths",
+                  description:
+                    "File path prefixes to exclude from results (e.g., ['config/locales/', 'spec/'])",
+                  type: "array",
+                  item_type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "github_search_code"
+          def name
+            "github_search_code"
+          end
         end
 
         def repo
@@ -115,10 +122,6 @@ module DiscourseAi
 
           "https://api.github.com/search/code?#{encoded_params}"
         end
-
-        # Cap blob fetches to avoid excessive API calls for line-number enrichment.
-        # Files beyond this limit still appear in results but without line numbers.
-        MAX_BLOB_FETCHES = 10
 
         def format_results(items)
           return [] if items.blank?

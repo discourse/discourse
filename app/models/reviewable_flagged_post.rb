@@ -6,23 +6,24 @@ class ReviewableFlaggedPost < Reviewable
   scope :pending_and_default_visible, -> { pending.default_visible }
 
   # Penalties are handled by the modal after the action is performed
-  def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_keep,
-      agree_and_keep_deleted: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      agree_and_edit: :agree_and_keep,
-      disagree_and_restore: :disagree,
-      ignore_and_do_nothing: :ignore,
-      delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
-    }
-  end
+  class << self
+    def action_aliases
+      {
+        agree_and_keep_hidden: :agree_and_keep,
+        agree_and_keep_deleted: :agree_and_keep,
+        agree_and_silence: :agree_and_keep,
+        agree_and_suspend: :agree_and_keep,
+        agree_and_edit: :agree_and_keep,
+        disagree_and_restore: :disagree,
+        ignore_and_do_nothing: :ignore,
+        delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
+      }
+    end
 
-  def self.counts_for(posts)
-    result = {}
+    def counts_for(posts)
+      result = {}
 
-    counts = DB.query(<<~SQL, pending: statuses[:pending])
+      counts = DB.query(<<~SQL, pending: statuses[:pending])
       SELECT r.target_id AS post_id,
         rs.reviewable_score_type,
         count(*) as total
@@ -33,12 +34,13 @@ class ReviewableFlaggedPost < Reviewable
       GROUP BY r.target_id, rs.reviewable_score_type
     SQL
 
-    counts.each do |c|
-      result[c.post_id] ||= {}
-      result[c.post_id][c.reviewable_score_type] = c.total
-    end
+      counts.each do |c|
+        result[c.post_id] ||= {}
+        result[c.post_id][c.reviewable_score_type] = c.total
+      end
 
-    result
+      result
+    end
   end
 
   def post

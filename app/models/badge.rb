@@ -72,16 +72,18 @@ class Badge < ActiveRecord::Base
   # used by serializer
   attr_accessor :has_badge
 
-  def self.trigger_hash
-    @trigger_hash ||=
-      Badge::Trigger
-        .constants
-        .map do |k|
-          name = k.to_s.underscore
-          [name, Badge::Trigger.const_get(k)] unless name =~ /deprecated/
-        end
-        .compact
-        .to_h
+  class << self
+    def trigger_hash
+      @trigger_hash ||=
+        Badge::Trigger
+          .constants
+          .map do |k|
+            name = k.to_s.underscore
+            [name, Badge::Trigger.const_get(k)] unless name =~ /deprecated/
+          end
+          .compact
+          .to_h
+    end
   end
 
   module Trigger
@@ -92,16 +94,18 @@ class Badge < ActiveRecord::Base
     UserChange = 8
     DeprecatedPostProcessed = 16 # No longer in use
 
-    def self.is_none?(trigger)
-      [None].include? trigger
-    end
+    class << self
+      def is_none?(trigger)
+        [None].include? trigger
+      end
 
-    def self.uses_user_ids?(trigger)
-      [TrustLevelChange, UserChange].include? trigger
-    end
+      def uses_user_ids?(trigger)
+        [TrustLevelChange, UserChange].include? trigger
+      end
 
-    def self.uses_post_ids?(trigger)
-      [PostAction, PostRevision].include? trigger
+      def uses_post_ids?(trigger)
+        [PostAction, PostRevision].include? trigger
+      end
     end
   end
 
@@ -137,27 +141,38 @@ class Badge < ActiveRecord::Base
   end
 
   # fields that can not be edited on system badges
-  def self.protected_system_fields
-    %i[name badge_type_id multiple_grant target_posts show_posts query trigger auto_revoke listable]
-  end
+  class << self
+    def protected_system_fields
+      %i[
+        name
+        badge_type_id
+        multiple_grant
+        target_posts
+        show_posts
+        query
+        trigger
+        auto_revoke
+        listable
+      ]
+    end
 
-  def self.trust_level_badge_ids
-    (1..4).to_a
-  end
+    def trust_level_badge_ids
+      (1..4).to_a
+    end
 
-  def self.like_badge_counts
-    @like_badge_counts ||= {
-      NicePost => 10,
-      GoodPost => 25,
-      GreatPost => 50,
-      NiceTopic => 10,
-      GoodTopic => 25,
-      GreatTopic => 50,
-    }
-  end
+    def like_badge_counts
+      @like_badge_counts ||= {
+        NicePost => 10,
+        GoodPost => 25,
+        GreatPost => 50,
+        NiceTopic => 10,
+        GoodTopic => 25,
+        GreatTopic => 50,
+      }
+    end
 
-  def self.ensure_consistency!
-    DB.exec <<~SQL
+    def ensure_consistency!
+      DB.exec <<~SQL
       DELETE FROM user_badges
             USING user_badges ub
         LEFT JOIN users u ON u.id = ub.user_id
@@ -165,7 +180,7 @@ class Badge < ActiveRecord::Base
               AND user_badges.id = ub.id
     SQL
 
-    DB.exec <<~SQL
+      DB.exec <<~SQL
       WITH X AS (
           SELECT badge_id
                , COUNT(user_id) users
@@ -178,8 +193,28 @@ class Badge < ActiveRecord::Base
        WHERE id = X.badge_id
          AND grant_count <> X.users
     SQL
+    end
   end
 
+  class << self
+    def i18n_name(name)
+      name.to_s.downcase.tr(" ", "_")
+    end
+
+    def display_name(name)
+      I18n.t(i18n_key(name), default: name)
+    end
+
+    def i18n_key(name)
+      "badges.#{i18n_name(name)}.name"
+    end
+
+    def find_system_badge_id_from_translation_key(translation_key)
+      return unless translation_key.starts_with?("badges.")
+      badge_name_klass = translation_key.split(".").second.camelize
+      Badge.const_defined?(badge_name_klass) ? "Badge::#{badge_name_klass}".constantize : nil
+    end
+  end
   def clear_user_titles!
     DB.exec(<<~SQL, badge_id: id, updated_at: Time.zone.now)
       UPDATE users AS u
@@ -216,24 +251,6 @@ class Badge < ActiveRecord::Base
       INNER JOIN badges ON badges.id = up.granted_title_badge_id
       WHERE up.user_id = u.id AND up.granted_title_badge_id = :granted_title_badge_id
     SQL
-  end
-
-  def self.i18n_name(name)
-    name.to_s.downcase.tr(" ", "_")
-  end
-
-  def self.display_name(name)
-    I18n.t(i18n_key(name), default: name)
-  end
-
-  def self.i18n_key(name)
-    "badges.#{i18n_name(name)}.name"
-  end
-
-  def self.find_system_badge_id_from_translation_key(translation_key)
-    return unless translation_key.starts_with?("badges.")
-    badge_name_klass = translation_key.split(".").second.camelize
-    Badge.const_defined?(badge_name_klass) ? "Badge::#{badge_name_klass}".constantize : nil
   end
 
   def awarded_for_trust_level?

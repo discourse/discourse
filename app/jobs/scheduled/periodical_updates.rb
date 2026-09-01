@@ -6,12 +6,14 @@ module Jobs
   class PeriodicalUpdates < ::Jobs::Scheduled
     every 15.minutes
 
-    def self.should_update_long_topics?
-      @call_count ||= 0
-      @call_count += 1
+    class << self
+      def should_update_long_topics?
+        @call_count ||= 0
+        @call_count += 1
 
-      # once every 6 hours
-      (@call_count % 24) == 1
+        # once every 6 hours
+        (@call_count % 24) == 1
+      end
     end
 
     def execute(_ = nil)

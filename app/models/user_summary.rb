@@ -8,6 +8,7 @@ class UserSummary
 
   alias read_attribute_for_serialization send
 
+  REPLY_ACTIONS = [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
   def initialize(user, guardian)
     @user = user
     @guardian = guardian
@@ -78,8 +79,6 @@ class UserSummary
 
     user_counts(liked_users)
   end
-
-  REPLY_ACTIONS = [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
 
   def most_replied_to_users
     replied_users = {}

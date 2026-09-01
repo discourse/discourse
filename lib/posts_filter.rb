@@ -49,202 +49,207 @@ class PostsFilter
 
   attr_reader :term, :filters, :order, :guardian, :limit, :offset, :invalid_filters
 
-  def self.add_filter(name, aliases: [], enabled: -> { true }, &block)
-    raise ArgumentError, "block is required" if block.blank?
+  class << self
+    def add_filter(name, aliases: [], enabled: -> { true }, &block)
+      raise ArgumentError, "block is required" if block.blank?
 
-    custom_filters[name.to_s] = { block: block, enabled: enabled, aliases: aliases.map(&:to_s) }
-  end
-
-  def self.remove_filter(name)
-    custom_filters.delete(name.to_s)
-  end
-
-  def self.custom_filters
-    PostsFilter.instance_variable_get(:@custom_filters) ||
-      PostsFilter.instance_variable_set(:@custom_filters, {})
-  end
-
-  def self.custom_filter_for(key)
-    custom_filters.find { |name, config| name == key || config[:aliases].include?(key) }&.last
-  end
-
-  def self.word_to_date(str)
-    ::Search.word_to_date(str)
-  end
-
-  def self.category_ids_from_param(category_param, exact: false)
-    category_param
-      .to_s
-      .split(",")
-      .map(&:strip)
-      .reject(&:blank?)
-      .flat_map { |category_value| category_ids_from_value(category_value, exact: exact) }
-      .uniq
-  end
-
-  def self.category_ids_from_value(category_value, exact: false)
-    category_value = category_value.to_s.strip
-    exact = true if category_value.start_with?("=")
-    category_value = category_value[1..] if category_value.start_with?("=")
-    category_value = strip_surrounding_quotes(category_value.strip)
-
-    category = find_category(category_value)
-    return [] if category.blank?
-
-    category_ids = [category.id]
-    category_ids.concat(Category.subcategory_ids(category.id)) if !exact
-    category_ids
-  end
-
-  def self.find_category(category_value)
-    parent_value, child_value = category_value.split(%r{[/:]}, 2)
-
-    if child_value.present?
-      parent_category_ids = matching_categories(parent_value).select(:id)
-
-      matching_categories(child_value)
-        .where(parent_category_id: parent_category_ids)
-        .order("case when parent_category_id is null then 0 else 1 end")
-        .first
-    else
-      matching_categories(category_value).order(
-        "case when parent_category_id is null then 0 else 1 end",
-      ).first
-    end
-  end
-
-  def self.matching_categories(category_value)
-    categories =
-      Category.where(
-        "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")} OR " \
-          "#{Category.normalize_sql("name")} = #{Category.normalize_sql("?")}",
-        category_value,
-        category_value,
-      )
-
-    if category_value.match?(/\A\d{1,10}\z/)
-      categories = categories.or(Category.where(id: category_value.to_i))
+      custom_filters[name.to_s] = { block: block, enabled: enabled, aliases: aliases.map(&:to_s) }
     end
 
-    categories
-  end
-
-  def self.strip_surrounding_quotes(value)
-    if value.length >= 2 &&
-         (
-           (value.start_with?("\"") && value.end_with?("\"")) ||
-             (value.start_with?("'") && value.end_with?("'"))
-         )
-      value[1...-1]
-    else
-      value
+    def remove_filter(name)
+      custom_filters.delete(name.to_s)
     end
-  end
 
-  def self.option_value_info(filter_name, values)
-    values.map do |value|
-      {
-        name: "#{filter_name}:#{value}",
-        description:
-          I18n.t(
-            "posts_filter.description.#{filter_name}_#{value}",
-            default: value.to_s.tr("_", " ").capitalize,
-          ),
-      }
+    def custom_filters
+      PostsFilter.instance_variable_get(:@custom_filters) ||
+        PostsFilter.instance_variable_set(:@custom_filters, {})
     end
-  end
 
-  def self.option_info(guardian)
-    results = [
-      {
-        name: "category:",
-        alias: "categories:",
-        description: I18n.t("posts_filter.description.category"),
-        priority: 1,
-        type: "category",
-        delimiters: [{ name: ",", description: I18n.t("posts_filter.description.category_any") }],
-        prefixes: [
-          { name: "-", description: I18n.t("posts_filter.description.exclude_category") },
-          {
-            name: "=",
-            description: I18n.t("posts_filter.description.category_without_subcategories"),
-          },
-          {
-            name: "-=",
-            description: I18n.t("posts_filter.description.exclude_category_without_subcategories"),
-          },
-        ],
-      },
-      {
-        name: "tag:",
-        alias: "tags:",
-        description: I18n.t("posts_filter.description.tag"),
-        priority: 1,
-        type: "tag",
-        delimiters: [{ name: ",", description: I18n.t("posts_filter.description.tags_any") }],
-        prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_tag") }],
-      },
-      {
-        name: "username:",
-        alias: "usernames:",
-        description: I18n.t("posts_filter.description.username"),
-        type: "username",
-        delimiters: [{ name: ",", description: I18n.t("posts_filter.description.usernames_any") }],
-      },
-      {
-        name: "group:",
-        alias: "groups:",
-        description: I18n.t("posts_filter.description.group"),
-        type: "group",
-        delimiters: [{ name: ",", description: I18n.t("posts_filter.description.groups_any") }],
-      },
-      {
-        name: "topic:",
-        alias: "topics:",
-        description: I18n.t("posts_filter.description.topic"),
-        type: "number",
-        prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
-      },
-      { name: "after:", description: I18n.t("posts_filter.description.after"), type: "date" },
-      { name: "before:", description: I18n.t("posts_filter.description.before"), type: "date" },
-      {
-        name: "topic_after:",
-        description: I18n.t("posts_filter.description.topic_after"),
-        type: "date",
-      },
-      {
-        name: "topic_before:",
-        description: I18n.t("posts_filter.description.topic_before"),
-        type: "date",
-      },
-      {
-        name: "keywords:",
-        description: I18n.t("posts_filter.description.keywords"),
-        type: "string",
-      },
-      {
-        name: "topic_keywords:",
-        description: I18n.t("posts_filter.description.topic_keywords"),
-        type: "string",
-      },
-      {
-        name: "post_type:",
-        description: I18n.t("posts_filter.description.post_type"),
-        priority: 1,
-      },
-      *option_value_info("post_type", POST_TYPE_VALUES),
-      { name: "status:", description: I18n.t("posts_filter.description.status"), priority: 1 },
-      *option_value_info("status", STATUS_VALUES),
-      { name: "order:", description: I18n.t("posts_filter.description.order"), priority: 1 },
-      *option_value_info("order", ORDER_VALUES),
-      {
-        name: "max_results:",
-        description: I18n.t("posts_filter.description.max_results"),
-        type: "number",
-      },
-    ]
+    def custom_filter_for(key)
+      custom_filters.find { |name, config| name == key || config[:aliases].include?(key) }&.last
+    end
 
-    DiscoursePluginRegistry.apply_modifier(:posts_filter_options, results, guardian)
+    def word_to_date(str)
+      ::Search.word_to_date(str)
+    end
+
+    def category_ids_from_param(category_param, exact: false)
+      category_param
+        .to_s
+        .split(",")
+        .map(&:strip)
+        .reject(&:blank?)
+        .flat_map { |category_value| category_ids_from_value(category_value, exact: exact) }
+        .uniq
+    end
+
+    def category_ids_from_value(category_value, exact: false)
+      category_value = category_value.to_s.strip
+      exact = true if category_value.start_with?("=")
+      category_value = category_value[1..] if category_value.start_with?("=")
+      category_value = strip_surrounding_quotes(category_value.strip)
+
+      category = find_category(category_value)
+      return [] if category.blank?
+
+      category_ids = [category.id]
+      category_ids.concat(Category.subcategory_ids(category.id)) if !exact
+      category_ids
+    end
+
+    def find_category(category_value)
+      parent_value, child_value = category_value.split(%r{[/:]}, 2)
+
+      if child_value.present?
+        parent_category_ids = matching_categories(parent_value).select(:id)
+
+        matching_categories(child_value)
+          .where(parent_category_id: parent_category_ids)
+          .order("case when parent_category_id is null then 0 else 1 end")
+          .first
+      else
+        matching_categories(category_value).order(
+          "case when parent_category_id is null then 0 else 1 end",
+        ).first
+      end
+    end
+
+    def matching_categories(category_value)
+      categories =
+        Category.where(
+          "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")} OR " \
+            "#{Category.normalize_sql("name")} = #{Category.normalize_sql("?")}",
+          category_value,
+          category_value,
+        )
+
+      if category_value.match?(/\A\d{1,10}\z/)
+        categories = categories.or(Category.where(id: category_value.to_i))
+      end
+
+      categories
+    end
+
+    def strip_surrounding_quotes(value)
+      if value.length >= 2 &&
+           (
+             (value.start_with?("\"") && value.end_with?("\"")) ||
+               (value.start_with?("'") && value.end_with?("'"))
+           )
+        value[1...-1]
+      else
+        value
+      end
+    end
+
+    def option_value_info(filter_name, values)
+      values.map do |value|
+        {
+          name: "#{filter_name}:#{value}",
+          description:
+            I18n.t(
+              "posts_filter.description.#{filter_name}_#{value}",
+              default: value.to_s.tr("_", " ").capitalize,
+            ),
+        }
+      end
+    end
+
+    def option_info(guardian)
+      results = [
+        {
+          name: "category:",
+          alias: "categories:",
+          description: I18n.t("posts_filter.description.category"),
+          priority: 1,
+          type: "category",
+          delimiters: [{ name: ",", description: I18n.t("posts_filter.description.category_any") }],
+          prefixes: [
+            { name: "-", description: I18n.t("posts_filter.description.exclude_category") },
+            {
+              name: "=",
+              description: I18n.t("posts_filter.description.category_without_subcategories"),
+            },
+            {
+              name: "-=",
+              description:
+                I18n.t("posts_filter.description.exclude_category_without_subcategories"),
+            },
+          ],
+        },
+        {
+          name: "tag:",
+          alias: "tags:",
+          description: I18n.t("posts_filter.description.tag"),
+          priority: 1,
+          type: "tag",
+          delimiters: [{ name: ",", description: I18n.t("posts_filter.description.tags_any") }],
+          prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_tag") }],
+        },
+        {
+          name: "username:",
+          alias: "usernames:",
+          description: I18n.t("posts_filter.description.username"),
+          type: "username",
+          delimiters: [
+            { name: ",", description: I18n.t("posts_filter.description.usernames_any") },
+          ],
+        },
+        {
+          name: "group:",
+          alias: "groups:",
+          description: I18n.t("posts_filter.description.group"),
+          type: "group",
+          delimiters: [{ name: ",", description: I18n.t("posts_filter.description.groups_any") }],
+        },
+        {
+          name: "topic:",
+          alias: "topics:",
+          description: I18n.t("posts_filter.description.topic"),
+          type: "number",
+          prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
+        },
+        { name: "after:", description: I18n.t("posts_filter.description.after"), type: "date" },
+        { name: "before:", description: I18n.t("posts_filter.description.before"), type: "date" },
+        {
+          name: "topic_after:",
+          description: I18n.t("posts_filter.description.topic_after"),
+          type: "date",
+        },
+        {
+          name: "topic_before:",
+          description: I18n.t("posts_filter.description.topic_before"),
+          type: "date",
+        },
+        {
+          name: "keywords:",
+          description: I18n.t("posts_filter.description.keywords"),
+          type: "string",
+        },
+        {
+          name: "topic_keywords:",
+          description: I18n.t("posts_filter.description.topic_keywords"),
+          type: "string",
+        },
+        {
+          name: "post_type:",
+          description: I18n.t("posts_filter.description.post_type"),
+          priority: 1,
+        },
+        *option_value_info("post_type", POST_TYPE_VALUES),
+        { name: "status:", description: I18n.t("posts_filter.description.status"), priority: 1 },
+        *option_value_info("status", STATUS_VALUES),
+        { name: "order:", description: I18n.t("posts_filter.description.order"), priority: 1 },
+        *option_value_info("order", ORDER_VALUES),
+        {
+          name: "max_results:",
+          description: I18n.t("posts_filter.description.max_results"),
+          type: "number",
+        },
+      ]
+
+      DiscoursePluginRegistry.apply_modifier(:posts_filter_options, results, guardian)
+    end
   end
 
   def initialize(query_string = nil, guardian: nil, limit: nil, offset: nil, scope: Post.all)

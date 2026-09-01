@@ -49,6 +49,27 @@ module DiscourseWorkflows
 
     attr_reader :nodes, :connections, :pin_data, :workflow_name
 
+    class << self
+      def from_workflow(workflow, published: false)
+        nodes = published ? workflow.published_nodes : workflow.nodes
+        connections = published ? workflow.published_connections : workflow.connections
+        workflow_name = published ? workflow.active_version&.name : workflow.name
+        new(
+          "name" => workflow_name || workflow.name,
+          "nodes" => nodes,
+          "connections" => connections,
+          "pinData" => workflow.pin_data || {},
+        )
+      end
+
+      def from_version(workflow, version)
+        new(
+          "name" => version.name || workflow.name,
+          "nodes" => version.nodes,
+          "connections" => version.connections,
+        )
+      end
+    end
     def initialize(workflow_data)
       data = workflow_data.deep_stringify_keys
       @workflow_name = data["name"]
@@ -199,26 +220,6 @@ module DiscourseWorkflows
           ),
         "pinData" => pin_data,
       }.compact
-    end
-
-    def self.from_workflow(workflow, published: false)
-      nodes = published ? workflow.published_nodes : workflow.nodes
-      connections = published ? workflow.published_connections : workflow.connections
-      workflow_name = published ? workflow.active_version&.name : workflow.name
-      new(
-        "name" => workflow_name || workflow.name,
-        "nodes" => nodes,
-        "connections" => connections,
-        "pinData" => workflow.pin_data || {},
-      )
-    end
-
-    def self.from_version(workflow, version)
-      new(
-        "name" => version.name || workflow.name,
-        "nodes" => version.nodes,
-        "connections" => version.connections,
-      )
     end
 
     private

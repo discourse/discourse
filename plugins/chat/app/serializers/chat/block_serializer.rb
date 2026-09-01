@@ -4,6 +4,18 @@ module Chat
   class BlockSerializer < ApplicationSerializer
     attributes :type, :elements
 
+    class << self
+      def element_serializer_for(type)
+        case type
+        when "button"
+          Chat::Blocks::Elements::ButtonSerializer
+        when "category"
+          Chat::Blocks::Elements::CategorySerializer
+        else
+          raise "no serializer for #{type}"
+        end
+      end
+    end
     def type
       object["type"]
     end
@@ -12,17 +24,6 @@ module Chat
       object["elements"].map do |element|
         serializer = self.class.element_serializer_for(element["type"])
         serializer.new(element, root: false).as_json
-      end
-    end
-
-    def self.element_serializer_for(type)
-      case type
-      when "button"
-        Chat::Blocks::Elements::ButtonSerializer
-      when "category"
-        Chat::Blocks::Elements::CategorySerializer
-      else
-        raise "no serializer for #{type}"
       end
     end
   end

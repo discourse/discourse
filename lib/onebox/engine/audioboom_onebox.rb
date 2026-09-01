@@ -9,8 +9,10 @@ module Onebox
       always_https
       matches_domain("audioboom.com")
 
-      def self.matches_path(path)
-        path.match?(%r{^/posts/\d+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/posts/\d+$})
+        end
       end
 
       def placeholder_html

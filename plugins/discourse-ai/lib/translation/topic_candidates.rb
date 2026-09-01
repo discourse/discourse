@@ -3,11 +3,12 @@
 module DiscourseAi
   module Translation
     class TopicCandidates < BaseCandidates
-      def self.progress_summary
-        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
-        eligible_topics_sql = get.select(:id, :locale).to_sql
+      class << self
+        def progress_summary
+          supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+          eligible_topics_sql = get.select(:id, :locale).to_sql
 
-        sql = <<~SQL
+          sql = <<~SQL
           WITH #{DiscourseAi::Translation.supported_locale_bases_cte},
           eligible_topics AS (
             SELECT id,
@@ -43,58 +44,58 @@ module DiscourseAi
           LEFT JOIN localization_coverage lc ON lc.topic_id = et.id
         SQL
 
-        result = DB.query(sql, supported_locales:).first
+          result = DB.query(sql, supported_locales:).first
 
-        {
-          target_type: "topic",
-          total_count: result.total_count,
-          translated_count: result.translated_count,
-          needs_language_detection_count: result.needs_language_detection_count,
-        }
-      end
-
-      def self.progress_details
-        backfill_start_at = DiscourseAi::Translation.backfill_start_at
-        main_topics =
-          (
-            if backfill_start_at
-              Topic.where("topics.created_at >= ?", backfill_start_at)
-            else
-              Topic.none
-            end
-          ).where(deleted_at: nil)
-        main_topics =
-          main_topics.where(
-            "topics.user_id > 0",
-          ) unless SiteSetting.ai_translation_include_bot_content
-
-        category_condition, category_params =
-          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
-        main_topics =
-          main_topics.where(
-            "topics.archetype = :pm OR (#{category_condition})",
-            category_params.merge(pm: Archetype.private_message),
-          )
-
-        case SiteSetting.ai_translation_personal_messages
-        when "group"
-          main_topics =
-            main_topics.where(
-              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              pm: Archetype.private_message,
-            )
-        when "none", nil
-          main_topics = main_topics.where.not(archetype: Archetype.private_message)
+          {
+            target_type: "topic",
+            total_count: result.total_count,
+            translated_count: result.translated_count,
+            needs_language_detection_count: result.needs_language_detection_count,
+          }
         end
 
-        banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
-        eligible_topics_sql =
-          "(#{main_topics.select("topics.id, topics.locale").to_sql}) UNION " \
-            "(#{banner_topics.select("topics.id, topics.locale").to_sql})"
-        supported_locales =
-          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+        def progress_details
+          backfill_start_at = DiscourseAi::Translation.backfill_start_at
+          main_topics =
+            (
+              if backfill_start_at
+                Topic.where("topics.created_at >= ?", backfill_start_at)
+              else
+                Topic.none
+              end
+            ).where(deleted_at: nil)
+          main_topics =
+            main_topics.where(
+              "topics.user_id > 0",
+            ) unless SiteSetting.ai_translation_include_bot_content
 
-        sql = <<~SQL
+          category_condition, category_params =
+            DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
+          main_topics =
+            main_topics.where(
+              "topics.archetype = :pm OR (#{category_condition})",
+              category_params.merge(pm: Archetype.private_message),
+            )
+
+          case SiteSetting.ai_translation_personal_messages
+          when "group"
+            main_topics =
+              main_topics.where(
+                "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+                pm: Archetype.private_message,
+              )
+          when "none", nil
+            main_topics = main_topics.where.not(archetype: Archetype.private_message)
+          end
+
+          banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
+          eligible_topics_sql =
+            "(#{main_topics.select("topics.id, topics.locale").to_sql}) UNION " \
+              "(#{banner_topics.select("topics.id, topics.locale").to_sql})"
+          supported_locales =
+            ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+
+          sql = <<~SQL
           WITH supported AS MATERIALIZED (
             SELECT DISTINCT ON (
                      split_part(lower(replace(locale, '-', '_')), '_', 1)
@@ -163,34 +164,34 @@ module DiscourseAi
           ORDER BY supported.locale
         SQL
 
-        {
-          target_type: "topic",
-          locales:
-            DB
-              .query(sql)
-              .map do |row|
-                {
-                  locale: row.locale,
-                  translated_count: row.translated_count,
-                  pending_count: row.pending_count,
-                  eligible_count: row.eligible_count,
-                }
-              end,
-        }
-      end
+          {
+            target_type: "topic",
+            locales:
+              DB
+                .query(sql)
+                .map do |row|
+                  {
+                    locale: row.locale,
+                    translated_count: row.translated_count,
+                    pending_count: row.pending_count,
+                    eligible_count: row.eligible_count,
+                  }
+                end,
+          }
+        end
 
-      def self.needs_localization(limit:)
-        locales = DiscourseAi::Translation.locales
-        return [] if locales.blank?
+        def needs_localization(limit:)
+          locales = DiscourseAi::Translation.locales
+          return [] if locales.blank?
 
-        locale_map = {}
-        locales.each { |l| locale_map[l.split("_").first] ||= l }
+          locale_map = {}
+          locales.each { |l| locale_map[l.split("_").first] ||= l }
 
-        target_locale_values = locale_map.map { |base, full| "('#{base}', '#{full}')" }.join(", ")
+          target_locale_values = locale_map.map { |base, full| "('#{base}', '#{full}')" }.join(", ")
 
-        base_sql = get.where.not(locale: nil).to_sql
+          base_sql = get.where.not(locale: nil).to_sql
 
-        sql = <<~SQL
+          sql = <<~SQL
           SELECT et.id AS topic_id, target.target_locale
           FROM (#{base_sql}) et
           JOIN (VALUES #{target_locale_values}) AS target(base_locale, target_locale)
@@ -204,60 +205,62 @@ module DiscourseAi
           LIMIT #{limit.to_i}
         SQL
 
-        DB.query(sql).map { |r| [r.topic_id, r.target_locale] }
+          DB.query(sql).map { |r| [r.topic_id, r.target_locale] }
+        end
       end
 
       private
 
       # all topics that are eligible for translation based on site settings,
       # including those without locale detected yet.
-      def self.get
-        backfill_start_at = DiscourseAi::Translation.backfill_start_at
-        topics =
-          (
-            if backfill_start_at
-              Topic.where("topics.created_at >= ?", backfill_start_at)
-            else
-              Topic.none
-            end
-          ).where(deleted_at: nil)
+      class << self
+        def get
+          backfill_start_at = DiscourseAi::Translation.backfill_start_at
+          topics =
+            (
+              if backfill_start_at
+                Topic.where("topics.created_at >= ?", backfill_start_at)
+              else
+                Topic.none
+              end
+            ).where(deleted_at: nil)
 
-        topics =
-          topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
+          topics =
+            topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
-        pm_scope = SiteSetting.ai_translation_personal_messages
-        category_condition, category_params =
-          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
+          pm_scope = SiteSetting.ai_translation_personal_messages
+          category_condition, category_params =
+            DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
 
-        topics =
-          topics.where(
-            "topics.archetype = :pm OR (#{category_condition})",
-            category_params.merge(pm: Archetype.private_message),
-          )
-
-        # PM scope filter
-        case pm_scope
-        when "group"
           topics =
             topics.where(
-              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              pm: Archetype.private_message,
+              "topics.archetype = :pm OR (#{category_condition})",
+              category_params.merge(pm: Archetype.private_message),
             )
-        when "none", nil
-          topics = topics.where.not(archetype: Archetype.private_message)
+
+          # PM scope filter
+          case pm_scope
+          when "group"
+            topics =
+              topics.where(
+                "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+                pm: Archetype.private_message,
+              )
+          when "none", nil
+            topics = topics.where.not(archetype: Archetype.private_message)
+          end
+
+          # Always include banner topics regardless of age or category filters
+          banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
+          topics = topics.or(banner_topics)
+
+          topics
         end
 
-        # Always include banner topics regardless of age or category filters
-        banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
-        topics = topics.or(banner_topics)
+        def calculate_completion_per_locale(locale)
+          base_locale = "#{locale.split("_").first}%"
 
-        topics
-      end
-
-      def self.calculate_completion_per_locale(locale)
-        base_locale = "#{locale.split("_").first}%"
-
-        sql = <<~SQL
+          sql = <<~SQL
           WITH eligible_topics AS (
             #{get.where.not(topics: { locale: nil }).to_sql}
           ),
@@ -274,8 +277,9 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        done, total = DB.query_single(sql, base_locale:)
-        { done:, total: }
+          done, total = DB.query_single(sql, base_locale:)
+          { done:, total: }
+        end
       end
     end
   end

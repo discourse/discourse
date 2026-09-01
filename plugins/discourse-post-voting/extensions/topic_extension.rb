@@ -2,11 +2,13 @@
 
 module PostVoting
   module TopicExtension
-    def self.included(base)
-      base.extend(ClassMethods)
-      base.validate :ensure_regular_topic, on: [:create]
-      base.validate :ensure_no_post_voting_subtype, on: [:update]
-      base.const_set :POST_VOTING_SUBTYPE, "question_answer"
+    class << self
+      def included(base)
+        base.extend(ClassMethods)
+        base.validate :ensure_regular_topic, on: [:create]
+        base.validate :ensure_no_post_voting_subtype, on: [:update]
+        base.const_set :POST_VOTING_SUBTYPE, "question_answer"
+      end
     end
 
     def reload(options = nil)

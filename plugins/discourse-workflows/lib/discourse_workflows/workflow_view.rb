@@ -4,10 +4,12 @@ module DiscourseWorkflows
   class WorkflowView
     attr_reader :id, :name, :active
 
-    def self.from_workflow(workflow, name: nil)
-      return new(id: nil, name: name, active: false) if workflow.blank?
+    class << self
+      def from_workflow(workflow, name: nil)
+        return new(id: nil, name: name, active: false) if workflow.blank?
 
-      new(id: workflow.id, name: name.presence || workflow.name, active: workflow.published?)
+        new(id: workflow.id, name: name.presence || workflow.name, active: workflow.published?)
+      end
     end
 
     def initialize(id:, name:, active:)

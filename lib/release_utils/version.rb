@@ -10,19 +10,6 @@ module ReleaseUtils
 
     protected attr_reader :gem_version
 
-    def initialize(version_string)
-      @gem_version = Gem::Version.new(version_string)
-
-      segments = gem_version.segments
-      @major = segments[0]
-      @minor = segments[1] || 1
-      @patch = segments[2] || 0
-
-      @pre, @revision = segments.drop(3).drop_while { it == "pre" } if gem_version.prerelease?
-
-      freeze
-    end
-
     class << self
       def current
         version_string = File.read("lib/version.rb")[/STRING = "(.*)"/, 1]
@@ -35,6 +22,18 @@ module ReleaseUtils
         return target if target > current
         current.next_development_cycle
       end
+    end
+    def initialize(version_string)
+      @gem_version = Gem::Version.new(version_string)
+
+      segments = gem_version.segments
+      @major = segments[0]
+      @minor = segments[1] || 1
+      @patch = segments[2] || 0
+
+      @pre, @revision = segments.drop(3).drop_while { it == "pre" } if gem_version.prerelease?
+
+      freeze
     end
 
     def <=>(other)

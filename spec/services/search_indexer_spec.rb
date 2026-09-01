@@ -409,12 +409,14 @@ RSpec.describe SearchIndexer do
     let(:plugin) { Plugin::Instance.new }
     let(:mock_model_class) do
       Class.new do
-        def self.name
-          "TestModel"
-        end
+        class << self
+          def name
+            "TestModel"
+          end
 
-        def self.table_name
-          "test_models"
+          def table_name
+            "test_models"
+          end
         end
 
         attr_accessor :id

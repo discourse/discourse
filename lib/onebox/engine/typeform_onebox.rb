@@ -9,8 +9,10 @@ module Onebox
       requires_iframe_origins "https://*.typeform.com"
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/to/[a-zA-Z0-9]+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/to/[a-zA-Z0-9]+$})
+        end
       end
 
       def to_html

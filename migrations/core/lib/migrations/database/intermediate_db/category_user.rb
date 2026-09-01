@@ -29,14 +29,16 @@ module Migrations
         # @param notification_level   [Integer]
         #
         # @return [void]
-        def self.create(category_id:, user_id:, last_seen_at: nil, notification_level:)
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            category_id,
-            user_id,
-            Migrations::Database.format_datetime(last_seen_at),
-            notification_level,
-          )
+        class << self
+          def create(category_id:, user_id:, last_seen_at: nil, notification_level:)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              category_id,
+              user_id,
+              Migrations::Database.format_datetime(last_seen_at),
+              notification_level,
+            )
+          end
         end
       end
     end

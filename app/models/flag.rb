@@ -19,32 +19,33 @@ class Flag < ActiveRecord::Base
     order(:position).where(score_type: false).where.not(id: PostActionType::LIKE_POST_ACTION_ID)
   end
 
+  class << self
+    def valid_applies_to_types
+      Set.new(DEFAULT_VALID_APPLIES_TO | DiscoursePluginRegistry.flag_applies_to_types)
+    end
+
+    def reset_flag_settings!
+      # Flags are cached in Redis for better performance. After the update,
+      # we need to reload them in all processes.
+      PostActionType.reload_types
+    end
+
+    def used_flag_ids(flag_ids)
+      sql =
+        flag_ids
+          .reduce([]) do |queries, flag_id|
+            queries << "(SELECT #{flag_id} FROM post_actions WHERE post_action_type_id = #{flag_id} LIMIT 1)"
+            queries << "(SELECT #{flag_id} FROM reviewable_scores WHERE reviewable_score_type = #{flag_id} LIMIT 1)"
+            queries
+          end
+          .join(" UNION ")
+
+      DB.query_single(sql)
+    end
+  end
   def used?
     PostAction.exists?(post_action_type_id: id) ||
       ReviewableScore.exists?(reviewable_score_type: id)
-  end
-
-  def self.valid_applies_to_types
-    Set.new(DEFAULT_VALID_APPLIES_TO | DiscoursePluginRegistry.flag_applies_to_types)
-  end
-
-  def self.reset_flag_settings!
-    # Flags are cached in Redis for better performance. After the update,
-    # we need to reload them in all processes.
-    PostActionType.reload_types
-  end
-
-  def self.used_flag_ids(flag_ids)
-    sql =
-      flag_ids
-        .reduce([]) do |queries, flag_id|
-          queries << "(SELECT #{flag_id} FROM post_actions WHERE post_action_type_id = #{flag_id} LIMIT 1)"
-          queries << "(SELECT #{flag_id} FROM reviewable_scores WHERE reviewable_score_type = #{flag_id} LIMIT 1)"
-          queries
-        end
-        .join(" UNION ")
-
-    DB.query_single(sql)
   end
 
   def system?

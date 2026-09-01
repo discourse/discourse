@@ -6,6 +6,23 @@ module Jobs
 
     attr_reader :sent_reminder
 
+    class << self
+      def last_notified_id
+        Discourse.redis.get(last_notified_key).to_i
+      end
+
+      def last_notified_id=(arg)
+        Discourse.redis.set(last_notified_key, arg)
+      end
+
+      def last_notified_key
+        "last_notified_reviewable_id"
+      end
+
+      def clear_key
+        Discourse.redis.del(last_notified_key)
+      end
+    end
     def execute(args)
       @sent_reminder = false
 
@@ -46,22 +63,6 @@ module Jobs
           self.class.last_notified_id = reviewable_ids[0]
         end
       end
-    end
-
-    def self.last_notified_id
-      Discourse.redis.get(last_notified_key).to_i
-    end
-
-    def self.last_notified_id=(arg)
-      Discourse.redis.set(last_notified_key, arg)
-    end
-
-    def self.last_notified_key
-      "last_notified_reviewable_id"
-    end
-
-    def self.clear_key
-      Discourse.redis.del(last_notified_key)
     end
 
     def active_moderator_usernames

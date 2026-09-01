@@ -12,8 +12,10 @@ module Migrations
       end
     end
 
-    def self.filter(classes, skip: [], only: [])
-      new(classes, skip:, only:).filter
+    class << self
+      def filter(classes, skip: [], only: [])
+        new(classes, skip:, only:).filter
+      end
     end
 
     def initialize(classes, skip: [], only: [])

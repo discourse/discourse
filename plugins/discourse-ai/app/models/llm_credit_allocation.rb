@@ -35,6 +35,38 @@ class LlmCreditAllocation < ActiveRecord::Base
               less_than_or_equal_to: 100,
             }
 
+  class << self
+    def credits_available?(llm_model)
+      return true unless llm_model&.credit_system_enabled?
+
+      allocation = llm_model.llm_credit_allocation
+      return true unless allocation
+
+      allocation.credits_available?
+    end
+
+    def check_credits!(llm_model, feature_name = nil)
+      return unless llm_model&.credit_system_enabled?
+
+      # If feature has 0 credit cost, skip the check entirely
+      if feature_name.present?
+        cost_per_token = LlmFeatureCreditCost.credit_cost_for(llm_model, feature_name)
+        return if cost_per_token.zero?
+      end
+
+      allocation = llm_model.llm_credit_allocation
+      allocation.check_credits!
+    end
+
+    def deduct_credits!(llm_model, feature_name, request_tokens, response_tokens)
+      return unless llm_model&.credit_system_enabled?
+
+      total_tokens = request_tokens + response_tokens
+      credit_cost =
+        LlmFeatureCreditCost.calculate_credit_cost(llm_model, feature_name, total_tokens)
+      llm_model.llm_credit_allocation.deduct_credits!(credit_cost)
+    end
+  end
   def daily_used
     # Use llm_credit_daily_usages table
     # Check if association is preloaded to avoid N+1 queries
@@ -100,36 +132,6 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   def check_credits!
     raise CreditLimitExceeded.new("Credit limit exceeded", allocation: self) if hard_limit_reached?
-  end
-
-  def self.credits_available?(llm_model)
-    return true unless llm_model&.credit_system_enabled?
-
-    allocation = llm_model.llm_credit_allocation
-    return true unless allocation
-
-    allocation.credits_available?
-  end
-
-  def self.check_credits!(llm_model, feature_name = nil)
-    return unless llm_model&.credit_system_enabled?
-
-    # If feature has 0 credit cost, skip the check entirely
-    if feature_name.present?
-      cost_per_token = LlmFeatureCreditCost.credit_cost_for(llm_model, feature_name)
-      return if cost_per_token.zero?
-    end
-
-    allocation = llm_model.llm_credit_allocation
-    allocation.check_credits!
-  end
-
-  def self.deduct_credits!(llm_model, feature_name, request_tokens, response_tokens)
-    return unless llm_model&.credit_system_enabled?
-
-    total_tokens = request_tokens + response_tokens
-    credit_cost = LlmFeatureCreditCost.calculate_credit_cost(llm_model, feature_name, total_tokens)
-    llm_model.llm_credit_allocation.deduct_credits!(credit_cost)
   end
 
   def formatted_reset_time

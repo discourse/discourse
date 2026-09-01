@@ -38,23 +38,18 @@ module Migrations
         #
         # @see Migrations::Database::IntermediateDB::Enums::HashtagType
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        def self.create(
-          hashtag_type: nil,
-          name:,
-          owner_id:,
-          owner_type:,
-          placeholder:,
-          target_id: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            hashtag_type,
-            name,
-            owner_id,
-            owner_type,
-            placeholder,
-            target_id,
-          )
+        class << self
+          def create(hashtag_type: nil, name:, owner_id:, owner_type:, placeholder:, target_id: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              hashtag_type,
+              name,
+              owner_id,
+              owner_type,
+              placeholder,
+              target_id,
+            )
+          end
         end
       end
     end

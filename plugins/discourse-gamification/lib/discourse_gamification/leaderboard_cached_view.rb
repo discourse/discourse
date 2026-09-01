@@ -20,6 +20,37 @@ module DiscourseGamification
 
     attr_reader :leaderboard
 
+    class << self
+      def create_all
+        GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).create }
+      end
+
+      def refresh_all
+        GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).refresh }
+      end
+
+      def delete_all
+        GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).delete }
+      end
+
+      def purge_all_stale
+        GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).purge_stale }
+      end
+
+      def update_all
+        ActiveRecord::Base.transaction do
+          purge_all_stale
+          create_all
+        end
+      end
+
+      def regenerate_all
+        ActiveRecord::Base.transaction do
+          delete_all
+          create_all
+        end
+      end
+    end
     def initialize(leaderboard)
       @leaderboard = leaderboard
     end
@@ -64,36 +95,6 @@ module DiscourseGamification
           .load
       else
         raise NotReadyError.new(I18n.t("errors.leaderboard_positions_not_ready"))
-      end
-    end
-
-    def self.create_all
-      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).create }
-    end
-
-    def self.refresh_all
-      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).refresh }
-    end
-
-    def self.delete_all
-      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).delete }
-    end
-
-    def self.purge_all_stale
-      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).purge_stale }
-    end
-
-    def self.update_all
-      ActiveRecord::Base.transaction do
-        purge_all_stale
-        create_all
-      end
-    end
-
-    def self.regenerate_all
-      ActiveRecord::Base.transaction do
-        delete_all
-        create_all
       end
     end
 

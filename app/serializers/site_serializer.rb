@@ -67,6 +67,7 @@ class SiteSerializer < ApplicationSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
   has_many :anonymous_sidebar_sections, embed: :objects, serializer: SidebarSectionSerializer
 
+  SIDEBAR_TOP_TAGS_TO_SHOW = 5
   def user_themes
     cache_fragment("user_themes") do
       themes =
@@ -353,8 +354,6 @@ class SiteSerializer < ApplicationSerializer
   def hashtag_icons
     HashtagAutocompleteService.data_source_icon_map
   end
-
-  SIDEBAR_TOP_TAGS_TO_SHOW = 5
 
   def navigation_menu_site_top_tags
     if top_tags.present?

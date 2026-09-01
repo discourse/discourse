@@ -23,9 +23,11 @@ module JsonApiKit
       attr_reader :owner_key
     end
 
-    def self.for(scoped_to)
-      return All.new unless scoped_to
-      scoped_to.try(:to_scoping) || new(scoped_to)
+    class << self
+      def for(scoped_to)
+        return All.new unless scoped_to
+        scoped_to.try(:to_scoping) || new(scoped_to)
+      end
     end
 
     def initialize(scoped_to)

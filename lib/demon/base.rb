@@ -7,17 +7,21 @@ end
 class Demon::Base
   HOSTNAME = Socket.gethostname
 
-  def self.demons
-    @demons
+  class << self
+    def demons
+      @demons
+    end
   end
 
   if Rails.env.test?
-    def self.set_demons(demons)
-      @demons = demons
-    end
+    class << self
+      def set_demons(demons)
+        @demons = demons
+      end
 
-    def self.reset_demons
-      @demons = {}
+      def reset_demons
+        @demons = {}
+      end
     end
 
     def set_pid(pid)
@@ -25,32 +29,42 @@ class Demon::Base
     end
   end
 
-  def self.start(count = 1, verbose: false, logger: nil)
-    @demons ||= {}
-    count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
-  end
+  class << self
+    def start(count = 1, verbose: false, logger: nil)
+      @demons ||= {}
+      count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
+    end
 
-  def self.stop
-    return unless @demons
-    @demons.values.each { |demon| demon.stop }
-  end
+    def stop
+      return unless @demons
+      @demons.values.each { |demon| demon.stop }
+    end
 
-  def self.restart
-    return unless @demons
-    @demons.values.each { |demon| demon.restart }
-  end
+    def restart
+      return unless @demons
+      @demons.values.each { |demon| demon.restart }
+    end
 
-  def self.ensure_running
-    @demons.values.each { |demon| demon.ensure_running }
-  end
+    def ensure_running
+      @demons.values.each { |demon| demon.ensure_running }
+    end
 
-  def self.kill(signal)
-    return unless @demons
-    @demons.values.each { |demon| demon.kill(signal) }
+    def kill(signal)
+      return unless @demons
+      @demons.values.each { |demon| demon.kill(signal) }
+    end
   end
 
   attr_reader :pid, :parent_pid, :started, :index
 
+  class << self
+    def alive?(pid)
+      Process.kill(0, pid)
+      true
+    rescue StandardError
+      false
+    end
+  end
   def initialize(index, rails_root: nil, parent_pid: nil, verbose: false, logger: nil)
     @index = index
     @pid = nil
@@ -198,13 +212,6 @@ class Demon::Base
     end
 
     nil
-  end
-
-  def self.alive?(pid)
-    Process.kill(0, pid)
-    true
-  rescue StandardError
-    false
   end
 
   private

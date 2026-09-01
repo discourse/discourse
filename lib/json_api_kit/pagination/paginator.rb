@@ -3,10 +3,12 @@
 module JsonApiKit
   module Pagination
     class Paginator
-      def self.for(scope, order:, size:, after: nil, before: nil)
-        raise ArgumentError, "a page is read from one end or the other" if after && before
-        return Backwards.new(scope, order:, size:, from: order.position(before)) if before
-        Forwards.new(scope, order:, size:, from: after && order.position(after))
+      class << self
+        def for(scope, order:, size:, after: nil, before: nil)
+          raise ArgumentError, "a page is read from one end or the other" if after && before
+          return Backwards.new(scope, order:, size:, from: order.position(before)) if before
+          Forwards.new(scope, order:, size:, from: after && order.position(after))
+        end
       end
 
       def initialize(scope, order:, size:, from: nil)

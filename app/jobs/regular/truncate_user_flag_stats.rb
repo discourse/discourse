@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Jobs::TruncateUserFlagStats < ::Jobs::Base
-  def self.truncate_to
-    100
+  class << self
+    def truncate_to
+      100
+    end
   end
 
   # To give users a chance to improve, we limit their flag stats to the last N flags

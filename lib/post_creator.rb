@@ -8,6 +8,78 @@ class PostCreator
 
   attr_reader :opts, :post
 
+  class << self
+    def track_post_stats
+      !Rails.env.test? || @track_post_stats
+    end
+
+    def track_post_stats=(val)
+      @track_post_stats = val
+    end
+
+    def create(user, opts)
+      PostCreator.new(user, opts).create
+    end
+
+    def create!(user, opts)
+      PostCreator.new(user, opts).create!
+    end
+
+    def before_create_tasks(post)
+      set_reply_info(post)
+
+      post.word_count = post.raw.scan(/[[:word:]]+/).size
+
+      post.post_number ||=
+        Topic.next_post_number(
+          post.topic_id,
+          reply: post.reply_to_post_number.present?,
+          post_type: post.post_type,
+          post: true,
+        )
+
+      cooking_options = post.cooking_options || {}
+      cooking_options[:topic_id] = post.topic_id
+
+      post.cooked ||= post.cook(post.raw, cooking_options.symbolize_keys)
+      post.sort_order = post.post_number
+      post.last_version_at ||= Time.now
+    end
+
+    def set_reply_info(post)
+      return if post.reply_to_post_number.blank?
+
+      # Before the locking here was added, replying to a post and liking a post
+      # at roughly the same time could cause a deadlock.
+      #
+      # Liking a post grabs an update lock on the post and then on the topic (to
+      # update like counts).
+      #
+      # Here, we lock the replied to post before getting the topic lock so that
+      # we can update the replied to post later without causing a deadlock.
+
+      reply_info =
+        Post
+          .where(topic_id: post.topic_id, post_number: post.reply_to_post_number)
+          .select(:user_id, :post_type)
+          .lock
+          .first
+
+      if reply_info.present?
+        post.reply_to_user_id ||= reply_info.user_id
+        whisper_type = Post.types[:whisper]
+
+        if reply_info.post_type == whisper_type
+          if post.acting_user&.whisperer?
+            post.post_type = whisper_type
+          else
+            post.errors.add(:base, I18n.t(:topic_not_found))
+            throw :abort
+          end
+        end
+      end
+    end
+  end
   # Acceptable options:
   #
   #   raw                     - raw text of post
@@ -275,77 +347,6 @@ class PostCreator
       DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user, continue_on_error: true)
     end
     DiscourseEvent.trigger(:post_created, @post, @opts, @user, continue_on_error: true)
-  end
-
-  def self.track_post_stats
-    !Rails.env.test? || @track_post_stats
-  end
-
-  def self.track_post_stats=(val)
-    @track_post_stats = val
-  end
-
-  def self.create(user, opts)
-    PostCreator.new(user, opts).create
-  end
-
-  def self.create!(user, opts)
-    PostCreator.new(user, opts).create!
-  end
-
-  def self.before_create_tasks(post)
-    set_reply_info(post)
-
-    post.word_count = post.raw.scan(/[[:word:]]+/).size
-
-    post.post_number ||=
-      Topic.next_post_number(
-        post.topic_id,
-        reply: post.reply_to_post_number.present?,
-        post_type: post.post_type,
-        post: true,
-      )
-
-    cooking_options = post.cooking_options || {}
-    cooking_options[:topic_id] = post.topic_id
-
-    post.cooked ||= post.cook(post.raw, cooking_options.symbolize_keys)
-    post.sort_order = post.post_number
-    post.last_version_at ||= Time.now
-  end
-
-  def self.set_reply_info(post)
-    return if post.reply_to_post_number.blank?
-
-    # Before the locking here was added, replying to a post and liking a post
-    # at roughly the same time could cause a deadlock.
-    #
-    # Liking a post grabs an update lock on the post and then on the topic (to
-    # update like counts).
-    #
-    # Here, we lock the replied to post before getting the topic lock so that
-    # we can update the replied to post later without causing a deadlock.
-
-    reply_info =
-      Post
-        .where(topic_id: post.topic_id, post_number: post.reply_to_post_number)
-        .select(:user_id, :post_type)
-        .lock
-        .first
-
-    if reply_info.present?
-      post.reply_to_user_id ||= reply_info.user_id
-      whisper_type = Post.types[:whisper]
-
-      if reply_info.post_type == whisper_type
-        if post.acting_user&.whisperer?
-          post.post_type = whisper_type
-        else
-          post.errors.add(:base, I18n.t(:topic_not_found))
-          throw :abort
-        end
-      end
-    end
   end
 
   protected

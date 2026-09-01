@@ -6,6 +6,19 @@ class AdminDashboardData
   # kept for backward compatibility
   GLOBAL_REPORTS = []
 
+  class << self
+    def fetch_stats
+      new.as_json
+    end
+
+    def reports(source)
+      source.map { |type| Report.find(type).as_json }
+    end
+
+    def stats_cache_key
+      "dashboard-data-#{Report::SCHEMA_VERSION}"
+    end
+  end
   def initialize(opts = {})
     @opts = opts
   end
@@ -16,17 +29,5 @@ class AdminDashboardData
 
   def as_json(_options = nil)
     @json ||= get_json
-  end
-
-  def self.fetch_stats
-    new.as_json
-  end
-
-  def self.reports(source)
-    source.map { |type| Report.find(type).as_json }
-  end
-
-  def self.stats_cache_key
-    "dashboard-data-#{Report::SCHEMA_VERSION}"
   end
 end

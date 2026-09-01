@@ -4,23 +4,25 @@ RSpec.describe AdminDashboard::Reports::SourceProvider do
   describe ".accessible_ids" do
     let(:provider) do
       Class.new(described_class) do
-        def self.source_name = "test"
+        class << self
+          def source_name = "test"
 
-        def self.label = "Test"
+          def label = "Test"
 
-        def self.resolve_many(identifiers, guardian:)
-          identifiers
-            .select { |id| %w[a b].include?(id) }
-            .each_with_object({}) do |id, hash|
-              hash[id] = AdminDashboard::Reports::ResolvedReport.new(
-                source: source_name,
-                identifier: id,
-                title: id,
-                description: nil,
-                label: label,
-                url: nil,
-              )
-            end
+          def resolve_many(identifiers, guardian:)
+            identifiers
+              .select { |id| %w[a b].include?(id) }
+              .each_with_object({}) do |id, hash|
+                hash[id] = AdminDashboard::Reports::ResolvedReport.new(
+                  source: source_name,
+                  identifier: id,
+                  title: id,
+                  description: nil,
+                  label: label,
+                  url: nil,
+                )
+              end
+          end
         end
       end
     end

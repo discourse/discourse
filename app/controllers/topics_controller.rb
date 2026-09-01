@@ -56,6 +56,35 @@ class TopicsController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[show feed]
 
+  class << self
+    def defer_track_visit(topic_id, user_id)
+      Scheduler::Defer.later "Track Visit" do
+        TopicUser.track_visit!(topic_id, user_id)
+      end
+    end
+
+    def defer_topic_view(topic_id, ip, user_id = nil)
+      Scheduler::Defer.later "Topic View" do
+        topic = Topic.find_by(id: topic_id)
+        next if topic.blank?
+        next if topic.shared_draft?
+
+        # We need to make sure that we aren't allowing recording
+        # random topic views against topics the user cannot see.
+        user = User.find_by(id: user_id) if user_id.present?
+        next if user_id.present? && user.blank?
+        next if !Guardian.new(user).can_see_topic?(topic)
+
+        TopicViewItem.add(topic_id, ip, user_id)
+      end
+    end
+
+    def defer_add_incoming_link(hash)
+      Scheduler::Defer.later "Track Link" do
+        IncomingLink.add(hash)
+      end
+    end
+  end
   def id_for_slug
     topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)
@@ -1541,34 +1570,6 @@ class TopicsController < ApplicationController
     end
 
     TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit_to_topic?
-  end
-
-  def self.defer_track_visit(topic_id, user_id)
-    Scheduler::Defer.later "Track Visit" do
-      TopicUser.track_visit!(topic_id, user_id)
-    end
-  end
-
-  def self.defer_topic_view(topic_id, ip, user_id = nil)
-    Scheduler::Defer.later "Topic View" do
-      topic = Topic.find_by(id: topic_id)
-      next if topic.blank?
-      next if topic.shared_draft?
-
-      # We need to make sure that we aren't allowing recording
-      # random topic views against topics the user cannot see.
-      user = User.find_by(id: user_id) if user_id.present?
-      next if user_id.present? && user.blank?
-      next if !Guardian.new(user).can_see_topic?(topic)
-
-      TopicViewItem.add(topic_id, ip, user_id)
-    end
-  end
-
-  def self.defer_add_incoming_link(hash)
-    Scheduler::Defer.later "Track Link" do
-      IncomingLink.add(hash)
-    end
   end
 
   def should_track_visit_to_topic?

@@ -5,8 +5,10 @@ module DiscourseAi
     MAX_INPUT_BYTES = 1.megabyte
     MAX_EVENTS = 10_000
 
-    def self.decode(raw_response_payload, truncated: false)
-      new(raw_response_payload, truncated:).decode
+    class << self
+      def decode(raw_response_payload, truncated: false)
+        new(raw_response_payload, truncated:).decode
+      end
     end
 
     def initialize(raw_response_payload, truncated:)

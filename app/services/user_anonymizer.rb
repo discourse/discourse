@@ -5,6 +5,11 @@ class UserAnonymizer
 
   EMAIL_SUFFIX = "@anonymized.invalid"
 
+  class << self
+    def make_anonymous(user, actor = nil, opts = nil)
+      new(user, actor, opts).make_anonymous
+    end
+  end
   # opts:
   #   anonymize_ip  - an optional new IP to update their logs with
   def initialize(user, actor = nil, opts = nil)
@@ -12,10 +17,6 @@ class UserAnonymizer
     @actor = actor
     @user_history = nil
     @opts = opts || {}
-  end
-
-  def self.make_anonymous(user, actor = nil, opts = nil)
-    new(user, actor, opts).make_anonymous
   end
 
   def make_anonymous

@@ -4,39 +4,41 @@ module DiscourseAi
   module Agents
     module Tools
       class DeleteTopic < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Deletes or recovers a topic based on the deleted parameter.",
-            parameters: [
-              {
-                name: "topic_id",
-                description: "The ID of the topic",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "deleted",
-                description: "true to delete the topic, false to recover it",
-                type: "boolean",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the topic is being deleted or recovered",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Deletes or recovers a topic based on the deleted parameter.",
+              parameters: [
+                {
+                  name: "topic_id",
+                  description: "The ID of the topic",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "deleted",
+                  description: "true to delete the topic, false to recover it",
+                  type: "boolean",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the topic is being deleted or recovered",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "delete_topic"
-        end
+          def name
+            "delete_topic"
+          end
 
-        def self.requires_approval?
-          true
+          def requires_approval?
+            true
+          end
         end
 
         def invoke

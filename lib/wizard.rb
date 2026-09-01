@@ -6,6 +6,16 @@ class Wizard
 
   @@excluded_steps = []
 
+  class << self
+    def exclude_step(step)
+      @@excluded_steps << step
+    end
+  end
+  class << self
+    def user_requires_completion?(user)
+      new(user).requires_completion?
+    end
+  end
   def initialize(user)
     @steps = []
     @user = user
@@ -73,10 +83,6 @@ class Wizard
     end
   end
 
-  def self.exclude_step(step)
-    @@excluded_steps << step
-  end
-
   def steps_with_fields
     @steps_with_fields ||= @steps.select(&:has_fields?)
   end
@@ -130,9 +136,5 @@ class Wizard
     else
       false
     end
-  end
-
-  def self.user_requires_completion?(user)
-    new(user).requires_completion?
   end
 end

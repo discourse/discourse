@@ -3,11 +3,13 @@
 require_relative "../mixins/twitch_onebox"
 
 class Onebox::Engine::TwitchClipsOnebox
-  def self.twitch_regexp
-    %r{^https?://(?:clips\.twitch\.tv/embed\?clip=|www\.twitch\.tv/[a-zA-Z0-9_]+/clip/|clips\.twitch\.tv/)([a-zA-Z0-9_\-]+)}
+  include Onebox::Mixins::TwitchOnebox
+  class << self
+    def twitch_regexp
+      %r{^https?://(?:clips\.twitch\.tv/embed\?clip=|www\.twitch\.tv/[a-zA-Z0-9_]+/clip/|clips\.twitch\.tv/)([a-zA-Z0-9_\-]+)}
+    end
   end
 
-  include Onebox::Mixins::TwitchOnebox
   requires_iframe_origins "https://clips.twitch.tv"
 
   def query_params

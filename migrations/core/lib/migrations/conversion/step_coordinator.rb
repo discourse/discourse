@@ -39,15 +39,17 @@ module Migrations
       # fork-starved step, on the scheduler's planner thread while other steps run.
       #
       # @return [Array(Array, Integer)] `[boundaries, total]`
-      def self.compute_plan(step_class:, step_factory:, fork_count:)
-        step = step_factory.call(step_class)
-        begin
-          source = step.source
-          boundaries =
-            fork_count > 1 ? source.partition_boundaries(fork_count * CHUNKS_PER_FORK) : []
-          [boundaries, source.max_progress]
-        ensure
-          step.source.cleanup
+      class << self
+        def compute_plan(step_class:, step_factory:, fork_count:)
+          step = step_factory.call(step_class)
+          begin
+            source = step.source
+            boundaries =
+              fork_count > 1 ? source.partition_boundaries(fork_count * CHUNKS_PER_FORK) : []
+            [boundaries, source.max_progress]
+          ensure
+            step.source.cleanup
+          end
         end
       end
 

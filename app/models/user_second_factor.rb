@@ -22,8 +22,10 @@ class UserSecondFactor < ActiveRecord::Base
   # (factor_type first_factor), never in this table. The enum value exists so
   # the `second_factor_method` wire param can distinguish the passkey WebAuthn
   # ceremony (user verification required) from the security key one.
-  def self.methods
-    @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3, passkey: 4)
+  class << self
+    def methods
+      @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3, passkey: 4)
+    end
   end
 
   def totp_object

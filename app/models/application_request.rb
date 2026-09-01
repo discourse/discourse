@@ -28,53 +28,55 @@ class ApplicationRequest < ActiveRecord::Base
 
   include CachedCounting
 
-  def self.disable
-    @disabled = true
-  end
+  class << self
+    def disable
+      @disabled = true
+    end
 
-  def self.enable
-    @disabled = false
-  end
+    def enable
+      @disabled = false
+    end
 
-  def self.increment!(req_type)
-    return if @disabled
-    perform_increment!(req_type)
-  end
+    def increment!(req_type)
+      return if @disabled
+      perform_increment!(req_type)
+    end
 
-  def self.write_cache!(req_type, count, date)
-    req_type_id = req_types[req_type]
+    def write_cache!(req_type, count, date)
+      req_type_id = req_types[req_type]
 
-    DB.exec(<<~SQL, date: date, req_type_id: req_type_id, count: count)
+      DB.exec(<<~SQL, date: date, req_type_id: req_type_id, count: count)
       INSERT INTO application_requests (date, req_type, count)
       VALUES (:date, :req_type_id, :count)
       ON CONFLICT (date, req_type)
       DO UPDATE SET count = application_requests.count + excluded.count
     SQL
-  end
-
-  def self.stats
-    s = ActiveSupport::HashWithIndifferentAccess.new({})
-
-    req_types.each do |key, i|
-      query = where(req_type: i)
-      s["#{key}_total"] = query.sum(:count)
-      s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
-      s["#{key}_28_days"] = query.where("date > ?", 28.days.ago).sum(:count)
-      s["#{key}_7_days"] = query.where("date > ?", 7.days.ago).sum(:count)
     end
 
-    s
-  end
+    def stats
+      s = ActiveSupport::HashWithIndifferentAccess.new({})
 
-  def self.request_type_count_for_period(type, since)
-    id = req_types[type]
-    if !id
-      raise ArgumentError.new(
-              "unknown request type #{type.inspect} in ApplicationRequest.req_types",
-            )
+      req_types.each do |key, i|
+        query = where(req_type: i)
+        s["#{key}_total"] = query.sum(:count)
+        s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
+        s["#{key}_28_days"] = query.where("date > ?", 28.days.ago).sum(:count)
+        s["#{key}_7_days"] = query.where("date > ?", 7.days.ago).sum(:count)
+      end
+
+      s
     end
 
-    where(req_type: id).where("date >= ?", since).sum(:count)
+    def request_type_count_for_period(type, since)
+      id = req_types[type]
+      if !id
+        raise ArgumentError.new(
+                "unknown request type #{type.inspect} in ApplicationRequest.req_types",
+              )
+      end
+
+      where(req_type: id).where("date >= ?", since).sum(:count)
+    end
   end
 end
 

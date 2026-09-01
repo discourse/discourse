@@ -2,8 +2,10 @@
 
 module Chat
   module PluginInstanceExtension
-    def self.prepended(base)
-      DiscoursePluginRegistry.define_register(:chat_markdown_features, Set)
+    class << self
+      def prepended(base)
+        DiscoursePluginRegistry.define_register(:chat_markdown_features, Set)
+      end
     end
 
     def chat
@@ -11,8 +13,10 @@ module Chat
     end
 
     module ChatPluginApiExtensions
-      def self.enable_markdown_feature(name)
-        DiscoursePluginRegistry.chat_markdown_features << name
+      class << self
+        def enable_markdown_feature(name)
+          DiscoursePluginRegistry.chat_markdown_features << name
+        end
       end
     end
   end

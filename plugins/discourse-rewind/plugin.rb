@@ -20,13 +20,15 @@ register_asset "stylesheets/mobile/_index.scss", :mobile
 module ::DiscourseRewind
   PLUGIN_NAME = "discourse-rewind"
 
-  def self.public_asset_path(name)
-    File.expand_path(File.join(__dir__, "public", name))
-  end
+  class << self
+    def public_asset_path(name)
+      File.expand_path(File.join(__dir__, "public", name))
+    end
 
-  def self.rewind_year(date = nil)
-    date ||= Time.zone.now
-    date.month == 1 ? date.year - 1 : date.year
+    def rewind_year(date = nil)
+      date ||= Time.zone.now
+      date.month == 1 ? date.year - 1 : date.year
+    end
   end
 end
 

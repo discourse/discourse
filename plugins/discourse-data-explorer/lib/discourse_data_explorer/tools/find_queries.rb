@@ -8,35 +8,37 @@ module DiscourseDataExplorer
       MAX_SEARCHABLE_QUERIES = 200
       MAX_SQL_LENGTH = 2_000
 
-      def self.signature
-        {
-          name: name,
-          description:
-            "Finds existing Data Explorer queries that may be useful examples for the user's request. Use this for inspiration before writing SQL; do not copy results blindly.",
-          parameters: [
-            {
-              name: "search",
-              description:
-                "short search phrase describing the report or query pattern to find, for example: active members, tag usage, group replies",
-              type: "string",
-              required: true,
-            },
-            {
-              name: "limit",
-              description: "maximum number of example queries to return",
-              type: "integer",
-              required: false,
-            },
-          ],
-        }
-      end
+      class << self
+        def signature
+          {
+            name: name,
+            description:
+              "Finds existing Data Explorer queries that may be useful examples for the user's request. Use this for inspiration before writing SQL; do not copy results blindly.",
+            parameters: [
+              {
+                name: "search",
+                description:
+                  "short search phrase describing the report or query pattern to find, for example: active members, tag usage, group replies",
+                type: "string",
+                required: true,
+              },
+              {
+                name: "limit",
+                description: "maximum number of example queries to return",
+                type: "integer",
+                required: false,
+              },
+            ],
+          }
+        end
 
-      def self.custom?
-        true
-      end
+        def custom?
+          true
+        end
 
-      def self.name
-        "find_queries"
+        def name
+          "find_queries"
+        end
       end
 
       def invoke

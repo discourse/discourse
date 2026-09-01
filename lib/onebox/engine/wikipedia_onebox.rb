@@ -10,8 +10,10 @@ module Onebox
       matches_domain("wikipedia.com", "wikipedia.org", allow_subdomains: true)
       always_https
 
-      def self.matches_path(path)
-        true # Matches any path under the specified domains
+      class << self
+        def matches_path(path)
+          true # Matches any path under the specified domains
+        end
       end
 
       private

@@ -55,11 +55,162 @@ class Invite < ActiveRecord::Base
 
   attribute :email_already_exists
 
-  def self.emailed_status_types
-    @emailed_status_types ||=
-      Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
+  class << self
+    def emailed_status_types
+      @emailed_status_types ||=
+        Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
+    end
   end
 
+  class << self
+    def generate(invited_by, opts = nil)
+      opts ||= {}
+      time_zone = Time.find_zone(invited_by&.user_option&.timezone) || Time.zone
+      email = Email.downcase(opts[:email]) if opts[:email].present?
+
+      raise UserExists.new(new.user_exists_error_msg(email)) if find_user_by_email(email)
+
+      if email.present?
+        invite =
+          Invite
+            .with_deleted
+            .where(email: email, invited_by_id: invited_by.id)
+            .order("created_at DESC")
+            .first
+
+        if invite && (invite.expired? || invite.deleted_at)
+          invite.destroy
+          invite = nil
+        end
+        email_digest = Digest::SHA256.hexdigest(email)
+        RateLimiter.new(invited_by, "reinvites-per-day-#{email_digest}", 3, 1.day.to_i).performed!
+      end
+
+      emailed_status =
+        if opts[:skip_email] || invite&.emailed_status == emailed_status_types[:not_required]
+          emailed_status_types[:not_required]
+        elsif opts[:emailed_status].present?
+          opts[:emailed_status]
+        elsif email.present?
+          emailed_status_types[:pending]
+        else
+          emailed_status_types[:not_required]
+        end
+
+      if invite
+        was_admin = invite.admin?
+        invite.update_columns(
+          created_at: Time.zone.now,
+          updated_at: Time.zone.now,
+          expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
+          emailed_status: emailed_status,
+          # update_columns skips validations, so the inviter checks from
+          # ensure_valid_admin_invite / ensure_valid_moderator_invite have to be
+          # re-applied here
+          admin: !!opts[:admin] && !!invited_by&.admin?,
+          moderator: !!opts[:moderator] && !!invited_by&.staff?,
+        )
+      else
+        create_args =
+          opts.slice(
+            :email,
+            :description,
+            :domain,
+            :moderator,
+            :admin,
+            :custom_message,
+            :max_redemptions_allowed,
+          )
+        create_args[:invited_by] = invited_by
+        create_args[:email] = email
+        create_args[:emailed_status] = emailed_status
+        create_args[:expires_at] = opts[:expires_at] ||
+          time_zone.now + SiteSetting.invite_expiry_days.days
+
+        invite = Invite.create!(create_args)
+      end
+
+      DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
+
+      if invite.admin? || invite.moderator?
+        # staff invites never carry topic or group associations; clear any left
+        # over from a reused member invite
+        invite.topic_invites.destroy_all
+        invite.invited_groups.destroy_all
+      else
+        topic_id = opts[:topic]&.id || opts[:topic_id]
+        invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+
+        group_ids = opts[:group_ids]
+        if group_ids.present?
+          group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+        end
+      end
+
+      if emailed_status == emailed_status_types[:pending]
+        invite.update_column(:emailed_status, emailed_status_types[:sending])
+        Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: opts[:invite_to_topic])
+      end
+
+      invite.reload
+    end
+  end
+  class << self
+    def redeem_for_existing_user(user)
+      invite = Invite.find_by(email: Email.downcase(user.email))
+      if invite.present? && invite.redeemable?
+        InviteRedeemer.new(invite: invite, redeeming_user: user).redeem
+      end
+      invite
+    end
+
+    def find_user_by_email(email)
+      User.with_email(Email.downcase(email)).where(staged: false).first
+    end
+
+    def pending(inviter)
+      Invite
+        .distinct
+        .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+        .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+        .where(invited_by_id: inviter.id)
+        .where("redemption_count < max_redemptions_allowed")
+        .where("expires_at > ?", Time.zone.now)
+        .order("invites.updated_at DESC")
+    end
+
+    def expired(inviter)
+      Invite
+        .distinct
+        .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
+        .joins("LEFT JOIN users ON invited_users.user_id = users.id")
+        .where(invited_by_id: inviter.id)
+        .where("redemption_count < max_redemptions_allowed")
+        .where("expires_at < ?", Time.zone.now)
+        .order("invites.expires_at ASC")
+    end
+
+    def redeemed_users(inviter)
+      InvitedUser
+        .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
+        .includes(user: :user_stat)
+        .where.not(user_id: nil)
+        .where("invites.invited_by_id = ?", inviter.id)
+        .order("invited_users.redeemed_at DESC")
+        .references("invite")
+        .references("user")
+        .references("user_stat")
+    end
+
+    def invalidate_for_email(email)
+      Invite.find_by(email: Email.downcase(email))&.invalidate!
+    end
+  end
+  class << self
+    def base_directory
+      Rails.public_path.join("uploads", "csv", RailsMultisite::ConnectionManagement.current_db).to_s
+    end
+  end
   def user_doesnt_already_exist
     self.email_already_exists = false
     return if email.blank?
@@ -136,98 +287,6 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def self.generate(invited_by, opts = nil)
-    opts ||= {}
-    time_zone = Time.find_zone(invited_by&.user_option&.timezone) || Time.zone
-    email = Email.downcase(opts[:email]) if opts[:email].present?
-
-    raise UserExists.new(new.user_exists_error_msg(email)) if find_user_by_email(email)
-
-    if email.present?
-      invite =
-        Invite
-          .with_deleted
-          .where(email: email, invited_by_id: invited_by.id)
-          .order("created_at DESC")
-          .first
-
-      if invite && (invite.expired? || invite.deleted_at)
-        invite.destroy
-        invite = nil
-      end
-      email_digest = Digest::SHA256.hexdigest(email)
-      RateLimiter.new(invited_by, "reinvites-per-day-#{email_digest}", 3, 1.day.to_i).performed!
-    end
-
-    emailed_status =
-      if opts[:skip_email] || invite&.emailed_status == emailed_status_types[:not_required]
-        emailed_status_types[:not_required]
-      elsif opts[:emailed_status].present?
-        opts[:emailed_status]
-      elsif email.present?
-        emailed_status_types[:pending]
-      else
-        emailed_status_types[:not_required]
-      end
-
-    if invite
-      was_admin = invite.admin?
-      invite.update_columns(
-        created_at: Time.zone.now,
-        updated_at: Time.zone.now,
-        expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
-        emailed_status: emailed_status,
-        # update_columns skips validations, so the inviter checks from
-        # ensure_valid_admin_invite / ensure_valid_moderator_invite have to be
-        # re-applied here
-        admin: !!opts[:admin] && !!invited_by&.admin?,
-        moderator: !!opts[:moderator] && !!invited_by&.staff?,
-      )
-    else
-      create_args =
-        opts.slice(
-          :email,
-          :description,
-          :domain,
-          :moderator,
-          :admin,
-          :custom_message,
-          :max_redemptions_allowed,
-        )
-      create_args[:invited_by] = invited_by
-      create_args[:email] = email
-      create_args[:emailed_status] = emailed_status
-      create_args[:expires_at] = opts[:expires_at] ||
-        time_zone.now + SiteSetting.invite_expiry_days.days
-
-      invite = Invite.create!(create_args)
-    end
-
-    DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
-
-    if invite.admin? || invite.moderator?
-      # staff invites never carry topic or group associations; clear any left
-      # over from a reused member invite
-      invite.topic_invites.destroy_all
-      invite.invited_groups.destroy_all
-    else
-      topic_id = opts[:topic]&.id || opts[:topic_id]
-      invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
-
-      group_ids = opts[:group_ids]
-      if group_ids.present?
-        group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
-      end
-    end
-
-    if emailed_status == emailed_status_types[:pending]
-      invite.update_column(:emailed_status, emailed_status_types[:sending])
-      Jobs.enqueue(:invite_email, invite_id: invite.id, invite_to_topic: opts[:invite_to_topic])
-    end
-
-    invite.reload
-  end
-
   def redeem(
     email: nil,
     username: nil,
@@ -255,56 +314,6 @@ class Invite < ActiveRecord::Base
     ).redeem
   end
 
-  def self.redeem_for_existing_user(user)
-    invite = Invite.find_by(email: Email.downcase(user.email))
-    if invite.present? && invite.redeemable?
-      InviteRedeemer.new(invite: invite, redeeming_user: user).redeem
-    end
-    invite
-  end
-
-  def self.find_user_by_email(email)
-    User.with_email(Email.downcase(email)).where(staged: false).first
-  end
-
-  def self.pending(inviter)
-    Invite
-      .distinct
-      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
-      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
-      .where(invited_by_id: inviter.id)
-      .where("redemption_count < max_redemptions_allowed")
-      .where("expires_at > ?", Time.zone.now)
-      .order("invites.updated_at DESC")
-  end
-
-  def self.expired(inviter)
-    Invite
-      .distinct
-      .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
-      .joins("LEFT JOIN users ON invited_users.user_id = users.id")
-      .where(invited_by_id: inviter.id)
-      .where("redemption_count < max_redemptions_allowed")
-      .where("expires_at < ?", Time.zone.now)
-      .order("invites.expires_at ASC")
-  end
-
-  def self.redeemed_users(inviter)
-    InvitedUser
-      .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
-      .includes(user: :user_stat)
-      .where.not(user_id: nil)
-      .where("invites.invited_by_id = ?", inviter.id)
-      .order("invited_users.redeemed_at DESC")
-      .references("invite")
-      .references("user")
-      .references("user_stat")
-  end
-
-  def self.invalidate_for_email(email)
-    Invite.find_by(email: Email.downcase(email))&.invalidate!
-  end
-
   def invalidate!
     update_attribute(:invalidated_at, Time.current)
     self
@@ -321,10 +330,6 @@ class Invite < ActiveRecord::Base
 
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
-  end
-
-  def self.base_directory
-    Rails.public_path.join("uploads", "csv", RailsMultisite::ConnectionManagement.current_db).to_s
   end
 
   def ensure_max_redemptions_allowed

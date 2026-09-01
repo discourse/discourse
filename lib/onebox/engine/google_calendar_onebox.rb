@@ -9,8 +9,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://calendar.google.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/calendar/.*$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/calendar/.*$})
+        end
       end
 
       def to_html

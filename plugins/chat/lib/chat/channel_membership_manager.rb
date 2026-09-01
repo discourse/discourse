@@ -2,8 +2,10 @@
 
 module Chat
   class ChannelMembershipManager
-    def self.all_for_user(user)
-      Chat::UserChatChannelMembership.where(user: user)
+    class << self
+      def all_for_user(user)
+        Chat::UserChatChannelMembership.where(user: user)
+      end
     end
 
     attr_reader :channel

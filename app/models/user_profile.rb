@@ -43,6 +43,69 @@ class UserProfile < ActiveRecord::Base
 
   attr_accessor :skip_pull_hotlinked_image
 
+  class << self
+    def rebake_old(limit)
+      problems = []
+      UserProfile
+        .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
+        .limit(limit)
+        .each do |p|
+          p.rebake!
+        rescue => e
+          problems << { profile: p, ex: e }
+        end
+      problems
+    end
+  end
+  class << self
+    def import_url_for_user(background_url, user, options = nil)
+      if SiteSetting.verbose_upload_logging
+        Rails.logger.warn(
+          "Verbose Upload Logging: Downloading profile background from #{background_url}",
+        )
+      end
+
+      tempfile =
+        FileHelper.download(
+          background_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "sso-profile-background",
+          follow_redirect: true,
+          skip_rate_limit: true,
+        )
+
+      return unless tempfile
+
+      ext = FastImage.type(tempfile).to_s
+      tempfile.rewind
+
+      is_card_background = !options || options[:is_card_background]
+      type = is_card_background ? "card_background" : "profile_background"
+
+      upload =
+        UploadCreator.new(
+          tempfile,
+          "external-profile-background." + ext,
+          origin: background_url,
+          type: type,
+        ).create_for(user.id)
+
+      if is_card_background
+        user.user_profile.upload_card_background(upload)
+      else
+        user.user_profile.upload_profile_background(upload)
+      end
+    rescue Net::ReadTimeout, OpenURI::HTTPError
+      # skip saving, we are not connected to the net
+    ensure
+      tempfile.close! if tempfile && tempfile.respond_to?(:close!)
+    end
+  end
+  class << self
+    def remove_featured_topic_from_all_profiles(topic)
+      where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+    end
+  end
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>\z/, "")
@@ -82,64 +145,8 @@ class UserProfile < ActiveRecord::Base
     update!(profile_background_upload: nil)
   end
 
-  def self.rebake_old(limit)
-    problems = []
-    UserProfile
-      .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
-      .limit(limit)
-      .each do |p|
-        p.rebake!
-      rescue => e
-        problems << { profile: p, ex: e }
-      end
-    problems
-  end
-
   def rebake!
     update_columns(bio_cooked: cooked, bio_cooked_version: BAKED_VERSION)
-  end
-
-  def self.import_url_for_user(background_url, user, options = nil)
-    if SiteSetting.verbose_upload_logging
-      Rails.logger.warn(
-        "Verbose Upload Logging: Downloading profile background from #{background_url}",
-      )
-    end
-
-    tempfile =
-      FileHelper.download(
-        background_url,
-        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-        tmp_file_name: "sso-profile-background",
-        follow_redirect: true,
-        skip_rate_limit: true,
-      )
-
-    return unless tempfile
-
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
-
-    is_card_background = !options || options[:is_card_background]
-    type = is_card_background ? "card_background" : "profile_background"
-
-    upload =
-      UploadCreator.new(
-        tempfile,
-        "external-profile-background." + ext,
-        origin: background_url,
-        type: type,
-      ).create_for(user.id)
-
-    if is_card_background
-      user.user_profile.upload_card_background(upload)
-    else
-      user.user_profile.upload_profile_background(upload)
-    end
-  rescue Net::ReadTimeout, OpenURI::HTTPError
-    # skip saving, we are not connected to the net
-  ensure
-    tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
   protected
@@ -159,10 +166,6 @@ class UserProfile < ActiveRecord::Base
   end
 
   private
-
-  def self.remove_featured_topic_from_all_profiles(topic)
-    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
-  end
 
   def cooked
     if bio_raw.present?

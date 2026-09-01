@@ -4,17 +4,18 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
   BOUNCE_ENGAGED_SECONDS_THRESHOLD = 10
   private_constant :BOUNCE_ENGAGED_SECONDS_THRESHOLD
 
-  def self.bounce_engaged_seconds_threshold
-    BOUNCE_ENGAGED_SECONDS_THRESHOLD
-  end
+  class << self
+    def bounce_engaged_seconds_threshold
+      BOUNCE_ENGAGED_SECONDS_THRESHOLD
+    end
 
-  def self.aggregate(start_date:, end_date:)
-    start_date = start_date.to_date
-    end_date = end_date.to_date + 1
-    source_condition = BrowserPageviewEvent.rollup_source_condition
+    def aggregate(start_date:, end_date:)
+      start_date = start_date.to_date
+      end_date = end_date.to_date + 1
+      source_condition = BrowserPageviewEvent.rollup_source_condition
 
-    transaction do
-      DB.exec(<<~SQL, start_date:, end_date:)
+      transaction do
+        DB.exec(<<~SQL, start_date:, end_date:)
         DELETE FROM browser_pageview_session_engagement_daily_rollups rollup
         WHERE rollup.date >= :start_date
           AND rollup.date < :end_date
@@ -27,8 +28,8 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
           )
       SQL
 
-      DB.exec(
-        <<~SQL,
+        DB.exec(
+          <<~SQL,
         WITH active_sessions AS (
           SELECT DISTINCT session_id
           FROM browser_pageview_events
@@ -78,11 +79,12 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
           ON engagement.session_id = session_pageviews.session_id
         GROUP BY session_pageviews.date, session_pageviews.logged_in
       SQL
-        start_date:,
-        end_date:,
-        session_started_before: BrowserPageviewSessionEngagement::BEACON_SETTLE_PERIOD.ago,
-        bounce_threshold: BOUNCE_ENGAGED_SECONDS_THRESHOLD,
-      )
+          start_date:,
+          end_date:,
+          session_started_before: BrowserPageviewSessionEngagement::BEACON_SETTLE_PERIOD.ago,
+          bounce_threshold: BOUNCE_ENGAGED_SECONDS_THRESHOLD,
+        )
+      end
     end
   end
 end

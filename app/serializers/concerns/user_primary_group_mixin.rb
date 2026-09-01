@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 module UserPrimaryGroupMixin
-  def self.included(klass)
-    klass.attributes :primary_group_name,
-                     :flair_name,
-                     :flair_url,
-                     :flair_bg_color,
-                     :flair_color,
-                     :flair_group_id,
-                     :admin,
-                     :moderator,
-                     :trust_level
+  class << self
+    def included(klass)
+      klass.attributes :primary_group_name,
+                       :flair_name,
+                       :flair_url,
+                       :flair_bg_color,
+                       :flair_color,
+                       :flair_group_id,
+                       :admin,
+                       :moderator,
+                       :trust_level
+    end
   end
 
   def primary_group_name

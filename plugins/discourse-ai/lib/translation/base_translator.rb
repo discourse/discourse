@@ -3,6 +3,17 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
+      class << self
+        def preferred_llm_model(agent_klass)
+          model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
+
+          if model_id.present?
+            LlmModel.find_by(id: model_id)
+          else
+            LlmModel.last
+          end
+        end
+      end
       def initialize(text:, target_locale:, topic: nil, post: nil, llm_model: nil)
         @text = text
         @target_locale = target_locale
@@ -76,16 +87,6 @@ module DiscourseAi
 
       def agent_setting
         raise NotImplementedError
-      end
-
-      def self.preferred_llm_model(agent_klass)
-        model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
-
-        if model_id.present?
-          LlmModel.find_by(id: model_id)
-        else
-          LlmModel.last
-        end
       end
     end
   end

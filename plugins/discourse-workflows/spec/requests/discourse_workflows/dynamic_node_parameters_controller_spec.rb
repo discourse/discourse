@@ -127,22 +127,24 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
             ],
           )
 
-          def self.load_options_context(context)
-            [
-              {
-                id: context.get_current_node_parameter("operation"),
-                name: context.filter,
-                method_name: context.method_name,
-                property_name: context.property_name,
-                workflow_id: context.workflow_id,
-                credential_slots: context.credentials.keys,
-                credential_user: context.get_credentials("auth")["user"],
-                node_id: context.node_id,
-                input_subject: context.input_context.dig("item", "json", "subject"),
-                execution_value: context.execution_context.dig("preview", "value"),
-                user_id: context.user.id,
-              },
-            ]
+          class << self
+            def load_options_context(context)
+              [
+                {
+                  id: context.get_current_node_parameter("operation"),
+                  name: context.filter,
+                  method_name: context.method_name,
+                  property_name: context.property_name,
+                  workflow_id: context.workflow_id,
+                  credential_slots: context.credentials.keys,
+                  credential_user: context.get_credentials("auth")["user"],
+                  node_id: context.node_id,
+                  input_subject: context.input_context.dig("item", "json", "subject"),
+                  execution_value: context.execution_context.dig("preview", "value"),
+                  user_id: context.user.id,
+                },
+              ]
+            end
           end
         end
 
@@ -215,16 +217,20 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         Class.new(DiscourseWorkflows::NodeType) do
           description(name: "action:load_options_version_test", version: "1.0")
 
-          def self.load_options_context(_context)
-            [{ id: "v1", name: "Version 1" }]
+          class << self
+            def load_options_context(_context)
+              [{ id: "v1", name: "Version 1" }]
+            end
           end
         end
       v2 =
         Class.new(DiscourseWorkflows::NodeType) do
           description(name: "action:load_options_version_test", version: "2.0")
 
-          def self.load_options_context(_context)
-            [{ id: "v2", name: "Version 2" }]
+          class << self
+            def load_options_context(_context)
+              [{ id: "v2", name: "Version 2" }]
+            end
           end
         end
 
@@ -268,8 +274,10 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         Class.new(DiscourseWorkflows::NodeType) do
           description(name: "action:exact_load_options_version_test", version: "1.0")
 
-          def self.load_options_context(_context)
-            [{ id: "v1", name: "Version 1" }]
+          class << self
+            def load_options_context(_context)
+              [{ id: "v1", name: "Version 1" }]
+            end
           end
         end
 
@@ -297,8 +305,10 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         Class.new(DiscourseWorkflows::NodeType) do
           description(name: "action:load_options_method_test")
 
-          def self.load_options(method_name)
-            [{ id: method_name, name: method_name.upcase }]
+          class << self
+            def load_options(method_name)
+              [{ id: method_name, name: method_name.upcase }]
+            end
           end
         end
 

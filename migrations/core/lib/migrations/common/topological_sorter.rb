@@ -5,8 +5,10 @@ module Migrations
   end
 
   class TopologicalSorter
-    def self.sort(nodes)
-      new(nodes).sort
+    class << self
+      def sort(nodes)
+        new(nodes).sort
+      end
     end
 
     def initialize(nodes)

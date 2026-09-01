@@ -3,13 +3,15 @@
 class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
-  def self.action_aliases
-    {
-      discard_post: :reject_post,
-      reject_and_silence: :reject_post,
-      reject_and_suspend: :reject_post,
-      delete_user_block: :delete_and_block_user,
-    }
+  class << self
+    def action_aliases
+      {
+        discard_post: :reject_post,
+        reject_and_silence: :reject_post,
+        reject_and_suspend: :reject_post,
+        delete_user_block: :delete_and_block_user,
+      }
+    end
   end
 
   after_create do
@@ -26,14 +28,16 @@ class ReviewableQueuedPost < Reviewable
 
   after_commit :compute_user_stats, only: %i[create update]
 
-  def self.additional_args(params)
-    return {} if params[:revise_reason].blank?
+  class << self
+    def additional_args(params)
+      return {} if params[:revise_reason].blank?
 
-    {
-      revise_reason: params[:revise_reason],
-      revise_feedback: params[:revise_feedback],
-      revise_custom_reason: params[:revise_custom_reason],
-    }
+      {
+        revise_reason: params[:revise_reason],
+        revise_feedback: params[:revise_feedback],
+        revise_custom_reason: params[:revise_custom_reason],
+      }
+    end
   end
 
   def build_combined_actions(actions, guardian, args)

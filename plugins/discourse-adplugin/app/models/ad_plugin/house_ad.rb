@@ -43,37 +43,46 @@ module AdPlugin
     after_destroy :clear_cache
     after_save :clear_cache
 
-    def self.all_for_anons
-      for_anons.to_a
+    class << self
+      def all_for_anons
+        for_anons.to_a
+      end
+
+      def all_for_logged_in_users(scope)
+        query = for_logged_in
+        return query if scope.nil?
+
+        query =
+          query
+            .left_joins(:groups)
+            .where(
+              "ad_plugin_house_ads_groups.group_id IN (?) OR ad_plugin_house_ads_groups.group_id = ? OR ad_plugin_house_ads_groups.group_id IS NULL",
+              scope.user.group_ids,
+              Group::AUTO_GROUPS[:everyone],
+            )
+            .distinct
+
+        category_ids = Category.secured(scope).pluck(:id)
+        query =
+          query
+            .left_joins(:categories)
+            .where(
+              "ad_plugin_house_ads_categories.category_id IN (?) OR ad_plugin_house_ads_categories.category_id IS NULL",
+              category_ids,
+            )
+            .distinct
+
+        query.to_a
+      end
     end
 
-    def self.all_for_logged_in_users(scope)
-      query = for_logged_in
-      return query if scope.nil?
-
-      query =
-        query
-          .left_joins(:groups)
-          .where(
-            "ad_plugin_house_ads_groups.group_id IN (?) OR ad_plugin_house_ads_groups.group_id = ? OR ad_plugin_house_ads_groups.group_id IS NULL",
-            scope.user.group_ids,
-            Group::AUTO_GROUPS[:everyone],
-          )
-          .distinct
-
-      category_ids = Category.secured(scope).pluck(:id)
-      query =
-        query
-          .left_joins(:categories)
-          .where(
-            "ad_plugin_house_ads_categories.category_id IN (?) OR ad_plugin_house_ads_categories.category_id IS NULL",
-            category_ids,
-          )
-          .distinct
-
-      query.to_a
+    class << self
+      def publish_if_ads_enabled
+        if AdPlugin::HouseAdSetting.all.any? { |_, ads_to_show| ads_to_show.present? }
+          AdPlugin::HouseAdSetting.publish_settings
+        end
+      end
     end
-
     def route_names
       routes.pluck(:route_name)
     end
@@ -112,12 +121,6 @@ module AdPlugin
     def clear_cache
       Site.clear_anon_cache!
       self.class.publish_if_ads_enabled
-    end
-
-    def self.publish_if_ads_enabled
-      if AdPlugin::HouseAdSetting.all.any? { |_, ads_to_show| ads_to_show.present? }
-        AdPlugin::HouseAdSetting.publish_settings
-      end
     end
   end
 end

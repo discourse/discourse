@@ -14,12 +14,14 @@ module Compression
 
     attr_reader :zip_file, :remaining_total_bytes
 
-    def self.open(path, **kwargs)
-      ::Zip::File.open(path) do |zip_file|
-        reader = new(zip_file, **kwargs)
-        reader.validate!
+    class << self
+      def open(path, **kwargs)
+        ::Zip::File.open(path) do |zip_file|
+          reader = new(zip_file, **kwargs)
+          reader.validate!
 
-        yield(reader)
+          yield(reader)
+        end
       end
     end
 

@@ -6,8 +6,10 @@ module DiscourseAi
   module Evals
     module Runners
       class Discoveries < Base
-        def self.can_handle?(feature_name)
-          feature_name&.start_with?("search:discoveries")
+        class << self
+          def can_handle?(feature_name)
+            feature_name&.start_with?("search:discoveries")
+          end
         end
 
         def run(eval_case, llm, execution_context:)

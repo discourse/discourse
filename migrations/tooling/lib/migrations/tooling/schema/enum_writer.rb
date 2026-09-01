@@ -4,15 +4,16 @@ module Migrations
   module Tooling
     module Schema
       class EnumWriter
+        class << self
+          def filename_for(enum)
+            "#{enum.name.downcase.underscore}.rb"
+          end
+        end
         def initialize(namespace, header)
           @namespace = namespace
           @header = header.gsub(/^/, "# ")
           @namespace_parts = namespace.split("::")
           @base_indent = "  " * (@namespace_parts.size - 1)
-        end
-
-        def self.filename_for(enum)
-          "#{enum.name.downcase.underscore}.rb"
         end
 
         def output_enum(enum, output_stream)

@@ -46,6 +46,13 @@ class PresenceChannel
 
     attr_accessor :public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout
 
+    class << self
+      def from_json(json)
+        data = JSON.parse(json, symbolize_names: true)
+        data = {} if !data.is_a? Hash
+        new(**data.slice(:public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout))
+      end
+    end
     def initialize(
       public: false,
       allowed_user_ids: nil,
@@ -58,12 +65,6 @@ class PresenceChannel
       @allowed_group_ids = allowed_group_ids
       @count_only = count_only
       @timeout = timeout
-    end
-
-    def self.from_json(json)
-      data = JSON.parse(json, symbolize_names: true)
-      data = {} if !data.is_a? Hash
-      new(**data.slice(:public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout))
     end
 
     def to_json
@@ -86,6 +87,117 @@ class PresenceChannel
 
   attr_reader :name, :timeout, :message_bus_channel_name, :config
 
+  COMMON_PRESENT_LEAVE_LUA = <<~LUA
+    local channel = ARGV[1]
+    local user_id = ARGV[2]
+    local client_id = ARGV[3]
+    local expires = ARGV[4]
+    local mutex_value = ARGV[5]
+
+    local zlist_key = KEYS[1]
+    local hash_key = KEYS[2]
+    local channels_key = KEYS[3]
+    local message_bus_id_key = KEYS[4]
+    local mutex_key = KEYS[5]
+
+    local mutex_locked = redis.call('EXISTS', mutex_key) == 1
+
+    local zlist_elem = tostring(user_id) .. " " .. tostring(client_id)
+  LUA
+
+  UPDATE_GLOBAL_CHANNELS_LUA = <<~LUA
+    -- Update the global channels list with the timestamp of the oldest client
+    local oldest_client = redis.call('ZRANGE', zlist_key, 0, 0, 'WITHSCORES')
+    if table.getn(oldest_client) > 0 then
+      local oldest_client_expire_timestamp = oldest_client[2]
+      redis.call('ZADD', channels_key, tonumber(oldest_client_expire_timestamp), tostring(channel))
+    else
+      -- The channel is now empty, delete from global list
+      redis.call('ZREM', channels_key, tostring(channel))
+    end
+  LUA
+
+  LUA_SCRIPTS = {}
+  # Designed to be run periodically. Checks the channel list for channels with expired members,
+  # and runs auto_leave for each eligible channel
+  class << self
+    def auto_leave_all
+      channels_with_expiring_members =
+        PresenceChannel.redis.zrangebyscore(redis_key_channel_list, "-inf", Time.zone.now.to_i)
+      channels_with_expiring_members.each { |name| new(name, raise_not_found: false).auto_leave }
+    end
+
+    # Clear all known channels. This is intended for debugging/development only
+    def clear_all!
+      channels = PresenceChannel.redis.zrangebyscore(redis_key_channel_list, "-inf", "+inf")
+      channels.each { |name| new(name, raise_not_found: false).clear }
+
+      config_cache_keys =
+        PresenceChannel
+          .redis
+          .scan_each(match: Discourse.redis.namespace_key("_presence_*_config"))
+          .to_a
+      PresenceChannel.redis.del(*config_cache_keys) if config_cache_keys.present?
+    end
+
+    # Shortcut to access a redis client for all PresenceChannel activities.
+    # PresenceChannel must use the same Redis server as MessageBus, so that
+    # actions can be applied atomically. For the vast majority of Discourse
+    # installations, this is the same Redis server as `Discourse.redis`.
+    def redis
+      if MessageBus.backend == :redis
+        MessageBus.backend_instance.send(:pub_redis) # TODO: avoid a private API?
+      elsif Rails.env.test?
+        Discourse.redis.without_namespace
+      else
+        raise "PresenceChannel is unable to access MessageBus's Redis instance"
+      end
+    end
+
+    def redis_eval(key, *args)
+      LUA_SCRIPTS[key].eval(redis, *args)
+    end
+
+    # Register a callback to configure channels with a given prefix
+    # Prefix must match [a-zA-Z0-9_-]+
+    #
+    # For example, this registration will be used for
+    # all channels starting /topic-reply/...:
+    #
+    #     register_prefix("topic-reply") do |channel_name|
+    #       PresenceChannel::Config.new(public: true)
+    #     end
+    #
+    # At runtime, the block will be passed a full channel name. If the channel
+    # should not exist, the block should return `nil`. If the channel should exist,
+    # the block should return a PresenceChannel::Config object.
+    #
+    # Return values may be cached for up to 10 seconds.
+    #
+    # Plugins should use the {Plugin::Instance.register_presence_channel_prefix} API instead
+    def register_prefix(prefix, &block)
+      unless prefix.match? /[a-zA-Z0-9_-]+/
+        raise "PresenceChannel prefix #{prefix} must match [a-zA-Z0-9_-]+"
+      end
+      if @@configuration_blocks&.[](prefix)
+        raise "PresenceChannel prefix #{prefix} already registered"
+      end
+      @@configuration_blocks[prefix] = block
+    end
+
+    # For use in a test environment only
+    def unregister_prefix(prefix)
+      raise "Only allowed in test environment" if !Rails.env.test?
+      @@configuration_blocks&.delete(prefix)
+    end
+  end
+  # This list contains all active presence channels, ranked with the expiration timestamp of their least-recently-seen  client_id
+  # We periodically check the 'lowest ranked' items in this list based on the `timeout` of the channel
+  class << self
+    def redis_key_channel_list
+      Discourse.redis.namespace_key("_presence_channels")
+    end
+  end
   def initialize(name, raise_not_found: true, use_cache: true)
     @name = name
     @message_bus_channel_name = "/presence#{name}"
@@ -221,78 +333,6 @@ class PresenceChannel
     PresenceChannel.redis.del(redis_key_config)
     PresenceChannel.redis.del(redis_key_mutex)
     PresenceChannel.redis.zrem(self.class.redis_key_channel_list, name)
-  end
-
-  # Designed to be run periodically. Checks the channel list for channels with expired members,
-  # and runs auto_leave for each eligible channel
-  def self.auto_leave_all
-    channels_with_expiring_members =
-      PresenceChannel.redis.zrangebyscore(redis_key_channel_list, "-inf", Time.zone.now.to_i)
-    channels_with_expiring_members.each { |name| new(name, raise_not_found: false).auto_leave }
-  end
-
-  # Clear all known channels. This is intended for debugging/development only
-  def self.clear_all!
-    channels = PresenceChannel.redis.zrangebyscore(redis_key_channel_list, "-inf", "+inf")
-    channels.each { |name| new(name, raise_not_found: false).clear }
-
-    config_cache_keys =
-      PresenceChannel
-        .redis
-        .scan_each(match: Discourse.redis.namespace_key("_presence_*_config"))
-        .to_a
-    PresenceChannel.redis.del(*config_cache_keys) if config_cache_keys.present?
-  end
-
-  # Shortcut to access a redis client for all PresenceChannel activities.
-  # PresenceChannel must use the same Redis server as MessageBus, so that
-  # actions can be applied atomically. For the vast majority of Discourse
-  # installations, this is the same Redis server as `Discourse.redis`.
-  def self.redis
-    if MessageBus.backend == :redis
-      MessageBus.backend_instance.send(:pub_redis) # TODO: avoid a private API?
-    elsif Rails.env.test?
-      Discourse.redis.without_namespace
-    else
-      raise "PresenceChannel is unable to access MessageBus's Redis instance"
-    end
-  end
-
-  def self.redis_eval(key, *args)
-    LUA_SCRIPTS[key].eval(redis, *args)
-  end
-
-  # Register a callback to configure channels with a given prefix
-  # Prefix must match [a-zA-Z0-9_-]+
-  #
-  # For example, this registration will be used for
-  # all channels starting /topic-reply/...:
-  #
-  #     register_prefix("topic-reply") do |channel_name|
-  #       PresenceChannel::Config.new(public: true)
-  #     end
-  #
-  # At runtime, the block will be passed a full channel name. If the channel
-  # should not exist, the block should return `nil`. If the channel should exist,
-  # the block should return a PresenceChannel::Config object.
-  #
-  # Return values may be cached for up to 10 seconds.
-  #
-  # Plugins should use the {Plugin::Instance.register_presence_channel_prefix} API instead
-  def self.register_prefix(prefix, &block)
-    unless prefix.match? /[a-zA-Z0-9_-]+/
-      raise "PresenceChannel prefix #{prefix} must match [a-zA-Z0-9_-]+"
-    end
-    if @@configuration_blocks&.[](prefix)
-      raise "PresenceChannel prefix #{prefix} already registered"
-    end
-    @@configuration_blocks[prefix] = block
-  end
-
-  # For use in a test environment only
-  def self.unregister_prefix(prefix)
-    raise "Only allowed in test environment" if !Rails.env.test?
-    @@configuration_blocks&.delete(prefix)
   end
 
   private
@@ -437,44 +477,6 @@ class PresenceChannel
   def redis_key_config
     Discourse.redis.namespace_key("_presence_#{name}_config")
   end
-
-  # This list contains all active presence channels, ranked with the expiration timestamp of their least-recently-seen  client_id
-  # We periodically check the 'lowest ranked' items in this list based on the `timeout` of the channel
-  def self.redis_key_channel_list
-    Discourse.redis.namespace_key("_presence_channels")
-  end
-
-  COMMON_PRESENT_LEAVE_LUA = <<~LUA
-    local channel = ARGV[1]
-    local user_id = ARGV[2]
-    local client_id = ARGV[3]
-    local expires = ARGV[4]
-    local mutex_value = ARGV[5]
-
-    local zlist_key = KEYS[1]
-    local hash_key = KEYS[2]
-    local channels_key = KEYS[3]
-    local message_bus_id_key = KEYS[4]
-    local mutex_key = KEYS[5]
-
-    local mutex_locked = redis.call('EXISTS', mutex_key) == 1
-
-    local zlist_elem = tostring(user_id) .. " " .. tostring(client_id)
-  LUA
-
-  UPDATE_GLOBAL_CHANNELS_LUA = <<~LUA
-    -- Update the global channels list with the timestamp of the oldest client
-    local oldest_client = redis.call('ZRANGE', zlist_key, 0, 0, 'WITHSCORES')
-    if table.getn(oldest_client) > 0 then
-      local oldest_client_expire_timestamp = oldest_client[2]
-      redis.call('ZADD', channels_key, tonumber(oldest_client_expire_timestamp), tostring(channel))
-    else
-      -- The channel is now empty, delete from global list
-      redis.call('ZREM', channels_key, tostring(channel))
-    end
-  LUA
-
-  LUA_SCRIPTS = {}
 
   LUA_SCRIPTS[:present] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}

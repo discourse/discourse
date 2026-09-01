@@ -152,57 +152,59 @@ if defined?(DiscourseWorkflows)
             },
           )
 
-          def self.group_definition
-            { icon: "robot", label_key: "discourse_workflows.add_node.categories.ai", order: 40 }
-          end
-
-          def self.load_options_context(context)
-            case context.method_name
-            when "agents"
-              agent_options.select { |agent| context.matches_filter?(agent[:name]) }
-            when "llm_models"
-              llm_model_options(context)
+          class << self
+            def group_definition
+              { icon: "robot", label_key: "discourse_workflows.add_node.categories.ai", order: 40 }
             end
-          end
 
-          def self.agent_options
-            agents =
-              ::AiAgent
-                .where(enabled: true)
-                .order(:name)
-                .pluck(:id, :name, :default_llm_id, :force_default_llm)
-
-            site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
-            llm_model_ids = agents.map { |_id, _name, default_llm_id, _force| default_llm_id }
-            llm_model_ids << site_default_llm_id
-            llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
-
-            default_llm = llm_models_by_id[site_default_llm_id]
-
-            agents.map do |id, name, default_llm_id, force_default_llm|
-              configured_llm = llm_models_by_id[default_llm_id]
-              resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
-              {
-                id: id,
-                name: name,
-                default_llm_id: default_llm_id,
-                force_default_llm: force_default_llm,
-                resolved_llm_id: resolved_llm&.id,
-                resolved_llm_name: resolved_llm&.display_name,
-              }
-            end
-          end
-
-          def self.llm_model_options(context)
-            ::LlmModel
-              .order(:display_name)
-              .pluck(:id, :display_name)
-              .filter_map do |id, display_name|
-                next if display_name.blank?
-
-                { id: id, name: display_name }
+            def load_options_context(context)
+              case context.method_name
+              when "agents"
+                agent_options.select { |agent| context.matches_filter?(agent[:name]) }
+              when "llm_models"
+                llm_model_options(context)
               end
-              .select { |llm_model| context.matches_filter?(llm_model[:name]) }
+            end
+
+            def agent_options
+              agents =
+                ::AiAgent
+                  .where(enabled: true)
+                  .order(:name)
+                  .pluck(:id, :name, :default_llm_id, :force_default_llm)
+
+              site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
+              llm_model_ids = agents.map { |_id, _name, default_llm_id, _force| default_llm_id }
+              llm_model_ids << site_default_llm_id
+              llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
+
+              default_llm = llm_models_by_id[site_default_llm_id]
+
+              agents.map do |id, name, default_llm_id, force_default_llm|
+                configured_llm = llm_models_by_id[default_llm_id]
+                resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
+                {
+                  id: id,
+                  name: name,
+                  default_llm_id: default_llm_id,
+                  force_default_llm: force_default_llm,
+                  resolved_llm_id: resolved_llm&.id,
+                  resolved_llm_name: resolved_llm&.display_name,
+                }
+              end
+            end
+
+            def llm_model_options(context)
+              ::LlmModel
+                .order(:display_name)
+                .pluck(:id, :display_name)
+                .filter_map do |id, display_name|
+                  next if display_name.blank?
+
+                  { id: id, name: display_name }
+                end
+                .select { |llm_model| context.matches_filter?(llm_model[:name]) }
+            end
           end
 
           def execute(exec_ctx)

@@ -11,8 +11,10 @@ module DiscourseWorkflows
 
       SYSTEM_COLUMN_NAMES = SYSTEM_COLUMN_TYPE_MAP.keys.freeze
 
-      def self.system_column?(name)
-        SYSTEM_COLUMN_TYPE_MAP.key?(name.to_s)
+      class << self
+        def system_column?(name)
+          SYSTEM_COLUMN_TYPE_MAP.key?(name.to_s)
+        end
       end
     end
   end

@@ -8,50 +8,52 @@ module DiscourseAi
         # `duration_days.days.from_now` inside a representable time range.
         MAX_DURATION_DAYS = 36_500
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Silences a user, blocking them from creating new posts/replies while they can still read the forum.",
-            parameters: [
-              {
-                name: "username",
-                description: "The username of the user to silence",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "duration_days",
-                description:
-                  "How many days to silence the user for. Use a very large number (e.g. 36500) for an effectively permanent silence.",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "reason",
-                description: "Short explanation of why the user is being silenced",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "message",
-                description: "Optional message sent to the user explaining the silence",
-                type: "string",
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Silences a user, blocking them from creating new posts/replies while they can still read the forum.",
+              parameters: [
+                {
+                  name: "username",
+                  description: "The username of the user to silence",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "duration_days",
+                  description:
+                    "How many days to silence the user for. Use a very large number (e.g. 36500) for an effectively permanent silence.",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "reason",
+                  description: "Short explanation of why the user is being silenced",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "message",
+                  description: "Optional message sent to the user explaining the silence",
+                  type: "string",
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "silence_user"
-        end
+          def name
+            "silence_user"
+          end
 
-        def self.requires_approval?
-          true
-        end
+          def requires_approval?
+            true
+          end
 
-        def self.attribute_to_approver?
-          true
+          def attribute_to_approver?
+            true
+          end
         end
 
         def invoke

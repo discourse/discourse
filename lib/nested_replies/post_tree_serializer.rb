@@ -2,19 +2,18 @@
 
 module NestedReplies
   class PostTreeSerializer
-    def initialize(topic:, topic_view:, guardian:)
-      @topic = topic
-      @topic_view = topic_view
-      @guardian = guardian
-      @ignored_user_ids = IgnoredUser.ignored_ids_for(guardian.user)
-    end
-
     SUGGESTED_AND_RELATED_KEYS = %i[
       suggested_topics
       suggested_group_name
       related_topics
       related_messages
     ].freeze
+    def initialize(topic:, topic_view:, guardian:)
+      @topic = topic
+      @topic_view = topic_view
+      @guardian = guardian
+      @ignored_user_ids = IgnoredUser.ignored_ids_for(guardian.user)
+    end
 
     def serialize_topic
       topic_view_json.merge(has_activity_log: activity_log_present?).except(

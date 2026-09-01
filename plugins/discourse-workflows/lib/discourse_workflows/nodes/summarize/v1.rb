@@ -139,55 +139,57 @@ module DiscourseWorkflows
 
         # The output keys depend on how the node is configured, so the contract is derived
         # from the configuration rather than declared as a constant.
-        def self.output_schemas(configuration = {}, input_schemas: [])
-          config = (configuration || {}).deep_stringify_keys
-          rows = Array(config.dig("fields_to_summarize", "values"))
-          split_fields = split_field_list(config["fields_to_split_by"])
+        class << self
+          def output_schemas(configuration = {}, input_schemas: [])
+            config = (configuration || {}).deep_stringify_keys
+            rows = Array(config.dig("fields_to_summarize", "values"))
+            split_fields = split_field_list(config["fields_to_split_by"])
 
-          properties = {}
-          split_fields.each { |field| properties[leaf_name(field)] = ANY_TYPE }
-          rows.each { |row| properties[output_key(row)] = schema_type_for(row) }
+            properties = {}
+            split_fields.each { |field| properties[leaf_name(field)] = ANY_TYPE }
+            rows.each { |row| properties[output_key(row)] = schema_type_for(row) }
 
-          [Schema.document(properties)]
-        end
+            [Schema.document(properties)]
+          end
 
-        def self.split_field_list(value)
-          value.to_s.split(",").filter_map { |field| field.strip.presence }
-        end
+          def split_field_list(value)
+            value.to_s.split(",").filter_map { |field| field.strip.presence }
+          end
 
-        def self.leaf_name(field)
-          return field if field.exclude?(".")
-          field.split(".").last
-        end
+          def leaf_name(field)
+            return field if field.exclude?(".")
+            field.split(".").last
+          end
 
-        def self.output_key(row)
-          row = row.deep_stringify_keys
-          explicit = row["output_field_name"].to_s.strip
-          return explicit if explicit.present?
+          def output_key(row)
+            row = row.deep_stringify_keys
+            explicit = row["output_field_name"].to_s.strip
+            return explicit if explicit.present?
 
-          prefix = OUTPUT_PREFIXES.fetch(row["aggregation"].to_s, "")
-          field = row["field"].to_s.strip
-          return prefix.chomp("_") if field.empty?
+            prefix = OUTPUT_PREFIXES.fetch(row["aggregation"].to_s, "")
+            field = row["field"].to_s.strip
+            return prefix.chomp("_") if field.empty?
 
-          "#{prefix}#{sanitize_key(leaf_name(field))}"
-        end
+            "#{prefix}#{sanitize_key(leaf_name(field))}"
+          end
 
-        def self.sanitize_key(name)
-          name.to_s.gsub(/["\[\]]/, "").gsub(/[ .]/, "_")
-        end
+          def sanitize_key(name)
+            name.to_s.gsub(/["\[\]]/, "").gsub(/[ .]/, "_")
+          end
 
-        def self.schema_type_for(row)
-          case row.deep_stringify_keys["aggregation"].to_s
-          when "count", "count_unique"
-            INTEGER_TYPE
-          when "sum", "average"
-            NUMBER_TYPE
-          when "concatenate"
-            STRING_TYPE
-          when "append", "collect", "unique"
-            ARRAY_TYPE
-          else
-            ANY_TYPE
+          def schema_type_for(row)
+            case row.deep_stringify_keys["aggregation"].to_s
+            when "count", "count_unique"
+              INTEGER_TYPE
+            when "sum", "average"
+              NUMBER_TYPE
+            when "concatenate"
+              STRING_TYPE
+            when "append", "collect", "unique"
+              ARRAY_TYPE
+            else
+              ANY_TYPE
+            end
           end
         end
 

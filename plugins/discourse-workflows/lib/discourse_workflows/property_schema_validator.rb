@@ -131,25 +131,27 @@ module DiscourseWorkflows
         end
       end
 
-    def self.validate_all
-      DiscourseWorkflows::NodeType
-        .registered_nodes
-        .flat_map { |node_class| validate_node(node_class) }
-        .compact
-    end
+    class << self
+      def validate_all
+        DiscourseWorkflows::NodeType
+          .registered_nodes
+          .flat_map { |node_class| validate_node(node_class) }
+          .compact
+      end
 
-    def self.validate_node(node_class)
-      identifier =
-        begin
-          node_class.identifier
-        rescue NotImplementedError
-          return []
-        end
-      call(identifier, node_class.property_schema)
-    end
+      def validate_node(node_class)
+        identifier =
+          begin
+            node_class.identifier
+          rescue NotImplementedError
+            return []
+          end
+        call(identifier, node_class.property_schema)
+      end
 
-    def self.call(identifier, schema)
-      new(identifier, schema).validate
+      def call(identifier, schema)
+        new(identifier, schema).validate
+      end
     end
 
     def initialize(identifier, schema)

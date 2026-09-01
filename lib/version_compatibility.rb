@@ -7,134 +7,136 @@ module Discourse
   class InvalidVersionListError < StandardError
   end
 
-  def self.has_needed_version?(current, needed)
-    Gem::Version.new(current) >= Gem::Version.new(needed)
-  rescue ArgumentError
-    false
-  end
-
-  # lookup an external resource (theme/plugin)'s best compatible version
-  # compatible resource files are YAML, in the format:
-  # `discourse_version: plugin/theme git reference.` For example:
-  #  2.5.0.beta6: c4a6c17
-  #  2.5.0.beta4: d1d2d3f
-  #  2.5.0.beta2: bb3ffee
-  #  2.4.4.beta6: some-other-branch-ref
-  #  2.4.2.beta1: v1-tag
-  def self.find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
-    return if version_list.blank?
-
-    begin
-      version_list = YAML.safe_load(version_list)
-    rescue Psych::SyntaxError, Psych::DisallowedClass
+  class << self
+    def has_needed_version?(current, needed)
+      Gem::Version.new(current) >= Gem::Version.new(needed)
+    rescue ArgumentError
+      false
     end
 
-    return if version_list.blank?
+    # lookup an external resource (theme/plugin)'s best compatible version
+    # compatible resource files are YAML, in the format:
+    # `discourse_version: plugin/theme git reference.` For example:
+    #  2.5.0.beta6: c4a6c17
+    #  2.5.0.beta4: d1d2d3f
+    #  2.5.0.beta2: bb3ffee
+    #  2.4.4.beta6: some-other-branch-ref
+    #  2.4.2.beta1: v1-tag
+    def find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
+      return if version_list.blank?
 
-    raise InvalidVersionListError unless version_list.is_a?(Hash)
-
-    version_list =
-      version_list
-        .transform_keys do |v|
-          Gem::Requirement.parse(v)
-        rescue Gem::Requirement::BadRequirementError
-          raise InvalidVersionListError, "Invalid version specifier: #{v}"
-        end
-        .sort_by do |parsed_requirement, _|
-          operator, version = parsed_requirement
-          [version, operator == "<" ? 0 : 1]
-        end
-
-    parsed_target_version = Gem::Version.new(target_version)
-
-    lowest_matching_entry =
-      version_list.find do |parsed_requirement, target|
-        req_operator, req_version = parsed_requirement
-        req_operator = "<=" if req_operator == "="
-
-        if !%w[<= <].include?(req_operator)
-          raise InvalidVersionListError,
-                "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
-        end
-
-        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version}")
-        resolved_requirement.satisfied_by?(parsed_target_version)
+      begin
+        version_list = YAML.safe_load(version_list)
+      rescue Psych::SyntaxError, Psych::DisallowedClass
       end
 
-    return if lowest_matching_entry.nil?
+      return if version_list.blank?
 
-    checkout_version = lowest_matching_entry[1]
+      raise InvalidVersionListError unless version_list.is_a?(Hash)
 
-    begin
-      Discourse::Utils.execute_command "git",
-                                       "check-ref-format",
-                                       "--allow-onelevel",
-                                       checkout_version
-    rescue RuntimeError
-      raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
+      version_list =
+        version_list
+          .transform_keys do |v|
+            Gem::Requirement.parse(v)
+          rescue Gem::Requirement::BadRequirementError
+            raise InvalidVersionListError, "Invalid version specifier: #{v}"
+          end
+          .sort_by do |parsed_requirement, _|
+            operator, version = parsed_requirement
+            [version, operator == "<" ? 0 : 1]
+          end
+
+      parsed_target_version = Gem::Version.new(target_version)
+
+      lowest_matching_entry =
+        version_list.find do |parsed_requirement, target|
+          req_operator, req_version = parsed_requirement
+          req_operator = "<=" if req_operator == "="
+
+          if !%w[<= <].include?(req_operator)
+            raise InvalidVersionListError,
+                  "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
+          end
+
+          resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version}")
+          resolved_requirement.satisfied_by?(parsed_target_version)
+        end
+
+      return if lowest_matching_entry.nil?
+
+      checkout_version = lowest_matching_entry[1]
+
+      begin
+        Discourse::Utils.execute_command "git",
+                                         "check-ref-format",
+                                         "--allow-onelevel",
+                                         checkout_version
+      rescue RuntimeError
+        raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
+      end
+
+      checkout_version
     end
 
-    checkout_version
-  end
+    def find_compatible_git_branch(path)
+      current_branch =
+        Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
 
-  def self.find_compatible_git_branch(path)
-    current_branch =
-      Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
+      default_branch =
+        Discourse::Utils
+          .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
+          .strip
+          .sub(%r{\Aorigin/}, "")
 
-    default_branch =
-      Discourse::Utils
-        .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
-        .strip
-        .sub(%r{\Aorigin/}, "")
+      return if current_branch != default_branch
 
-    return if current_branch != default_branch
+      compat_branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+      remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
 
-    compat_branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
-    remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
-
-    # Verify the branch exists locally; return a ref that git can resolve.
-    Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref)
-    "origin/#{compat_branch}"
-  rescue Discourse::Utils::CommandError
-  end
-
-  # Find a compatible resource from a git repo
-  def self.find_compatible_git_resource(path)
-    return unless File.directory?("#{path}/.git")
-
-    if compatible_branch = find_compatible_git_branch(path)
-      return compatible_branch
+      # Verify the branch exists locally; return a ref that git can resolve.
+      Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref)
+      "origin/#{compat_branch}"
+    rescue Discourse::Utils::CommandError
     end
 
-    tree_info =
-      Discourse::Utils.execute_command(
-        "git",
-        "-C",
-        path,
-        "ls-tree",
-        "-l",
-        "HEAD",
-        Discourse::VERSION_COMPATIBILITY_FILENAME,
-      )
-    blob_size = tree_info.split[3].to_i
+    # Find a compatible resource from a git repo
+    def find_compatible_git_resource(path)
+      return unless File.directory?("#{path}/.git")
 
-    if blob_size > Discourse::MAX_METADATA_FILE_SIZE
-      $stderr.puts "#{Discourse::VERSION_COMPATIBILITY_FILENAME} file in #{path} too big"
-      return
+      if compatible_branch = find_compatible_git_branch(path)
+        return compatible_branch
+      end
+
+      tree_info =
+        Discourse::Utils.execute_command(
+          "git",
+          "-C",
+          path,
+          "ls-tree",
+          "-l",
+          "HEAD",
+          Discourse::VERSION_COMPATIBILITY_FILENAME,
+        )
+      blob_size = tree_info.split[3].to_i
+
+      if blob_size > Discourse::MAX_METADATA_FILE_SIZE
+        $stderr.puts "#{Discourse::VERSION_COMPATIBILITY_FILENAME} file in #{path} too big"
+        return
+      end
+
+      compat_resource =
+        Discourse::Utils.execute_command(
+          "git",
+          "-C",
+          path,
+          "show",
+          "HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}",
+        )
+
+      Discourse.find_compatible_resource(compat_resource)
+    rescue InvalidVersionListError
+      $stderr.puts "Invalid version list in #{path}"
+    rescue Discourse::Utils::CommandError
     end
-
-    compat_resource =
-      Discourse::Utils.execute_command(
-        "git",
-        "-C",
-        path,
-        "show",
-        "HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}",
-      )
-
-    Discourse.find_compatible_resource(compat_resource)
-  rescue InvalidVersionListError
-    $stderr.puts "Invalid version list in #{path}"
-  rescue Discourse::Utils::CommandError
   end
 end

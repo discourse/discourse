@@ -3,6 +3,12 @@
 class UserNotificationScheduleProcessor
   attr_accessor :schedule, :user, :timezone_name
 
+  class << self
+    def create_do_not_disturb_timings_for(schedule)
+      processor = UserNotificationScheduleProcessor.new(schedule)
+      processor.create_do_not_disturb_timings
+    end
+  end
   def initialize(schedule)
     @schedule = schedule
     @user = schedule.user
@@ -13,11 +19,6 @@ class UserNotificationScheduleProcessor
     local_time = Time.now.in_time_zone(timezone_name)
 
     create_timings_for(local_time, days: 2)
-  end
-
-  def self.create_do_not_disturb_timings_for(schedule)
-    processor = UserNotificationScheduleProcessor.new(schedule)
-    processor.create_do_not_disturb_timings
   end
 
   private

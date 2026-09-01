@@ -78,10 +78,12 @@ if defined?(DiscourseWorkflows)
             },
           )
 
-          def self.load_options_context(context)
-            case context.method_name
-            when "chat_integration_channels"
-              ChatIntegrationChannelSelection.load_options(context)
+          class << self
+            def load_options_context(context)
+              case context.method_name
+              when "chat_integration_channels"
+                ChatIntegrationChannelSelection.load_options(context)
+              end
             end
           end
 

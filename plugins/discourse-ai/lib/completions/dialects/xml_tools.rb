@@ -4,6 +4,8 @@ module DiscourseAi
   module Completions
     module Dialects
       class XmlTools
+        DONE_MESSAGE =
+          "Regardless of what you think, REPLY IMMEDIATELY, WITHOUT MAKING ANY FURTHER TOOL CALLS, YOU ARE OUT OF TOOL CALL QUOTA!"
         def initialize(tools)
           @raw_tools = tools
         end
@@ -56,9 +58,6 @@ module DiscourseAi
             TEXT
             end
         end
-
-        DONE_MESSAGE =
-          "Regardless of what you think, REPLY IMMEDIATELY, WITHOUT MAKING ANY FURTHER TOOL CALLS, YOU ARE OUT OF TOOL CALL QUOTA!"
 
         def from_raw_tool(raw_message)
           result = <<~TEXT.strip

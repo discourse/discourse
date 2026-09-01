@@ -52,22 +52,24 @@ module DiscourseWorkflows
           },
         )
 
-        def self.load_options_context(context)
-          case context.method_name
-          when "groups"
-            ::Group
-              .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
+        class << self
+          def load_options_context(context)
+            case context.method_name
+            when "groups"
+              ::Group
+                .order(:name)
+                .pluck(:id, :name)
+                .select { |_, name| context.matches_filter?(name) }
+                .map { |id, name| { id:, name: } }
+            end
           end
-        end
 
-        def self.changed_names_for(columns)
-          return nil if columns.nil?
+          def changed_names_for(columns)
+            return nil if columns.nil?
 
-          columns = Array.wrap(columns).map(&:to_s)
-          CHANGED_FIELDS.filter_map { |name, mapped| name if mapped.intersect?(columns) }
+            columns = Array.wrap(columns).map(&:to_s)
+            CHANGED_FIELDS.filter_map { |name, mapped| name if mapped.intersect?(columns) }
+          end
         end
 
         def initialize(user, changed_columns = nil, *)

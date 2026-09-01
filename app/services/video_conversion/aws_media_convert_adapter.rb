@@ -5,6 +5,82 @@ module VideoConversion
   class AwsMediaConvertAdapter < BaseAdapter
     ADAPTER_NAME = "aws_mediaconvert"
 
+    class << self
+      def s3_upload_bucket
+        # MediaConvert needs just the bucket name, not the folder path
+        # If s3_upload_bucket is "bucket-name/folder", we need just "bucket-name"
+        bucket_name, _folder_path =
+          S3Helper.get_bucket_and_folder_path(SiteSetting.Upload.s3_upload_bucket)
+        bucket_name
+      end
+    end
+    class << self
+      def build_conversion_settings(input_path, temp_output_filename)
+        # temp_output_filename is just the filename without extension (e.g., "new_sha1")
+        # MediaConvert will automatically add .mp4 extension based on container type
+        # We write it to the subdirectory as a temporary location
+        subdirectory = SiteSetting.mediaconvert_output_subdirectory
+        destination_path = File.join(subdirectory, temp_output_filename)
+
+        {
+          timecode_config: {
+            source: "ZEROBASED",
+          },
+          output_groups: [
+            {
+              name: "File Group",
+              output_group_settings: {
+                type: "FILE_GROUP_SETTINGS",
+                file_group_settings: {
+                  destination: "s3://#{s3_upload_bucket}/#{destination_path}",
+                },
+              },
+              outputs: [
+                {
+                  container_settings: {
+                    container: "MP4",
+                  },
+                  video_description: {
+                    codec_settings: {
+                      codec: "H_264",
+                      h264_settings: {
+                        bitrate: 2_000_000,
+                        rate_control_mode: "CBR",
+                      },
+                    },
+                  },
+                  audio_descriptions: [
+                    {
+                      codec_settings: {
+                        codec: "AAC",
+                        aac_settings: {
+                          bitrate: 96_000,
+                          sample_rate: 48_000,
+                          coding_mode: "CODING_MODE_2_0",
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          inputs: [
+            {
+              file_input: input_path,
+              audio_selectors: {
+                "Audio Selector 1": {
+                  default_selection: "DEFAULT",
+                },
+              },
+              video_selector: {
+                rotate: "AUTO",
+              },
+            },
+          ],
+        }
+      end
+    end
     def convert
       return false if !valid_settings?
 
@@ -357,82 +433,8 @@ module VideoConversion
       self.class.s3_upload_bucket
     end
 
-    def self.s3_upload_bucket
-      # MediaConvert needs just the bucket name, not the folder path
-      # If s3_upload_bucket is "bucket-name/folder", we need just "bucket-name"
-      bucket_name, _folder_path =
-        S3Helper.get_bucket_and_folder_path(SiteSetting.Upload.s3_upload_bucket)
-      bucket_name
-    end
-
     def build_conversion_settings(input_path, output_path)
       self.class.build_conversion_settings(input_path, output_path)
-    end
-
-    def self.build_conversion_settings(input_path, temp_output_filename)
-      # temp_output_filename is just the filename without extension (e.g., "new_sha1")
-      # MediaConvert will automatically add .mp4 extension based on container type
-      # We write it to the subdirectory as a temporary location
-      subdirectory = SiteSetting.mediaconvert_output_subdirectory
-      destination_path = File.join(subdirectory, temp_output_filename)
-
-      {
-        timecode_config: {
-          source: "ZEROBASED",
-        },
-        output_groups: [
-          {
-            name: "File Group",
-            output_group_settings: {
-              type: "FILE_GROUP_SETTINGS",
-              file_group_settings: {
-                destination: "s3://#{s3_upload_bucket}/#{destination_path}",
-              },
-            },
-            outputs: [
-              {
-                container_settings: {
-                  container: "MP4",
-                },
-                video_description: {
-                  codec_settings: {
-                    codec: "H_264",
-                    h264_settings: {
-                      bitrate: 2_000_000,
-                      rate_control_mode: "CBR",
-                    },
-                  },
-                },
-                audio_descriptions: [
-                  {
-                    codec_settings: {
-                      codec: "AAC",
-                      aac_settings: {
-                        bitrate: 96_000,
-                        sample_rate: 48_000,
-                        coding_mode: "CODING_MODE_2_0",
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-        inputs: [
-          {
-            file_input: input_path,
-            audio_selectors: {
-              "Audio Selector 1": {
-                default_selection: "DEFAULT",
-              },
-            },
-            video_selector: {
-              rotate: "AUTO",
-            },
-          },
-        ],
-      }
     end
   end
 end

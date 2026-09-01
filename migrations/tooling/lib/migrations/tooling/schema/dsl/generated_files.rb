@@ -20,33 +20,35 @@ module Migrations
           # `resolved`, rooted at `root`. Manual models are hand-written, so they
           # are excluded. The SQL schema file is not included — callers that need
           # it add it themselves.
-          def self.expected_paths(resolved, output_config, root)
-            models_dir = File.expand_path(output_config.models_directory, root)
-            enums_dir = File.expand_path(output_config.enums_directory, root)
+          class << self
+            def expected_paths(resolved, output_config, root)
+              models_dir = File.expand_path(output_config.models_directory, root)
+              enums_dir = File.expand_path(output_config.enums_directory, root)
 
-            model_paths =
-              resolved
-                .tables
-                .reject { |table| table.model_mode == :manual }
-                .map { |table| File.join(models_dir, ModelWriter.filename_for(table)) }
+              model_paths =
+                resolved
+                  .tables
+                  .reject { |table| table.model_mode == :manual }
+                  .map { |table| File.join(models_dir, ModelWriter.filename_for(table)) }
 
-            enum_paths =
-              resolved.enums.map { |enum| File.join(enums_dir, EnumWriter.filename_for(enum)) }
+              enum_paths =
+                resolved.enums.map { |enum| File.join(enums_dir, EnumWriter.filename_for(enum)) }
 
-            model_paths + enum_paths
-          end
+              model_paths + enum_paths
+            end
 
-          # Absolute paths of generated `*.rb` files under `root`'s model and enum
-          # directories that the current definition no longer produces: they carry
-          # the auto-generated {MARKER} but are not in `expected` (the result of
-          # {expected_paths} for the same `root`). Hand-written models lack the
-          # marker and are never returned.
-          def self.stale_paths(output_config, root, expected)
-            expected = expected.to_set
+            # Absolute paths of generated `*.rb` files under `root`'s model and enum
+            # directories that the current definition no longer produces: they carry
+            # the auto-generated {MARKER} but are not in `expected` (the result of
+            # {expected_paths} for the same `root`). Hand-written models lack the
+            # marker and are never returned.
+            def stale_paths(output_config, root, expected)
+              expected = expected.to_set
 
-            [output_config.models_directory, output_config.enums_directory].uniq.flat_map do |dir|
-              Dir[File.join(File.expand_path(dir, root), "*.rb")].select do |path|
-                !expected.include?(path) && File.read(path).include?(MARKER)
+              [output_config.models_directory, output_config.enums_directory].uniq.flat_map do |dir|
+                Dir[File.join(File.expand_path(dir, root), "*.rb")].select do |path|
+                  !expected.include?(path) && File.read(path).include?(MARKER)
+                end
               end
             end
           end

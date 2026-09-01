@@ -61,58 +61,60 @@ module DiscourseAi
       Congratulations, you've now seen a small sample of what Discourse's Markdown can do! For more intricate formatting, consider exploring the advanced styling options. Remember that the key to great formatting is not just the available tools, but also the **clarity** and **readability** it brings to your readers.
     TEXT
 
-        def self.can_contact?(llm_model)
-          llm_model.provider == "fake"
-        end
+        class << self
+          def can_contact?(llm_model)
+            llm_model.provider == "fake"
+          end
 
-        def self.with_fake_content(content)
-          @fake_content = content
-          yield
-        ensure
-          @fake_content = nil
-        end
+          def with_fake_content(content)
+            @fake_content = content
+            yield
+          ensure
+            @fake_content = nil
+          end
 
-        def self.fake_content=(content)
-          @fake_content = content
-        end
+          def fake_content=(content)
+            @fake_content = content
+          end
 
-        def self.fake_content
-          @fake_content || STOCK_CONTENT
-        end
+          def fake_content
+            @fake_content || STOCK_CONTENT
+          end
 
-        def self.delays
-          @delays ||= Array.new(10) { Rails.env.test? ? 0 : rand(0..5) }
-        end
+          def delays
+            @delays ||= Array.new(10) { Rails.env.test? ? 0 : rand(0..5) }
+          end
 
-        def self.delays=(delays)
-          @delays = delays
-        end
+          def delays=(delays)
+            @delays = delays
+          end
 
-        def self.chunk_count
-          @chunk_count ||= 10
-        end
+          def chunk_count
+            @chunk_count ||= 10
+          end
 
-        def self.chunk_count=(chunk_count)
-          @chunk_count = chunk_count
-        end
+          def chunk_count=(chunk_count)
+            @chunk_count = chunk_count
+          end
 
-        def self.last_call
-          @last_call
-        end
+          def last_call
+            @last_call
+          end
 
-        def self.last_call=(params)
-          @last_call = params
-        end
+          def last_call=(params)
+            @last_call = params
+          end
 
-        def self.previous_calls
-          @previous_calls ||= []
-        end
+          def previous_calls
+            @previous_calls ||= []
+          end
 
-        def self.reset!
-          @last_call = nil
-          @fake_content = nil
-          @delays = nil
-          @chunk_count = nil
+          def reset!
+            @last_call = nil
+            @fake_content = nil
+            @delays = nil
+            @chunk_count = nil
+          end
         end
 
         def perform_completion!(

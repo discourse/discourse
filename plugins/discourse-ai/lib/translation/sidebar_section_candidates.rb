@@ -5,13 +5,14 @@ module DiscourseAi
     class SidebarSectionCandidates < BaseCandidates
       private
 
-      def self.get
-        SidebarSection.public_sections.custom_sections
-      end
+      class << self
+        def get
+          SidebarSection.public_sections.custom_sections
+        end
 
-      def self.calculate_completion_per_locale(locale)
-        base_locale = "#{locale.split("_").first}%"
-        sql = <<~SQL
+        def calculate_completion_per_locale(locale)
+          base_locale = "#{locale.split("_").first}%"
+          sql = <<~SQL
           WITH eligible_sidebar_sections AS (
             #{get.where.not(sidebar_sections: { locale: nil }).to_sql}
           ),
@@ -29,8 +30,9 @@ module DiscourseAi
           FROM total_count t, done_count d
         SQL
 
-        done, total = DB.query_single(sql, base_locale:)
-        { done:, total: }
+          done, total = DB.query_single(sql, base_locale:)
+          { done:, total: }
+        end
       end
     end
   end

@@ -4,23 +4,25 @@ module DiscourseAi
   module Agents
     module Tools
       class Time < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Will generate the time in a timezone",
-            parameters: [
-              {
-                name: "timezone",
-                description: "ALWAYS supply a Ruby compatible timezone",
-                type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Will generate the time in a timezone",
+              parameters: [
+                {
+                  name: "timezone",
+                  description: "ALWAYS supply a Ruby compatible timezone",
+                  type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "time"
+          def name
+            "time"
+          end
         end
 
         def timezone

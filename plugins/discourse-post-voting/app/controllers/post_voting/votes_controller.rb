@@ -9,6 +9,7 @@ module PostVoting
     before_action :ensure_can_see_post, only: %i[create destroy voters]
     before_action :ensure_post_voting_enabled, only: %i[create destroy]
 
+    VOTERS_LIMIT = 20
     def create
       ensure_can_vote(@post)
 
@@ -81,8 +82,6 @@ module PostVoting
         render json: failed_json, status: :unprocessable_entity
       end
     end
-
-    VOTERS_LIMIT = 20
 
     def voters
       # TODO: Probably a site setting to hide/show voters

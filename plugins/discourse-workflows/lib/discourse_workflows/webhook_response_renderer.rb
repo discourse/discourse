@@ -2,8 +2,10 @@
 
 module DiscourseWorkflows
   class WebhookResponseRenderer
-    def self.render(controller, response)
-      new(controller, WebhookResponse.coerce(response)).render
+    class << self
+      def render(controller, response)
+        new(controller, WebhookResponse.coerce(response)).render
+      end
     end
 
     def initialize(controller, response)

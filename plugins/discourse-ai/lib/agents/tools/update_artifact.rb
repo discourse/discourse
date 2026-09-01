@@ -4,49 +4,51 @@ module DiscourseAi
   module Agents
     module Tools
       class UpdateArtifact < Tool
-        def self.name
-          "update_artifact"
-        end
+        class << self
+          def name
+            "update_artifact"
+          end
 
-        def self.signature
-          {
-            name: "update_artifact",
-            description: "Updates an existing web artifact",
-            parameters: [
-              {
-                name: "artifact_id",
-                description: "The ID of the artifact to update",
-                type: "integer",
-                required: true,
-              },
-              {
-                name: "instructions",
-                description: "Clear instructions on what changes need to be made to the artifact.",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "version",
-                description:
-                  "The version number of the artifact to update, if not supplied latest version will be updated",
-                type: "integer",
-                required: false,
-              },
-            ],
-          }
-        end
+          def signature
+            {
+              name: "update_artifact",
+              description: "Updates an existing web artifact",
+              parameters: [
+                {
+                  name: "artifact_id",
+                  description: "The ID of the artifact to update",
+                  type: "integer",
+                  required: true,
+                },
+                {
+                  name: "instructions",
+                  description:
+                    "Clear instructions on what changes need to be made to the artifact.",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "version",
+                  description:
+                    "The version number of the artifact to update, if not supplied latest version will be updated",
+                  type: "integer",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.inject_prompt(prompt:, context:, agent:)
-          return if agent.options["do_not_echo_artifact"].to_s == "true"
-          # we inject the current artifact content into the last user message
-          if topic_id = context.topic_id
-            posts = Post.where(topic_id: topic_id)
-            artifact = AiArtifact.order("id desc").where(post: posts).first
-            if artifact
-              latest_version = artifact.versions.order(version_number: :desc).first
-              current = latest_version || artifact
+          def inject_prompt(prompt:, context:, agent:)
+            return if agent.options["do_not_echo_artifact"].to_s == "true"
+            # we inject the current artifact content into the last user message
+            if topic_id = context.topic_id
+              posts = Post.where(topic_id: topic_id)
+              artifact = AiArtifact.order("id desc").where(post: posts).first
+              if artifact
+                latest_version = artifact.versions.order(version_number: :desc).first
+                current = latest_version || artifact
 
-              artifact_source = <<~MSG
+                artifact_source = <<~MSG
                 Current Artifact:
 
                 ### HTML
@@ -66,22 +68,23 @@ module DiscourseAi
 
               MSG
 
-              last_message = prompt.messages.last
-              last_message[:content] = "#{artifact_source}\n\n#{last_message[:content]}"
+                last_message = prompt.messages.last
+                last_message[:content] = "#{artifact_source}\n\n#{last_message[:content]}"
+              end
             end
           end
-        end
 
-        def self.accepted_options
-          [
-            option(:editor_llm, type: :llm),
-            option(:update_algorithm, type: :enum, values: %w[diff full], default: "diff"),
-            option(:do_not_echo_artifact, type: :boolean, default: true),
-          ]
-        end
+          def accepted_options
+            [
+              option(:editor_llm, type: :llm),
+              option(:update_algorithm, type: :enum, values: %w[diff full], default: "diff"),
+              option(:do_not_echo_artifact, type: :boolean, default: true),
+            ]
+          end
 
-        def self.allow_partial_tool_calls?
-          true
+          def allow_partial_tool_calls?
+            true
+          end
         end
 
         def partial_invoke

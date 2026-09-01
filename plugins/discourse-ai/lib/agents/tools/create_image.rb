@@ -4,25 +4,27 @@ module DiscourseAi
   module Agents
     module Tools
       class CreateImage < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Renders images from supplied descriptions",
-            parameters: [
-              {
-                name: "prompts",
-                description:
-                  "The prompts used to generate or create or draw the image (5000 chars or less, be creative) up to 4 prompts, usually only supply a single prompt",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Renders images from supplied descriptions",
+              parameters: [
+                {
+                  name: "prompts",
+                  description:
+                    "The prompts used to generate or create or draw the image (5000 chars or less, be creative) up to 4 prompts, usually only supply a single prompt",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "create_image"
+          def name
+            "create_image"
+          end
         end
 
         def prompts

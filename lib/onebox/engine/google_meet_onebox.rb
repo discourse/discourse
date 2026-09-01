@@ -12,8 +12,10 @@ module Onebox
       matches_domain("meet.google.com")
       always_https
 
-      def self.matches_path(path)
-        path.match?(MEETING_CODE_PATH) || path.match?(LOOKUP_PATH)
+      class << self
+        def matches_path(path)
+          path.match?(MEETING_CODE_PATH) || path.match?(LOOKUP_PATH)
+        end
       end
 
       def inline_data

@@ -103,38 +103,42 @@ class WebHookEventType < ActiveRecord::Base
 
   scope :active_grouped, -> { active.where.not(group: nil).group_by(&:group) }
 
-  def self.active
-    ids_to_exclude = []
-    unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
-      ids_to_exclude.concat([TYPES[:solved_accepted_solution], TYPES[:solved_unaccepted_solution]])
+  class << self
+    def active
+      ids_to_exclude = []
+      unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
+        ids_to_exclude.concat(
+          [TYPES[:solved_accepted_solution], TYPES[:solved_unaccepted_solution]],
+        )
+      end
+      unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
+        ids_to_exclude.concat([TYPES[:assign_assigned], TYPES[:assign_unassigned]])
+      end
+      unless defined?(SiteSetting.topic_voting_enabled) && SiteSetting.topic_voting_enabled
+        ids_to_exclude.concat([TYPES[:voting_topic_upvote], TYPES[:voting_topic_unvote]])
+      end
+      unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
+        ids_to_exclude.concat(
+          [
+            TYPES[:chat_message_created],
+            TYPES[:chat_message_edited],
+            TYPES[:chat_message_trashed],
+            TYPES[:chat_message_restored],
+          ],
+        )
+      end
+      unless defined?(SiteSetting.discourse_post_event_enabled) &&
+               SiteSetting.discourse_post_event_enabled
+        ids_to_exclude.concat(
+          [
+            TYPES[:calendar_event_created],
+            TYPES[:calendar_event_updated],
+            TYPES[:calendar_event_destroyed],
+          ],
+        )
+      end
+      where.not(id: ids_to_exclude)
     end
-    unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
-      ids_to_exclude.concat([TYPES[:assign_assigned], TYPES[:assign_unassigned]])
-    end
-    unless defined?(SiteSetting.topic_voting_enabled) && SiteSetting.topic_voting_enabled
-      ids_to_exclude.concat([TYPES[:voting_topic_upvote], TYPES[:voting_topic_unvote]])
-    end
-    unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
-      ids_to_exclude.concat(
-        [
-          TYPES[:chat_message_created],
-          TYPES[:chat_message_edited],
-          TYPES[:chat_message_trashed],
-          TYPES[:chat_message_restored],
-        ],
-      )
-    end
-    unless defined?(SiteSetting.discourse_post_event_enabled) &&
-             SiteSetting.discourse_post_event_enabled
-      ids_to_exclude.concat(
-        [
-          TYPES[:calendar_event_created],
-          TYPES[:calendar_event_updated],
-          TYPES[:calendar_event_destroyed],
-        ],
-      )
-    end
-    where.not(id: ids_to_exclude)
   end
 end
 

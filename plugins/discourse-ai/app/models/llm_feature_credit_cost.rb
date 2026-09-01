@@ -10,19 +10,21 @@ class LlmFeatureCreditCost < ActiveRecord::Base
   validates :credits_per_token, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :feature_name, uniqueness: { scope: :llm_model_id }
 
-  def self.credit_cost_for(llm_model, feature_name)
-    return 1.0 if llm_model.blank? || feature_name.blank?
+  class << self
+    def credit_cost_for(llm_model, feature_name)
+      return 1.0 if llm_model.blank? || feature_name.blank?
 
-    cost =
-      where(llm_model: llm_model, feature_name: feature_name).pick(:credits_per_token) ||
-        where(llm_model: llm_model, feature_name: "default").pick(:credits_per_token) || 1.0
+      cost =
+        where(llm_model: llm_model, feature_name: feature_name).pick(:credits_per_token) ||
+          where(llm_model: llm_model, feature_name: "default").pick(:credits_per_token) || 1.0
 
-    cost.to_f
-  end
+      cost.to_f
+    end
 
-  def self.calculate_credit_cost(llm_model, feature_name, total_tokens)
-    cost_per_token = credit_cost_for(llm_model, feature_name)
-    (total_tokens * cost_per_token).ceil
+    def calculate_credit_cost(llm_model, feature_name, total_tokens)
+      cost_per_token = credit_cost_for(llm_model, feature_name)
+      (total_tokens * cost_per_token).ceil
+    end
   end
 end
 

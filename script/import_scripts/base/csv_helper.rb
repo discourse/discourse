@@ -3,20 +3,20 @@
 module ImportScripts
   module CsvHelper
     class RowResolver
-      def load(row)
-        @row = row
+      class << self
+        def create(cols)
+          Class.new(RowResolver).new(cols)
+        end
       end
-
-      def self.create(cols)
-        Class.new(RowResolver).new(cols)
-      end
-
       def initialize(cols)
         cols.each_with_index do |col, idx|
           self
             .class
             .public_send(:define_method, col.downcase.gsub(/[\W]/, "_").squeeze("_")) { @row[idx] }
         end
+      end
+      def load(row)
+        @row = row
       end
     end
 

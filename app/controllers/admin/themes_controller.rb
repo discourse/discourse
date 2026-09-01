@@ -9,6 +9,12 @@ class Admin::ThemesController < Admin::AdminController
   before_action :ensure_admin
   before_action :ensure_theme_creation_is_allowed, only: %i[create import]
 
+  THEME_CONTENT_TYPES = %w[
+    application/gzip
+    application/x-gzip
+    application/x-zip-compressed
+    application/zip
+  ]
   def preview
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
@@ -40,13 +46,6 @@ class Admin::ThemesController < Admin::AdminController
     Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
     render json: { public_key: k.ssh_public_key }
   end
-
-  THEME_CONTENT_TYPES = %w[
-    application/gzip
-    application/x-gzip
-    application/x-zip-compressed
-    application/zip
-  ]
 
   def import
     @theme = nil
@@ -128,21 +127,6 @@ class Admin::ThemesController < Admin::AdminController
     render_json_error err.message
   end
 
-  def create_remote_theme_placeholder(remote, branch:, private_key:)
-    Theme.transaction do
-      remote_theme =
-        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
-
-      Theme.create!(
-        user_id: theme_user&.id || -1,
-        name: remote.gsub(/\.git\z/, "").split("/").last,
-        remote_theme: remote_theme,
-      )
-    end
-  end
-
-  private :create_remote_theme_placeholder
-
   def index
     @themes = Theme.strict_loading.include_relations.order(:name)
 
@@ -171,7 +155,6 @@ class Admin::ThemesController < Admin::AdminController
 
     respond_to { |format| format.json { render json: payload } }
   end
-
   def create
     Themes::Create.call(
       params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
@@ -189,7 +172,6 @@ class Admin::ThemesController < Admin::AdminController
       end
     end
   end
-
   def update
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
@@ -263,7 +245,6 @@ class Admin::ThemesController < Admin::AdminController
   rescue Theme::SettingsMigrationError => e
     render_json_error e.message
   end
-
   def destroy
     Themes::Destroy.call(service_params) do
       on_success { head :no_content }
@@ -273,7 +254,6 @@ class Admin::ThemesController < Admin::AdminController
       on_model_not_found(:theme) { raise Discourse::NotFound }
     end
   end
-
   def bulk_destroy
     Themes::BulkDestroy.call(service_params) do
       on_success { head :no_content }
@@ -283,14 +263,12 @@ class Admin::ThemesController < Admin::AdminController
       on_model_not_found(:themes) { raise Discourse::NotFound }
     end
   end
-
   def show
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     render_serialized(@theme, ThemeSerializer)
   end
-
   def export
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
@@ -305,7 +283,6 @@ class Admin::ThemesController < Admin::AdminController
   ensure
     exporter.cleanup!
   end
-
   def get_translations
     Themes::GetTranslations.call(service_params) do
       on_success { |translations:| render(json: success_json.merge(translations:)) }
@@ -316,7 +293,6 @@ class Admin::ThemesController < Admin::AdminController
       on_model_not_found(:theme) { raise Discourse::NotFound }
     end
   end
-
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
@@ -340,7 +316,6 @@ class Admin::ThemesController < Admin::AdminController
     updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
   end
-
   def update_theme_site_setting
     Themes::ThemeSiteSettingManager.call(
       params: {
@@ -364,10 +339,8 @@ class Admin::ThemesController < Admin::AdminController
       on_model_not_found(:theme) { raise Discourse::NotFound }
     end
   end
-
   def schema
   end
-
   def objects_setting_metadata
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
@@ -377,7 +350,6 @@ class Admin::ThemesController < Admin::AdminController
 
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
   end
-
   def update_source
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
@@ -434,6 +406,20 @@ class Admin::ThemesController < Admin::AdminController
       render_json_error e.message
     end
   end
+  def create_remote_theme_placeholder(remote, branch:, private_key:)
+    Theme.transaction do
+      remote_theme =
+        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
+
+      Theme.create!(
+        user_id: theme_user&.id || -1,
+        name: remote.gsub(/\.git\z/, "").split("/").last,
+        remote_theme: remote_theme,
+      )
+    end
+  end
+
+  private :create_remote_theme_placeholder
 
   private
 

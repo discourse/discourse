@@ -10,8 +10,10 @@ module Onebox
       always_https
       requires_iframe_origins "https://*.kaltura.com"
 
-      def self.matches_path(path)
-        path.match?(%r{^/id/[a-zA-Z0-9]+$})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/id/[a-zA-Z0-9]+$})
+        end
       end
 
       def preview_html

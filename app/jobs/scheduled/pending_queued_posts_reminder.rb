@@ -4,6 +4,11 @@ module Jobs
   class PendingQueuedPostsReminder < ::Jobs::Scheduled
     every 15.minutes
 
+    class << self
+      def last_notified_key
+        "last_notified_queued_post_id"
+      end
+    end
     def execute(args)
       return true if SiteSetting.notify_about_queued_posts_after.zero?
 
@@ -46,10 +51,6 @@ module Jobs
 
     def last_notified_id=(arg)
       Discourse.redis.set(self.class.last_notified_key, arg)
-    end
-
-    def self.last_notified_key
-      "last_notified_queued_post_id"
     end
   end
 end

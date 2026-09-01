@@ -49,39 +49,41 @@ module Migrations
         # @param show_on_user_card   [Boolean, nil]
         #
         # @return [void]
-        def self.create(
-          original_id:,
-          created_at: nil,
-          description:,
-          editable: nil,
-          external_name: nil,
-          external_type: nil,
-          field_type_enum:,
-          name:,
-          position: nil,
-          requirement: nil,
-          searchable: nil,
-          show_on_profile: nil,
-          show_on_signup: nil,
-          show_on_user_card: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            original_id,
-            Migrations::Database.format_datetime(created_at),
-            description,
-            Migrations::Database.format_boolean(editable),
-            external_name,
-            external_type,
-            field_type_enum,
-            name,
-            position,
-            requirement,
-            Migrations::Database.format_boolean(searchable),
-            Migrations::Database.format_boolean(show_on_profile),
-            Migrations::Database.format_boolean(show_on_signup),
-            Migrations::Database.format_boolean(show_on_user_card),
+        class << self
+          def create(
+            original_id:,
+            created_at: nil,
+            description:,
+            editable: nil,
+            external_name: nil,
+            external_type: nil,
+            field_type_enum:,
+            name:,
+            position: nil,
+            requirement: nil,
+            searchable: nil,
+            show_on_profile: nil,
+            show_on_signup: nil,
+            show_on_user_card: nil
           )
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              original_id,
+              Migrations::Database.format_datetime(created_at),
+              description,
+              Migrations::Database.format_boolean(editable),
+              external_name,
+              external_type,
+              field_type_enum,
+              name,
+              position,
+              requirement,
+              Migrations::Database.format_boolean(searchable),
+              Migrations::Database.format_boolean(show_on_profile),
+              Migrations::Database.format_boolean(show_on_signup),
+              Migrations::Database.format_boolean(show_on_user_card),
+            )
+          end
         end
       end
     end

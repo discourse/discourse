@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 
 class Admin::UserFieldsController < Admin::AdminController
-  def self.columns
-    columns = %i[
-      name
-      field_type
-      editable
-      description
-      requirement
-      show_on_profile
-      show_on_signup
-      show_on_user_card
-      position
-      searchable
-    ]
-    DiscoursePluginRegistry.apply_modifier(:admin_user_fields_columns, columns)
+  class << self
+    def columns
+      columns = %i[
+        name
+        field_type
+        editable
+        description
+        requirement
+        show_on_profile
+        show_on_signup
+        show_on_user_card
+        position
+        searchable
+      ]
+      DiscoursePluginRegistry.apply_modifier(:admin_user_fields_columns, columns)
+    end
   end
 
   def create

@@ -8,35 +8,37 @@ module DiscourseWorkflows
     DRAFT_URI = "https://json-schema.org/draft/2020-12/schema"
     MODES = %i[replace passthrough merge union].freeze
 
-    def self.entity(name, properties, description)
-      {
-        "$schema" => DRAFT_URI,
-        "type" => "object",
-        "properties" => {
-          name => {
-            "type" => "object",
-            "description" => description,
-            "properties" => properties,
+    class << self
+      def entity(name, properties, description)
+        {
+          "$schema" => DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            name => {
+              "type" => "object",
+              "description" => description,
+              "properties" => properties,
+            },
           },
-        },
-      }.freeze
-    end
+        }.freeze
+      end
 
-    def self.document(properties)
-      { "$schema" => DRAFT_URI, "type" => "object", "properties" => properties }.freeze
-    end
+      def document(properties)
+        { "$schema" => DRAFT_URI, "type" => "object", "properties" => properties }.freeze
+      end
 
-    def self.entity_extension(name, properties)
-      {
-        "$schema" => DRAFT_URI,
-        "type" => "object",
-        "properties" => {
-          name => {
-            "type" => "object",
-            "properties" => properties,
+      def entity_extension(name, properties)
+        {
+          "$schema" => DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            name => {
+              "type" => "object",
+              "properties" => properties,
+            },
           },
-        },
-      }.freeze
+        }.freeze
+      end
     end
 
     TOPIC_PROPERTIES = JSON.parse(<<~JSON).freeze
@@ -288,26 +290,28 @@ module DiscourseWorkflows
           }
         JSON
 
-    def self.group_membership_event(action)
-      document(
-        USER_SCHEMA
-          .fetch("properties")
-          .merge(BASIC_GROUP_SCHEMA.fetch("properties"))
-          .merge(
-            "membership" => {
-              "type" => "object",
-              "description" => "Group membership event metadata",
-              "properties" => {
-                "automatic" => {
-                  "type" => %w[boolean null],
-                },
-                "action" => {
-                  "const" => action,
+    class << self
+      def group_membership_event(action)
+        document(
+          USER_SCHEMA
+            .fetch("properties")
+            .merge(BASIC_GROUP_SCHEMA.fetch("properties"))
+            .merge(
+              "membership" => {
+                "type" => "object",
+                "description" => "Group membership event metadata",
+                "properties" => {
+                  "automatic" => {
+                    "type" => %w[boolean null],
+                  },
+                  "action" => {
+                    "const" => action,
+                  },
                 },
               },
-            },
-          ),
-      )
+            ),
+        )
+      end
     end
 
     USER_ADDED_TO_GROUP_SCHEMA = group_membership_event("added")

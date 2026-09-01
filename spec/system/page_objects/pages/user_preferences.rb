@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class UserPreferences < PageObjects::Pages::Base
+      INTERFACE_LINK_CSS_SELECTOR = ".user-nav__preferences-tracking"
+      ACCOUNT_LINK_CSS_SELECTOR = ".user-nav__preferences-account"
       def visit(user)
         page.visit("/u/#{user.username}/preferences")
         self
@@ -21,8 +23,6 @@ module PageObjects
         find(".horizontal-overflow-nav__scroll-left").click
       end
 
-      INTERFACE_LINK_CSS_SELECTOR = ".user-nav__preferences-tracking"
-
       def has_interface_link_visible?
         horizontal_secondary_link_visible?(INTERFACE_LINK_CSS_SELECTOR, visible: true)
       end
@@ -30,8 +30,6 @@ module PageObjects
       def has_interface_link_not_visible?
         horizontal_secondary_link_visible?(INTERFACE_LINK_CSS_SELECTOR, visible: false)
       end
-
-      ACCOUNT_LINK_CSS_SELECTOR = ".user-nav__preferences-account"
 
       def has_account_link_visible?
         horizontal_secondary_link_visible?(ACCOUNT_LINK_CSS_SELECTOR, visible: true)

@@ -43,31 +43,33 @@ module DiscourseAi
       MAX_TEXT_FILE_BYTES = 1 * 1024 * 1024
       MAX_RAW_DOCUMENT_BYTES = 10 * 1024 * 1024
 
-      def self.encode(upload, mime_type, attachment_type, skips)
-        path = fetch_path(upload)
+      class << self
+        def encode(upload, mime_type, attachment_type, skips)
+          path = fetch_path(upload)
 
-        if path.blank?
-          log_document_upload_skip(
-            skips,
-            upload,
-            attachment_type,
-            "file is not available in the store",
-          )
-          return
+          if path.blank?
+            log_document_upload_skip(
+              skips,
+              upload,
+              attachment_type,
+              "file is not available in the store",
+            )
+            return
+          end
+
+          extract_text_payload(upload, path, attachment_type, skips) ||
+            raw_document_payload(upload, path, mime_type, attachment_type, skips)
         end
 
-        extract_text_payload(upload, path, attachment_type, skips) ||
-          raw_document_payload(upload, path, mime_type, attachment_type, skips)
-      end
+        def attachment_type_for(extension, mime_type)
+          ext = extension.to_s.delete_prefix(".").downcase
+          ext = LlmModel::ATTACHMENT_TYPE_ALIASES.fetch(ext, ext)
+          return ext if SUPPORTED_ATTACHMENT_TYPES.include?(ext)
 
-      def self.attachment_type_for(extension, mime_type)
-        ext = extension.to_s.delete_prefix(".").downcase
-        ext = LlmModel::ATTACHMENT_TYPE_ALIASES.fetch(ext, ext)
-        return ext if SUPPORTED_ATTACHMENT_TYPES.include?(ext)
-
-        mime = mime_type.to_s.downcase
-        MIME_ATTACHMENT_TYPES.find { |fragment, _| mime.include?(fragment) }&.last ||
-          UNKNOWN_ATTACHMENT_TYPE
+          mime = mime_type.to_s.downcase
+          MIME_ATTACHMENT_TYPES.find { |fragment, _| mime.include?(fragment) }&.last ||
+            UNKNOWN_ATTACHMENT_TYPE
+        end
       end
 
       class << self

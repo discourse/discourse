@@ -6,15 +6,16 @@ require_relative "../github_access"
 module Onebox
   module Engine
     class GithubBlobOnebox
-      def self.git_regexp
-        %r{^https?://(www\.)?github\.com.*/blob/}
-      end
-
-      def self.onebox_name
-        "githubblob"
-      end
-
       include Onebox::Mixins::GitBlobOnebox
+      class << self
+        def git_regexp
+          %r{^https?://(www\.)?github\.com.*/blob/}
+        end
+
+        def onebox_name
+          "githubblob"
+        end
+      end
 
       def i18n
         {

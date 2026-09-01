@@ -8,8 +8,10 @@ module Migrations
   # name back to a user or group (`Importer::PlaceholderResolver`), so the two sides
   # can't disagree on what counts as the same name.
   module NameNormalizer
-    def self.normalize(name)
-      name.unicode_normalize.downcase
+    class << self
+      def normalize(name)
+        name.unicode_normalize.downcase
+      end
     end
   end
 end

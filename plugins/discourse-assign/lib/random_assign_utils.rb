@@ -5,8 +5,10 @@ require_relative "discourse_assign/assignment_permissions"
 class RandomAssignUtils
   attr_reader :context, :fields, :automation, :topic, :group
 
-  def self.automation_script!(...)
-    new(...).automation_script!
+  class << self
+    def automation_script!(...)
+      new(...).automation_script!
+    end
   end
 
   def initialize(context, fields, automation)

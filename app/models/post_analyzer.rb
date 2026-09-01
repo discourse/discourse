@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class PostAnalyzer
+  # from rack ... compat with ruby 2.2
+  class << self
+    def parse_uri_rfc2396(uri)
+      @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
+      @parser.parse(uri)
+    end
+  end
   def initialize(raw, topic_id)
     @raw = raw
     @topic_id = topic_id
@@ -86,12 +93,6 @@ class PostAnalyzer
     return [] if @raw.blank?
     return @raw_mentions if @raw_mentions.present?
     @raw_mentions = PrettyText.extract_mentions(cooked_stripped)
-  end
-
-  # from rack ... compat with ruby 2.2
-  def self.parse_uri_rfc2396(uri)
-    @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
-    @parser.parse(uri)
   end
 
   # Count how many hosts are linked in the post

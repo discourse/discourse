@@ -34,21 +34,17 @@ module Migrations
         # @return [void]
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        def self.create(
-          original_markdown: nil,
-          owner_id:,
-          owner_type:,
-          placeholder:,
-          upload_id: nil
-        )
-          Migrations::Database::IntermediateDB.insert(
-            SQL,
-            original_markdown,
-            owner_id,
-            owner_type,
-            placeholder,
-            upload_id,
-          )
+        class << self
+          def create(original_markdown: nil, owner_id:, owner_type:, placeholder:, upload_id: nil)
+            Migrations::Database::IntermediateDB.insert(
+              SQL,
+              original_markdown,
+              owner_id,
+              owner_type,
+              placeholder,
+              upload_id,
+            )
+          end
         end
       end
     end

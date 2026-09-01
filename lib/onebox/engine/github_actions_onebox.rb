@@ -16,16 +16,17 @@ module Onebox
       )
       always_https
 
+      class << self
+        def priority
+          90 # overlaps with GithubPullRequestOnebox
+        end
+      end
       def url
         if type == :actions_run
           "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/actions/runs/#{match[:run_id]}"
         elsif type == :pr_run
           "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/check-runs/#{match[:check_run_id]}"
         end
-      end
-
-      def self.priority
-        90 # overlaps with GithubPullRequestOnebox
       end
 
       private

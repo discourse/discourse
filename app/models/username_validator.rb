@@ -1,49 +1,8 @@
 # frozen_string_literal: true
 
 class UsernameValidator
-  # Public: Perform the validation of a field in a given object
-  # it adds the errors (if any) to the object that we're giving as parameter
-  #
-  # object - Object in which we're performing the validation
-  # field_name - name of the field that we're validating
-  #
-  # Example: UsernameValidator.perform_validation(user, 'name')
-  def self.perform_validation(object, field_name, opts = {})
-    validator = UsernameValidator.new(object.public_send(field_name), object:, **opts)
-    unless validator.valid_format?
-      validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
-    end
-  end
-
-  def initialize(username, skip_length_validation: false, object: nil)
-    @username = username&.unicode_normalize
-    @skip_length_validation = skip_length_validation
-    @object = object
-    @errors = []
-  end
-
-  attr_accessor :errors
-  attr_reader :username
-  attr_reader :object
-  attr_reader :skip_length_validation
-
-  def valid_format?
-    username_present?
-    username_length_min? if !skip_length_validation
-    username_length_max? if !skip_length_validation
-    username_char_valid?
-    username_char_allowed?
-    username_first_char_valid?
-    username_last_char_valid?
-    username_no_double_special?
-    username_does_not_end_with_confusing_suffix?
-    username_plugin_validation
-    errors.empty?
-  end
-
   CONFUSING_EXTENSIONS = /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)\z/i
   MAX_CHARS = 60
-
   ASCII_INVALID_CHAR_PATTERN = /[^\w.-]/
   # All Unicode characters except for alphabetic and numeric character, marks and underscores are invalid.
   # In addition to that, the following letters and nonspacing marks are invalid:
@@ -76,6 +35,60 @@ class UsernameValidator
   INVALID_LEADING_CHAR_PATTERN = /\A[^\p{Alnum}\p{M}_]+/
   INVALID_TRAILING_CHAR_PATTERN = /[^\p{Alnum}\p{M}]+\z/
   REPEATED_SPECIAL_CHAR_PATTERN = /[-_.]{2,}/
+  # Public: Perform the validation of a field in a given object
+  # it adds the errors (if any) to the object that we're giving as parameter
+  #
+  # object - Object in which we're performing the validation
+  # field_name - name of the field that we're validating
+  #
+  # Example: UsernameValidator.perform_validation(user, 'name')
+  class << self
+    def perform_validation(object, field_name, opts = {})
+      validator = UsernameValidator.new(object.public_send(field_name), object:, **opts)
+      unless validator.valid_format?
+        validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
+      end
+    end
+  end
+
+  class << self
+    def invalid_char_pattern
+      SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
+    end
+
+    def char_allowlist_exists?
+      SiteSetting.unicode_usernames && SiteSetting.allowed_unicode_username_characters.present?
+    end
+
+    def allowed_char?(c)
+      c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters_regex)
+    end
+  end
+  def initialize(username, skip_length_validation: false, object: nil)
+    @username = username&.unicode_normalize
+    @skip_length_validation = skip_length_validation
+    @object = object
+    @errors = []
+  end
+
+  attr_accessor :errors
+  attr_reader :username
+  attr_reader :object
+  attr_reader :skip_length_validation
+
+  def valid_format?
+    username_present?
+    username_length_min? if !skip_length_validation
+    username_length_max? if !skip_length_validation
+    username_char_valid?
+    username_char_allowed?
+    username_first_char_valid?
+    username_last_char_valid?
+    username_no_double_special?
+    username_does_not_end_with_confusing_suffix?
+    username_plugin_validation
+    errors.empty?
+  end
 
   private
 
@@ -159,17 +172,5 @@ class UsernameValidator
 
   def username_grapheme_clusters
     @username_grapheme_clusters ||= username.grapheme_clusters
-  end
-
-  def self.invalid_char_pattern
-    SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
-  end
-
-  def self.char_allowlist_exists?
-    SiteSetting.unicode_usernames && SiteSetting.allowed_unicode_username_characters.present?
-  end
-
-  def self.allowed_char?(c)
-    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters_regex)
   end
 end

@@ -27,8 +27,10 @@ module Migrations
         # @param value         [String, nil]
         #
         # @return [void]
-        def self.create(category_id:, name:, value: nil)
-          Migrations::Database::IntermediateDB.insert(SQL, category_id, name, value)
+        class << self
+          def create(category_id:, name:, value: nil)
+            Migrations::Database::IntermediateDB.insert(SQL, category_id, name, value)
+          end
         end
       end
     end

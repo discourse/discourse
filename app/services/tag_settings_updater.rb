@@ -3,14 +3,15 @@
 class TagSettingsUpdater
   attr_reader :tag, :errors
 
+  class << self
+    def update(tag, actor, params)
+      new(tag, actor).update(params)
+    end
+  end
   def initialize(tag, actor)
     @tag = tag
     @actor = actor
     @errors = []
-  end
-
-  def self.update(tag, actor, params)
-    new(tag, actor).update(params)
   end
 
   def update(params)

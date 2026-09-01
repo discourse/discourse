@@ -1,35 +1,50 @@
 # frozen_string_literal: true
 
 class CategoryList
+  include ActiveModel::Serialization
   CATEGORIES_PER_PAGE = 20
   SUBCATEGORIES_PER_CATEGORY = 5
 
   # Maximum number of categories before the optimized category page style is enforced
   MAX_UNOPTIMIZED_CATEGORIES = 1000
 
-  include ActiveModel::Serialization
-
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
   attr_accessor :categories, :uncategorized
 
-  def self.register_included_association(association)
-    @included_associations ||= []
-    @included_associations << association if !@included_associations.include?(association)
+  class << self
+    def register_included_association(association)
+      @included_associations ||= []
+      @included_associations << association if !@included_associations.include?(association)
+    end
+
+    def included_associations
+      [
+        :uploaded_background,
+        :uploaded_background_dark,
+        :uploaded_logo,
+        :uploaded_logo_dark,
+        :topic_only_relative_url,
+        subcategories: [:topic_only_relative_url],
+      ].concat(@included_associations || [])
+    end
   end
 
-  def self.included_associations
-    [
-      :uploaded_background,
-      :uploaded_background_dark,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url],
-    ].concat(@included_associations || [])
+  class << self
+    def order_categories(categories)
+      if SiteSetting.fixed_category_positions
+        categories.order(:position, :id)
+      else
+        categories
+          .left_outer_joins(:featured_topics)
+          .where("topics.category_id IS NULL OR topics.category_id IN (?)", categories.select(:id))
+          .group("categories.id")
+          .order("max(topics.bumped_at) DESC NULLS LAST")
+          .order("categories.id ASC")
+      end
+    end
   end
-
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options
@@ -56,19 +71,6 @@ class CategoryList
 
   def preload_key
     "categories_list"
-  end
-
-  def self.order_categories(categories)
-    if SiteSetting.fixed_category_positions
-      categories.order(:position, :id)
-    else
-      categories
-        .left_outer_joins(:featured_topics)
-        .where("topics.category_id IS NULL OR topics.category_id IN (?)", categories.select(:id))
-        .group("categories.id")
-        .order("max(topics.bumped_at) DESC NULLS LAST")
-        .order("categories.id ASC")
-    end
   end
 
   private

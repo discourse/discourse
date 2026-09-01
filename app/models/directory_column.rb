@@ -5,52 +5,58 @@ class DirectoryColumn < ActiveRecord::Base
 
   enum :type, { automatic: 0, user_field: 1, plugin: 2 }, scopes: false
 
-  def self.automatic_column_names
-    @automatic_column_names ||= %i[
-      likes_received
-      likes_given
-      topics_entered
-      topic_count
-      post_count
-      posts_read
-      days_visited
-    ]
-  end
+  class << self
+    def automatic_column_names
+      @automatic_column_names ||= %i[
+        likes_received
+        likes_given
+        topics_entered
+        topic_count
+        post_count
+        posts_read
+        days_visited
+      ]
+    end
 
-  def self.active_column_names
-    DirectoryColumn
-      .where(type: %i[automatic plugin])
-      .where(enabled: true)
-      .pluck(:name)
-      .map(&:to_sym)
+    def active_column_names
+      DirectoryColumn
+        .where(type: %i[automatic plugin])
+        .where(enabled: true)
+        .pluck(:name)
+        .map(&:to_sym)
+    end
   end
 
   @@plugin_directory_columns = []
 
-  def self.plugin_directory_columns
-    @@plugin_directory_columns
+  class << self
+    def plugin_directory_columns
+      @@plugin_directory_columns
+    end
   end
 
   belongs_to :user_field
 
-  def self.clear_plugin_directory_columns
-    @@plugin_directory_columns = []
-  end
+  class << self
+    def clear_plugin_directory_columns
+      @@plugin_directory_columns = []
+    end
 
-  def self.find_or_create_plugin_directory_column(attrs)
-    directory_column =
-      find_or_create_by(
-        name: attrs[:column_name],
-        icon: attrs[:icon],
-        type: DirectoryColumn.types[:plugin],
-      ) do |column|
-        column.position = DirectoryColumn.maximum("position") + 1
-        column.enabled = false
+    def find_or_create_plugin_directory_column(attrs)
+      directory_column =
+        find_or_create_by(
+          name: attrs[:column_name],
+          icon: attrs[:icon],
+          type: DirectoryColumn.types[:plugin],
+        ) do |column|
+          column.position = DirectoryColumn.maximum("position") + 1
+          column.enabled = false
+        end
+
+      if @@plugin_directory_columns.exclude?(directory_column.name)
+        @@plugin_directory_columns << directory_column.name
+        DirectoryItem.add_plugin_query(attrs[:query])
       end
-
-    if @@plugin_directory_columns.exclude?(directory_column.name)
-      @@plugin_directory_columns << directory_column.name
-      DirectoryItem.add_plugin_query(attrs[:query])
     end
   end
 end

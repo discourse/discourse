@@ -40,6 +40,31 @@ class NestedTopicsController < ApplicationController
   after_action :track_visit, only: %i[show context]
   after_action :allow_embed_mode, only: %i[show context]
 
+  TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
+  # Screen-tracking only advances last_read for posts the viewport renders,
+  # so collapsed/hidden replies leave a nested topic stuck unread in the
+  # sidebar. Treat the visit itself as catching up.
+  class << self
+    def defer_mark_caught_up(topic_id, user_id)
+      Scheduler::Defer.later "Nested Topic Catch Up" do
+        user = User.find_by(id: user_id)
+        topic = Topic.find_by(id: topic_id)
+        next if user.blank? || topic.blank?
+        next unless topic.nested_view?
+
+        highest =
+          if user.whisperer?
+            [topic.highest_staff_post_number.to_i, topic.highest_post_number.to_i].max
+          else
+            topic.highest_post_number.to_i
+          end
+        next if highest < 1
+
+        TopicUser.update_last_read(user, topic_id, highest, 0, 0)
+        Notification.mark_posts_read(user, topic_id, (1..highest).to_a)
+      end
+    end
+  end
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: redirects browser requests to the canonical topic route.
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
@@ -137,8 +162,6 @@ class NestedTopicsController < ApplicationController
   end
 
   private
-
-  TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
 
   def activity_posts
     post_types = [Post.types[:small_action]]
@@ -259,29 +282,6 @@ class NestedTopicsController < ApplicationController
     end
 
     TopicsController.defer_topic_view(topic_id, ip, user_id)
-  end
-
-  # Screen-tracking only advances last_read for posts the viewport renders,
-  # so collapsed/hidden replies leave a nested topic stuck unread in the
-  # sidebar. Treat the visit itself as catching up.
-  def self.defer_mark_caught_up(topic_id, user_id)
-    Scheduler::Defer.later "Nested Topic Catch Up" do
-      user = User.find_by(id: user_id)
-      topic = Topic.find_by(id: topic_id)
-      next if user.blank? || topic.blank?
-      next unless topic.nested_view?
-
-      highest =
-        if user.whisperer?
-          [topic.highest_staff_post_number.to_i, topic.highest_post_number.to_i].max
-        else
-          topic.highest_post_number.to_i
-        end
-      next if highest < 1
-
-      TopicUser.update_last_read(user, topic_id, highest, 0, 0)
-      Notification.mark_posts_read(user, topic_id, (1..highest).to_a)
-    end
   end
 
   def should_track_visit?

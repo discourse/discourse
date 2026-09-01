@@ -25,12 +25,14 @@ RSpec.describe AccessControlList::EvaluateModification do
 
       self.table_name = "posts"
 
-      def self.mandatory_acl
-        [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
-      end
+      class << self
+        def mandatory_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+        end
 
-      def self.loss_warning_permissions
-        []
+        def loss_warning_permissions
+          []
+        end
       end
     end
 

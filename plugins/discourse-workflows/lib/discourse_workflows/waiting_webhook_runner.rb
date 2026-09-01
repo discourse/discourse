@@ -4,21 +4,23 @@ module DiscourseWorkflows
   class WaitingWebhookRunner
     Response = Struct.new(:status, :body, keyword_init: true)
 
-    def self.call(**kwargs)
-      new(**kwargs).call
-    end
+    class << self
+      def call(**kwargs)
+        new(**kwargs).call
+      end
 
-    def self.waiting_for?(execution, node_type:)
-      return false unless execution&.waiting?
+      def waiting_for?(execution, node_type:)
+        return false unless execution&.waiting?
 
-      node = execution.find_waiting_node
-      return false if node.blank?
+        node = execution.find_waiting_node
+        return false if node.blank?
 
-      node_class =
-        Registry.find_node_type(NodeData.read(node, "type"), version: NodeData.type_version(node))
-      return false unless node_class
+        node_class =
+          Registry.find_node_type(NodeData.read(node, "type"), version: NodeData.type_version(node))
+        return false unless node_class
 
-      node_class.waiting_webhook_for(http_method: "GET", path: "", node_type: node_type).present?
+        node_class.waiting_webhook_for(http_method: "GET", path: "", node_type: node_type).present?
+      end
     end
 
     def initialize(

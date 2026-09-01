@@ -6,37 +6,75 @@ module DiscourseAi
       class GithubDiff < Tool
         LARGE_OBJECT_THRESHOLD = 30_000
 
-        def self.signature
-          {
-            name: name,
-            description: "Retrieves the diff for a GitHub pull request or commit",
-            parameters: [
-              {
-                name: "repo",
-                description: "The repository name in the format 'owner/repo'",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "pull_id",
-                description: "The pull request number (use this OR sha, not both)",
-                type: "integer",
-                required: false,
-              },
-              {
-                name: "sha",
-                description: "The commit SHA (use this OR pull_id, not both)",
-                type: "string",
-                required: false,
-              },
-            ],
-          }
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Retrieves the diff for a GitHub pull request or commit",
+              parameters: [
+                {
+                  name: "repo",
+                  description: "The repository name in the format 'owner/repo'",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "pull_id",
+                  description: "The pull request number (use this OR sha, not both)",
+                  type: "integer",
+                  required: false,
+                },
+                {
+                  name: "sha",
+                  description: "The commit SHA (use this OR pull_id, not both)",
+                  type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
+
+          def name
+            "github_diff"
+          end
         end
 
-        def self.name
-          "github_diff"
-        end
+        class << self
+          def sort_and_shorten_diff(diff, threshold: LARGE_OBJECT_THRESHOLD)
+            file_start_regex = /^diff --git.*/
 
+            prev_start = -1
+            prev_match = nil
+
+            split = []
+
+            diff.scan(file_start_regex) do |match|
+              match_start = $~.offset(0)[0]
+
+              if prev_start != -1
+                full_diff = diff[prev_start...match_start]
+                split << [prev_match, full_diff]
+              end
+
+              prev_match = match
+              prev_start = match_start
+            end
+
+            split << [prev_match, diff[prev_start..-1]] if prev_match
+
+            split.sort! { |x, y| x[1].length <=> y[1].length }
+
+            split
+              .map do |x, y|
+                if y.length < threshold
+                  y
+                else
+                  "#{x}\nRedacted, Larger than #{threshold} chars"
+                end
+              end
+              .join("\n")
+          end
+        end
         def repo
           parameters[:repo]
         end
@@ -66,41 +104,6 @@ module DiscourseAi
           else
             { repo: repo, ref: pull_id, url: url }
           end
-        end
-
-        def self.sort_and_shorten_diff(diff, threshold: LARGE_OBJECT_THRESHOLD)
-          file_start_regex = /^diff --git.*/
-
-          prev_start = -1
-          prev_match = nil
-
-          split = []
-
-          diff.scan(file_start_regex) do |match|
-            match_start = $~.offset(0)[0]
-
-            if prev_start != -1
-              full_diff = diff[prev_start...match_start]
-              split << [prev_match, full_diff]
-            end
-
-            prev_match = match
-            prev_start = match_start
-          end
-
-          split << [prev_match, diff[prev_start..-1]] if prev_match
-
-          split.sort! { |x, y| x[1].length <=> y[1].length }
-
-          split
-            .map do |x, y|
-              if y.length < threshold
-                y
-              else
-                "#{x}\nRedacted, Larger than #{threshold} chars"
-              end
-            end
-            .join("\n")
         end
 
         private

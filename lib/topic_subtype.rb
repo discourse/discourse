@@ -5,6 +5,41 @@ class TopicSubtype
 
   attr_accessor :id, :options
 
+  class << self
+    def list
+      return [] if @archetypes.blank?
+      @archetypes.values
+    end
+
+    def user_to_user
+      "user_to_user"
+    end
+
+    def system_message
+      "system_message"
+    end
+
+    def moderator_warning
+      "moderator_warning"
+    end
+
+    def notify_moderators
+      "notify_moderators"
+    end
+
+    def notify_user
+      "notify_user"
+    end
+
+    def pending_users_reminder
+      "pending_users"
+    end
+
+    def register(name, options = {})
+      @subtypes ||= {}
+      @subtypes[name] = TopicSubtype.new(name, options)
+    end
+  end
   def initialize(id, options)
     @id = id
     @options = options
@@ -12,40 +47,6 @@ class TopicSubtype
 
   def attributes
     { "id" => @id, "options" => @options }
-  end
-
-  def self.list
-    return [] if @archetypes.blank?
-    @archetypes.values
-  end
-
-  def self.user_to_user
-    "user_to_user"
-  end
-
-  def self.system_message
-    "system_message"
-  end
-
-  def self.moderator_warning
-    "moderator_warning"
-  end
-
-  def self.notify_moderators
-    "notify_moderators"
-  end
-
-  def self.notify_user
-    "notify_user"
-  end
-
-  def self.pending_users_reminder
-    "pending_users"
-  end
-
-  def self.register(name, options = {})
-    @subtypes ||= {}
-    @subtypes[name] = TopicSubtype.new(name, options)
   end
 
   register "user_to_user"

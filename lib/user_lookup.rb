@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
 class UserLookup
-  def self.lookup_columns
-    @user_lookup_columns ||= %i[
-      id
-      username
-      name
-      uploaded_avatar_id
-      primary_group_id
-      flair_group_id
-      admin
-      moderator
-      trust_level
-    ]
-  end
+  class << self
+    def lookup_columns
+      @user_lookup_columns ||= %i[
+        id
+        username
+        name
+        uploaded_avatar_id
+        primary_group_id
+        flair_group_id
+        admin
+        moderator
+        trust_level
+      ]
+    end
 
-  def self.group_lookup_columns
-    @group_lookup_columns ||= %i[id name flair_icon flair_upload_id flair_bg_color flair_color]
+    def group_lookup_columns
+      @group_lookup_columns ||= %i[id name flair_icon flair_upload_id flair_bg_color flair_color]
+    end
   end
 
   def initialize(user_ids = [])

@@ -3,8 +3,10 @@
 module DiscourseAi
   module Agents
     class DiscourseAdminAssistant < Agent
-      def self.rag_document_sources
-        [{ url: "https://www.discourse.org/pricing", refresh_interval_hours: 24 }]
+      class << self
+        def rag_document_sources
+          [{ url: "https://www.discourse.org/pricing", refresh_interval_hours: 24 }]
+        end
       end
 
       def thinking_effort

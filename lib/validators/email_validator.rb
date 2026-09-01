@@ -1,6 +1,36 @@
 # frozen_string_literal: true
 
 class EmailValidator < ActiveModel::EachValidator
+  class << self
+    def allowed?(email)
+      if (setting = SiteSetting.allowed_email_domains).present?
+        return email_in_restriction_setting?(setting, email) || is_developer?(email)
+      elsif (setting = SiteSetting.blocked_email_domains).present?
+        return !(email_in_restriction_setting?(setting, email) && !is_developer?(email))
+      end
+
+      true
+    end
+
+    def can_auto_approve_user?(email)
+      if (setting = SiteSetting.auto_approve_email_domains).present?
+        return !!(EmailValidator.allowed?(email) && email_in_restriction_setting?(setting, email))
+      end
+
+      false
+    end
+
+    def email_in_restriction_setting?(setting, value)
+      domains = setting.gsub(".", '\.')
+      regexp = Regexp.new("@(.+\\.)?(#{domains})$", true)
+      value =~ regexp
+    end
+
+    def is_developer?(value)
+      Rails.configuration.respond_to?(:developer_emails) &&
+        Rails.configuration.developer_emails.include?(value)
+    end
+  end
   def validate_each(record, attribute, value)
     if value.blank?
       record.errors.add(attribute, I18n.t(:"user.email.blank"))
@@ -22,34 +52,5 @@ class EmailValidator < ActiveModel::EachValidator
     if !invalid && ScreenedEmail.should_block?(value)
       record.errors.add(attribute, I18n.t(:"user.email.blocked"))
     end
-  end
-
-  def self.allowed?(email)
-    if (setting = SiteSetting.allowed_email_domains).present?
-      return email_in_restriction_setting?(setting, email) || is_developer?(email)
-    elsif (setting = SiteSetting.blocked_email_domains).present?
-      return !(email_in_restriction_setting?(setting, email) && !is_developer?(email))
-    end
-
-    true
-  end
-
-  def self.can_auto_approve_user?(email)
-    if (setting = SiteSetting.auto_approve_email_domains).present?
-      return !!(EmailValidator.allowed?(email) && email_in_restriction_setting?(setting, email))
-    end
-
-    false
-  end
-
-  def self.email_in_restriction_setting?(setting, value)
-    domains = setting.gsub(".", '\.')
-    regexp = Regexp.new("@(.+\\.)?(#{domains})$", true)
-    value =~ regexp
-  end
-
-  def self.is_developer?(value)
-    Rails.configuration.respond_to?(:developer_emails) &&
-      Rails.configuration.developer_emails.include?(value)
   end
 end

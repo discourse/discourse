@@ -7,6 +7,12 @@ class DiscoursePluginRegistry
 
   @@register_names = Set.new
 
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
+  VENDORED_CORE_PRETTY_TEXT_MAP = {
+    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
+    "moment-timezone.js" =>
+      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+  }
   # Plugins often need to be able to register additional handlers, data, or
   # classes that will be used by core classes. This should be used if you
   # need to control which type the registry is, and if it doesn't need to
@@ -17,42 +23,46 @@ class DiscoursePluginRegistry
   #   - Defines singleton method to access the register
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on registry.reset!
-  def self.define_register(register_name, type)
-    return if respond_to?(register_name)
-    @@register_names << register_name
+  class << self
+    def define_register(register_name, type)
+      return if respond_to?(register_name)
+      @@register_names << register_name
 
-    define_singleton_method(register_name) do
-      instance_variable_get(:"@#{register_name}") ||
-        instance_variable_set(:"@#{register_name}", type.new)
+      define_singleton_method(register_name) do
+        instance_variable_get(:"@#{register_name}") ||
+          instance_variable_set(:"@#{register_name}", type.new)
+      end
+
+      define_method(register_name) { self.class.public_send(register_name) }
     end
 
-    define_method(register_name) { self.class.public_send(register_name) }
-  end
+    # Plugins often need to add values to a list, and we need to filter those
+    # lists at runtime to ignore values from disabled plugins. Unlike define_register,
+    # the type of the register cannot be defined, and is always Array.
+    #
+    # Create a new register (see `define_register`) with some additions:
+    #   - Register is created in a class variable using the specified name/type
+    #   - Defines singleton method to access the register
+    #   - Defines instance method as a shortcut to the singleton method
+    #   - Automatically deletes the register on registry.reset!
+    def define_filtered_register(register_name)
+      return if respond_to?(register_name)
+      define_register(register_name, Array)
 
-  # Plugins often need to add values to a list, and we need to filter those
-  # lists at runtime to ignore values from disabled plugins. Unlike define_register,
-  # the type of the register cannot be defined, and is always Array.
-  #
-  # Create a new register (see `define_register`) with some additions:
-  #   - Register is created in a class variable using the specified name/type
-  #   - Defines singleton method to access the register
-  #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on registry.reset!
-  def self.define_filtered_register(register_name)
-    return if respond_to?(register_name)
-    define_register(register_name, Array)
+      singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
 
-    singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
+      define_singleton_method(register_name) do
+        public_send(:"_raw_#{register_name}")
+          .filter_map { |h| h[:value] if h[:plugin].enabled? }
+          .uniq
+      end
 
-    define_singleton_method(register_name) do
-      public_send(:"_raw_#{register_name}").filter_map { |h| h[:value] if h[:plugin].enabled? }.uniq
+      define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
+        public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
+      end
+
+      yield(self) if block_given?
     end
-
-    define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
-      public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
-    end
-
-    yield(self) if block_given?
   end
 
   define_register :javascripts, Set
@@ -160,25 +170,164 @@ class DiscoursePluginRegistry
     end
   end
 
-  def self.register_auth_provider(auth_provider)
-    auth_providers << auth_provider
+  class << self
+    def register_auth_provider(auth_provider)
+      auth_providers << auth_provider
+    end
+
+    def register_mail_poller(mail_poller)
+      mail_pollers << mail_poller
+    end
   end
 
-  def self.register_mail_poller(mail_poller)
-    mail_pollers << mail_poller
-  end
+  class << self
+    def register_service_worker(filename, options = {})
+      service_workers << filename
+    end
 
+    def register_svg_icon(icon)
+      svg_icons << icon.strip
+    end
+  end
+  class << self
+    def register_locale(locale, options = {})
+      locales[locale] = options
+    end
+
+    def unregister_locale(locale)
+      raise "unregister_locale can only be used in tests" if !Rails.env.test?
+
+      locales.delete(locale)
+    end
+  end
+  class << self
+    def register_asset(asset, opts = nil, plugin_directory_name = nil)
+      if asset =~ JS_REGEX
+        if opts == :vendored_pretty_text
+          vendored_pretty_text << asset
+        elsif opts == :vendored_core_pretty_text
+          vendored_core_pretty_text << asset
+        else
+          javascripts << asset
+        end
+      elsif asset =~ /\.css$|\.scss\z/
+        if opts == :mobile
+          mobile_stylesheets[plugin_directory_name] ||= Set.new
+          mobile_stylesheets[plugin_directory_name] << asset
+        elsif opts == :desktop
+          desktop_stylesheets[plugin_directory_name] ||= Set.new
+          desktop_stylesheets[plugin_directory_name] << asset
+        elsif opts == :admin
+          admin_stylesheets[plugin_directory_name] ||= Set.new
+          admin_stylesheets[plugin_directory_name] << asset
+        elsif opts == :color_definitions
+          color_definition_stylesheets[plugin_directory_name] = asset
+        else
+          stylesheets[plugin_directory_name] ||= Set.new
+          stylesheets[plugin_directory_name] << asset
+        end
+      end
+    end
+
+    def stylesheets_exists?(plugin_directory_name, target = nil)
+      register = target.in?(STYLESHEET_TARGETS) ? "#{target}_stylesheets" : "stylesheets"
+      public_send(register)[plugin_directory_name].present?
+    end
+
+    def register_seed_data(key, value)
+      seed_data[key] = value
+    end
+
+    def register_seed_path_builder(&block)
+      seed_path_builders << block
+    end
+
+    def register_html_builder(name, &block)
+      html_builders[name] ||= []
+      html_builders[name] << block
+    end
+
+    def build_html(name, ctx = nil, **kwargs)
+      builders = html_builders[name] || []
+      builders.map { |b| b.call(ctx, **kwargs) }.join("\n").html_safe
+    end
+
+    def seed_paths
+      result = SeedFu.fixture_paths.dup
+      seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
+      result.uniq
+    end
+
+    def register_seedfu_filter(filter = nil)
+      seedfu_filter << filter
+    end
+  end
+  class << self
+    def core_asset_for_name(name)
+      asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
+      raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
+      asset
+    end
+
+    def clear_modifiers!
+      if Rails.env.test? && GlobalSetting.load_plugins?
+        raise "Clearing modifiers during a plugin spec run will affect all future specs. Use unregister_modifier instead."
+      end
+      @modifiers = nil
+    end
+
+    def register_modifier(plugin_instance, name, &blk)
+      @modifiers ||= {}
+      modifiers = @modifiers[name] ||= []
+      modifiers << [plugin_instance, blk]
+    end
+
+    def unregister_modifier(plugin_instance, name, &blk)
+      raise "unregister_modifier can only be used in tests" if !Rails.env.test?
+
+      modifiers_for_name = @modifiers&.[](name)
+      raise "no #{name} modifiers found" if !modifiers_for_name
+
+      i = modifiers_for_name.find_index { |info| info == [plugin_instance, blk] }
+      raise "no modifier found for that plugin/block combination" if !i
+
+      modifiers_for_name.delete_at(i)
+    end
+
+    def apply_modifier(name, arg, *more_args)
+      return arg if !@modifiers
+
+      registered_modifiers = @modifiers[name]
+      return arg if !registered_modifiers
+
+      # iterate as fast as possible to minimize cost (avoiding each)
+      # also erases one stack frame
+      length = registered_modifiers.length
+      index = 0
+      while index < length
+        plugin_instance, block = registered_modifiers[index]
+        arg = block.call(arg, *more_args) if plugin_instance.enabled?
+
+        index += 1
+      end
+
+      arg
+    end
+
+    def reset!
+      @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
+      clear_modifiers!
+    end
+
+    def reset_register!(register_name)
+      found_register = @@register_names.detect { |name| name == register_name }
+
+      instance_variable_set(:"@#{found_register}", nil) if found_register
+    end
+  end
   def register_js(filename, options = {})
     # If we have a server side option, add that too.
     self.class.javascripts << filename
-  end
-
-  def self.register_service_worker(filename, options = {})
-    service_workers << filename
-  end
-
-  def self.register_svg_icon(icon)
-    svg_icons << icon.strip
   end
 
   def register_css(filename, plugin_directory_name)
@@ -186,148 +335,7 @@ class DiscoursePluginRegistry
     self.class.stylesheets[plugin_directory_name] << filename
   end
 
-  def self.register_locale(locale, options = {})
-    locales[locale] = options
-  end
-
-  def self.unregister_locale(locale)
-    raise "unregister_locale can only be used in tests" if !Rails.env.test?
-
-    locales.delete(locale)
-  end
-
   def register_archetype(name, options = {})
     Archetype.register(name, options)
-  end
-
-  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
-
-  def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
-    if asset =~ JS_REGEX
-      if opts == :vendored_pretty_text
-        vendored_pretty_text << asset
-      elsif opts == :vendored_core_pretty_text
-        vendored_core_pretty_text << asset
-      else
-        javascripts << asset
-      end
-    elsif asset =~ /\.css$|\.scss\z/
-      if opts == :mobile
-        mobile_stylesheets[plugin_directory_name] ||= Set.new
-        mobile_stylesheets[plugin_directory_name] << asset
-      elsif opts == :desktop
-        desktop_stylesheets[plugin_directory_name] ||= Set.new
-        desktop_stylesheets[plugin_directory_name] << asset
-      elsif opts == :admin
-        admin_stylesheets[plugin_directory_name] ||= Set.new
-        admin_stylesheets[plugin_directory_name] << asset
-      elsif opts == :color_definitions
-        color_definition_stylesheets[plugin_directory_name] = asset
-      else
-        stylesheets[plugin_directory_name] ||= Set.new
-        stylesheets[plugin_directory_name] << asset
-      end
-    end
-  end
-
-  def self.stylesheets_exists?(plugin_directory_name, target = nil)
-    register = target.in?(STYLESHEET_TARGETS) ? "#{target}_stylesheets" : "stylesheets"
-    public_send(register)[plugin_directory_name].present?
-  end
-
-  def self.register_seed_data(key, value)
-    seed_data[key] = value
-  end
-
-  def self.register_seed_path_builder(&block)
-    seed_path_builders << block
-  end
-
-  def self.register_html_builder(name, &block)
-    html_builders[name] ||= []
-    html_builders[name] << block
-  end
-
-  def self.build_html(name, ctx = nil, **kwargs)
-    builders = html_builders[name] || []
-    builders.map { |b| b.call(ctx, **kwargs) }.join("\n").html_safe
-  end
-
-  def self.seed_paths
-    result = SeedFu.fixture_paths.dup
-    seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
-    result.uniq
-  end
-
-  def self.register_seedfu_filter(filter = nil)
-    seedfu_filter << filter
-  end
-
-  VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
-    "moment-timezone.js" =>
-      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
-  }
-
-  def self.core_asset_for_name(name)
-    asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
-    raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
-    asset
-  end
-
-  def self.clear_modifiers!
-    if Rails.env.test? && GlobalSetting.load_plugins?
-      raise "Clearing modifiers during a plugin spec run will affect all future specs. Use unregister_modifier instead."
-    end
-    @modifiers = nil
-  end
-
-  def self.register_modifier(plugin_instance, name, &blk)
-    @modifiers ||= {}
-    modifiers = @modifiers[name] ||= []
-    modifiers << [plugin_instance, blk]
-  end
-
-  def self.unregister_modifier(plugin_instance, name, &blk)
-    raise "unregister_modifier can only be used in tests" if !Rails.env.test?
-
-    modifiers_for_name = @modifiers&.[](name)
-    raise "no #{name} modifiers found" if !modifiers_for_name
-
-    i = modifiers_for_name.find_index { |info| info == [plugin_instance, blk] }
-    raise "no modifier found for that plugin/block combination" if !i
-
-    modifiers_for_name.delete_at(i)
-  end
-
-  def self.apply_modifier(name, arg, *more_args)
-    return arg if !@modifiers
-
-    registered_modifiers = @modifiers[name]
-    return arg if !registered_modifiers
-
-    # iterate as fast as possible to minimize cost (avoiding each)
-    # also erases one stack frame
-    length = registered_modifiers.length
-    index = 0
-    while index < length
-      plugin_instance, block = registered_modifiers[index]
-      arg = block.call(arg, *more_args) if plugin_instance.enabled?
-
-      index += 1
-    end
-
-    arg
-  end
-
-  def self.reset!
-    @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
-    clear_modifiers!
-  end
-
-  def self.reset_register!(register_name)
-    found_register = @@register_names.detect { |name| name == register_name }
-
-    instance_variable_set(:"@#{found_register}", nil) if found_register
   end
 end

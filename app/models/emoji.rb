@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Emoji
+  include ActiveModel::SerializerSupport
   # update this to clear the cache
   EMOJI_VERSION = "15"
 
@@ -11,10 +12,438 @@ class Emoji
 
   DEFAULT_GROUP = "default"
 
-  include ActiveModel::SerializerSupport
-
   attr_accessor :name, :url, :tonable, :group, :created_by
 
+  class << self
+    def global_emoji_cache
+      @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
+    end
+
+    def site_emoji_cache
+      @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
+    end
+
+    def all
+      Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
+    end
+
+    def standard
+      Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
+    end
+
+    def allowed
+      Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
+    end
+
+    def denied
+      Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
+    end
+
+    def grouped
+      groups = allowed.group_by(&:group)
+      pinned = SiteSetting.emoji_picker_pinned_groups_map
+      return groups if pinned.empty?
+
+      groups.sort_by { |key, _| pinned.index(key) || pinned.length }.to_h
+    end
+
+    def aliases
+      aliases_db
+    end
+
+    def search_aliases
+      search_aliases_db
+    end
+
+    def locale_search_aliases(locale)
+      locale = locale.to_s
+      @locale_search_aliases ||= {}
+      @locale_search_aliases[locale] ||= load_locale_search_aliases(locale)
+    end
+
+    def translations
+      Discourse.cache.fetch(cache_key("translations_emojis")) { load_translations }
+    end
+
+    def custom
+      Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
+    end
+
+    def tonable_emojis
+      tonable_emojis_db
+    end
+
+    def normalize_name(name)
+      match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
+      [match[1], match[2]&.to_i]
+    end
+  end
+  class << self
+    def custom?(name)
+      name, _ = normalize_name(name)
+      Emoji.custom.detect { |e| e.name == name }.present?
+    end
+
+    def exists?(name)
+      Emoji[name].present?
+    end
+
+    def [](name)
+      name, tone = normalize_name(name)
+      is_toned = tone.present?
+      find_emoji(name, is_toned) || find_emoji(resolve_alias(name), is_toned)
+    end
+
+    def find_emoji(name, is_toned)
+      found_emoji = nil
+
+      [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
+        found_emoji =
+          cache.defer_get_set(name) do
+            [
+              Emoji
+                .public_send(list_key)
+                .detect { |e| e.name == name && (!is_toned || (is_toned && e.tonable)) },
+            ]
+          end[
+            0
+          ]
+
+        break if found_emoji
+      end
+
+      found_emoji
+    end
+  end
+  class << self
+    def create_from_db_item(emoji)
+      name = emoji["name"]
+      return unless group = groups[name]
+      filename = emoji["filename"] || name
+
+      Emoji.new.tap do |e|
+        e.name = name
+        e.tonable = Emoji.tonable_emojis.include?(name)
+        e.url = Emoji.url_for(filename)
+        e.group = group
+      end
+    end
+
+    def url_for(name)
+      name, tone = normalize_name(name)
+      name = "#{name}/#{tone}" if tone
+      if SiteSetting.external_emoji_url.blank?
+        "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+      else
+        "#{SiteSetting.external_emoji_url}/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+      end
+    end
+
+    def cache_key(name)
+      "#{name}#{cache_postfix}"
+    end
+
+    def cache_postfix
+      ":v#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
+    end
+
+    def clear_cache
+      %w[custom standard translations allowed denied all].each do |key|
+        Discourse.cache.delete(cache_key("#{key}_emojis"))
+      end
+      global_emoji_cache.clear
+      site_emoji_cache.clear
+      @locale_search_aliases = nil
+    end
+
+    def groups_file
+      @groups_file ||= DiscourseEmojis.paths[:groups]
+    end
+
+    def groups
+      @groups ||=
+        begin
+          groups = {}
+
+          File
+            .open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+            .each { |group| group["icons"].each { |icon| groups[icon["name"]] = group["name"] } }
+
+          groups
+        end
+    end
+
+    def emojis_db_file
+      @emojis_db_file ||= DiscourseEmojis.paths[:emojis]
+    end
+
+    def emojis_db
+      @emojis_db ||= Emoji.parse_emoji_file(emojis_db_file)
+    end
+
+    def translations_db_file
+      @translations_db_file ||= DiscourseEmojis.paths[:translations]
+    end
+
+    def translations_db
+      @translations_db ||= Emoji.parse_emoji_file(translations_db_file)
+    end
+
+    def tonable_emojis_db_file
+      @tonable_emojis_db_file ||= DiscourseEmojis.paths[:tonable_emojis]
+    end
+
+    def tonable_emojis_db
+      @tonable_emojis_db ||= Emoji.parse_emoji_file(tonable_emojis_db_file)
+    end
+
+    def aliases_db_file
+      @aliases_db_file ||= DiscourseEmojis.paths[:aliases]
+    end
+
+    def aliases_db
+      @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
+    end
+
+    def aliases_values
+      @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
+    end
+
+    def reverse_aliases
+      @reverse_aliases ||=
+        aliases_db.each_with_object({}) do |(original, alias_names), map|
+          alias_names.each { |alias_name| map[alias_name] = original }
+        end
+    end
+
+    def resolve_alias(name)
+      reverse_aliases[name] || name
+    end
+
+    def search_aliases_db_file
+      @search_aliases_db_file ||= DiscourseEmojis.paths[:search_aliases]
+    end
+
+    def search_aliases_db
+      @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
+    end
+
+    def locale_search_aliases_dir
+      @locale_search_aliases_dir ||= DiscourseEmojis.paths[:locale_search_aliases]
+    end
+
+    def load_locale_search_aliases(locale)
+      dir = locale_search_aliases_dir
+      return nil if dir.nil?
+      file = File.join(dir, "#{locale}.json")
+      return nil unless File.exist?(file)
+      Emoji.parse_emoji_file(file)
+    end
+  end
+  class << self
+    def load_standard
+      emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
+    end
+
+    def load_allowed
+      denied_emojis = denied
+      all_emojis = load_standard + load_custom
+
+      if denied_emojis.present?
+        all_emojis.reject { |e| denied_emojis.include?(e.name) }
+      else
+        all_emojis
+      end
+    end
+
+    def load_denied
+      if SiteSetting.emoji_deny_list.present?
+        denied_emoji = SiteSetting.emoji_deny_list.split("|")
+        if denied_emoji.size > 0
+          denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
+        end
+      end
+    end
+
+    def load_custom
+      result = []
+      if !GlobalSetting.skip_db?
+        CustomEmoji
+          .includes(:upload)
+          .order(:name)
+          .each do |emoji|
+            result << Emoji.new.tap do |e|
+              e.name = emoji.name
+              e.url = emoji.upload&.url
+              e.group = emoji.group || DEFAULT_GROUP
+              e.created_by = User.where(id: emoji.user_id).pick(:username)
+            end
+          end
+      end
+
+      Plugin::CustomEmoji.emojis.each do |group, emojis|
+        emojis.each do |name, url|
+          result << Emoji.new.tap do |e|
+            e.name = name
+            url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
+            e.url = url
+            e.group = group || DEFAULT_GROUP
+          end
+        end
+      end
+
+      result
+    end
+
+    def load_translations
+      translations_db
+    end
+
+    def base_directory
+      "public#{base_url}"
+    end
+
+    def base_url
+      db = RailsMultisite::ConnectionManagement.current_db
+      "#{Discourse.base_path}/uploads/#{db}/_emoji"
+    end
+
+    def replacement_code(code)
+      code.split("-").map!(&:hex).pack("U*")
+    end
+
+    def unicode_replacements
+      @unicode_replacements ||=
+        begin
+          replacements = {}
+          is_tonable_emojis = Emoji.tonable_emojis
+          fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
+
+          emojis_db.each do |e|
+            name = e["name"]
+
+            # special cased as we prefer to keep these as symbols
+            next if name == "registered"
+            next if name == "copyright"
+            next if name == "trade_mark"
+            next if name == "left_right_arrow"
+
+            code = replacement_code(e["code"])
+            next unless code
+
+            replacements[code] = name
+            if is_tonable_emojis.include?(name)
+              fitzpatrick_scales.each_with_index do |scale, index|
+                codepoints = code.codepoints
+                codepoints.delete_at(1) if codepoints[1] == 0xfe0f
+
+                toned_code = codepoints.insert(1, scale).pack("U*")
+                replacements[toned_code] = "#{name}:t#{index + 2}"
+              end
+            end
+          end
+
+          replacements["\u{2639}"] = "frowning"
+          replacements["\u{263B}"] = "slight_smile"
+          replacements["\u{2661}"] = "heart"
+          replacements["\u{2665}"] = "heart"
+
+          replacements
+        end
+    end
+
+    def unicode_unescape(string)
+      PrettyText.escape_emoji(string)
+    end
+
+    def gsub_emoji_to_unicode(str)
+      str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name } if str
+    end
+
+    def lookup_unicode(name)
+      return "" if denied&.include?(name)
+
+      @reverse_map ||=
+        begin
+          map = {}
+          is_tonable_emojis = Emoji.tonable_emojis
+
+          emojis_db.each do |e|
+            next if e["name"] == "tm"
+
+            code = replacement_code(e["code"])
+            next unless code
+
+            map[e["name"]] = code
+            if is_tonable_emojis.include?(e["name"])
+              FITZPATRICK_SCALE.each_with_index do |scale, index|
+                codepoints = code.codepoints
+                codepoints.delete_at(1) if codepoints[1] == 0xfe0f
+
+                toned_code = codepoints.insert(1, scale.to_i(16)).pack("U*")
+                map["#{e["name"]}:t#{index + 2}"] = toned_code
+              end
+            end
+          end
+
+          Emoji.aliases.each do |key, alias_names|
+            next unless alias_code = map[key]
+            alias_names.each { |alias_name| map[alias_name] = alias_code }
+          end
+
+          map
+        end
+      @reverse_map[name]
+    end
+
+    def unicode_replacements_json
+      @unicode_replacements_json ||= unicode_replacements.to_json
+    end
+
+    def codes_to_img(str)
+      return if str.blank?
+
+      result = +""
+      last_index = 0
+
+      str.scan(EMOJI_CODE_REGEXP) do
+        match = Regexp.last_match
+        code = match[1]
+
+        result << ERB::Util.html_escape_once(str[last_index...match.begin(0)])
+
+        result << if code && Emoji.custom?(code)
+          emoji = Emoji[code]
+          emoji_img_tag(emoji.cdn_url, code)
+        elsif code && Emoji.exists?(code)
+          emoji_img_tag(Emoji.url_for(code), code)
+        else
+          ERB::Util.html_escape_once(match[0])
+        end
+
+        last_index = match.end(0)
+      end
+
+      result << ERB::Util.html_escape_once(str[last_index..])
+      result
+    end
+
+    def emoji_img_tag(url, code)
+      escaped_url = ERB::Util.html_escape(url)
+      escaped_code = ERB::Util.html_escape(code)
+
+      "<img src=\"#{escaped_url}\" title=\"#{escaped_code}\" class=\"emoji\" alt=\"#{escaped_code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
+    end
+  end
+  class << self
+    def sanitize_emoji_name(name)
+      name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
+    end
+
+    def parse_emoji_file(file)
+      File.open(file, "r:UTF-8") { |f| JSON.parse(f.read) }
+    end
+  end
   # The cached `url` is the raw upload/asset URL. CDN conversion is applied
   # lazily here (and in EmojiSerializer) so that changing the S3/asset CDN
   # settings takes effect without having to rebuild the emoji cache.
@@ -23,432 +452,11 @@ class Emoji
     Discourse.store.cdn_url(url)
   end
 
-  def self.global_emoji_cache
-    @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
-  end
-
-  def self.site_emoji_cache
-    @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
-  end
-
-  def self.all
-    Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
-  end
-
-  def self.standard
-    Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
-  end
-
-  def self.allowed
-    Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
-  end
-
-  def self.denied
-    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
-  end
-
-  def self.grouped
-    groups = allowed.group_by(&:group)
-    pinned = SiteSetting.emoji_picker_pinned_groups_map
-    return groups if pinned.empty?
-
-    groups.sort_by { |key, _| pinned.index(key) || pinned.length }.to_h
-  end
-
-  def self.aliases
-    aliases_db
-  end
-
-  def self.search_aliases
-    search_aliases_db
-  end
-
-  def self.locale_search_aliases(locale)
-    locale = locale.to_s
-    @locale_search_aliases ||= {}
-    @locale_search_aliases[locale] ||= load_locale_search_aliases(locale)
-  end
-
-  def self.translations
-    Discourse.cache.fetch(cache_key("translations_emojis")) { load_translations }
-  end
-
-  def self.custom
-    Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
-  end
-
-  def self.tonable_emojis
-    tonable_emojis_db
-  end
-
-  def self.normalize_name(name)
-    match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
-    [match[1], match[2]&.to_i]
-  end
   private_class_method :normalize_name
 
-  def self.custom?(name)
-    name, _ = normalize_name(name)
-    Emoji.custom.detect { |e| e.name == name }.present?
-  end
-
-  def self.exists?(name)
-    Emoji[name].present?
-  end
-
-  def self.[](name)
-    name, tone = normalize_name(name)
-    is_toned = tone.present?
-    find_emoji(name, is_toned) || find_emoji(resolve_alias(name), is_toned)
-  end
-
-  def self.find_emoji(name, is_toned)
-    found_emoji = nil
-
-    [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
-      found_emoji =
-        cache.defer_get_set(name) do
-          [
-            Emoji
-              .public_send(list_key)
-              .detect { |e| e.name == name && (!is_toned || (is_toned && e.tonable)) },
-          ]
-        end[
-          0
-        ]
-
-      break if found_emoji
-    end
-
-    found_emoji
-  end
   private_class_method :find_emoji
 
-  def self.create_from_db_item(emoji)
-    name = emoji["name"]
-    return unless group = groups[name]
-    filename = emoji["filename"] || name
-
-    Emoji.new.tap do |e|
-      e.name = name
-      e.tonable = Emoji.tonable_emojis.include?(name)
-      e.url = Emoji.url_for(filename)
-      e.group = group
-    end
-  end
-
-  def self.url_for(name)
-    name, tone = normalize_name(name)
-    name = "#{name}/#{tone}" if tone
-    if SiteSetting.external_emoji_url.blank?
-      "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
-    else
-      "#{SiteSetting.external_emoji_url}/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
-    end
-  end
-
-  def self.cache_key(name)
-    "#{name}#{cache_postfix}"
-  end
-
-  def self.cache_postfix
-    ":v#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
-  end
-
-  def self.clear_cache
-    %w[custom standard translations allowed denied all].each do |key|
-      Discourse.cache.delete(cache_key("#{key}_emojis"))
-    end
-    global_emoji_cache.clear
-    site_emoji_cache.clear
-    @locale_search_aliases = nil
-  end
-
-  def self.groups_file
-    @groups_file ||= DiscourseEmojis.paths[:groups]
-  end
-
-  def self.groups
-    @groups ||=
-      begin
-        groups = {}
-
-        File
-          .open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }
-          .each { |group| group["icons"].each { |icon| groups[icon["name"]] = group["name"] } }
-
-        groups
-      end
-  end
-
-  def self.emojis_db_file
-    @emojis_db_file ||= DiscourseEmojis.paths[:emojis]
-  end
-
-  def self.emojis_db
-    @emojis_db ||= Emoji.parse_emoji_file(emojis_db_file)
-  end
-
-  def self.translations_db_file
-    @translations_db_file ||= DiscourseEmojis.paths[:translations]
-  end
-
-  def self.translations_db
-    @translations_db ||= Emoji.parse_emoji_file(translations_db_file)
-  end
-
-  def self.tonable_emojis_db_file
-    @tonable_emojis_db_file ||= DiscourseEmojis.paths[:tonable_emojis]
-  end
-
-  def self.tonable_emojis_db
-    @tonable_emojis_db ||= Emoji.parse_emoji_file(tonable_emojis_db_file)
-  end
-
-  def self.aliases_db_file
-    @aliases_db_file ||= DiscourseEmojis.paths[:aliases]
-  end
-
-  def self.aliases_db
-    @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
-  end
-
-  def self.aliases_values
-    @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
-  end
-
-  def self.reverse_aliases
-    @reverse_aliases ||=
-      aliases_db.each_with_object({}) do |(original, alias_names), map|
-        alias_names.each { |alias_name| map[alias_name] = original }
-      end
-  end
-
-  def self.resolve_alias(name)
-    reverse_aliases[name] || name
-  end
-
-  def self.search_aliases_db_file
-    @search_aliases_db_file ||= DiscourseEmojis.paths[:search_aliases]
-  end
-
-  def self.search_aliases_db
-    @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
-  end
-
-  def self.locale_search_aliases_dir
-    @locale_search_aliases_dir ||= DiscourseEmojis.paths[:locale_search_aliases]
-  end
-
-  def self.load_locale_search_aliases(locale)
-    dir = locale_search_aliases_dir
-    return nil if dir.nil?
-    file = File.join(dir, "#{locale}.json")
-    return nil unless File.exist?(file)
-    Emoji.parse_emoji_file(file)
-  end
   private_class_method :load_locale_search_aliases
 
-  def self.load_standard
-    emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
-  end
-
-  def self.load_allowed
-    denied_emojis = denied
-    all_emojis = load_standard + load_custom
-
-    if denied_emojis.present?
-      all_emojis.reject { |e| denied_emojis.include?(e.name) }
-    else
-      all_emojis
-    end
-  end
-
-  def self.load_denied
-    if SiteSetting.emoji_deny_list.present?
-      denied_emoji = SiteSetting.emoji_deny_list.split("|")
-      if denied_emoji.size > 0
-        denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
-      end
-    end
-  end
-
-  def self.load_custom
-    result = []
-    if !GlobalSetting.skip_db?
-      CustomEmoji
-        .includes(:upload)
-        .order(:name)
-        .each do |emoji|
-          result << Emoji.new.tap do |e|
-            e.name = emoji.name
-            e.url = emoji.upload&.url
-            e.group = emoji.group || DEFAULT_GROUP
-            e.created_by = User.where(id: emoji.user_id).pick(:username)
-          end
-        end
-    end
-
-    Plugin::CustomEmoji.emojis.each do |group, emojis|
-      emojis.each do |name, url|
-        result << Emoji.new.tap do |e|
-          e.name = name
-          url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
-          e.url = url
-          e.group = group || DEFAULT_GROUP
-        end
-      end
-    end
-
-    result
-  end
-
-  def self.load_translations
-    translations_db
-  end
-
-  def self.base_directory
-    "public#{base_url}"
-  end
-
-  def self.base_url
-    db = RailsMultisite::ConnectionManagement.current_db
-    "#{Discourse.base_path}/uploads/#{db}/_emoji"
-  end
-
-  def self.replacement_code(code)
-    code.split("-").map!(&:hex).pack("U*")
-  end
-
-  def self.unicode_replacements
-    @unicode_replacements ||=
-      begin
-        replacements = {}
-        is_tonable_emojis = Emoji.tonable_emojis
-        fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
-
-        emojis_db.each do |e|
-          name = e["name"]
-
-          # special cased as we prefer to keep these as symbols
-          next if name == "registered"
-          next if name == "copyright"
-          next if name == "trade_mark"
-          next if name == "left_right_arrow"
-
-          code = replacement_code(e["code"])
-          next unless code
-
-          replacements[code] = name
-          if is_tonable_emojis.include?(name)
-            fitzpatrick_scales.each_with_index do |scale, index|
-              codepoints = code.codepoints
-              codepoints.delete_at(1) if codepoints[1] == 0xfe0f
-
-              toned_code = codepoints.insert(1, scale).pack("U*")
-              replacements[toned_code] = "#{name}:t#{index + 2}"
-            end
-          end
-        end
-
-        replacements["\u{2639}"] = "frowning"
-        replacements["\u{263B}"] = "slight_smile"
-        replacements["\u{2661}"] = "heart"
-        replacements["\u{2665}"] = "heart"
-
-        replacements
-      end
-  end
-
-  def self.unicode_unescape(string)
-    PrettyText.escape_emoji(string)
-  end
-
-  def self.gsub_emoji_to_unicode(str)
-    str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name } if str
-  end
-
-  def self.lookup_unicode(name)
-    return "" if denied&.include?(name)
-
-    @reverse_map ||=
-      begin
-        map = {}
-        is_tonable_emojis = Emoji.tonable_emojis
-
-        emojis_db.each do |e|
-          next if e["name"] == "tm"
-
-          code = replacement_code(e["code"])
-          next unless code
-
-          map[e["name"]] = code
-          if is_tonable_emojis.include?(e["name"])
-            FITZPATRICK_SCALE.each_with_index do |scale, index|
-              codepoints = code.codepoints
-              codepoints.delete_at(1) if codepoints[1] == 0xfe0f
-
-              toned_code = codepoints.insert(1, scale.to_i(16)).pack("U*")
-              map["#{e["name"]}:t#{index + 2}"] = toned_code
-            end
-          end
-        end
-
-        Emoji.aliases.each do |key, alias_names|
-          next unless alias_code = map[key]
-          alias_names.each { |alias_name| map[alias_name] = alias_code }
-        end
-
-        map
-      end
-    @reverse_map[name]
-  end
-
-  def self.unicode_replacements_json
-    @unicode_replacements_json ||= unicode_replacements.to_json
-  end
-
-  def self.codes_to_img(str)
-    return if str.blank?
-
-    result = +""
-    last_index = 0
-
-    str.scan(EMOJI_CODE_REGEXP) do
-      match = Regexp.last_match
-      code = match[1]
-
-      result << ERB::Util.html_escape_once(str[last_index...match.begin(0)])
-
-      result << if code && Emoji.custom?(code)
-        emoji = Emoji[code]
-        emoji_img_tag(emoji.cdn_url, code)
-      elsif code && Emoji.exists?(code)
-        emoji_img_tag(Emoji.url_for(code), code)
-      else
-        ERB::Util.html_escape_once(match[0])
-      end
-
-      last_index = match.end(0)
-    end
-
-    result << ERB::Util.html_escape_once(str[last_index..])
-    result
-  end
-
-  def self.emoji_img_tag(url, code)
-    escaped_url = ERB::Util.html_escape(url)
-    escaped_code = ERB::Util.html_escape(code)
-
-    "<img src=\"#{escaped_url}\" title=\"#{escaped_code}\" class=\"emoji\" alt=\"#{escaped_code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
-  end
   private_class_method :emoji_img_tag
-
-  def self.sanitize_emoji_name(name)
-    name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
-  end
-
-  def self.parse_emoji_file(file)
-    File.open(file, "r:UTF-8") { |f| JSON.parse(f.read) }
-  end
 end

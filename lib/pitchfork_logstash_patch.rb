@@ -6,9 +6,11 @@
 # monkey patch here overrides Pitchfork's logging of error so that we log the error and backtrace in a
 # single message.
 module Pitchfork
-  def self.log_error(logger, prefix, exc)
-    message = exc.message
-    message = message.dump if /[[:cntrl:]]/ =~ message
-    logger.error "#{prefix}: #{message} (#{exc.class})\n#{exc.backtrace.join("\n")}"
+  class << self
+    def log_error(logger, prefix, exc)
+      message = exc.message
+      message = message.dump if /[[:cntrl:]]/ =~ message
+      logger.error "#{prefix}: #{message} (#{exc.class})\n#{exc.backtrace.join("\n")}"
+    end
   end
 end

@@ -27,6 +27,93 @@ module Chat
                optional: true
     has_many :pinned_messages, class_name: "Chat::PinnedMessage", foreign_key: :chat_channel_id
 
+    class << self
+      def sti_class_mapping =
+        {
+          "CategoryChannel" => Chat::CategoryChannel,
+          "DirectMessageChannel" => Chat::DirectMessageChannel,
+        }
+
+      def polymorphic_class_mapping = { "DirectMessage" => Chat::DirectMessage }
+
+      def editable_statuses
+        statuses.filter { |k, _| !%w[read_only archived].include?(k) }
+      end
+
+      def public_channel_chatable_types
+        %w[Category]
+      end
+
+      def direct_channel_chatable_types
+        %w[DirectMessage]
+      end
+
+      def chatable_types
+        public_channel_chatable_types + direct_channel_chatable_types
+      end
+
+      def find_by_id_or_slug(id)
+        with_categories.find_by(
+          "chat_channels.id = :id OR categories.slug = :slug OR chat_channels.slug = :slug",
+          id: Integer(id, exception: false),
+          slug: id.to_s.downcase,
+        )
+      end
+    end
+    class << self
+      def ensure_consistency!
+        update_message_counts
+        update_user_counts
+      end
+    end
+    class << self
+      def update_message_counts
+        # NOTE: Chat::Channel#messages_count is not updated every time
+        # a message is created or deleted in a channel, so it should not
+        # be displayed in the UI. It is updated eventually via Jobs::Chat::PeriodicalUpdates
+        DB.exec <<~SQL
+        UPDATE chat_channels channels
+        SET messages_count = subquery.messages_count
+        FROM (
+          SELECT COUNT(*) AS messages_count, chat_channel_id
+          FROM chat_messages
+          WHERE chat_messages.deleted_at IS NULL
+          GROUP BY chat_channel_id
+        ) subquery
+        WHERE channels.id = subquery.chat_channel_id
+        AND channels.deleted_at IS NULL
+        AND subquery.messages_count != channels.messages_count
+      SQL
+      end
+
+      def update_user_counts
+        updated_channel_ids =
+          DB.query_single(<<~SQL, statuses: [statuses[:open], statuses[:closed]])
+        UPDATE chat_channels channels
+        SET user_count = subquery.user_count, user_count_stale = false
+        FROM (
+          SELECT COUNT(DISTINCT user_chat_channel_memberships.id) AS user_count, user_chat_channel_memberships.chat_channel_id
+          FROM user_chat_channel_memberships
+          INNER JOIN users ON users.id = user_chat_channel_memberships.user_id
+          WHERE users.active
+            AND (users.suspended_till IS NULL OR users.suspended_till <= CURRENT_TIMESTAMP)
+            AND NOT users.staged
+            AND user_chat_channel_memberships.following
+            and users.id > 0
+          GROUP BY user_chat_channel_memberships.chat_channel_id
+        ) subquery
+        WHERE channels.id = subquery.chat_channel_id
+        AND channels.deleted_at IS NULL
+        AND subquery.user_count != channels.user_count
+        AND channels.status IN (:statuses)
+        RETURNING channels.id;
+      SQL
+
+        Chat::Channel
+          .where(id: updated_channel_ids)
+          .find_each { |channel| ::Chat::Publisher.publish_chat_channel_metadata(channel) }
+      end
+    end
     def last_message
       super || NullMessage.new
     end
@@ -61,40 +148,6 @@ module Chat
           end
 
     delegate :empty?, to: :chat_messages, prefix: true
-
-    class << self
-      def sti_class_mapping =
-        {
-          "CategoryChannel" => Chat::CategoryChannel,
-          "DirectMessageChannel" => Chat::DirectMessageChannel,
-        }
-
-      def polymorphic_class_mapping = { "DirectMessage" => Chat::DirectMessage }
-
-      def editable_statuses
-        statuses.filter { |k, _| !%w[read_only archived].include?(k) }
-      end
-
-      def public_channel_chatable_types
-        %w[Category]
-      end
-
-      def direct_channel_chatable_types
-        %w[DirectMessage]
-      end
-
-      def chatable_types
-        public_channel_chatable_types + direct_channel_chatable_types
-      end
-
-      def find_by_id_or_slug(id)
-        with_categories.find_by(
-          "chat_channels.id = :id OR categories.slug = :slug OR chat_channels.slug = :slug",
-          id: Integer(id, exception: false),
-          slug: id.to_s.downcase,
-        )
-      end
-    end
 
     statuses.keys.each do |status|
       define_method("#{status}!") { |acting_user| change_status(acting_user, status.to_sym) }
@@ -163,63 +216,12 @@ module Chat
       update!(last_message_id: latest_not_deleted_message_id)
     end
 
-    def self.ensure_consistency!
-      update_message_counts
-      update_user_counts
-    end
-
     def joined_by?(user)
       user.user_chat_channel_memberships.strict_loading.any? do |membership|
         predicate = membership.chat_channel_id == id
         predicate = predicate && membership.following if public_channel?
         predicate
       end
-    end
-
-    def self.update_message_counts
-      # NOTE: Chat::Channel#messages_count is not updated every time
-      # a message is created or deleted in a channel, so it should not
-      # be displayed in the UI. It is updated eventually via Jobs::Chat::PeriodicalUpdates
-      DB.exec <<~SQL
-        UPDATE chat_channels channels
-        SET messages_count = subquery.messages_count
-        FROM (
-          SELECT COUNT(*) AS messages_count, chat_channel_id
-          FROM chat_messages
-          WHERE chat_messages.deleted_at IS NULL
-          GROUP BY chat_channel_id
-        ) subquery
-        WHERE channels.id = subquery.chat_channel_id
-        AND channels.deleted_at IS NULL
-        AND subquery.messages_count != channels.messages_count
-      SQL
-    end
-
-    def self.update_user_counts
-      updated_channel_ids = DB.query_single(<<~SQL, statuses: [statuses[:open], statuses[:closed]])
-        UPDATE chat_channels channels
-        SET user_count = subquery.user_count, user_count_stale = false
-        FROM (
-          SELECT COUNT(DISTINCT user_chat_channel_memberships.id) AS user_count, user_chat_channel_memberships.chat_channel_id
-          FROM user_chat_channel_memberships
-          INNER JOIN users ON users.id = user_chat_channel_memberships.user_id
-          WHERE users.active
-            AND (users.suspended_till IS NULL OR users.suspended_till <= CURRENT_TIMESTAMP)
-            AND NOT users.staged
-            AND user_chat_channel_memberships.following
-            and users.id > 0
-          GROUP BY user_chat_channel_memberships.chat_channel_id
-        ) subquery
-        WHERE channels.id = subquery.chat_channel_id
-        AND channels.deleted_at IS NULL
-        AND subquery.user_count != channels.user_count
-        AND channels.status IN (:statuses)
-        RETURNING channels.id;
-      SQL
-
-      Chat::Channel
-        .where(id: updated_channel_ids)
-        .find_each { |channel| ::Chat::Publisher.publish_chat_channel_metadata(channel) }
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)

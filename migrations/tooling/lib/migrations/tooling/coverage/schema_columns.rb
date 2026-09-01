@@ -40,48 +40,52 @@ module Migrations
 
         # @return [Hash{String => Model}] generated models keyed by their constant
         #   name (e.g. "User"), in sorted order.
-        def self.call
-          namespace = Migrations::Database::IntermediateDB
+        class << self
+          def call
+            namespace = Migrations::Database::IntermediateDB
 
-          namespace
-            .constants(false)
-            .sort
-            .each_with_object({}) do |const_name, models|
-              model = build_model(namespace, const_name)
-              models[model.name] = model if model
-            end
-        end
-
-        def self.build_model(namespace, const_name)
-          value = namespace.const_get(const_name)
-          return unless value.is_a?(Module)
-          return unless value.respond_to?(:create)
-          return unless generated?(value)
-
-          required = []
-          optional = []
-
-          value
-            .method(:create)
-            .parameters
-            .each do |type, name|
-              case type
-              when :keyreq
-                required << name
-              when :key
-                optional << name
+            namespace
+              .constants(false)
+              .sort
+              .each_with_object({}) do |const_name, models|
+                model = build_model(namespace, const_name)
+                models[model.name] = model if model
               end
-            end
+          end
 
-          Model.new(name: const_name.to_s, required:, optional:)
+          def build_model(namespace, const_name)
+            value = namespace.const_get(const_name)
+            return unless value.is_a?(Module)
+            return unless value.respond_to?(:create)
+            return unless generated?(value)
+
+            required = []
+            optional = []
+
+            value
+              .method(:create)
+              .parameters
+              .each do |type, name|
+                case type
+                when :keyreq
+                  required << name
+                when :key
+                  optional << name
+                end
+              end
+
+            Model.new(name: const_name.to_s, required:, optional:)
+          end
         end
         private_class_method :build_model
 
-        def self.generated?(model)
-          path, = model.method(:create).source_location
-          return false unless path
+        class << self
+          def generated?(model)
+            path, = model.method(:create).source_location
+            return false unless path
 
-          File.read(path).include?(GENERATED_MARKER)
+            File.read(path).include?(GENERATED_MARKER)
+          end
         end
         private_class_method :generated?
       end

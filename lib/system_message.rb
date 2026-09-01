@@ -3,13 +3,15 @@
 # Handle sending a message to a user from the system.
 
 class SystemMessage
-  def self.create(recipient, type, params = {})
-    new(recipient).create(type, params)
-  end
+  class << self
+    def create(recipient, type, params = {})
+      new(recipient).create(type, params)
+    end
 
-  def self.create_from_system_user(recipient, type, params = {})
-    params = params.merge(from_system: true)
-    new(recipient).create(type, params)
+    def create_from_system_user(recipient, type, params = {})
+      params = params.merge(from_system: true)
+      new(recipient).create(type, params)
+    end
   end
 
   def initialize(recipient)

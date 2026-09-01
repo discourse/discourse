@@ -50,26 +50,27 @@ class ThemeSetting < ActiveRecord::Base
     end
   end
 
+  class << self
+    def types
+      TYPES_ENUM
+    end
+
+    def guess_type(value)
+      case value
+      when Integer
+        types[:integer]
+      when Float
+        types[:float]
+      when String
+        types[:string]
+      when TrueClass, FalseClass
+        types[:bool]
+      end
+    end
+  end
   def clear_settings_cache
     # All necessary caches will be cleared on next ensure_baked!
     theme.settings_field&.invalidate_baked!
-  end
-
-  def self.types
-    TYPES_ENUM
-  end
-
-  def self.guess_type(value)
-    case value
-    when Integer
-      types[:integer]
-    when Float
-      types[:float]
-    when String
-      types[:string]
-    when TrueClass, FalseClass
-      types[:bool]
-    end
   end
 
   private

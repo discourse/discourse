@@ -39,6 +39,7 @@ class CategoriesController < ApplicationController
   MAX_CATEGORY_SEARCH_TERM_LENGTH = 250
   MAX_CATEGORY_SEARCH_WORDS = 25
 
+  MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")
@@ -151,7 +152,6 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
-  MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)

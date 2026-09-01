@@ -9,17 +9,18 @@ class GroupUser < ActiveRecord::Base
   after_commit :sync_add_via_manager, on: :create
   after_commit :sync_remove_via_manager, on: :destroy
 
-  def self.notification_levels
-    NotificationLevels.all
-  end
+  class << self
+    def notification_levels
+      NotificationLevels.all
+    end
 
-  def self.ensure_consistency!(last_seen = 1.hour.ago)
-    update_first_unread_pm(last_seen)
-  end
+    def ensure_consistency!(last_seen = 1.hour.ago)
+      update_first_unread_pm(last_seen)
+    end
 
-  def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(
-      <<~SQL,
+    def update_first_unread_pm(last_seen, limit: 10_000)
+      DB.exec(
+        <<~SQL,
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -65,71 +66,85 @@ class GroupUser < ActiveRecord::Base
     ) Y
     WHERE gu.user_id = Y.user_id AND gu.group_id = Y.group_id
     SQL
-      archetype: Archetype.private_message,
-      last_seen: last_seen,
-      limit: limit,
-      now: 10.minutes.ago,
-      whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
-    )
+        archetype: Archetype.private_message,
+        last_seen: last_seen,
+        limit: limit,
+        now: 10.minutes.ago,
+        whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
+      )
+    end
   end
 
   protected
 
-  def set_notification_level
-    self.notification_level = group&.default_notification_level || 3
-  end
+  class << self
+    def set_category_notifications(group, user)
+      bulk_set_category_notifications(group, [user.id])
+    end
 
-  def self.set_category_notifications(group, user)
-    bulk_set_category_notifications(group, [user.id])
-  end
+    def set_tag_notifications(group, user)
+      bulk_set_tag_notifications(group, [user.id])
+    end
 
-  def self.set_tag_notifications(group, user)
-    bulk_set_tag_notifications(group, [user.id])
-  end
+    def bulk_set_category_notifications(group, user_ids)
+      defaults = group.group_category_notification_defaults.to_a
+      return if defaults.empty?
 
-  def self.bulk_set_category_notifications(group, user_ids)
-    defaults = group.group_category_notification_defaults.to_a
-    return if defaults.empty?
-
-    defaults.each do |default|
-      DB.exec(
-        <<~SQL,
+      defaults.each do |default|
+        DB.exec(
+          <<~SQL,
           INSERT INTO category_users (user_id, category_id, notification_level)
           SELECT unnest(ARRAY[:user_ids]::int[]), :category_id, :notification_level
           ON CONFLICT (user_id, category_id) DO UPDATE
             SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "category_users.notification_level")}
         SQL
-        user_ids: user_ids,
-        category_id: default.category_id,
-        notification_level: default.notification_level,
-      )
+          user_ids: user_ids,
+          category_id: default.category_id,
+          notification_level: default.notification_level,
+        )
+      end
+
+      CategoryUser.auto_watch(user_ids: user_ids)
+      CategoryUser.auto_track(user_ids: user_ids)
     end
 
-    CategoryUser.auto_watch(user_ids: user_ids)
-    CategoryUser.auto_track(user_ids: user_ids)
-  end
+    def bulk_set_tag_notifications(group, user_ids)
+      defaults = group.group_tag_notification_defaults.to_a
+      return if defaults.empty?
 
-  def self.bulk_set_tag_notifications(group, user_ids)
-    defaults = group.group_tag_notification_defaults.to_a
-    return if defaults.empty?
-
-    defaults.each do |default|
-      DB.exec(
-        <<~SQL,
+      defaults.each do |default|
+        DB.exec(
+          <<~SQL,
           INSERT INTO tag_users (user_id, tag_id, notification_level, created_at, updated_at)
           SELECT unnest(ARRAY[:user_ids]::int[]), :tag_id, :notification_level, NOW(), NOW()
           ON CONFLICT (user_id, tag_id) DO UPDATE
             SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "tag_users.notification_level")},
                 updated_at = NOW()
         SQL
-        user_ids: user_ids,
-        tag_id: default.tag_id,
-        notification_level: default.notification_level,
-      )
-    end
+          user_ids: user_ids,
+          tag_id: default.tag_id,
+          notification_level: default.notification_level,
+        )
+      end
 
-    TagUser.auto_watch(user_ids: user_ids)
-    TagUser.auto_track(user_ids: user_ids)
+      TagUser.auto_watch(user_ids: user_ids)
+      TagUser.auto_track(user_ids: user_ids)
+    end
+  end
+  class << self
+    def semantically_higher_notification_level_sql(new_col, existing_col)
+      <<~SQL.squish
+      CASE
+        WHEN (CASE #{new_col} WHEN 3 THEN 5 ELSE #{new_col} END) >=
+             (CASE #{existing_col} WHEN 3 THEN 5 ELSE #{existing_col} END)
+        THEN #{new_col}
+        ELSE #{existing_col}
+      END
+    SQL
+    end
+  end
+  def set_notification_level
+    self.notification_level = group&.default_notification_level || 3
   end
 
   def sync_add_via_manager
@@ -140,16 +155,6 @@ class GroupUser < ActiveRecord::Base
     GroupManager.new(group).sync_removal_side_effects([user.id])
   end
 
-  def self.semantically_higher_notification_level_sql(new_col, existing_col)
-    <<~SQL.squish
-      CASE
-        WHEN (CASE #{new_col} WHEN 3 THEN 5 ELSE #{new_col} END) >=
-             (CASE #{existing_col} WHEN 3 THEN 5 ELSE #{existing_col} END)
-        THEN #{new_col}
-        ELSE #{existing_col}
-      END
-    SQL
-  end
   private_class_method :semantically_higher_notification_level_sql
 end
 

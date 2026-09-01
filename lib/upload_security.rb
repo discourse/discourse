@@ -52,13 +52,15 @@ class UploadSecurity
     UserProfile
   ]
 
-  def self.register_custom_public_type(type)
-    @@custom_public_types << type if !@@custom_public_types.include?(type)
-  end
+  class << self
+    def register_custom_public_type(type)
+      @@custom_public_types << type if !@@custom_public_types.include?(type)
+    end
 
-  # used in tests
-  def self.reset_custom_public_types
-    @@custom_public_types = []
+    # used in tests
+    def reset_custom_public_types
+      @@custom_public_types = []
+    end
   end
 
   def initialize(upload, opts = {})

@@ -17,42 +17,44 @@ module DiscourseChatIntegration
         },
       ]
 
-      def self.trigger_notification(post, channel, rule)
-        message = gitter_message(post)
-        response = Net::HTTP.post_form(URI(channel.data["webhook_url"]), message: message)
-        unless response.kind_of? Net::HTTPSuccess
-          error_key = nil
-          raise DiscourseChatIntegration::ProviderError.new info: {
-                                                              error_key: error_key,
-                                                              message: message,
-                                                              response_body: response.body,
-                                                            }
+      class << self
+        def trigger_notification(post, channel, rule)
+          message = gitter_message(post)
+          response = Net::HTTP.post_form(URI(channel.data["webhook_url"]), message: message)
+          unless response.kind_of? Net::HTTPSuccess
+            error_key = nil
+            raise DiscourseChatIntegration::ProviderError.new info: {
+                                                                error_key: error_key,
+                                                                message: message,
+                                                                response_body: response.body,
+                                                              }
+          end
         end
-      end
 
-      def self.gitter_message(post)
-        display_name = post.user.username
-        topic = post.topic
-        parent_category = topic.category.try :parent_category
-        category_name =
-          (
-            if parent_category
-              "[#{parent_category.name}/#{topic.category.name}]"
-            elsif topic.category
-              "[#{topic.category.name}]"
-            else
-              ""
-            end
-          )
+        def gitter_message(post)
+          display_name = post.user.username
+          topic = post.topic
+          parent_category = topic.category.try :parent_category
+          category_name =
+            (
+              if parent_category
+                "[#{parent_category.name}/#{topic.category.name}]"
+              elsif topic.category
+                "[#{topic.category.name}]"
+              else
+                ""
+              end
+            )
 
-        "[__#{display_name}__ - #{topic.title} - #{category_name}](#{post.full_url})"
-      end
+          "[__#{display_name}__ - #{topic.title} - #{category_name}](#{post.full_url})"
+        end
 
-      def self.get_channel_by_name(name)
-        DiscourseChatIntegration::Channel
-          .with_provider(PROVIDER_NAME)
-          .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
-          .first
+        def get_channel_by_name(name)
+          DiscourseChatIntegration::Channel
+            .with_provider(PROVIDER_NAME)
+            .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
+            .first
+        end
       end
     end
   end

@@ -3,11 +3,14 @@
 module DiscourseAi
   module Embeddings
     class Vector
-      def self.instance
-        vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
-        raise "Invalid embeddings selected model" if vector_def.nil?
+      MAX_CONCURRENT_EMBEDDINGS = 40
+      class << self
+        def instance
+          vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
+          raise "Invalid embeddings selected model" if vector_def.nil?
 
-        new(vector_def)
+          new(vector_def)
+        end
       end
 
       def initialize(vector_definition)
@@ -15,8 +18,6 @@ module DiscourseAi
       end
 
       delegate :tokenizer, to: :vdef
-
-      MAX_CONCURRENT_EMBEDDINGS = 40
 
       def gen_bulk_reprensentations(relation)
         pool =

@@ -47,13 +47,21 @@ class Auth::Result
     overrides_name
   ]
 
+  class << self
+    def from_session_data(data, user:)
+      result = new
+      data = data.with_indifferent_access
+      SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
+      result.user = user
+      result
+    end
+  end
+  def initialize
+    @failed = false
+  end
   def [](key)
     key = key.to_sym
     public_send(key) if ATTRIBUTES.include?(key)
-  end
-
-  def initialize
-    @failed = false
   end
 
   def email
@@ -71,14 +79,6 @@ class Auth::Result
 
   def session_data
     SESSION_ATTRIBUTES.map { |att| [att, public_send(att)] }.to_h
-  end
-
-  def self.from_session_data(data, user:)
-    result = new
-    data = data.with_indifferent_access
-    SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
-    result.user = user
-    result
   end
 
   def apply_user_attributes!

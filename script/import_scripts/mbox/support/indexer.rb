@@ -6,6 +6,8 @@ require "yaml"
 
 module ImportScripts::Mbox
   class Indexer
+    METADATA_FILENAME = "metadata.yml"
+    IGNORED_FILE_EXTENSIONS = %w[.dbindex .dbnames .digest .subjects .yml]
     # @param database [ImportScripts::Mbox::Database]
     # @param settings [ImportScripts::Mbox::Settings]
     def initialize(database, settings)
@@ -38,9 +40,6 @@ module ImportScripts::Mbox
     end
 
     private
-
-    METADATA_FILENAME = "metadata.yml"
-    IGNORED_FILE_EXTENSIONS = %w[.dbindex .dbnames .digest .subjects .yml]
 
     def index_category(directory)
       metadata_file = File.join(directory, METADATA_FILENAME)

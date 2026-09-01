@@ -3,38 +3,41 @@ module DiscourseAi
   module Agents
     module Tools
       class GithubFileContent < Tool
-        def self.signature
-          {
-            name: name,
-            description: "Retrieves the content of specified GitHub files",
-            parameters: [
-              {
-                name: "repo_name",
-                description: "The name of the GitHub repository (e.g., 'discourse/discourse')",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "file_paths",
-                description:
-                  "The file paths to retrieve. Append '#Lstart-Lend' (e.g., app/models/user.rb#L10-L25) to limit the returned lines",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-              {
-                name: "branch",
-                description:
-                  "The branch or commit SHA to retrieve the files from (default: 'main')",
-                type: "string",
-                required: false,
-              },
-            ],
-          }
-        end
+        MAX_LINES = 200
+        class << self
+          def signature
+            {
+              name: name,
+              description: "Retrieves the content of specified GitHub files",
+              parameters: [
+                {
+                  name: "repo_name",
+                  description: "The name of the GitHub repository (e.g., 'discourse/discourse')",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "file_paths",
+                  description:
+                    "The file paths to retrieve. Append '#Lstart-Lend' (e.g., app/models/user.rb#L10-L25) to limit the returned lines",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+                {
+                  name: "branch",
+                  description:
+                    "The branch or commit SHA to retrieve the files from (default: 'main')",
+                  type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "github_file_content"
+          def name
+            "github_file_content"
+          end
         end
 
         def repo_name
@@ -158,8 +161,6 @@ module DiscourseAi
         def line_fragment_regex
           /#L(\d+)(?:-L?(\d+))?\z/i
         end
-
-        MAX_LINES = 200
 
         def extract_requested_content(content, start_line, end_line)
           normalized = content.gsub("\r\n", "\n")

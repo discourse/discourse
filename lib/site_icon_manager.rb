@@ -68,21 +68,23 @@ module SiteIconManager
 
   WATCHED_SETTINGS = ICONS.keys + %i[logo logo_small]
 
-  def self.clear_cache!
-    @cache.clear
-  end
+  class << self
+    def clear_cache!
+      @cache.clear
+    end
 
-  def self.ensure_optimized!
-    unless @disabled
-      ICONS.each do |name, info|
-        icon = resolve_original(info)
+    def ensure_optimized!
+      unless @disabled
+        ICONS.each do |name, info|
+          icon = resolve_original(info)
 
-        if info[:height] && info[:width]
-          OptimizedImage.create_for(icon, info[:width], info[:height])
+          if info[:height] && info[:width]
+            OptimizedImage.create_for(icon, info[:width], info[:height])
+          end
         end
       end
+      @cache.clear
     end
-    @cache.clear
   end
 
   ICONS.each do |name, info|
@@ -104,27 +106,31 @@ module SiteIconManager
   end
 
   # Used in test mode
-  def self.disable
-    @disabled = true
-  end
+  class << self
+    def disable
+      @disabled = true
+    end
 
-  def self.enable
-    @disabled = false
+    def enable
+      @disabled = false
+    end
   end
 
   private
 
-  def self.get_set_cache(key, &block)
-    return block.call if @disabled
-    @cache.defer_get_set(key, &block)
-  end
-
-  def self.resolve_original(info)
-    info[:settings].each do |setting_name|
-      value = SiteSetting.get(setting_name)
-      return value if value
+  class << self
+    def get_set_cache(key, &block)
+      return block.call if @disabled
+      @cache.defer_get_set(key, &block)
     end
-    return Upload.find_by(id: SKETCH_LOGO_ID) if info[:fallback_to_sketch]
-    nil
+
+    def resolve_original(info)
+      info[:settings].each do |setting_name|
+        value = SiteSetting.get(setting_name)
+        return value if value
+      end
+      return Upload.find_by(id: SKETCH_LOGO_ID) if info[:fallback_to_sketch]
+      nil
+    end
   end
 end

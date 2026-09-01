@@ -33,6 +33,39 @@ class Search
 
     BLURB_LENGTH = 200
 
+    OMISSION = "..."
+    SCRUB_HEADLINE_REGEXP =
+      %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
+    class << self
+      def blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
+        blurb = nil
+
+        if scrub
+          cooked = SearchIndexer::HtmlScrubber.scrub(cooked)
+
+          urls = Set.new
+          cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
+          urls.each do |url|
+            case File.extname(URI(url).path || "")
+            when Oneboxer::VIDEO_REGEX
+              cooked.gsub!(url, I18n.t("search.video"))
+            when Oneboxer::AUDIO_REGEX
+              cooked.gsub!(url, I18n.t("search.audio"))
+            end
+          rescue URI::InvalidURIError
+          end
+        end
+
+        if term
+          term = Regexp.last_match[1] if term =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
+
+          blurb = TextHelper.excerpt(cooked, term, radius: blurb_length / 2)
+        end
+
+        blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
+        Sanitize.clean(blurb)
+      end
+    end
     def initialize(
       type_filter:,
       term:,
@@ -71,10 +104,6 @@ class Search
         topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
       end
     end
-
-    OMISSION = "..."
-    SCRUB_HEADLINE_REGEXP =
-      %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
 
     def blurb(post, scope: nil)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
@@ -131,35 +160,6 @@ class Search
           extra_categories << category
         end
       end
-    end
-
-    def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
-      blurb = nil
-
-      if scrub
-        cooked = SearchIndexer::HtmlScrubber.scrub(cooked)
-
-        urls = Set.new
-        cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
-        urls.each do |url|
-          case File.extname(URI(url).path || "")
-          when Oneboxer::VIDEO_REGEX
-            cooked.gsub!(url, I18n.t("search.video"))
-          when Oneboxer::AUDIO_REGEX
-            cooked.gsub!(url, I18n.t("search.audio"))
-          end
-        rescue URI::InvalidURIError
-        end
-      end
-
-      if term
-        term = Regexp.last_match[1] if term =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
-
-        blurb = TextHelper.excerpt(cooked, term, radius: blurb_length / 2)
-      end
-
-      blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
-      Sanitize.clean(blurb)
     end
   end
 end

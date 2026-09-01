@@ -40,6 +40,21 @@ module DiscourseAi
                     :turn_token_budget,
                     :tool_invocation_counts,
                     :completion_limit_reached
+      # these are strings that can be safely interpolated into templates
+      TEMPLATE_PARAMS = %w[
+        date
+        time
+        site_url
+        site_title
+        site_description
+        participants
+        username
+        resource_url
+        inferred_concepts
+        user_language
+        temporal_context
+        top_categories
+      ]
       def initialize(
         post: nil,
         topic: nil,
@@ -151,22 +166,6 @@ module DiscourseAi
       def image_upload_authorized?(upload_id)
         authorized_image_upload_ids.include?(upload_id.to_i)
       end
-
-      # these are strings that can be safely interpolated into templates
-      TEMPLATE_PARAMS = %w[
-        date
-        time
-        site_url
-        site_title
-        site_description
-        participants
-        username
-        resource_url
-        inferred_concepts
-        user_language
-        temporal_context
-        top_categories
-      ]
 
       def lookup_template_param(key)
         public_send(key.to_sym) if TEMPLATE_PARAMS.include?(key)

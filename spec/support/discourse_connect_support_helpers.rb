@@ -3,12 +3,14 @@
 require "webrick"
 
 module DiscourseConnectHelpers
-  def self.provider_port=(port)
-    @provider_port = port
-  end
+  class << self
+    def provider_port=(port)
+      @provider_port = port
+    end
 
-  def self.provider_port
-    @provider_port
+    def provider_port
+      @provider_port
+    end
   end
 
   def build_discourse_connect_payload(return_url)

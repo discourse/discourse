@@ -7,20 +7,22 @@ module DiscourseAi
       MAX_PROMPT_LENGTH = 20_000
       MAX_RESULT_TOKENS = 30_000
 
-      def self.resolve_model(agent_record)
-        resolve_models([agent_record])[agent_record.id]
-      end
+      class << self
+        def resolve_model(agent_record)
+          resolve_models([agent_record])[agent_record.id]
+        end
 
-      def self.resolve_models(agent_records)
-        site_model_id = SiteSetting.ai_default_llm_model.presence&.to_i
-        model_ids = agent_records.filter_map(&:default_llm_id)
-        model_ids << site_model_id if site_model_id
-        models_by_id = LlmModel.where(id: model_ids.uniq).index_by(&:id)
+        def resolve_models(agent_records)
+          site_model_id = SiteSetting.ai_default_llm_model.presence&.to_i
+          model_ids = agent_records.filter_map(&:default_llm_id)
+          model_ids << site_model_id if site_model_id
+          models_by_id = LlmModel.where(id: model_ids.uniq).index_by(&:id)
 
-        agent_records.each_with_object({}) do |agent_record, result|
-          model = models_by_id[agent_record.default_llm_id]
-          model ||= models_by_id[site_model_id] if !agent_record.force_default_llm?
-          result[agent_record.id] = model if model
+          agent_records.each_with_object({}) do |agent_record, result|
+            model = models_by_id[agent_record.default_llm_id]
+            model ||= models_by_id[site_model_id] if !agent_record.force_default_llm?
+            result[agent_record.id] = model if model
+          end
         end
       end
 

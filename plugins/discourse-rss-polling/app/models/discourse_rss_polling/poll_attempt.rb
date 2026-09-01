@@ -13,43 +13,45 @@ module DiscourseRssPolling
 
     scope :recent, -> { order(created_at: :desc, id: :desc) }
 
-    def self.record!(rss_feed_id:, items:, error: nil)
-      counts = items.map { |item| item["status"] }.tally
-      failed_count = counts.fetch("failed", 0)
+    class << self
+      def record!(rss_feed_id:, items:, error: nil)
+        counts = items.map { |item| item["status"] }.tally
+        failed_count = counts.fetch("failed", 0)
 
-      attempt =
-        transaction do
-          create!(
-            rss_feed_id:,
-            status: (error || failed_count.positive?) ? :error : :success,
-            imported_count: counts.fetch("imported", 0),
-            updated_count: counts.fetch("updated", 0),
-            skipped_count: counts.fetch("skipped", 0),
-            failed_count:,
-            error:,
-            items: items.first(MAX_ITEMS),
-          ).tap { purge_old(rss_feed_id) }
-        end
+        attempt =
+          transaction do
+            create!(
+              rss_feed_id:,
+              status: (error || failed_count.positive?) ? :error : :success,
+              imported_count: counts.fetch("imported", 0),
+              updated_count: counts.fetch("updated", 0),
+              skipped_count: counts.fetch("skipped", 0),
+              failed_count:,
+              error:,
+              items: items.first(MAX_ITEMS),
+            ).tap { purge_old(rss_feed_id) }
+          end
 
-      publish(attempt)
-      attempt
-    end
+        publish(attempt)
+        attempt
+      end
 
-    def self.message_bus_channel(rss_feed_id)
-      "/rss-polling/feeds/#{rss_feed_id}"
-    end
+      def message_bus_channel(rss_feed_id)
+        "/rss-polling/feeds/#{rss_feed_id}"
+      end
 
-    def self.publish(attempt)
-      MessageBus.publish(
-        message_bus_channel(attempt.rss_feed_id),
-        PollAttemptSerializer.new(attempt, root: false).as_json,
-        group_ids: [Group::AUTO_GROUPS[:admins]],
-      )
-    end
+      def publish(attempt)
+        MessageBus.publish(
+          message_bus_channel(attempt.rss_feed_id),
+          PollAttemptSerializer.new(attempt, root: false).as_json,
+          group_ids: [Group::AUTO_GROUPS[:admins]],
+        )
+      end
 
-    def self.purge_old(rss_feed_id)
-      keep_ids = where(rss_feed_id:).recent.limit(KEEP_PER_FEED).select(:id)
-      where(rss_feed_id:).where.not(id: keep_ids).delete_all
+      def purge_old(rss_feed_id)
+        keep_ids = where(rss_feed_id:).recent.limit(KEEP_PER_FEED).select(:id)
+        where(rss_feed_id:).where.not(id: keep_ids).delete_all
+      end
     end
   end
 end

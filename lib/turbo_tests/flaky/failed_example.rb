@@ -3,6 +3,7 @@
 module TurboTests
   module Flaky
     class FailedExample
+      SCREENSHOT_PREFIX = "[Screenshot Image]: "
       # @param [TurboTests::FakeExample] failed_example
       def initialize(failed_example)
         @failed_example = failed_example
@@ -41,8 +42,6 @@ module TurboTests
       def exception_message
         @failed_example.execution_result.exception.message
       end
-
-      SCREENSHOT_PREFIX = "[Screenshot Image]: "
 
       # Unfortunately this has to be parsed from the output because `ActionDispatch` is just printing the path instead of
       # properly adding the screenshot to the test metadata.

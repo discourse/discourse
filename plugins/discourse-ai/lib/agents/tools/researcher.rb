@@ -6,6 +6,8 @@ module DiscourseAi
       class Researcher < Tool
         attr_reader :filter, :result_count, :goals, :dry_run
 
+        MIN_TOKENS_FOR_RESEARCH = 8000
+        MIN_TOKENS_FOR_POST = 50
         class << self
           def signature
             {
@@ -148,9 +150,6 @@ module DiscourseAi
         end
 
         protected
-
-        MIN_TOKENS_FOR_RESEARCH = 8000
-        MIN_TOKENS_FOR_POST = 50
 
         def process_filter(filter, goals, post, &blk)
           if researcher_llm.max_prompt_tokens < MIN_TOKENS_FOR_RESEARCH

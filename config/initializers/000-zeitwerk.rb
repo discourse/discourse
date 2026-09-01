@@ -9,14 +9,16 @@
 module DiscourseInflector
   @overrides = {}
 
-  def self.camelize(basename, abspath)
-    return basename.camelize if abspath.ends_with?("onceoff.rb")
-    return "Jobs" if abspath.ends_with?("jobs/base.rb")
-    @overrides[basename] || basename.camelize
-  end
+  class << self
+    def camelize(basename, abspath)
+      return basename.camelize if abspath.ends_with?("onceoff.rb")
+      return "Jobs" if abspath.ends_with?("jobs/base.rb")
+      @overrides[basename] || basename.camelize
+    end
 
-  def self.inflect(overrides)
-    @overrides.merge!(overrides)
+    def inflect(overrides)
+      @overrides.merge!(overrides)
+    end
   end
 end
 

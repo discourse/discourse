@@ -202,148 +202,150 @@ module Payloads
   # ~32 fields, shaped like the `users` step item (SELECT u.* plus avatar
   # columns): several timestamps, a date, two inet columns, realistic string
   # lengths, many nils
-  def self.users_item(i, primitive:)
-    created_at = Time.utc(2019, 12, 31, 23, 59, 59) + i
-    last_seen_at = created_at + 86_400
-    ip = IPAddr.new(i % 0xffffffff, Socket::AF_INET)
+  class << self
+    def users_item(i, primitive:)
+      created_at = Time.utc(2019, 12, 31, 23, 59, 59) + i
+      last_seen_at = created_at + 86_400
+      ip = IPAddr.new(i % 0xffffffff, Socket::AF_INET)
 
-    {
-      id: i + 1,
-      username: "user_#{i}",
-      name: "User Number #{i} von Üsername 😀",
-      active: true,
-      admin: false,
-      moderator: false,
-      staged: false,
-      approved: true,
-      approved_at: temporal(created_at, primitive:),
-      approved_by_id: 1,
-      created_at: temporal(created_at, primitive:),
-      updated_at: temporal(last_seen_at, primitive:),
-      first_seen_at: temporal(created_at, primitive:),
-      last_seen_at: temporal(last_seen_at, primitive:),
-      last_posted_at: nil,
-      last_emailed_at: temporal(last_seen_at, primitive:),
-      previous_visit_at: nil,
-      suspended_at: nil,
-      suspended_till: nil,
-      silenced_till: nil,
-      date_of_birth: primitive ? "1990-04-01" : Date.new(1990, 4, 1),
-      ip_address: primitive ? ip.to_s : ip,
-      registration_ip_address: primitive ? ip.to_s : ip,
-      locale: nil,
-      title: i % 10 == 0 ? "Trust Level 3 Member" : nil,
-      trust_level: i % 5,
-      group_locked_trust_level: nil,
-      manual_locked_trust_level: nil,
-      primary_group_id: nil,
-      flair_group_id: nil,
-      seen_notification_id: i * 7,
-      uploaded_avatar_id: i % 3 == 0 ? i + 1000 : nil,
-      views: i % 1234,
-      avatar_url: "/uploads/default/original/3X/a/b/avatar_#{i}.png",
-      avatar_filename: "avatar_#{i}.png",
-      avatar_origin: nil,
-      avatar_user_id: i + 1,
-    }
-  end
+      {
+        id: i + 1,
+        username: "user_#{i}",
+        name: "User Number #{i} von Üsername 😀",
+        active: true,
+        admin: false,
+        moderator: false,
+        staged: false,
+        approved: true,
+        approved_at: temporal(created_at, primitive:),
+        approved_by_id: 1,
+        created_at: temporal(created_at, primitive:),
+        updated_at: temporal(last_seen_at, primitive:),
+        first_seen_at: temporal(created_at, primitive:),
+        last_seen_at: temporal(last_seen_at, primitive:),
+        last_posted_at: nil,
+        last_emailed_at: temporal(last_seen_at, primitive:),
+        previous_visit_at: nil,
+        suspended_at: nil,
+        suspended_till: nil,
+        silenced_till: nil,
+        date_of_birth: primitive ? "1990-04-01" : Date.new(1990, 4, 1),
+        ip_address: primitive ? ip.to_s : ip,
+        registration_ip_address: primitive ? ip.to_s : ip,
+        locale: nil,
+        title: i % 10 == 0 ? "Trust Level 3 Member" : nil,
+        trust_level: i % 5,
+        group_locked_trust_level: nil,
+        manual_locked_trust_level: nil,
+        primary_group_id: nil,
+        flair_group_id: nil,
+        seen_notification_id: i * 7,
+        uploaded_avatar_id: i % 3 == 0 ? i + 1000 : nil,
+        views: i % 1234,
+        avatar_url: "/uploads/default/original/3X/a/b/avatar_#{i}.png",
+        avatar_filename: "avatar_#{i}.png",
+        avatar_origin: nil,
+        avatar_user_id: i + 1,
+      }
+    end
 
-  # shaped like a site-settings step item carrying a nested JSONB-derived
-  # array of hashes plus a timestamp
-  def self.site_settings_item(i, primitive:)
-    updated_at = Time.utc(2023, 5, 17, 12, 34, 56) + i
+    # shaped like a site-settings step item carrying a nested JSONB-derived
+    # array of hashes plus a timestamp
+    def site_settings_item(i, primitive:)
+      updated_at = Time.utc(2023, 5, 17, 12, 34, 56) + i
 
-    {
-      name: "setting_name_#{i}",
-      value: "some moderately long setting value, number #{i}, with text",
-      data_type: i % 25,
-      updated_at: temporal(updated_at, primitive:),
-      uploads: [
-        {
-          id: i + 1,
-          url: "/uploads/default/original/3X/c/d/upload_#{i}.png",
-          filename: "upload_#{i}.png",
-          origin: nil,
-          user_id: 1,
-        },
-        {
-          id: i + 2,
-          url: "/uploads/default/original/3X/e/f/upload_#{i + 1}.png",
-          filename: "upload_#{i + 1}.png",
-          origin: "https://example.com/upload_#{i + 1}.png",
-          user_id: 1,
-        },
-      ],
-    }
-  end
-
-  # the child -> parent payload: `[parametrized_insert_statements, stats]` as
-  # produced by `ParallelJob#run` -- params are already primitives in all arms
-  # because IntermediateDB models format values before insert
-  def self.return_payload(struct_stats:)
-    iso = "2019-12-31T23:59:59Z"
-    statements = [
-      [
-        "INSERT INTO users (original_id, username, name, active, admin, moderator, staged, " \
-          "approved, approved_at, approved_by_id, created_at, first_seen_at, last_seen_at, " \
-          "silenced_till, suspended_at, suspended_till, date_of_birth, ip_address, " \
-          "registration_ip_address, locale, title, trust_level, primary_group_id, " \
-          "flair_group_id, uploaded_avatar_id, avatar_type, views) " \
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-          42,
-          "user_42",
-          "User Number 42",
-          1,
-          0,
-          0,
-          0,
-          1,
-          iso,
-          1,
-          iso,
-          iso,
-          iso,
-          nil,
-          nil,
-          nil,
-          "1990-04-01",
-          "192.168.0.1",
-          nil,
-          nil,
-          nil,
-          2,
-          nil,
-          nil,
-          1042,
-          1,
-          1234,
+      {
+        name: "setting_name_#{i}",
+        value: "some moderately long setting value, number #{i}, with text",
+        data_type: i % 25,
+        updated_at: temporal(updated_at, primitive:),
+        uploads: [
+          {
+            id: i + 1,
+            url: "/uploads/default/original/3X/c/d/upload_#{i}.png",
+            filename: "upload_#{i}.png",
+            origin: nil,
+            user_id: 1,
+          },
+          {
+            id: i + 2,
+            url: "/uploads/default/original/3X/e/f/upload_#{i + 1}.png",
+            filename: "upload_#{i + 1}.png",
+            origin: "https://example.com/upload_#{i + 1}.png",
+            user_id: 1,
+          },
         ],
-      ],
-      [
-        "INSERT INTO user_emails (user_id, email, \"primary\", created_at) VALUES (?, ?, ?, ?)",
-        [42, "user_42@example.com", 1, iso],
-      ],
-      [
-        "INSERT INTO user_options (user_id, timezone, email_level, email_messages_level, " \
-          "email_digests, hide_profile_and_presence, dark_scheme_id, color_scheme_id) " \
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [42, "Europe/Vienna", 1, 1, 1, 0, nil, nil],
-      ],
-    ]
+      }
+    end
 
-    stats = StepStats.new(1, 0, 0)
-    [statements, struct_stats ? stats : stats.to_a]
-  end
+    # the child -> parent payload: `[parametrized_insert_statements, stats]` as
+    # produced by `ParallelJob#run` -- params are already primitives in all arms
+    # because IntermediateDB models format values before insert
+    def return_payload(struct_stats:)
+      iso = "2019-12-31T23:59:59Z"
+      statements = [
+        [
+          "INSERT INTO users (original_id, username, name, active, admin, moderator, staged, " \
+            "approved, approved_at, approved_by_id, created_at, first_seen_at, last_seen_at, " \
+            "silenced_till, suspended_at, suspended_till, date_of_birth, ip_address, " \
+            "registration_ip_address, locale, title, trust_level, primary_group_id, " \
+            "flair_group_id, uploaded_avatar_id, avatar_type, views) " \
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [
+            42,
+            "user_42",
+            "User Number 42",
+            1,
+            0,
+            0,
+            0,
+            1,
+            iso,
+            1,
+            iso,
+            iso,
+            iso,
+            nil,
+            nil,
+            nil,
+            "1990-04-01",
+            "192.168.0.1",
+            nil,
+            nil,
+            nil,
+            2,
+            nil,
+            nil,
+            1042,
+            1,
+            1234,
+          ],
+        ],
+        [
+          "INSERT INTO user_emails (user_id, email, \"primary\", created_at) VALUES (?, ?, ?, ?)",
+          [42, "user_42@example.com", 1, iso],
+        ],
+        [
+          "INSERT INTO user_options (user_id, timezone, email_level, email_messages_level, " \
+            "email_digests, hide_profile_and_presence, dark_scheme_id, color_scheme_id) " \
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          [42, "Europe/Vienna", 1, 1, 1, 0, nil, nil],
+        ],
+      ]
 
-  def self.temporal(time, primitive:)
-    # under a primitive wire format, timestamps cross as PG text
-    primitive ? time.strftime("%F %T") : time
-  end
+      stats = StepStats.new(1, 0, 0)
+      [statements, struct_stats ? stats : stats.to_a]
+    end
 
-  def self.corpus(builder, primitive:)
-    unique = UNIQUE_ITEM_COUNT.times.map { |i| public_send(builder, i, primitive:) }
-    (ITEM_COUNT / UNIQUE_ITEM_COUNT.to_f).ceil.times.flat_map { unique }.first(ITEM_COUNT)
+    def temporal(time, primitive:)
+      # under a primitive wire format, timestamps cross as PG text
+      primitive ? time.strftime("%F %T") : time
+    end
+
+    def corpus(builder, primitive:)
+      unique = UNIQUE_ITEM_COUNT.times.map { |i| public_send(builder, i, primitive:) }
+      (ITEM_COUNT / UNIQUE_ITEM_COUNT.to_f).ceil.times.flat_map { unique }.first(ITEM_COUNT)
+    end
   end
 end
 

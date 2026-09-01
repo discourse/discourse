@@ -8,38 +8,40 @@ require "auth"
 class Plugin::CustomEmoji
   CACHE_KEY = "plugin-emoji"
 
-  def self.cache_key
-    @@cache_key ||= CACHE_KEY
-  end
+  class << self
+    def cache_key
+      @@cache_key ||= CACHE_KEY
+    end
 
-  def self.emojis
-    @@emojis ||= {}
-  end
+    def emojis
+      @@emojis ||= {}
+    end
 
-  def self.clear_cache
-    @@cache_key = CACHE_KEY
-    @@emojis = {}
-    @@translations = {}
-  end
+    def clear_cache
+      @@cache_key = CACHE_KEY
+      @@emojis = {}
+      @@translations = {}
+    end
 
-  def self.register(name, url, group = Emoji::DEFAULT_GROUP)
-    @@cache_key = Digest::SHA1.hexdigest(cache_key + name + group)[0..10]
-    new_group = emojis[group] || {}
-    new_group[name] = url
-    emojis[group] = new_group
-  end
+    def register(name, url, group = Emoji::DEFAULT_GROUP)
+      @@cache_key = Digest::SHA1.hexdigest(cache_key + name + group)[0..10]
+      new_group = emojis[group] || {}
+      new_group[name] = url
+      emojis[group] = new_group
+    end
 
-  def self.unregister(name, group = Emoji::DEFAULT_GROUP)
-    emojis[group].delete(name)
-  end
+    def unregister(name, group = Emoji::DEFAULT_GROUP)
+      emojis[group].delete(name)
+    end
 
-  def self.translations
-    @@translations ||= {}
-  end
+    def translations
+      @@translations ||= {}
+    end
 
-  def self.translate(from, to)
-    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
-    translations[from] = to
+    def translate(from, to)
+      @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+      translations[from] = to
+    end
   end
 end
 
@@ -66,6 +68,39 @@ class Plugin::Instance
     }
   end
 
+  # This method returns Core stats + stats registered by plugins
+  class << self
+    def stats
+      Stat.all_stats
+    end
+
+    def find_all(parent_path)
+      allowed = GlobalSetting.plugins_to_load
+      [].tap do |plugins|
+        # also follows symlinks - http://stackoverflow.com/q/357754
+        Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
+          next if allowed && !allowed.include?(File.basename(File.dirname(path)))
+          plugins << parse_from_source(path)
+        end
+      end
+    end
+
+    def parse_from_source(path)
+      source = File.read(path)
+      metadata = Plugin::Metadata.parse(source)
+      new(metadata, path)
+    end
+  end
+  class << self
+    def js_path
+      File.expand_path "#{Rails.root.join("app/assets/generated")}"
+    end
+  end
+  def initialize(metadata = nil, path = nil)
+    @metadata = metadata
+    @path = path
+    @idx = 0
+  end
   def root_dir
     return if Rails.env.production?
     File.dirname(path)
@@ -86,34 +121,6 @@ class Plugin::Instance
 
   def seed_fu_filter(filter = nil)
     @seed_fu_filter = filter
-  end
-
-  # This method returns Core stats + stats registered by plugins
-  def self.stats
-    Stat.all_stats
-  end
-
-  def self.find_all(parent_path)
-    allowed = GlobalSetting.plugins_to_load
-    [].tap do |plugins|
-      # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        next if allowed && !allowed.include?(File.basename(File.dirname(path)))
-        plugins << parse_from_source(path)
-      end
-    end
-  end
-
-  def self.parse_from_source(path)
-    source = File.read(path)
-    metadata = Plugin::Metadata.parse(source)
-    new(metadata, path)
-  end
-
-  def initialize(metadata = nil, path = nil)
-    @metadata = metadata
-    @path = path
-    @idx = 0
   end
 
   # Keys can only be lowercase letters
@@ -1682,10 +1689,6 @@ class Plugin::Instance
   end
 
   protected
-
-  def self.js_path
-    File.expand_path "#{Rails.root.join("app/assets/generated")}"
-  end
 
   def extra_js_file_path
     @extra_js_file_path ||=

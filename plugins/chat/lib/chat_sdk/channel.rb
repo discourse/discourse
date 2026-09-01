@@ -14,24 +14,9 @@ module ChatSDK
     # @raise [RuntimeError] Raises an "Unexpected error" if the message retrieval fails for an unspecified reason.
     # @raise [RuntimeError] Raises "Guardian can't view channel" if the user's permissions are insufficient to view the channel.
     # @raise [RuntimeError] Raises "Target message doesn't exist" if the specified target message cannot be found in the channel.
-    def self.messages(...)
-      new.messages(...)
-    end
-
-    def messages(channel_id:, guardian:, **params)
-      Chat::ListChannelMessages.call(
-        guardian:,
-        params: {
-          channel_id:,
-          direction: "future",
-          **params,
-        },
-      ) do
-        on_success { |messages:| messages }
-        on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
-        on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }
-        on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
-        on_failure { raise "Unexpected error" }
+    class << self
+      def messages(...)
+        new.messages(...)
       end
     end
 
@@ -49,17 +34,11 @@ module ChatSDK
     #   ChatSDK::Channel.start_reply(channel_id: 1, thread_id: 34, guardian: Guardian.new)
     #
     # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
-    def self.start_reply(...)
-      new.start_reply(...)
-    end
-
-    def start_reply(channel_id:, thread_id: nil, guardian:)
-      Chat::StartReply.call(guardian:, params: { channel_id:, thread_id: }) do
-        on_success { |client_id:| client_id }
-        on_model_not_found(:presence_channel) { raise "Chat::Channel or Chat::Thread not found." }
+    class << self
+      def start_reply(...)
+        new.start_reply(...)
       end
     end
-
     # Ends an ongoing reply in a specified channel or thread.
     #
     # @param channel_id [Integer] The ID of the channel where the reply is being stopped.
@@ -74,8 +53,33 @@ module ChatSDK
     #   ChatSDK::Channel.stop_reply(channel_id: 1, thread_id: 34, client_id: "abc123", guardian: Guardian.new)
     #
     # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
-    def self.stop_reply(...)
-      new.stop_reply(...)
+    class << self
+      def stop_reply(...)
+        new.stop_reply(...)
+      end
+    end
+    def messages(channel_id:, guardian:, **params)
+      Chat::ListChannelMessages.call(
+        guardian:,
+        params: {
+          channel_id:,
+          direction: "future",
+          **params,
+        },
+      ) do
+        on_success { |messages:| messages }
+        on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
+        on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }
+        on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
+        on_failure { raise "Unexpected error" }
+      end
+    end
+
+    def start_reply(channel_id:, thread_id: nil, guardian:)
+      Chat::StartReply.call(guardian:, params: { channel_id:, thread_id: }) do
+        on_success { |client_id:| client_id }
+        on_model_not_found(:presence_channel) { raise "Chat::Channel or Chat::Thread not found." }
+      end
     end
 
     def stop_reply(channel_id:, thread_id: nil, client_id:, guardian:)

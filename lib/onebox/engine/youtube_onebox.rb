@@ -10,15 +10,18 @@ module Onebox
       requires_iframe_origins "https://www.youtube.com"
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/.+$})
-      end
-
       WIDTH = 480
       HEIGHT = 360
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/.+$})
+        end
+      end
 
-      def self.embed_url(video_id)
-        "https://www.youtube.com/embed/#{video_id}"
+      class << self
+        def embed_url(video_id)
+          "https://www.youtube.com/embed/#{video_id}"
+        end
       end
 
       def parse_embed_response

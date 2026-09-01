@@ -5,6 +5,7 @@ module Migrations
     module Steps
       module Base
         class SiteSettings < Step
+          LIST_SEPARATOR = "|"
           class << self
             def inherited(klass)
               super
@@ -29,7 +30,6 @@ module Migrations
             ].map { |number| ::SiteSettings::TypeSupervisor.types[number].to_s }
 
           DISALLOWED_SITE_SETTINGS = Set.new([:permalink_normalizations]).freeze
-          LIST_SEPARATOR = "|"
 
           private_constant :DATATYPES_WITH_DEPENDENCY, :DISALLOWED_SITE_SETTINGS
 

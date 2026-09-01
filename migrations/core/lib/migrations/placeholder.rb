@@ -27,6 +27,27 @@ module Migrations
     # Matches one whole token, from any run.
     PATTERN = /#{DELIMITER}[^#{DELIMITER}]+#{DELIMITER}/
 
+    # @return [Array<String>] every token in `text`, in order.
+    class << self
+      def scan(text)
+        text.to_s.scan(PATTERN)
+      end
+
+      # @return [Boolean] whether `text` still contains a token.
+      def include?(text)
+        PATTERN.match?(text.to_s)
+      end
+
+      # The `kind` of a token (e.g. `"quote"`), or `nil` if `text` is not a token. A
+      # plain string, never a symbol: it only labels reports, and a stray U+E000 in
+      # source content could put anything here.
+      #
+      # @return [String, nil]
+      def kind(text)
+        inner = text.to_s[/\A#{DELIMITER}([^#{DELIMITER}]+)#{DELIMITER}\z/, 1]
+        inner&.split(".")&.fetch(1, nil)
+      end
+    end
     # @param nonce [String] only override in tests, to get repeatable tokens.
     def initialize(nonce: SecureRandom.alphanumeric(16))
       @nonce = nonce
@@ -37,26 +58,6 @@ module Migrations
     def mint(kind)
       @sequence += 1
       "#{DELIMITER}#{@nonce}.#{kind}.#{@sequence}#{DELIMITER}"
-    end
-
-    # @return [Array<String>] every token in `text`, in order.
-    def self.scan(text)
-      text.to_s.scan(PATTERN)
-    end
-
-    # @return [Boolean] whether `text` still contains a token.
-    def self.include?(text)
-      PATTERN.match?(text.to_s)
-    end
-
-    # The `kind` of a token (e.g. `"quote"`), or `nil` if `text` is not a token. A
-    # plain string, never a symbol: it only labels reports, and a stray U+E000 in
-    # source content could put anything here.
-    #
-    # @return [String, nil]
-    def self.kind(text)
-      inner = text.to_s[/\A#{DELIMITER}([^#{DELIMITER}]+)#{DELIMITER}\z/, 1]
-      inner&.split(".")&.fetch(1, nil)
     end
   end
 end

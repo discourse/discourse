@@ -83,16 +83,18 @@ RSpec.describe SiteSerializer do
 
         self.table_name = "posts"
 
-        def self.name
-          "SiteSerializerSpecTarget"
-        end
+        class << self
+          def name
+            "SiteSerializerSpecTarget"
+          end
 
-        def self.mandatory_acl
-          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
-        end
+          def mandatory_acl
+            [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+          end
 
-        def self.banned_acl
-          [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+          def banned_acl
+            [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+          end
         end
       end
     end

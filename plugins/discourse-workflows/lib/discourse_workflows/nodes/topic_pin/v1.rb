@@ -140,8 +140,10 @@ module DiscourseWorkflows
           },
         )
 
-        def self.validate_configuration(configuration, errors)
-          validate_timezone_configuration(configuration, errors)
+        class << self
+          def validate_configuration(configuration, errors)
+            validate_timezone_configuration(configuration, errors)
+          end
         end
 
         def execute(exec_ctx)

@@ -2,11 +2,13 @@
 
 module DiscourseWorkflows
   class WorkflowDependencyIndexer
-    def self.call(
-      workflow,
-      version: workflow.workflow_versions.find_by(version_id: workflow.version_id)
-    )
-      new(workflow, version:).call
+    class << self
+      def call(
+        workflow,
+        version: workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      )
+        new(workflow, version:).call
+      end
     end
 
     def initialize(workflow, version:)

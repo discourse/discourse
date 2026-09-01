@@ -4,6 +4,82 @@
 # Check whether a user is ready for a new trust level.
 #
 class Promotion
+  class << self
+    def tl2_met?(user)
+      stat = user.user_stat
+      return false if stat.topics_entered < SiteSetting.tl2_requires_topics_entered
+      return false if stat.posts_read_count < SiteSetting.tl2_requires_read_posts
+      return false if (stat.time_read / 60) < SiteSetting.tl2_requires_time_spent_mins
+      return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl2_requires_time_spent_mins
+      return false if stat.days_visited < SiteSetting.tl2_requires_days_visited
+      return false if stat.likes_received < SiteSetting.tl2_requires_likes_received
+      return false if stat.likes_given < SiteSetting.tl2_requires_likes_given
+      return false if stat.calc_topic_reply_count! < SiteSetting.tl2_requires_topic_reply_count
+
+      true
+    end
+
+    def tl1_met?(user)
+      stat = user.user_stat
+      return false if stat.topics_entered < SiteSetting.tl1_requires_topics_entered
+      return false if stat.posts_read_count < SiteSetting.tl1_requires_read_posts
+      return false if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
+      return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl1_requires_time_spent_mins
+
+      true
+    end
+
+    def tl3_met?(user)
+      TrustLevel3Requirements.new(user).requirements_met?
+    end
+
+    def tl3_lost?(user)
+      TrustLevel3Requirements.new(user).requirements_lost?
+    end
+
+    # Figure out what a user's trust level should be from scratch
+    def recalculate(user, performed_by = nil, use_previous_trust_level: false)
+      granted_trust_level =
+        TrustLevel.calculate(user, use_previous_trust_level: use_previous_trust_level) ||
+          TrustLevel[0]
+
+      granted_trust_level = user.trust_level if granted_trust_level < user.trust_level &&
+        !can_downgrade_trust_level?(user)
+
+      # TrustLevel.calculate always returns a value, however we added extra protection just
+      # in case this changes
+      user.update_column(:trust_level, TrustLevel[granted_trust_level])
+
+      return if user.manual_locked_trust_level.present?
+
+      promotion = Promotion.new(user)
+
+      override =
+        DiscoursePluginRegistry.apply_modifier(:recalculate_trust_level, false, user, promotion)
+      return override if override
+
+      promotion.review_tl0 if granted_trust_level < TrustLevel[1]
+      promotion.review_tl1 if granted_trust_level < TrustLevel[2]
+      promotion.review_tl2 if granted_trust_level < TrustLevel[3]
+
+      Group.user_trust_level_change!(user.id, user.trust_level)
+
+      if user.trust_level == TrustLevel[3] && Promotion.tl3_lost?(user)
+        user.change_trust_level!(
+          TrustLevel[2],
+          log_action_for: performed_by || Discourse.system_user,
+        )
+      end
+    end
+
+    def can_downgrade_trust_level?(user)
+      return false if user.trust_level == TrustLevel[1] && tl1_met?(user)
+      return false if user.trust_level == TrustLevel[2] && tl2_met?(user)
+      return false if user.trust_level == TrustLevel[3] && tl3_met?(user)
+
+      true
+    end
+  end
   def initialize(user)
     @user = user
   end
@@ -98,78 +174,6 @@ class Promotion
       Group.user_trust_level_change!(@user.id, @user.trust_level)
       BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
     end
-
-    true
-  end
-
-  def self.tl2_met?(user)
-    stat = user.user_stat
-    return false if stat.topics_entered < SiteSetting.tl2_requires_topics_entered
-    return false if stat.posts_read_count < SiteSetting.tl2_requires_read_posts
-    return false if (stat.time_read / 60) < SiteSetting.tl2_requires_time_spent_mins
-    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl2_requires_time_spent_mins
-    return false if stat.days_visited < SiteSetting.tl2_requires_days_visited
-    return false if stat.likes_received < SiteSetting.tl2_requires_likes_received
-    return false if stat.likes_given < SiteSetting.tl2_requires_likes_given
-    return false if stat.calc_topic_reply_count! < SiteSetting.tl2_requires_topic_reply_count
-
-    true
-  end
-
-  def self.tl1_met?(user)
-    stat = user.user_stat
-    return false if stat.topics_entered < SiteSetting.tl1_requires_topics_entered
-    return false if stat.posts_read_count < SiteSetting.tl1_requires_read_posts
-    return false if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
-    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl1_requires_time_spent_mins
-
-    true
-  end
-
-  def self.tl3_met?(user)
-    TrustLevel3Requirements.new(user).requirements_met?
-  end
-
-  def self.tl3_lost?(user)
-    TrustLevel3Requirements.new(user).requirements_lost?
-  end
-
-  # Figure out what a user's trust level should be from scratch
-  def self.recalculate(user, performed_by = nil, use_previous_trust_level: false)
-    granted_trust_level =
-      TrustLevel.calculate(user, use_previous_trust_level: use_previous_trust_level) ||
-        TrustLevel[0]
-
-    granted_trust_level = user.trust_level if granted_trust_level < user.trust_level &&
-      !can_downgrade_trust_level?(user)
-
-    # TrustLevel.calculate always returns a value, however we added extra protection just
-    # in case this changes
-    user.update_column(:trust_level, TrustLevel[granted_trust_level])
-
-    return if user.manual_locked_trust_level.present?
-
-    promotion = Promotion.new(user)
-
-    override =
-      DiscoursePluginRegistry.apply_modifier(:recalculate_trust_level, false, user, promotion)
-    return override if override
-
-    promotion.review_tl0 if granted_trust_level < TrustLevel[1]
-    promotion.review_tl1 if granted_trust_level < TrustLevel[2]
-    promotion.review_tl2 if granted_trust_level < TrustLevel[3]
-
-    Group.user_trust_level_change!(user.id, user.trust_level)
-
-    if user.trust_level == TrustLevel[3] && Promotion.tl3_lost?(user)
-      user.change_trust_level!(TrustLevel[2], log_action_for: performed_by || Discourse.system_user)
-    end
-  end
-
-  def self.can_downgrade_trust_level?(user)
-    return false if user.trust_level == TrustLevel[1] && tl1_met?(user)
-    return false if user.trust_level == TrustLevel[2] && tl2_met?(user)
-    return false if user.trust_level == TrustLevel[3] && tl3_met?(user)
 
     true
   end

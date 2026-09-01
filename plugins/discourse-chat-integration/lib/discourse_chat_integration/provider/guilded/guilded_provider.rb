@@ -17,80 +17,82 @@ module DiscourseChatIntegration
         },
       ].freeze
 
-      def self.trigger_notification(post, channel, rule)
-        webhook_url = channel.data["webhook_url"]
-        message = generate_guilded_message(post)
-        response = send_message(webhook_url, message)
+      class << self
+        def trigger_notification(post, channel, rule)
+          webhook_url = channel.data["webhook_url"]
+          message = generate_guilded_message(post)
+          response = send_message(webhook_url, message)
 
-        if !response.kind_of?(Net::HTTPSuccess)
-          raise DiscourseChatIntegration::ProviderError.new(
-                  info: {
-                    error_key: nil,
-                    message: message,
-                    response_body: response.body,
-                  },
-                )
-        end
-      end
-
-      def self.generate_guilded_message(post)
-        topic = post.topic
-        category =
-          if topic.category&.parent_category
-            "[#{topic.category.parent_category.name}/#{topic.category.name}]"
-          elsif topic.category
-            "[#{topic.category.name}]"
-          else
-            ""
+          if !response.kind_of?(Net::HTTPSuccess)
+            raise DiscourseChatIntegration::ProviderError.new(
+                    info: {
+                      error_key: nil,
+                      message: message,
+                      response_body: response.body,
+                    },
+                  )
           end
-        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        end
 
-        message = {
-          embeds: [
-            {
-              title:
-                "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
-              url: post.full_url,
-              description:
-                post.excerpt(
-                  SiteSetting.chat_integration_guilded_excerpt_length,
-                  text_entities: true,
-                  strip_links: true,
-                  remap_emoji: true,
-                ),
-              footer: {
-                icon_url: ensure_protocol(post.user.small_avatar_url),
-                text: "#{display_name} | #{post.created_at}",
+        def generate_guilded_message(post)
+          topic = post.topic
+          category =
+            if topic.category&.parent_category
+              "[#{topic.category.parent_category.name}/#{topic.category.name}]"
+            elsif topic.category
+              "[#{topic.category.name}]"
+            else
+              ""
+            end
+          display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+
+          message = {
+            embeds: [
+              {
+                title:
+                  "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
+                url: post.full_url,
+                description:
+                  post.excerpt(
+                    SiteSetting.chat_integration_guilded_excerpt_length,
+                    text_entities: true,
+                    strip_links: true,
+                    remap_emoji: true,
+                  ),
+                footer: {
+                  icon_url: ensure_protocol(post.user.small_avatar_url),
+                  text: "#{display_name} | #{post.created_at}",
+                },
               },
-            },
-          ],
-        }
+            ],
+          }
 
-        message
-      end
+          message
+        end
 
-      def self.send_message(url, message)
-        uri = URI(url)
-        http = FinalDestination::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == "https")
+        def send_message(url, message)
+          uri = URI(url)
+          http = FinalDestination::HTTP.new(uri.host, uri.port)
+          http.use_ssl = (uri.scheme == "https")
 
-        req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
-        req.body = message.to_json
-        response = http.request(req)
+          req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
+          req.body = message.to_json
+          response = http.request(req)
 
-        response
-      end
+          response
+        end
 
-      def self.ensure_protocol(url)
-        return url if !url.start_with?("//")
-        "http:#{url}"
-      end
+        def ensure_protocol(url)
+          return url if !url.start_with?("//")
+          "http:#{url}"
+        end
 
-      def self.get_channel_by_name(name)
-        DiscourseChatIntegration::Channel
-          .with_provider(PROVIDER_NAME)
-          .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
-          .first
+        def get_channel_by_name(name)
+          DiscourseChatIntegration::Channel
+            .with_provider(PROVIDER_NAME)
+            .with_data_value(CHANNEL_IDENTIFIER_KEY, name)
+            .first
+        end
       end
     end
   end

@@ -57,43 +57,50 @@ module DiscourseWorkflows
           },
         ].freeze
 
-        def self.signature
-          {
-            name: name,
-            description:
-              "Returns the runtime, input, output, sample data, and return-contract context needed to write a workflow Code node script.",
-            parameters: [
-              { name: "workflow_id", description: "Workflow ID", type: "integer", required: false },
-              {
-                name: "target_node_id",
-                description: "Existing Code node ID when editing a script",
-                type: "string",
-                required: false,
-              },
-              {
-                name: "upstream_node_id",
-                description: "Node ID that feeds the Code node",
-                type: "string",
-                required: false,
-              },
-              {
-                name: "downstream_node_id",
-                description: "Node ID that consumes the Code node output",
-                type: "string",
-                required: false,
-              },
-              {
-                name: "sample_limit",
-                description: "Maximum number of pinned sample items to return",
-                type: "integer",
-                required: false,
-              },
-            ],
-          }
-        end
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Returns the runtime, input, output, sample data, and return-contract context needed to write a workflow Code node script.",
+              parameters: [
+                {
+                  name: "workflow_id",
+                  description: "Workflow ID",
+                  type: "integer",
+                  required: false,
+                },
+                {
+                  name: "target_node_id",
+                  description: "Existing Code node ID when editing a script",
+                  type: "string",
+                  required: false,
+                },
+                {
+                  name: "upstream_node_id",
+                  description: "Node ID that feeds the Code node",
+                  type: "string",
+                  required: false,
+                },
+                {
+                  name: "downstream_node_id",
+                  description: "Node ID that consumes the Code node output",
+                  type: "string",
+                  required: false,
+                },
+                {
+                  name: "sample_limit",
+                  description: "Maximum number of pinned sample items to return",
+                  type: "integer",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "workflow_script_context"
+          def name
+            "workflow_script_context"
+          end
         end
 
         def invoke

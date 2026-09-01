@@ -13,6 +13,14 @@ module DiscourseAutomation
     attribute :placeholders
     attribute :stats
 
+    EMPTY_STATS = {
+      total_runs: 0,
+      total_time: 0,
+      total_errors: 0,
+      average_run_time: 0,
+      min_run_time: 0,
+      max_run_time: 0,
+    }
     def last_updated_by
       BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, root: false).as_json
     end
@@ -85,15 +93,6 @@ module DiscourseAutomation
     def include_stats?
       scope&.dig(:stats).present?
     end
-
-    EMPTY_STATS = {
-      total_runs: 0,
-      total_time: 0,
-      total_errors: 0,
-      average_run_time: 0,
-      min_run_time: 0,
-      max_run_time: 0,
-    }
 
     def stats
       automation_stats = scope&.dig(:stats, object.id) || {}

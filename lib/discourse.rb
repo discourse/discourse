@@ -21,114 +21,116 @@ module Discourse
     #   Discourse::Utils.execute_command(chdir: 'mydirectory') do |runner|
     #     runner.exec("pwd")
     #   end
-    def self.execute_command(*command, **args)
-      runner = CommandRunner.new(**args)
+    class << self
+      def execute_command(*command, **args)
+        runner = CommandRunner.new(**args)
 
-      if block_given?
-        if command.present?
-          raise RuntimeError.new("Cannot pass command and block to execute_command")
+        if block_given?
+          if command.present?
+            raise RuntimeError.new("Cannot pass command and block to execute_command")
+          end
+          yield runner
+        else
+          runner.exec(*command)
         end
-        yield runner
-      else
-        runner.exec(*command)
       end
-    end
 
-    def self.pretty_logs(logs)
-      logs.join("\n")
-    end
+      def pretty_logs(logs)
+        logs.join("\n")
+      end
 
-    def self.logs_markdown(logs, user:, filename: "log.txt")
-      # Reserve 250 characters for the rest of the text
-      max_logs_length = SiteSetting.max_post_length - 250
-      pretty_logs = Discourse::Utils.pretty_logs(logs)
+      def logs_markdown(logs, user:, filename: "log.txt")
+        # Reserve 250 characters for the rest of the text
+        max_logs_length = SiteSetting.max_post_length - 250
+        pretty_logs = Discourse::Utils.pretty_logs(logs)
 
-      # If logs are short, try to inline them
-      return <<~TEXT if pretty_logs.size < max_logs_length
+        # If logs are short, try to inline them
+        return <<~TEXT if pretty_logs.size < max_logs_length
         ```text
         #{pretty_logs}
         ```
         TEXT
 
-      # Try to create an upload for the logs
-      upload =
-        Dir.mktmpdir do |dir|
-          File.write(File.join(dir, filename), pretty_logs)
-          zipfile = Compression::Zip.new.compress(dir, filename)
-          File.open(zipfile) do |file|
-            UploadCreator.new(
-              file,
-              File.basename(zipfile),
-              type: "backup_logs",
-              for_export: "true",
-            ).create_for(user.id)
+        # Try to create an upload for the logs
+        upload =
+          Dir.mktmpdir do |dir|
+            File.write(File.join(dir, filename), pretty_logs)
+            zipfile = Compression::Zip.new.compress(dir, filename)
+            File.open(zipfile) do |file|
+              UploadCreator.new(
+                file,
+                File.basename(zipfile),
+                type: "backup_logs",
+                for_export: "true",
+              ).create_for(user.id)
+            end
           end
+
+        if upload.persisted?
+          return UploadMarkdown.new(upload).attachment_markdown
+        else
+          Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
         end
 
-      if upload.persisted?
-        return UploadMarkdown.new(upload).attachment_markdown
-      else
-        Rails.logger.warn("Failed to upload the backup logs file: #{upload.errors.full_messages}")
-      end
-
-      # If logs are long and upload cannot be created, show trimmed logs
-      <<~TEXT
+        # If logs are long and upload cannot be created, show trimmed logs
+        <<~TEXT
       ```text
       ...
       #{pretty_logs.last(max_logs_length)}
       ```
       TEXT
-    end
-
-    def self.atomic_write_file(destination, contents)
-      begin
-        return if File.read(destination) == contents
-      rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
-      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-
-      File.open(temp_destination, "w") do |fd|
-        fd.write(contents)
-        fd.fsync()
-      end
-
-      FileUtils.mv(temp_destination, destination)
-
-      nil
-    end
-
-    def self.atomic_ln_s(source, destination)
-      return if File.symlink?(destination) && File.readlink(destination) == source
-
-      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
-
-      File.open(
-        Rails.root.join("tmp/atomic_ln_s.lock").to_s,
-        File::CREAT | File::WRONLY,
-        0o644,
-      ) do |lock|
-        lock.flock(File::LOCK_EX)
-
-        next if File.symlink?(destination) && File.readlink(destination) == source
-
-        temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-        File.symlink(source, temp_destination)
-
+      def atomic_write_file(destination, contents)
         begin
-          File.rename(temp_destination, destination)
-        rescue Errno::EXDEV
-          # Rails.root/tmp and the destination can live on different filesystems
-          # (e.g. containerized setups where tmp is a separate mount). rename(2)
-          # cannot cross filesystem boundaries, so fall back to a non-atomic
-          # replace. The flock above already serializes writers.
-          File.delete(destination) if File.symlink?(destination)
-          FileUtils.mv(temp_destination, destination)
+          return if File.read(destination) == contents
+        rescue Errno::ENOENT
         end
+
+        FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+        temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
+
+        File.open(temp_destination, "w") do |fd|
+          fd.write(contents)
+          fd.fsync()
+        end
+
+        FileUtils.mv(temp_destination, destination)
+
+        nil
       end
 
-      nil
+      def atomic_ln_s(source, destination)
+        return if File.symlink?(destination) && File.readlink(destination) == source
+
+        FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+
+        File.open(
+          Rails.root.join("tmp/atomic_ln_s.lock").to_s,
+          File::CREAT | File::WRONLY,
+          0o644,
+        ) do |lock|
+          lock.flock(File::LOCK_EX)
+
+          next if File.symlink?(destination) && File.readlink(destination) == source
+
+          temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
+          File.symlink(source, temp_destination)
+
+          begin
+            File.rename(temp_destination, destination)
+          rescue Errno::EXDEV
+            # Rails.root/tmp and the destination can live on different filesystems
+            # (e.g. containerized setups where tmp is a separate mount). rename(2)
+            # cannot cross filesystem boundaries, so fall back to a non-atomic
+            # replace. The flock above already serializes writers.
+            File.delete(destination) if File.symlink?(destination)
+            FileUtils.mv(temp_destination, destination)
+          end
+        end
+
+        nil
+      end
     end
 
     class CommandError < RuntimeError
@@ -199,25 +201,29 @@ module Discourse
     end
   end
 
-  def self.job_exception_stats
-    @job_exception_stats
-  end
+  class << self
+    def job_exception_stats
+      @job_exception_stats
+    end
 
-  def self.reset_job_exception_stats!
-    @job_exception_stats = Hash.new(0)
+    def reset_job_exception_stats!
+      @job_exception_stats = Hash.new(0)
+    end
   end
 
   reset_job_exception_stats!
 
   if Rails.env.test?
-    def self.catch_job_exceptions!
-      raise "tests only" if !Rails.env.test?
-      @catch_job_exceptions = true
-    end
+    class << self
+      def catch_job_exceptions!
+        raise "tests only" if !Rails.env.test?
+        @catch_job_exceptions = true
+      end
 
-    def self.reset_catch_job_exceptions!
-      raise "tests only" if !Rails.env.test?
-      remove_instance_variable(:@catch_job_exceptions)
+      def reset_catch_job_exceptions!
+        raise "tests only" if !Rails.env.test?
+        remove_instance_variable(:@catch_job_exceptions)
+      end
     end
   end
 
@@ -227,30 +233,32 @@ module Discourse
   # error_context() method in Jobs::Base to pass the job arguments and any
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
-  def self.handle_job_exception(ex, context = {}, parent_logger = nil)
-    return if ex.class == Jobs::HandledExceptionWrapper
+  class << self
+    def handle_job_exception(ex, context = {}, parent_logger = nil)
+      return if ex.class == Jobs::HandledExceptionWrapper
 
-    context ||= {}
-    parent_logger ||= Sidekiq.default_configuration
+      context ||= {}
+      parent_logger ||= Sidekiq.default_configuration
 
-    job = context[:job]
+      job = context[:job]
 
-    # mini_scheduler direct reporting
-    if Hash === job
-      job_class = job["class"]
-      job_exception_stats[job_class] += 1 if job_class
+      # mini_scheduler direct reporting
+      if Hash === job
+        job_class = job["class"]
+        job_exception_stats[job_class] += 1 if job_class
+      end
+
+      # internal reporting
+      job_exception_stats[job] += 1 if job.class == Class && ::Jobs::Base > job
+
+      cm = RailsMultisite::ConnectionManagement
+      parent_logger.handle_exception(
+        ex,
+        { current_db: cm.current_db, current_hostname: cm.current_hostname }.merge(context),
+      )
+
+      raise ex if Rails.env.test? && !@catch_job_exceptions
     end
-
-    # internal reporting
-    job_exception_stats[job] += 1 if job.class == Class && ::Jobs::Base > job
-
-    cm = RailsMultisite::ConnectionManagement
-    parent_logger.handle_exception(
-      ex,
-      { current_db: cm.current_db, current_hostname: cm.current_hostname }.merge(context),
-    )
-
-    raise ex if Rails.env.test? && !@catch_job_exceptions
   end
 
   # Expected less matches than what we got in a find
@@ -344,244 +352,254 @@ module Discourse
   class ScssError < StandardError
   end
 
-  def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
-  end
+  class << self
+    def filters
+      @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
+    end
 
-  def self.anonymous_filters
-    @anonymous_filters ||= %i[latest top categories hot]
-  end
+    def anonymous_filters
+      @anonymous_filters ||= %i[latest top categories hot]
+    end
 
-  # `anonymous_filters` also holds menu items such as `categories`, which have no
-  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
-  def self.anonymous_list_filters
-    Discourse.filters & Discourse.anonymous_filters
-  end
+    # `anonymous_filters` also holds menu items such as `categories`, which have no
+    # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+    def anonymous_list_filters
+      Discourse.filters & Discourse.anonymous_filters
+    end
 
-  def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:categories]
-  end
+    def top_menu_items
+      @top_menu_items ||= Discourse.filters + [:categories]
+    end
 
-  def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
+    def anonymous_top_menu_items
+      @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
+    end
   end
 
   # list of pixel ratios Discourse tries to optimize for
   PIXEL_RATIOS = [1, 1.5, 2, 3]
 
-  def self.avatar_sizes
-    # TODO: should cache these when we get a notification system for site settings
-    Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
-  end
+  class << self
+    def avatar_sizes
+      # TODO: should cache these when we get a notification system for site settings
+      Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
+    end
 
-  def self.activate_plugins!
-    @plugins = []
-    @plugins_by_name = {}
-    Plugin::Instance
-      .find_all("#{Rails.root.join("plugins")}")
-      .each do |p|
-        v = p.metadata.required_version || Discourse::VERSION::STRING
-        if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
-          p.activate!
-          @plugins << p
-          @plugins_by_name[p.name] = p
+    def activate_plugins!
+      @plugins = []
+      @plugins_by_name = {}
+      Plugin::Instance
+        .find_all("#{Rails.root.join("plugins")}")
+        .each do |p|
+          v = p.metadata.required_version || Discourse::VERSION::STRING
+          if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
+            p.activate!
+            @plugins << p
+            @plugins_by_name[p.name] = p
 
-          # The plugin directory name and metadata name should match, but that
-          # is not always the case
-          dir_name = p.path.split("/")[-2]
-          if p.name != dir_name
-            STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
-            # Plugins are looked up by directory name in SiteSettingExtension
-            # because SiteSetting.load_settings uses directory name as plugin
-            # name. We alias the two names just to make sure the look up works
-            @plugins_by_name[dir_name] = p
+            # The plugin directory name and metadata name should match, but that
+            # is not always the case
+            dir_name = p.path.split("/")[-2]
+            if p.name != dir_name
+              STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
+              # Plugins are looked up by directory name in SiteSettingExtension
+              # because SiteSetting.load_settings uses directory name as plugin
+              # name. We alias the two names just to make sure the look up works
+              @plugins_by_name[dir_name] = p
+            end
+          else
+            STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
           end
-        else
-          STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
         end
+      DiscourseEvent.trigger(:after_plugin_activation)
+    end
+
+    def plugins
+      @plugins ||= []
+    end
+
+    def plugins_by_name
+      @plugins_by_name ||= {}
+    end
+
+    def visible_plugins
+      plugins.filter(&:visible?)
+    end
+
+    def plugins_sorted_by_name(enabled_only: true)
+      if enabled_only
+        return(
+          visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+        )
       end
-    DiscourseEvent.trigger(:after_plugin_activation)
-  end
-
-  def self.plugins
-    @plugins ||= []
-  end
-
-  def self.plugins_by_name
-    @plugins_by_name ||= {}
-  end
-
-  def self.visible_plugins
-    plugins.filter(&:visible?)
-  end
-
-  def self.plugins_sorted_by_name(enabled_only: true)
-    if enabled_only
-      return visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+      visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
     end
-    visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
-  end
 
-  def self.plugin_themes
-    @plugin_themes ||= plugins.map(&:themes).flatten
-  end
-
-  def self.official_plugins
-    plugins.find_all { |p| p.metadata.official? }
-  end
-
-  def self.unofficial_plugins
-    plugins.find_all { |p| !p.metadata.official? }
-  end
-
-  def self.preinstalled_plugins
-    plugins.find_all(&:preinstalled?)
-  end
-
-  def self.find_plugins(args)
-    plugins.select do |plugin|
-      next if args[:include_official] == false && plugin.metadata.official?
-      next if args[:include_unofficial] == false && !plugin.metadata.official?
-      next if !args[:include_disabled] && !plugin.enabled?
-      next if args[:only] && !args[:only].include?(plugin.directory_name)
-
-      true
+    def plugin_themes
+      @plugin_themes ||= plugins.map(&:themes).flatten
     end
-  end
 
-  def self.apply_asset_filters(plugins, type, request)
-    filter_opts = asset_filter_options(type, request)
-    plugins.select { |plugin| plugin.asset_filters.all? { |b| b.call(type, request, filter_opts) } }
-  end
+    def official_plugins
+      plugins.find_all { |p| p.metadata.official? }
+    end
 
-  def self.asset_filter_options(type, request)
-    result = {}
-    return result if request.blank?
+    def unofficial_plugins
+      plugins.find_all { |p| !p.metadata.official? }
+    end
 
-    path = request.fullpath
-    result[:path] = path if path.present?
+    def preinstalled_plugins
+      plugins.find_all(&:preinstalled?)
+    end
 
-    result
-  end
+    def find_plugins(args)
+      plugins.select do |plugin|
+        next if args[:include_official] == false && plugin.metadata.official?
+        next if args[:include_unofficial] == false && !plugin.metadata.official?
+        next if !args[:include_disabled] && !plugin.enabled?
+        next if args[:only] && !args[:only].include?(plugin.directory_name)
 
-  def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
+        true
+      end
+    end
 
-    assets = []
+    def apply_asset_filters(plugins, type, request)
+      filter_opts = asset_filter_options(type, request)
+      plugins.select do |plugin|
+        plugin.asset_filters.all? { |b| b.call(type, request, filter_opts) }
+      end
+    end
 
-    targets = [nil]
-    targets << :mobile if args[:mobile_view]
-    targets << :desktop if args[:desktop_view]
-    targets << :admin if args[:include_admin]
+    def asset_filter_options(type, request)
+      result = {}
+      return result if request.blank?
 
-    targets.each do |target|
-      assets +=
-        plugins
-          .find_all { |plugin| plugin.css_asset_exists?(target) }
-          .map do |plugin|
-            target.nil? ? plugin.directory_name : "#{plugin.directory_name}_#{target}"
+      path = request.fullpath
+      result[:path] = path if path.present?
+
+      result
+    end
+
+    def find_plugin_css_assets(args)
+      plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
+
+      assets = []
+
+      targets = [nil]
+      targets << :mobile if args[:mobile_view]
+      targets << :desktop if args[:desktop_view]
+      targets << :admin if args[:include_admin]
+
+      targets.each do |target|
+        assets +=
+          plugins
+            .find_all { |plugin| plugin.css_asset_exists?(target) }
+            .map do |plugin|
+              target.nil? ? plugin.directory_name : "#{plugin.directory_name}_#{target}"
+            end
+      end
+
+      assets.map! { |asset| "#{asset}_rtl" } if args[:rtl]
+      assets
+    end
+
+    def find_plugin_js_assets(args)
+      plugins =
+        find_plugins(args).select do |plugin|
+          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+        end
+
+      plugins = apply_asset_filters(plugins, :js, args[:request])
+
+      assets = []
+
+      plugins.each do |plugin|
+        if plugin.js_asset_exists?
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+              plugin: plugin,
+              type_module: true,
+              importmap_name: "discourse/plugins/#{plugin.name}",
+              external_plugin_imports:
+                Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            }
           end
-    end
+        end
 
-    assets.map! { |asset| "#{asset}_rtl" } if args[:rtl]
-    assets
-  end
-
-  def self.find_plugin_js_assets(args)
-    plugins =
-      find_plugins(args).select do |plugin|
-        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-      end
-
-    plugins = apply_asset_filters(plugins, :js, args[:request])
-
-    assets = []
-
-    plugins.each do |plugin|
-      if plugin.js_asset_exists?
-        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
+        if plugin.extra_js_asset_exists?
           assets << {
-            name: logical_path,
-            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+            name: "plugins/#{plugin.directory_name}_extra",
             plugin: plugin,
-            type_module: true,
-            importmap_name: "discourse/plugins/#{plugin.name}",
-            external_plugin_imports:
-              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            type_module: false,
           }
         end
+
+        if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
+              plugin: plugin,
+              type_module: true,
+              external_plugin_imports:
+                Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
+            }
+          end
+        end
+
+        if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
+             plugin.test_js_asset_exists?
+          if logical_path =
+               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
+            assets << {
+              name: logical_path,
+              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
+              plugin: plugin,
+              type_module: true,
+              external_plugin_imports:
+                Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
+            }
+          end
+        end
       end
 
-      if plugin.extra_js_asset_exists?
-        assets << {
-          name: "plugins/#{plugin.directory_name}_extra",
-          plugin: plugin,
-          type_module: false,
+      assets.each do |asset|
+        asset[:plugin_attributes] = {
+          "data-official": !!asset[:plugin].metadata&.official?,
+          "data-preinstalled": asset[:plugin].preinstalled?,
+          "data-plugin-name": asset[:plugin].name,
         }
       end
 
-      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        if logical_path =
-             Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
-          assets << {
-            name: logical_path,
-            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
-            plugin: plugin,
-            type_module: true,
-            external_plugin_imports:
-              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
-          }
-        end
-      end
-
-      if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
-           plugin.test_js_asset_exists?
-        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
-          assets << {
-            name: logical_path,
-            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
-            plugin: plugin,
-            type_module: true,
-            external_plugin_imports:
-              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
-          }
-        end
-      end
+      assets
     end
 
-    assets.each do |asset|
-      asset[:plugin_attributes] = {
-        "data-official": !!asset[:plugin].metadata&.official?,
-        "data-preinstalled": asset[:plugin].preinstalled?,
-        "data-plugin-name": asset[:plugin].name,
-      }
+    def assets_digest
+      @assets_digest ||=
+        begin
+          digest =
+            Digest::MD5.hexdigest(
+              Rails
+                .application
+                .assets
+                .load_path
+                .assets
+                .map(&:digested_path)
+                .map(&:to_s)
+                .sort
+                .join("|"),
+            )
+
+          channel = "/global/asset-version"
+          message = MessageBus.last_message(channel)
+
+          MessageBus.publish channel, digest unless message && message.data == digest
+          digest
+        end
     end
-
-    assets
-  end
-
-  def self.assets_digest
-    @assets_digest ||=
-      begin
-        digest =
-          Digest::MD5.hexdigest(
-            Rails
-              .application
-              .assets
-              .load_path
-              .assets
-              .map(&:digested_path)
-              .map(&:to_s)
-              .sort
-              .join("|"),
-          )
-
-        channel = "/global/asset-version"
-        message = MessageBus.last_message(channel)
-
-        MessageBus.publish channel, digest unless message && message.data == digest
-        digest
-      end
   end
 
   BUILTIN_AUTH = [
@@ -609,168 +627,174 @@ module Discourse
     ),
   ]
 
-  def self.auth_providers
-    BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
-  end
+  class << self
+    def auth_providers
+      BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
+    end
 
-  def self.enabled_auth_providers
-    auth_providers.select { |provider| provider.authenticator.enabled? }
-  end
+    def enabled_auth_providers
+      auth_providers.select { |provider| provider.authenticator.enabled? }
+    end
 
-  def self.authenticators
-    # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
-    #  for the cases of multisite
-    auth_providers.map(&:authenticator)
-  end
+    def authenticators
+      # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
+      #  for the cases of multisite
+      auth_providers.map(&:authenticator)
+    end
 
-  def self.enabled_authenticators
-    authenticators.select(&:enabled?)
-  end
+    def enabled_authenticators
+      authenticators.select(&:enabled?)
+    end
 
-  def self.cache
-    @cache ||=
-      if GlobalSetting.skip_redis?
-        ActiveSupport::Cache::MemoryStore.new
-      else
-        Cache.new
-      end
-  end
+    def cache
+      @cache ||=
+        if GlobalSetting.skip_redis?
+          ActiveSupport::Cache::MemoryStore.new
+        else
+          Cache.new
+        end
+    end
 
-  # hostname of the server, operating system level
-  # called os_hostname so we do no confuse it with current_hostname
-  def self.os_hostname
-    @os_hostname ||=
-      begin
-        require "socket"
-        Socket.gethostname
-      rescue => e
-        warn_exception(e, message: "Socket.gethostname is not working")
+    # hostname of the server, operating system level
+    # called os_hostname so we do no confuse it with current_hostname
+    def os_hostname
+      @os_hostname ||=
         begin
-          `hostname`.strip
+          require "socket"
+          Socket.gethostname
         rescue => e
-          warn_exception(e, message: "hostname command is not working")
-          "unknown_host"
+          warn_exception(e, message: "Socket.gethostname is not working")
+          begin
+            `hostname`.strip
+          rescue => e
+            warn_exception(e, message: "hostname command is not working")
+            "unknown_host"
+          end
         end
+    end
+
+    # Get the current base URL for the current site
+    def current_hostname
+      SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
+    end
+
+    def base_path(default_value = "")
+      ActionController::Base.config.relative_url_root.presence || default_value
+    end
+
+    def base_uri(default_value = "")
+      deprecate("Discourse.base_uri is deprecated, use Discourse.base_path instead")
+      base_path(default_value)
+    end
+
+    def base_protocol
+      SiteSetting.force_https? ? "https" : "http"
+    end
+
+    def current_hostname_with_port
+      default_port = SiteSetting.force_https? ? 443 : 80
+      result = +"#{current_hostname}"
+      if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+        result << ":#{SiteSetting.port}"
       end
-  end
 
-  # Get the current base URL for the current site
-  def self.current_hostname
-    SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
-  end
+      if Rails.env.development? && SiteSetting.port.blank?
+        result << ":#{ENV["UNICORN_PORT"] || 3000}"
+      end
 
-  def self.base_path(default_value = "")
-    ActionController::Base.config.relative_url_root.presence || default_value
-  end
-
-  def self.base_uri(default_value = "")
-    deprecate("Discourse.base_uri is deprecated, use Discourse.base_path instead")
-    base_path(default_value)
-  end
-
-  def self.base_protocol
-    SiteSetting.force_https? ? "https" : "http"
-  end
-
-  def self.current_hostname_with_port
-    default_port = SiteSetting.force_https? ? 443 : 80
-    result = +"#{current_hostname}"
-    if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
-      result << ":#{SiteSetting.port}"
+      result
     end
 
-    result << ":#{ENV["UNICORN_PORT"] || 3000}" if Rails.env.development? && SiteSetting.port.blank?
-
-    result
-  end
-
-  def self.base_url_no_prefix
-    "#{base_protocol}://#{current_hostname_with_port}"
-  end
-
-  def self.base_url
-    base_url_no_prefix + base_path
-  end
-
-  def self.route_for(uri)
-    unless uri.is_a?(URI)
-      uri =
-        begin
-          URI(uri)
-        rescue ArgumentError, URI::Error
-        end
+    def base_url_no_prefix
+      "#{base_protocol}://#{current_hostname_with_port}"
     end
 
-    return unless uri
-
-    path = +(uri.path || "")
-    if !uri.host ||
-         (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_path))
-      path.slice!(Discourse.base_path)
-      return Rails.application.routes.recognize_path(path)
+    def base_url
+      base_url_no_prefix + base_path
     end
 
-    nil
-  rescue ActionController::RoutingError
-    nil
-  end
+    def route_for(uri)
+      unless uri.is_a?(URI)
+        uri =
+          begin
+            URI(uri)
+          rescue ArgumentError, URI::Error
+          end
+      end
 
-  def self.beacon_pv_tracking_path
-    "#{Discourse.base_path}/srv/pv"
-  end
+      return unless uri
 
-  def self.engagement_tracking_path
-    "#{Discourse.base_path}/srv/se"
+      path = +(uri.path || "")
+      if !uri.host ||
+           (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_path))
+        path.slice!(Discourse.base_path)
+        return Rails.application.routes.recognize_path(path)
+      end
+
+      nil
+    rescue ActionController::RoutingError
+      nil
+    end
+
+    def beacon_pv_tracking_path
+      "#{Discourse.base_path}/srv/pv"
+    end
+
+    def engagement_tracking_path
+      "#{Discourse.base_path}/srv/se"
+    end
   end
 
   class << self
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
-  def self.urls_cache
-    @urls_cache ||= DistributedCache.new("urls_cache")
-  end
+  class << self
+    def urls_cache
+      @urls_cache ||= DistributedCache.new("urls_cache")
+    end
 
-  def self.tos_url
-    if SiteSetting.tos_url.present?
-      SiteSetting.tos_url
-    else
-      return urls_cache["tos"] if urls_cache["tos"].present?
-
-      tos_url =
-        if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
-          "#{Discourse.base_path}/tos"
-        end
-
-      if tos_url
-        urls_cache["tos"] = tos_url
+    def tos_url
+      if SiteSetting.tos_url.present?
+        SiteSetting.tos_url
       else
-        urls_cache.delete("tos")
+        return urls_cache["tos"] if urls_cache["tos"].present?
+
+        tos_url =
+          if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+            "#{Discourse.base_path}/tos"
+          end
+
+        if tos_url
+          urls_cache["tos"] = tos_url
+        else
+          urls_cache.delete("tos")
+        end
       end
     end
-  end
 
-  def self.privacy_policy_url
-    if SiteSetting.privacy_policy_url.present?
-      SiteSetting.privacy_policy_url
-    else
-      return urls_cache["privacy_policy"] if urls_cache["privacy_policy"].present?
-
-      privacy_policy_url =
-        if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
-          "#{Discourse.base_path}/privacy"
-        end
-
-      if privacy_policy_url
-        urls_cache["privacy_policy"] = privacy_policy_url
+    def privacy_policy_url
+      if SiteSetting.privacy_policy_url.present?
+        SiteSetting.privacy_policy_url
       else
-        urls_cache.delete("privacy_policy")
+        return urls_cache["privacy_policy"] if urls_cache["privacy_policy"].present?
+
+        privacy_policy_url =
+          if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+            "#{Discourse.base_path}/privacy"
+          end
+
+        if privacy_policy_url
+          urls_cache["privacy_policy"] = privacy_policy_url
+        else
+          urls_cache.delete("privacy_policy")
+        end
       end
     end
-  end
 
-  def self.clear_urls!
-    urls_cache.clear
+    def clear_urls!
+      urls_cache.clear
+    end
   end
 
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
@@ -792,56 +816,58 @@ module Discourse
     PG_FORCE_READONLY_MODE_KEY,
   ]
 
-  def self.enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
-    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
-      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+  class << self
+    def enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
+      if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+        Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+      end
+
+      if expires.nil?
+        expires = [
+          USER_READONLY_MODE_KEY,
+          PG_FORCE_READONLY_MODE_KEY,
+          STAFF_WRITES_ONLY_MODE_KEY,
+        ].exclude?(key)
+      end
+
+      if expires
+        ttl =
+          case key
+          when PG_READONLY_MODE_KEY
+            PG_READONLY_MODE_KEY_TTL
+          else
+            READONLY_MODE_KEY_TTL
+          end
+
+        Discourse.redis.setex(key, ttl, 1)
+        keep_readonly_mode(key, ttl: ttl) if !Rails.env.test?
+      else
+        Discourse.redis.set(key, 1)
+      end
+
+      MessageBus.publish(readonly_channel, true)
+      true
     end
 
-    if expires.nil?
-      expires = [
-        USER_READONLY_MODE_KEY,
-        PG_FORCE_READONLY_MODE_KEY,
-        STAFF_WRITES_ONLY_MODE_KEY,
-      ].exclude?(key)
-    end
+    def keep_readonly_mode(key, ttl:)
+      # extend the expiry by ttl minute every ttl/2 seconds
+      @mutex ||= Mutex.new
 
-    if expires
-      ttl =
-        case key
-        when PG_READONLY_MODE_KEY
-          PG_READONLY_MODE_KEY_TTL
-        else
-          READONLY_MODE_KEY_TTL
-        end
+      @mutex.synchronize do
+        @dbs ||= Set.new
+        @dbs << RailsMultisite::ConnectionManagement.current_db
+        @threads ||= {}
 
-      Discourse.redis.setex(key, ttl, 1)
-      keep_readonly_mode(key, ttl: ttl) if !Rails.env.test?
-    else
-      Discourse.redis.set(key, 1)
-    end
+        unless @threads[key]&.alive?
+          @threads[key] = Thread.new do
+            while @dbs.size > 0
+              sleep ttl / 2
 
-    MessageBus.publish(readonly_channel, true)
-    true
-  end
-
-  def self.keep_readonly_mode(key, ttl:)
-    # extend the expiry by ttl minute every ttl/2 seconds
-    @mutex ||= Mutex.new
-
-    @mutex.synchronize do
-      @dbs ||= Set.new
-      @dbs << RailsMultisite::ConnectionManagement.current_db
-      @threads ||= {}
-
-      unless @threads[key]&.alive?
-        @threads[key] = Thread.new do
-          while @dbs.size > 0
-            sleep ttl / 2
-
-            @mutex.synchronize do
-              @dbs.each do |db|
-                RailsMultisite::ConnectionManagement.with_connection(db) do
-                  @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
+              @mutex.synchronize do
+                @dbs.each do |db|
+                  RailsMultisite::ConnectionManagement.with_connection(db) do
+                    @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
+                  end
                 end
               end
             end
@@ -849,144 +875,144 @@ module Discourse
         end
       end
     end
-  end
 
-  def self.disable_readonly_mode(key = READONLY_MODE_KEY)
-    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
-      Sidekiq.unpause! if Sidekiq.paused?
+    def disable_readonly_mode(key = READONLY_MODE_KEY)
+      if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+        Sidekiq.unpause! if Sidekiq.paused?
+      end
+
+      Discourse.redis.del(key)
+      MessageBus.publish(readonly_channel, false)
+      true
     end
 
-    Discourse.redis.del(key)
-    MessageBus.publish(readonly_channel, false)
-    true
-  end
+    def enable_pg_force_readonly_mode
+      RailsMultisite::ConnectionManagement.each_connection do
+        enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      end
 
-  def self.enable_pg_force_readonly_mode
-    RailsMultisite::ConnectionManagement.each_connection do
-      enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      true
     end
 
-    true
-  end
+    def disable_pg_force_readonly_mode
+      RailsMultisite::ConnectionManagement.each_connection do
+        disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      end
 
-  def self.disable_pg_force_readonly_mode
-    RailsMultisite::ConnectionManagement.each_connection do
-      disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      true
     end
 
-    true
-  end
-
-  def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || GlobalSetting.pg_force_readonly_mode || Discourse.redis.exists?(*keys)
-  end
-
-  def self.staff_writes_only_mode?
-    Discourse.redis.get(STAFF_WRITES_ONLY_MODE_KEY).present?
-  end
-
-  def self.pg_readonly_mode?
-    Discourse.redis.get(PG_READONLY_MODE_KEY).present?
-  end
-
-  # Shared between processes
-  def self.postgres_last_read_only
-    @postgres_last_read_only ||= DistributedCache.new("postgres_last_read_only")
-  end
-
-  # Per-process
-  def self.redis_last_read_only
-    @redis_last_read_only ||= {}
-  end
-
-  def self.postgres_recently_readonly?
-    seconds =
-      postgres_last_read_only.defer_get_set("timestamp") { redis.get(LAST_POSTGRES_READONLY_KEY) }
-
-    seconds ? Time.zone.at(seconds.to_i) > 15.seconds.ago : false
-  end
-
-  def self.recently_readonly?
-    redis_read_only = redis_last_read_only[Discourse.redis.namespace]
-
-    (redis_read_only.present? && redis_read_only > 15.seconds.ago) || postgres_recently_readonly?
-  end
-
-  def self.received_postgres_readonly!
-    time = Time.zone.now
-    redis.set(LAST_POSTGRES_READONLY_KEY, time.to_i.to_s)
-    postgres_last_read_only.clear(after_commit: false)
-
-    time
-  end
-
-  def self.clear_postgres_readonly!
-    redis.del(LAST_POSTGRES_READONLY_KEY)
-    postgres_last_read_only.clear(after_commit: false)
-  end
-
-  def self.received_redis_readonly!
-    redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
-  end
-
-  def self.clear_redis_readonly!
-    redis_last_read_only[Discourse.redis.namespace] = nil
-  end
-
-  def self.clear_readonly!
-    clear_redis_readonly!
-    clear_postgres_readonly!
-    Site.clear_anon_cache!
-    true
-  end
-
-  def self.request_refresh!(user_ids: nil)
-    # Causes refresh on next click for all clients
-    #
-    # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
-    # it spreads the refreshes out over a time period
-    if user_ids
-      MessageBus.publish("/refresh_client", "clobber", user_ids: user_ids)
-    else
-      MessageBus.publish("/global/asset-version", "clobber")
+    def readonly_mode?(keys = READONLY_KEYS)
+      recently_readonly? || GlobalSetting.pg_force_readonly_mode || Discourse.redis.exists?(*keys)
     end
-  end
 
-  def self.git_version
-    @git_version ||= GitUtils.git_version
-  end
-
-  def self.git_branch
-    @git_branch ||= GitUtils.git_branch
-  end
-
-  def self.full_version
-    @full_version ||= GitUtils.full_version
-  end
-
-  def self.last_commit_date
-    @last_commit_date ||= GitUtils.last_commit_date
-  end
-
-  def self.try_git(git_cmd, default_value)
-    GitUtils.try_git(git_cmd, default_value)
-  end
-
-  def self.user_agent
-    if git_version.present?
-      @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
-    else
-      @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+    def staff_writes_only_mode?
+      Discourse.redis.get(STAFF_WRITES_ONLY_MODE_KEY).present?
     end
-  end
 
-  # Either returns the site_contact_username user or the first admin.
-  def self.site_contact_user
-    user =
-      User.find_by(
-        username_lower: SiteSetting.site_contact_username.downcase,
-      ) if SiteSetting.site_contact_username.present?
-    user ||= system_user || User.admins.real.order(:id).first
+    def pg_readonly_mode?
+      Discourse.redis.get(PG_READONLY_MODE_KEY).present?
+    end
+
+    # Shared between processes
+    def postgres_last_read_only
+      @postgres_last_read_only ||= DistributedCache.new("postgres_last_read_only")
+    end
+
+    # Per-process
+    def redis_last_read_only
+      @redis_last_read_only ||= {}
+    end
+
+    def postgres_recently_readonly?
+      seconds =
+        postgres_last_read_only.defer_get_set("timestamp") { redis.get(LAST_POSTGRES_READONLY_KEY) }
+
+      seconds ? Time.zone.at(seconds.to_i) > 15.seconds.ago : false
+    end
+
+    def recently_readonly?
+      redis_read_only = redis_last_read_only[Discourse.redis.namespace]
+
+      (redis_read_only.present? && redis_read_only > 15.seconds.ago) || postgres_recently_readonly?
+    end
+
+    def received_postgres_readonly!
+      time = Time.zone.now
+      redis.set(LAST_POSTGRES_READONLY_KEY, time.to_i.to_s)
+      postgres_last_read_only.clear(after_commit: false)
+
+      time
+    end
+
+    def clear_postgres_readonly!
+      redis.del(LAST_POSTGRES_READONLY_KEY)
+      postgres_last_read_only.clear(after_commit: false)
+    end
+
+    def received_redis_readonly!
+      redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
+    end
+
+    def clear_redis_readonly!
+      redis_last_read_only[Discourse.redis.namespace] = nil
+    end
+
+    def clear_readonly!
+      clear_redis_readonly!
+      clear_postgres_readonly!
+      Site.clear_anon_cache!
+      true
+    end
+
+    def request_refresh!(user_ids: nil)
+      # Causes refresh on next click for all clients
+      #
+      # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
+      # it spreads the refreshes out over a time period
+      if user_ids
+        MessageBus.publish("/refresh_client", "clobber", user_ids: user_ids)
+      else
+        MessageBus.publish("/global/asset-version", "clobber")
+      end
+    end
+
+    def git_version
+      @git_version ||= GitUtils.git_version
+    end
+
+    def git_branch
+      @git_branch ||= GitUtils.git_branch
+    end
+
+    def full_version
+      @full_version ||= GitUtils.full_version
+    end
+
+    def last_commit_date
+      @last_commit_date ||= GitUtils.last_commit_date
+    end
+
+    def try_git(git_cmd, default_value)
+      GitUtils.try_git(git_cmd, default_value)
+    end
+
+    def user_agent
+      if git_version.present?
+        @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
+      else
+        @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+      end
+    end
+
+    # Either returns the site_contact_username user or the first admin.
+    def site_contact_user
+      user =
+        User.find_by(
+          username_lower: SiteSetting.site_contact_username.downcase,
+        ) if SiteSetting.site_contact_username.present?
+      user ||= system_user || User.admins.real.order(:id).first
+    end
   end
 
   # A global override bypasses the write-time name-to-id conversion.
@@ -996,406 +1022,414 @@ module Discourse
 
   SYSTEM_USER_ID = -1
 
-  def self.system_user
-    @system_users ||= {}
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
-  end
-
-  def self.store
-    if SiteSetting.Upload.enable_s3_uploads
-      @s3_store_loaded ||= require "file_store/s3_store"
-      FileStore::S3Store.new
-    else
-      @local_store_loaded ||= require "file_store/local_store"
-      FileStore::LocalStore.new
-    end
-  end
-
-  def self.stats
-    PluginStore.new("stats")
-  end
-
-  def self.current_user_provider
-    @current_user_provider || Auth::DefaultCurrentUserProvider
-  end
-
-  def self.current_user_provider=(val)
-    @current_user_provider = val
-  end
-
-  def self.asset_host
-    Rails.configuration.action_controller.asset_host
-  end
-
-  def self.readonly_channel
-    "/site/read-only"
-  end
-
-  # all forking servers must call this
-  # before forking, otherwise the forked process might
-  # be in a bad state
-  def self.before_fork
-    if GlobalSetting.mini_racer_single_threaded
-      ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
-    else
-      # V8 does not support forking, make sure all contexts are disposed
-      ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+  class << self
+    def system_user
+      @system_users ||= {}
+      current_db = RailsMultisite::ConnectionManagement.current_db
+      @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
     end
 
-    # get rid of rubbish so we don't share it
-    Process.warmup
-  end
-
-  # Called in web worker processes after fork to apply worker-specific
-  # database variable overrides (e.g. a stricter statement_timeout for
-  # web requests than for sidekiq jobs). Configured via GlobalSettings
-  # with the `unicorn_worker_db_variables_` prefix.
-  def self.apply_worker_db_variables_overrides
-    variables_overrides = {}
-    prefix = "unicorn_worker_db_variables_"
-
-    GlobalSetting.provider.keys.each do |key|
-      if key.start_with?(prefix)
-        variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
-          key,
-        )
+    def store
+      if SiteSetting.Upload.enable_s3_uploads
+        @s3_store_loaded ||= require "file_store/s3_store"
+        FileStore::S3Store.new
+      else
+        @local_store_loaded ||= require "file_store/local_store"
+        FileStore::LocalStore.new
       end
     end
 
-    if variables_overrides.any?
-      ActiveRecord::Base.configurations =
-        Rails.application.config.database_configuration(variables_overrides:)
-      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
-      ActiveRecord::Base.establish_connection
-    end
-  end
-
-  # all forking servers must call this
-  # after fork, otherwise Discourse will be
-  # in a bad state
-  def self.after_fork
-    # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
-    MessageBus.after_fork
-    SiteSetting.after_fork
-    Discourse.redis.reconnect
-    Rails.cache.reconnect
-    Discourse.cache.reconnect
-    Logster.store.redis.reconnect
-    Sidekiq.redis_pool.reload(&:close)
-
-    if !GlobalSetting.mini_racer_single_threaded
-      PrettyText.reset_context
-      AssetProcessor.reset_context
+    def stats
+      PluginStore.new("stats")
     end
 
-    # warm up v8 after fork, that way we do not fork a v8 context
-    # it may cause issues if bg threads in a v8 isolate randomly stop
-    # working due to fork
-    begin
-      # Skip warmup in development mode - it makes boot take ~2s longer
-      PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
-    rescue => e
-      Rails.logger.error("Failed to warm up pretty text: #{e}\n#{e.backtrace.join("\n")}")
+    def current_user_provider
+      @current_user_provider || Auth::DefaultCurrentUserProvider
     end
 
-    nil
-  end
-
-  # you can use Discourse.warn when you want to report custom environment
-  # with the error, this helps with grouping
-  def self.warn(message, env = nil)
-    append = env ? (+" ") << env.map { |k, v| "#{k}: #{v}" }.join(" ") : ""
-
-    loggers = Rails.logger.broadcasts
-    logster_env = env
-
-    if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
-      logster_env = Logster::Message.populate_from_env(old_env)
-
-      # a bit awkward by try to keep the new params
-      env.each { |k, v| logster_env[k] = v }
+    def current_user_provider=(val)
+      @current_user_provider = val
     end
 
-    loggers.each do |logger|
-      if !(Logster::Logger === logger)
-        logger.warn("#{message} #{append}")
-        next
+    def asset_host
+      Rails.configuration.action_controller.asset_host
+    end
+
+    def readonly_channel
+      "/site/read-only"
+    end
+
+    # all forking servers must call this
+    # before forking, otherwise the forked process might
+    # be in a bad state
+    def before_fork
+      if GlobalSetting.mini_racer_single_threaded
+        ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
+      else
+        # V8 does not support forking, make sure all contexts are disposed
+        ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
       end
 
-      logger.store.report(::Logger::Severity::WARN, "discourse", message, env: logster_env)
+      # get rid of rubbish so we don't share it
+      Process.warmup
     end
 
-    if old_env
-      env.each do |k, v|
-        # do not leak state
-        logster_env.delete(k)
+    # Called in web worker processes after fork to apply worker-specific
+    # database variable overrides (e.g. a stricter statement_timeout for
+    # web requests than for sidekiq jobs). Configured via GlobalSettings
+    # with the `unicorn_worker_db_variables_` prefix.
+    def apply_worker_db_variables_overrides
+      variables_overrides = {}
+      prefix = "unicorn_worker_db_variables_"
+
+      GlobalSetting.provider.keys.each do |key|
+        if key.start_with?(prefix)
+          variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
+            key,
+          )
+        end
+      end
+
+      if variables_overrides.any?
+        ActiveRecord::Base.configurations =
+          Rails.application.config.database_configuration(variables_overrides:)
+        ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+        ActiveRecord::Base.establish_connection
       end
     end
 
-    nil
-  end
+    # all forking servers must call this
+    # after fork, otherwise Discourse will be
+    # in a bad state
+    def after_fork
+      # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
+      MessageBus.after_fork
+      SiteSetting.after_fork
+      Discourse.redis.reconnect
+      Rails.cache.reconnect
+      Discourse.cache.reconnect
+      Logster.store.redis.reconnect
+      Sidekiq.redis_pool.reload(&:close)
 
-  # report a warning maintaining backtrack for logster
-  def self.warn_exception(e, message: "", env: nil)
-    if Rails.logger.respond_to? :add_with_opts
-      env ||= {}
-      env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
+      if !GlobalSetting.mini_racer_single_threaded
+        PrettyText.reset_context
+        AssetProcessor.reset_context
+      end
 
-      # logster
-      Rails.logger.add_with_opts(
-        ::Logger::Severity::WARN,
-        "#{message} : #{e.class.name} : #{e}",
-        "discourse-exception",
-        backtrace: e.backtrace.join("\n"),
-        env: env,
-      )
-    else
-      # no logster ... fallback
-      Rails.logger.warn("#{message} #{e}\n#{e.backtrace.join("\n")}")
-    end
-  rescue StandardError
-    STDERR.puts "Failed to report exception #{e} #{message}"
-  end
-
-  def self.capture_exceptions(message: "", env: nil)
-    yield
-  rescue Exception => e
-    Discourse.warn_exception(e, message: message, env: env)
-    nil
-  end
-
-  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
-    location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["DEPRECATION NOTICE:", warning]
-    warning << "(deprecated since Discourse #{since})" if since
-    warning << "(removal in Discourse #{drop_from})" if drop_from
-    warning << "\nAt #{location}"
-    warning = warning.join(" ")
-
-    raise Deprecation.new(warning) if raise_error
-
-    STDERR.puts(warning) if Rails.env.development?
-
-    STDERR.puts(warning) if output_in_test && Rails.env.test?
-
-    digest = Digest::MD5.hexdigest(warning)
-    redis_key = "deprecate-notice-#{digest}"
-
-    if !Rails.env.development? && Rails.logger && !GlobalSetting.skip_redis? &&
-         !Discourse.redis.without_namespace.get(redis_key)
-      Rails.logger.warn(warning)
+      # warm up v8 after fork, that way we do not fork a v8 context
+      # it may cause issues if bg threads in a v8 isolate randomly stop
+      # working due to fork
       begin
-        Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
-      rescue Redis::ReadOnlyError
+        # Skip warmup in development mode - it makes boot take ~2s longer
+        PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
+      rescue => e
+        Rails.logger.error("Failed to warm up pretty text: #{e}\n#{e.backtrace.join("\n")}")
       end
+
+      nil
     end
-    warning
+
+    # you can use Discourse.warn when you want to report custom environment
+    # with the error, this helps with grouping
+    def warn(message, env = nil)
+      append = env ? (+" ") << env.map { |k, v| "#{k}: #{v}" }.join(" ") : ""
+
+      loggers = Rails.logger.broadcasts
+      logster_env = env
+
+      if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+        logster_env = Logster::Message.populate_from_env(old_env)
+
+        # a bit awkward by try to keep the new params
+        env.each { |k, v| logster_env[k] = v }
+      end
+
+      loggers.each do |logger|
+        if !(Logster::Logger === logger)
+          logger.warn("#{message} #{append}")
+          next
+        end
+
+        logger.store.report(::Logger::Severity::WARN, "discourse", message, env: logster_env)
+      end
+
+      if old_env
+        env.each do |k, v|
+          # do not leak state
+          logster_env.delete(k)
+        end
+      end
+
+      nil
+    end
+
+    # report a warning maintaining backtrack for logster
+    def warn_exception(e, message: "", env: nil)
+      if Rails.logger.respond_to? :add_with_opts
+        env ||= {}
+        env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
+
+        # logster
+        Rails.logger.add_with_opts(
+          ::Logger::Severity::WARN,
+          "#{message} : #{e.class.name} : #{e}",
+          "discourse-exception",
+          backtrace: e.backtrace.join("\n"),
+          env: env,
+        )
+      else
+        # no logster ... fallback
+        Rails.logger.warn("#{message} #{e}\n#{e.backtrace.join("\n")}")
+      end
+    rescue StandardError
+      STDERR.puts "Failed to report exception #{e} #{message}"
+    end
+
+    def capture_exceptions(message: "", env: nil)
+      yield
+    rescue Exception => e
+      Discourse.warn_exception(e, message: message, env: env)
+      nil
+    end
+
+    def deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
+      location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
+      warning = ["DEPRECATION NOTICE:", warning]
+      warning << "(deprecated since Discourse #{since})" if since
+      warning << "(removal in Discourse #{drop_from})" if drop_from
+      warning << "\nAt #{location}"
+      warning = warning.join(" ")
+
+      raise Deprecation.new(warning) if raise_error
+
+      STDERR.puts(warning) if Rails.env.development?
+
+      STDERR.puts(warning) if output_in_test && Rails.env.test?
+
+      digest = Digest::MD5.hexdigest(warning)
+      redis_key = "deprecate-notice-#{digest}"
+
+      if !Rails.env.development? && Rails.logger && !GlobalSetting.skip_redis? &&
+           !Discourse.redis.without_namespace.get(redis_key)
+        Rails.logger.warn(warning)
+        begin
+          Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
+        rescue Redis::ReadOnlyError
+        end
+      end
+      warning
+    end
   end
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config
-    GlobalSetting
-      .redis_config
-      .dup
-      .except(:client_implementation, :custom)
-      .tap { |config| config.merge!(db: config[:db].to_i + 1) }
-  end
+  class << self
+    def sidekiq_redis_config
+      GlobalSetting
+        .redis_config
+        .dup
+        .except(:client_implementation, :custom)
+        .tap { |config| config.merge!(db: config[:db].to_i + 1) }
+    end
 
-  def self.static_doc_topic_ids
-    [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
-  end
+    def static_doc_topic_ids
+      [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
+    end
 
-  def self.site_creation_date
-    @creation_dates ||= {}
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    @creation_dates[current_db] ||= begin
-      result = DB.query_single <<~SQL
+    def site_creation_date
+      @creation_dates ||= {}
+      current_db = RailsMultisite::ConnectionManagement.current_db
+      @creation_dates[current_db] ||= begin
+        result = DB.query_single <<~SQL
           SELECT created_at
           FROM schema_migration_details
           ORDER BY created_at
           LIMIT 1
         SQL
-      result.first
+        result.first
+      end
     end
-  end
 
-  def self.clear_site_creation_date_cache
-    @creation_dates = {}
+    def clear_site_creation_date_cache
+      @creation_dates = {}
+    end
   end
 
   cattr_accessor :last_ar_cache_reset
 
-  def self.reset_active_record_cache_if_needed(e)
-    last_cache_reset = Discourse.last_ar_cache_reset
-    if e && e.message =~ /UndefinedColumn/ &&
-         (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
-      Discourse.last_ar_cache_reset = Time.zone.now
-      Discourse.reset_active_record_cache
+  class << self
+    def reset_active_record_cache_if_needed(e)
+      last_cache_reset = Discourse.last_ar_cache_reset
+      if e && e.message =~ /UndefinedColumn/ &&
+           (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
+        Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
+        Discourse.last_ar_cache_reset = Time.zone.now
+        Discourse.reset_active_record_cache
+      end
     end
-  end
 
-  def self.reset_active_record_cache
-    ActiveRecord::Base.connection.query_cache.clear
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.reset_column_information
-    rescue StandardError
+    def reset_active_record_cache
+      ActiveRecord::Base.connection.query_cache.clear
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+        table.classify.constantize.reset_column_information
+      rescue StandardError
+        nil
+      end
       nil
     end
-    nil
-  end
 
-  def self.running_in_rack?
-    ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
-  end
-
-  def self.skip_post_deployment_migrations?
-    %w[1 true].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
-  end
-
-  # this is used to preload as much stuff as possible prior to forking
-  # in turn this can conserve large amounts of memory on forking servers
-  def self.preload_rails!
-    return if @preloaded_rails
-
-    if !Rails.env.development?
-      # Skipped in development because the schema cache gets reset on every code change anyway
-      # Better to rely on the filesystem-based db:schema:cache:dump
-
-      # load up all models and schema
-      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        table.classify.constantize.first
-      rescue StandardError
-        nil
-      end
-
-      # ensure we have a full schema cache in case we missed something above
-      ActiveRecord::Base.connection.data_sources.each do |table|
-        ActiveRecord::Base.connection.schema_cache.add(table)
-      end
+    def running_in_rack?
+      ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
     end
 
-    RailsMultisite::ConnectionManagement.safe_each_connection do
-      I18n.t(:posts)
-
-      # this will force Cppjieba to preload if any site has it
-      # enabled allowing it to be reused between all child processes
-      Search.prepare_data("test")
-
-      JsLocaleHelper.load_translations(SiteSetting.default_locale)
-      Site.json_for(Guardian.new)
-      SvgSprite.preload
-
-      begin
-        SiteSetting.client_settings_json
-      rescue => e
-        # Rescue from Redis related errors so that we can still boot the
-        # application even if Redis is down.
-        warn_exception(e, message: "Error while preloading client settings json")
-      end
+    def skip_post_deployment_migrations?
+      %w[1 true].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
     end
 
-    [
-      Thread.new do
-        # router warm up
+    # this is used to preload as much stuff as possible prior to forking
+    # in turn this can conserve large amounts of memory on forking servers
+    def preload_rails!
+      return if @preloaded_rails
 
-        Rails.application.routes.recognize_path("abc")
-      rescue StandardError
-        nil
-      end,
-      Thread.new do
-        # preload discourse version
-        Discourse.git_version
-        Discourse.git_branch
-        Discourse.full_version
-        Discourse.plugins.each { |p| p.commit_url }
-      end,
-      Thread.new do
-        require "actionview_precompiler"
-        ActionviewPrecompiler.precompile
-      end,
-      Thread.new do
-        LetterAvatar.image_magick_version
-        LetterAvatar.cleanup_old
-      end,
-      Thread.new { SvgSprite.core_svgs },
-      Thread.new { EmberAssets.script_chunks(exception: false) },
-      Thread.new do
-        if GlobalSetting.mini_racer_single_threaded
-          PrettyText.cook("warm up **pretty text**")
-          AssetProcessor.v8
+      if !Rails.env.development?
+        # Skipped in development because the schema cache gets reset on every code change anyway
+        # Better to rely on the filesystem-based db:schema:cache:dump
+
+        # load up all models and schema
+        (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
+          table.classify.constantize.first
+        rescue StandardError
+          nil
         end
-      end,
-    ].each(&:join)
-  ensure
-    @preloaded_rails = true
+
+        # ensure we have a full schema cache in case we missed something above
+        ActiveRecord::Base.connection.data_sources.each do |table|
+          ActiveRecord::Base.connection.schema_cache.add(table)
+        end
+      end
+
+      RailsMultisite::ConnectionManagement.safe_each_connection do
+        I18n.t(:posts)
+
+        # this will force Cppjieba to preload if any site has it
+        # enabled allowing it to be reused between all child processes
+        Search.prepare_data("test")
+
+        JsLocaleHelper.load_translations(SiteSetting.default_locale)
+        Site.json_for(Guardian.new)
+        SvgSprite.preload
+
+        begin
+          SiteSetting.client_settings_json
+        rescue => e
+          # Rescue from Redis related errors so that we can still boot the
+          # application even if Redis is down.
+          warn_exception(e, message: "Error while preloading client settings json")
+        end
+      end
+
+      [
+        Thread.new do
+          # router warm up
+
+          Rails.application.routes.recognize_path("abc")
+        rescue StandardError
+          nil
+        end,
+        Thread.new do
+          # preload discourse version
+          Discourse.git_version
+          Discourse.git_branch
+          Discourse.full_version
+          Discourse.plugins.each { |p| p.commit_url }
+        end,
+        Thread.new do
+          require "actionview_precompiler"
+          ActionviewPrecompiler.precompile
+        end,
+        Thread.new do
+          LetterAvatar.image_magick_version
+          LetterAvatar.cleanup_old
+        end,
+        Thread.new { SvgSprite.core_svgs },
+        Thread.new { EmberAssets.script_chunks(exception: false) },
+        Thread.new do
+          if GlobalSetting.mini_racer_single_threaded
+            PrettyText.cook("warm up **pretty text**")
+            AssetProcessor.v8
+          end
+        end,
+      ].each(&:join)
+    ensure
+      @preloaded_rails = true
+    end
   end
 
   mattr_accessor :redis
 
-  def self.is_parallel_test?
-    ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
-  end
-
-  def self.test_env_number
-    return "0" if ENV["TEST_ENV_NUMBER"].nil?
-    ENV["TEST_ENV_NUMBER"].presence || "1"
-  end
-
-  def self.apply_cdn_headers(headers)
-    headers["Access-Control-Allow-Origin"] = "*"
-  end
-
-  def self.allow_dev_populate?
-    Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
-  end
-
-  # warning: this method is very expensive and shouldn't be called in places
-  # where performance matters. it's meant to be called manually (e.g. in the
-  # rails console) when dealing with an emergency that requires invalidating
-  # theme cache
-  def self.clear_all_theme_cache!
-    ThemeField.force_recompilation!
-    Theme.all.each(&:update_javascript_cache!)
-    Theme.expire_site_cache!
-  end
-
-  def self.anonymous_locale(request)
-    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
-    locale ||= locale_from_cookie(request)
-    locale ||=
-      request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
-    HttpLanguageParser.parse(locale)
-  end
-
-  def self.locale_from_cookie(request)
-    cookie = request.cookies["locale"]
-    return if cookie.blank?
-    return cookie if SiteSetting.set_locale_from_cookie
-
-    # The language switcher writes this cookie, so reading it back needs no separate opt-in.
-    # Restricted to the configured locales so anonymous cache variance stays bounded by the
-    # site's own locale list rather than every available locale.
-    if ContentLocalization.language_switcher_enabled? &&
-         SiteSetting.content_localization_locales.include?(cookie)
-      cookie
+  class << self
+    def is_parallel_test?
+      ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
     end
-  end
 
-  # For test environment only
-  def self.enable_sidekiq_logging
-    @@sidekiq_logging_enabled = true
-  end
+    def test_env_number
+      return "0" if ENV["TEST_ENV_NUMBER"].nil?
+      ENV["TEST_ENV_NUMBER"].presence || "1"
+    end
 
-  # For test environment only
-  def self.disable_sidekiq_logging
-    @@sidekiq_logging_enabled = false
-  end
+    def apply_cdn_headers(headers)
+      headers["Access-Control-Allow-Origin"] = "*"
+    end
 
-  def self.enable_sidekiq_logging?
-    ENV["DISCOURSE_LOG_SIDEKIQ"] == "1" ||
-      (defined?(@@sidekiq_logging_enabled) && @@sidekiq_logging_enabled)
+    def allow_dev_populate?
+      Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
+    end
+
+    # warning: this method is very expensive and shouldn't be called in places
+    # where performance matters. it's meant to be called manually (e.g. in the
+    # rails console) when dealing with an emergency that requires invalidating
+    # theme cache
+    def clear_all_theme_cache!
+      ThemeField.force_recompilation!
+      Theme.all.each(&:update_javascript_cache!)
+      Theme.expire_site_cache!
+    end
+
+    def anonymous_locale(request)
+      locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
+      locale ||= locale_from_cookie(request)
+      locale ||=
+        request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
+      HttpLanguageParser.parse(locale)
+    end
+
+    def locale_from_cookie(request)
+      cookie = request.cookies["locale"]
+      return if cookie.blank?
+      return cookie if SiteSetting.set_locale_from_cookie
+
+      # The language switcher writes this cookie, so reading it back needs no separate opt-in.
+      # Restricted to the configured locales so anonymous cache variance stays bounded by the
+      # site's own locale list rather than every available locale.
+      if ContentLocalization.language_switcher_enabled? &&
+           SiteSetting.content_localization_locales.include?(cookie)
+        cookie
+      end
+    end
+
+    # For test environment only
+    def enable_sidekiq_logging
+      @@sidekiq_logging_enabled = true
+    end
+
+    # For test environment only
+    def disable_sidekiq_logging
+      @@sidekiq_logging_enabled = false
+    end
+
+    def enable_sidekiq_logging?
+      ENV["DISCOURSE_LOG_SIDEKIQ"] == "1" ||
+        (defined?(@@sidekiq_logging_enabled) && @@sidekiq_logging_enabled)
+    end
   end
 end

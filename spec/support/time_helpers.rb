@@ -3,8 +3,10 @@
 # Time / clock control for specs.
 
 class TrackTimeStub
-  def self.stubbed
-    false
+  class << self
+    def stubbed
+      false
+    end
   end
 end
 
@@ -70,19 +72,21 @@ module BrowserTime
   # would silently never run.
   #
   # Playwright warns about this "stuck page" behaviour for pinned clocks too.
-  def self.freeze(page, time)
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.clock.install(time:)
-      pw_page.clock.resume
+  class << self
+    def freeze(page, time)
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.clock.install(time:)
+        pw_page.clock.resume
+      end
     end
-  end
 
-  # Apply timezone override via CDP if timezone metadata is present.
-  # We use CDP instead of the driver's timezoneId option because the driver
-  # instance is cached and reused between tests, so timezoneId only affects
-  # the first test. CDP override works at runtime for each test.
-  def self.override_timezone(pw_page, timezone)
-    cdp = pw_page.context.new_cdp_session(pw_page)
-    cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+    # Apply timezone override via CDP if timezone metadata is present.
+    # We use CDP instead of the driver's timezoneId option because the driver
+    # instance is cached and reused between tests, so timezoneId only affects
+    # the first test. CDP override works at runtime for each test.
+    def override_timezone(pw_page, timezone)
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+    end
   end
 end

@@ -2,8 +2,10 @@
 
 module Onebox
   module LayoutSupport
-    def self.max_text
-      500
+    class << self
+      def max_text
+        500
+      end
     end
 
     def layout

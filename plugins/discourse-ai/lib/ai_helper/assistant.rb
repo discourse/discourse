@@ -15,18 +15,61 @@ module DiscourseAi
       REPLACE_DATES = "replace_dates"
       IMAGE_CAPTION = "image_caption"
 
-      def self.prompt_cache
-        @prompt_cache ||= DiscourseAi::MultisiteHash.new("prompt_cache")
+      SANITIZE_REGEX_STR =
+        %w[term context topic replyTo input output result]
+          .map { |tag| "<#{tag}>\\n?|\\n?</#{tag}>" }
+          .join("|")
+
+      SANITIZE_REGEX = Regexp.new(SANITIZE_REGEX_STR, Regexp::IGNORECASE | Regexp::MULTILINE)
+
+      class << self
+        def prompt_cache
+          @prompt_cache ||= DiscourseAi::MultisiteHash.new("prompt_cache")
+        end
+
+        def clear_prompt_cache!
+          prompt_cache.flush!
+        end
+
+        def prompt_agent_ids
+          agents_prompt_map.keys.compact.uniq
+        end
       end
 
-      def self.clear_prompt_cache!
-        prompt_cache.flush!
-      end
+      # Priorities are:
+      #   1. Agent's default LLM
+      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
+      class << self
+        def find_ai_helper_model(helper_mode, agent_klass)
+          model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
-      def self.prompt_agent_ids
-        agents_prompt_map.keys.compact.uniq
-      end
+          if model_id.present?
+            LlmModel.find_by(id: model_id)
+          else
+            LlmModel.last
+          end
+        end
 
+        def agents_prompt_map(include_image_caption: false)
+          map = {
+            SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
+            SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
+            SiteSetting.ai_helper_proofreader_agent.to_i => PROOFREAD,
+            SiteSetting.ai_helper_markdown_tables_agent.to_i => MARKDOWN_TABLE,
+            SiteSetting.ai_helper_custom_prompt_agent.to_i => CUSTOM_PROMPT,
+            SiteSetting.ai_helper_explain_agent.to_i => EXPLAIN,
+            SiteSetting.ai_helper_post_illustrator_agent.to_i => ILLUSTRATE_POST,
+            SiteSetting.ai_helper_smart_dates_agent.to_i => REPLACE_DATES,
+          }
+
+          if include_image_caption
+            image_caption_agent = SiteSetting.ai_image_caption_agent.to_i
+            map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
+          end
+
+          map
+        end
+      end
       def initialize(helper_llm: nil, image_caption_llm: nil)
         @helper_llm = helper_llm
         @image_caption_llm = image_caption_llm
@@ -351,39 +394,6 @@ module DiscourseAi
         self.class.find_ai_helper_model(helper_mode, agent_klass)
       end
 
-      # Priorities are:
-      #   1. Agent's default LLM
-      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
-      def self.find_ai_helper_model(helper_mode, agent_klass)
-        model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
-
-        if model_id.present?
-          LlmModel.find_by(id: model_id)
-        else
-          LlmModel.last
-        end
-      end
-
-      def self.agents_prompt_map(include_image_caption: false)
-        map = {
-          SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
-          SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
-          SiteSetting.ai_helper_proofreader_agent.to_i => PROOFREAD,
-          SiteSetting.ai_helper_markdown_tables_agent.to_i => MARKDOWN_TABLE,
-          SiteSetting.ai_helper_custom_prompt_agent.to_i => CUSTOM_PROMPT,
-          SiteSetting.ai_helper_explain_agent.to_i => EXPLAIN,
-          SiteSetting.ai_helper_post_illustrator_agent.to_i => ILLUSTRATE_POST,
-          SiteSetting.ai_helper_smart_dates_agent.to_i => REPLACE_DATES,
-        }
-
-        if include_image_caption
-          image_caption_agent = SiteSetting.ai_image_caption_agent.to_i
-          map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
-        end
-
-        map
-      end
-
       def agents_prompt_map(include_image_caption: false)
         self.class.agents_prompt_map(include_image_caption:)
       end
@@ -409,13 +419,6 @@ module DiscourseAi
           end
           .compact
       end
-
-      SANITIZE_REGEX_STR =
-        %w[term context topic replyTo input output result]
-          .map { |tag| "<#{tag}>\\n?|\\n?</#{tag}>" }
-          .join("|")
-
-      SANITIZE_REGEX = Regexp.new(SANITIZE_REGEX_STR, Regexp::IGNORECASE | Regexp::MULTILINE)
 
       def sanitize_result(result)
         result.gsub(SANITIZE_REGEX, "")

@@ -15,16 +15,19 @@ module Onebox
       matches_domain("gist.github.com")
       always_https
 
-      def self.matches_path(path)
-        path.match?(%r{^/[\w\-]+/[a-f0-9]+(/|$)})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/[\w\-]+/[a-f0-9]+(/|$)})
+        end
       end
 
+      class << self
+        def priority
+          110 # overlaps with GithubRepoOnebox
+        end
+      end
       def url
         "https://api.github.com/gists/#{match[:sha]}"
-      end
-
-      def self.priority
-        110 # overlaps with GithubRepoOnebox
       end
 
       private

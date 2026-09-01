@@ -11,98 +11,6 @@ class TopicQuery
   PG_MAX_INT = 2_147_483_647
   DEFAULT_PER_PAGE_COUNT = 30
 
-  def self.validators
-    @validators ||=
-      begin
-        int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
-        zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
-        zero_up_to_max_page =
-          lambda { |x| int.call(x) && x.to_i.between?(0, SiteSetting.max_topic_query_page_param) }
-        one_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
-        array_or_string = lambda { |x| Array === x || String === x }
-        string = lambda { |x| String === x }
-        true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
-
-        {
-          page: zero_up_to_max_page,
-          per_page: one_up_to_one_hundred,
-          before: zero_up_to_max_int,
-          bumped_before: zero_up_to_max_int,
-          topic_ids: array_or_string,
-          category: string,
-          order: string,
-          ascending: true_or_false,
-          min_posts: zero_up_to_max_int,
-          max_posts: zero_up_to_max_int,
-          status: string,
-          filter: string,
-          state: string,
-          search: string,
-          q: string,
-          f: string,
-          subset: string,
-          group_name: string,
-          tags: array_or_string,
-          match_all_tags: true_or_false,
-          no_subcategories: true_or_false,
-          no_tags: true_or_false,
-          exclude_tag: string,
-        }
-      end
-  end
-
-  def self.validate?(option, value)
-    if fn = validators[option.to_sym]
-      fn.call(value)
-    else
-      true
-    end
-  end
-
-  def self.public_valid_options
-    # For these to work in Ember, add them to `controllers/discovery/list.js`
-    @public_valid_options ||= %i[
-      page
-      per_page
-      before
-      bumped_before
-      topic_ids
-      category
-      order
-      ascending
-      min_posts
-      max_posts
-      status
-      filter
-      state
-      search
-      q
-      f
-      subset
-      group_name
-      tags
-      match_all_tags
-      no_subcategories
-      no_tags
-      exclude_tag
-    ]
-  end
-
-  def self.valid_options
-    @valid_options ||=
-      public_valid_options +
-        %i[
-          except_topic_ids
-          limit
-          visible
-          guardian
-          no_definitions
-          destination_category_id
-          include_all_pms
-          include_pms
-        ]
-  end
-
   # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
     "likes" => "like_count",
@@ -114,33 +22,296 @@ class TopicQuery
     "category" => "category_id",
     "created" => "created_at",
   }
+  class << self
+    def validators
+      @validators ||=
+        begin
+          int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
+          zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+          zero_up_to_max_page =
+            lambda { |x| int.call(x) && x.to_i.between?(0, SiteSetting.max_topic_query_page_param) }
+          one_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
+          array_or_string = lambda { |x| Array === x || String === x }
+          string = lambda { |x| String === x }
+          true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
+
+          {
+            page: zero_up_to_max_page,
+            per_page: one_up_to_one_hundred,
+            before: zero_up_to_max_int,
+            bumped_before: zero_up_to_max_int,
+            topic_ids: array_or_string,
+            category: string,
+            order: string,
+            ascending: true_or_false,
+            min_posts: zero_up_to_max_int,
+            max_posts: zero_up_to_max_int,
+            status: string,
+            filter: string,
+            state: string,
+            search: string,
+            q: string,
+            f: string,
+            subset: string,
+            group_name: string,
+            tags: array_or_string,
+            match_all_tags: true_or_false,
+            no_subcategories: true_or_false,
+            no_tags: true_or_false,
+            exclude_tag: string,
+          }
+        end
+    end
+
+    def validate?(option, value)
+      if fn = validators[option.to_sym]
+        fn.call(value)
+      else
+        true
+      end
+    end
+
+    def public_valid_options
+      # For these to work in Ember, add them to `controllers/discovery/list.js`
+      @public_valid_options ||= %i[
+        page
+        per_page
+        before
+        bumped_before
+        topic_ids
+        category
+        order
+        ascending
+        min_posts
+        max_posts
+        status
+        filter
+        state
+        search
+        q
+        f
+        subset
+        group_name
+        tags
+        match_all_tags
+        no_subcategories
+        no_tags
+        exclude_tag
+      ]
+    end
+
+    def valid_options
+      @valid_options ||=
+        public_valid_options +
+          %i[
+            except_topic_ids
+            limit
+            visible
+            guardian
+            no_definitions
+            destination_category_id
+            include_all_pms
+            include_pms
+          ]
+    end
+  end
 
   cattr_accessor :results_filter_callbacks
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
 
-  def self.add_custom_filter(key, &blk)
-    @custom_filters ||= {}
-    valid_options << key
-    public_valid_options << key
-    @custom_filters[key] = blk
-  end
-
-  def self.remove_custom_filter(key)
-    @custom_filters.delete(key)
-    public_valid_options.delete(key)
-    valid_options.delete(key)
-    @custom_filters = nil if @custom_filters.length == 0
-  end
-
-  def self.apply_custom_filters(results, topic_query)
-    if @custom_filters
-      @custom_filters.each { |key, filter| results = filter.call(results, topic_query) }
+  class << self
+    def add_custom_filter(key, &blk)
+      @custom_filters ||= {}
+      valid_options << key
+      public_valid_options << key
+      @custom_filters[key] = blk
     end
-    results
+
+    def remove_custom_filter(key)
+      @custom_filters.delete(key)
+      public_valid_options.delete(key)
+      valid_options.delete(key)
+      @custom_filters = nil if @custom_filters.length == 0
+    end
+
+    def apply_custom_filters(results, topic_query)
+      if @custom_filters
+        @custom_filters.each { |key, filter| results = filter.call(results, topic_query) }
+      end
+      results
+    end
   end
 
+  class << self
+    def unseen_filter(list, user)
+      new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
+    end
+
+    def new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
+      if treat_as_new_topic_start_date
+        list =
+          list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
+      else
+        list = list.where("topics.created_at >= #{treat_as_new_topic_clause_sql}")
+      end
+
+      list.where("tu.last_read_post_number IS NULL").where(
+        "COALESCE(tu.notification_level, :tracking) >= :tracking",
+        tracking: TopicUser.notification_levels[:tracking],
+      )
+    end
+
+    def unread_filter(list, whisperer: false)
+      col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
+
+      list.where("tu.last_read_post_number < topics.#{col_name}").where(
+        "COALESCE(tu.notification_level, :regular) >= :tracking",
+        regular: TopicUser.notification_levels[:regular],
+        tracking: TopicUser.notification_levels[:tracking],
+      )
+    end
+
+    # Any changes here will need to be reflected in `lib/topic-list-tracked-filter.js` for the `isTrackedTopic` function on
+    # the client side. The `f=tracked` query param is not heavily used so we do not want to be querying for a topic's
+    # tracked status by default. Instead, the client will handle the filtering when the `f=tracked` query params is present.
+    def tracked_filter(list, user_id)
+      tracked_category_ids_sql = <<~SQL
+    SELECT cd.category_id FROM category_users cd
+    WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+    SQL
+
+      has_sub_sub_categories = SiteSetting.max_category_nesting == 3
+
+      sql = +<<~SQL
+      topics.category_id IN (
+        SELECT
+          c.id
+        FROM categories c
+        #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
+        WHERE (c.id IN (#{tracked_category_ids_sql}))
+        OR c.parent_category_id IN (#{tracked_category_ids_sql})
+        #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
+      )
+    SQL
+
+      sql << <<~SQL if SiteSetting.tagging_enabled
+        OR topics.id IN (
+          SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
+            SELECT tu.tag_id
+            FROM tag_users tu
+            WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
+          )
+        )
+      SQL
+
+      list.where(sql, user_id: user_id, tracking: NotificationLevels.all[:tracking])
+    end
+
+    def watching_first_post_filter(list, user)
+      return list.none if user.nil?
+
+      category_scope =
+        list.where(
+          "topics.category_id IN (
+          SELECT category_id
+          FROM category_users
+          WHERE user_id = ? AND notification_level = ?
+        )",
+          user.id,
+          CategoryUser.notification_levels[:watching_first_post],
+        )
+
+      return category_scope if !SiteSetting.tagging_enabled
+
+      tag_scope =
+        list.where(
+          "topics.id IN (
+          SELECT topic_id
+          FROM topic_tags
+          WHERE tag_id IN (
+            SELECT tag_id
+            FROM tag_users
+            WHERE user_id = ? AND notification_level = ?
+          )
+        )",
+          user.id,
+          TagUser.notification_levels[:watching_first_post],
+        )
+
+      category_scope.or(tag_scope)
+    end
+  end
+  class << self
+    def remove_muted_tags(list, user, opts = {})
+      if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == "never"
+        return list
+      end
+
+      muted_tag_ids = []
+
+      if user.present?
+        muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+      else
+        muted_tag_names = SiteSetting.default_tags_muted.split("|")
+
+        muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id) if muted_tag_names.present?
+      end
+
+      return list if muted_tag_ids.blank?
+
+      # if viewing the topic list for a muted tag, show all the topics
+      if !ActiveModel::Type::Boolean.new.cast(opts[:no_tags]) && opts[:tags].present?
+        if TagUser
+             .lookup(user, :muted)
+             .joins(:tag)
+             .where("lower(tags.name) = ?", opts[:tags].first.downcase)
+             .exists?
+          return list
+        end
+      end
+
+      query_params = { tag_ids: muted_tag_ids }
+
+      if user && !opts[:skip_categories]
+        query_params[:regular] = CategoryUser.notification_levels[:regular]
+
+        query_params[:watching_or_infinite] = if user.user_option.watched_precedence_over_muted
+          CategoryUser.notification_levels[:watching]
+        else
+          99
+        end
+      end
+
+      if SiteSetting.remove_muted_tags_from_latest == "always"
+        list =
+          list.where(
+            "
+        NOT EXISTS(
+          SELECT 1
+            FROM topic_tags tt
+           WHERE tt.tag_id IN (:tag_ids)
+             AND tt.topic_id = topics.id
+             #{user && !opts[:skip_categories] ? "AND COALESCE(category_users.notification_level, :regular) < :watching_or_infinite" : ""})",
+            query_params,
+          )
+      else
+        list =
+          list.where(
+            "
+        EXISTS (
+          SELECT 1
+            FROM topic_tags tt
+           WHERE (tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id)
+             #{user && !opts[:skip_categories] ? "OR COALESCE(category_users.notification_level, :regular) >= :watching_or_infinite" : ""}
+        ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)",
+            query_params,
+          )
+      end
+    end
+  end
   def initialize(user = nil, options = {})
     options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup
@@ -435,104 +606,6 @@ class TopicQuery
     create_list(:new_in_category, unordered: true, category: category.id) do |list|
       list.by_newest.limit(25)
     end
-  end
-
-  def self.unseen_filter(list, user)
-    new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
-  end
-
-  def self.new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
-    if treat_as_new_topic_start_date
-      list =
-        list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
-    else
-      list = list.where("topics.created_at >= #{treat_as_new_topic_clause_sql}")
-    end
-
-    list.where("tu.last_read_post_number IS NULL").where(
-      "COALESCE(tu.notification_level, :tracking) >= :tracking",
-      tracking: TopicUser.notification_levels[:tracking],
-    )
-  end
-
-  def self.unread_filter(list, whisperer: false)
-    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
-
-    list.where("tu.last_read_post_number < topics.#{col_name}").where(
-      "COALESCE(tu.notification_level, :regular) >= :tracking",
-      regular: TopicUser.notification_levels[:regular],
-      tracking: TopicUser.notification_levels[:tracking],
-    )
-  end
-
-  # Any changes here will need to be reflected in `lib/topic-list-tracked-filter.js` for the `isTrackedTopic` function on
-  # the client side. The `f=tracked` query param is not heavily used so we do not want to be querying for a topic's
-  # tracked status by default. Instead, the client will handle the filtering when the `f=tracked` query params is present.
-  def self.tracked_filter(list, user_id)
-    tracked_category_ids_sql = <<~SQL
-    SELECT cd.category_id FROM category_users cd
-    WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
-    SQL
-
-    has_sub_sub_categories = SiteSetting.max_category_nesting == 3
-
-    sql = +<<~SQL
-      topics.category_id IN (
-        SELECT
-          c.id
-        FROM categories c
-        #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
-        WHERE (c.id IN (#{tracked_category_ids_sql}))
-        OR c.parent_category_id IN (#{tracked_category_ids_sql})
-        #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
-      )
-    SQL
-
-    sql << <<~SQL if SiteSetting.tagging_enabled
-        OR topics.id IN (
-          SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
-            SELECT tu.tag_id
-            FROM tag_users tu
-            WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
-          )
-        )
-      SQL
-
-    list.where(sql, user_id: user_id, tracking: NotificationLevels.all[:tracking])
-  end
-
-  def self.watching_first_post_filter(list, user)
-    return list.none if user.nil?
-
-    category_scope =
-      list.where(
-        "topics.category_id IN (
-          SELECT category_id
-          FROM category_users
-          WHERE user_id = ? AND notification_level = ?
-        )",
-        user.id,
-        CategoryUser.notification_levels[:watching_first_post],
-      )
-
-    return category_scope if !SiteSetting.tagging_enabled
-
-    tag_scope =
-      list.where(
-        "topics.id IN (
-          SELECT topic_id
-          FROM topic_tags
-          WHERE tag_id IN (
-            SELECT tag_id
-            FROM tag_users
-            WHERE user_id = ? AND notification_level = ?
-          )
-        )",
-        user.id,
-        TagUser.notification_levels[:watching_first_post],
-      )
-
-    category_scope.or(tag_scope)
   end
 
   def prioritize_pinned_topics(topics, options)
@@ -1079,74 +1152,6 @@ class TopicQuery
     end
 
     list
-  end
-
-  def self.remove_muted_tags(list, user, opts = {})
-    if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == "never"
-      return list
-    end
-
-    muted_tag_ids = []
-
-    if user.present?
-      muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
-    else
-      muted_tag_names = SiteSetting.default_tags_muted.split("|")
-
-      muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id) if muted_tag_names.present?
-    end
-
-    return list if muted_tag_ids.blank?
-
-    # if viewing the topic list for a muted tag, show all the topics
-    if !ActiveModel::Type::Boolean.new.cast(opts[:no_tags]) && opts[:tags].present?
-      if TagUser
-           .lookup(user, :muted)
-           .joins(:tag)
-           .where("lower(tags.name) = ?", opts[:tags].first.downcase)
-           .exists?
-        return list
-      end
-    end
-
-    query_params = { tag_ids: muted_tag_ids }
-
-    if user && !opts[:skip_categories]
-      query_params[:regular] = CategoryUser.notification_levels[:regular]
-
-      query_params[:watching_or_infinite] = if user.user_option.watched_precedence_over_muted
-        CategoryUser.notification_levels[:watching]
-      else
-        99
-      end
-    end
-
-    if SiteSetting.remove_muted_tags_from_latest == "always"
-      list =
-        list.where(
-          "
-        NOT EXISTS(
-          SELECT 1
-            FROM topic_tags tt
-           WHERE tt.tag_id IN (:tag_ids)
-             AND tt.topic_id = topics.id
-             #{user && !opts[:skip_categories] ? "AND COALESCE(category_users.notification_level, :regular) < :watching_or_infinite" : ""})",
-          query_params,
-        )
-    else
-      list =
-        list.where(
-          "
-        EXISTS (
-          SELECT 1
-            FROM topic_tags tt
-           WHERE (tt.tag_id NOT IN (:tag_ids)
-             AND tt.topic_id = topics.id)
-             #{user && !opts[:skip_categories] ? "OR COALESCE(category_users.notification_level, :regular) >= :watching_or_infinite" : ""}
-        ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)",
-          query_params,
-        )
-    end
   end
 
   def remove_dismissed(list, user)

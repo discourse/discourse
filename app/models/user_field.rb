@@ -30,8 +30,10 @@ class UserField < ActiveRecord::Base
        { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4, date: 5 }.freeze
   alias_attribute :field_type, :field_type_enum
 
-  def self.max_length
-    2048
+  class << self
+    def max_length
+      2048
+    end
   end
 
   def required?

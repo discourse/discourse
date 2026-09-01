@@ -40,6 +40,16 @@ module DiscourseAi
           end
         end
 
+        class << self
+          def no_more_tool_calls_text
+            # note, Anthropic must never prefill with an ending whitespace
+            "Tool budget EXHAUSTED for this response, no more tools will be called in this response.\nHere is the best, complete, answer I can come up with given the information I have to address the original user query."
+          end
+
+          def no_more_tool_calls_text_user
+            "IT IS CRITICAL you do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge."
+          end
+        end
         def initialize(generic_prompt, llm_model, opts: {})
           @prompt = generic_prompt
           @opts = opts
@@ -66,15 +76,6 @@ module DiscourseAi
 
         def tool_choice
           prompt.tool_choice
-        end
-
-        def self.no_more_tool_calls_text
-          # note, Anthropic must never prefill with an ending whitespace
-          "Tool budget EXHAUSTED for this response, no more tools will be called in this response.\nHere is the best, complete, answer I can come up with given the information I have to address the original user query."
-        end
-
-        def self.no_more_tool_calls_text_user
-          "IT IS CRITICAL you do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge."
         end
 
         def no_more_tool_calls_text

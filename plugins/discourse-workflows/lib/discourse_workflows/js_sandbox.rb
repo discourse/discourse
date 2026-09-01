@@ -18,6 +18,16 @@ module DiscourseWorkflows
     class PayloadTooLargeError < StandardError
     end
 
+    class << self
+      def serialize_json_payload(value, label:)
+        payload = value.to_json
+
+        return payload if payload.bytesize <= MAX_INJECTED_JSON_BYTES
+
+        raise PayloadTooLargeError,
+              "Sandbox payload '#{label}' exceeds #{MAX_INJECTED_JSON_BYTES} bytes"
+      end
+    end
     def initialize(workflow_context, user: nil, vars: nil, capture_logs: false, budget_tracker: nil)
       @workflow_context = workflow_context
       @user = user
@@ -66,15 +76,6 @@ module DiscourseWorkflows
 
     def attach(name, callable)
       @js_context.attach(name, callable)
-    end
-
-    def self.serialize_json_payload(value, label:)
-      payload = value.to_json
-
-      return payload if payload.bytesize <= MAX_INJECTED_JSON_BYTES
-
-      raise PayloadTooLargeError,
-            "Sandbox payload '#{label}' exceeds #{MAX_INJECTED_JSON_BYTES} bytes"
     end
 
     def dispose

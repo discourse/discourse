@@ -9,12 +9,13 @@ module DiscourseAi
 
       # ModelType that are eligible for translation based on site settings
       # @return [ActiveRecord::Relation] the ActiveRecord relation of the candidates
-      def self.get
-        raise NotImplementedError
-      end
+      class << self
+        def get
+          raise NotImplementedError
+        end
 
-      def self.total_and_with_locale_count
-        DB.query_single(<<~SQL)
+        def total_and_with_locale_count
+          DB.query_single(<<~SQL)
           WITH eligible AS (
             #{get.to_sql}
           ),
@@ -29,6 +30,7 @@ module DiscourseAi
           SELECT t.count AS total, d.count AS done
           FROM total_count t, done_count d
         SQL
+        end
       end
     end
   end

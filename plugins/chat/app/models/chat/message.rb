@@ -134,13 +134,156 @@ module Chat
                  end
                end
 
-    def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
+    MARKDOWN_FEATURES = %w[
+      anchor
+      bbcode-block
+      bbcode-inline
+      code
+      category-hashtag
+      censored
+      chat-transcript
+      discourse-local-dates
+      emoji
+      inlineEmoji
+      html-img
+      hashtag-autocomplete
+      mentions
+      unicodeUsernames
+      onebox
+      quotes
+      spoiler-alert
+      table
+      text-post-process
+      upload-protocol
+      watched-words
+      chat-html-inline
+    ]
+    MARKDOWN_IT_RULES = %w[
+      autolink
+      list
+      backticks
+      newline
+      code
+      fence
+      image
+      table
+      linkify
+      link
+      strikethrough
+      blockquote
+      emphasis
+      replacements
+      escape
+      entity
+    ]
+    class << self
+      def polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
+    end
 
     validates :cooked, length: { maximum: 20_000 }
 
     validates_with Chat::MessageBlocksValidator
 
     validate :validate_message
+    class << self
+      def cook(message, opts = {})
+        bot = opts[:user_id] && opts[:user_id].negative?
+        slash_command = match_slash_command(message, opts[:author_username])
+        message_to_cook = slash_command ? slash_command[:content] : message
+
+        features = MARKDOWN_FEATURES.dup
+        features << "image-grid" if bot
+        features << "emojiShortcuts" if SiteSetting.enable_emoji_shortcuts
+
+        rules = MARKDOWN_IT_RULES.dup
+        rules << "heading" if bot
+
+        # A rule in our Markdown pipeline may have Guardian checks that require a
+        # user to be present. The last editing user of the message will be more
+        # generally up to date than the creating user. For example, we use
+        # this when cooking #hashtags to determine whether we should render
+        # the found hashtag based on whether the user can access the channel it
+        # is referencing.
+        cooked =
+          PrettyText.cook(
+            message_to_cook,
+            features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
+            markdown_it_rules: rules,
+            force_quote_link: true,
+            user_id: opts[:user_id],
+            hashtag_context: "chat-composer",
+          )
+        cooked =
+          format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
+
+        result =
+          Oneboxer.apply(cooked) do |url|
+            if opts[:invalidate_oneboxes]
+              Oneboxer.invalidate(url)
+              InlineOneboxer.invalidate(url)
+            end
+            onebox = Oneboxer.cached_onebox(url)
+            onebox
+          end
+
+        cooked = result.to_html if result.changed?
+        cooked
+      end
+    end
+    class << self
+      def match_slash_command(message, author_username)
+        return if message.blank?
+
+        SLASH_COMMAND_PATTERNS.each do |name, command|
+          next if command[:formatter] == :action && author_username.blank?
+          next if !(match = message.match(command[:pattern]))
+
+          return { name:, content: match[1].to_s, **command }
+        end
+
+        nil
+      end
+    end
+    class << self
+      def format_slash_command(cooked, command, author_username)
+        if command[:formatter] == :action
+          format_action(cooked, author_username)
+        else
+          append_command_text(cooked, command[:text])
+        end
+      end
+    end
+    class << self
+      def format_action(cooked, author_username)
+        fragment = Loofah.html5_fragment(cooked)
+        elements = fragment.children.select(&:element?)
+        return cooked if elements.length != 1 || elements.first.name != "p"
+
+        paragraph = elements.first
+        emphasis = Nokogiri::XML::Node.new("em", fragment.document)
+        emphasis["class"] = "chat-message-action"
+        emphasis.add_child(Nokogiri::XML::Text.new("#{author_username} ", fragment.document))
+        paragraph.children.to_a.each { |child| emphasis.add_child(child) }
+        paragraph.add_child(emphasis)
+
+        fragment.to_html
+      end
+    end
+    class << self
+      def append_command_text(cooked, text)
+        fragment = Loofah.html5_fragment(cooked)
+        elements = fragment.children.select(&:element?)
+        return cooked if elements.length > 1
+        return cooked if elements.one? && elements.first.name != "p"
+
+        paragraph = elements.first || Nokogiri::XML::Node.new("p", fragment.document)
+        fragment.add_child(paragraph) if elements.empty?
+        separator = paragraph.children.empty? ? "" : " "
+        paragraph.add_child(Nokogiri::XML::Text.new("#{separator}#{text}", fragment.document))
+
+        fragment.to_html
+      end
+    end
     def validate_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self) if !user&.bot?
 
@@ -238,151 +381,18 @@ module Chat
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end
 
-    MARKDOWN_FEATURES = %w[
-      anchor
-      bbcode-block
-      bbcode-inline
-      code
-      category-hashtag
-      censored
-      chat-transcript
-      discourse-local-dates
-      emoji
-      inlineEmoji
-      html-img
-      hashtag-autocomplete
-      mentions
-      unicodeUsernames
-      onebox
-      quotes
-      spoiler-alert
-      table
-      text-post-process
-      upload-protocol
-      watched-words
-      chat-html-inline
-    ]
-
-    MARKDOWN_IT_RULES = %w[
-      autolink
-      list
-      backticks
-      newline
-      code
-      fence
-      image
-      table
-      linkify
-      link
-      strikethrough
-      blockquote
-      emphasis
-      replacements
-      escape
-      entity
-    ]
-
-    def self.cook(message, opts = {})
-      bot = opts[:user_id] && opts[:user_id].negative?
-      slash_command = match_slash_command(message, opts[:author_username])
-      message_to_cook = slash_command ? slash_command[:content] : message
-
-      features = MARKDOWN_FEATURES.dup
-      features << "image-grid" if bot
-      features << "emojiShortcuts" if SiteSetting.enable_emoji_shortcuts
-
-      rules = MARKDOWN_IT_RULES.dup
-      rules << "heading" if bot
-
-      # A rule in our Markdown pipeline may have Guardian checks that require a
-      # user to be present. The last editing user of the message will be more
-      # generally up to date than the creating user. For example, we use
-      # this when cooking #hashtags to determine whether we should render
-      # the found hashtag based on whether the user can access the channel it
-      # is referencing.
-      cooked =
-        PrettyText.cook(
-          message_to_cook,
-          features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
-          markdown_it_rules: rules,
-          force_quote_link: true,
-          user_id: opts[:user_id],
-          hashtag_context: "chat-composer",
-        )
-      cooked = format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
-
-      result =
-        Oneboxer.apply(cooked) do |url|
-          if opts[:invalidate_oneboxes]
-            Oneboxer.invalidate(url)
-            InlineOneboxer.invalidate(url)
-          end
-          onebox = Oneboxer.cached_onebox(url)
-          onebox
-        end
-
-      cooked = result.to_html if result.changed?
-      cooked
-    end
-
     def action?
       SLASH_COMMAND_PATTERNS.any? do |_, command|
         command[:formatter] == :action && message&.match?(command[:pattern])
       end
     end
 
-    def self.match_slash_command(message, author_username)
-      return if message.blank?
-
-      SLASH_COMMAND_PATTERNS.each do |name, command|
-        next if command[:formatter] == :action && author_username.blank?
-        next if !(match = message.match(command[:pattern]))
-
-        return { name:, content: match[1].to_s, **command }
-      end
-
-      nil
-    end
     private_class_method :match_slash_command
 
-    def self.format_slash_command(cooked, command, author_username)
-      if command[:formatter] == :action
-        format_action(cooked, author_username)
-      else
-        append_command_text(cooked, command[:text])
-      end
-    end
     private_class_method :format_slash_command
 
-    def self.format_action(cooked, author_username)
-      fragment = Loofah.html5_fragment(cooked)
-      elements = fragment.children.select(&:element?)
-      return cooked if elements.length != 1 || elements.first.name != "p"
-
-      paragraph = elements.first
-      emphasis = Nokogiri::XML::Node.new("em", fragment.document)
-      emphasis["class"] = "chat-message-action"
-      emphasis.add_child(Nokogiri::XML::Text.new("#{author_username} ", fragment.document))
-      paragraph.children.to_a.each { |child| emphasis.add_child(child) }
-      paragraph.add_child(emphasis)
-
-      fragment.to_html
-    end
     private_class_method :format_action
 
-    def self.append_command_text(cooked, text)
-      fragment = Loofah.html5_fragment(cooked)
-      elements = fragment.children.select(&:element?)
-      return cooked if elements.length > 1
-      return cooked if elements.one? && elements.first.name != "p"
-
-      paragraph = elements.first || Nokogiri::XML::Node.new("p", fragment.document)
-      fragment.add_child(paragraph) if elements.empty?
-      separator = paragraph.children.empty? ? "" : " "
-      paragraph.add_child(Nokogiri::XML::Text.new("#{separator}#{text}", fragment.document))
-
-      fragment.to_html
-    end
     private_class_method :append_command_text
 
     def full_url

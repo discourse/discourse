@@ -2,9 +2,11 @@
 
 module JsonApiKit
   class Joins
-    def self.for(declarations)
-      return declarations if declarations.is_a?(self)
-      new(Array.wrap(declarations))
+    class << self
+      def for(declarations)
+        return declarations if declarations.is_a?(self)
+        new(Array.wrap(declarations))
+      end
     end
 
     def initialize(declarations)

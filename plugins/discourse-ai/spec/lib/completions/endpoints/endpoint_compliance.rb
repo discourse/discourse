@@ -3,6 +3,11 @@
 require "net/http"
 
 class EndpointMock
+  class << self
+    def with_chunk_array_support(&blk)
+      new(nil).with_chunk_array_support(&blk)
+    end
+  end
   def initialize(model)
     @model = model
   end
@@ -102,10 +107,6 @@ class EndpointMock
   ensure
     ::FinalDestination.send(:remove_const, :HTTP)
     ::FinalDestination.send(:const_set, :HTTP, @original_net_http)
-  end
-
-  def self.with_chunk_array_support(&blk)
-    new(nil).with_chunk_array_support(&blk)
   end
 
   protected

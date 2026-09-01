@@ -3,8 +3,10 @@
 module MobileDetection
   # if the criteria for mobile_device? changes, update the code for `isMobileDevice` in
   # `frontend/discourse/app/services/capabilities.js`
-  def self.mobile_device?(user_agent)
-    user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
+  class << self
+    def mobile_device?(user_agent)
+      user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
+    end
   end
 
   MODERN_MOBILE_REGEX =
@@ -21,7 +23,9 @@ module MobileDetection
 
   USER_AGENT_MAX_LENGTH = 400
 
-  def self.modern_mobile_device?(user_agent)
-    user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
+  class << self
+    def modern_mobile_device?(user_agent)
+      user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
+    end
   end
 end

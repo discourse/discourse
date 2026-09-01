@@ -22,12 +22,13 @@ module Chat
     # @param thread_ids [Array<Integer>] The IDs of the threads to query.
     # @param preview [Boolean] Determines the number of participants to return.
     # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
-    def self.call(thread_ids:)
-      return {} if thread_ids.blank?
+    class << self
+      def call(thread_ids:)
+        return {} if thread_ids.blank?
 
-      # We only want enough data for BasicUserSerializer, since the participants
-      # are just showing username & avatar.
-      thread_participant_stats = DB.query(<<~SQL, thread_ids: thread_ids)
+        # We only want enough data for BasicUserSerializer, since the participants
+        # are just showing username & avatar.
+        thread_participant_stats = DB.query(<<~SQL, thread_ids: thread_ids)
         SELECT thread_participant_stats.*, users.username, users.name, users.uploaded_avatar_id FROM (
           SELECT chat_messages.thread_id, chat_messages.user_id, COUNT(*) AS message_count,
             ROW_NUMBER() OVER (PARTITION BY chat_messages.thread_id ORDER BY COUNT(*) DESC) AS row_number
@@ -43,7 +44,7 @@ module Chat
         ORDER BY thread_participant_stats.thread_id ASC, thread_participant_stats.message_count DESC, thread_participant_stats.user_id ASC
       SQL
 
-      most_recent_participants = DB.query(<<~SQL, thread_ids: thread_ids)
+        most_recent_participants = DB.query(<<~SQL, thread_ids: thread_ids)
         SELECT DISTINCT ON (thread_id) chat_messages.thread_id, chat_messages.user_id,
           users.username, users.name, users.uploaded_avatar_id
         FROM chat_messages
@@ -55,47 +56,48 @@ module Chat
         AND chat_messages.deleted_at IS NULL
         ORDER BY chat_messages.thread_id ASC, chat_messages.created_at DESC
       SQL
-      most_recent_participants =
-        most_recent_participants.reduce({}) do |hash, mrm|
-          hash[mrm.thread_id] = {
-            id: mrm.user_id,
-            username: mrm.username,
-            name: mrm.name,
-            uploaded_avatar_id: mrm.uploaded_avatar_id,
-          }
-          hash
+        most_recent_participants =
+          most_recent_participants.reduce({}) do |hash, mrm|
+            hash[mrm.thread_id] = {
+              id: mrm.user_id,
+              username: mrm.username,
+              name: mrm.name,
+              uploaded_avatar_id: mrm.uploaded_avatar_id,
+            }
+            hash
+          end
+
+        thread_participants = {}
+        thread_participant_stats.each do |thread_participant_stat|
+          thread_id = thread_participant_stat.thread_id
+          thread_participants[thread_id] ||= {}
+          thread_participants[thread_id][:users] ||= []
+          thread_participants[thread_id][:total_count] ||= 0
+
+          # If we want to return more of the top N users in the thread we
+          # can just increase the number here.
+          if thread_participants[thread_id][:users].length < (MAX_PARTICIPANTS - 1) &&
+               thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
+            thread_participants[thread_id][:users].push(
+              {
+                id: thread_participant_stat.user_id,
+                username: thread_participant_stat.username,
+                name: thread_participant_stat.name,
+                uploaded_avatar_id: thread_participant_stat.uploaded_avatar_id,
+              },
+            )
+          end
+
+          thread_participants[thread_id][:total_count] += 1
         end
 
-      thread_participants = {}
-      thread_participant_stats.each do |thread_participant_stat|
-        thread_id = thread_participant_stat.thread_id
-        thread_participants[thread_id] ||= {}
-        thread_participants[thread_id][:users] ||= []
-        thread_participants[thread_id][:total_count] ||= 0
-
-        # If we want to return more of the top N users in the thread we
-        # can just increase the number here.
-        if thread_participants[thread_id][:users].length < (MAX_PARTICIPANTS - 1) &&
-             thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
-          thread_participants[thread_id][:users].push(
-            {
-              id: thread_participant_stat.user_id,
-              username: thread_participant_stat.username,
-              name: thread_participant_stat.name,
-              uploaded_avatar_id: thread_participant_stat.uploaded_avatar_id,
-            },
-          )
+        # Always put the most recent participant at the end of the array.
+        most_recent_participants.each do |thread_id, user|
+          thread_participants[thread_id][:users].push(user)
         end
 
-        thread_participants[thread_id][:total_count] += 1
+        thread_participants
       end
-
-      # Always put the most recent participant at the end of the array.
-      most_recent_participants.each do |thread_id, user|
-        thread_participants[thread_id][:users].push(user)
-      end
-
-      thread_participants
     end
   end
 end

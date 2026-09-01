@@ -15,8 +15,10 @@ module Onebox
         "new.reddit.com",
       )
 
-      def self.matches_path(path)
-        path.match?(%r{^/(?:r|user)/[^/]+/comments/[^/]+})
+      class << self
+        def matches_path(path)
+          path.match?(%r{^/(?:r|user)/[^/]+/comments/[^/]+})
+        end
       end
 
       def to_html

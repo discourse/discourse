@@ -36,46 +36,61 @@ module DiscourseAi
 
       # @return [Array<DiscourseAi::Evals::Eval>] all cases sorted by path so
       #   the CLI emits a deterministic order.
-      def self.available_cases
-        Dir.glob(CASES_GLOB).sort.map { |path| new(path: path) }
+      class << self
+        def available_cases
+          Dir.glob(CASES_GLOB).sort.map { |path| new(path: path) }
+        end
       end
 
+      class << self
+        def from_dataset_csv(path:, feature:)
+          raise ArgumentError, "Feature is required for datasets" if feature.blank?
+
+          normalized_path = File.expand_path(path)
+          rows = CSV.read(normalized_path, headers: true)
+          raise ArgumentError, "Dataset '#{path}' has no rows" if rows.empty?
+
+          rows.each_with_index.map do |row, index|
+            normalized = normalize_dataset_row(row)
+            content = normalized[:content].to_s.strip
+            expected = normalized[:expected_output].to_s
+
+            if content.blank? || expected.blank?
+              raise ArgumentError, "Dataset rows must define 'content' and 'expected_output'"
+            end
+
+            attrs = {
+              id: "dataset-#{File.basename(path, File.extname(path))}-#{index + 1}",
+              name: "dataset row #{index + 1}",
+              description: "Dataset row #{index + 1} from #{File.basename(path)}",
+              feature: feature,
+              args: {
+                input: content,
+              },
+              expected_output: expected.strip,
+            }
+
+            new(path: normalized_path, initial_data: attrs)
+          end
+        end
+      end
+      class << self
+        def normalize_dataset_row(row)
+          row
+            .to_h
+            .each_with_object({}) do |(key, value), memo|
+              next if key.nil?
+
+              normalized_key = key.to_s.strip.downcase.gsub(/\s+/, "_").to_sym
+              memo[normalized_key] = value
+            end
+        end
+      end
       # @param path [String] absolute path to the YAML definition file.
       # @raise [ArgumentError] when a required key (like `feature`) is missing.
       def initialize(path:, initial_data: nil)
         yaml = initial_data&.symbolize_keys || YAML.load_file(path).symbolize_keys
         initialize_from_hash(yaml, path: path, base_dir: File.dirname(path))
-      end
-
-      def self.from_dataset_csv(path:, feature:)
-        raise ArgumentError, "Feature is required for datasets" if feature.blank?
-
-        normalized_path = File.expand_path(path)
-        rows = CSV.read(normalized_path, headers: true)
-        raise ArgumentError, "Dataset '#{path}' has no rows" if rows.empty?
-
-        rows.each_with_index.map do |row, index|
-          normalized = normalize_dataset_row(row)
-          content = normalized[:content].to_s.strip
-          expected = normalized[:expected_output].to_s
-
-          if content.blank? || expected.blank?
-            raise ArgumentError, "Dataset rows must define 'content' and 'expected_output'"
-          end
-
-          attrs = {
-            id: "dataset-#{File.basename(path, File.extname(path))}-#{index + 1}",
-            name: "dataset row #{index + 1}",
-            description: "Dataset row #{index + 1} from #{File.basename(path)}",
-            feature: feature,
-            args: {
-              input: content,
-            },
-            expected_output: expected.strip,
-          }
-
-          new(path: normalized_path, initial_data: attrs)
-        end
       end
 
       def print
@@ -142,17 +157,6 @@ module DiscourseAi
           end
         end
         args
-      end
-
-      def self.normalize_dataset_row(row)
-        row
-          .to_h
-          .each_with_object({}) do |(key, value), memo|
-            next if key.nil?
-
-            normalized_key = key.to_s.strip.downcase.gsub(/\s+/, "_").to_sym
-            memo[normalized_key] = value
-          end
       end
     end
   end

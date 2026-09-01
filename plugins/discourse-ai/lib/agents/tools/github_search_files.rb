@@ -4,38 +4,41 @@ module DiscourseAi
   module Agents
     module Tools
       class GithubSearchFiles < Tool
-        def self.signature
-          {
-            name: name,
-            description:
-              "Searches for files in a GitHub repository containing specific keywords in their paths or names",
-            parameters: [
-              {
-                name: "repo",
-                description: "The repository name in the format 'owner/repo'",
-                type: "string",
-                required: true,
-              },
-              {
-                name: "keywords",
-                description: "An array of keywords to match in file paths or names",
-                type: "array",
-                item_type: "string",
-                required: true,
-              },
-              {
-                name: "branch",
-                description:
-                  "The branch or commit SHA to search within (default: repository's default branch)",
-                type: "string",
-                required: false,
-              },
-            ],
-          }
-        end
+        MAX_FILE_SEARCH_RESULTS = 25
+        class << self
+          def signature
+            {
+              name: name,
+              description:
+                "Searches for files in a GitHub repository containing specific keywords in their paths or names",
+              parameters: [
+                {
+                  name: "repo",
+                  description: "The repository name in the format 'owner/repo'",
+                  type: "string",
+                  required: true,
+                },
+                {
+                  name: "keywords",
+                  description: "An array of keywords to match in file paths or names",
+                  type: "array",
+                  item_type: "string",
+                  required: true,
+                },
+                {
+                  name: "branch",
+                  description:
+                    "The branch or commit SHA to search within (default: repository's default branch)",
+                  type: "string",
+                  required: false,
+                },
+              ],
+            }
+          end
 
-        def self.name
-          "github_search_files"
+          def name
+            "github_search_files"
+          end
         end
 
         def repo
@@ -53,8 +56,6 @@ module DiscourseAi
         def description_args
           { repo: repo, keywords: keywords.join(", "), branch: @branch_name }
         end
-
-        MAX_FILE_SEARCH_RESULTS = 25
 
         def invoke
           # Fetch the default branch if no branch is specified

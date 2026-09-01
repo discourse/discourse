@@ -22,55 +22,49 @@ module ImageMagick
 
   FONTCONFIG_READ_PATHS = %w[/etc/fonts /var/cache/fontconfig].freeze
 
-  def self.asset_read_paths
-    @asset_read_paths ||=
-      Discourse::SafeExec.existing_paths(
-        [Rails.root.join("vendor").to_s, ENV["MAGICK_CONFIGURE_PATH"], *FONTCONFIG_READ_PATHS],
-      )
-  end
-
-  def self.magick(
-    *args,
-    operation:,
-    read: [],
-    write: [],
-    timeout: nil,
-    nice: nil,
-    failure_message: ""
-  )
-    command = ["magick", *args]
-    command = ["nice", "-n", nice.to_s, *command] if nice
-    run(*command, operation:, read:, write:, timeout:, failure_message:)
-  end
-
-  def self.identify(*args, operation:, read: [], write: [], timeout: nil, failure_message: "")
-    run("identify", *args, operation:, read:, write:, timeout:, failure_message:)
-  end
-
-  def self.run(*command, operation:, read:, write:, timeout:, failure_message:)
-    # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
-    # the write allowlist, so large images that spill to disk still succeed.
-    Dir.mktmpdir("discourse-imagemagick-") do |scratch|
-      ImageProcessing::Instrumentation.instrument(operation:) do
-        Discourse::SafeExec.capture(
-          *command,
-          env: {
-            **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
-            "MAGICK_TEMPORARY_PATH" => scratch,
-            "TMPDIR" => scratch,
-            "HOME" => scratch,
-            "XDG_CACHE_HOME" => scratch,
-            "MALLOC_ARENA_MAX" => "2",
-          },
-          unsetenv_others: true,
-          read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
-          write: [scratch, *write],
-          execute: Discourse::SafeExec.default_execute_paths,
-          timeout: timeout || DEFAULT_TIMEOUT,
-          rlimits: RLIMITS,
-          failure_message:,
-          seccomp_deny_network: true,
+  class << self
+    def asset_read_paths
+      @asset_read_paths ||=
+        Discourse::SafeExec.existing_paths(
+          [Rails.root.join("vendor").to_s, ENV["MAGICK_CONFIGURE_PATH"], *FONTCONFIG_READ_PATHS],
         )
+    end
+
+    def magick(*args, operation:, read: [], write: [], timeout: nil, nice: nil, failure_message: "")
+      command = ["magick", *args]
+      command = ["nice", "-n", nice.to_s, *command] if nice
+      run(*command, operation:, read:, write:, timeout:, failure_message:)
+    end
+
+    def identify(*args, operation:, read: [], write: [], timeout: nil, failure_message: "")
+      run("identify", *args, operation:, read:, write:, timeout:, failure_message:)
+    end
+
+    def run(*command, operation:, read:, write:, timeout:, failure_message:)
+      # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
+      # the write allowlist, so large images that spill to disk still succeed.
+      Dir.mktmpdir("discourse-imagemagick-") do |scratch|
+        ImageProcessing::Instrumentation.instrument(operation:) do
+          Discourse::SafeExec.capture(
+            *command,
+            env: {
+              **ENV.slice("PATH", "MAGICK_CONFIGURE_PATH", "LANG", "LC_ALL"),
+              "MAGICK_TEMPORARY_PATH" => scratch,
+              "TMPDIR" => scratch,
+              "HOME" => scratch,
+              "XDG_CACHE_HOME" => scratch,
+              "MALLOC_ARENA_MAX" => "2",
+            },
+            unsetenv_others: true,
+            read: [*Discourse::SafeExec.default_read_paths, *asset_read_paths, *read],
+            write: [scratch, *write],
+            execute: Discourse::SafeExec.default_execute_paths,
+            timeout: timeout || DEFAULT_TIMEOUT,
+            rlimits: RLIMITS,
+            failure_message:,
+            seccomp_deny_network: true,
+          )
+        end
       end
     end
   end

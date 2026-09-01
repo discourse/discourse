@@ -5,8 +5,10 @@ module DiscourseAi
     class DocumentSourceRefresher
       RETRY_INTERVAL = 1.hour
 
-      def self.refresh(source)
-        new(source).refresh
+      class << self
+        def refresh(source)
+          new(source).refresh
+        end
       end
 
       def initialize(source)

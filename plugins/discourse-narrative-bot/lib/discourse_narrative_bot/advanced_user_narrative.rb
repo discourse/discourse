@@ -94,12 +94,14 @@ module DiscourseNarrativeBot
       },
     }
 
-    def self.badge_name
-      BADGE_NAME
-    end
+    class << self
+      def badge_name
+        BADGE_NAME
+      end
 
-    def self.reset_trigger
-      I18n.t("discourse_narrative_bot.advanced_user_narrative.reset_trigger")
+      def reset_trigger
+        I18n.t("discourse_narrative_bot.advanced_user_narrative.reset_trigger")
+      end
     end
 
     def reset_bot(user, post)

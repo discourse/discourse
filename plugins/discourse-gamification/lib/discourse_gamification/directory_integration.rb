@@ -2,8 +2,9 @@
 
 module DiscourseGamification
   class DirectoryIntegration
-    def self.query
-      <<~SQL
+    class << self
+      def query
+        <<~SQL
         WITH default_leaderboard AS (
           SELECT
             id,
@@ -62,6 +63,7 @@ module DiscourseGamification
           directory_items.period_type = :period_type AND
           scored_directory.score != directory_items.gamification_score
       SQL
+      end
     end
   end
 end

@@ -6,12 +6,14 @@ module JsonApiKit
       class Position
         attr_reader :segment, :values
 
-        def self.from(cursor, order:)
-          digest, segment_id, *values = cursor.values
-          unless digest == order.digest
-            raise ArgumentError, "a cursor comes from one resource and one sort"
+        class << self
+          def from(cursor, order:)
+            digest, segment_id, *values = cursor.values
+            unless digest == order.digest
+              raise ArgumentError, "a cursor comes from one resource and one sort"
+            end
+            new(segment: order.fetch(segment_id), values:)
           end
-          new(segment: order.fetch(segment_id), values:)
         end
 
         def initialize(segment:, values:)

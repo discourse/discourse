@@ -100,10 +100,172 @@ module Email
 
     COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
 
-    def self.formats
-      @formats ||= Enum.new(plaintext: 1, markdown: 2)
+    HTML_EXTRACTERS = [
+      [:gmail, /class="gmail_(signature|extra)/],
+      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
+      [:word, /class="WordSection1"/],
+      [:exchange, /name="message(Body|Reply)Section"/],
+      [:apple_mail, /id="AppleMailSignature"/],
+      [:mozilla, /class="moz-/],
+      [:protonmail, /class="protonmail_/],
+      [:zimbra, /data-marker="__/],
+      [:newton, /(id|class)="cm_/],
+      [:front, /class="front-/],
+    ]
+    class << self
+      def formats
+        @formats ||= Enum.new(plaintext: 1, markdown: 2)
+      end
     end
 
+    class << self
+      def update_bounce_score(email, score)
+        if user = User.find_by_email(email)
+          old_bounce_score = user.user_stat.bounce_score
+          new_bounce_score = old_bounce_score + score
+          range = (old_bounce_score + 1..new_bounce_score)
+
+          user.user_stat.bounce_score = new_bounce_score
+          user.user_stat.reset_bounce_score_after =
+            SiteSetting.reset_bounce_score_after_days.days.from_now
+          user.user_stat.save!
+
+          if range === SiteSetting.bounce_score_threshold
+            # NOTE: we check bounce_score before sending emails
+            # So log we revoked the email...
+            reason =
+              I18n.t(
+                "user.email.revoked",
+                email: user.email,
+                date: user.user_stat.reset_bounce_score_after,
+              )
+            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
+            # ... and PM the user
+            SystemMessage.create_from_system_user(user, :email_revoked)
+          end
+        end
+      end
+    end
+    class << self
+      def extract_email_address_and_name_from_mailman(mail)
+        list_address, _ = Email::Receiver.extract_email_address_and_name(mail[:list_post])
+        list_address, _ =
+          Email::Receiver.extract_email_address_and_name(mail[:x_beenthere]) if list_address.blank?
+
+        return if list_address.blank?
+
+        # the CC header often includes the name of the sender
+        address_to_name = mail[:cc]&.element&.addresses.to_h { [it.address, it.name] }
+
+        %i[from reply_to x_mailfrom x_original_from].each do |header|
+          next if mail[header].blank?
+          email, name = Email::Receiver.extract_email_address_and_name(mail[header])
+          if email.present? && email != list_address
+            return email, name.presence || address_to_name[email]
+          end
+        end
+      end
+
+      def extract_email_address_and_name(value)
+        # ensure the email header value is a string
+        value = value.to_s
+        # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
+        value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
+        # 'mailto:' suffix isn't supported by Mail::Address parsing
+        value = value.gsub("mailto:", "")
+        # parse the email header value
+        parsed = Mail::Address.new(value)
+        # extract the email address and name
+        mail = parsed.address.to_s.downcase.strip
+        name = parsed.name.to_s.strip
+        # ensure the email address is "valid"
+        if mail.include?("@")
+          # remove surrounding quotes from the name
+          name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
+          # return the email address and name
+          [mail, name]
+        end
+      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
+        # something went wrong parsing the email header value, return nil
+      end
+    end
+    class << self
+      def check_address(address, include_verp = false)
+        # only check for a group/category when 'email_in' is enabled
+        if SiteSetting.email_in
+          group = Group.find_by_email(address)
+          return group if group
+
+          category = Category.find_by_email(address)
+          return category if category
+        end
+
+        # reply
+        match = Email::Receiver.reply_by_email_address_regex(true, include_verp).match(address)
+        if match && match.captures
+          match.captures.each do |c|
+            next if c.blank?
+            post_reply_key = PostReplyKey.find_by(reply_key: c)
+            return post_reply_key if post_reply_key
+          end
+        end
+        nil
+      end
+    end
+    class << self
+      def reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
+        reply_addresses = [SiteSetting.reply_by_email_address]
+        reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split(
+          "|",
+        )
+
+        if include_verp && SiteSetting.reply_by_email_address.present? &&
+             SiteSetting.reply_by_email_address["+"]
+          reply_addresses << SiteSetting.reply_by_email_address.sub(
+            "%{reply_key}",
+            "verp-%{reply_key}",
+          )
+        end
+
+        reply_addresses.flatten!
+        reply_addresses.select!(&:present?)
+        reply_addresses.map! { |a| Regexp.escape(a) }
+        reply_addresses.map! { |a| a.gsub("\+", "\+?") }
+        reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})?") }
+        if reply_addresses.empty?
+          /$a/ # a regex that can never match
+        else
+          /#{reply_addresses.join("|")}/
+        end
+      end
+    end
+    class << self
+      def extract_reply_message_ids(mail, max_message_id_count:)
+        message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
+        message_ids.flatten!
+        message_ids.select!(&:present?)
+        message_ids.uniq!
+        message_ids.first(max_message_id_count)
+      end
+
+      def extract_references(references)
+        if Array === references
+          references
+        elsif references.present?
+          references.split(/[\s,]/).map { |r| Email::MessageIdService.message_id_clean(r) }
+        end
+      end
+    end
+    class << self
+      def elided_html(elided)
+        html = +"\n\n" << "<details class='elided'>" << "\n"
+        html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" <<
+          "\n\n"
+        html << elided << "\n\n"
+        html << "</details>" << "\n"
+        html
+      end
+    end
     def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
@@ -369,33 +531,6 @@ module Email
       @email_log ||= EmailLog.find_by(bounce_key: bounce_key)
     end
 
-    def self.update_bounce_score(email, score)
-      if user = User.find_by_email(email)
-        old_bounce_score = user.user_stat.bounce_score
-        new_bounce_score = old_bounce_score + score
-        range = (old_bounce_score + 1..new_bounce_score)
-
-        user.user_stat.bounce_score = new_bounce_score
-        user.user_stat.reset_bounce_score_after =
-          SiteSetting.reset_bounce_score_after_days.days.from_now
-        user.user_stat.save!
-
-        if range === SiteSetting.bounce_score_threshold
-          # NOTE: we check bounce_score before sending emails
-          # So log we revoked the email...
-          reason =
-            I18n.t(
-              "user.email.revoked",
-              email: user.email,
-              date: user.user_stat.reset_bounce_score_after,
-            )
-          StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
-          # ... and PM the user
-          SystemMessage.create_from_system_user(user, :email_revoked)
-        end
-      end
-    end
-
     def is_auto_generated?
       return false if SiteSetting.auto_generated_allowlist.split("|").include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
@@ -527,19 +662,6 @@ module Email
         HtmlToMarkdown.new(elided_html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
       [EmailReplyTrimmer.trim(markdown), elided_markdown]
     end
-
-    HTML_EXTRACTERS = [
-      [:gmail, /class="gmail_(signature|extra)/],
-      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
-      [:word, /class="WordSection1"/],
-      [:exchange, /name="message(Body|Reply)Section"/],
-      [:apple_mail, /id="AppleMailSignature"/],
-      [:mozilla, /class="moz-/],
-      [:protonmail, /class="protonmail_/],
-      [:zimbra, /data-marker="__/],
-      [:newton, /(id|class)="cm_/],
-      [:front, /class="front-/],
-    ]
 
     def extract_from_gmail(doc)
       # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote, gmail_default...
@@ -747,48 +869,6 @@ module Email
       nil
     end
 
-    def self.extract_email_address_and_name_from_mailman(mail)
-      list_address, _ = Email::Receiver.extract_email_address_and_name(mail[:list_post])
-      list_address, _ =
-        Email::Receiver.extract_email_address_and_name(mail[:x_beenthere]) if list_address.blank?
-
-      return if list_address.blank?
-
-      # the CC header often includes the name of the sender
-      address_to_name = mail[:cc]&.element&.addresses.to_h { [it.address, it.name] }
-
-      %i[from reply_to x_mailfrom x_original_from].each do |header|
-        next if mail[header].blank?
-        email, name = Email::Receiver.extract_email_address_and_name(mail[header])
-        if email.present? && email != list_address
-          return email, name.presence || address_to_name[email]
-        end
-      end
-    end
-
-    def self.extract_email_address_and_name(value)
-      # ensure the email header value is a string
-      value = value.to_s
-      # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
-      value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
-      # 'mailto:' suffix isn't supported by Mail::Address parsing
-      value = value.gsub("mailto:", "")
-      # parse the email header value
-      parsed = Mail::Address.new(value)
-      # extract the email address and name
-      mail = parsed.address.to_s.downcase.strip
-      name = parsed.name.to_s.strip
-      # ensure the email address is "valid"
-      if mail.include?("@")
-        # remove surrounding quotes from the name
-        name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
-        # return the email address and name
-        [mail, name]
-      end
-    rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
-      # something went wrong parsing the email header value, return nil
-    end
-
     def subject
       @subject ||=
         if mail_subject = @mail.subject
@@ -857,28 +937,6 @@ module Email
         destination.is_a?(Category) && destination.mailinglist_mirror? &&
           (category.nil? || destination == category)
       end
-    end
-
-    def self.check_address(address, include_verp = false)
-      # only check for a group/category when 'email_in' is enabled
-      if SiteSetting.email_in
-        group = Group.find_by_email(address)
-        return group if group
-
-        category = Category.find_by_email(address)
-        return category if category
-      end
-
-      # reply
-      match = Email::Receiver.reply_by_email_address_regex(true, include_verp).match(address)
-      if match && match.captures
-        match.captures.each do |c|
-          next if c.blank?
-          post_reply_key = PostReplyKey.find_by(reply_key: c)
-          return post_reply_key if post_reply_key
-        end
-      end
-      nil
     end
 
     def process_destination(destination, user, body, elided)
@@ -1208,32 +1266,6 @@ module Email
       end
     end
 
-    def self.reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
-      reply_addresses = [SiteSetting.reply_by_email_address]
-      reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split(
-        "|",
-      )
-
-      if include_verp && SiteSetting.reply_by_email_address.present? &&
-           SiteSetting.reply_by_email_address["+"]
-        reply_addresses << SiteSetting.reply_by_email_address.sub(
-          "%{reply_key}",
-          "verp-%{reply_key}",
-        )
-      end
-
-      reply_addresses.flatten!
-      reply_addresses.select!(&:present?)
-      reply_addresses.map! { |a| Regexp.escape(a) }
-      reply_addresses.map! { |a| a.gsub("\+", "\+?") }
-      reply_addresses.map! { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})?") }
-      if reply_addresses.empty?
-        /$a/ # a regex that can never match
-      else
-        /#{reply_addresses.join("|")}/
-      end
-    end
-
     def group_incoming_emails_regex
       @group_incoming_emails_regex =
         Regexp.union(DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact_blank.uniq)
@@ -1266,22 +1298,6 @@ module Email
       end
 
       post
-    end
-
-    def self.extract_reply_message_ids(mail, max_message_id_count:)
-      message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
-      message_ids.flatten!
-      message_ids.select!(&:present?)
-      message_ids.uniq!
-      message_ids.first(max_message_id_count)
-    end
-
-    def self.extract_references(references)
-      if Array === references
-        references
-      elsif references.present?
-        references.split(/[\s,]/).map { |r| Email::MessageIdService.message_id_clean(r) }
-      end
     end
 
     def likes
@@ -1584,15 +1600,6 @@ module Email
       end
 
       result.post
-    end
-
-    def self.elided_html(elided)
-      html = +"\n\n" << "<details class='elided'>" << "\n"
-      html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" <<
-        "\n\n"
-      html << elided << "\n\n"
-      html << "</details>" << "\n"
-      html
     end
 
     def add_other_addresses(post, sender, mail_object)

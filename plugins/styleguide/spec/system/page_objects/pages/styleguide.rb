@@ -3,6 +3,7 @@
 module PageObjects
   module Pages
     class Styleguide < PageObjects::Pages::Base
+      COLOR_MODE_MENU = "styleguide-color-mode"
       def visit_index
         visit("/styleguide")
         self
@@ -27,8 +28,6 @@ module PageObjects
       def has_active_nav_link?(text)
         has_css?(".sidebar-sections.styleguide-panel .sidebar-section-link.active", text: text)
       end
-
-      COLOR_MODE_MENU = "styleguide-color-mode"
 
       def select_color_mode(mode)
         menu = PageObjects::Components::DMenu.new(".toggle-color-mode", COLOR_MODE_MENU)

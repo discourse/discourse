@@ -4,7 +4,9 @@ module JsonApiKit
   class Path
     SEPARATOR = "."
 
-    def self.for(path) = path.try(:to_path) || new(path.to_s.split(SEPARATOR))
+    class << self
+      def for(path) = path.try(:to_path) || new(path.to_s.split(SEPARATOR))
+    end
 
     def initialize(names, at: 0)
       @names = names

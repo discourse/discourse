@@ -2,9 +2,11 @@
 
 module JsonApiKit
   class Reflection
-    def self.for(reflection)
-      return Through.new(reflection) if reflection.through_reflection?
-      new(reflection)
+    class << self
+      def for(reflection)
+        return Through.new(reflection) if reflection.through_reflection?
+        new(reflection)
+      end
     end
 
     delegate :belongs_to?,

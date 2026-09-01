@@ -4,16 +4,17 @@ module Migrations
   module Tooling
     module Schema
       class ModelWriter
+        class << self
+          def filename_for(table)
+            "#{table.name.singularize}.rb"
+          end
+        end
         def initialize(model_namespace, enum_namespace, header)
           @model_namespace = model_namespace
           @enum_namespace = enum_namespace
           @header = header.gsub(/^/, "# ")
           @namespace_parts = model_namespace.split("::")
           @base_indent = "  " * (@namespace_parts.size - 1)
-        end
-
-        def self.filename_for(table)
-          "#{table.name.singularize}.rb"
         end
 
         def output_table(table, output_stream, custom_code: nil)

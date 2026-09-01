@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class ColorSchemeRevisor
+  class << self
+    def revise(color_scheme, params)
+      new(color_scheme, params).revise
+    end
+  end
   def initialize(color_scheme, params = {})
     @color_scheme = color_scheme
     @params = params
-  end
-
-  def self.revise(color_scheme, params)
-    new(color_scheme, params).revise
   end
 
   def revise

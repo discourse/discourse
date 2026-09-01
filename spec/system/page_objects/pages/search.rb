@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class Search < PageObjects::Pages::Base
+      SEARCH_ICON_SELECTOR = "#search-button.btn-icon"
+      SEARCH_FIELD_SELECTOR = ".floating-search-input .search-menu"
+      SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
+      SEARCH_PAGE_SELECTOR = "body.search-page"
       def type_in_search(input)
         filter = find("input.full-page-search")
         filter.click
@@ -85,10 +89,6 @@ module PageObjects
         page.has_no_css?(".search-menu .search-menu-panel")
       end
 
-      SEARCH_ICON_SELECTOR = "#search-button.btn-icon"
-      SEARCH_FIELD_SELECTOR = ".floating-search-input .search-menu"
-      SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
-
       def has_search_icon?
         page.has_selector?(SEARCH_ICON_SELECTOR, visible: true)
       end
@@ -132,8 +132,6 @@ module PageObjects
       def search_term(id = "icon-search-input")
         page.find("##{id}").value
       end
-
-      SEARCH_PAGE_SELECTOR = "body.search-page"
 
       def active?
         has_css?(SEARCH_PAGE_SELECTOR)

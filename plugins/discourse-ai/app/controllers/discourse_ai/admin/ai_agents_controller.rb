@@ -9,6 +9,11 @@ module DiscourseAi
 
       before_action :find_ai_agent, only: %i[edit update destroy create_user export]
 
+      AI_STREAM_CONVERSATION_UNIQUE_ID = "ai-stream-conversation-unique-id"
+      MAX_STREAM_REPLY_CUSTOM_TOOLS = 20
+      MAX_STREAM_REPLY_TOOL_RESULTS = 20
+      MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
+      MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
       def index
         ai_agents =
           AiAgent
@@ -284,12 +289,6 @@ module DiscourseAi
       end
 
       private
-
-      AI_STREAM_CONVERSATION_UNIQUE_ID = "ai-stream-conversation-unique-id"
-      MAX_STREAM_REPLY_CUSTOM_TOOLS = 20
-      MAX_STREAM_REPLY_TOOL_RESULTS = 20
-      MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
-      MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
 
       def stage_user
         unique_id = params[:user_unique_id].to_s

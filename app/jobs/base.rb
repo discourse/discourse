@@ -3,47 +3,105 @@
 require "sidekiq/api"
 
 module Jobs
-  def self.queued
-    Sidekiq::Stats.new.enqueued
-  end
-
-  def self.run_later?
-    !@run_immediately
-  end
-
-  def self.run_immediately?
-    !!@run_immediately
-  end
-
-  def self.run_immediately!
-    @run_immediately = true
-  end
-
-  def self.run_later!
-    @run_immediately = false
-  end
-
-  def self.with_immediate_jobs
-    prior = @run_immediately
-    run_immediately!
-    yield
-  ensure
-    @run_immediately = prior
-  end
-
-  def self.last_job_performed_at
-    Sidekiq.redis do |r|
-      int = r.get("last_job_perform_at")
-      int ? Time.at(int.to_i) : nil
+  class << self
+    def queued
+      Sidekiq::Stats.new.enqueued
     end
-  end
 
-  def self.num_email_retry_jobs
-    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
+    def run_later?
+      !@run_immediately
+    end
+
+    def run_immediately?
+      !!@run_immediately
+    end
+
+    def run_immediately!
+      @run_immediately = true
+    end
+
+    def run_later!
+      @run_immediately = false
+    end
+
+    def with_immediate_jobs
+      prior = @run_immediately
+      run_immediately!
+      yield
+    ensure
+      @run_immediately = prior
+    end
+
+    def last_job_performed_at
+      Sidekiq.redis do |r|
+        int = r.get("last_job_perform_at")
+        int ? Time.at(int.to_i) : nil
+      end
+    end
+
+    def num_email_retry_jobs
+      Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
+    end
   end
 
   class Base
     class JobInstrumenter
+      class << self
+        def raw_log(message)
+          logger << message
+        rescue => e
+          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+        end
+
+        # For test environment only
+        def set_log_path(path)
+          @@log_path = path
+          @@logger = nil
+        end
+
+        # For test environment only
+        def reset_log_path
+          @@log_path = nil
+          @@logger = nil
+        end
+
+        def log_path
+          @@log_path ||= "#{Rails.root.join("log/sidekiq.log")}"
+        end
+
+        def logger
+          @@logger ||=
+            begin
+              FileUtils.touch(log_path) if !File.exist?(log_path)
+              Logger.new(log_path)
+            end
+        end
+      end
+      class << self
+        def mutex
+          @@mutex ||= Mutex.new
+        end
+
+        def ensure_interval_logging!
+          interval = ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
+          return if !interval
+          interval = interval.to_i
+          @@interval_thread ||=
+            Thread.new do
+              loop do
+                sleep interval
+                mutex.synchronize do
+                  @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+                end
+              end
+            rescue Exception => e
+              Discourse.warn_exception(
+                e,
+                message: "Sidekiq interval logging thread terminated unexpectedly",
+              )
+            end
+        end
+      end
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
 
@@ -105,36 +163,6 @@ module Jobs
         end
       end
 
-      def self.raw_log(message)
-        logger << message
-      rescue => e
-        Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
-      end
-
-      # For test environment only
-      def self.set_log_path(path)
-        @@log_path = path
-        @@logger = nil
-      end
-
-      # For test environment only
-      def self.reset_log_path
-        @@log_path = nil
-        @@logger = nil
-      end
-
-      def self.log_path
-        @@log_path ||= "#{Rails.root.join("log/sidekiq.log")}"
-      end
-
-      def self.logger
-        @@logger ||=
-          begin
-            FileUtils.touch(log_path) if !File.exist?(log_path)
-            Logger.new(log_path)
-          end
-      end
-
       def current_duration
         Process.clock_gettime(Process::CLOCK_MONOTONIC) - @start_timestamp
       end
@@ -149,43 +177,39 @@ module Jobs
       def enabled?
         Discourse.enable_sidekiq_logging?
       end
-
-      def self.mutex
-        @@mutex ||= Mutex.new
-      end
-
-      def self.ensure_interval_logging!
-        interval = ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
-        return if !interval
-        interval = interval.to_i
-        @@interval_thread ||=
-          Thread.new do
-            loop do
-              sleep interval
-              mutex.synchronize do
-                @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
-              end
-            end
-          rescue Exception => e
-            Discourse.warn_exception(
-              e,
-              message: "Sidekiq interval logging thread terminated unexpectedly",
-            )
-          end
-      end
     end
 
     include Sidekiq::Worker
 
-    def self.cluster_concurrency(val)
-      raise ArgumentError, "cluster_concurrency must be 1 or nil" if val != 1 && val != nil
-      @cluster_concurrency = val
+    class << self
+      def cluster_concurrency(val)
+        raise ArgumentError, "cluster_concurrency must be 1 or nil" if val != 1 && val != nil
+        @cluster_concurrency = val
+      end
+
+      def get_cluster_concurrency
+        @cluster_concurrency
+      end
     end
 
-    def self.get_cluster_concurrency
-      @cluster_concurrency
+    class << self
+      def delayed_perform(opts = {})
+        new.perform(opts)
+      end
     end
+    class << self
+      def cluster_concurrency_redis_key
+        "cluster_concurrency:#{self}"
+      end
 
+      def clear_cluster_concurrency_lock!
+        Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
+      end
+
+      def acquire_cluster_concurrency_lock!
+        !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
+      end
+    end
     def log(*args)
       args.each do |arg|
         Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [#{self.class.name.upcase}] #{arg}"
@@ -208,10 +232,6 @@ module Jobs
       ctx[:message] = code_desc if code_desc
       ctx.merge!(extra) if extra != nil
       ctx
-    end
-
-    def self.delayed_perform(opts = {})
-      new.perform(opts)
     end
 
     def execute(opts = {})
@@ -239,18 +259,6 @@ module Jobs
 
         retval
       end
-    end
-
-    def self.cluster_concurrency_redis_key
-      "cluster_concurrency:#{self}"
-    end
-
-    def self.clear_cluster_concurrency_lock!
-      Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
-    end
-
-    def self.acquire_cluster_concurrency_lock!
-      !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
     end
 
     def perform(*args)
@@ -363,12 +371,14 @@ module Jobs
   class Scheduled < Base
     extend MiniScheduler::Schedule
 
-    def self.perform_when_readonly
-      @perform_when_readonly = true
-    end
+    class << self
+      def perform_when_readonly
+        @perform_when_readonly = true
+      end
 
-    def self.perform_when_readonly?
-      @perform_when_readonly || false
+      def perform_when_readonly?
+        @perform_when_readonly || false
+      end
     end
 
     def perform(*args)
@@ -376,111 +386,113 @@ module Jobs
     end
   end
 
-  def self.enqueue(job, opts = {})
-    if job.instance_of?(Class)
-      klass = job
-    else
-      klass = "::Jobs::#{job.to_s.camelcase}".constantize
-    end
+  class << self
+    def enqueue(job, opts = {})
+      if job.instance_of?(Class)
+        klass = job
+      else
+        klass = "::Jobs::#{job.to_s.camelcase}".constantize
+      end
 
-    # Unless we want to work on all sites
-    unless opts.delete(:all_sites)
-      opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
-    end
+      # Unless we want to work on all sites
+      unless opts.delete(:all_sites)
+        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+      end
 
-    delay = opts.delete(:delay_for)
-    queue = opts.delete(:queue)
+      delay = opts.delete(:delay_for)
+      queue = opts.delete(:queue)
 
-    # Only string keys are allowed in JSON. We call `.with_indifferent_access`
-    # in Jobs::Base#perform, so this is invisible to developers
-    opts = opts.deep_stringify_keys
+      # Only string keys are allowed in JSON. We call `.with_indifferent_access`
+      # in Jobs::Base#perform, so this is invisible to developers
+      opts = opts.deep_stringify_keys
 
-    # Simulate the args being dumped/parsed through JSON
-    parsed_opts = JSON.parse(JSON.dump(opts))
-    if opts != parsed_opts
-      Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
+      # Simulate the args being dumped/parsed through JSON
+      parsed_opts = JSON.parse(JSON.dump(opts))
+      if opts != parsed_opts
+        Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
         #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
         This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
         Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
       TEXT
-    end
-    opts = parsed_opts
-
-    if ::Jobs.run_later?
-      hash = { "class" => klass, "args" => [opts] }
-
-      if delay
-        hash["at"] = Time.now.to_f + delay.to_f if delay.to_f > 0
       end
+      opts = parsed_opts
 
-      hash["queue"] = queue if queue
+      if ::Jobs.run_later?
+        hash = { "class" => klass, "args" => [opts] }
 
-      DB.after_commit { klass.client_push(hash) }
-    else
-      if Rails.env.development?
-        Scheduler::Defer.later("job") { klass.new.perform(opts) }
-      else
-        # Run the job synchronously
-        # But never run a job inside another job
-        # That could cause deadlocks during test runs
-        queue = Thread.current[:discourse_nested_job_queue]
-        outermost_job = !queue
-
-        if outermost_job
-          queue = Queue.new
-          Thread.current[:discourse_nested_job_queue] = queue
+        if delay
+          hash["at"] = Time.now.to_f + delay.to_f if delay.to_f > 0
         end
 
-        queue.push([klass, opts])
+        hash["queue"] = queue if queue
 
-        if outermost_job
-          # responsible for executing the queue
-          begin
-            until queue.empty?
-              queued_klass, queued_opts = queue.pop(true)
-              queued_klass.new.perform_immediately(queued_opts)
+        DB.after_commit { klass.client_push(hash) }
+      else
+        if Rails.env.development?
+          Scheduler::Defer.later("job") { klass.new.perform(opts) }
+        else
+          # Run the job synchronously
+          # But never run a job inside another job
+          # That could cause deadlocks during test runs
+          queue = Thread.current[:discourse_nested_job_queue]
+          outermost_job = !queue
+
+          if outermost_job
+            queue = Queue.new
+            Thread.current[:discourse_nested_job_queue] = queue
+          end
+
+          queue.push([klass, opts])
+
+          if outermost_job
+            # responsible for executing the queue
+            begin
+              until queue.empty?
+                queued_klass, queued_opts = queue.pop(true)
+                queued_klass.new.perform_immediately(queued_opts)
+              end
+            ensure
+              Thread.current[:discourse_nested_job_queue] = nil
             end
-          ensure
-            Thread.current[:discourse_nested_job_queue] = nil
           end
         end
       end
     end
-  end
 
-  def self.enqueue_in(secs, job_name, opts = {})
-    enqueue(job_name, opts.merge!(delay_for: secs))
-  end
-
-  def self.enqueue_at(datetime, job_name, opts = {})
-    secs = [datetime.to_f - Time.zone.now.to_f, 0].max
-    enqueue_in(secs, job_name, opts)
-  end
-
-  def self.cancel_scheduled_job(job_name, opts = {})
-    scheduled_for(job_name, opts).each(&:delete)
-  end
-
-  def self.scheduled_for(job_name, opts = {})
-    opts = opts.with_indifferent_access
-    unless opts.delete(:all_sites)
-      opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+    def enqueue_in(secs, job_name, opts = {})
+      enqueue(job_name, opts.merge!(delay_for: secs))
     end
 
-    job_class = "Jobs::#{job_name.to_s.camelcase}"
-    Sidekiq::ScheduledSet.new.select do |scheduled_job|
-      if scheduled_job.klass.to_s == job_class
-        matched = true
-        job_params = scheduled_job.args[0].with_indifferent_access
-        opts.each do |key, value|
-          if job_params[key] != value
-            matched = false
-            break
+    def enqueue_at(datetime, job_name, opts = {})
+      secs = [datetime.to_f - Time.zone.now.to_f, 0].max
+      enqueue_in(secs, job_name, opts)
+    end
+
+    def cancel_scheduled_job(job_name, opts = {})
+      scheduled_for(job_name, opts).each(&:delete)
+    end
+
+    def scheduled_for(job_name, opts = {})
+      opts = opts.with_indifferent_access
+      unless opts.delete(:all_sites)
+        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+      end
+
+      job_class = "Jobs::#{job_name.to_s.camelcase}"
+      Sidekiq::ScheduledSet.new.select do |scheduled_job|
+        if scheduled_job.klass.to_s == job_class
+          matched = true
+          job_params = scheduled_job.args[0].with_indifferent_access
+          opts.each do |key, value|
+            if job_params[key] != value
+              matched = false
+              break
+            end
           end
+          matched
+        else
+          false
         end
-        matched
-      else
-        false
       end
     end
   end

@@ -9,38 +9,40 @@ class OptimizedVideo < ActiveRecord::Base
   validates :adapter, presence: true
   validates :upload_id, uniqueness: { scope: :adapter }
 
-  def self.create_for(upload, filename, user_id, options = {})
-    return if upload.blank?
+  class << self
+    def create_for(upload, filename, user_id, options = {})
+      return if upload.blank?
 
-    optimized_upload =
-      Upload.create!(
-        user_id: user_id,
-        original_filename: filename,
-        filesize: options[:filesize],
-        sha1: options[:sha1],
-        extension: options[:extension] || "mp4",
-        url: options[:url],
-        etag: options[:etag],
-        skip_video_conversion: true,
-        secure: upload.secure?,
-      )
+      optimized_upload =
+        Upload.create!(
+          user_id: user_id,
+          original_filename: filename,
+          filesize: options[:filesize],
+          sha1: options[:sha1],
+          extension: options[:extension] || "mp4",
+          url: options[:url],
+          etag: options[:etag],
+          skip_video_conversion: true,
+          secure: upload.secure?,
+        )
 
-    optimized_video =
-      OptimizedVideo.new(
-        upload_id: upload.id,
-        optimized_upload_id: optimized_upload.id,
-        adapter: options[:adapter],
-      )
+      optimized_video =
+        OptimizedVideo.new(
+          upload_id: upload.id,
+          optimized_upload_id: optimized_upload.id,
+          adapter: options[:adapter],
+        )
 
-    if optimized_video.save
-      UploadReference.ensure_exist!(upload_ids: [optimized_upload.id], target: upload)
-      optimized_video
-    else
-      optimized_upload.destroy
-      Rails.logger.error(
-        "Failed to create optimized video for upload ID #{upload.id}: #{optimized_video.errors.full_messages.join(", ")}",
-      )
-      nil
+      if optimized_video.save
+        UploadReference.ensure_exist!(upload_ids: [optimized_upload.id], target: upload)
+        optimized_video
+      else
+        optimized_upload.destroy
+        Rails.logger.error(
+          "Failed to create optimized video for upload ID #{upload.id}: #{optimized_video.errors.full_messages.join(", ")}",
+        )
+        nil
+      end
     end
   end
 

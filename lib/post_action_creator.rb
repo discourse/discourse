@@ -41,6 +41,11 @@ class PostActionCreator
     end
   end
 
+  class << self
+    def notify_types
+      @notify_types ||= PostActionType.notify_flag_types.keys
+    end
+  end
   def initialize(
     created_by,
     post,
@@ -203,10 +208,6 @@ class PostActionCreator
     elsif self.class.notify_types.include?(@post_action_name)
       @post.publish_change_to_clients! :acted
     end
-  end
-
-  def self.notify_types
-    @notify_types ||= PostActionType.notify_flag_types.keys
   end
 
   def enforce_rules

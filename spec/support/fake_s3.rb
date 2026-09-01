@@ -5,16 +5,18 @@ require "aws-sdk-s3"
 class FakeS3
   attr_reader :s3_client
 
-  def self.create
-    s3 = new
-    s3.stub_bucket(SiteSetting.s3_upload_bucket) if SiteSetting.s3_upload_bucket.present?
-    if SiteSetting.s3_backup_bucket.present?
-      s3.stub_bucket(
-        File.join(SiteSetting.s3_backup_bucket, RailsMultisite::ConnectionManagement.current_db),
-      )
+  class << self
+    def create
+      s3 = new
+      s3.stub_bucket(SiteSetting.s3_upload_bucket) if SiteSetting.s3_upload_bucket.present?
+      if SiteSetting.s3_backup_bucket.present?
+        s3.stub_bucket(
+          File.join(SiteSetting.s3_backup_bucket, RailsMultisite::ConnectionManagement.current_db),
+        )
+      end
+      s3.stub_s3_helper
+      s3
     end
-    s3.stub_s3_helper
-    s3
   end
 
   def initialize

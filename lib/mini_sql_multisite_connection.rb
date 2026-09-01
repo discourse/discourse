@@ -48,6 +48,11 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
     end
   end
 
+  class << self
+    def instance
+      new(nil, param_encoder: ParamEncoder.new)
+    end
+  end
   def transaction_open?
     ActiveRecord::Base.connection.transaction_open?
   end
@@ -69,10 +74,6 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
     return blk.call if !transaction_open?
 
     ActiveRecord::Base.connection.add_transaction_record(AfterCommitWrapper.new(&blk))
-  end
-
-  def self.instance
-    new(nil, param_encoder: ParamEncoder.new)
   end
 
   # we need a tiny adapter here so we always run against the

@@ -11,6 +11,15 @@ class DiscourseLogstashLogger < Logger
 
   attr_accessor :customize_event, :type
 
+  ALLOWED_HEADERS_FROM_ENV = %w[
+    REQUEST_URI
+    REQUEST_METHOD
+    HTTP_HOST
+    HTTP_USER_AGENT
+    HTTP_ACCEPT
+    HTTP_REFERER
+    HTTP_X_FORWARDED_FOR
+  ]
   # Creates a new logger instance.
   #
   # @param logdev [String, IO, nil] The log device. This can be one of:
@@ -22,28 +31,20 @@ class DiscourseLogstashLogger < Logger
   #   The proc is called with a hash of log event data and can be modified in place.
   #
   # @return [Logger] A new logger instance with the specified log device and type.
-  def self.logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
-    logger = new(logdev)
-    logger.type = type
-    logger.customize_event = customize_event if customize_event
-    logger.level = level
-    logger
+  class << self
+    def logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
+      logger = new(logdev)
+      logger.type = type
+      logger.customize_event = customize_event if customize_event
+      logger.level = level
+      logger
+    end
   end
 
   # :nodoc:
   def add(*args, &block)
     add_with_opts(*args, &block)
   end
-
-  ALLOWED_HEADERS_FROM_ENV = %w[
-    REQUEST_URI
-    REQUEST_METHOD
-    HTTP_HOST
-    HTTP_USER_AGENT
-    HTTP_ACCEPT
-    HTTP_REFERER
-    HTTP_X_FORWARDED_FOR
-  ]
 
   # :nodoc:
   def add_with_opts(severity, message = nil, progname = nil, opts = {}, &block)

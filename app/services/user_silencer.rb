@@ -3,26 +3,27 @@
 class UserSilencer
   attr_reader :user_history
 
+  class << self
+    def silence(user, by_user = nil, opts = {})
+      UserSilencer.new(user, by_user, opts).silence
+    end
+
+    def auto_silence(user, by_user = nil, opts = {})
+      UserSilencer.new(user, by_user, opts).auto_silence
+    end
+
+    def unsilence(user, by_user = nil, opts = {})
+      UserSilencer.new(user, by_user, opts).unsilence
+    end
+
+    def was_silenced_for?(post)
+      return false if post.blank?
+
+      UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
+    end
+  end
   def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
-  end
-
-  def self.silence(user, by_user = nil, opts = {})
-    UserSilencer.new(user, by_user, opts).silence
-  end
-
-  def self.auto_silence(user, by_user = nil, opts = {})
-    UserSilencer.new(user, by_user, opts).auto_silence
-  end
-
-  def self.unsilence(user, by_user = nil, opts = {})
-    UserSilencer.new(user, by_user, opts).unsilence
-  end
-
-  def self.was_silenced_for?(post)
-    return false if post.blank?
-
-    UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
   end
 
   def silence

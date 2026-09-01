@@ -7,42 +7,53 @@ module Migrations
     module Schema
       module DSL
         class PluginIntrospector
-          def self.compute_checksums(plugins_path)
-            discover_plugins(plugins_path).transform_values { |paths| checksum_for_paths(paths) }
-          end
-
-          private_class_method def self.checksum_for_paths(paths)
-            files =
-              paths
-                .select { |p| File.directory?(p) }
-                .flat_map { |p| Dir[File.join(p, "*.rb")].sort }
-                .uniq
-
-            return "empty" if files.empty?
-
-            digests = files.map { |f| "#{File.basename(f)}:#{Digest::MD5.file(f).hexdigest}" }
-            Digest::MD5.hexdigest(digests.join("\n"))
-          end
-
-          def self.discover_plugins(plugins_path)
-            plugins = {}
-
-            Dir[File.join(plugins_path, "*")].sort.each do |plugin_dir|
-              next if !File.directory?(plugin_dir)
-
-              plugin_name = File.basename(plugin_dir)
-              paths = plugin_migration_paths(plugin_dir)
-              plugins[plugin_name] = paths if paths.any?
+          class << self
+            def compute_checksums(plugins_path)
+              discover_plugins(plugins_path).transform_values { |paths| checksum_for_paths(paths) }
             end
-
-            plugins
           end
 
-          private_class_method def self.plugin_migration_paths(plugin_dir)
-            %w[db/migrate db/post_migrate]
-              .map { |sub| File.join(plugin_dir, sub) }
-              .select { |path| File.directory?(path) }
+          private_class_method class << self
+                                 def checksum_for_paths(paths)
+                                   files =
+                                     paths
+                                       .select { |p| File.directory?(p) }
+                                       .flat_map { |p| Dir[File.join(p, "*.rb")].sort }
+                                       .uniq
+
+                                   return "empty" if files.empty?
+
+                                   digests =
+                                     files.map do |f|
+                                       "#{File.basename(f)}:#{Digest::MD5.file(f).hexdigest}"
+                                     end
+                                   Digest::MD5.hexdigest(digests.join("\n"))
+                                 end
+                               end
+
+          class << self
+            def discover_plugins(plugins_path)
+              plugins = {}
+
+              Dir[File.join(plugins_path, "*")].sort.each do |plugin_dir|
+                next if !File.directory?(plugin_dir)
+
+                plugin_name = File.basename(plugin_dir)
+                paths = plugin_migration_paths(plugin_dir)
+                plugins[plugin_name] = paths if paths.any?
+              end
+
+              plugins
+            end
           end
+
+          private_class_method class << self
+                                 def plugin_migration_paths(plugin_dir)
+                                   %w[db/migrate db/post_migrate]
+                                     .map { |sub| File.join(plugin_dir, sub) }
+                                     .select { |path| File.directory?(path) }
+                                 end
+                               end
 
           def initialize(plugins_path: nil)
             @plugins_path = plugins_path || Rails.root.join("plugins").to_s

@@ -25,8 +25,10 @@ class Cache
 
   # we don't need this feature, 1 day expiry is enough
   # it makes lookups a tad cheaper
-  def self.supports_cache_versioning?
-    false
+  class << self
+    def supports_cache_versioning?
+      false
+    end
   end
 
   def initialize(namespace: "_CACHE")

@@ -19,8 +19,11 @@ class Admin::SiteTextsController < Admin::AdminController
       "js.powered_by_discourse"
     ].freeze
 
-  def self.restricted_key?(key)
-    RESTRICTED_KEYS.include?(key)
+  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
+  class << self
+    def restricted_key?(key)
+      RESTRICTED_KEYS.include?(key)
+    end
   end
 
   def index
@@ -189,8 +192,6 @@ class Admin::SiteTextsController < Admin::AdminController
     custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
     { id: key, value:, locale:, interpolation_keys: (interpolation_keys | custom_keys).sort }
   end
-
-  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
 
   def find_site_text(locale)
     if RESTRICTED_KEYS.include?(params[:id])

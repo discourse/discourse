@@ -9,23 +9,24 @@ class TopicViewItem < ActiveRecord::Base
   belongs_to :topic
   validates :topic_id, :ip_address, :viewed_at, presence: true
 
-  def self.add(topic_id, ip, user_id = nil, at = nil, skip_redis = false)
-    # Only store a view once per day per thing per (user || ip)
-    at ||= Time.zone.today
+  class << self
+    def add(topic_id, ip, user_id = nil, at = nil, skip_redis = false)
+      # Only store a view once per day per thing per (user || ip)
+      at ||= Time.zone.today
 
-    redis_key = +"view:#{topic_id}:#{at}"
-    if user_id
-      redis_key << ":user-#{user_id}"
-    else
-      redis_key << ":ip-#{ip}"
-    end
+      redis_key = +"view:#{topic_id}:#{at}"
+      if user_id
+        redis_key << ":user-#{user_id}"
+      else
+        redis_key << ":ip-#{ip}"
+      end
 
-    if skip_redis || Discourse.redis.setnx(redis_key, "1")
-      skip_redis || Discourse.redis.expire(redis_key, SiteSetting.topic_view_duration_hours.hours)
+      if skip_redis || Discourse.redis.setnx(redis_key, "1")
+        skip_redis || Discourse.redis.expire(redis_key, SiteSetting.topic_view_duration_hours.hours)
 
-      TopicViewItem.transaction do
-        # this is called real frequently, working hard to avoid exceptions
-        sql = <<~SQL
+        TopicViewItem.transaction do
+          # this is called real frequently, working hard to avoid exceptions
+          sql = <<~SQL
           INSERT INTO topic_views (topic_id, ip_address, viewed_at, user_id)
           SELECT :topic_id, :ip_address, :viewed_at, :user_id
           WHERE NOT EXISTS (
@@ -34,31 +35,32 @@ class TopicViewItem < ActiveRecord::Base
           )
         SQL
 
-        builder = DB.build(sql)
+          builder = DB.build(sql)
 
-        if !user_id
-          builder.where("ip_address = :ip_address AND topic_id = :topic_id AND user_id IS NULL")
-        else
-          builder.where("user_id = :user_id AND topic_id = :topic_id")
-          ip = nil # do not store IP of logged in users
-        end
-
-        result = builder.exec(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
-
-        if result > 0
-          if user_id
-            UserStat.where(user_id: user_id).update_all "topics_entered = topics_entered + 1"
+          if !user_id
+            builder.where("ip_address = :ip_address AND topic_id = :topic_id AND user_id IS NULL")
+          else
+            builder.where("user_id = :user_id AND topic_id = :topic_id")
+            ip = nil # do not store IP of logged in users
           end
+
+          result = builder.exec(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
+
+          if result > 0
+            if user_id
+              UserStat.where(user_id: user_id).update_all "topics_entered = topics_entered + 1"
+            end
+          end
+
+          Topic.where(id: topic_id).update_all "views = views + 1"
+
+          TopicViewStat.add(
+            topic_id: topic_id,
+            date: at,
+            anonymous_views: user_id ? 0 : 1,
+            logged_in_views: user_id ? 1 : 0,
+          )
         end
-
-        Topic.where(id: topic_id).update_all "views = views + 1"
-
-        TopicViewStat.add(
-          topic_id: topic_id,
-          date: at,
-          anonymous_views: user_id ? 0 : 1,
-          logged_in_views: user_id ? 1 : 0,
-        )
       end
     end
   end

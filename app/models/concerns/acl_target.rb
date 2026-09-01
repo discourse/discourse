@@ -3,17 +3,19 @@
 module AclTarget
   extend ActiveSupport::Concern
 
-  def self.acl_matches?(acl_a, acl_b)
-    acl_a[:type].to_sym == acl_b[:type].to_sym && acl_a[:id] == acl_b[:id] &&
-      acl_a[:permission].to_s == acl_b[:permission].to_s
-  end
+  class << self
+    def acl_matches?(acl_a, acl_b)
+      acl_a[:type].to_sym == acl_b[:type].to_sym && acl_a[:id] == acl_b[:id] &&
+        acl_a[:permission].to_s == acl_b[:permission].to_s
+    end
 
-  def self.target_classes
-    loaded_target_classes
-  end
+    def target_classes
+      loaded_target_classes
+    end
 
-  def self.loaded_target_classes
-    @loaded_target_classes ||= []
+    def loaded_target_classes
+      @loaded_target_classes ||= []
+    end
   end
 
   included do
