@@ -2,7 +2,7 @@
 
 RSpec.describe Sidekiq::DiscourseEvent do
   describe "#call" do
-    it "should trigger the `sidekiq_job_ran` discourse event when successfully executing the block" do
+    it "triggers the `sidekiq_job_ran` discourse event when successfully executing the block" do
       called = false
 
       events =
@@ -24,7 +24,7 @@ RSpec.describe Sidekiq::DiscourseEvent do
       expect(event[:params][3]).to be_a(Float)
     end
 
-    it "should trigger `sidekiq_job_error` discourse event when an error occurs while executing the block" do
+    it "triggers `sidekiq_job_error` discourse event when an error occurs while executing the block" do
       called = false
 
       events =

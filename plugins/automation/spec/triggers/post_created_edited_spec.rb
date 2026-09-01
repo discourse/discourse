@@ -275,19 +275,19 @@ describe "PostCreatedEdited" do
 
     context "when the post is being created from an incoming email" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
+
       fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
       fab!(:topic) { create_topic(user: user) }
       fab!(:post) { create_post(topic: topic) }
 
-      let!(:post_reply_key) do
-        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
-      end
-
       before do
+        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
         SiteSetting.email_in = true
         SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
         SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
+
       end
+
 
       it "fires the trigger" do
         list = capture_contexts { Email::Receiver.new(email("html_reply")).process! }
@@ -308,22 +308,17 @@ describe "PostCreatedEdited" do
           expect(list[0]["kind"]).to eq("post_created_edited")
         end
 
-        context "when ignore_automated is true" do
-          before do
-            automation.upsert_field!(
-              "ignore_automated",
-              "boolean",
-              { value: true },
-              target: "trigger",
-            )
-          end
+        it "doesn't fire the trigger when ignore_automated is true" do
+          automation.upsert_field!(
+            "ignore_automated",
+            "boolean",
+            { value: true },
+            target: "trigger",
+          )
+          list =
+            capture_contexts { Email::Receiver.new(email("auto_generated_unblocked")).process! }
 
-          it "doesn't fire the trigger" do
-            list =
-              capture_contexts { Email::Receiver.new(email("auto_generated_unblocked")).process! }
-
-            expect(list).to be_blank
-          end
+          expect(list).to be_blank
         end
       end
     end
@@ -415,7 +410,7 @@ describe "PostCreatedEdited" do
         expect(list[0]["kind"]).to eq("post_created_edited")
       end
 
-      it "will not fire on unrelated categories" do
+      it "does not fire on unrelated categories" do
         list =
           capture_contexts do
             PostCreator.create(user, basic_topic_params.merge({ category: another_category.id }))

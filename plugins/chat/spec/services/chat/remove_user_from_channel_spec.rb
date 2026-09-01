@@ -17,78 +17,76 @@ RSpec.describe Chat::RemoveUserFromChannel do
     let(:params) { { channel_id: channel.id, user_id: user.id } }
     let(:dependencies) { { guardian: } }
 
-    context "when all steps pass" do
-      context "when category channel" do
-        context "with existing membership" do
-          before do
-            channel.add(user)
-            channel.add(acting_user)
-            Chat::Channel.ensure_consistency!
-          end
-
-          it { is_expected.to run_successfully }
-
-          it "unfollows the channel" do
-            membership = channel.membership_for(user)
-
-            expect { result }.to change { membership.reload.following }.from(true).to(false)
-          end
-
-          it "recomputes user count" do
-            expect { result }.to change { channel.reload.user_count }.from(2).to(1)
-          end
+    context "when category channel" do
+      context "with existing membership" do
+        before do
+          channel.add(user)
+          channel.add(acting_user)
+          Chat::Channel.ensure_consistency!
         end
 
-        context "with no existing membership" do
-          it { is_expected.to run_successfully }
+        it { is_expected.to run_successfully }
 
-          it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership.count }
-          end
+        it "unfollows the channel" do
+          membership = channel.membership_for(user)
+
+          expect { result }.to change { membership.reload.following }.from(true).to(false)
+        end
+
+        it "recomputes user count" do
+          expect { result }.to change { channel.reload.user_count }.from(2).to(1)
         end
       end
 
-      context "when group channel" do
-        context "with existing membership" do
-          fab!(:channel) do
-            Fabricate(:direct_message_channel, group: true, users: [acting_user, user])
-          end
+      context "with no existing membership" do
+        it { is_expected.to run_successfully }
 
-          before { Chat::Channel.ensure_consistency! }
+        it "does nothing" do
+          expect { result }.to_not change { Chat::UserChatChannelMembership.count }
+        end
+      end
+    end
 
-          it { is_expected.to run_successfully }
-
-          it "leaves the channel" do
-            membership = channel.membership_for(user)
-
-            result
-
-            expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
-            expect(channel.chatable.direct_message_users.where(user_id: user.id).exists?).to eq(
-              false,
-            )
-          end
-
-          it "recomputes user count" do
-            expect { result }.to change { channel.reload.user_count }.from(2).to(1)
-          end
+    context "when group channel" do
+      context "with existing membership" do
+        fab!(:channel) do
+          Fabricate(:direct_message_channel, group: true, users: [acting_user, user])
         end
 
-        context "with no existing membership" do
-          it { is_expected.to run_successfully }
+        before { Chat::Channel.ensure_consistency! }
 
-          it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership.count }
-          end
+        it { is_expected.to run_successfully }
+
+        it "leaves the channel" do
+          membership = channel.membership_for(user)
+
+          result
+
+          expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
+          expect(channel.chatable.direct_message_users.where(user_id: user.id).exists?).to eq(
+            false,
+          )
+        end
+
+        it "recomputes user count" do
+          expect { result }.to change { channel.reload.user_count }.from(2).to(1)
         end
       end
 
-      context "when channel is a one-on-one DM" do
-        context "with existing membership" do
-          fab!(:channel) { Fabricate(:direct_message_channel, users: [acting_user, user]) }
+      context "with no existing membership" do
+        it { is_expected.to run_successfully }
 
-          it { is_expected.to fail_a_policy(:can_remove_users_from_channel) }
+        it "does nothing" do
+          expect { result }.to_not change { Chat::UserChatChannelMembership.count }
         end
+      end
+    end
+
+    context "when channel is a one-on-one DM" do
+      context "with existing membership" do
+        fab!(:channel) { Fabricate(:direct_message_channel, users: [acting_user, user]) }
+
+        it { is_expected.to fail_a_policy(:can_remove_users_from_channel) }
       end
     end
 

@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::PostUploadsRecovery do
   describe "#grace_period" do
-    it "should restrict the grace period to the right range" do
+    it "restricts the grace period to the right range" do
       SiteSetting.purge_deleted_uploads_grace_period_days = described_class::MIN_PERIOD - 1
 
       expect(described_class.new.grace_period).to eq(30)

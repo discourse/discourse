@@ -9,6 +9,14 @@ RSpec.describe "posts" do
   before do
     Jobs.run_immediately!
     sign_in(admin)
+    sign_in(admin_user)
+    PostCreator.new(
+                user,
+                raw: "this is some text for my post",
+                topic_id: topic.id,
+                reply_to_post_number: post.post_number,
+              ).create
+
   end
 
   path "/posts.json" do
@@ -108,7 +116,6 @@ RSpec.describe "posts" do
         end
 
         let(:admin_user) { Fabricate(:admin) }
-        before { sign_in(admin_user) }
 
         run_test!
 
@@ -192,14 +199,7 @@ RSpec.describe "posts" do
         fab!(:user)
         fab!(:topic)
         fab!(:post) { Fabricate(:post, topic: topic, user: user) }
-        let!(:reply) do
-          PostCreator.new(
-            user,
-            raw: "this is some text for my post",
-            topic_id: topic.id,
-            reply_to_post_number: post.post_number,
-          ).create
-        end
+
         let!(:id) { post.id }
 
         it_behaves_like "a JSON endpoint", 200 do

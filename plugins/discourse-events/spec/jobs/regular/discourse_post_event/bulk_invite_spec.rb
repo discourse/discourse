@@ -46,8 +46,7 @@ describe Jobs::DiscoursePostEventBulkInvite do
       end
     end
 
-    context "with valid params" do
-      context "when current user can’t act on event" do
+    context "with valid params when the current user can’t act on the event" do
         let(:lurker) { Fabricate(:user) }
 
         it "raises an error" do
@@ -61,171 +60,170 @@ describe Jobs::DiscoursePostEventBulkInvite do
         end
       end
 
-      context "when current user can act on event" do
-        let(:invitee_1) { Fabricate(:user) }
-        let(:invitee_2) { Fabricate(:user) }
-        let(:invitee_3) { Fabricate(:user) }
-        let(:invitee_4) { Fabricate(:user) }
-        let(:group_1) do
-          Fabricate(:group).tap do |g|
-            g.add(invitee_1)
-            g.add(invitee_2)
+    context "when current user can act on event" do
+      let(:invitee_1) { Fabricate(:user) }
+      let(:invitee_2) { Fabricate(:user) }
+      let(:invitee_3) { Fabricate(:user) }
+      let(:invitee_4) { Fabricate(:user) }
+      let(:group_1) do
+        Fabricate(:group).tap do |g|
+          g.add(invitee_1)
+          g.add(invitee_2)
+          g.save!
+        end
+      end
+      let(:valid_params) do
+        {
+          event_id: post_event_1.id,
+          invitees: [
+            { "identifier" => group_1.name, "attendance" => "not_going" },
+            { "identifier" => invitee_3.username, "attendance" => "interested" },
+            { "identifier" => invitee_4.username, "attendance" => "going" },
+            { "identifier" => "non_existent", "attendance" => "going" },
+          ],
+          current_user_id: user_1.id,
+        }
+      end
+
+      context "when the event is private" do
+        it "creates the invitees" do
+          SystemMessage
+            .expects(:create_from_system_user)
+            .with(
+              user_1,
+              :discourse_post_event_bulk_invite_failed,
+              processed: 1,
+              failed: 3,
+              logs:
+                "[#{Time.zone.now}] Couldn't find user or group: '#{invitee_3.username}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: '#{invitee_4.username}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: 'non_existent' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.",
+              # rubocop:enable Layout/LineLength
+            )
+            .once
+
+          Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
+
+          invitee_klass = DiscourseEvents::Events::Invitee
+
+          expect(invitee_klass.count).to eq(2)
+          expect(invitee_klass.find_by(user_id: invitee_1.id).status).to eq(
+            invitee_klass.statuses[:not_going],
+          )
+          expect(invitee_klass.find_by(user_id: invitee_2.id).status).to eq(
+            invitee_klass.statuses[:not_going],
+          )
+          expect(invitee_klass.find_by(user_id: invitee_3)).to eq(nil)
+          expect(invitee_klass.find_by(user_id: invitee_4)).to eq(nil)
+        end
+
+        it "sets the attendance to going by default" do
+          SystemMessage.expects(:create_from_system_user).with(
+            user_1,
+            :discourse_post_event_bulk_invite_succeeded,
+            processed: 1,
+          )
+
+          invitee_klass = DiscourseEvents::Events::Invitee
+
+          Jobs::DiscoursePostEventBulkInvite.new.execute(
+            event_id: post_event_1.id,
+            invitees: [{ "identifier" => group_1.name }],
+            current_user_id: user_1.id,
+          )
+
+          expect(invitee_klass.count).to eq(2)
+          expect(invitee_klass.find_by(user_id: group_1.users[0].id).status).to eq(
+            invitee_klass.statuses[:going],
+          )
+          expect(invitee_klass.find_by(user_id: group_1.users[1].id).status).to eq(
+            invitee_klass.statuses[:going],
+          )
+        end
+      end
+
+      context "when the current user can't see the group's members" do
+        # Moderator can edit any post but is not an admin, so member-visibility
+        # checks actually apply to them.
+        let(:moderator) { Fabricate(:moderator) }
+        let(:mod_topic) { Fabricate(:topic, user: moderator) }
+        let(:mod_post) { Fabricate(:post, topic: mod_topic) }
+        let(:mod_event) { Fabricate(:event, post: mod_post, status: "private") }
+        let(:hidden_member) { Fabricate(:user) }
+        let(:hidden_group) do
+          Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners]).tap do |g|
+            g.add(hidden_member)
             g.save!
           end
         end
-        let(:valid_params) do
-          {
-            event_id: post_event_1.id,
-            invitees: [
-              { "identifier" => group_1.name, "attendance" => "not_going" },
-              { "identifier" => invitee_3.username, "attendance" => "interested" },
-              { "identifier" => invitee_4.username, "attendance" => "going" },
-              { "identifier" => "non_existent", "attendance" => "going" },
-            ],
-            current_user_id: user_1.id,
-          }
+
+        # Serialized Sidekiq args come back with string keys, which is what the
+        # group-visibility filter must handle (see filter_out_unavailable_groups).
+        it "filters out the group even when invitee args use string keys" do
+          Jobs::DiscoursePostEventBulkInvite.new.execute(
+            event_id: mod_event.id,
+            invitees: [{ "identifier" => hidden_group.name, "attendance" => "going" }],
+            current_user_id: moderator.id,
+          )
+
+          expect(DiscourseEvents::Events::Invitee.where(post_id: mod_post.id)).to be_empty
         end
+      end
 
-        context "when the event is private" do
-          it "creates the invitees" do
-            SystemMessage
-              .expects(:create_from_system_user)
-              .with(
-                user_1,
-                :discourse_post_event_bulk_invite_failed,
-                processed: 1,
-                failed: 3,
-                logs:
-                  "[#{Time.zone.now}] Couldn't find user or group: '#{invitee_3.username}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: '#{invitee_4.username}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: 'non_existent' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.",
-                # rubocop:enable Layout/LineLength
-              )
-              .once
+      context "when the event is public" do
+        before { post_event_1.update_with_params!(status: 1) }
 
-            Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
-
-            invitee_klass = DiscourseEvents::Events::Invitee
-
-            expect(invitee_klass.count).to eq(2)
-            expect(invitee_klass.find_by(user_id: invitee_1.id).status).to eq(
-              invitee_klass.statuses[:not_going],
-            )
-            expect(invitee_klass.find_by(user_id: invitee_2.id).status).to eq(
-              invitee_klass.statuses[:not_going],
-            )
-            expect(invitee_klass.find_by(user_id: invitee_3)).to eq(nil)
-            expect(invitee_klass.find_by(user_id: invitee_4)).to eq(nil)
-          end
-
-          it "sets the attendance to going by default" do
-            SystemMessage.expects(:create_from_system_user).with(
+        it "creates the invitees" do
+          SystemMessage
+            .expects(:create_from_system_user)
+            .with(
               user_1,
-              :discourse_post_event_bulk_invite_succeeded,
-              processed: 1,
+              :discourse_post_event_bulk_invite_failed,
+              processed: 2,
+              failed: 2,
+              logs:
+                # rubocop:disable Layout/LineLength
+                "[#{Time.zone.now}] Couldn't find user or group: '#{group_1.name}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: 'non_existent' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.",
+              # rubocop:enable Layout/LineLength
             )
+            .once
 
-            invitee_klass = DiscourseEvents::Events::Invitee
+          Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
 
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: post_event_1.id,
-              invitees: [{ "identifier" => group_1.name }],
-              current_user_id: user_1.id,
-            )
+          invitee_klass = DiscourseEvents::Events::Invitee
 
-            expect(invitee_klass.count).to eq(2)
-            expect(invitee_klass.find_by(user_id: group_1.users[0].id).status).to eq(
-              invitee_klass.statuses[:going],
-            )
-            expect(invitee_klass.find_by(user_id: group_1.users[1].id).status).to eq(
-              invitee_klass.statuses[:going],
-            )
-          end
+          expect(invitee_klass.count).to eq(2)
+          expect(invitee_klass.find_by(user_id: invitee_1)).to eq(nil)
+          expect(invitee_klass.find_by(user_id: invitee_2)).to eq(nil)
+          expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
+            invitee_klass.statuses[:interested],
+          )
+          expect(invitee_klass.find_by(user_id: invitee_4.id).status).to eq(
+            invitee_klass.statuses[:going],
+          )
         end
 
-        context "when the current user can't see the group's members" do
-          # Moderator can edit any post but is not an admin, so member-visibility
-          # checks actually apply to them.
-          let(:moderator) { Fabricate(:moderator) }
-          let(:mod_topic) { Fabricate(:topic, user: moderator) }
-          let(:mod_post) { Fabricate(:post, topic: mod_topic) }
-          let(:mod_event) { Fabricate(:event, post: mod_post, status: "private") }
-          let(:hidden_member) { Fabricate(:user) }
-          let(:hidden_group) do
-            Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners]).tap do |g|
-              g.add(hidden_member)
-              g.save!
-            end
-          end
+        it "skips an unrecognized attendance instead of corrupting the invitee" do
+          invitee_klass = DiscourseEvents::Events::Invitee
 
-          # Serialized Sidekiq args come back with string keys, which is what the
-          # group-visibility filter must handle (see filter_out_unavailable_groups).
-          it "filters out the group even when invitee args use string keys" do
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: mod_event.id,
-              invitees: [{ "identifier" => hidden_group.name, "attendance" => "going" }],
-              current_user_id: moderator.id,
-            )
+          Jobs::DiscoursePostEventBulkInvite.new.execute(
+            event_id: post_event_1.id,
+            invitees: [{ "identifier" => invitee_3.username, "attendance" => "interested" }],
+            current_user_id: user_1.id,
+          )
+          expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
+            invitee_klass.statuses[:interested],
+          )
 
-            expect(DiscourseEvents::Events::Invitee.where(post_id: mod_post.id)).to be_empty
-          end
-        end
-
-        context "when the event is public" do
-          before { post_event_1.update_with_params!(status: 1) }
-
-          it "creates the invitees" do
-            SystemMessage
-              .expects(:create_from_system_user)
-              .with(
-                user_1,
-                :discourse_post_event_bulk_invite_failed,
-                processed: 2,
-                failed: 2,
-                logs:
-                  # rubocop:disable Layout/LineLength
-                  "[#{Time.zone.now}] Couldn't find user or group: '#{group_1.name}' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.\n[#{Time.zone.now}] Couldn't find user or group: 'non_existent' or the groups provided contained no users. Note that public events can't bulk invite groups. And other events can't bulk invite usernames.",
-                # rubocop:enable Layout/LineLength
-              )
-              .once
-
-            Jobs::DiscoursePostEventBulkInvite.new.execute(valid_params)
-
-            invitee_klass = DiscourseEvents::Events::Invitee
-
-            expect(invitee_klass.count).to eq(2)
-            expect(invitee_klass.find_by(user_id: invitee_1)).to eq(nil)
-            expect(invitee_klass.find_by(user_id: invitee_2)).to eq(nil)
-            expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
-              invitee_klass.statuses[:interested],
-            )
-            expect(invitee_klass.find_by(user_id: invitee_4.id).status).to eq(
-              invitee_klass.statuses[:going],
-            )
-          end
-
-          it "skips an unrecognized attendance instead of corrupting the invitee" do
-            invitee_klass = DiscourseEvents::Events::Invitee
-
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: post_event_1.id,
-              invitees: [{ "identifier" => invitee_3.username, "attendance" => "interested" }],
-              current_user_id: user_1.id,
-            )
-            expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
-              invitee_klass.statuses[:interested],
-            )
-
-            # An attendance value that is not a real status (e.g. a malformed CSV
-            # row) is skipped: the existing invitee keeps its status rather than
-            # being saved with a null status.
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: post_event_1.id,
-              invitees: [{ "identifier" => invitee_3.username, "attendance" => "bogus" }],
-              current_user_id: user_1.id,
-            )
-            expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
-              invitee_klass.statuses[:interested],
-            )
-          end
+          # An attendance value that is not a real status (e.g. a malformed CSV
+          # row) is skipped: the existing invitee keeps its status rather than
+          # being saved with a null status.
+          Jobs::DiscoursePostEventBulkInvite.new.execute(
+            event_id: post_event_1.id,
+            invitees: [{ "identifier" => invitee_3.username, "attendance" => "bogus" }],
+            current_user_id: user_1.id,
+          )
+          expect(invitee_klass.find_by(user_id: invitee_3.id).status).to eq(
+            invitee_klass.statuses[:interested],
+          )
         end
       end
     end

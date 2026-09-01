@@ -25,11 +25,12 @@ RSpec.describe DiscourseAi::Evals::LlmRepository do
     }
   end
 
-  before { @previous_env_value = ENV["EVAL_TEST_API_KEY"] }
-
-  after do
-    if @previous_env_value
-      ENV["EVAL_TEST_API_KEY"] = @previous_env_value
+  around do |example|
+    previous_env_value = ENV["EVAL_TEST_API_KEY"]
+    example.run
+  ensure
+    if previous_env_value
+      ENV["EVAL_TEST_API_KEY"] = previous_env_value
     else
       ENV.delete("EVAL_TEST_API_KEY")
     end

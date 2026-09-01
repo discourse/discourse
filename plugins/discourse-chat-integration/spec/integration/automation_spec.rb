@@ -76,7 +76,7 @@ RSpec.describe "Triggering notifications" do
       expect(validated_provider.sent_messages.length).to eq(0)
     end
 
-    it "should not trigger a provider notification on topic creation for topic_tags_changed script" do
+    it "does not trigger a provider notification on topic creation for topic_tags_changed script" do
       TopicCreator.create(
         admin,
         Guardian.new(admin),

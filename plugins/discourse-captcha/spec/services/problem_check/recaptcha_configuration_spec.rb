@@ -4,7 +4,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   subject(:check) { described_class.new }
 
   shared_examples "fails_problem_check" do
-    it do
+    it "reports the invalid configuration" do
       expect(check).to have_a_problem.with_priority("high").with_message(
         "There is a problem with your ReCaptcha `site_key` or `secret_key` configuration",
       )
@@ -42,6 +42,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
         SiteSetting.recaptcha_secret_key = "just a string"
         SiteSetting.recaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
@@ -70,6 +71,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
         SiteSetting.recaptcha_secret_key = "just a string"
         SiteSetting.recaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end

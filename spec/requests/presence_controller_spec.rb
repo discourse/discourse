@@ -61,7 +61,7 @@ RSpec.describe PresenceController do
       end
     end
 
-    it "works" do
+    it "updates the user's present channels" do
       sign_in(user)
       client_id = SecureRandom.hex
 
@@ -156,7 +156,7 @@ RSpec.describe PresenceController do
     let(:user2) { Fabricate(:user) }
     let(:user3) { Fabricate(:user) }
 
-    it "works" do
+    it "returns presence information for the requested channels" do
       get "/presence/get", params: { channels: [ch1.name] }
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(

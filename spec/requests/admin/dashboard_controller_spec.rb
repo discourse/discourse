@@ -981,6 +981,7 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
       context "when there are no problems" do
         it "returns an empty array" do
           post "/admin/dashboard/problems.json"
@@ -1798,14 +1799,18 @@ RSpec.describe Admin::DashboardController do
           created_at: created_at,
         }
       end
-      let!(:oldest) do
+      before do
         Fabricate(
           :browser_pageview_event,
           url: "/oldest-id",
           session_id: "oldest-id",
           **event_attributes,
         )
+        sign_in(admin)
+        SiteSetting.site_traffic_explorer_event_limit = 2
+
       end
+
       let!(:middle) do
         Fabricate(
           :browser_pageview_event,
@@ -1823,10 +1828,6 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      before do
-        sign_in(admin)
-        SiteSetting.site_traffic_explorer_event_limit = 2
-      end
 
       it "returns no more than the configured pageview cap" do
         get "/admin/dashboard/site-traffic-explorer.json", params: request_params
@@ -1882,7 +1883,7 @@ RSpec.describe Admin::DashboardController do
 
     context "when the selected date range exceeds retention and traffic reaches the cap" do
       let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
-      let!(:first_retained) do
+      before do
         Fabricate(
           :browser_pageview_event,
           url: "/first-retained",
@@ -1894,6 +1895,7 @@ RSpec.describe Admin::DashboardController do
           **event_attributes,
         )
       end
+
       let!(:middle_retained) do
         Fabricate(
           :browser_pageview_event,

@@ -38,30 +38,22 @@ RSpec.describe Chat::Api::ChannelsReadController do
           Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: current_user)
         end
 
-        context "when message_id param doesn't link to a message of the channel" do
-          it "raises a not found" do
-            put "/chat/api/channels/#{chat_channel.id}/read/-999.json"
-            expect(response.status).to eq(404)
-          end
+        it "returns not found when message_id does not belong to the channel" do
+          put "/chat/api/channels/#{chat_channel.id}/read/-999.json"
+          expect(response.status).to eq(404)
         end
 
-        context "when message_id param is inferior to existing last read" do
-          before { membership.update!(last_read_message_id: message_2.id) }
-
-          it "raises an invalid request" do
-            put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
-            expect(response.status).to eq(400)
-            expect(response.parsed_body["errors"][0]).to match(/message_id/)
-          end
+        it "rejects a message_id older than the existing last read" do
+          membership.update!(last_read_message_id: message_2.id)
+          put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"][0]).to match(/message_id/)
         end
 
-        context "when message_id refers to deleted message" do
-          before { message_1.trash!(Discourse.system_user) }
-
-          it "works" do
-            put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}"
-            expect(response.status).to eq(200)
-          end
+        it "accepts a deleted message as the last-read position" do
+          message_1.trash!(Discourse.system_user)
+          put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}"
+          expect(response.status).to eq(200)
         end
 
         it "updates timing records" do

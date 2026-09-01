@@ -10,7 +10,7 @@ module DiscourseEvents::Events
     end
 
     describe "#index" do
-      it "should not result in N+1 queries problem when multiple events are returned" do
+      it "does not result in N+1 queries problem when multiple events are returned" do
         # Warmup
         get "/discourse-post-event/events.json"
 
@@ -30,7 +30,7 @@ module DiscourseEvents::Events
         expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
 
-      it "should not show deleted events" do
+      it "does not show deleted events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
         active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
         deleted_event =
@@ -45,7 +45,7 @@ module DiscourseEvents::Events
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
 
-      it "should not show closed events" do
+      it "does not show closed events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
         active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
         closed_event = Fabricate(:event, original_starts_at: 3.days.from_now, closed: true)
@@ -78,7 +78,7 @@ module DiscourseEvents::Events
         expect(description_html).to include("<p>Bring snacks</p>")
       end
 
-      it "should return events in ics format" do
+      it "returns events in ics format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
 
@@ -108,7 +108,7 @@ module DiscourseEvents::Events
         expect(body).to include("SUMMARY:Test Event 2")
       end
 
-      it "should include location and description in ics format" do
+      it "includes location and description in ics format" do
         event =
           Fabricate(
             :event,
@@ -165,7 +165,7 @@ module DiscourseEvents::Events
         expect(response.body).not_to match(/^X-INJECTED:evil$/)
       end
 
-      it "should not HTML-encode ampersands in ics format" do
+      it "does not HTML-encode ampersands in ics format" do
         Fabricate(
           :event,
           original_starts_at: 1.day.from_now,
@@ -181,7 +181,7 @@ module DiscourseEvents::Events
         expect(response.body).not_to include("&amp;")
       end
 
-      it "should not HTML-encode topic title used as ics summary" do
+      it "does not HTML-encode topic title used as ics summary" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now)
         event.post.topic.update!(title: "Rock & Roll Music Festival 2026")
 
@@ -190,7 +190,7 @@ module DiscourseEvents::Events
         expect(response.body).to include("SUMMARY:Rock & Roll Music Festival 2026")
       end
 
-      it "should handle events without location and description in ics format" do
+      it "handles events without location and description in ics format" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Simple Event")
 
         get "/discourse-post-event/events.ics"
@@ -203,7 +203,7 @@ module DiscourseEvents::Events
         expect(body).to include("END:VEVENT")
       end
 
-      it "should include post url in description when no custom description is set" do
+      it "includes post url in description when no custom description is set" do
         event =
           Fabricate(:event, original_starts_at: 1.day.from_now, name: "Event Without Description")
 
@@ -475,322 +475,304 @@ module DiscourseEvents::Events
       let(:invitee1) { Fabricate(:user) }
       let(:invitee2) { Fabricate(:user) }
 
-      context "with an existing event" do
-        let(:event_1) { Fabricate(:event, post: post1) }
+      let(:event_1) { Fabricate(:event, post: post1) }
 
-        before { sign_in(user) }
+      before { sign_in(user) }
 
-        context "when updating" do
-          context "when doing csv bulk invite" do
-            let(:valid_file) do
-              file = Tempfile.new("valid.csv")
-              file.write("bob,going\n")
-              file.write("sam,interested\n")
-              file.write("the_foo_bar_group,not_going\n")
-              file.rewind
-              file
-            end
-
-            let(:empty_file) do
-              file = Tempfile.new("invalid.pdf")
-              file.rewind
-              file
-            end
-
-            context "when current user can manage the event" do
-              context "when no file is given" do
-                it "returns an error" do
-                  post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
-                  expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
-                end
-              end
-
-              context "when an empty file is given" do
-                it "returns an error" do
-                  post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
-                       params: {
-                         file: fixture_file_upload(empty_file),
-                       }
-                  expect(response.status).to eq(422)
-                end
-              end
-
-              context "when a valid file is given" do
-                before { Jobs.run_later! }
-
-                it "enqueues the job and returns 200" do
-                  expect_enqueued_with(
-                    job: :discourse_post_event_bulk_invite,
-                    args: {
-                      "event_id" => event_1.id,
-                      "invitees" => [
-                        { "identifier" => "bob", "attendance" => "going" },
-                        { "identifier" => "sam", "attendance" => "interested" },
-                        { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
-                      ],
-                      "current_user_id" => user.id,
-                    },
-                  ) do
-                    post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
-                         params: {
-                           file: fixture_file_upload(valid_file),
-                         }
-                  end
-
-                  expect(response.status).to eq(200)
-                end
-              end
-            end
-
-            context "when current user can’t manage the event" do
-              let(:lurker) { Fabricate(:user) }
-
-              before { sign_in(lurker) }
-
-              it "returns an error" do
-                post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
-                expect(response.status).to eq(403)
-              end
-            end
+      context "when doing csv bulk invite" do
+          let(:valid_file) do
+            file = Tempfile.new("valid.csv")
+            file.write("bob,going\n")
+            file.write("sam,interested\n")
+            file.write("the_foo_bar_group,not_going\n")
+            file.rewind
+            file
           end
 
-          context "when doing bulk invite" do
-            context "when current user can manage the event" do
-              context "when no invitees are given" do
-                it "returns an error" do
-                  post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json"
-                  expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
-                end
-              end
+          let(:empty_file) do
+            file = Tempfile.new("invalid.pdf")
+            file.rewind
+            file
+          end
 
-              context "when empty invitees are given" do
-                it "returns an error" do
-                  post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json",
-                       params: {
-                         invitees: [],
-                       }
-                  expect(response.status).to eq(400)
-                end
-              end
-
-              context "when valid invitees are given" do
-                before { Jobs.run_later! }
-
-                it "enqueues the job and returns 200" do
-                  expect_enqueued_with(
-                    job: :discourse_post_event_bulk_invite,
-                    args: {
-                      "event_id" => event_1.id,
-                      "invitees" => [
-                        { "identifier" => "bob", "attendance" => "going" },
-                        { "identifier" => "sam", "attendance" => "interested" },
-                        { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
-                      ],
-                      "current_user_id" => user.id,
-                    },
-                  ) do
-                    post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json",
-                         params: {
-                           invitees: [
-                             { "identifier" => "bob", "attendance" => "going" },
-                             { "identifier" => "sam", "attendance" => "interested" },
-                             { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
-                           ],
-                         }
-                  end
-
-                  expect(response.status).to eq(200)
-                end
-              end
+          context "when current user can manage the event" do
+            it "returns an error when no file is given" do
+              post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
+              expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
             end
 
-            context "when current user can’t manage the event" do
-              let(:lurker) { Fabricate(:user) }
-
-              before { sign_in(lurker) }
-
-              it "returns an error" do
-                post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json"
-                expect(response.status).to eq(403)
-              end
+            it "returns an error when an empty file is given" do
+              post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
+                     params: {
+                       file: fixture_file_upload(empty_file),
+                     }
+              expect(response.status).to eq(422)
             end
-          end
-        end
 
-        context "when acting user has created the event" do
-          it "destroys a event" do
-            expect(event_1.persisted?).to be(true)
-
-            channel = "/discourse-post-event/#{event_1.post.topic_id}"
-            messages =
-              MessageBus
-                .track_publish { delete "/discourse-post-event/events/#{event_1.id}.json" }
-                .select { |message| message.channel == channel }
-            expect(messages.count).to eq(1)
-            message = messages.first
-            expect(message.channel).to eq(channel)
-            expect(message.data[:id]).to eq(event_1.id)
-            expect(response.status).to eq(200)
-            expect(Event).to_not exist(id: event_1.id)
-          end
-        end
-
-        context "when acting user has not created the event" do
-          let(:lurker) { Fabricate(:user) }
-
-          before { sign_in(lurker) }
-
-          it "doesn’t destroy the event" do
-            expect(event_1.persisted?).to be(true)
-            delete "/discourse-post-event/events/#{event_1.id}.json"
-            expect(response.status).to eq(403)
-            expect(Event).to exist(id: event_1.id)
-          end
-        end
-
-        context "when watching user is not logged" do
-          before { sign_out }
-
-          context "when topic is public" do
-            it "can see the event" do
-              get "/discourse-post-event/events/#{event_1.id}.json"
+            it "enqueues the job and returns 200 when a valid file is given" do
+              Jobs.run_later!
+              expect_enqueued_with(
+                job: :discourse_post_event_bulk_invite,
+                args: {
+                  "event_id" => event_1.id,
+                  "invitees" => [
+                    { "identifier" => "bob", "attendance" => "going" },
+                    { "identifier" => "sam", "attendance" => "interested" },
+                    { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
+                  ],
+                  "current_user_id" => user.id,
+                },
+              ) do
+                post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
+                     params: {
+                       file: fixture_file_upload(valid_file),
+                     }
+              end
 
               expect(response.status).to eq(200)
             end
           end
 
-          context "when topic is not public" do
-            before { event_1.post.topic.convert_to_private_message(Discourse.system_user) }
+          context "when current user can’t manage the event" do
+            let(:lurker) { Fabricate(:user) }
 
-            it "can’t see the event" do
-              get "/discourse-post-event/events/#{event_1.id}.json"
+            before { sign_in(lurker) }
 
-              expect(response.status).to eq(404)
+            it "returns an error" do
+              post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
+              expect(response.status).to eq(403)
             end
           end
         end
 
-        context "with a private event" do
-          fab!(:viewer, :user)
-          fab!(:invitee, :user)
-          fab!(:restricted_group) do
-            Fabricate(
-              :group,
-              visibility_level: Group.visibility_levels[:owners],
-              members_visibility_level: Group.visibility_levels[:owners],
-            ).tap { |group| group.add(invitee) }
-          end
-          fab!(:private_event_post) do
-            Fabricate(
-              :post,
-              user: Fabricate(:user, admin: true, refresh_auto_groups: true),
-              topic: Fabricate(:topic, category: Fabricate(:category)),
-            )
-          end
-          fab!(:private_event) do
-            Fabricate(
-              :event,
-              post: private_event_post,
-              status: DiscourseEvents::Events::Event.statuses[:private],
-              raw_invitees: [restricted_group.name],
-            )
+      context "when doing bulk invite" do
+        context "when current user can manage the event" do
+          it "returns an error when no invitees are given" do
+            post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json"
+            expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
           end
 
-          before do
-            private_event.create_invitees(
-              [{ user_id: invitee.id, status: Invitee.statuses[:going] }],
-            )
-            sign_in(viewer)
+          it "returns an error when empty invitees are given" do
+            post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json",
+                   params: {
+                     invitees: [],
+                   }
+            expect(response.status).to eq(400)
           end
 
-          it "does not serialize invitee details for non-invited viewers who cannot see the invited group" do
-            get "/discourse-post-event/events/#{private_event.id}.json"
+          it "enqueues the job and returns 200 when valid invitees are given" do
+            Jobs.run_later!
+            expect_enqueued_with(
+              job: :discourse_post_event_bulk_invite,
+              args: {
+                "event_id" => event_1.id,
+                "invitees" => [
+                  { "identifier" => "bob", "attendance" => "going" },
+                  { "identifier" => "sam", "attendance" => "interested" },
+                  { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
+                ],
+                "current_user_id" => user.id,
+              },
+            ) do
+              post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json",
+                   params: {
+                     invitees: [
+                       { "identifier" => "bob", "attendance" => "going" },
+                       { "identifier" => "sam", "attendance" => "interested" },
+                       { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
+                     ],
+                   }
+            end
 
             expect(response.status).to eq(200)
-            event = response.parsed_body["event"]
-            expect(event).not_to have_key("raw_invitees")
-            expect(event).not_to have_key("sample_invitees")
-            expect(event).not_to have_key("stats")
-            expect(event["should_display_invitees"]).to eq(false)
           end
         end
 
-        context "when filtering by category" do
-          fab!(:category)
+        context "when current user can’t manage the event" do
+          let(:lurker) { Fabricate(:user) }
 
-          fab!(:subcategory) do
-            Fabricate(:category, parent_category: category, name: "category subcategory")
+          before { sign_in(lurker) }
+
+          it "returns an error" do
+            post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json"
+            expect(response.status).to eq(403)
           end
+        end
+      end
 
-          fab!(:event_1) do
-            Fabricate(
-              :event,
-              original_starts_at: 2.days.from_now,
-              post: Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: category)),
-            )
-          end
+      context "when acting user has created the event" do
+        it "destroys a event" do
+          expect(event_1.persisted?).to be(true)
 
-          fab!(:event_2) do
-            Fabricate(
-              :event,
-              original_starts_at: 1.day.from_now,
-              post:
-                Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: subcategory)),
-            )
-          end
+          channel = "/discourse-post-event/#{event_1.post.topic_id}"
+          messages =
+            MessageBus
+              .track_publish { delete "/discourse-post-event/events/#{event_1.id}.json" }
+              .select { |message| message.channel == channel }
+          expect(messages.count).to eq(1)
+          message = messages.first
+          expect(message.channel).to eq(channel)
+          expect(message.data[:id]).to eq(event_1.id)
+          expect(response.status).to eq(200)
+          expect(Event).to_not exist(id: event_1.id)
+        end
+      end
 
-          fab!(:event_3) do
-            Fabricate(
-              :event,
-              post: Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: category)),
-              original_starts_at: 10.days.ago,
-              original_ends_at: 9.days.ago,
-            )
-          end
+      context "when acting user has not created the event" do
+        let(:lurker) { Fabricate(:user) }
 
-          it "can filter the event by category" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}"
+        before { sign_in(lurker) }
+
+        it "doesn’t destroy the event" do
+          expect(event_1.persisted?).to be(true)
+          delete "/discourse-post-event/events/#{event_1.id}.json"
+          expect(response.status).to eq(403)
+          expect(Event).to exist(id: event_1.id)
+        end
+      end
+
+      context "when watching user is not logged" do
+        before { sign_out }
+
+        context "when topic is public" do
+          it "can see the event" do
+            get "/discourse-post-event/events/#{event_1.id}.json"
 
             expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(2) # Now includes expired event_3
-            event_ids = events.map { |e| e["id"] }
-            expect(event_ids).to include(event_1.id)
-            expect(event_ids).to include(event_3.id)
           end
+        end
 
-          it "includes subcategory events when param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true"
+        context "when topic is not public" do
+          before { event_1.post.topic.convert_to_private_message(Discourse.system_user) }
 
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(3) # Now includes expired event_3
-            expect(events).to match_array(
-              [
-                hash_including("id" => event_1.id),
-                hash_including("id" => event_2.id),
-                hash_including("id" => event_3.id),
-              ],
-            )
+          it "can’t see the event" do
+            get "/discourse-post-event/events/#{event_1.id}.json"
+
+            expect(response.status).to eq(404)
           end
+        end
+      end
 
-          it "limits the number of events returned when limit param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&limit=1"
+      context "with a private event" do
+        fab!(:viewer, :user)
+        fab!(:invitee, :user)
+        fab!(:restricted_group) do
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          ).tap { |group| group.add(invitee) }
+        end
+        fab!(:private_event_post) do
+          Fabricate(
+            :post,
+            user: Fabricate(:user, admin: true, refresh_auto_groups: true),
+            topic: Fabricate(:topic, category: Fabricate(:category)),
+          )
+        end
+        fab!(:private_event) do
+          Fabricate(
+            :event,
+            post: private_event_post,
+            status: DiscourseEvents::Events::Event.statuses[:private],
+            raw_invitees: [restricted_group.name],
+          )
+        end
 
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_3.id) # Expired event sorts first (NULL starts_at)
-          end
+        before do
+          private_event.create_invitees(
+            [{ user_id: invitee.id, status: Invitee.statuses[:going] }],
+          )
+          sign_in(viewer)
+        end
 
-          it "filters events before the provided datetime if before param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&before=#{event_2.starts_at}"
+        it "does not serialize invitee details for non-invited viewers who cannot see the invited group" do
+          get "/discourse-post-event/events/#{private_event.id}.json"
 
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_3.id)
-          end
+          expect(response.status).to eq(200)
+          event = response.parsed_body["event"]
+          expect(event).not_to have_key("raw_invitees")
+          expect(event).not_to have_key("sample_invitees")
+          expect(event).not_to have_key("stats")
+          expect(event["should_display_invitees"]).to eq(false)
+        end
+      end
+
+      context "when filtering by category" do
+        fab!(:category)
+
+        fab!(:subcategory) do
+          Fabricate(:category, parent_category: category, name: "category subcategory")
+        end
+
+        fab!(:event_1) do
+          Fabricate(
+            :event,
+            original_starts_at: 2.days.from_now,
+            post: Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: category)),
+          )
+        end
+
+        fab!(:event_2) do
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            post:
+              Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: subcategory)),
+          )
+        end
+
+        fab!(:event_3) do
+          Fabricate(
+            :event,
+            post: Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: category)),
+            original_starts_at: 10.days.ago,
+            original_ends_at: 9.days.ago,
+          )
+        end
+
+        it "can filter the event by category" do
+          get "/discourse-post-event/events.json?category_id=#{category.id}"
+
+          expect(response.status).to eq(200)
+          events = response.parsed_body["events"]
+          expect(events.length).to eq(2) # Now includes expired event_3
+          event_ids = events.map { |e| e["id"] }
+          expect(event_ids).to include(event_1.id)
+          expect(event_ids).to include(event_3.id)
+        end
+
+        it "includes subcategory events when param provided" do
+          get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true"
+
+          expect(response.status).to eq(200)
+          events = response.parsed_body["events"]
+          expect(events.length).to eq(3) # Now includes expired event_3
+          expect(events).to match_array(
+            [
+              hash_including("id" => event_1.id),
+              hash_including("id" => event_2.id),
+              hash_including("id" => event_3.id),
+            ],
+          )
+        end
+
+        it "limits the number of events returned when limit param provided" do
+          get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&limit=1"
+
+          expect(response.status).to eq(200)
+          events = response.parsed_body["events"]
+          expect(events.length).to eq(1)
+          expect(events[0]["id"]).to eq(event_3.id) # Expired event sorts first (NULL starts_at)
+        end
+
+        it "filters events before the provided datetime if before param provided" do
+          get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&before=#{event_2.starts_at}"
+
+          expect(response.status).to eq(200)
+          events = response.parsed_body["events"]
+          expect(events.length).to eq(1)
+          expect(events[0]["id"]).to eq(event_3.id)
         end
       end
     end
@@ -942,6 +924,7 @@ module DiscourseEvents::Events
     before do
       SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
+      chat_channel.update!(last_message: chat_message)
     end
 
     fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
@@ -959,7 +942,6 @@ module DiscourseEvents::Events
       )
     end
 
-    before { chat_channel.update!(last_message: chat_message) }
 
     context "when the viewer is anonymous" do
       before do

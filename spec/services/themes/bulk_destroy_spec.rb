@@ -5,7 +5,8 @@ RSpec.describe Themes::BulkDestroy do
     it { is_expected.to validate_presence_of(:theme_ids) }
     it { is_expected.to allow_values([1], (1..50).to_a).for(:theme_ids) }
     it { is_expected.not_to allow_values([], (1..51).to_a).for(:theme_ids) }
-    it do
+
+    it "rejects non-positive theme IDs" do
       is_expected.not_to allow_values([1, 0, -3]).for(:theme_ids).with_message(
         /must all be positive/,
       )

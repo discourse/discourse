@@ -75,7 +75,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(404)
       end
 
-      it "should return correct user count for default categories change" do
+      it "returns correct user count for default categories change" do
         category_id = Fabricate(:category).id
 
         put "/admin/site_settings/default_categories_watching/user_count.json",
@@ -95,7 +95,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
       end
 
-      it "should return correct user count for default tags change" do
+      it "returns correct user count for default tags change" do
         tag = Fabricate(:tag)
 
         put "/admin/site_settings/default_tags_watching/user_count.json",
@@ -181,7 +181,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.parsed_body["user_count"]).to eq(1)
         end
 
-        it "should return correct user count for boolean setting" do
+        it "returns correct user count for boolean setting" do
           expect_user_count(
             site_setting_name: "default_other_external_links_in_new_tab",
             user_setting_name: "external_links_in_new_tab",
@@ -190,7 +190,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should return correct user count for 'text_size_key'" do
+        it "returns correct user count for 'text_size_key'" do
           expect_user_count(
             site_setting_name: "default_text_size",
             user_setting_name: "text_size_key",
@@ -201,7 +201,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should return correct user count for 'title_count_mode_key'" do
+        it "returns correct user count for 'title_count_mode_key'" do
           expect_user_count(
             site_setting_name: "default_title_count_mode",
             user_setting_name: "title_count_mode_key",
@@ -352,10 +352,11 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default user options" do
-        let!(:user1) { Fabricate(:user) }
+        before { Fabricate(:user) }
+
         let!(:user2) { Fabricate(:user) }
 
-        it "should update all existing user options" do
+        it "updates all existing user options" do
           SiteSetting.default_email_in_reply_to = true
 
           user2.user_option.email_in_reply_to = true
@@ -371,7 +372,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(user2.user_option.email_in_reply_to).to eq(false)
         end
 
-        it "should not update existing user options" do
+        it "does not update existing user options" do
           expect {
             put "/admin/site_settings/default_email_in_reply_to.json",
                 params: {
@@ -380,7 +381,7 @@ RSpec.describe Admin::SiteSettingsController do
           }.not_to change { UserOption.where(email_in_reply_to: false).count }
         end
 
-        it "should update `email_digests` column in existing user options" do
+        it "updates `email_digests` column in existing user options" do
           UserOption.last.update(email_digests: false)
 
           expect {
@@ -475,7 +476,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should update existing users user preference" do
+        it "updates existing users user preference" do
           put "/admin/site_settings/default_categories_watching.json",
               params: {
                 default_categories_watching: category_ids.last(2).join("|"),
@@ -510,7 +511,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should not update existing users user preference" do
+        it "does not update existing users user preference" do
           expect {
             put "/admin/site_settings/default_categories_watching.json",
                 params: {
@@ -548,7 +549,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should publish a MessageBus informing the correct groups" do
+        it "publishes a MessageBus informing the correct groups" do
           messages =
             MessageBus.track_publish("/site_setting/default_categories_watching/process") do
               put "/admin/site_settings/default_categories_watching.json",
@@ -577,7 +578,7 @@ RSpec.describe Admin::SiteSettingsController do
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
         end
 
-        it "should update existing users user preference" do
+        it "updates existing users user preference" do
           put "/admin/site_settings/default_tags_watching.json",
               params: {
                 default_tags_watching: tags.last(2).pluck(:name).join("|"),
@@ -596,7 +597,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should not update existing users user preference" do
+        it "does not update existing users user preference" do
           expect {
             put "/admin/site_settings/default_tags_watching.json",
                 params: {
@@ -618,7 +619,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should publish a MessageBus informing the correct groups" do
+        it "publishes a MessageBus informing the correct groups" do
           messages =
             MessageBus.track_publish("/site_setting/default_tags_watching/process") do
               put "/admin/site_settings/default_tags_watching.json",

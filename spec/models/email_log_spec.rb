@@ -116,7 +116,7 @@ RSpec.describe EmailLog do
   end
 
   describe "#bounce_key" do
-    it "should format the bounce_key correctly" do
+    it "formats the bounce_key correctly" do
       hex = SecureRandom.hex
       email_log = Fabricate(:email_log, user: user, bounce_key: hex)
 
@@ -161,6 +161,7 @@ RSpec.describe EmailLog do
 
   describe ".addressed_to_user scope" do
     let(:user) { Fabricate(:user, email: "test@test.com") }
+
     before do
       Fabricate(:email_log, to_address: "john@smith.com")
       Fabricate(:email_log, cc_addresses: "jane@jones.com;elle@someplace.org")

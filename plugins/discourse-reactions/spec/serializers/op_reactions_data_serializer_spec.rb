@@ -363,10 +363,10 @@ describe TopicListItemSerializer do
   include_examples "op_reactions_data serializer",
                    TopicListItemSerializer,
                    :include_discourse_reactions_data_on_topic_list
-end
 
-describe SuggestedTopicSerializer do
-  include_examples "op_reactions_data serializer",
-                   SuggestedTopicSerializer,
-                   :include_discourse_reactions_data_on_suggested_topics
+  context "with SuggestedTopicSerializer" do
+    include_examples "op_reactions_data serializer",
+                     SuggestedTopicSerializer,
+                     :include_discourse_reactions_data_on_suggested_topics
+  end
 end

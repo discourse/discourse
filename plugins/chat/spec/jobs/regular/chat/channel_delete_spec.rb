@@ -6,13 +6,14 @@ describe Jobs::Chat::ChannelDelete do
   fab!(:user2, :user)
   fab!(:user3, :user)
   let(:users) { [user1, user2, user3] }
+  let(:deletion_context) { {} }
 
   before do
     messages = []
     20.times do
       messages << Fabricate(:chat_message, chat_channel: chat_channel, user: users.sample)
     end
-    @message_ids = messages.map(&:id)
+    deletion_context[:message_ids] = messages.map(&:id)
 
     10.times { Chat::MessageReaction.create(chat_message: messages.sample, user: users.sample) }
 
@@ -29,9 +30,12 @@ describe Jobs::Chat::ChannelDelete do
       notifications: [Fabricate(:notification)],
     )
 
-    @incoming_chat_webhook_id = Fabricate(:incoming_chat_webhook, chat_channel: chat_channel)
+    deletion_context[:incoming_chat_webhook] = Fabricate(
+      :incoming_chat_webhook,
+      chat_channel: chat_channel,
+    )
     Chat::WebhookEvent.create(
-      incoming_chat_webhook: @incoming_chat_webhook_id,
+      incoming_chat_webhook: deletion_context[:incoming_chat_webhook],
       chat_message: messages.sample,
     )
 
@@ -65,19 +69,24 @@ describe Jobs::Chat::ChannelDelete do
     {
       incoming_webhooks: Chat::IncomingWebhook.where(chat_channel_id: chat_channel.id).count,
       webhook_events:
-        Chat::WebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count,
+        Chat::WebhookEvent.where(
+          incoming_chat_webhook_id: deletion_context.fetch(:incoming_chat_webhook).id,
+        ).count,
       drafts: Chat::Draft.where(chat_channel: chat_channel).count,
       channel_memberships: Chat::UserChatChannelMembership.where(chat_channel: chat_channel).count,
-      revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
-      mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
+      revisions: Chat::MessageRevision.where(chat_message_id: deletion_context[:message_ids]).count,
+      mentions: Chat::Mention.where(chat_message_id: deletion_context[:message_ids]).count,
       upload_references:
         UploadReference.where(
-          target_id: @message_ids,
+          target_id: deletion_context[:message_ids],
           target_type: Chat::Message.polymorphic_name,
         ).count,
-      hotlinked_media: Chat::MessageHotlinkedMedia.where(chat_message_id: @message_ids).count,
-      messages: Chat::Message.where(id: @message_ids).count,
-      reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
+      hotlinked_media:
+        Chat::MessageHotlinkedMedia.where(chat_message_id: deletion_context[:message_ids]).count,
+      messages: Chat::Message.where(id: deletion_context[:message_ids]).count,
+      reactions: Chat::MessageReaction.where(
+        chat_message_id: deletion_context[:message_ids],
+      ).count,
     }
   end
 

@@ -310,6 +310,12 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
           nodes: nodes,
           connections: workflow_connections_for(nodes, %w[webhook-1 wait-1]),
         )
+        Fabricate(
+                  :discourse_workflows_execution_data,
+                  execution: waiting_execution,
+                  workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
+                )
+
       end
 
       fab!(:waiting_execution) do
@@ -323,13 +329,6 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
         )
       end
 
-      before do
-        Fabricate(
-          :discourse_workflows_execution_data,
-          execution: waiting_execution,
-          workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
-        )
-      end
 
       it "resumes when the suffix matches" do
         post "/workflows/waiting/#{waiting_execution.id}/webhook/after-approval.json?signature=#{signature}",

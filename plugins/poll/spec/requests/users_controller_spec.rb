@@ -10,7 +10,8 @@ RSpec.describe Admin::UsersController do
 
     context "when user has voted" do
       let!(:topic) { Fabricate(:topic, user: admin) }
-      let!(:post) { Fabricate(:post, topic: topic, user: admin, raw: "[poll]\n- a\n- b\n[/poll]") }
+
+      before { Fabricate(:post, topic: topic, user: admin, raw: "[poll]\n- a\n- b\n[/poll]") }
 
       it "deletes the user" do
         poll = Poll.last

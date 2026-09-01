@@ -32,11 +32,11 @@ RSpec.describe TopicCreator do
         SiteSetting.duplicate_topic_titles = "allowed"
       end
 
-      it "should be possible for an admin to create a topic" do
+      it "is possible for an admin to create a topic" do
         expect(TopicCreator.create(admin, Guardian.new(admin), valid_attrs)).to be_valid
       end
 
-      it "should be possible for a moderator to create a topic" do
+      it "is possible for a moderator to create a topic" do
         expect(TopicCreator.create(moderator, Guardian.new(moderator), valid_attrs)).to be_valid
       end
 
@@ -51,11 +51,11 @@ RSpec.describe TopicCreator do
       context "with regular user" do
         before { SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
-        it "should be possible for a regular user to create a topic" do
+        it "is possible for a regular user to create a topic" do
           expect(TopicCreator.create(user, Guardian.new(user), valid_attrs)).to be_valid
         end
 
-        it "should be possible for a regular user to create a topic with blank auto_close_time" do
+        it "is possible for a regular user to create a topic with blank auto_close_time" do
           expect(
             TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(auto_close_time: "")),
           ).to be_valid
@@ -92,16 +92,14 @@ RSpec.describe TopicCreator do
           expect(topic.participant_count).to eq(3)
         end
 
-        describe "locale" do
-          it "updates the locale of the topic" do
-            topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: "ja"))
-            expect(topic.locale).to eq("ja")
-          end
+        it "updates the locale of the topic" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: "ja"))
+          expect(topic.locale).to eq("ja")
+        end
 
-          it "sets the locale of the topic to nil if blank" do
-            topic1 = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: ""))
-            expect(topic1.locale).to eq(nil)
-          end
+        it "sets the locale of the topic to nil if blank" do
+          topic1 = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: ""))
+          expect(topic1.locale).to eq(nil)
         end
       end
     end
@@ -483,65 +481,63 @@ RSpec.describe TopicCreator do
           )
         end
 
-        context "when allowing other tags" do
-          before { category.update!(allow_global_tags: true) }
-
-          it "allows topics to use tags that aren't restricted by any category" do
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag2.name, tag3.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(true)
-            expect(tc.errors).to be_empty
-            topic = tc.create
-            expect(topic.tags).to contain_exactly(tag1, tag2, tag3, tag5)
-          end
-
-          it "rejects topics if they use restricted tags of another category" do
-            Fabricate(:category, tags: [tag5], tag_groups: [tag_group2])
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(false)
-            expect(tc.errors.full_messages).to contain_exactly(
-              I18n.t(
-                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
-                count: 1,
-                tags: tag5.name,
-                category: category.name,
-              ),
+        it "allows global tags that aren't restricted by any category" do
+          category.update!(allow_global_tags: true)
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag3.name, tag5.name],
             )
+          expect(tc.valid?).to eq(true)
+          expect(tc.errors).to be_empty
+          topic = tc.create
+          expect(topic.tags).to contain_exactly(tag1, tag2, tag3, tag5)
+        end
 
-            tc =
-              TopicCreator.new(
-                user,
-                Guardian.new(user),
-                title: "hello this is a test topic with tags",
-                raw: "hello this is a test topic with tags",
-                category: category.id,
-                tags: [tag1.name, tag2.name, tag5.name],
-              )
-            expect(tc.valid?).to eq(false)
-            expect(tc.errors.full_messages).to contain_exactly(
-              I18n.t(
-                "tags.forbidden.restricted_tags_cannot_be_used_in_category",
-                count: 2,
-                tags: [tag2, tag5].map(&:name).sort.join(", "),
-                category: category.name,
-              ),
+        it "rejects global tags restricted to another category" do
+          category.update!(allow_global_tags: true)
+          Fabricate(:category, tags: [tag5], tag_groups: [tag_group2])
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag5.name],
             )
-          end
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 1,
+              tags: tag5.name,
+              category: category.name,
+            ),
+          )
+
+          tc =
+            TopicCreator.new(
+              user,
+              Guardian.new(user),
+              title: "hello this is a test topic with tags",
+              raw: "hello this is a test topic with tags",
+              category: category.id,
+              tags: [tag1.name, tag2.name, tag5.name],
+            )
+          expect(tc.valid?).to eq(false)
+          expect(tc.errors.full_messages).to contain_exactly(
+            I18n.t(
+              "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+              count: 2,
+              tags: [tag2, tag5].map(&:name).sort.join(", "),
+              category: category.name,
+            ),
+          )
         end
       end
     end
@@ -555,7 +551,7 @@ RSpec.describe TopicCreator do
           SiteSetting.enable_staged_users = true
         end
 
-        it "should be possible for a regular user to send private message" do
+        it "is possible for a regular user to send private message" do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
@@ -577,7 +573,7 @@ RSpec.describe TopicCreator do
       end
 
       context "with failure cases" do
-        it "should be rollback the changes when email is invalid" do
+        it "is rollback the changes when email is invalid" do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
           SiteSetting.reply_by_email_enabled = true

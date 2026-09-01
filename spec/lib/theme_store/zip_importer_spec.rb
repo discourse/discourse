@@ -4,27 +4,29 @@
 require "theme_store/zip_importer"
 
 RSpec.describe ThemeStore::ZipImporter do
-  before do
-    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
+  let(:temp_folder) do
+    "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
+  end
 
-    FileUtils.mkdir(@temp_folder)
-    Dir.chdir(@temp_folder) do
+  before do
+    FileUtils.mkdir(temp_folder)
+    Dir.chdir(temp_folder) do
       FileUtils.mkdir_p("test/a")
       File.write("test/hello.txt", "hello world")
       File.write("test/a/inner", "hello world inner")
     end
   end
 
-  after { FileUtils.rm_rf @temp_folder }
+  after { FileUtils.rm_rf temp_folder }
 
   it "can import a simple zipped theme" do
-    Dir.chdir(@temp_folder) do
-      Compression::Zip.new.compress(@temp_folder, "test")
+    Dir.chdir(temp_folder) do
+      Compression::Zip.new.compress(temp_folder, "test")
       FileUtils.rm_rf("test/")
     end
 
     file_name = "test.zip"
-    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
+    importer = ThemeStore::ZipImporter.new("#{temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")
@@ -34,10 +36,10 @@ RSpec.describe ThemeStore::ZipImporter do
   end
 
   it "can import a simple gzipped theme" do
-    Dir.chdir(@temp_folder) { `tar -cvzf test.tar.gz test/* 2> /dev/null` }
+    Dir.chdir(temp_folder) { `tar -cvzf test.tar.gz test/* 2> /dev/null` }
 
     file_name = "test.tar.gz"
-    importer = ThemeStore::ZipImporter.new("#{@temp_folder}/#{file_name}", file_name)
+    importer = ThemeStore::ZipImporter.new("#{temp_folder}/#{file_name}", file_name)
     importer.import!
 
     expect(importer["hello.txt"]).to eq("hello world")

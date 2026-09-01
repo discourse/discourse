@@ -20,9 +20,10 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "with limit parameter" do
-    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
-
-    before { DirectoryItem.refresh! }
+    before do
+      Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) }
+      DirectoryItem.refresh!
+    end
 
     it "limits the number of returned items" do
       get "/directory_items.json", params: { period: "all", limit: 2 }
@@ -142,7 +143,7 @@ RSpec.describe DirectoryItemsController do
     context "with a logged in user" do
       before { sign_in(user) }
 
-      it "succeeds" do
+      it "returns the directory items" do
         get "/directory_items.json", params: { period: "all" }
         expect(response.status).to eq(200)
       end

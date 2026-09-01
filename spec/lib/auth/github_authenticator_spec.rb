@@ -18,6 +18,7 @@ end
 
 RSpec.describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
+
   fab!(:user)
 
   describe "after_authenticate" do
@@ -59,7 +60,7 @@ RSpec.describe Auth::GithubAuthenticator do
       ).to eq(user.username)
     end
 
-    it "should use primary email for new user creation over other available emails" do
+    it "uses primary email for new user creation over other available emails" do
       hash = {
         provider: "github",
         extra: {
@@ -81,7 +82,7 @@ RSpec.describe Auth::GithubAuthenticator do
       expect(result.email).to eq("john@example.com")
     end
 
-    it "should not error out if user already has a different old github account attached" do
+    it "does not error out if user already has a different old github account attached" do
       # There is a rare case where an end user had
       # 2 different github accounts and moved emails between the 2
 
@@ -113,7 +114,7 @@ RSpec.describe Auth::GithubAuthenticator do
       expect(UserAssociatedAccount.where(user_id: user.id).pluck(:provider_uid)).to eq(["1001"])
     end
 
-    it "will not authenticate for already existing users with an unverified email" do
+    it "does not authenticate for already existing users with an unverified email" do
       hash = {
         provider: "github",
         extra: {
@@ -159,7 +160,7 @@ RSpec.describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(hash[:info][:email].present?)
     end
 
-    it "will skip blocklisted domains for non existing users" do
+    it "skips blocklisted domains for non existing users" do
       hash = {
         provider: "github",
         extra: {
@@ -186,7 +187,7 @@ RSpec.describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(true)
     end
 
-    it "will find allowlisted domains for non existing users" do
+    it "finds allowlisted domains for non existing users" do
       hash = {
         provider: "github",
         extra: {

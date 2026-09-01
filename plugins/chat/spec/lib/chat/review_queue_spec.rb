@@ -18,6 +18,8 @@ describe Chat::ReviewQueue do
   end
 
   describe "#flag_message" do
+    let(:flag_message) { "I just flagged your chat message..." }
+
     it "raises an error when the user is not allowed to flag" do
       UserSilencer.new(flagger).silence
 
@@ -201,7 +203,6 @@ describe Chat::ReviewQueue do
       expect(flag_msg["reviewable_id"]).to eq(new_reviewable.id)
     end
 
-    let(:flag_message) { "I just flagged your chat message..." }
 
     context "when creating a notify_user flag" do
       it "creates a companion PM" do

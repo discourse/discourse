@@ -33,7 +33,7 @@ RSpec.describe Chat::ChatController do
   describe "#rebake" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 
-    it "works" do
+    it "rebakes the chat message" do
       sign_in(admin)
       put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
       expect(response.status).to eq(200)

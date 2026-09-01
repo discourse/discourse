@@ -24,84 +24,111 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'string' should be at 1st position" do
         expect(SiteSettings::TypeSupervisor.types[:string]).to eq(1)
       end
+
       it "'time' should be at 2nd position" do
         expect(SiteSettings::TypeSupervisor.types[:time]).to eq(2)
       end
+
       it "'integer' should be at 3rd position" do
         expect(SiteSettings::TypeSupervisor.types[:integer]).to eq(3)
       end
+
       it "'float' should be at 4th position" do
         expect(SiteSettings::TypeSupervisor.types[:float]).to eq(4)
       end
+
       it "'bool' should be at 5th position" do
         expect(SiteSettings::TypeSupervisor.types[:bool]).to eq(5)
       end
+
       it "'null' should be at 6th position" do
         expect(SiteSettings::TypeSupervisor.types[:null]).to eq(6)
       end
+
       it "'enum' should be at 7th position" do
         expect(SiteSettings::TypeSupervisor.types[:enum]).to eq(7)
       end
+
       it "'list' should be at 8th position" do
         expect(SiteSettings::TypeSupervisor.types[:list]).to eq(8)
       end
+
       it "'url_list' should be at 9th position" do
         expect(SiteSettings::TypeSupervisor.types[:url_list]).to eq(9)
       end
+
       it "'host_list' should be at 10th position" do
         expect(SiteSettings::TypeSupervisor.types[:host_list]).to eq(10)
       end
+
       it "'category_list' should be at 11th position" do
         expect(SiteSettings::TypeSupervisor.types[:category_list]).to eq(11)
       end
+
       it "'value_list' should be at 12th position" do
         expect(SiteSettings::TypeSupervisor.types[:value_list]).to eq(12)
       end
+
       it "'regex' should be at 13th position" do
         expect(SiteSettings::TypeSupervisor.types[:regex]).to eq(13)
       end
+
       it "'email' should be at 14th position" do
         expect(SiteSettings::TypeSupervisor.types[:email]).to eq(14)
       end
+
       it "'username' should be at 15th position" do
         expect(SiteSettings::TypeSupervisor.types[:username]).to eq(15)
       end
+
       it "'category' should be at 16th position" do
         expect(SiteSettings::TypeSupervisor.types[:category]).to eq(16)
       end
+
       it "'uploaded_image_list' should be at 17th position" do
         expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
       end
+
       it "'upload' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:upload]).to eq(18)
       end
+
       it "'group' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:group]).to eq(19)
       end
+
       it "'group_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:group_list]).to eq(20)
       end
+
       it "'tag_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:tag_list]).to eq(21)
       end
+
       it "'color' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:color]).to eq(22)
       end
+
       it "'simple_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:simple_list]).to eq(23)
       end
+
       it "'emoji_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(24)
       end
+
       it "'tag_group_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:tag_group_list]).to eq(26)
       end
+
       it "'file_size_restriction' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:file_size_restriction]).to eq(27)
       end
+
       it "'datetime' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:datetime]).to eq(31)
       end
+
       it "'date' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:date]).to eq(33)
       end
@@ -439,7 +466,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_rb_value(:type_custom, "2|3")).to eq "2|3"
       end
 
-      it "should not modify the types of settings" do
+      it "does not modify the types of settings" do
         types = SiteSettings::TypeSupervisor.types
         settings.type_supervisor.to_rb_value(:default_locale, "fr", types[:enum])
         expect(settings.type_supervisor.to_db_value(:default_locale, "en")).to eq(
@@ -455,7 +482,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_upload, "", type: :upload)
     end
 
-    it "should return the right type that has been registered" do
+    it "returns the right type that has been registered" do
       expect(settings.type_supervisor.get_type(:type_null)).to eq(:null)
       expect(settings.type_supervisor.get_type(:type_upload)).to eq(:upload)
     end

@@ -127,30 +127,28 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
     end
 
-    context "when channel is not open" do
-      context "when channel is read_only" do
-        before { channel_1.update!(status: :read_only) }
+    context "when channel is read_only" do
+      before { channel_1.update!(status: :read_only) }
 
-        it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
+      it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
+    end
+
+    context "when channel is closed" do
+      before { channel_1.update!(status: :closed) }
+
+      it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
+
+      context "when user is staff" do
+        let(:guardian) { Guardian.new(Fabricate(:admin)) }
+
+        it { is_expected.to run_successfully }
       end
+    end
 
-      context "when channel is closed" do
-        before { channel_1.update!(status: :closed) }
+    context "when channel is archived" do
+      before { channel_1.update!(status: :archived) }
 
-        it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
-
-        context "when user is staff" do
-          let(:guardian) { Guardian.new(Fabricate(:admin)) }
-
-          it { is_expected.to run_successfully }
-        end
-      end
-
-      context "when channel is archived" do
-        before { channel_1.update!(status: :archived) }
-
-        it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
     end
 
     context "when threading is not enabled for the channel" do
@@ -159,7 +157,7 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
 
-    context "when original message is not found" do
+    context "when the original message belongs to another channel" do
       fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
 
       before { params[:channel_id] = channel_2.id }

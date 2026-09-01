@@ -25,7 +25,7 @@ RSpec.describe SuggestedTopicSerializer do
         SiteSetting.topic_featured_link_enabled = false
       end
 
-      it "should not return featured link attrs" do
+      it "does not return featured link attrs" do
         expect(json[:featured_link]).to eq(nil)
         expect(json[:featured_link_root_domain]).to eq(nil)
       end
@@ -34,7 +34,7 @@ RSpec.describe SuggestedTopicSerializer do
     context "when topic featured link is enabled" do
       before { SiteSetting.topic_featured_link_enabled = true }
 
-      it "should return featured link attrs" do
+      it "returns featured link attrs" do
         expect(json[:featured_link]).to eq(featured_link)
         expect(json[:featured_link_root_domain]).to eq("discourse.org")
       end

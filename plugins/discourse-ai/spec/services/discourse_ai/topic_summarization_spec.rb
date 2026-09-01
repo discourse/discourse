@@ -106,60 +106,55 @@ describe DiscourseAi::TopicSummarization do
         cached_summary.update!(summarized_text: cached_text, created_at: 24.hours.ago)
       end
 
-      context "when the user can requests new summaries" do
-        context "when there are no new posts" do
-          it "returns the cached summary" do
+      context "when there are no new posts" do
+        it "returns the cached summary" do
+          section = summarization.summarize
+
+          expect(section.summarized_text).to eq(cached_text)
+        end
+      end
+
+      context "when there are new posts" do
+        before { cached_summary.update!(original_content_sha: "outdated_sha") }
+
+        it "returns a new summary" do
+          DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
             section = summarization.summarize
 
-            expect(section.summarized_text).to eq(cached_text)
+            expect(section.summarized_text).to eq(summary)
           end
         end
 
-        context "when there are new posts" do
-          before { cached_summary.update!(original_content_sha: "outdated_sha") }
+        it "returns a cached summary that is less than one hour old" do
+          cached_summary.update!(created_at: 30.minutes.ago)
 
-          it "returns a new summary" do
-            DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
-              section = summarization.summarize
+          section = summarization.summarize
 
-              expect(section.summarized_text).to eq(summary)
-            end
-          end
-
-          context "when the cached summary is less than one hour old" do
-            before { cached_summary.update!(created_at: 30.minutes.ago) }
-
-            it "returns the cached summary" do
-              cached_summary.update!(created_at: 30.minutes.ago)
-
-              section = summarization.summarize
-
-              expect(section.summarized_text).to eq(cached_text)
-              expect(section.outdated).to eq(true)
-            end
-
-            it "returns a new summary if the skip_age_check flag is passed" do
-              DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
-                section = summarization.summarize(skip_age_check: true)
-
-                expect(section.summarized_text).to eq(summary)
-              end
-            end
-          end
+          expect(section.summarized_text).to eq(cached_text)
+          expect(section.outdated).to eq(true)
         end
 
-        context "when posts were edited" do
-          before do
-            cached_summary.update!(created_at: 30.minutes.ago)
-            post_2.update_columns(last_version_at: 1.minute.from_now)
+        it "returns a new recent summary if the skip_age_check flag is passed" do
+          cached_summary.update!(created_at: 30.minutes.ago)
+          DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+            section = summarization.summarize(skip_age_check: true)
+
+            expect(section.summarized_text).to eq(summary)
           end
+        end
+      end
 
-          it "regenerates even when the cached summary is less than one hour old" do
-            DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
-              section = summarization.summarize
+      context "when posts were edited" do
+        before do
+          cached_summary.update!(created_at: 30.minutes.ago)
+          post_2.update_columns(last_version_at: 1.minute.from_now)
+        end
 
-              expect(section.summarized_text).to eq(summary)
-            end
+        it "regenerates even when the cached summary is less than one hour old" do
+          DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+            section = summarization.summarize
+
+            expect(section.summarized_text).to eq(summary)
           end
         end
       end

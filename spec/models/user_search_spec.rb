@@ -55,7 +55,7 @@ RSpec.describe UserSearch do
       expect(results).to eq [user.username]
     end
 
-    it "will lookup the category from the topic id" do
+    it "lookups the category from the topic id" do
       topic = Fabricate(:topic, category: category)
       Fabricate(:post, user: topic.user, topic: topic)
 
@@ -64,13 +64,13 @@ RSpec.describe UserSearch do
       expect(results).to eq [topic.user, user].map(&:username)
     end
 
-    it "will raise an error if the user cannot see the category" do
+    it "raises an error if the user cannot see the category" do
       expect do
         search_for("", searching_user: Fabricate(:user), category_id: category.id)
       end.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "will respect the group member visibility setting" do
+    it "respects the group member visibility setting" do
       group.update(members_visibility_level: Group.visibility_levels[:owners])
       results = search_for("", searching_user: searching_user, category_id: category.id)
       expect(results).to be_blank

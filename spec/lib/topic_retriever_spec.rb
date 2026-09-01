@@ -10,7 +10,7 @@ RSpec.describe TopicRetriever do
   end
 
   describe "#retrieve" do
-    context "when host is invalid" do
+    context "when URL validation rejects the host" do
       before { topic_retriever.stubs(:invalid_url?).returns(true) }
 
       it "does not perform_retrieve" do
@@ -50,7 +50,7 @@ RSpec.describe TopicRetriever do
       end
     end
 
-    context "when host is invalid" do
+    context "when the host is not allowlisted" do
       before { Fabricate(:embeddable_host, host: "http://not-eviltrout.com/") }
 
       it "does not perform_retrieve" do

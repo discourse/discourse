@@ -8,7 +8,7 @@ RSpec.describe ExtraLocalesController do
   let(:fake_digest) { "a" * 40 }
 
   describe "#show" do
-    it "won't work with a weird parameter" do
+    it "does not work with a weird parameter" do
       get "/extra-locales/#{fake_digest}/en/-invalid..character!!.js"
       expect(response.status).to eq(404)
     end
@@ -238,7 +238,7 @@ RSpec.describe ExtraLocalesController do
   end
 
   describe ".url" do
-    it "works" do
+    it "builds a fingerprinted locale URL" do
       expect(ExtraLocalesController.url("admin")).to match(
         %r{\A/extra-locales/\h{40}/en/admin\.js\z},
       )
@@ -250,13 +250,6 @@ RSpec.describe ExtraLocalesController do
     end
 
     it "includes CDN" do
-      set_cdn_url "https://cdn.example.com"
-      expect(ExtraLocalesController.url("admin")).to start_with(
-        "https://cdn.example.com/extra-locales/",
-      )
-    end
-
-    it "includes hostname param for site-specific bundles" do
       set_cdn_url "https://cdn.example.com"
       expect(ExtraLocalesController.url("admin")).to start_with(
         "https://cdn.example.com/extra-locales/",

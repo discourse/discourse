@@ -6,6 +6,7 @@ RSpec.describe "events" do
     Jobs.run_immediately!
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    submit_request(example.metadata)
   end
 
   path "/discourse-post-event/events.json" do
@@ -202,7 +203,6 @@ RSpec.describe "events" do
 
         fab!(:event) { Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event") }
 
-        before { |example| submit_request(example.metadata) }
 
         it "returns iCalendar format" do
           expect(response.status).to eq(200)

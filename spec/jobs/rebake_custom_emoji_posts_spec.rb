@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RebakeCustomEmojiPosts do
-  it "should rebake posts that are using a given custom emoji" do
+  it "rebakes posts that are using a given custom emoji" do
     upload = Fabricate(:upload)
     custom_emoji = CustomEmoji.create!(name: "test", upload: upload)
     Emoji.clear_cache

@@ -15,11 +15,13 @@ RSpec.describe ReviewableNote do
     subject { build(:reviewable_note, reviewable: reviewable, user: admin) }
 
     it { is_expected.to validate_presence_of(:content) }
-    it do
+
+    it "validates the content length" do
       is_expected.to validate_length_of(:content).is_at_least(1).is_at_most(
         ReviewableNote::MAX_CONTENT_LENGTH,
       )
     end
+
     it { is_expected.to validate_presence_of(:reviewable_id) }
     it { is_expected.to validate_presence_of(:user_id) }
 

@@ -39,40 +39,38 @@ RSpec.describe InviteMailer do
           Fabricate(:invite, custom_message: "Hey, you <b>should</b> join this forum!\n\nWelcome!")
         end
 
-        context "when custom message includes invite link" do
-          let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
+        let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
 
-          it "renders the invitee email" do
-            expect(custom_invite_mail.to).to eql([invite.email])
-          end
+        it "renders the invitee email" do
+          expect(custom_invite_mail.to).to eql([invite.email])
+        end
 
-          it "renders the subject" do
-            expect(custom_invite_mail.subject).to be_present
-          end
+        it "renders the subject" do
+          expect(custom_invite_mail.subject).to be_present
+        end
 
-          it "renders site domain name in subject" do
-            expect(custom_invite_mail.subject).to match(Discourse.current_hostname)
-          end
+        it "renders site domain name in subject" do
+          expect(custom_invite_mail.subject).to match(Discourse.current_hostname)
+        end
 
-          it "renders the body" do
-            expect(custom_invite_mail.body).to be_present
-          end
+        it "renders the body" do
+          expect(custom_invite_mail.body).to be_present
+        end
 
-          it "renders custom_message, stripping HTML" do
-            expect(custom_invite_mail.body.encoded).to match(
-              "Hey, you should join this forum! Welcome!",
-            )
-          end
+        it "renders custom_message, stripping HTML" do
+          expect(custom_invite_mail.body.encoded).to match(
+            "Hey, you should join this forum! Welcome!",
+          )
+        end
 
-          it "renders the inviter email" do
-            expect(custom_invite_mail.from).to eql([SiteSetting.notification_email])
-          end
+        it "renders the inviter email" do
+          expect(custom_invite_mail.from).to eql([SiteSetting.notification_email])
+        end
 
-          it "renders invite link" do
-            expect(custom_invite_mail.body.encoded).to match(
-              "#{Discourse.base_url}/invites/#{invite.invite_key}",
-            )
-          end
+        it "renders invite link" do
+          expect(custom_invite_mail.body.encoded).to match(
+            "#{Discourse.base_url}/invites/#{invite.invite_key}",
+          )
         end
       end
 
@@ -80,6 +78,7 @@ RSpec.describe InviteMailer do
         fab!(:invite)
         let(:plugin) { Plugin::Instance.new }
         let(:custom_template) { "plugin_custom_invite_template" }
+
         before do
           I18n.backend.store_translations(
             :en,
@@ -97,12 +96,12 @@ RSpec.describe InviteMailer do
 
         it "allows plugins to customize the invite template" do
           plugin_instance = Plugin::Instance.new
-          @modifier_block = Proc.new { |template, passed_invite| custom_template }
+          modifier_block = Proc.new { |template, passed_invite| custom_template }
 
           DiscoursePluginRegistry.register_modifier(
             plugin_instance,
             :invite_forum_mailer_template,
-            &@modifier_block
+            &modifier_block
           )
 
           mail = InviteMailer.send_invite(invite)
@@ -116,7 +115,7 @@ RSpec.describe InviteMailer do
           DiscoursePluginRegistry.unregister_modifier(
             plugin_instance,
             :invite_forum_mailer_template,
-            &@modifier_block
+            &modifier_block
           )
         end
       end

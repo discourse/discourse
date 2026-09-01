@@ -2,7 +2,7 @@
 
 RSpec.describe UserActivator do
   fab!(:user)
-  let!(:email_token) { Fabricate(:email_token, user: user) }
+  before { Fabricate(:email_token, user: user) }
 
   describe "email_activator" do
     let(:activator) { EmailActivator.new(user, nil, nil, nil) }

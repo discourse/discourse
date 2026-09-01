@@ -162,12 +162,10 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           expect(result[:sync_result][:response_code]).to eq("200")
         end
 
-        context "when the execution has already been claimed for resume" do
-          before do
-            allow(DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
-          end
+        it "fails when the execution has already been claimed for resume" do
+          allow(DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
 
-          it { is_expected.to fail_to_find_a_model(:claimed_execution) }
+          expect(result).to fail_to_find_a_model(:claimed_execution)
         end
       end
     end
@@ -239,202 +237,206 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           expect(job["args"].first["trigger_node_id"]).to eq("webhook-1")
         end
       end
+    end
 
-      context "with basic auth" do
-        fab!(:credential) do
-          Fabricate(
-            :discourse_workflows_credential,
-            credential_type: "basic_auth",
-            data: {
-              "user" => "webhook_user",
-              "password" => "webhook_pass",
-            },
+    context "with basic auth" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "basic_auth",
+          data: {
+            "user" => "webhook_user",
+            "password" => "webhook_pass",
+          },
+        )
+      end
+
+      before do
+        update_workflow_node(workflow, "webhook-1") do |node|
+          node.merge(
+            DiscourseWorkflows::NodeData.split(
+              parameters: {
+                "path" => "my-hook",
+                "http_method" => "POST",
+                "authentication" => "basic_auth",
+              },
+              credentials: {
+                "auth" => {
+                  "id" => credential.id,
+                  "credential_type" => "basic_auth",
+                },
+              },
+              node_type: node["type"],
+            ),
           )
         end
+        publish_workflow!(workflow)
+      end
 
+      context "when request has valid basic auth" do
+        let(:params) do
+          auth = "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}"
+          super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
+        end
+
+        it { is_expected.to run_successfully }
+
+        it "executes the workflow" do
+          result
+          job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+          expect(job["args"].first["trigger_node_id"]).to eq("webhook-1")
+        end
+      end
+
+      context "when request has wrong credentials" do
+        let(:params) do
+          auth = "Basic #{Base64.strict_encode64("wrong:creds")}"
+          super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
+        end
+
+        it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
+
+        it "exposes :denied as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:denied)
+          expect(result[:auth_failure_mode]).to eq("basic_auth")
+        end
+      end
+
+      context "when request has no authorization header" do
+        it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
+
+        it "exposes :challenge as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:challenge)
+          expect(result[:auth_failure_mode]).to eq("basic_auth")
+        end
+      end
+
+      context "when credential record is missing" do
+        before { credential.destroy! }
+
+        it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
+
+        it "exposes :misconfigured as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:misconfigured)
+        end
+      end
+
+      context "when auth mode is unsupported" do
         before do
           update_workflow_node(workflow, "webhook-1") do |node|
             node.merge(
-              DiscourseWorkflows::NodeData.split(
-                parameters: {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "basic_auth",
-                },
-                credentials: {
-                  "auth" => {
-                    "id" => credential.id,
-                    "credential_type" => "basic_auth",
-                  },
-                },
-                node_type: node["type"],
-              ),
+              "parameters" => node["parameters"].merge("authentication" => "unknown_mode"),
             )
           end
           publish_workflow!(workflow)
         end
 
-        context "when request has valid basic auth" do
-          let(:params) do
-            auth = "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}"
-            super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
-          end
+        it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
 
-          it { is_expected.to run_successfully }
-
-          it "executes the workflow" do
-            result
-            job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-            expect(job["args"].first["trigger_node_id"]).to eq("webhook-1")
-          end
-        end
-
-        context "when request has wrong credentials" do
-          let(:params) do
-            auth = "Basic #{Base64.strict_encode64("wrong:creds")}"
-            super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
-          end
-
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
-          it "exposes :denied as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:denied)
-            expect(result[:auth_failure_mode]).to eq("basic_auth")
-          end
-        end
-
-        context "when request has no authorization header" do
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
-          it "exposes :challenge as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:challenge)
-            expect(result[:auth_failure_mode]).to eq("basic_auth")
-          end
-        end
-
-        context "when credential record is missing" do
-          before { credential.destroy! }
-
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
-          it "exposes :misconfigured as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:misconfigured)
-          end
-        end
-
-        context "when auth mode is unsupported" do
-          before do
-            update_workflow_node(workflow, "webhook-1") do |node|
-              node.merge(
-                "parameters" => node["parameters"].merge("authentication" => "unknown_mode"),
-              )
-            end
-            publish_workflow!(workflow)
-          end
-
-          it { is_expected.to fail_to_find_a_model(:authenticated_nodes) }
-
-          it "exposes :misconfigured as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:misconfigured)
-          end
+        it "exposes :misconfigured as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:misconfigured)
         end
       end
+    end
 
-      context "with bearer auth" do
-        fab!(:credential) do
-          Fabricate(
-            :discourse_workflows_credential,
-            credential_type: "bearer_token",
-            data: {
-              "token" => "secret-token",
-            },
+    context "with bearer auth" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "bearer_token",
+          data: {
+            "token" => "secret-token",
+          },
+        )
+      end
+
+      before do
+        update_workflow_node(workflow, "webhook-1") do |node|
+          node.merge(
+            DiscourseWorkflows::NodeData.split(
+              parameters: {
+                "path" => "my-hook",
+                "http_method" => "POST",
+                "authentication" => "bearer_auth",
+              },
+              credentials: {
+                "auth" => {
+                  "id" => credential.id,
+                  "credential_type" => "bearer_token",
+                },
+              },
+              node_type: node["type"],
+            ),
           )
         end
-
-        before do
-          update_workflow_node(workflow, "webhook-1") do |node|
-            node.merge(
-              DiscourseWorkflows::NodeData.split(
-                parameters: {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "bearer_auth",
-                },
-                credentials: {
-                  "auth" => {
-                    "id" => credential.id,
-                    "credential_type" => "bearer_token",
-                  },
-                },
-                node_type: node["type"],
-              ),
-            )
-          end
-          publish_workflow!(workflow)
-        end
-
-        context "when request has valid bearer token" do
-          let(:params) do
-            auth = "Bearer secret-token"
-            super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
-          end
-
-          it { is_expected.to run_successfully }
-        end
-
-        context "when bearer token is missing" do
-          it "exposes :denied as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:denied)
-          end
-        end
+        publish_workflow!(workflow)
       end
 
-      context "with header auth" do
-        fab!(:credential) do
-          Fabricate(
-            :discourse_workflows_credential,
-            credential_type: "header_auth",
-            data: {
-              "name" => "X-Api-Key",
-              "value" => "secret-value",
-            },
+      context "when request has valid bearer token" do
+        let(:params) do
+          auth = "Bearer secret-token"
+          super().merge(headers: { "authorization" => auth }, raw_authorization: auth)
+        end
+
+        it { is_expected.to run_successfully }
+      end
+
+      context "when bearer token is missing" do
+        it "exposes :denied as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:denied)
+        end
+      end
+    end
+
+    context "with header auth" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "header_auth",
+          data: {
+            "name" => "X-Api-Key",
+            "value" => "secret-value",
+          },
+        )
+      end
+
+      before do
+        update_workflow_node(workflow, "webhook-1") do |node|
+          node.merge(
+            DiscourseWorkflows::NodeData.split(
+              parameters: {
+                "path" => "my-hook",
+                "http_method" => "POST",
+                "authentication" => "header_auth",
+              },
+              credentials: {
+                "auth" => {
+                  "id" => credential.id,
+                  "credential_type" => "header_auth",
+                },
+              },
+              node_type: node["type"],
+            ),
           )
         end
+        publish_workflow!(workflow)
+      end
 
-        before do
-          update_workflow_node(workflow, "webhook-1") do |node|
-            node.merge(
-              DiscourseWorkflows::NodeData.split(
-                parameters: {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "header_auth",
-                },
-                credentials: {
-                  "auth" => {
-                    "id" => credential.id,
-                    "credential_type" => "header_auth",
-                  },
-                },
-                node_type: node["type"],
-              ),
-            )
-          end
-          publish_workflow!(workflow)
-        end
+      context "when request has matching header" do
+        let(:params) { super().merge(headers: { "x-api-key" => "secret-value" }) }
 
-        context "when request has matching header" do
-          let(:params) { super().merge(headers: { "x-api-key" => "secret-value" }) }
+        it { is_expected.to run_successfully }
+      end
 
-          it { is_expected.to run_successfully }
-        end
-
-        context "when header is missing" do
-          it "exposes :denied as the auth failure reason" do
-            expect(result[:auth_failure_reason]).to eq(:denied)
-          end
+      context "when header is missing" do
+        it "exposes :denied as the auth failure reason" do
+          expect(result[:auth_failure_reason]).to eq(:denied)
         end
       end
+    end
+
+    context "when claiming or synchronously executing a new workflow" do
+      before { publish_workflow!(workflow) }
 
       context "when another workflow tries to claim the same path" do
         fab!(:conflicting_workflow) do

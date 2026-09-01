@@ -3,7 +3,7 @@
 RSpec.describe Jobs::SendDefaultWelcomeMessage do
   let(:user) { Fabricate(:user) }
 
-  it "should send the right welcome message" do
+  it "sends the right welcome message" do
     described_class.new.execute(user_id: user.id)
 
     topic = Topic.last
@@ -33,7 +33,7 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
       )
     end
 
-    it "should send the right welcome message" do
+    it "sends the right welcome message" do
       described_class.new.execute(user_id: invited_user.user_id)
 
       topic = Topic.last

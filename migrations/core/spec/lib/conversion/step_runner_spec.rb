@@ -17,10 +17,12 @@ class RecordingChannel
 end
 
 RSpec.describe Migrations::Conversion::StepRunner do
+  let(:runner_context) { {} }
+
   around do |example|
     Dir.mktmpdir do |dir|
-      @shard_path = File.join(dir, "shard.db")
-      db = Extralite::Database.new(@shard_path)
+      runner_context[:shard_path] = File.join(dir, "shard.db")
+      db = Extralite::Database.new(runner_context[:shard_path])
       db.execute("CREATE TABLE notes (id INTEGER, body TEXT NOT NULL)")
       db.execute(
         "CREATE TABLE log_entries (created_at TEXT, type INTEGER, message TEXT, exception TEXT, details TEXT)",
@@ -60,21 +62,25 @@ RSpec.describe Migrations::Conversion::StepRunner do
   let(:channel) { RecordingChannel.new }
 
   def shard_rows(table)
-    db = Extralite::Database.new(@shard_path)
+    db = Extralite::Database.new(runner_context.fetch(:shard_path))
     db.query_splat("SELECT id FROM #{table} ORDER BY id")
   ensure
     db&.close
   end
 
   def shard_count(table)
-    db = Extralite::Database.new(@shard_path)
+    db = Extralite::Database.new(runner_context.fetch(:shard_path))
     db.query_single_splat("SELECT COUNT(*) FROM #{table}")
   ensure
     db&.close
   end
 
   it "reads the whole source, writes every good row to the shard, and reports progress" do
-    described_class.new(step: step_class.new, shard_path: @shard_path, channel:).run
+    described_class.new(
+      step: step_class.new,
+      shard_path: runner_context.fetch(:shard_path),
+      channel:,
+    ).run
 
     expect(shard_rows("notes")).to eq([1, 3])
     expect(shard_count("log_entries")).to eq(1)
@@ -88,7 +94,7 @@ RSpec.describe Migrations::Conversion::StepRunner do
     step = step_class.new
     allow(step.source).to receive(:cleanup).and_call_original
 
-    described_class.new(step:, shard_path: @shard_path, channel:).run
+    described_class.new(step:, shard_path: runner_context.fetch(:shard_path), channel:).run
 
     expect(step.source).to have_received(:cleanup)
   end
@@ -124,7 +130,7 @@ RSpec.describe Migrations::Conversion::StepRunner do
     def run_with(**read)
       described_class.new(
         step: partitioned_step_class.new,
-        shard_path: @shard_path,
+        shard_path: runner_context.fetch(:shard_path),
         channel:,
         **read,
       ).run

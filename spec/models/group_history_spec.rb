@@ -12,11 +12,11 @@ RSpec.describe GroupHistory do
   end
 
   describe ".with_filters" do
-    it "should return the right records" do
+    it "returns the right records" do
       expect(described_class.with_filters(group_history.group)).to eq([group_history])
     end
 
-    it "should filter by action correctly" do
+    it "filters by action correctly" do
       other_group_history
 
       expect(
@@ -24,7 +24,7 @@ RSpec.describe GroupHistory do
       ).to eq([other_group_history])
     end
 
-    it "should filter by subject correctly" do
+    it "filters by subject correctly" do
       other_group_history.update!(subject: "test")
 
       expect(described_class.with_filters(group_history.group, subject: "test")).to eq(
@@ -32,7 +32,7 @@ RSpec.describe GroupHistory do
       )
     end
 
-    it "should filter by multiple filters correctly" do
+    it "filters by multiple filters correctly" do
       group_history.update!(action: GroupHistory.actions[:remove_user_from_group])
       other_group_history.update!(subject: "test")
 
@@ -45,7 +45,7 @@ RSpec.describe GroupHistory do
       ).to eq([other_group_history])
     end
 
-    it "should filter by target_user and acting_user correctly" do
+    it "filters by target_user and acting_user correctly" do
       group_history
       other_group_history
 

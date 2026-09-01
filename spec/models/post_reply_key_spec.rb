@@ -2,7 +2,7 @@
 
 RSpec.describe PostReplyKey do
   describe "#reply_key" do
-    it "should format the reply_key correctly" do
+    it "formats the reply_key correctly" do
       hex = SecureRandom.hex
       post_reply_key = Fabricate(:post_reply_key, reply_key: hex)
 

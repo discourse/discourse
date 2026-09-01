@@ -1271,7 +1271,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   describe "max output tokens" do
-    it "it respects max output tokens supplied to model unconditionally, even with thinking" do
+    it "respects max output tokens supplied to model unconditionally, even with thinking" do
       model.update!(
         provider_params: {
           enable_reasoning: true,

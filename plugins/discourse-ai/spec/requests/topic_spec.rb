@@ -20,7 +20,7 @@ describe ::TopicsController do
   end
 
   context "when a user is logged on" do
-    it "includes related topics in payload when configured" do
+    it "includes related topics for anonymous and logged-in users" do
       get("#{topic.relative_url}.json")
       expect(response.status).to eq(200)
       json = response.parsed_body
@@ -37,7 +37,7 @@ describe ::TopicsController do
       expect(json["related_topics"].length).to eq(2)
     end
 
-    it "includes related topics in payload when configured" do
+    it "includes lazy-loaded categories with related topics" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
       category = Fabricate(:category)
       topic.update!(category: category)

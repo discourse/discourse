@@ -210,7 +210,7 @@ RSpec.describe PostActionNotifier do
       Fabricate(:post, topic: private_message, user: user, raw: "Hello @eviltrout")
     end
 
-    it "won't notify someone who can't see the post" do
+    it "does not notify someone who can't see the post" do
       expect { PostAlerter.post_created(mention_post) }.not_to change(
         evil_trout.notifications,
         :count,
@@ -232,7 +232,7 @@ RSpec.describe PostActionNotifier do
     fab!(:first_post) { Fabricate(:post, user: user, raw: "A useless post for you.") }
     let(:topic) { first_post.topic }
 
-    it "should not notify anyone" do
+    it "does not notify anyone" do
       expect {
         Fabricate(
           :post,

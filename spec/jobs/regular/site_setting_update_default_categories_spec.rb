@@ -23,7 +23,7 @@ describe Jobs::SiteSettingUpdateDefaultCategories do
         )
       end
 
-      it "should update existing users user preference" do
+      it "updates existing users user preference" do
         job.execute(
           id: "default_categories_watching",
           value: category_ids.last(2).join("|"),
@@ -73,7 +73,7 @@ describe Jobs::SiteSettingUpdateDefaultCategories do
         )
       end
 
-      it "should publish a MessageBus informing the correct groups" do
+      it "publishes a MessageBus informing the correct groups" do
         messages =
           MessageBus.track_publish("/site_setting/default_categories_watching/process") do
             job.execute(

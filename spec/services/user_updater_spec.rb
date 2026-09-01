@@ -37,6 +37,26 @@ RSpec.describe UserUpdater do
     fab!(:tag)
     fab!(:tag2, :tag)
 
+    let(:schedule_attrs) do
+      {
+        enabled: true,
+        day_0_start_time: 30,
+        day_0_end_time: 60,
+        day_1_start_time: 30,
+        day_1_end_time: 60,
+        day_2_start_time: 30,
+        day_2_end_time: 60,
+        day_3_start_time: 30,
+        day_3_end_time: 60,
+        day_4_start_time: 30,
+        day_4_end_time: 60,
+        day_5_start_time: 30,
+        day_5_end_time: 60,
+        day_6_start_time: 30,
+        day_6_end_time: 60,
+      }
+    end
+
     it "saves user" do
       user = Fabricate(:user, name: "Billy Bob")
       updater = UserUpdater.new(user, user)
@@ -357,25 +377,6 @@ RSpec.describe UserUpdater do
       expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
-    let(:schedule_attrs) do
-      {
-        enabled: true,
-        day_0_start_time: 30,
-        day_0_end_time: 60,
-        day_1_start_time: 30,
-        day_1_end_time: 60,
-        day_2_start_time: 30,
-        day_2_end_time: 60,
-        day_3_start_time: 30,
-        day_3_end_time: 60,
-        day_4_start_time: 30,
-        day_4_end_time: 60,
-        day_5_start_time: 30,
-        day_5_end_time: 60,
-        day_6_start_time: 30,
-        day_6_end_time: 60,
-      }
-    end
 
     context "with user_notification_schedule" do
       it "allows users to create their notification schedule when it doesn't exist previously" do

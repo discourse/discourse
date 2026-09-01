@@ -10,7 +10,7 @@ RSpec.describe TopicTimestampChanger do
     context "when new timestamp is in the future" do
       let(:new_timestamp) { old_timestamp + 2.days }
 
-      it "should raise the right error" do
+      it "raises the right error" do
         expect {
           TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
         }.to raise_error(TopicTimestampChanger::InvalidTimestampError)
@@ -42,7 +42,7 @@ RSpec.describe TopicTimestampChanger do
       end
 
       context "when posts have timestamps in the future" do
-        it "should set the new timestamp as the default timestamp" do
+        it "sets the new timestamp as the default timestamp" do
           new_timestamp = freeze_time
 
           p3 = Fabricate(:post, topic: topic, created_at: new_timestamp + 3.days)

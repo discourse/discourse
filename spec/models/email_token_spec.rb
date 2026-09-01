@@ -10,11 +10,11 @@ RSpec.describe EmailToken do
     let!(:original_token) { user.email_tokens.first }
     let!(:email_token) { Fabricate(:email_token, user: user, email: "bubblegum@adventuretime.ooo") }
 
-    it "should create the email token" do
+    it "creates the email token" do
       expect(email_token).to be_present
     end
 
-    it "should downcase the email" do
+    it "downcases the email" do
       token = Fabricate(:email_token, user: user, email: "UpperCaseSoWoW@GMail.com")
       expect(token.email).to eq "uppercasesowow@gmail.com"
     end
@@ -99,7 +99,7 @@ RSpec.describe EmailToken do
         expect(email_token).to be_confirmed
       end
 
-      it "will not confirm again" do
+      it "does not confirm again" do
         expect(EmailToken.confirm(email_token.token)).to be_blank
       end
     end

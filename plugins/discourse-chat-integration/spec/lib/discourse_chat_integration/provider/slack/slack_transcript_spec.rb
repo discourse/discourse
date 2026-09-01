@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseChatIntegration::Provider::SlackProvider::SlackTranscript do
-  before { Discourse.cache.clear }
+  before do
+    Discourse.cache.clear
+    SiteSetting.chat_integration_slack_access_token = "abcde"
+  end
 
   let(:messages_fixture) do
     [
@@ -103,7 +106,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider::SlackTranscrip
   end
 
   let(:transcript) { described_class.new(channel_name: "#general", channel_id: "G1234") }
-  before { SiteSetting.chat_integration_slack_access_token = "abcde" }
+
 
   it "doesn't raise an error when there are no messages to guess" do
     transcript.instance_variable_set(:@messages, [])

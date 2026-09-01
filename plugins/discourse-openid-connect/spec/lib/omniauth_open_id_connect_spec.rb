@@ -12,10 +12,10 @@ describe OmniAuth::Strategies::OpenIDConnect do
     )
   end
 
+  let(:app_calls) { [] }
   let(:app) do
-    @app_called = false
     lambda do |*args|
-      @app_called = true
+      app_calls << args
       [200, {}, ["Hello."]]
     end
   end
@@ -128,17 +128,8 @@ describe OmniAuth::Strategies::OpenIDConnect do
     end
 
     describe "callback_phase" do
-      before do
-        auth_params = strategy.authorize_params
-
-        strategy.stubs(:full_host).returns("https://example.com")
-
-        strategy.stubs(:request).returns(mock)
-        strategy
-          .request
-          .stubs(:params)
-          .returns("state" => auth_params[:state], "code" => "supersecretcode")
-
+      let(:auth_params) { strategy.authorize_params }
+      let(:token) do
         payload = {
           iss: "https://id.example.com/",
           sub: "someuserid",
@@ -149,7 +140,18 @@ describe OmniAuth::Strategies::OpenIDConnect do
           name: "My Auth Token Name",
           email: "tokenemail@example.com",
         }
-        @token = ::JWT.encode payload, nil, "none"
+        ::JWT.encode payload, nil, "none"
+      end
+
+      before do
+        strategy.stubs(:full_host).returns("https://example.com")
+
+        strategy.stubs(:request).returns(mock)
+        strategy
+          .request
+          .stubs(:params)
+          .returns("state" => auth_params[:state], "code" => "supersecretcode")
+
       end
 
       it "handles error redirects correctly" do
@@ -164,7 +166,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
           end
         expect(strategy.callback_phase[0]).to eq(302)
         expect(strategy.callback_phase[1]["Location"]).to eq("https://example.com/error_redirect")
-        expect(@app_called).to eq(false)
+        expect(app_calls).to be_empty
       end
 
       it "fails gracefully when an upstream request errors" do
@@ -175,7 +177,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
         expect(callback_response[1]["Location"]).to eq(
           "/auth/failure?message=openid_connect_request_failed&strategy=openidconnect",
         )
-        expect(@app_called).to eq(false)
+        expect(app_calls).to be_empty
       end
 
       context "with userinfo disabled" do
@@ -184,7 +186,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
             body: hash_including("code" => "supersecretcode", "p" => "someallowedvalue"),
           ).to_return(
             status: 200,
-            body: { id_token: @token }.to_json,
+            body: { id_token: token }.to_json,
             headers: {
               "Content-Type" => "application/json",
             },
@@ -198,20 +200,20 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(strategy.uid).to eq("someuserid")
           expect(strategy.info[:name]).to eq("My Auth Token Name")
           expect(strategy.info[:email]).to eq("tokenemail@example.com")
-          expect(strategy.extra[:id_token]).to eq(@token)
-          expect(@app_called).to eq(true)
+          expect(strategy.extra[:id_token]).to eq(token)
+          expect(app_calls).not_to be_empty
         end
 
         it "checks the nonce" do
           strategy.session["omniauth.nonce"] = "overriddenNonce"
           expect(strategy.callback_phase[0]).to eq(302)
-          expect(@app_called).to eq(false)
+          expect(app_calls).to be_empty
         end
 
         it "checks the issuer" do
           strategy.options.client_id = "overriddenclientid"
           expect(strategy.callback_phase[0]).to eq(302)
-          expect(@app_called).to eq(false)
+          expect(app_calls).to be_empty
         end
       end
 
@@ -225,7 +227,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
             body: hash_including("code" => "supersecretcode", "p" => "someallowedvalue"),
           ).to_return(
             status: 200,
-            body: { access_token: "AnAccessToken", expires_in: 3600, id_token: @token }.to_json,
+            body: { access_token: "AnAccessToken", expires_in: 3600, id_token: token }.to_json,
             headers: {
               "Content-Type" => "application/json",
             },
@@ -249,7 +251,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(strategy.uid).to eq("someuserid")
           expect(strategy.info[:name]).to eq("My Userinfo Name")
           expect(strategy.info[:email]).to eq("userinfoemail@example.com")
-          expect(@app_called).to eq(true)
+          expect(app_calls).not_to be_empty
         end
 
         it "handles mismatching `sub` correctly" do
@@ -259,7 +261,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(callback_response[1]["Location"]).to eq(
             "/auth/failure?message=openid_connect_sub_mismatch&strategy=openidconnect",
           )
-          expect(@app_called).to eq(false)
+          expect(app_calls).to be_empty
         end
 
         it "exposes id_token_info alongside the userinfo raw_info" do
@@ -272,6 +274,8 @@ describe OmniAuth::Strategies::OpenIDConnect do
   end
 
   context "with mTLS client certificate configured" do
+    let(:request_bodies) { [] }
+
     before do
       key = OpenSSL::PKey::RSA.new(2048)
       cert = OpenSSL::X509::Certificate.new
@@ -288,9 +292,6 @@ describe OmniAuth::Strategies::OpenIDConnect do
         client_cert: cert,
         client_key: key,
       }
-    end
-
-    before do
       strategy.stubs(:full_host).returns("https://example.com")
       strategy.stubs(:request).returns(mock)
       strategy.request.stubs(:params).returns({})
@@ -311,13 +312,13 @@ describe OmniAuth::Strategies::OpenIDConnect do
         name: "My Auth Token Name",
         email: "tokenemail@example.com",
       }
-      @token = ::JWT.encode payload, nil, "none"
+      token = ::JWT.encode payload, nil, "none"
 
       stub_request(:post, "https://id.example.com/token")
-        .with { |request| @request_body = request.body }
+        .with { |request| request_bodies << request.body }
         .to_return(
           status: 200,
-          body: { access_token: "MTLSAccessToken", expires_in: 3600, id_token: @token }.to_json,
+          body: { access_token: "MTLSAccessToken", expires_in: 3600, id_token: token }.to_json,
           headers: {
             "Content-Type" => "application/json",
           },
@@ -338,7 +339,9 @@ describe OmniAuth::Strategies::OpenIDConnect do
           "Content-Type" => "application/json",
         },
       )
+
     end
+
 
     it "uses mTLS authentication instead of client_secret" do
       expect(strategy.options.client_options.auth_scheme).to eq(:tls_client_auth)
@@ -350,8 +353,8 @@ describe OmniAuth::Strategies::OpenIDConnect do
       callback_response = strategy.callback_phase
       expect(callback_response[0]).to eq(200)
 
-      expect(@request_body).to include("client_id")
-      expect(@request_body).not_to include("client_secret")
+      expect(request_bodies.last).to include("client_id")
+      expect(request_bodies.last).not_to include("client_secret")
     end
   end
 end

@@ -22,7 +22,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
       theme.save!
     end
 
-    it "should return a hash of the settings property descriptions with schema.properties segments stripped" do
+    it "returns a hash of the settings property descriptions with schema.properties segments stripped" do
       objects_setting_locale
 
       payload = described_class.new(theme_setting[:objects_setting], root: false).as_json
@@ -50,7 +50,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
     fab!(:category_3) { Fabricate(:private_category, group: Fabricate(:group)) }
     fab!(:admin)
 
-    it "should return a hash of serialized categories" do
+    it "returns a hash of serialized categories" do
       theme_setting[:objects_with_categories].value = [
         {
           "category_ids" => [category_1.id, category_2.id],

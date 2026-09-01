@@ -10,6 +10,7 @@ RSpec.describe QualityTitleValidator do
   let(:meaningless_title) { "asdf asdf asdf asdf" }
   let(:loud_title) { "ALL CAPS INVALID TITLE" }
   let(:pretentious_title) { "superverylongwordintitlefornoparticularreason" }
+
   fab!(:topic) { Fabricate(:post).topic }
 
   before { SiteSetting.title_prettify = false }

@@ -2,15 +2,15 @@
 
 RSpec.describe Hijack do
   class Hijack::Tester < ApplicationController
-    attr_reader :io
+    attr_accessor :io
 
     include Hijack
     include CurrentUser
 
     def initialize(env = {})
-      @io = StringIO.new
+      self.io = StringIO.new
 
-      env.merge!("rack.hijack" => lambda { @io }, "rack.input" => StringIO.new)
+      env.merge!("rack.hijack" => lambda { io }, "rack.input" => StringIO.new)
 
       self.request = ActionController::TestRequest.new(env, nil, nil)
 
@@ -26,17 +26,17 @@ RSpec.describe Hijack do
   let(:tester) { Hijack::Tester.new }
 
   describe "Request Tracker integration" do
+    let(:request_data) { { calls: 0 } }
     let(:logger) do
       lambda do |env, data|
-        @calls += 1
-        @status = data[:status]
-        @total = data[:timing][:total_duration]
+        request_data[:calls] += 1
+        request_data[:status] = data[:status]
+        request_data[:total] = data[:timing][:total_duration]
       end
     end
 
     before do
       Middleware::RequestTracker.register_detailed_request_logger logger
-      @calls = 0
     end
 
     after { Middleware::RequestTracker.unregister_detailed_request_logger logger }
@@ -53,8 +53,8 @@ RSpec.describe Hijack do
 
       middleware.call(env)
 
-      expect(@calls).to eq(1)
-      expect(@status).to eq(201)
+      expect(request_data[:calls]).to eq(1)
+      expect(request_data[:status]).to eq(201)
     end
   end
 

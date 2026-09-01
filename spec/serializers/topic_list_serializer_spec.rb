@@ -7,7 +7,7 @@ RSpec.describe TopicListSerializer do
 
   before { topic.allowed_user_ids = [topic.user_id] }
 
-  it "should return the right payload" do
+  it "returns the right payload" do
     topic_list = TopicList.new(nil, user, [topic])
 
     serialized = described_class.new(topic_list, scope: Guardian.new(user)).as_json
@@ -28,7 +28,14 @@ RSpec.describe TopicListSerializer do
 
   describe "has categories" do
     describe "when lazy loading categories enabled" do
-      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+      fab!(:category_localization) do
+        Fabricate(:category_localization, category:, locale: "es", name: "Solicitudes")
+      end
+
+      before do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        category.update!(locale: "en")
+      end
 
       it "serializes categories when lazy loading" do
         topic_list = TopicList.new(nil, user, [topic])
@@ -39,38 +46,30 @@ RSpec.describe TopicListSerializer do
         expect(serialized[:topic_list][:categories].first[:id]).to eq(topic.category.id)
       end
 
-      describe "content localization" do
-        fab!(:category_localization) do
-          Fabricate(:category_localization, category:, locale: "es", name: "Solicitudes")
+      describe "when content localization is enabled" do
+        it "returns localized category name and description when locale param is passed" do
+          SiteSetting.content_localization_enabled = true
+          topic_list = TopicList.new(nil, user, [topic])
+          guardian = Guardian.new(user)
+
+          I18n.locale = "es"
+          serialized =
+            described_class.new(topic_list, scope: guardian, params: { locale: "es" }).as_json
+
+          expect(serialized[:topic_list][:categories].first[:name]).to eq("Solicitudes")
         end
+      end
 
-        before { category.update!(locale: "en") }
+      describe "when content localization is disabled" do
+        it "returns default category name and description" do
+          SiteSetting.content_localization_enabled = false
+          topic_list = TopicList.new(nil, user, [topic])
+          guardian = Guardian.new(user)
 
-        describe "when enabled" do
-          it "returns localized category name and description when locale param is passed" do
-            SiteSetting.content_localization_enabled = true
-            topic_list = TopicList.new(nil, user, [topic])
-            guardian = Guardian.new(user)
+          I18n.locale = "es"
+          serialized = described_class.new(topic_list, scope: guardian).as_json
 
-            I18n.locale = "es"
-            serialized =
-              described_class.new(topic_list, scope: guardian, params: { locale: "es" }).as_json
-
-            expect(serialized[:topic_list][:categories].first[:name]).to eq("Solicitudes")
-          end
-        end
-
-        describe "when disabled" do
-          it "returns default category name and description" do
-            SiteSetting.content_localization_enabled = false
-            topic_list = TopicList.new(nil, user, [topic])
-            guardian = Guardian.new(user)
-
-            I18n.locale = "es"
-            serialized = described_class.new(topic_list, scope: guardian).as_json
-
-            expect(serialized[:topic_list][:categories].first[:name]).to eq(category.name)
-          end
+          expect(serialized[:topic_list][:categories].first[:name]).to eq(category.name)
         end
       end
     end

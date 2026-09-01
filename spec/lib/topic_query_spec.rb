@@ -20,27 +20,29 @@ RSpec.describe TopicQuery do
   fab!(:moderator)
   fab!(:admin)
 
+  let(:plugin_instance) { Plugin::Instance.new }
+  let(:validator) do
+    lambda do |topics, options, query|
+      # this is notable, we do not send in a relation for suggested
+      # it would force us to completely rewrite SuggestedTopicsBuilder
+      expect(topics.is_a?(ActiveRecord::Relation)).to eq(true) if options[:filter] != :suggested
+      topics
+    end
+  end
+
   before do
-    @plugin_instance = Plugin::Instance.new
-    @validator_blk =
-      lambda do |topics, options, query|
-        # this is notable, we do not send in a relation for suggested
-        # it would force us to completely rewrite SuggestedTopicsBuilder
-        expect(topics.is_a?(ActiveRecord::Relation)).to eq(true) if options[:filter] != :suggested
-        topics
-      end
     DiscoursePluginRegistry.register_modifier(
-      @plugin_instance,
+      plugin_instance,
       :topic_query_create_list_topics,
-      &@validator_blk
+      &validator
     )
   end
 
   after do
     DiscoursePluginRegistry.unregister_modifier(
-      @plugin_instance,
+      plugin_instance,
       :topic_query_create_list_topics,
-      &@validator_blk
+      &validator
     )
   end
 
@@ -447,7 +449,8 @@ RSpec.describe TopicQuery do
       # Not used in assertions but fabricated to ensure we're not leaking topics
       # across categories
       let!(:_category) { Fabricate(:category_with_definition) }
-      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+
+      before { Fabricate(:category_with_definition, parent_category_id: _category.id) }
 
       it "works with subcategories" do
         expect(
@@ -656,9 +659,10 @@ RSpec.describe TopicQuery do
 
       context "with hidden tags" do
         let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-        let!(:staff_tag_group) do
+        before do
           Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
         end
+
         let!(:topic_with_hidden_tag) { Fabricate(:topic, tags: [tag, hidden_tag]) }
 
         it "returns topics with hidden tag to admin" do
@@ -780,12 +784,12 @@ RSpec.describe TopicQuery do
 
     before { SiteSetting.mute_all_categories_by_default = true }
 
-    it "should remove all topics from new and latest lists by default" do
+    it "removes all topics from new and latest lists by default" do
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
     end
 
-    it "should include tracked category topics in new and latest lists" do
+    it "includes tracked category topics in new and latest lists" do
       topic = Fabricate(:topic, category: category)
       CategoryUser.create!(
         user_id: user.id,
@@ -796,17 +800,17 @@ RSpec.describe TopicQuery do
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
-    it "should include default watched category topics in latest list for anonymous users" do
+    it "includes default watched category topics in latest list for anonymous users" do
       SiteSetting.default_categories_watching = category.id.to_s
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
-    it "should include default regular category topics in latest list for anonymous users" do
+    it "includes default regular category topics in latest list for anonymous users" do
       SiteSetting.default_categories_normal = category.id.to_s
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
-    it "should include topics when filtered by category" do
+    it "includes topics when filtered by category" do
       topic_query = TopicQuery.new(user, category: topic.category_id)
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
     end
@@ -1150,6 +1154,7 @@ RSpec.describe TopicQuery do
   describe "categorized" do
     fab!(:category, :category_with_definition)
     let(:topic_category) { category.topic }
+
     fab!(:topic_no_cat, :topic)
     fab!(:topic_in_cat1) do
       Fabricate(:topic, category: category, bumped_at: 10.minutes.ago, created_at: 10.minutes.ago)
@@ -1189,7 +1194,7 @@ RSpec.describe TopicQuery do
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
       end
 
-      it "should apply default sort order to latest and unseen filters only" do
+      it "applies default sort order to latest and unseen filters only" do
         category.update!(sort_order: "created", sort_ascending: true)
 
         topic1 =
@@ -1407,13 +1412,10 @@ RSpec.describe TopicQuery do
           expect(topic_query.list_latest.topics).to be_blank
         end
 
-        context "when un-muted" do
-          before { new_topic.notify_tracking!(user) }
-
-          it "returns the topic again" do
-            expect(topics).to eq([new_topic])
-            expect(topic_query.list_latest.topics).not_to be_blank
-          end
+        it "returns the topic again when un-muted" do
+          new_topic.notify_tracking!(user)
+          expect(topics).to eq([new_topic])
+          expect(topic_query.list_latest.topics).not_to be_blank
         end
       end
     end
@@ -1436,7 +1438,8 @@ RSpec.describe TopicQuery do
 
     context "with topic you've posted in" do
       let(:other_users_topic) { create_post(user: creator).topic }
-      let!(:your_post) { create_post(user: user, topic: other_users_topic) }
+
+      before { create_post(user: user, topic: other_users_topic) }
 
       it "includes the posted topic" do
         expect(topics.include?(other_users_topic)).to eq(true)
@@ -1586,15 +1589,28 @@ RSpec.describe TopicQuery do
       Discourse.redis.keys("random_topic_cache*").each { |k| Discourse.redis.del k }
     end
 
+    def suggested_for(topic)
+      topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
+    end
+
+    let(:topic) { Fabricate(:topic) }
+
+    let(:suggested_topics) do
+      tt = topic
+      # lets clear cache once category is created - working around caching is hard
+      clear_cache!
+      suggested_for(tt)
+    end
+
     context "when anonymous" do
       let(:topic) { Fabricate(:topic) }
       let!(:new_topic) { Fabricate(:post, user: creator).topic }
 
-      it "should return the new topic" do
+      it "returns the new topic" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([new_topic])
       end
 
-      it "should return the nothing when random topics excluded" do
+      it "returns the nothing when random topics excluded" do
         expect(TopicQuery.new.list_suggested_for(topic, include_random: false).topics).to eq([])
       end
     end
@@ -1602,23 +1618,22 @@ RSpec.describe TopicQuery do
     context "when anonymously browsing with invisible, closed and archived" do
       let!(:topic) { Fabricate(:topic) }
       let!(:regular_topic) { Fabricate(:post, user: creator).topic }
-      let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
-      let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
-      let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
-      it "should omit the closed/archived/invisible topics from suggested" do
+      before do
+        Fabricate(:topic, user: creator, closed: true)
+        Fabricate(:topic, user: creator, archived: true)
+        Fabricate(:topic, user: creator, visible: false)
+      end
+
+      it "omits the closed/archived/invisible topics from suggested" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([regular_topic])
       end
     end
 
     context "with a custom suggested provider registered" do
       let!(:topic1) { Fabricate(:topic) }
-      let!(:topic2) { Fabricate(:topic) }
-      let!(:topic3) { Fabricate(:topic) }
-      let!(:topic4) { Fabricate(:topic) }
-      let!(:topic5) { Fabricate(:topic) }
-      let!(:topic6) { Fabricate(:topic) }
-      let!(:topic7) { Fabricate(:topic) }
+
+      before { 6.times { Fabricate(:topic) } }
 
       let(:plugin_class) do
         Class.new(Plugin::Instance) do
@@ -1635,7 +1650,7 @@ RSpec.describe TopicQuery do
 
       let(:plugin) { plugin_class.new }
 
-      it "should return suggested defined by the custom provider" do
+      it "returns suggested defined by the custom provider" do
         DiscoursePluginRegistry.register_list_suggested_for_provider(
           plugin_class.method(:custom_suggested_topics),
           plugin,
@@ -1655,7 +1670,7 @@ RSpec.describe TopicQuery do
       after { clear_cache! }
 
       context "when there are no new topics for user" do
-        it "should return random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
+        it "returns random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
           topic2 = Fabricate(:topic, user: user)
           topic3 = Fabricate(:topic, user: user)
           _topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
@@ -1738,7 +1753,7 @@ RSpec.describe TopicQuery do
 
         before { topic.update!(category:) }
 
-        it "should return new topics for user ordered by topics that user has created first, in the same category as the topic and then topic's bumped at" do
+        it "returns new topics for user ordered by topics that user has created first, in the same category as the topic and then topic's bumped at" do
           expect(
             topic_query.list_suggested_for(topic, include_random: false).topics.map(&:id),
           ).to eq(
@@ -1769,200 +1784,180 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "when logged in" do
-      def suggested_for(topic)
-        topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
-      end
+    it "returns empty results when there is nothing to find" do
+      expect(suggested_topics).to be_blank
+    end
 
-      let(:topic) { Fabricate(:topic) }
+    context "with random suggested" do
+      before { Fabricate(:topic, created_at: 2.days.ago) }
 
-      let(:suggested_topics) do
+      let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
+
+      it "respects suggested_topics_max_days_old" do
+        SiteSetting.suggested_topics_max_days_old = 1365
         tt = topic
-        # lets clear cache once category is created - working around caching is hard
+
         clear_cache!
-        suggested_for(tt)
+        expect(topic_query.list_suggested_for(tt).topics.length).to eq(2)
+
+        SiteSetting.suggested_topics_max_days_old = 365
+        clear_cache!
+
+        expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
       end
 
-      it "should return empty results when there is nothing to find" do
-        expect(suggested_topics).to be_blank
+      it "removes muted topics" do
+        SiteSetting.suggested_topics_max_days_old = 1365
+        tt = topic
+        TopicNotifier.new(old_topic).mute!(user)
+        clear_cache!
+
+        topics = topic_query.list_suggested_for(tt).topics
+
+        expect(topics.length).to eq(1)
+        expect(topics).not_to include(old_topic)
+      end
+    end
+
+    context "with private messages" do
+      let(:group_user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+      let(:another_group) { Fabricate(:group) }
+
+      before do
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+        )
+        group.add(group_user)
+        another_group.add(user)
+        Group.user_trust_level_change!(user.id, user.trust_level)
+        Group.user_trust_level_change!(group_user.id, group_user.trust_level)
       end
 
-      context "with random suggested" do
-        let!(:new_topic) { Fabricate(:topic, created_at: 2.days.ago) }
-        let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
-
-        it "respects suggested_topics_max_days_old" do
-          SiteSetting.suggested_topics_max_days_old = 1365
-          tt = topic
-
-          clear_cache!
-          expect(topic_query.list_suggested_for(tt).topics.length).to eq(2)
-
-          SiteSetting.suggested_topics_max_days_old = 365
-          clear_cache!
-
-          expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
-        end
-
-        it "removes muted topics" do
-          SiteSetting.suggested_topics_max_days_old = 1365
-          tt = topic
-          TopicNotifier.new(old_topic).mute!(user)
-          clear_cache!
-
-          topics = topic_query.list_suggested_for(tt).topics
-
-          expect(topics.length).to eq(1)
-          expect(topics).not_to include(old_topic)
-        end
+      let!(:private_message) do
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+          topic_allowed_groups: [
+            Fabricate.build(:topic_allowed_group, group: group),
+            Fabricate.build(:topic_allowed_group, group: another_group),
+          ],
+        )
       end
 
-      context "with private messages" do
-        let(:group_user) { Fabricate(:user) }
-        let(:group) { Fabricate(:group) }
-        let(:another_group) { Fabricate(:group) }
+      let!(:private_group_topic) do
+        Fabricate(
+          :private_message_topic,
+          user: Fabricate(:user),
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+        )
+      end
 
-        let!(:topic) do
-          Fabricate(
-            :private_message_topic,
-            topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
-            topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
-          )
-        end
 
-        let!(:private_message) do
-          Fabricate(
-            :private_message_topic,
-            topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
-            topic_allowed_groups: [
-              Fabricate.build(:topic_allowed_group, group: group),
-              Fabricate.build(:topic_allowed_group, group: another_group),
-            ],
-          )
-        end
+      context "as user not part of group" do
+        before { Fabricate(:user) }
 
-        let!(:private_group_topic) do
-          Fabricate(
-            :private_message_topic,
-            user: Fabricate(:user),
-            topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
-          )
-        end
-
-        before do
-          group.add(group_user)
-          another_group.add(user)
-          Group.user_trust_level_change!(user.id, user.trust_level)
-          Group.user_trust_level_change!(group_user.id, group_user.trust_level)
-        end
-
-        context "as user not part of group" do
-          let!(:user) { Fabricate(:user) }
-
-          it "should not return topics by the group user" do
-            expect(suggested_topics).to eq([private_message.id])
-          end
-        end
-
-        context "as user part of group" do
-          let!(:user) { group_user }
-
-          it "should return the group topics" do
-            expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
-          end
-
-          context "when user is not in personal_message_enabled_groups" do
-            before do
-              SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-            end
-
-            it "should not return topics by the group user" do
-              expect(suggested_topics).to eq(nil)
-            end
-          end
-        end
-
-        context "with tag filter" do
-          let(:tag) { Fabricate(:tag) }
-          let!(:user) { group_user }
-
-          it "should return only tagged topics" do
-            Fabricate(:topic_tag, topic: private_message, tag: tag)
-            Fabricate(:topic_tag, topic: private_group_topic)
-
-            expect(
-              TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
-            ).to eq([private_message])
-          end
+        it "does not return topics by the group user" do
+          expect(suggested_topics).to eq([private_message.id])
         end
       end
 
-      context "with some existing topics" do
-        let!(:old_partially_read) do
-          topic = Fabricate(:post, user: creator).topic
-          Fabricate(:post, user: creator, topic: topic)
-          topic
+      context "as user part of group" do
+        before { group_user }
+
+        it "returns the group topics" do
+          expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
         end
 
-        let!(:partially_read) do
-          topic = Fabricate(:post, user: creator).topic
-          Fabricate(:post, user: creator, topic: topic)
-          topic
+        it "does not return group topics when personal messages are disabled for the user" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+          expect(suggested_topics).to eq(nil)
         end
+      end
 
-        let!(:new_topic) { Fabricate(:post, user: creator).topic }
-        let!(:fully_read) { Fabricate(:post, user: creator).topic }
-        let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
-        let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
-        let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
-        let!(:fully_read_closed) { Fabricate(:post, user: creator).topic }
-        let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
+      context "with tag filter" do
+        let(:tag) { Fabricate(:tag) }
+        let!(:user) { group_user }
 
-        before do
-          user.user_option.update!(
-            auto_track_topics_after_msecs: 0,
-            new_topic_duration_minutes: User::NewTopicDuration::ALWAYS,
-          )
+        it "returns only tagged topics" do
+          Fabricate(:topic_tag, topic: private_message, tag: tag)
+          Fabricate(:topic_tag, topic: private_group_topic)
 
-          freeze_time 3.weeks.from_now
-
-          TopicUser.update_last_read(user, old_partially_read.id, 1, 1, 0)
-          TopicUser.update_last_read(user, partially_read.id, 1, 1, 0)
-          TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
-          TopicUser.update_last_read(user, fully_read_closed.id, 1, 1, 0)
-          TopicUser.update_last_read(user, fully_read_archived.id, 1, 1, 0)
-
-          fully_read_closed.closed = true
-          fully_read_closed.save
-          fully_read_archived.archived = true
-          fully_read_archived.save
-
-          old_partially_read.update!(bumped_at: 2.weeks.ago)
-          partially_read.update!(bumped_at: Time.now)
+          expect(
+            TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
+          ).to eq([private_message])
         end
+      end
+    end
 
-        it "operates correctly" do
-          # Note, this is a pretty slow integration test
-          # it tests that suggested is returned in the expected order
-          # hence we run suggested_for twice here to save on all the setup
+    context "with some existing topics" do
+      let!(:old_partially_read) do
+        topic = Fabricate(:post, user: creator).topic
+        Fabricate(:post, user: creator, topic: topic)
+        topic
+      end
 
-          SiteSetting.suggested_topics = 4
-          SiteSetting.suggested_topics_unread_max_days_old = 7
+      let!(:partially_read) do
+        topic = Fabricate(:post, user: creator).topic
+        Fabricate(:post, user: creator, topic: topic)
+        topic
+      end
 
-          expect(suggested_topics[0]).to eq(partially_read.id)
-          expect(suggested_topics[1, 3]).to contain_exactly(
-            new_topic.id,
-            closed_topic.id,
-            archived_topic.id,
-          )
+      let!(:new_topic) { Fabricate(:post, user: creator).topic }
+      let!(:fully_read) { Fabricate(:post, user: creator).topic }
+      let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
+      let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
+      before do
+        Fabricate(:topic, user: creator, visible: false)
+        user.user_option.update!(
+          auto_track_topics_after_msecs: 0,
+          new_topic_duration_minutes: User::NewTopicDuration::ALWAYS,
+        )
 
-          expect(suggested_topics.length).to eq(4)
+        freeze_time 3.weeks.from_now
 
-          SiteSetting.suggested_topics = 2
-          SiteSetting.suggested_topics_unread_max_days_old = 15
+        TopicUser.update_last_read(user, old_partially_read.id, 1, 1, 0)
+        TopicUser.update_last_read(user, partially_read.id, 1, 1, 0)
+        TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
+        TopicUser.update_last_read(user, fully_read_closed.id, 1, 1, 0)
+        TopicUser.update_last_read(user, fully_read_archived.id, 1, 1, 0)
 
-          expect(suggested_for(topic)).to contain_exactly(partially_read.id, old_partially_read.id)
-        end
+        fully_read_closed.closed = true
+        fully_read_closed.save
+        fully_read_archived.archived = true
+        fully_read_archived.save
+
+        old_partially_read.update!(bumped_at: 2.weeks.ago)
+        partially_read.update!(bumped_at: Time.now)
+      end
+
+      let!(:fully_read_closed) { Fabricate(:post, user: creator).topic }
+      let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
+
+
+      it "operates correctly" do
+        # Note, this is a pretty slow integration test
+        # it tests that suggested is returned in the expected order
+        # hence we run suggested_for twice here to save on all the setup
+
+        SiteSetting.suggested_topics = 4
+        SiteSetting.suggested_topics_unread_max_days_old = 7
+
+        expect(suggested_topics[0]).to eq(partially_read.id)
+        expect(suggested_topics[1, 3]).to contain_exactly(
+          new_topic.id,
+          closed_topic.id,
+          archived_topic.id,
+        )
+
+        expect(suggested_topics.length).to eq(4)
+
+        SiteSetting.suggested_topics = 2
+        SiteSetting.suggested_topics_unread_max_days_old = 15
+
+        expect(suggested_for(topic)).to contain_exactly(partially_read.id, old_partially_read.id)
       end
     end
   end
@@ -1986,21 +1981,25 @@ RSpec.describe TopicQuery do
 
     fab!(:private_category) { Fabricate(:private_category_with_definition, group: group) }
 
-    let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
+    before do
+      Fabricate(:private_message_post, user: user).topic
+      Fabricate(:topic)
+      Fabricate(:topic, user: user, visible: false)
+    end
+
     let!(:topic1) { Fabricate(:topic, user: user) }
     let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
     let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
-    let!(:topic4) { Fabricate(:topic) }
-    let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
+
     let!(:topic6) { Fabricate(:topic, user: user2) }
 
-    it "should return the right lists for anon user" do
+    it "returns the right lists for anon user" do
       topics = TopicQuery.new.list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
 
-    it "should return the right list for users in the same group" do
+    it "returns the right list for users in the same group" do
       topics = TopicQuery.new(user).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
@@ -2010,7 +2009,7 @@ RSpec.describe TopicQuery do
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
     end
 
-    it "should return the right list for user no in the group" do
+    it "returns the right list for user no in the group" do
       topics = TopicQuery.new(user3).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic6)
@@ -2466,13 +2465,13 @@ RSpec.describe TopicQuery do
         )
       end
 
-      it "should not return any topics if the user is anonymous" do
+      it "does not return any topics if the user is anonymous" do
         expect(
           TopicQuery.new(nil, state: "watching_first_post").list_latest.topics.map(&:id),
         ).to eq([])
       end
 
-      it "should return the union of topics in watched categories and topics with watched tags" do
+      it "returns the union of topics in watched categories and topics with watched tags" do
         ids = TopicQuery.new(test_user, state: "watching_first_post").list_latest.topics.map(&:id)
 
         expect(ids).to contain_exactly(
@@ -2482,7 +2481,7 @@ RSpec.describe TopicQuery do
         )
       end
 
-      it "should work when combined with other filters" do
+      it "works when combined with other filters" do
         topic_in_watched_category.update!(closed: true)
 
         ids =

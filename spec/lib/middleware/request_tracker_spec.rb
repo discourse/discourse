@@ -747,6 +747,7 @@ RSpec.describe Middleware::RequestTracker do
 
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
+
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
@@ -1479,7 +1480,7 @@ RSpec.describe Middleware::RequestTracker do
 
       after { Middleware::RequestTracker.unregister_ip_skipper }
 
-      it "won't block if the ip is skipped" do
+      it "does not block if the ip is skipped" do
         env1 = env("REMOTE_ADDR" => "1.1.1.2")
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
@@ -1855,10 +1856,12 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
+    let(:logged_request) { {} }
+
     let(:logger) do
       ->(env, data) do
-        @env = env
-        @data = data
+        logged_request[:env] = env
+        logged_request[:data] = data
       end
     end
 
@@ -1883,7 +1886,7 @@ RSpec.describe Middleware::RequestTracker do
           "action_dispatch.request.parameters" => request_params,
         ),
       )
-      expect(@data[:cache]).to eq("skip")
+      expect(logged_request[:data][:cache]).to eq("skip")
 
       tracker.call(
         env(
@@ -1892,15 +1895,15 @@ RSpec.describe Middleware::RequestTracker do
           "action_dispatch.request.parameters" => request_params,
         ),
       )
-      expect(@data[:cache]).to eq("store")
+      expect(logged_request[:data][:cache]).to eq("store")
 
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))
-      expect(@data[:cache]).to eq("true")
+      expect(logged_request[:data][:cache]).to eq("true")
 
       # not allowlisted
       request_params.delete("a")
 
-      expect(@env["action_dispatch.request.parameters"]).to eq(request_params)
+      expect(logged_request[:env]["action_dispatch.request.parameters"]).to eq(request_params)
     end
 
     it "can correctly log detailed data" do
@@ -1924,9 +1927,9 @@ RSpec.describe Middleware::RequestTracker do
           ),
         )
 
-      expect(@data[:queue_seconds]).to eq(60)
+      expect(logged_request[:data][:queue_seconds]).to eq(60)
 
-      timing = @data[:timing]
+      timing = logged_request[:data][:timing]
       expect(timing[:total_duration]).to be > 0
 
       expect(timing[:sql][:duration]).to be > 0
@@ -1957,7 +1960,7 @@ RSpec.describe Middleware::RequestTracker do
 
       tracker.call(env)
 
-      expect(@data[:timing][:gc]).to eq(nil)
+      expect(logged_request[:data][:timing][:gc]).to eq(nil)
 
       SiteSetting.instrument_gc_stat_per_request = true
 
@@ -1971,25 +1974,25 @@ RSpec.describe Middleware::RequestTracker do
 
       tracker.call(env)
 
-      expect(@data[:timing][:gc][:time]).to be > 0.0
-      expect(@data[:timing][:gc][:major_count]).to eq(1)
-      expect(@data[:timing][:gc][:minor_count]).to eq(1)
+      expect(logged_request[:data][:timing][:gc][:time]).to be > 0.0
+      expect(logged_request[:data][:timing][:gc][:major_count]).to eq(1)
+      expect(logged_request[:data][:timing][:gc][:minor_count]).to eq(1)
     end
 
     it "can correctly log messagebus request types" do
       tracker = Middleware::RequestTracker.new(app([200, {}, []]))
 
       tracker.call(env(path: "/message-bus/abcde/poll"))
-      expect(@data[:is_background]).to eq(true)
-      expect(@data[:background_type]).to eq("message-bus")
+      expect(logged_request[:data][:is_background]).to eq(true)
+      expect(logged_request[:data][:background_type]).to eq("message-bus")
 
       tracker.call(env(path: "/message-bus/abcde/poll?dlp=t"))
-      expect(@data[:is_background]).to eq(true)
-      expect(@data[:background_type]).to eq("message-bus-dlp")
+      expect(logged_request[:data][:is_background]).to eq(true)
+      expect(logged_request[:data][:background_type]).to eq("message-bus-dlp")
 
       tracker.call(env("HTTP_DONT_CHUNK" => "True", :path => "/message-bus/abcde/poll"))
-      expect(@data[:is_background]).to eq(true)
-      expect(@data[:background_type]).to eq("message-bus-dontchunk")
+      expect(logged_request[:data][:is_background]).to eq(true)
+      expect(logged_request[:data][:background_type]).to eq("message-bus-dontchunk")
     end
   end
 

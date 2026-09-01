@@ -5,7 +5,7 @@ RSpec.describe CategoryUploadSerializer do
 
   fab!(:upload)
 
-  it "should include width and height" do
+  it "includes width and height" do
     expect(serializer.width).to eq(upload.width)
     expect(serializer.height).to eq(upload.height)
   end

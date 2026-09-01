@@ -173,7 +173,7 @@ RSpec.configure do |config|
 
   config.after(:suite) { Downloads.clear }
 
-  config.before(:each) { TestSetup.test_setup }
+  config.before { TestSetup.test_setup }
 
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
@@ -204,7 +204,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:each) do |example|
+  config.before do |example|
     if example.metadata[:type] != :system
       EmberAssets.stubs(:read_manifest!).returns(nil)
       EmberAssets.stubs(:script_chunks).returns({})
@@ -217,7 +217,7 @@ RSpec.configure do |config|
     EmberDeprecations.set_raise_on_deprecation!(example)
   end
 
-  config.after(:each) do |example|
+  config.after do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (example.metadata[:extra_failure_lines] ||= +"")
       RspecErrorTracker.append_failure_dump(lines)

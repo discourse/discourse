@@ -6,6 +6,8 @@ RSpec.describe Admin::ReportsController do
   fab!(:user)
 
   describe "#index" do
+    before { sign_in(admin) }
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -28,7 +30,6 @@ RSpec.describe Admin::ReportsController do
       end
     end
 
-    before { sign_in(admin) }
 
     it "excludes page view mobile reports" do
       get "/admin/reports.json"
@@ -122,72 +123,70 @@ RSpec.describe Admin::ReportsController do
         end
       end
 
-      context "with invalid params" do
-        context "with invalid report_type format" do
-          it "returns 404 when report_type contains special characters" do
-            get "/admin/reports/bulk.json", params: { reports: { "!!&asdfasdf" => { limit: 10 } } }
+      context "with invalid report_type format" do
+        it "returns 404 when report_type contains special characters" do
+          get "/admin/reports/bulk.json", params: { reports: { "!!&asdfasdf" => { limit: 10 } } }
 
-            expect(response.status).to eq(404)
-          end
-
-          it "returns 404 when report_type contains path traversal characters" do
-            get "/admin/reports/bulk.json", params: { reports: { "../../etc" => { limit: 10 } } }
-
-            expect(response.status).to eq(404)
-          end
+          expect(response.status).to eq(404)
         end
 
-        context "when limit param is invalid" do
-          include_examples "invalid limit params",
-                           "/admin/reports/topics.json",
-                           described_class::REPORTS_LIMIT
+        it "returns 404 when report_type contains path traversal characters" do
+          get "/admin/reports/bulk.json", params: { reports: { "../../etc" => { limit: 10 } } }
+
+          expect(response.status).to eq(404)
         end
+      end
 
-        context "with nonexistent report" do
-          it "returns not found reports" do
-            get "/admin/reports/bulk.json",
-                params: {
-                  reports: {
-                    topics: {
-                      limit: 10,
-                    },
-                    not_found: {
-                      limit: 10,
-                    },
+      context "when limit param is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/reports/topics.json",
+                         described_class::REPORTS_LIMIT
+      end
+
+      context "with nonexistent report" do
+        it "returns not found reports" do
+          get "/admin/reports/bulk.json",
+              params: {
+                reports: {
+                  topics: {
+                    limit: 10,
                   },
-                }
+                  not_found: {
+                    limit: 10,
+                  },
+                },
+              }
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["reports"].count).to eq(2)
-            expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
-            expect(response.parsed_body["reports"][1]["type"]).to eq("not_found")
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["reports"].count).to eq(2)
+          expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
+          expect(response.parsed_body["reports"][1]["type"]).to eq("not_found")
         end
+      end
 
-        context "with invalid start or end dates" do
-          it "doesn't return 500 error" do
-            get "/admin/reports/bulk.json",
-                params: {
-                  reports: {
-                    topics: {
-                      limit: 10,
-                      start_date: "2015-0-1",
-                    },
+      context "with invalid start or end dates" do
+        it "doesn't return 500 error" do
+          get "/admin/reports/bulk.json",
+              params: {
+                reports: {
+                  topics: {
+                    limit: 10,
+                    start_date: "2015-0-1",
                   },
-                }
-            expect(response.status).to eq(400)
+                },
+              }
+          expect(response.status).to eq(400)
 
-            get "/admin/reports/bulk.json",
-                params: {
-                  reports: {
-                    topics: {
-                      limit: 10,
-                      end_date: "2015-0-1",
-                    },
+          get "/admin/reports/bulk.json",
+              params: {
+                reports: {
+                  topics: {
+                    limit: 10,
+                    end_date: "2015-0-1",
                   },
-                }
-            expect(response.status).to eq(400)
-          end
+                },
+              }
+          expect(response.status).to eq(400)
         end
       end
     end
@@ -399,18 +398,17 @@ RSpec.describe Admin::ReportsController do
         end
       end
 
-      context "with valid type form" do
-        context "with missing report" do
-          it "returns a 404 error" do
-            get "/admin/reports/nonexistent.json"
-            expect(response.status).to eq(404)
-          end
+      context "with missing report" do
+        it "returns a 404 error" do
+          get "/admin/reports/nonexistent.json"
+          expect(response.status).to eq(404)
         end
+      end
 
-        context "when a report is found" do
-          it "renders the report as JSON" do
-            Fabricate(:topic)
-            get "/admin/reports/topics.json"
+      context "when a report is found" do
+        it "renders the report as JSON" do
+          Fabricate(:topic)
+          get "/admin/reports/topics.json"
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["report"]["total"]).to eq(1)
@@ -429,12 +427,12 @@ RSpec.describe Admin::ReportsController do
             expect(response.parsed_body["report"]).not_to have_key("related_items")
           end
         end
+      end
 
-        context "when limit param is invalid" do
-          include_examples "invalid limit params",
-                           "/admin/reports/topics.json",
-                           described_class::REPORTS_LIMIT
-        end
+      context "when limit param is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/reports/topics.json",
+                         described_class::REPORTS_LIMIT
       end
 
       describe "when report is scoped to a category" do
@@ -442,7 +440,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:topic) { Fabricate(:topic, category: category) }
         fab!(:other_topic, :topic)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           get "/admin/reports/topics.json", params: { category_id: category.id }
 
           expect(response.status).to eq(200)
@@ -459,7 +457,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:other_user, :user)
         fab!(:group)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           group.add(user)
 
           get "/admin/reports/signups.json", params: { group_id: group.id }

@@ -12,18 +12,17 @@ RSpec.describe ThemeStore::GitImporter do
     let(:trailing_slash_url) { "https://github.com/example/example/" }
     let(:ssh_url) { "git@github.com:example/example.git" }
     let(:branch) { "dev" }
+    let(:hex) { "xxx" }
+    let(:temp_folder) { "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{hex}" }
+    let(:ssh_folder) { "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{hex}" }
 
     before do
-      hex = "xxx"
       SecureRandom.stubs(:hex).returns(hex)
 
       FinalDestination::SSRFDetector
         .stubs(:lookup_and_filter_ips)
         .with("github.com")
         .returns(["192.0.2.100"])
-
-      @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{hex}"
-      @ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{hex}"
     end
 
     it "reports safe reasons for Git command failures" do
@@ -64,12 +63,12 @@ RSpec.describe ThemeStore::GitImporter do
       Discourse::Utils.expects(:execute_command).with(
         {
           "GIT_SSH_COMMAND" =>
-            "ssh -i #{@ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{@ssh_folder}/id_rsa -o StrictHostKeyChecking=no",
+            "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no",
         },
         "git",
         "clone",
         "ssh://git@github.com/example/example.git",
-        @temp_folder,
+        temp_folder,
         timeout: 20,
       )
 
@@ -81,7 +80,7 @@ RSpec.describe ThemeStore::GitImporter do
       Discourse::Utils.expects(:execute_command).with(
         {
           "GIT_SSH_COMMAND" =>
-            "ssh -i #{@ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{@ssh_folder}/id_rsa -o StrictHostKeyChecking=no",
+            "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no",
         },
         "git",
         "clone",
@@ -89,7 +88,7 @@ RSpec.describe ThemeStore::GitImporter do
         "-b",
         branch,
         "ssh://git@github.com/example/example.git",
-        @temp_folder,
+        temp_folder,
         timeout: 20,
       )
 
@@ -119,7 +118,7 @@ RSpec.describe ThemeStore::GitImporter do
           "http.curloptResolve=github.com:443:192.0.2.100",
           "clone",
           "https://github.com/redirected/example.git",
-          @temp_folder,
+          temp_folder,
           timeout: 20,
         )
 
@@ -148,7 +147,7 @@ RSpec.describe ThemeStore::GitImporter do
           "http.curloptResolve=github.com:443:192.0.2.100",
           "clone",
           "https://github.com/example/example.git",
-          @temp_folder,
+          temp_folder,
           timeout: 20,
         )
 
@@ -166,7 +165,7 @@ RSpec.describe ThemeStore::GitImporter do
           "http.curloptResolve=github.com:443:192.0.2.100",
           "clone",
           "https://github.com/example/example.git",
-          @temp_folder,
+          temp_folder,
           timeout: 20,
         )
 
@@ -187,7 +186,7 @@ RSpec.describe ThemeStore::GitImporter do
           "-b",
           branch,
           "https://github.com/example/example.git",
-          @temp_folder,
+          temp_folder,
           timeout: 20,
         )
 

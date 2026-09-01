@@ -3,19 +3,24 @@
 require "extralite"
 
 RSpec.describe Migrations::Conversion::ShardManager do
+  let(:shard_context) { {} }
+
   around do |example|
     Dir.mktmpdir do |dir|
-      @canonical = File.join(dir, "intermediate.db")
-      @migrations = File.join(dir, "migrations")
-      FileUtils.mkdir_p(@migrations)
-      File.write(File.join(@migrations, "001-schema.sql"), <<~SQL)
+      shard_context[:canonical_path] = File.join(dir, "intermediate.db")
+      shard_context[:migrations_path] = File.join(dir, "migrations")
+      FileUtils.mkdir_p(shard_context[:migrations_path])
+      File.write(File.join(shard_context[:migrations_path], "001-schema.sql"), <<~SQL)
         CREATE TABLE widgets (id INTEGER PRIMARY KEY, name TEXT);
         CREATE INDEX widgets_name ON widgets (name);
       SQL
-      Migrations::Database.migrate(@canonical, migrations_path: @migrations)
+      Migrations::Database.migrate(
+        shard_context[:canonical_path],
+        migrations_path: shard_context[:migrations_path],
+      )
 
       # a row from a previous run already lives in the DB
-      db = Extralite::Database.new(@canonical)
+      db = Extralite::Database.new(shard_context[:canonical_path])
       db.execute("INSERT INTO widgets (id, name) VALUES (1, 'existing')")
       db.close
 
@@ -24,7 +29,10 @@ RSpec.describe Migrations::Conversion::ShardManager do
   end
 
   def build_manager
-    described_class.new(canonical_path: @canonical, migrations_path: @migrations)
+    described_class.new(
+      canonical_path: shard_context.fetch(:canonical_path),
+      migrations_path: shard_context.fetch(:migrations_path),
+    )
   end
 
   it "gives each shard the run's schema but none of its data" do

@@ -5,7 +5,7 @@ RSpec.describe Jobs::CloseTopic do
 
   fab!(:topic) { Fabricate(:topic_timer, user: admin).topic }
 
-  it "should be able to close a topic" do
+  it "is able to close a topic" do
     freeze_time(61.minutes.from_now) do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id, state: true)
 
@@ -27,7 +27,7 @@ RSpec.describe Jobs::CloseTopic do
   end
 
   describe "when trying to close a topic that has already been closed" do
-    it "should delete the topic timer" do
+    it "deletes the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       topic.update!(closed: true)
@@ -39,7 +39,7 @@ RSpec.describe Jobs::CloseTopic do
   end
 
   describe "when trying to close a topic that has been deleted" do
-    it "should delete the topic timer" do
+    it "deletes the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       topic.trash!
@@ -75,7 +75,7 @@ RSpec.describe Jobs::CloseTopic do
 
     fab!(:topic) { Fabricate(:topic_timer, user: user).topic }
 
-    it "should destroy the topic timer" do
+    it "destroys the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       expect do
@@ -85,7 +85,7 @@ RSpec.describe Jobs::CloseTopic do
       expect(topic.reload.closed).to eq(false)
     end
 
-    it "should reconfigure topic timer if category's topics are set to autoclose" do
+    it "reconfigures topic timer if category's topics are set to autoclose" do
       category = Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)
 
       topic = Fabricate(:topic, category: category)

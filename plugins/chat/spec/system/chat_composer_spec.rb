@@ -233,7 +233,7 @@ RSpec.describe "Chat composer" do
   context "when posting a message with length equal to minimum length" do
     before { SiteSetting.chat_minimum_message_length = 1 }
 
-    it "works" do
+    it "posts the message" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("1")
 

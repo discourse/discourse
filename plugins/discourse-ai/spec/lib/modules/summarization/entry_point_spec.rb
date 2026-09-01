@@ -18,223 +18,220 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
       let(:topic_query) { TopicQuery.new(user) }
 
-      describe "topic_query_create_list_topics modifier" do
-        context "when hot topic summarization is enabled" do
-          it "doesn't duplicate records when there more than one summary type" do
-            Fabricate(:ai_summary, target: topic_ai_gist.target)
+      context "when hot topic summarization is enabled" do
+        it "doesn't duplicate records when there more than one summary type" do
+          Fabricate(:ai_summary, target: topic_ai_gist.target)
 
-            expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(
-              topic_ai_gist.target_id,
-            )
-          end
+          expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(
+            topic_ai_gist.target_id,
+          )
+        end
 
-          it "doesn't exclude records when the topic has a single different summary" do
-            regular_summary_2 = Fabricate(:ai_summary)
-            TopicHotScore.create!(topic_id: regular_summary_2.target_id, score: 1.0)
+        it "doesn't exclude records when the topic has a single different summary" do
+          regular_summary_2 = Fabricate(:ai_summary)
+          TopicHotScore.create!(topic_id: regular_summary_2.target_id, score: 1.0)
 
-            expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(
-              regular_summary_2.target_id,
-              topic_ai_gist.target_id,
-            )
-          end
+          expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(
+            regular_summary_2.target_id,
+            topic_ai_gist.target_id,
+          )
+        end
 
-          it "doesn't filter out hot topics without summaries" do
-            TopicHotScore.create!(topic_id: Fabricate(:topic).id, score: 1.0)
+        it "doesn't filter out hot topics without summaries" do
+          TopicHotScore.create!(topic_id: Fabricate(:topic).id, score: 1.0)
 
-            expect(topic_query.list_hot.topics.size).to eq(2)
-          end
+          expect(topic_query.list_hot.topics.size).to eq(2)
         end
       end
 
-      describe "topic_list_item serializer's ai_summary" do
-        context "when hot topic summarization is disabled" do
-          before { SiteSetting.ai_summary_gists_enabled = false }
-          it "doesn't include summaries" do
-            gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
+      context "when hot topic summarization is disabled" do
+        before { SiteSetting.ai_summary_gists_enabled = false }
 
-            serialized =
-              TopicListItemSerializer.new(gist_topic, scope: Guardian.new, root: false).as_json
+        it "doesn't include summaries" do
+          gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
 
-            expect(serialized.has_key?(:ai_topic_gist)).to eq(false)
-          end
+          serialized =
+            TopicListItemSerializer.new(gist_topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized.has_key?(:ai_topic_gist)).to eq(false)
+        end
+      end
+
+      context "when hot topics summarization is enabled" do
+        fab!(:group)
+
+        before do
+          group.add(user)
+          assign_agent_to(:ai_summary_gists_agent, [group.id])
+          SiteSetting.ai_summary_gists_enabled = true
         end
 
-        context "when hot topics summarization is enabled" do
-          fab!(:group)
+        it "includes the summary" do
+          gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
 
-          before do
-            group.add(user)
-            assign_agent_to(:ai_summary_gists_agent, [group.id])
-            SiteSetting.ai_summary_gists_enabled = true
-          end
+          serialized =
+            TopicListItemSerializer.new(
+              gist_topic,
+              scope: Guardian.new(user),
+              root: false,
+              filter: :hot,
+            ).as_json
 
-          it "includes the summary" do
-            gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
+          expect(serialized[:ai_topic_gist]).to be_present
+        end
 
-            serialized =
-              TopicListItemSerializer.new(
-                gist_topic,
-                scope: Guardian.new(user),
-                root: false,
-                filter: :hot,
-              ).as_json
+        it "selects the localized gist and respects the automatic-translation preference" do
+          topic_ai_gist.target.update!(locale: "en")
+          english_gist =
+            topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
+          japanese_gist =
+            Fabricate(
+              :topic_ai_gist,
+              target: topic_ai_gist.target,
+              locale: "ja",
+              summarized_text: "日本語の要約",
+            )
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_supported_locales = "ja"
+          I18n.locale = :ja
 
-            expect(serialized[:ai_topic_gist]).to be_present
-          end
+          gist_topic =
+            topic_query.list_hot.topics.find { |topic| topic.id == topic_ai_gist.target_id }
+          serialized =
+            TopicListItemSerializer.new(
+              gist_topic,
+              scope: Guardian.new(user),
+              root: false,
+              filter: :hot,
+            ).as_json
 
-          it "selects the localized gist and respects the automatic-translation preference" do
-            topic_ai_gist.target.update!(locale: "en")
-            english_gist =
-              topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
-            japanese_gist =
-              Fabricate(
-                :topic_ai_gist,
-                target: topic_ai_gist.target,
-                locale: "ja",
-                summarized_text: "日本語の要約",
-              )
-            SiteSetting.content_localization_enabled = true
-            SiteSetting.content_localization_supported_locales = "ja"
-            I18n.locale = :ja
+          expect(serialized[:ai_topic_gist]).to eq(japanese_gist.summarized_text)
 
-            gist_topic =
-              topic_query.list_hot.topics.find { |topic| topic.id == topic_ai_gist.target_id }
-            serialized =
-              TopicListItemSerializer.new(
-                gist_topic,
-                scope: Guardian.new(user),
-                root: false,
-                filter: :hot,
-              ).as_json
+          user.user_option.update!(automatically_translate: false)
+          original_serialized =
+            TopicListItemSerializer.new(
+              gist_topic,
+              scope: Guardian.new(user),
+              root: false,
+              filter: :hot,
+            ).as_json
 
-            expect(serialized[:ai_topic_gist]).to eq(japanese_gist.summarized_text)
+          expect(original_serialized[:ai_topic_gist]).to eq(english_gist.summarized_text)
+        end
 
-            user.user_option.update!(automatically_translate: false)
-            original_serialized =
-              TopicListItemSerializer.new(
-                gist_topic,
-                scope: Guardian.new(user),
-                root: false,
-                filter: :hot,
-              ).as_json
+        it "doesn't include the summary when the user is not a member of the opt-in group" do
+          non_member_user = Fabricate(:user)
 
-            expect(original_serialized[:ai_topic_gist]).to eq(english_gist.summarized_text)
-          end
+          gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
 
-          it "doesn't include the summary when the user is not a member of the opt-in group" do
-            non_member_user = Fabricate(:user)
+          serialized =
+            TopicListItemSerializer.new(
+              gist_topic,
+              scope: Guardian.new(non_member_user),
+              root: false,
+              filter: :hot,
+            ).as_json
 
-            gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
+          expect(serialized[:ai_topic_gist]).to be_nil
+        end
 
-            serialized =
-              TopicListItemSerializer.new(
-                gist_topic,
-                scope: Guardian.new(non_member_user),
-                root: false,
-                filter: :hot,
-              ).as_json
+        it "works when the topic has whispers" do
+          SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+          admin = Fabricate(:admin)
+          group.add(admin)
+          # We are testing a scenario where AR could get confused if we don't use `references`.
 
-            expect(serialized[:ai_topic_gist]).to be_nil
-          end
+          first = create_post(raw: "this is the first post", title: "super amazing title")
 
-          it "works when the topic has whispers" do
-            SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
-            admin = Fabricate(:admin)
-            group.add(admin)
-            # We are testing a scenario where AR could get confused if we don't use `references`.
-
-            first = create_post(raw: "this is the first post", title: "super amazing title")
-
-            _whisper =
-              create_post(
-                topic_id: first.topic.id,
-                post_type: Post.types[:whisper],
-                raw: "this is a whispered reply",
-              )
-
-            Fabricate(:topic_ai_gist, target: first.topic, locale: SiteSetting.default_locale)
-            topic_id = first.topic.id
-            TopicUser.update_last_read(admin, topic_id, first.post_number, 1, 1)
-            TopicUser.change(
-              admin.id,
-              topic_id,
-              notification_level: TopicUser.notification_levels[:tracking],
+          _whisper =
+            create_post(
+              topic_id: first.topic.id,
+              post_type: Post.types[:whisper],
+              raw: "this is a whispered reply",
             )
 
-            gist_topic = TopicQuery.new(admin).list_unread.topics.find { |t| t.id == topic_id }
+          Fabricate(:topic_ai_gist, target: first.topic, locale: SiteSetting.default_locale)
+          topic_id = first.topic.id
+          TopicUser.update_last_read(admin, topic_id, first.post_number, 1, 1)
+          TopicUser.change(
+            admin.id,
+            topic_id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
 
-            serialized =
-              TopicListItemSerializer.new(
-                gist_topic,
-                scope: Guardian.new(admin),
-                root: false,
-                filter: :unread,
-              ).as_json
+          gist_topic = TopicQuery.new(admin).list_unread.topics.find { |t| t.id == topic_id }
 
-            expect(serialized[:ai_topic_gist]).to be_present
-          end
+          serialized =
+            TopicListItemSerializer.new(
+              gist_topic,
+              scope: Guardian.new(admin),
+              root: false,
+              filter: :unread,
+            ).as_json
 
-          it "doesn't include the summary if it's not a gist" do
-            regular_summary_2 = Fabricate(:ai_summary)
-            TopicHotScore.create!(topic_id: regular_summary_2.target_id, score: 1.0)
+          expect(serialized[:ai_topic_gist]).to be_present
+        end
 
-            hot_topic = topic_query.list_hot.topics.find { |t| t.id == regular_summary_2.target_id }
+        it "doesn't include the summary if it's not a gist" do
+          regular_summary_2 = Fabricate(:ai_summary)
+          TopicHotScore.create!(topic_id: regular_summary_2.target_id, score: 1.0)
 
-            serialized =
-              TopicListItemSerializer.new(
-                hot_topic,
-                scope: Guardian.new(user),
-                root: false,
-                filter: :hot,
-              ).as_json
+          hot_topic = topic_query.list_hot.topics.find { |t| t.id == regular_summary_2.target_id }
 
-            expect(serialized[:ai_topic_gist]).to be_nil
-          end
+          serialized =
+            TopicListItemSerializer.new(
+              hot_topic,
+              scope: Guardian.new(user),
+              root: false,
+              filter: :hot,
+            ).as_json
 
-          it "includes gists in suggested topics with TopicListItemSerializer" do
-            main_topic = Fabricate(:topic)
-            gist_topic = topic_ai_gist.target
+          expect(serialized[:ai_topic_gist]).to be_nil
+        end
 
-            suggested_list = topic_query.list_suggested_for(main_topic)
-            suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
+        it "includes gists in suggested topics with TopicListItemSerializer" do
+          main_topic = Fabricate(:topic)
+          gist_topic = topic_ai_gist.target
 
-            skip "suggested topic not found in results" if suggested_topic.nil?
+          suggested_list = topic_query.list_suggested_for(main_topic)
+          suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
 
-            # Verify that ai_gist_summaries association is preloaded
-            expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
+          skip "suggested topic not found in results" if suggested_topic.nil?
 
-            serialized =
-              TopicListItemSerializer.new(
-                suggested_topic,
-                scope: Guardian.new(user),
-                root: false,
-                filter: :suggested,
-              ).as_json
+          # Verify that ai_gist_summaries association is preloaded
+          expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
 
-            expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
-          end
+          serialized =
+            TopicListItemSerializer.new(
+              suggested_topic,
+              scope: Guardian.new(user),
+              root: false,
+              filter: :suggested,
+            ).as_json
 
-          it "includes gists in suggested topics with SuggestedTopicSerializer" do
-            main_topic = Fabricate(:topic)
-            gist_topic = topic_ai_gist.target
+          expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
+        end
 
-            suggested_list = topic_query.list_suggested_for(main_topic)
-            suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
+        it "includes gists in suggested topics with SuggestedTopicSerializer" do
+          main_topic = Fabricate(:topic)
+          gist_topic = topic_ai_gist.target
 
-            skip "suggested topic not found in results" if suggested_topic.nil?
+          suggested_list = topic_query.list_suggested_for(main_topic)
+          suggested_topic = suggested_list.topics.find { |t| t.id == gist_topic.id }
 
-            # Verify that ai_gist_summaries association is preloaded
-            expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
+          skip "suggested topic not found in results" if suggested_topic.nil?
 
-            serialized =
-              SuggestedTopicSerializer.new(
-                suggested_topic,
-                scope: Guardian.new(user),
-                root: false,
-              ).as_json
+          # Verify that ai_gist_summaries association is preloaded
+          expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
 
-            expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
-          end
+          serialized =
+            SuggestedTopicSerializer.new(
+              suggested_topic,
+              scope: Guardian.new(user),
+              root: false,
+            ).as_json
+
+          expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
         end
       end
     end

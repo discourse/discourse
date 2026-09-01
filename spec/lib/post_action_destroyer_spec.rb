@@ -71,7 +71,7 @@ RSpec.describe PostActionDestroyer do
       end
 
       context "when post action doesn’t exist" do
-        it "fails" do
+        it "returns a not-found result" do
           result = PostActionDestroyer.destroy(user, post, :like)
           expect(result.success).to eq(false)
           expect(result.not_found).to eq(true)

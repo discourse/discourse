@@ -16,9 +16,7 @@ describe Post do
     let(:post_1) { Fabricate(:post) }
     let(:event_1) { Fabricate(:event, post: post_1, raw_invitees: ["trust_level_0"]) }
 
-    context "when a post is updated" do
-      context "when the post has a valid event" do
-        context "when the event markup is removed" do
+    context "when the event markup is removed from an updated post" do
           it "destroys the associated event" do
             post = create_post_with_event(user)
 
@@ -31,162 +29,156 @@ describe Post do
           end
         end
 
-        context "when event is on going" do
-          let(:going_user) { Fabricate(:user) }
-          let(:interested_user) { Fabricate(:user) }
+    context "when event is on going" do
+      let(:going_user) { Fabricate(:user) }
+      let(:interested_user) { Fabricate(:user) }
 
-          before do
-            SiteSetting.editing_grace_period = 1.minute
-            PostActionNotifier.enable
-            SiteSetting.discourse_post_event_edit_notifications_time_extension = 180
-          end
+      before do
+        SiteSetting.editing_grace_period = 1.minute
+        PostActionNotifier.enable
+        SiteSetting.discourse_post_event_edit_notifications_time_extension = 180
+      end
 
-          context "when in edit grace period" do
-            before do
-              event_1.event_dates.first.update_columns(starts_at: 3.hours.ago, ends_at: 2.hours.ago)
+      context "when in edit grace period" do
+        before do
+          event_1.event_dates.first.update_columns(starts_at: 3.hours.ago, ends_at: 2.hours.ago)
 
-              # clean state
-              Notification.destroy_all
-              interested_user.reload
-              going_user.reload
-            end
+          # clean state
+          Notification.destroy_all
+          interested_user.reload
+          going_user.reload
+        end
 
-            it "sends a post revision to going invitees" do
-              DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_1.id, :going)
-              DiscourseEvents::Events::Invitee.create_attendance!(
-                interested_user.id,
-                post_1.id,
-                :interested,
+        it "sends a post revision to going invitees" do
+          DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_1.id, :going)
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            interested_user.id,
+            post_1.id,
+            :interested,
+          )
+
+          expect {
+            revisor = PostRevisor.new(post_1)
+            revisor.revise!(
+              user,
+              { raw: post_1.raw + "\nWe are bout half way into our event!" },
+              revised_at: Time.now + 2.minutes,
+            )
+          }.to change { going_user.notifications.count }.by(1)
+
+          expect(interested_user.notifications.count).to eq(0)
+        end
+      end
+
+      context "when not edit grace period" do
+        before { event_1.event_dates.first.update_columns(starts_at: 5.hours.ago) }
+
+        it "doesn’t send a post revision to anyone" do
+          DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_1.id, :going)
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            interested_user.id,
+            event_1.id,
+            :interested,
+          )
+
+          expect {
+            revisor = PostRevisor.new(event_1.post)
+            revisor.revise!(
+              user,
+              { raw: event_1.post.raw + "\nWe are bout half way into our event!" },
+              revised_at: Time.now + 2.minutes,
+            )
+          }.to change {
+            going_user.notifications.count + interested_user.notifications.count
+          }.by(0)
+        end
+      end
+
+      context "with an event with recurrence" do
+        before do
+          freeze_time Time.utc(2020, 8, 12, 16, 32)
+
+          event_1.update_with_params!(
+            recurrence: "FREQ=WEEKLY;BYDAY=MO",
+            original_starts_at: 3.hours.ago,
+            original_ends_at: nil,
+          )
+
+          DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, event_1.id, :going)
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            interested_user.id,
+            event_1.id,
+            :interested,
+          )
+
+          event_1.reload
+
+          # we stop processing jobs immediately at this point to prevent infinite loop
+          # as future event ended job would finish now, trigger next recurrence, and other job...
+          Jobs.run_later!
+        end
+
+        it "sets the next dates when the event ends" do
+          event_1.update_with_params!(original_ends_at: Time.now)
+
+          expect(event_1.starts_at.to_s).to eq("2020-08-19 13:32:00 UTC")
+          expect(event_1.ends_at.to_s).to eq("2020-08-19 16:32:00 UTC")
+        end
+
+        it "clears status from invitees not marked as recurring when the event ends" do
+          going_invitee =
+              event_1.invitees.find_by(
+                status: DiscourseEvents::Events::Invitee.statuses[:going],
               )
+          interested_invitee =
+            event_1.invitees.find_by(
+              status: DiscourseEvents::Events::Invitee.statuses[:interested],
+            )
 
-              expect {
-                revisor = PostRevisor.new(post_1)
-                revisor.revise!(
-                  user,
-                  { raw: post_1.raw + "\nWe are bout half way into our event!" },
-                  revised_at: Time.now + 2.minutes,
-                )
-              }.to change { going_user.notifications.count }.by(1)
+          event_1.update_with_params!(original_ends_at: Time.now)
 
-              expect(interested_user.notifications.count).to eq(0)
-            end
-          end
+          expect(going_invitee.reload.status).to be_nil
+          expect(interested_invitee.reload.status).to be_nil
+        end
 
-          context "when not edit grace period" do
-            before { event_1.event_dates.first.update_columns(starts_at: 5.hours.ago) }
+        # that will be handled by new job, uncomment when finished
+        it "doesn’t resend event creation notification to invitees when the event ends" do
+          expect { event_1.update_with_params!(original_ends_at: Time.now) }.not_to change {
+              going_user.notifications.count
+            }
+        end
+      end
 
-            it "doesn’t send a post revision to anyone" do
-              DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_1.id, :going)
-              DiscourseEvents::Events::Invitee.create_attendance!(
-                interested_user.id,
-                event_1.id,
-                :interested,
-              )
+      context "when updating raw_invitees" do
+        let(:lurker_1) { Fabricate(:user) }
+        let(:group_1) { Fabricate(:group) }
 
-              expect {
-                revisor = PostRevisor.new(event_1.post)
-                revisor.revise!(
-                  user,
-                  { raw: event_1.post.raw + "\nWe are bout half way into our event!" },
-                  revised_at: Time.now + 2.minutes,
-                )
-              }.to change {
-                going_user.notifications.count + interested_user.notifications.count
-              }.by(0)
-            end
-          end
+        it "doesn’t accept usernames" do
+          event_1.update_with_params!(raw_invitees: [lurker_1.username])
+          expect(event_1.raw_invitees).to eq(["trust_level_0"])
+        end
 
-          context "with an event with recurrence" do
-            before do
-              freeze_time Time.utc(2020, 8, 12, 16, 32)
+        it "doesn’t accept another group than trust_level_0" do
+          event_1.update_with_params!(raw_invitees: [group_1.name])
+          expect(event_1.raw_invitees).to eq(["trust_level_0"])
+        end
+      end
 
-              event_1.update_with_params!(
-                recurrence: "FREQ=WEEKLY;BYDAY=MO",
-                original_starts_at: 3.hours.ago,
-                original_ends_at: nil,
-              )
+      context "when updating status to private" do
+        it "changes the status and force invitees" do
+          expect(event_1.raw_invitees).to eq(["trust_level_0"])
+          expect(event_1.status).to eq(DiscourseEvents::Events::Event.statuses[:public])
 
-              DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, event_1.id, :going)
-              DiscourseEvents::Events::Invitee.create_attendance!(
-                interested_user.id,
-                event_1.id,
-                :interested,
-              )
+          event_1.update_with_params!(status: DiscourseEvents::Events::Event.statuses[:private])
 
-              event_1.reload
-
-              # we stop processing jobs immediately at this point to prevent infinite loop
-              # as future event ended job would finish now, trigger next recurrence, and other job...
-              Jobs.run_later!
-            end
-
-            context "when the event ends" do
-              it "sets the next dates" do
-                event_1.update_with_params!(original_ends_at: Time.now)
-
-                expect(event_1.starts_at.to_s).to eq("2020-08-19 13:32:00 UTC")
-                expect(event_1.ends_at.to_s).to eq("2020-08-19 16:32:00 UTC")
-              end
-
-              it "clears status from invitees not marked as recurring" do
-                going_invitee =
-                  event_1.invitees.find_by(
-                    status: DiscourseEvents::Events::Invitee.statuses[:going],
-                  )
-                interested_invitee =
-                  event_1.invitees.find_by(
-                    status: DiscourseEvents::Events::Invitee.statuses[:interested],
-                  )
-
-                event_1.update_with_params!(original_ends_at: Time.now)
-
-                expect(going_invitee.reload.status).to be_nil
-                expect(interested_invitee.reload.status).to be_nil
-              end
-
-              # that will be handled by new job, uncomment when finished
-              it "doesn’t resend event creation notification to invitees" do
-                expect { event_1.update_with_params!(original_ends_at: Time.now) }.not_to change {
-                  going_user.notifications.count
-                }
-              end
-            end
-          end
-
-          context "when updating raw_invitees" do
-            let(:lurker_1) { Fabricate(:user) }
-            let(:group_1) { Fabricate(:group) }
-
-            it "doesn’t accept usernames" do
-              event_1.update_with_params!(raw_invitees: [lurker_1.username])
-              expect(event_1.raw_invitees).to eq(["trust_level_0"])
-            end
-
-            it "doesn’t accept another group than trust_level_0" do
-              event_1.update_with_params!(raw_invitees: [group_1.name])
-              expect(event_1.raw_invitees).to eq(["trust_level_0"])
-            end
-          end
-
-          context "when updating status to private" do
-            it "changes the status and force invitees" do
-              expect(event_1.raw_invitees).to eq(["trust_level_0"])
-              expect(event_1.status).to eq(DiscourseEvents::Events::Event.statuses[:public])
-
-              event_1.update_with_params!(status: DiscourseEvents::Events::Event.statuses[:private])
-
-              expect(event_1.raw_invitees).to eq([])
-              expect(event_1.status).to eq(DiscourseEvents::Events::Event.statuses[:private])
-            end
-          end
+          expect(event_1.raw_invitees).to eq([])
+          expect(event_1.status).to eq(DiscourseEvents::Events::Event.statuses[:private])
         end
       end
     end
 
     context "when a post is created" do
-      context "when the post contains one valid event" do
-        context "when the acting user is admin" do
-          it "creates the post event" do
+      it "allows an admin to create a post event" do
             start = Time.now.utc.iso8601(3)
 
             post =
@@ -201,191 +193,187 @@ describe Post do
             expect(post.event.original_starts_at).to eq_time(Time.parse(start))
           end
 
-          it "works with name attribute" do
-            post = create_post_with_event(user, 'name="foo bar"').reload
-            expect(post.event.name).to eq("foo bar")
-          end
+      it "works with name attribute" do
+        post = create_post_with_event(user, 'name="foo bar"').reload
+        expect(post.event.name).to eq("foo bar")
+      end
 
-          it "works with url attribute" do
-            url = "https://www.discourse.org"
+      it "works with url attribute" do
+        url = "https://www.discourse.org"
 
-            post = create_post_with_event(user, "url=\"#{url}\"").reload
-            expect(post.event.url).to eq(url)
-          end
+        post = create_post_with_event(user, "url=\"#{url}\"").reload
+        expect(post.event.url).to eq(url)
+      end
 
-          it "works with status attribute" do
-            post = create_post_with_event(user, 'status="private"').reload
-            expect(post.event.status).to eq(DiscourseEvents::Events::Event.statuses[:private])
-          end
+      it "works with status attribute" do
+        post = create_post_with_event(user, 'status="private"').reload
+        expect(post.event.status).to eq(DiscourseEvents::Events::Event.statuses[:private])
+      end
 
-          it "works with allowedGroups attribute" do
-            Fabricate(:group, name: "euro")
-            Fabricate(:group, name: "america")
+      it "works with allowedGroups attribute" do
+        Fabricate(:group, name: "euro")
+        Fabricate(:group, name: "america")
 
-            post = create_post_with_event(user, 'allowedGroups="euro"').reload
-            expect(post.event.raw_invitees).to eq([])
+        post = create_post_with_event(user, 'allowedGroups="euro"').reload
+        expect(post.event.raw_invitees).to eq([])
 
-            post = create_post_with_event(user, 'status="public" allowedGroups="euro"').reload
-            expect(post.event.raw_invitees).to eq(%w[trust_level_0])
+        post = create_post_with_event(user, 'status="public" allowedGroups="euro"').reload
+        expect(post.event.raw_invitees).to eq(%w[trust_level_0])
 
-            post = create_post_with_event(user, 'status="standalone" allowedGroups="euro"').reload
-            expect(post.event.raw_invitees).to eq([])
+        post = create_post_with_event(user, 'status="standalone" allowedGroups="euro"').reload
+        expect(post.event.raw_invitees).to eq([])
 
-            post = create_post_with_event(user, 'status="private" allowedGroups="euro"').reload
-            expect(post.event.raw_invitees).to eq(%w[euro])
+        post = create_post_with_event(user, 'status="private" allowedGroups="euro"').reload
+        expect(post.event.raw_invitees).to eq(%w[euro])
 
-            post =
-              create_post_with_event(user, 'status="private" allowedGroups="euro,america"').reload
-            expect(post.event.raw_invitees).to match_array(%w[euro america])
+        post =
+          create_post_with_event(user, 'status="private" allowedGroups="euro,america"').reload
+        expect(post.event.raw_invitees).to match_array(%w[euro america])
 
-            post = create_post_with_event(user, 'status="private"').reload
-            expect(post.event.raw_invitees).to eq([])
+        post = create_post_with_event(user, 'status="private"').reload
+        expect(post.event.raw_invitees).to eq([])
 
-            post = create_post_with_event(user, 'status="private"').reload
-            expect(post.event.raw_invitees).to eq([])
-          end
+        post = create_post_with_event(user, 'status="private"').reload
+        expect(post.event.raw_invitees).to eq([])
+      end
 
-          it "works with localised automatic group names" do
-            I18n.locale = SiteSetting.default_locale = "fr"
+      it "works with localised automatic group names" do
+        I18n.locale = SiteSetting.default_locale = "fr"
 
-            group = Group.find(Group::AUTO_GROUPS[:trust_level_0])
-            group.update!(name: I18n.t("groups.default_names.trust_level_0"))
+        group = Group.find(Group::AUTO_GROUPS[:trust_level_0])
+        group.update!(name: I18n.t("groups.default_names.trust_level_0"))
 
-            post =
-              create_post_with_event(user, 'status="public" allowedGroups="trust_level_0"').reload
-            expect(post.event.raw_invitees).to eq(%w[trust_level_0])
-          end
+        post =
+          create_post_with_event(user, 'status="public" allowedGroups="trust_level_0"').reload
+        expect(post.event.raw_invitees).to eq(%w[trust_level_0])
+      end
 
-          it "works with reminders attribute" do
-            post = create_post_with_event(user).reload
-            expect(post.event.reminders).to eq(nil)
+      it "works with reminders attribute" do
+        post = create_post_with_event(user).reload
+        expect(post.event.reminders).to eq(nil)
 
-            post =
-              create_post_with_event(
-                user,
-                'reminders="notification.1.hours,bumpTopic.-3.days"',
-              ).reload
-            expect(post.event.reminders).to eq("notification.1.hours,bumpTopic.-3.days")
-          end
+        post =
+          create_post_with_event(
+            user,
+            'reminders="notification.1.hours,bumpTopic.-3.days"',
+          ).reload
+        expect(post.event.reminders).to eq("notification.1.hours,bumpTopic.-3.days")
+      end
 
-          context "with custom fields" do
-            before { SiteSetting.discourse_post_event_allowed_custom_fields = "foo-bar|bar" }
+      context "with custom fields" do
+        before { SiteSetting.discourse_post_event_allowed_custom_fields = "foo-bar|bar" }
 
-            it "works with allowed custom fields" do
-              post = create_post_with_event(user, 'fooBar="1"').reload
-              expect(post.event.custom_fields["foo-bar"]).to eq("1")
+        it "works with allowed custom fields" do
+          post = create_post_with_event(user, 'fooBar="1"').reload
+          expect(post.event.custom_fields["foo-bar"]).to eq("1")
 
-              post = create_post_with_event(user, 'bar="2"').reload
-              expect(post.event.custom_fields["bar"]).to eq("2")
-            end
-
-            it "doesn’t work with not allowed custom fields" do
-              post = create_post_with_event(user, 'baz="3"').reload
-              expect(post.event.custom_fields["baz"]).to eq(nil)
-            end
-          end
+          post = create_post_with_event(user, 'bar="2"').reload
+          expect(post.event.custom_fields["bar"]).to eq("2")
         end
 
-        context "when the acting user has rights to create events" do
-          let(:user_with_rights) { Fabricate(:user, refresh_auto_groups: true) }
-          let(:group) { Fabricate(:group, users: [user_with_rights]) }
-
-          before { SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s }
-
-          it "creates the post event" do
-            start = Time.now.utc.iso8601(3)
-
-            post =
-              PostCreator.create!(
-                user_with_rights,
-                title: "Sell a boat party",
-                raw: "[event start=\"#{start}\"]\n[/event]",
-              )
-
-            expect(post.reload.persisted?).to eq(true)
-            expect(post.event.persisted?).to eq(true)
-            expect(post.event.original_starts_at).to eq_time(Time.parse(start))
-          end
-        end
-
-        context "when the acting user doesn’t have rights to create events" do
-          let(:user_without_rights) { Fabricate(:user, refresh_auto_groups: true) }
-          let(:group) { Fabricate(:group, users: [user]) }
-
-          before { SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s }
-
-          it "raises an error" do
-            start = Time.now.utc.iso8601(3)
-
-            expect do
-              PostCreator.create!(
-                user_without_rights,
-                title: "Sell a boat party",
-                raw: "[event start=\"#{start}\"]\n[/event]",
-              )
-            end.to(
-              raise_error(ActiveRecord::RecordNotSaved).with_message(
-                I18n.t(
-                  "discourse_post_event.errors.models.event.acting_user_not_allowed_to_create_event",
-                ),
-              ),
-            )
-          end
+        it "doesn’t work with not allowed custom fields" do
+          post = create_post_with_event(user, 'baz="3"').reload
+          expect(post.event.custom_fields["baz"]).to eq(nil)
         end
       end
 
-      context "when the post contains one invalid event" do
-        context "when start is invalid" do
-          it "raises an error" do
-            expect do
-              PostCreator.create!(
-                user,
-                title: "Sell a boat party",
-                raw: "[event start=\"x\"]\n[/event]",
-              )
-            end.to(
-              raise_error(ActiveRecord::RecordNotSaved).with_message(
-                I18n.t(
-                  "discourse_post_event.errors.models.event.start_must_be_present_and_a_valid_date",
-                ),
+      context "when the acting user has rights to create events" do
+        let(:user_with_rights) { Fabricate(:user, refresh_auto_groups: true) }
+        let(:group) { Fabricate(:group, users: [user_with_rights]) }
+
+        before { SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s }
+
+        it "creates the post event" do
+          start = Time.now.utc.iso8601(3)
+
+          post =
+            PostCreator.create!(
+              user_with_rights,
+              title: "Sell a boat party",
+              raw: "[event start=\"#{start}\"]\n[/event]",
+            )
+
+          expect(post.reload.persisted?).to eq(true)
+          expect(post.event.persisted?).to eq(true)
+          expect(post.event.original_starts_at).to eq_time(Time.parse(start))
+        end
+      end
+
+      context "when the acting user doesn’t have rights to create events" do
+        let(:user_without_rights) { Fabricate(:user, refresh_auto_groups: true) }
+        let(:group) { Fabricate(:group, users: [user]) }
+
+        before { SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s }
+
+        it "raises an error" do
+          start = Time.now.utc.iso8601(3)
+
+          expect do
+            PostCreator.create!(
+              user_without_rights,
+              title: "Sell a boat party",
+              raw: "[event start=\"#{start}\"]\n[/event]",
+            )
+          end.to(
+            raise_error(ActiveRecord::RecordNotSaved).with_message(
+              I18n.t(
+                "discourse_post_event.errors.models.event.acting_user_not_allowed_to_create_event",
               ),
-            )
-          end
+            ),
+          )
         end
+      end
 
-        context "when recurrence is invalid" do
-          it "raises an error" do
-            expect { create_post_with_event(user, 'recurrence="foo"') }.to raise_error(
-              I18n.t("discourse_post_event.errors.models.event.invalid_recurrence"),
-            )
+      context "when an event has an invalid start" do
+            it "raises an error" do
+                expect do
+                  PostCreator.create!(
+                    user,
+                    title: "Sell a boat party",
+                    raw: "[event start=\"x\"]\n[/event]",
+                  )
+                end.to(
+                  raise_error(ActiveRecord::RecordNotSaved).with_message(
+                    I18n.t(
+                      "discourse_post_event.errors.models.event.start_must_be_present_and_a_valid_date",
+                    ),
+                  ),
+                  )
+              end
           end
-        end
 
-        context "when start is not provided or" do
-          it "is not cooked" do
-            post = PostCreator.create!(user, title: "Sell a boat party", raw: <<~TXT)
+      context "when recurrence is invalid" do
+        it "raises an error" do
+          expect { create_post_with_event(user, 'recurrence="foo"') }.to raise_error(
+            I18n.t("discourse_post_event.errors.models.event.invalid_recurrence"),
+          )
+        end
+      end
+
+      context "when start is not provided or" do
+        it "is not cooked" do
+          post = PostCreator.create!(user, title: "Sell a boat party", raw: <<~TXT)
                 [event end=\"1\"]
                 [/event]
               TXT
 
-            expect(!post.cooked.include?("discourse-post-event")).to be(true)
-          end
+          expect(!post.cooked.include?("discourse-post-event")).to be(true)
         end
+      end
 
-        context "when end is provided and is invalid" do
-          it "raises an error" do
-            expect do
-              PostCreator.create!(
-                user,
-                title: "Sell a boat party",
-                raw: "[event start=\"#{Time.now.utc.iso8601(3)}\" end=\"d\"]\n[/event]",
-              )
-            end.to(
-              raise_error(ActiveRecord::RecordNotSaved).with_message(
-                I18n.t("discourse_post_event.errors.models.event.end_must_be_a_valid_date"),
-              ),
+      context "when end is provided and is invalid" do
+        it "raises an error" do
+          expect do
+            PostCreator.create!(
+              user,
+              title: "Sell a boat party",
+              raw: "[event start=\"#{Time.now.utc.iso8601(3)}\" end=\"d\"]\n[/event]",
             )
-          end
+          end.to(
+            raise_error(ActiveRecord::RecordNotSaved).with_message(
+              I18n.t("discourse_post_event.errors.models.event.end_must_be_a_valid_date"),
+            ),
+          )
         end
       end
 

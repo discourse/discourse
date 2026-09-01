@@ -9,6 +9,12 @@ RSpec.describe "a listing read from a cursor" do
   let(:cursor) { cursor_for(middle) }
   let(:sorted_listing) { listing_of({ sort:, page: { item_cursors: true } }) }
 
+  let(:pages) do
+    sorted_listing[:data].map do
+      listing_of({ sort:, page: { after: cursor_of(it) }, fields: { topics: [:title] } })
+    end
+  end
+
   describe "the cursor of a row" do
     it "is left out unless the request asks for it" do
       expect(listing_of({ sort: })[:data]).to all(exclude(:meta))
@@ -18,11 +24,7 @@ RSpec.describe "a listing read from a cursor" do
       expect(sorted_listing[:data].map { it[:meta][:page][:cursor] }).to all(be_present)
     end
   end
-  let(:pages) do
-    sorted_listing[:data].map do
-      listing_of({ sort:, page: { after: cursor_of(it) }, fields: { topics: [:title] } })
-    end
-  end
+
 
   def cursor_for(record) = cursor_of(sorted_listing[:data].detect { it[:id] == record.id.to_s })
 

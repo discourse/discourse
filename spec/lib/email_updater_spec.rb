@@ -270,7 +270,7 @@ RSpec.describe EmailUpdater do
       end
 
       context "when it was deleted before" do
-        it "works" do
+        it "restores the previously deleted email address" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -376,6 +376,8 @@ RSpec.describe EmailUpdater do
     end
 
     context "when confirming a valid token" do
+      let(:old_token_state) { {} }
+
       before do
         expect_enqueued_with(
           job: :critical_user_email,
@@ -384,8 +386,8 @@ RSpec.describe EmailUpdater do
             to_address: new_email,
           },
         ) do
-          @old_token = updater.change_req.old_email_token.token
-          updater.confirm(@old_token)
+          old_token_state[:value] = updater.change_req.old_email_token.token
+          updater.confirm(old_token_state[:value])
         end
       end
 
@@ -398,7 +400,7 @@ RSpec.describe EmailUpdater do
       end
 
       it "cannot be confirmed twice" do
-        updater.confirm(@old_token)
+        updater.confirm(old_token_state[:value])
         expect(updater.errors).to be_present
         expect(user.reload.email).to eq(old_email)
 

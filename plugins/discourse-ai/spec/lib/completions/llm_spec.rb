@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::Llm do
+  let(:llm) { described_class.proxy(model) }
+
+  before { enable_current_plugin }
+
   describe "upload skips" do
     fab!(:vision_model) { Fabricate(:anthropic_model, vision_enabled: true) }
 
@@ -40,9 +44,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
   fab!(:user)
   fab!(:model, :llm_model)
 
-  let(:llm) { described_class.proxy(model) }
 
-  before { enable_current_plugin }
 
   def stub_response(status: 200, body: success_body)
     WebMock.stub_request(:post, model.url).to_return(

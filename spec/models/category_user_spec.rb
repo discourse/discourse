@@ -30,13 +30,13 @@ RSpec.describe CategoryUser do
       ).pluck(:category_id)
     end
 
-    it "should add new records where required" do
+    it "adds new records where required" do
       CategoryUser.batch_set(user, :watching, [category.id])
 
       expect(category_ids_at_level(:watching)).to eq([category.id])
     end
 
-    it "should change existing records where required" do
+    it "changes existing records where required" do
       CategoryUser.create!(
         user_id: user.id,
         category_id: category.id,
@@ -49,7 +49,7 @@ RSpec.describe CategoryUser do
       expect(category_ids_at_level(:muted)).to eq([])
     end
 
-    it "should delete extraneous records where required" do
+    it "deletes extraneous records where required" do
       CategoryUser.create!(
         user_id: user.id,
         category_id: category.id,
@@ -61,18 +61,18 @@ RSpec.describe CategoryUser do
       expect(category_ids_at_level(:watching)).to eq([])
     end
 
-    it "should return true when something changed" do
+    it "returns true when something changed" do
       expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(true)
     end
 
-    it "should return false when nothing changed" do
+    it "returns false when nothing changed" do
       CategoryUser.batch_set(user, :watching, [category.id])
 
       expect(CategoryUser.batch_set(user, :watching, [category.id])).to eq(false)
     end
   end
 
-  it "should correctly auto_track" do
+  it "correctlies auto_track" do
     tracking_user = Fabricate(:user)
     topic = Fabricate(:post).topic
 
@@ -128,7 +128,7 @@ RSpec.describe CategoryUser do
       NotificationEmailer.enable
     end
 
-    it "should operate correctly" do
+    it "operates correctly" do
       watched_category = Fabricate(:category)
       muted_category = Fabricate(:category)
       tracked_category = Fabricate(:category)
@@ -348,6 +348,7 @@ RSpec.describe CategoryUser do
 
     context "for anon" do
       let(:user) { nil }
+
       before do
         SiteSetting.default_categories_watching = category1.id.to_s
         SiteSetting.default_categories_tracking = category2.id.to_s
@@ -355,6 +356,7 @@ RSpec.describe CategoryUser do
         SiteSetting.default_categories_normal = category4.id.to_s
         SiteSetting.default_categories_muted = category5.id.to_s
       end
+
       it "every category from the default_categories_* site settings get overridden to regular, except for muted" do
         levels = CategoryUser.notification_levels_for(user)
         expect(levels[category1.id]).to eq(CategoryUser.notification_levels[:regular])
@@ -393,6 +395,7 @@ RSpec.describe CategoryUser do
           notification_level: CategoryUser.notification_levels[:muted],
         )
       end
+
       it "gets the category_user notification levels for all categories the user is tracking and does not
       include categories the user is not tracking at all" do
         category6 = Fabricate(:category)
@@ -462,6 +465,7 @@ RSpec.describe CategoryUser do
         category2
         category3
       end
+
       it "calculates muted categories based on parent category state" do
         expect(CategoryUser.indirectly_muted_category_ids(user)).to eq([])
 

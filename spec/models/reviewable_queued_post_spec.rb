@@ -38,8 +38,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
     end
 
-    describe "actions" do
-      context "with approve_post" do
+    context "with approve_post" do
         it "triggers an extensibility event" do
           event =
             DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve_post) }
@@ -113,173 +112,172 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         end
       end
 
-      context "with reject_post" do
-        it "triggers an extensibility event" do
-          event =
-            DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
-          expect(event).to be_present
-          expect(event[:params].first).to eq(reviewable)
+    context "with reject_post" do
+      it "triggers an extensibility event" do
+        event =
+          DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
+        expect(event).to be_present
+        expect(event[:params].first).to eq(reviewable)
+      end
+
+      it "doesn't create a post" do
+        post_count = Post.count
+        result = reviewable.perform(moderator, :reject_post)
+        expect(result.success?).to eq(true)
+        expect(result.created_post).to be_nil
+        expect(Post.count).to eq(post_count)
+
+        # We can't reject twice
+        expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
+          Reviewable::InvalidAction,
+        )
+      end
+
+      it "logs a staff action linked to the reviewable" do
+        expect { reviewable.perform(moderator, :reject_post) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:post_rejected],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
+    end
+
+    context "with revise_and_reject_post" do
+      fab!(:contact_group, :group)
+      fab!(:contact_user, :user)
+
+      before do
+        SiteSetting.site_contact_group_name = contact_group.name
+        SiteSetting.site_contact_username = contact_user.username
+      end
+
+      it "doesn't create the post the user intended" do
+        post_count = Post.public_posts.count
+        result = reviewable.perform(moderator, :revise_and_reject_post)
+        expect(result.success?).to eq(true)
+        expect(result.created_post).to be_nil
+        expect(Post.public_posts.count).to eq(post_count)
+      end
+
+      it "creates a private message to the creator of the post" do
+        args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+        expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
+          Topic.where(archetype: Archetype.private_message).count
+        }
+
+        topic = Topic.where(archetype: Archetype.private_message).last
+        expect(topic.title).to eq(
+          I18n.t(
+            "system_messages.reviewable_queued_post_revise_and_reject.subject_template",
+            topic_title: reviewable.topic.title,
+          ),
+        )
+        translation_params = {
+          username: reviewable.target_created_by.username,
+          topic_title: reviewable.topic.title,
+          topic_url: reviewable.topic.url,
+          reason: args[:revise_reason],
+          feedback: args[:revise_feedback],
+          original_post: reviewable.payload["raw"],
+          site_name: SiteSetting.title,
+          edit_instructions:
+            I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_post"),
+        }
+        expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
+        expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
+        expect(topic.first_post.raw.chomp).to eq(
+          I18n.t(
+            "system_messages.reviewable_queued_post_revise_and_reject.text_body_template",
+            translation_params,
+          ).chomp,
+        )
+        expect(topic.first_post.raw).to include("reply to this message")
+      end
+
+      it "supports sending a custom revise reason" do
+        args = {
+          revise_reason: "Other...",
+          revise_feedback: "This is old news",
+          revise_custom_reason: "Boring",
+        }
+        expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
+          Topic.where(archetype: Archetype.private_message).count
+        }
+        topic = Topic.where(archetype: Archetype.private_message).last
+
+        expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
+        expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
+        expect(topic.first_post.raw).not_to include("Other...")
+        expect(topic.first_post.raw).to include("Boring")
+      end
+
+      context "when no site contact user is configured" do
+        before do
+          SiteSetting.site_contact_group_name = ""
+          SiteSetting.site_contact_username = ""
         end
 
-        it "doesn't create a post" do
-          post_count = Post.count
-          result = reviewable.perform(moderator, :reject_post)
-          expect(result.success?).to eq(true)
-          expect(result.created_post).to be_nil
-          expect(Post.count).to eq(post_count)
+        it "omits reply instructions from the PM" do
+          args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+          reviewable.perform(moderator, :revise_and_reject_post, args)
 
-          # We can't reject twice
-          expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
-            Reviewable::InvalidAction,
-          )
-        end
-
-        it "logs a staff action linked to the reviewable" do
-          expect { reviewable.perform(moderator, :reject_post) }.to change {
-            UserHistory.where(
-              action: UserHistory.actions[:post_rejected],
-              reviewable_id: reviewable.id,
-            ).count
-          }.by(1)
+          topic = Topic.where(archetype: Archetype.private_message).last
+          expect(topic.first_post.raw).not_to include("reply to this message")
         end
       end
 
-      context "with revise_and_reject_post" do
-        fab!(:contact_group, :group)
-        fab!(:contact_user, :user)
+      context "when the topic is nil in the case of a new topic being created" do
+        let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
-        before do
-          SiteSetting.site_contact_group_name = contact_group.name
-          SiteSetting.site_contact_username = contact_user.username
-        end
-
-        it "doesn't create the post the user intended" do
-          post_count = Post.public_posts.count
-          result = reviewable.perform(moderator, :revise_and_reject_post)
-          expect(result.success?).to eq(true)
-          expect(result.created_post).to be_nil
-          expect(Post.public_posts.count).to eq(post_count)
-        end
-
-        it "creates a private message to the creator of the post" do
+        it "creates a feedback message for the rejected topic" do
           args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
           expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
             Topic.where(archetype: Archetype.private_message).count
           }
-
           topic = Topic.where(archetype: Archetype.private_message).last
+
           expect(topic.title).to eq(
             I18n.t(
-              "system_messages.reviewable_queued_post_revise_and_reject.subject_template",
-              topic_title: reviewable.topic.title,
+              "system_messages.reviewable_queued_post_revise_and_reject_new_topic.subject_template",
+              topic_title: reviewable.payload["title"],
             ),
           )
           translation_params = {
             username: reviewable.target_created_by.username,
-            topic_title: reviewable.topic.title,
-            topic_url: reviewable.topic.url,
+            topic_title: reviewable.payload["title"],
+            topic_url: nil,
             reason: args[:revise_reason],
             feedback: args[:revise_feedback],
             original_post: reviewable.payload["raw"],
             site_name: SiteSetting.title,
             edit_instructions:
-              I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_post"),
+              I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_topic"),
           }
-          expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
-          expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
           expect(topic.first_post.raw.chomp).to eq(
             I18n.t(
-              "system_messages.reviewable_queued_post_revise_and_reject.text_body_template",
+              "system_messages.reviewable_queued_post_revise_and_reject_new_topic.text_body_template",
               translation_params,
             ).chomp,
           )
-          expect(topic.first_post.raw).to include("reply to this message")
-        end
-
-        it "supports sending a custom revise reason" do
-          args = {
-            revise_reason: "Other...",
-            revise_feedback: "This is old news",
-            revise_custom_reason: "Boring",
-          }
-          expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
-            Topic.where(archetype: Archetype.private_message).count
-          }
-          topic = Topic.where(archetype: Archetype.private_message).last
-
-          expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
-          expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
-          expect(topic.first_post.raw).not_to include("Other...")
-          expect(topic.first_post.raw).to include("Boring")
-        end
-
-        context "when no site contact user is configured" do
-          before do
-            SiteSetting.site_contact_group_name = ""
-            SiteSetting.site_contact_username = ""
-          end
-
-          it "omits reply instructions from the PM" do
-            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
-            reviewable.perform(moderator, :revise_and_reject_post, args)
-
-            topic = Topic.where(archetype: Archetype.private_message).last
-            expect(topic.first_post.raw).not_to include("reply to this message")
-          end
-        end
-
-        context "when the topic is nil in the case of a new topic being created" do
-          let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
-
-          it "works" do
-            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
-            expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
-              Topic.where(archetype: Archetype.private_message).count
-            }
-            topic = Topic.where(archetype: Archetype.private_message).last
-
-            expect(topic.title).to eq(
-              I18n.t(
-                "system_messages.reviewable_queued_post_revise_and_reject_new_topic.subject_template",
-                topic_title: reviewable.payload["title"],
-              ),
-            )
-            translation_params = {
-              username: reviewable.target_created_by.username,
-              topic_title: reviewable.payload["title"],
-              topic_url: nil,
-              reason: args[:revise_reason],
-              feedback: args[:revise_feedback],
-              original_post: reviewable.payload["raw"],
-              site_name: SiteSetting.title,
-              edit_instructions:
-                I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_topic"),
-            }
-            expect(topic.first_post.raw.chomp).to eq(
-              I18n.t(
-                "system_messages.reviewable_queued_post_revise_and_reject_new_topic.text_body_template",
-                translation_params,
-              ).chomp,
-            )
-          end
         end
       end
+    end
 
-      context "with delete_user" do
-        it "deletes the user and rejects the post" do
-          other_reviewable =
-            Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
+    context "with delete_user" do
+      it "deletes the user and rejects the post" do
+        other_reviewable =
+          Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
 
-          result = reviewable.perform(moderator, :delete_user)
-          expect(result.success?).to eq(true)
-          expect(User.find_by(id: reviewable.target_created_by)).to be_blank
+        result = reviewable.perform(moderator, :delete_user)
+        expect(result.success?).to eq(true)
+        expect(User.find_by(id: reviewable.target_created_by)).to be_blank
 
-          expect(result.remove_reviewable_ids).to include(reviewable.id)
-          expect(result.remove_reviewable_ids).to include(other_reviewable.id)
+        expect(result.remove_reviewable_ids).to include(reviewable.id)
+        expect(result.remove_reviewable_ids).to include(other_reviewable.id)
 
-          expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
-          expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
-        end
+        expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
+        expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
       end
     end
   end

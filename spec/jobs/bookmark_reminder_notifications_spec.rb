@@ -8,15 +8,14 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   let(:bookmark1) { Fabricate(:bookmark, user: user) }
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:bookmark3) { Fabricate(:bookmark, user: user) }
-  let!(:bookmarks) { [bookmark1, bookmark2, bookmark3] }
 
-  before do
-    # this is done to avoid model validations on Bookmark
-    bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
-    bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
-    bookmark3.update_column(:reminder_at, five_minutes_ago)
-    Discourse.redis.flushdb
-  end
+  before { [bookmark1, bookmark2, bookmark3]
+           bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
+           bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
+           bookmark3.update_column(:reminder_at, five_minutes_ago)
+           Discourse.redis.flushdb
+   }
+
 
   it "sends every reminder and sets the reminder_last_sent_at" do
     job.execute
@@ -28,7 +27,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     expect(bookmark3.reminder_last_sent_at).not_to eq(nil)
   end
 
-  it "will not send a reminder for a bookmark in the future" do
+  it "does not send a reminder for a bookmark in the future" do
     freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: 1.day.from_now)
     expect { job.execute }.to change { Notification.where(user: user).count }.by(3)
@@ -58,7 +57,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
   end
 
-  it "will not send notification when topic is not available" do
+  it "does not send notification when topic is not available" do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy
     bookmark3.bookmarkable.topic.destroy

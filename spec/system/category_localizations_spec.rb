@@ -36,7 +36,7 @@ describe "Category Localizations" do
   context "when content localization setting is disabled" do
     before { SiteSetting.content_localization_enabled = false }
 
-    it "should not show the localization tab" do
+    it "does not show the localization tab" do
       sign_in(admin)
 
       category_page.visit_settings(category)
@@ -68,7 +68,7 @@ describe "Category Localizations" do
     describe "Category Settings" do
       before { sign_in(admin) }
 
-      it "should show the localization tab" do
+      it "shows the localization tab" do
         category_page.visit_settings(category)
         expect(category_page).to have_setting_tab("localizations")
       end
@@ -99,12 +99,12 @@ describe "Category Localizations" do
       describe "when editing a category with no category localizations" do
         fab!(:mono_category, :category)
 
-        it "should show info hint to add new localizations" do
+        it "shows info hint to add new localizations" do
           category_page.visit_edit_localizations(mono_category)
           expect(form).to have_an_alert(I18n.t("js.category.localization.hint"))
         end
 
-        it "should allow you to add new localizations" do
+        it "allows you to add new localizations" do
           category_page.visit_edit_localizations(mono_category)
           category_page.find(".edit-category-tab-localizations .add-localization").click
           form.field("localizations.0.locale").select("es")
@@ -269,46 +269,44 @@ describe "Category Localizations" do
         it_behaves_like "navigating the site via various category links"
       end
 
-      describe "for logged in users" do
-        shared_examples_for "editing category settings" do
-          it "shows the original category name in the category edit page" do
-            sign_in(admin)
-            visit("/")
+      shared_examples_for "editing category settings" do
+        it "shows the original category name in the category edit page" do
+          sign_in(admin)
+          visit("/")
 
-            switcher.expand
-            switcher.option("[data-menu-option-id='es']").click
-            expect(sidebar).to have_section_link("Solicitudes")
+          switcher.expand
+          switcher.option("[data-menu-option-id='es']").click
+          expect(sidebar).to have_section_link("Solicitudes")
 
-            category_page.visit(category)
-            category_page.click_edit_category
+          category_page.visit(category)
+          category_page.click_edit_category
 
-            expect(find(".edit-category-tab-general input.category-name").value).to eq(
-              category.name,
-            )
-          end
+          expect(find(".edit-category-tab-general input.category-name").value).to eq(
+            category.name,
+          )
+        end
+      end
+
+      describe "with lazy loaded categories" do
+        before do
+          SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+          sign_in(admin)
         end
 
-        describe "with lazy loaded categories" do
-          before do
-            SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-            sign_in(admin)
-          end
+        it_behaves_like "navigating the site via various category links"
 
-          it_behaves_like "navigating the site via various category links"
+        it_behaves_like "editing category settings"
+      end
 
-          it_behaves_like "editing category settings"
+      describe "without lazy loaded categories" do
+        before do
+          SiteSetting.lazy_load_categories_groups = ""
+          sign_in(admin)
         end
 
-        describe "without lazy loaded categories" do
-          before do
-            SiteSetting.lazy_load_categories_groups = ""
-            sign_in(admin)
-          end
+        it_behaves_like "navigating the site via various category links"
 
-          it_behaves_like "navigating the site via various category links"
-
-          it_behaves_like "editing category settings"
-        end
+        it_behaves_like "editing category settings"
       end
     end
   end

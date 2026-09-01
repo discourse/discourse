@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe TopicQuery do
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    assign_allowed_group.add(user)
+    assign_allowed_group.add(user2)
+  end
 
   fab!(:user)
   fab!(:user2, :user)
@@ -10,10 +14,6 @@ describe TopicQuery do
 
   include_context "with group that is allowed to assign"
 
-  before do
-    assign_allowed_group.add(user)
-    assign_allowed_group.add(user2)
-  end
 
   def assign_to(topic:, user:, assignee:)
     topic.tap { |assigned_topic| Assigner.new(assigned_topic, user).assign(assignee) }
@@ -196,7 +196,7 @@ describe TopicQuery do
       group_assigned_topic
     end
 
-    it "should return the right topics" do
+    it "returns the right topics" do
       expect(TopicQuery.new(user).list_private_messages_assigned(user).topics).to contain_exactly(
         assigned_topic,
         group_assigned_topic,

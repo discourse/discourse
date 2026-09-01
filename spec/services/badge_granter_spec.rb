@@ -154,7 +154,7 @@ RSpec.describe BadgeGranter do
       b.badge_id = Badge::FirstLike
     end
 
-    it "should grant missing badges" do
+    it "grants missing badges" do
       nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
 
@@ -181,7 +181,7 @@ RSpec.describe BadgeGranter do
       expect(good_topic.grant_count).to eq(1)
     end
 
-    it "should grant badges in the user locale" do
+    it "grants badges in the user locale" do
       SiteSetting.allow_user_locale = true
 
       nice_topic = Badge.find(Badge::NiceTopic)

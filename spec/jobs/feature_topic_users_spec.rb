@@ -12,12 +12,13 @@ RSpec.describe Jobs::FeatureTopicUsers do
   context "with a topic" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
+
     fab!(:coding_horror)
     fab!(:evil_trout)
-    let!(:second_post) { create_post(topic: topic, user: coding_horror) }
-    let!(:third_post) { create_post(topic: topic, user: evil_trout) }
+    before { create_post(topic: topic, user: coding_horror)
+             create_post(topic: topic, user: evil_trout)  }
 
-    it "won't feature the OP" do
+    it "does not feature the OP" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.featured_user_ids.include?(topic.user_id)).to eq(false)
     end
@@ -27,7 +28,7 @@ RSpec.describe Jobs::FeatureTopicUsers do
       expect(topic.reload.featured_user_ids.include?(coding_horror.id)).to eq(true)
     end
 
-    it "won't feature the last poster" do
+    it "does not feature the last poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.featured_user_ids.include?(evil_trout.id)).to eq(false)
     end
@@ -37,7 +38,7 @@ RSpec.describe Jobs::FeatureTopicUsers do
     let!(:post) { create_post }
     let(:topic) { post.topic }
 
-    it "it works as expected" do
+    it "works as expected" do
       # It has 1 participant after creation
       expect(topic.participant_count).to eq(1)
 

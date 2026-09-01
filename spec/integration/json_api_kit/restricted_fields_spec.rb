@@ -31,13 +31,13 @@ RSpec.describe "a restricted field" do
         it "does not render it" do
           expect(document).to eq(title_only)
         end
+      end
 
-        context "when the field is explicitly requested" do
-          let(:params) { { fields: { topics: %w[title created_at] } } }
+      context "when an unreadable field is explicitly requested" do
+        let(:params) { { fields: { topics: %w[title created_at] } } }
 
-          it "does not render it" do
-            expect(document).to eq(title_only)
-          end
+        it "does not render it" do
+          expect(document).to eq(title_only)
         end
       end
 

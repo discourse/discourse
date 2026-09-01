@@ -9,7 +9,7 @@ RSpec.describe TopicTrackingState do
   let(:topic) { post.topic }
 
   shared_examples "does not publish message for private topics" do |method|
-    it "should not publish any message for a private topic" do
+    it "does not publish any message for a private topic" do
       messages =
         MessageBus.track_publish { described_class.public_send(method, private_message_topic) }
 
@@ -33,7 +33,7 @@ RSpec.describe TopicTrackingState do
       Fabricate(:topic, category: read_restricted_category_with_no_groups)
     end
 
-    it "should publish message to everyone for a topic in a category that is not read restricted" do
+    it "publishes message to everyone for a topic in a category that is not read restricted" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -48,7 +48,7 @@ RSpec.describe TopicTrackingState do
       expect(message.user_ids).to eq(nil)
     end
 
-    it "should publish message only to admin group and groups that have permission to read a category when topic is in category that is restricted to certain groups" do
+    it "publishes message only to admin group and groups that have permission to read a category when topic is in category that is restricted to certain groups" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -63,7 +63,7 @@ RSpec.describe TopicTrackingState do
       expect(message.user_ids).to eq(nil)
     end
 
-    it "should publish message only to admin group when topic is in category that is read restricted but no groups have been granted access" do
+    it "publishes message only to admin group when topic is in category that is read restricted but no groups have been granted access" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -199,7 +199,8 @@ RSpec.describe TopicTrackingState do
 
   describe "#publish_unread" do
     let(:other_user) { Fabricate(:user) }
-    let!(:other_user_watching_topic) do
+
+    before do
       Fabricate(:topic_user_watching, topic: topic, user: other_user)
     end
 
@@ -319,7 +320,7 @@ RSpec.describe TopicTrackingState do
         )
       end
 
-      it "should not publish any message" do
+      it "does not publish any message" do
         messages =
           MessageBus.track_publish { TopicTrackingState.publish_unread(private_message_post) }
 
@@ -369,14 +370,14 @@ RSpec.describe TopicTrackingState do
       expect(muted_message.data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
     end
 
-    it "should not publish any message when notification level is not muted" do
+    it "does not publish any message when notification level is not muted" do
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_muted(topic) }
       muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
 
       expect(muted_messages).to eq([])
     end
 
-    it "should not publish any message when the user was not seen in the last 7 days" do
+    it "does not publish any message when the user was not seen in the last 7 days" do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       post.user.update(last_seen_at: 8.days.ago)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_muted(topic) }
@@ -408,7 +409,7 @@ RSpec.describe TopicTrackingState do
       expect(unmuted_message.data["message_type"]).to eq(described_class::UNMUTED_MESSAGE_TYPE)
     end
 
-    it "should not publish any message when notification level is not muted" do
+    it "does not publish any message when notification level is not muted" do
       SiteSetting.mute_all_categories_by_default = true
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_unmuted(topic) }
@@ -417,7 +418,7 @@ RSpec.describe TopicTrackingState do
       expect(unmuted_messages).to eq([])
     end
 
-    it "should not publish any message when the user was not seen in the last 7 days" do
+    it "does not publish any message when the user was not seen in the last 7 days" do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 1)
       post.user.update(last_seen_at: 8.days.ago)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_unmuted(topic) }

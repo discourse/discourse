@@ -13,7 +13,7 @@ describe "Viewing sidebar" do
     describe "when using the header dropdown navigation menu" do
       before { SiteSetting.navigation_menu = "header dropdown" }
 
-      it "should display the sidebar when `navigation_menu` query param is 'sidebar' and maintain header dropdown" do
+      it "displays the sidebar when `navigation_menu` query param is 'sidebar' and maintain header dropdown" do
         visit("/latest?navigation_menu=sidebar")
 
         expect(sidebar).to be_visible
@@ -24,7 +24,7 @@ describe "Viewing sidebar" do
     describe "when using the sidebar navigation menu" do
       before { SiteSetting.navigation_menu = "sidebar" }
 
-      it "should display the sidebar dropdown menu when `navigation_menu` query param is 'header_dropdown'" do
+      it "displays the sidebar dropdown menu when `navigation_menu` query param is 'header_dropdown'" do
         visit("/latest?navigation_menu=header_dropdown")
 
         expect(sidebar).to be_not_visible
@@ -122,7 +122,7 @@ describe "Viewing sidebar" do
         Fabricate(:tag, name: "tag 6").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
       end
 
-      it "should not display the tags section when tagging is disabled" do
+      it "does not display the tags section when tagging is disabled" do
         SiteSetting.tagging_enabled = false
 
         visit("/latest")
@@ -131,7 +131,7 @@ describe "Viewing sidebar" do
         expect(sidebar).to have_no_tags_section
       end
 
-      it "should not display the tags section when there are no tags that a user can see" do
+      it "does not display the tags section when there are no tags that a user can see" do
         Tag.delete_all
 
         visit("/latest")
@@ -140,7 +140,7 @@ describe "Viewing sidebar" do
         expect(sidebar).to have_no_tags_section
       end
 
-      it "should display the site's top tags in the tags section when user has not configured any tags" do
+      it "displays the site's top tags in the tags section when user has not configured any tags" do
         visit("/latest")
 
         expect(sidebar).to be_visible
@@ -149,7 +149,7 @@ describe "Viewing sidebar" do
         expect(sidebar).to have_all_tags_section_link
       end
 
-      it "should display the tags configured by the user in alphabetical order" do
+      it "displays the tags configured by the user in alphabetical order" do
         Fabricate(:sidebar_section_link, linkable: tag3, user: user)
         Fabricate(:sidebar_section_link, linkable: tag1, user: user)
         Fabricate(:sidebar_section_link, linkable: tag2, user: user)
@@ -164,13 +164,13 @@ describe "Viewing sidebar" do
     end
 
     describe "when My messages sidebar link" do
-      it "should show for user with `can_send_private_messages` permission" do
+      it "shows for user with `can_send_private_messages` permission" do
         sign_in(admin)
         visit("/")
         expect(sidebar).to have_my_messages_link
       end
 
-      it "shouldn't show for user without `can_send_private_messages` permission" do
+      it "does not show for user without `can_send_private_messages` permission" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:admins]
         sign_in(user)
         visit("/")
@@ -199,20 +199,20 @@ describe "Viewing sidebar" do
         end
         let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
 
-        it "should show new messages indicator" do
+        it "shows new messages indicator" do
           sign_in(admin)
           visit("/")
           expect(sidebar).to have_my_messages_link_with_unread_icon
         end
 
-        it "should show a count of the new items" do
+        it "shows a count of the new items" do
           admin.user_option.update!(sidebar_show_count_of_new_items: true)
           sign_in(admin)
           visit("/")
           expect(sidebar).to have_my_messages_link_with_unread_count
         end
 
-        it "should remove unread icon after all messages are read" do
+        it "removes unread icon after all messages are read" do
           sign_in(admin)
           user_private_messages_page.visit(admin)
           user_private_messages_page.click_unseen_private_message(private_message.id)
@@ -225,7 +225,7 @@ describe "Viewing sidebar" do
       end
     end
 
-    it "shouldn't display the panel header for the main sidebar" do
+    it "does not display the panel header for the main sidebar" do
       visit("/latest")
       expect(sidebar).to be_visible
       expect(sidebar).to have_no_panel_header
@@ -234,7 +234,7 @@ describe "Viewing sidebar" do
 
   context "as anonymous user" do
     describe "My messages sidebar link" do
-      it "shouldn't show for anonymous user" do
+      it "does not show for anonymous user" do
         visit("/")
         expect(sidebar).to have_no_my_messages_link
       end

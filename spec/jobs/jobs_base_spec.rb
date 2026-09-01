@@ -16,8 +16,8 @@ RSpec.describe ::Jobs::Base do
     attr_accessor :fail_count
 
     def execute(args)
-      @fail_count ||= 0
-      @fail_count += 1
+      self.fail_count ||= 0
+      self.fail_count += 1
       raise BadJobError
     end
   end
@@ -25,20 +25,16 @@ RSpec.describe ::Jobs::Base do
   class ConcurrentJob < ::Jobs::Base
     cluster_concurrency 1
 
-    def self.stop!
-      @stop = true
+    class << self
+      attr_accessor :stop, :running
     end
 
-    def self.stop
-      @stop
+    def self.stop!
+      self.stop = true
     end
 
     def self.running?
-      @running
-    end
-
-    def self.running=(val)
-      @running = val
+      running
     end
 
     def execute(args)
@@ -166,7 +162,7 @@ RSpec.describe ::Jobs::Base do
       FileUtils.rm(tmp_log_file_path)
     end
 
-    it "should log the job in the sidekiq log file" do
+    it "logs the job in the sidekiq log file" do
       job = GoodJob.new
       job.perform({ some_param: "some_value" })
 

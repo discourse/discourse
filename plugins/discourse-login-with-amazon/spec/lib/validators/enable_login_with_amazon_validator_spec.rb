@@ -5,11 +5,11 @@ RSpec.describe EnableLoginWithAmazonValidator do
 
   describe "#valid_value?" do
     describe "when login_with_amazon_client_id and login_with_amazon_client_secret has not been set" do
-      it "should return true when value is false" do
+      it "returns true when value is false" do
         expect(validator.valid_value?("f")).to eq(true)
       end
 
-      it "should return false when value is true" do
+      it "returns false when value is true" do
         expect(validator.valid_value?("t")).to eq(false)
 
         expect(validator.error_message).to eq(
@@ -32,11 +32,11 @@ RSpec.describe EnableLoginWithAmazonValidator do
         SiteSetting.login_with_amazon_client_secret = "somesecretkey"
       end
 
-      it "should return true when value is false" do
+      it "returns true when value is false" do
         expect(validator.valid_value?("f")).to eq(true)
       end
 
-      it "should return true when value is true" do
+      it "returns true when value is true" do
         expect(validator.valid_value?("t")).to eq(true)
       end
     end

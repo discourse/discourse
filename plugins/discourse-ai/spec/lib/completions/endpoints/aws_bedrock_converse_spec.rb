@@ -401,6 +401,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       )
       expect(AiApiAuditLog.last.response_status).to be_nil
     end
+
     it "records SDK error response status when available" do
       client = instance_double(Aws::BedrockRuntime::Client)
       context = Seahorse::Client::RequestContext.new

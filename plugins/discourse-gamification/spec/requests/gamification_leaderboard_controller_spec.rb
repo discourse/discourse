@@ -15,22 +15,25 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
 
   fab!(:user_3, :user)
 
-  let!(:create_score) { UserVisit.create(user_id: current_user.id, visited_at: 2.days.ago) }
-  let!(:create_score_for_user2) { UserVisit.create(user_id: user_2.id, visited_at: 2.days.ago) }
-  let!(:create_score_for_staged_user) do
+  before do
+    UserVisit.create(user_id: current_user.id, visited_at: 2.days.ago)
+    UserVisit.create(user_id: user_2.id, visited_at: 2.days.ago)
     UserVisit.create(user_id: staged_user.id, visited_at: 2.days.ago)
-  end
-  let!(:create_score_for_anon_user) do
     UserVisit.create(user_id: anon_user.id, visited_at: 2.days.ago)
-  end
-  let!(:create_score_for_currently_suspended_user) do
     UserVisit.create(user_id: currently_suspended_user.id, visited_at: 2.days.ago)
-  end
-  let!(:create_score_for_previously_suspended_user) do
     UserVisit.create(user_id: previously_suspended_user.id, visited_at: 2.days.ago)
+    UserVisit.create(user_id: user_3.id, visited_at: 2.days.ago)
+    Fabricate(:topic, user: current_user)
+    SiteSetting.discourse_gamification_enabled = true
+    DiscourseGamification::GamificationLeaderboardScore.calculate_all(since_date: 10.days.ago)
+    sign_in(current_user)
   end
-  let!(:create_score_for_user_3) { UserVisit.create(user_id: user_3.id, visited_at: 2.days.ago) }
-  let!(:create_topic) { Fabricate(:topic, user: current_user) }
+
+
+
+
+
+
   fab!(:leaderboard) do
     Fabricate(:gamification_leaderboard, name: "test", created_by_id: current_user.id)
   end
@@ -62,11 +65,6 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     )
   end
 
-  before do
-    SiteSetting.discourse_gamification_enabled = true
-    DiscourseGamification::GamificationLeaderboardScore.calculate_all(since_date: 10.days.ago)
-    sign_in(current_user)
-  end
 
   describe "#respond" do
     it "returns users and their calculated scores" do

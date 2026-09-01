@@ -304,14 +304,15 @@ shared_examples "login scenarios" do
   end
 
   context "with two-factor authentication" do
-    let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
-    let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
-    fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
-
     before do
+      Fabricate(:user_second_factor_totp, user: user)
+      Fabricate(:user_second_factor_backup, user: user)
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       EmailToken.confirm(Fabricate(:email_token, user: other_user).token)
     end
+
+    fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
+
 
     context "when it is required" do
       before { SiteSetting.enforce_second_factor = "all" }

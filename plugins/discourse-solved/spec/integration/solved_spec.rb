@@ -195,29 +195,28 @@ RSpec.describe "Managing Posts solved status" do
 
       after { SearchIndexer.disable }
 
-      describe "searches for unsolved topics" do
-        describe "when allow solved on all topics is disabled" do
-          before { SiteSetting.allow_solved_on_all_topics = false }
+      describe "when allow solved on all topics is disabled" do
+        before { SiteSetting.allow_solved_on_all_topics = false }
 
-          it "only returns unsolved posts from categories and tags where solving is enabled" do
-            result = Search.execute("status:unsolved")
-            expect(result.posts.pluck(:id)).to match_array([post_unsolved.id, post_unsolved_2.id])
-          end
-
-          it "returns the filtered results when combining search with a tag" do
-            result = Search.execute("status:unsolved tag:#{tag.name}")
-            expect(result.posts.pluck(:id)).to match_array([post_unsolved_2.id])
-          end
+        it "only returns unsolved posts from categories and tags where solving is enabled" do
+          result = Search.execute("status:unsolved")
+          expect(result.posts.pluck(:id)).to match_array([post_unsolved.id, post_unsolved_2.id])
         end
 
-        describe "when allow solved on all topics is enabled" do
-          before { SiteSetting.allow_solved_on_all_topics = true }
-          it "only returns posts where the post is not solved" do
-            result = Search.execute("status:unsolved")
-            expect(result.posts.pluck(:id)).to match_array(
-              [post_unsolved.id, post_unsolved_2.id, post_disabled_1.id, post_disabled_2.id],
-            )
-          end
+        it "returns the filtered results when combining search with a tag" do
+          result = Search.execute("status:unsolved tag:#{tag.name}")
+          expect(result.posts.pluck(:id)).to match_array([post_unsolved_2.id])
+        end
+      end
+
+      describe "when allow solved on all topics is enabled" do
+        before { SiteSetting.allow_solved_on_all_topics = true }
+
+        it "only returns posts where the post is not solved" do
+          result = Search.execute("status:unsolved")
+          expect(result.posts.pluck(:id)).to match_array(
+            [post_unsolved.id, post_unsolved_2.id, post_disabled_1.id, post_disabled_2.id],
+          )
         end
       end
     end
@@ -478,6 +477,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       let(:p2) { Fabricate(:post, topic: topic) }
+
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
       it "can mark multiple posts as accepted, only creating one timer" do
@@ -617,7 +617,7 @@ RSpec.describe "Managing Posts solved status" do
         topic.reload
       end
 
-      it "should unmark the post as solved" do
+      it "unmarks the post as solved" do
         expect do post "/solution/unaccept.json", params: { id: p1.id } end.to change {
           topic.reload.public_topic_timer
         }.to(nil)
@@ -644,6 +644,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       let(:p2) { Fabricate(:post, topic: topic) }
+
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
       describe "when solved_topics_auto_close_hours is enabled" do
@@ -654,7 +655,7 @@ RSpec.describe "Managing Posts solved status" do
           topic.reload
         end
 
-        it "should unmark the post as solved only when last solution unaccepted" do
+        it "unmarks the post as solved only when last solution unaccepted" do
           expect do post "/solution/unaccept.json", params: { id: p1.id } end.not_to change {
             topic.reload.public_topic_timer
           }
@@ -695,15 +696,15 @@ RSpec.describe "Managing Posts solved status" do
 
   context "with group moderators" do
     fab!(:group_user)
-    let!(:category_moderation_group) do
-      Fabricate(:category_moderation_group, category: p1.topic.category, group: group_user.group)
-    end
-    let(:user_gm) { group_user.user }
-
     before do
+      Fabricate(:category_moderation_group, category: p1.topic.category, group: group_user.group)
       SiteSetting.enable_category_group_moderation = true
       sign_in(user_gm)
+
     end
+
+    let(:user_gm) { group_user.user }
+
 
     it "can accept a solution" do
       post "/solution/accept.json", params: { id: p1.id }
@@ -713,6 +714,7 @@ RSpec.describe "Managing Posts solved status" do
 
   context "with discourse-assign installed", if: defined?(DiscourseAssign) do
     let(:admin) { Fabricate(:admin) }
+
     fab!(:group)
     before do
       SiteSetting.solved_enabled = true
@@ -977,6 +979,7 @@ RSpec.describe "Managing Posts solved status" do
 
     describe "with multiple solutions enabled" do
       before { SiteSetting.solved_allow_multiple_solutions = true }
+
       it "lists all solutions in topic" do
         t1 = Fabricate(:topic_with_op)
 

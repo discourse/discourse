@@ -4,6 +4,20 @@ describe Auth::DiscourseIdAuthenticator do
   let(:authenticator) { described_class.new }
   let(:user) { Fabricate(:user) }
 
+  let(:hash) do
+    OmniAuth::AuthHash.new(
+      provider: "discourse_id",
+      info: {
+        "nickname" => "test_user",
+        "name" => "Test User",
+        "email" => user.email,
+        "image" => "http://example.com/avatar.png",
+        "uuid" => "12345",
+      },
+      uid: "99",
+    )
+  end
+
   context "with default settings" do
     before do
       SiteSetting.discourse_id_client_id = "client_id"
@@ -141,19 +155,6 @@ describe Auth::DiscourseIdAuthenticator do
     end
   end
 
-  let(:hash) do
-    OmniAuth::AuthHash.new(
-      provider: "discourse_id",
-      info: {
-        "nickname" => "test_user",
-        "name" => "Test User",
-        "email" => user.email,
-        "image" => "http://example.com/avatar.png",
-        "uuid" => "12345",
-      },
-      uid: "99",
-    )
-  end
 
   describe "after_authenticate" do
     it "works and syncs username, email, name, avatar" do

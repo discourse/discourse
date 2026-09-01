@@ -168,28 +168,24 @@ RSpec.describe EmailLoginCode::Redeem do
           expect(result[:user].custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
         end
 
-        context "when a field is not shown on signup" do
-          fab!(:hidden_field) do
-            Fabricate(:user_field, requirement: "optional", show_on_signup: false)
-          end
-
-          let(:params) do
-            {
-              email:,
-              code:,
-              user_fields: {
-                user_field.id.to_s => "Dev",
-                hidden_field.id.to_s => "Secret",
+        it "ignores values for fields that aren't shown on signup" do
+          hidden_field = Fabricate(:user_field, requirement: "optional", show_on_signup: false)
+          result =
+            described_class.call(
+              params: {
+                email:,
+                code:,
+                user_fields: {
+                  user_field.id.to_s => "Dev",
+                  hidden_field.id.to_s => "Secret",
+                },
               },
-            }
-          end
+              **dependencies,
+            )
+          user = result[:user]
 
-          it "ignores values for fields that aren't shown on signup" do
-            user = result[:user]
-
-            expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
-            expect(user.custom_fields["user_field_#{hidden_field.id}"]).to be_nil
-          end
+          expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+          expect(user.custom_fields["user_field_#{hidden_field.id}"]).to be_nil
         end
       end
 

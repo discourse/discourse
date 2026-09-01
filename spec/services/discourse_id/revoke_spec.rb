@@ -15,7 +15,7 @@ RSpec.describe DiscourseId::Revoke do
     context "when the timestamp is expired" do
       let(:timestamp) { Time.current.to_i - 3600 }
 
-      it do
+      it "rejects the expired timestamp" do
         is_expected.not_to allow_value(timestamp).for(:timestamp).with_message(
           "is expired: 3600 seconds old",
         )
@@ -23,7 +23,7 @@ RSpec.describe DiscourseId::Revoke do
     end
 
     context "when the signature is not valid" do
-      it do
+      it "rejects the invalid signature" do
         is_expected.not_to allow_value(signature).for(:signature).with_message(
           "is invalid for user id #{identifier}",
         )

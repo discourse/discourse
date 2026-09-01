@@ -11,13 +11,13 @@ RSpec.describe EnableDiscourseIdValidator do
       end
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("t")).to eq(true)
         end
       end
@@ -27,20 +27,20 @@ RSpec.describe EnableDiscourseIdValidator do
       before { SiteSetting.discourse_id_client_id = "" }
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should automatically register" do
+        it "automaticallies register" do
           allow(DiscourseId::Register).to receive(:call).and_return(
             instance_double(Service::Base::Context, success?: true),
           )
           expect(validator.valid_value?("t")).to eq(true)
         end
 
-        it "should show an appropriate error message when something went wrong" do
+        it "shows an appropriate error message when something went wrong" do
           failed_context = Service::Base::Context.new
           failed_context.fail(error: "an error")
           allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
@@ -66,7 +66,7 @@ RSpec.describe EnableDiscourseIdValidator do
       before { SiteSetting.discourse_id_client_secret = "" }
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end

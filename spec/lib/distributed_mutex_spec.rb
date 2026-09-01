@@ -80,7 +80,7 @@ RSpec.describe DistributedMutex do
   end
 
   describe "executions" do
-    it "should not allow critical sections to overlap" do
+    it "does not allow critical sections to overlap" do
       connections = 3.times.map { DiscourseRedis.new }
 
       scenario =

@@ -132,11 +132,11 @@ RSpec.describe Onebox::Engine do
 
     let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
 
-    it "should not include the scope" do
+    it "does not include the scope" do
       expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
     end
 
-    it "should not include the word Onebox" do
+    it "does not include the word Onebox" do
       expect(onebox_name).not_to include("onebox", "Onebox")
     end
   end

@@ -11,7 +11,7 @@ describe "PinTopic" do
   end
 
   context "when not pinned globally" do
-    it "works" do
+    it "pins the topic for individual users" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!
@@ -26,7 +26,7 @@ describe "PinTopic" do
   context "when pinned globally" do
     before { automation.upsert_field!("pinned_globally", "boolean", { value: true }) }
 
-    it "works" do
+    it "pins the topic globally" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!
@@ -44,7 +44,7 @@ describe "PinTopic" do
       automation.upsert_field!("pinned_until", "date_time", { value: 10.days.from_now })
     end
 
-    it "works" do
+    it "pins the topic and schedules it to be unpinned" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!

@@ -18,7 +18,7 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
       fab!(:message_1) { Fabricate(:chat_message, thread: thread, chat_channel: thread.channel) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: thread.channel) }
 
-      it "works" do
+      it "returns the thread messages" do
         get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
 
         expect(response.status).to eq(200)

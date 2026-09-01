@@ -7,7 +7,7 @@ RSpec.describe DbHelper do
   let(:long_sidebar_url_name) { "a" * (sidebar_url_name_limit + 1) }
 
   describe ".remap" do
-    it "should remap columns properly" do
+    it "remaps columns properly" do
       post = Fabricate(:post, cooked: "this is a specialcode that I included")
       post_attributes = post.reload.attributes
 
@@ -109,7 +109,7 @@ RSpec.describe DbHelper do
   end
 
   describe ".regexp_replace" do
-    it "should remap columns correctly" do
+    it "remaps columns correctly" do
       post = Fabricate(:post, raw: "this is a [img]test[/img] post")
 
       DbHelper.regexp_replace("\\[img\\]test\\[/img\\]", "[img]something[/img]")

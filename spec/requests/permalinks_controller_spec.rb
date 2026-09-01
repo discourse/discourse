@@ -15,14 +15,14 @@ RSpec.describe PermalinksController do
   fab!(:admin)
 
   describe "show" do
-    it "should redirect to a permalink's target_url with status 301" do
+    it "redirects to a permalink's target_url with status 301" do
       get "/#{permalink.url}"
 
       expect(response).to redirect_to(topic.relative_url)
       expect(response.status).to eq(301)
     end
 
-    it "should work for subfolder installs too" do
+    it "works for subfolder installs too" do
       set_subfolder "/forum"
 
       get "/#{permalink.url}"
@@ -31,7 +31,7 @@ RSpec.describe PermalinksController do
       expect(response.status).to eq(301)
     end
 
-    it "should apply normalizations" do
+    it "applies normalizations" do
       permalink.update!(external_url: "/topic/100", topic_id: nil)
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 

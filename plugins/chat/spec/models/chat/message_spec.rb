@@ -108,7 +108,7 @@ describe Chat::Message do
     context "when blocks format is invalid" do
       let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
 
-      it do
+      it "rejects elements with invalid types and missing text" do
         is_expected.to_not allow_value(blocks).for(:blocks).with_message(
           [
             "value at `/0/elements/0/type` is not one of: [\"button\"]",
@@ -134,7 +134,7 @@ describe Chat::Message do
         ]
       end
 
-      it do
+      it "rejects duplicated action IDs" do
         is_expected.to_not allow_value(blocks).for(:blocks).with_message(
           "have duplicated action_id: foo",
         )
@@ -157,7 +157,7 @@ describe Chat::Message do
         ]
       end
 
-      it do
+      it "rejects duplicated block IDs" do
         is_expected.to_not allow_value(blocks).for(:blocks).with_message(
           "have duplicated block_id: foo",
         )
@@ -814,6 +814,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 

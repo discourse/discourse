@@ -5,7 +5,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
   fab!(:topic) { Fabricate(:topic_timer, user: admin).topic }
 
-  it "should be able to close a topic" do
+  it "is able to close a topic" do
     topic
 
     freeze_time(61.minutes.from_now) do
@@ -18,7 +18,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
   end
 
   describe "opening a topic" do
-    it "should be work" do
+    it "is work" do
       topic.update!(closed: true)
 
       freeze_time(61.minutes.from_now) do
@@ -37,7 +37,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
       fab!(:topic) { Fabricate(:topic, category: category, closed: true) }
 
-      it "should restore the category's auto close timer" do
+      it "restores the category's auto close timer" do
         Fabricate(:topic_timer, status_type: TopicTimer.types[:open], topic: topic, user: admin)
 
         freeze_time(61.minutes.from_now) do
@@ -55,7 +55,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
   end
 
   describe "when trying to close a topic that has already been closed" do
-    it "should delete the topic timer" do
+    it "deletes the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       topic.update!(closed: true)
@@ -67,7 +67,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
   end
 
   describe "when trying to close a topic that has been deleted" do
-    it "should delete the topic timer" do
+    it "deletes the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       topic.trash!
@@ -83,7 +83,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
 
     fab!(:topic) { Fabricate(:topic_timer, user: user).topic }
 
-    it "should destroy the topic timer" do
+    it "destroys the topic timer" do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
       expect do
@@ -93,7 +93,7 @@ RSpec.describe Jobs::ToggleTopicClosed do
       expect(topic.reload.closed).to eq(false)
     end
 
-    it "should reconfigure topic timer if category's topics are set to autoclose" do
+    it "reconfigures topic timer if category's topics are set to autoclose" do
       category = Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)
 
       topic = Fabricate(:topic, category: category)

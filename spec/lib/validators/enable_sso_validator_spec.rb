@@ -8,13 +8,13 @@ RSpec.describe EnableSsoValidator do
       before { SiteSetting.discourse_connect_url = "" }
 
       describe "when val is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should not be valid" do
+        it "is not valid" do
           expect(validator.valid_value?("t")).to eq(false)
 
           expect(validator.error_message).to eq(
@@ -31,13 +31,13 @@ RSpec.describe EnableSsoValidator do
       end
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("t")).to eq(true)
         end
       end
@@ -47,13 +47,13 @@ RSpec.describe EnableSsoValidator do
       before { SiteSetting.discourse_connect_url = "https://www.example.com/sso" }
 
       describe "when val is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should not be valid" do
+        it "is not valid" do
           expect(validator.valid_value?("t")).to eq(false)
 
           expect(validator.error_message).to eq(
@@ -70,7 +70,7 @@ RSpec.describe EnableSsoValidator do
       end
 
       describe "when value is true" do
-        it "should not be valid" do
+        it "is not valid" do
           expect(validator.valid_value?("t")).to eq(false)
 
           expect(validator.error_message).to eq(
@@ -86,13 +86,13 @@ RSpec.describe EnableSsoValidator do
         SiteSetting.discourse_connect_secret = "x" * 10
       end
 
-      it "should be invalid" do
+      it "is invalid" do
         SiteSetting.enforce_second_factor = "all"
 
         expect(validator.valid_value?("t")).to eq(false)
       end
 
-      it "should be valid" do
+      it "is valid" do
         SiteSetting.enforce_second_factor = "no"
 
         expect(validator.valid_value?("t")).to eq(true)

@@ -31,6 +31,8 @@ RSpec.describe TopicLinkClick do
     end
 
     describe ".create_from" do
+      let(:host) { URI.parse(Discourse.base_url).host }
+
       it "works correctly" do
         # returns nil to prevent exploits
         click =
@@ -92,7 +94,7 @@ RSpec.describe TopicLinkClick do
       context "while logged in" do
         fab!(:other_user, :user)
 
-        let!(:url) do
+        before do
           described_class.create_from(
             url: topic_link.url,
             post_id: post.id,
@@ -100,6 +102,7 @@ RSpec.describe TopicLinkClick do
             user_id: other_user.id,
           )
         end
+
         let(:click) { described_class.last }
 
         it "creates a click without an IP" do
@@ -110,93 +113,90 @@ RSpec.describe TopicLinkClick do
         end
       end
 
-      context "with relative urls" do
-        let(:host) { URI.parse(Discourse.base_url).host }
 
-        it "returns the url" do
-          url = described_class.create_from(url: "/relative-url", post_id: post.id, ip: "127.0.0.1")
-          expect(url).to eq("/relative-url")
+      it "returns the url" do
+        url = described_class.create_from(url: "/relative-url", post_id: post.id, ip: "127.0.0.1")
+        expect(url).to eq("/relative-url")
+      end
+
+      it "finds a protocol relative urls with a host" do
+        url = "//#{host}/relative-url"
+        redirect = described_class.create_from(url: url)
+        expect(redirect).to eq(url)
+      end
+
+      it "returns the url if it's on our host" do
+        url = "http://#{host}/relative-url"
+        redirect = described_class.create_from(url: url)
+        expect(redirect).to eq(url)
+      end
+
+      context "with cdn links" do
+        before do
+          Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
         end
 
-        it "finds a protocol relative urls with a host" do
-          url = "//#{host}/relative-url"
-          redirect = described_class.create_from(url: url)
-          expect(redirect).to eq(url)
+        after { Rails.configuration.action_controller.asset_host = nil }
+
+        it "correctly handles cdn links" do
+          url =
+            described_class.create_from(
+              url: "https://cdn.discourse.org/stuff/my_link",
+              topic_id: topic.id,
+              ip: "127.0.0.3",
+            )
+
+          expect(url).to eq("https://cdn.discourse.org/stuff/my_link")
+
+          # cdn exploit
+          url =
+            described_class.create_from(
+              url: "https://cdn.discourse.org/bad/my_link",
+              topic_id: topic.id,
+              ip: "127.0.0.3",
+            )
+
+          expect(url).to eq(nil)
+
+          # cdn better link track
+          path = "/uploads/site/29/5b585f848d8761d5.xls"
+
+          post = Fabricate(:post, topic:, raw: "[test](#{path})")
+          TopicLink.extract_from(post)
+
+          url =
+            described_class.create_from(
+              url: "https://cdn.discourse.org/stuff#{path}",
+              topic_id: post.topic_id,
+              post_id: post.id,
+              ip: "127.0.0.3",
+            )
+
+          expect(url).to eq("https://cdn.discourse.org/stuff#{path}")
+
+          click = described_class.order("id desc").first
+
+          expect(click.topic_link_id).to eq(TopicLink.order("id desc").first.id)
         end
+      end
 
-        it "returns the url if it's on our host" do
-          url = "http://#{host}/relative-url"
-          redirect = described_class.create_from(url: url)
-          expect(redirect).to eq(url)
-        end
+      context "with s3 cdns" do
+        it "works with s3 urls" do
+          setup_s3
+          SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
 
-        context "with cdn links" do
-          before do
-            Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
-          end
+          post =
+            Fabricate(:post, topic:, raw: "[test](//test.localhost/uploads/default/my-test-link)")
+          TopicLink.extract_from(post)
 
-          after { Rails.configuration.action_controller.asset_host = nil }
+          url =
+            described_class.create_from(
+              url: "https://discourse-s3-cdn.global.ssl.fastly.net/my-test-link",
+              topic_id: topic.id,
+              ip: "127.0.0.3",
+            )
 
-          it "correctly handles cdn links" do
-            url =
-              described_class.create_from(
-                url: "https://cdn.discourse.org/stuff/my_link",
-                topic_id: topic.id,
-                ip: "127.0.0.3",
-              )
-
-            expect(url).to eq("https://cdn.discourse.org/stuff/my_link")
-
-            # cdn exploit
-            url =
-              described_class.create_from(
-                url: "https://cdn.discourse.org/bad/my_link",
-                topic_id: topic.id,
-                ip: "127.0.0.3",
-              )
-
-            expect(url).to eq(nil)
-
-            # cdn better link track
-            path = "/uploads/site/29/5b585f848d8761d5.xls"
-
-            post = Fabricate(:post, topic:, raw: "[test](#{path})")
-            TopicLink.extract_from(post)
-
-            url =
-              described_class.create_from(
-                url: "https://cdn.discourse.org/stuff#{path}",
-                topic_id: post.topic_id,
-                post_id: post.id,
-                ip: "127.0.0.3",
-              )
-
-            expect(url).to eq("https://cdn.discourse.org/stuff#{path}")
-
-            click = described_class.order("id desc").first
-
-            expect(click.topic_link_id).to eq(TopicLink.order("id desc").first.id)
-          end
-        end
-
-        context "with s3 cdns" do
-          it "works with s3 urls" do
-            setup_s3
-            SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
-
-            post =
-              Fabricate(:post, topic:, raw: "[test](//test.localhost/uploads/default/my-test-link)")
-            TopicLink.extract_from(post)
-
-            url =
-              described_class.create_from(
-                url: "https://discourse-s3-cdn.global.ssl.fastly.net/my-test-link",
-                topic_id: topic.id,
-                ip: "127.0.0.3",
-              )
-
-            expect(url).to be_present
-          end
+          expect(url).to be_present
         end
       end
 

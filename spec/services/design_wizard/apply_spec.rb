@@ -12,32 +12,38 @@ RSpec.describe DesignWizard::Apply do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
     it { is_expected.to validate_inclusion_of(:theme_id).in_array(Theme::CORE_THEMES.values) }
-    it do
+
+    it "validates the base font" do
       is_expected.to validate_inclusion_of(:base_font).in_array(
         BaseFontSetting.values.map { |font| font[:value] },
       ).allow_nil
     end
-    it do
+
+    it "validates the heading font" do
       is_expected.to validate_inclusion_of(:heading_font).in_array(
         BaseFontSetting.values.map { |font| font[:value] },
       ).allow_nil
     end
-    it do
+
+    it "validates the homepage" do
       is_expected.to validate_inclusion_of(:homepage).in_array(
         %w[latest new hot categories],
       ).allow_nil
     end
-    it do
+
+    it "validates the category page style" do
       is_expected.to validate_inclusion_of(:category_page_style).in_array(
         CategoryPageStyle.values.map { |style| style[:value] },
       ).allow_nil
     end
-    it do
+
+    it "validates the welcome banner location" do
       is_expected.to validate_inclusion_of(:welcome_banner_location).in_array(
         WelcomeBannerLocation.values.map { |location| location[:value] },
       ).allow_nil
     end
-    it do
+
+    it "validates the search experience" do
       is_expected.to validate_inclusion_of(:search_experience).in_array(
         SearchExperienceSiteSetting.values.map { |experience| experience[:value] },
       ).allow_nil

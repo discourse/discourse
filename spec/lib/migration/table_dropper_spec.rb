@@ -31,7 +31,7 @@ RSpec.describe Migration::TableDropper do
   end
 
   describe ".execute_drop" do
-    it "should drop the table" do
+    it "drops the table" do
       Migration::TableDropper.execute_drop(table_name)
 
       expect(table_exists?(table_name)).to eq(false)
@@ -50,7 +50,7 @@ RSpec.describe Migration::TableDropper do
       SQL
     end
 
-    it "should be droppable" do
+    it "is droppable" do
       Migration::TableDropper.execute_drop(table_name)
 
       expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(table_name))).to eq(false)
@@ -58,7 +58,7 @@ RSpec.describe Migration::TableDropper do
       expect(table_exists?(table_name)).to eq(false)
     end
 
-    it "should drop the read_only function" do
+    it "drops the read_only function" do
       Migration::TableDropper.execute_drop(table_name)
 
       schema_name, function_name =
@@ -67,7 +67,7 @@ RSpec.describe Migration::TableDropper do
       expect(function_exists?(function_name, schema_name)).to eq(false)
     end
 
-    it "should prevent insertions to the table" do
+    it "prevents insertions to the table" do
       DB.exec <<~SQL
           INSERT INTO #{table_name} (topic_id) VALUES (2)
         SQL

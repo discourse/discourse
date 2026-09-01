@@ -11,7 +11,7 @@ describe Chat::Api::CurrentUserThreadsController do
 
   describe "#index" do
     describe "success" do
-      let!(:thread) do
+      before do
         Fabricate(
           :chat_thread,
           original_message_user: current_user,
@@ -20,7 +20,7 @@ describe Chat::Api::CurrentUserThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the current user's threads" do
         get "/chat/api/me/threads"
 
         expect(response).to have_http_status :ok

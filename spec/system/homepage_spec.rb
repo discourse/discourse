@@ -198,7 +198,7 @@ describe "Homepage" do
     end
 
     context "when the theme adds content to the [custom-homepage] connector" do
-      let!(:basic_html_field) do
+      before do
         Fabricate(
           :theme_field,
           theme: theme,
@@ -225,7 +225,8 @@ describe "Homepage" do
 
     context "when a theme component adds content to the [custom-homepage] connector" do
       let!(:component) { Fabricate(:theme, component: true) }
-      let!(:component_html_field) do
+
+      before do
         Fabricate(
           :theme_field,
           theme: component,
@@ -245,9 +246,9 @@ describe "Homepage" do
             });
           GJS
         )
+        theme.add_relative_theme!(:child, component)
       end
 
-      before { theme.add_relative_theme!(:child, component) }
 
       include_examples "a custom homepage"
     end
@@ -255,7 +256,8 @@ describe "Homepage" do
 
   context "when a theme component uses the custom_homepage modifier" do
     let!(:component) { Fabricate(:theme, component: true) }
-    let!(:component_html_field) do
+
+    before do
       Fabricate(
         :theme_field,
         theme: component,
@@ -275,14 +277,13 @@ describe "Homepage" do
           });
         GJS
       )
-    end
-
-    before do
       component.theme_modifier_set.custom_homepage = true
       component.theme_modifier_set.save!
       theme.add_relative_theme!(:child, component)
       theme.set_default!
+
     end
+
 
     include_examples "a custom homepage"
   end

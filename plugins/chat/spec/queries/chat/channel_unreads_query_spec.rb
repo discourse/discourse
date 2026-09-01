@@ -135,44 +135,50 @@ describe Chat::ChannelUnreadsQuery do
           )
         end
 
-        context "when include_missing_memberships is true" do
-          let(:include_missing_memberships) { true }
+        it "returns zeroed counts when missing memberships are included" do
+          result =
+            described_class.call(
+              channel_ids: channel_ids,
+              user_id: current_user.id,
+              include_missing_memberships: true,
+              include_read: true,
+            ).map(&:to_h)
+          expect(result).to match_array(
+            [
+              {
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+                channel_id: channel_1.id,
+              },
+              {
+                mention_count: 0,
+                unread_count: 0,
+                watched_threads_unread_count: 0,
+                channel_id: channel_2.id,
+              },
+            ],
+          )
+        end
 
-          it "does return zeroed counts for the channels" do
-            expect(query).to match_array(
-              [
-                {
-                  mention_count: 0,
-                  unread_count: 1,
-                  watched_threads_unread_count: 0,
-                  channel_id: channel_1.id,
-                },
-                {
-                  mention_count: 0,
-                  unread_count: 0,
-                  watched_threads_unread_count: 0,
-                  channel_id: channel_2.id,
-                },
-              ],
-            )
-          end
-
-          context "when include_read is false" do
-            let(:include_read) { false }
-
-            it "does not return counts for the channels" do
-              expect(query).to match_array(
-                [
-                  {
-                    mention_count: 0,
-                    unread_count: 1,
-                    watched_threads_unread_count: 0,
-                    channel_id: channel_1.id,
-                  },
-                ],
-              )
-            end
-          end
+        it "omits zeroed counts when read channels are excluded" do
+          result =
+            described_class.call(
+              channel_ids: channel_ids,
+              user_id: current_user.id,
+              include_missing_memberships: true,
+              include_read: false,
+            ).map(&:to_h)
+          expect(result).to match_array(
+            [
+              {
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+                channel_id: channel_1.id,
+              },
+            ],
+          )
         end
       end
     end

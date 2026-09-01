@@ -38,7 +38,7 @@ RSpec.describe FormTemplate, type: :model do
       )
     end
 
-    it "should update validation limits when the site setting has been changed" do
+    it "updates validation limits when the site setting has been changed" do
       SiteSetting.max_form_template_content_length = 100
       SiteSetting.max_form_template_title_length = 100
 

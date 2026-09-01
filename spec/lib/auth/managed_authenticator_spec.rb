@@ -206,7 +206,7 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
       end
 
-      it "will ignore name when equal to email" do
+      it "ignores name when equal to email" do
         result = authenticator.after_authenticate(hash.deep_merge(info: { name: hash.info.email }))
         expect(result.email).to eq(hash.info.email)
         expect(result.name).to eq(nil)
@@ -215,7 +215,7 @@ RSpec.describe Auth::ManagedAuthenticator do
 
     describe "avatar on update" do
       fab!(:user)
-      let!(:associated) do
+      before do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
 
@@ -258,7 +258,7 @@ RSpec.describe Auth::ManagedAuthenticator do
 
     describe "profile on update" do
       fab!(:user)
-      let!(:associated) do
+      before do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
 

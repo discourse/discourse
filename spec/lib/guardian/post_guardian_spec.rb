@@ -320,21 +320,21 @@ RSpec.describe PostGuardian do
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       describe "when post has been deleted" do
-        it "should return the right value" do
+        it "returns the right value" do
           expect(Guardian.new(moderator).can_recover_post?(post)).to be_falsey
 
           PostDestroyer.new(moderator, post).destroy
 
           expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
         end
+      end
 
-        describe "when post's user has been deleted" do
-          it "should return the right value" do
-            PostDestroyer.new(moderator, post).destroy
-            post.user.destroy!
+      describe "when the post and its user have been deleted" do
+        it "allows the moderator to recover the post" do
+          PostDestroyer.new(moderator, post).destroy
+          post.user.destroy!
 
-            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
-          end
+          expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
         end
       end
     end
@@ -461,6 +461,7 @@ RSpec.describe PostGuardian do
       fab!(:private_message) { Fabricate(:system_message_topic, user: user) }
 
       before { user.save! }
+
       it "allows the user to reply to system messages" do
         expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
         SiteSetting.enable_system_message_replies = false
@@ -1040,6 +1041,7 @@ RSpec.describe PostGuardian do
         SiteSetting.allow_likes_in_anonymous_mode = false
         SiteSetting.allow_anonymous_mode = true
       end
+
       describe "an anonymous user" do
         let(:post_action) do
           user.id = anon.id

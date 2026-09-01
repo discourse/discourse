@@ -23,7 +23,7 @@ describe DiscourseEvents::Events::ChatChannelSync do
     expect(event.chat_channel.user_chat_channel_memberships.count).to eq(2)
   end
 
-  it "will simply do nothing if user has no permission to create channel" do
+  it "simplies do nothing if user has no permission to create channel" do
     post = Fabricate(:post, user: user)
     event = Fabricate(:event, chat_enabled: true, post: post)
 

@@ -32,7 +32,7 @@ RSpec.describe TopicListItemSerializer do
   describe "when topic featured link is disable" do
     before { SiteSetting.topic_featured_link_enabled = false }
 
-    it "should not include the topic's featured link" do
+    it "does not include the topic's featured link" do
       topic.featured_link = "http://meta.discourse.org"
       serialized = TopicListItemSerializer.new(topic, scope: Guardian.new, root: false).as_json
 

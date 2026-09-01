@@ -122,7 +122,7 @@ RSpec.describe Site do
       expect(Site.new(guardian).categories).not_to include(sub_category)
     end
 
-    it "should clear the cache when custom fields are updated" do
+    it "clears the cache when custom fields are updated" do
       Site.preloaded_category_custom_fields << "enable_marketplace"
       categories = Site.new(Guardian.new).categories
 

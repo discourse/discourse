@@ -29,7 +29,7 @@ describe "Table Builder" do
   end
 
   context "when creating a new table" do
-    it "should add table items created in spreadsheet to composer input" do
+    it "adds table items created in spreadsheet to composer input" do
       visit("/latest")
       page.find("#create-topic").click
       find(".toolbar-menu__options-trigger").click
@@ -55,7 +55,7 @@ describe "Table Builder" do
     end
 
     context "when cancelling table creation" do
-      it "should close the modal if there are no changes made" do
+      it "closes the modal if there are no changes made" do
         visit("/latest")
         page.find("#create-topic").click
         find(".toolbar-menu__options-trigger").click
@@ -64,7 +64,7 @@ describe "Table Builder" do
         expect(page).to have_no_css(".insert-table-modal")
       end
 
-      it "should show a warning popup if there are unsaved changes" do
+      it "shows a warning popup if there are unsaved changes" do
         visit("/latest")
         page.find("#create-topic").click
         find(".toolbar-menu__options-trigger").click
@@ -77,7 +77,7 @@ describe "Table Builder" do
   end
 
   context "when editing a table" do
-    it "should prefill the spreadsheet with the markdown table items from the post" do
+    it "prefills the spreadsheet with the markdown table items from the post" do
       topic_page.visit_topic(topic)
       topic_page.find(".btn-edit-table", visible: :all).click
       expect(page).to have_selector(".insert-table-modal")
@@ -95,7 +95,7 @@ describe "Table Builder" do
       end
     end
 
-    it "should update the post with the new table content" do
+    it "updates the post with the new table content" do
       topic_page.visit_topic(topic)
       topic_page.find(".btn-edit-table", visible: :all).click
       expect(page).to have_selector(".insert-table-modal")
@@ -113,7 +113,7 @@ describe "Table Builder" do
       expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
     end
 
-    it "should respect the original empty header" do
+    it "respects the original empty header" do
       topic_page.visit_topic(topic2)
       topic_page.find(".btn-edit-table", visible: :all).click
       expect(page).to have_selector(".insert-table-modal")
@@ -131,7 +131,7 @@ describe "Table Builder" do
     end
 
     context "when adding an edit reason" do
-      it "should add the edit reason to the edit history" do
+      it "adds the edit reason to the edit history" do
         edit_reason = "Updated Nissan model"
 
         topic_page.visit_topic(topic)
@@ -147,7 +147,7 @@ describe "Table Builder" do
     end
 
     context "when cancelling table creation" do
-      it "should close the modal if there are no changes made" do
+      it "closes the modal if there are no changes made" do
         topic_page.visit_topic(topic)
         topic_page.find(".btn-edit-table", visible: :all).click
         expect(page).to have_selector(".insert-table-modal")
@@ -163,7 +163,7 @@ describe "Table Builder" do
         expect(page).to have_no_css(".insert-table-modal")
       end
 
-      it "should show a warning popup if there are unsaved changes" do
+      it "shows a warning popup if there are unsaved changes" do
         topic_page.visit_topic(topic)
         topic_page.find(".btn-edit-table", visible: :all).click
         expect(page).to have_selector(".insert-table-modal")
@@ -173,7 +173,7 @@ describe "Table Builder" do
       end
     end
 
-    it "should not accept default Discourse keyboard shortcuts" do
+    it "does not accept default Discourse keyboard shortcuts" do
       topic_page.visit_topic(topic)
       topic_page.find(".btn-edit-table", visible: :all).click
       insert_table_modal.find_cell(0, 0)

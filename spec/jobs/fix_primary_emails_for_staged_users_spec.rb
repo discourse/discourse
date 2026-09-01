@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::FixPrimaryEmailsForStagedUsers do
-  it "should clean up duplicated staged users" do
+  it "cleans up duplicated staged users" do
     common_email = "test@reply"
 
     staged_user = Fabricate(:user, staged: true, active: false)

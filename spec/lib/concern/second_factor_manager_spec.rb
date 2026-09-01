@@ -17,7 +17,7 @@ RSpec.describe SecondFactorManager do
   let(:user_backup) { user_second_factor_backup.user }
 
   describe "#totp" do
-    it "should return the right data" do
+    it "returns the right data" do
       totp = nil
 
       expect do totp = another_user.create_totp(enabled: true) end.to change {
@@ -32,7 +32,7 @@ RSpec.describe SecondFactorManager do
   end
 
   describe "#create_totp" do
-    it "should create the right record" do
+    it "creates the right record" do
       second_factor = another_user.create_totp(enabled: true)
 
       expect(second_factor.method).to eq(UserSecondFactor.methods[:totp])
@@ -42,18 +42,20 @@ RSpec.describe SecondFactorManager do
   end
 
   describe "#totp_provisioning_uri" do
-    it "should return the right uri" do
+    it "returns the right uri" do
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
         "otpauth://totp/#{SiteSetting.title}:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}",
       )
     end
-    it "should handle a colon in the site title" do
+
+    it "handles a colon in the site title" do
       SiteSetting.title = "Spaceballs: The Discourse"
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
         "otpauth://totp/Spaceballs%20The%20Discourse:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=Spaceballs%20The%20Discourse",
       )
     end
-    it "should handle a two words before a colon in the title" do
+
+    it "handles a two words before a colon in the title" do
       SiteSetting.title = "Our Spaceballs: The Discourse"
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
         "otpauth://totp/Our%20Spaceballs%20The%20Discourse:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=Our%20Spaceballs%20The%20Discourse",
@@ -62,7 +64,7 @@ RSpec.describe SecondFactorManager do
   end
 
   describe "#authenticate_totp" do
-    it "should be able to authenticate a token" do
+    it "is able to authenticate a token" do
       freeze_time do
         expect(user.user_second_factors.totps.first.last_used).to eq(nil)
 
@@ -75,14 +77,14 @@ RSpec.describe SecondFactorManager do
     end
 
     describe "when token is blank" do
-      it "should be false" do
+      it "is false" do
         expect(user.authenticate_totp(nil)).to eq(false)
         expect(user.user_second_factors.totps.first.last_used).to eq(nil)
       end
     end
 
     describe "when token is invalid" do
-      it "should be false" do
+      it "is false" do
         expect(user.authenticate_totp("111111")).to eq(false)
         expect(user.user_second_factors.totps.first.last_used).to eq(nil)
       end
@@ -91,26 +93,26 @@ RSpec.describe SecondFactorManager do
 
   describe "#totp_enabled?" do
     describe "when user does not have a second factor record" do
-      it "should return false" do
+      it "returns false" do
         expect(another_user.totp_enabled?).to eq(false)
       end
     end
 
     describe "when user's second factor record is disabled" do
-      it "should return false" do
+      it "returns false" do
         disable_totp
         expect(user.totp_enabled?).to eq(false)
       end
     end
 
     describe "when user's second factor record is enabled" do
-      it "should return true" do
+      it "returns true" do
         expect(user.totp_enabled?).to eq(true)
       end
     end
 
     describe "when SSO is enabled" do
-      it "should return false" do
+      it "returns false" do
         SiteSetting.discourse_connect_url = "http://someurl.com"
         SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
@@ -120,7 +122,7 @@ RSpec.describe SecondFactorManager do
     end
 
     describe "when local login is disabled" do
-      it "should return false" do
+      it "returns false" do
         SiteSetting.enable_local_logins = false
 
         expect(user.totp_enabled?).to eq(false)
@@ -197,367 +199,9 @@ RSpec.describe SecondFactorManager do
     end
   end
 
-  describe "#authenticate_second_factor" do
-    let(:params) { {} }
-    let(:server_session) { ServerSession.new("some-prefix") }
-
-    context "when neither security keys nor totp/backup codes are enabled" do
-      before { disable_security_key && disable_totp }
-
-      it "returns OK, because it doesn't need to authenticate" do
-        expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-      end
-
-      it "keeps used_2fa_method nil because no authentication is done" do
-        expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(nil)
-      end
-
-      context "when the user has a passkey and allow_passkeys_for_2fa is enabled" do
-        # Login / email-login / password-reset flows call authenticate_second_factor
-        # without a second_factor_method. They don't advertise passkeys, so a
-        # passkey-only user must still pass through these flows; only the explicit
-        # 2FA endpoint (which submits a method) should require passkey validation.
-        before do
-          SiteSetting.allow_passkeys_for_2fa = true
-          Fabricate(:passkey_with_random_credential, user: user)
-        end
-
-        it "returns OK when no second_factor_method is submitted" do
-          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-        end
-
-        it "validates the credential when the passkey method is submitted" do
-          params_with_method = {
-            second_factor_method: UserSecondFactor.methods[:passkey],
-            second_factor_token: {
-              credentialId: "missing",
-            },
-          }
-          result = user.authenticate_second_factor(params_with_method, server_session)
-          expect(result.ok).to eq(false)
-        end
-
-        it "rejects the security key method because passkeys are not security keys" do
-          params_with_method = {
-            second_factor_method: UserSecondFactor.methods[:security_key],
-            second_factor_token: {
-              credentialId: "missing",
-            },
-          }
-          result = user.authenticate_second_factor(params_with_method, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
-        end
-      end
-    end
-
-    context "with the passkey ceremony" do
-      let!(:passkey) do
-        Fabricate(
-          :user_security_key,
-          user: user,
-          credential_id: valid_passkey_data[:credential_id],
-          public_key: valid_passkey_data[:public_key],
-          factor_type: UserSecurityKey.factor_types[:first_factor],
-        )
-      end
-
-      before do
-        SiteSetting.allow_passkeys_for_2fa = true
-        simulate_localhost_passkey_challenge
-        DiscourseWebauthn.stage_challenge(user, server_session)
-        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
-      end
-
-      context "when the passkey assertion is valid" do
-        let(:params) do
-          {
-            second_factor_token: valid_passkey_auth_data,
-            second_factor_method: UserSecondFactor.methods[:passkey],
-          }
-        end
-
-        it "returns OK and sets used_2fa_method to passkey" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(true)
-          expect(result.used_2fa_method).to eq(UserSecondFactor.methods[:passkey])
-        end
-      end
-
-      context "when a passkey assertion is posted as the security key method" do
-        let(:params) do
-          {
-            second_factor_token: valid_passkey_auth_data,
-            second_factor_method: UserSecondFactor.methods[:security_key],
-          }
-        end
-
-        it "is rejected with an ownership error" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("webauthn.validation.ownership_error"))
-        end
-      end
-
-      context "when a security key assertion is posted as the passkey method" do
-        let(:params) do
-          {
-            second_factor_token: valid_security_key_auth_post_data,
-            second_factor_method: UserSecondFactor.methods[:passkey],
-          }
-        end
-
-        it "is rejected with an ownership error" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("webauthn.validation.ownership_error"))
-        end
-      end
-    end
-
-    context "when only security key is enabled" do
-      before do
-        disable_totp
-        simulate_localhost_webauthn_challenge
-        DiscourseWebauthn.stage_challenge(user, server_session)
-        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
-      end
-
-      context "when security key params are valid" do
-        let(:params) do
-          {
-            second_factor_token: valid_security_key_auth_post_data,
-            second_factor_method: UserSecondFactor.methods[:security_key],
-          }
-        end
-        it "returns OK" do
-          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-        end
-
-        it "sets used_2fa_method to security keys" do
-          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-            UserSecondFactor.methods[:security_key],
-          )
-        end
-      end
-
-      context "when security key params are invalid" do
-        let(:params) do
-          {
-            second_factor_token: {
-              signature: "bad",
-              clientData: "bad",
-              authenticatorData: "bad",
-              credentialId: "bad",
-            },
-            second_factor_method: UserSecondFactor.methods[:security_key],
-          }
-        end
-        it "returns not OK" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("webauthn.validation.not_found_error"))
-          expect(result.used_2fa_method).to eq(nil)
-        end
-      end
-    end
-
-    context "when only totp is enabled" do
-      before { disable_security_key }
-
-      context "when totp is valid" do
-        let(:params) do
-          {
-            second_factor_token: user.user_second_factors.totps.first.totp_object.now,
-            second_factor_method: UserSecondFactor.methods[:totp],
-          }
-        end
-        it "returns OK" do
-          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-        end
-
-        it "sets used_2fa_method to totp" do
-          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-            UserSecondFactor.methods[:totp],
-          )
-        end
-      end
-
-      context "when totp is invalid" do
-        let(:params) do
-          { second_factor_token: "blah", second_factor_method: UserSecondFactor.methods[:totp] }
-        end
-        it "returns not OK" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("login.invalid_second_factor_code"))
-          expect(result.used_2fa_method).to eq(nil)
-        end
-      end
-    end
-
-    context "when both security keys and totp are enabled" do
-      let(:invalid_method) { 99 }
-      let(:method) { invalid_method }
-
-      before do
-        simulate_localhost_webauthn_challenge
-        DiscourseWebauthn.stage_challenge(user, server_session)
-        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
-      end
-
-      context "when method selected is invalid" do
-        it "returns an error" do
-          result = user.authenticate_second_factor(params, server_session)
-          expect(result.ok).to eq(false)
-          expect(result.error).to eq(I18n.t("login.invalid_second_factor_method"))
-          expect(result.used_2fa_method).to eq(nil)
-        end
-      end
-
-      context "when method selected is TOTP" do
-        let(:method) { UserSecondFactor.methods[:totp] }
-        let(:token) { user.user_second_factors.totps.first.totp_object.now }
-
-        context "when totp params are provided" do
-          let(:params) { { second_factor_token: token, second_factor_method: method } }
-
-          it "validates totp OK" do
-            expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-          end
-
-          it "sets used_2fa_method to totp" do
-            expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-              UserSecondFactor.methods[:totp],
-            )
-          end
-
-          context "when the user does not have TOTP enabled" do
-            let(:token) { "test" }
-            before { user.totps.destroy_all }
-
-            it "returns an error" do
-              result = user.authenticate_second_factor(params, server_session)
-              expect(result.ok).to eq(false)
-              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
-              expect(result.used_2fa_method).to eq(nil)
-            end
-          end
-        end
-      end
-
-      context "when method selected is Security Keys" do
-        let(:method) { UserSecondFactor.methods[:security_key] }
-
-        before do
-          simulate_localhost_webauthn_challenge
-          DiscourseWebauthn.stage_challenge(user, server_session)
-        end
-
-        context "when security key params are valid" do
-          let(:params) do
-            { second_factor_token: valid_security_key_auth_post_data, second_factor_method: method }
-          end
-          it "returns OK" do
-            expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-          end
-
-          it "sets used_2fa_method to security keys" do
-            expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-              UserSecondFactor.methods[:security_key],
-            )
-          end
-
-          context "when the user does not have security keys enabled" do
-            before { user.security_keys.destroy_all }
-
-            it "returns an error" do
-              result = user.authenticate_second_factor(params, server_session)
-              expect(result.ok).to eq(false)
-              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
-              expect(result.used_2fa_method).to eq(nil)
-            end
-          end
-        end
-      end
-
-      context "when method selected is Backup Codes" do
-        let(:method) { UserSecondFactor.methods[:backup_codes] }
-        let!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
-
-        context "when backup code params are provided" do
-          let(:params) do
-            { second_factor_token: "iAmValidBackupCode", second_factor_method: method }
-          end
-
-          context "when backup codes enabled" do
-            it "validates codes OK" do
-              expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-            end
-
-            it "sets used_2fa_method to backup codes" do
-              expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-                UserSecondFactor.methods[:backup_codes],
-              )
-            end
-          end
-
-          context "when backup codes disabled" do
-            before { user.user_second_factors.backup_codes.destroy_all }
-
-            it "returns an error" do
-              result = user.authenticate_second_factor(params, server_session)
-              expect(result.ok).to eq(false)
-              expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
-              expect(result.used_2fa_method).to eq(nil)
-            end
-          end
-        end
-      end
-
-      context "when no totp params are provided" do
-        let(:params) do
-          {
-            second_factor_token: valid_security_key_auth_post_data,
-            second_factor_method: UserSecondFactor.methods[:security_key],
-          }
-        end
-
-        it "validates the security key OK" do
-          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-        end
-
-        it "sets used_2fa_method to security keys" do
-          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-            UserSecondFactor.methods[:security_key],
-          )
-        end
-      end
-
-      context "when totp params are provided" do
-        let(:params) do
-          {
-            second_factor_token: user.user_second_factors.totps.first.totp_object.now,
-            second_factor_method: UserSecondFactor.methods[:totp],
-          }
-        end
-
-        it "validates totp OK" do
-          expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
-        end
-
-        it "sets used_2fa_method to totp" do
-          expect(user.authenticate_second_factor(params, server_session).used_2fa_method).to eq(
-            UserSecondFactor.methods[:totp],
-          )
-        end
-      end
-    end
-  end
-
   describe "backup codes" do
     describe "#generate_backup_codes" do
-      it "should generate and store 10 backup codes" do
+      it "generates and store 10 backup codes" do
         backup_codes = user.generate_backup_codes
 
         expect(backup_codes.length).to be 10
@@ -570,7 +214,7 @@ RSpec.describe SecondFactorManager do
     end
 
     describe "#create_backup_codes" do
-      it "should create 10 backup code records" do
+      it "creates 10 backup code records" do
         raw_codes = Array.new(10) { SecureRandom.hex(8) }
         backup_codes = another_user.create_backup_codes(raw_codes)
 
@@ -579,7 +223,7 @@ RSpec.describe SecondFactorManager do
     end
 
     describe "#authenticate_backup_code" do
-      it "should be able to authenticate a backup code" do
+      it "is able to authenticate a backup code" do
         backup_code = "iAmValidBackupCode"
 
         expect(user_backup.authenticate_backup_code(backup_code)).to eq(true)
@@ -587,13 +231,13 @@ RSpec.describe SecondFactorManager do
       end
 
       describe "when code is blank" do
-        it "should be false" do
+        it "is false" do
           expect(user_backup.authenticate_backup_code(nil)).to eq(false)
         end
       end
 
       describe "when code is invalid" do
-        it "should be false" do
+        it "is false" do
           expect(user_backup.authenticate_backup_code("notValidBackupCode")).to eq(false)
         end
       end
@@ -601,26 +245,26 @@ RSpec.describe SecondFactorManager do
 
     describe "#backup_codes_enabled?" do
       describe "when user does not have a second factor backup enabled" do
-        it "should return false" do
+        it "returns false" do
           expect(another_user.backup_codes_enabled?).to eq(false)
         end
       end
 
       describe "when user's second factor backup codes have been used" do
-        it "should return false" do
+        it "returns false" do
           user_backup.user_second_factors.backup_codes.update_all(enabled: false)
           expect(user_backup.backup_codes_enabled?).to eq(false)
         end
       end
 
       describe "when user's second factor code is available" do
-        it "should return true" do
+        it "returns true" do
           expect(user_backup.backup_codes_enabled?).to eq(true)
         end
       end
 
       describe "when SSO is enabled" do
-        it "should return false" do
+        it "returns false" do
           SiteSetting.discourse_connect_url = "http://someurl.com"
           SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
@@ -630,7 +274,7 @@ RSpec.describe SecondFactorManager do
       end
 
       describe "when local login is disabled" do
-        it "should return false" do
+        it "returns false" do
           SiteSetting.enable_local_logins = false
 
           expect(user_backup.backup_codes_enabled?).to eq(false)

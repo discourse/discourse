@@ -58,69 +58,56 @@ RSpec.describe Chat::Api::ChannelsController do
 
       before { sign_in(current_user) }
 
-      context "with category channels" do
-        context "when channel is public" do
-          fab!(:channel_1, :category_channel)
+      context "when channel is public" do
+        fab!(:channel_1, :category_channel)
 
-          it "returns the channel" do
-            get "/chat/api/channels"
+        it "returns the channel" do
+          get "/chat/api/channels"
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
-              [channel_1.id],
-            )
-          end
-
-          context "when chatable is destroyed" do
-            before { channel_1.chatable.destroy! }
-
-            it "returns nothing" do
-              get "/chat/api/channels"
-
-              expect(response.status).to eq(200)
-              expect(response.parsed_body["channels"]).to be_blank
-            end
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
         end
 
-        context "when channel has limited access" do
-          fab!(:group_1, :group)
-          fab!(:channel_1) { Fabricate(:private_category_channel, group: group_1) }
+        it "returns nothing when the chatable is destroyed" do
+          channel_1.chatable.destroy!
+          get "/chat/api/channels"
 
-          context "when user has access" do
-            before { group_1.add(current_user) }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"]).to be_blank
+        end
+      end
 
-            it "returns the channel" do
-              get "/chat/api/channels"
+      context "when channel has limited access" do
+        fab!(:group_1, :group)
+        fab!(:channel_1) { Fabricate(:private_category_channel, group: group_1) }
 
-              expect(response.status).to eq(200)
-              expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
-                [channel_1.id],
-              )
-            end
-          end
+        it "returns the channel when the user has access" do
+          group_1.add(current_user)
+          get "/chat/api/channels"
 
-          context "when user has no access" do
-            it "returns nothing" do
-              get "/chat/api/channels"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
+        end
 
-              expect(response.status).to eq(200)
-              expect(response.parsed_body["channels"]).to be_blank
-            end
+        it "returns nothing when the user has no access" do
+          get "/chat/api/channels"
 
-            context "when user is admin" do
-              before { sign_in(Fabricate(:admin)) }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"]).to be_blank
+        end
 
-              it "returns the channels" do
-                get "/chat/api/channels"
+        it "returns the channel when the user is an admin without explicit access" do
+          sign_in(Fabricate(:admin))
+          get "/chat/api/channels"
 
-                expect(response.status).to eq(200)
-                expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
-                  [channel_1.id],
-                )
-              end
-            end
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
         end
       end
 
@@ -190,35 +177,36 @@ RSpec.describe Chat::Api::ChannelsController do
           )
         end
 
-        context "with include_subcategories" do
-          fab!(:subcategory) { Fabricate(:category, parent_category: category_1) }
-          fab!(:subcategory_channel) { Fabricate(:category_channel, chatable: subcategory) }
+        it "returns channels from parent and subcategories when requested" do
+          subcategory = Fabricate(:category, parent_category: category_1)
+          subcategory_channel = Fabricate(:category_channel, chatable: subcategory)
 
-          it "returns channels from parent and subcategories" do
-            get "/chat/api/channels",
-                params: {
-                  chatable_id: category_1.id,
-                  chatable_type: "Category",
-                  include_subcategories: true,
-                }
+          get "/chat/api/channels",
+              params: {
+                chatable_id: category_1.id,
+                chatable_type: "Category",
+                include_subcategories: true,
+              }
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["channels"].map { |c| c["id"] }).to contain_exactly(
-              channel_1.id,
-              subcategory_channel.id,
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |c| c["id"] }).to contain_exactly(
+            channel_1.id,
+            subcategory_channel.id,
+          )
+        end
 
-          it "returns only parent category channels without the param" do
-            get "/chat/api/channels",
-                params: {
-                  chatable_id: category_1.id,
-                  chatable_type: "Category",
-                }
+        it "returns only parent category channels when subcategories are not requested" do
+          subcategory = Fabricate(:category, parent_category: category_1)
+          Fabricate(:category_channel, chatable: subcategory)
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["channels"].map { |c| c["id"] }).to eq([channel_1.id])
-          end
+          get "/chat/api/channels",
+              params: {
+                chatable_id: category_1.id,
+                chatable_type: "Category",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |c| c["id"] }).to eq([channel_1.id])
         end
       end
     end
@@ -801,63 +789,61 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
 
-      describe "Updating a channel to add users automatically" do
-        it "sets the channel to auto-update users automatically" do
-          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
+      it "sets the channel to auto-update users automatically" do
+        put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
-          expect(response.parsed_body["channel"]["auto_join_users"]).to eq(true)
+        expect(response.parsed_body["channel"]["auto_join_users"]).to eq(true)
+      end
+
+      it "tells staff members to slow down when toggling auto-update multiple times" do
+        RateLimiter.enable
+
+        put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
+
+        expect(response.status).to eq(429)
+      end
+
+      describe "triggers the auto-join process" do
+        fab!(:chatters_group, :group)
+        fab!(:another_user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+
+        before do
+          Jobs.run_immediately!
+          Fabricate(:category_group, category: channel.chatable, group: chatters_group)
+          chatters_group.add(another_user)
         end
 
-        it "tells staff members to slow down when toggling auto-update multiple times" do
-          RateLimiter.enable
-
+        it "joins the user when auto_join_users is true" do
           put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
+
+          created_channel_id = response.parsed_body.dig("channel", "id")
+          membership_exists =
+            Chat::UserChatChannelMembership.find_by(
+              user: another_user,
+              chat_channel_id: created_channel_id,
+              following: true,
+            )
+
+          expect(membership_exists).to be_present
+        end
+
+        it "doesn't join the user when auto_join_users is false" do
           put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
-          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
-          expect(response.status).to eq(429)
-        end
+          created_channel_id = response.parsed_body.dig("channel", "id")
 
-        describe "triggers the auto-join process" do
-          fab!(:chatters_group, :group)
-          fab!(:another_user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+          expect(created_channel_id).to be_present
 
-          before do
-            Jobs.run_immediately!
-            Fabricate(:category_group, category: channel.chatable, group: chatters_group)
-            chatters_group.add(another_user)
-          end
+          membership_exists =
+            Chat::UserChatChannelMembership.find_by(
+              user: another_user,
+              chat_channel_id: created_channel_id,
+              following: true,
+            )
 
-          it "joins the user when auto_join_users is true" do
-            put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
-
-            created_channel_id = response.parsed_body.dig("channel", "id")
-            membership_exists =
-              Chat::UserChatChannelMembership.find_by(
-                user: another_user,
-                chat_channel_id: created_channel_id,
-                following: true,
-              )
-
-            expect(membership_exists).to be_present
-          end
-
-          it "doesn't join the user when auto_join_users is false" do
-            put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
-
-            created_channel_id = response.parsed_body.dig("channel", "id")
-
-            expect(created_channel_id).to be_present
-
-            membership_exists =
-              Chat::UserChatChannelMembership.find_by(
-                user: another_user,
-                chat_channel_id: created_channel_id,
-                following: true,
-              )
-
-            expect(membership_exists).to be_nil
-          end
+          expect(membership_exists).to be_nil
         end
       end
     end

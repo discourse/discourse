@@ -11,6 +11,8 @@ RSpec.describe ThemeField do
 
   after { ThemeJavascriptCompiler.enable_terser! }
 
+  let(:key) { "themes.settings_errors" }
+
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
       theme2 = Fabricate(:theme)
@@ -271,7 +273,6 @@ RSpec.describe ThemeField do
     field
   end
 
-  let(:key) { "themes.settings_errors" }
 
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"

@@ -28,7 +28,7 @@ RSpec.describe ExportCsvController do
         expect(job_data["user_id"]).to eq(user.id)
       end
 
-      it "should not enqueue export job if rate limit is reached" do
+      it "does not enqueue export job if rate limit is reached" do
         UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: user.id)
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
         expect(response.status).to eq(422)
@@ -127,7 +127,7 @@ RSpec.describe ExportCsvController do
         expect(job_data["user_id"]).to eq(admin.id)
       end
 
-      it "should not rate limit export for staff" do
+      it "does not rate limit export for staff" do
         UserExport.create(file_name: "screened-email-150116-010145", user_id: admin.id)
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
         expect(response.status).to eq(200)

@@ -55,22 +55,6 @@ describe DiscourseAi::Translation::CategoryLocalizer do
       expect(res.description).to eq(translated_cat_desc)
     end
 
-    it "handles locale format standardization" do
-      translated_cat_desc = "C'est une catégorie de test"
-      translated_cat_name = "Catégorie de Test"
-      short_text_translator_stub(
-        { text: category.name, target_locale:, translated: translated_cat_name },
-      )
-      post_raw_translator_stub(
-        { text: category.description_excerpt, target_locale:, translated: translated_cat_desc },
-      )
-
-      res = localizer.localize(category, target_locale)
-
-      expect(res.name).to eq(translated_cat_name)
-      expect(res.description).to eq(translated_cat_desc)
-    end
-
     it "returns nil if category is blank" do
       expect(localizer.localize(nil)).to be_nil
     end

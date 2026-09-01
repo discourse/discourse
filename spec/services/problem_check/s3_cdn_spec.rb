@@ -23,7 +23,7 @@ RSpec.describe ProblemCheck::S3Cdn do
       context "when CDN URL is not configured" do
         let(:cdn_url) { nil }
 
-        it do
+        it "reports the invalid S3 CDN configuration" do
           expect(check).to have_a_problem.with_priority("low").with_message(
             'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.',
           )

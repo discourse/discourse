@@ -15,7 +15,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Google do
   end
 
   describe "#process" do
-    it "will not explode if there are no results" do
+    it "does not explode if there are no results" do
       json_text = { searchInformation: { totalResults: "0" } }.to_json
 
       stub_request(

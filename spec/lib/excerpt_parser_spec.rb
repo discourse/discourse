@@ -139,7 +139,7 @@ RSpec.describe ExcerptParser do
   end
 
   describe "keep_quotes parameter" do
-    it "should keep the quoted content in html" do
+    it "keeps the quoted content in html" do
       html = <<~HTML.strip
         <aside class="quote">
           <blockquote>

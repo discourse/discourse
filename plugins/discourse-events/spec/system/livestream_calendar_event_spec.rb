@@ -18,7 +18,7 @@ describe "Discourse Livestream - Topic Livestream with events - Authenticated" d
   end
 
   context "when in a event topic view" do
-    it "clicks going to join the chat channel for livestream topics" do
+    it "toggles attendance for livestream event topics" do
       topic_livestream.create_livestream_event_topic(composer, topic_page)
 
       find(".going-button", wait: 25).click
@@ -49,7 +49,7 @@ describe "Discourse Livestream - Topic Livestream with events - Authenticated" d
       expect(topic_page).to have_css("body.confirmed-event-assistance", wait: 25)
     end
 
-    it "clicks going to join the chat channel for livestream topics" do
+    it "toggles attendance for normal event topics" do
       topic_livestream.create_normal_event_topic(composer, topic_page)
 
       find(".going-button", wait: 25).click

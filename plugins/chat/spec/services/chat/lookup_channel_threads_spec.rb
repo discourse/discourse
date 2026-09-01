@@ -1,98 +1,103 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Chat::LookupChannelThreads::Contract, type: :model do
-  it { is_expected.to validate_presence_of(:channel_id) }
-  it { is_expected.to allow_values(1, 0, nil, "a").for(:limit) }
-  it do
-    is_expected.not_to allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit)
-  end
-
-  describe "Limits" do
-    subject(:contract) { described_class.new }
-
-    context "when limit is not set" do
-      it "defaults to a max value" do
-        contract.validate
-        expect(contract.limit).to eq(::Chat::LookupChannelThreads::THREADS_LIMIT)
-      end
-    end
-
-    context "when limit is over max" do
-      before { contract.limit = ::Chat::LookupChannelThreads::THREADS_LIMIT + 1 }
-
-      it "sets limit to max" do
-        contract.validate
-        expect(contract.limit).to eq(::Chat::LookupChannelThreads::THREADS_LIMIT)
-      end
-    end
-
-    context "when limit is allowed" do
-      before { contract.limit = 5 }
-
-      it "sets limit to the value" do
-        contract.validate
-        expect(contract.limit).to eq(5)
-      end
-    end
-  end
-
-  describe "Offsets" do
-    subject(:contract) { described_class.new }
-
-    context "when offset is not set" do
-      it "defaults to zero" do
-        contract.validate
-        expect(contract.offset).to be_zero
-      end
-    end
-
-    context "when offset is under 0" do
-      before { contract.offset = -1 }
-
-      it "sets offset to zero" do
-        contract.validate
-        expect(contract.offset).to be_zero
-      end
-    end
-
-    context "when offset is allowed" do
-      before { contract.offset = 5 }
-
-      it "sets offset to the value" do
-        contract.validate
-        expect(contract.offset).to eq(5)
-      end
-    end
-  end
-
-  describe "#offset_query" do
-    subject(:contract) { described_class.new }
-
-    before do
-      contract.limit = 10
-      contract.offset = 5
-    end
-
-    it "returns the offset query string" do
-      expect(contract.offset_query).to eq("offset=15")
-    end
-  end
-end
-
 RSpec.describe ::Chat::LookupChannelThreads do
   subject(:result) { described_class.call(params:, **dependencies) }
+
+  let(:dependencies) { { guardian: } }
+  let(:params) { { channel_id:, limit:, offset: } }
+  let(:offset) { 0 }
+  let(:limit) { 10 }
+  let(:channel_id) { channel.id }
+  let(:guardian) { Guardian.new(current_user) }
+
+
+  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:channel_id) }
+    it { is_expected.to allow_values(1, 0, nil, "a").for(:limit) }
+
+    it "rejects limits above the maximum" do
+      is_expected.not_to allow_values(::Chat::LookupChannelThreads::THREADS_LIMIT + 1).for(:limit)
+    end
+
+    describe "Limits" do
+      subject(:contract) { described_class.new }
+
+      context "when limit is not set" do
+        it "defaults to a max value" do
+          contract.validate
+          expect(contract.limit).to eq(::Chat::LookupChannelThreads::THREADS_LIMIT)
+        end
+      end
+
+      context "when limit is over max" do
+        before { contract.limit = ::Chat::LookupChannelThreads::THREADS_LIMIT + 1 }
+
+        it "sets limit to max" do
+          contract.validate
+          expect(contract.limit).to eq(::Chat::LookupChannelThreads::THREADS_LIMIT)
+        end
+      end
+
+      context "when limit is allowed" do
+        before { contract.limit = 5 }
+
+        it "sets limit to the value" do
+          contract.validate
+          expect(contract.limit).to eq(5)
+        end
+      end
+    end
+
+    describe "Offsets" do
+      subject(:contract) { described_class.new }
+
+      context "when offset is not set" do
+        it "defaults to zero" do
+          contract.validate
+          expect(contract.offset).to be_zero
+        end
+      end
+
+      context "when offset is under 0" do
+        before { contract.offset = -1 }
+
+        it "sets offset to zero" do
+          contract.validate
+          expect(contract.offset).to be_zero
+        end
+      end
+
+      context "when offset is allowed" do
+        before { contract.offset = 5 }
+
+        it "sets offset to the value" do
+          contract.validate
+          expect(contract.offset).to eq(5)
+        end
+      end
+    end
+
+    describe "#offset_query" do
+      subject(:contract) { described_class.new }
+
+      before do
+        contract.limit = 10
+        contract.offset = 5
+      end
+
+      it "returns the offset query string" do
+        expect(contract.offset_query).to eq("offset=15")
+      end
+    end
+  end
+
 
   fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
-  let(:guardian) { Guardian.new(current_user) }
-  let(:channel_id) { channel.id }
-  let(:limit) { 10 }
-  let(:offset) { 0 }
-  let(:params) { { channel_id:, limit:, offset: } }
-  let(:dependencies) { { guardian: } }
 
-  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
 
   context "when data is invalid" do
     let(:channel_id) { nil }

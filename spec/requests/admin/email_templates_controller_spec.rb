@@ -19,7 +19,7 @@ RSpec.describe Admin::EmailTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work if you are an admin" do
+      it "works if you are an admin" do
         get "/admin/email/templates.json"
 
         expect(response.status).to eq(200)

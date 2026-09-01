@@ -11,6 +11,7 @@ RSpec.describe "Share conversation via link" do
     SiteSetting.ai_bot_public_sharing_allowed_groups = "1" # admin
     Group.refresh_automatic_groups!
     sign_in(admin)
+    Fabricate(:post, topic: pm, user: admin, raw: "test test test user reply")
   end
 
   let(:pm) do
@@ -22,7 +23,6 @@ RSpec.describe "Share conversation via link" do
     )
   end
 
-  let!(:op) { Fabricate(:post, topic: pm, user: admin, raw: "test test test user reply") }
 
   it "does not show share button for my own PMs without bot" do
     visit(pm.url)

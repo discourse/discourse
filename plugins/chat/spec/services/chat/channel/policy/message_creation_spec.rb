@@ -22,18 +22,13 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
       context "when user can't create a message in this channel" do
         before { channel.closed!(Discourse.system_user) }
 
-        context "when user can't create direct messages" do
-          it "returns false" do
-            expect(result).to be_falsey
-          end
+        it "returns false when the user can't create direct messages" do
+          expect(result).to be_falsey
         end
 
-        context "when admin can create direct messages" do
-          before { user.grant_admin! }
-
-          it "returns true" do
-            expect(result).to be_truthy
-          end
+        it "returns true when an admin can create direct messages" do
+          user.grant_admin!
+          expect(result).to be_truthy
         end
       end
 
@@ -51,11 +46,6 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
         end
       end
 
-      context "when user can send direct messages to the channel" do
-        it "returns true" do
-          expect(result).to be_truthy
-        end
-      end
     end
 
     context "when category channel" do
@@ -160,7 +150,7 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
     end
 
     context "when channel is a category one" do
-      let!(:channel) { Fabricate(:chat_channel, status: status) }
+      before { Fabricate(:chat_channel, status: status) }
 
       context "when channel is closed" do
         let(:status) { :closed }

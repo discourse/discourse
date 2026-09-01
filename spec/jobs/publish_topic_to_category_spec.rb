@@ -24,7 +24,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   describe "when topic has been deleted" do
-    it "should not publish the topic to the new category" do
+    it "does not publish the topic to the new category" do
       created_at = freeze_time 1.hour.ago
       topic
 
@@ -39,7 +39,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
     end
   end
 
-  it "should publish the topic to the new category" do
+  it "publishes the topic to the new category" do
     freeze_time 1.hour.ago do
       topic.update!(visible: false)
     end
@@ -63,7 +63,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   describe "when topic is a private message" do
-    it "should publish the topic to the new category" do
+    it "publishes the topic to the new category" do
       freeze_time 1.hour.ago do
         expect { topic.convert_to_private_message(Discourse.system_user) }.to change {
           topic.private_message?
@@ -127,7 +127,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
   end
 
   describe "when new category has a default auto-close" do
-    it "should apply the auto-close timer upon publishing" do
+    it "applies the auto-close timer upon publishing" do
       freeze_time
 
       another_category.update!(auto_close_hours: 5)

@@ -83,7 +83,8 @@ module DiscourseEvents::Events
         let(:invitee2) { Fabricate(:user, username: "Francisco", name: "Francisco") }
         let(:invitee3) { Fabricate(:user, username: "Frank", name: "Frank") }
         let(:invitee4) { Fabricate(:user, username: "Franchesca", name: "Franchesca") }
-        let!(:random_user) { Fabricate(:user, username: "Franny") }
+        before { Fabricate(:user, username: "Franny") }
+
         let(:post_event_1) do
           pe = Fabricate(:event, post: post_1)
           pe.create_invitees(

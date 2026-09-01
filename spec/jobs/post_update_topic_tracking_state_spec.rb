@@ -5,18 +5,18 @@ RSpec.describe Jobs::PostUpdateTopicTrackingState do
 
   fab!(:post)
 
-  it "should publish messages" do
+  it "publishes messages" do
     messages = MessageBus.track_publish { job.execute({ post_id: post.id }) }
     expect(messages.size).not_to eq(0)
   end
 
-  it "should not publish messages for deleted topics" do
+  it "does not publish messages for deleted topics" do
     post.topic.trash!
     messages = MessageBus.track_publish { job.execute({ post_id: post.id }) }
     expect(messages.size).to eq(0)
   end
 
-  it "should not update topic groups for small_action posts in private messages" do
+  it "does not update topic groups for small_action posts in private messages" do
     user = Fabricate(:user, refresh_auto_groups: true)
     recipient = Fabricate(:user)
     pm =

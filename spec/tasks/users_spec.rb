@@ -4,7 +4,7 @@ RSpec.describe "tasks/users" do
   describe "users:disable_2fa" do
     let(:user) { Fabricate(:user) }
 
-    it "should remove all 2fa methods for user with given username" do
+    it "removes all 2fa methods for user with given username" do
       Fabricate(:user_second_factor_totp, user: user, name: "TOTP", enabled: true)
       Fabricate(:user_second_factor_totp, user: user, name: "TOTP2", enabled: true)
       Fabricate(

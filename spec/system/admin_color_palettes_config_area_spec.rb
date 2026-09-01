@@ -299,6 +299,7 @@ describe "Admin Color Palettes Config Area Page" do
         dark_color_scheme: default_dark_scheme,
       )
     end
+
     it "sorts schemes in order: selectable, custom, current default theme, alphabetical for horizon theme" do
       SiteSetting.default_theme_id = Theme.horizon_theme.id
       config_area.visit

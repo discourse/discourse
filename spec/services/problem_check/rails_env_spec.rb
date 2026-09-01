@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::RailsEnv do
     context "when running in development environment" do
       let(:environment) { "development" }
 
-      it do
+      it "reports the invalid Rails environment" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your server is running in development mode.",
         )
@@ -25,7 +25,7 @@ RSpec.describe ProblemCheck::RailsEnv do
     context "when running in test environment" do
       let(:environment) { "test" }
 
-      it do
+      it "reports the invalid Rails environment" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your server is running in test mode.",
         )

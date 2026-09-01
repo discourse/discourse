@@ -18,45 +18,49 @@ RSpec.describe Chat::Thread::Policy::MessageExistence do
       it { is_expected.to be true }
     end
 
-    context "when 'target_message_id' is provided" do
-      context "when target message does not exist" do
-        let(:target_message_id) { -1 }
+    context "when target message does not exist" do
+      let(:target_message_id) { -1 }
 
-        it { is_expected.to be false }
+      it { is_expected.to be false }
+    end
+
+    context "when target message exists" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: thread.channel, user:, thread:) }
+
+      let(:target_message_id) { message.id }
+
+      context "when target message is not trashed" do
+        it { is_expected.to be true }
       end
 
-      context "when target message exists" do
-        fab!(:message) { Fabricate(:chat_message, chat_channel: thread.channel, user:, thread:) }
+      context "when target message is trashed and belongs to the guardian" do
+        before { message.trash! }
 
-        let(:target_message_id) { message.id }
+        it { is_expected.to be true }
+      end
 
-        context "when target message is not trashed" do
-          it { is_expected.to be true }
+      context "when target message is trashed, belongs to another user, and guardian is staff" do
+        fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+        let(:guardian) { Discourse.system_user.guardian }
+
+        before do
+          message.trash!
+          message.update!(user: other_user)
         end
 
-        context "when target message is trashed" do
-          before { message.trash! }
+        it { is_expected.to be true }
+      end
 
-          context "when target message’s user is the same as the guardian" do
-            it { is_expected.to be true }
-          end
+      context "when target message is trashed, belongs to another user, and guardian is not staff" do
+        fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
 
-          context "when target message’s user is different than the guardian" do
-            fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
-
-            before { message.update!(user: other_user) }
-
-            context "when guardian is staff" do
-              let(:guardian) { Discourse.system_user.guardian }
-
-              it { is_expected.to be true }
-            end
-
-            context "when guardian is not staff" do
-              it { is_expected.to be false }
-            end
-          end
+        before do
+          message.trash!
+          message.update!(user: other_user)
         end
+
+        it { is_expected.to be false }
       end
     end
   end

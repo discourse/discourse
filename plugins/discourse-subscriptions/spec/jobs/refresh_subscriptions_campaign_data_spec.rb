@@ -3,7 +3,7 @@
 RSpec.describe Jobs::RefreshSubscriptionsCampaignData do
   before { SiteSetting.discourse_subscriptions_campaign_enabled = true }
 
-  it "should execute the job only if stripe is configured" do
+  it "executes the job only if stripe is configured" do
     DiscourseSubscriptions::Campaign.any_instance.expects(:refresh_data).once
     described_class.new.execute({})
 

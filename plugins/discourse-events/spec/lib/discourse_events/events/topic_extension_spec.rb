@@ -6,16 +6,16 @@ describe DiscourseEvents::Events::TopicExtension do
     Jobs.run_immediately!
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    Fabricate(:event, post: event_op)
+    Fabricate(:post, topic: plain_topic, user:, created_at: 2.days.ago)
   end
 
   fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
 
   let(:event_topic) { Fabricate(:topic, user:, created_at: 2.days.ago) }
   let(:event_op) { Fabricate(:post, topic: event_topic, user:, created_at: 2.days.ago) }
-  let!(:event) { Fabricate(:event, post: event_op) }
 
   let(:plain_topic) { Fabricate(:topic, user:, created_at: 2.days.ago) }
-  let!(:plain_op) { Fabricate(:post, topic: plain_topic, user:, created_at: 2.days.ago) }
 
   let(:source_topic) { Fabricate(:topic, user:) }
 
@@ -80,7 +80,8 @@ describe DiscourseEvents::Events::TopicExtension do
       let(:incoming_event_op) do
         Fabricate(:post, topic: incoming_topic, user:, created_at: 5.days.ago)
       end
-      let!(:incoming_event) { Fabricate(:event, post: incoming_event_op) }
+
+      before { Fabricate(:event, post: incoming_event_op) }
 
       it "allows chronological merge when the incoming event is the oldest post" do
         expect {
@@ -125,7 +126,8 @@ describe DiscourseEvents::Events::TopicExtension do
       let(:incoming_event_op) do
         Fabricate(:post, topic: incoming_topic, user:, created_at: 1.hour.ago)
       end
-      let!(:incoming_event) { Fabricate(:event, post: incoming_event_op) }
+
+      before { Fabricate(:event, post: incoming_event_op) }
 
       it "blocks the merge whether chronological or sequential" do
         expect_block do

@@ -18,7 +18,7 @@ describe Topic do
 
   describe "validations" do
     describe "#subtype" do
-      it "should not allow Post Voting formatted topics to be created when post_voting_enabled site setting is not enabled" do
+      it "does not allow Post Voting formatted topics to be created when post_voting_enabled site setting is not enabled" do
         SiteSetting.post_voting_enabled = false
 
         topic =
@@ -30,7 +30,7 @@ describe Topic do
         )
       end
 
-      it "should not allow topic to change to Post Voting subtype once it has been created" do
+      it "does not allow topic to change to Post Voting subtype once it has been created" do
         topic_2 = Fabricate(:topic)
         topic_2.subtype = Topic::POST_VOTING_SUBTYPE
 
@@ -40,7 +40,7 @@ describe Topic do
         )
       end
 
-      it "should only allow Post Voting subtype to be set on regular topics" do
+      it "onlies allow Post Voting subtype to be set on regular topics" do
         topic =
           Fabricate.build(:topic, archetype: Archetype.default, subtype: Topic::POST_VOTING_SUBTYPE)
 
@@ -56,43 +56,43 @@ describe Topic do
     end
   end
 
-  it "should return correct comments" do
+  it "returns correct comments" do
     comment_ids = comments.map(&:id)
     topic_comment_ids = topic.comments.pluck(:id)
 
     expect(comment_ids).to eq(topic_comment_ids)
   end
 
-  it "should return correct answers" do
+  it "returns correct answers" do
     answer_ids = answers.map(&:id)
     topic_answer_ids = topic.answers.pluck(:id)
 
     expect(answer_ids).to eq(topic_answer_ids)
   end
 
-  it "should return correct answer_count" do
+  it "returns correct answer_count" do
     expect(topic.answers.size).to eq(answers.size)
   end
 
-  it "should return correct last_answered_at" do
+  it "returns correct last_answered_at" do
     expected = answers.last.created_at
 
     expect(topic.last_answered_at).to eq_time(expected)
   end
 
-  it "should return correct last_commented_on" do
+  it "returns correct last_commented_on" do
     expected = comments.last.created_at
 
     expect(topic.last_commented_on).to eq_time(expected)
   end
 
-  it "should return correct last_answer_post_number" do
+  it "returns correct last_answer_post_number" do
     expected = answers.last.post_number
 
     expect(topic.last_answer_post_number).to eq(expected)
   end
 
-  it "should return correct last_answerer" do
+  it "returns correct last_answerer" do
     expected = answers.last.user.id
 
     expect(topic.last_answerer.id).to eq(expected)
@@ -110,17 +110,17 @@ describe Topic do
   end
 
   describe ".post_voting_votes" do
-    it "should return nil if user is blank" do
+    it "returns nil if user is blank" do
       expect(Topic.post_voting_votes(topic, nil)).to eq(nil)
     end
 
-    it "should return nil if disabled" do
+    it "returns nil if disabled" do
       SiteSetting.post_voting_enabled = false
 
       expect(Topic.post_voting_votes(topic, user)).to eq(nil)
     end
 
-    it "should return voted post IDs" do
+    it "returns voted post IDs" do
       expected =
         answers
           .first(3)

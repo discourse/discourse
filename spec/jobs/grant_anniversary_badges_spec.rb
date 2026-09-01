@@ -122,7 +122,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
   end
 
   context "with repeated grants" do
-    it "won't award twice in the same year" do
+    it "does not award twice in the same year" do
       user = Fabricate(:user, created_at: 400.days.ago)
       Fabricate(:post, user: user, created_at: 1.week.ago)
 
@@ -132,7 +132,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(1)
     end
 
-    it "will award again if a year has passed" do
+    it "awards again if a year has passed" do
       user = Fabricate(:user, created_at: 800.days.ago)
       Fabricate(:post, user: user, created_at: 450.days.ago)
 

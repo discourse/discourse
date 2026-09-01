@@ -30,7 +30,7 @@ RSpec.describe ScoreCalculator do
   end
 
   describe "summary" do
-    it "won't update the site settings when the site settings don't match" do
+    it "does not enable summaries when thresholds are not met" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
       expect(topic.has_summary).to eq(false)
@@ -56,7 +56,7 @@ RSpec.describe ScoreCalculator do
       expect(topic.has_summary).to eq(true)
     end
 
-    it "won't update the site settings when the site settings don't match" do
+    it "enables summaries when thresholds are met" do
       SiteSetting.expects(:summary_likes_required).returns(0)
       SiteSetting.expects(:summary_posts_required).returns(1)
       SiteSetting.expects(:summary_score_threshold).returns(100)

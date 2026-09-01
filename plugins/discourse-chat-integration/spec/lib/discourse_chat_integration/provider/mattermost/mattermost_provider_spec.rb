@@ -35,7 +35,7 @@ RSpec.describe DiscourseChatIntegration::Provider::MattermostProvider do
     end
 
     describe "when mattermost icon has been configured" do
-      it "should use the right icon" do
+      it "uses the right icon" do
         SiteSetting.chat_integration_mattermost_icon_url = "https://specific_logo"
         message = described_class.mattermost_message(post, chan1)
         expect(message[:icon_url]).to eq(SiteSetting.chat_integration_mattermost_icon_url)

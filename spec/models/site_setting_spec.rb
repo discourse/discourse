@@ -247,7 +247,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "cached settings" do
-    it "should recalculate cached setting when dependent settings are changed" do
+    it "recalculates cached setting when dependent settings are changed" do
       SiteSetting.blocked_attachment_filenames = "foo"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 
@@ -406,6 +406,7 @@ RSpec.describe SiteSetting do
 
   describe "creating upload references for type objects settings with upload fields" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 

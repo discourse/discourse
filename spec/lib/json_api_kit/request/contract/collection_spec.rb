@@ -61,9 +61,11 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.to allow_value("", "created_at", "-created_at").for(:sort) }
     it { is_expected.to allow_value("created_at,-title").for(:sort) }
     it { is_expected.not_to allow_value({ secrets: :asc }).for(:sort) }
-    it do
+
+    it "rejects invalid sort directions" do
       is_expected.not_to allow_value({ created_at: :sideways }, { created_at: "asc" }).for(:sort)
     end
+
     it { is_expected.not_to allow_value("secrets", "created_at,secrets").for(:sort) }
     it { is_expected.not_to allow_value(%w[created_at], 5).for(:sort) }
 
@@ -211,17 +213,19 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     before { contract.valid? }
 
-    it do
+    it "validates the page size" do
       is_expected.to validate_numericality_of(:size)
         .only_integer
         .is_greater_than(0)
         .is_less_than_or_equal_to(50)
         .allow_nil
     end
+
     it { is_expected.not_to allow_value("").for(:size) }
     it { is_expected.to allow_value(cursor).for(:after) }
     it { is_expected.to allow_value(cursor).for(:before) }
-    it do
+
+    it "rejects invalid after cursors" do
       is_expected.not_to allow_value(
         "not-a-cursor",
         "",
@@ -229,7 +233,8 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
         cursor_not_matching_segment,
       ).for(:after)
     end
-    it do
+
+    it "rejects invalid before cursors" do
       is_expected.not_to allow_value(
         "not-a-cursor",
         "",
@@ -270,18 +275,20 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     before { contract.valid? }
 
-    it do
+    it "validates the anchor's before size" do
       is_expected.to validate_numericality_of(:before_size)
         .only_integer
         .is_greater_than_or_equal_to(0)
         .allow_nil
     end
-    it do
+
+    it "validates the anchor's after size" do
       is_expected.to validate_numericality_of(:after_size)
         .only_integer
         .is_greater_than_or_equal_to(0)
         .allow_nil
     end
+
     it { is_expected.not_to allow_value("").for(:before_size) }
     it { is_expected.not_to allow_value("").for(:after_size) }
 

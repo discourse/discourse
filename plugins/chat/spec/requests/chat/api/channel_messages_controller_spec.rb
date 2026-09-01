@@ -16,7 +16,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
       fab!(:message_2, :chat_message)
 
-      it "works" do
+      it "returns the visible channel messages" do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(200)
@@ -81,7 +81,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       before { Discourse.enable_readonly_mode }
       after { Discourse.disable_readonly_mode }
 
-      it "works" do
+      it "returns messages in read-only mode" do
         get "/chat/api/channels/#{channel.id}/messages"
 
         expect(response.status).to eq(200)
@@ -456,7 +456,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   describe "#update" do
     context "when message is updated" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
-      it "works" do
+      it "updates the message" do
         put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
             params: {
               message: "abcdefg",
@@ -549,18 +549,15 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           expect(message_1.reload.message).not_to eq("abcdefg")
         end
 
-        context "when the user is not the author" do
-          fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+        it "returns a 403 when the user is not the author" do
+          another_user_message = Fabricate(:chat_message, chat_channel: channel)
+          put "/chat/api/channels/#{channel.id}/messages/#{another_user_message.id}",
+              params: {
+                message: "abcdefg",
+              }
 
-          it "returns a 403" do
-            put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
-                params: {
-                  message: "abcdefg",
-                }
-
-            expect(response.status).to eq(403)
-            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
-          end
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
         end
       end
 

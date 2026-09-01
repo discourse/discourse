@@ -8,7 +8,7 @@ RSpec.describe Jobs::CleanUpUnusedUserApiKeys do
   context "when user api key is unused in last 1 days" do
     before { SiteSetting.revoke_user_api_keys_unused_days = 1 }
 
-    it "should only revoke keys that are active and unused" do
+    it "onlies revoke keys that are active and unused" do
       freeze_time
 
       key1.update!(last_used_at: 2.days.ago)

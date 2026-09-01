@@ -110,7 +110,7 @@ describe DiscourseDataExplorer::QueryRunner do
     end
   end
 
-  describe ".run" do
+  context "when running with result limits" do
     it "does not cache when a non-default limit is used" do
       described_class.run(query, nil, current_user: admin, limit: 1)
 

@@ -21,11 +21,12 @@ RSpec.describe ::Jobs::NotifyCategoryChange do
   end
 
   context "when mailing list mode is enabled" do
-    before { SiteSetting.disable_mailing_list_mode = false }
-    before do
-      regular_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
-    end
-    before { Jobs.run_immediately! }
+    before { SiteSetting.disable_mailing_list_mode = false
+             regular_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+
+             Jobs.run_immediately!  }
+
+
 
     it "notifies mailing list subscribers" do
       post.topic.update!(category: category)

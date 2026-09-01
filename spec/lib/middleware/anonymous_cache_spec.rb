@@ -292,7 +292,7 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "background request rate limit" do
-    it "will rate limit background requests" do
+    it "rates limit background requests" do
       app = Middleware::AnonymousCache.new(lambda { |env| [200, {}, ["ok"]] })
 
       global_setting :background_requests_max_queue_length, "0.5"
@@ -332,7 +332,7 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    it "will revert to anonymous once we reach the limit" do
+    it "reverts to anonymous once we reach the limit" do
       is_anon = false
 
       app =
@@ -408,6 +408,8 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "crawler blocking" do
+    let(:request_state) { {} }
+
     let :non_crawler do
       {
         "HTTP_USER_AGENT" =>
@@ -416,13 +418,13 @@ RSpec.describe Middleware::AnonymousCache do
     end
 
     def get(path, options)
-      @env =
+      request_state[:env] =
         env(
           { "REQUEST_URI" => path, "PATH_INFO" => path, "REQUEST_PATH" => path }.merge(
             options[:headers],
           ),
         )
-      @status, @response_header, @response = middleware.call(@env)
+      request_state[:status], request_state[:response_header], request_state[:response] = middleware.call(request_state[:env])
     end
 
     it "applies allowed_crawler_user_agents correctly" do
@@ -430,18 +432,18 @@ RSpec.describe Middleware::AnonymousCache do
 
       get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
 
       get "/",
           headers: {
             "HTTP_USER_AGENT" => "Anotherbot/2.1 (+http://www.notgoogle.com/bot.html)",
           }
 
-      expect(@status).to eq(403)
-      expect(@response).to be_an(Array)
+      expect(request_state[:status]).to eq(403)
+      expect(request_state[:response]).to be_an(Array)
 
       get "/", headers: non_crawler
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
     end
 
     it "doesn't block api requests" do
@@ -452,21 +454,21 @@ RSpec.describe Middleware::AnonymousCache do
           headers: {
             "QUERY_STRING" => "api_key=#{api_key.key}&api_username=system",
           }
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
 
       get "/latest", headers: { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "system" }
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
     end
 
     it "applies blocked_crawler_user_agents correctly" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/", headers: non_crawler
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
 
       get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
-      expect(@status).to eq(403)
+      expect(request_state[:status]).to eq(403)
 
       expect {
         get "/",
@@ -474,7 +476,7 @@ RSpec.describe Middleware::AnonymousCache do
               "HTTP_USER_AGENT" => (+"Evil Googlebot String \xc3\x28").force_encoding("ASCII"),
             }
 
-        expect(@status).to eq(403)
+        expect(request_state[:status]).to eq(403)
       }.not_to raise_error
 
       get "/",
@@ -482,10 +484,10 @@ RSpec.describe Middleware::AnonymousCache do
             "HTTP_USER_AGENT" => "Twitterbot/2.1 (+http://www.notgoogle.com/bot.html)",
           }
 
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
     end
 
-    it "should never block robots.txt" do
+    it "nevers block robots.txt" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/robots.txt",
@@ -493,10 +495,10 @@ RSpec.describe Middleware::AnonymousCache do
             "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
           }
 
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
     end
 
-    it "should never block srv/status" do
+    it "nevers block srv/status" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/srv/status",
@@ -504,7 +506,7 @@ RSpec.describe Middleware::AnonymousCache do
             "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
           }
 
-      expect(@status).to eq(200)
+      expect(request_state[:status]).to eq(200)
     end
 
     it "blocked crawlers shouldn't log page views" do
@@ -512,7 +514,7 @@ RSpec.describe Middleware::AnonymousCache do
 
       get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
-      expect(@env["discourse.request_tracker.skip"]).to eq(true)
+      expect(request_state[:env]["discourse.request_tracker.skip"]).to eq(true)
     end
 
     it "blocks json requests" do
@@ -523,7 +525,7 @@ RSpec.describe Middleware::AnonymousCache do
             "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
           }
 
-      expect(@status).to eq(403)
+      expect(request_state[:status]).to eq(403)
     end
   end
 end

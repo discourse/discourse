@@ -13,20 +13,20 @@ RSpec.describe DiscourseChatIntegration::Rule do
   let(:group) { Fabricate(:group) }
 
   describe ".alloc_key" do
-    it "should return sequential numbers" do
+    it "returns sequential numbers" do
       expect(DiscourseChatIntegration::Rule.create(channel: channel).key).to eq("rule:1")
       expect(DiscourseChatIntegration::Rule.create(channel: channel).key).to eq("rule:2")
       expect(DiscourseChatIntegration::Rule.create(channel: channel).key).to eq("rule:3")
     end
   end
 
-  it "should convert between channel and channel_id successfully" do
+  it "converts between channel and channel_id successfully" do
     rule = DiscourseChatIntegration::Rule.create(channel: channel)
     expect(rule.channel_id).to eq(channel.id)
     expect(rule.channel.id).to eq(channel.id)
   end
 
-  it "should save and load successfully" do
+  it "saves and load successfully" do
     expect(DiscourseChatIntegration::Rule.all.length).to eq(0)
 
     rule =

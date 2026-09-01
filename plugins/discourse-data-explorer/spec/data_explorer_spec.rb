@@ -76,7 +76,7 @@ describe DiscourseDataExplorer::DataExplorer do
   describe ".run_query" do
     fab!(:topic)
 
-    it "should run a query that includes PG template patterns" do
+    it "runs a query that includes PG template patterns" do
       sql = <<~SQL
       WITH query AS (
         SELECT TO_CHAR(created_at, 'yyyy:mm:dd') AS date FROM topics
@@ -91,7 +91,7 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["date"]).to eq(topic.created_at.strftime("%Y:%m:%d"))
     end
 
-    it "should run a query containing a question mark in the comment" do
+    it "runs a query containing a question mark in the comment" do
       sql = <<~SQL
       WITH query AS (
         SELECT id FROM topics -- some SQL ? comment ?

@@ -4,9 +4,14 @@ require "extralite"
 require "timeout"
 
 RSpec.describe Migrations::Conversion::StepScheduler, :integration do
+  let(:scheduler_context) { {} }
+  let(:db_path) { scheduler_context.fetch(:db_path) }
+  let(:shard_manager) { scheduler_context.fetch(:shard_manager) }
+  let(:writer) { scheduler_context.fetch(:writer) }
+
   around do |example|
     Dir.mktmpdir do |storage_path|
-      @db_path = File.join(storage_path, "intermediate.db")
+      scheduler_context[:db_path] = File.join(storage_path, "intermediate.db")
       migrations_path = File.join(storage_path, "migrations")
       FileUtils.mkdir_p(migrations_path)
       File.write(File.join(migrations_path, "001-schema.sql"), <<~SQL)
@@ -16,39 +21,39 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
         CREATE TABLE keyed (id INTEGER PRIMARY KEY, label TEXT);
         CREATE TABLE log_entries (created_at TEXT, type INTEGER, message TEXT, exception TEXT, details TEXT);
       SQL
-      Migrations::Database.migrate(@db_path, migrations_path:)
+      Migrations::Database.migrate(db_path, migrations_path:)
 
       # The shard template is migrated fresh from the same schema (no data), so
       # shards stay empty even when the run DB already has rows.
-      @shard_manager =
-        Migrations::Conversion::ShardManager.new(canonical_path: @db_path, migrations_path:)
-      @writer = Migrations::Database::Connection.new(path: @db_path)
-      Migrations::Database::IntermediateDB.setup(@writer)
+      scheduler_context[:shard_manager] =
+        Migrations::Conversion::ShardManager.new(canonical_path: db_path, migrations_path:)
+      scheduler_context[:writer] = Migrations::Database::Connection.new(path: db_path)
+      Migrations::Database::IntermediateDB.setup(writer)
       begin
         example.run
       ensure
         Migrations::Database::IntermediateDB.close
-        @shard_manager.cleanup
+        shard_manager.cleanup
       end
     end
   end
 
   def rows(table)
-    db = Extralite::Database.new(@db_path)
+    db = Extralite::Database.new(db_path)
     db.query_splat("SELECT id FROM #{table} ORDER BY id")
   ensure
     db.close if db
   end
 
   def log_entry_count
-    db = Extralite::Database.new(@db_path)
+    db = Extralite::Database.new(db_path)
     db.query_single_splat("SELECT COUNT(*) FROM log_entries")
   ensure
     db.close if db
   end
 
   def log_messages
-    db = Extralite::Database.new(@db_path)
+    db = Extralite::Database.new(db_path)
     db.query_splat("SELECT message FROM log_entries ORDER BY message")
   ensure
     db.close if db
@@ -156,8 +161,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
         budget: 2,
         reporter:,
         step_factory: ->(step_class) { step_class.new },
-        shard_manager: @shard_manager,
-        writer: @writer,
+        shard_manager:,
+        writer:,
       ).run
     ensure
       reporter&.close
@@ -229,8 +234,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -301,8 +306,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -358,8 +363,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -426,8 +431,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
       no_fork: true,
     ).run
     reporter.close
@@ -497,8 +502,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
           budget: 2,
           reporter:,
           step_factory: ->(step_class) { step_class.new },
-          shard_manager: @shard_manager,
-          writer: @writer,
+          shard_manager:,
+          writer:,
         ).run
       ensure
         reporter&.close
@@ -573,8 +578,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
           budget: 2,
           reporter:,
           step_factory: ->(step_class) { step_class.new },
-          shard_manager: @shard_manager,
-          writer: @writer,
+          shard_manager:,
+          writer:,
         ).run
       ensure
         reporter&.close
@@ -603,8 +608,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 2,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
   ensure
     reporter&.close
@@ -645,7 +650,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     Migrations::Database::IntermediateDB.close
 
-    db = Extralite::Database.new(@db_path)
+    db = Extralite::Database.new(db_path)
     keyed = db.query_array("SELECT id, label FROM keyed ORDER BY id")
     db.close
     # the existing row is kept and the new, non-colliding rows are appended
@@ -758,8 +763,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
 
     Migrations::Database::IntermediateDB.close
@@ -842,8 +847,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 2,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -892,8 +897,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 2,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -954,8 +959,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 4,
       reporter:,
       step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
       no_fork: true,
     ).run
 
@@ -1032,8 +1037,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       budget: 1, # Second must wait for First's fork — the preplan window
       reporter:,
       step_factory:,
-      shard_manager: @shard_manager,
-      writer: @writer,
+      shard_manager:,
+      writer:,
     ).run
     reporter.close
 
@@ -1111,8 +1116,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
           budget: 1,
           reporter:,
           step_factory:,
-          shard_manager: @shard_manager,
-          writer: @writer,
+          shard_manager:,
+          writer:,
         ).run
       ensure
         reporter&.close

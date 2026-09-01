@@ -2,7 +2,6 @@
 
 describe "Users directory" do
   fab!(:user)
-  let!(:initial_directory_events) { [] }
 
   before { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
 

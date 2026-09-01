@@ -27,22 +27,27 @@ RSpec.describe Compression::Engine do
   end
 
   describe "compressing and decompressing files" do
-    before do
+    let(:compressed_path) do
       Dir.chdir(temp_folder) do
-        @compressed_path =
+        path =
           Compression::Engine.engine_for("#{folder_name}#{extension}").compress(
             temp_folder,
             folder_name,
           )
         FileUtils.rm_rf("#{folder_name}/")
+        path
       end
+    end
+
+    before do
+      compressed_path
     end
 
     context "when working with zip files" do
       let(:extension) { ".zip" }
 
       it "decompresses the folder and inspects files correctly" do
-        engine = described_class.engine_for(@compressed_path)
+        engine = described_class.engine_for(compressed_path)
 
         extract_location = "#{temp_folder}/extract_location"
         FileUtils.mkdir(extract_location)
@@ -119,7 +124,7 @@ RSpec.describe Compression::Engine do
         extract_location = "#{extract_location}/extract_location"
         FileUtils.symlink(real_location, extract_location)
 
-        engine = described_class.engine_for(@compressed_path)
+        engine = described_class.engine_for(compressed_path)
         engine.decompress(extract_location, "#{temp_folder}/#{folder_name}.zip", available_size)
 
         expect(File.realpath(extract_location)).to eq(real_location)
@@ -132,7 +137,7 @@ RSpec.describe Compression::Engine do
       let(:extension) { ".tar.gz" }
 
       it "decompresses the folder and inspects files correctly" do
-        engine = described_class.engine_for(@compressed_path)
+        engine = described_class.engine_for(compressed_path)
 
         engine.decompress(temp_folder, "#{temp_folder}/#{folder_name}.tar.gz", available_size)
 
@@ -185,7 +190,7 @@ RSpec.describe Compression::Engine do
         extract_location = "#{extract_location}/extract_location"
         FileUtils.symlink(real_location, extract_location)
 
-        engine = described_class.engine_for(@compressed_path)
+        engine = described_class.engine_for(compressed_path)
         engine.decompress(extract_location, "#{temp_folder}/#{folder_name}.tar.gz", available_size)
 
         expect(File.realpath(extract_location)).to eq(real_location)
@@ -198,7 +203,7 @@ RSpec.describe Compression::Engine do
       let(:extension) { ".tar" }
 
       it "decompress the folder and inspect files correctly" do
-        engine = described_class.engine_for(@compressed_path)
+        engine = described_class.engine_for(compressed_path)
 
         engine.decompress(temp_folder, "#{temp_folder}/#{folder_name}.tar", available_size)
 

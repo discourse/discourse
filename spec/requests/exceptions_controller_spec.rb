@@ -2,7 +2,7 @@
 
 RSpec.describe ExceptionsController do
   describe "#not_found" do
-    it "should return the right response" do
+    it "returns the right response" do
       get "/404"
 
       expect(response.status).to eq(404)
@@ -18,7 +18,7 @@ RSpec.describe ExceptionsController do
     describe "text site logo" do
       before { SiteSetting.logo = "" }
 
-      it "should return the right response" do
+      it "returns the right response" do
         get "/404"
 
         expect(response.status).to eq(404)

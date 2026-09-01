@@ -128,6 +128,7 @@ describe "Composer - ProseMirror - Pasting content" do
 
   context "when unauthorized to upload" do
     before { SiteSetting.authorized_extensions = "" }
+
     it "allows pasting text" do
       cdp.allow_clipboard
       open_composer

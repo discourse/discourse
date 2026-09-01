@@ -34,13 +34,14 @@ RSpec.describe TagUser do
         notification_level: TagUser.notification_levels[:watching],
       )
     end
-    let!(:tag_user2) do
+    before do
       TagUser.create(
         user: user1,
         tag: tag2,
         notification_level: TagUser.notification_levels[:tracking],
       )
     end
+
     let!(:tag_user3) do
       TagUser.create(
         user: user2,
@@ -189,6 +190,7 @@ RSpec.describe TagUser do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:watched_tag, :tag)
     let(:muted_tag) { Fabricate(:tag) }
+
     fab!(:tracked_tag, :tag)
 
     context "with some tag notification settings" do
@@ -418,12 +420,14 @@ RSpec.describe TagUser do
 
     context "for anon" do
       let(:user) { nil }
+
       before do
         SiteSetting.default_tags_watching = tag1.name
         SiteSetting.default_tags_tracking = tag2.name
         SiteSetting.default_tags_watching_first_post = tag3.name
         SiteSetting.default_tags_muted = tag4.name
       end
+
       it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
         levels = TagUser.notification_levels_for(user)
         expect(levels[tag1.id][:level]).to eq(TagUser.notification_levels[:regular])
@@ -435,6 +439,7 @@ RSpec.describe TagUser do
 
     context "for a user" do
       let(:user) { Fabricate(:user) }
+
       before do
         TagUser.create(
           user: user,

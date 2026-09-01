@@ -585,7 +585,7 @@ RSpec.describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(2)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user a second time on revision" do
       p1 = create_post_with_alerts(raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
       expect {
         p1.revise(p1.user, raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]')
@@ -677,7 +677,7 @@ RSpec.describe PostAlerter do
 
     before { Jobs.run_immediately! }
 
-    it "will notify correctly on linking" do
+    it "notifies correctly on linking" do
       linking_post
 
       expect(user.notifications.count).to eq(1)
@@ -757,6 +757,7 @@ RSpec.describe PostAlerter do
     let(:post) do
       create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic)
     end
+
     fab!(:other_post) { Fabricate(:post, topic: topic) }
 
     before { Jobs.run_immediately! }
@@ -813,6 +814,7 @@ RSpec.describe PostAlerter do
       Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
+
     before { group.add(evil_trout) }
 
     it "notifies users correctly" do
@@ -865,13 +867,16 @@ RSpec.describe PostAlerter do
     let(:mention_post) { create_post_with_alerts(user: user, raw: "Hello @eviltrout") }
     let(:topic) { mention_post.topic }
 
-    before { Jobs.run_immediately! }
+    before { Jobs.run_immediately!
+             group.bulk_add([alice.id, eve.id])
+             group.bulk_add([alice.id, eve.id])   }
+
 
     it "notifies a user" do
       expect { mention_post }.to change(evil_trout.notifications, :count).by(1)
     end
 
-    it "won't notify the user a second time on revision" do
+    it "does not notify the user a second time on revision" do
       mention_post
       expect {
         mention_post.revise(
@@ -924,7 +929,6 @@ RSpec.describe PostAlerter do
       Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
 
-    before { group.bulk_add([alice.id, eve.id]) }
 
     def create_post_with_alerts(args = {})
       post = Fabricate(:post, args)
@@ -976,44 +980,43 @@ RSpec.describe PostAlerter do
         )
       end
 
-      context "when user is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
-            let(:expected_notification) do
-              notification_level == :watching ? :private_message : :mentioned
-            end
+      %i[watching tracking regular].each do |notification_level|
+        context "when notification level is '#{notification_level}'" do
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            it "notifies about @username mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
+          let(:expected_notification) do
+            notification_level == :watching ? :private_message : :mentioned
+          end
 
-            it "notifies about @username mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(
-                alice,
-                expected_notification,
-              )
-            end
+          it "notifies about @username mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
 
-            it "notifies about @group mention when allowed user is part of group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @username mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(
+              alice,
+              expected_notification,
+            )
+          end
+
+          it "notifies about @group mention when allowed user is part of group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
           end
         end
+      end
 
-        context "when notification level is 'muted'" do
-          before { set_topic_notification_level(alice, pm_topic, :muted) }
+      context "when notification level is 'muted'" do
+        before { set_topic_notification_level(alice, pm_topic, :muted) }
 
-          it "does not notify about @username mention" do
-            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-            expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
-          end
+        it "does not notify about @username mention" do
+          args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+          expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
         end
       end
 
@@ -1055,38 +1058,36 @@ RSpec.describe PostAlerter do
 
       before { some_group.bulk_add([alice.id, carol.id]) }
 
-      context "when group is part of conversation" do
-        %i[watching tracking regular].each do |notification_level|
-          context "when notification level is '#{notification_level}'" do
-            before { set_topic_notification_level(alice, pm_topic, notification_level) }
+      %i[watching tracking regular].each do |notification_level|
+        context "when notification level is '#{notification_level}'" do
+          before { set_topic_notification_level(alice, pm_topic, notification_level) }
 
-            it "notifies about @group mention" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @group mention" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
 
-            it "notifies about @group mentions by non-human users" do
-              args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
-            end
+          it "notifies about @group mentions by non-human users" do
+            args = { user: Discourse.system_user, topic: pm_topic, raw: "Hello @group" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+          end
 
-            it "notifies about @username mention when user belongs to allowed group" do
-              args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
-            end
+          it "notifies about @username mention when user belongs to allowed group" do
+            args = { user: bob, topic: pm_topic, raw: "Hello @alice" }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
           end
         end
+      end
 
-        context "when notification level is 'muted'" do
-          before { set_topic_notification_level(alice, pm_topic, :muted) }
+      context "when notification level is 'muted'" do
+        before { set_topic_notification_level(alice, pm_topic, :muted) }
 
-          it "does not notify about @group mention" do
-            args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-            expect { create_post_with_alerts(args) }.to_not add_notification(
-              alice,
-              :group_mentioned,
-            )
-          end
+        it "does not notify about @group mention" do
+          args = { user: bob, topic: pm_topic, raw: "Hello @group" }
+          expect { create_post_with_alerts(args) }.to_not add_notification(
+            alice,
+            :group_mentioned,
+          )
         end
       end
 
@@ -1453,6 +1454,14 @@ RSpec.describe PostAlerter do
   describe ".create_notification_alert" do
     before { evil_trout.update_columns(last_seen_at: 10.minutes.ago) }
 
+    let(:modifier_block) do
+      Proc.new do |payload|
+        payload[:username] = "gotcha"
+        payload[:post_url] = "stolen_url"
+        payload
+      end
+    end
+
     it "publishes notification to notification-alert MessageBus channel" do
       messages =
         MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
@@ -1470,13 +1479,6 @@ RSpec.describe PostAlerter do
       expect(messages.first.data[:post_url]).to eq(post.url)
     end
 
-    let(:modifier_block) do
-      Proc.new do |payload|
-        payload[:username] = "gotcha"
-        payload[:post_url] = "stolen_url"
-        payload
-      end
-    end
 
     it "applies the post_alerter_live_notification_payload modifier" do
       plugin_instance = Plugin::Instance.new
@@ -1873,7 +1875,7 @@ RSpec.describe PostAlerter do
       ).to eq(true)
     end
 
-    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+    it "doesn't notify about small action posts when the topic author is watching the topic " do
       Jobs.run_immediately!
 
       u1 = Fabricate(:admin)
@@ -2740,7 +2742,7 @@ RSpec.describe PostAlerter do
         )
       end
 
-      it "should use the first post of the topic" do
+      it "uses the first post of the topic" do
         topic_link
         expect(PostAlerter.new.extract_linked_users(post.reload)).to eq([post2.user])
       end

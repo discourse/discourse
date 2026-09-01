@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpInactiveUsers do
-  it "should clean up new users that have been inactive" do
+  it "cleans up new users that have been inactive" do
     SiteSetting.clean_up_inactive_users_after_days = 0
 
     user =
@@ -71,7 +71,7 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
     expect(User.exists?(moderator.id)).to eq(true)
   end
 
-  it "should clean up a user that has a deleted post" do
+  it "cleans up a user that has a deleted post" do
     SiteSetting.clean_up_inactive_users_after_days = 1
 
     Fabricate(:active_user)
@@ -93,7 +93,7 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
     expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
   end
 
-  it "should clean up user that has a deleted topic" do
+  it "cleans up user that has a deleted topic" do
     SiteSetting.clean_up_inactive_users_after_days = 1
 
     Fabricate(:active_user)

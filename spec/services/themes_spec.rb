@@ -88,10 +88,7 @@ RSpec.describe ThemesInstallTask do
       `rm -fr #{component_repo}`
     end
 
-    it "gracefully fails" do
-      ThemesInstallTask.install(nothing: "fail!")
-      expect(Theme.where(name: "fail!").exists?).to eq(false)
-    end
+    around { |group| MockGitImporter.with_mock { group.run } }
 
     before do
       FinalDestination.stubs(:resolve).with(theme_repo_url).returns(URI.parse(theme_repo_url))
@@ -101,7 +98,12 @@ RSpec.describe ThemesInstallTask do
         .returns(URI.parse(component_repo_url))
     end
 
-    around(:each) { |group| MockGitImporter.with_mock { group.run } }
+    it "gracefully fails" do
+      ThemesInstallTask.install(nothing: "fail!")
+      expect(Theme.where(name: "fail!").exists?).to eq(false)
+    end
+
+
 
     describe "no options" do
       it "installs a theme" do

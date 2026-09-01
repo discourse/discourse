@@ -155,8 +155,8 @@ RSpec.describe PendingAssignsReminder do
     it "closed topics aren't included as active assigns" do
       SiteSetting.unassign_on_close = true
 
-      @post5 = Fabricate(:post)
-      Assigner.new(@post5.topic, user).assign(user)
+      post5 = Fabricate(:post)
+      Assigner.new(post5.topic, user).assign(user)
 
       reminder.remind(user)
 
@@ -165,8 +165,8 @@ RSpec.describe PendingAssignsReminder do
 
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 3))
 
-      @post5.topic.update_status("closed", true, Discourse.system_user)
-      expect(@post5.topic.closed).to eq(true)
+      post5.topic.update_status("closed", true, Discourse.system_user)
+      expect(post5.topic.closed).to eq(true)
 
       reminder.remind(user)
 

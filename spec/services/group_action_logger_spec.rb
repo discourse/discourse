@@ -10,7 +10,7 @@ RSpec.describe GroupActionLogger do
   before { group.add_owner(group_owner) }
 
   describe "#log_make_user_group_owner" do
-    it "should create the right record" do
+    it "creates the right record" do
       logger.log_make_user_group_owner(user)
 
       group_history = GroupHistory.last
@@ -22,7 +22,7 @@ RSpec.describe GroupActionLogger do
   end
 
   describe "#log_remove_user_as_group_owner" do
-    it "should create the right record" do
+    it "creates the right record" do
       logger.log_remove_user_as_group_owner(user)
 
       group_history = GroupHistory.last
@@ -35,7 +35,7 @@ RSpec.describe GroupActionLogger do
 
   describe "#log_add_user_to_group" do
     context "as a group owner" do
-      it "should create the right record" do
+      it "creates the right record" do
         logger.log_add_user_to_group(user)
 
         group_history = GroupHistory.last
@@ -51,7 +51,7 @@ RSpec.describe GroupActionLogger do
 
       before { group.update!(public_admission: true) }
 
-      it "should create the right record" do
+      it "creates the right record" do
         logger.log_add_user_to_group(user)
 
         group_history = GroupHistory.last
@@ -65,7 +65,7 @@ RSpec.describe GroupActionLogger do
 
   describe "#log_remove_user_from_group" do
     context "as group owner" do
-      it "should create the right record" do
+      it "creates the right record" do
         logger.log_remove_user_from_group(user)
 
         group_history = GroupHistory.last
@@ -81,7 +81,7 @@ RSpec.describe GroupActionLogger do
 
       before { group.update!(public_exit: true) }
 
-      it "should create the right record" do
+      it "creates the right record" do
         logger.log_remove_user_from_group(user)
 
         group_history = GroupHistory.last
@@ -195,7 +195,7 @@ RSpec.describe GroupActionLogger do
   end
 
   describe "#log_change_group_settings" do
-    it "should create the right record" do
+    it "creates the right record" do
       group.update!(public_admission: true, created_at: Time.zone.now)
 
       expect { logger.log_change_group_settings }.to change { GroupHistory.count }.by(1)

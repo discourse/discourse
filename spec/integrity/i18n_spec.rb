@@ -102,9 +102,8 @@ RSpec.describe "i18n integrity checks" do
       end
     end
   end
-end
 
-RSpec.describe "fallbacks" do
+  context "with fallbacks" do
   before do
     I18n.backend = I18n::Backend::DiscourseI18n.new
     I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
@@ -131,4 +130,5 @@ RSpec.describe "fallbacks" do
       end
     end
   end
+end
 end

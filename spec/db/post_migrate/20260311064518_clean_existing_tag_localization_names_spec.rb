@@ -5,12 +5,14 @@ require Rails.root.join("db/post_migrate/20260311064518_clean_existing_tag_local
 describe CleanExistingTagLocalizationNames do
   fab!(:tag)
 
+  let(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
+    original_verbose
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after { ActiveRecord::Migration.verbose = original_verbose }
 
   def insert_localization(locale, name)
     DB.query_single(

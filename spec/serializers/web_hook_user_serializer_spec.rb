@@ -14,13 +14,13 @@ RSpec.describe WebHookUserSerializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
   end
 
-  it "should include relevant user info" do
+  it "includes relevant user info" do
     payload = serializer.as_json
     expect(payload[:email]).to eq(user.email)
     expect(payload[:external_id]).to eq("12345")
   end
 
-  it "should only include the required keys" do
+  it "onlies include the required keys" do
     expect(serializer.as_json.keys).to contain_exactly(
       :admin,
       :allowed_pm_usernames,

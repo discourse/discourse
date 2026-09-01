@@ -335,181 +335,179 @@ RSpec.describe Admin::BadgesController do
     end
   end
 
-  describe "#update" do
-    context "when logged in as an admin" do
-      before { sign_in(admin) }
+  context "when logged in as an admin" do
+    before { sign_in(admin) }
 
-      it "does not update the name of system badges" do
-        editor_badge = Badge.find(Badge::Editor)
-        editor_badge_name = editor_badge.name
+    it "does not update the name of system badges" do
+      editor_badge = Badge.find(Badge::Editor)
+      editor_badge_name = editor_badge.name
 
-        put "/admin/badges/#{editor_badge.id}.json", params: { name: "123456" }
+      put "/admin/badges/#{editor_badge.id}.json", params: { name: "123456" }
 
-        expect(response.status).to eq(200)
-        editor_badge.reload
-        expect(editor_badge.name).to eq(editor_badge_name)
+      expect(response.status).to eq(200)
+      editor_badge.reload
+      expect(editor_badge.name).to eq(editor_badge_name)
 
-        expect(
-          UserHistory.where(
-            acting_user_id: admin.id,
-            action: UserHistory.actions[:change_badge],
-          ).exists?,
-        ).to eq(true)
-      end
+      expect(
+        UserHistory.where(
+          acting_user_id: admin.id,
+          action: UserHistory.actions[:change_badge],
+        ).exists?,
+      ).to eq(true)
+    end
 
-      it "does not allow changing the system flag on a system badge" do
-        editor_badge = Badge.find(Badge::Editor)
+    it "does not allow changing the system flag on a system badge" do
+      editor_badge = Badge.find(Badge::Editor)
 
-        put "/admin/badges/#{editor_badge.id}.json", params: { system: "false" }
+      put "/admin/badges/#{editor_badge.id}.json", params: { system: "false" }
 
-        expect(response.status).to eq(200)
-        editor_badge.reload
-        expect(editor_badge.system?).to eq(true)
-      end
+      expect(response.status).to eq(200)
+      editor_badge.reload
+      expect(editor_badge.system?).to eq(true)
+    end
 
-      it "does not allow setting the system flag on a custom badge" do
-        put "/admin/badges/#{badge.id}.json", params: { system: "true" }
+    it "does not allow setting the system flag on a custom badge" do
+      put "/admin/badges/#{badge.id}.json", params: { system: "true" }
 
-        expect(response.status).to eq(200)
-        badge.reload
-        expect(badge.system?).to eq(false)
-      end
+      expect(response.status).to eq(200)
+      badge.reload
+      expect(badge.system?).to eq(false)
+    end
 
-      it "does not allow query updates if badge_sql is disabled" do
-        badge.query = "select 123"
-        badge.save
+    it "does not allow query updates if badge_sql is disabled" do
+      badge.query = "select 123"
+      badge.save
 
-        SiteSetting.enable_badge_sql = false
+      SiteSetting.enable_badge_sql = false
 
-        put "/admin/badges/#{badge.id}.json",
-            params: {
-              name: "123456",
-              query: "select id user_id, created_at granted_at from users",
-              badge_type_id: badge.badge_type_id,
-              allow_title: false,
-              multiple_grant: false,
-              enabled: true,
-            }
+      put "/admin/badges/#{badge.id}.json",
+          params: {
+            name: "123456",
+            query: "select id user_id, created_at granted_at from users",
+            badge_type_id: badge.badge_type_id,
+            allow_title: false,
+            multiple_grant: false,
+            enabled: true,
+          }
 
-        expect(response.status).to eq(200)
-        badge.reload
-        expect(badge.name).to eq("123456")
-        expect(badge.query).to eq("select 123")
-      end
+      expect(response.status).to eq(200)
+      badge.reload
+      expect(badge.name).to eq("123456")
+      expect(badge.query).to eq("select 123")
+    end
 
-      it "updates the badge" do
-        SiteSetting.enable_badge_sql = true
-        sql = "select id user_id, created_at granted_at from users"
-        image = Fabricate(:upload)
+    it "updates the badge" do
+      SiteSetting.enable_badge_sql = true
+      sql = "select id user_id, created_at granted_at from users"
+      image = Fabricate(:upload)
 
-        put "/admin/badges/#{badge.id}.json",
-            params: {
-              name: "123456",
-              query: sql,
-              badge_type_id: badge.badge_type_id,
-              allow_title: false,
-              multiple_grant: false,
-              enabled: true,
-              image_upload_id: image.id,
-              icon: "fa-rocket",
-            }
+      put "/admin/badges/#{badge.id}.json",
+          params: {
+            name: "123456",
+            query: sql,
+            badge_type_id: badge.badge_type_id,
+            allow_title: false,
+            multiple_grant: false,
+            enabled: true,
+            image_upload_id: image.id,
+            icon: "fa-rocket",
+          }
 
-        expect(response.status).to eq(200)
-        badge.reload
-        expect(badge.name).to eq("123456")
-        expect(badge.query).to eq(sql)
-        expect(badge.image_upload.id).to eq(image.id)
-        expect(badge.icon).to eq("fa-rocket")
-      end
+      expect(response.status).to eq(200)
+      badge.reload
+      expect(badge.name).to eq("123456")
+      expect(badge.query).to eq(sql)
+      expect(badge.image_upload.id).to eq(image.id)
+      expect(badge.icon).to eq("fa-rocket")
+    end
 
-      context "when there is a user with a title granted using the badge" do
-        fab!(:user_with_badge_title, :active_user)
+    context "when there is a user with a title granted using the badge" do
+      fab!(:user_with_badge_title, :active_user)
 
-        before { BadgeGranter.grant(badge, user_with_badge_title) }
+      before { BadgeGranter.grant(badge, user_with_badge_title) }
 
-        context "when the name of the badge hasn't changed" do
-          it "does not fire a title updating job" do
-            expect_not_enqueued_with(job: :bulk_user_title_update) do
-              put "/admin/badges/#{badge.id}.json", params: { name: badge.name }
-            end
-          end
-        end
-
-        context "when using default locale" do
-          it "updates the user title in a job" do
-            user_with_badge_title.update(title: "First Like")
-
-            expect_enqueued_with(
-              job: :bulk_user_title_update,
-              args: {
-                new_title: "First Ever Like",
-                granted_badge_id: badge.id,
-                action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
-              },
-            ) { put "/admin/badges/#{badge.id}.json", params: { name: "First Ever Like" } }
-          end
-        end
-
-        context "when using a custom locale" do
-          it "updates the title in the custom locale" do
-            SiteSetting.default_locale = "sv"
-
-            user_with_badge_title.update(title: "Första Gillningen")
-
-            expect_enqueued_with(
-              job: :bulk_user_title_update,
-              args: {
-                new_title: "Första Gillningen Någonsin",
-                granted_badge_id: badge.id,
-                action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
-              },
-            ) do
-              put "/admin/badges/#{badge.id}.json", params: { name: "Första Gillningen Någonsin" }
-            end
+      context "when the name of the badge hasn't changed" do
+        it "does not fire a title updating job" do
+          expect_not_enqueued_with(job: :bulk_user_title_update) do
+            put "/admin/badges/#{badge.id}.json", params: { name: badge.name }
           end
         end
       end
-    end
 
-    shared_examples "badge update not allowed" do
-      it "prevents badge update with a 404 response" do
-        SiteSetting.enable_badge_sql = true
+      context "when using default locale" do
+        it "updates the user title in a job" do
+          user_with_badge_title.update(title: "First Like")
 
-        sql = "select id user_id, created_at granted_at from users"
-        image = Fabricate(:upload)
+          expect_enqueued_with(
+            job: :bulk_user_title_update,
+            args: {
+              new_title: "First Ever Like",
+              granted_badge_id: badge.id,
+              action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
+            },
+          ) { put "/admin/badges/#{badge.id}.json", params: { name: "First Ever Like" } }
+        end
+      end
 
-        put "/admin/badges/#{badge.id}.json",
-            params: {
-              name: "123456",
-              query: sql,
-              badge_type_id: badge.badge_type_id,
-              allow_title: false,
-              multiple_grant: false,
-              enabled: true,
-              image_upload_id: image.id,
-              icon: "fa-rocket",
-            }
+      context "when using a custom locale" do
+        it "updates the title in the custom locale" do
+          SiteSetting.default_locale = "sv"
 
-        badge.reload
-        expect(response.status).to eq(404)
-        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-        expect(badge.name).not_to eq("123456")
-        expect(badge.query).not_to eq(sql)
-        expect(badge.icon).not_to eq("fa-rocket")
+          user_with_badge_title.update(title: "Första Gillningen")
+
+          expect_enqueued_with(
+            job: :bulk_user_title_update,
+            args: {
+              new_title: "Första Gillningen Någonsin",
+              granted_badge_id: badge.id,
+              action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
+            },
+          ) do
+            put "/admin/badges/#{badge.id}.json", params: { name: "Första Gillningen Någonsin" }
+          end
+        end
       end
     end
+  end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+  shared_examples "badge update not allowed" do
+    it "prevents badge update with a 404 response" do
+      SiteSetting.enable_badge_sql = true
 
-      include_examples "badge update not allowed"
+      sql = "select id user_id, created_at granted_at from users"
+      image = Fabricate(:upload)
+
+      put "/admin/badges/#{badge.id}.json",
+          params: {
+            name: "123456",
+            query: sql,
+            badge_type_id: badge.badge_type_id,
+            allow_title: false,
+            multiple_grant: false,
+            enabled: true,
+            image_upload_id: image.id,
+            icon: "fa-rocket",
+          }
+
+      badge.reload
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      expect(badge.name).not_to eq("123456")
+      expect(badge.query).not_to eq(sql)
+      expect(badge.icon).not_to eq("fa-rocket")
     end
+  end
 
-    context "when logged in as a non-staff user" do
-      before { sign_in(user) }
+  context "when logged in as a moderator" do
+    before { sign_in(moderator) }
 
-      include_examples "badge update not allowed"
-    end
+    include_examples "badge update not allowed"
+  end
+
+  context "when logged in as a non-staff user" do
+    before { sign_in(user) }
+
+    include_examples "badge update not allowed"
   end
 
   describe "#mass_award" do

@@ -5,6 +5,7 @@ require "rotp"
 RSpec.describe UsersEmailController do
   fab!(:user)
   let!(:email_token) { Fabricate(:email_token, user: user) }
+
   fab!(:moderator)
 
   describe "#confirm-new-email" do
@@ -150,166 +151,164 @@ RSpec.describe UsersEmailController do
     end
   end
 
-  describe "#update" do
-    it "requires you to be logged in" do
+  it "requires you to be logged in" do
+    put "/u/#{user.username}/preferences/email.json",
+        params: {
+          email: "bubblegum@adventuretime.ooo",
+        }
+    expect(response.status).to eq(403)
+  end
+
+  context "when logged in" do
+    before { sign_in(user) }
+
+    context "with CSRF protection enabled" do
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "rejects a CSRF token captured before a password reset" do
+        get "/session/csrf.json"
+        pre_reset_csrf_token = response.parsed_body["csrf"]
+        password_reset_token =
+          user
+            .email_tokens
+            .create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+            .token
+
+        put "/u/password-reset/#{password_reset_token}.json",
+            params: {
+              password: SecureRandom.hex,
+            },
+            headers: {
+              "X-CSRF-Token" => pre_reset_csrf_token,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+
+        expect do
+          put "/u/#{user.username}/preferences/email.json",
+              params: {
+                email: "bubblegum@adventuretime.ooo",
+              },
+              headers: {
+                "X-CSRF-Token" => pre_reset_csrf_token,
+                "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+              }
+        end.not_to change(EmailChangeRequest, :count)
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include("BAD CSRF")
+      end
+    end
+
+    it "raises an error without an email parameter" do
+      put "/u/#{user.username}/preferences/email.json"
+      expect(response.status).to eq(400)
+    end
+
+    it "raises an error without an invalid email" do
+      put "/u/#{user.username}/preferences/email.json", params: { email: "sam@not-email.com'" }
+      expect(response.status).to eq(422)
+      expect(response.body).to include("Email is invalid")
+    end
+
+    it "raises an error if you can't edit the user's email" do
+      SiteSetting.email_editable = false
+
       put "/u/#{user.username}/preferences/email.json",
           params: {
             email: "bubblegum@adventuretime.ooo",
           }
-      expect(response.status).to eq(403)
+      expect(response).to be_forbidden
     end
 
-    context "when logged in" do
-      before { sign_in(user) }
+    context "when the new email address is taken" do
+      fab!(:other_user, :coding_horror)
 
-      context "with CSRF protection enabled" do
-        before { ActionController::Base.allow_forgery_protection = true }
-        after { ActionController::Base.allow_forgery_protection = false }
+      context "when hide_email_address_taken is disabled" do
+        before { SiteSetting.hide_email_address_taken = false }
 
-        it "rejects a CSRF token captured before a password reset" do
-          get "/session/csrf.json"
-          pre_reset_csrf_token = response.parsed_body["csrf"]
-          password_reset_token =
-            user
-              .email_tokens
-              .create!(email: user.email, scope: EmailToken.scopes[:password_reset])
-              .token
+        it "raises an error" do
+          put "/u/#{user.username}/preferences/email.json", params: { email: other_user.email }
+          expect(response).to_not be_successful
+        end
 
-          put "/u/password-reset/#{password_reset_token}.json",
+        it "raises an error if there is whitespace too" do
+          put "/u/#{user.username}/preferences/email.json",
               params: {
-                password: SecureRandom.hex,
-              },
-              headers: {
-                "X-CSRF-Token" => pre_reset_csrf_token,
+                email: "#{other_user.email} ",
               }
+          expect(response).to_not be_successful
+        end
+      end
 
+      context "when hide_email_address_taken is enabled" do
+        before { SiteSetting.hide_email_address_taken = true }
+
+        it "responds with success" do
+          put "/u/#{user.username}/preferences/email.json", params: { email: other_user.email }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["success"]).to eq(true)
+        end
+      end
+    end
 
-          expect do
-            put "/u/#{user.username}/preferences/email.json",
-                params: {
-                  email: "bubblegum@adventuretime.ooo",
-                },
-                headers: {
-                  "X-CSRF-Token" => pre_reset_csrf_token,
-                  "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
-                }
-          end.not_to change(EmailChangeRequest, :count)
+    context "when new email is different case of existing email" do
+      fab!(:other_user) { Fabricate(:user, email: "case.insensitive@gmail.com") }
 
-          expect(response.status).to eq(403)
-          expect(response.body).to include("BAD CSRF")
+      context "when hiding taken e-mails" do
+        before { SiteSetting.hide_email_address_taken = true }
+
+        it "raises an error" do
+          put "/u/#{user.username}/preferences/email.json",
+              params: {
+                email: other_user.email.upcase,
+              }
+          expect(response).to be_successful
         end
       end
 
-      it "raises an error without an email parameter" do
-        put "/u/#{user.username}/preferences/email.json"
-        expect(response.status).to eq(400)
-      end
+      context "when revealing taken e-mails" do
+        before { SiteSetting.hide_email_address_taken = false }
 
-      it "raises an error without an invalid email" do
-        put "/u/#{user.username}/preferences/email.json", params: { email: "sam@not-email.com'" }
-        expect(response.status).to eq(422)
-        expect(response.body).to include("Email is invalid")
-      end
-
-      it "raises an error if you can't edit the user's email" do
-        SiteSetting.email_editable = false
-
-        put "/u/#{user.username}/preferences/email.json",
-            params: {
-              email: "bubblegum@adventuretime.ooo",
-            }
-        expect(response).to be_forbidden
-      end
-
-      context "when the new email address is taken" do
-        fab!(:other_user, :coding_horror)
-
-        context "when hide_email_address_taken is disabled" do
-          before { SiteSetting.hide_email_address_taken = false }
-
-          it "raises an error" do
-            put "/u/#{user.username}/preferences/email.json", params: { email: other_user.email }
-            expect(response).to_not be_successful
-          end
-
-          it "raises an error if there is whitespace too" do
-            put "/u/#{user.username}/preferences/email.json",
-                params: {
-                  email: "#{other_user.email} ",
-                }
-            expect(response).to_not be_successful
-          end
-        end
-
-        context "when hide_email_address_taken is enabled" do
-          before { SiteSetting.hide_email_address_taken = true }
-
-          it "responds with success" do
-            put "/u/#{user.username}/preferences/email.json", params: { email: other_user.email }
-            expect(response.status).to eq(200)
-          end
+        it "raises an error" do
+          put "/u/#{user.username}/preferences/email.json",
+              params: {
+                email: other_user.email.upcase,
+              }
+          expect(response).to_not be_successful
         end
       end
+    end
 
-      context "when new email is different case of existing email" do
-        fab!(:other_user) { Fabricate(:user, email: "case.insensitive@gmail.com") }
+    it "raises an error when new email domain is present in blocked_email_domains site setting" do
+      SiteSetting.blocked_email_domains = "mailinator.com"
 
-        context "when hiding taken e-mails" do
-          before { SiteSetting.hide_email_address_taken = true }
+      put "/u/#{user.username}/preferences/email.json",
+          params: {
+            email: "not_good@mailinator.com",
+          }
+      expect(response).to_not be_successful
+    end
 
-          it "raises an error" do
-            put "/u/#{user.username}/preferences/email.json",
-                params: {
-                  email: other_user.email.upcase,
-                }
-            expect(response).to be_successful
-          end
-        end
+    it "raises an error when new email domain is not present in allowed_email_domains site setting" do
+      SiteSetting.allowed_email_domains = "discourse.org"
 
-        context "when revealing taken e-mails" do
-          before { SiteSetting.hide_email_address_taken = false }
+      put "/u/#{user.username}/preferences/email.json",
+          params: {
+            email: "bubblegum@adventuretime.ooo",
+          }
+      expect(response).to_not be_successful
+    end
 
-          it "raises an error" do
-            put "/u/#{user.username}/preferences/email.json",
-                params: {
-                  email: other_user.email.upcase,
-                }
-            expect(response).to_not be_successful
-          end
-        end
-      end
-
-      it "raises an error when new email domain is present in blocked_email_domains site setting" do
-        SiteSetting.blocked_email_domains = "mailinator.com"
-
-        put "/u/#{user.username}/preferences/email.json",
-            params: {
-              email: "not_good@mailinator.com",
-            }
-        expect(response).to_not be_successful
-      end
-
-      it "raises an error when new email domain is not present in allowed_email_domains site setting" do
-        SiteSetting.allowed_email_domains = "discourse.org"
-
-        put "/u/#{user.username}/preferences/email.json",
-            params: {
-              email: "bubblegum@adventuretime.ooo",
-            }
-        expect(response).to_not be_successful
-      end
-
-      context "with success" do
-        it "has an email token" do
-          expect do
-            put "/u/#{user.username}/preferences/email.json",
-                params: {
-                  email: "bubblegum@adventuretime.ooo",
-                }
-          end.to change(EmailChangeRequest, :count)
-        end
+    context "with success" do
+      it "has an email token" do
+        expect do
+          put "/u/#{user.username}/preferences/email.json",
+              params: {
+                email: "bubblegum@adventuretime.ooo",
+              }
+        end.to change(EmailChangeRequest, :count)
       end
     end
   end

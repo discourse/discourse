@@ -31,6 +31,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
+
   let(:query_ids_to_invalidate) { [visible_query.id] }
 
   after do

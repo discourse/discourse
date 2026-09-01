@@ -125,6 +125,13 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
           posts = trigger_search(query)
 
           expect(posts).to be_empty
+
+          anonymous_posts =
+            DiscourseAi::Completions::Llm.with_prepared_responses([hypothetical_post]) do
+              described_class.new(Guardian.new(nil)).search_for_topics(query)
+            end
+
+          expect(anonymous_posts).to be_empty
         end
 
         it "returns the results if the user has access to the category" do
@@ -133,17 +140,6 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
           posts = trigger_search(query)
 
           expect(posts).to contain_exactly(post)
-        end
-
-        context "while searching as anon" do
-          it "returns an empty list" do
-            posts =
-              DiscourseAi::Completions::Llm.with_prepared_responses([hypothetical_post]) do
-                described_class.new(Guardian.new(nil)).search_for_topics(query)
-              end
-
-            expect(posts).to be_empty
-          end
         end
       end
     end

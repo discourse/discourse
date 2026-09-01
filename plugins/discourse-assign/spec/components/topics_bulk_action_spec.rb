@@ -5,14 +5,16 @@ describe TopicsBulkAction do
   fab!(:post1, :post)
   fab!(:post2, :post)
 
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    assign_allowed_group.add(user)
+  end
 
   let(:user) { Fabricate(:user) }
   let(:user2) { Fabricate(:user) }
 
   include_context "with group that is allowed to assign"
 
-  before { assign_allowed_group.add(user) }
 
   describe "assign_topics" do
     it "assigns multiple topics to a user" do

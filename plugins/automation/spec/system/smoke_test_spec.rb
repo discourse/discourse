@@ -53,7 +53,7 @@ describe "DiscourseAutomation | smoke test" do
     end
   end
 
-  it "works" do
+  it "creates an automation" do
     visit("/admin/plugins/automation")
 
     find(".admin-config-area-empty-list__cta-button").click

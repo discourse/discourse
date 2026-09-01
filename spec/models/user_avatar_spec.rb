@@ -6,6 +6,7 @@ RSpec.describe UserAvatar do
 
   describe "#update_gravatar!" do
     let(:temp) { Tempfile.new("test") }
+
     fab!(:upload) { Fabricate(:upload, user: user) }
 
     describe "when working" do
@@ -42,7 +43,7 @@ RSpec.describe UserAvatar do
       end
 
       describe "when user has an existing custom upload" do
-        it "should not change the user's uploaded avatar" do
+        it "does not change the user's uploaded avatar" do
           user.update!(uploaded_avatar: upload)
 
           avatar.update!(custom_upload: upload, gravatar_upload: Fabricate(:upload, user: user))
@@ -57,7 +58,7 @@ RSpec.describe UserAvatar do
       end
 
       describe "when user has an existing gravatar" do
-        it "should update the user's uploaded avatar correctly" do
+        it "updates the user's uploaded avatar correctly" do
           user.update!(uploaded_avatar: upload)
           avatar.update!(gravatar_upload: upload)
 
@@ -104,7 +105,7 @@ RSpec.describe UserAvatar do
       end
     end
 
-    it "should not raise an error when there's no primary_email" do
+    it "does not raise an error when there's no primary_email" do
       avatar.user.primary_email.destroy
       avatar.user.reload
 
@@ -157,7 +158,7 @@ RSpec.describe UserAvatar do
     end
 
     describe "when avatar url returns an invalid status code" do
-      it "should not do anything" do
+      it "does not do anything" do
         stub_request(:get, "http://thisfakesomething.something.com/").to_return(
           status: 500,
           body: "",
@@ -212,7 +213,7 @@ RSpec.describe UserAvatar do
       )
     end
 
-    it "will clean up dangling avatars" do
+    it "cleans up dangling avatars" do
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
 

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseNarrativeBot::Store do
   describe ".set" do
-    it "should set the right value in the plugin store" do
+    it "sets the right value in the plugin store" do
       key = "somekey"
       described_class.set(key, "yay")
       plugin_store_row = PluginStoreRow.last
@@ -14,7 +14,7 @@ RSpec.describe DiscourseNarrativeBot::Store do
   end
 
   describe ".get" do
-    it "should get the right value from the plugin store" do
+    it "gets the right value from the plugin store" do
       PluginStoreRow.create!(
         plugin_name: DiscourseNarrativeBot::PLUGIN_NAME,
         key: "somekey",

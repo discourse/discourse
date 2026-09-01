@@ -148,32 +148,30 @@ RSpec.describe Chat::Action::SearchForMessages do
         end
       end
 
-      context "with has_more indicator" do
-        context "when there are more results" do
-          before { args[:limit] = 2 }
+      context "when there are more results" do
+        before { args[:limit] = 2 }
 
-          it "sets has_more to true" do
-            expect(action).to include(has_more: true, limit: 2)
-          end
+        it "sets has_more to true" do
+          expect(action).to include(has_more: true, limit: 2)
+        end
+      end
+
+      context "when there are no more results" do
+        before { args[:limit] = 10 }
+
+        it "sets has_more to false" do
+          expect(action).to include(has_more: false, limit: 10)
+        end
+      end
+
+      context "when offset is used" do
+        before do
+          args[:limit] = 2
+          args[:offset] = 3
         end
 
-        context "when there are no more results" do
-          before { args[:limit] = 10 }
-
-          it "sets has_more to false" do
-            expect(action).to include(has_more: false, limit: 10)
-          end
-        end
-
-        context "when offset is used" do
-          before do
-            args[:limit] = 2
-            args[:offset] = 3
-          end
-
-          it "sets has_more correctly based on remaining results" do
-            expect(action).to include(has_more: false, limit: 2, offset: 3)
-          end
+        it "sets has_more correctly based on remaining results" do
+          expect(action).to include(has_more: false, limit: 2, offset: 3)
         end
       end
 

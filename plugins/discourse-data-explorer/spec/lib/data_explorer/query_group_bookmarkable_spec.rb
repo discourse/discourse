@@ -35,6 +35,7 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   before do
     SiteSetting.data_explorer_enabled = true
     register_test_bookmarkable(DiscourseDataExplorer::QueryGroupBookmarkable)
+    Fabricate(:group_user, user: user, group: group3)
   end
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
@@ -53,7 +54,6 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   let!(:query_group4) { Fabricate(:query_group, query: query1, group: group2) }
 
   # User is a member of Group 3, which has no access to Query 1.
-  let!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
 
   # User bookmarked the same Query 1 twice, from different Groups (0 and 1)
   let!(:bookmark1) do

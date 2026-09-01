@@ -388,6 +388,7 @@ RSpec.describe Jobs::UserEmail do
 
     context "with confirm_new_email" do
       let(:email_token) { Fabricate(:email_token, user: user) }
+
       before do
         EmailChangeRequest.create!(
           user: user,
@@ -400,6 +401,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by admin" do
         let(:requested_by) { Fabricate(:admin) }
+
         it "passes along true for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -413,6 +415,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by the user" do
         let(:requested_by) { user }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -426,6 +429,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when requested_by record is not present" do
         let(:requested_by) { nil }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -440,6 +444,24 @@ RSpec.describe Jobs::UserEmail do
 
     context "with post" do
       fab!(:post) { Fabricate(:post, user: user) }
+
+      def send_suspended_user_email(post)
+        notification =
+          Fabricate(
+            :notification,
+            user: suspended,
+            topic: post.topic,
+            post_number: post.post_number,
+            data: { original_post_id: post.id }.to_json,
+          )
+
+        described_class.new.execute(
+          type: :user_private_message,
+          user_id: suspended.id,
+          post_id: post.id,
+          notification_id: notification.id,
+        )
+      end
 
       it "doesn't send the email if you've seen the post" do
         PostTiming.record_timing(
@@ -468,76 +490,41 @@ RSpec.describe Jobs::UserEmail do
       end
 
       context "when user is suspended" do
-        context "when topic is a private message" do
-          subject(:send_email) do
-            described_class.new.execute(
-              type: :user_private_message,
-              user_id: suspended.id,
-              post_id: post.id,
-              notification_id: pm_notification.id,
-            )
-          end
+        it "sends a non-group private message from staff" do
+          post = Fabricate(:private_message_post, user: Fabricate(:moderator), recipient: suspended)
 
-          let(:pm_notification) do
-            Fabricate(
-              :notification,
-              user: suspended,
-              topic: post.topic,
-              post_number: post.post_number,
-              data: { original_post_id: post.id }.to_json,
-            )
-          end
-          fab!(:moderator)
-          fab!(:regular_user, :user)
+          send_suspended_user_email(post)
 
-          context "when this is not a group PM" do
-            let(:post) { Fabricate(:private_message_post, user: user, recipient: suspended) }
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
+        end
 
-            context "when post is from a staff user" do
-              let(:user) { moderator }
+        it "does not send a non-group private message from a regular user" do
+          post = Fabricate(:private_message_post, user: Fabricate(:user), recipient: suspended)
 
-              it "does send an email" do
-                send_email
-                expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
-              end
-            end
+          send_suspended_user_email(post)
 
-            context "when post is from a regular user" do
-              let(:user) { regular_user }
+          expect(ActionMailer::Base.deliveries).to be_empty
+        end
 
-              it "doesn't send email" do
-                send_email
-                expect(ActionMailer::Base.deliveries).to be_empty
-              end
-            end
-          end
+        it "does not send a group private message from staff" do
+          group = Fabricate(:group)
+          group.users << [suspended, *Fabricate.times(2, :user)]
+          post =
+            Fabricate(:group_private_message_post, user: Fabricate(:moderator), recipients: group)
 
-          context "when this is a group PM" do
-            fab!(:group)
-            fab!(:users) { Fabricate.times(2, :user) }
+          send_suspended_user_email(post)
 
-            let(:post) { Fabricate(:group_private_message_post, user: user, recipients: group) }
+          expect(ActionMailer::Base.deliveries).to be_empty
+        end
 
-            before { group.users << [suspended, *users] }
+        it "does not send a group private message from a regular user" do
+          group = Fabricate(:group)
+          group.users << [suspended, *Fabricate.times(2, :user)]
+          post = Fabricate(:group_private_message_post, user: Fabricate(:user), recipients: group)
 
-            context "when post is from a staff user" do
-              let(:user) { moderator }
+          send_suspended_user_email(post)
 
-              it "does not send an email" do
-                send_email
-                expect(ActionMailer::Base.deliveries).to be_empty
-              end
-            end
-
-            context "when post is from a regular user" do
-              let(:user) { regular_user }
-
-              it "does not send an email" do
-                send_email
-                expect(ActionMailer::Base.deliveries).to be_empty
-              end
-            end
-          end
+          expect(ActionMailer::Base.deliveries).to be_empty
         end
 
         it "doesn't send PM from system user" do
@@ -887,6 +874,29 @@ RSpec.describe Jobs::UserEmail do
       end
 
       context "when user is suspended" do
+        let :sent_message do
+            Jobs::UserEmail.new.message_for_email(
+              suspended,
+              pm_from_staff,
+              "user_private_message",
+              pm_notification,
+            )
+          end
+        let(:pm_notification) do
+            Fabricate(
+              :notification,
+              user: suspended,
+              topic: pm_from_staff.topic,
+              post_number: pm_from_staff.post_number,
+              data: { original_post_id: pm_from_staff.id }.to_json,
+            )
+          end
+        let(:pm_from_staff) do
+            Fabricate(:post, user: Fabricate(:moderator)).tap do |post|
+              post.topic.topic_allowed_users.create!(user_id: suspended.id)
+            end
+          end
+
         it "doesn't send email for a pm from a regular user" do
           msg, err =
             Jobs::UserEmail.new.message_for_email(
@@ -900,42 +910,20 @@ RSpec.describe Jobs::UserEmail do
           expect(err).not_to eq(nil)
         end
 
-        context "with pm from staff" do
-          before do
-            @pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
-            @pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
-            @pm_notification =
-              Fabricate(
-                :notification,
-                user: suspended,
-                topic: @pm_from_staff.topic,
-                post_number: @pm_from_staff.post_number,
-                data: { original_post_id: @pm_from_staff.id }.to_json,
-              )
-          end
 
-          let :sent_message do
-            Jobs::UserEmail.new.message_for_email(
-              suspended,
-              @pm_from_staff,
-              "user_private_message",
-              @pm_notification,
-            )
-          end
 
-          it "sends an email" do
+        it "sends an email for a private message from staff" do
             msg, err = sent_message
             expect(msg).not_to be(nil)
             expect(err).to be(nil)
           end
 
-          it "sends an email even if user was last seen recently" do
-            suspended.update_column(:last_seen_at, 1.minute.ago)
+        it "sends a staff private message even if user was last seen recently" do
+          suspended.update_column(:last_seen_at, 1.minute.ago)
 
-            msg, err = sent_message
-            expect(msg).not_to be(nil)
-            expect(err).to be(nil)
-          end
+          msg, err = sent_message
+          expect(msg).not_to be(nil)
+          expect(err).to be(nil)
         end
       end
 

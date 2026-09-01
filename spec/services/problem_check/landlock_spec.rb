@@ -21,7 +21,7 @@ RSpec.describe ProblemCheck::Landlock do
       context "when Landlock is not supported" do
         let(:supported) { false }
 
-        it do
+        it "reports unavailable Landlock support" do
           expect(check).to have_a_problem.with_priority("high").with_message(
             "Landlock sandboxing is unavailable in this hosting environment, so external commands run without filesystem and network isolation. This is an important security protection that should not be missing in production. Use a Linux kernel with Landlock support (5.13 or later) to restore it.",
           )

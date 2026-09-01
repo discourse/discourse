@@ -174,6 +174,7 @@ describe "Welcome banner" do
 
       context "for text color setting" do
         let(:red) { "#ff0000" }
+
         before { SiteSetting.welcome_banner_text_color = red }
 
         it "doesn't set text color without background image" do
@@ -220,7 +221,7 @@ describe "Welcome banner" do
 
         before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
 
-        it "should show on" do
+        it "shows on" do
           sign_in(current_user)
 
           visit "/"
@@ -233,7 +234,7 @@ describe "Welcome banner" do
           expect(banner).to be_visible
         end
 
-        it "should NOT show on" do
+        it "does not show on" do
           visit "/login"
           expect(banner).to be_hidden
 
@@ -261,7 +262,7 @@ describe "Welcome banner" do
         end
       end
 
-      it "should show on discovery routes only" do
+      it "shows on discovery routes only" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "discovery"
 
@@ -272,7 +273,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on top menu pages only" do
+      it "shows on top menu pages only" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "top_menu_pages"
         SiteSetting
@@ -287,7 +288,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on homepage only" do
+      it "shows on homepage only" do
         SiteSetting.welcome_banner_page_visibility = "homepage"
 
         visit "/"

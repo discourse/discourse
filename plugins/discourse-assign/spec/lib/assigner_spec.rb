@@ -334,187 +334,185 @@ RSpec.describe Assigner do
       expect(assigner.assign(another_mod).fetch(:success)).to eq(true)
     end
 
-    describe "forbidden reasons" do
-      it "doesn't assign if the topic has more than 5 assignments" do
-        other_post = nil
+    it "doesn't assign if the topic has more than 5 assignments" do
+      other_post = nil
 
-        status = described_class.new(topic, admin).assign(Fabricate(:moderator))
-        expect(status[:success]).to eq(true)
+      status = described_class.new(topic, admin).assign(Fabricate(:moderator))
+      expect(status[:success]).to eq(true)
 
-        # Assign many posts to reach the limit
-        1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT - 1) do
-          other_post = Fabricate(:post, topic: topic)
-          user = Fabricate(:moderator)
-          status = described_class.new(other_post, admin).assign(user)
-          expect(status[:success]).to eq(true)
-        end
-
-        # Assigning one more post is not allowed
-        post = Fabricate(:post, topic: topic)
-        status = described_class.new(post, admin).assign(moderator)
-        expect(status[:success]).to eq(false)
-        expect(status[:reason]).to eq(:too_many_assigns_for_topic)
-
-        # Allows to reassign Topic
-        status = described_class.new(topic, admin).assign(Fabricate(:moderator))
-        expect(status[:success]).to eq(true)
-
-        # Delete a post to mark the assignment as inactive
-        PostDestroyer.new(admin, other_post).destroy
-
-        # Try assigning again
-        status = described_class.new(post, admin).assign(moderator)
+      # Assign many posts to reach the limit
+      1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT - 1) do
+        other_post = Fabricate(:post, topic: topic)
+        user = Fabricate(:moderator)
+        status = described_class.new(other_post, admin).assign(user)
         expect(status[:success]).to eq(true)
       end
 
-      it "doesn't assign if the user has too many assigned topics" do
-        SiteSetting.max_assigned_topics = 1
-        another_post = Fabricate(:post)
-        assigner.assign(moderator)
+      # Assigning one more post is not allowed
+      post = Fabricate(:post, topic: topic)
+      status = described_class.new(post, admin).assign(moderator)
+      expect(status[:success]).to eq(false)
+      expect(status[:reason]).to eq(:too_many_assigns_for_topic)
 
-        second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
+      # Allows to reassign Topic
+      status = described_class.new(topic, admin).assign(Fabricate(:moderator))
+      expect(status[:success]).to eq(true)
 
-        expect(second_assign[:success]).to eq(false)
-        expect(second_assign[:reason]).to eq(:too_many_assigns)
+      # Delete a post to mark the assignment as inactive
+      PostDestroyer.new(admin, other_post).destroy
+
+      # Try assigning again
+      status = described_class.new(post, admin).assign(moderator)
+      expect(status[:success]).to eq(true)
+    end
+
+    it "doesn't assign if the user has too many assigned topics" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      assigner.assign(moderator)
+
+      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
+
+      expect(second_assign[:success]).to eq(false)
+      expect(second_assign[:reason]).to eq(:too_many_assigns)
+    end
+
+    it "doesn't enforce the limit when self-assigning" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      assigner.assign(moderator)
+
+      second_assign = described_class.new(another_post.topic, moderator).assign(moderator)
+
+      expect(second_assign[:success]).to eq(true)
+    end
+
+    it "doesn't count self-assigns when enforcing the limit" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+
+      first_assign = assigner.assign(moderator)
+
+      # reached limit so stop
+      second_assign = described_class.new(Fabricate(:topic), moderator_2).assign(moderator)
+
+      # self assign has a bypass
+      third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
+
+      expect(first_assign[:success]).to eq(true)
+      expect(second_assign[:success]).to eq(false)
+      expect(third_assign[:success]).to eq(true)
+    end
+
+    it "doesn't count inactive assigns when enforcing the limit" do
+      SiteSetting.max_assigned_topics = 1
+      SiteSetting.unassign_on_close = true
+      another_post = Fabricate(:post)
+
+      first_assign = assigner.assign(moderator)
+      topic.update_status("closed", true, Discourse.system_user)
+
+      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
+
+      expect(first_assign[:success]).to eq(true)
+      expect(second_assign[:success]).to eq(true)
+    end
+
+    it "reassigns a post even when at the assignments limit" do
+      posts =
+        described_class::ASSIGNMENTS_PER_TOPIC_LIMIT.times.map { Fabricate(:post, topic: topic) }
+
+      posts.each do |post|
+        user = Fabricate(:moderator)
+        described_class.new(post, admin).assign(user)
       end
 
-      it "doesn't enforce the limit when self-assigning" do
-        SiteSetting.max_assigned_topics = 1
-        another_post = Fabricate(:post)
-        assigner.assign(moderator)
+      status = described_class.new(posts.first, admin).assign(Fabricate(:moderator))
+      expect(status[:success]).to eq(true)
+    end
 
-        second_assign = described_class.new(another_post.topic, moderator).assign(moderator)
-
-        expect(second_assign[:success]).to eq(true)
+    context "when 'allow_self_reassign' is false" do
+      subject(:assign) do
+        assigner.assign(moderator, note: other_note, allow_self_reassign: self_reassign)
       end
 
-      it "doesn't count self-assigns when enforcing the limit" do
-        SiteSetting.max_assigned_topics = 1
-        another_post = Fabricate(:post)
+      let(:self_reassign) { false }
+      let(:assigner) { described_class.new(topic, moderator_2) }
+      let(:note) { "note me down" }
 
-        first_assign = assigner.assign(moderator)
+      before { assigner.assign(moderator, note: note) }
 
-        # reached limit so stop
-        second_assign = described_class.new(Fabricate(:topic), moderator_2).assign(moderator)
+      context "when the assigned user and the note is the same" do
+        let(:other_note) { note }
 
-        # self assign has a bypass
-        third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
-
-        expect(first_assign[:success]).to eq(true)
-        expect(second_assign[:success]).to eq(false)
-        expect(third_assign[:success]).to eq(true)
-      end
-
-      it "doesn't count inactive assigns when enforcing the limit" do
-        SiteSetting.max_assigned_topics = 1
-        SiteSetting.unassign_on_close = true
-        another_post = Fabricate(:post)
-
-        first_assign = assigner.assign(moderator)
-        topic.update_status("closed", true, Discourse.system_user)
-
-        second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
-
-        expect(first_assign[:success]).to eq(true)
-        expect(second_assign[:success]).to eq(true)
-      end
-
-      it "reassigns a post even when at the assignments limit" do
-        posts =
-          described_class::ASSIGNMENTS_PER_TOPIC_LIMIT.times.map { Fabricate(:post, topic: topic) }
-
-        posts.each do |post|
-          user = Fabricate(:moderator)
-          described_class.new(post, admin).assign(user)
-        end
-
-        status = described_class.new(posts.first, admin).assign(Fabricate(:moderator))
-        expect(status[:success]).to eq(true)
-      end
-
-      context "when 'allow_self_reassign' is false" do
-        subject(:assign) do
-          assigner.assign(moderator, note: other_note, allow_self_reassign: self_reassign)
-        end
-
-        let(:self_reassign) { false }
-        let(:assigner) { described_class.new(topic, moderator_2) }
-        let(:note) { "note me down" }
-
-        before { assigner.assign(moderator, note: note) }
-
-        context "when the assigned user and the note is the same" do
-          let(:other_note) { note }
-
-          it "fails to assign" do
-            expect(assign).to match(success: false, reason: :already_assigned)
-          end
-        end
-
-        context "when the assigned user is the same but the note is different" do
-          let(:other_note) { "note me down again" }
-
-          it "allows assignment" do
-            expect(assign).to match(success: true)
-          end
-        end
-      end
-
-      context "when 'allow_self_reassign' is true" do
-        subject(:assign) { assigner.assign(moderator, allow_self_reassign: self_reassign) }
-
-        let(:self_reassign) { true }
-        let(:assigner) { described_class.new(topic, moderator_2) }
-
-        context "when the assigned user is the same" do
-          before { assigner.assign(moderator) }
-
-          it "allows assignment" do
-            expect(assign).to match(success: true)
-          end
+        it "fails to assign" do
+          expect(assign).to match(success: false, reason: :already_assigned)
         end
       end
 
-      it "fails to assign when the assigned user cannot view the pm" do
-        assign = described_class.new(pm, moderator_2).assign(moderator)
+      context "when the assigned user is the same but the note is different" do
+        let(:other_note) { "note me down again" }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+        it "allows assignment" do
+          expect(assign).to match(success: true)
+        end
       end
+    end
 
-      it "fails to assign when the assigned admin cannot view the pm" do
-        assign = described_class.new(pm, moderator_2).assign(admin)
+    context "when 'allow_self_reassign' is true" do
+      subject(:assign) { assigner.assign(moderator, allow_self_reassign: self_reassign) }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+      let(:self_reassign) { true }
+      let(:assigner) { described_class.new(topic, moderator_2) }
+
+      context "when the assigned user is the same" do
+        before { assigner.assign(moderator) }
+
+        it "allows assignment" do
+          expect(assign).to match(success: true)
+        end
       end
+    end
 
-      it "fails to assign when not all group members has access to pm" do
-        assign = described_class.new(pm, moderator_2).assign(moderator.groups.first)
+    it "fails to assign when the assigned user cannot view the pm" do
+      assign = described_class.new(pm, moderator_2).assign(moderator)
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+    end
 
-        # even when admin
-        assign = described_class.new(pm, moderator_2).assign(admin.groups.first)
+    it "fails to assign when the assigned admin cannot view the pm" do
+      assign = described_class.new(pm, moderator_2).assign(admin)
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
-      end
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+    end
 
-      it "fails to assign when the assigned user cannot view the topic" do
-        assign = described_class.new(secure_topic, moderator_2).assign(moderator)
+    it "fails to assign when not all group members has access to pm" do
+      assign = described_class.new(pm, moderator_2).assign(moderator.groups.first)
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
-      end
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
 
-      it "fails to assign when the not all group members can view the topic" do
-        assign = described_class.new(secure_topic, moderator_2).assign(moderator.groups.first)
+      # even when admin
+      assign = described_class.new(pm, moderator_2).assign(admin.groups.first)
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
-      end
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+    end
+
+    it "fails to assign when the assigned user cannot view the topic" do
+      assign = described_class.new(secure_topic, moderator_2).assign(moderator)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
+    end
+
+    it "fails to assign when the not all group members can view the topic" do
+      assign = described_class.new(secure_topic, moderator_2).assign(moderator.groups.first)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
     end
 
     describe "category scoped assignment permissions" do
@@ -1079,7 +1077,7 @@ RSpec.describe Assigner do
       }
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "sends an email if the assigner and assignee are different" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator_2) }.to change {
@@ -1087,7 +1085,7 @@ RSpec.describe Assigner do
       }.by(1)
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "doesn't send an email if the assigner and assignee are the same" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator) }.not_to change {

@@ -10,7 +10,7 @@ RSpec.describe PostsController do
   end
 
   describe "polls" do
-    it "works" do
+    it "creates a poll" do
       Group.refresh_automatic_groups!
       post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
@@ -63,7 +63,7 @@ RSpec.describe PostsController do
       expect(job_args["poll_name"]).to eq(name)
     end
 
-    it "should have different options" do
+    it "has different options" do
       post :create, params: { title: title, raw: "[poll]\n- A\n- A\n[/poll]" }, format: :json
 
       expect(response).not_to be_successful
@@ -84,7 +84,7 @@ RSpec.describe PostsController do
       expect(response).to be_successful
     end
 
-    it "should have at least 1 options" do
+    it "has at least 1 options" do
       post :create, params: { title: title, raw: "[poll]\n[/poll]" }, format: :json
 
       expect(response).not_to be_successful
@@ -92,7 +92,7 @@ RSpec.describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
 
-    it "should have at most 'SiteSetting.poll_maximum_options' options" do
+    it "has at most 'SiteSetting.poll_maximum_options' options" do
       raw = +"[poll]\n"
       (SiteSetting.poll_maximum_options + 1).times { |n| raw << "\n- #{n}" }
       raw << "\n[/poll]"
@@ -106,7 +106,7 @@ RSpec.describe PostsController do
       )
     end
 
-    it "should have valid parameters" do
+    it "has valid parameters" do
       post :create,
            params: {
              title: title,
@@ -179,132 +179,130 @@ RSpec.describe PostsController do
       expect(poll.title).to eq("What’s up?")
     end
 
-    describe "edit window" do
-      describe "within the first 5 minutes" do
-        let(:post_id) do
-          freeze_time(4.minutes.ago) do
-            post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
+    describe "within the first 5 minutes" do
+      let(:post_id) do
+        freeze_time(4.minutes.ago) do
+          post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
-            response.parsed_body["id"]
-          end
-        end
-
-        it "can be changed" do
-          put :update,
-              params: {
-                id: post_id,
-                post: {
-                  raw: "[poll]\n- A\n- B\n- C\n[/poll]",
-                },
-              },
-              format: :json
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["post"]["polls"][0]["options"][2]["html"]).to eq("C")
-        end
-
-        it "does not clear votes when poll has no change" do
-          DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
-          put :update,
-              params: {
-                id: post_id,
-                post: {
-                  raw: "[poll]\n- A\n- B\n[/poll]\n This poll has no change, but the raw does.",
-                },
-              },
-              format: :json
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["post"]["polls_votes"]["poll"]).to match_array(
-            "5c24fc1df56d764b550ceae1b9319125",
-          )
-        end
-
-        it "resets the votes when poll is changed" do
-          DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
-
-          put :update,
-              params: {
-                id: post_id,
-                post: {
-                  raw: "[poll]\n- A\n- B\n- C\n[/poll]",
-                },
-              },
-              format: :json
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["post"]["polls_votes"]).to_not be
+          response.parsed_body["id"]
         end
       end
 
-      describe "after the poll edit window has expired" do
-        let(:poll) { "[poll]\n- A\n- B\n[/poll]" }
-        let(:new_option) { "[poll]\n- A\n- C\n[/poll]" }
-        let(:updated) { "before\n\n[poll]\n- A\n- B\n[/poll]\n\nafter" }
+      it "can be changed" do
+        put :update,
+            params: {
+              id: post_id,
+              post: {
+                raw: "[poll]\n- A\n- B\n- C\n[/poll]",
+              },
+            },
+            format: :json
 
-        let(:post_id) do
-          freeze_time(6.minutes.ago) do
-            post :create, params: { title: title, raw: poll }, format: :json
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["post"]["polls"][0]["options"][2]["html"]).to eq("C")
+      end
 
-            response.parsed_body["id"]
-          end
+      it "does not clear votes when poll has no change" do
+        DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
+        put :update,
+            params: {
+              id: post_id,
+              post: {
+                raw: "[poll]\n- A\n- B\n[/poll]\n This poll has no change, but the raw does.",
+              },
+            },
+            format: :json
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["post"]["polls_votes"]["poll"]).to match_array(
+          "5c24fc1df56d764b550ceae1b9319125",
+        )
+      end
+
+      it "resets the votes when poll is changed" do
+        DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
+
+        put :update,
+            params: {
+              id: post_id,
+              post: {
+                raw: "[poll]\n- A\n- B\n- C\n[/poll]",
+              },
+            },
+            format: :json
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["post"]["polls_votes"]).to_not be
+      end
+    end
+
+    describe "after the poll edit window has expired" do
+      let(:poll) { "[poll]\n- A\n- B\n[/poll]" }
+      let(:new_option) { "[poll]\n- A\n- C\n[/poll]" }
+      let(:updated) { "before\n\n[poll]\n- A\n- B\n[/poll]\n\nafter" }
+
+      let(:post_id) do
+        freeze_time(6.minutes.ago) do
+          post :create, params: { title: title, raw: poll }, format: :json
+
+          response.parsed_body["id"]
+        end
+      end
+
+      let(:poll_edit_window_mins) { 6 }
+
+      before { SiteSetting.poll_edit_window_mins = poll_edit_window_mins }
+
+      describe "with no vote" do
+        it "can change the options" do
+          put :update, params: { id: post_id, post: { raw: new_option } }, format: :json
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["post"]["polls"][0]["options"][1]["html"]).to eq("C")
         end
 
-        let(:poll_edit_window_mins) { 6 }
+        it "support changes on the post" do
+          put :update, params: { id: post_id, post: { raw: updated } }, format: :json
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["post"]["cooked"]).to match("before")
+        end
+      end
 
-        before { SiteSetting.poll_edit_window_mins = poll_edit_window_mins }
-
-        describe "with no vote" do
-          it "can change the options" do
-            put :update, params: { id: post_id, post: { raw: new_option } }, format: :json
-
-            expect(response.status).to eq(200)
-            json = response.parsed_body
-            expect(json["post"]["polls"][0]["options"][1]["html"]).to eq("C")
-          end
-
-          it "support changes on the post" do
-            put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response.status).to eq(200)
-            json = response.parsed_body
-            expect(json["post"]["cooked"]).to match("before")
-          end
+      describe "with at least one vote" do
+        before do
+          DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
         end
 
-        describe "with at least one vote" do
-          before do
-            DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
-          end
+        it "cannot change the options" do
+          put :update, params: { id: post_id, post: { raw: new_option } }, format: :json
 
-          it "cannot change the options" do
-            put :update, params: { id: post_id, post: { raw: new_option } }, format: :json
+          expect(response).not_to be_successful
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(
+            I18n.t(
+              "poll.edit_window_expired.cannot_edit_default_poll_with_votes",
+              minutes: poll_edit_window_mins,
+            ),
+          )
+        end
 
-            expect(response).not_to be_successful
-            json = response.parsed_body
-            expect(json["errors"][0]).to eq(
-              I18n.t(
-                "poll.edit_window_expired.cannot_edit_default_poll_with_votes",
-                minutes: poll_edit_window_mins,
-              ),
-            )
-          end
-
-          it "support changes on the post" do
-            put :update, params: { id: post_id, post: { raw: updated } }, format: :json
-            expect(response.status).to eq(200)
-            json = response.parsed_body
-            expect(json["post"]["cooked"]).to match("before")
-          end
+        it "support changes on the post" do
+          put :update, params: { id: post_id, post: { raw: updated } }, format: :json
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["post"]["cooked"]).to match("before")
         end
       end
     end
   end
 
   describe "named polls" do
-    it "should have different options" do
+    it "has different options" do
       post :create,
            params: {
              title: title,
@@ -322,7 +320,7 @@ RSpec.describe PostsController do
       )
     end
 
-    it "should have at least 1 option" do
+    it "has at least 1 option" do
       post :create, params: { title: title, raw: "[poll name='foo']\n[/poll]" }, format: :json
 
       expect(response).not_to be_successful
@@ -334,7 +332,7 @@ RSpec.describe PostsController do
   end
 
   describe "multiple polls" do
-    it "works" do
+    it "creates every poll" do
       post :create,
            params: {
              title: title,
@@ -348,7 +346,7 @@ RSpec.describe PostsController do
       expect(Poll.where(post_id: json["id"]).count).to eq(2)
     end
 
-    it "should have a name" do
+    it "has a name" do
       post :create,
            params: {
              title: title,
@@ -361,7 +359,7 @@ RSpec.describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_without_name"))
     end
 
-    it "should have unique name" do
+    it "has unique name" do
       post :create,
            params: {
              title: title,

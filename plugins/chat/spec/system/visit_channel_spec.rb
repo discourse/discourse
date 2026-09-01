@@ -30,230 +30,213 @@ RSpec.describe "Visit channel" do
     end
   end
 
-  context "when chat enabled" do
-    context "when anonymous" do
-      it "redirects to homepage" do
+  context "when anonymous" do
+    it "redirects to homepage" do
+      visit("/chat/c/-/#{category_channel_1.id}")
+
+      expect(page).to have_current_path("/latest")
+    end
+  end
+
+  context "when regular user" do
+    before { sign_in(current_user) }
+
+    context "when current user is not allowed to chat" do
+      before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "redirects homepage" do
         visit("/chat/c/-/#{category_channel_1.id}")
 
         expect(page).to have_current_path("/latest")
       end
     end
 
-    context "when regular user" do
-      before { sign_in(current_user) }
+    context "when channel is not found" do
+      it "shows an error" do
+        visit("/chat/c/-/999")
 
-      context "when current user is not allowed to chat" do
-        before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
-
-        it "redirects homepage" do
-          visit("/chat/c/-/#{category_channel_1.id}")
-
-          expect(page).to have_current_path("/latest")
-        end
+        expect(page).to have_content("Not Found") # this is not a translated key
       end
+    end
 
-      context "when channel is not found" do
+    context "when loading a non existing message of a channel" do
+      it "shows an error" do
+        visit("/chat/c/-/#{category_channel_1.id}/-999")
+
+        expect(page).to have_content(I18n.t("not_found"))
+      end
+    end
+
+    context "when channel is not accessible" do
+      context "when category channel" do
         it "shows an error" do
-          visit("/chat/c/-/999")
-
-          expect(page).to have_content("Not Found") # this is not a translated key
-        end
-      end
-
-      context "when loading a non existing message of a channel" do
-        it "shows an error" do
-          visit("/chat/c/-/#{category_channel_1.id}/-999")
-
-          expect(page).to have_content(I18n.t("not_found"))
-        end
-      end
-
-      context "when channel is not accessible" do
-        context "when category channel" do
-          it "shows an error" do
-            visit("/chat/c/-/#{private_category_channel_1.id}")
-
-            expect(page).to have_content(I18n.t("invalid_access"))
-          end
-        end
-
-        context "when direct message channel" do
-          it "shows an error" do
-            visit("/chat/c/-/#{inaccessible_dm_channel_1.id}")
-
-            expect(page).to have_content(I18n.t("invalid_access"))
-          end
-        end
-      end
-
-      context "when category channel is read-only" do
-        fab!(:restricted_category) { Fabricate(:category, read_restricted: true) }
-        fab!(:readonly_group_1) { Fabricate(:group, users: [current_user]) }
-        fab!(:readonly_category_channel_1) do
-          Fabricate(:category_channel, chatable: restricted_category)
-        end
-        fab!(:message_1) { Fabricate(:chat_message, chat_channel: readonly_category_channel_1) }
-
-        before do
-          Fabricate(
-            :category_group,
-            category: restricted_category,
-            group: readonly_group_1,
-            permission_type: CategoryGroup.permission_types[:readonly],
-          )
-        end
-
-        it "shows an error" do
-          chat.visit_channel(readonly_category_channel_1)
+          visit("/chat/c/-/#{private_category_channel_1.id}")
 
           expect(page).to have_content(I18n.t("invalid_access"))
         end
       end
 
-      context "when current user is not member of the channel" do
-        context "when category channel" do
-          fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+      context "when direct message channel" do
+        it "shows an error" do
+          visit("/chat/c/-/#{inaccessible_dm_channel_1.id}")
 
-          it "allows to join it" do
-            chat.visit_channel(category_channel_1)
+          expect(page).to have_content(I18n.t("invalid_access"))
+        end
+      end
+    end
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
-          end
+    context "when category channel is read-only" do
+      fab!(:restricted_category) { Fabricate(:category, read_restricted: true) }
+      fab!(:readonly_group_1) { Fabricate(:group, users: [current_user]) }
+      fab!(:readonly_category_channel_1) do
+        Fabricate(:category_channel, chatable: restricted_category)
+      end
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: readonly_category_channel_1) }
 
-          it "shows a preview of the channel" do
-            chat.visit_channel(category_channel_1)
+      before do
+        Fabricate(
+          :category_group,
+          category: restricted_category,
+          group: readonly_group_1,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
 
-            expect(page).to have_content(category_channel_1.name)
-            expect(channel_page.messages).to have_message(id: message_1.id)
-          end
+      it "shows an error" do
+        chat.visit_channel(readonly_category_channel_1)
 
-          context "with a thread" do
-            fab!(:thread) do
-              Fabricate(
-                :chat_thread,
-                channel: category_channel_1,
-                original_message: message_1,
-                with_replies: 1,
-              )
-            end
+        expect(page).to have_content(I18n.t("invalid_access"))
+      end
+    end
 
-            before { category_channel_1.update(threading_enabled: true) }
+    context "when current user is not member of the channel" do
+      context "when category channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
-            it "allows to join it" do
-              chat.visit_thread(thread)
+        it "allows to join it" do
+          chat.visit_channel(category_channel_1)
 
-              expect(page).to have_css(".toggle-channel-membership-button.-join", count: 1)
-            end
-          end
+          expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
         end
 
-        context "when direct message channel" do
-          fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1) }
+        it "shows a preview of the channel" do
+          chat.visit_channel(category_channel_1)
 
-          before { dm_channel_1.membership_for(current_user).destroy! }
+          expect(page).to have_content(category_channel_1.name)
+          expect(channel_page.messages).to have_message(id: message_1.id)
+        end
 
-          it "allows to join it" do
-            chat.visit_channel(dm_channel_1)
+        it "allows joining a thread" do
+          thread =
+            Fabricate(
+              :chat_thread,
+              channel: category_channel_1,
+              original_message: message_1,
+              with_replies: 1,
+            )
+          category_channel_1.update(threading_enabled: true)
+          chat.visit_thread(thread)
 
-            expect(channel_page.composer).to be_enabled
-          end
+          expect(page).to have_css(".toggle-channel-membership-button.-join", count: 1)
         end
       end
 
-      context "when current user is member of the channel" do
-        context "when category channel" do
-          fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+      context "when direct message channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1) }
 
-          before { category_channel_1.add(current_user) }
+        before { dm_channel_1.membership_for(current_user).destroy! }
 
-          it "doesn’t ask to join it" do
-            chat.visit_channel(category_channel_1)
+        it "allows to join it" do
+          chat.visit_channel(dm_channel_1)
 
-            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
+          expect(channel_page.composer).to be_enabled
+        end
+      end
+    end
 
-          it "shows a preview of the channel" do
-            chat.visit_channel(category_channel_1)
+    context "when current user is member of the channel" do
+      context "when category channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
-            expect(page).to have_content(category_channel_1.name)
-            expect(channel_page.messages).to have_message(id: message_1.id)
-          end
+        before { category_channel_1.add(current_user) }
 
-          context "when URL doesn’t contain slug" do
-            it "redirects to correct URL" do
-              visit("/chat/c/-/#{category_channel_1.id}")
+        it "doesn’t ask to join it" do
+          chat.visit_channel(category_channel_1)
 
-              expect(page).to have_current_path(
-                "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
-              )
-            end
-          end
-
-          context "when visiting a specific channel message ID then navigating to another channel" do
-            fab!(:early_message) { Fabricate(:chat_message, chat_channel: category_channel_1) }
-            fab!(:other_channel) do
-              Fabricate(:category_channel, chatable: category_channel_1.chatable)
-            end
-            fab!(:other_channel_message) { Fabricate(:chat_message, chat_channel: other_channel) }
-
-            before do
-              30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
-              other_channel.add(current_user)
-            end
-
-            it "does not error" do
-              visit(early_message.url)
-              expect(channel_page).to have_no_loading_skeleton
-              expect(channel_page.messages).to have_message(id: early_message.id)
-              sidebar_page.open_channel(other_channel)
-              expect(dialog).to be_closed
-              expect(channel_page.messages).to have_message(id: other_channel_message.id)
-            end
-          end
+          expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
         end
 
-        context "when direct message channel" do
-          fab!(:message_1) do
-            Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
-          end
+        it "shows a preview of the channel" do
+          chat.visit_channel(category_channel_1)
 
-          it "doesn't ask to join it" do
-            chat.visit_channel(dm_channel_1)
-
-            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(dm_channel_1)
-
-            expect(channel_page.messages).to have_message(id: message_1.id)
-          end
-
-          context "when URL doesn't contain slug" do
-            it "redirects to correct URL" do
-              visit("/chat/c/-/#{dm_channel_1.id}")
-
-              expect(page).to have_current_path(
-                "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
-              )
-            end
-          end
+          expect(page).to have_content(category_channel_1.name)
+          expect(channel_page.messages).to have_message(id: message_1.id)
         end
 
-        context "when group direct message channel has an emoji in the title" do
-          fab!(:other_user, :user)
-          fab!(:group_dm_channel) do
-            Fabricate(:direct_message_channel, users: [current_user, other_user])
-          end
+        it "redirects a URL without a slug" do
+          visit("/chat/c/-/#{category_channel_1.id}")
 
-          before { group_dm_channel.update!(name: "test :heart:") }
+          expect(page).to have_current_path(
+            "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
+          )
+        end
 
-          it "converts the emoji in the header" do
-            chat.visit_channel(group_dm_channel)
+        it "navigates from a specific message to another channel without error" do
+          early_message = Fabricate(:chat_message, chat_channel: category_channel_1)
+          other_channel =
+            Fabricate(:category_channel, chatable: category_channel_1.chatable)
+          other_channel_message = Fabricate(:chat_message, chat_channel: other_channel)
+          30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
+          other_channel.add(current_user)
 
-            expect(page.find(".c-navbar__channel-title")).to have_content("test")
-            expect(page.find(".c-navbar__channel-title")).to have_no_content(":heart:")
-          end
+          visit(early_message.url)
+          expect(channel_page).to have_no_loading_skeleton
+          expect(channel_page.messages).to have_message(id: early_message.id)
+          sidebar_page.open_channel(other_channel)
+          expect(dialog).to be_closed
+          expect(channel_page.messages).to have_message(id: other_channel_message.id)
+        end
+      end
+
+      context "when direct message channel" do
+        fab!(:message_1) do
+          Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
+        end
+
+        it "doesn't ask to join it" do
+          chat.visit_channel(dm_channel_1)
+
+          expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
+        end
+
+        it "shows a preview of the channel" do
+          chat.visit_channel(dm_channel_1)
+
+          expect(channel_page.messages).to have_message(id: message_1.id)
+        end
+
+        it "redirects a URL without a slug" do
+          visit("/chat/c/-/#{dm_channel_1.id}")
+
+          expect(page).to have_current_path(
+            "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
+          )
+        end
+      end
+
+      context "when group direct message channel has an emoji in the title" do
+        fab!(:other_user, :user)
+        fab!(:group_dm_channel) do
+          Fabricate(:direct_message_channel, users: [current_user, other_user])
+        end
+
+        before { group_dm_channel.update!(name: "test :heart:") }
+
+        it "converts the emoji in the header" do
+          chat.visit_channel(group_dm_channel)
+
+          expect(page.find(".c-navbar__channel-title")).to have_content("test")
+          expect(page.find(".c-navbar__channel-title")).to have_no_content(":heart:")
         end
       end
     end

@@ -2,14 +2,14 @@
 
 describe ColorMath do
   describe "#brightness" do
-    it "works" do
+    it "calculates brightness for black and white" do
       expect(ColorMath.brightness("000")).to eq(0)
       expect(ColorMath.brightness("fff")).to eq(255)
     end
   end
 
   describe "#scale_color_lightness" do
-    it "works" do
+    it "adjusts greyscale lightness" do
       expect(ColorMath.scale_color_lightness("000", 0.5)).to eq("808080")
       expect(ColorMath.scale_color_lightness("fff", -0.5)).to eq("808080")
     end

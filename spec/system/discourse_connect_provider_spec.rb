@@ -11,6 +11,7 @@ describe "Discourse Connect Provider" do
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
   let(:login_form) { PageObjects::Pages::Login.new }
   let!(:return_url) { "http://localhost:#{sso_port}/test/url" }
+
   before do
     SiteSetting.enable_discourse_connect_provider = true
     SiteSetting.discourse_connect_provider_secrets = "localhost|Test"
@@ -69,8 +70,11 @@ describe "Discourse Connect Provider" do
   end
 
   context "with two-factor authentication" do
-    let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
-    let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
+    before do
+      Fabricate(:user_second_factor_totp, user: user)
+      Fabricate(:user_second_factor_backup, user: user)
+    end
+
     fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     it "redirects back to the return_sso_url" do

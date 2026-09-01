@@ -102,9 +102,11 @@ RSpec.describe SpamRule::AutoSilence do
   describe "#silence_user" do
     subject(:autosilence) { described_class.new(user) }
 
-    let!(:admin) { Fabricate(:admin) } # needed for SystemMessage
+    before { Fabricate(:admin)
+             Fabricate(:post, user: user)  } # needed for SystemMessage
+
     let(:user) { Fabricate(:user) }
-    let!(:post) { Fabricate(:post, user: user) }
+
 
     context "when user is not silenced" do
       it "prevents the user from making new posts" do
@@ -114,7 +116,7 @@ RSpec.describe SpamRule::AutoSilence do
       end
 
       context "with a moderator" do
-        let!(:moderator) { Fabricate(:moderator) }
+        before { Fabricate(:moderator) }
 
         it "sends private message to moderators" do
           SiteSetting.notify_mods_when_user_silenced = true
@@ -150,7 +152,7 @@ RSpec.describe SpamRule::AutoSilence do
     let(:post2) { Fabricate(:post, user: user) }
 
     context "with higher trust levels or staff" do
-      it "should not autosilence any of them" do
+      it "does not autosilence any of them" do
         PostActionCreator.spam(flagger, post)
         PostActionCreator.spam(flagger2, post)
 

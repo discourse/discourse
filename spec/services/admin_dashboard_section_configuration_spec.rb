@@ -276,6 +276,27 @@ describe AdminDashboardSectionConfiguration do
   end
 
   describe ".update_setting" do
+    let(:fake_setting) do
+      Class.new do
+        def self.permit
+          [:category_id]
+        end
+
+        def self.validate(attrs)
+          id = attrs[:category_id]
+          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
+          { "category_id" => id.to_i }
+        end
+      end
+    end
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
     it "persists a valid selection under its key" do
       described_class.update_setting(
         section_id: "engagement",
@@ -566,21 +587,7 @@ describe AdminDashboardSectionConfiguration do
       )
     end
 
-    let(:plugin) { Plugin::Instance.new }
 
-    let(:fake_setting) do
-      Class.new do
-        def self.permit
-          [:category_id]
-        end
-
-        def self.validate(attrs)
-          id = attrs[:category_id]
-          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
-          { "category_id" => id.to_i }
-        end
-      end
-    end
 
     def register_support_section(enabled: true)
       plugin.register_admin_dashboard_section(
@@ -592,11 +599,6 @@ describe AdminDashboardSectionConfiguration do
       ) { {} }
     end
 
-    after do
-      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
-        entry[:value][:id] == "support"
-      end
-    end
 
     it "creates a section row on the fly when persisting a plugin section's setting for the first time" do
       register_support_section

@@ -15,7 +15,7 @@ RSpec.describe Chat::Api::ChannelsInvitesController do
 
   describe "create" do
     describe "success" do
-      it "works" do
+      it "invites the requested users" do
         expect {
           post "/chat/api/channels/#{channel_1.id}/invites?user_ids=#{user_1.id},#{user_2.id}"
         }.to change {
@@ -42,7 +42,7 @@ RSpec.describe Chat::Api::ChannelsInvitesController do
     describe "message_id param" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-      it "works" do
+      it "includes the message ID in the notification" do
         post "/chat/api/channels/#{channel_1.id}/invites?user_ids=#{user_1.id},#{user_2.id}&message_id=#{message_1.id}"
 
         expect(JSON.parse(Notification.last.data)["chat_message_id"]).to eq(message_1.id)

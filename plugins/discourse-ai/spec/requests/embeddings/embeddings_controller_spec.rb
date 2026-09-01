@@ -69,7 +69,7 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
     context "when rate limiting is enabled" do
       before { RateLimiter.enable }
 
-      it "will rate limit correctly" do
+      it "rates limit correctly" do
         stub_const(described_class, :MAX_HYDE_SEARCHES_PER_MINUTE, 1) do
           stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 2) do
             query = "test #{SecureRandom.hex}"

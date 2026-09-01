@@ -5,12 +5,12 @@ describe DiscourseAi::Completions::JsonStreamDecoder do
 
   before { enable_current_plugin }
 
-  it "should be able to parse simple messages" do
+  it "is able to parse simple messages" do
     result = decoder << "data: #{{ hello: "world" }.to_json}"
     expect(result).to eq([{ hello: "world" }])
   end
 
-  it "should handle anthropic mixed stlye streams" do
+  it "handles anthropic mixed stlye streams" do
     stream = <<~TEXT.split("|")
       event: |message_start|
       data: |{"hel|lo": "world"}|
@@ -30,7 +30,7 @@ describe DiscourseAi::Completions::JsonStreamDecoder do
     expect(results.flatten.compact).to eq([{ hello: "world" }, { foo: "bar" }, { baz: "qux" }])
   end
 
-  it "should be able to handle complex overlaps" do
+  it "is able to handle complex overlaps" do
     stream = <<~TEXT.split("|")
       data: |{"hel|lo": "world"}
 

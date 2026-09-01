@@ -234,12 +234,8 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
     end
 
     context "with different timezones" do
-      before { freeze_time Time.parse("2024-07-28 00:30:00 UTC") }
-
-      let(:base_time) { Time.parse("2024-07-28 00:30:00 UTC") } # 8:30 AM Singapore
-      let(:singapore_tz) { "Asia/Singapore" }
-
-      let!(:log_sg1) do
+      before do
+        freeze_time Time.parse("2024-07-28 00:30:00 UTC")
         AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "summarize",
@@ -248,9 +244,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
           response_tokens: 50,
           created_at: base_time,
         )
-      end
 
-      let!(:log_sg2) do
         AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "summarize",
@@ -260,6 +254,11 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
           created_at: base_time - 1.hour,
         )
       end
+
+      let(:base_time) { Time.parse("2024-07-28 00:30:00 UTC") } # 8:30 AM Singapore
+      let(:singapore_tz) { "Asia/Singapore" }
+
+
 
       it "shows correct data across timezone boundaries" do
         report =

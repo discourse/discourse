@@ -7,8 +7,7 @@ RSpec.describe UserProfile do
     fab!(:user)
     fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
-    describe "#location" do
-      context "when it contains watched words" do
+    context "when the location contains watched words" do
         before { profile.location = location }
 
         context "when watched words are of type 'Block'" do
@@ -22,9 +21,10 @@ RSpec.describe UserProfile do
         end
 
         context "when watched words are of type 'Censor'" do
-          let!(:censored_word) do
+          before do
             Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
           end
+
           let(:location) { "censored location" }
 
           it "censors the words upon saving" do
@@ -34,7 +34,8 @@ RSpec.describe UserProfile do
 
         context "when watched words are of type 'Replace'" do
           let(:location) { "word to replace" }
-          let!(:replace_word) do
+
+          before do
             Fabricate(
               :watched_word,
               word: "to replace",
@@ -49,25 +50,24 @@ RSpec.describe UserProfile do
         end
       end
 
-      context "when it is > 3000 characters" do
-        before { profile.location = "a" * 3500 }
+    context "when it is > 3000 characters" do
+      before { profile.location = "a" * 3500 }
 
-        it "is not valid" do
-          expect(profile.valid?).to eq(false)
-          expect(profile.errors.full_messages).to include(
-            /Location is too long \(maximum is 3000 characters\)/,
-          )
-        end
+      it "is not valid" do
+        expect(profile.valid?).to eq(false)
+        expect(profile.errors.full_messages).to include(
+          /Location is too long \(maximum is 3000 characters\)/,
+        )
       end
+    end
 
-      context "when it does not contain watched words" do
-        it { is_expected.to be_valid }
-      end
+    context "when it does not contain watched words" do
+      it { is_expected.to be_valid }
+    end
 
-      it "is not cooked" do
-        profile.location = "https://discourse.org"
-        expect { profile.save! }.not_to change { profile.location }
-      end
+    it "is not cooked" do
+      profile.location = "https://discourse.org"
+      expect { profile.save! }.not_to change { profile.location }
     end
 
     describe "#bio_raw" do
@@ -137,7 +137,7 @@ RSpec.describe UserProfile do
     context "with website validation" do
       let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
 
-      it "should not allow invalid URLs" do
+      it "does not allow invalid URLs" do
         user_profile.website = "http://https://google.com"
         expect(user_profile).to_not be_valid
       end
@@ -192,7 +192,7 @@ RSpec.describe UserProfile do
       user.user_profile.reload
     end
 
-    it "should markdown the raw_bio and put it in cooked_bio" do
+    it "markdowns the raw_bio and put it in cooked_bio" do
       expect(user.user_profile.bio_cooked).to eq("<p><strong>turtle power!</strong></p>")
     end
   end
@@ -328,7 +328,7 @@ RSpec.describe UserProfile do
     end
 
     describe "when profile_background_url returns an invalid status code" do
-      it "should not do anything" do
+      it "does not do anything" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: false)
@@ -340,7 +340,7 @@ RSpec.describe UserProfile do
     end
 
     describe "when card_background_url returns an invalid status code" do
-      it "should not do anything" do
+      it "does not do anything" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: true)

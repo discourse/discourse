@@ -518,7 +518,7 @@ describe DiscourseDataExplorer::QueryController do
           create_post
         end
 
-        it "should limit the results in JSON response" do
+        it "limits the results in JSON response" do
           SiteSetting.data_explorer_query_result_limit = 2
           query = make_query <<~SQL
             SELECT id FROM posts
@@ -540,7 +540,7 @@ describe DiscourseDataExplorer::QueryController do
           expect(response.status).to eq(400)
         end
 
-        it "should limit the results in CSV download" do
+        it "limits the results in CSV download" do
           query = make_query <<~SQL
             SELECT id FROM posts
           SQL
@@ -1187,7 +1187,7 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
-  describe "Admin" do
+  describe "Admin AI query generation" do
     fab!(:admin)
 
     before do

@@ -112,9 +112,13 @@ RSpec.describe Bookmark do
       let(:category) { Fabricate(:category) }
       let(:topic_in_category) { Fabricate(:topic, category: category) }
 
-      let!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
-      let!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
-      let!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
+      before do
+        Fabricate(:bookmark, created_at: 1.day.ago)
+        Fabricate(:bookmark, created_at: 2.days.ago)
+        Fabricate(:bookmark, created_at: 3.days.ago)
+        Fabricate(:bookmark, created_at: 40.days.ago)
+      end
+
       let!(:bookmark4) do
         Fabricate(
           :bookmark,
@@ -122,7 +126,7 @@ RSpec.describe Bookmark do
           created_at: 3.days.ago,
         )
       end
-      let!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
+
 
       it "gets the count of bookmarks grouped by date within the last 30 days by default" do
         expect(Bookmark.count_per_day).to eq(

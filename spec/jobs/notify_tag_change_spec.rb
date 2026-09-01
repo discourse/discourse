@@ -94,7 +94,8 @@ RSpec.describe ::Jobs::NotifyTagChange do
     let!(:hidden_tag_group) do
       Fabricate(:tag_group, name: "hidden", permissions: [[hidden_group.id, :full]])
     end
-    let!(:topic_user) do
+
+    before do
       Fabricate(
         :topic_user,
         user: user,

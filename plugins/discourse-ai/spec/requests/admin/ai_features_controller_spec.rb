@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseAi::Admin::AiFeaturesController do
   let(:controller) { described_class.new }
+
   fab!(:admin)
   fab!(:group)
   fab!(:llm_model)

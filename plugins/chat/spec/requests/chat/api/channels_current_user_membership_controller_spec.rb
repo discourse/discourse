@@ -26,7 +26,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     context "when current user can’t see the channel" do
       fab!(:channel_2) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
 
-      it "fails" do
+      it "refuses to create a membership" do
         expect { post "/chat/api/channels/#{channel_2.id}/memberships/me" }.not_to change {
           Chat::UserChatChannelMembership.where(user_id: current_user.id).count
         }
@@ -50,7 +50,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
           readonly_group_1.add(current_user)
         end
 
-        it "fails" do
+        it "refuses to create a membership" do
           expect { post "/chat/api/channels/#{channel_2.id}/memberships/me" }.not_to change {
             Chat::UserChatChannelMembership.where(user_id: current_user.id).count
           }
@@ -73,7 +73,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
           readonly_group_1.add(current_user)
         end
 
-        it "works" do
+        it "creates a membership" do
           expect { post "/chat/api/channels/#{channel_2.id}/memberships/me" }.to change {
             Chat::UserChatChannelMembership.where(user_id: current_user.id).count
           }.by(1)
@@ -155,7 +155,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
   describe "#destroy" do
     describe "success" do
-      it "works" do
+      it "deletes the membership" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/me"
 
         expect(response.status).to eq(200)

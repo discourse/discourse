@@ -7,23 +7,28 @@ RSpec.describe Groups::Create do
     let(:attributes) { {} }
 
     it { is_expected.to validate_presence_of :name }
-    it do
+
+    it "validates the mentionable level" do
       is_expected.to validate_inclusion_of(:mentionable_level).in_array(Group::ALIAS_LEVELS.values)
     end
-    it do
+
+    it "validates the messageable level" do
       is_expected.to validate_inclusion_of(:messageable_level).in_array(Group::ALIAS_LEVELS.values)
     end
-    it do
+
+    it "validates the visibility level" do
       is_expected.to validate_inclusion_of(:visibility_level).in_array(
         Group.visibility_levels.values,
       )
     end
-    it do
+
+    it "validates the member visibility level" do
       is_expected.to validate_inclusion_of(:members_visibility_level).in_array(
         Group.visibility_levels.values,
       )
     end
-    it do
+
+    it "validates the default notification level" do
       is_expected.to validate_inclusion_of(:default_notification_level).in_array(
         GroupUser.notification_levels.values,
       )

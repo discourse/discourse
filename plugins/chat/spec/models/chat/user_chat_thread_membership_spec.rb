@@ -5,7 +5,7 @@ RSpec.describe Chat::UserChatThreadMembership do
   it { is_expected.to belong_to(:last_read_message).class_name("Chat::Message") }
   it { is_expected.to belong_to(:thread).class_name("Chat::Thread") }
 
-  it do
+  it "defines the supported notification levels" do
     is_expected.to define_enum_for(:notification_level).with_values(
       muted: 0,
       normal: 1,

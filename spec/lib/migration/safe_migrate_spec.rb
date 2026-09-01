@@ -161,7 +161,7 @@ RSpec.describe Migration::SafeMigrate do
   end
 
   describe "for a post deployment migration" do
-    it "should not ban unsafe migrations using up" do
+    it "does not ban unsafe migrations using up" do
       Migration::SafeMigrate::SafeMigration.enable_safe!
 
       path = File.expand_path "#{Rails.root.join("spec/fixtures/db/post_migrate/drop_table")}"
@@ -171,7 +171,7 @@ RSpec.describe Migration::SafeMigrate do
       expect(output).to include("drop_table(:email_logs)")
     end
 
-    it "should not ban unsafe migrations using change" do
+    it "does not ban unsafe migrations using change" do
       Migration::SafeMigrate::SafeMigration.enable_safe!
 
       path = File.expand_path "#{Rails.root.join("spec/fixtures/db/post_migrate/change")}"

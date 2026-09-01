@@ -2,7 +2,7 @@
 
 RSpec.describe RateLimiter::LimitExceeded do
   describe "#description" do
-    it "should return the right description" do
+    it "returns the right description" do
       [
         [3, I18n.t("rate_limiter.short_time")],
         [59, I18n.t("rate_limiter.seconds", count: 59)],

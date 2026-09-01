@@ -22,7 +22,18 @@
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
 describe "Theme screenshots" do
-  before { skip "Set TAKE_SCREENSHOTS=1 to run this spec" if ENV["TAKE_SCREENSHOTS"] != "1" }
+  before do
+    skip "Set TAKE_SCREENSHOTS=1 to run this spec" if ENV["TAKE_SCREENSHOTS"] != "1"
+    Theme.where(id: themes.map { |t| t[:id] }).update_all(user_selectable: true)
+
+    themes.each do |t|
+      SystemThemesManager.sync_theme!(t[:name]) if Theme::CORE_THEMES.key?(t[:name])
+    end
+
+    SiteIconManager.clear_cache!
+
+    allow(TopicUser).to receive(:track_visit!)
+  end
 
   let(:output_dir) do
     dir = ENV["SCREENSHOTS_DIR"] || Rails.root.join("tmp/theme-screenshots").to_s
@@ -61,17 +72,6 @@ describe "Theme screenshots" do
     base
   end
 
-  before do
-    Theme.where(id: themes.map { |t| t[:id] }).update_all(user_selectable: true)
-
-    themes.each do |t|
-      SystemThemesManager.sync_theme!(t[:name]) if Theme::CORE_THEMES.key?(t[:name])
-    end
-
-    SiteIconManager.clear_cache!
-
-    allow(TopicUser).to receive(:track_visit!)
-  end
 
   it "captures screenshots" do
     FileUtils.rm_f(Dir.glob(File.join(raw_dir, "*.png")))

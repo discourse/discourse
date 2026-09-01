@@ -47,7 +47,7 @@ RSpec.describe ProblemCheckTracker do
     end
 
     context "when the checking logic of the tracker has been removed or renamed" do
-      it do
+      it "removes the obsolete tracker" do
         expect { described_class[:missing_check].check }.to change { described_class.count }.by(-1)
       end
     end
@@ -222,7 +222,7 @@ RSpec.describe ProblemCheckTracker do
     let(:updated_attributes) { { blips: 1 } }
     let(:ignored_at) { nil }
 
-    it do
+    it "records the problem and schedules the next check" do
       freeze_time
 
       expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
@@ -292,7 +292,8 @@ RSpec.describe ProblemCheckTracker do
 
     context "when there's an alarm sounding for multi-target trackers" do
       let(:blips) { 1 }
-      let!(:existing_admin_notice) do
+
+      before do
         Fabricate(
           :admin_notice,
           subject: "problem",
@@ -356,7 +357,7 @@ RSpec.describe ProblemCheckTracker do
 
     let(:updated_attributes) { { blips: 0, next_run_at: } }
 
-    it do
+    it "clears the problem and schedules the next check" do
       freeze_time
 
       expect { problem_tracker.no_problem!(next_run_at:) }.to change {

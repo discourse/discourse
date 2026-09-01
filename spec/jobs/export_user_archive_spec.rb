@@ -62,7 +62,7 @@ RSpec.describe Jobs::ExportUserArchive do
       )
     end
 
-    it "works" do
+    it "exports the archive and sends a download message" do
       expect do Jobs::ExportUserArchive.new.execute(user_id: user.id) end.to change {
         Upload.count
       }.by(1)
@@ -285,6 +285,7 @@ RSpec.describe Jobs::ExportUserArchive do
 
     context "with auth token logs" do
       let(:component) { "auth_token_logs" }
+
       it "includes details such as the path" do
         data, _csv_out = make_component_csv
         expect(data.length).to eq(1)

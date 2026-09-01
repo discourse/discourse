@@ -15,7 +15,7 @@ RSpec.describe UserStatCountUpdater do
 
   after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-  it "should log the exception when a negative count is inserted" do
+  it "logs the exception when a negative count is inserted" do
     UserStatCountUpdater.decrement!(post, user_stat: user_stat)
 
     expect(fake_logger.warnings.last).to match("topic_count")
@@ -27,7 +27,7 @@ RSpec.describe UserStatCountUpdater do
     expect(fake_logger.warnings.last).to match(post_2.id.to_s)
   end
 
-  it "should log the exception when a negative count will be inserted but 0 is used instead" do
+  it "logs the exception when a negative count will be inserted but 0 is used instead" do
     UserStatCountUpdater.set!(user_stat: user_stat, count: -10, count_column: :post_count)
 
     expect(fake_logger.warnings.last).to match("post_count")

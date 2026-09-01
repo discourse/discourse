@@ -96,7 +96,7 @@ RSpec.describe TopicConverter do
           category.update!(read_restricted: false)
         end
 
-        it "should convert private message into the right category" do
+        it "converts private message into the right category" do
           topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
           topic.reload
 
@@ -116,7 +116,7 @@ RSpec.describe TopicConverter do
       end
 
       context "when a custom category_id is given" do
-        it "should convert private message into the right category" do
+        it "converts private message into the right category" do
           topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
 
           expect(topic.reload.category).to eq(category)
@@ -386,7 +386,7 @@ RSpec.describe TopicConverter do
     context "when user already exists in topic_allowed_users table" do
       before { topic.topic_allowed_users.create!(user_id: admin.id) }
 
-      it "works" do
+      it "converts the topic without duplicating the allowed user" do
         topic.convert_to_private_message(admin)
 
         expect(topic.reload.archetype).to eq("private_message")

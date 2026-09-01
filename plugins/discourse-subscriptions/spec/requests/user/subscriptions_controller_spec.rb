@@ -35,11 +35,12 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
     let(:customer) do
       Fabricate(:customer, user_id: user.id, customer_id: "cus_23456", product_id: "prod_123")
     end
-    let!(:subscription) do
+
+    before do
       Fabricate(:subscription, customer_id: customer.id, external_id: "sub_10z")
+      sign_in(user)
     end
 
-    before { sign_in(user) }
 
     describe "index" do
       plans_json =

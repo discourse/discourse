@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 describe "Admin Badges Grouping Modal" do
-  before { SiteSetting.enable_badges = true }
+  before do
+    SiteSetting.enable_badges = true
+    sign_in(current_user)
+  end
 
   fab!(:current_user, :admin)
 
   let(:badges_page) { PageObjects::Pages::AdminBadges.new }
   let(:badges_groupings_page) { PageObjects::Pages::AdminBadgesGroupings.new }
 
-  before { sign_in(current_user) }
 
   context "when adding a new grouping" do
     it "saves it" do

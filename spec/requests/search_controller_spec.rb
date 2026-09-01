@@ -26,27 +26,25 @@ RSpec.describe SearchController do
   end
 
   context "with integration" do
-    before { SearchIndexer.enable }
-
     before do
-      # TODO be a bit more strategic here instead of junking
-      # all of redis
+      SearchIndexer.enable
       Discourse.redis.flushdb
     end
+
 
     after { Discourse.redis.flushdb }
 
     context "when overloaded" do
-      before { global_setting :disable_search_queue_threshold, 0.2 }
+      before do
+        global_setting :disable_search_queue_threshold, 0.2
+        freeze_time 0.3.seconds.from_now
+      end
 
       let! :start_time do
         freeze_time
         Time.now
       end
 
-      let! :current_time do
-        freeze_time 0.3.seconds.from_now
-      end
 
       it "errors on #query" do
         get "/search/query.json",
@@ -226,7 +224,7 @@ RSpec.describe SearchController do
     end
 
     context "when searching by topic id" do
-      it "should not be restricted by minimum search term length" do
+      it "is not restricted by minimum search term length" do
         SiteSetting.min_search_term_length = 20_000
 
         get "/search/query.json",
@@ -242,7 +240,7 @@ RSpec.describe SearchController do
         expect(data["topics"][0]["id"]).to eq(awesome_post.topic_id)
       end
 
-      it "should return the right result" do
+      it "returns the right result" do
         get "/search/query.json",
             params: {
               term: user_post.topic_id,

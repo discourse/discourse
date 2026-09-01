@@ -18,42 +18,42 @@ describe DiscourseGamification do
       }.by(1)
     end
   end
-end
 
-describe DiscourseGamification do
-  let(:guardian) { Guardian.new }
-  let!(:default_gamification_leaderboard) { Fabricate(:gamification_leaderboard) }
+  context "with the default gamification leaderboard" do
+    let(:guardian) { Guardian.new }
+    let!(:default_gamification_leaderboard) { Fabricate(:gamification_leaderboard) }
 
-  it "adds default_gamification_leaderboard_id to the SiteSettingSerializer" do
-    site = Site.new(guardian)
-    serializer = SiteSerializer.new(site)
-    expect(serializer).to respond_to(:default_gamification_leaderboard_id)
-    expect(serializer.default_gamification_leaderboard_id).to eq(
-      default_gamification_leaderboard.id,
-    )
-  end
-end
-
-context "when merging users" do
-  fab!(:user_1, :user)
-  fab!(:user_2, :user)
-  fab!(:leaderboard, :gamification_leaderboard)
-
-  before do
-    SiteSetting.discourse_gamification_enabled = true
-    DiscourseGamification::LeaderboardCachedView.create_all
-    Fabricate.times(1, :topic, user: user_1)
-    Fabricate.times(1, :topic, user: user_2)
-    DiscourseGamification::GamificationLeaderboardScore.calculate_all
-    DiscourseGamification::LeaderboardCachedView.refresh_all
+    it "adds default_gamification_leaderboard_id to the SiteSettingSerializer" do
+      site = Site.new(guardian)
+      serializer = SiteSerializer.new(site)
+      expect(serializer).to respond_to(:default_gamification_leaderboard_id)
+      expect(serializer.default_gamification_leaderboard_id).to eq(
+        default_gamification_leaderboard.id,
+      )
+    end
   end
 
-  it "sums the scores" do
-    expect(user_2.gamification_score).to eq(5)
+  context "when merging users" do
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:leaderboard, :gamification_leaderboard)
 
-    UserMerger.new(user_1, user_2, Discourse.system_user).merge!
-    DiscourseGamification::LeaderboardCachedView.refresh_all
+    before do
+      SiteSetting.discourse_gamification_enabled = true
+      DiscourseGamification::LeaderboardCachedView.create_all
+      Fabricate.times(1, :topic, user: user_1)
+      Fabricate.times(1, :topic, user: user_2)
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all
+      DiscourseGamification::LeaderboardCachedView.refresh_all
+    end
 
-    expect(user_2.gamification_score).to eq(10)
+    it "sums the scores" do
+      expect(user_2.gamification_score).to eq(5)
+
+      UserMerger.new(user_1, user_2, Discourse.system_user).merge!
+      DiscourseGamification::LeaderboardCachedView.refresh_all
+
+      expect(user_2.gamification_score).to eq(10)
+    end
   end
 end

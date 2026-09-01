@@ -18,7 +18,7 @@ RSpec.describe SiteController do
     )
   end
 
-  let!(:logged_in_ad) do
+  before do
     AdPlugin::HouseAd.create(
       name: "logged-in-ad",
       html: "<div>LOGGED IN</div>",
@@ -27,59 +27,54 @@ RSpec.describe SiteController do
       group_ids: [],
       category_ids: [],
     )
-  end
-
-  let!(:logged_in_ad_with_category) do
     AdPlugin::HouseAd.create(
-      name: "logged-in-ad-with-category",
-      html: "<div>LOGGED IN WITH CATEGORY</div>",
-      visible_to_logged_in_users: true,
-      visible_to_anons: false,
-      group_ids: [group.id],
-      category_ids: [private_category.id],
-    )
-  end
+          name: "logged-in-ad-with-category",
+          html: "<div>LOGGED IN WITH CATEGORY</div>",
+          visible_to_logged_in_users: true,
+          visible_to_anons: false,
+          group_ids: [group.id],
+          category_ids: [private_category.id],
+        )
 
-  let!(:logged_in_ad_with_group_2) do
     AdPlugin::HouseAd.create(
-      name: "logged-in-ad-with-group",
-      html: "<div>LOGGED IN WITH GROUP</div>",
-      visible_to_logged_in_users: true,
-      visible_to_anons: false,
-      group_ids: [group_2.id],
-      category_ids: [],
-    )
-  end
+          name: "logged-in-ad-with-group",
+          html: "<div>LOGGED IN WITH GROUP</div>",
+          visible_to_logged_in_users: true,
+          visible_to_anons: false,
+          group_ids: [group_2.id],
+          category_ids: [],
+        )
 
-  let!(:everyone_ad) do
     AdPlugin::HouseAd.create(
-      name: "everyone-ad",
-      html: "<div>EVERYONE</div>",
-      visible_to_logged_in_users: true,
-      visible_to_anons: true,
-      group_ids: [],
-      category_ids: [],
-    )
-  end
+          name: "everyone-ad",
+          html: "<div>EVERYONE</div>",
+          visible_to_logged_in_users: true,
+          visible_to_anons: true,
+          group_ids: [],
+          category_ids: [],
+        )
 
-  let!(:everyone_group_ad) do
     AdPlugin::HouseAd.create(
-      name: "everyone-group-ad",
-      html: "<div>EVERYONE</div>",
-      visible_to_logged_in_users: true,
-      visible_to_anons: false,
-      group_ids: [Group::AUTO_GROUPS[:everyone]],
-      category_ids: [],
-    )
-  end
+          name: "everyone-group-ad",
+          html: "<div>EVERYONE</div>",
+          visible_to_logged_in_users: true,
+          visible_to_anons: false,
+          group_ids: [Group::AUTO_GROUPS[:everyone]],
+          category_ids: [],
+        )
 
-  before do
     enable_current_plugin
     AdPlugin::HouseAdSetting.update(
       "topic_list_top",
       "logged-in-ad|anon-ad|everyone-ad|logged-in-ad-with-category|logged-in-ad-with-group|everyone-group-ad",
     )
+
   end
+
+
+
+
+
 
   describe "#site" do
     context "when logged in" do

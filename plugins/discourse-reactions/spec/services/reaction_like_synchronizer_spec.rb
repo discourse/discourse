@@ -11,17 +11,17 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
     SiteSetting.discourse_reactions_excluded_from_like = "clap|-1"
 
     UserActionManager.enable
+    Fabricate(:topic_user, user: user, topic: post.topic)
+    Fabricate(:topic_user, user: user, topic: post_2.topic)
   end
 
-  let!(:topic_user) { Fabricate(:topic_user, user: user, topic: post.topic) }
-  let!(:topic_user_2) { Fabricate(:topic_user, user: user, topic: post_2.topic) }
 
   # This and reaction_user_2 use the ReactionManager so the proper PostActionCreator
   # records are created, rather than building this all manually.
   let!(:reaction_user) do
     DiscourseReactions::ReactionManager.new(reaction_value: "+1", user: user, post: post).toggle!
-    @reaction_plus_one = DiscourseReactions::Reaction.find_by(reaction_value: "+1", post: post)
-    DiscourseReactions::ReactionUser.find_by(user: user, post: post, reaction: @reaction_plus_one)
+    reaction = DiscourseReactions::Reaction.find_by(reaction_value: "+1", post: post)
+    DiscourseReactions::ReactionUser.find_by(user: user, post: post, reaction: reaction)
   end
 
   let!(:reaction_user_2) do
@@ -30,8 +30,8 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
       user: user,
       post: post_2,
     ).toggle!
-    @reaction_clap = DiscourseReactions::Reaction.find_by(reaction_value: "clap", post: post_2)
-    DiscourseReactions::ReactionUser.find_by(user: user, post: post_2, reaction: @reaction_clap)
+    reaction = DiscourseReactions::Reaction.find_by(reaction_value: "clap", post: post_2)
+    DiscourseReactions::ReactionUser.find_by(user: user, post: post_2, reaction: reaction)
   end
 
   it "does nothing if discourse_reactions_like_sync_enabled is false" do

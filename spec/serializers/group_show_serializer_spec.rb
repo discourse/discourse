@@ -8,7 +8,7 @@ RSpec.describe GroupShowSerializer do
     fab!(:user, :admin)
     fab!(:group) { Fabricate(:group, users: [user]) }
 
-    it "should return the right attributes" do
+    it "returns the right attributes" do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
 
       expect(json[:group_show][:is_group_owner]).to eq(nil)
@@ -19,7 +19,7 @@ RSpec.describe GroupShowSerializer do
   context "with a group owner" do
     before { group.add_owner(user) }
 
-    it "should return the right attributes" do
+    it "returns the right attributes" do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
 
       expect(json[:group_show][:is_group_owner]).to eq(true)
@@ -30,7 +30,7 @@ RSpec.describe GroupShowSerializer do
   describe "#mentionable" do
     fab!(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
-    it "should return the right value" do
+    it "returns the right value" do
       json = GroupShowSerializer.new(group, scope: Guardian.new).as_json
 
       expect(json[:group_show][:mentionable]).to eq(nil)
@@ -45,19 +45,19 @@ RSpec.describe GroupShowSerializer do
     fab!(:group) { Fabricate(:group, automatic_membership_email_domains: "ilovediscourse.com") }
     let(:admin_guardian) { Guardian.new(Fabricate(:admin)) }
 
-    it "should include email domains for admin" do
+    it "includes email domains for admin" do
       subject =
         described_class.new(group, scope: admin_guardian, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq("ilovediscourse.com")
     end
 
-    it "should not include email domains for other users" do
+    it "does not include email domains for other users" do
       subject =
         described_class.new(group, scope: Guardian.new, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
     end
 
-    it "should include email domains for moderator when moderators_manage_groups is enabled" do
+    it "includes email domains for moderator when moderators_manage_groups is enabled" do
       SiteSetting.moderators_manage_groups = true
       moderator_guardian = Fabricate(:moderator).guardian
       subject =

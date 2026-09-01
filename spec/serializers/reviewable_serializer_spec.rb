@@ -26,7 +26,7 @@ RSpec.describe ReviewableSerializer do
     expect(json[:removed_topic_id]).to eq reviewable.topic_id
   end
 
-  it "will not throw an error when the payload is `nil`" do
+  it "does not throw an error when the payload is `nil`" do
     reviewable.payload = nil
     json =
       ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json

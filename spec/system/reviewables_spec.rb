@@ -17,14 +17,14 @@ describe "Reviewables" do
   describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
 
-    it "should not show a button to expand/collapse the post content" do
+    it "does not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
     end
 
     describe "reviewable actions" do
-      it "should have agree_and_edit action" do
+      it "has agree_and_edit action" do
         visit("/review")
         select_kit =
           PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
@@ -46,7 +46,7 @@ describe "Reviewables" do
         expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
       end
 
-      it "should open a modal when suspending a user" do
+      it "opens a modal when suspending a user" do
         visit("/review")
 
         select_kit =
@@ -61,7 +61,7 @@ describe "Reviewables" do
         )
       end
 
-      it "should show a toast when disagreeing with a flag flag" do
+      it "shows a toast when disagreeing with a flag flag" do
         visit("/review")
 
         select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
@@ -108,7 +108,7 @@ describe "Reviewables" do
   describe "when there is a queued post reviewable with a short post" do
     fab!(:short_queued_reviewable, :reviewable_queued_post)
 
-    it "should not show a button to expand/collapse the post content" do
+    it "does not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle

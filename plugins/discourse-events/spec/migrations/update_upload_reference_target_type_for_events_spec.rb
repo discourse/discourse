@@ -11,13 +11,14 @@ RSpec.describe UpdateUploadReferenceTargetTypeForEvents do
   fab!(:other_upload, :upload)
   fab!(:event) { Fabricate(:event, post: Fabricate(:post)) }
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
     UploadReference.delete_all
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
-
-  after { ActiveRecord::Migration.verbose = @original_verbose }
 
   def reference(upload_id:, target_type:, target_id:)
     UploadReference.insert_all(

@@ -20,7 +20,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::ChatGpt do
       expect(translated).to contain_exactly(*open_ai_version)
     end
 
-    it "will retain usernames for unicode usernames, correctly in mixed mode" do
+    it "retains usernames for unicode usernames, correctly in mixed mode" do
       prompt =
         DiscourseAi::Completions::Prompt.new(
           "You are a bot",
@@ -95,6 +95,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::ChatGpt do
       expect(translated.last[:role]).to eq("user")
       expect(translated.last[:content].length).to be < (8000 * 4)
     end
+
     it "renders converted document uploads as text content parts" do
       llm_model.update!(allowed_attachment_types: ["docx"])
       converted_text = "Uploaded document: sample.docx (13 Bytes)\n\nConverted text"

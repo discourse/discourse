@@ -24,12 +24,11 @@ describe "Creating Invites" do
     SiteSetting.invite_link_max_redemptions_limit = 63
     SiteSetting.invite_expiry_days = 3
     sign_in(user)
-  end
-
-  before do
     user_invited_pending_page.visit(user)
     open_invite_modal
+
   end
+
 
   it "is possible to create an invite link without toggling the advanced options" do
     cdp.allow_clipboard

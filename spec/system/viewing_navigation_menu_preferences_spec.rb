@@ -13,7 +13,7 @@ describe "Viewing sidebar preferences" do
 
     before { sign_in(admin) }
 
-    it "should be able to view navigation menu preferences of another user" do
+    it "is able to view navigation menu preferences of another user" do
       user.user_option.update!(
         sidebar_link_to_filtered_list: true,
         sidebar_show_count_of_new_items: true,

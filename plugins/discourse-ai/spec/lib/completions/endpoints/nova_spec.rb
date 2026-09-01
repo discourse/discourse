@@ -29,7 +29,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
   before { enable_current_plugin }
 
-  it "should be able to make a simple request" do
+  it "is able to make a simple request" do
     proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
 
     content = {
@@ -62,7 +62,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     expect(log.response_tokens).to eq(119)
   end
 
-  it "should be able to make a streaming request" do
+  it "is able to make a streaming request" do
     messages =
       [
         { messageStart: { role: "assistant" } },
@@ -102,7 +102,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     expect(log.response_tokens).to eq(18)
   end
 
-  it "should support native streaming tool calls" do
+  it "supports native streaming tool calls" do
     #model.provider_params["disable_native_tools"] = true
     #model.save!
 

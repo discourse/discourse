@@ -111,7 +111,7 @@ describe "Solved" do
     end
   end
 
-  it "should collapse/expand the solution when clicking the toggle" do
+  it "collapse/expands the solution when clicking the toggle" do
     solved_topic = Fabricate(:solved_topic, topic:)
     Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
 

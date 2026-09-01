@@ -285,7 +285,7 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to be_present
       end
 
-      it "will use the ReviewableUser serializer for its fields" do
+      it "uses the ReviewableUser serializer for its fields" do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
         user = Fabricate(:user)
@@ -565,202 +565,200 @@ RSpec.describe ReviewablesController do
       end
     end
 
-    describe "#show" do
-      context "with basics" do
-        fab!(:reviewable)
-        before { sign_in(Fabricate(:moderator)) }
+    context "with basics" do
+      fab!(:reviewable)
+      before { sign_in(Fabricate(:moderator)) }
 
-        it "returns the reviewable as json" do
-          get "/review/#{reviewable.id}.json"
-          expect(response.code).to eq("200")
+      it "returns the reviewable as json" do
+        get "/review/#{reviewable.id}.json"
+        expect(response.code).to eq("200")
 
-          json = response.parsed_body
-          expect(json["reviewable"]["id"]).to eq(reviewable.id)
-        end
-
-        it "returns 404 for a missing reviewable" do
-          get "/review/123456789.json"
-          expect(response.code).to eq("404")
-        end
+        json = response.parsed_body
+        expect(json["reviewable"]["id"]).to eq(reviewable.id)
       end
 
-      context "with conversation" do
-        fab!(:post)
-        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-        fab!(:admin)
-        let(:result) { PostActionCreator.notify_moderators(user, post, "this is the first post") }
-        let(:reviewable) { result.reviewable }
+      it "returns 404 for a missing reviewable" do
+        get "/review/123456789.json"
+        expect(response.code).to eq("404")
+      end
+    end
 
-        before do
-          PostCreator.create(
-            admin,
-            topic_id: result.reviewable_score.meta_topic_id,
-            raw: "this is the second post",
-          )
-          PostCreator.create(
-            admin,
-            topic_id: result.reviewable_score.meta_topic_id,
-            raw: "this is the third post",
-          )
-        end
+    context "with conversation" do
+      fab!(:post)
+      fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:admin)
+      let(:result) { PostActionCreator.notify_moderators(user, post, "this is the first post") }
+      let(:reviewable) { result.reviewable }
 
-        it "returns the conversation" do
-          get "/review/#{reviewable.id}.json"
-          expect(response.code).to eq("200")
-          json = response.parsed_body
-
-          score = json["reviewable_scores"][0]
-          conversation_id = score["reviewable_conversation_id"]
-
-          conversation = json["reviewable_conversations"].find { |c| c["id"] == conversation_id }
-          expect(conversation).to be_present
-          expect(conversation["has_more"]).to eq(true)
-          expect(conversation["permalink"]).to be_present
-
-          reply =
-            json["conversation_posts"].find do |cp|
-              cp["id"] == conversation["conversation_post_ids"][0]
-            end
-          expect(reply["excerpt"]).to be_present
-          expect(reply["user_id"]).to eq(user.id)
-
-          reply =
-            json["conversation_posts"].find do |cp|
-              cp["id"] == conversation["conversation_post_ids"][1]
-            end
-          expect(reply["excerpt"]).to be_present
-          expect(reply["user_id"]).to eq(admin.id)
-        end
+      before do
+        PostCreator.create(
+          admin,
+          topic_id: result.reviewable_score.meta_topic_id,
+          raw: "this is the second post",
+        )
+        PostCreator.create(
+          admin,
+          topic_id: result.reviewable_score.meta_topic_id,
+          raw: "this is the third post",
+        )
       end
 
-      context "when a category moderator cannot see the flag's PM topic" do
-        subject(:show_reviewable) { get "/review/#{reviewable.id}.json" }
+      it "returns the conversation" do
+        get "/review/#{reviewable.id}.json"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
 
-        fab!(:post)
-        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-        fab!(:category_moderator, :user)
-        fab!(:group)
-        fab!(:category_moderation_group) do
-          Fabricate(:category_moderation_group, category: post.topic.category, group:)
-        end
+        score = json["reviewable_scores"][0]
+        conversation_id = score["reviewable_conversation_id"]
 
-        let(:flag_reason) { "this is the flag reason" }
-        let(:result) { PostActionCreator.notify_moderators(user, post, flag_reason) }
-        let(:reviewable) { result.reviewable }
-        let(:reviewable_score) { result.reviewable_score }
-        let(:meta_topic) { reviewable_score.meta_topic }
+        conversation = json["reviewable_conversations"].find { |c| c["id"] == conversation_id }
+        expect(conversation).to be_present
+        expect(conversation["has_more"]).to eq(true)
+        expect(conversation["permalink"]).to be_present
 
-        let(:response_body) { response.parsed_body }
-        let(:serialized_score) { response_body["reviewable_scores"].first }
-        let(:conversation_id) { serialized_score["reviewable_conversation_id"] }
-        let(:conversation) do
-          response_body["reviewable_conversations"].find { |convo| convo["id"] == conversation_id }
-        end
-        let(:flagger_post) do
-          response_body["conversation_posts"].find do |convo_post|
-            convo_post["id"] == conversation["conversation_post_ids"].first
+        reply =
+          json["conversation_posts"].find do |cp|
+            cp["id"] == conversation["conversation_post_ids"][0]
           end
+        expect(reply["excerpt"]).to be_present
+        expect(reply["user_id"]).to eq(user.id)
+
+        reply =
+          json["conversation_posts"].find do |cp|
+            cp["id"] == conversation["conversation_post_ids"][1]
+          end
+        expect(reply["excerpt"]).to be_present
+        expect(reply["user_id"]).to eq(admin.id)
+      end
+    end
+
+    context "when a category moderator cannot see the flag's PM topic" do
+      subject(:show_reviewable) { get "/review/#{reviewable.id}.json" }
+
+      fab!(:post)
+      fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:category_moderator, :user)
+      fab!(:group)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
+      end
+
+      let(:flag_reason) { "this is the flag reason" }
+      let(:result) { PostActionCreator.notify_moderators(user, post, flag_reason) }
+      let(:reviewable) { result.reviewable }
+      let(:reviewable_score) { result.reviewable_score }
+      let(:meta_topic) { reviewable_score.meta_topic }
+
+      let(:response_body) { response.parsed_body }
+      let(:serialized_score) { response_body["reviewable_scores"].first }
+      let(:conversation_id) { serialized_score["reviewable_conversation_id"] }
+      let(:conversation) do
+        response_body["reviewable_conversations"].find { |convo| convo["id"] == conversation_id }
+      end
+      let(:flagger_post) do
+        response_body["conversation_posts"].find do |convo_post|
+          convo_post["id"] == conversation["conversation_post_ids"].first
+        end
+      end
+
+      before do
+        SiteSetting.enable_category_group_moderation = false
+        reviewable_score
+        SiteSetting.enable_category_group_moderation = true
+        group.add(category_moderator)
+        sign_in(category_moderator)
+      end
+
+      it "cannot see the flag's PM topic directly" do
+        expect(category_moderator.guardian.can_see_topic?(meta_topic)).to eq(false)
+      end
+
+      context "when the conversation belongs to the flag being reviewed" do
+        it "returns the notify moderators conversation" do
+          show_reviewable
+
+          expect(response.code).to eq("200")
+          expect(conversation_id).to eq(meta_topic.id)
+          expect(conversation).to be_present
+          expect(flagger_post).to include(
+            "user_id" => user.id,
+            "excerpt" => a_string_including(flag_reason),
+          )
+        end
+      end
+
+      context "when the score points at an unrelated notify_moderators message" do
+        let(:unrelated_flag_reason) { "unrelated flag reason" }
+        let(:unrelated_post) { Fabricate(:post) }
+        let(:unrelated_result) do
+          PostActionCreator.notify_moderators(user, unrelated_post, unrelated_flag_reason)
         end
 
         before do
           SiteSetting.enable_category_group_moderation = false
-          reviewable_score
+          reviewable_score.update!(meta_topic: unrelated_result.reviewable_score.meta_topic)
           SiteSetting.enable_category_group_moderation = true
-          group.add(category_moderator)
-          sign_in(category_moderator)
         end
 
-        it "cannot see the flag's PM topic directly" do
-          expect(category_moderator.guardian.can_see_topic?(meta_topic)).to eq(false)
-        end
-
-        context "when the conversation belongs to the flag being reviewed" do
-          it "returns the notify moderators conversation" do
-            show_reviewable
-
-            expect(response.code).to eq("200")
-            expect(conversation_id).to eq(meta_topic.id)
-            expect(conversation).to be_present
-            expect(flagger_post).to include(
-              "user_id" => user.id,
-              "excerpt" => a_string_including(flag_reason),
-            )
-          end
-        end
-
-        context "when the score points at an unrelated notify_moderators message" do
-          let(:unrelated_flag_reason) { "unrelated flag reason" }
-          let(:unrelated_post) { Fabricate(:post) }
-          let(:unrelated_result) do
-            PostActionCreator.notify_moderators(user, unrelated_post, unrelated_flag_reason)
-          end
-
-          before do
-            SiteSetting.enable_category_group_moderation = false
-            reviewable_score.update!(meta_topic: unrelated_result.reviewable_score.meta_topic)
-            SiteSetting.enable_category_group_moderation = true
-          end
-
-          it "does not return the conversation" do
-            show_reviewable
-
-            expect(response.code).to eq("200")
-            expect(conversation_id).to be_blank
-            expect(response_body["reviewable_conversations"]).to be_blank
-            expect(response_body["conversation_posts"]).to be_blank
-            expect(response.body).not_to include(unrelated_flag_reason)
-          end
-        end
-      end
-
-      context "with an inaccessible conversation" do
-        it "does not serialize the conversation" do
-          SiteSetting.enable_category_group_moderation = true
-
-          category = Fabricate(:category)
-          group_user = Fabricate(:group_user)
-          Fabricate(:category_moderation_group, category: category, group: group_user.group)
-
-          flagger = Fabricate(:user, refresh_auto_groups: true)
-          topic = Fabricate(:topic, category: category)
-          post = Fabricate(:post, topic: topic)
-          meta_post =
-            PostCreator.create!(
-              flagger,
-              archetype: Archetype.private_message,
-              subtype: TopicSubtype.notify_moderators,
-              target_group_names: [Group[:moderators].name],
-              title: "A hidden flag conversation",
-              raw: "Sensitive flag reason for moderators only",
-            )
-          reviewable =
-            ReviewableFlaggedPost.needs_review!(
-              created_by: flagger,
-              target: post,
-              topic: topic,
-              reviewable_by_moderator: true,
-            )
-          reviewable_score =
-            reviewable.add_score(
-              flagger,
-              ReviewableScore.types[:notify_moderators],
-              meta_topic_id: meta_post.topic_id,
-            )
-
-          expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
-
-          sign_in(group_user.user)
-          get "/review/#{reviewable.id}.json"
+        it "does not return the conversation" do
+          show_reviewable
 
           expect(response.code).to eq("200")
-          json = response.parsed_body
-          score = json["reviewable_scores"].find { |item| item["id"] == reviewable_score.id }
-
-          expect(score).not_to have_key("reviewable_conversation_id")
-          expect(json["reviewable_conversations"]).to be_blank
-          expect(json["conversation_posts"]).to be_blank
-          expect(response.body).not_to include(meta_post.raw)
+          expect(conversation_id).to be_blank
+          expect(response_body["reviewable_conversations"]).to be_blank
+          expect(response_body["conversation_posts"]).to be_blank
+          expect(response.body).not_to include(unrelated_flag_reason)
         end
+      end
+    end
+
+    context "with an inaccessible conversation" do
+      it "does not serialize the conversation" do
+        SiteSetting.enable_category_group_moderation = true
+
+        category = Fabricate(:category)
+        group_user = Fabricate(:group_user)
+        Fabricate(:category_moderation_group, category: category, group: group_user.group)
+
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        meta_post =
+          PostCreator.create!(
+            flagger,
+            archetype: Archetype.private_message,
+            subtype: TopicSubtype.notify_moderators,
+            target_group_names: [Group[:moderators].name],
+            title: "A hidden flag conversation",
+            raw: "Sensitive flag reason for moderators only",
+          )
+        reviewable =
+          ReviewableFlaggedPost.needs_review!(
+            created_by: flagger,
+            target: post,
+            topic: topic,
+            reviewable_by_moderator: true,
+          )
+        reviewable_score =
+          reviewable.add_score(
+            flagger,
+            ReviewableScore.types[:notify_moderators],
+            meta_topic_id: meta_post.topic_id,
+          )
+
+        expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
+
+        sign_in(group_user.user)
+        get "/review/#{reviewable.id}.json"
+
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        score = json["reviewable_scores"].find { |item| item["id"] == reviewable_score.id }
+
+        expect(score).not_to have_key("reviewable_conversation_id")
+        expect(json["reviewable_conversations"]).to be_blank
+        expect(json["conversation_posts"]).to be_blank
+        expect(response.body).not_to include(meta_post.raw)
       end
     end
 

@@ -10,6 +10,29 @@ RSpec.describe "users" do
     SiteSetting.tagging_enabled = true
     Jobs.run_immediately!
     sign_in(admin)
+    SiteSetting.discourse_connect_url = "http://someurl.com"
+    SiteSetting.discourse_connect_secret = "x" * 10
+    SiteSetting.enable_discourse_connect = true
+    user.create_single_sign_on_record(external_id: "1", last_payload: "")
+
+    SiteSetting.enable_google_oauth2_logins = true
+    UserAssociatedAccount.create!(
+      user: user,
+      provider_uid: "myuid",
+      provider_name: "google_oauth2",
+    )
+
+    stub_request(
+            :get,
+            %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
+          ).with(
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip",
+              "Host" => "www.gravatar.com",
+            },
+          ).to_return(status: 200, body: "", headers: {})
+
   end
 
   path "/users.json" do
@@ -137,12 +160,6 @@ RSpec.describe "users" do
         fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
         let(:external_id) { "1" }
 
-        before do
-          SiteSetting.discourse_connect_url = "http://someurl.com"
-          SiteSetting.discourse_connect_secret = "x" * 10
-          SiteSetting.enable_discourse_connect = true
-          user.create_single_sign_on_record(external_id: "1", last_payload: "")
-        end
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -178,14 +195,6 @@ RSpec.describe "users" do
         let(:provider) { "google_oauth2" }
         let(:external_id) { "myuid" }
 
-        before do
-          SiteSetting.enable_google_oauth2_logins = true
-          UserAssociatedAccount.create!(
-            user: user,
-            provider_uid: "myuid",
-            provider_name: "google_oauth2",
-          )
-        end
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -528,18 +537,6 @@ RSpec.describe "users" do
   end
 
   path "/user_avatar/{username}/refresh_gravatar.json" do
-    before do
-      stub_request(
-        :get,
-        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
-      ).with(
-        headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip",
-          "Host" => "www.gravatar.com",
-        },
-      ).to_return(status: 200, body: "", headers: {})
-    end
 
     post "Refresh gravatar" do
       tags "Users", "Admin"

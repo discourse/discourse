@@ -171,7 +171,7 @@ describe GithubLinkback do
       expect(links.size).to eq(0)
     end
 
-    it "should return the urls for the selected projects" do
+    it "returns the urls for the selected projects" do
       SiteSetting.github_linkback_projects =
         "discourse/discourse|eviltrout/ember-performance|discourse/*"
       links = GithubLinkback.new(post).github_links
@@ -273,21 +273,21 @@ describe GithubLinkback do
         expect(post.custom_fields[field]).to be_present
       end
 
-      it "should create linkback for <= SiteSetting.github_linkback_maximum_links urls" do
+      it "creates linkback for <= SiteSetting.github_linkback_maximum_links urls" do
         SiteSetting.github_linkback_maximum_links = 2
         post = Fabricate(:post, raw: "#{github_pr_link} #{github_issue_link}")
         links = GithubLinkback.new(post).create
         expect(links.size).to eq(2)
       end
 
-      it "should skip linkback for > SiteSetting.github_linkback_maximum_links urls" do
+      it "skips linkback for > SiteSetting.github_linkback_maximum_links urls" do
         SiteSetting.github_linkback_maximum_links = 1
         post = Fabricate(:post, raw: "#{github_pr_link} #{github_issue_link}")
         links = GithubLinkback.new(post).create
         expect(links.size).to eq(0)
       end
 
-      it "should create linkback for <= SiteSetting.github_linkback_maximum_links unique urls" do
+      it "creates linkback for <= SiteSetting.github_linkback_maximum_links unique urls" do
         SiteSetting.github_linkback_maximum_links = 1
         post = Fabricate(:post, raw: "#{github_pr_link} #{github_pr_link} #{github_pr_link}")
         links = GithubLinkback.new(post).create

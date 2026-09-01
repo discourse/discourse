@@ -98,6 +98,7 @@ RSpec.describe Discourse do
         2.4.4.beta6: twofourfourbetasix
         2.4.2.beta1: twofourtwobetaone
         YML
+
       include_examples "test compatible resource"
     end
 
@@ -109,6 +110,7 @@ RSpec.describe Discourse do
         2.5.0.beta2: twofivebetatwo
         2.4.4.beta6: twofourfourbetasix
         YML
+
       include_examples "test compatible resource"
     end
 

@@ -2,7 +2,7 @@
 
 # We can use the redeliver event to test the user-agent header
 RSpec.describe "Net::HTTPHeader sets a default user-agent" do
-  it "should set a user-agent when none has been set" do
+  it "sets a user-agent when none has been set" do
     get "/test_net_http_headers.json"
 
     expect(response).to have_http_status(:success)

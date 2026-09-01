@@ -10,7 +10,7 @@ RSpec.describe Jobs::CleanUpUserApiKeysMaxLife do
   context "when user api key was created before the max life period" do
     before { SiteSetting.revoke_user_api_keys_maxlife_days = 2 }
 
-    it "should revoke active keys" do
+    it "revokes active keys" do
       freeze_time
 
       expect { described_class.new.execute({}) }.to change { older_key.reload.revoked_at }.from(

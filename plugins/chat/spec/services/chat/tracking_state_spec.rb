@@ -31,11 +31,43 @@ RSpec.describe ::Chat::TrackingState do
     end
 
     context "when not including channels and threads where the user is not a member" do
-      context "when only channel_ids are provided" do
-        let(:id_params) { { channel_ids: [channel_1.id, channel_2.id] } }
+      let(:id_params) { { channel_ids: [channel_1.id, channel_2.id] } }
 
-        it "gets the tracking state of the channels" do
+      it "gets the tracking state of the channels" do
+        generate_tracking_state
+        expect(result.report.channel_tracking).to eq(
+          channel_1.id => {
+            unread_count: 4, # 2 messages + 2 thread original messages
+            mention_count: 0,
+            watched_threads_unread_count: 0,
+          },
+        )
+      end
+
+      it "gets the tracking state of the threads in the channels" do
+        generate_tracking_state
+        expect(result.report.thread_tracking).to eq(
+          thread_1.id => {
+            channel_id: channel_1.id,
+            unread_count: 1,
+            mention_count: 0,
+            watched_threads_unread_count: 0,
+          },
+          thread_2.id => {
+            channel_id: channel_1.id,
+            unread_count: 2,
+            mention_count: 0,
+            watched_threads_unread_count: 0,
+          },
+        )
+      end
+
+      context "when include_threads is false" do
+        let(:include_threads) { false }
+
+        it "only gets channel tracking state and no thread tracking state" do
           generate_tracking_state
+          expect(result.report.thread_tracking).to eq({})
           expect(result.report.channel_tracking).to eq(
             channel_1.id => {
               unread_count: 4, # 2 messages + 2 thread original messages
@@ -43,40 +75,6 @@ RSpec.describe ::Chat::TrackingState do
               watched_threads_unread_count: 0,
             },
           )
-        end
-
-        it "gets the tracking state of the threads in the channels" do
-          generate_tracking_state
-          expect(result.report.thread_tracking).to eq(
-            thread_1.id => {
-              channel_id: channel_1.id,
-              unread_count: 1,
-              mention_count: 0,
-              watched_threads_unread_count: 0,
-            },
-            thread_2.id => {
-              channel_id: channel_1.id,
-              unread_count: 2,
-              mention_count: 0,
-              watched_threads_unread_count: 0,
-            },
-          )
-        end
-
-        context "when include_threads is false" do
-          let(:include_threads) { false }
-
-          it "only gets channel tracking state and no thread tracking state" do
-            generate_tracking_state
-            expect(result.report.thread_tracking).to eq({})
-            expect(result.report.channel_tracking).to eq(
-              channel_1.id => {
-                unread_count: 4, # 2 messages + 2 thread original messages
-                mention_count: 0,
-                watched_threads_unread_count: 0,
-              },
-            )
-          end
         end
       end
 

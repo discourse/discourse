@@ -3,7 +3,7 @@
 RSpec.describe Jobs::CleanUpUserExportTopics do
   fab!(:user)
 
-  it "should delete ancient user export system messages" do
+  it "deletes ancient user export system messages" do
     post_en =
       SystemMessage.create_from_system_user(
         user,

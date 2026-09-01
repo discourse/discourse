@@ -13,7 +13,7 @@ RSpec.describe klass do
     FinalDestination::SSRFDetector.disallow_ip_lookups_in_test!
   end
 
-  it "should filter endpoint hostname through our SSRF detector" do
+  it "filters endpoint hostname through our SSRF detector" do
     klass::Request.any_instance.expects(:encrypt_payload)
     klass::Request.any_instance.expects(:headers)
 
@@ -34,7 +34,7 @@ RSpec.describe klass do
     end.to raise_error(FinalDestination::SSRFDetector::DisallowedIpError)
   end
 
-  it "should send the right request if endpoint hostname resolves to a public ip address" do
+  it "sends the right request if endpoint hostname resolves to a public ip address" do
     klass::Request.any_instance.expects(:encrypt_payload)
     klass::Request.any_instance.expects(:headers)
 

@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 describe "HashtagAutocompleteService multisite registry", type: :multisite do
-  class MockPlugin
-    def initialize(setting_provider)
-      @setting_provider = setting_provider
-    end
-
+  MockPlugin = Struct.new(:setting_provider) do
     def enabled?
-      @setting_provider.find("bookmark_hashtag_enabled")&.value == "true"
+      setting_provider.find("bookmark_hashtag_enabled")&.value == "true"
     end
   end
 

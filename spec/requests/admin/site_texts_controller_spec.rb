@@ -197,7 +197,7 @@ RSpec.describe Admin::SiteTextsController do
         I18n.config.available_locales = nil
       end
 
-      context "with plural keys" do
+      shared_examples "finds correct plural keys" do
         before do
           I18n.backend.store_translations(
             :en,
@@ -208,123 +208,121 @@ RSpec.describe Admin::SiteTextsController do
           )
         end
 
-        shared_examples "finds correct plural keys" do
-          it "finds the correct plural keys for the locale" do
-            SiteSetting.default_locale = locale
+        it "finds the correct plural keys for the locale" do
+          SiteSetting.default_locale = locale
 
-            get "/admin/customize/site_texts.json", params: { q: "colour", locale: locale }
-            expect(response.status).to eq(200)
+          get "/admin/customize/site_texts.json", params: { q: "colour", locale: locale }
+          expect(response.status).to eq(200)
 
-            json = ::JSON.parse(response.body, symbolize_names: true)
-            expect(json).to be_present
+          json = ::JSON.parse(response.body, symbolize_names: true)
+          expect(json).to be_present
 
-            site_texts = json[:site_texts]
-            expect(site_texts).to be_present
+          site_texts = json[:site_texts]
+          expect(site_texts).to be_present
 
-            expected_search_result =
-              expected_translations.map do |key, value|
-                overridden =
-                  defined?(expected_overridden) ? expected_overridden[key] || false : false
-                interpolation_keys =
-                  (
-                    if defined?(expected_interpolation_keys)
-                      expected_interpolation_keys[key] || []
-                    else
-                      []
-                    end
-                  )
-                {
-                  id: "colour.#{key}",
-                  value:,
-                  status: "up_to_date",
-                  old_default: nil,
-                  new_default: nil,
-                  can_revert: overridden,
-                  overridden:,
-                  interpolation_keys:,
-                }
-              end
+          expected_search_result =
+            expected_translations.map do |key, value|
+              overridden =
+                defined?(expected_overridden) ? expected_overridden[key] || false : false
+              interpolation_keys =
+                (
+                  if defined?(expected_interpolation_keys)
+                    expected_interpolation_keys[key] || []
+                  else
+                    []
+                  end
+                )
+              {
+                id: "colour.#{key}",
+                value:,
+                status: "up_to_date",
+                old_default: nil,
+                new_default: nil,
+                can_revert: overridden,
+                overridden:,
+                interpolation_keys:,
+              }
+            end
 
-            expect(site_texts).to match_array(expected_search_result)
-          end
+          expect(site_texts).to match_array(expected_search_result)
+        end
+      end
+
+      context "with English" do
+        let(:locale) { :en }
+        let(:expected_translations) { { one: "%{count} colour", other: "%{count} colours" } }
+        let(:expected_interpolation_keys) { { one: ["count"], other: ["count"] } }
+
+        include_examples "finds correct plural keys"
+      end
+
+      context "with language with different plural keys and missing translations" do
+        let(:locale) { :ru }
+        let(:expected_translations) do
+          {
+            one: "%{count} colour",
+            few: "%{count} colours",
+            many: "%{count} colours",
+            other: "%{count} colours",
+          }
+        end
+        let(:expected_interpolation_keys) do
+          { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
         end
 
-        context "with English" do
-          let(:locale) { :en }
-          let(:expected_translations) { { one: "%{count} colour", other: "%{count} colours" } }
-          let(:expected_interpolation_keys) { { one: ["count"], other: ["count"] } }
+        include_examples "finds correct plural keys"
+      end
 
-          include_examples "finds correct plural keys"
-        end
-
-        context "with language with different plural keys and missing translations" do
-          let(:locale) { :ru }
-          let(:expected_translations) do
-            {
-              one: "%{count} colour",
-              few: "%{count} colours",
-              many: "%{count} colours",
-              other: "%{count} colours",
-            }
-          end
-          let(:expected_interpolation_keys) do
-            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
-          end
-
-          include_examples "finds correct plural keys"
-        end
-
-        context "with language with different plural keys and partial translation" do
-          before do
-            I18n.backend.store_translations(
-              :ru,
-              colour: {
-                few: "%{count} цвета",
-                many: "%{count} цветов",
-              },
-            )
-          end
-
-          let(:locale) { :ru }
-          let(:expected_translations) do
-            {
-              one: "%{count} colour",
+      context "with language with different plural keys and partial translation" do
+        before do
+          I18n.backend.store_translations(
+            :ru,
+            colour: {
               few: "%{count} цвета",
               many: "%{count} цветов",
-              other: "%{count} colours",
-            }
-          end
-          let(:expected_interpolation_keys) do
-            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
-          end
-
-          include_examples "finds correct plural keys"
+            },
+          )
         end
 
-        context "with overridden translation not in original translation" do
-          before do
-            I18n.backend.store_translations(
-              :ru,
-              colour: {
-                few: "%{count} цвета",
-                many: "%{count} цветов",
-              },
-            )
-            TranslationOverride.create!(locale: :ru, translation_key: "colour.one", value: "ONE")
-            TranslationOverride.create!(locale: :ru, translation_key: "colour.few", value: "FEW")
-          end
-
-          let(:locale) { :ru }
-          let(:expected_translations) do
-            { one: "ONE", few: "FEW", many: "%{count} цветов", other: "%{count} colours" }
-          end
-          let(:expected_interpolation_keys) do
-            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
-          end
-          let(:expected_overridden) { { one: true, few: true } }
-
-          include_examples "finds correct plural keys"
+        let(:locale) { :ru }
+        let(:expected_translations) do
+          {
+            one: "%{count} colour",
+            few: "%{count} цвета",
+            many: "%{count} цветов",
+            other: "%{count} colours",
+          }
         end
+        let(:expected_interpolation_keys) do
+          { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
+        end
+
+        include_examples "finds correct plural keys"
+      end
+
+      context "with overridden translation not in original translation" do
+        before do
+          I18n.backend.store_translations(
+            :ru,
+            colour: {
+              few: "%{count} цвета",
+              many: "%{count} цветов",
+            },
+          )
+          TranslationOverride.create!(locale: :ru, translation_key: "colour.one", value: "ONE")
+          TranslationOverride.create!(locale: :ru, translation_key: "colour.few", value: "FEW")
+        end
+
+        let(:locale) { :ru }
+        let(:expected_translations) do
+          { one: "ONE", few: "FEW", many: "%{count} цветов", other: "%{count} colours" }
+        end
+        let(:expected_interpolation_keys) do
+          { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
+        end
+        let(:expected_overridden) { { one: true, few: true } }
+
+        include_examples "finds correct plural keys"
       end
 
       it "does not return restricted keys in search results" do
@@ -482,7 +480,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(json["site_text"]["interpolation_keys"]).to eq(%w[name name_or_username username])
       end
 
-      context "with plural keys" do
+      shared_examples "has correct plural keys" do
         before do
           I18n.backend.store_translations(
             :en,
@@ -493,52 +491,50 @@ RSpec.describe Admin::SiteTextsController do
           )
         end
 
-        shared_examples "has correct plural keys" do
-          it "returns the correct plural keys for the locale" do
-            expected_translations.each do |key, value|
-              id = "colour.#{key}"
+        it "returns the correct plural keys for the locale" do
+          expected_translations.each do |key, value|
+            id = "colour.#{key}"
 
-              get "/admin/customize/site_texts/#{id}.json", params: { locale: locale }
-              expect(response.status).to eq(200)
+            get "/admin/customize/site_texts/#{id}.json", params: { locale: locale }
+            expect(response.status).to eq(200)
 
-              json = response.parsed_body
-              expect(json).to be_present
+            json = response.parsed_body
+            expect(json).to be_present
 
-              site_text = json["site_text"]
-              expect(site_text).to be_present
+            site_text = json["site_text"]
+            expect(site_text).to be_present
 
-              expect(site_text["id"]).to eq(id)
-              expect(site_text["value"]).to eq(value)
-            end
+            expect(site_text["id"]).to eq(id)
+            expect(site_text["value"]).to eq(value)
           end
         end
+      end
 
-        context "with English" do
-          let(:locale) { :en }
-          let(:expected_translations) { { one: "%{count} colour", other: "%{count} colours" } }
+      context "with English" do
+        let(:locale) { :en }
+        let(:expected_translations) { { one: "%{count} colour", other: "%{count} colours" } }
 
-          include_examples "has correct plural keys"
+        include_examples "has correct plural keys"
+      end
+
+      context "with language with different plural keys and missing translations" do
+        let(:locale) { :ru }
+        let(:expected_translations) do
+          { one: "%{count} colour", few: "%{count} colours", other: "%{count} colours" }
         end
 
-        context "with language with different plural keys and missing translations" do
-          let(:locale) { :ru }
-          let(:expected_translations) do
-            { one: "%{count} colour", few: "%{count} colours", other: "%{count} colours" }
-          end
+        include_examples "has correct plural keys"
+      end
 
-          include_examples "has correct plural keys"
+      context "with language with different plural keys and partial translation" do
+        before { I18n.backend.store_translations(:ru, colour: { few: "%{count} цвета" }) }
+
+        let(:locale) { :ru }
+        let(:expected_translations) do
+          { one: "%{count} colour", few: "%{count} цвета", other: "%{count} colours" }
         end
 
-        context "with language with different plural keys and partial translation" do
-          before { I18n.backend.store_translations(:ru, colour: { few: "%{count} цвета" }) }
-
-          let(:locale) { :ru }
-          let(:expected_translations) do
-            { one: "%{count} colour", few: "%{count} цвета", other: "%{count} colours" }
-          end
-
-          include_examples "has correct plural keys"
-        end
+        include_examples "has correct plural keys"
       end
 
       it "returns 403 for restricted keys" do
@@ -898,7 +894,7 @@ RSpec.describe Admin::SiteTextsController do
         Fabricate(
           :topic,
           title: "The English Guidelines",
-          category: @staff_category,
+          category: staff_category,
           user: Discourse.system_user,
         )
       Fabricate(:post, topic: guidelines_topic, user: Discourse.system_user)

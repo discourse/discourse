@@ -15,7 +15,7 @@ class TestCachedCounting
 end
 
 RSpec.describe CachedCounting do
-  it "should be default disabled in test" do
+  it "is default disabled in test" do
     expect(CachedCounting.enabled?).to eq(false)
   end
 

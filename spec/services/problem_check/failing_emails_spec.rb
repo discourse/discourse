@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::FailingEmails do
     context "when jobs are failing" do
       let(:failing_jobs) { 1 }
 
-      it do
+      it "reports recent email failures" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           'There are 1 email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.',
         )

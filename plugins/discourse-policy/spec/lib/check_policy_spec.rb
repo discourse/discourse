@@ -216,7 +216,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  it "will correctly notify users with high priority notifications" do
+  it "correctlies notify users with high priority notifications" do
     Jobs.run_immediately!
     freeze_time
 
@@ -297,7 +297,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  it "will delete the existing policy reminder notification before creating a new one" do
+  it "deletes the existing policy reminder notification before creating a new one" do
     Jobs.run_immediately!
     freeze_time
 

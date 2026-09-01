@@ -5,6 +5,10 @@ RSpec.describe Group do
   fab!(:user)
   fab!(:group)
 
+  after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
+  # UGLY but perf is horrible with this callback
+  before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+
   it_behaves_like "it has custom fields"
 
   describe "Validations" do
@@ -14,7 +18,7 @@ RSpec.describe Group do
 
     describe "#grant_trust_level" do
       describe "when trust level is not valid" do
-        it "should not be valid" do
+        it "is not valid" do
           group.grant_trust_level = 123_456
 
           expect(group.valid?).to eq(false)
@@ -28,7 +32,7 @@ RSpec.describe Group do
 
     describe "#name" do
       context "when a user with a similar name exists" do
-        it "should not be valid" do
+        it "is not valid" do
           new_group = Fabricate.build(:group, name: admin.username.upcase)
 
           expect(new_group).to_not be_valid
@@ -40,7 +44,7 @@ RSpec.describe Group do
       end
 
       context "when a group with a similar name exists" do
-        it "should not be valid" do
+        it "is not valid" do
           new_group = Fabricate.build(:group, name: group.name.upcase)
 
           expect(new_group).to_not be_valid
@@ -52,7 +56,7 @@ RSpec.describe Group do
       end
 
       context "when a group with a reserved name is created" do
-        it "should not be valid" do
+        it "is not valid" do
           new_group = Fabricate.build(:group, name: "by-id")
           expect(new_group).to_not be_valid
 
@@ -138,9 +142,6 @@ RSpec.describe Group do
     end
   end
 
-  # UGLY but perf is horrible with this callback
-  before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
-  after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
   describe "validation" do
     let(:group) { build(:group) }
@@ -217,7 +218,7 @@ RSpec.describe Group do
 
     context "when a group has no owners" do
       describe "group has not been persisted" do
-        it "should not allow membership requests" do
+        it "does not allow membership requests" do
           group = Fabricate.build(:group, allow_membership_requests: true)
 
           expect(group.valid?).to eq(false)
@@ -232,7 +233,7 @@ RSpec.describe Group do
         end
       end
 
-      it "should not allow membership requests" do
+      it "does not allow membership requests" do
         group.allow_membership_requests = true
 
         expect(group.valid?).to eq(false)
@@ -731,7 +732,7 @@ RSpec.describe Group do
 
     before { group.add(user) }
 
-    it "it deleted correctly" do
+    it "deleted correctly" do
       group.destroy!
       expect(User.where(id: user.id).count).to eq 1
       expect(GroupUser.where(group_id: group.id).count).to eq 0
@@ -983,7 +984,7 @@ RSpec.describe Group do
 
       before { user.user_stat.update!(topics_entered: 999, posts_read_count: 999, time_read: 999) }
 
-      it "should not demote the user" do
+      it "does not demote the user" do
         group.add(user)
         group2.add(user)
 
@@ -1034,7 +1035,7 @@ RSpec.describe Group do
     end
   end
 
-  it "should cook the bio" do
+  it "cooks the bio" do
     group = Fabricate(:group)
     group.update!(bio_raw: "This is a group for :unicorn: lovers")
 
@@ -1334,7 +1335,7 @@ RSpec.describe Group do
 
       before { group.update!(public_exit: true) }
 
-      it "should publish category removal when category is read-restricted to the group" do
+      it "publishes category removal when category is read-restricted to the group" do
         category.set_permissions(group => :full)
         category.save!
         group.update!(categories: [category])
@@ -1346,7 +1347,7 @@ RSpec.describe Group do
         expect(message.user_ids).to eq([user.id])
       end
 
-      it "should publish updated category permissions when category is readable by everyone" do
+      it "publishes updated category permissions when category is readable by everyone" do
         category.set_permissions(:everyone => :readonly, group => :full)
         category.save!
         group.update!(categories: [category])
@@ -1360,7 +1361,7 @@ RSpec.describe Group do
       end
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
-        it "should publish a message to refresh the user's client" do
+        it "publishes a message to refresh the user's client" do
           group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
 
           message = MessageBus.track_publish { group.remove(user) }.first
@@ -1429,7 +1430,7 @@ RSpec.describe Group do
     context "when adding a user into a public group" do
       fab!(:category)
 
-      it "should publish the group's categories to the client" do
+      it "publishes the group's categories to the client" do
         group.update!(public_admission: true, categories: [category])
 
         message = MessageBus.track_publish("/categories") { group.add(user) }.first
@@ -1440,7 +1441,7 @@ RSpec.describe Group do
       end
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
-        it "should publish a message to refresh the user's client" do
+        it "publishes a message to refresh the user's client" do
           group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
 
           message = MessageBus.track_publish { group.add(user) }.first
@@ -1458,7 +1459,7 @@ RSpec.describe Group do
       Group.search_groups(name, sort: :auto).map(&:name)
     end
 
-    it "should return the right groups" do
+    it "returns the right groups" do
       Group.delete_all
 
       group_name =
@@ -1475,7 +1476,7 @@ RSpec.describe Group do
       expect(search_group_names("test2")).to eq([])
     end
 
-    it "should prioritize prefix matches on group's name or fullname" do
+    it "prioritizes prefix matches on group's name or fullname" do
       Fabricate(:group, name: "pears_11", full_name: "fred apple")
       Fabricate(:group, name: "apples", full_name: "jane orange")
       Fabricate(:group, name: "oranges2", full_name: "nothing")
@@ -1800,7 +1801,7 @@ RSpec.describe Group do
   describe "#automatic_group_membership" do
     let(:group) { Fabricate(:group, automatic_membership_email_domains: "example.com") }
 
-    it "should be triggered on create and update" do
+    it "is triggered on create and update" do
       expect { group }.to change { Jobs::AutomaticGroupMembership.jobs.size }.by(1)
 
       job = Jobs::AutomaticGroupMembership.jobs.last
@@ -1822,7 +1823,7 @@ RSpec.describe Group do
   describe "Unicode usernames and group names" do
     before { SiteSetting.unicode_usernames = true }
 
-    it "should normalize the name" do
+    it "normalizes the name" do
       group = Fabricate(:group, name: "Bücherwurm") # NFD
       expect(group.name).to eq("Bücherwurm") # NFC
     end

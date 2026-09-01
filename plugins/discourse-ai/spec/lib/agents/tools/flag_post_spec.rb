@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
-  it "does not require separate approval before adding a post to the review queue" do
-    expect(described_class.requires_approval?).to eq(false)
-  end
-
-  fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  let(:context) { DiscourseAi::Agents::BotContext.new(post: post) }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
-  fab!(:post)
+  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
 
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
   end
+
+  it "does not require separate approval before adding a post to the review queue" do
+    expect(described_class.requires_approval?).to eq(false)
+  end
+
+  fab!(:llm_model)
+  fab!(:post)
+
 
   def tool(params = nil, agent_options: {}, **kwargs)
     params ||= kwargs
@@ -26,7 +29,6 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
     )
   end
 
-  let(:context) { DiscourseAi::Agents::BotContext.new(post: post) }
 
   it "flags the post when flag_post is true" do
     result = nil

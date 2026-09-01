@@ -11,13 +11,13 @@ RSpec.describe FastImage do
     FinalDestination::SSRFDetector.disallow_ip_lookups_in_test!
   end
 
-  it "should filter endpoint hostname through our SSRF detector and return null object" do
+  it "filters endpoint hostname through our SSRF detector and return null object" do
     stub_ip_lookup("example.com", %W[0.0.0.0])
 
     expect(described_class.type("http://example.com")).to eq(nil)
   end
 
-  it "should send the right request if endpoint hostname resolves to a public ip address" do
+  it "sends the right request if endpoint hostname resolves to a public ip address" do
     stub_ip_lookup("example.com", %W[52.125.123.12])
 
     success = Class.new(StandardError)

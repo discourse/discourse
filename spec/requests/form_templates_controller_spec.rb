@@ -11,7 +11,7 @@ RSpec.describe FormTemplatesController do
     context "when logged in as a user" do
       before { sign_in(user) }
 
-      it "should return all form templates ordered by its ids" do
+      it "returns all form templates ordered by its ids" do
         get "/form-templates.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -57,7 +57,7 @@ RSpec.describe FormTemplatesController do
     end
 
     context "when you are not logged in" do
-      it "should deny access" do
+      it "denies access" do
         get "/form-templates.json"
         expect(response.status).to eq(403)
       end
@@ -69,7 +69,7 @@ RSpec.describe FormTemplatesController do
         SiteSetting.enable_form_templates = false
       end
 
-      it "should not work if you are a logged in user" do
+      it "does not work if you are a logged in user" do
         get "/form-templates.json"
         expect(response.status).to eq(403)
       end
@@ -82,7 +82,7 @@ RSpec.describe FormTemplatesController do
     context "when logged in as a user" do
       before { sign_in(user) }
 
-      it "should return a single template" do
+      it "returns a single template" do
         get "/form-templates/#{form_template.id}.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -151,7 +151,7 @@ RSpec.describe FormTemplatesController do
           sign_in(user)
         end
 
-        it "should return a single template with the correct data" do
+        it "returns a single template with the correct data" do
           get "/form-templates/#{tag_groups_form_template.id}.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
@@ -186,7 +186,7 @@ RSpec.describe FormTemplatesController do
           )
         end
 
-        it "should return a single template with the correct data in order" do
+        it "returns a single template with the correct data in order" do
           new_tag = Fabricate(:tag, description: "Custom Tag")
           tag_group1.tags = [tag3, tag1, new_tag]
           tag_group1.save
@@ -209,7 +209,7 @@ RSpec.describe FormTemplatesController do
     end
 
     context "when you are not logged in" do
-      it "should deny access" do
+      it "denies access" do
         get "/form-templates/#{form_template.id}.json"
         expect(response.status).to eq(403)
       end
@@ -221,7 +221,7 @@ RSpec.describe FormTemplatesController do
         SiteSetting.enable_form_templates = false
       end
 
-      it "should not work if you are a logged in user" do
+      it "does not work if you are a logged in user" do
         get "/form-templates/#{form_template.id}.json"
         expect(response.status).to eq(403)
       end

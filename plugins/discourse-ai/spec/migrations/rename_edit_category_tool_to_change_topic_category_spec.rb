@@ -7,13 +7,15 @@ require Rails.root.join(
 RSpec.describe RenameEditCategoryToolToChangeTopicCategory do
   fab!(:agent, :ai_agent)
 
-  before do
-    enable_current_plugin
-    @original_verbose = ActiveRecord::Migration.verbose
-    ActiveRecord::Migration.verbose = false
-  end
+  before { enable_current_plugin }
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
+    ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
+  end
 
   def stored_tools(id)
     value = DB.query_single("SELECT tools FROM ai_agents WHERE id = ?", id).first

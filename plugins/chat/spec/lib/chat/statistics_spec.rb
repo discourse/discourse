@@ -119,9 +119,7 @@ describe Chat::Statistics do
       expect(monthly[:users]).to eq(2)
     end
   end
-end
 
-describe Chat::Statistics do
   describe "#channel_messages" do
     now = Time.now
 

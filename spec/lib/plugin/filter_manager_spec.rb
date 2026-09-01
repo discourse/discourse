@@ -11,15 +11,15 @@ RSpec.describe Plugin::FilterManager do
     expect(instance.apply(:added_numbers, 1, 0)).to eq(5)
   end
 
-  it "should raise an exception if wrong arity is passed in" do
+  it "raises an exception if wrong arity is passed in" do
     expect do instance.register(:test) {} end.to raise_error(ArgumentError)
   end
 
-  it "should return the original if no filters exist" do
+  it "returns the original if no filters exist" do
     expect(instance.apply(:foo, nil, 42)).to eq(42)
   end
 
-  it "should raise an exception if no block is passed in" do
+  it "raises an exception if no block is passed in" do
     expect do instance.register(:test) end.to raise_error(ArgumentError)
   end
 end

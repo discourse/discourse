@@ -7,7 +7,7 @@ RSpec.describe CurrentUserSerializer do
   let(:guardian) { user.guardian }
 
   context "when SSO is not enabled" do
-    it "should not include the external_id field" do
+    it "does not include the external_id field" do
       payload = serializer.as_json
       expect(payload).not_to have_key(:external_id)
     end
@@ -20,7 +20,7 @@ RSpec.describe CurrentUserSerializer do
       user
     end
 
-    it "should include the external_id" do
+    it "includes the external_id" do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
       SiteSetting.discourse_connect_secret = "12345678910"
       SiteSetting.enable_discourse_connect = true
@@ -34,12 +34,12 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category2, :category)
     fab!(:category3, :category)
 
-    it "should include empty top_category_ids array" do
+    it "includes empty top_category_ids array" do
       payload = serializer.as_json
       expect(payload[:top_category_ids]).to eq([])
     end
 
-    it "should include correct id in top_category_ids array" do
+    it "includes correct id in top_category_ids array" do
       _category = Category.first
       CategoryUser.create!(
         user_id: user.id,
@@ -67,7 +67,7 @@ RSpec.describe CurrentUserSerializer do
   describe "#muted_tag" do
     fab!(:tag)
 
-    let!(:tag_user) do
+    before do
       TagUser.create!(
         user_id: user.id,
         notification_level: TagUser.notification_levels[:muted],
@@ -107,7 +107,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#groups" do
-    it "should only show visible groups" do
+    it "onlies show visible groups" do
       Fabricate(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       public_group =
@@ -309,11 +309,11 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "should not include associated account ids by default" do
+    it "does not include associated account ids by default" do
       expect(serializer.as_json[:associated_account_ids]).to be_nil
     end
 
-    it "should include associated account ids when site setting enabled" do
+    it "includes associated account ids when site setting enabled" do
       SiteSetting.include_associated_account_ids = true
       expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
     end

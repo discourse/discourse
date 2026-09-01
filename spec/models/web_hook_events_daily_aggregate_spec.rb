@@ -38,7 +38,7 @@ RSpec.describe WebHookEventsDailyAggregate do
   describe ".purge_old" do
     before { SiteSetting.retain_web_hook_events_aggregate_days = 1 }
 
-    it "should be able to purge old web hook event aggregates" do
+    it "is able to purge old web hook event aggregates" do
       web_hook = Fabricate(:web_hook)
       WebHookEvent.create!(status: 200, web_hook: web_hook, created_at: 1.day.ago, duration: 180)
       WebHookEvent.create!(status: 200, web_hook: web_hook, created_at: 2.days.ago, duration: 180)
@@ -59,7 +59,7 @@ RSpec.describe WebHookEventsDailyAggregate do
   end
 
   describe "aggregation works" do
-    it "should be able to aggregate web hook events" do
+    it "is able to aggregate web hook events" do
       yesterday_aggregate =
         WebHookEventsDailyAggregate.create!(web_hook_id: web_hook.id, date: 1.day.ago)
       yesterday_events = [event, failed_event, failed_event2]
@@ -75,7 +75,7 @@ RSpec.describe WebHookEventsDailyAggregate do
       expect(yesterday_aggregate.failed_event_count).to eq(2)
     end
 
-    it "should be able to filter by day" do
+    it "is able to filter by day" do
       WebHookEventsDailyAggregate.create!(web_hook_id: web_hook.id, date: 1.day.ago)
       WebHookEventsDailyAggregate.create!(web_hook_id: web_hook.id, date: 0.days.ago)
       yesterday_events = [event, failed_event, failed_event2]
@@ -101,7 +101,7 @@ RSpec.describe WebHookEventsDailyAggregate do
       )
     end
 
-    it "should not create a new WebHookEventsDailyAggregate row if AggregateWebHooksEvents runs twice" do
+    it "does not create a new WebHookEventsDailyAggregate row if AggregateWebHooksEvents runs twice" do
       expect { Jobs::AggregateWebHooksEvents.new.execute(date: 1.day.ago) }.to change {
         WebHookEventsDailyAggregate.count
       }.by(1)
@@ -111,7 +111,7 @@ RSpec.describe WebHookEventsDailyAggregate do
       }
     end
 
-    it "should not fail if there are no events" do
+    it "does not fail if there are no events" do
       expect { Jobs::AggregateWebHooksEvents.new.execute(date: 99.days.ago) }.not_to raise_error
 
       expect(WebHookEventsDailyAggregate.count).to eq(1)

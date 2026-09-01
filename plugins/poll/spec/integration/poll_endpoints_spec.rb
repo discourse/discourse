@@ -28,7 +28,7 @@ RSpec.describe "DiscoursePoll endpoints" do
     let(:ranked_choice_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
     let(:ranked_choice_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
-    it "should return the right response" do
+    it "returns the right response" do
       DiscoursePoll::Poll.vote(user, post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
 
       get "/polls/voters.json",
@@ -47,7 +47,7 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return the right response for a single option" do
+    it "returns the right response for a single option" do
       DiscoursePoll::Poll.vote(
         user,
         post_with_multiple_poll.id,
@@ -75,7 +75,7 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return valid response for a ranked choice option" do
+    it "returns valid response for a ranked choice option" do
       ranked_choice_poll = post_with_ranked_choice_poll.polls.first
       ranked_choice_poll_options = ranked_choice_poll.poll_options
       ranked_choice_votes = {
@@ -113,14 +113,14 @@ RSpec.describe "DiscoursePoll endpoints" do
     end
 
     describe "when post_id is blank" do
-      it "should raise the right error" do
+      it "raises the right error" do
         get "/polls/voters.json", params: { poll_name: DiscoursePoll::DEFAULT_POLL_NAME }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when post_id is not valid" do
-      it "should raise the right error" do
+      it "raises the right error" do
         get "/polls/voters.json",
             params: {
               post_id: -1,
@@ -132,14 +132,14 @@ RSpec.describe "DiscoursePoll endpoints" do
     end
 
     describe "when poll_name is blank" do
-      it "should raise the right error" do
+      it "raises the right error" do
         get "/polls/voters.json", params: { post_id: post.id }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when poll_name is not valid" do
-      it "should raise the right error" do
+      it "raises the right error" do
         get "/polls/voters.json", params: { post_id: post.id, poll_name: "wrongpoll" }
         expect(response.status).to eq(400)
         expect(response.body).to include("poll_name")
@@ -151,7 +151,7 @@ RSpec.describe "DiscoursePoll endpoints" do
         Fabricate(:post, raw: "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]")
       end
 
-      it "should return the right response" do
+      it "returns the right response" do
         post
 
         DiscoursePoll::Poll.vote(

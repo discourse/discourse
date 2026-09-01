@@ -20,7 +20,7 @@ RSpec.describe ProblemCheck::Ram do
   context "when total ram is less than 1 GB" do
     let(:total_ram) { 512_636 }
 
-    it do
+    it "reports insufficient memory" do
       expect(check).to have_a_problem.with_priority("low").with_message(
         "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.",
       )

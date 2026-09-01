@@ -122,7 +122,7 @@ RSpec.describe UserNameSuggester do
       expect(UserNameSuggester.suggest("Darth_-_Vader")).to eq("Darth_Vader")
     end
 
-    it "should handle typical facebook usernames" do
+    it "handles typical facebook usernames" do
       expect(UserNameSuggester.suggest("roger.nelson.3344913")).to eq("roger.nelson.33")
     end
 

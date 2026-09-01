@@ -47,6 +47,34 @@ RSpec.describe "uploads" do
     before do
       setup_s3
       SiteSetting.enable_direct_s3_uploads = true
+      ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
+      ExternalUploadManager.any_instance.stubs(:destroy!)
+      external_stub.update(unique_identifier: unique_identifier)
+
+      ExternalUploadManager.stubs(:create_direct_multipart_upload).returns(
+                  {
+                    external_upload_identifier: "66e86218-80d9-4bda-b4d5-2b6def968705",
+                    key: "temp/site/uploads/default/12345/67890.jpg",
+                    unique_identifier:
+                      "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
+                  },
+                )
+
+      stub_s3_store
+      external_stub.update(unique_identifier: unique_identifier)
+
+      stub_s3_store
+      external_stub.update(
+        unique_identifier: unique_identifier,
+        external_upload_identifier:
+          "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
+      )
+
+      ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
+      ExternalUploadManager.any_instance.stubs(:destroy!)
+      stub_s3_store
+      external_stub.update(unique_identifier: unique_identifier)
+
     end
 
     path "/uploads/generate-presigned-put.json" do
@@ -103,11 +131,6 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        before do
-          ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
-          ExternalUploadManager.any_instance.stubs(:destroy!)
-          external_stub.update(unique_identifier: unique_identifier)
-        end
 
         tags "Uploads"
         operationId "completeExternalUpload"
@@ -145,16 +168,6 @@ RSpec.describe "uploads" do
 
     path "/uploads/create-multipart.json" do
       post "Creates a multipart external upload" do
-        before do
-          ExternalUploadManager.stubs(:create_direct_multipart_upload).returns(
-            {
-              external_upload_identifier: "66e86218-80d9-4bda-b4d5-2b6def968705",
-              key: "temp/site/uploads/default/12345/67890.jpg",
-              unique_identifier:
-                "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
-            },
-          )
-        end
 
         tags "Uploads"
         operationId "createMultipartUpload"
@@ -199,10 +212,6 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        before do
-          stub_s3_store
-          external_stub.update(unique_identifier: unique_identifier)
-        end
 
         tags "Uploads"
         operationId "batchPresignMultipartParts"
@@ -254,14 +263,6 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        before do
-          stub_s3_store
-          external_stub.update(
-            unique_identifier: unique_identifier,
-            external_upload_identifier:
-              "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
-          )
-        end
 
         tags "Uploads"
         operationId "abortMultipart"
@@ -303,12 +304,6 @@ RSpec.describe "uploads" do
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
 
-        before do
-          ExternalUploadManager.any_instance.stubs(:transform!).returns(upload)
-          ExternalUploadManager.any_instance.stubs(:destroy!)
-          stub_s3_store
-          external_stub.update(unique_identifier: unique_identifier)
-        end
 
         tags "Uploads"
         operationId "completeMultipart"

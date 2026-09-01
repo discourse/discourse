@@ -25,7 +25,7 @@ RSpec.describe "Admin editing objects type" do
 
     before { objects_setting }
 
-    it "should display the right label and description for each property if the label and description has been configured in a locale file" do
+    it "displays the right label and description for each property if the label and description has been configured in a locale file" do
       theme.set_field(
         target: :translations,
         name: "en",
@@ -61,7 +61,7 @@ RSpec.describe "Admin editing objects type" do
       expect(admin_objects_setting_editor_page).to have_setting_field_label("url", "URL")
     end
 
-    it "should allow admin to edit the theme setting of objects type" do
+    it "allows admin to edit the theme setting of objects type" do
       visit("/admin/customize/themes/#{theme.id}")
 
       expect(admin_customize_themes_page).to have_no_overriden_setting("objects_setting")

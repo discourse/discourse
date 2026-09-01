@@ -15,7 +15,7 @@ describe ListController do
     sign_in(user)
   end
 
-  it "should return the right attributes for Post Voting topics" do
+  it "returns the right attributes for Post Voting topics" do
     TopicUser.create!(user: user, topic: post_voting_topic, last_read_post_number: 2)
     TopicUser.create!(user: user, topic: topic, last_read_post_number: 2)
 
@@ -31,7 +31,7 @@ describe ListController do
     expect(non_post_voting["is_post_voting"]).to eq(nil)
   end
 
-  it "should return the right attributes when Post Voting is disabled" do
+  it "returns the right attributes when Post Voting is disabled" do
     SiteSetting.post_voting_enabled = false
 
     TopicUser.create!(user: user, topic: post_voting_topic, last_read_post_number: 2)

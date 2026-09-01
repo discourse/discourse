@@ -146,16 +146,13 @@ RSpec.describe Themes::Create do
           expect(SiteSetting.default_theme_id).to eq(result.theme.id)
         end
 
-        context "when there is an existing default theme" do
-          fab!(:existing_default, :theme)
+        it "clears an existing default theme" do
+          existing_default = Fabricate(:theme)
+          existing_default.set_default!
 
-          before { existing_default.set_default! }
-
-          it "clears the existing default theme" do
-            expect { result }.to change { existing_default.reload.default? }.to(false)
-            expect(result.theme).to be_default
-            expect(SiteSetting.default_theme_id).to eq(result.theme.id)
-          end
+          expect { result }.to change { existing_default.reload.default? }.to(false)
+          expect(result.theme).to be_default
+          expect(SiteSetting.default_theme_id).to eq(result.theme.id)
         end
       end
     end

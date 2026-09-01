@@ -37,7 +37,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       narrative.set_data(user, state: :tutorial_poll, topic_id: topic.id, last_post_id: post.id)
     end
 
-    it "should create the right message" do
+    it "creates the right message" do
       expect { narrative.notify_timeout(user) }.to change { Post.count }.by(1)
 
       expect(Post.last.raw).to eq(
@@ -66,7 +66,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
       let(:post) { Fabricate(:post, topic: topic) }
 
-      it "should reset the bot" do
+      it "resets the bot" do
         narrative.reset_bot(user, post)
 
         expected_raw =
@@ -100,7 +100,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     end
 
     context "when trigger is not initiated in a PM" do
-      it "should start the new track in a PM" do
+      it "starts the new track in a PM" do
         narrative.reset_bot(user, other_post)
 
         expected_raw =
@@ -132,7 +132,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         expect(new_post.topic.id).to_not eq(topic.id)
       end
 
-      it "should not explode if title emojis are disabled" do
+      it "does not explode if title emojis are disabled" do
         SiteSetting.max_emojis_in_title = 0
         narrative.reset_bot(user, other_post)
 
@@ -143,8 +143,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     end
   end
 
-  describe "#input" do
-    context "when editing tutorial" do
+  context "when editing tutorial" do
       before do
         narrative.set_data(
           user,
@@ -158,7 +157,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when post is not in the right topic" do
-        it "should not do anything" do
+        it "does not do anything" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -168,7 +167,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the post" do
-        it "should create the right reply" do
+        it "creates the right reply" do
           post
           narrative.expects(:enqueue_timeout_job).with(user).once
 
@@ -184,7 +183,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "creates the right reply" do
             post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -207,7 +206,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       context "when user edits the right post" do
         let(:post_2) { Fabricate(:post, user: post.user, topic: post.topic) }
 
-        it "should create the right reply" do
+        it "creates the right reply" do
           post_2
 
           expect do
@@ -226,571 +225,570 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
     end
 
-    context "when deleting tutorial" do
-      before do
+  context "when deleting tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_delete,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    context "when user replies to the topic" do
+      it "creates the right reply" do
+        narrative.expects(:enqueue_timeout_job).with(user).once
+
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.delete.not_found",
+            base_uri: "",
+          ),
+        )
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
+      end
+
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger.upcase)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
+          new_post = topic.ordered_posts.last(2).first
+
+          expect(new_post.raw).to eq(
+            I18n.t(
+              "discourse_narrative_bot.advanced_user_narrative.recover.instructions",
+              base_uri: "",
+            ),
+          )
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
+        end
+      end
+    end
+
+    context "when user destroys a post in a different topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        PostDestroyer.new(user, other_post).destroy
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
+      end
+    end
+
+    context "when user deletes a post in the right topic" do
+      it "creates the right reply" do
+        post
+
+        expect { PostDestroyer.new(user, post).destroy }.to change { Post.count }.by(2)
+
+        expected_raw = <<~RAW
+          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.reply", base_uri: "")}
+
+          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.instructions", base_uri: "")}
+          RAW
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
+        expect(topic.ordered_posts.last(2).first.raw).to eq(expected_raw.chomp)
+      end
+
+      context "when user is an admin" do
+        it "creates the right reply" do
+          post
+          user.update!(admin: true)
+
+          expect { PostDestroyer.new(user, post).destroy }.to_not change { Post.count }
+
+          expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.reply", base_uri: "")}
+
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.instructions", base_uri: "")}
+            RAW
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+        end
+      end
+    end
+  end
+
+  context "when undeleting post tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_recover,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    context "when posts are configured to be deleted immediately" do
+      before { SiteSetting.delete_removed_posts_after = 0 }
+
+      it "sets up the tutorial correctly" do
         narrative.set_data(
           user,
           state: :tutorial_delete,
           topic_id: topic.id,
           track: described_class.to_s,
         )
+
+        PostDestroyer.new(user, post).destroy
+
+        post = Post.last
+
+        expect(post.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
+
+        PostDestroyer.destroy_stubs
+
+        expect(post.reload).to be_present
+      end
+    end
+
+    context "when user replies to the topic" do
+      it "creates the right reply" do
+        narrative.set_data(
+          user,
+          narrative.get_data(user).merge(tutorial_recover: { post_id: "1" }),
+        )
+
+        narrative.expects(:enqueue_timeout_job).with(user).once
+
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.recover.not_found",
+            base_uri: "",
+          ),
+        )
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
       end
 
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.expects(:enqueue_timeout_job).with(user).once
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          parent_category = Fabricate(:category, name: "a")
+          _category = Fabricate(:category, parent_category: parent_category, name: "b")
 
-          narrative.input(:reply, user, post: post)
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
           new_post = Post.last
 
           expect(new_post.raw).to eq(
             I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.delete.not_found",
+              "discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions",
+              category: "#a:b",
               base_uri: "",
             ),
           )
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
-        end
-
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            post.update!(raw: skip_trigger.upcase)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = topic.ordered_posts.last(2).first
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.recover.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-          end
-        end
-      end
-
-      context "when user destroys a post in a different topic" do
-        it "should not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
-
-          PostDestroyer.new(user, other_post).destroy
-
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
-        end
-      end
-
-      context "when user deletes a post in the right topic" do
-        it "should create the right reply" do
-          post
-
-          expect { PostDestroyer.new(user, post).destroy }.to change { Post.count }.by(2)
-
-          expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.reply", base_uri: "")}
-
-          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.instructions", base_uri: "")}
-          RAW
-
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-          expect(topic.ordered_posts.last(2).first.raw).to eq(expected_raw.chomp)
-        end
-
-        context "when user is an admin" do
-          it "should create the right reply" do
-            post
-            user.update!(admin: true)
-
-            expect { PostDestroyer.new(user, post).destroy }.to_not change { Post.count }
-
-            expected_raw = <<~RAW
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.reply", base_uri: "")}
-
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.instructions", base_uri: "")}
-            RAW
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-            expect(Post.last.raw).to eq(expected_raw.chomp)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
         end
       end
     end
 
-    context "when undeleting post tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_recover,
-          topic_id: topic.id,
-          track: described_class.to_s,
-        )
+    context "when user recovers a post in a different topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        PostDestroyer.new(user, other_post).destroy
+        PostDestroyer.new(user, other_post).recover
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
       end
+    end
 
-      context "when posts are configured to be deleted immediately" do
-        before { SiteSetting.delete_removed_posts_after = 0 }
+    context "when user recovers a post in the right topic" do
+      it "creates the right reply" do
+        parent_category = Fabricate(:category, name: "a")
+        _category = Fabricate(:category, parent_category: parent_category, name: "b")
+        post
 
-        it "should set up the tutorial correctly" do
-          narrative.set_data(
-            user,
-            state: :tutorial_delete,
-            topic_id: topic.id,
-            track: described_class.to_s,
-          )
+        PostDestroyer.new(user, post).destroy
 
-          PostDestroyer.new(user, post).destroy
+        expect { PostDestroyer.new(user, post).recover }.to change { Post.count }.by(1)
 
-          post = Post.last
-
-          expect(post.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
-
-          PostDestroyer.destroy_stubs
-
-          expect(post.reload).to be_present
-        end
-      end
-
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.set_data(
-            user,
-            narrative.get_data(user).merge(tutorial_recover: { post_id: "1" }),
-          )
-
-          narrative.expects(:enqueue_timeout_job).with(user).once
-
-          narrative.input(:reply, user, post: post)
-          new_post = Post.last
-
-          expect(new_post.raw).to eq(
-            I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.recover.not_found",
-              base_uri: "",
-            ),
-          )
-
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-        end
-
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            parent_category = Fabricate(:category, name: "a")
-            _category = Fabricate(:category, parent_category: parent_category, name: "b")
-
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions",
-                category: "#a:b",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
-          end
-        end
-      end
-
-      context "when user recovers a post in a different topic" do
-        it "should not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
-
-          PostDestroyer.new(user, other_post).destroy
-          PostDestroyer.new(user, other_post).recover
-
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
-        end
-      end
-
-      context "when user recovers a post in the right topic" do
-        it "should create the right reply" do
-          parent_category = Fabricate(:category, name: "a")
-          _category = Fabricate(:category, parent_category: parent_category, name: "b")
-          post
-
-          PostDestroyer.new(user, post).destroy
-
-          expect { PostDestroyer.new(user, post).recover }.to change { Post.count }.by(1)
-
-          expected_raw = <<~RAW
+        expected_raw = <<~RAW
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.reply", base_uri: "", deletion_after: SiteSetting.delete_removed_posts_after)}
 
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions", category: "#a:b", base_uri: "")}
           RAW
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-        end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+      end
+    end
+  end
+
+  context "with category hashtag tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_category_hashtag,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    context "when post is not in the right topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
       end
     end
 
-    context "with category hashtag tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_category_hashtag,
-          topic_id: topic.id,
-          track: described_class.to_s,
+    context "when user replies to the topic" do
+      it "creates the right reply" do
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.category_hashtag.not_found",
+            base_uri: "",
+          ),
         )
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
       end
 
-      context "when post is not in the right topic" do
-        it "should not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-          expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
-        end
-      end
-
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.input(:reply, user, post: post)
           new_post = Post.last
 
           expect(new_post.raw).to eq(
             I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.category_hashtag.not_found",
+              "discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions",
               base_uri: "",
             ),
           )
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_category_hashtag)
-        end
-
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(
-              :tutorial_change_topic_notification_level,
-            )
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(
+            :tutorial_change_topic_notification_level,
+          )
         end
       end
+    end
 
-      it "should create the right reply" do
-        category = Fabricate(:category)
+    it "creates the right reply" do
+      category = Fabricate(:category)
 
-        post.update!(raw: "Check out this ##{category.slug}")
-        narrative.input(:reply, user, post: post)
+      post.update!(raw: "Check out this ##{category.slug}")
+      narrative.input(:reply, user, post: post)
 
-        expected_raw = <<~RAW
+      expected_raw = <<~RAW
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply", base_uri: "")}
 
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions", base_uri: "")}
           RAW
 
-        expect(Post.last.raw).to eq(expected_raw.chomp)
+      expect(Post.last.raw).to eq(expected_raw.chomp)
+      expect(narrative.get_data(user)[:state].to_sym).to eq(
+        :tutorial_change_topic_notification_level,
+      )
+    end
+  end
+
+  context "with topic notification level tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_change_topic_notification_level,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    context "when notification level is changed for another topic" do
+      it "does not do anything" do
+        other_topic
+        user
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        expect do
+          TopicUser.change(
+            user.id,
+            other_topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+        end.to_not change { Post.count }
+
         expect(narrative.get_data(user)[:state].to_sym).to eq(
           :tutorial_change_topic_notification_level,
         )
       end
     end
 
-    context "with topic notification level tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_change_topic_notification_level,
-          topic_id: topic.id,
-          track: described_class.to_s,
+    context "when user replies to the topic" do
+      it "creates the right reply" do
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.not_found",
+            base_uri: "",
+          ),
+        )
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(
+          :tutorial_change_topic_notification_level,
         )
       end
 
-      context "when notification level is changed for another topic" do
-        it "should not do anything" do
-          other_topic
-          user
-          narrative.expects(:enqueue_timeout_job).with(user).never
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-          expect do
-            TopicUser.change(
-              user.id,
-              other_topic.id,
-              notification_level: TopicUser.notification_levels[:tracking],
-            )
-          end.to_not change { Post.count }
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(
-            :tutorial_change_topic_notification_level,
-          )
-        end
-      end
-
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.input(:reply, user, post: post)
           new_post = Post.last
 
           expect(new_post.raw).to eq(
             I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.not_found",
+              "discourse_narrative_bot.advanced_user_narrative.poll.instructions",
               base_uri: "",
             ),
           )
 
-          expect(narrative.get_data(user)[:state].to_sym).to eq(
-            :tutorial_change_topic_notification_level,
-          )
-        end
-
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.poll.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
         end
       end
+    end
 
-      context "when user changed the topic notification level" do
-        it "should create the right reply" do
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
+    context "when user changed the topic notification level" do
+      it "creates the right reply" do
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
 
-          expected_raw = <<~RAW
+        expected_raw = <<~RAW
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply", base_uri: "")}
 
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.poll.instructions", base_uri: "")}
           RAW
 
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
-        end
-      end
-
-      context "when user cannot create polls" do
-        it "should create the right reply (polls disabled)" do
-          SiteSetting.poll_enabled = false
-
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-
-          expected_raw = <<~RAW
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply", base_uri: "")}
-
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.details.instructions", base_uri: "")}
-          RAW
-
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
-        end
-
-        it "should create the right reply (insufficient trust level)" do
-          user.change_trust_level!(TrustLevel[0])
-
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-
-          expected_raw = <<~RAW
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply", base_uri: "")}
-
-            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.details.instructions", base_uri: "")}
-          RAW
-
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
-        end
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
       end
     end
 
-    context "with poll tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_poll,
-          topic_id: topic.id,
-          track: described_class.to_s,
+    context "when user cannot create polls" do
+      it "creates the right reply (polls disabled)" do
+        SiteSetting.poll_enabled = false
+
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
         )
+
+        expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply", base_uri: "")}
+
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.details.instructions", base_uri: "")}
+          RAW
+
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
       end
 
-      it "allows new users to create polls" do
-        user.update(trust_level: 0)
+      it "creates the right reply (insufficient trust level)" do
+        user.change_trust_level!(TrustLevel[0])
 
-        post = PostCreator.create(user, topic_id: topic.id, raw: <<~RAW)
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
+
+        expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply", base_uri: "")}
+
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.details.instructions", base_uri: "")}
+          RAW
+
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
+      end
+    end
+  end
+
+  context "with poll tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_poll,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    it "allows new users to create polls" do
+      user.update(trust_level: 0)
+
+      post = PostCreator.create(user, topic_id: topic.id, raw: <<~RAW)
           [poll type=regular]
           * foo
           * bar
           [/poll]
         RAW
 
-        expect(post.errors[:base].size).to eq(0)
+      expect(post.errors[:base].size).to eq(0)
+    end
+
+    context "when post is not in the right topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
+      end
+    end
+
+    context "when user replies to the topic" do
+      it "creates the right reply" do
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
+
+        expect(new_post.raw).to eq(
+          I18n.t("discourse_narrative_bot.advanced_user_narrative.poll.not_found", base_uri: ""),
+        )
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
       end
 
-      context "when post is not in the right topic" do
-        it "should not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-          expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
-        end
-      end
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.input(:reply, user, post: post)
           new_post = Post.last
 
           expect(new_post.raw).to eq(
-            I18n.t("discourse_narrative_bot.advanced_user_narrative.poll.not_found", base_uri: ""),
+            I18n.t(
+              "discourse_narrative_bot.advanced_user_narrative.details.instructions",
+              base_uri: "",
+            ),
           )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
-        end
 
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.details.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
         end
       end
+    end
 
-      it "should create the right reply" do
-        post.update!(raw: "[poll]\n* 1\n* 2\n[/poll]\n")
-        narrative.input(:reply, user, post: post)
+    it "creates the right reply" do
+      post.update!(raw: "[poll]\n* 1\n* 2\n[/poll]\n")
+      narrative.input(:reply, user, post: post)
 
-        expected_raw = <<~RAW
+      expected_raw = <<~RAW
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.poll.reply", base_uri: "")}
 
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.details.instructions", base_uri: "")}
         RAW
 
-        expect(Post.last.raw).to eq(expected_raw.chomp)
+      expect(Post.last.raw).to eq(expected_raw.chomp)
+      expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
+    end
+  end
+
+  context "with details tutorial" do
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_details,
+        topic_id: topic.id,
+        track: described_class.to_s,
+      )
+    end
+
+    context "when post is not in the right topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
       end
     end
 
-    context "with details tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_details,
-          topic_id: topic.id,
-          track: described_class.to_s,
-        )
-      end
-
-      context "when post is not in the right topic" do
-        it "should not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
-
-          expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
-        end
-      end
-
-      context "when user replies to the topic" do
-        it "should create the right reply" do
-          narrative.input(:reply, user, post: post)
-
-          expect(Post.last.raw).to eq(
-            I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.details.not_found",
-              base_uri: "",
-            ),
-          )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
-        end
-
-        context "when reply contains the skip trigger" do
-          it "should create the right reply" do
-            post.update!(raw: skip_trigger)
-
-            expect do
-              DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-            end.to change { Post.count }.by(1)
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:end)
-          end
-        end
-      end
-
-      it "should create the right reply and issue the discobot certificate" do
-        post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
+    context "when user replies to the topic" do
+      it "creates the right reply" do
         narrative.input(:reply, user, post: post)
 
-        expect(topic.ordered_posts.last(2).first.raw).to eq(
-          I18n.t("discourse_narrative_bot.advanced_user_narrative.details.reply", base_uri: ""),
+        expect(Post.last.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.details.not_found",
+            base_uri: "",
+          ),
         )
-
-        expect(narrative.get_data(user)).to eq(
-          "state" => "end",
-          "topic_id" => topic.id,
-          "track" => described_class.to_s,
-        )
-
-        expect(
-          user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?,
-        ).to eq(true)
-
-        expect(topic.ordered_posts.last.cooked).to include("<iframe")
-        expect(Nokogiri.HTML5(topic.ordered_posts.last.cooked).at("iframe").text).not_to include(
-          "Bye for now",
-        )
-        expect(topic.ordered_posts.last.cooked).to include("</iframe>")
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
       end
+
+      context "when reply contains the skip trigger" do
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+
+          expect do
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          end.to change { Post.count }.by(1)
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:end)
+        end
+      end
+    end
+
+    it "creates the right reply and issue the discobot certificate" do
+      post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
+      narrative.input(:reply, user, post: post)
+
+      expect(topic.ordered_posts.last(2).first.raw).to eq(
+        I18n.t("discourse_narrative_bot.advanced_user_narrative.details.reply", base_uri: ""),
+      )
+
+      expect(narrative.get_data(user)).to eq(
+        "state" => "end",
+        "topic_id" => topic.id,
+        "track" => described_class.to_s,
+      )
+
+      expect(
+        user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?,
+      ).to eq(true)
+
+      expect(topic.ordered_posts.last.cooked).to include("<iframe")
+      expect(Nokogiri.HTML5(topic.ordered_posts.last.cooked).at("iframe").text).not_to include(
+        "Bye for now",
+      )
+      expect(topic.ordered_posts.last.cooked).to include("</iframe>")
     end
   end
 

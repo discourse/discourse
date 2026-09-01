@@ -24,7 +24,8 @@ RSpec.describe Stylesheet::Compiler do
         Discourse.system_user.id,
       )
     end
-    let!(:upload_theme_field) do
+
+    before do
       ThemeField.create!(
         theme: theme,
         target_id: 0,
@@ -33,8 +34,6 @@ RSpec.describe Stylesheet::Compiler do
         value: "",
         type_id: ThemeField.types[:theme_upload_var],
       )
-    end
-    let!(:stylesheet_theme_field) do
       ThemeField.create!(
         theme: theme,
         target_id: 0,
@@ -43,6 +42,7 @@ RSpec.describe Stylesheet::Compiler do
         type_id: ThemeField.types[:scss],
       )
     end
+
 
     it "theme stylesheet should be able to access theme asset variables" do
       theme.reload.with_scss_load_paths do |load_paths|

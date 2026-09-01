@@ -26,7 +26,7 @@ RSpec.describe NotificationSerializer do
     let(:serializer) { NotificationSerializer.new(notification) }
     let(:json) { serializer.as_json }
 
-    it "should include the external_id" do
+    it "includes the external_id" do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
       SiteSetting.discourse_connect_secret = "12345678910"
       SiteSetting.enable_discourse_connect = true

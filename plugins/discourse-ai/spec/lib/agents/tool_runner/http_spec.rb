@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe DiscourseAi::Agents::ToolRunner do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:bot_user) { Discourse.system_user }
 
   def create_tool(script:)
@@ -189,7 +190,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       expect(result).to eq("Hello World")
     end
 
-    it "will not timeout on slow HTTP reqs" do
+    it "does not timeout on slow HTTP reqs" do
       script = <<~JS
         function invoke(params) {
           result = http.get("https://example.com/" + params.query,

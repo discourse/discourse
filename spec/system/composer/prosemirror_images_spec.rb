@@ -168,6 +168,7 @@ describe "Composer - ProseMirror - Images" do
 
   describe "auto-grid functionality with enable_auto_grid_images" do
     before { SiteSetting.enable_auto_grid_images = true }
+
     it "automatically wraps 3+ uploaded images in a grid" do
       open_composer
       file_path_1 = file_from_fixtures("logo.png", "images").path

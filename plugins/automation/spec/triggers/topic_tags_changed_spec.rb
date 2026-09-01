@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
-  before { SiteSetting.discourse_automation_enabled = true }
+  before do
+    SiteSetting.discourse_automation_enabled = true
+    SiteSetting.tagging_enabled = true
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
+  end
 
   fab!(:cool_tag, :tag)
   fab!(:bad_tag, :tag)
@@ -15,12 +21,6 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
   end
 
-  before do
-    SiteSetting.tagging_enabled = true
-    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
-  end
 
   context "when watching a cool tag" do
     before do
@@ -46,7 +46,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       )
     end
 
-    it "should fire the trigger if the tag is added" do
+    it "fires the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -59,7 +59,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["user"]).to eq(user)
     end
 
-    it "should fire the trigger if the tag is removed" do
+    it "fires the trigger if the tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -70,7 +70,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["user"]).to eq(user)
     end
 
-    it "should not fire if the tag is not present" do
+    it "does not fire if the tag is not present" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -96,7 +96,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
-    it "should fire the trigger if any tag is added" do
+    it "fires the trigger if any tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -108,7 +108,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should fire the trigger if any tag is removed" do
+    it "fires the trigger if any tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -118,7 +118,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should not fire if the tag is not present" do
+    it "does not fire if the tag is not present" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -129,7 +129,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list.length).to eq(0)
     end
 
-    it "should fire the trigger if a tag is add and one is removed" do
+    it "fires the trigger if a tag is add and one is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -153,7 +153,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
-    it "should fire the trigger if the tag is added" do
+    it "fires the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
       topic_1 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
 
@@ -167,7 +167,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should fire the trigger if the tag is removed" do
+    it "fires the trigger if the tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -176,7 +176,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should not fire if not the watching category" do
+    it "does not fire if not the watching category" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
 
       list =
@@ -202,7 +202,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
-    it "should fire the trigger if any tag is added" do
+    it "fires the trigger if any tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
       topic_1 = Fabricate(:topic, user: user, tags: [], category: category_2)
 
@@ -216,7 +216,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should fire the trigger if any tag is removed" do
+    it "fires the trigger if any tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -225,7 +225,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should not fire if not the watching category" do
+    it "does not fire if not the watching category" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
 
       list =
@@ -238,7 +238,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
   end
 
   context "when without any watching tags or categories" do
-    it "should fire the trigger if the tag is added" do
+    it "fires the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -250,7 +250,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should fire the trigger if the tag is removed" do
+    it "fires the trigger if the tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -260,7 +260,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
     end
 
-    it "should send the correct removed tags in context" do
+    it "sends the correct removed tags in context" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -278,7 +278,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["removed_tags"]).to eq([cool_tag.name])
     end
 
-    it "should send the correct added tags in context" do
+    it "sends the correct added tags in context" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
@@ -296,7 +296,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list[0]["removed_tags"]).to eq([])
     end
 
-    it "should not fire the trigger on PMs by default" do
+    it "does not fire the trigger on PMs by default" do
       pm = Fabricate(:private_message_topic)
       list =
         capture_contexts do
@@ -309,7 +309,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       expect(list.length).to eq(0)
     end
 
-    it "should fire the trigger on PMs if trigger_with_pms is set" do
+    it "fires the trigger on PMs if trigger_with_pms is set" do
       automation.upsert_field!(
         "trigger_with_pms",
         "boolean",
@@ -330,7 +330,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     end
 
     context "with TAGS_ADDED set in trigger_on field" do
-      it "should fire if tag is added" do
+      it "fires if tag is added" do
         automation.upsert_field!(
           "trigger_on",
           "choices",
@@ -349,7 +349,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
         expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
       end
 
-      it "should not fire if tag is removed" do
+      it "does not fire if tag is removed" do
         automation.upsert_field!(
           "trigger_on",
           "choices",
@@ -367,7 +367,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     end
 
     context "with TAGS_REMOVED set in trigger_on field" do
-      it "should fire if tag is removed" do
+      it "fires if tag is removed" do
         automation.upsert_field!(
           "trigger_on",
           "choices",
@@ -384,7 +384,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
         expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
       end
 
-      it "should not fire if tag is added" do
+      it "does not fire if tag is added" do
         automation.upsert_field!(
           "trigger_on",
           "choices",

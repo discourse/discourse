@@ -9,7 +9,7 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work if you are an admin" do
+      it "works if you are an admin" do
         get "/admin/customize/form-templates.json"
         expect(response.status).to eq(200)
 
@@ -21,7 +21,7 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as a non-admin user" do
       before { sign_in(user) }
 
-      it "should not work if you are not an admin" do
+      it "does not work if you are not an admin" do
         get "/admin/customize/form-templates.json"
 
         expect(response.status).to eq(404)
@@ -34,7 +34,7 @@ RSpec.describe Admin::FormTemplatesController do
         SiteSetting.enable_form_templates = false
       end
 
-      it "should not work if you are an admin" do
+      it "does not work if you are an admin" do
         get "/admin/customize/form-templates.json"
 
         expect(response.status).to eq(403)
@@ -46,7 +46,7 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work if you are an admin" do
+      it "works if you are an admin" do
         get "/admin/customize/form-templates/#{form_template.id}.json"
         expect(response.status).to eq(200)
 
@@ -151,6 +151,7 @@ RSpec.describe Admin::FormTemplatesController do
 
     context "when logged in as a non-admin user" do
       before { sign_in(user) }
+
       it "prevents deletion with a 404 response" do
         expect do
           delete "/admin/customize/form-templates/#{form_template.id}.json"

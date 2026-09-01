@@ -25,7 +25,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
       # Not testing how filters are merged here, that's done in .smart_create_rule
       # We just want to make sure the commands are being interpreted correctly
 
-      it "should add a new rule correctly" do
+      it "adds a new rule correctly" do
         response = DiscourseChatIntegration::Helper.process_command(chan1, ["watch", category.slug])
 
         expect(response).to eq(I18n.t("chat_integration.provider.dummy.create.created"))
@@ -37,7 +37,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
         expect(rule.tags).to eq(nil)
       end
 
-      it "should work with all four filter types" do
+      it "works with all four filter types" do
         response =
           DiscourseChatIntegration::Helper.process_command(chan1, ["thread", category.slug])
 
@@ -76,7 +76,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
       context "with tags enabled" do
         before { SiteSetting.tagging_enabled = true }
 
-        it "should add a new tag rule correctly" do
+        it "adds a new tag rule correctly" do
           response =
             DiscourseChatIntegration::Helper.process_command(chan1, ["watch", "tag:#{tag1.name}"])
 
@@ -89,7 +89,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
           expect(rule.tags).to eq([tag1.name])
         end
 
-        it "should work with a category and multiple tags" do
+        it "works with a category and multiple tags" do
           response =
             DiscourseChatIntegration::Helper.process_command(
               chan1,
@@ -144,21 +144,21 @@ RSpec.describe DiscourseChatIntegration::Manager do
     end
 
     describe "help command" do
-      it "should return the right response" do
+      it "returns the right response" do
         response = DiscourseChatIntegration::Helper.process_command(chan1, ["help"])
         expect(response).to eq(I18n.t("chat_integration.provider.dummy.help"))
       end
     end
 
     describe "status command" do
-      it "should return the right response" do
+      it "returns the right response" do
         response = DiscourseChatIntegration::Helper.process_command(chan1, ["status"])
         expect(response).to eq(DiscourseChatIntegration::Helper.status_for_channel(chan1))
       end
     end
 
     describe "unknown command" do
-      it "should return the right response" do
+      it "returns the right response" do
         response = DiscourseChatIntegration::Helper.process_command(chan1, ["somerandomtext"])
         expect(response).to eq(I18n.t("chat_integration.provider.dummy.parse_error"))
       end
@@ -180,6 +180,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
 
     context "with some rules" do
       let(:group) { Fabricate(:group) }
+
       before do
         DiscourseChatIntegration::Rule.create!(
           channel: chan1,

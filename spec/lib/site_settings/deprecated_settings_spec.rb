@@ -52,6 +52,12 @@ RSpec.describe SiteSettings::DeprecatedSettings do
   end
 
   describe "when deprecating global settings" do
+    after do
+      global_setting(:old_one, false)
+      SiteSetting.refresh!
+      SiteSetting.remove_instance_variable(:@shadowed_settings)
+    end
+
     describe "when not overriding deprecated settings" do
       it "can access the old method and does not act as a proxy to the new method" do
         global_setting(:old_one, true)
@@ -88,10 +94,5 @@ RSpec.describe SiteSettings::DeprecatedSettings do
       end
     end
 
-    after do
-      global_setting(:old_one, false)
-      SiteSetting.refresh!
-      SiteSetting.remove_instance_variable(:@shadowed_settings)
-    end
   end
 end

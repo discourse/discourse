@@ -186,7 +186,7 @@ describe DiscourseAi::AiBot::EntryPoint do
       end
     end
 
-    it "will include ai_search_discoveries field in the user_option if discover agent is enabled" do
+    it "includes ai_search_discoveries field in the user_option if discover agent is enabled" do
       user = Fabricate(:user)
       group = Fabricate(:group)
       group.add(user)

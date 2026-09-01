@@ -3,7 +3,8 @@
 RSpec.describe(Chat::UpdateChannelStatus) do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:channel_id) }
-    it do
+
+    it "accepts editable channel statuses" do
       is_expected.to validate_inclusion_of(:status).in_array(Chat::Channel.editable_statuses.keys)
     end
   end
@@ -27,7 +28,7 @@ RSpec.describe(Chat::UpdateChannelStatus) do
     end
 
     context "when user is not allowed to change channel status" do
-      let!(:current_user) { Fabricate(:user) }
+      before { Fabricate(:user) }
 
       it { is_expected.to fail_a_policy(:check_channel_permission) }
     end

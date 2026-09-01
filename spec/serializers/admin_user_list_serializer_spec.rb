@@ -44,7 +44,8 @@ RSpec.describe AdminUserListSerializer do
     let(:serialized_user) { user }
     let(:viewed_by) { user }
     let(:emails_desired) { nil }
-    let!(:secondary_emails) do
+
+    before do
       %w[first second].map do |name|
         Fabricate(:secondary_email, user: serialized_user, email: "#{name}@email.com")
       end

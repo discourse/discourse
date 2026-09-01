@@ -28,7 +28,7 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
     context "when upcoming change is stable and not opted in" do
       before { SiteSetting.enable_upload_debug_mode = false }
 
-      it do
+      it "reports the opted-out upcoming change" do
         expect(check).to have_a_problem.with_priority("low").with_target("enable_upload_debug_mode")
       end
     end

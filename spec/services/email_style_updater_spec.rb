@@ -21,7 +21,7 @@ RSpec.describe EmailStyleUpdater do
       expect(SiteSetting.email_custom_css_compiled.strip).to eq("h1{color:blue}")
     end
 
-    it "will not store defaults" do
+    it "does not store defaults" do
       updater.update(html: default_html, css: "")
       expect_settings_to_be_unset
     end

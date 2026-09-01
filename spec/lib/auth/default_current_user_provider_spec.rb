@@ -184,7 +184,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
         params = { "HTTP_API_KEY" => api_key.key }
 
@@ -238,6 +238,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#current_user" do
+    let(:original_time) { Time.zone.now }
+
     let(:cookie) do
       new_provider = provider("/")
       new_provider.log_on_user(user, {}, new_provider.cookie_jar)
@@ -245,13 +247,13 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     before do
-      @orig = freeze_time
-      user.clear_last_seen_cache!(@orig)
+      freeze_time(original_time)
+      user.clear_last_seen_cache!(original_time)
     end
 
-    after { user.clear_last_seen_cache!(@orig) }
+    after { user.clear_last_seen_cache!(original_time) }
 
-    it "should not update last seen for suspended users" do
+    it "does not update last seen for suspended users" do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
       u.reload
@@ -277,7 +279,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
         u = provider2.current_user
         u.reload
@@ -286,7 +288,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     describe "when impersonating another user" do
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         old_timestamp = 1.week.ago
         user.update!(last_seen_at: old_timestamp)
         User.any_instance.stubs(:is_impersonating).returns(true)
@@ -298,7 +300,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+    it "does not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
       SiteSetting.login_required = true
       user = Fabricate(:user)
       api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
@@ -394,12 +396,12 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  it "should update last seen for non ajax" do
+  it "updates last seen for non ajax" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 
-  it "should update ajax reqs with discourse visible" do
+  it "updates ajax reqs with discourse visible" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -410,7 +412,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(true)
   end
 
-  it "should not update last seen for ajax calls without Discourse-Present header" do
+  it "does not update last seen for ajax calls without Discourse-Present header" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -420,7 +422,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(false)
   end
 
-  it "should update last seen for API calls with Discourse-Present header" do
+  it "updates last seen for API calls with Discourse-Present header" do
     api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
     params = {
       :method => "POST",
@@ -440,10 +442,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   it "supports non persistent sessions" do
     SiteSetting.persistent_sessions = false
 
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
-    cookie_info = get_cookie_info(@provider.cookie_jar, "_t")
+    cookie_info = get_cookie_info(test_provider.cookie_jar, "_t")
     expect(cookie_info[:expires]).to eq(nil)
   end
 
@@ -456,10 +458,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
-    cookie = @provider.cookie_jar["_t"]
+    cookie = test_provider.cookie_jar["_t"]
     unhashed_token = decrypt_auth_cookie(cookie)[:token]
     cookie = CGI.escape(cookie)
 
@@ -505,37 +507,35 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "events" do
-    before do
-      @refreshes = 0
+    let(:refreshes) { { count: 0 } }
+    let(:increase_refreshes) { ->(_user) { refreshes[:count] += 1 } }
 
-      @increase_refreshes = ->(user) { @refreshes += 1 }
-      DiscourseEvent.on(:user_session_refreshed, &@increase_refreshes)
-    end
+    before { DiscourseEvent.on(:user_session_refreshed, &increase_refreshes) }
 
-    after { DiscourseEvent.off(:user_session_refreshed, &@increase_refreshes) }
+    after { DiscourseEvent.off(:user_session_refreshed, &increase_refreshes) }
 
     it "fires event when updating last seen" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
-      cookie = @provider.cookie_jar["_t"]
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
+      cookie = test_provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
       cookie = CGI.escape(cookie)
       freeze_time 20.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
-      expect(@refreshes).to eq(1)
+      expect(refreshes[:count]).to eq(1)
     end
 
     it "does not fire an event when last seen does not update" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
-      cookie = @provider.cookie_jar["_t"]
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
+      cookie = test_provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
       cookie = CGI.escape(cookie)
       freeze_time 2.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
-      expect(@refreshes).to eq(0)
+      expect(refreshes[:count]).to eq(0)
     end
   end
 
@@ -552,8 +552,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
           issued_at: 5.minutes.ago,
         )
 
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
       RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
       RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
@@ -592,17 +592,17 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         trust_level: 4,
         issued_at: 5.minutes.ago,
       )
-    @provider = provider("/")
-    @provider.cookie_jar["_t"] = bad_cookie
-    @provider.refresh_session(nil, {}, @provider.cookie_jar)
-    expect(@provider.cookie_jar.key?("_t")).to eq(false)
+    test_provider = provider("/")
+    test_provider.cookie_jar["_t"] = bad_cookie
+    test_provider.refresh_session(nil, {}, test_provider.cookie_jar)
+    expect(test_provider.cookie_jar.key?("_t")).to eq(false)
   end
 
   it "logging on user always creates a new token" do
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
-    @provider2 = provider("/")
-    @provider2.log_on_user(user, {}, @provider2.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
+    other_provider = provider("/")
+    other_provider.log_on_user(user, {}, other_provider.cookie_jar)
 
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
   end
@@ -627,8 +627,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(UserAuthToken.where(auth_token: (1..3).map { |i| "abc#{i}" }).count).to eq(3)
 
     # On next login, gets fixed
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
     expect(UserAuthToken.where(user_id: user.id).count).to eq(UserAuthToken::MAX_SESSION_COUNT)
 
     # Oldest sessions are 1, 2, 3. They should now be deleted
@@ -639,10 +639,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     SiteSetting.force_https = false
     SiteSetting.same_site_cookies = "Lax"
 
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
-    cookie_info = get_cookie_info(@provider.cookie_jar, "_t")
+    cookie_info = get_cookie_info(test_provider.cookie_jar, "_t")
     expect(cookie_info[:samesite]).to eq("Lax")
     expect(cookie_info[:httponly]).to eq(true)
     expect(cookie_info.key?(:secure)).to eq(false)
@@ -650,10 +650,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     SiteSetting.force_https = true
     SiteSetting.same_site_cookies = "Disabled"
 
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
-    cookie_info = get_cookie_info(@provider.cookie_jar, "_t")
+    cookie_info = get_cookie_info(test_provider.cookie_jar, "_t")
     expect(cookie_info[:secure]).to eq(true)
     expect(cookie_info.key?(:same_site)).to eq(false)
   end
@@ -669,8 +669,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         issued_at: 5.minutes.ago,
       )
 
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
     expect(provider("/", "HTTP_COOKIE" => "_t=#{cookie}").current_user.id).to eq(user.id)
 
@@ -680,8 +680,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   it "always unstage users" do
     user.update!(staged: true)
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
     user.reload
     expect(user.staged).to eq(false)
   end
@@ -749,7 +749,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
 
         good_provider = provider("/", params)
@@ -792,10 +792,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   it "ignores a valid auth cookie that has been tampered with" do
-    @provider = provider("/")
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    test_provider = provider("/")
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
-    cookie = @provider.cookie_jar["_t"]
+    cookie = test_provider.cookie_jar["_t"]
     cookie = swap_2_different_characters(cookie)
 
     ip = "10.0.0.1"
@@ -807,7 +807,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     # We're switching to :json during the Rails 7 upgrade, but we want a clean revert path
     # back to Rails 6 if needed
 
-    @provider =
+    test_provider =
       provider(
         "/",
         { # The upcoming default
@@ -815,8 +815,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
           :method => "GET",
         },
       )
-    @provider.log_on_user(user, {}, @provider.cookie_jar)
-    cookie = CGI.escape(@provider.cookie_jar["_t"])
+    test_provider.log_on_user(user, {}, test_provider.cookie_jar)
+    cookie = CGI.escape(test_provider.cookie_jar["_t"])
 
     ip = "10.0.0.1"
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
@@ -833,7 +833,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
     end
 
-    it "should work when the current user was cached by a different provider instance" do
+    it "works when the current user was cached by a different provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_present
@@ -843,7 +843,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
     end
 
-    it "should trigger user_logged_out event" do
+    it "triggers user_logged_out event" do
       event_triggered_user = nil
       event_handler = Proc.new { |user| event_triggered_user = user.id }
       DiscourseEvent.on(:user_logged_out, &event_handler)
@@ -906,17 +906,17 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     it "makes the user into an admin if their email is in DISCOURSE_DEVELOPER_EMAILS" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
       expect(user.reload.admin).to eq(true)
       user2 = Fabricate(:user)
-      @provider.log_on_user(user2, {}, @provider.cookie_jar)
+      test_provider.log_on_user(user2, {}, test_provider.cookie_jar)
       expect(user2.reload.admin).to eq(false)
     end
 
     it "adds the user to the correct staff/admin auto groups" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
       user.reload
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
@@ -927,8 +927,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     let(:admin) { Fabricate(:admin, last_seen_at: nil) }
 
     it "grants moderation and logs the staff action on the singular admin's first login" do
-      @provider = provider("/")
-      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(admin, {}, test_provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(true)
       log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
@@ -937,21 +937,21 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     it "is idempotent: a second login does not re-log grant_moderation" do
-      @provider = provider("/")
-      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(admin, {}, test_provider.cookie_jar)
       admin.update!(last_seen_at: nil)
 
       expect {
-        @provider = provider("/")
-        @provider.log_on_user(admin.reload, {}, @provider.cookie_jar)
+        test_provider = provider("/")
+        test_provider.log_on_user(admin.reload, {}, test_provider.cookie_jar)
       }.to_not change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
     end
 
     it "does not grant moderation when another admin already exists" do
       Fabricate(:admin)
 
-      @provider = provider("/")
-      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(admin, {}, test_provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:grant_moderation]).count).to eq(0)
@@ -960,15 +960,15 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     it "does not grant moderation when the admin has logged in before" do
       admin.update!(last_seen_at: 1.day.ago)
 
-      @provider = provider("/")
-      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(admin, {}, test_provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
     end
 
     it "does not grant moderation to non-admin users" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      test_provider = provider("/")
+      test_provider.log_on_user(user, {}, test_provider.cookie_jar)
 
       expect(user.reload.moderator).to eq(false)
     end

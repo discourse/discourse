@@ -1,7 +1,12 @@
 #frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Agents::Tools::Search do
-  before { SearchIndexer.enable }
+  before do
+    SearchIndexer.enable
+    enable_current_plugin
+    SiteSetting.ai_bot_enabled = true
+  end
+
   after { SearchIndexer.disable }
 
   fab!(:llm_model)
@@ -37,10 +42,6 @@ RSpec.describe DiscourseAi::Agents::Tools::Search do
     c
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
 
   describe "#invoke" do
     it "can retrieve options from agent correctly" do

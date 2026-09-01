@@ -3,13 +3,15 @@
 require Rails.root.join("db/migrate/20251024015907_populate_image_quality_setting.rb")
 
 RSpec.describe PopulateImageQualitySetting do
+  let(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
+    original_verbose
     ActiveRecord::Migration.verbose = false
   end
 
   after do
-    ActiveRecord::Migration.verbose = @original_verbose
+    ActiveRecord::Migration.verbose = original_verbose
     Discourse.clear_site_creation_date_cache
   end
 

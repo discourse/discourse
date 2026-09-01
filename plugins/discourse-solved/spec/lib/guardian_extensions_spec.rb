@@ -10,7 +10,7 @@ describe DiscourseSolved::GuardianExtensions do
 
   before { SiteSetting.allow_solved_on_all_topics = true }
 
-  describe ".can_unaccept_answer?" do
+  context "when unaccepting an answer without a topic" do
     it "returns false when topic is nil" do
       admin = Fabricate(:admin, refresh_auto_groups: true)
       expect(Guardian.new(admin).can_unaccept_answer?(nil, post)).to be_falsey

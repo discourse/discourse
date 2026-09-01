@@ -69,7 +69,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     AiAgent.agent_cache.flush!
   end
 
-  describe "#title_playground" do
+  context "when the title response contains multiple text blocks" do
     it "updates the topic title when the LLM returns multiple text blocks" do
       DiscourseAi::Completions::Llm.with_prepared_responses(
         [["A concise ", "conversation title"]],
@@ -416,7 +416,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         agent.update!(allow_chat_channel_mentions: true, default_llm_id: opus_model.id)
       end
 
-      it "should behave in a sane way when threading is enabled" do
+      it "behaves in a sane way when threading is enabled" do
         channel.update!(threading_enabled: true)
 
         message =
@@ -490,7 +490,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expect(reply.message).to eq("world")
       end
 
-      it "should reply to a mention if properly enabled" do
+      it "replies to a mention if properly enabled" do
         prompts = nil
 
         ChatSDK::Message.create(
@@ -1511,7 +1511,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
   describe "#canceling a completions" do
     after { DiscourseAi::AiBot::PostStreamer.on_callback = nil }
 
-    it "should be able to cancel a completion halfway through" do
+    it "is able to cancel a completion halfway through" do
       body = <<~STRING.strip
       event: message_start
       data: {"type": "message_start", "message": {"id": "msg_1nZdL29xx5MUA1yADyHTEsnR8uuvGzszyY", "type": "message", "role": "assistant", "content": [], "model": "claude-3-opus-20240229", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}

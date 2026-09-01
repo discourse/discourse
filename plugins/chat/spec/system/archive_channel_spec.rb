@@ -53,7 +53,7 @@ RSpec.describe "Archive channel" do
       end
 
       context "when archiving" do
-        it "works" do
+        it "archives the channel" do
           SiteSetting.tagging_enabled = true
           tag = Fabricate(:tag, name: "archived")
           Jobs.run_immediately!
@@ -79,35 +79,29 @@ RSpec.describe "Archive channel" do
           end
         end
 
-        context "when archived channels had unreads" do
-          let(:other_user) { Fabricate(:user) }
+        it "clears existing unread indicators" do
+          other_user = Fabricate(:user)
+          channel_1.add(current_user)
+          channel_1.add(other_user)
+          Jobs.run_immediately!
 
-          before do
-            channel_1.add(current_user)
-            channel_1.add(other_user)
-          end
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: other_user,
+            message: "this is fine @#{current_user.username}",
+            use_service: true,
+          )
 
-          it "clears unread indicators" do
-            Jobs.run_immediately!
+          visit("/")
+          expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
 
-            Fabricate(
-              :chat_message,
-              chat_channel: channel_1,
-              user: other_user,
-              message: "this is fine @#{current_user.username}",
-              use_service: true,
-            )
+          chat.visit_channel_settings(channel_1)
+          click_button(I18n.t("js.chat.channel_settings.archive_channel"))
+          find("#split-topic-name").fill_in(with: "An interesting topic for cats")
+          click_button(I18n.t("js.chat.channel_archive.title"))
 
-            visit("/")
-            expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
-
-            chat.visit_channel_settings(channel_1)
-            click_button(I18n.t("js.chat.channel_settings.archive_channel"))
-            find("#split-topic-name").fill_in(with: "An interesting topic for cats")
-            click_button(I18n.t("js.chat.channel_archive.title"))
-
-            expect(page).to have_no_css(".chat-channel-unread-indicator")
-          end
+          expect(page).to have_no_css(".chat-channel-unread-indicator")
         end
       end
 

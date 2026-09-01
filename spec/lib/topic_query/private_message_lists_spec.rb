@@ -118,7 +118,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_group" do
-    it "should return the right list for a group user" do
+    it "returns the right list for a group user" do
       group.add(user_2)
 
       topics =
@@ -127,7 +127,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should return the right list for an admin not part of the group" do
+    it "returns the right list for an admin not part of the group" do
       group.update!(name: group.name.capitalize)
 
       topics =
@@ -139,7 +139,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to contain_exactly(group_message)
     end
 
-    it "should not allow a moderator not part of the group to view the group's messages" do
+    it "does not allow a moderator not part of the group to view the group's messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)
@@ -149,7 +149,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       expect(topics).to eq([])
     end
 
-    it "should not allow a user not part of the group to view the group's messages" do
+    it "does not allow a user not part of the group to view the group's messages" do
       topics =
         TopicQuery
           .new(nil, group_name: group.name)

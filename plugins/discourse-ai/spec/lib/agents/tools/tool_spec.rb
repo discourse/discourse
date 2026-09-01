@@ -12,13 +12,9 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
   before { enable_current_plugin }
 
   describe "#read_response_body" do
-    class FakeResponse
-      def initialize(chunk)
-        @chunk = chunk
-      end
-
+    FakeResponse = Data.define(:chunk) do
       def read_body
-        yield @chunk while true
+        yield chunk while true
       end
     end
 

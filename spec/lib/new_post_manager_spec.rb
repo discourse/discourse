@@ -6,7 +6,7 @@ RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
 
-  describe "default action" do
+  describe "default action for public posts" do
     it "creates the post by default" do
       manager = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id)
       result = manager.perform
@@ -18,7 +18,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  describe "default action" do
+  describe "default action for private messages" do
     fab!(:other_user, :user)
 
     it "doesn't enqueue private messages" do
@@ -149,7 +149,8 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 0
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -162,7 +163,8 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 1
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -176,7 +178,7 @@ RSpec.describe NewPostManager do
         user.update!(trust_level: 2)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(result).to be_nil
       end
@@ -203,7 +205,8 @@ RSpec.describe NewPostManager do
 
     context "with a high trust level setting" do
       before { SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -217,7 +220,7 @@ RSpec.describe NewPostManager do
         SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         npm =
           NewPostManager.new(
             user,
@@ -239,7 +242,7 @@ RSpec.describe NewPostManager do
         user.update!(staged: true)
       end
 
-      it "will return an enqueue result" do
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -251,6 +254,7 @@ RSpec.describe NewPostManager do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
+
       it "doesn't return a result action" do
         result = NewPostManager.default_handler(manager)
         expect(result).to eq(nil)
@@ -397,11 +401,13 @@ RSpec.describe NewPostManager do
     let(:manager) do
       NewPostManager.new(user, raw: "this is new topic content", title: "new topic title")
     end
+
     context "with a high trust level setting for new topics" do
       before do
         SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       end
-      it "will return an enqueue result" do
+
+      it "returns an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -435,26 +441,25 @@ RSpec.describe NewPostManager do
   end
 
   describe "extensibility" do
-    before do
-      @counter = 0
-
-      @counter_handler =
-        lambda do |manager|
-          result = nil
-          if manager.args[:raw] == "this post increases counter"
-            @counter += 1
-            result = NewPostResult.new(:counter, true)
-          end
-
-          result
+    let(:counter_state) { { count: 0 } }
+    let(:counter_handler) do
+      lambda do |manager|
+        result = nil
+        if manager.args[:raw] == "this post increases counter"
+          counter_state[:count] += 1
+          result = NewPostResult.new(:counter, true)
         end
 
-      @queue_handler = ->(manager) do
-        manager.args[:raw] =~ /queue me/ ? manager.enqueue("default") : nil
+        result
       end
+    end
+    let(:queue_handler) do
+      ->(manager) { manager.args[:raw] =~ /queue me/ ? manager.enqueue("default") : nil }
+    end
 
-      NewPostManager.add_handler(&@counter_handler)
-      NewPostManager.add_handler(&@queue_handler)
+    before do
+      NewPostManager.add_handler(&counter_handler)
+      NewPostManager.add_handler(&queue_handler)
     end
 
     after { NewPostManager.clear_handlers! }
@@ -471,7 +476,7 @@ RSpec.describe NewPostManager do
       expect(result.action).to eq(:counter)
       expect(result).to be_success
       expect(result.post).to be_blank
-      expect(@counter).to be(1)
+      expect(counter_state[:count]).to be(1)
       expect(Reviewable.list_for(Discourse.system_user).count).to be(0)
     end
 
@@ -505,7 +510,7 @@ RSpec.describe NewPostManager do
       expect(result.pending_count).to eq(1)
       expect(result.post).to be_blank
       expect(Reviewable.list_for(Discourse.system_user).count).to eq(1)
-      expect(@counter).to be(0)
+      expect(counter_state[:count]).to be(0)
 
       reviewable.perform(Discourse.system_user, :approve_post)
 
@@ -531,7 +536,7 @@ RSpec.describe NewPostManager do
       expect(result.action).to eq(:create_post)
       expect(result).to be_success
       expect(result.post).to be_present
-      expect(@counter).to be(0)
+      expect(counter_state[:count]).to be(0)
     end
   end
 
@@ -605,90 +610,89 @@ RSpec.describe NewPostManager do
         expect(result).to be_success
       end
 
-      context "when the category has tagging rules" do
-        context "when there is a minimum number of tags required for the category" do
-          before { category.update(minimum_required_tags: 1) }
+      context "when the category requires a minimum number of tags" do
+        before { category.update(minimum_required_tags: 1) }
 
-          it "errors when there are no tags provided" do
-            manager =
-              NewPostManager.new(
-                user,
-                raw: "this is a new topic",
-                title: "Let's start a new topic!",
-                category: category.id,
-              )
-
-            result = manager.perform
-            expect(result.action).to eq(:enqueued)
-            expect(result.errors.full_messages).to include(
-              I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
+        it "errors when there are no tags provided" do
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
             )
-          end
 
-          it "enqueues the topic if there are tags provided" do
-            tag = Fabricate(:tag)
-            manager =
-              NewPostManager.new(
-                user,
-                raw: "this is a new topic",
-                title: "Let's start a new topic!",
-                category: category.id,
-                tags: tag.name,
-              )
-
-            result = manager.perform
-            expect(result.action).to eq(:enqueued)
-            expect(result.reason).to eq(:category)
-          end
+          result = manager.perform
+          expect(result.action).to eq(:enqueued)
+          expect(result.errors.full_messages).to include(
+            I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
+          )
         end
 
-        context "when there is a minimum number of tags required from a certain tag group for the category" do
-          let(:tag_group) { Fabricate(:tag_group) }
-          let(:tag) { Fabricate(:tag) }
-          before do
-            TagGroupMembership.create(tag: tag, tag_group: tag_group)
-            category.update(
-              category_required_tag_groups: [
-                CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
-              ],
+        it "enqueues the topic if there are tags provided" do
+          tag = Fabricate(:tag)
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: tag.name,
             )
-          end
 
-          it "errors when there are no tags from the group provided" do
-            manager =
-              NewPostManager.new(
-                user,
-                raw: "this is a new topic",
-                title: "Let's start a new topic!",
-                category: category.id,
-              )
+          result = manager.perform
+          expect(result.action).to eq(:enqueued)
+          expect(result.reason).to eq(:category)
+        end
+      end
 
-            result = manager.perform
-            expect(result.action).to eq(:enqueued)
-            expect(result.errors.full_messages).to include(
-              I18n.t(
-                "tags.required_tags_from_group",
-                count: category.category_required_tag_groups.first.min_count,
-                tag_group_name: category.category_required_tag_groups.first.tag_group.name,
-                tags: tag.name,
-              ),
+      context "when the category requires tags from a certain tag group" do
+        let(:tag_group) { Fabricate(:tag_group) }
+        let(:tag) { Fabricate(:tag) }
+
+        before do
+          TagGroupMembership.create(tag: tag, tag_group: tag_group)
+          category.update(
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+            ],
+          )
+        end
+
+        it "errors when there are no tags from the group provided" do
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
             )
-          end
 
-          it "enqueues the topic if there are tags provided" do
-            manager =
-              NewPostManager.new(
-                user,
-                raw: "this is a new topic",
-                title: "Let's start a new topic!",
-                category: category.id,
-                tags: [tag.name],
-              )
+          result = manager.perform
+          expect(result.action).to eq(:enqueued)
+          expect(result.errors.full_messages).to include(
+            I18n.t(
+              "tags.required_tags_from_group",
+              count: category.category_required_tag_groups.first.min_count,
+              tag_group_name: category.category_required_tag_groups.first.tag_group.name,
+              tags: tag.name,
+            ),
+          )
+        end
 
-            result = manager.perform
-            expect(result.action).to eq(:enqueued)
-            expect(result.reason).to eq(:category)
-          end
+        it "enqueues the topic if there are tags provided" do
+          manager =
+            NewPostManager.new(
+              user,
+              raw: "this is a new topic",
+              title: "Let's start a new topic!",
+              category: category.id,
+              tags: [tag.name],
+            )
+
+          result = manager.perform
+          expect(result.action).to eq(:enqueued)
+          expect(result.reason).to eq(:category)
         end
       end
 
@@ -865,7 +869,7 @@ RSpec.describe NewPostManager do
       topic.user.trust_level = 0
     end
 
-    it "will store via_email and raw_email in the enqueued post" do
+    it "stores via_email and raw_email in the enqueued post" do
       result = manager.perform
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present
@@ -895,12 +899,13 @@ RSpec.describe NewPostManager do
           first_post_checks: true,
         )
 
-      expect { @result = manager.perform }.to change { user.silenced? }.to(true).and change {
+      result = nil
+      expect { result = manager.perform }.to change { user.silenced? }.to(true).and change {
               Topic.where(
                 "subtype = 'system_message' AND title LIKE '%silenced%' AND excerpt LIKE '%first email was flagged as spam%'",
               ).count
             }.by(1)
-      expect(@result.action).to eq(:enqueued)
+      expect(result.action).to eq(:enqueued)
     end
 
     it "doesn't silence or enqueue exempt users" do

@@ -6,39 +6,38 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+      subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:author, :user)
-    fab!(:acting_user, :user)
-    fab!(:category) do
-      Fabricate(:category).tap do |c|
-        c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+      fab!(:author, :user)
+      fab!(:acting_user, :user)
+      fab!(:category) do
+        Fabricate(:category).tap do |c|
+          c.upsert_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true")
+        end
       end
-    end
-    fab!(:topic) { Fabricate(:topic_with_op, category:, user: author) }
+      fab!(:topic) { Fabricate(:topic_with_op, category:, user: author) }
 
-    let(:params) { { topic_id: topic.id } }
-    let(:dependencies) { { guardian: acting_user.guardian } }
+      let(:params) { { topic_id: topic.id } }
+      let(:dependencies) { { guardian: acting_user.guardian } }
 
-    before do
-      SiteSetting.solved_enabled = true
-      SiteSetting.enable_solved_shared_issues = true
-      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
-    end
+      before do
+        SiteSetting.solved_enabled = true
+        SiteSetting.enable_solved_shared_issues = true
+        DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+      end
 
-    context "when contract is invalid" do
-      let(:params) { {} }
+      context "when contract is invalid" do
+        let(:params) { {} }
 
-      it { is_expected.to fail_a_contract }
-    end
+        it { is_expected.to fail_a_contract }
+      end
 
-    context "when topic is not found" do
-      let(:params) { { topic_id: -1 } }
+      context "when topic is not found" do
+        let(:params) { { topic_id: -1 } }
 
-      it { is_expected.to fail_to_find_a_model(:topic) }
-    end
+        it { is_expected.to fail_to_find_a_model(:topic) }
+      end
 
-    context "when user cannot create a shared issue for the topic" do
       context "when the feature flag is disabled" do
         before { SiteSetting.enable_solved_shared_issues = false }
 
@@ -103,94 +102,93 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       end
     end
 
-    context "when no shared issue has been recorded yet" do
-      let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
+  context "when no shared issue has been recorded yet" do
+    let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
 
-      it { is_expected.to run_successfully }
+    it { is_expected.to run_successfully }
 
-      it "creates a shared issue record" do
-        expect { result }.to change {
-          DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
-        }.by(1)
-      end
+    it "creates a shared issue record" do
+      expect { result }.to change {
+        DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
+      }.by(1)
+    end
 
-      it "raises the notification level to tracking" do
-        expect { result }.to change { TopicUser.get(topic, acting_user)&.notification_level }.to(
-          TopicUser.notification_levels[:tracking],
+    it "raises the notification level to tracking" do
+      expect { result }.to change { TopicUser.get(topic, acting_user)&.notification_level }.to(
+        TopicUser.notification_levels[:tracking],
+      )
+    end
+
+    context "when the user is already watching the topic" do
+      before do
+        TopicUser.change(
+          acting_user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
         )
       end
 
-      context "when the user is already watching the topic" do
-        before do
-          TopicUser.change(
-            acting_user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:watching],
-          )
-        end
-
-        it "does not lower the notification level" do
-          expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
-        end
-      end
-
-      context "when the user is already tracking the topic" do
-        before do
-          TopicUser.change(
-            acting_user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-        end
-
-        it "does not change the notification level" do
-          expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
-        end
-      end
-
-      it "publishes a shared issue message indicating the user created a shared issue" do
-        expect(messages).to include(
-          an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: true),
-          ),
-        )
+      it "does not lower the notification level" do
+        expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
       end
     end
 
-    context "when the user has already recorded a shared issue" do
-      let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
-
-      before { Fabricate(:shared_issue, topic:, user: acting_user) }
-
-      it { is_expected.to run_successfully }
-
-      it "removes the shared issue record" do
-        expect { result }.to change {
-          DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
-        }.by(-1)
-      end
-
-      context "when the user is already tracking the topic" do
-        before do
-          TopicUser.change(
-            acting_user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-        end
-
-        it "does not change the notification level" do
-          expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
-        end
-      end
-
-      it "publishes a shared issue message indicating the user withdrew their shared issue" do
-        expect(messages).to include(
-          an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 0, user_created_shared_issue: false),
-          ),
+    context "when the user is already tracking the topic" do
+      before do
+        TopicUser.change(
+          acting_user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
         )
       end
+
+      it "does not change the notification level" do
+        expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
+      end
+    end
+
+    it "publishes a shared issue message indicating the user created a shared issue" do
+      expect(messages).to include(
+        an_object_having_attributes(
+          data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: true),
+        ),
+      )
     end
   end
+
+  context "when the user has already recorded a shared issue" do
+  let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
+
+  before { Fabricate(:shared_issue, topic:, user: acting_user) }
+
+  it { is_expected.to run_successfully }
+
+  it "removes the shared issue record" do
+    expect { result }.to change {
+      DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
+    }.by(-1)
+  end
+
+  context "when the user is already tracking the topic" do
+    before do
+      TopicUser.change(
+        acting_user.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+    end
+
+    it "does not change the notification level" do
+      expect { result }.not_to change { TopicUser.get(topic, acting_user).notification_level }
+    end
+  end
+
+  it "publishes a shared issue message indicating the user withdrew their shared issue" do
+    expect(messages).to include(
+      an_object_having_attributes(
+        data: a_hash_including(type: :shared_issue, count: 0, user_created_shared_issue: false),
+      ),
+    )
+  end
+end
 end

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe AdminDashboardCacheWarmer do
-  before { Discourse.cache.clear }
+  before { Discourse.cache.clear
+           DiscoursePluginRegistry.register_admin_dashboard_report_source(prewarming_provider, plugin)
+           DiscoursePluginRegistry.register_admin_dashboard_report_source(failing_provider, plugin)
+   }
 
   let(:prewarm_calls) { [] }
   let(:prewarming_provider) do
@@ -40,10 +43,6 @@ describe AdminDashboardCacheWarmer do
   end
   let(:plugin) { Plugin::Instance.new }
 
-  before do
-    DiscoursePluginRegistry.register_admin_dashboard_report_source(prewarming_provider, plugin)
-    DiscoursePluginRegistry.register_admin_dashboard_report_source(failing_provider, plugin)
-  end
 
   after do
     DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|

@@ -21,7 +21,7 @@ RSpec.describe PrettyText::Helpers do
       expect(result["動画"][:url]).to eq(thumbnail.url)
     end
 
-    it "should return cdn url if available" do
+    it "returns cdn url if available" do
       short_url = upload.short_url
       result = PrettyText::Helpers.lookup_upload_urls([short_url])
       expect(result[short_url][:url]).to eq(upload.url)

@@ -253,6 +253,7 @@ RSpec.describe ApplicationHelper do
     it "encodes tags" do
       expect(helper.escape_unicode("<tag>")).to eq("\u003ctag>")
     end
+
     it "survives junk text" do
       expect(helper.escape_unicode("hello \xc3\x28 world")).to match(/hello.*world/)
     end
@@ -261,7 +262,7 @@ RSpec.describe ApplicationHelper do
   describe "render_sitelinks_search_tag" do
     context "for non-subfolder install" do
       context "when on homepage" do
-        it "will return sitelinks search tag" do
+        it "returns sitelinks search tag" do
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with("/").returns(true)
 
@@ -279,8 +280,9 @@ RSpec.describe ApplicationHelper do
           expect(sitelinks_search_tag["url"]).to eq(Discourse.base_url)
         end
       end
+
       context "when not on homepage" do
-        it "will not return sitelinks search tag" do
+        it "does not return sitelinks search tag" do
           helper.stubs(:current_page?).returns(true)
           helper.stubs(:current_page?).with("/").returns(false)
           helper.stubs(:current_page?).with(Discourse.base_path).returns(false)
@@ -288,9 +290,10 @@ RSpec.describe ApplicationHelper do
         end
       end
     end
+
     context "for subfolder install" do
       context "when on homepage" do
-        it "will return sitelinks search tag" do
+        it "returns sitelinks search tag" do
           Discourse.stubs(:base_path).returns("/subfolder-base-path/")
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with(Discourse.base_path).returns(true)
@@ -298,8 +301,9 @@ RSpec.describe ApplicationHelper do
           expect(helper.render_sitelinks_search_tag).to include("subfolder-base-path")
         end
       end
+
       context "when not on homepage" do
-        it "will not return sitelinks search tag" do
+        it "does not return sitelinks search tag" do
           Discourse.stubs(:base_path).returns("/subfolder-base-path/")
           helper.stubs(:current_page?).returns(true)
           helper.stubs(:current_page?).with("/").returns(false)
@@ -323,41 +327,41 @@ RSpec.describe ApplicationHelper do
         helper.request.env[:resolved_theme_id] = dark_theme.id
       end
 
-      context "when on desktop" do
+      context "when logo_dark is not set" do
         before { helper.stubs(:mobile_device?).returns(false) }
 
-        context "when logo_dark is not set" do
-          it "will return site_logo_url instead" do
-            expect(helper.application_logo_url).to eq(SiteSetting.site_logo_url)
-          end
-        end
-
-        context "when logo_dark is set" do
-          before { SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png") }
-
-          it "will return site_logo_dark_url" do
-            expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
-          end
+        it "returns site_logo_url instead" do
+          expect(helper.application_logo_url).to eq(SiteSetting.site_logo_url)
         end
       end
 
-      context "when on mobile" do
-        before { helper.stubs(:mobile_device?).returns(true) }
-
-        context "when mobile_logo_dark is not set" do
-          it "will return site_mobile_logo_url instead" do
-            expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_url)
-          end
+      context "when logo_dark is set" do
+        before do
+          helper.stubs(:mobile_device?).returns(false)
+          SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png")
         end
 
-        context "when mobile_logo_dark is set" do
-          before do
-            SiteSetting.mobile_logo_dark = Fabricate(:upload, url: "/images/mobile-logo-dark.png")
-          end
+        it "returns site_logo_dark_url" do
+          expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
+        end
+      end
 
-          it "will return site_mobile_logo_dark_url" do
-            expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
-          end
+      context "when mobile_logo_dark is not set" do
+        before { helper.stubs(:mobile_device?).returns(true) }
+
+        it "returns site_mobile_logo_url instead" do
+          expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_url)
+        end
+      end
+
+      context "when mobile_logo_dark is set" do
+        before do
+          helper.stubs(:mobile_device?).returns(true)
+          SiteSetting.mobile_logo_dark = Fabricate(:upload, url: "/images/mobile-logo-dark.png")
+        end
+
+        it "returns site_mobile_logo_dark_url" do
+          expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
         end
       end
     end
@@ -366,7 +370,7 @@ RSpec.describe ApplicationHelper do
   describe "application_logo_dark_url" do
     context "when dark theme is not present" do
       context "when dark logo is not present" do
-        it "should return nothing" do
+        it "returns nothing" do
           expect(helper.application_logo_dark_url.present?).to eq(false)
         end
       end
@@ -384,7 +388,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when dark logo is not present" do
-        it "should return nothing" do
+        it "returns nothing" do
           expect(helper.application_logo_dark_url.present?).to eq(false)
         end
       end
@@ -392,7 +396,7 @@ RSpec.describe ApplicationHelper do
       context "when dark logo is present" do
         before { SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png") }
 
-        it "should return correct url" do
+        it "returns correct url" do
           expect(helper.application_logo_dark_url).to eq(SiteSetting.site_logo_dark_url)
         end
       end
@@ -411,7 +415,7 @@ RSpec.describe ApplicationHelper do
         SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png")
       end
 
-      it "should return nothing" do
+      it "returns nothing" do
         expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
         expect(helper.application_logo_dark_url.present?).to eq(false)
       end
@@ -567,20 +571,21 @@ RSpec.describe ApplicationHelper do
     fab!(:user)
 
     it "returns empty JSON if preloader is not initialized" do
-      @application_layout_preloader = nil
+      helper.instance_variable_set(:@application_layout_preloader, nil)
       expect(helper.preloaded_json).to eq("{}")
     end
 
     it "escapes and strips invalid unicode and strips in json body" do
-      @application_layout_preloader =
+      application_layout_preloader =
         ApplicationLayoutPreloader.new(
           guardian: Guardian.new(user),
           theme_id: nil,
           theme_target: nil,
           login_method: nil,
         )
+      helper.instance_variable_set(:@application_layout_preloader, application_layout_preloader)
 
-      @application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
+      application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
       expect(helper.preloaded_json).to include(
         %{"test":"[\\"\\u003c\\\\/script\\u003e\\u003cscript\\u003e \uFFFD\\"]"},
       )
@@ -843,7 +848,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "accepts a content argument" do
-      @description_meta = "Custom Description"
+      helper.instance_variable_set(:@description_meta, "Custom Description")
 
       result = helper.description_content
 
@@ -934,9 +939,12 @@ RSpec.describe ApplicationHelper do
     end
 
     context "with custom light scheme" do
+      let(:new_color_scheme) do
+        Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true)
+      end
+
       before do
-        @new_cs = Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true)
-        user.user_option.color_scheme_id = @new_cs.id
+        user.user_option.color_scheme_id = new_color_scheme.id
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
       end
@@ -947,7 +955,7 @@ RSpec.describe ApplicationHelper do
       end
 
       it "falls back to base scheme when the scheme is no longer user selectable" do
-        @new_cs.update!(user_selectable: false)
+        new_color_scheme.update!(user_selectable: false)
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).not_to include("color_definitions_flamboyant")
@@ -955,8 +963,8 @@ RSpec.describe ApplicationHelper do
       end
 
       it "keeps a non-user-selectable scheme that is the theme's own color scheme" do
-        @new_cs.update!(user_selectable: false)
-        Theme.find_default.update!(color_scheme_id: @new_cs.id)
+        new_color_scheme.update!(user_selectable: false)
+        Theme.find_default.update!(color_scheme_id: new_color_scheme.id)
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("color_definitions_flamboyant")
@@ -982,12 +990,14 @@ RSpec.describe ApplicationHelper do
     end
 
     context "with dark scheme with user option and/or cookies" do
+      let(:new_color_scheme) do
+        Fabricate(:color_scheme, name: "Custom Color Scheme", user_selectable: true)
+      end
+
       before do
         user.user_option.interface_color_mode = UserOption::LIGHT_MODE
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
-        @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme", user_selectable: true)
-
         Theme.find_default.update!(dark_color_scheme_id: ColorScheme.where(name: "Dark").pick(:id))
       end
 
@@ -1000,7 +1010,7 @@ RSpec.describe ApplicationHelper do
 
       it "returns user-selected dark color scheme stylesheet" do
         user.user_option.update!(
-          dark_scheme_id: @new_cs.id,
+          dark_scheme_id: new_color_scheme.id,
           interface_color_mode: UserOption::AUTO_MODE,
         )
 
@@ -1011,7 +1021,7 @@ RSpec.describe ApplicationHelper do
 
       it "respects cookie value over user option for dark color scheme" do
         user.user_option.update!(interface_color_mode: UserOption::AUTO_MODE)
-        helper.request.cookies["dark_scheme_id"] = @new_cs.id
+        helper.request.cookies["dark_scheme_id"] = new_color_scheme.id
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -1118,7 +1128,7 @@ RSpec.describe ApplicationHelper do
         color_scheme,
         { colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }] },
       )
-      @scheme_id = color_scheme.id
+      helper.instance_variable_set(:@scheme_id, color_scheme.id)
 
       expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
         <meta name="color-scheme" content="dark">

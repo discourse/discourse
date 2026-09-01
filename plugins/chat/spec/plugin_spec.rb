@@ -14,7 +14,7 @@ describe Chat do
     fab!(:upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
-    let!(:chat_message) do
+    before do
       Fabricate(
         :chat_message,
         chat_channel: chat_channel,
@@ -40,22 +40,22 @@ describe Chat do
     fab!(:draft_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
-    let!(:chat_message) do
+    before do
       Fabricate(
         :chat_message,
         chat_channel: chat_channel,
         user: user,
         message: "Hello world! #{message_upload.sha1}",
       )
-    end
-    let!(:draft_message) do
       Chat::Draft.create!(
-        user: user,
-        chat_channel: chat_channel,
-        data:
-          "{\"value\":\"hello world \",\"uploads\":[\"#{draft_upload.sha1}\"],\"replyToMsg\":null}",
-      )
+              user: user,
+              chat_channel: chat_channel,
+              data:
+                "{\"value\":\"hello world \",\"uploads\":[\"#{draft_upload.sha1}\"],\"replyToMsg\":null}",
+            )
+
     end
+
 
     it "marks uploads with reference to ChatMessage via UploadReference in use" do
       draft_upload
@@ -87,6 +87,7 @@ describe Chat do
     let!(:user) { Fabricate(:user) }
     let!(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
+
     fab!(:group)
 
     context "when chat enabled" do
@@ -190,7 +191,7 @@ describe Chat do
     end
 
     describe "when a user is added to a group with access to a channel through a category" do
-      let!(:category) { Fabricate(:private_category, group: chatters_group) }
+      before { Fabricate(:private_category, group: chatters_group) }
 
       it "joins the user to the channel if auto-join is enabled" do
         chatters_group.add(user)

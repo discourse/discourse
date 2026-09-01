@@ -4,7 +4,7 @@ RSpec.describe Stylesheet::Manager::ScssChecker do
   fab!(:theme)
 
   describe "#has_scss" do
-    it "should return true when theme has scss" do
+    it "returns true when theme has scss" do
       scss_theme = Fabricate(:theme, component: true)
       scss_theme.set_field(target: :common, name: "scss", value: ".scss{color: red;}")
       scss_theme.save!
@@ -30,7 +30,7 @@ RSpec.describe Stylesheet::Manager::ScssChecker do
       expect(embedded_theme_checker.has_scss(embedded_scss_theme.id)).to eq(true)
     end
 
-    it "should return false when theme does not have scss" do
+    it "returns false when theme does not have scss" do
       expect(described_class.new(:desktop_theme, [theme.id]).has_scss(theme.id)).to eq(false)
     end
   end

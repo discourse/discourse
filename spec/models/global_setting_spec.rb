@@ -113,18 +113,17 @@ RSpec.describe GlobalSetting do
       end
     end
   end
-end
 
-RSpec.describe GlobalSetting::EnvProvider do
-  it "can detect keys from env" do
-    ENV["DISCOURSE_BLA"] = "1"
-    ENV["DISCOURSE_BLA_2"] = "2"
-    expect(GlobalSetting::EnvProvider.new.keys).to include(:bla)
-    expect(GlobalSetting::EnvProvider.new.keys).to include(:bla_2)
+  describe GlobalSetting::EnvProvider do
+    it "can detect keys from env" do
+      ENV["DISCOURSE_BLA"] = "1"
+      ENV["DISCOURSE_BLA_2"] = "2"
+      expect(GlobalSetting::EnvProvider.new.keys).to include(:bla)
+      expect(GlobalSetting::EnvProvider.new.keys).to include(:bla_2)
+    end
   end
-end
 
-RSpec.describe GlobalSetting::FileProvider do
+  describe GlobalSetting::FileProvider do
   it "can parse a simple file" do
     f = Tempfile.new("foo")
     f.write("  # this is a comment\n")
@@ -218,4 +217,6 @@ RSpec.describe GlobalSetting::FileProvider do
       expect { GlobalSetting.plugins_to_load }.to raise_error(RuntimeError, /only supported/)
     end
   end
+end
+
 end

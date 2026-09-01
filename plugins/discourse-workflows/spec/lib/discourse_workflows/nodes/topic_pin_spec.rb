@@ -8,199 +8,197 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicPin::V1 do
   let(:item) { { "json" => {} } }
 
   describe "#execute" do
-    context "with the pin type" do
-      context "with the add operation" do
-        it "pins the topic in its category" do
-          config = { "operation" => "add", "topic_id" => topic.id.to_s }
+    context "with the add operation" do
+      it "pins the topic in its category" do
+        config = { "operation" => "add", "topic_id" => topic.id.to_s }
 
-          result = execute_node(configuration: config, item: item)
+        result = execute_node(configuration: config, item: item)
 
-          expect(result["pinned"]).to eq(true)
-          expect(result["pinned_globally"]).to eq(false)
-          expect(result).to match_node_output_schema(described_class, configuration: config)
+        expect(result["pinned"]).to eq(true)
+        expect(result["pinned_globally"]).to eq(false)
+        expect(result).to match_node_output_schema(described_class, configuration: config)
 
-          topic.reload
-          expect(topic.pinned_at).to be_present
-          expect(topic.pinned_globally).to eq(false)
+        topic.reload
+        expect(topic.pinned_at).to be_present
+        expect(topic.pinned_globally).to eq(false)
+      end
+
+      it "pins the topic globally" do
+        config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_globally" => true }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["pinned"]).to eq(true)
+        expect(result["pinned_globally"]).to eq(true)
+
+        topic.reload
+        expect(topic.pinned_at).to be_present
+        expect(topic.pinned_globally).to eq(true)
+      end
+
+      it "sets pinned_until" do
+        pinned_until = 3.days.from_now.utc.strftime("%Y-%m-%d %H:%M%z")
+        config = {
+          "operation" => "add",
+          "topic_id" => topic.id.to_s,
+          "pinned_until" => pinned_until,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["pinned_until"]).to eq(Time.parse(pinned_until).utc.iso8601)
+        expect(topic.reload.pinned_until).to eq_time(Time.parse(pinned_until))
+      end
+
+      it "pins indefinitely when pinned_until is blank" do
+        config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_until" => "" }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["pinned"]).to eq(true)
+        expect(result["pinned_until"]).to be_nil
+        expect(topic.reload.pinned_until).to be_nil
+      end
+
+      context "when pinned_until carries no timezone offset" do
+        fab!(:workflow) do
+          Fabricate(:discourse_workflows_workflow, settings: { "timezone" => "America/New_York" })
         end
 
-        it "pins the topic globally" do
-          config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_globally" => true }
-
-          result = execute_node(configuration: config, item: item)
-
-          expect(result["pinned"]).to eq(true)
-          expect(result["pinned_globally"]).to eq(true)
-
-          topic.reload
-          expect(topic.pinned_at).to be_present
-          expect(topic.pinned_globally).to eq(true)
-        end
-
-        it "sets pinned_until" do
-          pinned_until = 3.days.from_now.utc.strftime("%Y-%m-%d %H:%M%z")
+        it "anchors the value to the workflow timezone" do
           config = {
             "operation" => "add",
             "topic_id" => topic.id.to_s,
-            "pinned_until" => pinned_until,
+            "pinned_until" => "2026-08-01 12:00",
           }
 
-          result = execute_node(configuration: config, item: item)
+          execute_node(configuration: config, item: item, workflow: workflow)
 
-          expect(result["pinned_until"]).to eq(Time.parse(pinned_until).utc.iso8601)
-          expect(topic.reload.pinned_until).to eq_time(Time.parse(pinned_until))
+          # noon in New York on that date is 16:00 UTC, regardless of the server clock
+          expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 16, 0))
         end
 
-        it "pins indefinitely when pinned_until is blank" do
-          config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_until" => "" }
+        it "prefers the node timezone over the workflow timezone" do
+          config = {
+            "operation" => "add",
+            "topic_id" => topic.id.to_s,
+            "pinned_until" => "2026-08-01 12:00",
+            "timezone" => "Europe/Paris",
+          }
 
-          result = execute_node(configuration: config, item: item)
+          execute_node(configuration: config, item: item, workflow: workflow)
 
-          expect(result["pinned"]).to eq(true)
-          expect(result["pinned_until"]).to be_nil
-          expect(topic.reload.pinned_until).to be_nil
+          expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
         end
 
-        context "when pinned_until carries no timezone offset" do
-          fab!(:workflow) do
-            Fabricate(:discourse_workflows_workflow, settings: { "timezone" => "America/New_York" })
-          end
+        it "applies the node timezone to bannered_until too" do
+          config = {
+            "operation" => "add",
+            "pin_type" => "banner",
+            "topic_id" => topic.id.to_s,
+            "bannered_until" => "2026-08-01 12:00",
+            "timezone" => "Europe/Paris",
+          }
 
-          it "anchors the value to the workflow timezone" do
-            config = {
-              "operation" => "add",
-              "topic_id" => topic.id.to_s,
-              "pinned_until" => "2026-08-01 12:00",
-            }
+          execute_node(configuration: config, item: item, workflow: workflow)
 
-            execute_node(configuration: config, item: item, workflow: workflow)
-
-            # noon in New York on that date is 16:00 UTC, regardless of the server clock
-            expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 16, 0))
-          end
-
-          it "prefers the node timezone over the workflow timezone" do
-            config = {
-              "operation" => "add",
-              "topic_id" => topic.id.to_s,
-              "pinned_until" => "2026-08-01 12:00",
-              "timezone" => "Europe/Paris",
-            }
-
-            execute_node(configuration: config, item: item, workflow: workflow)
-
-            expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
-          end
-
-          it "applies the node timezone to bannered_until too" do
-            config = {
-              "operation" => "add",
-              "pin_type" => "banner",
-              "topic_id" => topic.id.to_s,
-              "bannered_until" => "2026-08-01 12:00",
-              "timezone" => "Europe/Paris",
-            }
-
-            execute_node(configuration: config, item: item, workflow: workflow)
-
-            expect(topic.reload.bannered_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
-          end
-
-          it "raises a readable error for an unknown node timezone" do
-            config = {
-              "operation" => "add",
-              "topic_id" => topic.id.to_s,
-              "pinned_until" => "2026-08-01 12:00",
-              "timezone" => "Mars/Olympus_Mons",
-            }
-
-            expect {
-              execute_node(configuration: config, item: item, workflow: workflow)
-            }.to raise_error(DiscourseWorkflows::NodeError, %r{Invalid timezone: Mars/Olympus_Mons})
-          end
-
-          it "keeps an explicit offset instead of reinterpreting it" do
-            config = {
-              "operation" => "add",
-              "topic_id" => topic.id.to_s,
-              "pinned_until" => "2026-08-01 12:00+02:00",
-            }
-
-            execute_node(configuration: config, item: item, workflow: workflow)
-
-            expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
-          end
-
-          it "raises a readable error for an unparseable value" do
-            config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_until" => "soon" }
-
-            expect {
-              execute_node(configuration: config, item: item, workflow: workflow)
-            }.to raise_error(
-              DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: 'soon'.",
-            )
-          end
-
-          it "raises a readable error for an out-of-range date" do
-            config = {
-              "operation" => "add",
-              "topic_id" => topic.id.to_s,
-              "pinned_until" => "2026-13-45",
-            }
-
-            expect {
-              execute_node(configuration: config, item: item, workflow: workflow)
-            }.to raise_error(
-              DiscourseWorkflows::NodeError,
-              "'pinned_until' is not a valid date and time: '2026-13-45'.",
-            )
-          end
+          expect(topic.reload.bannered_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
         end
 
-        it "adds a small action post" do
-          config = { "operation" => "add", "topic_id" => topic.id.to_s }
+        it "raises a readable error for an unknown node timezone" do
+          config = {
+            "operation" => "add",
+            "topic_id" => topic.id.to_s,
+            "pinned_until" => "2026-08-01 12:00",
+            "timezone" => "Mars/Olympus_Mons",
+          }
 
-          expect { execute_node(configuration: config, item: item) }.to change {
-            topic.posts.where(action_code: "pinned.enabled").count
-          }.by(1)
+          expect {
+            execute_node(configuration: config, item: item, workflow: workflow)
+          }.to raise_error(DiscourseWorkflows::NodeError, %r{Invalid timezone: Mars/Olympus_Mons})
+        end
+
+        it "keeps an explicit offset instead of reinterpreting it" do
+          config = {
+            "operation" => "add",
+            "topic_id" => topic.id.to_s,
+            "pinned_until" => "2026-08-01 12:00+02:00",
+          }
+
+          execute_node(configuration: config, item: item, workflow: workflow)
+
+          expect(topic.reload.pinned_until.utc).to eq_time(Time.utc(2026, 8, 1, 10, 0))
+        end
+
+        it "raises a readable error for an unparseable value" do
+          config = { "operation" => "add", "topic_id" => topic.id.to_s, "pinned_until" => "soon" }
+
+          expect {
+            execute_node(configuration: config, item: item, workflow: workflow)
+          }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            "'pinned_until' is not a valid date and time: 'soon'.",
+          )
+        end
+
+        it "raises a readable error for an out-of-range date" do
+          config = {
+            "operation" => "add",
+            "topic_id" => topic.id.to_s,
+            "pinned_until" => "2026-13-45",
+          }
+
+          expect {
+            execute_node(configuration: config, item: item, workflow: workflow)
+          }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            "'pinned_until' is not a valid date and time: '2026-13-45'.",
+          )
         end
       end
 
-      context "with the remove operation" do
-        it "unpins a topic pinned in its category" do
-          topic.update_pinned(true)
+      it "adds a small action post" do
+        config = { "operation" => "add", "topic_id" => topic.id.to_s }
 
-          config = { "operation" => "remove", "topic_id" => topic.id.to_s }
+        expect { execute_node(configuration: config, item: item) }.to change {
+          topic.posts.where(action_code: "pinned.enabled").count
+        }.by(1)
+      end
+    end
 
-          result = execute_node(configuration: config, item: item)
+    context "with the remove operation" do
+      it "unpins a topic pinned in its category" do
+        topic.update_pinned(true)
 
-          expect(result["pinned"]).to eq(false)
-          expect(topic.reload.pinned_at).to be_nil
-        end
+        config = { "operation" => "remove", "topic_id" => topic.id.to_s }
 
-        it "clears pinned_globally when unpinning a globally pinned topic" do
-          topic.update_pinned(true, true)
+        result = execute_node(configuration: config, item: item)
 
-          config = { "operation" => "remove", "topic_id" => topic.id.to_s }
+        expect(result["pinned"]).to eq(false)
+        expect(topic.reload.pinned_at).to be_nil
+      end
 
-          result = execute_node(configuration: config, item: item)
+      it "clears pinned_globally when unpinning a globally pinned topic" do
+        topic.update_pinned(true, true)
 
-          expect(result["pinned"]).to eq(false)
-          expect(result["pinned_globally"]).to eq(false)
+        config = { "operation" => "remove", "topic_id" => topic.id.to_s }
 
-          topic.reload
-          expect(topic.pinned_at).to be_nil
-          expect(topic.pinned_globally).to eq(false)
-        end
+        result = execute_node(configuration: config, item: item)
 
-        it "does nothing when the topic is not pinned" do
-          config = { "operation" => "remove", "topic_id" => topic.id.to_s }
+        expect(result["pinned"]).to eq(false)
+        expect(result["pinned_globally"]).to eq(false)
 
-          expect { execute_node(configuration: config, item: item) }.not_to change {
-            topic.posts.count
-          }
-        end
+        topic.reload
+        expect(topic.pinned_at).to be_nil
+        expect(topic.pinned_globally).to eq(false)
+      end
+
+      it "does nothing when the topic is not pinned" do
+        config = { "operation" => "remove", "topic_id" => topic.id.to_s }
+
+        expect { execute_node(configuration: config, item: item) }.not_to change {
+          topic.posts.count
+        }
       end
     end
 

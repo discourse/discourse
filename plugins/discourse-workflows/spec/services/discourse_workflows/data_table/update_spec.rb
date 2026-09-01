@@ -5,9 +5,11 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
     it { is_expected.to validate_presence_of(:data_table_id) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_length_of(:name).is_at_most(100) }
-    it do
+
+    it "accepts valid names" do
       is_expected.to allow_values("valid_name", "Name 123", "_underscore", "Table A").for(:name)
     end
+
     it { is_expected.not_to allow_values("123start", "name!@#").for(:name) }
   end
 

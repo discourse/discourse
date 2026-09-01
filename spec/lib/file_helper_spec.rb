@@ -107,7 +107,7 @@ RSpec.describe FileHelper do
     end
 
     describe "when max_file_size is exceeded" do
-      it "should return nil" do
+      it "returns nil" do
         tmpfile =
           FileHelper.download(
             "//eviltrout.com/trout.png",
@@ -137,7 +137,7 @@ RSpec.describe FileHelper do
     describe "when url is a jpeg" do
       let(:url) { "https://eviltrout.com/trout.jpg" }
 
-      it "should prioritize the content type returned by the response" do
+      it "prioritizes the content type returned by the response" do
         stub_request(:get, url).to_return(body: png, headers: { "content-type": "image/png" })
 
         tmpfile = FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")

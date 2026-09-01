@@ -316,6 +316,10 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           )
         end
 
+        let(:thread) do
+          Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+        end
+
         it "sends a message for regular user when staff-only is disabled and they are following channel" do
           expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
             Chat::Message.count
@@ -340,64 +344,52 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
         end
 
-        context "when sending a message in a thread" do
-          fab!(:thread) do
-            Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
-          end
 
-          it "does not update the last_read_message_id for the user who sent the message" do
-            post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
-            expect(response.status).to eq(200)
-            expect(membership.reload.last_read_message_id).to eq(message_1.id)
-          end
+        it "does not update the last_read_message_id for the user who sent the message" do
+          post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
+          expect(response.status).to eq(200)
+          expect(membership.reload.last_read_message_id).to eq(message_1.id)
+        end
 
-          it "publishes user tracking state using the old membership last_read_message_id" do
-            messages =
-              MessageBus.track_publish(
-                Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
-              ) do
-                post "/chat/#{chat_channel.id}.json",
-                     params: {
-                       message: message,
-                       thread_id: thread.id,
-                     }
-              end
-            expect(response.status).to eq(200)
-            expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
-          end
-
-          context "when thread is not part of the provided channel" do
-            let!(:another_channel) { Fabricate(:category_channel) }
-
-            before { another_channel.add(user) }
-
-            it "returns an error" do
-              post "/chat/#{another_channel.id}.json",
+        it "publishes user tracking state using the old membership last_read_message_id" do
+          messages =
+            MessageBus.track_publish(
+              Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+            ) do
+              post "/chat/#{chat_channel.id}.json",
                    params: {
                      message: message,
                      thread_id: thread.id,
                    }
-              expect(response).to have_http_status :unprocessable_entity
-              expect(response.parsed_body["errors"]).to include(
-                /thread is not part of the provided channel/i,
-              )
             end
-          end
+          expect(response.status).to eq(200)
+          expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
+        end
 
-          context "when provided thread does not match `reply_to_id`" do
-            let!(:another_thread) { Fabricate(:chat_thread, channel: chat_channel) }
+        it "returns an error when the thread belongs to another channel" do
+          another_channel = Fabricate(:category_channel)
+          another_channel.add(user)
+          post "/chat/#{another_channel.id}.json",
+               params: {
+                 message: message,
+                 thread_id: thread.id,
+               }
+          expect(response).to have_http_status :unprocessable_entity
+          expect(response.parsed_body["errors"]).to include(
+            /thread is not part of the provided channel/i,
+          )
+        end
 
-            it "returns an error" do
-              post "/chat/#{chat_channel.id}.json",
-                   params: {
-                     message: message,
-                     in_reply_to_id: message_1.id,
-                     thread_id: another_thread.id,
-                   }
-              expect(response).to have_http_status :unprocessable_entity
-              expect(response.parsed_body["errors"]).to include(/does not match parent message/)
-            end
-          end
+        it "returns an error when the thread does not match reply_to_id" do
+          another_thread = Fabricate(:chat_thread, channel: chat_channel)
+          post "/chat/#{chat_channel.id}.json",
+               params: {
+                 message: message,
+                 in_reply_to_id: message_1.id,
+                 thread_id: another_thread.id,
+               }
+          expect(response).to have_http_status :unprocessable_entity
+          expect(response.parsed_body["errors"]).to include(/does not match parent message/)
         end
       end
     end

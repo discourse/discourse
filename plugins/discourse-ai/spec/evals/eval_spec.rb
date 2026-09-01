@@ -3,15 +3,16 @@
 require_relative "../../evals/lib/eval"
 
 RSpec.describe DiscourseAi::Evals::Eval do
+  let(:cases_dir) { Dir.mktmpdir }
+
   around do |example|
-    Dir.mktmpdir do |dir|
-      @cases_dir = dir
-      stub_const(described_class, :CASES_GLOB, File.join(dir, "*/*.yml")) { example.run }
-    end
+    stub_const(described_class, :CASES_GLOB, File.join(cases_dir, "*/*.yml")) { example.run }
+  ensure
+    FileUtils.remove_entry(cases_dir)
   end
 
   describe ".from_dataset_csv" do
-    let(:csv_path) { File.join(@cases_dir, "dataset.csv") }
+    let(:csv_path) { File.join(cases_dir, "dataset.csv") }
 
     before { File.write(csv_path, <<~CSV) }
           content,expected_output
@@ -52,7 +53,7 @@ RSpec.describe DiscourseAi::Evals::Eval do
     end
 
     it "expands relative *_path args to absolute paths" do
-      folder = File.join(@cases_dir, "path-case")
+      folder = File.join(cases_dir, "path-case")
       FileUtils.mkdir_p(folder)
       File.write(File.join(folder, "input.txt"), "hello world")
 
@@ -105,7 +106,7 @@ RSpec.describe DiscourseAi::Evals::Eval do
   end
 
   def write_case(folder, name, overrides = {})
-    case_dir = File.join(@cases_dir, folder)
+    case_dir = File.join(cases_dir, folder)
     FileUtils.mkdir_p(case_dir)
 
     data = {

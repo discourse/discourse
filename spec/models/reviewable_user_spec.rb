@@ -7,6 +7,7 @@ RSpec.describe ReviewableUser, type: :model do
     user.activate
     user
   end
+
   fab!(:admin)
 
   describe "#actions_for" do
@@ -229,7 +230,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   context "when a user is deleted" do
-    it "should reject the reviewable" do
+    it "rejects the reviewable" do
       SiteSetting.must_approve_users = true
       Jobs::CreateUserReviewable.new.execute(user_id: user.id)
       reviewable = Reviewable.find_by(target: user)
@@ -458,7 +459,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "changing must_approve_users" do
-    it "will approve any existing users" do
+    it "approves any existing users" do
       user = Fabricate(:user)
       expect(user).not_to be_approved
       SiteSetting.must_approve_users = true

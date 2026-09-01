@@ -10,7 +10,7 @@ RSpec.describe "Post rake tasks" do
   before { STDOUT.stubs(:write) }
 
   describe "remap" do
-    it "should remap posts" do
+    it "remaps posts" do
       HighLine::Simulate.with("y") { invoke_rake_task("posts:remap", "brown", "red") }
 
       post.reload
@@ -54,7 +54,7 @@ RSpec.describe "Post rake tasks" do
     end
     let(:upload) { Fabricate(:upload, url: url) }
 
-    it "should create post custom field for missing upload" do
+    it "creates post custom field for missing upload" do
       post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
       upload.destroy!
 
@@ -64,7 +64,7 @@ RSpec.describe "Post rake tasks" do
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to eq([url])
     end
 
-    it 'should skip all the posts with "ignored" custom field' do
+    it 'skips all the posts with "ignored" custom field' do
       post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
       post.custom_fields[Post::MISSING_UPLOADS_IGNORED] = true
       post.save_custom_fields

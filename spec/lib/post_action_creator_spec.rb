@@ -185,7 +185,7 @@ RSpec.describe PostActionCreator do
   end
 
   describe "flags" do
-    it "will create a reviewable if one does not exist" do
+    it "creates a reviewable if one does not exist" do
       result = PostActionCreator.create(user, post, :inappropriate)
       expect(result.success?).to eq(true)
 
@@ -366,7 +366,7 @@ RSpec.describe PostActionCreator do
   end
 
   describe "take_action" do
-    it "will hide the post" do
+    it "hides the post" do
       PostActionCreator
         .new(
           Fabricate(:moderator, refresh_auto_groups: true),
@@ -384,7 +384,7 @@ RSpec.describe PostActionCreator do
         PostActionCreator.create(Fabricate(:user, refresh_auto_groups: true), post, :inappropriate)
       end
 
-      it "will agree with the old reviewable" do
+      it "agrees with the old reviewable" do
         reviewable =
           PostActionCreator
             .new(

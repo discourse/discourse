@@ -119,14 +119,14 @@ RSpec.describe Theme do
     )
   end
 
-  it "should correct bad html in body_tag_baked and head_tag_baked" do
+  it "corrects bad html in body_tag_baked and head_tag_baked" do
     theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "should create body_tag_baked on demand if needed" do
+  it "creates body_tag_baked on demand if needed" do
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
 
@@ -167,17 +167,19 @@ RSpec.describe Theme do
   end
 
   describe ".transform_ids" do
-    let!(:orphan1) { Fabricate(:theme, component: true) }
-    let!(:child) { Fabricate(:theme, component: true) }
-    let!(:child2) { Fabricate(:theme, component: true) }
-    let!(:orphan2) { Fabricate(:theme, component: true) }
-    let!(:orphan3) { Fabricate(:theme, component: true) }
-    let!(:orphan4) { Fabricate(:theme, component: true) }
-
     before do
+      Fabricate(:theme, component: true)
       theme.add_relative_theme!(:child, child)
       theme.add_relative_theme!(:child, child2)
+      Fabricate(:theme, component: true)
+      Fabricate(:theme, component: true)
+      Fabricate(:theme, component: true)
     end
+
+    let!(:child) { Fabricate(:theme, component: true) }
+    let!(:child2) { Fabricate(:theme, component: true) }
+
+
 
     it "returns an empty array if no ids are passed" do
       expect(Theme.transform_ids(nil)).to eq([])
@@ -1473,7 +1475,7 @@ RSpec.describe Theme do
     end
 
     context "when theme is a remote one" do
-      let!(:remote_theme) { theme.create_remote_theme(remote_url: remote_url) }
+      before { theme.create_remote_theme(remote_url: remote_url) }
 
       context "when URL is a SSH one" do
         let(:remote_url) { "git@github.com:discourse/graceful.git" }

@@ -4,7 +4,10 @@ RSpec.describe Notification do
   fab!(:user)
   fab!(:coding_horror)
 
-  before { NotificationEmailer.enable }
+  before { NotificationEmailer.enable
+           NotificationEmailer.disable
+           NotificationEmailer.disable   }
+
 
   it { is_expected.to validate_presence_of :notification_type }
   it { is_expected.to validate_presence_of :data }
@@ -222,7 +225,7 @@ RSpec.describe Notification do
       Fabricate(:notification)
     end
 
-    it "works" do
+    it "publishes the updated unread count for each notification" do
       messages =
         MessageBus.track_publish do
           user.notifications.create!(notification_type: Notification.types[:mentioned], data: "{}")
@@ -270,7 +273,7 @@ RSpec.describe Notification do
       PostAlerter.post_created(post)
     end
 
-    it "should create and roll up private message notifications" do
+    it "creates and roll up private message notifications" do
       expect(target.notifications.first.notification_type).to eq(
         Notification.types[:private_message],
       )
@@ -371,11 +374,11 @@ RSpec.describe Notification do
   describe "data" do
     let(:notification) { Fabricate.build(:notification) }
 
-    it "should have a data hash" do
+    it "has a data hash" do
       expect(notification.data_hash).to be_present
     end
 
-    it "should have the data within the json" do
+    it "has the data within the json" do
       expect(notification.data_hash[:poison]).to eq("ivy")
     end
   end
@@ -510,7 +513,7 @@ RSpec.describe Notification do
     end
   end
 
-  describe "do not disturb" do
+  describe "notification emails outside do not disturb" do
     it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
       notification =
         Notification.new(
@@ -547,11 +550,7 @@ RSpec.describe Notification do
       notification.save!
     end
   end
-end
 
-# pulling this out cause I don't want an observer
-RSpec.describe Notification do
-  fab!(:user)
 
   describe ".prioritized_list" do
     def create(**opts)
@@ -758,7 +757,7 @@ RSpec.describe Notification do
         )
       end
 
-      it "should not return any form of liked notifications" do
+      it "does not return any form of liked notifications" do
         notification = pm
         regular
         liked_consolidated
@@ -790,7 +789,7 @@ RSpec.describe Notification do
         2.times { create_membership_request_notification }
       end
 
-      it "should consolidate membership requests to a new notification" do
+      it "consolidates membership requests to a new notification" do
         original_notification = create_membership_request_notification
         starting_count = SiteSetting.notification_consolidation_threshold
 
@@ -850,7 +849,7 @@ RSpec.describe Notification do
     end
   end
 
-  describe "do not disturb" do
+  describe "notification shelving during do not disturb" do
     fab!(:user)
 
     it "creates a shelved_notification record when created while user is in DND" do

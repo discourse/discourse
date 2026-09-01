@@ -124,7 +124,9 @@ RSpec.describe Admin::ImpersonateController do
     it "succeeds and logs the impersonation" do
       post "/admin/impersonate.json", params: { username_or_email: user.username }
 
-      delete "/admin/impersonate.json"
+      expect { delete "/admin/impersonate.json" }.to change {
+        UserHistory.where(action: UserHistory.actions[:stop_impersonating]).count
+      }.by(1)
 
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(admin.id)

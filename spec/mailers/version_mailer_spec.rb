@@ -14,7 +14,7 @@ RSpec.describe VersionMailer do
   context "when contact_email is set" do
     before { SiteSetting.contact_email = "me@example.com" }
 
-    it "works" do
+    it "sends the email to the configured contact address" do
       expect(mail.to).to eq(["me@example.com"])
       expect(mail.subject).to be_present
       expect(mail.from).to eq([SiteSetting.notification_email])
