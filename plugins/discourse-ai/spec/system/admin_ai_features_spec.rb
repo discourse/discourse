@@ -78,6 +78,17 @@ RSpec.describe "Admin AI features configuration" do
     expect(ai_features_page).to have_feature_agent("ask_ai", follow_up_agent.name)
   end
 
+  it "hides Discover when it is disabled" do
+    SiteSetting.ai_discover_enabled = false
+    SiteSetting.ai_ask_ai_enabled = true
+
+    ai_features_page.visit
+    ai_features_page.toggle_enabled
+
+    expect(ai_features_page).to have_no_feature("discoveries")
+    expect(ai_features_page).to have_feature("ask_ai", "Ask AI")
+  end
+
   it "only allows existing enabled sites to configure Discover" do
     enable_legacy_discover
 
