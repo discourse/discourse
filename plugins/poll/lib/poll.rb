@@ -550,6 +550,8 @@ class DiscoursePoll::Poll
       end
     end
 
+    private
+
     def validate_votes!(poll, options)
       num_of_options = options.length
 
@@ -573,7 +575,5 @@ class DiscoursePoll::Poll
         raise DiscoursePoll::Error.new(I18n.t("poll.one_vote_per_user"))
       end
     end
-
-    private :validate_votes!
   end
 end

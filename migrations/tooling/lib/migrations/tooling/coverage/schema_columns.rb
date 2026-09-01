@@ -60,6 +60,8 @@ module Migrations
             File.read(path).include?(GENERATED_MARKER)
           end
 
+          private
+
           def build_model(namespace, const_name)
             value = namespace.const_get(const_name)
             return unless value.is_a?(Module)
@@ -83,8 +85,6 @@ module Migrations
 
             Model.new(name: const_name.to_s, required:, optional:)
           end
-
-          private :build_model
         end
 
         private_class_method :generated?

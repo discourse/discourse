@@ -64,6 +64,8 @@ module DiscourseWorkflows
         }
       end
 
+      private
+
       def execution_progress(execution)
         {
           id: execution.id,
@@ -74,8 +76,6 @@ module DiscourseWorkflows
           finished_at: execution.finished_at,
         }
       end
-
-      private :execution_progress
 
       def execution_summary(execution, workflow_name: nil)
         {
@@ -90,8 +90,6 @@ module DiscourseWorkflows
           created_at: execution.created_at,
         }
       end
-
-      private :execution_summary
     end
 
     private_class_method :publish_options

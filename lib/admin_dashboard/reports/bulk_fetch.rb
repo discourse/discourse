@@ -46,6 +46,8 @@ module AdminDashboard
           provider.fetch_many([item[:identifier]], guardian:, filters:)[item[:identifier]]
         end
 
+        private
+
         def fetch_in_parallel(items, guardian:, filters:)
           return [] if items.empty?
 
@@ -77,13 +79,9 @@ module AdminDashboard
           results
         end
 
-        private :fetch_in_parallel
-
         def item_key(item)
           "#{item[:source]}:#{item[:identifier]}"
         end
-
-        private :item_key
       end
 
       private_class_method :fetch_item

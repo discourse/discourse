@@ -24,6 +24,8 @@ module ImageProcessing
         raise ArgumentError, "operation must be a Symbol" if !operation.is_a?(Symbol)
       end
 
+      private
+
       def record(operation:, duration_seconds:, success:)
         DiscourseEvent.trigger(
           :image_processing_finished,
@@ -31,8 +33,6 @@ module ImageProcessing
           continue_on_error: true,
         )
       end
-
-      private :record
     end
 
     private_class_method :validate_operation!

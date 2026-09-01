@@ -96,13 +96,13 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         .to_h { |date, category_id, count| [[date, category_id], count] }
     end
 
+    private
+
     def human_page_views_expr
       return "r.page_views" if !CrawlerScorer.enabled?
 
       "GREATEST(r.page_views - r.likely_crawler_page_views, 0)"
     end
-
-    private :human_page_views_expr
 
     def daily_counts(start_date, end_date)
       DB.query(
@@ -175,8 +175,6 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
       )
     end
 
-    private :daily_counts
-
     def replace!(start_date:, end_date:, rows:)
       if rows.empty?
         where(date: start_date..end_date).delete_all
@@ -200,8 +198,6 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         end,
       )
     end
-
-    private :replace!
   end
 
   private_class_method :crawler_page_views_without_events

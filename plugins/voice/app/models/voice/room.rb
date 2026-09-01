@@ -70,8 +70,10 @@ module Voice
 
     # Strict by design: the column is an integer, so letting an unknown name
     # through means AR casts it with to_i and silently produces an open room.
-    def self.room_type_from_name!(name)
-      ROOM_TYPES.fetch(name.to_s) { raise Discourse::InvalidParameters.new(:room_type) }
+    class << self
+      def room_type_from_name!(name)
+        ROOM_TYPES.fetch(name.to_s) { raise Discourse::InvalidParameters.new(:room_type) }
+      end
     end
 
     def open?

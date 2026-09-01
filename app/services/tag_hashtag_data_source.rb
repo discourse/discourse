@@ -80,6 +80,8 @@ class TagHashtagDataSource
         .map { |tag| tag_to_hashtag_item(tag, guardian) }
     end
 
+    private
+
     def tag_to_hashtag_item(tag, guardian)
       topic_count_column = Tag.topic_count_column(guardian)
 
@@ -99,7 +101,5 @@ class TagHashtagDataSource
         item.id = tag.id
       end
     end
-
-    private :tag_to_hashtag_item
   end
 end

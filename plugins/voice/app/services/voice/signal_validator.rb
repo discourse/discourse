@@ -17,8 +17,10 @@ module Voice
     MAX_RECIPIENTS = 199
     MAX_TOTAL_BYTES = 1_048_576
 
-    def self.parse!(payload, room:)
-      new(payload, room: room).parse!
+    class << self
+      def parse!(payload, room:)
+        new(payload, room: room).parse!
+      end
     end
 
     def initialize(payload, room:)

@@ -33,6 +33,8 @@ module DiscourseWorkflows
         NodeData.parameters(node).deep_stringify_keys
       end
 
+      private
+
       def completion_payload(config)
         {
           "on_submission" => config.fetch("on_submission") { DEFAULT_ON_SUBMISSION },
@@ -43,15 +45,11 @@ module DiscourseWorkflows
         }
       end
 
-      private :completion_payload
-
       def sanitize_html(value)
         return if value.nil?
 
         DiscourseWorkflows::Forms::Schema.sanitize_html(value)
       end
-
-      private :sanitize_html
     end
 
     private_class_method :parameters_for

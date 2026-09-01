@@ -65,13 +65,13 @@ module DiscourseDataExplorer
         Discourse.redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
       end
 
+      private
+
       def within_max_age?(result, max_age)
         Time.iso8601(result["cached_at"]) >= max_age.ago
       rescue ArgumentError, TypeError
         false
       end
-
-      private :within_max_age?
     end
 
     private_class_method :limit_reached?, :prune_stale_entries

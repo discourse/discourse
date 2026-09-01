@@ -80,6 +80,8 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
         .uniq
     end
 
+    private
+
     def rebuildable_start_date(start_date)
       earliest_source_date =
         BrowserPageviewEvent
@@ -92,8 +94,6 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
       has_older_rollups = where("date < ?", earliest_source_date).exists?
       has_older_rollups ? earliest_source_date + 1 : start_date
     end
-
-    private :rebuildable_start_date
   end
 
   private_class_method :site_hostnames

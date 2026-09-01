@@ -18,18 +18,20 @@ module Voice
     # A join that followed an invite — a notification and a shared link both
     # carry the inviter's username. Returns the invite only on its first
     # redemption, so the inviter is credited at most once per invitee per room.
-    def self.redeem!(room:, user:, inviter_username:)
-      inviter = User.find_by(username_lower: inviter_username.to_s.downcase)
-      return if inviter.nil? || inviter.id == user.id
+    class << self
+      def redeem!(room:, user:, inviter_username:)
+        inviter = User.find_by(username_lower: inviter_username.to_s.downcase)
+        return if inviter.nil? || inviter.id == user.id
 
-      invite =
-        create_or_find_by(room_id: room.id, user_id: user.id, invited_by_id: inviter.id) do |i|
-          i.source = SOURCES[:link]
-        end
-      return if invite.redeemed_at.present?
+        invite =
+          create_or_find_by(room_id: room.id, user_id: user.id, invited_by_id: inviter.id) do |i|
+            i.source = SOURCES[:link]
+          end
+        return if invite.redeemed_at.present?
 
-      invite.update!(redeemed_at: Time.current)
-      invite
+        invite.update!(redeemed_at: Time.current)
+        invite
+      end
     end
   end
 end

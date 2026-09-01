@@ -326,6 +326,8 @@ module DiscourseAi
           end
         end
 
+        private
+
         def promote_post_reviewable_to_flagged!(post)
           reviewable = ReviewablePost.pending.find_by(target: post)
           return if reviewable.blank?
@@ -343,8 +345,6 @@ module DiscourseAi
           raise if !ReviewableFlaggedPost.exists?(target: post)
         end
 
-        private :promote_post_reviewable_to_flagged!
-
         def review_reviewable_for(post)
           # If a spam triage rule already flagged this post, reuse that reviewable
           # instead of creating a separate ReviewablePost. This mirrors
@@ -358,8 +358,6 @@ module DiscourseAi
               reviewable_by_moderator: true,
             )
         end
-
-        private :review_reviewable_for
       end
     end
   end

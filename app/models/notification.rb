@@ -275,31 +275,6 @@ class Notification < ActiveRecord::Base
       end
     end
 
-    # Be wary of calling this frequently. O(n) JSON parsing can suck.
-    def data_hash
-      @data_hash ||=
-        begin
-          return {} if data.blank?
-
-          parsed = JSON.parse(data)
-          return {} if parsed.blank?
-
-          parsed.with_indifferent_access
-        end
-    end
-
-    def url
-      return if topic.blank?
-      return consolidated_nested_replied_url if consolidated_nested_replied?
-
-      topic.relative_url(post_number)
-    end
-
-    def post
-      return if topic_id.blank? || post_number.blank?
-      Post.find_by(topic_id: topic_id, post_number: post_number)
-    end
-
     # Update `index_notifications_user_menu_ordering_deprioritized_likes` index when updating this as this is used by
     # `Notification.prioritized_list` to deprioritize like typed notifications. Also See
     # `db/migrate/20240306063428_add_indexes_to_notifications.rb`.
@@ -420,6 +395,31 @@ class Notification < ActiveRecord::Base
 
       notifications
     end
+  end
+
+  # Be wary of calling this frequently. O(n) JSON parsing can suck.
+  def data_hash
+    @data_hash ||=
+      begin
+        return {} if data.blank?
+
+        parsed = JSON.parse(data)
+        return {} if parsed.blank?
+
+        parsed.with_indifferent_access
+      end
+  end
+
+  def url
+    return if topic.blank?
+    return consolidated_nested_replied_url if consolidated_nested_replied?
+
+    topic.relative_url(post_number)
+  end
+
+  def post
+    return if topic_id.blank? || post_number.blank?
+    Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
   def unread_high_priority?

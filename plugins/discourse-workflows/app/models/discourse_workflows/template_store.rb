@@ -24,11 +24,11 @@ module DiscourseWorkflows
         }.deep_dup
       end
 
+      private
+
       def templates_by_id
         @templates_by_id ||= load_templates
       end
-
-      private :templates_by_id
 
       def load_templates
         Dir
@@ -41,8 +41,6 @@ module DiscourseWorkflows
             next
           end
       end
-
-      private :load_templates
     end
 
     private_class_method :summary_for

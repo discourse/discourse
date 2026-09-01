@@ -281,6 +281,8 @@ class InlineUploads
       names
     end
 
+    private
+
     def matched_uploads(node)
       upload_path = Discourse.store.upload_path
       base_url = Discourse.base_url.sub(%r{https?://}, "(https?://)")
@@ -320,8 +322,6 @@ class InlineUploads
 
       matches
     end
-
-    private :matched_uploads
   end
 
   URL_REGEX = /(?:[^\s()"']|\((?:[^\s()]*|\([^\s()]*\))*\))+/

@@ -45,11 +45,11 @@ class SidebarSectionLinksUpdater
       end
     end
 
+    private
+
     def delete_section_links(user:, linkable_type:)
       SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
     end
-
-    private :delete_section_links
   end
 
   private_class_method :update_section_links

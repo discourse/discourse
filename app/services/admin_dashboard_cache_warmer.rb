@@ -62,14 +62,14 @@ class AdminDashboardCacheWarmer
       end
     end
 
+    private
+
     def warm_core_reports(window)
       report_specs.each do |spec|
         report = Report.find(spec[:type], spec[:opts].merge(window))
         Report.cache(report) if report && report.error.blank?
       end
     end
-
-    private :warm_core_reports
   end
 
   private_class_method :warm_pinned_reports

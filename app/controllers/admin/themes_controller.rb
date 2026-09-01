@@ -15,6 +15,7 @@ class Admin::ThemesController < Admin::AdminController
     application/x-zip-compressed
     application/zip
   ]
+
   def preview
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
@@ -419,6 +420,8 @@ class Admin::ThemesController < Admin::AdminController
     end
   end
 
+  private
+
   def create_remote_theme_placeholder(remote, branch:, private_key:)
     Theme.transaction do
       remote_theme =
@@ -431,10 +434,6 @@ class Admin::ThemesController < Admin::AdminController
       )
     end
   end
-
-  private :create_remote_theme_placeholder
-
-  private
 
   def ban_in_allowlist_mode!
     raise Discourse::InvalidAccess if !Theme.allowed_remote_theme_ids.nil?

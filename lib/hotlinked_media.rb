@@ -52,6 +52,8 @@ module HotlinkedMedia
       [:upload_create_failed, nil]
     end
 
+    private
+
     def local_bases
       [
         Discourse.base_url.presence,
@@ -59,6 +61,5 @@ module HotlinkedMedia
         SiteSetting.external_emoji_url.presence,
       ].compact.map { |base| PostHotlinkedMedia.normalize_src(base) }
     end
-    private :local_bases
   end
 end

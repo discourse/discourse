@@ -9,6 +9,9 @@ Style/ClassMethodsDefinitions:
   Enabled: true
   EnforcedStyle: self_class
 
+Style/AccessModifierDeclarations:
+  AllowModifiersOnSymbols: false
+
 Layout/EmptyLineBetweenDefs:
   Enabled: true
 

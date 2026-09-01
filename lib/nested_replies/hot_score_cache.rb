@@ -141,12 +141,12 @@ module NestedReplies
         decision
       end
 
+      private
+
       def fallback_with_refresh(topic_id, requester, mode:)
         enqueue_result = request_refresh(topic_id, requester)
         record(Decision.new(effective_sort: "top", mode: mode, enqueue_result: enqueue_result))
       end
-
-      private :fallback_with_refresh
 
       def request_refresh(topic_id, requester)
         allowed =
@@ -163,8 +163,6 @@ module NestedReplies
       rescue Redis::BaseError
         :unavailable
       end
-
-      private :request_refresh
     end
 
     private_class_method :record

@@ -153,6 +153,8 @@ class RemoteTheme < ActiveRecord::Base
       ).create_for(theme.user_id)
     end
 
+    private
+
     def update_theme(
       importer,
       user: Discourse.system_user,
@@ -230,8 +232,6 @@ class RemoteTheme < ActiveRecord::Base
         Rails.logger.warn("Failed cleanup remote path #{e}")
       end
     end
-
-    private :update_theme
   end
 
   def out_of_date?

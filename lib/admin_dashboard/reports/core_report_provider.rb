@@ -65,19 +65,17 @@ module AdminDashboard
           end
         end
 
+        private
+
         def with_empty_flag(payload)
           payload.merge(empty: payload[:data].blank?)
         end
-
-        private :with_empty_flag
 
         def dashboard_entries(guardian)
           ::Reports::ListQuery
             .call(guardian: guardian)
             .reject { |entry| ::Report.dashboard_excluded_report_types.include?(entry[:type]) }
         end
-
-        private :dashboard_entries
 
         def build_resolved(entry)
           AdminDashboard::Reports::ResolvedReport.new(
@@ -90,8 +88,6 @@ module AdminDashboard
           )
         end
 
-        private :build_resolved
-
         def build_opts(filters, guardian)
           filters = filters.symbolize_keys if filters.respond_to?(:symbolize_keys)
           opts = { current_user: guardian&.user }
@@ -103,15 +99,11 @@ module AdminDashboard
           opts
         end
 
-        private :build_opts
-
         def parse_date(value)
           Time.zone.parse(value.to_s)
         rescue ArgumentError, TypeError
           nil
         end
-
-        private :parse_date
       end
 
       private_class_method :filter_by_search

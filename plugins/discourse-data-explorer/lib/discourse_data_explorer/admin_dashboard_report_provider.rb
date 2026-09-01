@@ -99,6 +99,8 @@ module DiscourseDataExplorer
         scope.to_a
       end
 
+      private
+
       def build_resolved(query)
         ::AdminDashboard::Reports::ResolvedReport.new(
           source: SOURCE_NAME,
@@ -109,8 +111,6 @@ module DiscourseDataExplorer
           url: "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
         )
       end
-
-      private :build_resolved
 
       def load_queries(identifiers)
         ids = identifiers.map(&:to_i).reject(&:zero?)
@@ -137,8 +137,6 @@ module DiscourseDataExplorer
         queries
       end
 
-      private :load_queries
-
       def mountable?(query)
         query.params.all? do |param|
           param.internal? || param.nullable || param.default.present? ||
@@ -146,16 +144,12 @@ module DiscourseDataExplorer
         end
       end
 
-      private :mountable?
-
       def prewarmable?(query, params)
         QueryRunner.cacheable?(query) &&
           query.params.all? do |param|
             param.default.present? || param.nullable || params.key?(param.identifier)
           end
       end
-
-      private :prewarmable?
 
       def persisted_after(search:, after:, limit:)
         if limit.nil?
@@ -182,8 +176,6 @@ module DiscourseDataExplorer
 
         mountable_queries.first(limit)
       end
-
-      private :persisted_after
     end
 
     private_class_method :persisted_batch

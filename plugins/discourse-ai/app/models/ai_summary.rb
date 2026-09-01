@@ -49,6 +49,8 @@ class AiSummary < ActiveRecord::Base
       where(id: ids_to_remove).delete_all if ids_to_remove.present?
     end
 
+    private
+
     def upsert_summary!(attributes)
       upsert_summary(attributes)
     rescue ActiveRecord::RecordNotUnique => error
@@ -57,8 +59,6 @@ class AiSummary < ActiveRecord::Base
       where(attributes.slice(:target_id, :target_type, :summary_type)).delete_all
       upsert_summary(attributes)
     end
-
-    private :upsert_summary!
 
     def upsert_summary(attributes)
       transaction(requires_new: true) do
@@ -79,8 +79,6 @@ class AiSummary < ActiveRecord::Base
       end
     end
 
-    private :upsert_summary
-
     def legacy_unique_index_conflict?(error)
       cause = error.cause
       return false if !cause.respond_to?(:result)
@@ -88,8 +86,6 @@ class AiSummary < ActiveRecord::Base
       constraint_name = cause.result.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
       constraint_name == LEGACY_UNIQUE_INDEX_NAME
     end
-
-    private :legacy_unique_index_conflict?
   end
 
   private_class_method :remove_superseded_summaries!
