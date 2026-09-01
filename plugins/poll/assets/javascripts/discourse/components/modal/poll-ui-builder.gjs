@@ -14,7 +14,7 @@ import { buildBBCodeAttrs } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, not } from "discourse/truth-helpers";
+import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DInputTip from "discourse/ui-kit/d-input-tip";
@@ -41,32 +41,6 @@ const ALWAYS_POLL_RESULT = "always";
 const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
-
-function indentContinuationLines(value) {
-  return value
-    .split("\n")
-    .map((line, index) => (index > 0 && line.length ? `  ${line}` : line))
-    .join("\n");
-}
-
-function optionsFromText(value) {
-  const options = [];
-
-  for (const line of value.split("\n")) {
-    if (line.length && !/^\s/.test(line)) {
-      options.push(line);
-    } else if (options.length) {
-      const continuation = line.startsWith("  ") ? line.slice(2) : line;
-      options[options.length - 1] += `\n${continuation}`;
-    }
-  }
-
-  return options;
-}
-
-function optionsToText(options) {
-  return options.map(indentContinuationLines).join("\n");
-}
 
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
@@ -103,19 +77,16 @@ export default class PollUiBuilderModal extends Component {
         poll.max ??
           (this.isNumber
             ? this.siteSettings.poll_maximum_options
-            : poll.options.length)
+            : poll.optionCount)
       );
       this.pollStep = Number(poll.step ?? 1);
       this.pollResult = poll.results || ALWAYS_POLL_RESULT;
-      this.pollTitle = poll.title;
       this.publicPoll = poll.public === "true";
-      this.pollOptions = poll.options.map((value) => trackedObject({ value }));
-      this.pollOptionsText = optionsToText(poll.options);
-      this.showAdvanced = Boolean(
-        poll.title?.includes("\n") ||
-        poll.options.some((option) => option.includes("\n"))
-      );
     }
+  }
+
+  get isEditing() {
+    return !!this.args.model.poll;
   }
 
   get showNumber() {
@@ -181,7 +152,9 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get pollOptionsCount() {
-    return this.pollOptions.filter((option) => option.value.trim()).length;
+    return this.isEditing
+      ? this.args.model.poll.optionCount
+      : this.pollOptions.filter((option) => option.value.trim()).length;
   }
 
   get siteGroups() {
@@ -197,17 +170,13 @@ export default class PollUiBuilderModal extends Component {
 
   get #pollOutput() {
     const attrs = buildBBCodeAttrs(this.#pollAttrs);
-    const title = this.pollTitle
-      ? `${"#".repeat(this.args.model.poll?.titleLevel ?? 1)} ${this.pollTitle
-          .trim()
-          .replaceAll("\n", "<br>")}\n`
-      : "";
+    const title = this.pollTitle ? `# ${this.pollTitle.trim()}\n` : "";
     const options = this.isNumber
       ? ""
       : this.pollOptions
           .map((option) => option.value.trim())
           .filter(Boolean)
-          .map((option) => `* ${indentContinuationLines(option)}\n`)
+          .map((option) => `* ${option}\n`)
           .join("");
 
     return `[poll${attrs ? ` ${attrs}` : ""}]\n${title}${options}[/poll]\n`;
@@ -241,14 +210,16 @@ export default class PollUiBuilderModal extends Component {
           ? String(this.pollMin)
           : null,
       max: !this.isRegular && this.pollMax ? String(this.pollMax) : null,
-      step: this.isNumber ? Math.max(Number(this.pollStep) || 1, 1) : null,
+      step: this.isNumber
+        ? String(Math.max(Number(this.pollStep) || 1, 1))
+        : null,
       public: String(this.publicPoll),
       chartType: !this.isNumber && this.chartType ? this.chartType : null,
       dynamic: this.dynamic ? "true" : null,
       groups: this.pollGroups?.length ? this.pollGroups.join(",") : null,
       close,
-      status: poll?.status,
-      order: poll?.order,
+      status: poll?.status ?? null,
+      order: poll?.order ?? null,
     };
   }
 
@@ -359,16 +330,16 @@ export default class PollUiBuilderModal extends Component {
 
   @action
   onOptionsTextChange(event) {
-    this.pollOptions = optionsFromText(event.target.value).map((value) =>
-      trackedObject({ value })
-    );
+    this.pollOptions = event.target.value
+      .split("\n")
+      .map((value) => trackedObject({ value }));
     this.#enforceMinMaxValues();
   }
 
   @action
   insertPoll() {
     if (this.args.model.onSave) {
-      this.args.model.onSave(this.#pollOutput);
+      this.args.model.onSave(this.#pollAttrs);
     } else {
       this.args.model.toolbarEvent.addText(this.#pollOutput);
     }
@@ -379,9 +350,7 @@ export default class PollUiBuilderModal extends Component {
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
     if (this.showAdvanced) {
-      this.pollOptionsText = optionsToText(
-        this.pollOptions.map((option) => option.value)
-      );
+      this.pollOptionsText = this.pollOptions.map((x) => x.value).join("\n");
     }
   }
 
@@ -544,20 +513,20 @@ export default class PollUiBuilderModal extends Component {
           {{/if}}
         </ul>
 
-        {{#if this.showAdvanced}}
+        {{#if (and this.showAdvanced (not this.isEditing))}}
           <div class="input-group poll-title">
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_title.label"
               }}</label>
-            <Textarea
-              rows="1"
-              @value={{this.pollTitle}}
+            <input
               {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
+              type="text"
+              value={{this.pollTitle}}
             />
           </div>
         {{/if}}
 
-        {{#unless this.isNumber}}
+        {{#unless (or this.isNumber this.isEditing)}}
           <div class="poll-options">
             {{#if this.showAdvanced}}
               <label class="input-group-label">{{i18n

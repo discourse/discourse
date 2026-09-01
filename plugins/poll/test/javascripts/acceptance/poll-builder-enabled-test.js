@@ -28,7 +28,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     poll_create_allowed_groups: AUTO_GROUPS.trust_level_1,
   });
 
-  test("edits an existing rich editor poll in place", async function (assert) {
+  test("edits an existing rich editor poll's settings in place", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(
@@ -44,82 +44,69 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       .dom(".poll-ui-builder .d-modal__title")
       .hasText("Edit poll", "opens the editing builder");
     assert
-      .dom(".poll-option-value input")
-      .exists({ count: 2 }, "opens the existing poll in simple mode");
-    await click(".advanced-mode-btn");
-    assert
       .dom(".poll-type-value-multiple")
       .hasClass("active", "restores the poll type");
     assert
-      .dom(".poll-title textarea")
-      .hasValue("**Question**", "preserves title formatting");
-    assert
-      .dom(".poll-options textarea")
-      .hasValue(
-        "**Yes**\n[No](https://example.com)",
-        "preserves option formatting"
-      );
+      .dom(".poll-options")
+      .doesNotExist("options stay in the document, not in the builder");
 
-    await fillIn(".poll-title textarea", "Updated question");
-    await fillIn(
-      ".poll-options textarea",
-      "**Yes**\n[No](https://example.com)\nMaybe"
-    );
+    await click(".poll-type-value-regular");
     await click(".insert-poll");
 
+    const poll = '.ProseMirror .poll[data-poll-name="second"]';
     assert
       .dom(".ProseMirror .poll")
       .exists({ count: 2 }, "replaces rather than appends a poll");
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"] h1')
-      .hasText("Updated question", "updates the selected poll");
+      .dom(poll)
+      .hasAttribute("data-poll-type", "regular", "applies the edited setting");
+    assert.dom(`${poll} h1`).hasText("Question", "leaves the title untouched");
     assert
-      .dom(
-        '.ProseMirror .poll[data-poll-name="second"] .composer-poll-node__content li'
-      )
-      .exists({ count: 3 }, "updates its options");
+      .dom(`${poll} .composer-poll-node__content li`)
+      .exists({ count: 2 }, "leaves the options untouched");
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"]')
+      .dom(poll)
       .hasAttribute(
         "data-poll-status",
         "closed",
         "does not reopen a closed poll"
       );
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"]')
-      .hasAttribute("data-poll-charttype", "pie", "preserves chart type");
-    assert
-      .dom('.ProseMirror .poll[data-poll-name="second"]')
+      .dom(poll)
       .hasAttribute(
         "data-poll-results",
         "on_vote",
         "preserves results visibility"
       );
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"]')
+      .dom(poll)
       .hasAttribute("data-poll-public", "false", "preserves voter privacy");
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"]')
+      .dom(poll)
       .hasAttribute("data-poll-dynamic", "true", "preserves dynamic voting");
 
     await triggerKeyEvent(".ProseMirror", "keydown", "Z", metaModifier);
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"] h1')
-      .hasText("Question", "undo restores the original poll");
+      .dom(poll)
+      .hasAttribute(
+        "data-poll-type",
+        "multiple",
+        "undo restores the original poll"
+      );
     await triggerKeyEvent(".ProseMirror", "keydown", "Z", {
       ...metaModifier,
       shiftKey: true,
     });
     assert
-      .dom('.ProseMirror .poll[data-poll-name="second"] h1')
-      .hasText("Updated question", "redo reapplies the edit");
+      .dom(poll)
+      .hasAttribute("data-poll-type", "regular", "redo reapplies the edit");
 
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll type=multiple results=on_vote public=false name=second chartType=pie max=2 min=1 dynamic=true status=closed order=asc]\n# Updated question\n\n* **Yes**\n* [No](https://example.com)\n* Maybe\n\n[/poll]\n\nAfter",
-        "preserves the other poll and surrounding text"
+        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll type=regular results=on_vote public=false name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
+        "preserves the other poll, the content and the surrounding text"
       );
   });
 
@@ -131,19 +118,16 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await waitFor(".ProseMirror");
     await settled();
     await click(".composer-poll-node__edit");
-    await fillIn(".poll-option-value:first-of-type input", "Changed");
+    await click(".poll-type-value-multiple");
     await click(".poll-ui-builder .d-modal__footer .btn-flat");
 
     assert
-      .dom(".ProseMirror .composer-poll-node__content li:first-child")
-      .hasText("First", "cancel does not apply changed options");
+      .dom(".ProseMirror .poll")
+      .doesNotHaveAttribute(
+        "data-poll-type",
+        "cancel does not apply the change"
+      );
     await click(".composer-poll-node__edit");
-    assert
-      .dom(".poll-option-value:first-of-type input")
-      .hasValue("First", "reopening loads the unchanged poll");
-    assert
-      .dom(".poll-option-value:nth-of-type(2) input")
-      .hasValue("Second", "preserves its remaining options");
     await click(".insert-poll");
     assert
       .dom(".ProseMirror .poll")
@@ -153,7 +137,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       );
   });
 
-  test("editing preserves structured poll content", async function (assert) {
+  test("editing leaves structured poll content alone", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(
@@ -164,9 +148,6 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await waitFor(".ProseMirror");
     await settled();
 
-    assert
-      .dom(".ProseMirror .poll h1")
-      .hasText("Question", "renders the poll title");
     assert
       .dom(".composer-poll-node__content li:first-child p")
       .exists({ count: 2 }, "loads both paragraphs in the first option");
@@ -203,19 +184,20 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await click(".composer-poll-node__edit");
 
     assert
-      .dom(".poll-option-value:first-of-type input")
-      .hasValue("First", "loads the newly inserted poll in simple mode");
-    assert
-      .dom(".poll-option-value:nth-of-type(2) input")
-      .hasValue("Second", "loads its remaining options");
-    await fillIn(".poll-option-value:first-of-type input", "Updated");
+      .dom(".poll-type-value-regular")
+      .hasClass("active", "loads the newly inserted poll");
+    await click(".poll-type-value-multiple");
     await click(".insert-poll");
+
     assert
       .dom(".ProseMirror .poll")
       .exists({ count: 1 }, "keeps a single poll");
     assert
-      .dom(".ProseMirror .composer-poll-node__content li:first-child")
-      .hasText("Updated", "saves the edited option");
+      .dom(".ProseMirror .poll")
+      .hasAttribute("data-poll-type", "multiple", "applies the edited setting");
+    assert
+      .dom(".ProseMirror .composer-poll-node__content li")
+      .exists({ count: 2 }, "keeps the options it was inserted with");
   });
 
   test("edits a numeric poll's range and step", async function (assert) {

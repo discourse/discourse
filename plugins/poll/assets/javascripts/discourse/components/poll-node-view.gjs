@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { buildBBCodeAttrs } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
 import PollUiBuilder from "./modal/poll-ui-builder";
 import PollInfo from "./poll-info";
@@ -24,34 +25,13 @@ export default class PollNodeView extends Component {
 
   @action
   editPoll() {
-    const { node, pluginParams } = this.args;
-    const { schema, utils } = pluginParams;
-    const options = [];
-    let title;
-    let titleLevel;
-
-    node.forEach((child) => {
-      if (child.type === schema.nodes.heading) {
-        titleLevel = child.attrs.level;
-        title = utils
-          .convertToMarkdown(
-            schema.nodes.doc.create(
-              null,
-              schema.nodes.paragraph.create(null, child.content)
-            )
-          )
-          .trim();
-      } else if (child.type === schema.nodes.bullet_list) {
-        child.forEach((item) => {
-          options.push(utils.convertToMarkdown(item).trim());
-        });
-      }
-    });
+    const { node } = this.args;
+    const optionCount = this.#optionList(node)?.node.childCount ?? 0;
 
     this.modal.show(PollUiBuilder, {
       model: {
-        poll: { ...node.attrs, title, titleLevel, options },
-        onSave: (markdown) => this.#savePoll(markdown),
+        poll: { ...node.attrs, optionCount },
+        onSave: (attrs) => this.#savePoll(attrs),
       },
     });
   }
@@ -88,7 +68,20 @@ export default class PollNodeView extends Component {
       node.attrs.type === "number" ? "false" : "true";
   }
 
-  #savePoll(markdown) {
+  #optionList(node) {
+    const { bullet_list: bulletList } = this.args.pluginParams.schema.nodes;
+    let offset = 1;
+
+    for (let index = 0; index < node.childCount; index++) {
+      const child = node.child(index);
+      if (child.type === bulletList) {
+        return { node: child, offset };
+      }
+      offset += child.nodeSize;
+    }
+  }
+
+  #savePoll(attrs) {
     const { getPos, view, pluginParams } = this.args;
     const pos = getPos();
     if (pos === undefined || view.isDestroyed) {
@@ -96,13 +89,26 @@ export default class PollNodeView extends Component {
     }
 
     const node = view.state.doc.nodeAt(pos);
-    const replacement =
-      pluginParams.utils.convertFromMarkdown(markdown).firstChild;
-    if (node?.type !== replacement?.type) {
+    if (node?.type !== this.args.node.type) {
       return;
     }
 
-    const tr = view.state.tr.replaceWith(pos, pos + node.nodeSize, replacement);
+    const tr = view.state.tr.setNodeMarkup(pos, null, attrs);
+
+    if (attrs.type === "number") {
+      // a number poll's options come from its range, so let the markdown
+      // pipeline generate them instead of repeating the rules here
+      const generated = pluginParams.utils.convertFromMarkdown(
+        `[poll ${buildBBCodeAttrs(attrs)}]\n[/poll]`
+      ).firstChild?.firstChild;
+      const list = this.#optionList(node);
+
+      if (list && generated?.type === list.node.type) {
+        const from = pos + list.offset;
+        tr.replaceWith(from, from + list.node.nodeSize, generated);
+      }
+    }
+
     tr.setSelection(pluginParams.pmState.NodeSelection.create(tr.doc, pos));
     view.dispatch(tr);
     view.focus();
