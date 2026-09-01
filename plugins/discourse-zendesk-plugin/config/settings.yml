@@ -10,6 +10,11 @@ discourse_zendesk:
     secret: true
   zendesk_jobs_email:
     default: ""
+  zendesk_oauth_client_id:
+    default: ""
+  zendesk_oauth_client_secret:
+    default: ""
+    secret: true
   zendesk_autogenerate_all_categories:
     default: false
   zendesk_autogenerate_categories:
