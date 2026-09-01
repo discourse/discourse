@@ -45,9 +45,7 @@ export function emptyTrailingColumns(grid) {
   let count = 0;
 
   for (let col = grid.width - 1; col > 0; col--) {
-    const empty = grid.rows.every(
-      (row) => !row.cells[col]?.node.textContent.trim()
-    );
+    const empty = grid.rows.every((row) => isEmptyCell(row.cells[col]));
     if (!empty) {
       break;
     }
@@ -63,9 +61,7 @@ export function emptyTrailingRows(grid) {
   let count = 0;
 
   for (let index = body.length - 1; index >= 0; index--) {
-    const empty = body[index].cells.every(
-      (cell) => !cell.node.textContent.trim()
-    );
+    const empty = body[index].cells.every(isEmptyCell);
     if (!empty) {
       break;
     }
@@ -73,6 +69,10 @@ export function emptyTrailingRows(grid) {
   }
 
   return count;
+}
+
+function isEmptyCell(cell) {
+  return !cell || cell.node.content.size === 0;
 }
 
 export function columnAlignment(table, col) {
