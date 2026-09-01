@@ -1,5 +1,6 @@
 import { i18n } from "discourse-i18n";
 
+const RETAINS_PENALTY = "retains_penalty";
 const LIFTS_PENALTY = "lifts_penalty";
 
 export const SILENCE = "silence";
@@ -35,4 +36,16 @@ export function penaltyEffectDescription(action, penalties) {
   return kinds.has(SUSPENSION)
     ? i18n("review.author_penalty.effect.retains_suspension")
     : i18n("review.author_penalty.effect.retains_silence");
+}
+
+export function survivingPenalty(action, penalties) {
+  if (action?.penalty_effect !== RETAINS_PENALTY) {
+    return null;
+  }
+
+  return (
+    penalties?.find(
+      (penalty) => penalty.kind === "silence" && penalty.can_lift
+    ) ?? null
+  );
 }

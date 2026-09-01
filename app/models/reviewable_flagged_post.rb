@@ -52,7 +52,6 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
@@ -110,10 +109,22 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
-    # We must return early in this case otherwise we can end up with a bundle
-    # with no associated actions, which is not valid on the client.
-    return if !can_delete_post_or_topic && !post_visible_or_system_user && post.hidden?
+    if can_delete_post_or_topic || post_visible_or_system_user || !post.hidden?
+      build_disagree_bundle(
+        actions,
+        can_delete_existing_post_or_topic:,
+        post_visible_or_system_user:,
+      )
+    end
 
+    build_unsilence_action(actions, guardian)
+  end
+
+  def build_disagree_bundle(
+    actions,
+    can_delete_existing_post_or_topic:,
+    post_visible_or_system_user:
+  )
     disagree_bundle =
       actions.add_bundle(
         "#{id}-disagree",
@@ -153,8 +164,21 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
+  def build_unsilence_action(actions, guardian)
+    return if !author_silenced?
+    return if !guardian.can_unsilence_user?(target_created_by)
+
+    build_action(actions, :unsilence_user, icon: "microphone-slash")
+  end
+
   def perform_ignore(performed_by, args)
     perform_ignore_and_do_nothing(performed_by, args)
+  end
+
+  def perform_unsilence_user(performed_by, _args)
+    UserSilencer.unsilence(target_user, performed_by, reviewable_id: id)
+
+    create_result(:success) { |result| result.remove_reviewable_ids = [] }
   end
 
   def perform_unsilence_user_and_ignore(performed_by, args)
@@ -196,6 +220,8 @@ class ReviewableFlaggedPost < Reviewable
         disagree_lifts_silence?
       when :unsilence_user_and_ignore
         user_silenced_for_post?
+      when :unsilence_user
+        author_silenced?
       else
         false
       end

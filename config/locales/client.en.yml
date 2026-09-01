@@ -1238,6 +1238,10 @@ en:
           retains_suspension: "The author stays suspended."
           retains_silence_and_suspension: "The author stays silenced and suspended."
           lifts_silence: "The author will be unsilenced."
+        toast:
+          still_silenced: "%{username} is still silenced."
+          undo: "Undo"
+          undone: "%{username} is no longer silenced."
       notes:
         add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"

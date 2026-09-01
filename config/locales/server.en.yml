@@ -6342,6 +6342,10 @@ en:
         title: "Unsilence user and ignore"
         description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
         complete: "User unsilenced and flag ignored."
+      unsilence_user:
+        title: "Unsilence author"
+        description: "Lift the silence on the author. This flag stays in the queue."
+        complete: "Author unsilenced."
       approve:
         title: "Yes"
         complete: "Post approved."
