@@ -1,8 +1,8 @@
 import { trackedArray } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
-import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -26,7 +26,7 @@ export default class extends DiscourseRoute {
 
     // when landing on the route from a full page load
     this.router
-      .replaceWith(`discovery.${defaultHomepage()}`)
+      .replaceWith(homepageNavigationDestination())
       .followRedirects()
       .then(() => this.#openInviteModalIfAllowed());
   }

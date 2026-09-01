@@ -1541,7 +1541,6 @@ gl:
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
-    min_ban_entries_for_roll_up: "Ao premer no botón Pregar, crearase unha nova entrada de veto de subrede se hai polo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que non coincidan despois de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidas que non coincidan despois de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para pausar automaticamente un tema co fin de intervilo"

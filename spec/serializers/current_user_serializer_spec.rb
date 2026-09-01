@@ -510,6 +510,36 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_run_design_wizard" do
+    fab!(:admin)
+
+    let(:admin_serializer) { described_class.new(admin, scope: Guardian.new(admin), root: false) }
+
+    it "is not included for non-admin users" do
+      expect(serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true for an admin on a site that still uses a core theme" do
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "is not included once a theme is installed" do
+      Fabricate(:theme)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included once a component is installed" do
+      Fabricate(:theme, component: true)
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is not included when the default theme is not a core theme" do
+      custom_theme = Fabricate(:theme)
+      custom_theme.set_default!
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+  end
+
   describe "#has_new_upcoming_changes" do
     def serialize_for(user)
       described_class.new(user, scope: user.guardian, root: false).as_json

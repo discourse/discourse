@@ -65,14 +65,7 @@ class CategoriesController < ApplicationController
           MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)),
         )
 
-        @topic_list = fetch_topic_list
-
-        if @topic_list.present? && @topic_list.topics.present?
-          store_preloaded(
-            @topic_list.preload_key,
-            MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
-          )
-        end
+        preload_topic_list
 
         render
       end
@@ -882,6 +875,20 @@ class CategoriesController < ApplicationController
     }
 
     @category_list = CategoryList.new(guardian, category_options)
+  end
+
+  # The crawler layout renders categories only and emits no preloaded data, so
+  # building and serializing the list would be pure waste.
+  def preload_topic_list
+    return if use_crawler_layout?
+
+    @topic_list = fetch_topic_list
+    return if @topic_list.blank? || @topic_list.topics.blank?
+
+    store_preloaded(
+      @topic_list.preload_key,
+      MultiJson.dump(TopicListSerializer.new(@topic_list, scope: guardian)),
+    )
   end
 
   def fetch_topic_list(topics_filter: nil)

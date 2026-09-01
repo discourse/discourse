@@ -876,14 +876,15 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.post_type).to eq(Post.types[:whisper])
     end
 
-    it "allows mentioning a agent" do
+    it "allows mentioning an agent that inherits the site default LLM" do
       # we still should be able to mention with no bots
       toggle_enabled_bots(bots: [])
 
-      agent.update!(allow_topic_mentions: true)
+      global_llm = assign_fake_provider_to(:ai_default_llm_model)
+      agent.update!(allow_topic_mentions: true, default_llm: nil)
 
       post = nil
-      DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"], llm: global_llm) do
         post =
           create_post(
             user: admin,

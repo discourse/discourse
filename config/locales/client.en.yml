@@ -467,6 +467,7 @@ en:
         since: "(since %{version})"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
+      open_styleguide: "Open styleguide"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
@@ -572,7 +573,7 @@ en:
       dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose colors, fonts, and a homepage."
+        description: "Choose colors, fonts, and how your site is laid out."
         action: "See options"
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
@@ -609,18 +610,33 @@ en:
 
     design_wizard:
       title: "Customize your site"
-      subtitle: "Choose colors, fonts, and a homepage."
+      subtitle: "Choose colors, fonts, and how your site is laid out."
       step_label: "Go to step %{index}"
       save: "Save and finish"
       back: "Back"
       next: "Next"
+      launch: "Design wizard"
+      launch_description: "Walk through your site's theme, colors, fonts, and layout again."
+      intro:
+        description: "This wizard walks you through your site's theme, colors, fonts, homepage layout, welcome banner, and search style."
+        autosave: "Each step is saved as you go, so members see the changes right away. You can put everything back when you close."
+        start: "Get started"
+      close:
+        message: "You have already saved some changes to your site's design. Do you want to keep them?"
+        message_without_revert: "You have already saved some changes to your site's design. They cannot be undone from here."
+        keep: "Keep changes"
+        revert: "Revert changes"
+        continue_editing: "Continue editing"
       sections:
         theme: "Theme"
         colors: "Default color"
         fonts: "Fonts"
         homepage: "Homepage"
+        welcome_banner: "Welcome banner"
+        search: "Search"
       theme:
         selected: "Selected"
+        applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
         light: "Light"
@@ -645,6 +661,21 @@ en:
           boxes: "Boxes"
           with_topics: "Categories with topics"
           only: "Categories only"
+      welcome_banner:
+        enable: "Show a welcome banner"
+        enable_description: "Greet visitors with your site name and a search box"
+        location: "Banner location"
+        locations:
+          below_site_header: "Below the site header"
+          above_topic_content: "Above the topic list"
+      search:
+        experiences:
+          search_icon:
+            title: "Search icon"
+            description: "A magnifying glass in the header that opens search."
+          search_field:
+            title: "Search field"
+            description: "A full search field in the header, always visible."
 
     about:
       edit: "Edit this page"
@@ -1010,6 +1041,7 @@ en:
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
       user:
+        avatar: "Avatar when flagged"
         bio: "Bio"
         website: "Website"
         username: "Username"
@@ -2465,7 +2497,6 @@ en:
         watch_topic: "Watch topic"
         track_topic: "Track topic"
         do_nothing: "Do nothing"
-      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -3069,6 +3100,7 @@ en:
       account_ready_continue: "Continue"
       username_label: "Username"
       username_placeholder: "Choose a username"
+      regenerate_username: "Suggest a random username"
       change_avatar: "Change avatar"
       username_taken: "That username is taken. Try another."
       username_unavailable: "That username isn't available. Try %{suggestion}."
@@ -3243,6 +3275,36 @@ en:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      command: "Command"
+      option: "Option"
+      control: "Control"
+      arrow_up: "Up arrow"
+      arrow_down: "Down arrow"
+      arrow_left: "Left arrow"
+      arrow_right: "Right arrow"
+      period: "Period"
+      comma: "Comma"
+      slash: "Slash"
+      backslash: "Backslash"
+      question_mark: "Question mark"
+      exclamation_mark: "Exclamation mark"
+      hash: "Hash"
+      equals: "Equals"
+      minus: "Minus"
+      plus: "Plus"
+      semicolon: "Semicolon"
+      apostrophe: "Apostrophe"
+      backquote: "Backquote"
+      left_bracket: "Left bracket"
+      right_bracket: "Right bracket"
+      space: "Space"
+      tab: "Tab"
+      backspace: "Backspace"
+      delete: "Delete"
+      home: "Home"
+      end: "End"
+      page_up: "Page up"
+      page_down: "Page down"
 
     conditional_loading_section:
       loading: Loading…
@@ -3538,7 +3600,7 @@ en:
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
-      title: "Or press %{modifier}Enter"
+      submit_shortcut_title: "Or press %{shortcut}"
       save_and_close: "Save and close"
       discard: "Discard"
       cancel_edit: "Cancel edit"
@@ -3567,6 +3629,8 @@ en:
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Switch to standard Markdown editor"
+      switch_to_rich_text_no_shortcut: "Switch to new rich text editor"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -3732,6 +3796,10 @@ en:
         visit: "Open link"
         remove_preview: "Remove preview"
         link_copied: "Link copied!"
+
+      preview_node:
+        show_source: "Show source"
+        show_preview: "Show preview"
 
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
@@ -3943,10 +4011,11 @@ en:
         search_icon: "Search icon near profile avatar"
 
       type:
-        default: "Topics/posts"
+        label: "Search type"
+        default: "Posts"
         users: "Users"
         categories: "Categories"
-        categories_and_tags: "Categories/tags"
+        categories_and_tags: "Categories & tags"
 
       context:
         user: "Search posts by @%{username}"
@@ -3961,7 +4030,6 @@ en:
         in: "filters by metadata (e.g. in:title, in:personal, in:pinned)"
         status: "filters by topic status"
         full_search: "launches full page search"
-        full_search_key: "%{modifier} + Enter"
         me: "shows only your posts"
 
       advanced:
@@ -4291,7 +4359,7 @@ en:
           missing_to: "A replacement tag is required"
       delete_topics:
         name: "Delete"
-        description: "Permanently delete the selected topics. This action cannot be undone."
+        description: "Delete the selected topics. Deleted topics can be restored."
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
@@ -4918,7 +4986,7 @@ en:
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
       follow_quote: "go to the quoted post"
-      show_full: "Show Full Post"
+      show_more: "Show more…"
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
@@ -5820,12 +5888,8 @@ en:
     keyboard_shortcuts_help:
       search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} or %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
       search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
@@ -6282,6 +6346,7 @@ en:
         custom:
           add: "Add custom section"
           edit: "Edit custom section"
+          drop_to_add: "Drop here to add a new section"
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
@@ -6334,6 +6399,7 @@ en:
                   other: "Name must be shorter than %{count} characters"
             value:
               label: "Link"
+              duplicate: "Another link in this section already points here"
               validation:
                 blank: "Link cannot be blank"
                 maximum:
@@ -7009,7 +7075,8 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         search_everything:
           title: "Search"
-          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered. To open this search anywhere in the admin interface, press %{shortcutHTML}."
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
+          header_shortcut: "To open this search anywhere in the admin interface, press %{shortcutHTML}."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -7262,17 +7329,42 @@ en:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
         empty: "No matching pageviews"
-        summary: "Traffic summary"
-        traffic_over_time: "Traffic over time"
-        pageviews: "Pageviews"
-        metric_information: "About this metric"
+        metric_information: "About %{metric}"
         active_filters: "Active traffic filters"
-        filter_description: "%{filter} is <strong>%{value}</strong>"
+        filtering_to:
+          traffic_type:
+            one: "Filtering to %{count} traffic type"
+            other: "Filtering to %{count} traffic types"
+          top_url:
+            one: "Filtering to %{count} top URL"
+            other: "Filtering to %{count} top URLs"
+          entry_url:
+            one: "Filtering to %{count} entry URL"
+            other: "Filtering to %{count} entry URLs"
+          referrer:
+            one: "Filtering to %{count} referrer"
+            other: "Filtering to %{count} referrers"
+          country:
+            one: "Filtering to %{count} country"
+            other: "Filtering to %{count} countries"
+          network:
+            one: "Filtering to %{count} network"
+            other: "Filtering to %{count} networks"
+          browser:
+            one: "Filtering to %{count} browser"
+            other: "Filtering to %{count} browsers"
+          ip:
+            one: "Filtering to %{count} IP address"
+            other: "Filtering to %{count} IP addresses"
+        remove_filter_value: "Remove %{value}"
+        clear_all: "Clear all"
+        apply: "Apply"
+        apply_filters: "Apply filters"
         filter_by:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"
         remove_filter: "Remove %{filter} filter"
-        remove_traffic_type_filter: "Remove %{value} traffic filter"
+        # remove_traffic_type_filter: "Remove %{value} traffic filter"
         view_more: "View more"
         no_dimension_data: "No data for this breakdown."
         direct_or_unknown: "Direct / unknown"
@@ -7288,14 +7380,6 @@ en:
           entry_urls: "Entry URLs"
           browsers: "Browsers"
           ip_addresses: "IP addresses"
-        columns:
-          referrers: "Referrer"
-          countries: "Country"
-          networks: "Network"
-          top_urls: "URL"
-          entry_urls: "Entry URL"
-          browsers: "Browser"
-          ip_addresses: "IP address"
         filters:
           traffic_type: "Traffic type"
           top_url: "Top URL"
@@ -7305,9 +7389,10 @@ en:
           network: "Network"
           browser: "Browser"
           ip: "IP address"
+        headline:
+          one: "%{formatted_count} pageview"
+          other: "%{formatted_count} pageviews"
         metrics:
-          pageviews:
-            label: "Pageviews"
           distinct_sessions:
             label: "Distinct sessions"
           logged_in_share:
@@ -7431,6 +7516,21 @@ en:
               staff: "Staff"
               empty: "No posts in the selected period."
               save_error: "Couldn't save your selection for next time."
+              add_group: "Add group"
+              modal:
+                title: "Compare groups"
+                search_placeholder: "Search groups..."
+                counter: "%{count} of %{max} groups selected"
+                apply: "Save"
+                enable: "Enable %{title}"
+                disable: "Disable %{title}"
+                move_up: "Move %{title} up"
+                move_down: "Move %{title} down"
+                footer_note: "These changes will apply for all users."
+                descriptions:
+                  new_members: "Signed up during the selected period"
+                  returning: "Signed up before the selected period"
+                  staff: "Admins and moderators"
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -7595,6 +7695,26 @@ en:
                 no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
+          system:
+            title: "System"
+            storage: "Storage"
+            status: "Status"
+            fetch_error: "Couldn't load system information. Try refreshing the page."
+            commits:
+              one: "+%{count} commit"
+              other: "+%{count} commits"
+            view_on_github: "View on GitHub"
+            update_check_failed: "Update check failed — ensure Sidekiq is running."
+            update_available: "Update available: %{version}"
+            space_free: "%{size} free"
+            backups_size:
+              one: "%{size} backup (%{count})"
+              other: "%{size} backups (%{count})"
+            uploads_size: "%{size} uploads"
+            latest_backup: "Latest backup %{date}"
+            manage_backups: "Manage backups"
+            discourse_updated: "Discourse updated"
+            dashboard_updated: "Dashboard updated"
         reports_section:
           header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
@@ -7748,6 +7868,16 @@ en:
           average_for_sample: "Average for sample"
           total: "All time total"
           no_data: "No data to display."
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              one: "%{count} user"
+              other: "%{count} users"
+            posts_count:
+              one: "%{count} post"
+              other: "%{count} posts"
+            deselect: "Deselect %{name}"
+            fetch_error: "Couldn't load users for this group."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
@@ -9099,6 +9229,7 @@ en:
             deleted_tag: "deleted tag"
             update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
+            created_tag: "created tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
             lock_trust_level: "lock trust level"
@@ -9126,6 +9257,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"

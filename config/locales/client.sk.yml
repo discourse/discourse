@@ -6042,21 +6042,16 @@ sk:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
       site_traffic_explorer:
-        pageviews: "Zobrazenia stránky"
+        metric_information: "O %{metric}"
+        clear_all: "Vymazať všetko"
+        apply: "Použi"
         view_more: "Zobraziť viac"
         cards:
           pages: "Stránky"
           visitors: "Návštevníci"
-        columns:
-          top_urls: "URL"
-          browsers: "Prehliadač"
-          ip_addresses: "IP adresy"
         filters:
           browser: "Prehliadač"
           ip: "IP adresy"
-        metrics:
-          pageviews:
-            label: "Zobrazenia stránky"
         series:
           anonymous_human: "Anonymný"
       dashboard:

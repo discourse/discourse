@@ -2796,9 +2796,8 @@ th:
       search:
         title: "ค้นหา"
       site_traffic_explorer:
-        columns:
-          top_urls: "URL"
-          ip_addresses: "ที่อยู่ไอพี"
+        metric_information: "เกี่ยวกับ %{metric}"
+        apply: "นำไปใช้"
         filters:
           ip: "ที่อยู่ไอพี"
         series:

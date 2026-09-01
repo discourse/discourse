@@ -2,8 +2,10 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 import Category from "discourse/models/category";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link";
 import CommonCategoriesSection from "../common/categories-section";
@@ -20,6 +22,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   @service currentUser;
   @service modal;
   @service navigationMenu;
+  @service router;
   @service siteSettings;
 
   constructor() {
@@ -42,6 +45,11 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
       this,
       this._refreshCounts
     );
+  }
+
+  @cached
+  get activeLink() {
+    return findActiveLink(this.sectionLinks, this.router);
   }
 
   // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
@@ -102,6 +110,8 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   <template>
     <Section
       @sectionName="categories"
+      @activeLink={{this.activeLink}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
       @headerActions={{this.headerActions}}
       @headerActionsIcon={{this.headerActionsIcon}}
@@ -111,6 +121,10 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
       {{#each this.sectionLinks as |sectionLink|}}
         <SectionLink
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq sectionLink.name this.activeLink.name)
+          }}
           @route={{sectionLink.route}}
           @query={{sectionLink.query}}
           @title={{sectionLink.title}}
@@ -129,7 +143,9 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
         />
       {{/each}}
 
-      <AllCategoriesSectionLink />
+      <AllCategoriesSectionLink
+        @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      />
 
       {{#if this.shouldDisplayDefaultConfig}}
         <SectionLink

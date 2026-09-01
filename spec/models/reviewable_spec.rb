@@ -812,9 +812,10 @@ RSpec.describe Reviewable, type: :model do
     after { Reviewable.clear_custom_filters! }
 
     it "correctly add a new filter" do
-      Reviewable.add_custom_filter([:assigned_to, Proc.new { |results, value| results }])
+      custom_filter = [:assigned_to, Proc.new { |results, value| results }]
+      Reviewable.add_custom_filter(custom_filter)
 
-      expect(Reviewable.custom_filters.size).to eq(1)
+      expect(Reviewable.custom_filters).to include(custom_filter)
     end
 
     it "applies the custom filter" do
@@ -829,6 +830,65 @@ RSpec.describe Reviewable, type: :model do
 
       expect(results.size).to eq(1)
       expect(results.first).to eq first_reviewable
+    end
+
+    it "exposes a custom filter through the Type and Reason filters" do
+      admin = Fabricate(:admin)
+      type_reviewable = Fabricate(:reviewable)
+      reason_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:source, Proc.new { |results, value| results.where(id: value) }],
+        type_filter: {
+          id: "custom_source",
+          value: type_reviewable.id,
+        },
+        reason_filters: -> do
+          [{ id: "custom_source:reason", name: "Custom reason", value: reason_reviewable.id }]
+        end,
+      )
+
+      expect(Reviewable.valid_type?("custom_source")).to eq(false)
+      expect(Reviewable.valid_filter_type?("custom_source")).to eq(true)
+      expect(Reviewable.custom_filter_type_options).to include(
+        { id: "custom_source", value: type_reviewable.id, filter: :source },
+      )
+      expect(Reviewable.custom_reason_filter_options).to include(
+        {
+          id: "custom_source:reason",
+          name: "Custom reason",
+          value: reason_reviewable.id,
+          filter: :source,
+        },
+      )
+      expect(Reviewable.list_for(admin, type: "custom_source")).to contain_exactly(type_reviewable)
+      expect(Reviewable.list_for(admin, score_type: "custom_source:reason")).to contain_exactly(
+        reason_reviewable,
+      )
+    end
+
+    it "composes multiple custom filters" do
+      admin = Fabricate(:admin)
+      first_reviewable = Fabricate(:reviewable)
+      second_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:first_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+      Reviewable.add_custom_filter(
+        [:second_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+
+      results =
+        Reviewable.list_for(
+          admin,
+          additional_filters: {
+            first_id: first_reviewable.id,
+            second_id: second_reviewable.id,
+          },
+        )
+
+      expect(results).to be_empty
     end
 
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do
@@ -873,12 +933,14 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
-      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
-        ["approve_post"],
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
       )
       expect(
-        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+        actions.bundles.find { |b| b.bundle_id == "approve_post" }.actions.map(&:action_name),
+      ).to eq(["approve_post"])
+      expect(
+        actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
     end
 

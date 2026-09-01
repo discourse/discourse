@@ -1,4 +1,5 @@
-import { array, hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -20,10 +21,31 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import DMenus from "discourse/float-kit/components/d-menus";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import { getLockState } from "discourse/lib/body-scroll-lock";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import dElement from "discourse/ui-kit/helpers/d-element";
+
+const ModalWithMenu = <template>
+  <DModal @closeModal={{@closeModal}} @inline={{true}}>
+    <span class="outer-modal-content">Outer modal</span>
+    <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+      <:content as |menu|>
+        <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
+      </:content>
+    </DMenu>
+  </DModal>
+</template>;
+
+const CloseMenuWithData = <template>
+  <DButton
+    class="close-with-data"
+    @action={{fn @close (hash data=(hash saved=true))}}
+  />
+</template>;
 
 module("Integration | Component | FloatKit | DMenu", function (hooks) {
   setupRenderingTest(hooks);
@@ -92,6 +114,57 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
+  });
+
+  test("closing a standalone mobile menu cleans up its modal", async function (assert) {
+    forceMobile();
+
+    const initialLockCount = getLockState().lockedNum;
+
+    await render(
+      <template>
+        <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+          <:content as |menu|>
+            <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
+          </:content>
+        </DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.strictEqual(
+      getLockState().lockedNum,
+      initialLockCount + 1,
+      "opening the menu locks body scrolling"
+    );
+
+    await click(".close-menu");
+
+    assert.dom(".fk-d-menu-modal").doesNotExist("the menu modal closes");
+    assert.strictEqual(
+      getLockState().lockedNum,
+      initialLockCount,
+      "closing the menu releases its body scroll lock"
+    );
+  });
+
+  test("closing a mobile menu preserves its containing modal", async function (assert) {
+    forceMobile();
+
+    await render(<template><ModalContainer /></template>);
+
+    const modal = getOwner(this).lookup("service:modal");
+    modal.show(ModalWithMenu);
+    await settled();
+
+    await open();
+    await click(".close-menu");
+
+    assert
+      .dom(".outer-modal-content")
+      .exists("the containing modal remains open");
+    assert.dom(".fk-d-menu-modal").doesNotExist("the menu modal closes");
   });
 
   test("DMenu uses a modal while DTooltip stays inline on mobile", async function (assert) {
@@ -281,8 +354,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("@onClose", async function (assert) {
-    this.test = false;
-    this.onClose = () => (this.test = true);
+    const notClosed = Symbol("not closed");
+    this.closeData = notClosed;
+    this.onClose = (data) => (this.closeData = data);
 
     await render(
       <template><DMenu @inline={{true}} @onClose={{this.onClose}} /></template>
@@ -290,7 +364,60 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
     await close();
 
-    assert.true(this.test);
+    assert.strictEqual(
+      this.closeData,
+      undefined,
+      "an ordinary close supplies no data"
+    );
+  });
+
+  test("a service-created menu component can close with data", async function (assert) {
+    let closeData;
+
+    await render(
+      <template>
+        <button type="button" class="menu-trigger">Open</button>
+        <DMenus />
+      </template>
+    );
+
+    await getOwner(this)
+      .lookup("service:menu")
+      .show(find(".menu-trigger"), {
+        component: CloseMenuWithData,
+        onClose: (data) => (closeData = data),
+      });
+    await click(".close-with-data");
+
+    assert.deepEqual(
+      closeData,
+      { saved: true },
+      "onClose receives the data supplied by the rendered component"
+    );
+  });
+
+  test("close data preserves the default trigger focus", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      <template>
+        <button type="button" class="outside-button">Outside</button>
+        <DMenu
+          @onRegisterApi={{this.onRegisterApi}}
+          @inline={{true}}
+          @label="Open"
+        />
+      </template>
+    );
+
+    await open();
+    await focus(".outside-button");
+    await this.api.close({ data: { saved: true } });
+
+    assert
+      .dom(".fk-d-menu__trigger")
+      .isFocused("supplying only data still restores focus to the trigger");
   });
 
   test("-expanded class", async function (assert) {
@@ -1262,5 +1389,70 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert
       .dom(".fk-d-menu")
       .exists("interactive menu stays open without grace period");
+  });
+
+  test("destroys its instance when the menu itself is torn down", async function (assert) {
+    const state = new (class {
+      @tracked rendered = true;
+    })();
+
+    await render(
+      <template>
+        {{#if state.rendered}}
+          <DMenu @inline={{true}} @label="label" @content="content" />
+        {{/if}}
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists();
+
+    const menuService = getOwner(this).lookup("service:menu");
+    assert.strictEqual(menuService.registeredMenus.size, 1, "menu registered");
+
+    state.rendered = false;
+    await rerender();
+
+    assert.dom(".fk-d-menu").doesNotExist("the float is gone");
+    assert.strictEqual(
+      menuService.registeredMenus.size,
+      0,
+      "the instance is not leaked"
+    );
+  });
+
+  test("a changing triggerComponent does not kill the menu", async function (assert) {
+    const state = new (class {
+      @tracked label = "first";
+    })();
+
+    const trigger = <template>
+      <button ...attributes type="button">{{@componentArgs.expanded}}</button>
+    </template>;
+    const otherTrigger = <template>
+      <button ...attributes type="button">changed</button>
+    </template>;
+
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @content="content"
+          @triggerComponent={{if (eq state.label "first") trigger otherTrigger}}
+        />
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists("opens with the first trigger");
+
+    await click(".fk-d-menu__trigger");
+    state.label = "second";
+    await rerender();
+
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .exists("still opens after the trigger component is swapped");
   });
 });

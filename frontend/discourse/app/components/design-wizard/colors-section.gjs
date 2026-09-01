@@ -63,17 +63,17 @@ const DesignWizardColorsSection = <template>
     </p>
   </div>
 
-  <div class="design-wizard__user-selectable">
+  <div class="design-wizard__switch-row">
     <div>
       <span
         id="design-wizard-user-selectable-title"
-        class="design-wizard__user-selectable-title"
+        class="design-wizard__switch-row-title"
       >
         {{i18n "design_wizard.colors.user_selectable"}}
       </span>
       <span
         id="design-wizard-user-selectable-description"
-        class="design-wizard__user-selectable-description"
+        class="design-wizard__switch-row-description"
       >
         {{i18n "design_wizard.colors.user_selectable_description"}}
       </span>

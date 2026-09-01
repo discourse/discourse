@@ -352,6 +352,12 @@ module Discourse
     @anonymous_filters ||= %i[latest top categories hot]
   end
 
+  # `anonymous_filters` also holds menu items such as `categories`, which have no
+  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+  def self.anonymous_list_filters
+    Discourse.filters & Discourse.anonymous_filters
+  end
+
   def self.top_menu_items
     @top_menu_items ||= Discourse.filters + [:categories]
   end

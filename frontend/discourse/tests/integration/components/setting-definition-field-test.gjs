@@ -1,10 +1,11 @@
 import { array, concat, hash } from "@ember/helper";
-import { render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -616,6 +617,143 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert
       .dom(".value-probe")
       .hasText("", "removing the last category clears the value");
+  });
+
+  test("category serializes the selection as an id string", async function (assert) {
+    const [category, otherCategory] = Site.current().categories;
+
+    await render(
+      <template>
+        <Form @data={{hash my_category=(concat category.id)}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_category"
+              type="category"
+              label="My category"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_category}}</span>
+        </Form>
+      </template>
+    );
+
+    const categories = selectKit("[data-name='my_category'] .category-chooser");
+    await categories.expand();
+    await categories.selectRowByValue(otherCategory.id);
+
+    assert.dom(".value-probe").hasText(String(otherCategory.id));
+  });
+
+  test("group filters out disallowed groups from the choices", async function (assert) {
+    this.site.groups = [
+      { id: 0, name: "everyone" },
+      { id: 1, name: "Donuts" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_group="1"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_group"
+              type="group"
+              label="My group"
+              disallowed_groups="0"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_group}}</span>
+        </Form>
+      </template>
+    );
+
+    const groups = selectKit("[data-name='my_group'] .combo-box");
+    assert.strictEqual(groups.header().value(), "1");
+
+    await groups.expand();
+    assert.false(groups.rowByValue("0").exists(), "everyone is not offered");
+    assert.true(groups.rowByValue("1").exists());
+  });
+
+  test("tag_list round-trips a pipe-joined list of tag names", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_tags="dog|cat"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash key="my_tags" type="tag_list" label="My tags"}}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_tags}}</span>
+        </Form>
+      </template>
+    );
+
+    const tags = selectKit("[data-name='my_tags'] .tag-chooser");
+    assert.strictEqual(tags.header().value(), "dog,cat");
+
+    await tags.expand();
+    await tags.selectRowByName("monkey");
+
+    assert.dom(".value-probe").hasText("dog|cat|monkey");
+  });
+
+  test("tag_group_list round-trips a pipe-joined list of tag group names", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_tag_groups="TagGroup1"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_tag_groups"
+              type="tag_group_list"
+              label="My tag groups"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_tag_groups}}</span>
+        </Form>
+      </template>
+    );
+
+    const tagGroups = selectKit(
+      "[data-name='my_tag_groups'] .tag-group-chooser"
+    );
+    await tagGroups.expand();
+    await tagGroups.selectRowByName("TagGroup2");
+
+    assert.dom(".value-probe").hasText("TagGroup1|TagGroup2");
+  });
+
+  test("icon offers icons that are not in the sprite yet", async function (assert) {
+    let onlyAvailable;
+    pretender.get("/svg-sprite/picker-search", (request) => {
+      onlyAvailable = request.queryParams.only_available;
+      return response(200, { icons: [{ id: "pencil" }], has_more: false });
+    });
+
+    await render(
+      <template>
+        <Form @data={{hash my_icon="heart"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash key="my_icon" type="icon" label="My icon"}}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_icon'] .d-icon-grid-picker")
+      .hasAttribute("data-value", "heart");
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor("[data-icon-id='pencil']");
+
+    assert.strictEqual(
+      onlyAvailable,
+      "false",
+      "an icon can be picked before it is rendered anywhere on the site"
+    );
   });
 
   test("list + list_type collapses to the compact_list control", async function (assert) {

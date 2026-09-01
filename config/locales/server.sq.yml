@@ -823,7 +823,6 @@ sq:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"

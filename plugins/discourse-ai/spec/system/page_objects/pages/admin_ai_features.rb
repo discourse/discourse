@@ -31,6 +31,17 @@ module PageObjects
         )
       end
 
+      def has_feature?(feature_name, name)
+        page.has_css?(
+          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__feature-name",
+          text: name,
+        )
+      end
+
+      def has_no_feature?(feature_name)
+        page.has_no_css?("#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}']")
+      end
+
       def has_feature_groups?(feature_name, groups)
         listed_groups =
           page.find(

@@ -89,6 +89,8 @@ export function registerDragAndDropMonitor(
  *
  * @see The `dragAndDrop` service to read drag state reactively; rendering from
  *   these callbacks duplicates what it keeps.
+ * @see `dDragDwell` for the packaged case of acting once a drag has hovered
+ *   one element for a delay.
  */
 export default modifier<DDragAndDropMonitorSignature>(
   (_element, _positional, args) =>

@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::DocxToText do
-  def with_docx(entries)
-    tempfile = Tempfile.new(%w[document .docx])
-    path = tempfile.path
-    tempfile.close
-    FileUtils.rm_f(path)
-
-    ::Zip::File.open(path, create: true) do |zip_file|
-      entries.each do |name, content|
-        zip_file.get_output_stream(name) { |stream| stream.write(content) }
-      end
-    end
-
-    yield path
-  ensure
-    tempfile&.close
-    FileUtils.rm_f(path) if path
-  end
-
   def word_xml(body)
     <<~XML
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -75,7 +57,7 @@ RSpec.describe DiscourseAi::Completions::DocxToText do
   end
 
   it "extracts paragraph text from the main document" do
-    with_docx("word/document.xml" => word_xml(<<~XML)) do |path|
+    with_zipped_document("docx", "word/document.xml" => word_xml(<<~XML)) do |path|
           <w:body>
             <w:p>
               <w:r><w:t>Hello</w:t></w:r>
@@ -94,7 +76,8 @@ RSpec.describe DiscourseAi::Completions::DocxToText do
   it "extracts supported text parts in a stable order" do
     part = ->(text) { word_xml("<w:p><w:r><w:t>#{text}</w:t></w:r></w:p>") }
 
-    with_docx(
+    with_zipped_document(
+      "docx",
       "word/footer1.xml" => part.call("Footer"),
       "word/header2.xml" => part.call("Header two"),
       "word/document.xml" => part.call("Body"),
@@ -110,7 +93,7 @@ RSpec.describe DiscourseAi::Completions::DocxToText do
   end
 
   it "extracts image alt text inline" do
-    with_docx("word/document.xml" => word_xml(<<~XML)) do |path|
+    with_zipped_document("docx", "word/document.xml" => word_xml(<<~XML)) do |path|
           <w:body>
             <w:p>
               <w:r><w:t>See </w:t></w:r>
@@ -132,7 +115,8 @@ RSpec.describe DiscourseAi::Completions::DocxToText do
   end
 
   it "adds prefixes for numbered and bulleted lists" do
-    with_docx(
+    with_zipped_document(
+      "docx",
       "word/numbering.xml" => numbering_xml,
       "word/document.xml" => word_xml(<<~XML),
           <w:body>
@@ -151,7 +135,7 @@ RSpec.describe DiscourseAi::Completions::DocxToText do
   end
 
   it "returns blank text when the docx has no supported text parts" do
-    with_docx("docProps/core.xml" => "<properties />") do |path|
+    with_zipped_document("docx", "docProps/core.xml" => "<properties />") do |path|
       expect(described_class.convert(path)).to eq("")
     end
   end

@@ -148,11 +148,13 @@ module TopicGuardian
     return false if topic.blank?
     return false if !is_staff? && !can_see_topic?(topic, false)
 
-    if is_category_group_moderator?(topic.category) ||
-         user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    if is_category_group_moderator?(topic.category) || can_delete_all_posts_and_topics?
       topic.deleted_at?
     else
-      can_recover_post?(topic.ordered_posts.first)
+      original_post = topic.first_post_with_deleted
+      return false if original_post&.trashed? && !can_see_deleted_post?(original_post)
+
+      can_recover_post?(original_post)
     end
   end
 
@@ -161,7 +163,7 @@ module TopicGuardian
     return false if topic.is_category_topic?
     return false if Discourse.static_doc_topic_ids.include?(topic.id)
     return true if is_category_group_moderator?(topic.category) && can_see_topic?(topic)
-    return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    return true if can_delete_all_posts_and_topics?
 
     is_my_own?(topic) && can_delete_own_topic?(topic)
   end
@@ -209,8 +211,7 @@ module TopicGuardian
   end
 
   def can_see_deleted_topics?(category)
-    is_category_group_moderator?(category) ||
-      user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    is_category_group_moderator?(category) || can_delete_all_posts_and_topics?
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.

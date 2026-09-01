@@ -80,6 +80,10 @@ class Reviewable < ActiveRecord::Base
     type.to_s.safe_constantize.in?(types)
   end
 
+  def self.valid_filter_type?(type)
+    valid_type?(type) || custom_filter_type_options.any? { |option| option[:id].to_s == type.to_s }
+  end
+
   def self.types
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
@@ -106,12 +110,40 @@ class Reviewable < ActiveRecord::Base
     @reviewable_filters ||= []
   end
 
-  def self.add_custom_filter(new_filter)
+  def self.custom_filter_type_options
+    (@reviewable_filter_type_options || []) | DiscoursePluginRegistry.reviewable_filter_type_options
+  end
+
+  def self.custom_reason_filter_options
+    registrations =
+      (@reviewable_reason_filter_options || []) |
+        DiscoursePluginRegistry.reviewable_filter_reason_registrations
+
+    registrations.flat_map do |registration|
+      options = registration[:options]
+      options = options.call if options.respond_to?(:call)
+
+      Array(options).map { |option| option.merge(filter: registration[:filter]) }
+    end
+  end
+
+  def self.add_custom_filter(new_filter, type_filter: nil, reason_filters: nil)
     custom_filters << new_filter
+    if type_filter
+      (@reviewable_filter_type_options ||= []) << type_filter.merge(filter: new_filter.first)
+    end
+    if reason_filters
+      (@reviewable_reason_filter_options ||= []) << {
+        filter: new_filter.first,
+        options: reason_filters,
+      }
+    end
   end
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+    @reviewable_filter_type_options = []
+    @reviewable_reason_filter_options = []
   end
 
   def set_type_source
@@ -559,7 +591,14 @@ class Reviewable < ActiveRecord::Base
     result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-    result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
+    if type
+      custom_type = custom_filter_type_options.find { |option| option[:id].to_s == type.to_s }
+      if custom_type
+        result = apply_custom_filter(result, custom_type[:filter], custom_type[:value])
+      else
+        result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name)
+      end
+    end
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
@@ -577,13 +616,19 @@ class Reviewable < ActiveRecord::Base
     end
 
     if score_type
-      score_type = score_type.to_i
-      result = result.where(<<~SQL, score_type: score_type)
-      EXISTS(
-        SELECT 1 FROM reviewable_scores
-        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
-      )
-      SQL
+      custom_score_type =
+        custom_reason_filter_options.find { |option| option[:id].to_s == score_type.to_s }
+      if custom_score_type
+        result = apply_custom_filter(result, custom_score_type[:filter], custom_score_type[:value])
+      else
+        score_type = score_type.to_i
+        result = result.where(<<~SQL, score_type: score_type)
+          EXISTS(
+            SELECT 1 FROM reviewable_scores
+            WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+          )
+        SQL
+      end
     end
 
     if reviewed_by
@@ -626,7 +671,7 @@ class Reviewable < ActiveRecord::Base
           filter_query = filter.last
 
           next(memo) unless additional_filters[key]
-          filter_query.call(result, additional_filters[key])
+          filter_query.call(memo, additional_filters[key])
         end
     end
 
@@ -652,6 +697,12 @@ class Reviewable < ActiveRecord::Base
     result = result.offset(offset) if offset
     result
   end
+
+  def self.apply_custom_filter(result, key, value)
+    filter = custom_filters.find { |registered_filter| registered_filter.first == key }
+    filter ? filter.last.call(result, value) : result
+  end
+  private_class_method :apply_custom_filter
 
   def self.unseen_list_for(user, preload: true, limit: nil)
     results = list_for(user, preload: preload, limit: limit, include_claimed_by_others: false)
@@ -812,7 +863,7 @@ class Reviewable < ActiveRecord::Base
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
-        "reject_user",
+        "#{id}-reject_user",
         icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )

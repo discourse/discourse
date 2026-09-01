@@ -23,6 +23,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/dropdowns", title: "Dropdowns" },
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
+      { href: "/atoms/shortcut", title: "Shortcut" },
     ],
     "molecules" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
@@ -34,6 +35,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
+      { href: "/molecules/roving-focus", title: "Roving focus" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
@@ -43,6 +45,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
+      { href: "/molecules/virtual-list", title: "Virtual list" },
     ],
     "organisms" => [
       { href: "/organisms/post", title: "Post" },
@@ -145,14 +148,14 @@ RSpec.describe "Styleguide Smoke Test" do
       "sources" => ".styleguide-drag-and-drop__grip",
       "targets" => ".styleguide-drag-and-drop__zone.--inner",
       "outside" => ".styleguide-drag-and-drop__zone",
-      "reacting" => ".styleguide-drag-and-drop__panel",
+      "reacting" => %w[.styleguide-drag-and-drop__panel .styleguide-drag-and-drop__folder],
       "resize" => ".styleguide-drag-and-drop__resizable",
       "gestures" => ".styleguide-drag-and-drop__knob",
-    }.each do |group, selector|
+    }.each do |group, selectors|
       visit "/styleguide/molecules/drag-and-drop?group=#{group}"
 
       expect(page).to have_css("[data-test-styleguide-group='#{group}']")
-      expect(page).to have_css(selector)
+      Array(selectors).each { |selector| expect(page).to have_css(selector) }
     end
   end
 
@@ -161,6 +164,25 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # The separator and the handles are components; the raw edge is a modifier.
     expect(page).to have_css(".styleguide-example__kind", count: 3)
+  end
+
+  it "renders the dwell example collapsed and open" do
+    visit "/styleguide/molecules/drag-and-drop?group=reacting"
+
+    expect(page).to have_css(".styleguide-drag-and-drop__folder")
+    expect(page).to have_no_css(".styleguide-drag-and-drop__folder.--open")
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell")
+
+    find(".styleguide-drag-and-drop__folder-toggle").click
+    expect(page).to have_css(".styleguide-drag-and-drop__folder.--open")
+    expect(page).to have_css(".styleguide-drag-and-drop__folder-row", count: 3)
+    if ENV["TAKE_SCREENSHOTS"] == "1"
+      page.scroll_to(find(".styleguide-drag-and-drop__folder"), align: :center)
+    end
+    screenshot_marker(label: "styleguide-drag-and-drop-dwell-open")
   end
 
   it "renders the index page correctly on a site with no default color schemes" do
@@ -187,6 +209,19 @@ RSpec.describe "Styleguide Smoke Test" do
           expect(styleguide).to have_heading(item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is enabled for everyone" do
+    before do
+      Capybara.reset_sessions!
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+    end
+
+    it "renders a page using HighlightedCode for anonymous users" do
+      visit "/styleguide/atoms/font-scale"
+      expect(styleguide).to have_heading("Font System")
+      expect(page).to have_css("code.hljs")
     end
   end
 

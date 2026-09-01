@@ -9,6 +9,7 @@ import otp from "../components/sections/atoms/07-otp";
 import dateTimeInputs from "../components/sections/atoms/08-date-time-inputs";
 import dropdowns from "../components/sections/atoms/09-dropdowns";
 import topicLink from "../components/sections/atoms/10-topic-link-status";
+import shortcut from "../components/sections/atoms/11-shortcut";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
@@ -21,6 +22,7 @@ import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
+import rovingFocus from "../components/sections/molecules/roving-focus";
 import segmentedControl from "../components/sections/molecules/segmented-control";
 import signupCta from "../components/sections/molecules/signup-cta";
 import toasts from "../components/sections/molecules/toasts";
@@ -28,6 +30,7 @@ import tooltips from "../components/sections/molecules/tooltips";
 import topicListItem from "../components/sections/molecules/topic-list-item";
 import topicNotifications from "../components/sections/molecules/topic-notifications";
 import topicTimerInfo from "../components/sections/molecules/topic-timer-info";
+import virtualList from "../components/sections/molecules/virtual-list";
 import post from "../components/sections/organisms/00-post";
 import postList from "../components/sections/organisms/01-post-list";
 import postOneboxes from "../components/sections/organisms/02-post-oneboxes";
@@ -66,6 +69,7 @@ const SECTIONS = [
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
+  { component: shortcut, category: "atoms", id: "shortcut" },
   {
     component: segmentedControl,
     category: "atoms",
@@ -83,6 +87,7 @@ const SECTIONS = [
     id: "navigation-stacked",
   },
   { component: postMenu, category: "molecules", id: "post-menu" },
+  { component: rovingFocus, category: "molecules", id: "roving-focus" },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
   { component: multiselect, category: "molecules", id: "multi-select" },
@@ -97,6 +102,7 @@ const SECTIONS = [
     id: "topic-notifications",
   },
   { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
+  { component: virtualList, category: "molecules", id: "virtual-list" },
   { component: post, category: "organisms", id: "post", priority: 0 },
   { component: postList, category: "organisms", id: "post-list", priority: 1 },
   {

@@ -2607,15 +2607,10 @@ sw:
       search:
         title: "Tafuta"
       site_traffic_explorer:
-        pageviews: "Ukurasa Umeonwa Mara"
-        columns:
-          top_urls: "Anwani ya mtandao"
-          ip_addresses: "Anwani ya Mtandao"
+        metric_information: "Kuhusu %{metric}"
+        apply: "Tumia"
         filters:
           ip: "Anwani ya Mtandao"
-        metrics:
-          pageviews:
-            label: "Ukurasa Umeonwa Mara"
         series:
           anonymous_human: "Asiyejulikana"
       dashboard:

@@ -973,11 +973,22 @@ export default class TextareaTextManipulation implements TextManipulation {
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
+    const collapsedSelection = sel.start === sel.end;
+
     if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
-      if (sel.start === sel.end) {
+
+      let absorbedHead = false;
+      if (hlen > 0 && sel.pre.slice(sel.pre.lastIndexOf("\n") + 1) === hval) {
+        sel.start -= hlen;
+        sel.pre = sel.pre.slice(0, -hlen);
+        sel.value = `${hval}${sel.value}`;
+        absorbedHead = true;
+      }
+
+      if (collapsedSelection && !absorbedHead) {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
@@ -985,6 +996,7 @@ export default class TextareaTextManipulation implements TextManipulation {
       // they are "list-like" in that they have a character at
       // the start and a level, rather than having a surrounding format.
       let number;
+      let removedHead = false;
       if (hval.includes("#")) {
         const currentHeadingLevel = sel.value.search(/[^#]/);
 
@@ -992,6 +1004,7 @@ export default class TextareaTextManipulation implements TextManipulation {
         // mirrors list behavior.
         if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
           number = sel.value.slice(hlen);
+          removedHead = true;
         } else {
           // Replace the existing heading level with the new one, or
           // if there is no heading level, add the new one.
@@ -1009,6 +1022,7 @@ export default class TextareaTextManipulation implements TextManipulation {
         // it to "list item"
         if (sel.value.startsWith(hval)) {
           number = sel.value.slice(hlen);
+          removedHead = true;
         } else {
           number = `${hval}${sel.value}`;
         }
@@ -1024,17 +1038,14 @@ export default class TextareaTextManipulation implements TextManipulation {
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
 
-      if (opts?.excludeHeadInSelection) {
-        this.selectText(
-          sel.start + (preNewlines.length - preChars) + hval.length,
-          number.length - hval.length
-        );
-      } else {
-        this.selectText(
-          sel.start + (preNewlines.length - preChars),
-          number.length
-        );
-      }
+      const headSelectionOffset =
+        (opts?.excludeHeadInSelection || collapsedSelection) && !removedHead
+          ? hval.length
+          : 0;
+      this.selectText(
+        sel.start + (preNewlines.length - preChars) + headSelectionOffset,
+        number.length - headSelectionOffset
+      );
     }
   }
 

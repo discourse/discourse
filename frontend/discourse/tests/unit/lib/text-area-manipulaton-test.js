@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
+import { i18n } from "discourse-i18n";
 
 module("Unit | Utility | text-area-manipulation", function (hooks) {
   setupTest(hooks);
@@ -50,6 +51,26 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     textarea.select();
     manipulation.applySurroundSelection("**", "**", "example");
     assert.strictEqual(textarea.value, "****Hello World**");
+  });
+
+  test("applyList selects a placeholder without its checklist marker", function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+
+    textarea.setSelectionRange(0, 0);
+    manipulation.applyList(
+      manipulation.getSelected(false, { lineVal: true }),
+      "- [ ] ",
+      "list_item"
+    );
+
+    const example = i18n("composer.list_item");
+    assert.strictEqual(textarea.value, `- [ ] ${example}`);
+    assert.strictEqual(textarea.selectionStart, 6);
+    assert.strictEqual(textarea.selectionEnd, 6 + example.length);
   });
 
   test("emojiSelected - replaces ASCII partial term", async function (assert) {

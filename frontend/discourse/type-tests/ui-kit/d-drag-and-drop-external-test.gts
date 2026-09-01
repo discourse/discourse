@@ -49,7 +49,7 @@ const Positives = <template>
 
   {{! External auto-scroll is a separate opt-in keyed by kind, not drag type }}
   <div
-    {{dDragAndDropAutoScroll types="card" accepts=(array "urls" "files")}}
+    {{dDragAndDropAutoScroll types="card" externalKinds=(array "urls" "files")}}
   ></div>
 </template>;
 

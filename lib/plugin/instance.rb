@@ -1009,8 +1009,25 @@ class Plugin::Instance
   # Receives an array with two elements:
   # 1. A symbol that represents the name of the value to filter.
   # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.
-  def add_custom_reviewable_filter(filter)
+  #
+  # type_filter accepts an id and filter value for the Type control. reason_filters accepts an
+  # array or callable returning ids, names, and filter values for the Reason control.
+  def add_custom_reviewable_filter(filter, type_filter: nil, reason_filters: nil)
     reloadable_patch { Reviewable.add_custom_filter(filter) }
+
+    if type_filter
+      DiscoursePluginRegistry.register_reviewable_filter_type_option(
+        type_filter.merge(filter: filter.first),
+        self,
+      )
+    end
+
+    if reason_filters
+      DiscoursePluginRegistry.register_reviewable_filter_reason_registration(
+        { filter: filter.first, options: reason_filters },
+        self,
+      )
+    end
   end
 
   # Register a new API key scope.
@@ -1078,13 +1095,63 @@ class Plugin::Instance
   # Example:
   #   register_calendar_subscription_feed(
   #     name: "all_events",
-  #     scope: "discourse-calendar:events_calendar",
-  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     scope: "my-plugin:events_calendar",
+  #     description_key: "my_plugin.preferences.all_events_description",
   #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
   #   )
   def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
     DiscoursePluginRegistry.register_calendar_subscription_feed(
       { name: name, scope: scope, description_key: description_key, url: url },
+      self,
+    )
+  end
+
+  # Registers a plugin page as an option for the default_homepage site setting.
+  # The route is also mounted at `/` when the option is selected, while `path`
+  # remains the page's canonical URL for direct navigation.
+  #
+  # @param id [String, Symbol] stable identifier stored in the site setting
+  # @param name [String] client-side translation key used in the admin setting
+  # @param path [String] application path for the homepage
+  # @param route [String] Rails controller action, in `controller#action` form
+  # @param anonymous [Boolean] whether logged-out visitors may use this homepage
+  # @param server_side [Boolean] whether navigation requires a full page request
+  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+    id = id.to_s
+
+    if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
+      raise ArgumentError,
+            "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
+    end
+    raise ArgumentError, "homepage name must be present" if name.blank?
+    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
+      raise ArgumentError, "homepage route must use controller#action format"
+    end
+    if ![true, false].include?(anonymous)
+      raise ArgumentError, "homepage anonymous must be true or false"
+    end
+    if ![true, false].include?(server_side)
+      raise ArgumentError, "homepage server_side must be true or false"
+    end
+
+    registered_ids =
+      DiscoursePluginRegistry._raw_homepage_options.map { |entry| entry[:value][:id] }
+    core_homepage_ids =
+      Discourse.filters.map(&:to_s) + %w[categories custom blank finish_installation]
+    if core_homepage_ids.include?(id) || registered_ids.include?(id)
+      raise ArgumentError, "homepage id '#{id}' is already registered"
+    end
+
+    DiscoursePluginRegistry.register_homepage_option(
+      {
+        id: id,
+        name: name,
+        path: path.to_s,
+        route: route.to_s,
+        anonymous: anonymous,
+        server_side: server_side,
+      },
       self,
     )
   end

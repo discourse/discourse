@@ -7,8 +7,21 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
   let(:jpg) { plugin_file_from_fixtures("1x1.jpg") }
   let(:large_jpg) { plugin_file_from_fixtures("100x100.jpg") }
   let(:webp) { plugin_file_from_fixtures("1x1.webp") }
+  let(:avif) { plugin_file_from_fixtures("1x1.avif") }
+  let(:large_avif) { plugin_file_from_fixtures("100x100.avif") }
 
   before { enable_current_plugin }
+
+  MAX_PIXELS = 1_048_576
+
+  def encode_document(upload, attachment_type)
+    described_class.encode(
+      upload_ids: [upload.id],
+      max_pixels: MAX_PIXELS,
+      allowed_kinds: %i[document],
+      allowed_attachment_types: Array(attachment_type),
+    )
+  end
 
   def create_doc_upload(contents: "raw doc bytes", filename: "sample.doc")
     extension = File.extname(filename)
@@ -20,40 +33,6 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     UploadCreator.new(tempfile, filename).create_for(Discourse.system_user.id)
   ensure
     tempfile&.close!
-  end
-
-  def zip_bytes(entries, extension)
-    tempfile = Tempfile.new(["sample", extension])
-    path = tempfile.path
-    tempfile.close
-    FileUtils.rm_f(path)
-
-    ::Zip::File.open(path, create: true) do |zip_file|
-      entries.each do |name, content|
-        zip_file.get_output_stream(name) { |stream| stream.write(content) }
-      end
-    end
-
-    File.binread(path)
-  ensure
-    tempfile&.close
-    FileUtils.rm_f(path) if path
-  end
-
-  def docx_bytes(entries)
-    zip_bytes(entries, ".docx")
-  end
-
-  def xlsx_bytes(entries)
-    zip_bytes(entries, ".xlsx")
-  end
-
-  def odt_bytes(entries)
-    zip_bytes(entries, ".odt")
-  end
-
-  def ods_bytes(entries)
-    zip_bytes(entries, ".ods")
   end
 
   def odt_content_xml(text)
@@ -104,7 +83,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
 
   it "automatically converts gifs to pngs" do
     upload = UploadCreator.new(gif, "1x1.gif").create_for(Discourse.system_user.id)
-    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: 1_048_576)
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
     expect(encoded.length).to eq(1)
     expect(encoded[0][:base64]).to be_present
     expect(encoded[0][:mime_type]).to eq("image/png")
@@ -112,7 +91,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
 
   it "automatically converts webp to pngs" do
     upload = UploadCreator.new(webp, "1x1.webp").create_for(Discourse.system_user.id)
-    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: 1_048_576)
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
     expect(encoded.length).to eq(1)
     expect(encoded[0][:base64]).to be_present
     expect(encoded[0][:mime_type]).to eq("image/png")
@@ -129,10 +108,143 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
 
   it "supports jpg" do
     upload = UploadCreator.new(jpg, "1x1.jpg").create_for(Discourse.system_user.id)
-    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: 1_048_576)
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
     expect(encoded.length).to eq(1)
     expect(encoded[0][:base64]).to be_present
     expect(encoded[0][:mime_type]).to eq("image/jpeg")
+  end
+
+  it "automatically converts avif to pngs" do
+    upload = UploadCreator.new(avif, "1x1.avif").create_for(Discourse.system_user.id)
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+    expect(encoded.length).to eq(1)
+    expect(encoded[0][:base64]).to be_present
+    expect(encoded[0][:mime_type]).to eq("image/png")
+  end
+
+  it "resizes avif to the configured pixel area" do
+    upload = UploadCreator.new(large_avif, "100x100.avif").create_for(Discourse.system_user.id)
+
+    described_class.encode(upload_ids: [upload.id], max_pixels: 2_500)
+
+    expect(upload.optimized_images.find_by(width: 50, height: 50, extension: ".png")).to be_present
+  end
+
+  it "encodes uploads whose extension is not lowercase" do
+    upload = UploadCreator.new(jpg, "1x1.jpg").create_for(Discourse.system_user.id)
+    upload.update!(extension: "JPG")
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded.length).to eq(1)
+    expect(encoded[0][:mime_type]).to eq("image/jpeg")
+  end
+
+  it "skips and logs images it cannot encode" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    allow(Rails.logger).to receive(:warn)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "avatar.jxl", "unsupported image format"),
+    )
+  end
+
+  it "never routes an unsupported image through the document path" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+
+    encoded =
+      described_class.encode(
+        upload_ids: [upload.id],
+        max_pixels: MAX_PIXELS,
+        allowed_kinds: %i[image document],
+        allowed_attachment_types: nil,
+      )
+
+    expect(encoded).to be_empty
+  end
+
+  it "skips and logs images with unknown dimensions" do
+    upload = Fabricate(:upload, original_filename: "avatar.png", extension: "png", width: 0)
+    allow(Rails.logger).to receive(:warn)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "dimensions are unknown"),
+    )
+  end
+
+  it "skips and logs images that cannot be optimized" do
+    upload = UploadCreator.new(webp, "1x1.webp").create_for(Discourse.system_user.id)
+    allow(Rails.logger).to receive(:warn)
+    allow_any_instance_of(Upload).to receive(:get_optimized_image).and_return(nil)
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
+
+    expect(encoded).to be_empty
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_including("Skipping image upload", "could not be converted to png"),
+    )
+  end
+
+  it "does not raise when an upload no longer exists" do
+    missing_id = Upload.maximum(:id).to_i + 1
+
+    expect(described_class.encode(upload_ids: [missing_id], max_pixels: MAX_PIXELS)).to be_empty
+  end
+
+  it "records skipped images into a caller supplied collector" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    skips = []
+
+    encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS, skips: skips)
+
+    expect(encoded).to be_empty
+    expect(skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+    expect(skips.first[:filename]).to eq("avatar.jxl")
+    expect(skips.first[:message]).to include("unsupported image format")
+  end
+
+  it "reaches the collector a prompt was handed" do
+    upload = Fabricate(:upload, original_filename: "avatar.jxl", extension: "jxl")
+    execution_context = DiscourseAi::Completions::ExecutionContext.new
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "system",
+        messages: [{ type: :user, content: ["look", { upload_id: upload.id }] }],
+      )
+    prompt.upload_skips = execution_context.upload_skips
+
+    prompt.encoded_uploads(prompt.messages.last)
+
+    expect(execution_context.upload_skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
+  end
+
+  it "only claims formats ImageMagick can decode" do
+    described_class::SUPPORTED_IMAGE_EXTENSIONS.each do |extension|
+      expect(extension).to match(OptimizedImage::IM_DECODERS)
+    end
+  end
+
+  describe ".supported_image_upload?" do
+    it "accepts every format the encoder can transcode" do
+      %w[jpg jpeg png gif webp avif].each do |extension|
+        upload = Fabricate.build(:upload, original_filename: "x.#{extension}", extension: extension)
+        expect(described_class.supported_image_upload?(upload)).to eq(true), extension
+      end
+    end
+
+    it "rejects formats the encoder cannot transcode" do
+      %w[jxl heic svg bmp pdf].each do |extension|
+        upload = Fabricate.build(:upload, original_filename: "x.#{extension}", extension: extension)
+        expect(described_class.supported_image_upload?(upload)).to eq(false), extension
+      end
+    end
   end
 
   describe ".doc, .docx, .xls, and .xlsx uploads" do
@@ -145,13 +257,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
         "Converted document text\n",
       )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["doc"],
-        )
+      encoded = encode_document(upload, ["doc"])
 
       expect(DiscourseAi::Completions::DocToText).to have_received(:convert).with(
         a_string_matching(/\.doc\z/),
@@ -174,13 +280,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       allow(DiscourseAi::Completions::DocToText).to receive(:convert).and_return(nil)
       allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["doc"],
-        )
+      encoded = encode_document(upload, ["doc"])
 
       expect(encoded).to be_empty
       expect(Rails.logger).to have_received(:warn).with(
@@ -198,17 +298,14 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       upload =
         create_doc_upload(
           contents:
-            docx_bytes("word/document.xml" => docx_document_xml("Converted DOCX document text")),
+            zipped_document_bytes(
+              "docx",
+              "word/document.xml" => docx_document_xml("Converted DOCX document text"),
+            ),
           filename: "sample.docx",
         )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["docx"],
-        )
+      encoded = encode_document(upload, ["docx"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first).to include(
@@ -222,30 +319,6 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    it "logs docx conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw docx bytes", filename: "sample.docx")
-
-      allow(Rails.logger).to receive(:warn)
-
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["docx"],
-        )
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .docx upload to text",
-          "upload_id=#{upload.id}",
-          "sample.docx",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
-    end
-
     it "converts .xls files to text" do
       upload = create_doc_upload(contents: "raw xls bytes", filename: "sample.xls")
 
@@ -253,13 +326,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
         "Name,Value\nAlice,1\n",
       )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["xls"],
-        )
+      encoded = encode_document(upload, ["xls"])
 
       expect(DiscourseAi::Completions::XlsToText).to have_received(:convert).with(
         a_string_matching(/\.xls\z/),
@@ -282,13 +349,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       allow(DiscourseAi::Completions::XlsToText).to receive(:convert).and_return(nil)
       allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["xls"],
-        )
+      encoded = encode_document(upload, ["xls"])
 
       expect(encoded).to be_empty
       expect(Rails.logger).to have_received(:warn).with(
@@ -305,7 +366,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     it "converts .xlsx files to text" do
       upload =
         create_doc_upload(
-          contents: xlsx_bytes("xl/worksheets/sheet1.xml" => <<~XML),
+          contents: zipped_document_bytes("xlsx", "xl/worksheets/sheet1.xml" => <<~XML),
                 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
                   <sheetData>
                     <row><c t="inlineStr"><is><t>Converted XLSX spreadsheet text</t></is></c></row>
@@ -315,13 +376,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
           filename: "sample.xlsx",
         )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["xlsx"],
-        )
+      encoded = encode_document(upload, ["xlsx"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first).to include(
@@ -337,44 +392,18 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    it "logs xlsx conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw xlsx bytes", filename: "sample.xlsx")
-
-      allow(Rails.logger).to receive(:warn)
-
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["xlsx"],
-        )
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .xlsx upload to text",
-          "upload_id=#{upload.id}",
-          "sample.xlsx",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
-    end
-
     it "converts .odt files to text" do
       upload =
         create_doc_upload(
-          contents: odt_bytes("content.xml" => odt_content_xml("Converted ODT document text")),
+          contents:
+            zipped_document_bytes(
+              "odt",
+              "content.xml" => odt_content_xml("Converted ODT document text"),
+            ),
           filename: "sample.odt",
         )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["odt"],
-        )
+      encoded = encode_document(upload, ["odt"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first).to include(
@@ -388,44 +417,18 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    it "logs odt conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw odt bytes", filename: "sample.odt")
-
-      allow(Rails.logger).to receive(:warn)
-
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["odt"],
-        )
-
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .odt upload to text",
-          "upload_id=#{upload.id}",
-          "sample.odt",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
-    end
-
     it "converts .ods files to text" do
       upload =
         create_doc_upload(
-          contents: ods_bytes("content.xml" => ods_content_xml("Sales", "Converted ODS cell")),
+          contents:
+            zipped_document_bytes(
+              "ods",
+              "content.xml" => ods_content_xml("Sales", "Converted ODS cell"),
+            ),
           filename: "sample.ods",
         )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["ods"],
-        )
+      encoded = encode_document(upload, ["ods"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first).to include(
@@ -439,28 +442,38 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    it "logs ods conversion failures and skips the upload" do
-      upload = create_doc_upload(contents: "raw ods bytes", filename: "sample.ods")
+    %w[docx xlsx odt ods].each do |extension|
+      it "logs #{extension} conversion failures and skips the upload" do
+        upload =
+          create_doc_upload(contents: "raw #{extension} bytes", filename: "sample.#{extension}")
 
-      allow(Rails.logger).to receive(:warn)
+        allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["ods"],
+        encoded = encode_document(upload, [extension])
+
+        expect(Rails.logger).to have_received(:warn).with(
+          a_string_including(
+            "Failed to convert .#{extension} upload to text",
+            "upload_id=#{upload.id}",
+            "sample.#{extension}",
+            "Zip",
+          ),
+        )
+        expect(encoded).to be_empty
+      end
+    end
+
+    it "routes .html uploads through the html converter" do
+      upload =
+        create_doc_upload(
+          contents: "<html><body><h1>Heading</h1></body></html>",
+          filename: "page.html",
         )
 
-      expect(Rails.logger).to have_received(:warn).with(
-        a_string_including(
-          "Failed to convert .ods upload to text",
-          "upload_id=#{upload.id}",
-          "sample.ods",
-          "Zip",
-        ),
-      )
-      expect(encoded).to be_empty
+      encoded = encode_document(upload, ["html"])
+
+      expect(encoded.first).to include(converted_from: "html", mime_type: "text/plain")
+      expect(encoded.first[:text]).to include("# Heading")
     end
 
     it "converts .rtf files to text" do
@@ -470,13 +483,7 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
           filename: "sample.rtf",
         )
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["rtf"],
-        )
+      encoded = encode_document(upload, ["rtf"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first).to include(
@@ -510,7 +517,7 @@ Alice,1",
       encoded =
         described_class.encode(
           upload_ids: uploads.map(&:id),
-          max_pixels: 1_048_576,
+          max_pixels: MAX_PIXELS,
           allowed_kinds: %i[document],
           allowed_attachment_types: %w[txt md csv],
         )
@@ -545,7 +552,7 @@ Alice,1",
       encoded =
         described_class.encode(
           upload_ids: [md_upload.id, txt_upload.id],
-          max_pixels: 1_048_576,
+          max_pixels: MAX_PIXELS,
           allowed_kinds: %i[document],
           allowed_attachment_types: %w[markdown text],
         )
@@ -559,13 +566,8 @@ Alice,1",
       upload = create_doc_upload(contents: "0123456789abcdef", filename: "large.txt")
 
       encoded =
-        stub_const(described_class, :MAX_TEXT_FILE_BYTES, 10) do
-          described_class.encode(
-            upload_ids: [upload.id],
-            max_pixels: 1_048_576,
-            allowed_kinds: %i[document],
-            allowed_attachment_types: ["txt"],
-          )
+        stub_const(DiscourseAi::Completions::DocumentEncoder, :MAX_TEXT_FILE_BYTES, 10) do
+          encode_document(upload, ["txt"])
         end
 
       expect(encoded.length).to eq(1)
@@ -581,13 +583,7 @@ Alice,1",
 
       allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["txt"],
-        )
+      encoded = encode_document(upload, ["txt"])
 
       expect(Rails.logger).to have_received(:warn).with(
         a_string_including(
@@ -607,13 +603,7 @@ Alice,1",
       allow(DiscourseAi::Completions::DocToText).to receive(:convert).and_raise(error)
       allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["doc"],
-        )
+      encoded = encode_document(upload, ["doc"])
 
       expect(Rails.logger).to have_received(:warn).with(
         a_string_including(
@@ -633,13 +623,7 @@ Alice,1",
       allow(DiscourseAi::Completions::DocToText).to receive(:convert).and_return("\n  \n")
       allow(Rails.logger).to receive(:warn)
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["doc"],
-        )
+      encoded = encode_document(upload, ["doc"])
 
       expect(Rails.logger).to have_received(:warn).with(
         a_string_including(
@@ -655,13 +639,7 @@ Alice,1",
     it "sends allowed raw PDF documents when they are within the byte limit" do
       upload = create_doc_upload(contents: "%PDF raw bytes", filename: "sample.pdf")
 
-      encoded =
-        described_class.encode(
-          upload_ids: [upload.id],
-          max_pixels: 1_048_576,
-          allowed_kinds: %i[document],
-          allowed_attachment_types: ["pdf"],
-        )
+      encoded = encode_document(upload, ["pdf"])
 
       expect(encoded.length).to eq(1)
       expect(encoded.first[:kind]).to eq(:document)
@@ -675,13 +653,8 @@ Alice,1",
       allow(Rails.logger).to receive(:warn)
 
       encoded =
-        stub_const(described_class, :MAX_RAW_DOCUMENT_BYTES, 4) do
-          described_class.encode(
-            upload_ids: [upload.id],
-            max_pixels: 1_048_576,
-            allowed_kinds: %i[document],
-            allowed_attachment_types: ["pdf"],
-          )
+        stub_const(DiscourseAi::Completions::DocumentEncoder, :MAX_RAW_DOCUMENT_BYTES, 4) do
+          encode_document(upload, ["pdf"])
         end
 
       expect(encoded).to be_empty

@@ -228,7 +228,7 @@ module PostGuardian
 
     return true if is_category_group_moderator?(post.topic&.category)
 
-    return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    return true if can_delete_all_posts_and_topics?
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
@@ -404,8 +404,7 @@ module PostGuardian
   end
 
   def can_see_deleted_posts?(category = nil)
-    is_category_group_moderator?(category) ||
-      @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    is_category_group_moderator?(category) || can_delete_all_posts_and_topics?
   end
 
   def can_see_deleted_posts_for_user?
