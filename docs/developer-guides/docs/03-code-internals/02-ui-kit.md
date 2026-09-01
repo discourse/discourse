@@ -8,7 +8,7 @@ id: ui-kit
 
 `ui-kit` is the layer of reusable, domain-free building blocks that core, plugins, and themes compose their interfaces from. It lives under `frontend/discourse/app/ui-kit/` and ships three kinds of primitive:
 
-- **Components**: `d-button`, `d-modal`, `d-select`, `d-skeleton`, and so on.
+- **Components**: `d-button`, `d-modal`, `d-native-select`, `d-skeleton`, and so on.
 - **Helpers** (`ui-kit/helpers/`): `d-icon`, `d-format-date`, `d-concat-class`, `d-user-avatar`, and so on.
 - **Modifiers** (`ui-kit/modifiers/`): `d-trap-tab`, `d-on-resize`, `d-close-on-click-outside`, the drag-and-drop family, and so on.
 
@@ -78,7 +78,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 
 | Primitive                                                                                                                                                                      | Use it for                                  | Styleguide                                                                       |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- | -------------------------------------------------------------------------------- |
-| `DSelect`                                                                                                                                                                      | A native `<select>` with Discourse styling. | [Dropdowns](https://meta.discourse.org/styleguide/atoms/dropdowns)               |
+| `DNativeSelect`                                                                                                                                                                | A native `<select>` with Discourse styling. | [Dropdowns](https://meta.discourse.org/styleguide/atoms/dropdowns)               |
 | `DMultiSelect`                                                                                                                                                                 | Choose several values with search.          | [Multi select](https://meta.discourse.org/styleguide/molecules/multi-select)     |
 | `DTextField`, `DTextarea`, `DExpandingTextArea`, `DPasswordField`, `DRadioButton`                                                                                              | Single controls.                            | [Forms](https://meta.discourse.org/styleguide/atoms/forms)                       |
 | `DDateInput`, `DDatePicker`, `DTimeInput`, `DDateTimeInput`, `DDateTimeInputRange`, `DFutureDateInput`, `DRelativeTimePicker`, `DTimeShortcutPicker`, `DCalendarDateTimeInput` | Dates, times, and ranges.                   | [Date/time inputs](https://meta.discourse.org/styleguide/atoms/date-time-inputs) |

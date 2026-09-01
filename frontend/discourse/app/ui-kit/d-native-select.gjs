@@ -18,7 +18,7 @@ const claimSelectedAfterRender = modifier((element, [selected]) => {
   }
 });
 
-export class DSelectOption extends Component {
+export class DNativeSelectOption extends Component {
   get value() {
     return optionValue(this.args.value);
   }
@@ -32,8 +32,8 @@ export class DSelectOption extends Component {
     <option
       class={{if
         this.isSelected
-        "d-select__option --selected"
-        "d-select__option"
+        "d-native-select__option --selected"
+        "d-native-select__option"
       }}
       value={{this.value}}
       selected={{this.isSelected}}
@@ -45,7 +45,7 @@ export class DSelectOption extends Component {
   </template>
 }
 
-export default class DSelect extends Component {
+export default class DNativeSelect extends Component {
   get htmlSelectValue() {
     const value = this.args.value;
     if (value === NO_VALUE_OPTION) {
@@ -78,11 +78,11 @@ export default class DSelect extends Component {
     <select
       value={{this.htmlSelectValue}}
       ...attributes
-      class="d-select"
+      class="d-native-select"
       {{on "input" this.handleInput}}
     >
       {{#if this.includeNone}}
-        <DSelectOption
+        <DNativeSelectOption
           @value={{NO_VALUE_OPTION}}
           @selected={{this.htmlSelectValue}}
         >
@@ -95,11 +95,13 @@ export default class DSelect extends Component {
               {{i18n "select_placeholder"}}
             {{/if}}
           {{/if}}
-        </DSelectOption>
+        </DNativeSelectOption>
       {{/if}}
 
       {{yield
-        (hash Option=(component DSelectOption selected=this.htmlSelectValue))
+        (hash
+          Option=(component DNativeSelectOption selected=this.htmlSelectValue)
+        )
       }}
     </select>
   </template>

@@ -1,7 +1,7 @@
 import { find } from "@ember/test-helpers";
 import QUnit from "qunit";
 
-class DSelect {
+class DNativeSelect {
   constructor(selector, context) {
     this.context = context;
     if (selector instanceof HTMLElement) {
@@ -13,7 +13,7 @@ class DSelect {
 
   hasOption({ value, label }, assertionMessage) {
     const option = this.element.querySelector(
-      `.d-select__option[value="${value}"]`
+      `.d-native-select__option[value="${value}"]`
     );
 
     this.context.dom(option).exists(assertionMessage);
@@ -24,7 +24,7 @@ class DSelect {
 
   hasNoOption(value, assertionMessage) {
     const option = this.element.querySelector(
-      `.d-select__option[value="${value}"]`
+      `.d-native-select__option[value="${value}"]`
     );
 
     this.context.dom(option).doesNotExist(assertionMessage);
@@ -53,8 +53,8 @@ class DSelect {
   }
 }
 
-export function setupDSelectAssertions() {
-  QUnit.assert.dselect = function (selector = ".d-select") {
-    return new DSelect(selector, this);
+export function setupDNativeSelectAssertions() {
+  QUnit.assert.dnativeselect = function (selector = ".d-native-select") {
+    return new DNativeSelect(selector, this);
   };
 }
