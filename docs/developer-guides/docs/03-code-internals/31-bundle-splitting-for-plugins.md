@@ -111,13 +111,15 @@ This means no conditionals, no loops, and no values read from settings, services
 
 ## Compatibility
 
-When using staticModules, you should avoid using these legacy Ember features:
+When using staticModules, you should avoid using these legacy features:
 
 - `templateName`/`controllerName` overrides in routes
 
 - Injecting controllers or routes via `@controller` or `.lookup()`
 
 - Loading components via `.lookup()`
+
+- `requirejs.entries`, `require()`, `define()`
 
 ## Verification
 
