@@ -9,8 +9,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 class StubDesktopNotifications extends Service {
   @tracked isNotSupported = false;
   @tracked isEnabled = false;
+  @tracked pushNeedsAttention = false;
   @tracked consentPromptDismissed = false;
-  @tracked canRestorePushWithoutPrompt = false;
   @tracked enableCalls = 0;
   @tracked dismissCalls = 0;
 
@@ -51,16 +51,7 @@ module("Integration | Component | NotificationConsentBanner", function (hooks) {
     assert.dom(".consent_banner").exists();
   });
 
-  test("prompts when a lost subscription can be restored without a permission prompt", async function (assert) {
-    stubPermission("granted");
-    this.desktopNotifications.canRestorePushWithoutPrompt = true;
-
-    await render(<template><NotificationConsentBanner /></template>);
-
-    assert.dom(".consent_banner").exists("the banner offers to re-enable");
-  });
-
-  test("stays hidden while permission is granted and nothing was lost", async function (assert) {
+  test("stays hidden while permission is granted", async function (assert) {
     stubPermission("granted");
 
     await render(<template><NotificationConsentBanner /></template>);
@@ -68,9 +59,17 @@ module("Integration | Component | NotificationConsentBanner", function (hooks) {
     assert.dom(".consent_banner").doesNotExist();
   });
 
+  test("prompts when granted push needs attention", async function (assert) {
+    stubPermission("granted");
+    this.desktopNotifications.pushNeedsAttention = true;
+
+    await render(<template><NotificationConsentBanner /></template>);
+
+    assert.dom(".consent_banner").exists("the banner offers to repair push");
+  });
+
   test("stays hidden once permission has been denied", async function (assert) {
     stubPermission("denied");
-    this.desktopNotifications.canRestorePushWithoutPrompt = true;
 
     await render(<template><NotificationConsentBanner /></template>);
 

@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
+  currentPushTransportEpoch,
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
   setPushTransport,
@@ -13,6 +14,8 @@ import { isTesting } from "discourse/lib/environment";
 import { listenForPushNotificationMessages } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
+
+const PUSH_RECONCILE_COOLDOWN_MS = 60_000;
 
 export class SubscribeUserNotificationsInit {
   @service appEvents;
@@ -121,12 +124,15 @@ export class SubscribeUserNotificationsInit {
       return this.pushReconciliation;
     }
 
+    this._lastPushReconciliationAt = Date.now();
+
     // Until reconciliation reports back, the stored intent is the only evidence
     // there is. Assuming push delivers keeps a notification arriving during the
     // round trip from being shown twice.
     if (this.desktopNotifications.pushIntent === "subscribed") {
       setPushTransport("delivering");
     }
+    const transportEpoch = currentPushTransportEpoch();
 
     this.pushReconciliation = this.desktopNotifications
       .reconcilePushSubscription()
@@ -136,19 +142,19 @@ export class SubscribeUserNotificationsInit {
         return null;
       })
       .then((result) => {
-        if (result === "subscribed" || result === "unconfirmed") {
-          // "unconfirmed" still delivers: the device kept the subscription the
-          // server already knows, only the redundant resync went unanswered.
-          setPushTransport("delivering");
+        let transport = null;
+        if (result === "subscribed") {
+          transport = "delivering";
         } else if (
-          this.desktopNotifications.pushIntent === "subscribed" &&
+          this.desktopNotifications.pushIntent !== "off" &&
           this.desktopNotifications.isGrantedPermission &&
+          this.desktopNotifications.isPushNotificationsPreferred &&
           !this.capabilities.isMobileDevice
         ) {
-          setPushTransport("fallback");
-        } else {
-          setPushTransport(null);
+          transport = "fallback";
         }
+
+        setPushTransport(transport, { ifEpoch: transportEpoch });
 
         return result;
       })
@@ -314,15 +320,20 @@ export class SubscribeUserNotificationsInit {
 
   @bind
   onAlert(data) {
+    // Avoid retrying every alert when a subscription cannot be repaired.
+    if (
+      this.desktopNotifications.pushIntent !== "off" &&
+      this.desktopNotifications.isGrantedPermission &&
+      this.desktopNotifications.isPushNotificationsPreferred &&
+      this.desktopNotifications.pushSubscriptionConfirmed !== true &&
+      Date.now() - (this._lastPushReconciliationAt ?? 0) >
+        PUSH_RECONCILE_COOLDOWN_MS
+    ) {
+      this.reconcileTransports();
+    }
+
+    // MessageBus cannot display a mobile notification
     if (this.capabilities.isMobileDevice) {
-      if (
-        this.desktopNotifications.pushIntent === "subscribed" &&
-        this.desktopNotifications.pushSubscriptionConfirmed !== true
-      ) {
-        // MessageBus cannot display mobile notifications, but an alert proves
-        // connectivity is back, so repair push for subsequent notifications.
-        this.reconcileTransports();
-      }
       return;
     }
 

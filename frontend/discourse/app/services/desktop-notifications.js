@@ -4,6 +4,7 @@ import Service, { service } from "@ember/service";
 import {
   confirmNotification,
   context,
+  setPushTransport,
 } from "discourse/lib/desktop-notifications";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
@@ -125,14 +126,12 @@ export default class DesktopNotificationsService extends Service {
     );
   }
 
-  // The permission grant outlived the stored intent (e.g. iOS wiped local
-  // storage): one explicit click restores push without a permission prompt.
-  get canRestorePushWithoutPrompt() {
+  get pushNeedsAttention() {
     return (
-      !!this.currentUser &&
-      this.pushIntent === null &&
+      this.pushIntent !== "off" &&
       this.isGrantedPermission &&
-      this.isPushNotificationsPreferred
+      this.isPushNotificationsPreferred &&
+      this.pushSubscriptionConfirmed === false
     );
   }
 
@@ -151,6 +150,9 @@ export default class DesktopNotificationsService extends Service {
     setSubscriptionIntent(this.currentUser, intent);
     this.pushIntent = intent;
     this.pushSubscriptionConfirmed = value;
+    if (value) {
+      this.rearmConsentPrompt();
+    }
   }
 
   dismissConsentPrompt() {
@@ -176,26 +178,26 @@ export default class DesktopNotificationsService extends Service {
     this.consentPromptDismissed = false;
   }
 
-  // Called at boot: restores a platform-purged subscription when possible,
-  // and re-arms the consent prompt when it isn't.
+  // Reconciles stored intent with platform/server state for transport and UI.
   async reconcilePushSubscription() {
     const result = await reconcileSubscription(this.currentUser, {
       resubscribe: this.isPushNotificationsPreferred,
       applicationServerKey: this.siteSettings.vapid_public_key_bytes,
     });
 
-    // Only conclusive results move the toggle: "unconfirmed" and null leave
-    // the stored intent as the best evidence, so one failed boot cannot flip
-    // the UI off while push may still deliver.
     if (result === "subscribed") {
+      this.pushIntent = "subscribed";
       this.pushSubscriptionConfirmed = true;
     } else if (result === "lost") {
-      this.pushSubscriptionConfirmed = false;
-    }
-
-    if (result === "lost") {
       this.pushIntent = null;
+      this.pushSubscriptionConfirmed = false;
       this.rearmConsentPrompt();
+    } else if (
+      this.pushIntent !== "off" &&
+      this.isGrantedPermission &&
+      this.isPushNotificationsPreferred
+    ) {
+      this.pushSubscriptionConfirmed = false;
     }
 
     return result;
@@ -211,6 +213,7 @@ export default class DesktopNotificationsService extends Service {
         this.setIsEnabledPush(false);
       });
     }
+    setPushTransport(null);
 
     return true;
   }
@@ -249,7 +252,10 @@ export default class DesktopNotificationsService extends Service {
         this.setIsEnabledPush(true);
       }, this.siteSettings.vapid_public_key_bytes);
 
-      if (!subscribed) {
+      if (subscribed) {
+        setPushTransport("delivering");
+      } else {
+        this.pushSubscriptionConfirmed = false;
         this.toasts.error({
           duration: "short",
           data: {

@@ -3,9 +3,13 @@ import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
+export const pushNotificationPreferenceStore = new KeyValueStore(
+  "push_notification_preferences_"
+);
 
 // a worker that failed to install never activates, so `ready` would hang
 const SERVICE_WORKER_READY_TIMEOUT_MS = 5000;
+const ADOPTION_IN_PROGRESS = "adopting";
 
 export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
@@ -14,7 +18,12 @@ export function userSubscriptionKey(user) {
 // The user's last expressed choice on this device; the platform's actual
 // subscription can be purged behind our back (common on iOS home screen apps).
 export function getSubscriptionIntent(user) {
-  const value = keyValueStore.getItem(userSubscriptionKey(user));
+  const key = userSubscriptionKey(user);
+  if (pushNotificationPreferenceStore.getItem(key) === "off") {
+    return "off";
+  }
+
+  const value = keyValueStore.getItem(key);
 
   if (value === "subscribed") {
     return "subscribed";
@@ -22,6 +31,8 @@ export function getSubscriptionIntent(user) {
 
   // older builds stored the boolean `false` (stringified) on explicit disable
   if (value === "off" || value === "false") {
+    pushNotificationPreferenceStore.setItem(key, "off");
+    keyValueStore.remove(key);
     return "off";
   }
 
@@ -31,32 +42,17 @@ export function getSubscriptionIntent(user) {
 }
 
 export function setSubscriptionIntent(user, intent) {
-  if (intent) {
-    keyValueStore.setItem(userSubscriptionKey(user), intent);
+  const key = userSubscriptionKey(user);
+
+  if (intent === "off") {
+    pushNotificationPreferenceStore.setItem(key, "off");
+    keyValueStore.remove(key);
+  } else if (intent === "subscribed") {
+    pushNotificationPreferenceStore.remove(key);
+    keyValueStore.setItem(key, intent);
   } else {
-    keyValueStore.remove(userSubscriptionKey(user));
+    keyValueStore.remove(key);
   }
-}
-
-// "unconfirmed" is only safe for an endpoint the server acknowledged in an
-// earlier session. A brand-new one it never answered for must keep the in-tab
-// fallback alive, or a device whose row was never created goes silent.
-function confirmedEndpointKey(user) {
-  return `confirmed-endpoint-${user.get("id")}`;
-}
-
-function markEndpointConfirmed(user, subscription) {
-  keyValueStore.setItem(
-    confirmedEndpointKey(user),
-    subscription.toJSON().endpoint
-  );
-}
-
-function isEndpointConfirmed(user, subscription) {
-  return (
-    keyValueStore.getItem(confirmedEndpointKey(user)) ===
-    subscription.toJSON().endpoint
-  );
 }
 
 function sendSubscriptionToServer(subscription, sendConfirmation) {
@@ -151,24 +147,28 @@ async function discardPlatformSubscription(subscription) {
   }
 }
 
-// The POST recreates the server row, so a disable that landed while it was in
-// flight has to be replayed against it: `unsubscribe()` has already invalidated
-// the platform subscription, leaving no other handle on that row.
-async function confirmResync(user, subscription) {
-  if (getSubscriptionIntent(user) === "off") {
+// The POST recreates the server row, so an opt-out or logout that landed while
+// it was in flight has to be replayed against it.
+async function confirmResync(user, subscription, previousIntent) {
+  const currentIntent = getSubscriptionIntent(user);
+  const storedIntent = keyValueStore.getItem(userSubscriptionKey(user));
+  if (
+    currentIntent === "off" ||
+    (previousIntent === "subscribed" && currentIntent === null) ||
+    (previousIntent === null &&
+      currentIntent === null &&
+      storedIntent !== ADOPTION_IN_PROGRESS)
+  ) {
     await retireServerSubscription(subscription);
     return null;
   }
 
-  markEndpointConfirmed(user, subscription);
+  setSubscriptionIntent(user, "subscribed");
   return "subscribed";
 }
 
-// Returns "subscribed" when the server knows about a working subscription,
-// "unconfirmed" when the device still has the one it was told about earlier but
-// the resync could not reach the server, "lost" when the user has to opt in
-// again, and null when there was nothing to conclude — a transient failure, so
-// the intent is kept and the next boot retries.
+// Returns the verified state, "lost" when permission vanished, or null when no
+// conclusion was possible.
 export async function reconcileSubscription(
   user,
   { resubscribe = false, applicationServerKey } = {}
@@ -195,21 +195,19 @@ export async function reconcileSubscription(
   // pending, and the branches below destroy subscriptions.
   const intent = getSubscriptionIntent(user);
 
-  if (intent === null) {
-    if (subscription) {
-      // An origin has only one subscription. With no current-user intent its
-      // ownership cannot be verified, so retaining it could expose another
-      // account's notifications after an abnormal session replacement.
-      await discardPlatformSubscription(subscription);
-    }
-    return null;
-  }
-
   if (intent === "off") {
     // Only drop the platform subscription once the server row is gone: it is
     // the sole way back to that row if the request failed.
     if (subscription && (await retireServerSubscription(subscription))) {
-      await discardPlatformSubscription(subscription);
+      const currentIntent = getSubscriptionIntent(user);
+      if (currentIntent === "off") {
+        await discardPlatformSubscription(subscription);
+      } else if (
+        currentIntent === "subscribed" &&
+        (await resyncSubscriptionWithServer(subscription))
+      ) {
+        return await confirmResync(user, subscription, currentIntent);
+      }
     }
     return null;
   }
@@ -218,23 +216,42 @@ export async function reconcileSubscription(
   // revoked grant counts as a loss whether or not the subscription object
   // itself survived.
   if (Notification.permission !== "granted") {
-    setSubscriptionIntent(user, null);
-    return "lost";
+    if (intent === "subscribed") {
+      setSubscriptionIntent(user, null);
+      return "lost";
+    }
+    return null;
   }
 
   if (subscription) {
-    if (await resyncSubscriptionWithServer(subscription)) {
-      return await confirmResync(user, subscription);
+    if (intent === null) {
+      if (!resubscribe) {
+        return null;
+      }
+      keyValueStore.setItem(userSubscriptionKey(user), ADOPTION_IN_PROGRESS);
     }
 
-    // A failed request is not proof the row is missing, so an endpoint the
-    // server acknowledged before still counts as delivering.
-    return isEndpointConfirmed(user, subscription) ? "unconfirmed" : null;
+    if (await resyncSubscriptionWithServer(subscription)) {
+      return await confirmResync(user, subscription, intent);
+    }
+
+    if (
+      keyValueStore.getItem(userSubscriptionKey(user)) === ADOPTION_IN_PROGRESS
+    ) {
+      setSubscriptionIntent(user, null);
+    }
+
+    return null;
   }
 
-  // the grant survived the platform purge, so the restore needs no prompt
-  if (!resubscribe) {
+  // The origin-level grant is the opt-in. Restore for every account except
+  // those which explicitly opted out.
+  if (!resubscribe || !applicationServerKey) {
     return null;
+  }
+
+  if (intent === null) {
+    keyValueStore.setItem(userSubscriptionKey(user), ADOPTION_IN_PROGRESS);
   }
 
   try {
@@ -246,16 +263,26 @@ export async function reconcileSubscription(
     // a failed restore is not an opt-out: keep the intent and retry next boot
     // eslint-disable-next-line no-console
     console.error(e);
+    if (
+      keyValueStore.getItem(userSubscriptionKey(user)) === ADOPTION_IN_PROGRESS
+    ) {
+      keyValueStore.remove(userSubscriptionKey(user));
+    }
     return null;
   }
 
   if (await resyncSubscriptionWithServer(subscription)) {
-    return await confirmResync(user, subscription);
+    return await confirmResync(user, subscription, intent);
   }
 
   // Left in place: only one subscription exists per origin, so discarding it can
   // destroy one another tab just confirmed. It stays unacknowledged, so the next
   // boot keeps the fallback and resyncs this same endpoint.
+  if (
+    keyValueStore.getItem(userSubscriptionKey(user)) === ADOPTION_IN_PROGRESS
+  ) {
+    keyValueStore.remove(userSubscriptionKey(user));
+  }
   return null;
 }
 

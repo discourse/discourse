@@ -3,9 +3,11 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { helperContext } from "discourse/lib/helpers";
+import KeyValueStore from "discourse/lib/key-value-store";
 import {
   getSubscriptionIntent,
   keyValueStore,
+  pushNotificationPreferenceStore,
   reconcileSubscription,
   setSubscriptionIntent,
   subscribe,
@@ -24,6 +26,7 @@ module("Unit | Lib | push-notifications", function (hooks) {
 
   hooks.afterEach(function () {
     keyValueStore.remove(userSubscriptionKey(user));
+    pushNotificationPreferenceStore.remove(userSubscriptionKey(user));
   });
 
   test("getSubscriptionIntent returns the stored intent", function (assert) {
@@ -40,6 +43,19 @@ module("Unit | Lib | push-notifications", function (hooks) {
 
   test("getSubscriptionIntent maps the legacy explicit-disable value to off", function (assert) {
     keyValueStore.setItem(userSubscriptionKey(user), "false");
+    assert.strictEqual(getSubscriptionIntent(user), "off");
+    assert.strictEqual(
+      pushNotificationPreferenceStore.getItem(userSubscriptionKey(user)),
+      "off",
+      "the old opt-out is migrated to storage which survives logout"
+    );
+  });
+
+  test("an explicit opt-out survives logout storage cleanup", function (assert) {
+    setSubscriptionIntent(user, "off");
+
+    new KeyValueStore("discourse_").abandonLocal();
+
     assert.strictEqual(getSubscriptionIntent(user), "off");
   });
 
@@ -114,7 +130,7 @@ module(
 
     hooks.afterEach(function () {
       keyValueStore.remove(userSubscriptionKey(user));
-      keyValueStore.remove(`confirmed-endpoint-${user.get("id")}`);
+      pushNotificationPreferenceStore.remove(userSubscriptionKey(user));
     });
 
     test("restores a subscription the platform dropped while permission is granted", async function (assert) {
@@ -179,9 +195,9 @@ module(
       assert.strictEqual(getSubscriptionIntent(user), "off");
     });
 
-    test("never adopts an existing subscription when the intent is unknown", async function (assert) {
+    test("adopts an existing subscription when the intent is unknown", async function (assert) {
       pushManager.subscription = {
-        toJSON: () => ({ endpoint: "other-user" }),
+        toJSON: () => ({ endpoint: "existing" }),
         unsubscribe: () => {
           pushManager.platformUnsubscribeCalls++;
           return Promise.resolve(true);
@@ -194,19 +210,48 @@ module(
         applicationServerKey,
       });
 
-      assert.strictEqual(result, null);
+      assert.strictEqual(result, "subscribed");
       assert.strictEqual(
         getSubscriptionIntent(user),
-        null,
-        "a live subscription may belong to another user of the same browser"
+        "subscribed",
+        "the origin-level permission applies unless this user opted out"
       );
       await settled();
-      assert.deepEqual(subscribeRequests, [], "nothing is sent to the server");
+      assert.deepEqual(
+        subscribeRequests,
+        [
+          {
+            subscription: { endpoint: "existing" },
+            send_confirmation: "false",
+          },
+        ],
+        "the POST transfers the endpoint to the current account"
+      );
       assert.strictEqual(
         pushManager.platformUnsubscribeCalls,
-        1,
-        "an unverifiably owned subscription cannot leak the previous account's notifications"
+        0,
+        "adoption preserves the working platform subscription"
       );
+    });
+
+    test("creates a subscription by default when permission is already granted", async function (assert) {
+      sinon.stub(Notification, "permission").get(() => "granted");
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(result, "subscribed");
+      assert.strictEqual(
+        pushManager.subscribeCalls,
+        1,
+        "the origin-level notification grant opts the account into push"
+      );
+      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
+      assert.deepEqual(subscribeRequests, [
+        { subscription: { endpoint: "restored" }, send_confirmation: "false" },
+      ]);
     });
 
     test("does not resubscribe when push is not the preferred transport", async function (assert) {
@@ -281,12 +326,10 @@ module(
       );
     });
 
-    test("does not claim an endpoint the server never acknowledged is delivering", async function (assert) {
+    test("does not suppress fallback when an existing subscription cannot be confirmed", async function (assert) {
       setSubscriptionIntent(user, "subscribed");
       sinon.stub(Notification, "permission").get(() => "granted");
-      pushManager.subscription = {
-        toJSON: () => ({ endpoint: "never-synced" }),
-      };
+      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
       pretender.post("/push_notifications/subscribe", () => response(500, {}));
 
       const result = await reconcileSubscription(user, {
@@ -297,34 +340,13 @@ module(
       assert.strictEqual(
         result,
         null,
-        "the row may never have been created, so the in-tab fallback has to stay alive rather than be silenced"
+        "only a successful server response proves push can deliver"
       );
-      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
-    });
-
-    test("keeps an existing subscription when only the resync failed", async function (assert) {
-      setSubscriptionIntent(user, "subscribed");
-      sinon.stub(Notification, "permission").get(() => "granted");
-      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
-
-      // a first boot in which the server acknowledged this endpoint
-      await reconcileSubscription(user, {
-        resubscribe: true,
-        applicationServerKey,
-      });
-      pretender.post("/push_notifications/subscribe", () => response(500, {}));
-
-      const result = await reconcileSubscription(user, {
-        resubscribe: true,
-        applicationServerKey,
-      });
-
       assert.strictEqual(
-        result,
-        "unconfirmed",
-        "the server was told about this endpoint when it was created, so a failed resync does not stop delivery"
+        getSubscriptionIntent(user),
+        "subscribed",
+        "the preference survives so reconciliation can retry"
       );
-      assert.strictEqual(getSubscriptionIntent(user), "subscribed");
     });
 
     test("treats a revoked permission grant as a loss even when the subscription survived", async function (assert) {
@@ -440,6 +462,61 @@ module(
       );
     });
 
+    test("retires a row a stale resync recreated after logout", async function (assert) {
+      setSubscriptionIntent(user, "subscribed");
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
+      pretender.post("/push_notifications/subscribe", (request) => {
+        subscribeRequests.push(parsePostData(request.requestBody));
+        setSubscriptionIntent(user, null);
+        return response({ success: "OK" });
+      });
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(
+        result,
+        null,
+        "the logged-out account is not restored"
+      );
+      assert.strictEqual(
+        getSubscriptionIntent(user),
+        null,
+        "the stale request does not recreate local state"
+      );
+      assert.deepEqual(
+        unsubscribeRequests,
+        [{ subscription: { endpoint: "existing" } }],
+        "the stale account's recreated row is retired"
+      );
+    });
+
+    test("retires an adoption that completes after logout", async function (assert) {
+      sinon.stub(Notification, "permission").get(() => "granted");
+      pushManager.subscription = { toJSON: () => ({ endpoint: "existing" }) };
+      pretender.post("/push_notifications/subscribe", (request) => {
+        subscribeRequests.push(parsePostData(request.requestBody));
+        setSubscriptionIntent(user, null);
+        return response({ success: "OK" });
+      });
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(result, null, "the logged-out account is not adopted");
+      assert.strictEqual(getSubscriptionIntent(user), null);
+      assert.deepEqual(
+        unsubscribeRequests,
+        [{ subscription: { endpoint: "existing" } }],
+        "the stale account's row is retired"
+      );
+    });
+
     test("retries retiring the server subscription when the user turned push off", async function (assert) {
       setSubscriptionIntent(user, "off");
       pushManager.subscription = {
@@ -467,6 +544,44 @@ module(
         pushManager.platformUnsubscribeCalls,
         1,
         "the endpoint is invalidated so it cannot retain another account's delivery"
+      );
+    });
+
+    test("replays an enable that lands during opt-out cleanup", async function (assert) {
+      setSubscriptionIntent(user, "off");
+      pushManager.subscription = {
+        toJSON: () => ({ endpoint: "re-enabled" }),
+        unsubscribe: () => {
+          pushManager.platformUnsubscribeCalls++;
+          return Promise.resolve(true);
+        },
+      };
+      pretender.post("/push_notifications/unsubscribe", (request) => {
+        unsubscribeRequests.push(parsePostData(request.requestBody));
+        setSubscriptionIntent(user, "subscribed");
+        return response({ success: "OK" });
+      });
+
+      const result = await reconcileSubscription(user, {
+        resubscribe: true,
+        applicationServerKey,
+      });
+
+      assert.strictEqual(result, "subscribed");
+      assert.strictEqual(
+        pushManager.platformUnsubscribeCalls,
+        0,
+        "the explicit enable keeps the platform subscription"
+      );
+      assert.deepEqual(
+        subscribeRequests,
+        [
+          {
+            subscription: { endpoint: "re-enabled" },
+            send_confirmation: "false",
+          },
+        ],
+        "the row is recreated after the stale teardown"
       );
     });
   }
@@ -522,7 +637,7 @@ module(
 
     hooks.afterEach(function () {
       keyValueStore.remove(userSubscriptionKey(user));
-      keyValueStore.remove(`confirmed-endpoint-${user.get("id")}`);
+      pushNotificationPreferenceStore.remove(userSubscriptionKey(user));
     });
 
     test("retires the server subscription even when the platform already dropped it", async function (assert) {

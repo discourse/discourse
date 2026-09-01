@@ -23,6 +23,7 @@ module(
     function build(result, { pushIntent = "subscribed" } = {}) {
       const desktopNotifications = {
         isGrantedPermission: true,
+        isPushNotificationsPreferred: true,
         pushIntent,
         reconcilePushSubscription: sinon.stub().resolves(result),
         setIsEnabledBrowser: sinon.spy(),
@@ -30,9 +31,13 @@ module(
 
       return {
         capabilities: { isMobileDevice: false },
-        currentUser,
+        currentUser: { ...currentUser, isInDoNotDisturb: () => false },
+        siteSettings: {},
+        appEvents: { trigger: sinon.spy() },
         desktopNotifications,
         messageBus: { unsubscribe: sinon.spy() },
+        reconcileTransports:
+          SubscribeUserNotificationsInit.prototype.reconcileTransports,
       };
     }
 
@@ -59,26 +64,6 @@ module(
       );
     });
 
-    test("treats an unconfirmed subscription as delivering", async function (assert) {
-      const instance = build("unconfirmed");
-
-      await reconcile(instance);
-
-      assert.strictEqual(
-        getPushTransport(),
-        "delivering",
-        "the device still has the subscription the server knows, so an in-tab fallback would double every notification"
-      );
-      assert.false(
-        instance.desktopNotifications.setIsEnabledBrowser.called,
-        "and nothing persistent is written over the user's own choice"
-      );
-      assert.strictEqual(
-        keyValueStore.getItem("notifications-disabled"),
-        undefined
-      );
-    });
-
     test("falls back to in-tab notifications for the session when push is not delivering", async function (assert) {
       const instance = build(null);
 
@@ -96,6 +81,45 @@ module(
       assert.strictEqual(
         keyValueStore.getItem("notifications-disabled"),
         undefined
+      );
+    });
+
+    test("a desktop alert retries push after reconciliation fails", async function (assert) {
+      const clock = sinon.useFakeTimers();
+      const instance = build(null);
+      const { reconcilePushSubscription } = instance.desktopNotifications;
+      reconcilePushSubscription.onSecondCall().resolves("subscribed");
+      const onAlert = Object.getOwnPropertyDescriptor(
+        SubscribeUserNotificationsInit.prototype,
+        "onAlert"
+      ).get.call(instance);
+
+      try {
+        await reconcile(instance);
+        setPushTransport("delivering");
+        onAlert({});
+        assert.strictEqual(
+          reconcilePushSubscription.callCount,
+          1,
+          "an alert during the cooldown does not retry"
+        );
+
+        clock.tick(60_001);
+        onAlert({});
+        await instance.pushReconciliation;
+      } finally {
+        clock.restore();
+      }
+
+      assert.strictEqual(
+        reconcilePushSubscription.callCount,
+        2,
+        "a transient failure is retried without waiting for a reload"
+      );
+      assert.strictEqual(
+        getPushTransport(),
+        "delivering",
+        "successful retry suppresses the in-tab fallback"
       );
     });
 
@@ -119,9 +143,47 @@ module(
       assert.strictEqual(getPushTransport(), "delivering");
     });
 
-    test("leaves the stored preference in charge when push was never wanted", async function (assert) {
-      setPushTransport("delivering");
+    test("a completed enable overrides an older reconciliation verdict", async function (assert) {
+      let finishReconciliation;
       const instance = build(null, { pushIntent: null });
+      instance.desktopNotifications.reconcilePushSubscription = () =>
+        new Promise((resolve) => (finishReconciliation = resolve));
+
+      const pending = reconcile(instance);
+      instance.desktopNotifications.pushIntent = "subscribed";
+      setPushTransport("delivering");
+      finishReconciliation(null);
+      await pending;
+
+      assert.strictEqual(
+        getPushTransport(),
+        "delivering",
+        "the stale fallback cannot overrule the explicit enable"
+      );
+    });
+
+    test("a completed disable overrides an older reconciliation verdict", async function (assert) {
+      let finishReconciliation;
+      const instance = build(null);
+      instance.desktopNotifications.reconcilePushSubscription = () =>
+        new Promise((resolve) => (finishReconciliation = resolve));
+
+      const pending = reconcile(instance);
+      instance.desktopNotifications.pushIntent = "off";
+      setPushTransport(null);
+      finishReconciliation("subscribed");
+      await pending;
+
+      assert.strictEqual(
+        getPushTransport(),
+        null,
+        "the stale delivery verdict cannot overrule the explicit opt-out"
+      );
+    });
+
+    test("leaves an explicit opt-out in charge", async function (assert) {
+      setPushTransport("delivering");
+      const instance = build(null, { pushIntent: "off" });
 
       await reconcile(instance);
 

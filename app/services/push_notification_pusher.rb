@@ -72,22 +72,35 @@ class PushNotificationPusher
     user.push_subscriptions.clear
   end
 
-  def self.subscribe(user, push_params, send_confirmation)
+  def self.subscribe(user, push_params, send_confirmation, user_auth_token_id: nil)
     data = push_params.to_json
-    # An origin has one live subscription, so registering it transfers delivery
-    # away from any account that is no longer active in that browser.
-    PushSubscription.where(data: data).where.not(user: user).delete_all
+    new_subscription = nil
 
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
+    # A browser endpoint belongs to one active account. Serialize transfers so
+    # concurrent registrations cannot deliver both accounts to one browser.
+    DistributedMutex.synchronize(subscription_mutex_key(data)) do
+      next if user_auth_token_id && !user_auth_token_valid?(user_auth_token_id, user)
 
-    new_subscription =
-      if subscriptions_count == 1
-        subscriptions.first
-      else
-        subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
+      PushSubscription.where(data: data).where.not(user: user).delete_all
+
+      subscriptions = PushSubscription.where(user: user, data: data)
+      subscriptions_count = subscriptions.count
+
+      new_subscription =
+        if subscriptions_count == 1
+          subscriptions.first
+        else
+          subscriptions.destroy_all
+          PushSubscription.create!(user: user, data: data)
+        end
+
+      if user_auth_token_id && !user_auth_token_valid?(user_auth_token_id, user)
+        new_subscription.destroy!
+        new_subscription = nil
       end
+    end
+
+    return if !new_subscription
 
     if send_confirmation == "true"
       message = {
@@ -104,8 +117,24 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.where(user: user, data: subscription.to_json).delete_all
+    data = subscription.to_json
+    DistributedMutex.synchronize(subscription_mutex_key(data)) do
+      PushSubscription.where(user: user, data: data).delete_all
+    end
   end
+
+  def self.subscription_mutex_key(data)
+    "push_subscription_#{Digest::SHA1.hexdigest(data)}"
+  end
+  private_class_method :subscription_mutex_key
+
+  def self.user_auth_token_valid?(user_auth_token_id, user)
+    UserAuthToken
+      .where(id: user_auth_token_id)
+      .where("user_id = :user_id OR impersonated_user_id = :user_id", user_id: user.id)
+      .exists?
+  end
+  private_class_method :user_auth_token_valid?
 
   def self.get_badge
     if (url = SiteSetting.site_push_notifications_icon_url).present?

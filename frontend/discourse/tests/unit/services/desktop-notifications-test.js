@@ -1,6 +1,15 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import {
+  getPushTransport,
+  setPushTransport,
+} from "discourse/lib/desktop-notifications";
+import {
+  keyValueStore as pushNotificationKeyValueStore,
+  pushNotificationPreferenceStore,
+  userSubscriptionKey,
+} from "discourse/lib/push-notifications";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
@@ -15,13 +24,15 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     ).enable_desktop_push_notifications = true;
   });
 
-  hooks.afterEach(async function () {
+  hooks.afterEach(function () {
     this.service.rearmConsentPrompt();
-
-    const { keyValueStore } = await import("discourse/lib/push-notifications");
-    keyValueStore.remove(
-      `confirmed-endpoint-${this.owner.lookup("service:current-user").id}`
+    pushNotificationKeyValueStore.remove(
+      userSubscriptionKey(this.owner.lookup("service:current-user"))
     );
+    pushNotificationPreferenceStore.remove(
+      userSubscriptionKey(this.owner.lookup("service:current-user"))
+    );
+    setPushTransport(null);
   });
 
   function unusablePushManager() {
@@ -93,7 +104,7 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     );
   });
 
-  test("keeps reporting push as enabled when reconciliation concluded nothing", async function (assert) {
+  test("surfaces attention when reconciliation concludes nothing", async function (assert) {
     const { setSubscriptionIntent } =
       await import("discourse/lib/push-notifications");
     setSubscriptionIntent(
@@ -115,14 +126,15 @@ module("Unit | Service | desktop-notifications", function (hooks) {
       "subscribed",
       "the intent is kept so the next boot retries"
     );
-    assert.true(
+    assert.false(
       this.service.isEnabledPush,
-      "the stored intent stays the best evidence, so one failed boot must not flip the toggle off"
+      "an unverified restore is not reported as working"
     );
-    assert.true(this.service.isSubscribed);
+    assert.false(this.service.isSubscribed);
+    assert.true(this.service.pushNeedsAttention, "the banner can offer repair");
   });
 
-  test("keeps push enabled when only the boot resync failed", async function (assert) {
+  test("keeps the preference when the boot resync fails", async function (assert) {
     const { setSubscriptionIntent } =
       await import("discourse/lib/push-notifications");
     setSubscriptionIntent(
@@ -149,12 +161,21 @@ module("Unit | Service | desktop-notifications", function (hooks) {
 
     const result = await this.service.reconcilePushSubscription();
 
-    assert.strictEqual(result, "unconfirmed");
-    assert.true(
-      this.service.isEnabledPush,
-      "one unreachable request must not report a working subscription as off"
+    assert.strictEqual(result, null);
+    assert.strictEqual(
+      this.service.pushIntent,
+      "subscribed",
+      "the preference survives for the retry"
     );
-    assert.true(this.service.isSubscribed);
+    assert.false(
+      this.service.isEnabledPush,
+      "push is not reported as verified"
+    );
+    assert.true(this.service.pushNeedsAttention, "the banner can offer repair");
+    assert.false(
+      this.service.isSubscribed,
+      "the toggle surfaces the unverified state"
+    );
   });
 
   test("migrates a legacy consent prompt dismissal to the current user", async function (assert) {
@@ -194,13 +215,14 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     );
   });
 
-  test("push can still be switched off after an unconfirmed restore", async function (assert) {
+  test("push can still be switched off after a failed restore", async function (assert) {
     const { getSubscriptionIntent, setSubscriptionIntent } =
       await import("discourse/lib/push-notifications");
     const user = this.owner.lookup("service:current-user");
     setSubscriptionIntent(user, "subscribed");
     this.service.pushIntent = "subscribed";
     this.service.pushSubscriptionConfirmed = false;
+    setPushTransport("delivering");
 
     sinon
       .stub(navigator.serviceWorker, "ready")
@@ -211,9 +233,65 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     assert.strictEqual(
       getSubscriptionIntent(user),
       "off",
-      "turning it off follows the stored intent, not the unconfirmed state"
+      "turning it off follows the stored intent after a transient failure"
     );
     assert.false(this.service.isEnabledPush);
+    assert.strictEqual(
+      getPushTransport(),
+      null,
+      "the explicit opt-out immediately owns transport arbitration"
+    );
+  });
+
+  test("adoption updates the service state", async function (assert) {
+    const subscription = {
+      toJSON: () => ({ endpoint: "adopted" }),
+    };
+    sinon.stub(Notification, "permission").get(() => "granted");
+    sinon.stub(navigator.serviceWorker, "ready").get(() =>
+      Promise.resolve({
+        pushManager: {
+          getSubscription: () => Promise.resolve(subscription),
+        },
+      })
+    );
+    pretender.post("/push_notifications/subscribe", () =>
+      response({ success: "OK" })
+    );
+
+    const result = await this.service.reconcilePushSubscription();
+
+    assert.strictEqual(result, "subscribed");
+    assert.strictEqual(
+      this.service.pushIntent,
+      "subscribed",
+      "the tracked state follows the adopted stored intent"
+    );
+    assert.true(this.service.isEnabledPush, "the toggle reports push enabled");
+  });
+
+  test("a successful enable marks push as delivering", async function (assert) {
+    const subscription = {
+      toJSON: () => ({ endpoint: "enabled" }),
+    };
+    sinon.stub(Notification, "permission").get(() => "granted");
+    sinon.stub(navigator.serviceWorker, "ready").get(() =>
+      Promise.resolve({
+        pushManager: {
+          subscribe: () => Promise.resolve(subscription),
+        },
+      })
+    );
+    pretender.post("/push_notifications/subscribe", () =>
+      response({ success: "OK" })
+    );
+
+    assert.true(await this.service.enable(), "push is enabled");
+    assert.strictEqual(
+      getPushTransport(),
+      "delivering",
+      "in-tab alerts are suppressed without waiting for a reload"
+    );
   });
 
   test("the consent prompt dismissal is recorded against the current user", async function (assert) {
@@ -280,6 +358,10 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     assert.false(
       this.service.isSubscribed,
       "isSubscribed agrees with the reported failure"
+    );
+    assert.true(
+      this.service.pushNeedsAttention,
+      "the repair banner remains visible after the failed enable"
     );
   });
 });

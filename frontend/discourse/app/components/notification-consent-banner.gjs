@@ -11,16 +11,17 @@ export default class NotificationConsentBanner extends Component {
   @service siteSettings;
 
   get showNotificationPromptBanner() {
+    const pushNeedsAttention = this.desktopNotifications.pushNeedsAttention;
+
     return (
       this.siteSettings.push_notifications_prompt &&
       !this.desktopNotifications.isNotSupported &&
       this.currentUser &&
       this.capabilities.isPwa &&
       Notification.permission !== "denied" &&
-      !this.desktopNotifications.isEnabled &&
       !this.desktopNotifications.consentPromptDismissed &&
-      (Notification.permission !== "granted" ||
-        this.desktopNotifications.canRestorePushWithoutPrompt)
+      (!this.desktopNotifications.isEnabled || pushNeedsAttention) &&
+      (Notification.permission !== "granted" || pushNeedsAttention)
     );
   }
 
