@@ -52,6 +52,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
   MEMBER_GROUP = 0
   ADMIN_GROUP = 1
   MODERATORS_GROUP = 2
+
   TRTR_TABLE =
     begin
       from = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ"

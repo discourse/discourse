@@ -211,8 +211,6 @@ module Migrations
           File.join(Tooling.root_path, "config", "schema", "plugin_manifest.yml")
         end
 
-        private
-
         def refresh_plugin_manifest!
           manifest = plugin_manifest
           return if manifest.fresh?
@@ -230,6 +228,11 @@ module Migrations
                 "Skipped — #{e.message} (use 'schema refresh-plugins --force' to retry)"
         end
 
+        # These lifecycle methods remain public after the private manifest helpers.
+        # rubocop:disable Layout/ClassStructure
+
+        public
+
         def available_databases
           dir = schema_root_path
           return [] unless File.directory?(dir)
@@ -242,6 +245,7 @@ module Migrations
           @ready = nil
           @plugin_manifest = nil
         end
+        # rubocop:enable Layout/ClassStructure
 
         private
 

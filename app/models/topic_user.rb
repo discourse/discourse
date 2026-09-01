@@ -408,6 +408,11 @@ class TopicUser < ActiveRecord::Base
       klass.publish_read(topic_id, post_number, user, notification_level)
     end
 
+    # The remaining class methods are public API after the private publishing helper.
+    # rubocop:disable Layout/ClassStructure
+
+    public
+
     # Update the cached topic_user.liked column based on data
     # from the post_actions table. This is useful when posts
     # have moved around, or to ensure integrity of the data.
@@ -529,6 +534,7 @@ SQL
 
       builder.exec
     end
+    # rubocop:enable Layout/ClassStructure
   end
 
   def topic_bookmarks

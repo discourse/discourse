@@ -27,6 +27,11 @@ module Migrations
               Digest::MD5.hexdigest(digests.join("\n"))
             end
 
+            # discover_plugins remains public between its private helpers.
+            # rubocop:disable Layout/ClassStructure
+
+            public
+
             def discover_plugins(plugins_path)
               plugins = {}
 
@@ -40,6 +45,7 @@ module Migrations
 
               plugins
             end
+            # rubocop:enable Layout/ClassStructure
 
             private
 

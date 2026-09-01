@@ -85,6 +85,48 @@ class ThemeField < ActiveRecord::Base
           where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
         end
 
+  # ThemeFileMatcher must be defined before FILE_MATCHERS is initialized.
+  class ThemeFileMatcher
+    OPTIONS = %i[name type target]
+    # regex: used to match file names to fields (import).
+    #        can contain named capture groups for name/type/target
+    # canonical: a lambda which converts name/type/target
+    #            to filename (export)
+    # targets/names/types: can be nil if any value is allowed
+    #                          single value
+    #                          array of allowed values
+    def initialize(regex:, canonical:, targets:, names:, types:)
+      @allowed_values = {}
+      @allowed_values[:names] = Array(names) if names
+      @allowed_values[:targets] = Array(targets) if targets
+      @allowed_values[:types] = Array(types) if types
+      @canonical = canonical
+      @regex = regex
+    end
+
+    def opts_from_filename(filename)
+      match = @regex.match(filename)
+      return false unless match
+      hash = {}
+      OPTIONS.each do |option|
+        plural = :"#{option}s"
+        hash[option] = @allowed_values[plural][0] if @allowed_values[plural]&.length == 1
+        hash[option] = match[option] if hash[option].nil?
+      end
+      hash
+    end
+
+    def filename_from_opts(opts)
+      is_match =
+        OPTIONS.all? do |option|
+          plural = :"#{option}s"
+          next true if @allowed_values[plural] == nil # Allows any value
+          next true if @allowed_values[plural].include?(opts[option]) # Value is allowed
+        end
+      is_match ? @canonical.call(opts) : nil
+    end
+  end
+
   FILE_MATCHERS = [
     ThemeFileMatcher.new(
       regex:
@@ -576,47 +618,6 @@ class ThemeField < ActiveRecord::Base
 
   def contains_ember_css_selector?(text)
     text.match(/#ember\d+|[.]ember-view/)
-  end
-
-  class ThemeFileMatcher
-    OPTIONS = %i[name type target]
-    # regex: used to match file names to fields (import).
-    #        can contain named capture groups for name/type/target
-    # canonical: a lambda which converts name/type/target
-    #            to filename (export)
-    # targets/names/types: can be nil if any value is allowed
-    #                          single value
-    #                          array of allowed values
-    def initialize(regex:, canonical:, targets:, names:, types:)
-      @allowed_values = {}
-      @allowed_values[:names] = Array(names) if names
-      @allowed_values[:targets] = Array(targets) if targets
-      @allowed_values[:types] = Array(types) if types
-      @canonical = canonical
-      @regex = regex
-    end
-
-    def opts_from_filename(filename)
-      match = @regex.match(filename)
-      return false unless match
-      hash = {}
-      OPTIONS.each do |option|
-        plural = :"#{option}s"
-        hash[option] = @allowed_values[plural][0] if @allowed_values[plural]&.length == 1
-        hash[option] = match[option] if hash[option].nil?
-      end
-      hash
-    end
-
-    def filename_from_opts(opts)
-      is_match =
-        OPTIONS.all? do |option|
-          plural = :"#{option}s"
-          next true if @allowed_values[plural] == nil # Allows any value
-          next true if @allowed_values[plural].include?(opts[option]) # Value is allowed
-        end
-      is_match ? @canonical.call(opts) : nil
-    end
   end
 
   # For now just work for standard fields
