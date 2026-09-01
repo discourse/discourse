@@ -80,15 +80,15 @@ async function hoverCell(cell) {
 }
 
 async function pressKey(view, key, modifiers = {}) {
-  view.dom.dispatchEvent(
-    new KeyboardEvent("keydown", {
-      key,
-      bubbles: true,
-      cancelable: true,
-      ...modifiers,
-    })
-  );
+  const event = new KeyboardEvent("keydown", {
+    key,
+    bubbles: true,
+    cancelable: true,
+    ...modifiers,
+  });
+  view.dom.dispatchEvent(event);
   await settled();
+  return event;
 }
 
 async function pressGrip(
@@ -777,6 +777,19 @@ module(
       assert.strictEqual(view.state.selection.$from.parent.textContent, "h1");
     });
 
+    test("Shift+Tab at the first cell remains available to the browser", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+
+      await selectCell(view, 0, 0);
+      const event = await pressKey(view, "Tab", { shiftKey: true });
+
+      assert.false(
+        event.defaultPrevented,
+        "the editor does not trap backward focus at the table boundary"
+      );
+    });
+
     test("a cell that ends up the wrong type is corrected", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1023,6 +1036,28 @@ module(
       assert.strictEqual(editor.value, before, "and the same for rows");
     });
 
+    test("dragging back preserves non-text cell content", async function (assert) {
+      const markdown = `| h1 | |
+| --- | --- |
+| | ![image](https://example.com/image.png) |`;
+      const [editor] = await setupRichEditor(assert, markdown);
+      const before = editor.value;
+
+      await dragAppend(find(".composer-table__append.--column"), -600);
+      assert.strictEqual(
+        editor.value,
+        before,
+        "an image-only trailing column is not removed"
+      );
+
+      await dragAppend(find(".composer-table__append.--row"), -600);
+      assert.strictEqual(
+        editor.value,
+        before,
+        "an image-only trailing row is not removed"
+      );
+    });
+
     test("a row can be dragged into and out of the header", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1215,7 +1250,7 @@ module(
       document.dispatchEvent(
         new PointerEvent("pointermove", at(bounds.bottom - 2))
       );
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await waitUntil(() => scroller.scrollTop > 0);
 
       assert.true(
         scroller.scrollTop > 0,

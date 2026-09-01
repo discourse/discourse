@@ -246,8 +246,15 @@ function handleKeyDown(view, event) {
     if (!currentCell(state)) {
       return false;
     }
-    event.preventDefault();
-    return goToNextCell(event.shiftKey ? -1 : 1)(state, view.dispatch, view);
+    const handled = goToNextCell(event.shiftKey ? -1 : 1)(
+      state,
+      view.dispatch,
+      view
+    );
+    if (handled) {
+      event.preventDefault();
+    }
+    return handled;
   }
 
   return false;
