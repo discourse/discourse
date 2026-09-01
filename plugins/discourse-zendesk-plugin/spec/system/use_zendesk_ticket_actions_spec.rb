@@ -60,7 +60,7 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_view_action(ticket_url)
   end
 
-  it "shows a view-group member the existing Zendesk ticket action" do
+  it "shows a view-group member a link to the existing Zendesk ticket" do
     view_group = Fabricate(:group)
     viewer = Fabricate(:user)
     view_group.add(viewer)
@@ -83,7 +83,7 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_no_actions
   end
 
-  it "keeps Zendesk ticket actions and the setup warning hidden when the Zendesk URL is blank" do
+  it "keeps Zendesk ticket actions and setup warnings hidden until Zendesk setup is complete" do
     SiteSetting.zendesk_url = ""
     sign_in(Fabricate(:moderator))
 

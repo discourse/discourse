@@ -35,7 +35,7 @@ RSpec.describe "Discourse Zendesk Plugin" do
     describe "Storage Preparation" do
       let(:zendesk_enabled_default) { false }
 
-      it "defines the Zendesk URL and disabled state defaults" do
+      it "uses the expected defaults for the Zendesk URL and enabled state" do
         expect(SiteSetting.zendesk_url).to eq(zendesk_url_default)
         expect(SiteSetting.zendesk_enabled).to eq(zendesk_enabled_default)
       end

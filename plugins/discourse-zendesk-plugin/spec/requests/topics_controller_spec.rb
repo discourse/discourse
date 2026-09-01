@@ -66,7 +66,7 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key(DiscourseZendeskPlugin::ZENDESK_URL_FIELD)
     end
 
-    it "returns no ticket access or details when Zendesk credentials are incomplete" do
+    it "returns no ticket access or details before Zendesk setup is complete" do
       SiteSetting.zendesk_jobs_api_token = ""
       sign_in(Fabricate(:moderator))
 

@@ -101,7 +101,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "returns forbidden when Zendesk credentials are incomplete" do
+    it "returns forbidden before Zendesk authentication is configured" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
@@ -116,7 +116,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "returns forbidden when the Zendesk URL is blank" do
+    it "returns forbidden before a Zendesk account is configured" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
