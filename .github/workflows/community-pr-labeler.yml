@@ -1,0 +1,92 @@
+name: Community PR Labeler
+
+# Labels pull requests authored by community contributors (anyone who is not
+# identified as an org member and does not have write access to this repo) so
+# they can be filtered with `label:community` — in the GitHub UI, via the
+# search API, and by anonymous clients that cannot see private org membership.
+#
+# pull_request_target is safe here: the workflow never checks out or
+# executes PR code; it only reads the event payload and calls the API.
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: read
+  issues: write # createLabel/addLabels go through the issues API
+
+env:
+  COMMUNITY_LABEL: community
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const label = process.env.COMMUNITY_LABEL;
+            const pr = context.payload.pull_request;
+
+            // COLLABORATOR can include outside users with read-only access,
+            // so repository permission is checked separately below.
+            const orgAssociations = ["OWNER", "MEMBER"];
+
+            if (pr.user.type === "Bot") {
+              core.info(`@${pr.user.login} is a bot — skipping`);
+              return;
+            }
+
+            if (orgAssociations.includes(pr.author_association)) {
+              core.info(`@${pr.user.login} is ${pr.author_association} — skipping`);
+              return;
+            }
+
+            let permission = "none";
+            try {
+              ({ data: { permission } } =
+                await github.rest.repos.getCollaboratorPermissionLevel({
+                  ...context.repo,
+                  username: pr.user.login,
+                }));
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+            }
+
+            if (["admin", "write"].includes(permission)) {
+              core.info(`@${pr.user.login} has ${permission} access — skipping`);
+              return;
+            }
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: label });
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+              try {
+                await github.rest.issues.createLabel({
+                  ...context.repo,
+                  name: label,
+                  color: "0E8A16",
+                  description: "Authored by a community contributor",
+                });
+              } catch (createError) {
+                // a concurrent run may have just created it
+                if (createError.status !== 422) {
+                  throw createError;
+                }
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: pr.number,
+              labels: [label],
+            });
+            core.notice(`Labeled #${pr.number} by @${pr.user.login} as ${label}`);
