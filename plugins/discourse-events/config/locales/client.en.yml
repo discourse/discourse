@@ -341,6 +341,26 @@ en:
     group_timezones:
       search: "Search..."
       group_availability: "%{group} availability"
+    discourse_workflows:
+      nodes:
+        "action:event": "Event"
+      node_descriptions:
+        "action:event": "Close, open, or update attendance for an event"
+      event:
+        operation: "Operation"
+        operations:
+          close: "Close event"
+          open: "Open event"
+          set_attendance: "Set attendance"
+        topic_id: "Topic ID"
+        attendee_username: "Attendee"
+        attendance: "Attendance"
+        attendances:
+          going: "Going"
+          interested: "Interested"
+          not_going: "Not going"
+          remove: "Remove attendance"
+        actor_username: "Performed by user"
     discourse_post_event:
       new_event: "New Event"
       notifications:
