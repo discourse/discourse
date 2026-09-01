@@ -56,13 +56,24 @@ module(
     test("constrains a diagram with tall source", async function (assert) {
       await setupRichEditor(assert, TALL_GRAPH);
 
-      const { height, width } = find(
-        ".composer-graphviz-node"
-      ).getBoundingClientRect();
+      const block = find(".composer-graphviz-node");
+      const source = find(".composer-preview-node__source");
+      const pre = source.querySelector("pre");
+      const { height, width } = block.getBoundingClientRect();
 
       assert.true(
         Math.abs(height / width - 9 / 16) < 0.01,
         "the diagram uses the same aspect ratio as its cooked preview"
+      );
+
+      assert.true(
+        Math.abs(source.clientHeight - block.clientHeight) <= 1,
+        "the source face fills the frame, neither overflowing nor falling short"
+      );
+
+      assert.true(
+        pre.scrollHeight > pre.clientHeight,
+        "the source scrolls within the frame"
       );
     });
 
