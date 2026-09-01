@@ -59,6 +59,8 @@ RSpec.describe "Discourse Zendesk Plugin" do
 
       before do
         SiteSetting.zendesk_enabled = true
+        SiteSetting.zendesk_jobs_email = "zendesk@example.com"
+        SiteSetting.zendesk_jobs_api_token = "api-token"
         sign_in staff
         default_header = { "Content-Type" => "application/json; charset=UTF-8" }
         stub_request(:get, zendesk_api_user_search_url).to_return(

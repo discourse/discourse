@@ -1,5 +1,7 @@
 en:
   site_settings:
+    zendesk_create_ticket_allowed_groups: "Groups whose members can manually create Zendesk tickets from topics they can view. Members can also view the resulting tickets."
+    zendesk_view_ticket_allowed_groups: "Groups whose members can view Zendesk tickets linked to topics they can view. Groups in {{setting:zendesk_create_ticket_allowed_groups}} can also view tickets."
     zendesk_jobs_api_token: "Deprecated: Zendesk will permanently deactivate API tokens on April 30, 2027. Configure {{setting:zendesk_oauth_client_id}} and {{setting:zendesk_oauth_client_secret}} to use OAuth instead."
     zendesk_oauth_client_id: "The unique client ID provided by your Zendesk application, used for the authentication process."
     zendesk_oauth_client_secret: "Client secret of your Zendesk application."

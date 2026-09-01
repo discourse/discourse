@@ -4,70 +4,65 @@ import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class ZendeskTopicActions extends Component {
   init() {
     super.init(...arguments);
-    const zendesk_id = this.topic.get("discourse_zendesk_plugin_zendesk_id");
-    if (zendesk_id && zendesk_id !== "") {
-      this.set("zendesk_id", zendesk_id);
-    }
     this.setProperties({
+      can_create_zendesk_ticket: this.topic.get("can_create_zendesk_ticket"),
+      can_view_zendesk_ticket: this.topic.get("can_view_zendesk_ticket"),
       zendesk_url: this.topic.get("discourse_zendesk_plugin_zendesk_url"),
-      valid_zendesk_credential: this.get(
-        "currentUser.discourse_zendesk_plugin_status"
-      ),
     });
   }
 
   @action
   createZendeskIssue() {
-    let self = this;
-    self.set("dirty", true);
+    this.set("dirty", true);
     ajax("/zendesk-plugin/issues", {
       type: "POST",
       data: {
         topic_id: this.get("topic").get("id"),
       },
     }).then((topic) => {
-      self.setProperties({
-        zendesk_id: topic.discourse_zendesk_plugin_zendesk_id,
+      this.setProperties({
+        can_create_zendesk_ticket: topic.can_create_zendesk_ticket,
+        can_view_zendesk_ticket: topic.can_view_zendesk_ticket,
         zendesk_url: topic.discourse_zendesk_plugin_zendesk_url,
       });
     });
   }
 
   <template>
-    <span
-      class="after-topic-footer-buttons-outlet zendesk-topic-actions"
-      ...attributes
-    >
-      {{#if this.currentUser.staff}}
-        {{#if this.valid_zendesk_credential}}
-          {{#if this.zendesk_id}}
-            <a
-              href={{this.zendesk_url}}
-              target="_blank"
-              class="btn-primary btn"
-              rel="noopener noreferrer"
-            >
-              <i class="fa fa-clone"></i>
-              {{i18n "topic.view_zendesk_issue"}}
-            </a>
-          {{else}}
-            <DButton
-              class="btn-primary"
-              @action={{this.createZendeskIssue}}
-              @label="topic.create_zendesk_issue"
-              @disabled={{this.dirty}}
-            />
-          {{/if}}
-        {{else}}
-          <p>{{i18n "zendesk.credentials_not_setup"}}</p>
-        {{/if}}
-      {{/if}}
-    </span>
+    {{#if this.can_view_zendesk_ticket}}
+      <span
+        class="after-topic-footer-buttons-outlet zendesk-topic-actions"
+        ...attributes
+      >
+        <a
+          href={{this.zendesk_url}}
+          target="_blank"
+          class="btn btn-primary"
+          rel="noopener noreferrer"
+        >
+          {{dIcon "clone"}}
+          {{i18n "topic.view_zendesk_issue"}}
+        </a>
+      </span>
+    {{else if this.can_create_zendesk_ticket}}
+      <span
+        class="after-topic-footer-buttons-outlet zendesk-topic-actions"
+        ...attributes
+      >
+        <DButton
+          class="btn-primary"
+          @action={{this.createZendeskIssue}}
+          @label="topic.create_zendesk_issue"
+          @disabled={{this.dirty}}
+        />
+      </span>
+    {{/if}}
   </template>
 }

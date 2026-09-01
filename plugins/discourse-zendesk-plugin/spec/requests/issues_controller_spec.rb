@@ -16,15 +16,20 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
     }.to_json
   end
   let(:default_header) { { "Content-Type" => "application/json; charset=UTF-8" } }
-
-  before do
-    SiteSetting.zendesk_enabled = true
-
+  let(:ticket_request) do
     stub_request(:post, zendesk_api_ticket_url).to_return(
       status: 200,
       body: ticket_response,
       headers: default_header,
     )
+  end
+
+  before do
+    SiteSetting.zendesk_enabled = true
+    SiteSetting.zendesk_jobs_email = "zendesk@example.com"
+    SiteSetting.zendesk_jobs_api_token = "api-token"
+
+    ticket_request
     stub_request(:get, zendesk_url_default + "/users/me").to_return(
       status: 200,
       body: { user: {} }.to_json,
@@ -43,28 +48,75 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
   end
 
   describe "#create" do
-    it "creates a zendesk ticket for a topic" do
+    it "lets staff create a Zendesk ticket by default" do
       moderator = Fabricate(:moderator)
-      topic = Fabricate(:topic)
-      Fabricate(:post, topic: topic)
+      topic = Fabricate(:post).topic
       sign_in(moderator)
-      SiteSetting.zendesk_oauth_client_id = "oauth-client-id"
-      SiteSetting.zendesk_oauth_client_secret = "oauth-client-secret"
-      stub_request(:post, "https://your-url.zendesk.com/oauth/tokens").to_return(
-        status: 200,
-        body: { access_token: "oauth-access-token", expires_in: 1800 }.to_json,
-      )
 
       post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
 
       expect(response.status).to eq(200)
-      expect(WebMock).to have_requested(:post, zendesk_api_ticket_url).with(
-        headers: {
-          "Authorization" => "Bearer oauth-access-token",
-        },
-      )
+      expect(ticket_request).to have_been_requested.once
     end
-    it "does not create a zendesk ticket for a topic the moderator cannot see" do
+
+    it "lets a member of a custom create group create a Zendesk ticket" do
+      create_group = Fabricate(:group)
+      creator = Fabricate(:user)
+      create_group.add(creator)
+      SiteSetting.zendesk_create_ticket_allowed_groups = create_group.id
+      topic = Fabricate(:post).topic
+      sign_in(creator)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(ticket_request).to have_been_requested.once
+    end
+
+    it "rejects staff after staff is removed from the allowed groups" do
+      moderator = Fabricate(:moderator)
+      SiteSetting.zendesk_create_ticket_allowed_groups = ""
+      SiteSetting.zendesk_view_ticket_allowed_groups = ""
+      topic = Fabricate(:post).topic
+      sign_in(moderator)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(ticket_request).not_to have_been_requested
+    end
+
+    it "rejects members who can only view Zendesk tickets" do
+      view_group = Fabricate(:group)
+      viewer = Fabricate(:user)
+      view_group.add(viewer)
+      SiteSetting.zendesk_create_ticket_allowed_groups = ""
+      SiteSetting.zendesk_view_ticket_allowed_groups = view_group.id
+      topic = Fabricate(:post).topic
+      sign_in(viewer)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(ticket_request).not_to have_been_requested
+    end
+
+    it "rejects allowed members while Zendesk credentials are incomplete" do
+      create_group = Fabricate(:group)
+      creator = Fabricate(:user)
+      create_group.add(creator)
+      SiteSetting.zendesk_create_ticket_allowed_groups = create_group.id
+      SiteSetting.zendesk_jobs_api_token = ""
+      topic = Fabricate(:post).topic
+      sign_in(creator)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(ticket_request).not_to have_been_requested
+    end
+
+    it "rejects staff who cannot view the topic" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
       pm = Fabricate(:private_message_topic, user: admin)
@@ -75,7 +127,16 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       post "/zendesk-plugin/issues.json", params: { topic_id: pm.id }
 
       expect(response.status).to eq(403)
-      expect(WebMock).not_to have_requested(:post, zendesk_api_ticket_url)
+      expect(ticket_request).not_to have_been_requested
+    end
+
+    it "rejects anonymous users" do
+      topic = Fabricate(:post).topic
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(ticket_request).not_to have_been_requested
     end
   end
 end

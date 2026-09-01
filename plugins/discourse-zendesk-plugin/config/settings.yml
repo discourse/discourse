@@ -5,6 +5,20 @@ discourse_zendesk:
   zendesk_enabled:
     default: false
     client: true
+  zendesk_create_ticket_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
+  zendesk_view_ticket_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
   zendesk_jobs_api_token:
     default: ""
     secret: true
