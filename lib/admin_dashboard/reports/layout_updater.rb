@@ -18,17 +18,19 @@ module AdminDashboard
         AdminDashboardReport.transaction do
           AdminDashboardReport.delete_all
           now = Time.current
-          rows =
+          records =
             items.each_with_index.map do |item, index|
               {
                 source: item[:source],
                 identifier: item[:identifier],
                 position: index,
+                rows: item[:rows] || 1,
+                cols: item[:cols] || 1,
                 created_at: now,
                 updated_at: now,
               }
             end
-          AdminDashboardReport.insert_all(rows) if rows.any?
+          AdminDashboardReport.insert_all(records) if records.any?
         end
       end
     end
