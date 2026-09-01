@@ -178,7 +178,11 @@ class DiscourseConnect < DiscourseConnectBase
 
     sso_record.save!
 
-    apply_group_rules(sso_record.user) if sso_record.user
+    if sso_record.user
+      self.add_groups =
+        DiscoursePluginRegistry.apply_modifier(:discourse_connect_add_groups, add_groups, self)
+      apply_group_rules(sso_record.user)
+    end
 
     sso_record && sso_record.user
   end
