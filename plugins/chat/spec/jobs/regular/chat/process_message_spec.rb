@@ -192,6 +192,9 @@ describe Jobs::Chat::ProcessMessage do
     # the two jobs enqueueing each other
     it "does not enqueue the pull job when it was the pull job that asked for the re-cook" do
       SiteSetting.download_remote_images_to_local = true
+      # the check walks the doc and resolves every local upload URL, so don't
+      # pay for it when the answer is already ignored
+      Chat::MessageProcessor.any_instance.expects(:hotlinked_media_pending?).never
 
       expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
         described_class.new.execute(

@@ -32,7 +32,11 @@ module Jobs
 
           stale_ids = processor.stale_hotlinked_media_ids
           chat_message.hotlinked_media.where(id: stale_ids).destroy_all if stale_ids.present?
-          hotlinked_media_pending = processor.hotlinked_media_pending?
+          # the pull job's own re-cook comes back with skip_pull set, and the
+          # check walks the doc and resolves every local upload URL
+          if !args[:skip_pull_hotlinked_images]
+            hotlinked_media_pending = processor.hotlinked_media_pending?
+          end
 
           # we don't process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
@@ -53,8 +57,8 @@ module Jobs
 
         # outside the mutex: the pull job re-cooks through this job, and would
         # block on the lock we still hold whenever jobs run inline
-        if hotlinked_media_pending && !args[:skip_pull_hotlinked_images] &&
-             SiteSetting.download_remote_images_to_local? && SiteSetting.chat_allow_uploads?
+        if hotlinked_media_pending && SiteSetting.download_remote_images_to_local? &&
+             SiteSetting.chat_allow_uploads?
           ::Jobs.enqueue(::Jobs::Chat::PullHotlinkedImages, chat_message_id: args[:chat_message_id])
         end
       end
