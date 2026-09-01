@@ -98,7 +98,9 @@ export default class ChatChannelRow extends Component {
   }
 
   get shouldHandleSwipe() {
-    if (!this.capabilities.touch) {
+    // layout mode, not viewport width: the swipe styles and animations only
+    // exist in the mobile stylesheet bundle
+    if (!this.capabilities.touch || !this.site.mobileView) {
       return false;
     }
 

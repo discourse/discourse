@@ -687,10 +687,12 @@ export default class ChatMessage extends Component {
         {{on "mouseleave" this.onMouseLeave passive=true}}
         {{on "mousemove" this.onMouseMove passive=true}}
         {{this.toggleCheckIfPossible}}
+        {{! the long-press actions modal only has a mobile layout }}
         {{ChatOnLongPress
           this.onLongPressStart
           this.onLongPressEnd
           this.onLongPressCancel
+          enabled=this.site.mobileView
         }}
       >
         {{yield to="top"}}

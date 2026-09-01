@@ -142,7 +142,13 @@ export default class SectionLink extends Component {
   }
 
   get shouldRenderHoverAction() {
-    return this.args.hoverValue && !this.capabilities.touch;
+    if (!this.args.hoverValue) {
+      return false;
+    }
+
+    // on narrow touch layouts the affordance exists elsewhere; rendering
+    // the button would only clutter the panel
+    return !this.capabilities.touch || this.capabilities.viewport.sm;
   }
 
   @action
@@ -255,6 +261,7 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
                   title={{@hoverTitle}}
                   type="button"
@@ -323,6 +330,7 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
                   title={{@hoverTitle}}
                   type="button"
