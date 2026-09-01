@@ -30,6 +30,7 @@ import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
+import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -402,9 +403,7 @@ export default class ReviewableItem extends Component {
     }
 
     if (performableAction.completed_message) {
-      this.toasts.success({
-        data: { message: performableAction.completed_message },
-      });
+      this.#showCompletedToast(performableAction, reviewable);
     }
 
     if (this.args.remove && result.remove_reviewable_ids?.length > 0) {
@@ -416,6 +415,58 @@ export default class ReviewableItem extends Component {
 
       return this.store.find("reviewable", reviewable.id);
     }
+  }
+
+  #showCompletedToast(performableAction, reviewable) {
+    const penalty = survivingPenalty(
+      performableAction,
+      reviewable.author_penalties
+    );
+    const author = reviewable.target_created_by;
+
+    if (!penalty || !author) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+      return;
+    }
+
+    this.toasts.success({
+      autoClose: false,
+      data: {
+        title: performableAction.completed_message,
+        message: i18n("review.author_penalty.toast.still_silenced", {
+          username: author.username,
+        }),
+        actions: [
+          {
+            label: i18n("review.author_penalty.toast.undo"),
+            class: "btn-transparent reviewable-undo-penalty",
+            action: ({ close }) => this.#liftPenalty(author, close),
+          },
+        ],
+      },
+    });
+  }
+
+  async #liftPenalty(author, close) {
+    try {
+      await ajax(`/admin/users/${author.id}/unsilence`, { type: "PUT" });
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    close();
+
+    this.toasts.success({
+      data: {
+        message: i18n("review.author_penalty.toast.undone", {
+          username: author.username,
+        }),
+      },
+    });
+
+    this.store.find("reviewable", this.args.reviewable.id);
   }
 
   @action

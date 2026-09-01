@@ -28,6 +28,7 @@ describe "Review queue | author penalty" do
       ".review-item__meta-flagged-user .d-icon-microphone-slash",
       visible: :all,
     )
+    expect(page).to have_no_css(".reviewable-action.post-unsilence-user")
   end
 
   context "when automated tooling silenced the author for this post" do
@@ -54,6 +55,41 @@ describe "Review queue | author penalty" do
       review_page.click_timeline_tab
 
       expect(page).to have_css(".timeline-event__title", text: "Author silenced automatically")
+    end
+
+    it "lifts the silence without resolving the flag" do
+      review_page.visit_reviewable(reviewable)
+
+      find(".reviewable-action.post-unsilence-user").click
+
+      expect(page).to have_no_css(
+        ".review-item__meta-flagged-user .d-icon-microphone-slash",
+        visible: :all,
+      )
+      expect(author.reload).not_to be_silenced
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "names the surviving penalty after an action that keeps it" do
+      review_page.visit_reviewable(reviewable)
+
+      review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
+
+      expect(page).to have_css(".fk-d-default-toast__message", text: "spammer99 is still silenced.")
+      expect(author.reload).to be_silenced
+    end
+
+    it "offers an undo on that toast" do
+      review_page.visit_reviewable(reviewable)
+
+      review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
+      find(".reviewable-undo-penalty").click
+
+      expect(page).to have_css(
+        ".fk-d-default-toast__message",
+        text: "spammer99 is no longer silenced.",
+      )
+      expect(author.reload).not_to be_silenced
     end
   end
 end
