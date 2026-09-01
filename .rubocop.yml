@@ -43,20 +43,6 @@ Lint/Debugger:
     SystemHelpers:
       - pause_test
 
-RSpec/ContextWording:
-  Enabled: true
-  Prefixes:
-    - when
-    - with
-    - without
-    - for
-    - while
-    - if
-    - unless
-    - as
-    - after
-    - in
-
 RSpec/EmptyLineAfterExample:
   Enabled: true
 
@@ -68,10 +54,6 @@ RSpec/EmptyLineAfterFinalLet:
 
 RSpec/EmptyLineAfterHook:
   Enabled: true
-
-RSpec/ExampleWithoutDescription:
-  Enabled: true
-  EnforcedStyle: single_line_only
 
 RSpec/ExampleWording:
   Enabled: true
