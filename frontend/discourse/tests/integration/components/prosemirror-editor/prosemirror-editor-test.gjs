@@ -1,6 +1,8 @@
-import { render, settled } from "@ember/test-helpers";
+import { click, find, render, settled, waitFor } from "@ember/test-helpers";
 import { cacheShortUploadUrl, resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
+import ModalContainer from "discourse/components/modal-container";
+import DMenus from "discourse/float-kit/components/d-menus";
 import {
   clearRichEditorExtensions,
   resetRichEditorExtensions,
@@ -9,6 +11,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
 import grid from "discourse/static/prosemirror/extensions/grid";
 import image from "discourse/static/prosemirror/extensions/image";
+import defaultExtensions from "discourse/static/prosemirror/extensions/register-default";
 import uploadPlaceholder from "discourse/static/prosemirror/extensions/upload-placeholder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
@@ -139,6 +142,70 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     );
 
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+  });
+
+  test("uses node actions from the editor's extensions", async function (assert) {
+    let globalRuns = 0;
+    let localRuns = 0;
+
+    withPluginApi((api) => {
+      api.registerRichEditorExtension({
+        nodeActions: {
+          paragraph: () => [
+            {
+              label: "Global action",
+              className: "composer-node-menu__global-action",
+              action: () => globalRuns++,
+            },
+          ],
+        },
+      });
+    });
+
+    const extensions = [
+      ...defaultExtensions,
+      {
+        nodeActions: {
+          paragraph: () => [
+            {
+              label: "Local action",
+              className: "composer-node-menu__local-action",
+              action: () => localRuns++,
+            },
+          ],
+        },
+      },
+    ];
+
+    await render(
+      <template>
+        <ProsemirrorEditor @extensions={{extensions}} @value="Paragraph" />
+        <DMenus />
+        <ModalContainer />
+      </template>
+    );
+
+    const block = find(".ProseMirror > p");
+    const bounds = block.getBoundingClientRect();
+    block.parentElement.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        clientX: bounds.left + 20,
+        clientY: bounds.top + 6,
+      })
+    );
+    await settled();
+    await click(".composer-drag-handle");
+    await waitFor(".composer-node-menu__local-action");
+
+    assert
+      .dom(".composer-node-menu__global-action")
+      .doesNotExist("globally registered actions stay out of this editor");
+
+    await click(".composer-node-menu__local-action");
+
+    assert.strictEqual(localRuns, 1, "the editor-local action runs");
+    assert.strictEqual(globalRuns, 0, "the global action does not run");
   });
 
   test("supports registered nodeSpec/parser/serializer", async function (assert) {

@@ -173,6 +173,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         toggleRichEditor: this.args.toggleRichEditor,
       },
       schema: this.schema,
+      extensions: this.extensions,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
       pmView: ProsemirrorView,

@@ -112,6 +112,8 @@ export interface PluginParams {
   pmSchemaList: typeof import("prosemirror-schema-list");
   /** Schema used by the editor instance. */
   schema: Schema;
+  /** Extensions active in the editor instance. */
+  extensions: readonly RichEditorExtension[];
   /** Returns application context for the editor instance. */
   getContext: () => PluginContext;
 }
@@ -410,16 +412,17 @@ export function getExtensions(): RichEditorExtension[] {
 }
 
 /**
- * Every action registered for a node type, followed by those registered for all
- * blocks. Read at the moment the menu opens so an extension registered late is
- * still honoured.
+ * Every action in the supplied extension set for a node type, followed by those
+ * registered for all blocks. Read at the moment the menu opens so an extension
+ * registered late is still honoured.
  */
 export function nodeActionsFor(
   nodeName: string,
-  params: NodeActionsParams
+  params: NodeActionsParams,
+  extensions: readonly RichEditorExtension[] = registeredExtensions
 ): NodeAction[] {
   const collect = (key: string) =>
-    registeredExtensions.flatMap(
+    extensions.flatMap(
       (extension) => extension.nodeActions?.[key]?.(params) ?? []
     );
 

@@ -260,7 +260,7 @@ class DragHandleView {
     });
   }
 
-  async openMenu() {
+  async openMenu({ fromCaret = false } = {}) {
     if (this.#destroyed || !this.#view.editable || this.#openingMenu) {
       return;
     }
@@ -268,7 +268,12 @@ class DragHandleView {
     this.#openingMenu = true;
 
     try {
-      if (!this.#target && this.#caretTarget) {
+      if (fromCaret) {
+        this.#target = this.#caretTarget;
+        if (this.#target) {
+          this.#place(this.#target);
+        }
+      } else if (!this.#target && this.#caretTarget) {
         this.#target = this.#caretTarget;
         this.#place(this.#target);
       }
@@ -278,12 +283,16 @@ class DragHandleView {
         return;
       }
 
-      const items = nodeActionsFor(target.node.type.name, {
-        node: target.node,
-        pos: target.pos,
-        view: this.#view,
-        pluginParams: this.#pluginParams,
-      });
+      const items = nodeActionsFor(
+        target.node.type.name,
+        {
+          node: target.node,
+          pos: target.pos,
+          view: this.#view,
+          pluginParams: this.#pluginParams,
+        },
+        this.#pluginParams.extensions
+      );
 
       if (!items.length) {
         this.#view.focus();
@@ -873,7 +882,7 @@ const extension = {
           }
 
           event.preventDefault();
-          handle.openMenu();
+          handle.openMenu({ fromCaret: true });
           return true;
         },
       },

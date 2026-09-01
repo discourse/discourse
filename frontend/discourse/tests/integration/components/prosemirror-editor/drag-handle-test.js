@@ -573,6 +573,35 @@ module(
         .exists("the focused block's menu opens without a pointer");
     });
 
+    test("Alt+Enter follows the caret instead of the pointer", async function (assert) {
+      const [editor] = await setupRichEditor(assert, DOC, { withMenus: true });
+      const { view } = editor;
+      let thirdParagraphPos;
+
+      await hoverBlock(view, 0);
+      view.state.doc.descendants((node, pos) => {
+        if (node.textContent === "Third paragraph.") {
+          thirdParagraphPos = pos;
+        }
+      });
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, thirdParagraphPos + 1)
+        )
+      );
+      view.focus();
+      await settled();
+
+      await triggerKeyEvent(view.dom, "keydown", "Enter", { altKey: true });
+      await waitFor('.fk-d-menu[data-identifier="composer-node-menu"]');
+
+      assert.strictEqual(
+        view.state.selection.node.textContent,
+        "Third paragraph.",
+        "keyboard actions target the block containing the caret"
+      );
+    });
+
     test("Alt+Enter targets the current nested list item", async function (assert) {
       const [editor] = await setupRichEditor(assert, NESTED_DOC, {
         withMenus: true,
