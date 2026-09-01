@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class GivenDailyLike < ActiveRecord::Base
+  # The table has no primary key. This is its unique index.
+  self.implicit_order_column = %i[user_id given_date]
+
   belongs_to :user
 
   def self.find_for(user_id, date)
