@@ -78,7 +78,10 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 8.0
+    config.load_defaults 8.1
+    # Rails 8.1 would raise on a path relative redirect. Three admin authored fields can
+    # still hold one, so keep the log behaviour until they validate their input.
+    config.action_controller.action_on_path_relative_redirect = :log
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
