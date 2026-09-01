@@ -365,6 +365,11 @@
       visibility: hidden;
     }
 
+    // a long source scrolls within a bounded face instead of growing the block
+    &__source {
+      max-height: 14lh;
+    }
+
     &__source pre {
       margin: 0;
       height: 100%;
