@@ -567,14 +567,20 @@ export default class CodeLoginForm extends Component {
 
     try {
       const honeypot = await ajax("/session/hp.json");
-      await ajax("/session/login-code", {
+      const result = await ajax("/session/login-code", {
         type: "POST",
         data: {
           email: this.email,
+          signup: this.isSignup,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
       });
+
+      if (result?.error) {
+        this.codeError = result.error;
+        return false;
+      }
 
       this.step = "code";
       this.startResendCooldown();
@@ -678,6 +684,12 @@ export default class CodeLoginForm extends Component {
           >
             <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
+
+          {{#if this.codeError}}
+            <div class="code-login-form__error" aria-live="polite" role="alert">
+              {{this.codeError}}
+            </div>
+          {{/if}}
 
           <div class="code-login-form__email-actions">
             <form.Submit

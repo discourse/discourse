@@ -62,6 +62,56 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__resend").exists();
   });
 
+  test("signup requests declare their intent", async function (assert) {
+    let signup;
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", (request) => {
+      signup = new URLSearchParams(request.requestBody).get("signup");
+      return response({ success: "OK" });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+
+    assert.strictEqual(signup, "true", "the request identifies signup intent");
+    assert
+      .dom(".code-login-form__code-step")
+      .exists("the form advances after the request succeeds");
+  });
+
+  test("shows a request error without advancing to the code step", async function (assert) {
+    const error =
+      "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member.";
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", () => response({ error }));
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("the email step remains visible");
+    assert
+      .dom(".code-login-form__error")
+      .hasText(error, "the account limit error is shown inline");
+    assert
+      .dom(".code-login-form__code-step")
+      .doesNotExist("the code step is not rendered");
+    assert.dom(".d-otp-input").doesNotExist("the code input is not rendered");
+  });
+
   test("keeps a hidden email field for password managers after the email step", async function (assert) {
     stubCodeRequest();
 
