@@ -194,6 +194,71 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
       expect(response.parsed_body["tool_names"]).to contain_exactly("search_issues", "create_issue")
     end
 
+    it "updates health metadata and the tool cache when testing saved configuration" do
+      ai_mcp_server = Fabricate(:ai_mcp_server, last_health_status: "unknown")
+      stub_request(:post, ai_mcp_server.url).to_return(
+        {
+          status: 200,
+          body: {
+            jsonrpc: "2.0",
+            result: {
+              protocolVersion: "2025-03-26",
+              capabilities: {
+                tools: {
+                  listChanged: true,
+                },
+              },
+            },
+          }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+            "Mcp-Session-Id" => "session-1",
+          },
+        },
+        { status: 202, body: "", headers: { "Content-Type" => "application/json" } },
+        {
+          status: 200,
+          body: { jsonrpc: "2.0", result: { tools: [{ name: "search_issues" }] } }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        },
+      )
+
+      post "/admin/plugins/discourse-ai/ai-mcp-servers/#{ai_mcp_server.id}/test.json",
+           params: {
+             ai_mcp_server: {
+               name: ai_mcp_server.name,
+               description: ai_mcp_server.description,
+               url: ai_mcp_server.url,
+               auth_type: ai_mcp_server.auth_type,
+               timeout_seconds: ai_mcp_server.timeout_seconds,
+               enabled: ai_mcp_server.enabled,
+             },
+           }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response).to be_successful
+      expect(response.parsed_body["tool_names"]).to eq(["search_issues"])
+      expect(ai_mcp_server.reload).to have_attributes(
+        last_health_status: "healthy",
+        last_health_error: nil,
+        protocol_version: "2025-03-26",
+        server_capabilities: {
+          "tools" => {
+            "listChanged" => true,
+          },
+        },
+      )
+      expect(ai_mcp_server.last_checked_at).to be_present
+      expect(ai_mcp_server.last_tools_synced_at).to be_present
+      expect(
+        Rails.cache.read(DiscourseAi::Mcp::ToolRegistry.cache_key(ai_mcp_server.id))["definitions"],
+      ).to eq([{ "name" => "search_issues" }])
+    end
+
     it "requires OAuth servers to be saved before testing" do
       post "/admin/plugins/discourse-ai/ai-mcp-servers/test.json",
            params: {
