@@ -3669,6 +3669,22 @@ class _PluginApi {
    *
    * EXPERIMENTAL: This API will change without warning
    *
+   * Extensions can contribute actions to the drag-handle menu for a node type.
+   * Use `*` for actions that apply to every top-level block.
+   *
+   * @example
+   * api.registerRichEditorExtension({
+   *   nodeActions: {
+   *     paragraph: ({ node }) => [
+   *       {
+   *         icon: "circle-info",
+   *         label: i18n("my_plugin.inspect_block"),
+   *         action: () => inspectBlock(node),
+   *       },
+   *     ],
+   *   },
+   * });
+   *
    * @param {RichEditorExtension} extension
    */
   registerRichEditorExtension(extension) {
