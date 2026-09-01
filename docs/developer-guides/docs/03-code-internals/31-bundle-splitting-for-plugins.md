@@ -58,19 +58,16 @@ export default {
 };
 ```
 
-## Loading code on demand yourself
+## Manually loading code on-demand
 
-Bundling is automatic for routes only. Anything reached from an initializer, a service or a component is loaded as soon as the thing importing it is loaded.
+Bundling is automatic for routes only. Anything imported from an initializer or service is loaded eagerly.
 
-When something is large and rarely used — a modal that opens on a click, a panel behind a toggle — import it dynamically instead. Wrap the promise in `waitForPromise` so tests wait for it to settle:
+When something is large and rarely used (e.g. a modal that opens on a click), you should import it dynamically instead.
 
 ```js
-import { waitForPromise } from "@ember/test-waiters";
-
 export default async function showNewMessageModal(modal) {
-  const { default: ChatModalNewMessage } = await waitForPromise(
-    import("../components/chat/modal/new-message")
-  );
+  const { default: ChatModalNewMessage } =
+    await import("../components/chat/modal/new-message");
 
   modal.show(ChatModalNewMessage);
 }
@@ -79,6 +76,14 @@ export default async function showNewMessageModal(modal) {
 The path must be a literal, so that the build can find it. To pull in a group of modules with one import, re-export them from a single module and import that.
 
 This only helps with `staticModules` enabled. Without it, every module is loaded at boot regardless of how it is imported.
+
+If your plugin uses qunit tests, wrap the promise in `waitForPromise` so that tests wait for it to load:
+
+```js
+import { waitForPromise } from "@ember/test-waiters";
+
+await waitForPromise(import("./my-module"));
+```
 
 ## Sharing code with other themes and plugins
 
