@@ -97,9 +97,7 @@ describe Jobs::Chat::ProcessMessage do
       end
     end
 
-    # the job also repairs a stored cooked that lost its localization, so keep
-    # handing it messages whose media the cook already localized
-    it "enqueues the pull job for a message that already tracks hotlinked media" do
+    it "does not enqueue the pull job when tracked media is localized during processing" do
       SiteSetting.download_remote_images_to_local = true
       Chat::MessageHotlinkedMedia.create!(
         chat_message: hotlinked_message,
@@ -108,12 +106,22 @@ describe Jobs::Chat::ProcessMessage do
         upload: Fabricate(:upload),
       )
 
-      expect_enqueued_with(
-        job: Jobs::Chat::PullHotlinkedImages,
-        args: {
-          chat_message_id: hotlinked_message.id,
-        },
-      ) { described_class.new.execute(chat_message_id: hotlinked_message.id) }
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
+      end
+    end
+
+    it "does not enqueue the pull job for tracked media with a terminal failure" do
+      SiteSetting.download_remote_images_to_local = true
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: hotlinked_message,
+        url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+        status: :too_large,
+      )
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: hotlinked_message.id)
+      end
     end
 
     it "enqueues the pull job for a local upload URL that resolves to nothing" do

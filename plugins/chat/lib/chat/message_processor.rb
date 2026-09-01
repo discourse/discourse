@@ -65,13 +65,16 @@ module Chat
     # own loop: anything looser enqueues for nothing, anything tighter leaves an
     # image hotlinked for good.
     def hotlinked_media_pending?
-      return true if @used_hotlinked_media_ids.any?
-
       HotlinkedMedia
         .extract_candidates(@doc)
         .any? do |node|
-          node.name == "img" &&
-            Chat::MessageHotlinkedMedia.downloadable?(HotlinkedMedia.download_src_for(node))
+          next false if node.name != "img"
+
+          download_src = HotlinkedMedia.download_src_for(node)
+          next false if !Chat::MessageHotlinkedMedia.downloadable?(download_src)
+
+          normalized_src = Chat::MessageHotlinkedMedia.normalize_src(download_src)
+          !hotlinked_media_map.key?(normalized_src)
         end
     end
 
