@@ -32,6 +32,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:profile_media_type) { JsonApiKit::Pagination::Profile::MEDIA_TYPE }
   let(:profile) { "https://jsonapi.org/profiles/ethanresnick/cursor-pagination" }
   let(:path) { "/api/topics" }
+  let(:version) { JsonApiKit::Timeline.current.to_s }
   let(:headers) { {} }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
@@ -48,7 +49,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       get "/api/forbidden" => "json_api_kit_spec/failing#forbidden"
     end
     Rails.application.routes.disable_clear_and_finalize = false
-    get path, headers:, params: query
+    get path, headers: { "HTTP_API_VERSION" => version, **headers }, params: query
   end
 
   after { Rails.application.reload_routes! }
@@ -77,7 +78,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
 
       it "reports a missing declaration" do
         expect(Discourse).to have_received(:warn_exception) do |error, _|
-          expect(error).to be_a(JsonApiKit::BaseController::MissingDeclaration)
+          expect(error).to be_a(JsonApiKit::BaseController::Serving::MissingDeclaration)
           expect(error.message).to match(/declare the resource it serves/)
         end
       end
@@ -144,7 +145,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       let(:next_link) { URI.parse(parsed_body.dig("links", "next")) }
 
       it "sends the rows after the window when a client follows the next link" do
-        get "#{next_link.path}?#{next_link.query}"
+        get "#{next_link.path}?#{next_link.query}", headers: { "HTTP_API_VERSION" => version }
 
         expect(JSON.parse(response.body)["data"].map { it["id"] }).to eq([newest.id.to_s])
       end
