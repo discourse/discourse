@@ -1,0 +1,602 @@
+.ProseMirror {
+  .composer-table {
+    --handle-length: 1.375rem;
+    --handle-thickness: 0.375rem;
+
+    // The append bars are controls in their own right, not hairlines, so they
+    // carry their own mass and the lane is sized to hold it.
+    --append-thickness: 0.875rem;
+    --grip-lane: 1.125rem;
+
+    // No hover to reveal anything with, and a finger needs a real target.
+    @media (hover: none) {
+      --handle-length: 1.75rem;
+      --handle-thickness: 0.5rem;
+      --append-thickness: 1.125rem;
+      --grip-lane: 1.375rem;
+    }
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    &.is-panning table {
+      user-select: none;
+    }
+
+    // The chrome lives inside the scroll box, so it needs room that the table
+    // itself does not occupy.
+    padding: var(--grip-lane);
+
+    // Pulled back into the editor's own horizontal padding and no further:
+    // anything wider is clipped by the container's hidden overflow.
+    margin: 1em -0.625rem;
+
+    &__inner {
+      position: relative;
+      width: max-content;
+    }
+
+    // The table's own edge, drawn only while its controls are up: it frames
+    // what is being edited without inventing gridlines a post will not draw.
+    // An outline rather than a border, so nothing reflows when it appears.
+    table {
+      outline: 1px solid transparent;
+      touch-action: pan-y pinch-zoom;
+      transition: outline-color 0.12s ease;
+    }
+
+    th,
+    td {
+      position: relative;
+
+      // Layout only, never style: a cooked post draws row borders and nothing
+      // else, and the editor must not invent decoration the post will drop.
+      // Width is different — an empty column still has to be a target you can
+      // put a cursor in, which a post never asks of it.
+      min-width: 5em;
+
+      // Composed rather than set per side, so a corner cell can draw both of
+      // the edges it owns.
+      &.is-structural-target {
+        --edge-top: 0 0 0 0 transparent;
+        --edge-right: 0 0 0 0 transparent;
+        --edge-bottom: 0 0 0 0 transparent;
+        --edge-left: 0 0 0 0 transparent;
+        background-color: var(--token-color-background-accent-subtlest);
+        box-shadow:
+          var(--edge-top), var(--edge-right), var(--edge-bottom),
+          var(--edge-left);
+
+        &.--edge-top {
+          --edge-top: inset 0 2px 0 0 var(--token-color-border-focused);
+        }
+
+        &.--edge-right {
+          --edge-right: inset -2px 0 0 0 var(--token-color-border-focused);
+        }
+
+        &.--edge-bottom {
+          --edge-bottom: inset 0 -2px 0 0 var(--token-color-border-focused);
+        }
+
+        &.--edge-left {
+          --edge-left: inset 2px 0 0 0 var(--token-color-border-focused);
+        }
+      }
+    }
+
+    html[dir="rtl"] & {
+      th,
+      td {
+        &.is-structural-target {
+          &.--edge-right {
+            --edge-right: inset 2px 0 0 0 var(--token-color-border-focused);
+          }
+
+          &.--edge-left {
+            --edge-left: inset -2px 0 0 0 var(--token-color-border-focused);
+          }
+        }
+      }
+    }
+
+    &__grip,
+    &__append {
+      position: absolute;
+      z-index: 1;
+      padding: 0;
+      border: var(--token-border-width) solid transparent;
+      background-color: var(--token-color-surface-pressed);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity 0.12s ease,
+        background-color 0.12s ease;
+
+      &:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+        outline: 2px solid var(--token-color-border-focused);
+        outline-offset: 2px;
+      }
+    }
+
+    &__grip {
+      border-radius: var(--token-radius-normal);
+
+      // Both axes reorder by dragging; only the header row is pinned in place.
+      cursor: grab;
+
+      // The pill stays small while the target it answers to does not.
+      &::after {
+        content: "";
+        position: absolute;
+        inset: -0.5rem;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--token-color-icon-default);
+        }
+      }
+
+      // Centred on the table's own edge rather than floating beside it, and
+      // centred by translation so it stays put when activated.
+      &.--column {
+        top: 0;
+        left: 50%;
+        translate: -50% -50%;
+        width: var(--handle-length);
+        height: var(--handle-thickness);
+        touch-action: none;
+      }
+
+      &.--row {
+        left: 0;
+        top: 50%;
+        translate: -50% -50%;
+        width: var(--handle-thickness);
+        height: var(--handle-length);
+        touch-action: none;
+      }
+
+      // Revealed for the row and column under the pointer, so the table stays
+      // quiet while it is typed in.
+      &.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    // Every column handle sits in a header cell, so the axis marker prevents a
+    // targeted header row from activating them all.
+    .is-structural-target.--axis-column .composer-table__grip.--column,
+    .is-structural-target.--axis-row .composer-table__grip.--row {
+      opacity: 1;
+      pointer-events: auto;
+      border-color: transparent;
+      background-color: var(--token-color-background-accent-bolder);
+
+      // Six dots, and only six: the painted box is sized to exactly three
+      // columns by two rows of the 4px dot grid, so the gradient cannot tile
+      // itself into a texture.
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        background-image: radial-gradient(
+          circle,
+          var(--token-color-text-inverse) 0.75px,
+          transparent 0.75px
+        );
+        background-size: 0.25rem 0.25rem;
+      }
+    }
+
+    .is-structural-target.--axis-column .composer-table__grip.--column {
+      height: calc(var(--handle-thickness) * 2);
+
+      &::before {
+        width: 0.75rem;
+        height: 0.5rem;
+      }
+    }
+
+    .is-structural-target.--axis-row .composer-table__grip.--row {
+      width: calc(var(--handle-thickness) * 2);
+
+      &::before {
+        width: 0.5rem;
+        height: 0.75rem;
+      }
+    }
+
+    &__append {
+      border-radius: var(--token-radius-normal);
+    }
+
+    &__append {
+      .d-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0.625rem;
+        height: 0.625rem;
+        translate: -50% -50%;
+
+        // Legible on the resting grey; the accent states swap it for its inverse.
+        color: var(--token-color-icon-default);
+        transition: color 0.12s ease;
+      }
+
+      &:focus-visible {
+        background-color: var(--token-color-background-accent-bolder);
+
+        .d-icon {
+          color: var(--token-color-text-inverse);
+        }
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--token-color-background-accent-bolder);
+
+          .d-icon {
+            color: var(--token-color-text-inverse);
+          }
+        }
+      }
+
+      &.is-appending,
+      &.is-removing {
+        opacity: 1;
+        pointer-events: auto;
+
+        .d-icon {
+          opacity: 0;
+        }
+
+        .composer-table__append-count {
+          display: block;
+        }
+      }
+
+      &.is-appending {
+        background-color: var(--token-color-background-accent-bolder);
+      }
+
+      // Dragging back only ever drops empty rows or columns, but it is still a
+      // removal and should not read as an addition.
+      &.is-removing {
+        background-color: var(--danger);
+      }
+
+      &.--column {
+        top: 0;
+        bottom: 0;
+        inset-inline-end: calc(var(--grip-lane) * -1);
+        width: var(--append-thickness);
+        touch-action: pan-y pinch-zoom;
+        cursor: ew-resize;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset-block: 0;
+          inset-inline: -0.375rem;
+        }
+      }
+
+      &.--row {
+        left: 0;
+        right: 0;
+        bottom: calc(var(--grip-lane) * -1);
+        height: var(--append-thickness);
+        touch-action: pan-x pinch-zoom;
+        cursor: ns-resize;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset-block: -0.375rem;
+          inset-inline: 0;
+        }
+      }
+    }
+
+    &__append-count {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: none;
+      min-width: 1.25rem;
+      padding: var(--space-half) var(--space-1);
+      border: var(--token-border-width) solid var(--token-color-border-default);
+      border-radius: var(--token-radius-full);
+      translate: -50% -50%;
+      background-color: var(--token-color-surface);
+      box-shadow: 0 2px 5px rgb(var(--primary-rgb), 0.18);
+      color: var(--token-color-text-default);
+      font-size: var(--font-down-2);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    // What the drag is about to do, drawn at the edge it will grow from. The
+    // inner element is padded to match so the scroll box does not clip it.
+    &__ghost {
+      position: absolute;
+      z-index: 1;
+      display: none;
+      border: 1px dashed var(--token-color-border-focused);
+      border-radius: var(--token-radius-normal);
+      background-color: var(--token-color-background-accent-subtlest);
+      pointer-events: none;
+
+      &.--visible {
+        display: block;
+      }
+
+      // `currentcolor` draws the divisions, so one property sets both.
+      &.--add {
+        border-color: var(--token-color-border-focused);
+        background-color: var(--token-color-background-accent-subtlest);
+        color: var(--token-color-border-focused);
+      }
+
+      &.--remove {
+        border-color: var(--danger);
+        background-color: var(--danger-low);
+        color: var(--danger);
+      }
+    }
+
+    &__drop-indicator {
+      position: absolute;
+      z-index: 2;
+      display: none;
+      border-radius: 1px;
+      background-color: var(--token-color-border-focused);
+      pointer-events: none;
+
+      &.--row {
+        display: block;
+        left: 0;
+        right: 0;
+        height: 2px;
+        translate: 0 -1px;
+      }
+
+      &.--column {
+        display: block;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        translate: -1px 0;
+      }
+    }
+
+    // The table-wide affordances answer to the table, not to one row or column.
+    @media (hover: hover) {
+      &:hover {
+        .composer-table__append {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        table {
+          outline-color: var(--token-color-border-default);
+        }
+      }
+    }
+
+    // Without hover there is nothing to reveal them with, so putting the caret
+    // in the table brings up the whole set.
+    @media (hover: none) {
+      &.is-active {
+        .composer-table__append {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        table {
+          outline-color: var(--token-color-border-default);
+        }
+      }
+
+      .is-current-row .composer-table__grip.--row,
+      .is-current-column .composer-table__grip.--column {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .composer-table__grip.--column::after {
+        inset-block: -1.125rem;
+        inset-inline: -0.5rem;
+      }
+
+      .composer-table__grip.--row::after {
+        inset-block: -0.5rem;
+        inset-inline: -1.125rem;
+      }
+
+      .composer-table__append.--column::after {
+        inset-inline: -0.8125rem;
+      }
+
+      .composer-table__append.--row::after {
+        inset-block: -0.8125rem;
+      }
+    }
+
+    .is-reordering {
+      .composer-table__grip.is-visible {
+        cursor: grabbing;
+      }
+
+      // The row or column being carried: lifted off the table and following
+      // the pointer, so the gesture shows what is moving and not only where it
+      // would land.
+      th.is-moving,
+      td.is-moving {
+        z-index: 1;
+        opacity: 0.55;
+        background-color: var(--token-color-background-accent-subtlest);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      table,
+      .composer-table__grip,
+      .composer-table__append,
+      .composer-table__append .d-icon {
+        transition: none;
+      }
+    }
+
+    @media (forced-colors: active) {
+      th.is-structural-target,
+      td.is-structural-target {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+      }
+
+      .composer-table__grip,
+      .composer-table__append {
+        border-color: ButtonText;
+      }
+
+      .is-structural-target.--axis-column .composer-table__grip.--column,
+      .is-structural-target.--axis-row .composer-table__grip.--row {
+        outline: 2px solid Highlight;
+        background: Highlight;
+        color: HighlightText;
+        forced-color-adjust: none;
+      }
+    }
+  }
+}
+
+.composer-table__drag-avatar {
+  position: fixed;
+  z-index: z("composer", "dropdown");
+  border-radius: var(--token-radius-normal);
+  background-color: var(--token-color-background-accent-bolder);
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.75rem;
+    height: 0.5rem;
+    translate: -50% -50%;
+    background-image: radial-gradient(
+      circle,
+      var(--token-color-text-inverse) 0.75px,
+      transparent 0.75px
+    );
+    background-size: 0.25rem 0.25rem;
+  }
+
+  &.--row::before {
+    width: 0.5rem;
+    height: 0.75rem;
+  }
+}
+
+.composer-table__grip.is-drag-origin {
+  opacity: 0;
+}
+
+.fk-d-menu[data-identifier="composer-table-menu"] {
+  // the composer sits above the default dropdown layer
+  z-index: z("composer", "dropdown");
+  user-select: none;
+
+  .fk-d-menu__inner-content {
+    overflow: hidden;
+    border-color: var(--token-color-border-default);
+    border-radius: var(--token-radius-large);
+  }
+}
+
+.composer-table-menu {
+  min-width: 15rem;
+  gap: 0;
+  padding: var(--space-1);
+
+  .dropdown-menu__divider {
+    margin-block: var(--space-1);
+    border-color: var(--token-color-border-default);
+  }
+
+  .btn {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 2.125rem;
+    height: auto;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: 0;
+    border-radius: var(--token-radius-normal);
+    background: transparent;
+    color: var(--token-color-text-default);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+
+    .d-icon {
+      width: 1rem;
+      color: var(--token-color-icon-subtle);
+      font-size: var(--font-down-1);
+    }
+
+    .d-button-label {
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-6);
+      text-align: start;
+    }
+
+    // Present but quiet: the label is what is being read, the keys are a hint.
+    .shortcut {
+      min-width: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--token-color-text-subtlest);
+      font-size: var(--font-down-2);
+      font-weight: var(--token-font-weight-regular);
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--token-color-surface-hovered);
+    }
+
+    &.--active {
+      background-color: var(--token-color-surface-selected);
+
+      .d-icon {
+        color: var(--token-color-text-accent);
+      }
+    }
+
+    &.--dangerous:hover,
+    &.--dangerous:focus-visible {
+      background-color: var(--danger-low);
+      color: var(--danger);
+
+      .d-icon {
+        color: var(--token-color-icon-danger);
+      }
+    }
+  }
+}
