@@ -32,6 +32,17 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
+  # JSON:API Kit spike — read-only, public-shaped JSON:API.
+  # See docs/api-modernization-exploration.md (Part 9).
+  scope "/data-explorer/api", defaults: { format: :json } do
+    # Each endpoint named once — verbs and the `internal/` prefix are derived from the
+    # controller's declarations. See lib/discourse_data_explorer/json_api_kit/routes.rb.
+    jsonapi_resource "queries", controller: "discourse_data_explorer/json_api_kit/queries"
+    jsonapi_resource "queries", controller: "discourse_data_explorer/json_api_kit/internal_queries"
+  end
+  # API key scopes for the routes just drawn (docs/resource-design.md §8).
+  DiscourseDataExplorer::JsonApiKit::ApiKeyScopes.register!
+
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
   get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
   get "/admin/plugins/explorer/queries" =>

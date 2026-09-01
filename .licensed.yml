@@ -42,6 +42,7 @@ ignored:
     - timeout # Ruby (default gem)
     - tsort # Ruby (default gem)
     - uri # Ruby (default gem)
+    - yaml # Ruby (default gem)
 
 reviewed:
   bundler:
