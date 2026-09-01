@@ -335,7 +335,7 @@ class LefthookLinter
     return nil if parts.length < 2
 
     plugin_dir = "plugins/#{parts[1]}"
-    File.join(PROJECT_ROOT, plugin_dir) if bundled_plugins.exclude?(plugin_dir)
+    File.join(PROJECT_ROOT, plugin_dir) unless bundled_plugins.include?(plugin_dir)
   end
 
   def standalone_plugin_root(file)
