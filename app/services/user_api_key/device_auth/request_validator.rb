@@ -87,5 +87,6 @@ class UserApiKey::DeviceAuth::RequestValidator
       raise Discourse::InvalidParameters.new(param_name) if value.to_s.bytesize > max_length
     end
   end
+
   private_class_method :validate_param_length!
 end

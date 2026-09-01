@@ -96,6 +96,7 @@ module DiscourseWorkflows
             scope.distinct.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } }
           end
         end
+
         private_class_method :callable_workflow_options
 
         def execute(exec_ctx)

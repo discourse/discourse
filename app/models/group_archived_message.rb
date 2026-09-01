@@ -58,6 +58,7 @@ class GroupArchivedMessage < ActiveRecord::Base
       )
     end
   end
+
   private_class_method :publish_topic_tracking_state
 end
 

@@ -89,11 +89,9 @@ class AiAgent < ActiveRecord::Base
     def agent_cache
       @agent_cache ||= DiscourseAi::MultisiteHash.new("agent_cache")
     end
-  end
 
-  scope :ordered, -> { order("priority DESC, lower(name) ASC") }
+    public
 
-  class << self
     def all_agents(enabled_only: true)
       agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
 
@@ -200,11 +198,9 @@ class AiAgent < ActiveRecord::Base
         agents
       end
     end
-  end
 
-  after_commit :bump_cache
+    public
 
-  class << self
     def detach_user!(user_id)
       return if where(user_id: user_id).update_all(user_id: nil) == 0
 
@@ -212,6 +208,11 @@ class AiAgent < ActiveRecord::Base
       DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
     end
   end
+
+  scope :ordered, -> { order("priority DESC, lower(name) ASC") }
+
+  after_commit :bump_cache
+
   def bump_cache
     self.class.agent_cache.flush!
     return if !DiscourseAi::AiHelper::Assistant.prompt_agent_ids.include?(id)

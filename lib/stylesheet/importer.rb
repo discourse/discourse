@@ -51,6 +51,7 @@ module Stylesheet
         @theme_id = @theme.id || -1
       end
     end
+
     def font
       body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
       heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }

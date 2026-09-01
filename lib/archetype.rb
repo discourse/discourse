@@ -33,6 +33,7 @@ class Archetype
       @archetypes.delete(name)
     end
   end
+
   def initialize(id, options)
     @id = id
     @options = options

@@ -83,9 +83,7 @@ module DiscourseAi
           def allow_partial_tool_calls?
             true
           end
-        end
 
-        class << self
           def storage_api
             <<~API
             ## Storage API
@@ -142,6 +140,7 @@ module DiscourseAi
           API
           end
         end
+
         def partial_invoke
           if parameters[:specification].present?
             in_progress(specification: parameters[:specification])

@@ -191,8 +191,7 @@ class WordWatcher
       text = replace_link(text)
       text
     end
-  end
-  class << self
+
     def replace_text_with_regexp(text, regexp, replacement)
       text.gsub(regexp) do |match|
         prefix = ""
@@ -205,8 +204,7 @@ class WordWatcher
         "#{prefix}#{replacement}"
       end
     end
-  end
-  class << self
+
     def censor_text_with_regexp(text, regexp)
       text.gsub(regexp) do |match|
         # the regex captures leading whitespaces
@@ -218,8 +216,7 @@ class WordWatcher
         end
       end
     end
-  end
-  class << self
+
     def match_word_regexp(regexp)
       s = SPACELESS_SCRIPTS
       w = WORD_CHARS
@@ -227,8 +224,7 @@ class WordWatcher
       trailing = "(?:(?!#{w})|(?=[#{s}])|(?<=[#{s}]))"
       "#{leading}(#{regexp})#{trailing}"
     end
-  end
-  class << self
+
     def replace(text, watch_word_type)
       regexps_for_action(watch_word_type)
         .to_a
@@ -238,6 +234,7 @@ class WordWatcher
         end
     end
   end
+
   def initialize(raw)
     @raw = raw
   end

@@ -80,6 +80,7 @@ class Promotion
       true
     end
   end
+
   def initialize(user)
     @user = user
   end

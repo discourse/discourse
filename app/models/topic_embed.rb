@@ -383,16 +383,6 @@ class TopicEmbed < ActiveRecord::Base
       fragment.to_html
     end
 
-    def text_truncated?(contents, excerpt)
-      return false if excerpt.blank?
-
-      Nokogiri::HTML5.fragment(contents).text.squish !=
-        Nokogiri::HTML5.fragment(excerpt).text.squish
-    end
-  end
-  private_class_method :text_truncated?
-
-  class << self
     def expanded_for(post)
       Discourse
         .cache
@@ -407,6 +397,19 @@ class TopicEmbed < ActiveRecord::Base
         end
     end
 
+    def expanded_cache_key(topic_id)
+      "embed-topic:#{topic_id}"
+    end
+
+    def text_truncated?(contents, excerpt)
+      return false if excerpt.blank?
+
+      Nokogiri::HTML5.fragment(contents).text.squish !=
+        Nokogiri::HTML5.fragment(excerpt).text.squish
+    end
+
+    private :text_truncated?
+
     def content_for_expansion(embed)
       return embed.embed_content_cache if embed.embed_content_cache.present?
 
@@ -419,14 +422,10 @@ class TopicEmbed < ActiveRecord::Base
       embed.update!(embed_content_cache: body)
       body
     end
-  end
-  private_class_method :content_for_expansion
 
-  class << self
-    def expanded_cache_key(topic_id)
-      "embed-topic:#{topic_id}"
-    end
+    private :content_for_expansion
   end
+
   private_class_method :expanded_cache_key
 end
 

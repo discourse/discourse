@@ -11,6 +11,7 @@ module Migrations
             new(settings).perform!
           end
         end
+
         def initialize(settings)
           @settings = settings
           @databases = setup_databases

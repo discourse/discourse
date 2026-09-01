@@ -36,6 +36,7 @@ module DiscourseAi
           @schema = { priority_tables: priority, other_tables: other_tables }
         end
       end
+
       def thinking_effort
         "medium"
       end

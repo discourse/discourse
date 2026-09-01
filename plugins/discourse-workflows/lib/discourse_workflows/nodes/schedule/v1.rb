@@ -201,6 +201,7 @@ module DiscourseWorkflows
             )
           end
         end
+
         def initialize(*)
           super(parameters: {})
         end

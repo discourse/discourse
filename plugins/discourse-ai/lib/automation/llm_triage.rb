@@ -40,43 +40,6 @@ module DiscourseAi
           end
         end
 
-        def promote_post_reviewable_to_flagged!(post)
-          reviewable = ReviewablePost.pending.find_by(target: post)
-          return if reviewable.blank?
-          return if ReviewableFlaggedPost.exists?(target: post)
-
-          reviewable.update!(
-            type: ReviewableFlaggedPost.name,
-            potential_spam: true,
-            reviewable_by_moderator: true,
-            payload: {
-              targets_topic: false,
-            },
-          )
-        rescue ActiveRecord::RecordNotUnique
-          raise if !ReviewableFlaggedPost.exists?(target: post)
-        end
-      end
-      private_class_method :promote_post_reviewable_to_flagged!
-
-      class << self
-        def review_reviewable_for(post)
-          # If a spam triage rule already flagged this post, reuse that reviewable
-          # instead of creating a separate ReviewablePost. This mirrors
-          # `promote_post_reviewable_to_flagged!` for the opposite ordering, so
-          # moderators always see a single review item regardless of which rule
-          # ran first.
-          ReviewableFlaggedPost.pending.find_by(target: post) ||
-            ReviewablePost.needs_review!(
-              target: post,
-              created_by: Discourse.system_user,
-              reviewable_by_moderator: true,
-            )
-        end
-      end
-      private_class_method :review_reviewable_for
-
-      class << self
         def handle(
           post:,
           triage_agent_id:,
@@ -362,6 +325,41 @@ module DiscourseAi
             end
           end
         end
+
+        def promote_post_reviewable_to_flagged!(post)
+          reviewable = ReviewablePost.pending.find_by(target: post)
+          return if reviewable.blank?
+          return if ReviewableFlaggedPost.exists?(target: post)
+
+          reviewable.update!(
+            type: ReviewableFlaggedPost.name,
+            potential_spam: true,
+            reviewable_by_moderator: true,
+            payload: {
+              targets_topic: false,
+            },
+          )
+        rescue ActiveRecord::RecordNotUnique
+          raise if !ReviewableFlaggedPost.exists?(target: post)
+        end
+
+        private :promote_post_reviewable_to_flagged!
+
+        def review_reviewable_for(post)
+          # If a spam triage rule already flagged this post, reuse that reviewable
+          # instead of creating a separate ReviewablePost. This mirrors
+          # `promote_post_reviewable_to_flagged!` for the opposite ordering, so
+          # moderators always see a single review item regardless of which rule
+          # ran first.
+          ReviewableFlaggedPost.pending.find_by(target: post) ||
+            ReviewablePost.needs_review!(
+              target: post,
+              created_by: Discourse.system_user,
+              reviewable_by_moderator: true,
+            )
+        end
+
+        private :review_reviewable_for
       end
     end
   end

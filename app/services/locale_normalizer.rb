@@ -27,11 +27,9 @@ class LocaleNormalizer
       locale2 = locale2.gsub("-", "_").downcase
       locale1.split("_").first == locale2.split("_").first
     end
-  end
 
-  private
+    public
 
-  class << self
     def i18n_pairs
       # they should look like this for the input to match against:
       # {
@@ -54,4 +52,6 @@ class LocaleNormalizer
           end
     end
   end
+
+  private
 end

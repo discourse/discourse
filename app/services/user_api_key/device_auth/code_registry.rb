@@ -138,5 +138,6 @@ class UserApiKey::DeviceAuth::CodeRegistry
       "#{code[0, 4]}-#{code[4, 4]}"
     end
   end
+
   private_class_method :reserve_user_code!, :reserve_request_token!, :generate_user_code
 end

@@ -5,6 +5,7 @@ module DiscourseAi
     module Tools
       class GithubSearchFiles < Tool
         MAX_FILE_SEARCH_RESULTS = 25
+
         class << self
           def signature
             {

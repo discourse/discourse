@@ -28,6 +28,7 @@ module Migrations
               new(databases, settings).run!
             end
           end
+
           def initialize(databases, settings)
             @uploads_db = databases[:uploads_db]
             @intermediate_db = databases[:intermediate_db]

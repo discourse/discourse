@@ -97,6 +97,7 @@ class PostRevisor
   attr_reader :category_changed, :post_revision, :opts
 
   USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE]
+
   class << self
     def tracked_topic_fields
       @@tracked_topic_fields ||= {}
@@ -122,8 +123,7 @@ class PostRevisor
       topic_changes.record_change(field, topic_changes.topic.public_send(field), attribute)
       topic_changes.topic.public_send("#{field}=", attribute)
     end
-  end
-  class << self
+
     def create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
       if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes ||
            SiteSetting.whispers_allowed_groups.blank?
@@ -197,6 +197,7 @@ class PostRevisor
       canonical_ids == topic.tags.pluck(:id).sort
     end
   end
+
   def initialize(post, topic = post.topic)
     @post = post
     @topic = topic

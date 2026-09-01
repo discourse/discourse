@@ -20,6 +20,7 @@ class DiscourseLogstashLogger < Logger
     HTTP_REFERER
     HTTP_X_FORWARDED_FOR
   ]
+
   # Creates a new logger instance.
   #
   # @param logdev [String, IO, nil] The log device. This can be one of:

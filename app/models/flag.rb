@@ -43,6 +43,7 @@ class Flag < ActiveRecord::Base
       DB.query_single(sql)
     end
   end
+
   def used?
     PostAction.exists?(post_action_type_id: id) ||
       ReviewableScore.exists?(reviewable_score_type: id)

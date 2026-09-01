@@ -25,6 +25,7 @@ class TopicView
   # get accurate participant count, instead grab cached count
   # from topic
   MAX_POSTS_COUNT_PARTICIPANTS = 500
+
   class << self
     def on_preload(&blk)
       (@preload ||= Set.new) << blk
@@ -40,41 +41,13 @@ class TopicView
     def preload(topic_view)
       @preload.each { |preload| preload.call(topic_view) } if @preload
     end
-  end
 
-  attr_reader(
-    :topic,
-    :posts,
-    :guardian,
-    :filtered_posts,
-    :chunk_size,
-    :print,
-    :message_bus_last_id,
-    :queued_posts_enabled,
-    :personal_message,
-    :can_review_topic,
-    :page,
-    :skip_post_loading,
-  )
-  alias queued_posts_enabled? queued_posts_enabled
+    public
 
-  attr_accessor(
-    :draft,
-    :draft_key,
-    :draft_sequence,
-    :user_custom_fields,
-    :post_custom_fields,
-    :post_number,
-    :include_suggested,
-    :include_related,
-  )
-
-  class << self
     def print_chunk_size
       1000
     end
-  end
-  class << self
+
     def chunk_size
       CHUNK_SIZE
     end
@@ -124,6 +97,34 @@ class TopicView
       @custom_default_scopes = nil
     end
   end
+
+  attr_reader(
+    :topic,
+    :posts,
+    :guardian,
+    :filtered_posts,
+    :chunk_size,
+    :print,
+    :message_bus_last_id,
+    :queued_posts_enabled,
+    :personal_message,
+    :can_review_topic,
+    :page,
+    :skip_post_loading,
+  )
+  alias queued_posts_enabled? queued_posts_enabled
+
+  attr_accessor(
+    :draft,
+    :draft_key,
+    :draft_sequence,
+    :user_custom_fields,
+    :post_custom_fields,
+    :post_number,
+    :include_suggested,
+    :include_related,
+  )
+
   def initialize(topic_or_topic_id, user = nil, options = {})
     @topic = find_topic(topic_or_topic_id)
     @user = user
@@ -183,6 +184,7 @@ class TopicView
         (@guardian.authenticated? && @guardian.reply_posting_review_required?(@topic.category))
     @personal_message = @topic.private_message?
   end
+
   # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
   # on the TopicView rather than on Post objects. Cleared automatically when the
   # post collection changes via reset_post_collection.

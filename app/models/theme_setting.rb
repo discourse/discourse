@@ -68,6 +68,7 @@ class ThemeSetting < ActiveRecord::Base
       end
     end
   end
+
   def clear_settings_cache
     # All necessary caches will be cleared on next ensure_baked!
     theme.settings_field&.invalidate_baked!

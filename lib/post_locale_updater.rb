@@ -16,5 +16,6 @@ class PostLocaleUpdater
       raise Discourse::InvalidParameters.new(:locale)
     end
   end
+
   private_class_method :validate_locale!
 end

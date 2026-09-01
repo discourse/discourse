@@ -11,10 +11,10 @@ class Demon::Base
     def demons
       @demons
     end
-  end
 
-  if Rails.env.test?
-    class << self
+    public
+
+    if Rails.env.test?
       def set_demons(demons)
         @demons = demons
       end
@@ -24,12 +24,6 @@ class Demon::Base
       end
     end
 
-    def set_pid(pid)
-      @pid = pid
-    end
-  end
-
-  class << self
     def start(count = 1, verbose: false, logger: nil)
       @demons ||= {}
       count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
@@ -53,11 +47,9 @@ class Demon::Base
       return unless @demons
       @demons.values.each { |demon| demon.kill(signal) }
     end
-  end
 
-  attr_reader :pid, :parent_pid, :started, :index
+    public
 
-  class << self
     def alive?(pid)
       Process.kill(0, pid)
       true
@@ -65,6 +57,15 @@ class Demon::Base
       false
     end
   end
+
+  if Rails.env.test?
+    def set_pid(pid)
+      @pid = pid
+    end
+  end
+
+  attr_reader :pid, :parent_pid, :started, :index
+
   def initialize(index, rails_root: nil, parent_pid: nil, verbose: false, logger: nil)
     @index = index
     @pid = nil

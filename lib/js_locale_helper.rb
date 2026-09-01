@@ -117,18 +117,16 @@ module JsLocaleHelper
       @plugin_translations = nil
       @loaded_merges = nil
     end
-  end
 
-  if Rails.env.test?
-    class << self
+    public
+
+    if Rails.env.test?
       def set_translations(locale, translations)
         @loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
         @loaded_translations[locale] = translations
       end
     end
-  end
 
-  class << self
     def translations_for(locale_str, no_fallback: false)
       clear_cache! if Rails.env.development?
 
@@ -275,11 +273,9 @@ module JsLocaleHelper
       localeData.extra[#{bundle.to_json}] = #{translations.to_json};
     JS
     end
-  end
 
-  MOMENT_LOCALE_MAPPING = { "hy" => "hy-am", "ug" => "ug-cn" }
+    public
 
-  class << self
     def find_moment_locale(locale_chain, timezone_names: false)
       if timezone_names
         path =
@@ -384,4 +380,6 @@ module JsLocaleHelper
       prefix.blank? ? key : "#{prefix}.#{key}"
     end
   end
+
+  MOMENT_LOCALE_MAPPING = { "hy" => "hy-am", "ug" => "ug-cn" }
 end

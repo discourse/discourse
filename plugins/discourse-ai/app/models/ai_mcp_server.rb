@@ -115,6 +115,7 @@ class AiMcpServer < ActiveRecord::Base
       end
     end
   end
+
   def auth_header_value
     if oauth?
       token = oauth_token_store.access_token

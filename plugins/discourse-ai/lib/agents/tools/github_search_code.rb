@@ -14,6 +14,7 @@ module DiscourseAi
         # Cap blob fetches to avoid excessive API calls for line-number enrichment.
         # Files beyond this limit still appear in results but without line numbers.
         MAX_BLOB_FETCHES = 10
+
         class << self
           def signature
             {

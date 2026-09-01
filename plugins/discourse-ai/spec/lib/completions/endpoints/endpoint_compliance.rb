@@ -8,6 +8,7 @@ class EndpointMock
       new(nil).with_chunk_array_support(&blk)
     end
   end
+
   def initialize(model)
     @model = model
   end

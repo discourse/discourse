@@ -94,6 +94,7 @@ module ::DiscourseAutomation
       )
     end
   end
+
   private_class_method :suppressed_triggers_count,
                        :decrement_suppressed_triggers_count,
                        :deprecated_active_automation_api

@@ -73,12 +73,9 @@ class DiscourseConnectBase
     def used_nonce_expiry_time
       24.hours
     end
-  end
 
-  attr_accessor(*ACCESSORS)
-  attr_writer :sso_secret, :sso_url
+    public
 
-  class << self
     def sso_secret
       raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
     end
@@ -135,13 +132,15 @@ class DiscourseConnectBase
 
       sso
     end
-  end
 
-  class << self
     def sign(payload, secret)
       OpenSSL::HMAC.hexdigest("sha256", secret, payload)
     end
   end
+
+  attr_accessor(*ACCESSORS)
+  attr_writer :sso_secret, :sso_url
+
   def diagnostics
     DiscourseConnectBase::ACCESSORS.map { |a| "#{a}: #{public_send(a)}" }.join("\n")
   end

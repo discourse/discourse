@@ -27,11 +27,9 @@ module DiscoursePoll
           publish_changes(post) if has_changed
         end
       end
-    end
 
-    private
+      public
 
-    class << self
       def compute_name_diffs(post, polls)
         old_poll_names = ::Poll.where(post: post).pluck(:name)
         new_poll_names = polls.keys
@@ -204,5 +202,7 @@ module DiscoursePoll
         sorted_old_options != sorted_new_options
       end
     end
+
+    private
   end
 end

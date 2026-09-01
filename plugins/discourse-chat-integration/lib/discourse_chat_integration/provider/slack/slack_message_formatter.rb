@@ -12,6 +12,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
         me.excerpt
       end
     end
+
     def initialize
       @excerpt = +""
     end

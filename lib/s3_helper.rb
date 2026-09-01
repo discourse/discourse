@@ -48,8 +48,7 @@ class S3Helper
     def get_bucket_and_folder_path(s3_bucket_name)
       s3_bucket_name.downcase.split("/", 2)
     end
-  end
-  class << self
+
     def s3_options(obj)
       opts = { region: obj.s3_region }
 
@@ -86,6 +85,7 @@ class S3Helper
       end
     end
   end
+
   def initialize(s3_bucket_name, tombstone_prefix = "", options = {})
     @s3_client = options.delete(:client)
     @s3_bucket = options.delete(:bucket)

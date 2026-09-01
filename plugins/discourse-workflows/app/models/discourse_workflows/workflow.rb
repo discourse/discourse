@@ -113,9 +113,7 @@ module DiscourseWorkflows
         scope = scope.where.not(id: exclude_id) if exclude_id
         scope
       end
-    end
 
-    class << self
       def static_data_node_key(node_name)
         "#{STATIC_DATA_NODE_PREFIX}#{node_name}"
       end
@@ -129,6 +127,7 @@ module DiscourseWorkflows
           value.all? { |key, slot| key.to_s != "node" && static_data_slot(slot) == slot }
       end
     end
+
     def find_node(node_id)
       find_node_in(nodes, node_id)
     end

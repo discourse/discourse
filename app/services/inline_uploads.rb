@@ -155,13 +155,9 @@ class InlineUploads
 
       markdown
     end
-  end
 
-  URL_REGEX = /(?:[^\s()"']|\((?:[^\s()]*|\([^\s()]*\))*\))+/
-  TITLE_PART_REGEX = /"[^"]*"|'[^']*'/
-  private_constant :URL_REGEX, :TITLE_PART_REGEX
+    public
 
-  class << self
     def match_md_inline_img(markdown, external_src: false)
       markdown.scan(/(!?\[([^\[\]]*)\]\((#{URL_REGEX})([ ]*#{TITLE_PART_REGEX}[ ]*)?\))/) do |match|
         if (external_src || matched_uploads(match[2]).present?) && block_given?
@@ -274,6 +270,17 @@ class InlineUploads
       raw
     end
 
+    def node_children_names(node, names = Set.new)
+      if node.children.blank?
+        names << node.name
+        return names
+      end
+
+      node.children.each { |child| names = node_children_names(child, names) }
+
+      names
+    end
+
     def matched_uploads(node)
       upload_path = Discourse.store.upload_path
       base_url = Discourse.base_url.sub(%r{https?://}, "(https?://)")
@@ -313,20 +320,13 @@ class InlineUploads
 
       matches
     end
+
+    private :matched_uploads
   end
-  private_class_method :matched_uploads
 
-  class << self
-    def node_children_names(node, names = Set.new)
-      if node.children.blank?
-        names << node.name
-        return names
-      end
+  URL_REGEX = /(?:[^\s()"']|\((?:[^\s()]*|\([^\s()]*\))*\))+/
+  TITLE_PART_REGEX = /"[^"]*"|'[^']*'/
+  private_constant :URL_REGEX, :TITLE_PART_REGEX
 
-      node.children.each { |child| names = node_children_names(child, names) }
-
-      names
-    end
-  end
   private_class_method :node_children_names
 end

@@ -13,11 +13,9 @@ module DiscourseEvents
             .compact
             .to_h
         end
-      end
 
-      private
+        public
 
-      class << self
         def current_holiday(user_events)
           ends_at = holiday_ends_at(user_events)
           return nil unless ends_at
@@ -71,6 +69,8 @@ module DiscourseEvents
           result
         end
       end
+
+      private
     end
   end
 end

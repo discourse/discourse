@@ -23,6 +23,7 @@ class NotificationEmailer
         hash
       end
     end
+
     def initialize(notification, no_delay: false)
       @notification = notification
       @no_delay = no_delay

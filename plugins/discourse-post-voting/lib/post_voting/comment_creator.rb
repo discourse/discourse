@@ -52,14 +52,14 @@ module PostVoting
           username: comment.user.username,
         )
       end
-    end
 
-    private
+      public
 
-    class << self
       def anonymous_guardian
         Guardian.new(nil)
       end
     end
+
+    private
   end
 end

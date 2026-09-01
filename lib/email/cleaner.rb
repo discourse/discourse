@@ -10,6 +10,7 @@ module Email
         )
       end
     end
+
     def initialize(mail, remove_attachments: true, truncate: true, rejected: false)
       @mail = Mail.new(mail)
       @mail.charset = "UTF-8"

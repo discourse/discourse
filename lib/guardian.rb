@@ -720,6 +720,7 @@ class Guardian
   def category_group_moderation_allowed?
     authenticated? && SiteSetting.enable_category_group_moderation
   end
+
   def category_group_moderator_scope
     Category.joins(category_moderation_groups: { group: :group_users }).where(
       group_users: {
@@ -727,6 +728,7 @@ class Guardian
       },
     )
   end
+
   def is_api?
     @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
   end

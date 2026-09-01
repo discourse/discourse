@@ -56,8 +56,7 @@ class UserProfile < ActiveRecord::Base
         end
       problems
     end
-  end
-  class << self
+
     def import_url_for_user(background_url, user, options = nil)
       if SiteSetting.verbose_upload_logging
         Rails.logger.warn(
@@ -100,12 +99,12 @@ class UserProfile < ActiveRecord::Base
     ensure
       tempfile.close! if tempfile && tempfile.respond_to?(:close!)
     end
-  end
-  class << self
+
     def remove_featured_topic_from_all_profiles(topic)
       where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
     end
   end
+
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>\z/, "")

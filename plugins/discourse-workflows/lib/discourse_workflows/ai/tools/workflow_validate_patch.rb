@@ -15,6 +15,7 @@ module DiscourseWorkflows
           )+
         /x
         MAX_AVAILABLE_PATHS = 12
+
         class << self
           def signature
             {

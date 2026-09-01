@@ -15,11 +15,9 @@ module DiscourseAi
               server_election(resources)
             end
         end
-      end
 
-      private
+        public
 
-      class << self
         def dns_srv_lookup_for_domain(domain)
           resolver = Resolv::DNS.new
           resolver.getresources(domain, Resolv::DNS::Resource::IN::SRV)
@@ -62,6 +60,8 @@ module DiscourseAi
           end
         end
       end
+
+      private
     end
   end
 end

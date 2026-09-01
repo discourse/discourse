@@ -8,6 +8,7 @@ module DiscourseAi
 
         MIN_TOKENS_FOR_RESEARCH = 8000
         MIN_TOKENS_FOR_POST = 50
+
         class << self
           def signature
             {

@@ -57,6 +57,7 @@ class Poll < ActiveRecord::Base
       end
     end
   end
+
   def reload(options = nil)
     @has_voted = {}
     super

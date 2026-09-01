@@ -73,6 +73,7 @@ module Chat
         clear_caches!(updated_thread_ids)
       end
     end
+
     def last_message
       super || NullMessage.new
     end

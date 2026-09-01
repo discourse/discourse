@@ -85,6 +85,7 @@ class TopicsController < ApplicationController
       end
     end
   end
+
   def id_for_slug
     topic = Topic.find_by_slug(params[:slug])
     guardian.ensure_can_see!(topic)

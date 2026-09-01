@@ -27,8 +27,7 @@ class UserApiKey < ActiveRecord::Base
     def available_scopes
       @available_scopes ||= Set.new(UserApiKeyScopes.all_scopes.keys.map(&:to_s))
     end
-  end
-  class << self
+
     def push_clients_for(user)
       return [] if SiteSetting.allow_user_api_key_scopes.split("|").exclude?("push")
       return [] if SiteSetting.allowed_user_api_push_urls.blank?
@@ -44,6 +43,7 @@ class UserApiKey < ActiveRecord::Base
         .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
     end
   end
+
   def generate_key
     if !key_hash
       @key ||= SecureRandom.hex

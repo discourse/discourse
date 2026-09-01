@@ -37,6 +37,7 @@ class TopicsBulkAction
       define_method(name, &block)
     end
   end
+
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids

@@ -173,6 +173,7 @@ class ThemeField < ActiveRecord::Base
     ),
   ]
   JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript]
+
   class << self
     def types
       @types ||=
@@ -203,17 +204,9 @@ class ThemeField < ActiveRecord::Base
         field.ensure_baked!
       end
     end
-  end
 
-  validates :name,
-            format: {
-              with: /\A[a-z_][a-z0-9_-]*\z/i,
-            },
-            if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
+    public
 
-  belongs_to :theme
-
-  class << self
     def guess_type(name:, target:)
       if basic_targets.include?(target.to_s) && html_fields.include?(name.to_s)
         types[:html]
@@ -239,8 +232,7 @@ class ThemeField < ActiveRecord::Base
     def basic_targets
       @basic_targets ||= %w[common desktop mobile]
     end
-  end
-  class << self
+
     def opts_from_file_path(filename)
       FILE_MATCHERS.each do |matcher|
         if opts = matcher.opts_from_filename(filename)
@@ -250,6 +242,15 @@ class ThemeField < ActiveRecord::Base
       nil
     end
   end
+
+  validates :name,
+            format: {
+              with: /\A[a-z_][a-z0-9_-]*\z/i,
+            },
+            if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
+
+  belongs_to :theme
+
   def process_html(html)
     errors = []
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)

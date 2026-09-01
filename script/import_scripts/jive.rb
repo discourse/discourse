@@ -42,9 +42,11 @@ class ImportScripts::Jive < ImportScripts::Base
         Class.new(RowResolver).new(cols)
       end
     end
+
     def initialize(cols)
       cols.each_with_index { |col, idx| self.class.public_send(:define_method, col) { @row[idx] } }
     end
+
     def load(row)
       @row = row
     end

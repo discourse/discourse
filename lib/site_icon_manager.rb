@@ -85,6 +85,32 @@ module SiteIconManager
       end
       @cache.clear
     end
+
+    public
+
+    def disable
+      @disabled = true
+    end
+
+    def enable
+      @disabled = false
+    end
+
+    public
+
+    def get_set_cache(key, &block)
+      return block.call if @disabled
+      @cache.defer_get_set(key, &block)
+    end
+
+    def resolve_original(info)
+      info[:settings].each do |setting_name|
+        value = SiteSetting.get(setting_name)
+        return value if value
+      end
+      return Upload.find_by(id: SKETCH_LOGO_ID) if info[:fallback_to_sketch]
+      nil
+    end
   end
 
   ICONS.each do |name, info|
@@ -106,31 +132,6 @@ module SiteIconManager
   end
 
   # Used in test mode
-  class << self
-    def disable
-      @disabled = true
-    end
-
-    def enable
-      @disabled = false
-    end
-  end
 
   private
-
-  class << self
-    def get_set_cache(key, &block)
-      return block.call if @disabled
-      @cache.defer_get_set(key, &block)
-    end
-
-    def resolve_original(info)
-      info[:settings].each do |setting_name|
-        value = SiteSetting.get(setting_name)
-        return value if value
-      end
-      return Upload.find_by(id: SKETCH_LOGO_ID) if info[:fallback_to_sketch]
-      nil
-    end
-  end
 end

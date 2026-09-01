@@ -23,6 +23,7 @@ class AnsiScreen
       Unicode::DisplayWidth.of(string.gsub(SGR, ""))
     end
   end
+
   # wrap_mode: :truncate (xterm-like, a long row stays one physical row) or
   # :reflow (modern emulators / tmux, a long row rewraps into several rows).
   def initialize(width: 80, wrap_mode: :truncate)

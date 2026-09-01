@@ -13,9 +13,7 @@ module Stylesheet
         watcher.start
         watcher
       end
-    end
 
-    class << self
       def default_paths
         return @default_paths if @default_paths
 
@@ -34,6 +32,7 @@ module Stylesheet
         @default_paths
       end
     end
+
     def initialize(paths)
       @paths = paths || Watcher.default_paths
       @queue = Queue.new

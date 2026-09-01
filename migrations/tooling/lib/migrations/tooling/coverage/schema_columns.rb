@@ -53,6 +53,13 @@ module Migrations
               end
           end
 
+          def generated?(model)
+            path, = model.method(:create).source_location
+            return false unless path
+
+            File.read(path).include?(GENERATED_MARKER)
+          end
+
           def build_model(namespace, const_name)
             value = namespace.const_get(const_name)
             return unless value.is_a?(Module)
@@ -76,17 +83,10 @@ module Migrations
 
             Model.new(name: const_name.to_s, required:, optional:)
           end
-        end
-        private_class_method :build_model
 
-        class << self
-          def generated?(model)
-            path, = model.method(:create).source_location
-            return false unless path
-
-            File.read(path).include?(GENERATED_MARKER)
-          end
+          private :build_model
         end
+
         private_class_method :generated?
       end
     end

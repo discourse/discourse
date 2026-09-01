@@ -160,6 +160,7 @@ module DiscourseWorkflows
         step.is_a?(Hash) ? step[key.to_s] : step.public_send(key)
       end
     end
+
     private_class_method :step_field
 
     def fail_with_timeout!

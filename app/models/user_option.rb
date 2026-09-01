@@ -80,15 +80,9 @@ class UserOption < ActiveRecord::Base
     def composition_mode_types
       @composition_mode_types ||= Enum.new(markdown: 0, rich: 1)
     end
-  end
 
-  validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
-  validates :email_level, inclusion: { in: UserOption.email_level_types.values }
-  validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
-  validates :timezone, timezone: true
-  validate :understood_languages_are_supported, if: :will_save_change_to_understood_languages?
+    public
 
-  class << self
     def user_tzinfo(user_id)
       timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || "UTC"
 
@@ -105,6 +99,13 @@ class UserOption < ActiveRecord::Base
       tzinfo
     end
   end
+
+  validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
+  validates :email_level, inclusion: { in: UserOption.email_level_types.values }
+  validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
+  validates :timezone, timezone: true
+  validate :understood_languages_are_supported, if: :will_save_change_to_understood_languages?
+
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
     self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency

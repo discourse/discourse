@@ -31,6 +31,7 @@ class EmailValidator < ActiveModel::EachValidator
         Rails.configuration.developer_emails.include?(value)
     end
   end
+
   def validate_each(record, attribute, value)
     if value.blank?
       record.errors.add(attribute, I18n.t(:"user.email.blank"))

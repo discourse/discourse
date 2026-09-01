@@ -29,6 +29,7 @@ module DiscourseAi
         SQL
       end
     end
+
     private_class_method :claimed_id
   end
 end

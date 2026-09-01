@@ -19,6 +19,7 @@ class Auth::AuthProvider
       ]
     end
   end
+
   def initialize(params = {})
     params.each { |key, value| public_send "#{key}=", value }
   end

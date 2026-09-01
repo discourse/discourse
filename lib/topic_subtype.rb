@@ -40,6 +40,7 @@ class TopicSubtype
       @subtypes[name] = TopicSubtype.new(name, options)
     end
   end
+
   def initialize(id, options)
     @id = id
     @options = options

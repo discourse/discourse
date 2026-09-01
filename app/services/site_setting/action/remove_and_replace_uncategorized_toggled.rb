@@ -30,6 +30,7 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
       SiteSetting.allow_uncategorized_topics || UpcomingChanges.enabled?(UPCOMING_CHANGE)
     end
   end
+
   def call
     enabled ? enable : disable
   end

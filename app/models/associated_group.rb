@@ -18,6 +18,7 @@ class AssociatedGroup < ActiveRecord::Base
         .delete_all
     end
   end
+
   def label
     "#{provider_name}:#{name}"
   end

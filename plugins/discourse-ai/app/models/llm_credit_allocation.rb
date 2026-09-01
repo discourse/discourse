@@ -67,6 +67,7 @@ class LlmCreditAllocation < ActiveRecord::Base
       llm_model.llm_credit_allocation.deduct_credits!(credit_cost)
     end
   end
+
   def daily_used
     # Use llm_credit_daily_usages table
     # Check if association is preloaded to avoid N+1 queries

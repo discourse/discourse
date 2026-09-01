@@ -13,8 +13,7 @@ module VideoConversion
           S3Helper.get_bucket_and_folder_path(SiteSetting.Upload.s3_upload_bucket)
         bucket_name
       end
-    end
-    class << self
+
       def build_conversion_settings(input_path, temp_output_filename)
         # temp_output_filename is just the filename without extension (e.g., "new_sha1")
         # MediaConvert will automatically add .mp4 extension based on container type
@@ -81,6 +80,7 @@ module VideoConversion
         }
       end
     end
+
     def convert
       return false if !valid_settings?
 

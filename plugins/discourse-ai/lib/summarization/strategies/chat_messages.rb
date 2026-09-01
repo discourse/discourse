@@ -8,6 +8,7 @@ module DiscourseAi
           super(target)
           @since = since
         end
+
         def type
           AiSummary.summary_types[:complete]
         end

@@ -148,13 +148,11 @@ class Reviewable < ActiveRecord::Base
       @reviewable_filter_type_options = []
       @reviewable_reason_filter_options = []
     end
-  end
 
-  # Create a new reviewable, or if the target has already been reviewed return it to the
-  # pending state and re-use it.
-  #
-  # You probably want to call this to create your reviewable rather than `.create`.
-  class << self
+    # Create a new reviewable, or if the target has already been reviewed return it to the
+    # pending state and re-use it.
+    #
+    # You probably want to call this to create your reviewable rather than `.create`.
     def needs_review!(
       target: nil,
       topic: nil,
@@ -231,8 +229,7 @@ class Reviewable < ActiveRecord::Base
 
       reviewable
     end
-  end
-  class << self
+
     def set_priorities(values)
       values.each do |k, v|
         id = priorities[k]
@@ -278,8 +275,7 @@ class Reviewable < ActiveRecord::Base
       return 0.0 if id.nil?
       PluginStore.get("reviewables", "priority_#{id}").to_f
     end
-  end
-  class << self
+
     def bulk_perform_targets(performed_by, action, type, target_ids, args = nil)
       args ||= {}
       viewable_by(performed_by)
@@ -356,8 +352,7 @@ class Reviewable < ActiveRecord::Base
         )
       SQL
     end
-  end
-  class << self
+
     def pending_count(user)
       list_for(user).count
     end
@@ -521,8 +516,7 @@ class Reviewable < ActiveRecord::Base
       filter = custom_filters.find { |registered_filter| registered_filter.first == key }
       filter ? filter.last.call(result, value) : result
     end
-  end
-  class << self
+
     def unseen_list_for(user, preload: true, limit: nil)
       results = list_for(user, preload: preload, limit: limit, include_claimed_by_others: false)
       if user.last_seen_reviewable_id
@@ -538,8 +532,7 @@ class Reviewable < ActiveRecord::Base
     def basic_serializers_for_list(reviewables, user)
       reviewables.map { |r| r.basic_serializer.new(r, scope: user.guardian, root: nil) }
     end
-  end
-  class << self
+
     def lookup_serializer_for(type)
       "#{type}Serializer".constantize
     rescue NameError
@@ -551,8 +544,7 @@ class Reviewable < ActiveRecord::Base
       @@serializers ||= {}
       @@serializers[type] ||= lookup_serializer_for(type)
     end
-  end
-  class << self
+
     def scores_with_topics
       ReviewableScore.joins(reviewable: :topic).where("reviewables.type = ?", name)
     end
@@ -578,8 +570,7 @@ class Reviewable < ActiveRecord::Base
         .order("date(reviewable_scores.created_at)")
         .count
     end
-  end
-  class << self
+
     def by_status(partial_result, status)
       return partial_result if status == :all
 
@@ -613,6 +604,7 @@ class Reviewable < ActiveRecord::Base
       Reviewable.pending.where.not(type: Reviewable.sti_names).delete_all
     end
   end
+
   def set_type_source
     self.type_source = Reviewable.source_for(type)
   end

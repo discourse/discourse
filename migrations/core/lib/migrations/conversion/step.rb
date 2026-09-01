@@ -121,6 +121,7 @@ module Migrations
           klass
         end
       end
+
       def initialize(args = {})
         @args = args
         @source = self.class.source_class.new(args)

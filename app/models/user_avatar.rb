@@ -21,9 +21,7 @@ class UserAvatar < ActiveRecord::Base
     def register_custom_user_gravatar_email_hash(user_id, email)
       @@custom_user_gravatar_email_hash[user_id] = User.email_hash(email)
     end
-  end
 
-  class << self
     def local_avatar_url(hostname, username, upload_id, size)
       local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
     end
@@ -152,6 +150,7 @@ class UserAvatar < ActiveRecord::Base
       end
     end
   end
+
   def contains_upload?(id)
     gravatar_upload_id == id || custom_upload_id == id
   end

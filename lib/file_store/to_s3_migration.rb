@@ -48,6 +48,7 @@ module FileStore
         { client_options: opts, bucket: ENV["DISCOURSE_S3_BUCKET"] }
       end
     end
+
     def initialize(s3_options:, dry_run: false, migrate_to_multisite: false)
       @s3_bucket = s3_options[:bucket]
       @s3_client_options = s3_options[:client_options]

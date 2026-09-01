@@ -22,6 +22,7 @@ class TopicQuery
     "category" => "category_id",
     "created" => "created_at",
   }
+
   class << self
     def validators
       @validators ||=
@@ -114,14 +115,9 @@ class TopicQuery
             include_pms
           ]
     end
-  end
 
-  cattr_accessor :results_filter_callbacks
-  self.results_filter_callbacks = []
+    public
 
-  attr_accessor :options, :user, :guardian
-
-  class << self
     def add_custom_filter(key, &blk)
       @custom_filters ||= {}
       valid_options << key
@@ -142,9 +138,7 @@ class TopicQuery
       end
       results
     end
-  end
 
-  class << self
     def unseen_filter(list, user)
       new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
     end
@@ -242,8 +236,7 @@ class TopicQuery
 
       category_scope.or(tag_scope)
     end
-  end
-  class << self
+
     def remove_muted_tags(list, user, opts = {})
       if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == "never"
         return list
@@ -312,6 +305,12 @@ class TopicQuery
       end
     end
   end
+
+  cattr_accessor :results_filter_callbacks
+  self.results_filter_callbacks = []
+
+  attr_accessor :options, :user, :guardian
+
   def initialize(user = nil, options = {})
     options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup

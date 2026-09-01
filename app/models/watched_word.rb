@@ -53,19 +53,9 @@ class WatchedWord < ActiveRecord::Base
           silence: 7,
         )
     end
-  end
 
-  belongs_to :watched_word_group
+    public
 
-  scope :for,
-        ->(word:) do
-          where(
-            "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
-            word: word,
-          )
-        end
-
-  class << self
     def create_or_update_word(params)
       word = normalize_word(params[:word])
       word = self.for(word: word).first_or_initialize(word: word)
@@ -82,9 +72,7 @@ class WatchedWord < ActiveRecord::Base
     def has_replacement?(action)
       action == :replace || action == :tag || action == :link
     end
-  end
 
-  class << self
     def normalize_word(word)
       # When a regular expression is converted to a string, it is wrapped with
       # '(?-mix:' and ')'
@@ -93,6 +81,17 @@ class WatchedWord < ActiveRecord::Base
       word.strip.squeeze("*")
     end
   end
+
+  belongs_to :watched_word_group
+
+  scope :for,
+        ->(word:) do
+          where(
+            "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
+            word: word,
+          )
+        end
+
   def action_key=(arg)
     self.action = WatchedWord.actions[arg.to_sym]
   end

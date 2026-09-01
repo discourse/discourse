@@ -9,6 +9,7 @@ module Migrations
             "#{table.name.singularize}.rb"
           end
         end
+
         def initialize(model_namespace, enum_namespace, header)
           @model_namespace = model_namespace
           @enum_namespace = enum_namespace

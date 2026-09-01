@@ -17,6 +17,7 @@ class Reviewable < ActiveRecord::Base
         }
       end
     end
+
     def initialize(reviewable, guardian, args = nil)
       super(reviewable, guardian, args)
       @bundles = []

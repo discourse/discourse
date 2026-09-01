@@ -65,6 +65,7 @@ class ReviewableSerializer < ApplicationSerializer
       self._payload_for_serialization += attributes.map(&:to_s)
     end
   end
+
   def bundled_actions
     args = {}
     args[:claimed_by] = claimed_by if @options[:claimed_topics]

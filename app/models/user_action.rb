@@ -214,9 +214,7 @@ class UserAction < ActiveRecord::Base
     def stream_item(action_id, guardian)
       stream(action_id: action_id, guardian: guardian).first
     end
-  end
 
-  class << self
     def stream(opts = nil)
       opts ||= {}
 

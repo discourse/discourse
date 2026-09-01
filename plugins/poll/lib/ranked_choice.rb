@@ -98,11 +98,9 @@ class DiscoursePoll::RankedChoice
         round_activity: round_activity,
       }
     end
-  end
 
-  private
+    public
 
-  class << self
     def tally_votes(current_votes)
       tally = Hash.new(0)
       current_votes.each do |vote|
@@ -132,4 +130,6 @@ class DiscoursePoll::RankedChoice
       { digest: digest, html: options.find { |option| option[:id] == digest }[:html] }
     end
   end
+
+  private
 end

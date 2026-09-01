@@ -9,6 +9,7 @@ module Migrations
             "#{enum.name.downcase.underscore}.rb"
           end
         end
+
         def initialize(namespace, header)
           @namespace = namespace
           @header = header.gsub(/^/, "# ")

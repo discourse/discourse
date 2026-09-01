@@ -73,11 +73,9 @@ class GroupUser < ActiveRecord::Base
         whisperers_group_ids: SiteSetting.whispers_allowed_groups_map,
       )
     end
-  end
 
-  protected
+    public
 
-  class << self
     def set_category_notifications(group, user)
       bulk_set_category_notifications(group, [user.id])
     end
@@ -130,8 +128,7 @@ class GroupUser < ActiveRecord::Base
       TagUser.auto_watch(user_ids: user_ids)
       TagUser.auto_track(user_ids: user_ids)
     end
-  end
-  class << self
+
     def semantically_higher_notification_level_sql(new_col, existing_col)
       <<~SQL.squish
       CASE
@@ -143,6 +140,9 @@ class GroupUser < ActiveRecord::Base
     SQL
     end
   end
+
+  protected
+
   def set_notification_level
     self.notification_level = group&.default_notification_level || 3
   end

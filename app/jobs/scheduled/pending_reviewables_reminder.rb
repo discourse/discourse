@@ -23,6 +23,7 @@ module Jobs
         Discourse.redis.del(last_notified_key)
       end
     end
+
     def execute(args)
       @sent_reminder = false
 

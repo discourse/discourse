@@ -35,6 +35,7 @@ class UsernameValidator
   INVALID_LEADING_CHAR_PATTERN = /\A[^\p{Alnum}\p{M}_]+/
   INVALID_TRAILING_CHAR_PATTERN = /[^\p{Alnum}\p{M}]+\z/
   REPEATED_SPECIAL_CHAR_PATTERN = /[-_.]{2,}/
+
   # Public: Perform the validation of a field in a given object
   # it adds the errors (if any) to the object that we're giving as parameter
   #
@@ -49,9 +50,7 @@ class UsernameValidator
         validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
       end
     end
-  end
 
-  class << self
     def invalid_char_pattern
       SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
     end
@@ -64,6 +63,7 @@ class UsernameValidator
       c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters_regex)
     end
   end
+
   def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation

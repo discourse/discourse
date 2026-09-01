@@ -10,6 +10,7 @@ class Users::AssociateAccountsController < ApplicationController
       "#{SERVER_SESSION_PREFIX}_#{token}"
     end
   end
+
   def connect_info
     account_description = authenticator.description_for_auth_hash(auth_hash)
     existing_account_description = authenticator.description_for_user(current_user).presence

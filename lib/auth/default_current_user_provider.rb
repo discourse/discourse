@@ -67,6 +67,7 @@ class Auth::DefaultCurrentUserProvider
     RouteMatcher.new(methods: :get, actions: "users#bookmarks", formats: :ics),
     RouteMatcher.new(methods: :post, actions: "admin/email#handle_mail", formats: nil),
   ]
+
   class << self
     def shared_session_redis_key(key)
       "shared_session_user_auth_token_id:#{key}"
@@ -75,9 +76,7 @@ class Auth::DefaultCurrentUserProvider
     def store_shared_session_key(key, token_id)
       Discourse.redis.setex(shared_session_redis_key(key), 7.days, token_id)
     end
-  end
 
-  class << self
     def find_v0_auth_cookie(request)
       cookie = request.cookies[TOKEN_COOKIE]
 

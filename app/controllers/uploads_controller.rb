@@ -80,8 +80,7 @@ class UploadsController < ApplicationController
     ensure
       tempfile&.close!
     end
-  end
-  class << self
+
     def max_attachment_size_for_user(user)
       if user.id == Discourse::SYSTEM_USER_ID &&
            !SiteSetting.system_user_max_attachment_size_kb.zero?
@@ -91,6 +90,7 @@ class UploadsController < ApplicationController
       end
     end
   end
+
   def create
     # capture current user for block later on
     me = current_user

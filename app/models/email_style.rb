@@ -13,6 +13,7 @@ class EmailStyle
       ""
     end
   end
+
   def id
     "email-style"
   end

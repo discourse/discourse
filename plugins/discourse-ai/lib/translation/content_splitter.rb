@@ -42,11 +42,9 @@ module DiscourseAi
 
           chunks
         end
-      end
 
-      private
+        public
 
-      class << self
         def extract_mixed_chunk(text, size:)
           return text if text.length <= size
 
@@ -112,6 +110,8 @@ module DiscourseAi
           nil
         end
       end
+
+      private
     end
   end
 end

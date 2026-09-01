@@ -156,9 +156,7 @@ class PostTiming < ActiveRecord::Base
             user_id = :user_id
     SQL
     end
-  end
 
-  class << self
     def process_timings(current_user, topic_id, topic_time, timings, opts = {})
       lookup_column = current_user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
       highest_post_number = DB.query_single(<<~SQL, topic_id: topic_id).first

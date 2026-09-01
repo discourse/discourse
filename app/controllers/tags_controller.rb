@@ -7,47 +7,14 @@ class TagsController < ::ApplicationController
   before_action :ensure_tags_enabled
 
   LIST_LIMIT = 51
+
   class << self
     def show_methods
       Discourse.anonymous_filters.map { |f| :"show_#{f}" }
     end
-  end
 
-  requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
+    public
 
-  skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
-
-  before_action :set_category,
-                except: %i[
-                  index
-                  update
-                  destroy
-                  tag_feed
-                  search
-                  notifications
-                  update_notifications
-                  personal_messages
-                  info
-                  list
-                  settings
-                  update_settings
-                ]
-
-  before_action :fetch_tag,
-                only: %i[
-                  info
-                  update
-                  destroy
-                  tag_feed
-                  notifications
-                  update_notifications
-                  create_synonyms
-                  destroy_synonym
-                ]
-
-  after_action :add_noindex_header, except: %i[index show]
-
-  class << self
     def tag_counts_json(tags, guardian)
       show_pm_tags = guardian.can_tag_pms?
       target_tag_ids = tags.filter_map(&:target_tag_id).uniq
@@ -93,6 +60,41 @@ class TagsController < ::ApplicationController
       end
     end
   end
+
+  requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
+
+  skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
+
+  before_action :set_category,
+                except: %i[
+                  index
+                  update
+                  destroy
+                  tag_feed
+                  search
+                  notifications
+                  update_notifications
+                  personal_messages
+                  info
+                  list
+                  settings
+                  update_settings
+                ]
+
+  before_action :fetch_tag,
+                only: %i[
+                  info
+                  update
+                  destroy
+                  tag_feed
+                  notifications
+                  update_notifications
+                  create_synonyms
+                  destroy_synonym
+                ]
+
+  after_action :add_noindex_header, except: %i[index show]
+
   def index
     @description_meta = I18n.t("tags.title")
     @title = @description_meta

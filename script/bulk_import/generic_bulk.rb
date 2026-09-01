@@ -33,6 +33,7 @@ class BulkImport::Generic < BulkImport::Base
       raise "MERGE_IMPORT and DELTA_IMPORT cannot be enabled together"
     end
   end
+
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
     super()

@@ -23,6 +23,7 @@ module ReleaseUtils
         current.next_development_cycle
       end
     end
+
     def initialize(version_string)
       @gem_version = Gem::Version.new(version_string)
 

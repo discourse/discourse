@@ -12,6 +12,7 @@ module Migrations
             new(options).configure!
           end
         end
+
         def initialize(options)
           @options = options
         end
@@ -39,6 +40,7 @@ module Migrations
               def current_db_override=(value)
                 @current_db_override = value
               end
+
               def current_db
                 @current_db_override
               end

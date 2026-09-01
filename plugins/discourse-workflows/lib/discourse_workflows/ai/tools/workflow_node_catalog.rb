@@ -301,9 +301,7 @@ module DiscourseWorkflows
           def name
             "workflow_node_catalog"
           end
-        end
 
-        class << self
           def query_terms(query)
             query
               .to_s
@@ -314,6 +312,7 @@ module DiscourseWorkflows
               .uniq
           end
         end
+
         def invoke
           return not_allowed_response if !ensure_can_manage_workflows!
 

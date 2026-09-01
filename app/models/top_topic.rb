@@ -54,11 +54,9 @@ class TopTopic < ActiveRecord::Base
     rescue NoMethodError
       raise @invalid_period_error
     end
-  end
 
-  private
+    public
 
-  class << self
     def sort_orders
       @@sort_orders ||= %i[posts views likes op_likes].freeze
     end
@@ -248,6 +246,8 @@ class TopTopic < ActiveRecord::Base
       )
     end
   end
+
+  private
 end
 
 # == Schema Information

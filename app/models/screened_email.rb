@@ -64,6 +64,7 @@ class ScreenedEmail < ActiveRecord::Base
       matrix.last.last
     end
   end
+
   def downcase_email
     self.email = email.downcase
   end

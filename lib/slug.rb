@@ -23,11 +23,9 @@ module Slug
       slug = prettify_slug(slug, max_length: max_length)
       (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
     end
-  end
 
-  private
+    public
 
-  class << self
     def slug_is_only_numbers?(slug)
       (slug =~ /[^\d]/).blank?
     end
@@ -62,4 +60,6 @@ module Slug
       ""
     end
   end
+
+  private
 end

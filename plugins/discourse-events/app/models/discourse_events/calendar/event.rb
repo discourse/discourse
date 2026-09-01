@@ -81,8 +81,7 @@ module DiscourseEvents
 
           post.publish_change_to_clients!(:calendar_change)
         end
-      end
-      class << self
+
         def convert_to_date_time(value)
           return if value.blank?
 
@@ -99,6 +98,7 @@ module DiscourseEvents
           { hour: setting.first, min: setting.last }
         end
       end
+
       def ends_at
         end_date || (start_date + 24.hours)
       end

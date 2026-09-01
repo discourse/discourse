@@ -4,6 +4,7 @@ module DiscourseAi
   module Agents
     class LocaleDetector < Agent
       STATIC_LANGUAGE_CODES = %w[en es fr de it pt-BR ru zh-CN ja ko].freeze
+
       class << self
         def default_enabled
           false

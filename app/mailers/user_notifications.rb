@@ -37,8 +37,7 @@ class UserNotifications < ActionMailer::Base
 
       context_posts
     end
-  end
-  class << self
+
     def participants(post, recipient_user, reveal_staged_email: false)
       list = []
 
@@ -94,6 +93,7 @@ class UserNotifications < ActionMailer::Base
       end
     end
   end
+
   def signup(user, opts = {})
     build_user_email_token_by_template("user_notifications.signup", user, opts[:email_token])
   end

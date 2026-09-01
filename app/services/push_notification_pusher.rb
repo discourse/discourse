@@ -6,6 +6,7 @@ class PushNotificationPusher
 
   MAX_ERRORS = 3
   MIN_ERROR_DURATION = 86_400 # 1 day
+
   class << self
     def push(user, payload)
       message = nil
@@ -118,9 +119,7 @@ class PushNotificationPusher
         ActionController::Base.helpers.image_url("push-notifications/discourse.png")
       end
     end
-  end
 
-  class << self
     def handle_generic_error(subscription, error, user, endpoint, message)
       subscription.error_count += 1
       subscription.first_error_at ||= Time.zone.now

@@ -48,6 +48,7 @@ module Migrations
         inner&.split(".")&.fetch(1, nil)
       end
     end
+
     # @param nonce [String] only override in tests, to get repeatable tokens.
     def initialize(nonce: SecureRandom.alphanumeric(16))
       @nonce = nonce

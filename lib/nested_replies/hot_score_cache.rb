@@ -132,14 +132,22 @@ module NestedReplies
         end
       end
 
+      def record(decision)
+        DiscourseEvent.trigger(
+          :nested_replies_hot_sort_resolved,
+          { mode: decision.mode, enqueue_result: decision.enqueue_result },
+          continue_on_error: true,
+        )
+        decision
+      end
+
       def fallback_with_refresh(topic_id, requester, mode:)
         enqueue_result = request_refresh(topic_id, requester)
         record(Decision.new(effective_sort: "top", mode: mode, enqueue_result: enqueue_result))
       end
-    end
-    private_class_method :fallback_with_refresh
 
-    class << self
+      private :fallback_with_refresh
+
       def request_refresh(topic_id, requester)
         allowed =
           RateLimiter.new(
@@ -155,19 +163,10 @@ module NestedReplies
       rescue Redis::BaseError
         :unavailable
       end
-    end
-    private_class_method :request_refresh
 
-    class << self
-      def record(decision)
-        DiscourseEvent.trigger(
-          :nested_replies_hot_sort_resolved,
-          { mode: decision.mode, enqueue_result: decision.enqueue_result },
-          continue_on_error: true,
-        )
-        decision
-      end
+      private :request_refresh
     end
+
     private_class_method :record
   end
 end

@@ -8,6 +8,7 @@ module ImportScripts
           Class.new(RowResolver).new(cols)
         end
       end
+
       def initialize(cols)
         cols.each_with_index do |col, idx|
           self
@@ -15,6 +16,7 @@ module ImportScripts
             .public_send(:define_method, col.downcase.gsub(/[\W]/, "_").squeeze("_")) { @row[idx] }
         end
       end
+
       def load(row)
         @row = row
       end

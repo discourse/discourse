@@ -49,15 +49,6 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
       builder.query(prev_start: prev_start, current_start: current_start, current_end: current_end)
     end
 
-    def human_page_views_expr
-      return "r.page_views" if !CrawlerScorer.enabled?
-
-      "GREATEST(r.page_views - r.likely_crawler_page_views, 0)"
-    end
-  end
-  private_class_method :human_page_views_expr
-
-  class << self
     def earliest_activity_date
       Topic.where(ELIGIBLE_TOPICS).minimum(:created_at)&.to_date
     end
@@ -86,6 +77,32 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
 
       nil
     end
+
+    def crawler_page_views_without_events(start_date, end_date)
+      dates_with_events =
+        DB.query_single(<<~SQL, start_date: start_date, end_date: end_date.to_date + 1)
+        SELECT DISTINCT created_at::date
+        FROM browser_pageview_events
+        WHERE created_at >= :start_date
+          AND created_at < :end_date
+          AND #{BrowserPageviewEvent.rollup_source_condition}
+      SQL
+
+      scope = where(date: start_date..end_date).where("likely_crawler_page_views > 0")
+      scope = scope.where.not(date: dates_with_events) if dates_with_events.present?
+
+      scope
+        .pluck(:date, :category_id, :likely_crawler_page_views)
+        .to_h { |date, category_id, count| [[date, category_id], count] }
+    end
+
+    def human_page_views_expr
+      return "r.page_views" if !CrawlerScorer.enabled?
+
+      "GREATEST(r.page_views - r.likely_crawler_page_views, 0)"
+    end
+
+    private :human_page_views_expr
 
     def daily_counts(start_date, end_date)
       DB.query(
@@ -157,10 +174,9 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         regular_post_type: Post.types[:regular],
       )
     end
-  end
-  private_class_method :daily_counts
 
-  class << self
+    private :daily_counts
+
     def replace!(start_date:, end_date:, rows:)
       if rows.empty?
         where(date: start_date..end_date).delete_all
@@ -184,28 +200,10 @@ class CategoryActivityDailyRollup < ActiveRecord::Base
         end,
       )
     end
+
+    private :replace!
   end
-  private_class_method :replace!
 
-  class << self
-    def crawler_page_views_without_events(start_date, end_date)
-      dates_with_events =
-        DB.query_single(<<~SQL, start_date: start_date, end_date: end_date.to_date + 1)
-        SELECT DISTINCT created_at::date
-        FROM browser_pageview_events
-        WHERE created_at >= :start_date
-          AND created_at < :end_date
-          AND #{BrowserPageviewEvent.rollup_source_condition}
-      SQL
-
-      scope = where(date: start_date..end_date).where("likely_crawler_page_views > 0")
-      scope = scope.where.not(date: dates_with_events) if dates_with_events.present?
-
-      scope
-        .pluck(:date, :category_id, :likely_crawler_page_views)
-        .to_h { |date, category_id, count| [[date, category_id], count] }
-    end
-  end
   private_class_method :crawler_page_views_without_events
 end
 

@@ -59,23 +59,9 @@ class SharedAiConversation < ActiveRecord::Base
         target_type: target_type,
       )
     end
-  end
 
-  # Technically this may end up being a chat message
-  # but this name works
-  class SharedPost
-    attr_accessor :user
-    attr_reader :id, :user_id, :created_at, :cooked, :agent
-    def initialize(post)
-      @id = post[:id]
-      @user_id = post[:user_id]
-      @created_at = DateTime.parse(post[:created_at])
-      @cooked = post[:cooked]
-      @agent = post[:agent]
-    end
-  end
+    public
 
-  class << self
     def excerpt(posts)
       excerpt = +""
       posts.each do |post|
@@ -84,8 +70,7 @@ class SharedAiConversation < ActiveRecord::Base
       end
       excerpt
     end
-  end
-  class << self
+
     def build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
       allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
       ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
@@ -163,6 +148,21 @@ class SharedAiConversation < ActiveRecord::Base
         .limit(max_posts)
     end
   end
+
+  # Technically this may end up being a chat message
+  # but this name works
+  class SharedPost
+    attr_accessor :user
+    attr_reader :id, :user_id, :created_at, :cooked, :agent
+    def initialize(post)
+      @id = post[:id]
+      @user_id = post[:user_id]
+      @created_at = DateTime.parse(post[:created_at])
+      @cooked = post[:cooked]
+      @agent = post[:agent]
+    end
+  end
+
   def populated_context
     return @populated_context if @populated_context
     @populated_context = context.map { |post| SharedPost.new(post.symbolize_keys) }

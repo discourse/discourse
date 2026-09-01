@@ -25,19 +25,15 @@ class DirectoryColumn < ActiveRecord::Base
         .pluck(:name)
         .map(&:to_sym)
     end
-  end
 
-  @@plugin_directory_columns = []
+    public
 
-  class << self
     def plugin_directory_columns
       @@plugin_directory_columns
     end
-  end
 
-  belongs_to :user_field
+    public
 
-  class << self
     def clear_plugin_directory_columns
       @@plugin_directory_columns = []
     end
@@ -59,6 +55,10 @@ class DirectoryColumn < ActiveRecord::Base
       end
     end
   end
+
+  @@plugin_directory_columns = []
+
+  belongs_to :user_field
 end
 
 # == Schema Information

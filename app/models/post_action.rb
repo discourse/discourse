@@ -111,9 +111,7 @@ class PostAction < ActiveRecord::Base
 
       result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
     end
-  end
 
-  class << self
     def limit_action!(user, post, post_action_type_id)
       RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
     end
@@ -131,6 +129,7 @@ class PostAction < ActiveRecord::Base
       target_post.post_actions.each { |post_action| post_action.update_counters }
     end
   end
+
   def add_moderator_post_if_needed(moderator, disposition, delete_post = false)
     return if !SiteSetting.auto_respond_to_flag_actions
     return if related_post.nil? || related_post.topic.nil?

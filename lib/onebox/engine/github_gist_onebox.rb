@@ -19,13 +19,12 @@ module Onebox
         def matches_path(path)
           path.match?(%r{^/[\w\-]+/[a-f0-9]+(/|$)})
         end
-      end
 
-      class << self
         def priority
           110 # overlaps with GithubRepoOnebox
         end
       end
+
       def url
         "https://api.github.com/gists/#{match[:sha]}"
       end

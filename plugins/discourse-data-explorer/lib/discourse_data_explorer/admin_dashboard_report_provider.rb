@@ -70,97 +70,6 @@ module DiscourseDataExplorer
         end
       end
 
-      def build_resolved(query)
-        ::AdminDashboard::Reports::ResolvedReport.new(
-          source: SOURCE_NAME,
-          identifier: query.id.to_s,
-          title: query.name,
-          description: query.description,
-          label: label,
-          url: "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
-        )
-      end
-    end
-    private_class_method :build_resolved
-
-    class << self
-      def load_queries(identifiers)
-        ids = identifiers.map(&:to_i).reject(&:zero?)
-        return [] if ids.empty?
-
-        positive_ids, negative_ids = ids.partition(&:positive?)
-        queries = []
-
-        if positive_ids.any?
-          queries.concat(Query.where(id: positive_ids, hidden: false).includes(:groups))
-        end
-
-        if negative_ids.any?
-          valid_default_ids = negative_ids.select { |id| Queries.default.key?(id.to_s) }
-          persisted_by_id = Query.where(id: valid_default_ids).index_by(&:id)
-          valid_default_ids.each do |id|
-            query = persisted_by_id[id] || Query.new
-            query.attributes = Queries.default[id.to_s]
-            query.user_id = Discourse::SYSTEM_USER_ID.to_s
-            queries << query if !query.hidden
-          end
-        end
-
-        queries
-      end
-    end
-    private_class_method :load_queries
-
-    class << self
-      def mountable?(query)
-        query.params.all? do |param|
-          param.internal? || param.nullable || param.default.present? ||
-            DASHBOARD_SUPPLIED_PARAMS.include?(param.identifier)
-        end
-      end
-    end
-    private_class_method :mountable?
-
-    class << self
-      def prewarmable?(query, params)
-        QueryRunner.cacheable?(query) &&
-          query.params.all? do |param|
-            param.default.present? || param.nullable || params.key?(param.identifier)
-          end
-      end
-    end
-    private_class_method :prewarmable?
-
-    class << self
-      def persisted_after(search:, after:, limit:)
-        if limit.nil?
-          return(
-            persisted_batch(search: search, after: after, limit: nil).select do |query|
-              mountable?(query)
-            end
-          )
-        end
-
-        mountable_queries = []
-        cursor = after
-
-        loop do
-          batch = persisted_batch(search: search, after: cursor, limit: limit)
-          break if batch.empty?
-
-          mountable_queries.concat(batch.select { |query| mountable?(query) })
-          break if mountable_queries.size >= limit || batch.size < limit
-
-          last = batch.last
-          cursor = { title: last.name, key: "#{SOURCE_NAME}:#{last.id}" }
-        end
-
-        mountable_queries.first(limit)
-      end
-    end
-    private_class_method :persisted_after
-
-    class << self
       def persisted_batch(search:, after:, limit:)
         scope = Query.where(hidden: false)
         if search.present?
@@ -189,7 +98,94 @@ module DiscourseDataExplorer
         scope = scope.limit(limit) if limit
         scope.to_a
       end
+
+      def build_resolved(query)
+        ::AdminDashboard::Reports::ResolvedReport.new(
+          source: SOURCE_NAME,
+          identifier: query.id.to_s,
+          title: query.name,
+          description: query.description,
+          label: label,
+          url: "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
+        )
+      end
+
+      private :build_resolved
+
+      def load_queries(identifiers)
+        ids = identifiers.map(&:to_i).reject(&:zero?)
+        return [] if ids.empty?
+
+        positive_ids, negative_ids = ids.partition(&:positive?)
+        queries = []
+
+        if positive_ids.any?
+          queries.concat(Query.where(id: positive_ids, hidden: false).includes(:groups))
+        end
+
+        if negative_ids.any?
+          valid_default_ids = negative_ids.select { |id| Queries.default.key?(id.to_s) }
+          persisted_by_id = Query.where(id: valid_default_ids).index_by(&:id)
+          valid_default_ids.each do |id|
+            query = persisted_by_id[id] || Query.new
+            query.attributes = Queries.default[id.to_s]
+            query.user_id = Discourse::SYSTEM_USER_ID.to_s
+            queries << query if !query.hidden
+          end
+        end
+
+        queries
+      end
+
+      private :load_queries
+
+      def mountable?(query)
+        query.params.all? do |param|
+          param.internal? || param.nullable || param.default.present? ||
+            DASHBOARD_SUPPLIED_PARAMS.include?(param.identifier)
+        end
+      end
+
+      private :mountable?
+
+      def prewarmable?(query, params)
+        QueryRunner.cacheable?(query) &&
+          query.params.all? do |param|
+            param.default.present? || param.nullable || params.key?(param.identifier)
+          end
+      end
+
+      private :prewarmable?
+
+      def persisted_after(search:, after:, limit:)
+        if limit.nil?
+          return(
+            persisted_batch(search: search, after: after, limit: nil).select do |query|
+              mountable?(query)
+            end
+          )
+        end
+
+        mountable_queries = []
+        cursor = after
+
+        loop do
+          batch = persisted_batch(search: search, after: cursor, limit: limit)
+          break if batch.empty?
+
+          mountable_queries.concat(batch.select { |query| mountable?(query) })
+          break if mountable_queries.size >= limit || batch.size < limit
+
+          last = batch.last
+          cursor = { title: last.name, key: "#{SOURCE_NAME}:#{last.id}" }
+        end
+
+        mountable_queries.first(limit)
+      end
+
+      private :persisted_after
     end
+
     private_class_method :persisted_batch
   end
 end

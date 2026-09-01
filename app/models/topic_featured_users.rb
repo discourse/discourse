@@ -13,8 +13,7 @@ class TopicFeaturedUsers
     def recent_poster_count
       count - FREQUENT_POSTER_COUNT
     end
-  end
-  class << self
+
     def ensure_consistency!(topic_id = nil)
       filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
       filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
@@ -118,6 +117,7 @@ SQL
       DB.exec(sql)
     end
   end
+
   def initialize(topic)
     @topic = topic
   end

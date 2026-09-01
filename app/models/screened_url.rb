@@ -32,6 +32,7 @@ class ScreenedUrl < ActiveRecord::Base
       normalized
     end
   end
+
   def normalize
     self.url = ScreenedUrl.normalize_url(url) if url
     self.domain = domain.downcase.sub(/\Awww\./, "") if domain

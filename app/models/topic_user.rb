@@ -407,19 +407,18 @@ class TopicUser < ActiveRecord::Base
 
       klass.publish_read(topic_id, post_number, user, notification_level)
     end
-  end
-  # Update the cached topic_user.liked column based on data
-  # from the post_actions table. This is useful when posts
-  # have moved around, or to ensure integrity of the data.
-  #
-  # By default this will update data for all topics and all users.
-  # The parameters can be used to shrink the scope, and make it faster.
-  # user_id, post_id and topic_id can optionally be arrays of ids.
-  #
-  # Providing post_id will automatically scope to the relevant user_id and topic_id.
-  # A provided `topic_id` value will always take precedence, which is
-  # useful when a post has been moved between topics.
-  class << self
+
+    # Update the cached topic_user.liked column based on data
+    # from the post_actions table. This is useful when posts
+    # have moved around, or to ensure integrity of the data.
+    #
+    # By default this will update data for all topics and all users.
+    # The parameters can be used to shrink the scope, and make it faster.
+    # user_id, post_id and topic_id can optionally be arrays of ids.
+    #
+    # Providing post_id will automatically scope to the relevant user_id and topic_id.
+    # A provided `topic_id` value will always take precedence, which is
+    # useful when a post has been moved between topics.
     def update_post_action_cache(user_id: nil, post_id: nil, topic_id: nil, post_action_type: :like)
       raise ArgumentError, "post_action_type must equal :like" if post_action_type != :like
       raise ArgumentError, "post_id and user_id cannot be supplied together" if user_id && post_id
@@ -531,6 +530,7 @@ SQL
       builder.exec
     end
   end
+
   def topic_bookmarks
     Bookmark.where(topic: topic, user: user)
   end

@@ -29,6 +29,7 @@ module DiscourseDev
         model.offset(offset).first
       end
     end
+
     def initialize(model, count = DEFAULT_COUNT)
       @@initialized ||=
         begin

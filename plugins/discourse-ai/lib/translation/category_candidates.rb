@@ -143,13 +143,9 @@ module DiscourseAi
                 end,
           }
         end
-      end
 
-      private
+        public
 
-      # all categories that are eligible for translation based on site settings,
-      # including those without locale detected yet.
-      class << self
         def get
           categories = Category.all
           case SiteSetting.ai_translation_category_scope
@@ -191,6 +187,11 @@ module DiscourseAi
           { done:, total: }
         end
       end
+
+      private
+
+      # all categories that are eligible for translation based on site settings,
+      # including those without locale detected yet.
     end
   end
 end

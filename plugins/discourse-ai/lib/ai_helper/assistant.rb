@@ -34,12 +34,10 @@ module DiscourseAi
         def prompt_agent_ids
           agents_prompt_map.keys.compact.uniq
         end
-      end
 
-      # Priorities are:
-      #   1. Agent's default LLM
-      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
-      class << self
+        # Priorities are:
+        #   1. Agent's default LLM
+        #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
         def find_ai_helper_model(helper_mode, agent_klass)
           model_id = agent_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
@@ -70,6 +68,7 @@ module DiscourseAi
           map
         end
       end
+
       def initialize(helper_llm: nil, image_caption_llm: nil)
         @helper_llm = helper_llm
         @image_caption_llm = image_caption_llm

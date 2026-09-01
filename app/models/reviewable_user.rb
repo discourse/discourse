@@ -7,11 +7,9 @@ class ReviewableUser < Reviewable
     def create_for(user)
       create(created_by_id: Discourse.system_user.id, target: user)
     end
-  end
 
-  after_create :retain_avatar_snapshot
+    public
 
-  class << self
     def payload_for(user)
       profile = user.user_profile
       avatar = user.uploaded_avatar
@@ -30,17 +28,18 @@ class ReviewableUser < Reviewable
     def additional_args(params)
       { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
     end
-  end
 
-  # Update's the user's fields for approval but does not save. This
-  # can be used when generating a new user that is approved on create
-  class << self
+    # Update's the user's fields for approval but does not save. This
+    # can be used when generating a new user that is approved on create
     def set_approved_fields!(user, approved_by)
       user.approved = true
       user.approved_by ||= approved_by
       user.approved_at ||= Time.zone.now
     end
   end
+
+  after_create :retain_avatar_snapshot
+
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 

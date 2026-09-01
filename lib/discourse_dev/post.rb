@@ -46,6 +46,7 @@ module DiscourseDev
         super(::Post)
       end
     end
+
     def initialize(topic, count)
       super(::Post, count)
       @topic = topic

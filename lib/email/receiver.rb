@@ -112,13 +112,12 @@ module Email
       [:newton, /(id|class)="cm_/],
       [:front, /class="front-/],
     ]
+
     class << self
       def formats
         @formats ||= Enum.new(plaintext: 1, markdown: 2)
       end
-    end
 
-    class << self
       def update_bounce_score(email, score)
         if user = User.find_by_email(email)
           old_bounce_score = user.user_stat.bounce_score
@@ -145,8 +144,7 @@ module Email
           end
         end
       end
-    end
-    class << self
+
       def extract_email_address_and_name_from_mailman(mail)
         list_address, _ = Email::Receiver.extract_email_address_and_name(mail[:list_post])
         list_address, _ =
@@ -188,8 +186,7 @@ module Email
       rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
         # something went wrong parsing the email header value, return nil
       end
-    end
-    class << self
+
       def check_address(address, include_verp = false)
         # only check for a group/category when 'email_in' is enabled
         if SiteSetting.email_in
@@ -211,8 +208,7 @@ module Email
         end
         nil
       end
-    end
-    class << self
+
       def reply_by_email_address_regex(extract_reply_key = true, include_verp = false)
         reply_addresses = [SiteSetting.reply_by_email_address]
         reply_addresses << (SiteSetting.alternative_reply_by_email_addresses.presence || "").split(
@@ -238,8 +234,7 @@ module Email
           /#{reply_addresses.join("|")}/
         end
       end
-    end
-    class << self
+
       def extract_reply_message_ids(mail, max_message_id_count:)
         message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
         message_ids.flatten!
@@ -255,8 +250,7 @@ module Email
           references.split(/[\s,]/).map { |r| Email::MessageIdService.message_id_clean(r) }
         end
       end
-    end
-    class << self
+
       def elided_html(elided)
         html = +"\n\n" << "<details class='elided'>" << "\n"
         html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" <<
@@ -266,6 +260,7 @@ module Email
         html
       end
     end
+
     def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []

@@ -312,6 +312,7 @@ class ColorScheme < ActiveRecord::Base
   BASE_COLORS_FILE = "#{Rails.root.join("app/assets/stylesheets/common/foundation/colors.scss")}"
   COLOR_TRANSFORMATION_FILE =
     "#{Rails.root.join("app/assets/stylesheets/common/foundation/color_transformations.scss")}"
+
   class << self
     def base_color_scheme_colors
       base_with_hash = []
@@ -349,32 +350,9 @@ class ColorScheme < ActiveRecord::Base
       id = Integer(id, exception: false)
       id if id && valid_ids_cache.defer_get_set("ids") { pluck(:id).to_set }.include?(id)
     end
-  end
 
-  default_scope { where(remote_copy: false) }
+    public
 
-  attr_accessor :is_base
-  attr_accessor :skip_publish
-  attr_accessor :is_builtin_default
-
-  has_many :color_scheme_colors, -> { order("id ASC") }, dependent: :destroy
-
-  alias_method :colors, :color_scheme_colors
-
-  before_save :bump_version
-  after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
-  after_save_commit :dump_caches
-  after_destroy :dump_caches
-  after_destroy :destroy_remote_original
-  belongs_to :theme
-  belongs_to :base_scheme, -> { unscope(where: :remote_copy) }, class_name: "ColorScheme"
-
-  validate :no_edits_for_remote_copies, on: :update
-  validates_associated :color_scheme_colors
-
-  @mutex = Mutex.new
-
-  class << self
     def base_colors
       return @base_colors if @base_colors
       @mutex.synchronize do
@@ -478,9 +456,7 @@ class ColorScheme < ActiveRecord::Base
       cache_key = scheme_id ? "#{name}_#{scheme_id}" : name
       hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id) }
     end
-  end
 
-  class << self
     def publish_discourse_stylesheets!(id = nil)
       Stylesheet::Manager.clear_color_scheme_cache!
 
@@ -508,6 +484,30 @@ class ColorScheme < ActiveRecord::Base
       sorted
     end
   end
+
+  default_scope { where(remote_copy: false) }
+
+  attr_accessor :is_base
+  attr_accessor :skip_publish
+  attr_accessor :is_builtin_default
+
+  has_many :color_scheme_colors, -> { order("id ASC") }, dependent: :destroy
+
+  alias_method :colors, :color_scheme_colors
+
+  before_save :bump_version
+  after_save_commit :publish_discourse_stylesheet, unless: :skip_publish
+  after_save_commit :dump_caches
+  after_destroy :dump_caches
+  after_destroy :destroy_remote_original
+  belongs_to :theme
+  belongs_to :base_scheme, -> { unscope(where: :remote_copy) }, class_name: "ColorScheme"
+
+  validate :no_edits_for_remote_copies, on: :update
+  validates_associated :color_scheme_colors
+
+  @mutex = Mutex.new
+
   def colors=(arr)
     @colors_by_name = nil
     arr.each { |c| color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex]) }

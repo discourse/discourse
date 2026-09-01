@@ -11,6 +11,7 @@ class OptimizedImage < ActiveRecord::Base
   IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
   MAX_PNGQUANT_SIZE = 500_000
   MAX_CONVERT_SECONDS = 20
+
   class << self
     def lock(upload_id, width, height)
       @hostname ||= Discourse.os_hostname
@@ -154,9 +155,7 @@ class OptimizedImage < ActiveRecord::Base
         thumbnail
       end
     end
-  end
 
-  class << self
     def safe_path?(path)
       # this matches instructions which call #to_s
       path = path.to_s
@@ -168,8 +167,7 @@ class OptimizedImage < ActiveRecord::Base
     def ensure_safe_paths!(*paths)
       paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
     end
-  end
-  class << self
+
     def prepend_decoder!(path, ext_path = nil, opts = nil)
       opts ||= {}
 
@@ -297,14 +295,12 @@ class OptimizedImage < ActiveRecord::Base
     def downsize(from, to, dimensions, opts = {})
       optimize(:optimized_image_downsize, from, to, dimensions, opts)
     end
-  end
-  class << self
+
     def optimize(operation, from, to, dimensions, opts = {})
       instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
       convert_with(instructions, from, to, opts, operation:)
     end
-  end
-  class << self
+
     def convert_with(instructions, from, to, opts = {}, operation:)
       ImageMagick.magick(
         *instructions,
@@ -341,6 +337,7 @@ class OptimizedImage < ActiveRecord::Base
       end
     end
   end
+
   def destroy
     OptimizedImage.transaction do
       Discourse.store.remove_optimized_image(self) if upload

@@ -8,6 +8,7 @@ class DiscourseConnect < DiscourseConnectBase
   end
 
   BANNED_EXTERNAL_IDS = %w[none nil blank null]
+
   class << self
     def sso_url
       SiteSetting.discourse_connect_url

@@ -21,9 +21,7 @@ module DiscourseAutomation
       def plugin_triggerables
         @@plugin_triggerables
       end
-    end
 
-    class << self
       def add(identifier, &block)
         @all_scriptables = nil
         define_method("__scriptable_#{identifier}", &block)
@@ -39,6 +37,7 @@ module DiscourseAutomation
           DiscourseAutomation::Scriptable.instance_methods(false).grep(/^__scriptable_/)
       end
     end
+
     def initialize(name, automation = nil)
       @name = name
       @version = 0
@@ -216,10 +215,9 @@ module DiscourseAutomation
 
           input = Mustache.render(input, map).to_s
         end
-      end
 
-      REPORT_REGEX = /%%REPORT=(.*?)%%/
-      class << self
+        public
+
         def apply_report_placeholder(input = "")
           input.gsub(REPORT_REGEX) do |pattern|
             match = pattern.match(REPORT_REGEX)
@@ -395,6 +393,8 @@ module DiscourseAutomation
           end
         end
       end
+
+      REPORT_REGEX = /%%REPORT=(.*?)%%/
     end
   end
 end

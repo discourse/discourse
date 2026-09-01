@@ -11,6 +11,7 @@ class SiteSettings::LocalProcessProvider
       self.name = name
       self.data_type = data_type
     end
+
     def value_changed?
       false
     end
@@ -23,6 +24,7 @@ class SiteSettings::LocalProcessProvider
   def initialize
     @settings = {}
   end
+
   def settings
     @settings[current_site] ||= {}
   end

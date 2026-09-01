@@ -21,6 +21,7 @@ module Onebox
           90 # overlaps with GithubPullRequestOnebox
         end
       end
+
       def url
         if type == :actions_run
           "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/actions/runs/#{match[:run_id]}"

@@ -35,107 +35,9 @@ class Theme < ActiveRecord::Base
     def cache
       @cache ||= DistributedCache.new("theme:compiler:#{AssetProcessor::BASE_COMPILER_VERSION}")
     end
-  end
 
-  belongs_to :user
-  belongs_to :color_scheme
-  belongs_to :dark_color_scheme, class_name: "ColorScheme"
-  alias_method :color_palette, :color_scheme
+    public
 
-  has_many :theme_fields, dependent: :destroy, validate: false
-  has_many :theme_settings, dependent: :destroy
-  has_many :theme_translation_overrides, dependent: :destroy
-  has_many :child_theme_relation,
-           class_name: "ChildTheme",
-           foreign_key: "parent_theme_id",
-           dependent: :destroy
-  has_many :parent_theme_relation,
-           class_name: "ChildTheme",
-           foreign_key: "child_theme_id",
-           dependent: :destroy
-  has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
-  has_many :parent_themes,
-           -> { order(:name) },
-           through: :parent_theme_relation,
-           source: :parent_theme
-  has_many :color_schemes
-  has_many :theme_settings_migrations
-  belongs_to :remote_theme, dependent: :destroy
-  has_one :theme_modifier_set, dependent: :destroy
-  has_one :theme_svg_sprite, dependent: :destroy
-
-  has_one :settings_field,
-          -> { where(target_id: Theme.targets[:settings], name: "yaml") },
-          class_name: "ThemeField"
-  has_one :javascript_cache, dependent: :destroy
-
-  has_many :locale_fields,
-           -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
-           class_name: "ThemeField"
-  has_many :upload_fields,
-           -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) },
-           class_name: "ThemeField"
-  has_many :extra_scss_fields,
-           -> { where(target_id: Theme.targets[:extra_scss]) },
-           class_name: "ThemeField"
-  has_many :yaml_theme_fields,
-           -> { where("name = 'yaml' AND type_id = ?", ThemeField.types[:yaml]) },
-           class_name: "ThemeField"
-  has_many :var_theme_fields,
-           -> { where("type_id IN (?)", ThemeField.theme_var_type_ids) },
-           class_name: "ThemeField"
-  has_many :builder_theme_fields,
-           -> { where("name IN (?)", ThemeField.scss_fields) },
-           class_name: "ThemeField"
-  has_many :migration_fields,
-           -> { where(target_id: Theme.targets[:migrations]) },
-           class_name: "ThemeField"
-  has_many :theme_site_settings, dependent: :destroy
-
-  validate :component_validations
-  validate :validate_theme_fields
-
-  after_create :update_child_components
-  before_update :check_editable_attributes, if: :system?
-  before_destroy :raise_invalid_parameters, if: :system?
-
-  scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
-
-  scope :include_relations,
-        -> do
-          include_basic_relations.includes(
-            :theme_settings,
-            :theme_site_settings,
-            :settings_field,
-            theme_fields: %i[upload theme_settings_migration],
-            child_themes: [
-              { color_scheme: :base_scheme },
-              :locale_fields,
-              :theme_translation_overrides,
-            ],
-          )
-        end
-
-  scope :include_basic_relations,
-        -> do
-          includes(
-            :remote_theme,
-            :user,
-            :locale_fields,
-            :theme_translation_overrides,
-            :theme_modifier_set,
-            color_scheme: %i[theme color_scheme_colors base_scheme],
-            parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
-          )
-        end
-
-  scope :not_components, -> { where(component: false) }
-  scope :not_system, -> { where("id > 0") }
-  scope :system, -> { where("id < 0") }
-
-  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
-
-  class << self
     def compiler_version
       get_set_cache "compiler_version" do
         dependencies = [
@@ -253,8 +155,7 @@ class Theme < ActiveRecord::Base
         all_ids - disabled_ids
       end
     end
-  end
-  class << self
+
     def find_default
       find_by(id: SiteSetting.default_theme_id)
     end
@@ -362,8 +263,7 @@ class Theme < ActiveRecord::Base
 
       MessageBus.publish("/file-change", message)
     end
-  end
-  class << self
+
     def refresh_message_for_targets(targets, theme_ids)
       theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
 
@@ -435,6 +335,105 @@ class Theme < ActiveRecord::Base
       fields
     end
   end
+
+  belongs_to :user
+  belongs_to :color_scheme
+  belongs_to :dark_color_scheme, class_name: "ColorScheme"
+  alias_method :color_palette, :color_scheme
+
+  has_many :theme_fields, dependent: :destroy, validate: false
+  has_many :theme_settings, dependent: :destroy
+  has_many :theme_translation_overrides, dependent: :destroy
+  has_many :child_theme_relation,
+           class_name: "ChildTheme",
+           foreign_key: "parent_theme_id",
+           dependent: :destroy
+  has_many :parent_theme_relation,
+           class_name: "ChildTheme",
+           foreign_key: "child_theme_id",
+           dependent: :destroy
+  has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
+  has_many :parent_themes,
+           -> { order(:name) },
+           through: :parent_theme_relation,
+           source: :parent_theme
+  has_many :color_schemes
+  has_many :theme_settings_migrations
+  belongs_to :remote_theme, dependent: :destroy
+  has_one :theme_modifier_set, dependent: :destroy
+  has_one :theme_svg_sprite, dependent: :destroy
+
+  has_one :settings_field,
+          -> { where(target_id: Theme.targets[:settings], name: "yaml") },
+          class_name: "ThemeField"
+  has_one :javascript_cache, dependent: :destroy
+
+  has_many :locale_fields,
+           -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
+           class_name: "ThemeField"
+  has_many :upload_fields,
+           -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) },
+           class_name: "ThemeField"
+  has_many :extra_scss_fields,
+           -> { where(target_id: Theme.targets[:extra_scss]) },
+           class_name: "ThemeField"
+  has_many :yaml_theme_fields,
+           -> { where("name = 'yaml' AND type_id = ?", ThemeField.types[:yaml]) },
+           class_name: "ThemeField"
+  has_many :var_theme_fields,
+           -> { where("type_id IN (?)", ThemeField.theme_var_type_ids) },
+           class_name: "ThemeField"
+  has_many :builder_theme_fields,
+           -> { where("name IN (?)", ThemeField.scss_fields) },
+           class_name: "ThemeField"
+  has_many :migration_fields,
+           -> { where(target_id: Theme.targets[:migrations]) },
+           class_name: "ThemeField"
+  has_many :theme_site_settings, dependent: :destroy
+
+  validate :component_validations
+  validate :validate_theme_fields
+
+  after_create :update_child_components
+  before_update :check_editable_attributes, if: :system?
+  before_destroy :raise_invalid_parameters, if: :system?
+
+  scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
+
+  scope :include_relations,
+        -> do
+          include_basic_relations.includes(
+            :theme_settings,
+            :theme_site_settings,
+            :settings_field,
+            theme_fields: %i[upload theme_settings_migration],
+            child_themes: [
+              { color_scheme: :base_scheme },
+              :locale_fields,
+              :theme_translation_overrides,
+            ],
+          )
+        end
+
+  scope :include_basic_relations,
+        -> do
+          includes(
+            :remote_theme,
+            :user,
+            :locale_fields,
+            :theme_translation_overrides,
+            :theme_modifier_set,
+            color_scheme: %i[theme color_scheme_colors base_scheme],
+            parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
+          )
+        end
+
+  scope :not_components, -> { where(component: false) }
+  scope :not_system, -> { where("id > 0") }
+  scope :system, -> { where("id < 0") }
+
+  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color

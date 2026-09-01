@@ -20,13 +20,6 @@ class SidebarSectionLinksUpdater
       end
     end
 
-    def delete_section_links(user:, linkable_type:)
-      SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
-    end
-  end
-  private_class_method :delete_section_links
-
-  class << self
     def update_section_links(user:, linkable_type:, new_linkable_ids:)
       SidebarSectionLink.transaction do
         existing_linkable_ids =
@@ -51,6 +44,13 @@ class SidebarSectionLinksUpdater
         SidebarSectionLink.insert_all(to_insert_attributes) if to_insert_attributes.present?
       end
     end
+
+    def delete_section_links(user:, linkable_type:)
+      SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
+    end
+
+    private :delete_section_links
   end
+
   private_class_method :update_section_links
 end

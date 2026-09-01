@@ -60,9 +60,7 @@ class Invite < ActiveRecord::Base
       @emailed_status_types ||=
         Enum.new(not_required: 0, pending: 1, bulk_pending: 2, sending: 3, sent: 4)
     end
-  end
 
-  class << self
     def generate(invited_by, opts = nil)
       opts ||= {}
       time_zone = Time.find_zone(invited_by&.user_option&.timezone) || Time.zone
@@ -154,8 +152,7 @@ class Invite < ActiveRecord::Base
 
       invite.reload
     end
-  end
-  class << self
+
     def redeem_for_existing_user(user)
       invite = Invite.find_by(email: Email.downcase(user.email))
       if invite.present? && invite.redeemable?
@@ -205,12 +202,12 @@ class Invite < ActiveRecord::Base
     def invalidate_for_email(email)
       Invite.find_by(email: Email.downcase(email))&.invalidate!
     end
-  end
-  class << self
+
     def base_directory
       Rails.public_path.join("uploads", "csv", RailsMultisite::ConnectionManagement.current_db).to_s
     end
   end
+
   def user_doesnt_already_exist
     self.email_already_exists = false
     return if email.blank?

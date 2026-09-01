@@ -38,9 +38,7 @@ class ReviewableScore < ActiveRecord::Base
     def score_transitions
       { approved: statuses[:agreed], rejected: statuses[:disagreed], ignored: statuses[:ignored] }
     end
-  end
 
-  class << self
     def calculate_score(user, type_bonus, take_action_bonus)
       score = user_flag_score(user) + type_bonus + take_action_bonus
       score > 0 ? score : 0
@@ -88,6 +86,7 @@ class ReviewableScore < ActiveRecord::Base
       ).round(2)
     end
   end
+
   def score_type
     Reviewable::Collection::Item.new(reviewable_score_type)
   end

@@ -14,6 +14,7 @@ class CustomRenderer < AbstractController::Base
   def initialize(parent)
     @parent = parent
   end
+
   def action_name
     ""
   end

@@ -11,6 +11,7 @@ module DiscourseRewind
           true
         end
       end
+
       def call
         raise NotImplementedError
       end

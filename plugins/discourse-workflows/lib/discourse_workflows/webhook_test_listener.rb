@@ -90,6 +90,15 @@ module DiscourseWorkflows
         ActiveWebhooks.invalidate! if deleted.positive?
         deleted
       end
+
+      public
+
+      def existing_can_be_replaced?(existing, workflow:, user:, node_name:)
+        return true if existing.expires_at.present? && existing.expires_at <= Time.current
+
+        existing.workflow_id == workflow.id && existing.user_id == user.id &&
+          existing.node_name.to_s == node_name
+      end
     end
 
     attr_reader :id,
@@ -102,14 +111,6 @@ module DiscourseWorkflows
                 :workflow_snapshot,
                 :expires_at
 
-    class << self
-      def existing_can_be_replaced?(existing, workflow:, user:, node_name:)
-        return true if existing.expires_at.present? && existing.expires_at <= Time.current
-
-        existing.workflow_id == workflow.id && existing.user_id == user.id &&
-          existing.node_name.to_s == node_name
-      end
-    end
     def initialize(record)
       @id = record.id
       @listener_id = record.webhook_id.to_s

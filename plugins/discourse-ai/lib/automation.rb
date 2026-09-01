@@ -144,6 +144,7 @@ module DiscourseAi
         automation_id.present? && automation_name.present?
       end
     end
+
     private_class_method :automation_context?, :flag_post_response
   end
 end

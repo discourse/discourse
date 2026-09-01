@@ -11,6 +11,7 @@ module DiscourseDev
         super(::Group)
       end
     end
+
     def initialize
       super(::Group, DiscourseDev.config.group[:count])
     end

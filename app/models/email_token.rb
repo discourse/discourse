@@ -42,9 +42,7 @@ class EmailToken < ActiveRecord::Base
     def scopes
       @scopes ||= Enum.new(signup: 1, password_reset: 2, email_login: 3, email_update: 4)
     end
-  end
 
-  class << self
     def confirm(token, scope: nil, skip_reviewable: false)
       User.transaction do
         email_token = confirmable(token, scope: scope)
@@ -96,6 +94,7 @@ class EmailToken < ActiveRecord::Base
       Digest::SHA256.hexdigest(token)
     end
   end
+
   def token
     raise TokenAccessError.new if @token.blank?
 

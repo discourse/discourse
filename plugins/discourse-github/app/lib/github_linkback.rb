@@ -20,6 +20,7 @@ class GithubLinkback
       "github-linkback:#{Digest::SHA1.hexdigest(url)[0..15]}"
     end
   end
+
   def initialize(post)
     @post = post
   end

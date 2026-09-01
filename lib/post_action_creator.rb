@@ -39,13 +39,12 @@ class PostActionCreator
         create(created_by, post, action, message: message)
       end
     end
-  end
 
-  class << self
     def notify_types
       @notify_types ||= PostActionType.notify_flag_types.keys
     end
   end
+
   def initialize(
     created_by,
     post,

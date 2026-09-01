@@ -20,6 +20,7 @@ class Admin::SiteTextsController < Admin::AdminController
     ].freeze
 
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
+
   class << self
     def restricted_key?(key)
       RESTRICTED_KEYS.include?(key)

@@ -8,6 +8,7 @@ class TagSettingsUpdater
       new(tag, actor).update(params)
     end
   end
+
   def initialize(tag, actor)
     @tag = tag
     @actor = actor

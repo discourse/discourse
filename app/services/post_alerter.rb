@@ -23,6 +23,7 @@ class PostAlerter
     Notification.types[:private_message],
     Notification.types[:watching_category_or_tag],
   ]
+
   class << self
     def post_created(post, opts = {})
       PostAlerter.new(opts).after_save_post(post, true)

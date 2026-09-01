@@ -127,6 +127,38 @@ class BrowserPageviewEvent < ActiveRecord::Base
       error.cause.is_a?(PG::ReadOnlySqlTransaction)
     end
 
+    def retention_cutoff
+      RETENTION_PERIOD.ago.beginning_of_day
+    end
+
+    def rollup_source_condition(table: nil, start_date: nil, end_date: nil)
+      prefix = table ? "#{table}." : ""
+      cutover_date = beacon_cutover_date
+      return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
+      return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
+      if start_date && start_date.to_date >= cutover_date
+        return "#{prefix}source = #{SOURCE_BEACON}"
+      end
+
+      sanitize_sql_array(
+        [
+          "(#{prefix}created_at < ? AND #{prefix}source = #{SOURCE_PIGGYBACK} " \
+            "OR #{prefix}created_at >= ? AND #{prefix}source = #{SOURCE_BEACON})",
+          cutover_date,
+          cutover_date,
+        ],
+      )
+    end
+
+    def rollup_count_sql
+      logged_in_only = SiteSetting.login_required
+      count_column = logged_in_only ? "logged_in_count" : "count"
+      return count_column if !CrawlerScorer.enabled?
+
+      crawler_column = logged_in_only ? "likely_crawler_logged_in_count" : "likely_crawler_count"
+      "GREATEST(#{count_column} - #{crawler_column}, 0)"
+    end
+
     private
 
     def insert_rows!(queued_attributes)
@@ -233,40 +265,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
   end
 
   has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
-
-  class << self
-    def retention_cutoff
-      RETENTION_PERIOD.ago.beginning_of_day
-    end
-
-    def rollup_source_condition(table: nil, start_date: nil, end_date: nil)
-      prefix = table ? "#{table}." : ""
-      cutover_date = beacon_cutover_date
-      return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
-      return "#{prefix}source = #{SOURCE_PIGGYBACK}" if end_date && end_date.to_date <= cutover_date
-      if start_date && start_date.to_date >= cutover_date
-        return "#{prefix}source = #{SOURCE_BEACON}"
-      end
-
-      sanitize_sql_array(
-        [
-          "(#{prefix}created_at < ? AND #{prefix}source = #{SOURCE_PIGGYBACK} " \
-            "OR #{prefix}created_at >= ? AND #{prefix}source = #{SOURCE_BEACON})",
-          cutover_date,
-          cutover_date,
-        ],
-      )
-    end
-
-    def rollup_count_sql
-      logged_in_only = SiteSetting.login_required
-      count_column = logged_in_only ? "logged_in_count" : "count"
-      return count_column if !CrawlerScorer.enabled?
-
-      crawler_column = logged_in_only ? "likely_crawler_logged_in_count" : "likely_crawler_count"
-      "GREATEST(#{count_column} - #{crawler_column}, 0)"
-    end
-  end
 
   before_save :truncate_fields
 

@@ -22,6 +22,7 @@ module JsonApiKit
         Errors.new(error)
       end
     end
+
     private_class_method :build
 
     def initialize(query, urls:)

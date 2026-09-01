@@ -8,6 +8,7 @@ class SpamRule::AutoSilence
       user.blank? || user.silenced? || new(user).should_autosilence?
     end
   end
+
   def initialize(user, post = nil)
     @user = user
     @post = post

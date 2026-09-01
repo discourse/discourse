@@ -57,11 +57,9 @@ module Email
     def site_title
       SiteSetting.email_site_title.presence || SiteSetting.title
     end
-  end
 
-  private
+    public
 
-  class << self
     def obfuscate_part(part)
       if part.size < 3
         "*" * part.size
@@ -72,4 +70,6 @@ module Email
       end
     end
   end
+
+  private
 end

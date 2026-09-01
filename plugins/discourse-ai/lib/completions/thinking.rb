@@ -38,8 +38,7 @@ module DiscourseAi
         rescue StandardError
           key
         end
-      end
-      class << self
+
         def normalize_value(value)
           if value.is_a?(Hash)
             normalize_provider_info(value)
@@ -50,6 +49,7 @@ module DiscourseAi
           end
         end
       end
+
       def initialize(message:, partial: false, provider_info: {})
         @message = message
         @partial = partial

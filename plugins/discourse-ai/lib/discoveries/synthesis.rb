@@ -19,6 +19,7 @@ module DiscourseAi
             normalized.match?(/[[:alnum:]]/)
         end
       end
+
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
         @ai_agent = ai_agent

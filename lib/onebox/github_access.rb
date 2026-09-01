@@ -23,6 +23,7 @@ module Onebox
         tokens.split("\n").to_h { it.split("|") }
       end
     end
+
     private_class_method :org_token_map
   end
 end

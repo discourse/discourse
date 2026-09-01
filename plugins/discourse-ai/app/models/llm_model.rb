@@ -60,14 +60,11 @@ class LlmModel < ActiveRecord::Base
       qt = connection.quote_table_name(table.to_s)
       "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
     end
-  end
 
-  class << self
     def enabled_chat_bot_ids
       SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)
     end
-  end
-  class << self
+
     def provider_params
       params = {
         aws_bedrock: {
@@ -409,8 +406,7 @@ class LlmModel < ActiveRecord::Base
 
       params
     end
-  end
-  class << self
+
     def normalize_attachment_types(value)
       normalized =
         Array(value)
@@ -422,6 +418,7 @@ class LlmModel < ActiveRecord::Base
       normalized
     end
   end
+
   def estimated_cost_for_tokens(
     request_tokens:,
     response_tokens:,

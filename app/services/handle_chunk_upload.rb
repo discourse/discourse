@@ -14,6 +14,7 @@ class HandleChunkUpload
       HandleChunkUpload.new(chunk, params).merge_chunks
     end
   end
+
   def initialize(chunk, params = {})
     @chunk = chunk
     @params = params

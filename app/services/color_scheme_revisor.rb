@@ -6,6 +6,7 @@ class ColorSchemeRevisor
       new(color_scheme, params).revise
     end
   end
+
   def initialize(color_scheme, params = {})
     @color_scheme = color_scheme
     @params = params

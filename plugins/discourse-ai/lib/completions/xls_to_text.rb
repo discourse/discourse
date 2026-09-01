@@ -17,6 +17,7 @@ module DiscourseAi
       }
 
       CATDOC_CONFIG_PATH = "/etc/catdocrc"
+
       class << self
         def convert(path)
           return if !xls2csv_installed?
@@ -48,9 +49,7 @@ module DiscourseAi
               false
             end
         end
-      end
 
-      class << self
         def sandbox_read_paths(path)
           Discourse::SafeExec.default_read_paths +
             Discourse::SafeExec.existing_paths([CATDOC_CONFIG_PATH]) + [File.realpath(path)]

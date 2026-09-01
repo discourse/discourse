@@ -145,49 +145,9 @@ module Oneboxer
 
       doc
     end
-  end
 
-  HTML5_BLOCK_ELEMENTS = %w[
-    address
-    article
-    aside
-    blockquote
-    canvas
-    center
-    dd
-    div
-    dl
-    dt
-    fieldset
-    figcaption
-    figure
-    footer
-    form
-    h1
-    h2
-    h3
-    h4
-    h5
-    h6
-    header
-    hgroup
-    hr
-    li
-    main
-    nav
-    noscript
-    ol
-    output
-    p
-    pre
-    section
-    table
-    tfoot
-    ul
-    video
-  ]
+    public
 
-  class << self
     def apply(string_or_doc, extra_paths: nil)
       doc = string_or_doc
       doc = Loofah.html5_fragment(doc) if doc.is_a?(String)
@@ -278,11 +238,9 @@ module Oneboxer
     def cache_failed!(url)
       Discourse.cache.write(onebox_failed_cache_key(url), true, expires_in: 1.hour)
     end
-  end
 
-  private
+    public
 
-  class << self
     def preview_key(user_id)
       "onebox:preview:#{user_id}"
     end
@@ -739,4 +697,46 @@ module Oneboxer
       end
     end
   end
+
+  HTML5_BLOCK_ELEMENTS = %w[
+    address
+    article
+    aside
+    blockquote
+    canvas
+    center
+    dd
+    div
+    dl
+    dt
+    fieldset
+    figcaption
+    figure
+    footer
+    form
+    h1
+    h2
+    h3
+    h4
+    h5
+    h6
+    header
+    hgroup
+    hr
+    li
+    main
+    nav
+    noscript
+    ol
+    output
+    p
+    pre
+    section
+    table
+    tfoot
+    ul
+    video
+  ]
+
+  private
 end

@@ -371,11 +371,9 @@ module Chat
           user_ids: [user_id],
         )
       end
-    end
 
-    NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
+      public
 
-    class << self
       def publish_new_channel(chat_channel, user_ids)
         Chat::UserChatChannelMembership
           .includes(:user)
@@ -406,11 +404,9 @@ module Chat
           user_ids: user_ids,
         )
       end
-    end
 
-    CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"
+      public
 
-    class << self
       def publish_chat_channel_edit(chat_channel, acting_user)
         MessageBus.publish(
           CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
@@ -423,11 +419,9 @@ module Chat
           permissions(chat_channel),
         )
       end
-    end
 
-    CHANNEL_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-status"
+      public
 
-    class << self
       def publish_channel_status(chat_channel)
         MessageBus.publish(
           CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
@@ -435,11 +429,9 @@ module Chat
           permissions(chat_channel),
         )
       end
-    end
 
-    CHANNEL_METADATA_MESSAGE_BUS_CHANNEL = "/chat/channel-metadata"
+      public
 
-    class << self
       def publish_chat_channel_metadata(chat_channel)
         MessageBus.publish(
           CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
@@ -447,11 +439,9 @@ module Chat
           permissions(chat_channel),
         )
       end
-    end
 
-    CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-archive-status"
+      public
 
-    class << self
       def publish_archive_status(
         chat_channel,
         archive_status:,
@@ -516,11 +506,9 @@ module Chat
 
         MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
       end
-    end
 
-    private
+      public
 
-    class << self
       def permissions(channel)
         group_ids = channel.allowed_group_ids.presence
         if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
@@ -548,5 +536,17 @@ module Chat
         Guardian.new(nil)
       end
     end
+
+    NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
+
+    CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"
+
+    CHANNEL_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-status"
+
+    CHANNEL_METADATA_MESSAGE_BUS_CHANNEL = "/chat/channel-metadata"
+
+    CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-archive-status"
+
+    private
   end
 end

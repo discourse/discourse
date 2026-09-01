@@ -56,11 +56,9 @@ module RetrieveTitle
       end
       nil
     end
-  end
 
-  private
+    public
 
-  class << self
     def max_chunk_size(uri)
       # Exception for sites that leave the title until very late.
       if uri.host =~
@@ -120,4 +118,6 @@ module RetrieveTitle
       title
     end
   end
+
+  private
 end

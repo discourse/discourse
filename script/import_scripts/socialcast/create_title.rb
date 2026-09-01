@@ -20,11 +20,9 @@ class CreateTitle
 
       title unless title.nil? || title.size < 20
     end
-  end
 
-  private
+    public
 
-  class << self
     def remove_mentions(text)
       text.gsub(/@[\w]*/, "")
     end
@@ -52,4 +50,6 @@ class CreateTitle
       text
     end
   end
+
+  private
 end

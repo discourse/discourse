@@ -100,6 +100,59 @@ class RemoteTheme < ActiveRecord::Base
       )
     end
 
+    def import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
+      importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
+      importer.import!
+
+      theme_info = RemoteTheme.extract_theme_info(importer)
+
+      component = [true, "true"].include?(theme_info["component"])
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
+      theme.child_components = theme_info["components"].presence || []
+
+      remote_theme = new
+      theme.remote_theme = remote_theme
+
+      remote_theme.private_key = private_key
+      remote_theme.branch = branch
+      remote_theme.remote_url = importer.url
+
+      remote_theme.update_from_remote(importer)
+
+      theme
+    ensure
+      begin
+        importer.cleanup!
+      rescue => e
+        Rails.logger.warn("Failed cleanup remote git #{e}")
+      end
+    end
+
+    def out_of_date_themes
+      joined_remotes
+        .where("commits_behind > 0 OR remote_version <> local_version")
+        .where(themes: { enabled: true })
+        .pluck("themes.name", "themes.id")
+    end
+
+    def unreachable_themes
+      joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
+    end
+
+    def create_upload(theme:, path:, relative_path:, skip_validations: false)
+      new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
+
+      # OptimizedImage has strict file name restrictions, so rename temporarily
+      File.rename(path, new_path)
+
+      UploadCreator.new(
+        File.open(new_path),
+        File.basename(relative_path),
+        for_theme: true,
+        skip_validations: skip_validations,
+      ).create_for(theme.user_id)
+    end
+
     def update_theme(
       importer,
       user: Discourse.system_user,
@@ -177,65 +230,10 @@ class RemoteTheme < ActiveRecord::Base
         Rails.logger.warn("Failed cleanup remote path #{e}")
       end
     end
-  end
-  private_class_method :update_theme
 
-  class << self
-    def import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
-      importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
-      importer.import!
-
-      theme_info = RemoteTheme.extract_theme_info(importer)
-
-      component = [true, "true"].include?(theme_info["component"])
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
-      theme.child_components = theme_info["components"].presence || []
-
-      remote_theme = new
-      theme.remote_theme = remote_theme
-
-      remote_theme.private_key = private_key
-      remote_theme.branch = branch
-      remote_theme.remote_url = importer.url
-
-      remote_theme.update_from_remote(importer)
-
-      theme
-    ensure
-      begin
-        importer.cleanup!
-      rescue => e
-        Rails.logger.warn("Failed cleanup remote git #{e}")
-      end
-    end
-
-    def out_of_date_themes
-      joined_remotes
-        .where("commits_behind > 0 OR remote_version <> local_version")
-        .where(themes: { enabled: true })
-        .pluck("themes.name", "themes.id")
-    end
-
-    def unreachable_themes
-      joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
-    end
+    private :update_theme
   end
 
-  class << self
-    def create_upload(theme:, path:, relative_path:, skip_validations: false)
-      new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
-
-      # OptimizedImage has strict file name restrictions, so rename temporarily
-      File.rename(path, new_path)
-
-      UploadCreator.new(
-        File.open(new_path),
-        File.basename(relative_path),
-        for_theme: true,
-        skip_validations: skip_validations,
-      ).create_for(theme.user_id)
-    end
-  end
   def out_of_date?
     commits_behind > 0 || remote_version != local_version
   end

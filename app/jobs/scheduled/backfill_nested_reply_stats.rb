@@ -81,6 +81,7 @@ module Jobs
       SQL
       end
     end
+
     def execute(args = {})
       return unless SiteSetting.nested_replies_enabled
 

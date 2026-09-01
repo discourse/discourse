@@ -26,6 +26,7 @@ class WebHook < ActiveRecord::Base
     "reviewable_score_updated" => "reviewable_updated",
     "reviewable_transitioned_to" => "reviewable_updated",
   }
+
   class << self
     def content_types
       @content_types ||= Enum.new("application/json" => 1, "application/x-www-form-urlencoded" => 2)
@@ -45,8 +46,7 @@ class WebHook < ActiveRecord::Base
         ],
       )
     end
-  end
-  class << self
+
     def translate_event_name_to_type(event_name)
       EVENT_NAME_TO_EVENT_TYPE_MAP.each do |key, value|
         if key.is_a?(Regexp)
@@ -128,12 +128,12 @@ class WebHook < ActiveRecord::Base
 
       serializer.new(object, scope: guardian, root: false).to_json
     end
-  end
-  class << self
+
     def guardian
       Guardian.new(Discourse.system_user)
     end
   end
+
   def tag_names=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end

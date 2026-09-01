@@ -12,9 +12,7 @@ class RemindAssignsFrequencySiteSettings < EnumSiteSetting
     def valid_value?(val)
       val.to_i.to_s == val.to_s && values.any? { |v| v[:value] == val.to_i }
     end
-  end
 
-  class << self
     def values
       @values ||= [
         { name: "discourse_assign.reminders_frequency.never", value: 0 },

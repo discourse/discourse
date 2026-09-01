@@ -7,28 +7,14 @@ class Site
   cattr_accessor :preloaded_category_custom_fields
 
   SITE_JSON_CHANNEL = "/site_json"
+
   class << self
     def reset_preloaded_category_custom_fields
       self.preloaded_category_custom_fields = Set.new
     end
-  end
-  reset_preloaded_category_custom_fields
 
-  ##
-  # Sometimes plugins need to have additional data or options available
-  # when rendering custom markdown features/rules that are not available
-  # on the default opts.discourse object. These additional options should
-  # be namespaced to the plugin adding them.
-  #
-  # ```
-  # Site.markdown_additional_options["chat"] = { limited_pretty_text_markdown_rules: [] }
-  # ```
-  #
-  # These are passed down to markdown rules on opts.discourse.additionalOptions.
-  cattr_accessor :markdown_additional_options
-  self.markdown_additional_options = {}
+    public
 
-  class << self
     def add_categories_callbacks(enabled: -> { true }, &block)
       categories_callbacks << { block:, enabled: }
     end
@@ -36,9 +22,7 @@ class Site
     def categories_callbacks
       @categories_callbacks ||= []
     end
-  end
 
-  class << self
     def access_control_target_classes
       (
         AclTarget.target_classes +
@@ -128,8 +112,7 @@ class Site
           ).as_json
         end
     end
-  end
-  class << self
+
     def json_for(guardian)
       if guardian.anonymous? && SiteSetting.login_required
         return(
@@ -195,8 +178,7 @@ class Site
 
       json
     end
-  end
-  class << self
+
     def clear_anon_cache!
       # publishing forces the sequence up
       # the cache is validated based on the sequence
@@ -211,6 +193,23 @@ class Site
       SiteSetting.full_name_requirement != "hidden_at_signup"
     end
   end
+
+  reset_preloaded_category_custom_fields
+
+  ##
+  # Sometimes plugins need to have additional data or options available
+  # when rendering custom markdown features/rules that are not available
+  # on the default opts.discourse object. These additional options should
+  # be namespaced to the plugin adding them.
+  #
+  # ```
+  # Site.markdown_additional_options["chat"] = { limited_pretty_text_markdown_rules: [] }
+  # ```
+  #
+  # These are passed down to markdown rules on opts.discourse.additionalOptions.
+  cattr_accessor :markdown_additional_options
+  self.markdown_additional_options = {}
+
   def initialize(guardian)
     @guardian = guardian
   end

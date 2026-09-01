@@ -33,6 +33,22 @@ class AiSummary < ActiveRecord::Base
       Digest::SHA256.hexdigest(joined_ids)
     end
 
+    def remove_superseded_summaries!(strategy, stored_summary)
+      other_summaries =
+        where(target: strategy.target, summary_type: strategy.type)
+          .where.not(id: stored_summary.id)
+          .select(:id, :locale)
+      ids_to_remove =
+        other_summaries.filter_map do |candidate|
+          if candidate.locale.present? &&
+               LocaleNormalizer.is_same?(candidate.locale, strategy.locale)
+            candidate.id
+          end
+        end
+
+      where(id: ids_to_remove).delete_all if ids_to_remove.present?
+    end
+
     def upsert_summary!(attributes)
       upsert_summary(attributes)
     rescue ActiveRecord::RecordNotUnique => error
@@ -41,10 +57,9 @@ class AiSummary < ActiveRecord::Base
       where(attributes.slice(:target_id, :target_type, :summary_type)).delete_all
       upsert_summary(attributes)
     end
-  end
-  private_class_method :upsert_summary!
 
-  class << self
+    private :upsert_summary!
+
     def upsert_summary(attributes)
       transaction(requires_new: true) do
         AiSummary
@@ -63,10 +78,9 @@ class AiSummary < ActiveRecord::Base
           .then { AiSummary.find_by(id: it["id"]) }
       end
     end
-  end
-  private_class_method :upsert_summary
 
-  class << self
+    private :upsert_summary
+
     def legacy_unique_index_conflict?(error)
       cause = error.cause
       return false if !cause.respond_to?(:result)
@@ -74,26 +88,10 @@ class AiSummary < ActiveRecord::Base
       constraint_name = cause.result.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
       constraint_name == LEGACY_UNIQUE_INDEX_NAME
     end
-  end
-  private_class_method :legacy_unique_index_conflict?
 
-  class << self
-    def remove_superseded_summaries!(strategy, stored_summary)
-      other_summaries =
-        where(target: strategy.target, summary_type: strategy.type)
-          .where.not(id: stored_summary.id)
-          .select(:id, :locale)
-      ids_to_remove =
-        other_summaries.filter_map do |candidate|
-          if candidate.locale.present? &&
-               LocaleNormalizer.is_same?(candidate.locale, strategy.locale)
-            candidate.id
-          end
-        end
-
-      where(id: ids_to_remove).delete_all if ids_to_remove.present?
-    end
+    private :legacy_unique_index_conflict?
   end
+
   private_class_method :remove_superseded_summaries!
 
   def mark_as_outdated

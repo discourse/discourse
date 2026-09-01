@@ -22,6 +22,7 @@ class StaffActionLogger
     show_posts
     system
   ]
+
   class << self
     def base_attrs
       %i[

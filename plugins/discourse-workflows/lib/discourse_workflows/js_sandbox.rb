@@ -28,6 +28,7 @@ module DiscourseWorkflows
               "Sandbox payload '#{label}' exceeds #{MAX_INJECTED_JSON_BYTES} bytes"
       end
     end
+
     def initialize(workflow_context, user: nil, vars: nil, capture_logs: false, budget_tracker: nil)
       @workflow_context = workflow_context
       @user = user

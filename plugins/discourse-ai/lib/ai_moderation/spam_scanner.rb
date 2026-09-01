@@ -291,11 +291,9 @@ module DiscourseAi
             raise Discourse::NotFound
           end
         end
-      end
 
-      private
+        public
 
-      class << self
         def build_bot_context(
           feature_name: "spam_detection",
           messages:,
@@ -484,6 +482,8 @@ module DiscourseAi
           PostAction.active.flags.where(post: post).exists?
         end
       end
+
+      private
     end
   end
 end

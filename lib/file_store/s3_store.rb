@@ -24,13 +24,13 @@ module FileStore
     # includes the filename twice (filename= and filename*=UTF-8''), so we
     # limit the full header to 1600 bytes to stay within that budget.
     MAX_CONTENT_DISPOSITION_BYTES = 1_600
+
     class << self
       def acl_option_value(secure:)
         return if !SiteSetting.s3_use_acls
         secure ? CANNED_ACL_PRIVATE : CANNED_ACL_PUBLIC_READ
       end
-    end
-    class << self
+
       def visibility_tagging_option_value(secure:, encode_form: true)
         return if !SiteSetting.s3_enable_access_control_tags
 
@@ -64,8 +64,7 @@ module FileStore
 
         options
       end
-    end
-    class << self
+
       def content_disposition_for(filename, disposition: nil)
         disposition ||= FileHelper.is_inline_safe?(filename) ? "inline" : "attachment"
         return "" if filename.blank?
@@ -98,6 +97,7 @@ module FileStore
         )
       end
     end
+
     def initialize(s3_helper = nil)
       @s3_helper = s3_helper
     end

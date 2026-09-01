@@ -94,6 +94,7 @@ module Migrations
               .freeze
         end
       end
+
       # @param format [Symbol] one of {FORMATS}.
       # @param embeds [#upload, #quote, #mention, #link, nil] the embed collector;
       #   when nil the embeds render natively.

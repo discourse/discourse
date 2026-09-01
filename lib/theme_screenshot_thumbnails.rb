@@ -44,5 +44,6 @@ class ThemeScreenshotThumbnails
       Jobs.enqueue(:generate_theme_screenshot_thumbnails, theme_id: theme.id)
     end
   end
+
   private_class_method :enqueue_generation
 end

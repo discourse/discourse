@@ -29,9 +29,7 @@ class CategoryList
         subcategories: [:topic_only_relative_url],
       ].concat(@included_associations || [])
     end
-  end
 
-  class << self
     def order_categories(categories)
       if SiteSetting.fixed_category_positions
         categories.order(:position, :id)
@@ -45,6 +43,7 @@ class CategoryList
       end
     end
   end
+
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options

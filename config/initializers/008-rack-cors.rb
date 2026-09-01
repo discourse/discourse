@@ -23,6 +23,7 @@ class Discourse::Cors
       headers
     end
   end
+
   def initialize(app, options = nil)
     @app = app
     if GlobalSetting.enable_cors && GlobalSetting.cors_origin.present?

@@ -18,46 +18,44 @@ module ChatSDK
       def messages(...)
         new.messages(...)
       end
-    end
 
-    # Initiates a reply in a specified channel or thread.
-    #
-    # @param channel_id [Integer] The ID of the channel where the reply is started.
-    # @param thread_id [Integer, nil] (optional) The ID of the thread within the channel where the reply is started.
-    # @param guardian [Guardian] The guardian object representing the user's permissions.
-    # @return [String] The client ID associated with the initiated reply.
-    #
-    # @example Starting a reply in a channel
-    #   ChatSDK::Channel.start_reply(channel_id: 1, guardian: Guardian.new)
-    #
-    # @example Starting a reply in a specific thread
-    #   ChatSDK::Channel.start_reply(channel_id: 1, thread_id: 34, guardian: Guardian.new)
-    #
-    # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
-    class << self
+      # Initiates a reply in a specified channel or thread.
+      #
+      # @param channel_id [Integer] The ID of the channel where the reply is started.
+      # @param thread_id [Integer, nil] (optional) The ID of the thread within the channel where the reply is started.
+      # @param guardian [Guardian] The guardian object representing the user's permissions.
+      # @return [String] The client ID associated with the initiated reply.
+      #
+      # @example Starting a reply in a channel
+      #   ChatSDK::Channel.start_reply(channel_id: 1, guardian: Guardian.new)
+      #
+      # @example Starting a reply in a specific thread
+      #   ChatSDK::Channel.start_reply(channel_id: 1, thread_id: 34, guardian: Guardian.new)
+      #
+      # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
       def start_reply(...)
         new.start_reply(...)
       end
-    end
-    # Ends an ongoing reply in a specified channel or thread.
-    #
-    # @param channel_id [Integer] The ID of the channel where the reply is being stopped.
-    # @param thread_id [Integer, nil] (optional) The ID of the thread within the channel where the reply is being stopped.
-    # @param client_id [String] The client ID associated with the reply to stop.
-    # @param guardian [Guardian] The guardian object representing the user's permissions.
-    #
-    # @example Stopping a reply in a channel
-    #   ChatSDK::Channel.stop_reply(channel_id: 1, client_id: "abc123", guardian: Guardian.new)
-    #
-    # @example Stopping a reply in a specific thread
-    #   ChatSDK::Channel.stop_reply(channel_id: 1, thread_id: 34, client_id: "abc123", guardian: Guardian.new)
-    #
-    # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
-    class << self
+
+      # Ends an ongoing reply in a specified channel or thread.
+      #
+      # @param channel_id [Integer] The ID of the channel where the reply is being stopped.
+      # @param thread_id [Integer, nil] (optional) The ID of the thread within the channel where the reply is being stopped.
+      # @param client_id [String] The client ID associated with the reply to stop.
+      # @param guardian [Guardian] The guardian object representing the user's permissions.
+      #
+      # @example Stopping a reply in a channel
+      #   ChatSDK::Channel.stop_reply(channel_id: 1, client_id: "abc123", guardian: Guardian.new)
+      #
+      # @example Stopping a reply in a specific thread
+      #   ChatSDK::Channel.stop_reply(channel_id: 1, thread_id: 34, client_id: "abc123", guardian: Guardian.new)
+      #
+      # @raise [RuntimeError] Raises an error if the specified channel or thread is not found.
       def stop_reply(...)
         new.stop_reply(...)
       end
     end
+
     def messages(channel_id:, guardian:, **params)
       Chat::ListChannelMessages.call(
         guardian:,

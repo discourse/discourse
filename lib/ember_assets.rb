@@ -15,6 +15,7 @@ class EmberAssets < ActiveSupport::CurrentAttributes
 
   BUILD_WAIT_TIMEOUT = 20.0
   BUILD_POLL_INTERVAL = 0.05
+
   class << self
     def dist_dir
       "#{Rails.root.join("frontend/discourse/dist")}"
@@ -56,9 +57,7 @@ class EmberAssets < ActiveSupport::CurrentAttributes
           &.flat_map { |import| deep_imports_for(chunk_filename: import, chunks:, seen:) },
       ]
     end
-  end
 
-  class << self
     def build_error
       return nil unless Rails.env.local?
       return cache[:build_error] if cache.key?(:build_error)

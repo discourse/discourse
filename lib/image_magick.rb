@@ -68,5 +68,6 @@ module ImageMagick
       end
     end
   end
+
   private_class_method :run
 end

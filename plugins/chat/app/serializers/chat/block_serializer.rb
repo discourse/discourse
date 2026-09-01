@@ -16,6 +16,7 @@ module Chat
         end
       end
     end
+
     def type
       object["type"]
     end

@@ -15,6 +15,7 @@ class PostReplyKey < ActiveRecord::Base
       SecureRandom.hex(16)
     end
   end
+
   def reply_key
     super&.delete("-")
   end

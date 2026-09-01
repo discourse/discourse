@@ -25,6 +25,7 @@ module Email
         result
       end
     end
+
     def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}

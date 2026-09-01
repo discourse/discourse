@@ -9,6 +9,9 @@ Style/ClassMethodsDefinitions:
   Enabled: true
   EnforcedStyle: self_class
 
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+
 Layout/ClassStructure:
   Enabled: true
   AutoCorrect: false

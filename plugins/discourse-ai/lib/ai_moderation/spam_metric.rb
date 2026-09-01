@@ -14,11 +14,9 @@ module DiscourseAi
           increment("false_positive") if new_status == :rejected && ai_spam_log.is_spam
           increment("false_negative") if new_status == :rejected && !ai_spam_log.is_spam
         end
-      end
 
-      private
+        public
 
-      class << self
         def increment(type, value = 1)
           metric = ::DiscoursePrometheus::InternalMetric::Custom.new
           metric.name = "discourse_ai_spam_detection"
@@ -29,6 +27,8 @@ module DiscourseAi
           $prometheus_client.send_json(metric.to_h) unless Rails.env.test? # rubocop:disable Style/GlobalVars
         end
       end
+
+      private
     end
   end
 end

@@ -83,6 +83,7 @@ class Category < ActiveRecord::Base
 
   TOPIC_CREATION_PERMISSIONS = [:full]
   POST_CREATION_PERMISSIONS = %i[create_post full]
+
   class << self
     def normalize_sql(expr)
       "lower(unaccent(#{expr}))"
@@ -163,14 +164,13 @@ class Category < ActiveRecord::Base
     def reset_topic_ids_cache
       topic_id_cache.clear
     end
-  end
-  # Accepts an array of slugs with each item in the array
-  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
-  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
-  # category nesting hierarchy, nil is returned.
-  #
-  # When only a single slug is provided, the category id of all the categories with that slug is returned.
-  class << self
+
+    # Accepts an array of slugs with each item in the array
+    # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+    # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+    # category nesting hierarchy, nil is returned.
+    #
+    # When only a single slug is provided, the category id of all the categories with that slug is returned.
     def ids_from_slugs(slugs)
       return [] if slugs.blank?
 
@@ -208,8 +208,7 @@ class Category < ActiveRecord::Base
 
       DB.query_single(sqls.join("\nUNION ALL\n"), params)
     end
-  end
-  class << self
+
     def subcategory_ids(category_id)
       @@subcategory_ids.defer_get_set(category_id.to_s) do
         sql = <<~SQL
@@ -234,8 +233,7 @@ class Category < ActiveRecord::Base
     def clear_subcategory_ids
       @@subcategory_ids.clear
     end
-  end
-  class << self
+
     def scoped_to_permissions(guardian, permission_types)
       if guardian.try(:is_admin?)
         all
@@ -337,21 +335,18 @@ class Category < ActiveRecord::Base
         c.save if c.changed?
       end
     end
-  end
-  # Internal: Generate the text of post prompting to enter category description.
-  class << self
+
+    # Internal: Generate the text of post prompting to enter category description.
     def post_template
       I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
     end
-  end
-  class << self
+
     def first_paragraph_description(cooked)
       doc = Nokogiri::HTML5.fragment(cooked)
       doc.css("img").remove
       doc.css("p").first&.inner_html&.strip
     end
-  end
-  class << self
+
     def resolve_permissions(permissions)
       read_restricted = true
 
@@ -374,8 +369,7 @@ class Category < ActiveRecord::Base
 
       [read_restricted, mapped]
     end
-  end
-  class << self
+
     def auto_bump_topic!
       Category
         .joins(:category_setting)
@@ -383,8 +377,7 @@ class Category < ActiveRecord::Base
         .shuffle
         .any?(&:auto_bump_topic!)
     end
-  end
-  class << self
+
     def query_parent_category(parent_slug)
       encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method ==
         "encoded"
@@ -401,8 +394,7 @@ class Category < ActiveRecord::Base
     def find_by_email(email)
       where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
     end
-  end
-  class << self
+
     def find_by_slug_path(slug_path)
       return nil if slug_path.empty?
       return nil if slug_path.size > SiteSetting.max_category_nesting
@@ -439,8 +431,7 @@ class Category < ActiveRecord::Base
 
       find_by_slug_path([parent_category_slug, category_slug].compact)
     end
-  end
-  class << self
+
     def ensure_consistency!
       sql = <<~SQL
       SELECT t.id FROM topics t
@@ -476,6 +467,7 @@ class Category < ActiveRecord::Base
       [parent_slug, slug].compact.join(Category::SLUG_REF_SEPARATOR)
     end
   end
+
   def nested_replies_conversion_completed?
     !!ActiveModel::Type::Boolean.new.cast(
       custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD],

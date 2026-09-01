@@ -146,9 +146,7 @@ class Draft < ActiveRecord::Base
       # corrupt data is not a reason not to leave data
       Draft.where(user_id: user.id, draft_key: key).destroy_all
     end
-  end
 
-  class << self
     def preload_data(drafts, user)
       topic_ids = drafts.map(&:topic_id)
       post_ids = drafts.map(&:post_id)
@@ -300,6 +298,7 @@ class Draft < ActiveRecord::Base
       topic
     end
   end
+
   def display_user
     post&.user || topic&.user || user
   end

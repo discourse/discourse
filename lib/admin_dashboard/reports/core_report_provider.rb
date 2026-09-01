@@ -51,28 +51,34 @@ module AdminDashboard
           end
         end
 
-        def with_empty_flag(payload)
-          payload.merge(empty: payload[:data].blank?)
-        end
-      end
-      private_class_method :with_empty_flag
-
-      class << self
         def list_all(search: nil, after: nil, limit: nil)
           entries = dashboard_entries(Guardian.new(Discourse.system_user))
           entries = filter_by_search(entries, search) if search.present?
           seek(entries.map { |entry| build_resolved(entry) }, after: after, limit: limit)
         end
 
+        def filter_by_search(entries, search)
+          query = search.to_s.downcase
+          entries.select do |entry|
+            entry[:title].to_s.downcase.include?(query) ||
+              entry[:description].to_s.downcase.include?(query)
+          end
+        end
+
+        def with_empty_flag(payload)
+          payload.merge(empty: payload[:data].blank?)
+        end
+
+        private :with_empty_flag
+
         def dashboard_entries(guardian)
           ::Reports::ListQuery
             .call(guardian: guardian)
             .reject { |entry| ::Report.dashboard_excluded_report_types.include?(entry[:type]) }
         end
-      end
-      private_class_method :dashboard_entries
 
-      class << self
+        private :dashboard_entries
+
         def build_resolved(entry)
           AdminDashboard::Reports::ResolvedReport.new(
             source: SOURCE_NAME,
@@ -83,10 +89,9 @@ module AdminDashboard
             url: "/admin/reports/#{entry[:type]}",
           )
         end
-      end
-      private_class_method :build_resolved
 
-      class << self
+        private :build_resolved
+
         def build_opts(filters, guardian)
           filters = filters.symbolize_keys if filters.respond_to?(:symbolize_keys)
           opts = { current_user: guardian&.user }
@@ -97,27 +102,18 @@ module AdminDashboard
           opts[:filters] = filters[:filters] if filters[:filters]
           opts
         end
-      end
-      private_class_method :build_opts
 
-      class << self
+        private :build_opts
+
         def parse_date(value)
           Time.zone.parse(value.to_s)
         rescue ArgumentError, TypeError
           nil
         end
-      end
-      private_class_method :parse_date
 
-      class << self
-        def filter_by_search(entries, search)
-          query = search.to_s.downcase
-          entries.select do |entry|
-            entry[:title].to_s.downcase.include?(query) ||
-              entry[:description].to_s.downcase.include?(query)
-          end
-        end
+        private :parse_date
       end
+
       private_class_method :filter_by_search
     end
   end

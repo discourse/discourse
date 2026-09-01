@@ -32,6 +32,7 @@ module DiscourseEvents
       INLINE_MARKDOWN_FEATURES = %w[emoji linkify]
       INLINE_MARKDOWN_IT_RULES = %w[link linkify entity escape newline]
       INLINE_CACHE_VERSION = 2
+
       class << self
         def extract_events(post)
           cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
@@ -89,9 +90,7 @@ module DiscourseEvents
           dasherized = camelized.gsub(/[A-Z]/) { |char| "-#{char.downcase}" }.sub(/\A-/, "")
           "data-#{dasherized}"
         end
-      end
 
-      class << self
         def cook_inline(text, post: nil)
           text = text.to_s
           add_nofollow = post.nil? || post.add_nofollow?

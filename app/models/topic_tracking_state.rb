@@ -654,5 +654,6 @@ class TopicTrackingState
       end
     end
   end
+
   private_class_method :secure_category_group_ids
 end

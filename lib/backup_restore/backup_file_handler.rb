@@ -19,6 +19,7 @@ module BackupRestore
         )
       end
     end
+
     def initialize(logger, filename, current_db, root_tmp_directory: Rails.root, location: nil)
       @logger = logger
       if filename.start_with?("http://", "https://")

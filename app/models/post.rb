@@ -166,6 +166,7 @@ class Post < ActiveRecord::Base
   delegate :username, to: :user
 
   MAX_REPLY_LEVEL = 1000
+
   class << self
     def hidden_reasons
       @hidden_reasons ||=
@@ -201,14 +202,11 @@ class Post < ActiveRecord::Base
     def find_by_number(topic_id, post_number)
       find_by(topic_id: topic_id, post_number: post_number)
     end
-  end
 
-  class << self
     def allowed_image_classes
       @allowed_image_classes ||= %w[avatar favicon thumbnail emoji ytp-thumbnail-image]
     end
-  end
-  class << self
+
     def regular_order
       order(:sort_order, :post_number)
     end
@@ -244,14 +242,12 @@ class Post < ActiveRecord::Base
         ],
       )
     end
-  end
-  class << self
+
     def excerpt(cooked, maxlength = nil, options = {})
       maxlength ||= SiteSetting.post_excerpt_maxlength
       PrettyText.excerpt(cooked, maxlength, options)
     end
-  end
-  class << self
+
     def url(slug, topic_id, post_number, opts = nil)
       opts ||= {}
 
@@ -281,8 +277,7 @@ class Post < ActiveRecord::Base
         {}
       end
     end
-  end
-  class << self
+
     def rebake_old(limit, priority: :normal, rate_limiter: true)
       limiter =
         RateLimiter.new(
@@ -328,8 +323,7 @@ class Post < ActiveRecord::Base
         end
       problems
     end
-  end
-  class << self
+
     def estimate_posts_per_day
       val = Discourse.redis.get("estimated_posts_per_day")
       return val.to_i if val
@@ -340,8 +334,7 @@ class Post < ActiveRecord::Base
       Discourse.redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
       posts_per_day
     end
-  end
-  class << self
+
     def public_posts_count_per_day(
       start_date,
       end_date,
@@ -382,8 +375,7 @@ class Post < ActiveRecord::Base
         .order("date(posts.created_at)")
         .count
     end
-  end
-  class << self
+
     def rebake_all_quoted_posts(user_id)
       return if user_id.blank?
 
@@ -399,8 +391,7 @@ class Post < ActiveRecord::Base
          AND id IN (SELECT post_id FROM user_quoted_posts)
     SQL
     end
-  end
-  class << self
+
     def find_missing_uploads(include_local_upload: true)
       missing_uploads = []
       missing_post_uploads = {}
@@ -469,6 +460,7 @@ class Post < ActiveRecord::Base
       { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
     end
   end
+
   def whisper?
     post_type == Post.types[:whisper]
   end

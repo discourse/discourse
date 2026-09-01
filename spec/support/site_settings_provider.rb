@@ -22,6 +22,7 @@ class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
       SiteSetting.provider = new
     end
   end
+
   def initialize
     super
     self.current_site = "test"

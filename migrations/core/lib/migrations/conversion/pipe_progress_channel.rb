@@ -26,6 +26,7 @@ module Migrations
           end
         end
       end
+
       def initialize(io)
         @io = io
       end

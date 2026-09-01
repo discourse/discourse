@@ -130,6 +130,7 @@ class Service::Runner
       new(service, block.binding.eval("self"), dependencies).call(&block)
     end
   end
+
   # @!visibility private
   def initialize(service, object, dependencies)
     @service = service

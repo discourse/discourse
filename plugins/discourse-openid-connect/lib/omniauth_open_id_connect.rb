@@ -12,6 +12,7 @@ module OmniAuth
     class OpenIDConnect < OmniAuth::Strategies::OAuth2
       class NonceVerifyError < StandardError
       end
+
       class SubVerifyError < StandardError
       end
 
@@ -245,6 +246,7 @@ module OmniAuth
           client.request(:post, options[:client_options][:token_url], body: get_token_options)
         ::OAuth2::AccessToken.from_hash(client, response.parsed)
       end
+
       def prune!(hash)
         hash.delete_if do |_, v|
           prune!(v) if v.is_a?(Hash)

@@ -10,6 +10,7 @@ class UserAnonymizer
       new(user, actor, opts).make_anonymous
     end
   end
+
   # opts:
   #   anonymize_ip  - an optional new IP to update their logs with
   def initialize(user, actor = nil, opts = nil)

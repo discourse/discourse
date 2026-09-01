@@ -72,15 +72,9 @@ class TextCleaner
 
       text
     end
-  end
 
-  @@whitespaces_regexp =
-    Regexp.new(
-      "(\u00A0|\u1680|\u180E|[\u2000-\u200A]|\u2028|\u2029|\u202F|\u205F|\u3000)",
-      Regexp::IGNORECASE,
-    ).freeze
+    public
 
-  class << self
     def normalize_whitespaces(text)
       text&.gsub(@@whitespaces_regexp, " ")
     end
@@ -97,4 +91,10 @@ class TextCleaner
       opts[:case_option] ? text.capitalize(opts[:case_option]) : text.capitalize
     end
   end
+
+  @@whitespaces_regexp =
+    Regexp.new(
+      "(\u00A0|\u1680|\u180E|[\u2000-\u200A]|\u2028|\u2029|\u202F|\u205F|\u3000)",
+      Regexp::IGNORECASE,
+    ).freeze
 end

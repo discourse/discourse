@@ -162,11 +162,9 @@ class PostActionNotifier
     def add_post_revision_notifier_recipients(&block)
       custom_post_revision_notifier_recipients << block
     end
-  end
 
-  private
+    public
 
-  class << self
     def notification_is_disabled?(post_revision)
       if SiteSetting.disable_system_edit_notifications &&
            post_revision.user_id == Discourse::SYSTEM_USER_ID
@@ -187,4 +185,6 @@ class PostActionNotifier
       false
     end
   end
+
+  private
 end

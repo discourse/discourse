@@ -6,6 +6,7 @@ class AdminDashboardGeneralData < AdminDashboardData
       "general-dashboard-data-#{Report::SCHEMA_VERSION}"
     end
   end
+
   def get_json
     days_since_update =
       Discourse.last_commit_date ? ((DateTime.now - Discourse.last_commit_date) / 1.day).to_i : nil

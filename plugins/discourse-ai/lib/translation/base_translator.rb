@@ -14,6 +14,7 @@ module DiscourseAi
           end
         end
       end
+
       def initialize(text:, target_locale:, topic: nil, post: nil, llm_model: nil)
         @text = text
         @target_locale = target_locale

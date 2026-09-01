@@ -37,12 +37,12 @@ module DiscourseNarrativeBot
       def magic_8_ball_trigger
         I18n.t("discourse_narrative_bot.magic_8_ball.trigger")
       end
-    end
-    class << self
+
       def i18n_key(key)
         "discourse_narrative_bot.track_selector.#{key}"
       end
     end
+
     def initialize(input, user, post_id:, topic_id: nil)
       @input = input
       @user = user

@@ -12,6 +12,7 @@ class ThemeTranslationParser
       end
     end
   end
+
   def initialize(setting_field, internal: false)
     @setting_field = setting_field
     @internal = internal

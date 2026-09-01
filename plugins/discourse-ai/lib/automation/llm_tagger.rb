@@ -174,11 +174,9 @@ module DiscourseAi
             )
           end
         end
-      end
 
-      private
+        public
 
-      class << self
         def apply_tags_to_topic(topic, new_tags)
           return unless SiteSetting.tagging_enabled?
 
@@ -200,6 +198,8 @@ module DiscourseAi
           )
         end
       end
+
+      private
     end
   end
 end

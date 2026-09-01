@@ -20,8 +20,7 @@ class UsernameChanger
         false
       end
     end
-  end
-  class << self
+
     def update_username(
       user_id:,
       old_username:,
@@ -43,6 +42,7 @@ class UsernameChanger
       end
     end
   end
+
   def initialize(user, new_username, actor = nil)
     @user = user
     @old_username = user.username

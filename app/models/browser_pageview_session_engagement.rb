@@ -67,6 +67,7 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
       Arel.sql(assignments.join(", "))
     end
   end
+
   private_class_method :greatest_on_duplicate_clause
 end
 

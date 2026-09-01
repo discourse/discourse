@@ -37,11 +37,9 @@ module CachedCounting
       clear_queue!
       clear_flush_to_db_lock!
     end
-  end
 
-  ENSURE_THREAD_COOLDOWN_SECONDS = 5
+    public
 
-  class << self
     def ensure_thread!
       return if !enabled?
 
@@ -95,11 +93,9 @@ module CachedCounting
         flush_to_db
       end
     end
-  end
 
-  COUNTER_REDIS_HASH = "CounterCacheHash"
+    public
 
-  class << self
     def flush_in_memory
       counts = nil
       while QUEUE.length > 0
@@ -116,12 +112,9 @@ module CachedCounting
         end
       end
     end
-  end
 
-  DB_FLUSH_COOLDOWN_SECONDS = 60
-  DB_COOLDOWN_KEY = "cached_counting_cooldown"
+    public
 
-  class << self
     def flush_to_db
       redis = Discourse.redis.without_namespace
       DistributedMutex.synchronize("flush_counters_to_db", redis: redis, validity: 5.minutes) do
@@ -174,6 +167,13 @@ module CachedCounting
       redis.del(COUNTER_REDIS_HASH)
     end
   end
+
+  ENSURE_THREAD_COOLDOWN_SECONDS = 5
+
+  COUNTER_REDIS_HASH = "CounterCacheHash"
+
+  DB_FLUSH_COOLDOWN_SECONDS = 60
+  DB_COOLDOWN_KEY = "cached_counting_cooldown"
 
   class_methods do
     if Rails.env.test?

@@ -22,6 +22,7 @@ class UserSilencer
       UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
     end
   end
+
   def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
   end

@@ -176,16 +176,12 @@ module Chat
       escape
       entity
     ]
+
     class << self
       def polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
-    end
 
-    validates :cooked, length: { maximum: 20_000 }
+      public
 
-    validates_with Chat::MessageBlocksValidator
-
-    validate :validate_message
-    class << self
       def cook(message, opts = {})
         bot = opts[:user_id] && opts[:user_id].negative?
         slash_command = match_slash_command(message, opts[:author_username])
@@ -229,8 +225,7 @@ module Chat
         cooked = result.to_html if result.changed?
         cooked
       end
-    end
-    class << self
+
       def match_slash_command(message, author_username)
         return if message.blank?
 
@@ -243,8 +238,7 @@ module Chat
 
         nil
       end
-    end
-    class << self
+
       def format_slash_command(cooked, command, author_username)
         if command[:formatter] == :action
           format_action(cooked, author_username)
@@ -252,8 +246,7 @@ module Chat
           append_command_text(cooked, command[:text])
         end
       end
-    end
-    class << self
+
       def format_action(cooked, author_username)
         fragment = Loofah.html5_fragment(cooked)
         elements = fragment.children.select(&:element?)
@@ -268,8 +261,7 @@ module Chat
 
         fragment.to_html
       end
-    end
-    class << self
+
       def append_command_text(cooked, text)
         fragment = Loofah.html5_fragment(cooked)
         elements = fragment.children.select(&:element?)
@@ -284,6 +276,13 @@ module Chat
         fragment.to_html
       end
     end
+
+    validates :cooked, length: { maximum: 20_000 }
+
+    validates_with Chat::MessageBlocksValidator
+
+    validate :validate_message
+
     def validate_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self) if !user&.bot?
 

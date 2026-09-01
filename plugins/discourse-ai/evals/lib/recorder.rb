@@ -47,9 +47,7 @@ module DiscourseAi
             output: output,
           ).tap { |recorder| recorder.running }
         end
-      end
 
-      class << self
         def normalize_agent_key(key)
           stripped = key.to_s.strip
           stripped = "default" if stripped.empty?
@@ -64,6 +62,7 @@ module DiscourseAi
           slug.empty? ? "default" : slug.downcase
         end
       end
+
       def initialize(
         an_eval,
         logger,

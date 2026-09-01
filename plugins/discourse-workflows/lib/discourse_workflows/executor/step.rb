@@ -50,6 +50,7 @@ module DiscourseWorkflows
           )
         end
       end
+
       def initialize(
         node_id:,
         node_name:,

@@ -72,6 +72,14 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
       Array(dates).map(&:to_date).uniq.each { |date| aggregate(start_date: date, end_date: date) }
     end
 
+    def site_hostnames
+      hostnames =
+        RailsMultisite::ConnectionManagement.current_db_hostnames + [Discourse.current_hostname]
+      hostnames
+        .filter_map { |hostname| BrowserPageviewEventUrlNormalizer.normalize_host(hostname) }
+        .uniq
+    end
+
     def rebuildable_start_date(start_date)
       earliest_source_date =
         BrowserPageviewEvent
@@ -84,18 +92,10 @@ class BrowserPageviewEntryUrlDailyRollup < ActiveRecord::Base
       has_older_rollups = where("date < ?", earliest_source_date).exists?
       has_older_rollups ? earliest_source_date + 1 : start_date
     end
-  end
-  private_class_method :rebuildable_start_date
 
-  class << self
-    def site_hostnames
-      hostnames =
-        RailsMultisite::ConnectionManagement.current_db_hostnames + [Discourse.current_hostname]
-      hostnames
-        .filter_map { |hostname| BrowserPageviewEventUrlNormalizer.normalize_host(hostname) }
-        .uniq
-    end
+    private :rebuildable_start_date
   end
+
   private_class_method :site_hostnames
 end
 

@@ -9,6 +9,7 @@ module Email
         Email::Processor.new(mail, opts).process!
       end
     end
+
     def initialize(mail, opts = {})
       @mail = mail
       @opts = opts

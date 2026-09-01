@@ -12,6 +12,18 @@ class ReviewableQueuedPost < Reviewable
         delete_user_block: :delete_and_block_user,
       }
     end
+
+    public
+
+    def additional_args(params)
+      return {} if params[:revise_reason].blank?
+
+      {
+        revise_reason: params[:revise_reason],
+        revise_feedback: params[:revise_feedback],
+        revise_custom_reason: params[:revise_custom_reason],
+      }
+    end
   end
 
   after_create do
@@ -27,18 +39,6 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_commit :compute_user_stats, only: %i[create update]
-
-  class << self
-    def additional_args(params)
-      return {} if params[:revise_reason].blank?
-
-      {
-        revise_reason: params[:revise_reason],
-        revise_feedback: params[:revise_feedback],
-        revise_custom_reason: params[:revise_custom_reason],
-      }
-    end
-  end
 
   def build_combined_actions(actions, guardian, args)
     unless approved?

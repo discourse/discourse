@@ -18,6 +18,7 @@ class ReviewableClaimedTopic < ActiveRecord::Base
       result
     end
   end
+
   def log_topic_history(type, performed_by)
     return if automatic?
 

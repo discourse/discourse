@@ -37,8 +37,7 @@ module DiscourseDataExplorer
       def internal_types
         @internal_types ||= %i[current_user_id]
       end
-    end
-    class << self
+
       def type_aliases
         @type_aliases ||= { integer: :int, text: :string, timestamp: :datetime }
       end
@@ -83,6 +82,7 @@ module DiscourseDataExplorer
         ret_params
       end
     end
+
     def initialize(identifier, type, default, nullable, validate: true)
       unless identifier
         raise ValidationError.new("Parameter declaration error - identifier is missing")

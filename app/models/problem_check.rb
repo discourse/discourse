@@ -129,45 +129,39 @@ class ProblemCheck
     def identifier
       name.demodulize.underscore.to_sym
     end
-  end
-  delegate :identifier, to: :class
 
-  class << self
+    public
+
     def enabled?
       enabled
     end
-  end
-  delegate :enabled?, to: :class
 
-  class << self
+    public
+
     def scheduled?
       perform_every.present?
     end
-  end
-  delegate :scheduled?, to: :class
 
-  class << self
+    public
+
     def realtime?
       !scheduled? && !inline?
     end
-  end
-  delegate :realtime?, to: :class
 
-  class << self
+    public
+
     def inline?
       inline
     end
-  end
-  delegate :inline?, to: :class
 
-  class << self
+    public
+
     def targeted?
       targets.call != [ProblemCheck::NO_TARGET]
     end
-  end
-  delegate :targeted?, to: :class
 
-  class << self
+    public
+
     def each_target(&)
       targets.call.each(&)
     end
@@ -185,6 +179,18 @@ class ProblemCheck
       ProblemCheckTracker.where(identifier:).where.not(target: current_targets).destroy_all
     end
   end
+
+  delegate :identifier, to: :class
+
+  delegate :enabled?, to: :class
+
+  delegate :scheduled?, to: :class
+
+  delegate :realtime?, to: :class
+
+  delegate :inline?, to: :class
+
+  delegate :targeted?, to: :class
 
   def initialize(target = NO_TARGET)
     @target = target

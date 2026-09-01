@@ -102,6 +102,7 @@ module Discourse
               )
       end
     end
+
     private_class_method :raise_command_error
   end
 end

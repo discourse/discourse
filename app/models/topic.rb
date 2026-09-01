@@ -119,9 +119,7 @@ class Topic < ActiveRecord::Base
           unknown: 99,
         )
     end
-  end
 
-  class << self
     def clear_page_not_found_topics_cache!
       keys =
         I18n.available_locales.map do |locale|
@@ -129,8 +127,7 @@ class Topic < ActiveRecord::Base
         end
       Discourse.cache.redis.del(*keys)
     end
-  end
-  class << self
+
     def regenerate_og_image_after_replies_change(topic_id, replies_count)
       return if !og_image_counter_regeneration_needed?(replies_count - 1, replies_count)
 
@@ -148,8 +145,7 @@ class Topic < ActiveRecord::Base
         previous_count / OG_IMAGE_REGENERATION_COUNTER_STEP <
           current_count / OG_IMAGE_REGENERATION_COUNTER_STEP
     end
-  end
-  class << self
+
     def visible_post_types(viewed_by = nil, include_moderator_actions: true)
       types = Post.types
       result = [types[:regular]]
@@ -169,21 +165,18 @@ class Topic < ActiveRecord::Base
     def count_exceeds_minimum?
       count > SiteSetting.minimum_topics_similar
     end
-  end
-  class << self
+
     def has_flag_scope
       ReviewableFlaggedPost.pending_and_default_visible
     end
-  end
-  class << self
+
     def fancy_title(title)
       return unless escaped = ERB::Util.html_escape(title)
       fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
       fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
     end
-  end
-  # Returns hot topics since a date for display in email digest.
-  class << self
+
+    # Returns hot topics since a date for display in email digest.
     def for_digest(user, since, opts = nil)
       opts ||= {}
 
@@ -289,8 +282,7 @@ class Topic < ActiveRecord::Base
 
       topics
     end
-  end
-  class << self
+
     def listable_count_per_day(
       start_date,
       end_date,
@@ -320,8 +312,7 @@ class Topic < ActiveRecord::Base
 
       result.count
     end
-  end
-  class << self
+
     def similar_to(title, raw, user = nil)
       return [] if title.blank?
 
@@ -449,8 +440,7 @@ class Topic < ActiveRecord::Base
         )
       end
     end
-  end
-  class << self
+
     def public_post_types_sql
       "post_type NOT IN (#{Post.types[:small_action]}, #{Post.types[:whisper]})"
     end
@@ -611,8 +601,7 @@ class Topic < ActiveRecord::Base
 
       highest
     end
-  end
-  class << self
+
     def find_by_slug(slug)
       if SiteSetting.slug_generation_method != "encoded"
         Topic.find_by(slug: slug.downcase)
@@ -621,8 +610,7 @@ class Topic < ActiveRecord::Base
         Topic.find_by(slug: encoded_slug)
       end
     end
-  end
-  class << self
+
     def url(id, slug, post_number = nil)
       url = +"#{Discourse.base_url}/t/"
       url << "#{slug}/" if slug.present?
@@ -630,8 +618,7 @@ class Topic < ActiveRecord::Base
       url << "/#{post_number}" if post_number.to_i > 1
       url
     end
-  end
-  class << self
+
     def relative_url(id, slug, post_number = nil)
       url = +"#{Discourse.base_path}/t/"
       url << "#{slug}/" if slug.present?
@@ -639,8 +626,7 @@ class Topic < ActiveRecord::Base
       url << "/#{post_number}" if post_number.to_i > 1
       url
     end
-  end
-  class << self
+
     def ensure_consistency!
       # unpin topics that might have been missed
       Topic.where("pinned_until < ?", Time.now).update_all(
@@ -652,8 +638,7 @@ class Topic < ActiveRecord::Base
         .where("bannered_until < ?", Time.now)
         .find_each { |topic| topic.remove_banner!(Discourse.system_user) }
     end
-  end
-  class << self
+
     def time_to_first_response(sql, opts = nil)
       opts ||= {}
       builder = DB.build(sql)
@@ -690,8 +675,7 @@ class Topic < ActiveRecord::Base
       total = time_to_first_response(TIME_TO_FIRST_RESPONSE_TOTAL_SQL, opts)
       total.first["hours"].to_f.round(2)
     end
-  end
-  class << self
+
     def with_no_response_per_day(
       start_date,
       end_date,
@@ -712,8 +696,7 @@ class Topic < ActiveRecord::Base
       builder.where("t.deleted_at IS NULL")
       builder.query_hash
     end
-  end
-  class << self
+
     def with_no_response_total(opts = {})
       builder = DB.build(WITH_NO_RESPONSE_TOTAL_SQL)
       if opts[:category_id]
@@ -727,8 +710,7 @@ class Topic < ActiveRecord::Base
       builder.where("t.deleted_at IS NULL")
       builder.query_single.first.to_i
     end
-  end
-  class << self
+
     def private_message_topics_count_per_day(start_date, end_date, topic_subtype)
       private_messages
         .with_subtype(topic_subtype)
@@ -737,8 +719,7 @@ class Topic < ActiveRecord::Base
         .order("date(topics.created_at)")
         .count
     end
-  end
-  class << self
+
     def publish_stats_to_clients!(topic_id, type, opts = {})
       topic = Topic.find_by(id: topic_id)
       return if topic.blank?
@@ -765,8 +746,7 @@ class Topic < ActiveRecord::Base
         end
       end
     end
-  end
-  class << self
+
     def editable_custom_fields(guardian)
       fields = []
       fields.push(*DiscoursePluginRegistry.public_editable_topic_custom_fields)
@@ -774,6 +754,7 @@ class Topic < ActiveRecord::Base
       fields
     end
   end
+
   def shared_draft?
     SharedDraft.exists?(topic_id: id)
   end

@@ -145,13 +145,9 @@ module DiscourseAi
                 end,
           }
         end
-      end
 
-      private
+        public
 
-      # all tags that are eligible for translation based on site settings,
-      # including those without locale detected yet.
-      class << self
         def get
           Tag.all
         end
@@ -179,6 +175,11 @@ module DiscourseAi
           { done:, total: }
         end
       end
+
+      private
+
+      # all tags that are eligible for translation based on site settings,
+      # including those without locale detected yet.
     end
   end
 end

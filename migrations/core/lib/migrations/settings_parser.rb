@@ -4,6 +4,7 @@ module Migrations
   class SettingsParser
     class InvalidYaml < StandardError
     end
+
     class ValidationError < StandardError
     end
 
@@ -16,6 +17,7 @@ module Migrations
         raise InvalidYaml.new(e.message)
       end
     end
+
     def initialize(options)
       @options = options
 

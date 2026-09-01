@@ -10,11 +10,9 @@ class PostStripper
       run_plugin_strippers(nokogiri_fragment)
       nokogiri_fragment
     end
-  end
 
-  private
+    public
 
-  class << self
     def run_core_strippers(nokogiri_fragment)
       nokogiri_fragment.css(
         "pre .mention, aside.quote > .title, aside.quote .mention, aside.quote .mention-group, .onebox, .elided",
@@ -27,6 +25,8 @@ class PostStripper
       end
     end
   end
+
+  private
 
   private_class_method :run_core_strippers, :run_plugin_strippers
 end

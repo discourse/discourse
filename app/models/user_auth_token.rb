@@ -43,8 +43,7 @@ class UserAuthToken < ActiveRecord::Base
     def log_verbose(info)
       log(info) if SiteSetting.verbose_auth_token_logging
     end
-  end
-  class << self
+
     def login_location(ip)
       ipinfo = DiscourseIpInfo.get(ip)
 
@@ -216,8 +215,7 @@ class UserAuthToken < ActiveRecord::Base
         time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
       ).delete_all
     end
-  end
-  class << self
+
     def enforce_session_count_limit!(user_id)
       tokens_to_destroy =
         where(user_id: user_id)
@@ -228,6 +226,7 @@ class UserAuthToken < ActiveRecord::Base
       tokens_to_destroy.delete_all # Returns the number of deleted rows
     end
   end
+
   def user
     impersonated_user || acting_user
   end

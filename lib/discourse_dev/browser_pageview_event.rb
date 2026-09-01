@@ -42,6 +42,7 @@ module DiscourseDev
         new(count: count || DEFAULT_COUNT).populate!
       end
     end
+
     def initialize(count: DEFAULT_COUNT)
       @count = count
     end

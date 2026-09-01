@@ -6,6 +6,7 @@ class UsernameCheckerService
       UsernameCheckerService.new.is_developer?(email)
     end
   end
+
   def initialize(allow_reserved_username: false)
     @allow_reserved_username = allow_reserved_username
   end

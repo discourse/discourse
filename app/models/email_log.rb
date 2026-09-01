@@ -86,6 +86,7 @@ class EmailLog < ActiveRecord::Base
       where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
     end
   end
+
   def topic
     @topic ||= topic_id.present? ? Topic.find_by(id: topic_id) : post&.topic
   end

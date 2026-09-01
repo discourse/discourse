@@ -34,8 +34,7 @@ class TrustLevel3Requirements
       Discourse.redis.del NUM_TOPICS_KEY
       Discourse.redis.del NUM_POSTS_KEY
     end
-  end
-  class << self
+
     def num_topics_in_time_period
       Discourse.redis.get(NUM_TOPICS_KEY) ||
         begin
@@ -56,6 +55,7 @@ class TrustLevel3Requirements
         end
     end
   end
+
   def initialize(user)
     @user = user
   end

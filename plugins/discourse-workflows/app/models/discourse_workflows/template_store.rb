@@ -15,13 +15,21 @@ module DiscourseWorkflows
         remove_instance_variable(:@templates_by_id) if defined?(@templates_by_id)
       end
 
+      def summary_for(id, template)
+        {
+          id: id,
+          name: template["name"],
+          description: template["description"],
+          node_types: template["nodes"].map { |node| node["type"] }.uniq,
+        }.deep_dup
+      end
+
       def templates_by_id
         @templates_by_id ||= load_templates
       end
-    end
-    private_class_method :templates_by_id
 
-    class << self
+      private :templates_by_id
+
       def load_templates
         Dir
           .glob(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
@@ -33,19 +41,10 @@ module DiscourseWorkflows
             next
           end
       end
-    end
-    private_class_method :load_templates
 
-    class << self
-      def summary_for(id, template)
-        {
-          id: id,
-          name: template["name"],
-          description: template["description"],
-          node_types: template["nodes"].map { |node| node["type"] }.uniq,
-        }.deep_dup
-      end
+      private :load_templates
     end
+
     private_class_method :summary_for
   end
 end

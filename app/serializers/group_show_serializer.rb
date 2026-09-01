@@ -18,13 +18,9 @@ class GroupShowSerializer < BasicGroupSerializer
         end
       end
     end
-  end
 
-  has_one :smtp_updated_by, embed: :object, serializer: BasicUserSerializer
+    public
 
-  attributes :automatic_membership_email_domains
-
-  class << self
     def admin_or_owner_attributes(*attrs)
       attributes(*attrs)
       attrs.each do |attr|
@@ -34,6 +30,11 @@ class GroupShowSerializer < BasicGroupSerializer
       end
     end
   end
+
+  has_one :smtp_updated_by, embed: :object, serializer: BasicUserSerializer
+
+  attributes :automatic_membership_email_domains
+
   def include_automatic_membership_email_domains?
     scope.can_admin_group?(object)
   end

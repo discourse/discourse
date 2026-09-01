@@ -266,6 +266,7 @@ class AiTool < ActiveRecord::Base
       ]
     end
   end
+
   def signature
     {
       name: function_call_name,

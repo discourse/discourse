@@ -19,11 +19,9 @@ class DiscourseChatIntegration::PluginModel < PluginStoreRow
     def key_prefix
       raise "Not implemented"
     end
-  end
 
-  private
+    public
 
-  class << self
     def alloc_key
       DistributedMutex.synchronize("#{self::PLUGIN_NAME}_#{key_prefix}_id") do
         max_id = PluginStore.get(self::PLUGIN_NAME, "#{key_prefix}_id")
@@ -33,6 +31,9 @@ class DiscourseChatIntegration::PluginModel < PluginStoreRow
       end
     end
   end
+
+  private
+
   def set_key
     self.key ||= self.class.alloc_key
   end

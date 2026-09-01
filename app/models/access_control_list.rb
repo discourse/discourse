@@ -33,8 +33,7 @@ class AccessControlList < ActiveRecord::Base
     def relation
       super.extending(AccessControlListRelationMethods)
     end
-  end
-  class << self
+
     def inject_mandatory_acl(flattened_acl, target)
       target_klass =
         if target.is_a?(String)
@@ -130,6 +129,7 @@ class AccessControlList < ActiveRecord::Base
       { type: group_or_user.is_a?(Group) ? :group : :user, id: group_or_user.id, permission: }
     end
   end
+
   def allowed_users
     @allowed_users ||= User.where(id: allowed_user_ids).to_a
   end

@@ -176,5 +176,6 @@ class UserApiKey::DeviceAuth
       end
     end
   end
+
   private_class_method :normalize_trace_payload
 end

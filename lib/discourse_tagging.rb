@@ -461,61 +461,9 @@ module DiscourseTagging
 
       tags_by_group_map.select { |_, group_tags| group_tags.size > 1 }
     end
-  end
 
-  TAG_GROUP_RESTRICTIONS_SQL = <<~SQL
-    tag_group_restrictions AS (
-      SELECT t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
-        tg.one_per_topic as one_per_topic
-      FROM tags t
-      LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
-      LEFT OUTER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
-    )
-  SQL
+    public
 
-  CATEGORY_RESTRICTIONS_SQL = <<~SQL
-    category_restrictions AS (
-      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id, NULL AS category_tag_group_id
-      FROM tags t
-      INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
-
-      UNION
-
-      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id, ctg.tag_group_id AS category_tag_group_id
-      FROM tags t
-      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
-      INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
-    )
-  SQL
-
-  PERMITTED_TAGS_SQL = <<~SQL
-    permitted_tag_groups AS (
-      SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
-      FROM tags t
-      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
-      INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
-      INNER JOIN tag_group_permissions tgp
-      ON tg.id = tgp.tag_group_id /*and_group_ids*/
-      AND tgp.permission_type = #{TagGroupPermission.permission_types[:full]}
-    )
-  SQL
-
-  # Options:
-  #   term: a search term to filter tags by name
-  #   term_type: whether to search by "starts_with" or "contains" with the term
-  #   limit: max number of results
-  #   category: a Category to which the object being tagged belongs
-  #   for_input: result is for an input field, so only show permitted tags
-  #   for_topic: results are for tagging a topic
-  #   selected_tags: an array of tag names that are in the current selection (legacy)
-  #   selected_tag_ids: an array of tag ids that are in the current selection
-  #   only_tag_names: limit results to tags with these names
-  #   exclude_synonyms: exclude synonyms from results
-  #   order_search_results: result should be ordered for name search results
-  #   order_popularity: order result by topic_count
-  #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
-  #   excluded_tag_names: an array of tag names not to include in the results
-  class << self
     def filter_allowed_tags(guardian, opts = {})
       selected_tag_ids =
         if opts[:selected_tag_ids].present?
@@ -1070,4 +1018,57 @@ module DiscourseTagging
       TagUser.lookup(user, :muted).joins(:tag).pluck("tags.name")
     end
   end
+
+  TAG_GROUP_RESTRICTIONS_SQL = <<~SQL
+    tag_group_restrictions AS (
+      SELECT t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
+        tg.one_per_topic as one_per_topic
+      FROM tags t
+      LEFT OUTER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      LEFT OUTER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
+    )
+  SQL
+
+  CATEGORY_RESTRICTIONS_SQL = <<~SQL
+    category_restrictions AS (
+      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id, NULL AS category_tag_group_id
+      FROM tags t
+      INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
+
+      UNION
+
+      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id, ctg.tag_group_id AS category_tag_group_id
+      FROM tags t
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
+    )
+  SQL
+
+  PERMITTED_TAGS_SQL = <<~SQL
+    permitted_tag_groups AS (
+      SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
+      FROM tags t
+      INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
+      INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
+      INNER JOIN tag_group_permissions tgp
+      ON tg.id = tgp.tag_group_id /*and_group_ids*/
+      AND tgp.permission_type = #{TagGroupPermission.permission_types[:full]}
+    )
+  SQL
+
+  # Options:
+  #   term: a search term to filter tags by name
+  #   term_type: whether to search by "starts_with" or "contains" with the term
+  #   limit: max number of results
+  #   category: a Category to which the object being tagged belongs
+  #   for_input: result is for an input field, so only show permitted tags
+  #   for_topic: results are for tagging a topic
+  #   selected_tags: an array of tag names that are in the current selection (legacy)
+  #   selected_tag_ids: an array of tag ids that are in the current selection
+  #   only_tag_names: limit results to tags with these names
+  #   exclude_synonyms: exclude synonyms from results
+  #   order_search_results: result should be ordered for name search results
+  #   order_popularity: order result by topic_count
+  #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
+  #   excluded_tag_names: an array of tag names not to include in the results
 end

@@ -29,6 +29,10 @@ module DiscourseWorkflows
           parameters_for(node).fetch("page_type") { "page" } == COMPLETION_PAGE_TYPE
       end
 
+      def parameters_for(node)
+        NodeData.parameters(node).deep_stringify_keys
+      end
+
       def completion_payload(config)
         {
           "on_submission" => config.fetch("on_submission") { DEFAULT_ON_SUBMISSION },
@@ -38,23 +42,18 @@ module DiscourseWorkflows
           "completion_text" => sanitize_html(config["completion_text"]),
         }
       end
-    end
-    private_class_method :completion_payload
 
-    class << self
+      private :completion_payload
+
       def sanitize_html(value)
         return if value.nil?
 
         DiscourseWorkflows::Forms::Schema.sanitize_html(value)
       end
-    end
-    private_class_method :sanitize_html
 
-    class << self
-      def parameters_for(node)
-        NodeData.parameters(node).deep_stringify_keys
-      end
+      private :sanitize_html
     end
+
     private_class_method :parameters_for
   end
 end

@@ -2,6 +2,7 @@
 
 class LocaleSiteSetting < EnumSiteSetting
   FALLBACKS = { en_GB: :en }
+
   class << self
     def translate_names?
       true
@@ -18,11 +19,9 @@ class LocaleSiteSetting < EnumSiteSetting
         { native_name:, value: locale, name: "languages.#{locale}.name" }
       end
     end
-  end
 
-  @lock = Mutex.new
+    public
 
-  class << self
     def language_names
       return @language_names if @language_names
 
@@ -60,9 +59,7 @@ class LocaleSiteSetting < EnumSiteSetting
     def reset!
       @lock.synchronize { @values = @language_names = @supported_locales = nil }
     end
-  end
 
-  class << self
     def fallback_locale(locale)
       fallback_locale = FALLBACKS[locale.to_sym]
       return fallback_locale if fallback_locale
@@ -71,4 +68,6 @@ class LocaleSiteSetting < EnumSiteSetting
       plugin_locale ? plugin_locale[:fallbackLocale]&.to_sym : nil
     end
   end
+
+  @lock = Mutex.new
 end

@@ -116,11 +116,9 @@ class FinalDestination
       def disallow_ip_lookups_in_test!
         @allow_ip_lookups_in_test = false
       end
-    end
 
-    private
+      public
 
-    class << self
       def ip_in_ranges?(ip, ranges)
         ranges.any? { |r| r === ip }
       end
@@ -133,5 +131,7 @@ class FinalDestination
         end
       end
     end
+
+    private
   end
 end

@@ -18,6 +18,7 @@ class FinalDestination
 
   DEFAULT_USER_AGENT =
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
   class << self
     def clear_https_cache!(domain)
       key = redis_https_key(domain)
@@ -37,11 +38,9 @@ class FinalDestination
     def redis_https_key(domain)
       "HTTPS_DOMAIN_#{domain}"
     end
-  end
 
-  attr_reader :status, :cookie, :status_code, :content_type, :ignored
+    public
 
-  class << self
     def connection_timeout
       20
     end
@@ -50,6 +49,9 @@ class FinalDestination
       new(url, opts).resolve
     end
   end
+
+  attr_reader :status, :cookie, :status_code, :content_type, :ignored
+
   def initialize(url, opts = nil)
     @url = url
     @uri = uri(normalized_url) if @url

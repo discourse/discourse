@@ -59,14 +59,12 @@ module Chat
           slug: id.to_s.downcase,
         )
       end
-    end
-    class << self
+
       def ensure_consistency!
         update_message_counts
         update_user_counts
       end
-    end
-    class << self
+
       def update_message_counts
         # NOTE: Chat::Channel#messages_count is not updated every time
         # a message is created or deleted in a channel, so it should not
@@ -114,6 +112,7 @@ module Chat
           .find_each { |channel| ::Chat::Publisher.publish_chat_channel_metadata(channel) }
       end
     end
+
     def last_message
       super || NullMessage.new
     end

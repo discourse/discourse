@@ -7,12 +7,12 @@ class BookmarkManager
     def bookmark_metadata(bookmark, user)
       bookmark.registered_bookmarkable.bookmark_metadata(bookmark, user)
     end
-  end
-  class << self
+
     def send_reminder_notification(id)
       BookmarkReminderNotificationHandler.new(Bookmark.find_by(id: id)).send_notification
     end
   end
+
   def initialize(user)
     @user = user
     @guardian = Guardian.new(user)

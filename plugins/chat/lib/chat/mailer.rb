@@ -24,11 +24,9 @@ module Chat
             end
           end
       end
-    end
 
-    private
+      public
 
-    class << self
       def users_with_unreads
         groups_join_sql =
           if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
@@ -111,5 +109,7 @@ module Chat
       SQL
       end
     end
+
+    private
   end
 end

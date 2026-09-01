@@ -62,6 +62,26 @@ module DiscourseChatIntegration
           SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
         end
       end
+
+      public
+
+      def mount_engines
+        engines = []
+        DiscourseChatIntegration::Provider.providers.each do |provider|
+          engine =
+            provider
+              .constants
+              .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
+              .map(&provider.method(:const_get))
+              .first
+
+          engines.push(engine: engine, name: provider::PROVIDER_NAME) if engine
+        end
+
+        DiscourseChatIntegration::Provider::HookEngine.routes.draw do
+          engines.each { |engine| mount engine[:engine], at: engine[:name] }
+        end
+      end
     end
 
     class HookEngine < ::Rails::Engine
@@ -93,25 +113,6 @@ module DiscourseChatIntegration
     end
 
     # Automatically mount each provider's engine inside the HookEngine
-    class << self
-      def mount_engines
-        engines = []
-        DiscourseChatIntegration::Provider.providers.each do |provider|
-          engine =
-            provider
-              .constants
-              .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
-              .map(&provider.method(:const_get))
-              .first
-
-          engines.push(engine: engine, name: provider::PROVIDER_NAME) if engine
-        end
-
-        DiscourseChatIntegration::Provider::HookEngine.routes.draw do
-          engines.each { |engine| mount engine[:engine], at: engine[:name] }
-        end
-      end
-    end
   end
 end
 

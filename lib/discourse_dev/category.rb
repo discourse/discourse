@@ -11,6 +11,7 @@ module DiscourseDev
         super(::Category)
       end
     end
+
     def initialize
       super(::Category, DiscourseDev.config.category[:count])
       @parent_category_ids = ::Category.where(parent_category_id: nil).pluck(:id)

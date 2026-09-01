@@ -17,31 +17,28 @@ module Migrations
           puts e.backtrace.join("\n")
           exit(1)
         end
+
+        private
+
+        def handle_unknown_class_names_error(error)
+          all_suggestions_found = true
+
+          error.missing_names.each do |missing_name|
+            suggestions =
+              DidYouMean::SpellChecker.new(dictionary: error.available_names).correct(missing_name)
+            puts "Unknown step '#{missing_name}'".red
+            if suggestions.any?
+              puts "Did you mean: #{suggestions.join(", ")}".yellow
+            else
+              all_suggestions_found = false
+            end
+          end
+
+          if !all_suggestions_found
+            puts "Available steps are: ".yellow + error.available_names.join(", ")
+          end
+        end
       end
-
-      private_class_method class << self
-                             def handle_unknown_class_names_error(error)
-                               all_suggestions_found = true
-
-                               error.missing_names.each do |missing_name|
-                                 suggestions =
-                                   DidYouMean::SpellChecker.new(
-                                     dictionary: error.available_names,
-                                   ).correct(missing_name)
-                                 puts "Unknown step '#{missing_name}'".red
-                                 if suggestions.any?
-                                   puts "Did you mean: #{suggestions.join(", ")}".yellow
-                                 else
-                                   all_suggestions_found = false
-                                 end
-                               end
-
-                               if !all_suggestions_found
-                                 puts "Available steps are: ".yellow +
-                                        error.available_names.join(", ")
-                               end
-                             end
-                           end
     end
   end
 end

@@ -25,15 +25,16 @@ module DiscourseWorkflows
 
         new(token:, payload: payload.deep_stringify_keys)
       end
-    end
 
-    attr_reader :token, :workflow_id, :user_id, :trigger_node_id, :workflow_snapshot
+      public
 
-    class << self
       def cache_key(token)
         "#{CACHE_PREFIX}:#{token}"
       end
     end
+
+    attr_reader :token, :workflow_id, :user_id, :trigger_node_id, :workflow_snapshot
+
     def initialize(token:, payload:)
       @token = token
       @workflow_id = payload["workflow_id"].to_i

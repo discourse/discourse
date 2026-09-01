@@ -41,6 +41,7 @@ class NestedTopicsController < ApplicationController
   after_action :allow_embed_mode, only: %i[show context]
 
   TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
+
   # Screen-tracking only advances last_read for posts the viewport renders,
   # so collapsed/hidden replies leave a nested topic stuck unread in the
   # sidebar. Treat the visit itself as catching up.
@@ -65,6 +66,7 @@ class NestedTopicsController < ApplicationController
       end
     end
   end
+
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: redirects browser requests to the canonical topic route.
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id

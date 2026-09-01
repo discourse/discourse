@@ -11,8 +11,7 @@ class TopicsFilter
     def custom_status_filters
       @custom_status_filters ||= {}
     end
-  end
-  class << self
+
     def option_info(guardian)
       results = [
         {
@@ -251,6 +250,7 @@ class TopicsFilter
       DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
     end
   end
+
   def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
     @loaded_topic_users_reference = loaded_topic_users_reference
     @guardian = guardian || Guardian.new

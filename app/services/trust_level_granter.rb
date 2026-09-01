@@ -6,6 +6,7 @@ class TrustLevelGranter
       TrustLevelGranter.new(trust_level, user).grant
     end
   end
+
   def initialize(trust_level, user)
     @trust_level, @user = trust_level, user
   end

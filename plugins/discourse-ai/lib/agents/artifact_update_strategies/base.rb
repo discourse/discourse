@@ -4,6 +4,7 @@ module DiscourseAi
     module ArtifactUpdateStrategies
       class InvalidFormatError < StandardError
       end
+
       class Base
         attr_reader :post,
                     :user,

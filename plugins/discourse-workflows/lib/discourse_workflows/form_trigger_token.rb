@@ -65,6 +65,7 @@ module DiscourseWorkflows
           )
       end
     end
+
     private_class_method :encryptor
   end
 end

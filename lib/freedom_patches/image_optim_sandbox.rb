@@ -8,19 +8,21 @@ require "tmpdir"
 # them to the file being optimized with no network. Cmd.capture (version/CPU
 # probes, no untrusted input) is intentionally not patched.
 class ImageOptim
-  ImageOptim::Path.prepend(DiscourseScratchDestination)
-  # Per-thread tmp directory, so that we don't have to grant access to the global tmpdir
-  class << self
-    def discourse_tmp_root
-      Thread.current[:discourse_image_optim_tmp_root] ||= Dir.mktmpdir("discourse-image-optim-")
-    end
-  end
-
   module DiscourseScratchDestination
     def temp_path(*args, &block)
       return super if args.any?
 
       super(ImageOptim.discourse_tmp_root, &block)
+    end
+  end
+
+  # DiscourseScratchDestination must be defined before it can be prepended.
+  ImageOptim::Path.prepend(DiscourseScratchDestination)
+
+  # Per-thread tmp directory, so that we don't have to grant access to the global tmpdir
+  class << self
+    def discourse_tmp_root
+      Thread.current[:discourse_image_optim_tmp_root] ||= Dir.mktmpdir("discourse-image-optim-")
     end
   end
 

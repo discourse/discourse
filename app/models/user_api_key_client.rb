@@ -15,6 +15,7 @@ class UserApiKeyClient < ActiveRecord::Base
         .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
     end
   end
+
   def allowed_scopes
     Set.new(scopes.map(&:name))
   end

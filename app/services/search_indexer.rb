@@ -383,6 +383,7 @@ class SearchIndexer
       raw_data
     end
   end
+
   private_class_method :clean_post_raw_data!
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
@@ -390,6 +391,7 @@ class SearchIndexer
 
     MENTION_CLASSES = %w[mention mention-group]
     ATTRIBUTES = %w[alt title href data-video-title]
+
     class << self
       def scrub(html)
         return +"" if html.blank?
@@ -435,6 +437,7 @@ class SearchIndexer
         html_scrubber.scrubbed.squish
       end
     end
+
     def initialize
       @scrubbed = +""
     end

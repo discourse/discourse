@@ -45,8 +45,7 @@ module DiscourseWorkflows
           )
         new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
       end
-    end
-    class << self
+
       def build_resume_snapshot!(execution)
         unless execution.running?
           raise ArgumentError,
@@ -68,6 +67,7 @@ module DiscourseWorkflows
         snapshot
       end
     end
+
     def initialize(workflow, trigger_node_id, trigger_data, options = ExecutionOptions.new)
       @workflow = workflow
       @trigger_node_id = trigger_node_id.to_s

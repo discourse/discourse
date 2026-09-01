@@ -21,11 +21,9 @@ class WebCrawlerRequest < ActiveRecord::Base
         ["count = count + ?", count],
       )
     end
-  end
 
-  protected
+    public
 
-  class << self
     def request_id(date:, user_agent:, retries: 0)
       id = where(date: date, user_agent: user_agent).pick(:id)
       id ||= create!({ date: date, user_agent: user_agent }.merge(count: 0)).id
@@ -37,6 +35,8 @@ class WebCrawlerRequest < ActiveRecord::Base
       end
     end
   end
+
+  protected
 end
 
 # == Schema Information

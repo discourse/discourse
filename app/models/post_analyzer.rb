@@ -8,6 +8,7 @@ class PostAnalyzer
       @parser.parse(uri)
     end
   end
+
   def initialize(raw, topic_id)
     @raw = raw
     @topic_id = topic_id

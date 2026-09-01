@@ -38,9 +38,7 @@ module DiscourseDataExplorer
       def is_default_query?(id)
         id.to_i < 0
       end
-    end
 
-    class << self
       def find(id)
         return super unless is_default_query?(id)
         QueryFinder.find(id)
@@ -65,6 +63,7 @@ module DiscourseDataExplorer
         end
       end
     end
+
     def params
       @params ||= Parameter.create_from_sql(sql)
     end

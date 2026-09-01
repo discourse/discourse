@@ -28,9 +28,7 @@ class ScreenedIpAddress < ActiveRecord::Base
       match_for_ip_address(ip_address) ||
         create(opts.slice(:action_type).merge(ip_address: ip_address))
     end
-  end
 
-  class << self
     def match_for_ip_address(ip_address)
       # The <<= operator on inet columns means "is contained within or equal to".
       #
@@ -122,6 +120,7 @@ class ScreenedIpAddress < ActiveRecord::Base
       end
     end
   end
+
   def check_for_match
     if errors[:ip_address].blank?
       matched = self.class.match_for_ip_address(ip_address)

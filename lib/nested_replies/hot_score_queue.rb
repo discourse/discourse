@@ -124,6 +124,7 @@ module NestedReplies
         Discourse.redis.namespace_key(key)
       end
     end
+
     private_class_method :redis_key
   end
 end

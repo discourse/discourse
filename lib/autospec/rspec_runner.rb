@@ -4,17 +4,17 @@ module Autospec
   class RspecRunner < BaseRunner
     WATCHERS = {}
     RELOADERS = Set.new
+
     class << self
       def watch(pattern, &blk)
         WATCHERS[pattern] = blk
       end
-    end
 
-    class << self
       def reload(pattern)
         RELOADERS << pattern
       end
     end
+
     def watchers
       WATCHERS
     end

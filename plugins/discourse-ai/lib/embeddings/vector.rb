@@ -4,6 +4,7 @@ module DiscourseAi
   module Embeddings
     class Vector
       MAX_CONCURRENT_EMBEDDINGS = 40
+
       class << self
         def instance
           vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)

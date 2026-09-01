@@ -29,8 +29,7 @@ class Permalink < ActiveRecord::Base
     def find_by_url(url)
       find_by(url: normalize_url(url))
     end
-  end
-  class << self
+
     def filter_by(url = nil)
       permalinks =
         Permalink.includes(:topic, :post, :category, :tag, :user).order(
@@ -44,6 +43,7 @@ class Permalink < ActiveRecord::Base
       permalinks.to_a
     end
   end
+
   def internal?
     external_url.blank?
   end

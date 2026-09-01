@@ -77,8 +77,7 @@ class Emoji
       match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
       [match[1], match[2]&.to_i]
     end
-  end
-  class << self
+
     def custom?(name)
       name, _ = normalize_name(name)
       Emoji.custom.detect { |e| e.name == name }.present?
@@ -114,8 +113,7 @@ class Emoji
 
       found_emoji
     end
-  end
-  class << self
+
     def create_from_db_item(emoji)
       name = emoji["name"]
       return unless group = groups[name]
@@ -239,8 +237,7 @@ class Emoji
       return nil unless File.exist?(file)
       Emoji.parse_emoji_file(file)
     end
-  end
-  class << self
+
     def load_standard
       emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
     end
@@ -434,8 +431,7 @@ class Emoji
 
       "<img src=\"#{escaped_url}\" title=\"#{escaped_code}\" class=\"emoji\" alt=\"#{escaped_code}\" loading=\"lazy\" width=\"20\" height=\"20\">"
     end
-  end
-  class << self
+
     def sanitize_emoji_name(name)
       name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
     end
@@ -444,6 +440,7 @@ class Emoji
       File.open(file, "r:UTF-8") { |f| JSON.parse(f.read) }
     end
   end
+
   # The cached `url` is the raw upload/asset URL. CDN conversion is applied
   # lazily here (and in EmojiSerializer) so that changing the S3/asset CDN
   # settings takes effect without having to rebuild the emoji cache.

@@ -67,8 +67,7 @@ class Upload < ActiveRecord::Base
         "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
       ).where("ur.upload_id IS NULL")
     end
-  end
-  class << self
+
     def consider_for_reuse(upload, post)
       return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
       if !upload.matching_access_control_post?(post) ||
@@ -116,8 +115,7 @@ class Upload < ActiveRecord::Base
     def base62_sha1(sha1)
       Base62.encode(sha1.hex)
     end
-  end
-  class << self
+
     def sha1_from_short_path(path)
       sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
     end
@@ -144,8 +142,7 @@ class Upload < ActiveRecord::Base
     def generate_digest(path)
       Digest::SHA1.file(path).hexdigest
     end
-  end
-  class << self
+
     def migrate_to_new_scheme(limit: nil)
       problems = []
 
@@ -287,10 +284,12 @@ class Upload < ActiveRecord::Base
         .each { |upload| upload.calculate_dominant_color! }
     end
   end
+
   def initialize(*args)
     super
     self.validate_file_size = true
   end
+
   # when we access this post we don't care if the post
   # is deleted
   def access_control_post

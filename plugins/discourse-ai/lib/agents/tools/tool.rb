@@ -64,13 +64,9 @@ module DiscourseAi
               DiscourseAi::Agents::Tools::Custom.class_instance(tool_id)
             end
           end
-        end
 
-        # llm being public makes it a bit easier to test
-        attr_accessor :custom_raw, :parameters, :llm, :provider_data
-        attr_reader :tool_call_id, :agent_options, :bot_user, :context, :agent
+          public
 
-        class << self
           def send_http_request(url, headers: {}, follow_redirects: false, method: :get, body: nil)
             raise "Expecting caller to use a block" if !block_given?
 
@@ -140,6 +136,11 @@ module DiscourseAi
             end
           end
         end
+
+        # llm being public makes it a bit easier to test
+        attr_accessor :custom_raw, :parameters, :llm, :provider_data
+        attr_reader :tool_call_id, :agent_options, :bot_user, :context, :agent
+
         def initialize(
           parameters,
           tool_call_id: "",

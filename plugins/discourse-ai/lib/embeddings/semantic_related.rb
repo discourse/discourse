@@ -10,9 +10,7 @@ module DiscourseAi
           Discourse.cache.delete("semantic-suggested-topic-#{topic.id}")
           Discourse.redis.del("build-semantic-suggested-topic-#{topic.id}")
         end
-      end
 
-      class << self
         def related_topics_for_crawler(controller)
           return "" if !controller.instance_of? TopicsController
           return "" if !SiteSetting.ai_embeddings_semantic_related_topics_enabled
@@ -43,6 +41,7 @@ module DiscourseAi
             .each { |key| Discourse.cache.delete(key.split(":").last) }
         end
       end
+
       def related_topic_ids_for(topic)
         return [] if SiteSetting.ai_embeddings_semantic_related_topics < 1
         return [] if !DiscourseAi::Embeddings.enabled? # fail-safe in case something end up in a broken state.

@@ -42,6 +42,117 @@ module Jobs
     def num_email_retry_jobs
       Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
     end
+
+    public
+
+    def enqueue(job, opts = {})
+      if job.instance_of?(Class)
+        klass = job
+      else
+        klass = "::Jobs::#{job.to_s.camelcase}".constantize
+      end
+
+      # Unless we want to work on all sites
+      unless opts.delete(:all_sites)
+        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+      end
+
+      delay = opts.delete(:delay_for)
+      queue = opts.delete(:queue)
+
+      # Only string keys are allowed in JSON. We call `.with_indifferent_access`
+      # in Jobs::Base#perform, so this is invisible to developers
+      opts = opts.deep_stringify_keys
+
+      # Simulate the args being dumped/parsed through JSON
+      parsed_opts = JSON.parse(JSON.dump(opts))
+      if opts != parsed_opts
+        Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
+        #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
+        This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
+        Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
+      TEXT
+      end
+      opts = parsed_opts
+
+      if ::Jobs.run_later?
+        hash = { "class" => klass, "args" => [opts] }
+
+        if delay
+          hash["at"] = Time.now.to_f + delay.to_f if delay.to_f > 0
+        end
+
+        hash["queue"] = queue if queue
+
+        DB.after_commit { klass.client_push(hash) }
+      else
+        if Rails.env.development?
+          Scheduler::Defer.later("job") { klass.new.perform(opts) }
+        else
+          # Run the job synchronously
+          # But never run a job inside another job
+          # That could cause deadlocks during test runs
+          queue = Thread.current[:discourse_nested_job_queue]
+          outermost_job = !queue
+
+          if outermost_job
+            queue = Queue.new
+            Thread.current[:discourse_nested_job_queue] = queue
+          end
+
+          queue.push([klass, opts])
+
+          if outermost_job
+            # responsible for executing the queue
+            begin
+              until queue.empty?
+                queued_klass, queued_opts = queue.pop(true)
+                queued_klass.new.perform_immediately(queued_opts)
+              end
+            ensure
+              Thread.current[:discourse_nested_job_queue] = nil
+            end
+          end
+        end
+      end
+    end
+
+    def enqueue_in(secs, job_name, opts = {})
+      enqueue(job_name, opts.merge!(delay_for: secs))
+    end
+
+    def enqueue_at(datetime, job_name, opts = {})
+      secs = [datetime.to_f - Time.zone.now.to_f, 0].max
+      enqueue_in(secs, job_name, opts)
+    end
+
+    def cancel_scheduled_job(job_name, opts = {})
+      scheduled_for(job_name, opts).each(&:delete)
+    end
+
+    def scheduled_for(job_name, opts = {})
+      opts = opts.with_indifferent_access
+      unless opts.delete(:all_sites)
+        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+      end
+
+      job_class = "Jobs::#{job_name.to_s.camelcase}"
+      Sidekiq::ScheduledSet.new.select do |scheduled_job|
+        if scheduled_job.klass.to_s == job_class
+          matched = true
+          job_params = scheduled_job.args[0].with_indifferent_access
+          opts.each do |key, value|
+            if job_params[key] != value
+              matched = false
+              break
+            end
+          end
+          matched
+        else
+          false
+        end
+      end
+    end
   end
 
   class Base
@@ -76,8 +187,7 @@ module Jobs
               Logger.new(log_path)
             end
         end
-      end
-      class << self
+
         def mutex
           @@mutex ||= Mutex.new
         end
@@ -102,6 +212,7 @@ module Jobs
             end
         end
       end
+
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
 
@@ -190,14 +301,11 @@ module Jobs
       def get_cluster_concurrency
         @cluster_concurrency
       end
-    end
 
-    class << self
       def delayed_perform(opts = {})
         new.perform(opts)
       end
-    end
-    class << self
+
       def cluster_concurrency_redis_key
         "cluster_concurrency:#{self}"
       end
@@ -210,6 +318,7 @@ module Jobs
         !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
       end
     end
+
     def log(*args)
       args.each do |arg|
         Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [#{self.class.name.upcase}] #{arg}"
@@ -383,117 +492,6 @@ module Jobs
 
     def perform(*args)
       super if self.class.perform_when_readonly? || !Discourse.readonly_mode?
-    end
-  end
-
-  class << self
-    def enqueue(job, opts = {})
-      if job.instance_of?(Class)
-        klass = job
-      else
-        klass = "::Jobs::#{job.to_s.camelcase}".constantize
-      end
-
-      # Unless we want to work on all sites
-      unless opts.delete(:all_sites)
-        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
-      end
-
-      delay = opts.delete(:delay_for)
-      queue = opts.delete(:queue)
-
-      # Only string keys are allowed in JSON. We call `.with_indifferent_access`
-      # in Jobs::Base#perform, so this is invisible to developers
-      opts = opts.deep_stringify_keys
-
-      # Simulate the args being dumped/parsed through JSON
-      parsed_opts = JSON.parse(JSON.dump(opts))
-      if opts != parsed_opts
-        Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
-        #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
-        This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
-        Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
-      TEXT
-      end
-      opts = parsed_opts
-
-      if ::Jobs.run_later?
-        hash = { "class" => klass, "args" => [opts] }
-
-        if delay
-          hash["at"] = Time.now.to_f + delay.to_f if delay.to_f > 0
-        end
-
-        hash["queue"] = queue if queue
-
-        DB.after_commit { klass.client_push(hash) }
-      else
-        if Rails.env.development?
-          Scheduler::Defer.later("job") { klass.new.perform(opts) }
-        else
-          # Run the job synchronously
-          # But never run a job inside another job
-          # That could cause deadlocks during test runs
-          queue = Thread.current[:discourse_nested_job_queue]
-          outermost_job = !queue
-
-          if outermost_job
-            queue = Queue.new
-            Thread.current[:discourse_nested_job_queue] = queue
-          end
-
-          queue.push([klass, opts])
-
-          if outermost_job
-            # responsible for executing the queue
-            begin
-              until queue.empty?
-                queued_klass, queued_opts = queue.pop(true)
-                queued_klass.new.perform_immediately(queued_opts)
-              end
-            ensure
-              Thread.current[:discourse_nested_job_queue] = nil
-            end
-          end
-        end
-      end
-    end
-
-    def enqueue_in(secs, job_name, opts = {})
-      enqueue(job_name, opts.merge!(delay_for: secs))
-    end
-
-    def enqueue_at(datetime, job_name, opts = {})
-      secs = [datetime.to_f - Time.zone.now.to_f, 0].max
-      enqueue_in(secs, job_name, opts)
-    end
-
-    def cancel_scheduled_job(job_name, opts = {})
-      scheduled_for(job_name, opts).each(&:delete)
-    end
-
-    def scheduled_for(job_name, opts = {})
-      opts = opts.with_indifferent_access
-      unless opts.delete(:all_sites)
-        opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
-      end
-
-      job_class = "Jobs::#{job_name.to_s.camelcase}"
-      Sidekiq::ScheduledSet.new.select do |scheduled_job|
-        if scheduled_job.klass.to_s == job_class
-          matched = true
-          job_params = scheduled_job.args[0].with_indifferent_access
-          opts.each do |key, value|
-            if job_params[key] != value
-              matched = false
-              break
-            end
-          end
-          matched
-        else
-          false
-        end
-      end
     end
   end
 end

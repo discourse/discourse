@@ -18,6 +18,18 @@ module DiscourseZendeskPlugin
       def configured?
         oauth_configured? || api_token_configured?
       end
+
+      public
+
+      def autogeneration_category?(category_id)
+        return false if category_id.blank?
+
+        if SiteSetting.zendesk_autogenerate_all_categories?
+          true
+        else
+          SiteSetting.zendesk_autogenerate_categories.split("|").include?(category_id.to_s)
+        end
+      end
     end
 
     def zendesk_client
@@ -46,18 +58,6 @@ module DiscourseZendeskPlugin
       end
 
       client
-    end
-
-    class << self
-      def autogeneration_category?(category_id)
-        return false if category_id.blank?
-
-        if SiteSetting.zendesk_autogenerate_all_categories?
-          true
-        else
-          SiteSetting.zendesk_autogenerate_categories.split("|").include?(category_id.to_s)
-        end
-      end
     end
 
     def create_ticket(post)

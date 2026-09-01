@@ -36,6 +36,7 @@ class Search
     OMISSION = "..."
     SCRUB_HEADLINE_REGEXP =
       %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
+
     class << self
       def blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
         blurb = nil
@@ -66,6 +67,7 @@ class Search
         Sanitize.clean(blurb)
       end
     end
+
     def initialize(
       type_filter:,
       term:,

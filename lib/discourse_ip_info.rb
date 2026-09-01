@@ -73,8 +73,7 @@ class DiscourseIpInfo
       FileUtils.rm_r(dir, force: true) if dir
       gz_file&.close!
     end
-  end
-  class << self
+
     def open_db(path)
       instance.open_db(path)
     end
@@ -83,6 +82,7 @@ class DiscourseIpInfo
       instance.get(ip, locale: locale, resolve_hostname: resolve_hostname)
     end
   end
+
   def initialize
     open_db(DiscourseIpInfo.path)
   end

@@ -13,13 +13,9 @@ class HashtagAutocompleteService
     def search_conditions
       @search_conditions ||= Enum.new(contains: 0, starts_with: 1)
     end
-  end
 
-  attr_reader :guardian
+    public
 
-  # NOTE: This is not meant to be called directly; use `enabled_data_sources`
-  # or the individual data_source_X methods instead.
-  class << self
     def data_sources
       # Category and Tag data sources are in core and always should be
       # included for searches and lookups.
@@ -70,6 +66,11 @@ class HashtagAutocompleteService
       Hash[unique_contexts.map { |context| [context, ordered_types_for_context(context)] }]
     end
   end
+
+  attr_reader :guardian
+
+  # NOTE: This is not meant to be called directly; use `enabled_data_sources`
+  # or the individual data_source_X methods instead.
 
   class HashtagItem
     # The text to display in the UI autocomplete menu for the item.

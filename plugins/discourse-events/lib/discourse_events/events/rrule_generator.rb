@@ -64,11 +64,9 @@ module DiscourseEvents
             rrule_line
           end
         end
-      end
 
-      private
+        public
 
-      class << self
         def stringify(rrule)
           rrule.map { |k, v| "#{k}=#{v}" }.join(";")
         end
@@ -88,6 +86,8 @@ module DiscourseEvents
           rrule
         end
       end
+
+      private
     end
   end
 end

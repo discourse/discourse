@@ -39,9 +39,7 @@ module DiscourseAi
             message: attributes[:message],
           )
         end
-      end
 
-      class << self
         private
 
         def provider_attributes(provider, body)
@@ -85,6 +83,7 @@ module DiscourseAi
           seconds&.clamp(0, 300)
         end
       end
+
       def initialize(
         provider:,
         category:,

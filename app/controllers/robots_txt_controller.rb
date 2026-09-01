@@ -63,6 +63,7 @@ class RobotsTxtController < ApplicationController
       result
     end
   end
+
   def index
     if (overridden = SiteSetting.overridden_robots_txt.dup).present?
       overridden.prepend(OVERRIDDEN_HEADER) if guardian.is_admin? && !is_api?

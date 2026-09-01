@@ -53,6 +53,7 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
       new(nil, param_encoder: ParamEncoder.new)
     end
   end
+
   def transaction_open?
     ActiveRecord::Base.connection.transaction_open?
   end

@@ -19,6 +19,7 @@ class AdminDashboardData
       "dashboard-data-#{Report::SCHEMA_VERSION}"
     end
   end
+
   def initialize(opts = {})
     @opts = opts
   end

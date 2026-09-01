@@ -39,6 +39,13 @@ module AdminDashboard
             Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
         end
 
+        def fetch_item(item, guardian:, filters:)
+          provider = AdminDashboard::Reports::Registry.provider_for(item[:source])
+          return nil if provider.nil?
+
+          provider.fetch_many([item[:identifier]], guardian:, filters:)[item[:identifier]]
+        end
+
         def fetch_in_parallel(items, guardian:, filters:)
           return [] if items.empty?
 
@@ -69,24 +76,16 @@ module AdminDashboard
           end
           results
         end
-      end
-      private_class_method :fetch_in_parallel
 
-      class << self
+        private :fetch_in_parallel
+
         def item_key(item)
           "#{item[:source]}:#{item[:identifier]}"
         end
-      end
-      private_class_method :item_key
 
-      class << self
-        def fetch_item(item, guardian:, filters:)
-          provider = AdminDashboard::Reports::Registry.provider_for(item[:source])
-          return nil if provider.nil?
-
-          provider.fetch_many([item[:identifier]], guardian:, filters:)[item[:identifier]]
-        end
+        private :item_key
       end
+
       private_class_method :fetch_item
     end
   end

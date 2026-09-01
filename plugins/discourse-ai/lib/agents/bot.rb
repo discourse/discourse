@@ -104,9 +104,7 @@ module DiscourseAi
         def as(bot_user, agent: DiscourseAi::Agents::General.new, model: nil)
           new(bot_user, agent, model)
         end
-      end
 
-      class << self
         def guess_model(bot_user)
           associated_llm = LlmModel.find_by(user_id: bot_user.id)
 
@@ -115,6 +113,7 @@ module DiscourseAi
           associated_llm
         end
       end
+
       def initialize(bot_user, agent, model = nil)
         @bot_user = bot_user
         @agent = agent

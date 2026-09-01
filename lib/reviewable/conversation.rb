@@ -19,6 +19,7 @@ class Reviewable < ActiveRecord::Base
           fragment.to_html.strip
         end
       end
+
       def initialize(post)
         @user = post.user
         @id = post.id

@@ -19,11 +19,9 @@ module DiscourseEvents
         def clear!(user)
           user.clear_status! if user&.user_status && is_holiday_status?(user.user_status)
         end
-      end
 
-      private
+        public
 
-      class << self
         def is_holiday_status?(status)
           status.emoji == emoji_name &&
             status.description == I18n.t("discourse_events.holiday_status.description")
@@ -33,6 +31,8 @@ module DiscourseEvents
           SiteSetting.holiday_status_emoji.presence || "date"
         end
       end
+
+      private
     end
   end
 end

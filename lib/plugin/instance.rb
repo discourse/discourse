@@ -90,17 +90,18 @@ class Plugin::Instance
       metadata = Plugin::Metadata.parse(source)
       new(metadata, path)
     end
-  end
-  class << self
+
     def js_path
       File.expand_path "#{Rails.root.join("app/assets/generated")}"
     end
   end
+
   def initialize(metadata = nil, path = nil)
     @metadata = metadata
     @path = path
     @idx = 0
   end
+
   def root_dir
     return if Rails.env.production?
     File.dirname(path)

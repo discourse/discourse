@@ -318,6 +318,7 @@ module NestedReplies
           end
       end
     end
+
     private_class_method :refresh_sql
   end
 end

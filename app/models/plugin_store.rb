@@ -64,6 +64,7 @@ class PluginStore
       end
     end
   end
+
   def initialize(plugin_name)
     @plugin_name = plugin_name
   end

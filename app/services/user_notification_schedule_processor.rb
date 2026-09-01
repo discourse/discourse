@@ -9,6 +9,7 @@ class UserNotificationScheduleProcessor
       processor.create_do_not_disturb_timings
     end
   end
+
   def initialize(schedule)
     @schedule = schedule
     @user = schedule.user

@@ -9,12 +9,12 @@ class PostActionDestroyer
     def destroy(destroyed_by, post, action_key, opts = {})
       new(destroyed_by, post, PostActionType.types[action_key], opts).perform
     end
-  end
-  class << self
+
     def notify_types
       @notify_types ||= PostActionType.notify_flag_types.keys
     end
   end
+
   def initialize(destroyed_by, post, post_action_type_id, opts = {})
     @destroyed_by, @post, @post_action_type_id, @opts =
       destroyed_by,

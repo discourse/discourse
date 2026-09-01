@@ -14,6 +14,7 @@ class ProblemCheck::Problem
       new(h[:message], priority: h[:priority], identifier: h[:identifier], target: h[:target])
     end
   end
+
   def initialize(message, priority: "low", identifier: nil, target: nil, details: {})
     @message = message
     @priority = PRIORITIES.include?(priority) ? priority : "low"

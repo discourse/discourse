@@ -53,6 +53,7 @@ class PresenceChannel
         new(**data.slice(:public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout))
       end
     end
+
     def initialize(
       public: false,
       allowed_user_ids: nil,
@@ -118,6 +119,7 @@ class PresenceChannel
   LUA
 
   LUA_SCRIPTS = {}
+
   # Designed to be run periodically. Checks the channel list for channels with expired members,
   # and runs auto_leave for each eligible channel
   class << self
@@ -190,14 +192,14 @@ class PresenceChannel
       raise "Only allowed in test environment" if !Rails.env.test?
       @@configuration_blocks&.delete(prefix)
     end
-  end
-  # This list contains all active presence channels, ranked with the expiration timestamp of their least-recently-seen  client_id
-  # We periodically check the 'lowest ranked' items in this list based on the `timeout` of the channel
-  class << self
+
+    # This list contains all active presence channels, ranked with the expiration timestamp of their least-recently-seen  client_id
+    # We periodically check the 'lowest ranked' items in this list based on the `timeout` of the channel
     def redis_key_channel_list
       Discourse.redis.namespace_key("_presence_channels")
     end
   end
+
   def initialize(name, raise_not_found: true, use_cache: true)
     @name = name
     @message_bus_channel_name = "/presence#{name}"

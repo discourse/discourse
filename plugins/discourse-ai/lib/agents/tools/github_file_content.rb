@@ -4,6 +4,7 @@ module DiscourseAi
     module Tools
       class GithubFileContent < Tool
         MAX_LINES = 200
+
         class << self
           def signature
             {

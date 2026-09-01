@@ -55,13 +55,9 @@ class FileHelper
         name.gsub! /_+/, "_"
       end
     end
-  end
 
-  class FakeIO
-    attr_accessor :status
-  end
+    public
 
-  class << self
     def download(
       url,
       max_file_size:,
@@ -243,5 +239,9 @@ class FileHelper
           /\.(#{media.to_a.join("|")})\z/i
         end
     end
+  end
+
+  class FakeIO
+    attr_accessor :status
   end
 end

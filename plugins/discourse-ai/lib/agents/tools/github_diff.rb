@@ -37,9 +37,7 @@ module DiscourseAi
           def name
             "github_diff"
           end
-        end
 
-        class << self
           def sort_and_shorten_diff(diff, threshold: LARGE_OBJECT_THRESHOLD)
             file_start_regex = /^diff --git.*/
 
@@ -75,6 +73,7 @@ module DiscourseAi
               .join("\n")
           end
         end
+
         def repo
           parameters[:repo]
         end

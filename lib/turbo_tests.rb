@@ -37,6 +37,7 @@ module TurboTests
         end
       end
     end
+
     def initialize(backtrace, message, cause)
       @backtrace = backtrace
       @message = message

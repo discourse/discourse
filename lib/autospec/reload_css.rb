@@ -5,20 +5,14 @@ end
 
 class Autospec::ReloadCss
   WATCHERS = {}
+
   class << self
     def watch(pattern, &blk)
       WATCHERS[pattern] = blk
     end
-  end
 
-  # css, scss, sass or handlebars
-  watch(/\.css\z/)
-  watch(/\.ca?ss\.erb\z/)
-  watch(/\.s[ac]ss\z/)
-  watch(/\.hbs\z/)
-  watch(/\.hbr\z/)
+    public
 
-  class << self
     def message_bus
       MessageBus::Instance.new.tap do |bus|
         bus.site_id_lookup do
@@ -53,4 +47,11 @@ class Autospec::ReloadCss
       message_bus.publish "/file-change", paths
     end
   end
+
+  # css, scss, sass or handlebars
+  watch(/\.css\z/)
+  watch(/\.ca?ss\.erb\z/)
+  watch(/\.s[ac]ss\z/)
+  watch(/\.hbs\z/)
+  watch(/\.hbr\z/)
 end

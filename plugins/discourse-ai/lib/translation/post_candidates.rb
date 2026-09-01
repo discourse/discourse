@@ -215,13 +215,9 @@ module DiscourseAi
 
           DB.query(sql).map { |r| [r.post_id, r.target_locale] }
         end
-      end
 
-      private
+        public
 
-      # all posts that are eligible for translation based on site settings,
-      # including those without locale detected yet.
-      class << self
         def get
           backfill_start_at = DiscourseAi::Translation.backfill_start_at
           posts =
@@ -272,6 +268,11 @@ module DiscourseAi
           posts
         end
       end
+
+      private
+
+      # all posts that are eligible for translation based on site settings,
+      # including those without locale detected yet.
     end
   end
 end

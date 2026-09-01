@@ -29,6 +29,7 @@ class Admin::BackupsController < Admin::AdminController
       {} # noop, the backup does not create an upload record
     end
   end
+
   def index
     respond_to do |format|
       format.html do

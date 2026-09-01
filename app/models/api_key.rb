@@ -79,6 +79,7 @@ class ApiKey < ActiveRecord::Base
       Digest::SHA256.hexdigest key
     end
   end
+
   def generate_key
     if !key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB

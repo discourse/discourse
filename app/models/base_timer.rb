@@ -55,6 +55,7 @@ class BaseTimer < ActiveRecord::Base
       @_destructive_types ||= types.only(:delete, :delete_replies)
     end
   end
+
   def status_type_name
     self.class.types[status_type]
   end

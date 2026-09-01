@@ -34,11 +34,9 @@ module Chat
           end
         end
       end
-    end
 
-    private
+      public
 
-    class << self
       def build_args(url, chat_channel)
         {
           channel_id: chat_channel.id,
@@ -136,5 +134,7 @@ module Chat
         message.cooked
       end
     end
+
+    private
   end
 end

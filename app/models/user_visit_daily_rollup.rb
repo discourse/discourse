@@ -29,6 +29,7 @@ class UserVisitDailyRollup < ActiveRecord::Base
       )
     end
   end
+
   private_class_method :replace!
 end
 

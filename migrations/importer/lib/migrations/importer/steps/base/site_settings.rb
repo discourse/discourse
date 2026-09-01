@@ -6,6 +6,7 @@ module Migrations
       module Base
         class SiteSettings < Step
           LIST_SEPARATOR = "|"
+
           class << self
             def inherited(klass)
               super

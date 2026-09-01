@@ -70,9 +70,7 @@ module DiscourseAi
           MIME_ATTACHMENT_TYPES.find { |fragment, _| mime.include?(fragment) }&.last ||
             UNKNOWN_ATTACHMENT_TYPE
         end
-      end
 
-      class << self
         private
 
         def extract_text_payload(upload, path, attachment_type, skips)

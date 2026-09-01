@@ -12,6 +12,7 @@ module DiscourseDev
         super(::User, use_existing_records: false)
       end
     end
+
     def initialize
       super(::User, DiscourseDev.config.user[:count])
 

@@ -6,6 +6,7 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_MINUTES_AGO = 10
   UPDATE_UNREAD_USERS_LIMIT = 10_000
   MAX_TIME_READ_DIFF = 100
+
   class << self
     def ensure_consistency!(last_seen = 1.hour.ago)
       reset_bounce_scores
@@ -14,9 +15,7 @@ class UserStat < ActiveRecord::Base
       update_first_unread(last_seen)
       update_first_unread_pm(last_seen)
     end
-  end
 
-  class << self
     def update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
       DB.exec(
         <<~SQL,
@@ -212,9 +211,7 @@ class UserStat < ActiveRecord::Base
 
       DB.exec sql
     end
-  end
 
-  class << self
     def update_draft_count(user_id = nil)
       if user_id.present?
         draft_count = DB.query_single(<<~SQL, user_id: user_id).first
@@ -242,9 +239,8 @@ class UserStat < ActiveRecord::Base
       SQL
       end
     end
-  end
-  # attempt to add total read time to user based on previous time this was called
-  class << self
+
+    # attempt to add total read time to user based on previous time this was called
     def update_time_read!(id)
       if last_seen = last_seen_cached(id)
         diff = (Time.now.to_f - last_seen.to_f).round
@@ -256,8 +252,7 @@ class UserStat < ActiveRecord::Base
       end
       cache_last_seen(id, Time.now.to_f)
     end
-  end
-  class << self
+
     def last_seen_key(id)
       # frozen
       -"user-last-seen:#{id}"
@@ -271,6 +266,7 @@ class UserStat < ActiveRecord::Base
       Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
     end
   end
+
   def update_distinct_badge_count
     self.class.update_distinct_badge_count([user_id])
   end

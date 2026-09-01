@@ -10,12 +10,12 @@ class Wizard
     def exclude_step(step)
       @@excluded_steps << step
     end
-  end
-  class << self
+
     def user_requires_completion?(user)
       new(user).requires_completion?
     end
   end
+
   def initialize(user)
     @steps = []
     @user = user

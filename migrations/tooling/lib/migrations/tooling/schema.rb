@@ -204,40 +204,32 @@ module Migrations
         def config_path(database = :intermediate_db)
           File.join(schema_root_path, database.to_s)
         end
-      end
 
-      private_class_method class << self
-                             def manifest_path
-                               File.join(
-                                 Tooling.root_path,
-                                 "config",
-                                 "schema",
-                                 "plugin_manifest.yml",
-                               )
-                             end
-                           end
+        private
 
-      private_class_method class << self
-                             def refresh_plugin_manifest!
-                               manifest = plugin_manifest
-                               return if manifest.fresh?
+        def manifest_path
+          File.join(Tooling.root_path, "config", "schema", "plugin_manifest.yml")
+        end
 
-                               $stdout.write("Plugin manifest outdated, regenerating... ")
-                               manifest.regenerate!
-                               if manifest.incomplete?
-                                 failed_plugins =
-                                   manifest.failed_plugins.join(", ").presence || "(unknown)"
-                                 puts "Detected plugin changes, but some plugin migrations failed: #{failed_plugins}"
-                               else
-                                 puts "Detected #{manifest.table_count} plugin tables, #{manifest.column_count} plugin columns."
-                               end
-                             rescue StandardError => e
-                               raise ConfigError,
-                                     "Skipped — #{e.message} (use 'schema refresh-plugins --force' to retry)"
-                             end
-                           end
+        private
 
-      class << self
+        def refresh_plugin_manifest!
+          manifest = plugin_manifest
+          return if manifest.fresh?
+
+          $stdout.write("Plugin manifest outdated, regenerating... ")
+          manifest.regenerate!
+          if manifest.incomplete?
+            failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+            puts "Detected plugin changes, but some plugin migrations failed: #{failed_plugins}"
+          else
+            puts "Detected #{manifest.table_count} plugin tables, #{manifest.column_count} plugin columns."
+          end
+        rescue StandardError => e
+          raise ConfigError,
+                "Skipped — #{e.message} (use 'schema refresh-plugins --force' to retry)"
+        end
+
         def available_databases
           dir = schema_root_path
           return [] unless File.directory?(dir)
@@ -250,13 +242,13 @@ module Migrations
           @ready = nil
           @plugin_manifest = nil
         end
-      end
 
-      private_class_method class << self
-                             def registry
-                               @registry ||= DSL::Registry.new
-                             end
-                           end
+        private
+
+        def registry
+          @registry ||= DSL::Registry.new
+        end
+      end
     end
   end
 end

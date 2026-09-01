@@ -36,6 +36,7 @@ class TextSentinel
       )
     end
   end
+
   def initialize(text, opts = nil)
     @opts = opts || {}
     @text = text.to_s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")

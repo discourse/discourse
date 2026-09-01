@@ -14,21 +14,19 @@ class DiscourseRedis
     def config
       GlobalSetting.redis_config
     end
-  end
 
-  class << self
     def ignore_readonly
       yield
     rescue Redis::ReadOnlyError
       Discourse.received_redis_readonly!
       nil
     end
-  end
-  class << self
+
     def new_redis_store
       Cache.new
     end
   end
+
   def initialize(config = nil, namespace: true, raw_redis: nil)
     @config = config || DiscourseRedis.config
     @redis = raw_redis || DiscourseRedis.raw_connection(@config.dup)

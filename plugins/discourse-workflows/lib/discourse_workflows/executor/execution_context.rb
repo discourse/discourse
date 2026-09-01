@@ -75,6 +75,7 @@ module DiscourseWorkflows
           SecureRandom.urlsafe_base64(RESUME_TOKEN_BYTES)
         end
       end
+
       def initialize(
         workflow:,
         trigger_data:,

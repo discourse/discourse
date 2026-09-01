@@ -70,6 +70,7 @@ module DiscourseWorkflows
         )
       end
     end
+
     def initialize(workflow_data)
       data = workflow_data.deep_stringify_keys
       @workflow_name = data["name"]

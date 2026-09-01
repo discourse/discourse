@@ -70,6 +70,14 @@ class BrowserPageviewEventUrlNormalizer
       nil
     end
 
+    def parse_uri(raw)
+      return nil if raw.blank?
+
+      Addressable::URI.parse(raw.to_s.strip)
+    rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
+      nil
+    end
+
     # Filters the raw query string so original percent-encoding is preserved
     # (avoids %20/+ duplicate groupings for rows pointing at the same URL).
     def filter_query(query)
@@ -83,24 +91,15 @@ class BrowserPageviewEventUrlNormalizer
         end
         .join("&")
     end
-  end
-  private_class_method :filter_query
 
-  class << self
+    private :filter_query
+
     def normalized_path(uri)
       uri.path.to_s.sub(%r{/+\z}, "")
     end
-  end
-  private_class_method :normalized_path
 
-  class << self
-    def parse_uri(raw)
-      return nil if raw.blank?
-
-      Addressable::URI.parse(raw.to_s.strip)
-    rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
-      nil
-    end
+    private :normalized_path
   end
+
   private_class_method :parse_uri
 end

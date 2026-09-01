@@ -33,6 +33,7 @@ class PublishedPage < ActiveRecord::Base
       end
     end
   end
+
   def slug_format
     if slug !~ /\A[a-zA-Z\-\_0-9]+\z/
       errors.add(:slug, I18n.t("publish_page.slug_errors.invalid"))

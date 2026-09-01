@@ -5,6 +5,7 @@ class BadgeGranter
   end
 
   MAX_ITEMS_FOR_DELTA = 200
+
   class << self
     def disable_queue
       @queue_disabled = true
@@ -13,9 +14,7 @@ class BadgeGranter
     def enable_queue
       @queue_disabled = false
     end
-  end
 
-  class << self
     def grant(badge, user, opts = {})
       BadgeGranter.new(badge, user, opts).grant
     end
@@ -112,8 +111,7 @@ class BadgeGranter
         UserBadge.update_featured_ranks!([user.id])
       end
     end
-  end
-  class << self
+
     def revoke(user_badge, options = {})
       UserBadge.transaction do
         user_badge.destroy!
@@ -338,8 +336,7 @@ class BadgeGranter
     rescue => e
       { errors: e.message }
     end
-  end
-  class << self
+
     def backfill(badge, opts = nil)
       return unless SiteSetting.enable_badges
       return unless badge.enabled
@@ -530,6 +527,7 @@ class BadgeGranter
       )
     end
   end
+
   def initialize(badge, user, opts = {})
     @badge, @user, @opts = badge, user, opts
     @granted_by = opts[:granted_by] || Discourse.system_user

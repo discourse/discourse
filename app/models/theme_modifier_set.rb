@@ -9,13 +9,9 @@ class ThemeModifierSet < ActiveRecord::Base
     def modifiers
       @modifiers ||= load_modifiers
     end
-  end
 
-  validate :type_validator
+    public
 
-  # Given the ids of multiple active themes / theme components, this function
-  # will combine them into a 'resolved' behavior
-  class << self
     def resolve_modifier_for_themes(theme_ids, modifier_name)
       return nil if !(config = modifiers[modifier_name])
 
@@ -32,10 +28,9 @@ class ThemeModifierSet < ActiveRecord::Base
         raise ThemeModifierSetError, "Invalid theme modifier combine_mode"
       end
     end
-  end
-  # Build the list of modifiers from the DB schema.
-  # This allows plugins to introduce new modifiers by adding columns to the table
-  class << self
+
+    # Build the list of modifiers from the DB schema.
+    # This allows plugins to introduce new modifiers by adding columns to the table
     def load_modifiers
       hash = {}
       columns_hash.each do |column_name, info|
@@ -57,6 +52,12 @@ class ThemeModifierSet < ActiveRecord::Base
       hash
     end
   end
+
+  validate :type_validator
+
+  # Given the ids of multiple active themes / theme components, this function
+  # will combine them into a 'resolved' behavior
+
   def type_validator
     ThemeModifierSet.modifiers.each do |k, config|
       value = self[k]

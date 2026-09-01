@@ -17,6 +17,7 @@ module FileStore
       end
     CACHE_MAXIMUM_SIZE = 500
     CACHE_EVICT_COUNT = 100
+
     class << self
       def temporary_upload_path(file_name, folder_prefix: "")
         # We don't want to use the original file name as it can contain special
@@ -26,6 +27,7 @@ module FileStore
         File.join(TEMPORARY_UPLOAD_PREFIX, folder_prefix, SecureRandom.hex, file_name_random)
       end
     end
+
     def store_upload(file, upload, content_type = nil)
       upload.url = nil
       path = get_path_for_upload(upload)

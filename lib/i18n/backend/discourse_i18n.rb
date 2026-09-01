@@ -26,6 +26,7 @@ module I18n
           as_string ? regexp : /#{regexp}/i
         end
       end
+
       def available_locales
         LocaleSiteSetting.supported_locales.map(&:to_sym)
       end

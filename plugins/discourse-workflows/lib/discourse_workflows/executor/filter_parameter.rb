@@ -17,6 +17,7 @@ module DiscourseWorkflows
         "true" => { types: %w[boolean].freeze, needs_value: false }.freeze,
         "false" => { types: %w[boolean].freeze, needs_value: false }.freeze,
       }.freeze
+
       class << self
         def supported_types
           OPERATION_DEFINITIONS.values.flat_map { |definition| definition.fetch(:types) }.uniq
@@ -191,6 +192,7 @@ module DiscourseWorkflows
           nil
         end
       end
+
       private_class_method :coerce_number
     end
   end

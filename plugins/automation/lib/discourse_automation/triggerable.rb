@@ -17,6 +17,7 @@ module DiscourseAutomation
           DiscourseAutomation::Triggerable.instance_methods(false).grep(/^__triggerable_/)
       end
     end
+
     def initialize(name, automation = nil)
       @name = name
       @placeholders = []

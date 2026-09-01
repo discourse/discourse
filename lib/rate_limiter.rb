@@ -16,12 +16,9 @@ class RateLimiter
     def enable
       @disabled = false
     end
-  end
 
-  disable if Rails.env.profile?
+    public
 
-  # We don't observe rate limits in test mode
-  class << self
     def disabled?
       @disabled
     end
@@ -34,6 +31,10 @@ class RateLimiter
         .each { |k| Discourse.redis.without_namespace.del k }
     end
   end
+
+  disable if Rails.env.profile?
+
+  # We don't observe rate limits in test mode
 
   def initialize(
     user,
@@ -63,6 +64,7 @@ class RateLimiter
       @secs = @staff_limit[:secs].to_i
     end
   end
+
   def build_key(type)
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end

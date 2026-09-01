@@ -56,6 +56,14 @@ module DiscourseWorkflows
         )
       end
 
+      def publish_options
+        {
+          group_ids: [Group::AUTO_GROUPS[:admins]],
+          max_backlog_age: MAX_BACKLOG_AGE,
+          max_backlog_size: MAX_BACKLOG_SIZE,
+        }
+      end
+
       def execution_progress(execution)
         {
           id: execution.id,
@@ -66,10 +74,9 @@ module DiscourseWorkflows
           finished_at: execution.finished_at,
         }
       end
-    end
-    private_class_method :execution_progress
 
-    class << self
+      private :execution_progress
+
       def execution_summary(execution, workflow_name: nil)
         {
           id: execution.id,
@@ -83,18 +90,10 @@ module DiscourseWorkflows
           created_at: execution.created_at,
         }
       end
-    end
-    private_class_method :execution_summary
 
-    class << self
-      def publish_options
-        {
-          group_ids: [Group::AUTO_GROUPS[:admins]],
-          max_backlog_age: MAX_BACKLOG_AGE,
-          max_backlog_size: MAX_BACKLOG_SIZE,
-        }
-      end
+      private :execution_summary
     end
+
     private_class_method :publish_options
   end
 end

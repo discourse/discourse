@@ -135,8 +135,7 @@ class ListController < ApplicationController
         message_route(action)
       end
     end
-  end
-  class << self
+
     def feed_route_exists?(filter)
       @feed_route_exists ||= {}
       @feed_route_exists.fetch(filter) do
@@ -152,8 +151,7 @@ class ListController < ApplicationController
         end
       end
     end
-  end
-  class << self
+
     def best_period_for(previous_visit_at, category_id = nil)
       default_period =
         (
@@ -195,6 +193,7 @@ class ListController < ApplicationController
       periods
     end
   end
+
   def filter
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 

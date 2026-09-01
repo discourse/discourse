@@ -74,15 +74,14 @@ module AdPlugin
 
         query.to_a
       end
-    end
 
-    class << self
       def publish_if_ads_enabled
         if AdPlugin::HouseAdSetting.all.any? { |_, ads_to_show| ads_to_show.present? }
           AdPlugin::HouseAdSetting.publish_settings
         end
       end
     end
+
     def route_names
       routes.pluck(:route_name)
     end

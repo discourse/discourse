@@ -23,6 +23,7 @@ class AdminConfirmation
       ac
     end
   end
+
   def initialize(target_user, performed_by)
     @target_user = target_user
     @performed_by = performed_by

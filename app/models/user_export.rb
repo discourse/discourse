@@ -30,9 +30,7 @@ class UserExport < ActiveRecord::Base
           end
         end
     end
-  end
 
-  class << self
     def base_directory
       Rails
         .public_path
@@ -40,6 +38,7 @@ class UserExport < ActiveRecord::Base
         .to_s
     end
   end
+
   def retain_hours
     (created_at + DESTROY_CREATED_BEFORE - Time.zone.now).to_i / 1.hour
   end

@@ -161,21 +161,28 @@ module DiscourseWorkflows
         execution
       end
 
-      def signed_url(path, signature, absolute: false)
-        base = absolute ? Discourse.base_url : ""
-        separator = path.include?("?") ? "&" : "?"
-        "#{base}#{path}#{separator}#{SIGNATURE_PARAM}=#{Rack::Utils.escape(signature.to_s)}"
-      end
-    end
-    private_class_method :signed_url
-
-    class << self
       def resume_signature(execution_id:, resume_token:)
         resume_token = resume_token.to_s
         return if resume_token.blank?
 
         OpenSSL::HMAC.hexdigest("SHA256", signature_key, "#{execution_id.to_i}:#{resume_token}")
       end
+
+      def form_channel_key
+        @form_channel_key ||=
+          ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key(
+            FORM_CHANNEL_SALT,
+            HMAC_KEY_LENGTH,
+          )
+      end
+
+      def signed_url(path, signature, absolute: false)
+        base = absolute ? Discourse.base_url : ""
+        separator = path.include?("?") ? "&" : "?"
+        "#{base}#{path}#{separator}#{SIGNATURE_PARAM}=#{Rack::Utils.escape(signature.to_s)}"
+      end
+
+      private :signed_url
 
       def valid_action_signature?(execution, payload)
         signature = payload["signature"].to_s
@@ -190,10 +197,9 @@ module DiscourseWorkflows
 
         ActiveSupport::SecurityUtils.secure_compare(signature, expected)
       end
-    end
-    private_class_method :valid_action_signature?
 
-    class << self
+      private :valid_action_signature?
+
       def action_signature(execution_id:, resume_token:, action:, target_user_id: nil)
         OpenSSL::HMAC.hexdigest(
           "SHA256",
@@ -201,10 +207,9 @@ module DiscourseWorkflows
           "#{execution_id.to_i}:#{target_user_id}:#{action}:#{resume_token}",
         )
       end
-    end
-    private_class_method :action_signature
 
-    class << self
+      private :action_signature
+
       def action_token_key
         @action_token_key ||=
           ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key(
@@ -212,10 +217,9 @@ module DiscourseWorkflows
             HMAC_KEY_LENGTH,
           )
       end
-    end
-    private_class_method :action_token_key
 
-    class << self
+      private :action_token_key
+
       def signature_key
         @signature_key ||=
           ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key(
@@ -223,18 +227,10 @@ module DiscourseWorkflows
             HMAC_KEY_LENGTH,
           )
       end
-    end
-    private_class_method :signature_key
 
-    class << self
-      def form_channel_key
-        @form_channel_key ||=
-          ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key(
-            FORM_CHANNEL_SALT,
-            HMAC_KEY_LENGTH,
-          )
-      end
+      private :signature_key
     end
+
     private_class_method :form_channel_key
   end
 end

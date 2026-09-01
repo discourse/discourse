@@ -21,6 +21,7 @@ module Chat
         sensitivity_score(SiteSetting.chat_silence_user_sensitivity, scale: 0.6)
       end
     end
+
     def serializer
       Chat::ReviewableMessageSerializer
     end

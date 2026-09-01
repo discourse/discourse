@@ -54,6 +54,7 @@ class PostActionType < ActiveRecord::Base
       define_method(method_name) { |*args| PostActionTypeView.new.send(method_name, *args) }
     end
   end
+
   def expire_cache
     Discourse.cache.redis.del(
       *I18n.available_locales.map do |locale|

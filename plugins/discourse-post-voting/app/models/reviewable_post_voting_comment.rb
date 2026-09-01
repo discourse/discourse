@@ -13,6 +13,7 @@ class ReviewablePostVotingComment < Reviewable
       }
     end
   end
+
   def serializer
     ReviewablePostVotingCommentSerializer
   end

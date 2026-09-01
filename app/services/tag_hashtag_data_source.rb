@@ -21,29 +21,6 @@ class TagHashtagDataSource
       "icon"
     end
 
-    def tag_to_hashtag_item(tag, guardian)
-      topic_count_column = Tag.topic_count_column(guardian)
-
-      tag =
-        Tag.new(
-          tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
-        ) if tag.is_a?(Hash)
-
-      HashtagAutocompleteService::HashtagItem.new.tap do |item|
-        item.text = tag.name
-        item.secondary_text = "x#{tag.public_send(topic_count_column)}"
-        item.description = tag.description
-        item.slug = tag.name
-        item.relative_url = tag.url
-        item.icon = icon
-        item.style_type = style_type
-        item.id = tag.id
-      end
-    end
-  end
-  private_class_method :tag_to_hashtag_item
-
-  class << self
     def lookup(guardian, slugs)
       DiscourseTagging
         .filter_visible(Tag.where_name(slugs), guardian)
@@ -102,5 +79,27 @@ class TagHashtagDataSource
         .take(limit)
         .map { |tag| tag_to_hashtag_item(tag, guardian) }
     end
+
+    def tag_to_hashtag_item(tag, guardian)
+      topic_count_column = Tag.topic_count_column(guardian)
+
+      tag =
+        Tag.new(
+          tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
+        ) if tag.is_a?(Hash)
+
+      HashtagAutocompleteService::HashtagItem.new.tap do |item|
+        item.text = tag.name
+        item.secondary_text = "x#{tag.public_send(topic_count_column)}"
+        item.description = tag.description
+        item.slug = tag.name
+        item.relative_url = tag.url
+        item.icon = icon
+        item.style_type = style_type
+        item.id = tag.id
+      end
+    end
+
+    private :tag_to_hashtag_item
   end
 end

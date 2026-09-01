@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
   LEGACY_NO_UNOFFICIAL_PLUGINS = "only_official"
   # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
+
   # If a controller requires a plugin, it will raise an exception if that plugin is
   # disabled. This allows plugins to be disabled programmatically.
   class << self
@@ -47,8 +48,7 @@ class ApplicationController < ActionController::Base
         end
       end
     end
-  end
-  class << self
+
     def requires_login(arg = {})
       @requires_login_arg = arg
     end
@@ -57,6 +57,7 @@ class ApplicationController < ActionController::Base
       @requires_login_arg
     end
   end
+
   # Default Rails 3.2 lets the request through with a blank session
   #  we are being more pedantic here and nulling session / current_user
   #  and then raising a CSRF exception
@@ -991,9 +992,11 @@ class ApplicationController < ActionController::Base
   def honeypot_value
     server_session[HONEYPOT_KEY] ||= SecureRandom.hex
   end
+
   def challenge_value
     server_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
+
   def render_post_json(post, add_raw: true)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.add_raw = add_raw
@@ -1004,6 +1007,7 @@ class ApplicationController < ActionController::Base
     end
     render_json_dump(post_serializer)
   end
+
   # returns an array of integers given a param key
   # returns nil if key is not found
   def param_to_integer_list(key, delimiter = ",")
@@ -1014,6 +1018,7 @@ class ApplicationController < ActionController::Base
       params[key].map(&:to_i)
     end
   end
+
   def run_second_factor!(action_class, action_data: nil, target_user: current_user)
     if current_user && target_user != current_user
       # Anon can run 2fa against another target, but logged-in users should not.
@@ -1034,6 +1039,7 @@ class ApplicationController < ActionController::Base
 
     result
   end
+
   # We don't actually send 103 Early Hint responses from Discourse. However, upstream proxies can be configured
   # to cache a response header from the app and use that to send an Early Hint response to future clients.
   # See 'early_hint_header_mode' and 'early_hint_header_name' Global Setting descriptions for more info.
@@ -1054,15 +1060,19 @@ class ApplicationController < ActionController::Base
 
     response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
   end
+
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
   end
+
   def fetch_limit_from_params(params: self.params, default:, max:)
     fetch_int_from_params(:limit, params: params, default: default, max: max)
   end
+
   def fetch_page_from_params(params: self.params, default: 0, max: nil)
     fetch_int_from_params(:page, params: params, default: default, min: 0, max: max)
   end
+
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
     key = key.to_sym
 
@@ -1087,20 +1097,25 @@ class ApplicationController < ActionController::Base
       default
     end
   end
+
   def clean_xml
     response.body = response.body.gsub(XmlCleaner::INVALID_CHARACTERS, "")
   end
+
   def service_params
     { params: params.to_unsafe_h, guardian: }
   end
+
   def set_crawler_header
     response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
   end
+
   def ensure_dont_cache_page
     yield
   ensure
     dont_cache_page
   end
+
   def persist_locale_param_to_cookie
     if SiteSetting.set_locale_from_param && SiteSetting.set_locale_from_cookie &&
          (locale_param = params[Discourse::LOCALE_PARAM]).present?
@@ -1111,6 +1126,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
   def set_cross_origin_opener_policy_header
     if current_user.present? && SiteSetting.cross_origin_opener_unsafe_none_groups_map.any? &&
          current_user.in_any_groups?(SiteSetting.cross_origin_opener_unsafe_none_groups_map)

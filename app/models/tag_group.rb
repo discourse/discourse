@@ -56,8 +56,7 @@ class TagGroup < ActiveRecord::Base
         [group_id, permission]
       end
     end
-  end
-  class << self
+
     def visible(guardian)
       if guardian.is_admin?
         TagGroup
@@ -85,6 +84,7 @@ class TagGroup < ActiveRecord::Base
       end
     end
   end
+
   def tag_names=(tags_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tags_arg, unlimited: true)
   end

@@ -154,11 +154,9 @@ class SiteSetting < ActiveRecord::Base
       locales << default_locale if default_locale.present? && !locales.include?(default_locale)
       locales
     end
-  end
 
-  client_settings << :available_content_localization_locales
+    public
 
-  class << self
     def available_content_localization_locales
       return [] if !SiteSetting.content_localization_enabled?
 
@@ -276,7 +274,42 @@ class SiteSetting < ActiveRecord::Base
         subject: setting_name,
       ).order(created_at: :desc)
     end
+
+    public
+
+    def ImageQuality
+      SiteSetting::ImageQuality
+    end
+
+    public
+
+    def Upload
+      SiteSetting::Upload
+    end
+
+    def require_invite_code
+      invite_code.present?
+    end
+
+    public
+
+    def shared_drafts_enabled?
+      c = SiteSetting.shared_drafts_category
+      c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
+    end
+
+    public
+
+    def clear_cache!(expire_theme_site_setting_cache: false)
+      super(expire_theme_site_setting_cache:)
+
+      @blocked_attachment_content_types_regex = nil
+      @blocked_attachment_filenames_regex = nil
+      @allowed_unicode_username_regex = nil
+    end
   end
+
+  client_settings << :available_content_localization_locales
 
   class ImageQuality
     class << self
@@ -291,12 +324,6 @@ class SiteSetting < ActiveRecord::Base
       def image_preview_jpg_quality
         SiteSetting.image_preview_jpg_quality.nonzero? || SiteSetting.image_quality
       end
-    end
-  end
-
-  class << self
-    def ImageQuality
-      SiteSetting::ImageQuality
     end
   end
 
@@ -367,15 +394,6 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  class << self
-    def Upload
-      SiteSetting::Upload
-    end
-
-    def require_invite_code
-      invite_code.present?
-    end
-  end
   client_settings << :require_invite_code
 
   %i[
@@ -414,24 +432,7 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  class << self
-    def shared_drafts_enabled?
-      c = SiteSetting.shared_drafts_category
-      c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
-    end
-  end
-
   protected
-
-  class << self
-    def clear_cache!(expire_theme_site_setting_cache: false)
-      super(expire_theme_site_setting_cache:)
-
-      @blocked_attachment_content_types_regex = nil
-      @blocked_attachment_filenames_regex = nil
-      @allowed_unicode_username_regex = nil
-    end
-  end
 end
 
 # == Schema Information

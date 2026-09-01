@@ -6,6 +6,7 @@ class AdminDashboardIndexData < AdminDashboardData
       "index-dashboard-data-#{Report::SCHEMA_VERSION}"
     end
   end
+
   def get_json
     { updated_at: Time.zone.now.as_json }
   end

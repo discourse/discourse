@@ -50,15 +50,15 @@ RSpec.describe Jobs::ReindexSearch do
         def reset
           get_posts.clear
         end
-      end
 
-      private
+        public
 
-      class << self
         def get_posts
           @posts ||= []
         end
       end
+
+      private
     end
 
     after { FakeIndexer.reset }

@@ -19,6 +19,17 @@ module SiteSettingExtension
         klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
       end
     end
+
+    public
+
+    def theme_site_settings_cache_key(theme_id)
+      theme_id = "notheme" if theme_id.blank?
+
+      # NOTE: we use the git version in the key to ensure
+      # that we don't end up caching the incorrect version
+      # in cases where we are cycling unicorns
+      "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
+    end
   end
 
   # we need a default here to support defaults per locale
@@ -580,17 +591,6 @@ module SiteSettingExtension
       end
       .unshift(include_locale_setting && !only_overridden ? locale_setting_hash : nil)
       .compact
-  end
-
-  class << self
-    def theme_site_settings_cache_key(theme_id)
-      theme_id = "notheme" if theme_id.blank?
-
-      # NOTE: we use the git version in the key to ensure
-      # that we don't end up caching the incorrect version
-      # in cases where we are cycling unicorns
-      "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
-    end
   end
 
   # Merges the provider values of site settings (whether it be from the DB or wherever)

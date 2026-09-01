@@ -128,6 +128,7 @@ module DiscourseAi
           new(name: hash[:name], description: hash[:description], parameters: parameter_objects)
         end
       end
+
       def initialize(name:, description:, parameters: [], json_schema: nil)
         raise ArgumentError, "name must be a string" if !name.is_a?(String) || name.empty?
 
@@ -156,6 +157,7 @@ module DiscourseAi
         @description = description
         @parameters = parameters
       end
+
       def parameters_json_schema
         return @json_schema if @json_schema
 

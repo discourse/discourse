@@ -30,9 +30,7 @@ class PostRevision < ActiveRecord::Base
           OR public_version <> 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
     SQL
     end
-  end
 
-  class << self
     def copy(original_post, target_post)
       cols_to_copy = (column_names - %w[id post_id]).join(", ")
 
@@ -44,6 +42,7 @@ class PostRevision < ActiveRecord::Base
     SQL
     end
   end
+
   def categories
     return [] if modifications["category_id"].blank?
 

@@ -146,11 +146,9 @@ class DbHelper
 
       found
     end
-  end
 
-  private
+    public
 
-  class << self
     def finish!
       SiteSetting.refresh!
       Theme.expire_site_cache!
@@ -291,4 +289,6 @@ class DbHelper
       raise PG::StringDataRightTruncation, " #{error.message.strip} (table: #{table}, #{details})"
     end
   end
+
+  private
 end

@@ -13,15 +13,11 @@ class Jobs::Onceoff < ::Jobs::Base
     def onceoff_job_klasses
       @@onceoff_job_klasses
     end
-  end
 
-  class << self
     def name_for(klass)
       klass.name.sub(/\AJobs\:\:/, "")
     end
-  end
 
-  class << self
     def enqueue_all
       previously_ran = OnceoffLog.pluck(:job_name).uniq
 
@@ -31,6 +27,7 @@ class Jobs::Onceoff < ::Jobs::Base
       end
     end
   end
+
   def running_key_name
     "#{self.class.name}:running"
   end

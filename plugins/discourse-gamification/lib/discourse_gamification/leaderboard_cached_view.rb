@@ -51,6 +51,7 @@ module DiscourseGamification
         end
       end
     end
+
     def initialize(leaderboard)
       @leaderboard = leaderboard
     end

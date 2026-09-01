@@ -11,12 +11,14 @@ module Jobs
 
     POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"
     POLL_MAILBOX_ERRORS_KEY = "poll_mailbox_errors"
+
     class << self
       def errors_in_past_24_hours
         Discourse.redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
         Discourse.redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
       end
     end
+
     def execute(args)
       @args = args
       poll_pop3 if should_poll?

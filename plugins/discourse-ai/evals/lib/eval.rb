@@ -40,9 +40,7 @@ module DiscourseAi
         def available_cases
           Dir.glob(CASES_GLOB).sort.map { |path| new(path: path) }
         end
-      end
 
-      class << self
         def from_dataset_csv(path:, feature:)
           raise ArgumentError, "Feature is required for datasets" if feature.blank?
 
@@ -73,8 +71,7 @@ module DiscourseAi
             new(path: normalized_path, initial_data: attrs)
           end
         end
-      end
-      class << self
+
         def normalize_dataset_row(row)
           row
             .to_h
@@ -86,6 +83,7 @@ module DiscourseAi
             end
         end
       end
+
       # @param path [String] absolute path to the YAML definition file.
       # @raise [ArgumentError] when a required key (like `feature`) is missing.
       def initialize(path:, initial_data: nil)

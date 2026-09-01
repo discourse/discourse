@@ -32,5 +32,6 @@ module RandomUsernameGenerator
       word&.sub(/\A./) { |first| first.upcase }
     end
   end
+
   private_class_method :pick
 end

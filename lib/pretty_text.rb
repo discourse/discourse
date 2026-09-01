@@ -38,45 +38,9 @@ module PrettyText
       transpiled = processor.perform(source, nil, module_name)
       ctx.eval(transpiled, filename: module_name)
     end
-  end
 
-  # The only modules from the `discourse` package which may be bundled into the
-  # server-side renderer. Additions must not transitively depend on
-  # browser-only APIs.
-  BUNDLED_DISCOURSE_MODULES = %w[
-    deprecation-workflow
-    lib/avatar-utils
-    lib/case-converter
-    lib/escape
-    lib/get-url
-    lib/object
-    loader
-    static/markdown-it/features
-  ]
+    public
 
-  CORE_BUNDLE =
-    PrecompiledBundle.new(
-      dir: "tmp/pretty-text-processor",
-      filename_prefix: "pretty-text",
-      dependency_globs:
-        %w[
-          node_modules/.pnpm/lock.yaml
-          frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-          frontend/pretty-text/addon/**/*.js
-          frontend/discourse-markdown-it/src/**/*.js
-        ] + BUNDLED_DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.js" },
-    ) do
-      Discourse::Utils.execute_command(
-        "pnpm",
-        "-C=frontend/pretty-text-processor",
-        "node",
-        "build.mjs",
-        "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
-        chdir: Rails.root.to_s,
-      )
-    end
-
-  class << self
     def load_or_build_core_bundle
       CORE_BUNDLE.load_or_build
     end
@@ -390,12 +354,9 @@ module PrettyText
           end
         end
     end
-  end
 
-  class DetectedLink < Struct.new(:url, :is_quote)
-  end
+    public
 
-  class << self
     def extract_links(html)
       links = []
       doc = Nokogiri::HTML5.fragment(html)
@@ -734,20 +695,9 @@ module PrettyText
       make_all_links_absolute(doc)
       doc.to_html
     end
-  end
 
-  protected
+    public
 
-  class JavaScriptError < StandardError
-    attr_accessor :message, :backtrace
-
-    def initialize(message, backtrace)
-      @message = message
-      @backtrace = backtrace
-    end
-  end
-
-  class << self
     def protect
       rval = nil
       @mutex.synchronize do
@@ -772,15 +722,9 @@ module PrettyText
       loofah_fragment = Loofah.html5_fragment(doc.to_html)
       loofah_fragment.scrub!(scrubber).to_html
     end
-  end
 
-  private
+    public
 
-  USER_TYPE = "user"
-  GROUP_TYPE = "group"
-  GROUP_MENTIONABLE_TYPE = "group-mentionable"
-
-  class << self
     def add_mentions(doc, user_id: nil)
       elements = doc.css("span.mention")
       names = elements.map { |element| element.text[1..-1] }
@@ -881,4 +825,60 @@ module PrettyText
       /\A(data:|#{patterns.join("|")})/
     end
   end
+
+  # The only modules from the `discourse` package which may be bundled into the
+  # server-side renderer. Additions must not transitively depend on
+  # browser-only APIs.
+  BUNDLED_DISCOURSE_MODULES = %w[
+    deprecation-workflow
+    lib/avatar-utils
+    lib/case-converter
+    lib/escape
+    lib/get-url
+    lib/object
+    loader
+    static/markdown-it/features
+  ]
+
+  CORE_BUNDLE =
+    PrecompiledBundle.new(
+      dir: "tmp/pretty-text-processor",
+      filename_prefix: "pretty-text",
+      dependency_globs:
+        %w[
+          node_modules/.pnpm/lock.yaml
+          frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
+          frontend/pretty-text/addon/**/*.js
+          frontend/discourse-markdown-it/src/**/*.js
+        ] + BUNDLED_DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.js" },
+    ) do
+      Discourse::Utils.execute_command(
+        "pnpm",
+        "-C=frontend/pretty-text-processor",
+        "node",
+        "build.mjs",
+        "--discourse-modules=#{BUNDLED_DISCOURSE_MODULES.join(",")}",
+        chdir: Rails.root.to_s,
+      )
+    end
+
+  class DetectedLink < Struct.new(:url, :is_quote)
+  end
+
+  protected
+
+  class JavaScriptError < StandardError
+    attr_accessor :message, :backtrace
+
+    def initialize(message, backtrace)
+      @message = message
+      @backtrace = backtrace
+    end
+  end
+
+  private
+
+  USER_TYPE = "user"
+  GROUP_TYPE = "group"
+  GROUP_MENTIONABLE_TYPE = "group-mentionable"
 end

@@ -56,9 +56,11 @@ class Auth::Result
       result
     end
   end
+
   def initialize
     @failed = false
   end
+
   def [](key)
     key = key.to_sym
     public_send(key) if ATTRIBUTES.include?(key)

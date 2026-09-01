@@ -40,6 +40,7 @@ class UserCardSerializer < BasicUserSerializer
       end
     end
   end
+
   def initialize(object, options = {})
     super
     options[:include_status] = true

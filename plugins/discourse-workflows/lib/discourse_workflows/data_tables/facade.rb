@@ -80,6 +80,7 @@ module DiscourseWorkflows
 
       SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
       MAX_LIMIT = 100
+
       class << self
         def within_storage_limit?
           Storage.total_size_bytes < MAX_TOTAL_SIZE_BYTES

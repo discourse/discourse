@@ -17,15 +17,14 @@ class Embedding < OpenStruct
     def crawlers_settings
       %i[allowed_embed_selectors blocked_embed_selectors allowed_embed_classnames]
     end
-  end
 
-  class << self
     def find
       embedding_args = { id: "default" }
       Embedding.settings.each { |s| embedding_args[s] = SiteSetting.get(s) }
       Embedding.new(embedding_args)
     end
   end
+
   def base_url
     Discourse.base_url
   end

@@ -61,6 +61,7 @@ module DiscourseGamification
         )
       end
     end
+
     def score_override_for(key)
       score_overrides&.dig(key)
     end

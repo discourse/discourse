@@ -22,6 +22,7 @@ module DiscourseSolved
           ::CategoryCustomField.where(name: "enable_accepted_answers", value: "true").exists?
       end
     end
+
     private_class_method :solved_in_use?
   end
 end

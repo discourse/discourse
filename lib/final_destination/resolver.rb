@@ -35,11 +35,9 @@ class FinalDestination::Resolver
         @result
       end
     end
-  end
 
-  private
+    public
 
-  class << self
     def default_dns_query_timeout
       if gs = GlobalSetting.dns_query_timeout_secs.presence
         Integer(gs)
@@ -67,4 +65,6 @@ class FinalDestination::Resolver
       @thread.name = "final-destination_resolver_thread"
     end
   end
+
+  private
 end

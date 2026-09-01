@@ -33,6 +33,7 @@ module DiscourseAutomation
     attr_accessor :perform_required_fields_validation
 
     MAX_NAME_LENGTH = 100
+
     class << self
       def deserialize_context(context)
         new_context = ActiveSupport::HashWithIndifferentAccess.new
@@ -70,6 +71,7 @@ module DiscourseAutomation
         new_context
       end
     end
+
     def trigger=(new_trigger)
       @triggerable = nil
       super

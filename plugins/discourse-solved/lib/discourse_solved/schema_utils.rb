@@ -83,23 +83,18 @@ module DiscourseSolved
         !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
           post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
       end
+
+      private
+
+      def accepted_answer_visible?(topic)
+        topic.solved&.answer_posts&.any? { |post| Guardian.new.can_see_post?(post) }
+      end
+
+      private
+
+      def eligible_answers(topic)
+        topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
+      end
     end
-
-    private_class_method class << self
-                           def accepted_answer_visible?(topic)
-                             topic.solved&.answer_posts&.any? do |post|
-                               Guardian.new.can_see_post?(post)
-                             end
-                           end
-                         end
-
-    private_class_method class << self
-                           def eligible_answers(topic)
-                             topic
-                               .posts
-                               .where.not(post_number: 1)
-                               .where(post_type: Post.types[:regular], hidden: false)
-                           end
-                         end
   end
 end

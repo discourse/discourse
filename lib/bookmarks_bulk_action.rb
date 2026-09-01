@@ -6,6 +6,7 @@ class BookmarksBulkAction
       @operations ||= %w[clear_reminder delete]
     end
   end
+
   def initialize(user, bookmark_ids, operation, options = {})
     @user = user
     @bookmark_ids = bookmark_ids

@@ -88,6 +88,7 @@ module Checklist
         raw.gsub(/\[(?: |x)?\]/, "[ ]")
       end
     end
+
     private_class_method :normalize_checkbox_states
 
     private

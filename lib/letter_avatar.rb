@@ -248,6 +248,7 @@ class LetterAvatar
     [218, 105, 73],
     [126, 169, 36],
   ]
+
   class << self
     def version
       "#{VERSION}_#{image_magick_version}"

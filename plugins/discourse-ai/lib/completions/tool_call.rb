@@ -15,6 +15,7 @@ module DiscourseAi
         @provider_data ||= {}
         @partial = false
       end
+
       def partial?
         !!@partial
       end

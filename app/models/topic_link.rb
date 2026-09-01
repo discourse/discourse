@@ -11,27 +11,9 @@ class TopicLink < ActiveRecord::Base
     def max_url_length
       500
     end
-  end
 
-  belongs_to :topic
-  belongs_to :user
-  belongs_to :post
-  belongs_to :link_topic, class_name: "Topic"
-  belongs_to :link_post, class_name: "Post"
+    public
 
-  validates :url, presence: true
-
-  validates :url, length: { maximum: 500 }
-
-  validates :url, uniqueness: { scope: %i[topic_id post_id] }
-
-  has_many :topic_link_clicks, dependent: :destroy
-
-  validate :link_to_self
-
-  after_commit :crawl_link_title
-
-  class << self
     def topic_map(guardian, topic_id)
       # Sam: complicated reports are really hard in AR
       builder = DB.build(<<~SQL)
@@ -173,8 +155,7 @@ class TopicLink < ActiveRecord::Base
     def crawl_link_title(topic_link_id)
       Jobs.enqueue(:crawl_topic_link, topic_link_id: topic_link_id)
     end
-  end
-  class << self
+
     def duplicate_lookup(topic, guardian = Guardian.new)
       results =
         TopicLink
@@ -218,8 +199,7 @@ class TopicLink < ActiveRecord::Base
 
       posts.filter_map { |post| post.id if !post.hidden? || guardian.can_see_hidden_post?(post) }
     end
-  end
-  class << self
+
     def apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
       builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
@@ -228,8 +208,7 @@ class TopicLink < ActiveRecord::Base
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
     end
-  end
-  class << self
+
     def apply_source_post_visibility_filters(builder, guardian, source_post:)
       builder.where("#{source_post}.deleted_at IS NULL")
       builder.where(
@@ -238,19 +217,18 @@ class TopicLink < ActiveRecord::Base
       )
       builder.where("#{source_post}.hidden = false") unless guardian.is_staff?
     end
-  end
-  # This pattern is used to create topic links very efficiently with minimal
-  # errors under heavy concurrent use
-  #
-  # It avoids a SELECT to find out if the record is there and minimizes all
-  # the work it needs to do in case a record is missing
-  #
-  # It handles calling the required callback and has parity with Rails implementation
-  #
-  # Usually we would rely on ActiveRecord but in this case we have had lots of churn
-  # around creation of topic links leading to hard to debug log messages in production
-  #
-  class << self
+
+    # This pattern is used to create topic links very efficiently with minimal
+    # errors under heavy concurrent use
+    #
+    # It avoids a SELECT to find out if the record is there and minimizes all
+    # the work it needs to do in case a record is missing
+    #
+    # It handles calling the required callback and has parity with Rails implementation
+    #
+    # Usually we would rely on ActiveRecord but in this case we have had lots of churn
+    # around creation of topic links leading to hard to debug log messages in production
+    #
     def safe_create_topic_link(
       post_id:,
       user_id:,
@@ -449,6 +427,25 @@ class TopicLink < ActiveRecord::Base
       end
     end
   end
+
+  belongs_to :topic
+  belongs_to :user
+  belongs_to :post
+  belongs_to :link_topic, class_name: "Topic"
+  belongs_to :link_post, class_name: "Post"
+
+  validates :url, presence: true
+
+  validates :url, length: { maximum: 500 }
+
+  validates :url, uniqueness: { scope: %i[topic_id post_id] }
+
+  has_many :topic_link_clicks, dependent: :destroy
+
+  validate :link_to_self
+
+  after_commit :crawl_link_title
+
   # Make sure a topic can't link to itself
   def link_to_self
     errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)

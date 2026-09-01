@@ -24,6 +24,7 @@ module Email
         @@plugin_callbacks.push(block)
       end
     end
+
     def initialize(html, opts = nil)
       @html = html
       @opts = opts || {}

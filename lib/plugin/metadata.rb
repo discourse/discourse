@@ -27,6 +27,7 @@ class Plugin::Metadata
       metadata
     end
   end
+
   def meta_topic_id=(value)
     @meta_topic_id =
       begin

@@ -20,6 +20,7 @@ class Themes::Action::HorizonHighContextTopicCardsToggled < Service::ActionBase
       horizon_theme.default? || horizon_theme.user_selectable?
     end
   end
+
   def call
     theme = Theme.horizon_theme
     return if theme.blank?

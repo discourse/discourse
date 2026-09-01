@@ -43,15 +43,15 @@ module LocalizationAttributesReplacer
         post.cooked = loc.cooked if loc.cooked.present?
       end
     end
-  end
 
-  private
+    public
 
-  class << self
     def get_localization(model, crawl_locale)
       model.present? && model.locale.present? &&
         !LocaleNormalizer.is_same?(model.locale, crawl_locale) &&
         model.get_localization(crawl_locale)
     end
   end
+
+  private
 end

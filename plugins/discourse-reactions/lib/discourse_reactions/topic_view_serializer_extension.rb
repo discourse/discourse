@@ -22,14 +22,9 @@ module DiscourseReactions::TopicViewSerializerExtension
           hash
         end
     end
-  end
 
-  def posts
-    posts_with_reactions
-    super
-  end
+    public
 
-  class << self
     def prepended(base)
       def base.posts_reaction_users_count(post_ids, ignored_user_ids: [])
         ignored_filter =
@@ -72,5 +67,10 @@ module DiscourseReactions::TopicViewSerializerExtension
         end
       end
     end
+  end
+
+  def posts
+    posts_with_reactions
+    super
   end
 end

@@ -16,6 +16,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   allow_in_staff_writes_only_mode :complete
 
   ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { it }
+
   class << self
     def find_authenticator(name)
       if SiteSetting.enable_discourse_connect
@@ -27,6 +28,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
     end
   end
+
   def confirm_request
     self.class.find_authenticator(params[:provider])
     render locals: { hide_auth_buttons: true }

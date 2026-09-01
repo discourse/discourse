@@ -15,6 +15,7 @@ class Demon::Sidekiq < ::Demon::Base
   # to 700MB given tokenization overhead. Set the default a bit higher
   # so only outliers get restarted.
   DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 1000
+
   class << self
     def prefix
       "sidekiq"
@@ -23,9 +24,7 @@ class Demon::Sidekiq < ::Demon::Base
     def after_fork(&blk)
       blk ? (@blk = blk) : @blk
     end
-  end
 
-  class << self
     def heartbeat_check
       sidekiq_processes_for_current_hostname = {}
 
@@ -48,9 +47,7 @@ class Demon::Sidekiq < ::Demon::Base
         end
       end
     end
-  end
 
-  class << self
     def rss_memory_check
       if defined?(@@last_sidekiq_rss_memory_check) && @@last_sidekiq_rss_memory_check &&
            @@last_sidekiq_rss_memory_check >
@@ -75,9 +72,7 @@ class Demon::Sidekiq < ::Demon::Base
 
       @@last_sidekiq_rss_memory_check = Time.now.to_i
     end
-  end
 
-  class << self
     def max_allowed_sidekiq_rss_bytes
       [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
     end

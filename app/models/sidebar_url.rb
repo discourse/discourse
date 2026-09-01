@@ -78,6 +78,7 @@ class SidebarUrl < ActiveRecord::Base
       COMMUNITY_SECTION_LINK_PATHS.include?(normalized_value)
     end
   end
+
   def path_validator
     return true if !external?
     raise ActionController::RoutingError.new("Not Found") if value !~ Discourse::Utils::URI_REGEXP

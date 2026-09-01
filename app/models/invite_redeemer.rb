@@ -118,6 +118,7 @@ class InviteRedeemer
         UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
     end
   end
+
   def initialize(
     invite:,
     email: nil,

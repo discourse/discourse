@@ -9,22 +9,9 @@ class UserActionManager
     def enable
       @disabled = false
     end
-  end
 
-  %i[notification post topic post_action].each { |type| class_eval(<<~RUBY) }
-      def self.#{type}_created(*args)
-        return if @disabled
-        #{type}_rows(*args).each { |row| UserAction.log_action!(row) }
-      end
-      def self.#{type}_destroyed(*args)
-        return if @disabled
-        #{type}_rows(*args).each { |row| UserAction.remove_action!(row) }
-      end
-    RUBY
+    public
 
-  private
-
-  class << self
     def topic_rows(topic)
       # no action to log here, this can happen if a user is deleted
       # then topic has no user_id
@@ -148,4 +135,17 @@ class UserActionManager
       end
     end
   end
+
+  %i[notification post topic post_action].each { |type| class_eval(<<~RUBY) }
+      def self.#{type}_created(*args)
+        return if @disabled
+        #{type}_rows(*args).each { |row| UserAction.log_action!(row) }
+      end
+      def self.#{type}_destroyed(*args)
+        return if @disabled
+        #{type}_rows(*args).each { |row| UserAction.remove_action!(row) }
+      end
+    RUBY
+
+  private
 end

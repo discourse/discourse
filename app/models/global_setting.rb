@@ -6,21 +6,20 @@ class GlobalSetting
   # for legacy reasons
   REDIS_SECRET_KEY = "SECRET_TOKEN"
   REDIS_VALIDATE_SECONDS = 30
+
   class << self
     def register(key, default)
       define_singleton_method(key) { provider.lookup(key, default) }
     end
-  end
 
-  # In Rails secret_key_base is used to encrypt the cookie store
-  # the cookie store contains session data
-  # Discourse also uses this secret key to digest user auth tokens
-  # This method will
-  # - use existing token if already set in ENV or discourse.conf
-  # - generate a token on the fly if needed and cache in redis
-  # - skips caching generated token to redis if redis is skipped
-  # - enforce rules about token format falling back to redis if needed
-  class << self
+    # In Rails secret_key_base is used to encrypt the cookie store
+    # the cookie store contains session data
+    # Discourse also uses this secret key to digest user auth tokens
+    # This method will
+    # - use existing token if already set in ENV or discourse.conf
+    # - generate a token on the fly if needed and cache in redis
+    # - skips caching generated token to redis if redis is skipped
+    # - enforce rules about token format falling back to redis if needed
     def safe_secret_key_base
       if @safe_secret_key_base && @token_in_redis &&
            (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
@@ -294,6 +293,47 @@ class GlobalSetting
     def sendmail_settings
       { arguments: %w[-i] }
     end
+
+    public
+
+    attr_accessor :provider
+
+    def configure!(
+      path: File.expand_path("../../../config/discourse.conf", __FILE__),
+      use_blank_provider: Rails.env.test?
+    )
+      if use_blank_provider
+        @provider = BlankProvider.new
+      else
+        @provider = FileProvider.from(path) || EnvProvider.new
+      end
+    end
+
+    def load_plugins?
+      load_plugins_filter != :none
+    end
+
+    def plugins_to_load
+      filter = load_plugins_filter
+      filter.is_a?(Array) ? filter : nil
+    end
+
+    # Returns `:all`, `:none`, or an array of plugin directory names.
+    def load_plugins_filter
+      case ENV["LOAD_PLUGINS"]
+      when "0"
+        :none
+      when "1"
+        :all
+      when nil, ""
+        Rails.env.test? ? :none : :all
+      else
+        unless Rails.env.local?
+          raise "LOAD_PLUGINS=#{ENV["LOAD_PLUGINS"].inspect} is only supported in development/test"
+        end
+        ENV["LOAD_PLUGINS"].split(",").map { |p| File.basename(p.strip) }.reject(&:empty?)
+      end
+    end
   end
 
   class BaseProvider
@@ -316,15 +356,14 @@ class GlobalSetting
       def from(file)
         parse(file) if File.exist?(file)
       end
-    end
 
-    class << self
       def parse(file)
         provider = new(file)
         provider.read
         provider
       end
     end
+
     def initialize(file)
       @file = file
       @data = {}
@@ -378,47 +417,5 @@ class GlobalSetting
     end
   end
 
-  class << self
-    attr_accessor :provider
-  end
-
-  class << self
-    def configure!(
-      path: File.expand_path("../../../config/discourse.conf", __FILE__),
-      use_blank_provider: Rails.env.test?
-    )
-      if use_blank_provider
-        @provider = BlankProvider.new
-      else
-        @provider = FileProvider.from(path) || EnvProvider.new
-      end
-    end
-
-    def load_plugins?
-      load_plugins_filter != :none
-    end
-
-    def plugins_to_load
-      filter = load_plugins_filter
-      filter.is_a?(Array) ? filter : nil
-    end
-
-    # Returns `:all`, `:none`, or an array of plugin directory names.
-    def load_plugins_filter
-      case ENV["LOAD_PLUGINS"]
-      when "0"
-        :none
-      when "1"
-        :all
-      when nil, ""
-        Rails.env.test? ? :none : :all
-      else
-        unless Rails.env.local?
-          raise "LOAD_PLUGINS=#{ENV["LOAD_PLUGINS"].inspect} is only supported in development/test"
-        end
-        ENV["LOAD_PLUGINS"].split(",").map { |p| File.basename(p.strip) }.reject(&:empty?)
-      end
-    end
-  end
   private_class_method :load_plugins_filter
 end

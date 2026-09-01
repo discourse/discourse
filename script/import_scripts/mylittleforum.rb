@@ -132,6 +132,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     @upload_map = load_upload_map(@upload_map_path)
     build_legacy_upload_rewriter
   end
+
   def get_site_settings_for_import
     settings = super
 

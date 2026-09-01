@@ -19,6 +19,7 @@ class Search
   # Limited for performance reasons since `TS_HEADLINE` is slow when the text
   # document is too long.
   MAX_LENGTH_FOR_HEADLINE = 2500
+
   class << self
     def on_preload(&blk)
       (@preload ||= Set.new) << blk
@@ -39,9 +40,7 @@ class Search
     def facets
       %w[topic category user private_messages tags all_topics exclude_topics]
     end
-  end
 
-  class << self
     def min_length_bypass?(term)
       return false if term.blank?
       MIN_LENGTH_BYPASS_PATTERN.match?(term)
@@ -252,17 +251,13 @@ class Search
     rescue URI::InvalidURIError
       true
     end
-  end
 
-  attr_accessor :term
-  attr_reader :clean_term, :guardian
+    public
 
-  class << self
     def execute(term, opts = nil)
       new(term, opts).execute
     end
-  end
-  class << self
+
     def advanced_order(trigger, enabled: -> { true }, &block)
       advanced_orders[trigger] = { block:, enabled: }
     end
@@ -287,13 +282,11 @@ class Search
     def custom_topic_eager_loads
       Array.wrap(@custom_topic_eager_loads)
     end
-  end
-  class << self
+
     def default_ts_config
       "'#{Search.ts_config}'"
     end
-  end
-  class << self
+
     def ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil, prefix_match: true)
       to_tsquery(
         ts_config: ts_config,
@@ -320,6 +313,10 @@ class Search
       PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
     end
   end
+
+  attr_accessor :term
+  attr_reader :clean_term, :guardian
+
   def initialize(term, opts = nil)
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new

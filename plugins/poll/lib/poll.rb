@@ -491,33 +491,6 @@ class DiscoursePoll::Poll
         end
     end
 
-    def validate_votes!(poll, options)
-      num_of_options = options.length
-
-      if poll.multiple?
-        if poll.min && (num_of_options < poll.min)
-          raise DiscoursePoll::Error.new(I18n.t("poll.min_vote_per_user", count: poll.min))
-        elsif poll.max && (num_of_options > poll.max)
-          raise DiscoursePoll::Error.new(I18n.t("poll.max_vote_per_user", count: poll.max))
-        end
-      elsif poll.ranked_choice?
-        if poll.poll_options.length != num_of_options
-          raise DiscoursePoll::Error.new(
-                  I18n.t(
-                    "poll.ranked_choice.vote_options_mismatch",
-                    count: poll.options.length,
-                    provided: num_of_options,
-                  ),
-                )
-        end
-      elsif num_of_options > 1
-        raise DiscoursePoll::Error.new(I18n.t("poll.one_vote_per_user"))
-      end
-    end
-  end
-  private_class_method :validate_votes!
-
-  class << self
     def change_vote(user, post_id, poll_name)
       Poll.transaction do
         post = Post.find_by(id: post_id)
@@ -576,5 +549,31 @@ class DiscoursePoll::Poll
         serialized_poll
       end
     end
+
+    def validate_votes!(poll, options)
+      num_of_options = options.length
+
+      if poll.multiple?
+        if poll.min && (num_of_options < poll.min)
+          raise DiscoursePoll::Error.new(I18n.t("poll.min_vote_per_user", count: poll.min))
+        elsif poll.max && (num_of_options > poll.max)
+          raise DiscoursePoll::Error.new(I18n.t("poll.max_vote_per_user", count: poll.max))
+        end
+      elsif poll.ranked_choice?
+        if poll.poll_options.length != num_of_options
+          raise DiscoursePoll::Error.new(
+                  I18n.t(
+                    "poll.ranked_choice.vote_options_mismatch",
+                    count: poll.options.length,
+                    provided: num_of_options,
+                  ),
+                )
+        end
+      elsif num_of_options > 1
+        raise DiscoursePoll::Error.new(I18n.t("poll.one_vote_per_user"))
+      end
+    end
+
+    private :validate_votes!
   end
 end

@@ -16,9 +16,7 @@ class StrippedLengthValidator < ActiveModel::EachValidator
         record.errors.add attribute, I18n.t("errors.messages.too_short", count: range.begin)
       end
     end
-  end
 
-  class << self
     def get_sanitized_value(value, strip_uploads: false)
       value = value.dup
       value.gsub!(/<!--(.*?)-->/, "") # strip HTML comments
@@ -30,6 +28,7 @@ class StrippedLengthValidator < ActiveModel::EachValidator
       value.strip
     end
   end
+
   def validate_each(record, attribute, value)
     # the `in` parameter might be a lambda when the range is dynamic
     range = options[:in].lambda? ? options[:in].call : options[:in]

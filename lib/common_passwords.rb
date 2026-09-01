@@ -22,17 +22,9 @@ class CommonPasswords
       return false if password.blank?
       password_list.include?(password)
     end
-  end
 
-  private
+    public
 
-  class RedisPasswordList
-    def include?(password)
-      CommonPasswords.redis.sismember CommonPasswords::LIST_KEY, password
-    end
-  end
-
-  class << self
     def password_list
       @mutex.synchronize { load_passwords if redis.scard(LIST_KEY) <= 0 }
       RedisPasswordList.new
@@ -48,6 +40,14 @@ class CommonPasswords
     rescue Errno::ENOENT
       # tolerate this so we don't block signups
       Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."
+    end
+  end
+
+  private
+
+  class RedisPasswordList
+    def include?(password)
+      CommonPasswords.redis.sismember CommonPasswords::LIST_KEY, password
     end
   end
 end

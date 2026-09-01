@@ -7,6 +7,12 @@ module MobileDetection
     def mobile_device?(user_agent)
       user_agent =~ /Mobile/ && !(user_agent =~ /iPad/)
     end
+
+    public
+
+    def modern_mobile_device?(user_agent)
+      user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
+    end
   end
 
   MODERN_MOBILE_REGEX =
@@ -22,10 +28,4 @@ module MobileDetection
   }x
 
   USER_AGENT_MAX_LENGTH = 400
-
-  class << self
-    def modern_mobile_device?(user_agent)
-      user_agent[0...USER_AGENT_MAX_LENGTH].match?(MODERN_MOBILE_REGEX)
-    end
-  end
 end

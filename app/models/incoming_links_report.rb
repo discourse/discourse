@@ -237,6 +237,7 @@ class IncomingLinksReport
       links
     end
   end
+
   def initialize(type)
     @type = type
     @y_titles = {}

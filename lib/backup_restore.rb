@@ -120,11 +120,9 @@ module BackupRestore
       END$$;
     SQL
     end
-  end
 
-  DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
+    public
 
-  class << self
     def database_configuration
       config = ActiveRecord::Base.connection_pool.db_config.configuration_hash
       config = config.with_indifferent_access
@@ -143,11 +141,9 @@ module BackupRestore
         config["database"],
       )
     end
-  end
 
-  private
+    public
 
-  class << self
     def running_key
       "backup_restore_operation_is_running"
     end
@@ -211,4 +207,8 @@ module BackupRestore
         .to_i
     end
   end
+
+  DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
+
+  private
 end

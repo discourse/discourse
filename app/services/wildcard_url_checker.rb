@@ -28,11 +28,9 @@ module WildcardUrlChecker
           URL_COMPONENT_WILDCARD_PATTERN,
         )
     end
-  end
 
-  private
+    public
 
-  class << self
     def parse_valid_url(url)
       uri = URI.parse(url)
       return uri if uri&.scheme.present? && uri&.host.present?
@@ -68,4 +66,6 @@ module WildcardUrlChecker
       Regexp.new("\\A#{escaped_pattern}\\z", "i").match?(value)
     end
   end
+
+  private
 end

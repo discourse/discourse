@@ -9,6 +9,7 @@ module Jobs
         "last_notified_queued_post_id"
       end
     end
+
     def execute(args)
       return true if SiteSetting.notify_about_queued_posts_after.zero?
 

@@ -36,8 +36,7 @@ module Email
         end
         host
       end
-    end
-    class << self
+
       def bounceable_reply_address?
         SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
       end
@@ -46,6 +45,7 @@ module Email
         SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{bounce_key}")
       end
     end
+
     def initialize(message, email_type, user = nil)
       @message = message
       @message_attachments_index = {}

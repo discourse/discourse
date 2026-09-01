@@ -26,15 +26,6 @@ module DiscourseDataExplorer
         result
       end
 
-      def within_max_age?(result, max_age)
-        Time.iso8601(result["cached_at"]) >= max_age.ago
-      rescue ArgumentError, TypeError
-        false
-      end
-    end
-    private_class_method :within_max_age?
-
-    class << self
       def write(query_id, params_hash, result_json)
         payload = result_json.merge("cached_at" => Time.now.utc.iso8601)
         serialized = MultiJson.dump(payload)
@@ -73,6 +64,14 @@ module DiscourseDataExplorer
       def prune_stale_entries(index_key, now)
         Discourse.redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
       end
+
+      def within_max_age?(result, max_age)
+        Time.iso8601(result["cached_at"]) >= max_age.ago
+      rescue ArgumentError, TypeError
+        false
+      end
+
+      private :within_max_age?
     end
 
     private_class_method :limit_reached?, :prune_stale_entries

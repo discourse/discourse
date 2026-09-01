@@ -100,8 +100,7 @@ class InlineOneboxer
     def finish_preview!(user_id)
       Discourse.redis.del(preview_key(user_id))
     end
-  end
-  class << self
+
     def onebox_for(url, title, opts, css_class: nil)
       title = title && Emoji.gsub_emoji_to_unicode(title)
       if title && opts[:post_number]
@@ -149,6 +148,7 @@ class InlineOneboxer
       "inline-onebox:preview:#{user_id}"
     end
   end
+
   def initialize(urls, opts = nil)
     @urls = urls
     @opts = opts || {}

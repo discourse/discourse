@@ -12,6 +12,7 @@ module Middleware
     CACHEABLE_ENV = "discourse.anonymous_cache.cacheable"
 
     PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
+
     class << self
       def cache_key_segments
         @@cache_key_segments ||= {

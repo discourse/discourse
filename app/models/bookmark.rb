@@ -23,31 +23,9 @@ class Bookmark < ActiveRecord::Base
     def valid_bookmarkable_types
       Bookmark.registered_bookmarkables.map { |bm| bm.model.polymorphic_name }
     end
-  end
 
-  belongs_to :user
-  belongs_to :bookmarkable, polymorphic: true
+    public
 
-  has_many :dependent_reminder_notifications,
-           ->(bookmark) do
-             # we keep these notifications otherwise they would be deleted when the bookmark is deleted
-             # and user would never have a chance to see them
-             if bookmark.auto_delete_preference ==
-                  Bookmark.auto_delete_preferences[:when_reminder_sent]
-               where("false")
-             else
-               where(notification_type: Notification.types[:bookmark_reminder]).where(
-                 "data::jsonb->>'bookmark_id' = ?",
-                 bookmark.id.to_s,
-               )
-             end
-           end,
-           class_name: "Notification",
-           foreign_key: :user_id,
-           primary_key: :user_id,
-           dependent: :destroy
-
-  class << self
     def auto_delete_preferences
       @auto_delete_preferences ||=
         Enum.new(never: 0, when_reminder_sent: 1, on_owner_reply: 2, clear_reminder: 3)
@@ -56,24 +34,9 @@ class Bookmark < ActiveRecord::Base
     def select_type(bookmarks_relation, type)
       bookmarks_relation.select { |bm| bm.bookmarkable_type == type }
     end
-  end
 
-  validate :polymorphic_columns_present, on: %i[create update]
-  validate :valid_bookmarkable_type, on: %i[create update]
+    public
 
-  validate :unique_per_bookmarkable,
-           on: %i[create update],
-           if:
-             Proc.new { |b|
-               b.will_save_change_to_bookmarkable_id? || b.will_save_change_to_bookmarkable_type? ||
-                 b.will_save_change_to_user_id?
-             }
-
-  validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
-  validate :bookmark_limit_not_reached
-  validates :name, length: { maximum: 100 }
-
-  class << self
     def count_per_day(opts = nil)
       opts ||= {}
       result =
@@ -108,6 +71,44 @@ class Bookmark < ActiveRecord::Base
       Bookmark.registered_bookmarkables.each(&:cleanup_deleted)
     end
   end
+
+  belongs_to :user
+  belongs_to :bookmarkable, polymorphic: true
+
+  has_many :dependent_reminder_notifications,
+           ->(bookmark) do
+             # we keep these notifications otherwise they would be deleted when the bookmark is deleted
+             # and user would never have a chance to see them
+             if bookmark.auto_delete_preference ==
+                  Bookmark.auto_delete_preferences[:when_reminder_sent]
+               where("false")
+             else
+               where(notification_type: Notification.types[:bookmark_reminder]).where(
+                 "data::jsonb->>'bookmark_id' = ?",
+                 bookmark.id.to_s,
+               )
+             end
+           end,
+           class_name: "Notification",
+           foreign_key: :user_id,
+           primary_key: :user_id,
+           dependent: :destroy
+
+  validate :polymorphic_columns_present, on: %i[create update]
+  validate :valid_bookmarkable_type, on: %i[create update]
+
+  validate :unique_per_bookmarkable,
+           on: %i[create update],
+           if:
+             Proc.new { |b|
+               b.will_save_change_to_bookmarkable_id? || b.will_save_change_to_bookmarkable_type? ||
+                 b.will_save_change_to_user_id?
+             }
+
+  validate :ensure_sane_reminder_at_time, if: :will_save_change_to_reminder_at?
+  validate :bookmark_limit_not_reached
+  validates :name, length: { maximum: 100 }
+
   def registered_bookmarkable
     Bookmark.registered_bookmarkable_from_type(bookmarkable_type)
   end

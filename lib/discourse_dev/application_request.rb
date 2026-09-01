@@ -19,6 +19,7 @@ module DiscourseDev
         new.populate!
       end
     end
+
     def initialize
       settings = DiscourseDev.config.application_request
       @baseline = settings[:logged_in_browser_pageviews_per_day]

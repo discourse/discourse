@@ -21,6 +21,7 @@ class SearchLog < ActiveRecord::Base
         -> { CrawlerScorer.enabled? ? non_staff_or_anonymous.excluding_crawlers : non_staff }
 
   BACKFILL_AGENT_BATCH_SIZE = 100
+
   class << self
     def search_types
       @search_types ||= Enum.new(header: 1, full_page: 2)
@@ -91,8 +92,7 @@ class SearchLog < ActiveRecord::Base
 
       result
     end
-  end
-  class << self
+
     def backfill_crawler!
       agents = DB.query_single(<<~SQL)
       SELECT DISTINCT user_agent
@@ -226,6 +226,7 @@ class SearchLog < ActiveRecord::Base
       period&.to_date
     end
   end
+
   def ctr
     return 0 if click_through == 0 || searches == 0
 

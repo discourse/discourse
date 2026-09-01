@@ -28,6 +28,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @html_entities.decode(excerpt.to_s.gsub(/<[^>]*>/, "")).presence
     end
   end
+
   def initialize(length, options = nil)
     @length = length
     @excerpt = +""

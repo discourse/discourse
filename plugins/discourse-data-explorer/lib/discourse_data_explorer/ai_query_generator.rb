@@ -6,13 +6,12 @@ module DiscourseDataExplorer
       def default_enabled
         false
       end
-    end
 
-    class << self
       def max_turn_tokens
         100_000
       end
     end
+
     def tools
       [
         DiscourseAi::Agents::Tools::DbSchema,

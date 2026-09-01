@@ -273,6 +273,7 @@ class DiscourseDiff
 
     USELESS_TAGS = %w[html body]
     AUTOCLOSING_TAGS = %w[area base br col embed hr img input meta]
+
     class << self
       def tokenize(html)
         me = new
@@ -281,6 +282,7 @@ class DiscourseDiff
         me.tokens
       end
     end
+
     def initialize
       @tokens = []
     end

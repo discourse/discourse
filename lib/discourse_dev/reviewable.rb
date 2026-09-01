@@ -16,8 +16,7 @@ module DiscourseDev
             DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.to_a
         ).each { |klass| klass.new(users, topics, posts).populate! }
       end
-    end
-    class << self
+
       def create_needed_users(count)
         users = ::User.human_users.limit(count).to_a
 
@@ -49,6 +48,7 @@ module DiscourseDev
         posts
       end
     end
+
     def initialize(users, topics, posts)
       @users = users
       @topics = topics

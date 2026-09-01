@@ -12,13 +12,12 @@ module Onebox
 
       WIDTH = 480
       HEIGHT = 360
+
       class << self
         def matches_path(path)
           path.match?(%r{^/.+$})
         end
-      end
 
-      class << self
         def embed_url(video_id)
           "https://www.youtube.com/embed/#{video_id}"
         end

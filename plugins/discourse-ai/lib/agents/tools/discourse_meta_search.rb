@@ -72,9 +72,7 @@ module DiscourseAi
             Discourse search joins all terms with AND. Reduce and simplify terms to find more results.
           TEXT
           end
-        end
 
-        class << self
           def categories
             return @categories if defined?(@categories)
 
@@ -91,6 +89,7 @@ module DiscourseAi
                 .to_h
           end
         end
+
         def search_args
           parameters.slice(:category, :user, :order, :max_posts, :tags, :before, :after, :status)
         end

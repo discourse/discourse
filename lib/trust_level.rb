@@ -48,11 +48,9 @@ class TrustLevel
         SiteSetting.default_trust_level,
       ].max
     end
-  end
 
-  private
+    public
 
-  class << self
     def find_previous_trust_level(user)
       UserHistory
         .where(action: UserHistory.actions[:change_trust_level])
@@ -62,4 +60,6 @@ class TrustLevel
         .to_i
     end
   end
+
+  private
 end

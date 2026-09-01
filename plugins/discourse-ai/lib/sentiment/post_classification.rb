@@ -7,6 +7,7 @@ module DiscourseAi
 
       CONCURRENT_CLASSFICATIONS = 40
       CONCURRENT_AGENT_CLASSIFICATIONS = 5
+
       class << self
         def backfill_query(from_post_id: nil, max_age_days: nil)
           available_classifier_names = active_classifier_names

@@ -11,27 +11,22 @@ module Migrations
             def compute_checksums(plugins_path)
               discover_plugins(plugins_path).transform_values { |paths| checksum_for_paths(paths) }
             end
-          end
 
-          private_class_method class << self
-                                 def checksum_for_paths(paths)
-                                   files =
-                                     paths
-                                       .select { |p| File.directory?(p) }
-                                       .flat_map { |p| Dir[File.join(p, "*.rb")].sort }
-                                       .uniq
+            private
 
-                                   return "empty" if files.empty?
+            def checksum_for_paths(paths)
+              files =
+                paths
+                  .select { |p| File.directory?(p) }
+                  .flat_map { |p| Dir[File.join(p, "*.rb")].sort }
+                  .uniq
 
-                                   digests =
-                                     files.map do |f|
-                                       "#{File.basename(f)}:#{Digest::MD5.file(f).hexdigest}"
-                                     end
-                                   Digest::MD5.hexdigest(digests.join("\n"))
-                                 end
-                               end
+              return "empty" if files.empty?
 
-          class << self
+              digests = files.map { |f| "#{File.basename(f)}:#{Digest::MD5.file(f).hexdigest}" }
+              Digest::MD5.hexdigest(digests.join("\n"))
+            end
+
             def discover_plugins(plugins_path)
               plugins = {}
 
@@ -45,15 +40,15 @@ module Migrations
 
               plugins
             end
-          end
 
-          private_class_method class << self
-                                 def plugin_migration_paths(plugin_dir)
-                                   %w[db/migrate db/post_migrate]
-                                     .map { |sub| File.join(plugin_dir, sub) }
-                                     .select { |path| File.directory?(path) }
-                                 end
-                               end
+            private
+
+            def plugin_migration_paths(plugin_dir)
+              %w[db/migrate db/post_migrate]
+                .map { |sub| File.join(plugin_dir, sub) }
+                .select { |path| File.directory?(path) }
+            end
+          end
 
           def initialize(plugins_path: nil)
             @plugins_path = plugins_path || Rails.root.join("plugins").to_s

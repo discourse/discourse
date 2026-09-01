@@ -31,9 +31,7 @@ class ::TopicAssigner
       deprecation_note
       Assigner.publish_topic_tracking_state(topic, user_id)
     end
-  end
 
-  class << self
     def deprecation_note
       Discourse.deprecate(
         "TopicAssigner class is deprecated, use Assigner",
@@ -42,6 +40,7 @@ class ::TopicAssigner
       )
     end
   end
+
   def initialize(target, user)
     self.class.deprecation_note
     Assigner.new(target, user)

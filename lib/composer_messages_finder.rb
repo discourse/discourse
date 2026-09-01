@@ -5,8 +5,7 @@ class ComposerMessagesFinder
     def check_methods
       @check_methods ||= instance_methods.find_all { |m| m =~ /\Acheck\_/ }
     end
-  end
-  class << self
+
     def user_not_seen_in_a_while(usernames)
       User
         .where(username_lower: usernames)
@@ -15,6 +14,7 @@ class ComposerMessagesFinder
         .sort
     end
   end
+
   def initialize(user, details)
     @user = user
     @details = details

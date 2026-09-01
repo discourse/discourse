@@ -80,6 +80,7 @@ class PostCreator
       end
     end
   end
+
   # Acceptable options:
   #
   #   raw                     - raw text of post

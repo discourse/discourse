@@ -169,11 +169,9 @@ class UrlHelper
         url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
       end
     end
-  end
 
-  private
+    public
 
-  class << self
     def normalize_with_addressable(url)
       u = Addressable::URI.normalized_encode(url, Addressable::URI)
 
@@ -192,4 +190,6 @@ class UrlHelper
       u.to_s
     end
   end
+
+  private
 end

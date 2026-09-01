@@ -22,8 +22,7 @@ module BackupRestore
             Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")
           ] + Dir[Rails.root.join("plugins/**/db/migrate/*.rb")]
       end
-    end
-    class << self
+
       def psql_command
         db_conf = BackupRestore.database_configuration
 
@@ -43,8 +42,7 @@ module BackupRestore
           username_argument, # the username to connect as (if any)
         ].compact.join(" ")
       end
-    end
-    class << self
+
       def backup_schema_dropable?
         return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
 
@@ -56,6 +54,7 @@ module BackupRestore
         false
       end
     end
+
     def initialize(logger, current_db)
       @logger = logger
       @db_was_changed = false

@@ -141,6 +141,7 @@ class Report
     web_hook_events_daily_aggregate
   ]
   INTERNAL_REPORT_TYPES = %w[posters_by_member_type_members]
+
   class << self
     def hidden?(type, guardian:)
       return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
@@ -152,40 +153,9 @@ class Report
         SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
       hidden_reports.include?(type)
     end
-  end
 
-  attr_accessor :type,
-                :data,
-                :total,
-                :prev30Days,
-                :start_date,
-                :end_date,
-                :labels,
-                :prev_period,
-                :facets,
-                :limit,
-                :average,
-                :percent,
-                :higher_is_better,
-                :icon,
-                :modes,
-                :prev_data,
-                :dates_filtering,
-                :error,
-                :primary_color,
-                :secondary_color,
-                :filters,
-                :available_filters,
-                :legacy,
-                :default_group_by,
-                :y_axis_title,
-                :current_user,
-                :guardian,
-                :include_related_items,
-                :related_items,
-                :related_items_totals
+    public
 
-  class << self
     def default_days
       30
     end
@@ -196,9 +166,7 @@ class Report
         { type: :number, property: :y, title: I18n.t("reports.default.labels.count") },
       ]
     end
-  end
 
-  class << self
     def cache_key(report)
       guardian = report.guardian || report.current_user&.guardian
 
@@ -216,8 +184,7 @@ class Report
         CrawlerScorer.enabled?,
       ].compact.map(&:to_s).join(":")
     end
-  end
-  class << self
+
     def clear_cache(type = nil)
       pattern = type ? "reports:#{type}:*" : "reports:*"
 
@@ -234,8 +201,7 @@ class Report
         yield
       end
     end
-  end
-  class << self
+
     def _get(type, opts = nil)
       opts ||= {}
       type = type.to_s
@@ -489,6 +455,38 @@ class Report
       add_counts report, subject, "topics.created_at"
     end
   end
+
+  attr_accessor :type,
+                :data,
+                :total,
+                :prev30Days,
+                :start_date,
+                :end_date,
+                :labels,
+                :prev_period,
+                :facets,
+                :limit,
+                :average,
+                :percent,
+                :higher_is_better,
+                :icon,
+                :modes,
+                :prev_data,
+                :dates_filtering,
+                :error,
+                :primary_color,
+                :secondary_color,
+                :filters,
+                :available_filters,
+                :legacy,
+                :default_group_by,
+                :y_axis_title,
+                :current_user,
+                :guardian,
+                :include_related_items,
+                :related_items,
+                :related_items_totals
+
   def initialize(type)
     @type = type
     @start_date ||= Report.default_days.days.ago.utc.beginning_of_day

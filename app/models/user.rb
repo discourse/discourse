@@ -216,6 +216,7 @@ class User < ActiveRecord::Base
   # expensive queries
   MAX_UNREAD_NOTIFICATIONS = 99
   USER_FIELD_PREFIX = "user_field_"
+
   class << self
     def user_tips
       @user_tips ||=
@@ -227,8 +228,7 @@ class User < ActiveRecord::Base
           suggested_topics: 5,
         )
     end
-  end
-  class << self
+
     def max_password_length
       UserPassword::MAX_PASSWORD_LENGTH
     end
@@ -299,8 +299,7 @@ class User < ActiveRecord::Base
     def human_user_id?(user_id)
       user_id > 0
     end
-  end
-  class << self
+
     def new_from_params(params)
       user = User.new
       user.name = params[:name]
@@ -309,8 +308,7 @@ class User < ActiveRecord::Base
       user.username = params[:username]
       user
     end
-  end
-  class << self
+
     def suggest_name(string)
       return "" if string.blank?
       (string[/\A[^@]+/].presence || string[/[^@]+\z/]).tr(".", " ").titleize
@@ -335,13 +333,11 @@ class User < ActiveRecord::Base
     def find_by_username(username)
       find_by(username_lower: normalize_username(username))
     end
-  end
-  class << self
+
     def email_hash(email)
       Digest::MD5.hexdigest(email.strip.downcase)
     end
-  end
-  class << self
+
     def max_unread_notifications
       @max_unread_notifications ||= MAX_UNREAD_NOTIFICATIONS
     end
@@ -349,8 +345,7 @@ class User < ActiveRecord::Base
     def max_unread_notifications=(val)
       @max_unread_notifications = val
     end
-  end
-  class << self
+
     def update_ip_address!(user_id, new_ip:, old_ip:)
       can_update_ip_address =
         DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
@@ -386,14 +381,12 @@ class User < ActiveRecord::Base
         end
       end
     end
-  end
-  class << self
+
     def last_seen_redis_key(user_id, now)
       now_date = now.to_date
       "user:#{user_id}:#{now_date}"
     end
-  end
-  class << self
+
     def should_update_last_seen?(user_id, now = Time.zone.now)
       return true if SiteSetting.active_user_rate_limit_secs <= 0
 
@@ -404,13 +397,11 @@ class User < ActiveRecord::Base
         ex: SiteSetting.active_user_rate_limit_secs,
       )
     end
-  end
-  class << self
+
     def gravatar_template(email)
       "//#{SiteSetting.gravatar_base_url}/avatar/#{email_hash(email)}.png?s={size}&r=pg&d=identicon"
     end
-  end
-  class << self
+
     def username_hash(username)
       username
         .each_char
@@ -472,8 +463,7 @@ class User < ActiveRecord::Base
     def color_index(username, length)
       Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
     end
-  end
-  class << self
+
     def format_penalty_reason(details)
       return if details.blank?
       sanitize_staff_reason(details).split("<br>").first
@@ -486,8 +476,7 @@ class User < ActiveRecord::Base
         attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
       )
     end
-  end
-  class << self
+
     def count_by_signup_date(start_date = nil, end_date = nil, group_id = nil)
       result = self
 
@@ -522,8 +511,7 @@ class User < ActiveRecord::Base
 
       result.count
     end
-  end
-  class << self
+
     def preload_recent_time_read(users)
       times =
         UserVisit
@@ -533,14 +521,12 @@ class User < ActiveRecord::Base
           .sum(:time_read)
       users.each { |u| u.preload_recent_time_read(times[u.id] || 0) }
     end
-  end
-  class << self
+
     def username_exists?(username)
       username = normalize_username(username)
       DB.exec(User::USERNAME_EXISTS_SQL, username: username) > 0
     end
-  end
-  class << self
+
     def purge_unactivated
       return [] if SiteSetting.purge_unactivated_users_grace_period_days <= 0
 
@@ -574,8 +560,7 @@ class User < ActiveRecord::Base
           # keep going
         end
     end
-  end
-  class << self
+
     def first_login_admin_id
       User
         .where(admin: true)
@@ -584,8 +569,7 @@ class User < ActiveRecord::Base
         .order("user_auth_tokens.created_at")
         .pick(:id)
     end
-  end
-  class << self
+
     def ensure_consistency!
       DB.exec <<~SQL
       UPDATE users
@@ -600,6 +584,7 @@ class User < ActiveRecord::Base
     SQL
     end
   end
+
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
   end

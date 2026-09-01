@@ -5,6 +5,7 @@ module DiscourseAi
     module Dialects
       class ChatGpt < Dialect
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
+
         class << self
           def can_translate?(llm_model)
             return false if llm_model.url.to_s.include?("/v1/responses")

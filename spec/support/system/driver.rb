@@ -21,12 +21,9 @@ module SystemDrivers
 
       @schemas_preloaded = true
     end
-  end
 
-  MOBILE_USER_AGENT =
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1"
+    public
 
-  class << self
     def allow_network_hosts(example)
       Array(example.metadata[:allow_network]).map(&:to_s).map(&:strip).reject(&:empty?).uniq.sort
     end
@@ -179,6 +176,10 @@ module SystemDrivers
       base_args + args
     end
   end
+
+  MOBILE_USER_AGENT =
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1"
+
   private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
 end
 

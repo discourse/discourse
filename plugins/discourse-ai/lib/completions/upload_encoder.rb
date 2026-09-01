@@ -71,9 +71,7 @@ module DiscourseAi
             encode_image(upload, transcode_format(extension), max_pixels, skips)
           end
         end
-      end
 
-      class << self
         private
 
         def normalize_attachment_types(types)
