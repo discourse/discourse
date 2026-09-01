@@ -11,7 +11,9 @@ class SiteSerializer < ApplicationSerializer
     :trust_levels,
     :groups,
     :filters,
+    :anonymous_list_filters,
     :homepage_choices,
+    :homepage_options,
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
@@ -224,8 +226,16 @@ class SiteSerializer < ApplicationSerializer
     Discourse.filters.map(&:to_s)
   end
 
+  def anonymous_list_filters
+    Discourse.anonymous_list_filters.map(&:to_s)
+  end
+
   def homepage_choices
-    TopMenu.homepage_choices
+    HomepageSiteSetting.choices
+  end
+
+  def homepage_options
+    DiscoursePluginRegistry.homepage_options.map { |option| option.slice(:id, :path, :server_side) }
   end
 
   def periods

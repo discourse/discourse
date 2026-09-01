@@ -10212,7 +10212,8 @@ CREATE TABLE public.topic_embeds (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    embed_content_cache text
+    embed_content_cache text,
+    content_truncated boolean
 );
 
 
@@ -11872,7 +11873,6 @@ CREATE TABLE public.user_options (
     sidebar_show_count_of_new_items boolean DEFAULT false NOT NULL,
     watched_precedence_over_muted boolean DEFAULT false NOT NULL,
     chat_separate_sidebar_mode integer DEFAULT 0 NOT NULL,
-    topics_unread_when_closed boolean DEFAULT true NOT NULL,
     show_thread_title_prompts boolean DEFAULT true NOT NULL,
     auto_image_caption boolean DEFAULT false NOT NULL,
     enable_smart_lists boolean DEFAULT true NOT NULL,
@@ -11899,10 +11899,7 @@ CREATE TABLE public.user_options (
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
-    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
+    ai_ask_ai_default boolean DEFAULT true NOT NULL
 );
 
 
@@ -23361,8 +23358,17 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260828145150'),
+('20260826124054'),
+('20260824091843'),
+('20260824072257'),
+('20260824051214'),
+('20260821210913'),
+('20260821210543'),
+('20260821164114'),
 ('20260820171539'),
 ('20260820143851'),
+('20260819131113'),
 ('20260818143417'),
 ('20260818081537'),
 ('20260818045317'),

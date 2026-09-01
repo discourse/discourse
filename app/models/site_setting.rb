@@ -191,7 +191,7 @@ class SiteSetting < ActiveRecord::Base
   def self.homepage
     configured = default_homepage.presence
 
-    if configured && TopMenu.homepage_choices.include?(configured)
+    if configured && HomepageSiteSetting.choices.include?(configured)
       configured
     else
       top_menu_items[0].name
@@ -204,6 +204,11 @@ class SiteSetting < ActiveRecord::Base
 
   def self.anonymous_homepage
     return homepage if anonymous_menu_items.include?(homepage)
+    if DiscoursePluginRegistry.homepage_options.any? { |option|
+         option[:id] == homepage && option[:anonymous]
+       }
+      return homepage
+    end
 
     top_menu_items
       .map { |item| item.name }

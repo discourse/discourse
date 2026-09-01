@@ -4392,20 +4392,14 @@ lt:
       search:
         title: "Paieška"
       site_traffic_explorer:
-        pageviews: "Puslapio peržiūros"
+        metric_information: "Apie %{metric}"
+        apply: "Kandidatuoti"
         view_more: "Žiūrėti daugiau"
         cards:
           visitors: "Lankytojai"
-        columns:
-          top_urls: "Nuoroda"
-          browsers: "Naršyklė"
-          ip_addresses: "IP adresas"
         filters:
           browser: "Naršyklė"
           ip: "IP adresas"
-        metrics:
-          pageviews:
-            label: "Puslapio peržiūros"
         series:
           anonymous_human: "Anonimas"
       dashboard:

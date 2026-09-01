@@ -46,6 +46,12 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "Quiet (one sentence, no heading)"
+          balanced: "Balanced (one short paragraph)"
+          detailed: "Detailed (two or three short paragraphs)"
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
@@ -347,9 +353,12 @@ en:
         search:
           name: "Search"
           description: "Enhances search experience by providing AI-generated answers to queries"
-          discoveries: "Discoveries"
+          discoveries: "Discover (deprecated)"
+          ask_ai: "Ask AI"
           setting_groups:
             settings: "Basic Settings"
+            agents: "Agents"
+            access_control: "Access Control"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
@@ -674,9 +683,7 @@ en:
         refresh: "Refresh logs"
         retry: "Try again"
         apply: "Apply"
-        find: "Find"
         clear_filters: "Clear all filters"
-        all_periods: "All time periods"
         all_outcomes: "All outcomes"
         all_models: "All models"
         all_features: "All features"
@@ -686,11 +693,8 @@ en:
         has_retries: "Has retries"
         retried: "Retried"
         unattributed: "Unattributed"
-        user_placeholder: "Filter by user"
-        id_placeholder: "Enter an ID"
-        log_id: "Log ID"
-        topic_id: "Topic ID"
-        post_id: "Post ID"
+        search_placeholder: "Search by @username or ID (e.g. @user1 topic:123 log:45)"
+        feature_placeholder: "Feature name"
         time: "Time"
         when: "When"
         outcome: "Outcome"
@@ -716,15 +720,12 @@ en:
         cost: "Cost"
         actions: "Actions"
         table_caption: "AI requests sent to language models and their outcomes"
-        view_details: "View details"
+        view_details: "Details"
         no_results: "No AI logs match these filters."
         no_logs: "No retained AI logs were found."
-        filters:
-          title: "Filters"
-          period: "Time period"
-          date_range: "Date range"
-          id_type: "ID type"
-          id_value: "ID value"
+        new_logs_count:
+          one: "See %{count} new log"
+          other: "See %{count} new logs"
         periods:
           hour: "Last hour"
           day: "Last 24 hours"
@@ -837,7 +838,7 @@ en:
         create_user: Create user
         create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
         default_llm: Default language model
-        default_llm_help: The default language model to use for this agent. Required if you wish to mention the agent on public posts.
+        default_llm_help: The default language model to use for this agent. When blank, the site default language model is used.
         system_prompt: System prompt
         forced_tool_strategy: Forced tool strategy
         allow_chat_direct_messages: "Allow chat direct messages"
@@ -1465,16 +1466,16 @@ en:
 
         semantic_search: "Topics (Semantic)"
         semantic_search_results:
-          toggle: "AI results"
-          unavailable: "AI results unavailable"
-          zero_results_expanded: "Zero results found, showing %{count} AI results"
+          toggle: "Related results"
+          unavailable: "Related results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} related results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
-          invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          invalid_sort: "Search results must be sorted by relevance to display related results"
           not_submitted: "Submit a search to enable AI results"
           no_results: "No AI results found for this search"
-        semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
-        ai_generated_result: "Search result found using AI"
+        semantic_search_unavailable_tooltip: "Search results must be sorted by relevance to display related results"
+        ai_generated_result: "Related search result found using AI"
         ai_results_notice:
           no_results: "No exact matches, but here are some related results."
           few_results:
@@ -1638,21 +1639,52 @@ en:
             expanded_description: "with AI summaries"
 
       discobot_discoveries:
-        main_title: "Discobot discoveries"
-        regular_results: "Topics"
-        tell_me_more: "Tell me more..."
-        continue_convo: "Continue conversation..."
+        main_title: "Ask AI"
         loading_convo: "Loading conversation"
-        collapse: "Collapse"
-        timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+        follow_up:
+          label: "Ask a follow-up"
+          placeholder: "Ask a follow-up"
+          submit: "Ask"
+        timed_out: "Ask AI took too long to complete this search. Try again or use Search."
+        request_failed: "Ask AI could not start this search. Try again or use Search."
+        no_answer: "AI couldn’t find a clear answer. Ask the community."
+        create_topic: "Create topic"
+        answer_ready: "Ask AI answer ready."
         user_setting: "Enable AI search discoveries"
-        tooltip:
-          header: "AI powered search"
-          content: "Natural language search powered by %{model}"
-          actions:
-            info: "How does it work?"
-            disable: "Disable"
-
+        legacy:
+          main_title: "Discobot discoveries"
+          regular_results: "Topics"
+          tell_me_more: "Tell me more..."
+          continue_convo: "Continue conversation..."
+          loading_convo: "Loading conversation"
+          collapse: "Collapse"
+          timed_out: "Discobot couldn't find any discoveries. Something went wrong."
+          tooltip:
+            header: "AI powered search"
+            content: "Natural language search powered by %{model}"
+            actions:
+              info: "How does it work?"
+              disable: "Disable"
+        search_placeholder: "Search or Ask AI"
+        search_type: "AI"
+        ask_button: "Ask"
+        tip_ask: "asks AI instead of searching"
+        tip_search: "searches instead of asking AI"
+        make_default: "Make AI my default search option"
+        dismiss_default_preference: "Hide this setting"
+        default_preference_dismissed: "This setting is also available in your user preferences"
+        shortcut_hint: "or %{shortcut}"
+        advanced_with_shortcut: "Open advanced search (%{shortcut})"
+        search_all_topics: "All topics"
+        search_this_topic: "This topic"
+        search_in_context: "In %{name}"
+        search_group_messages: "Messages in %{group}"
+        search_user_posts: "Posts by %{username}"
+        search_messages: "Messages"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Related topics"
+          show_all_matching: "Show all matching topics"
       user_preferences:
         empty: "There are no relevant settings available at this time"
     review:
@@ -1662,6 +1694,8 @@ en:
         rejected_tool_action:
           title: "Tool rejected"
       types:
+        discourse_ai_triage:
+          title: "AI triage"
         reviewable_ai_post:
           title: "AI-Flagged post"
         reviewable_ai_chat_message:

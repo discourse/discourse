@@ -131,7 +131,6 @@ const extension = {
     },
   },
   serializeNode: {
-    // TODO(renato): state.renderInline should escape `|` if `state.inTable`
     table(state, node) {
       state.flushClose(1);
 
@@ -145,7 +144,7 @@ const extension = {
       const prevInTable = state.inTable;
       state.inTable = true;
 
-      // leading newline, it seems to have issues in a line just below a > blockquote otherwise
+      // Keep a table following a blockquote from being parsed as part of it.
       if (state.out) {
         state.out += "\n";
       }
@@ -170,7 +169,11 @@ const extension = {
             }
             state.out += cellIndex === 0 ? "| " : " | ";
 
+            const cellStart = state.out.length;
             state.renderInline(cell);
+            state.out =
+              state.out.slice(0, cellStart) +
+              state.out.slice(cellStart).replaceAll("|", "\\|");
 
             if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {

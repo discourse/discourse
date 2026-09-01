@@ -1580,4 +1580,66 @@ RSpec.describe PostDestroyer do
       end
     end
   end
+
+  describe "members of delete_all_posts_and_topics_allowed_groups" do
+    fab!(:group)
+    fab!(:group_member, :user)
+
+    before do
+      group.add(group_member)
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+    end
+
+    it "deletes another user's reply" do
+      reply = create_post(topic: post.topic, user: coding_horror)
+
+      PostDestroyer.new(group_member, reply).destroy
+
+      expect(reply.reload.deleted_at).to be_present
+      expect(reply.user_deleted).to eq(false)
+    end
+
+    it "deletes the topic along with the first post" do
+      PostDestroyer.new(group_member, post).destroy
+
+      expect(post.reload.deleted_at).to be_present
+      expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+    end
+
+    it "recovers another user's deleted reply" do
+      reply = create_post(topic: post.topic, user: coding_horror)
+      PostDestroyer.new(moderator, reply).destroy
+
+      PostDestroyer.new(group_member, reply.reload).recover
+
+      expect(reply.reload.deleted_at).to eq(nil)
+    end
+
+    it "recovers the topic along with the first post" do
+      PostDestroyer.new(moderator, post).destroy
+
+      PostDestroyer.new(group_member, post.reload).recover
+
+      expect(post.reload.deleted_at).to eq(nil)
+      expect(post.topic.deleted_at).to eq(nil)
+    end
+  end
+
+  it "leaves the topic deleted when recovering a first post the user cannot recover" do
+    PostDestroyer.new(moderator, post).destroy
+
+    PostDestroyer.new(coding_horror, post.reload).recover
+
+    expect(post.reload.deleted_at).to be_present
+    expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+  end
+
+  it "leaves the topic deleted when its author recovers a first post staff trashed" do
+    PostDestroyer.new(moderator, post).destroy
+
+    PostDestroyer.new(post.user, post.reload).recover
+
+    expect(post.reload.deleted_at).to be_present
+    expect(Topic.with_deleted.find(post.topic_id).deleted_at).to be_present
+  end
 end

@@ -652,6 +652,8 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "#{root_path}/random-username" => "users#generate_random_username"
+
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
 
@@ -1894,6 +1896,11 @@ Discourse::Application.routes.draw do
            as: "list_#{filter}"
     end
 
+    DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+      option = registration[:value]
+      get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+    end
+
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
 
     # special case for categories
@@ -1973,6 +1980,8 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+    put "/sidebar_sections/:id/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/:id/move_link" => "sidebar_sections#move_link"
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"

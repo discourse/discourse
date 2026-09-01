@@ -3,8 +3,10 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   focus,
   settled,
+  triggerEvent,
   visit,
   waitFor,
 } from "@ember/test-helpers";
@@ -484,6 +486,94 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     assert.false(uppyEventFired, "uppy does not start uploading the file");
     done();
+  });
+});
+
+acceptance("Uppy Composer Attachment - Auto Image Grid", function (needs) {
+  needs.user({ "user_option.composition_mode": 1 });
+  needs.pretender(pretender);
+  needs.settings({
+    simultaneous_uploads: 3,
+    enable_auto_grid_images: true,
+    allow_uncategorized_topics: true,
+  });
+  needs.hooks.afterEach(() => {
+    uploadNumber = 1;
+  });
+
+  test("auto-grids previewable images immediately", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+    const dataTransfer = new DataTransfer();
+    ["image-1.png", "image-2.png", "image-3.png"].forEach((filename) => {
+      dataTransfer.items.add(createFile(filename));
+    });
+
+    await triggerEvent(".ProseMirror", "drop", { dataTransfer });
+    await waitFor(".composer-image-grid");
+
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--image")
+      .exists({ count: 3 }, "previewable images are gridded while uploading");
+
+    await uploadsComplete;
+  });
+
+  test("auto-grids MIME-less images dropped from the filesystem", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+    const dataTransfer = new DataTransfer();
+    ["IMG_1.HEIC", "IMG_2.HEIC", "IMG_3.HEIC"].forEach((filename) => {
+      dataTransfer.items.add(createFile(filename, ""));
+    });
+
+    await triggerEvent(".ProseMirror", "drop", { dataTransfer });
+    await waitFor(".composer-image-grid .upload-placeholder.--file");
+
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "the image filenames create one grid immediately");
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--file")
+      .exists(
+        { count: 3 },
+        "the pending HEIC uploads use file placeholders inside the grid"
+      );
+
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".composer-image-node")
+      .exists({ count: 3 }, "all completed images are present");
+    assert.deepEqual(
+      findAll(".composer-image-node img").map((img) =>
+        img.getAttribute("data-orig-src")
+      ),
+      [
+        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        "upload://sdfljsdfgjlkwg4328.jpeg",
+        "upload://sdfljsdfgjlkwg4328.jpeg",
+      ],
+      "the final images retain their returned upload URLs"
+    );
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "the completed drop preserves the grid");
+    assert
+      .dom(".composer-image-grid .composer-image-node")
+      .exists({ count: 3 }, "the completed images are placed in the grid");
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--file")
+      .doesNotExist("the completed uploads no longer use file placeholders");
   });
 });
 

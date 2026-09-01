@@ -56,8 +56,8 @@ export default class AdminHolidaysListItem extends Component {
             @action={{this.toggleEnableHoliday}}
             @label={{if
               this.isHolidayDisabled
-              "discourse_calendar.enable_holiday"
-              "discourse_calendar.disable_holiday"
+              "discourse_events.enable_holiday"
+              "discourse_events.disable_holiday"
             }}
             @isLoading={{this.loading}}
             class="btn-default btn-small"

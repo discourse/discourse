@@ -265,6 +265,7 @@ export default {
             key = CHAT_PANEL;
             switchButtonLabel = i18n("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
+            scrollActiveLinkIntoView = true;
 
             get switchButtonDefaultUrl() {
               return chatStateManager.lastKnownChatURL || "/chat";

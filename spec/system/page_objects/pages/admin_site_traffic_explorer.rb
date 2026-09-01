@@ -72,6 +72,35 @@ module PageObjects
         has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
       end
 
+      def toggle_chart_legend(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart.legend.legendItems.find(
+              (item) => item.text === label
+            );
+
+            chart.options.plugins.legend.onClick(null, legendItem, chart.legend);
+            done();
+          });
+        JAVASCRIPT
+
+        self
+      end
+
+      def has_selected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) }
+      end
+
+      def has_deselected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) == false }
+      end
+
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
@@ -101,6 +130,22 @@ module PageObjects
             "[data-test-site-traffic-row]",
             text: /#{Regexp.escape(label)}.*#{Regexp.escape(count)}/m,
           )
+        end
+      end
+
+      def has_rows?(card:, rows:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          return false unless has_css?("[data-test-site-traffic-row]", count: rows.size)
+
+          actual_rows =
+            all("[data-test-site-traffic-row]").map do |row|
+              {
+                label: row.find(".site-traffic-explorer__dimension-text").text,
+                count: row.find(".site-traffic-explorer__row-count").text,
+              }
+            end
+
+          actual_rows == rows
         end
       end
 
@@ -196,6 +241,7 @@ module PageObjects
         selector = "[data-test-site-traffic-apply-filters]"
 
         has_css?(selector, count: 1) &&
+          has_css?("#{selector} .d-button-label", exact_text: "Apply", count: 1) &&
           has_css?(
             "#{selector} .site-traffic-explorer__filter-apply-pending-count",
             exact_text: count.to_s,
@@ -204,7 +250,7 @@ module PageObjects
       end
 
       def has_no_apply_filters?
-        has_no_button?("Apply", exact: false)
+        has_no_css?("[data-test-site-traffic-apply-filters]")
       end
 
       def apply_filters
@@ -260,7 +306,7 @@ module PageObjects
 
       def apply_expanded_filters
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          find_button("Apply", exact: true).click
+          find_button("Apply filters", exact: true).click
         end
         self
       end
@@ -274,6 +320,28 @@ module PageObjects
       end
 
       private
+
+      def legend_item_selected?(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart?.legend?.legendItems.find(
+              (item) => item.text === label
+            );
+
+            done(
+              legendItem
+                ? chart.isDatasetVisible(legendItem.datasetIndex)
+                : null
+            );
+          });
+        JAVASCRIPT
+      end
 
       def open_date_range
         find(".db-date-range__trigger").click

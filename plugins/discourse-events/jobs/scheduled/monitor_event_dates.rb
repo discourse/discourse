@@ -6,7 +6,7 @@ module Jobs
       every 1.minute
 
       def execute(args)
-        DiscoursePostEvent::EventDate.pending.find_each do |event_date|
+        DiscourseEvents::Events::EventDate.pending.find_each do |event_date|
           send_reminder(event_date)
           trigger_events(event_date)
           finish(event_date)

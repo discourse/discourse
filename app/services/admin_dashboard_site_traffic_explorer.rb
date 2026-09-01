@@ -175,7 +175,7 @@ class AdminDashboardSiteTrafficExplorer
     }
   end
 
-  def filter_predicate(except: nil)
+  def filter_predicate
     predicates = {
       top_url: "(NOT :top_url_filtered OR normalized_url IN (:top_urls))",
       entry_url: "(NOT :entry_url_filtered OR entry_url IN (:entry_urls))",
@@ -194,7 +194,7 @@ class AdminDashboardSiteTrafficExplorer
         SQL
     }
 
-    predicates.except(except).values.join("\n          AND ")
+    predicates.values.join("\n          AND ")
   end
 
   def query(start_date:, end_date:)
@@ -417,20 +417,19 @@ class AdminDashboardSiteTrafficExplorer
             SELECT COALESCE(
               jsonb_agg(
                 jsonb_build_object('value', value, 'pageviews', pageviews)
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
             FROM (
               SELECT
                 normalized_url AS value,
-                COUNT(*)::integer AS pageviews,
-                :top_url_filtered AND normalized_url IN (:top_urls) AS selected
+                COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :top_url)}
+              WHERE #{filter_predicate}
                 AND normalized_url IS NOT NULL
               GROUP BY normalized_url
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -438,20 +437,19 @@ class AdminDashboardSiteTrafficExplorer
             SELECT COALESCE(
               jsonb_agg(
                 jsonb_build_object('value', value, 'pageviews', pageviews)
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
             FROM (
               SELECT
                 entry_url AS value,
-                COUNT(*)::integer AS pageviews,
-                :entry_url_filtered AND entry_url IN (:entry_urls) AS selected
+                COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :entry_url)}
+              WHERE #{filter_predicate}
                 AND entry_url IS NOT NULL
               GROUP BY entry_url
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -459,20 +457,19 @@ class AdminDashboardSiteTrafficExplorer
             SELECT COALESCE(
               jsonb_agg(
                 jsonb_build_object('value', value, 'pageviews', pageviews)
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
             FROM (
               SELECT
                 referrer AS value,
-                COUNT(*)::integer AS pageviews,
-                :referrer_filtered AND referrer IN (:referrers) AS selected
+                COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :referrer)}
+              WHERE #{filter_predicate}
                 AND referrer IS NOT NULL
               GROUP BY referrer
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -484,7 +481,7 @@ class AdminDashboardSiteTrafficExplorer
                   'pageviews', pageviews,
                   'representative_ip', representative_ip
                 )
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
@@ -492,13 +489,12 @@ class AdminDashboardSiteTrafficExplorer
               SELECT
                 country_code AS value,
                 COUNT(*)::integer AS pageviews,
-                host(MIN(ip_address)) AS representative_ip,
-                :country_filtered AND country_code IN (:countries) AS selected
+                host(MIN(ip_address)) AS representative_ip
               FROM dimensioned
-              WHERE #{filter_predicate(except: :country)}
+              WHERE #{filter_predicate}
                 AND country_code IS NOT NULL
               GROUP BY country_code
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -510,7 +506,7 @@ class AdminDashboardSiteTrafficExplorer
                   'pageviews', pageviews,
                   'representative_ip', representative_ip
                 )
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
@@ -518,13 +514,12 @@ class AdminDashboardSiteTrafficExplorer
               SELECT
                 'AS' || asn AS value,
                 COUNT(*)::integer AS pageviews,
-                host(MIN(ip_address)) AS representative_ip,
-                :network_filtered AND asn IN (:network_asns) AS selected
+                host(MIN(ip_address)) AS representative_ip
               FROM dimensioned
-              WHERE #{filter_predicate(except: :network)}
+              WHERE #{filter_predicate}
                 AND asn IS NOT NULL
               GROUP BY asn
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -532,19 +527,18 @@ class AdminDashboardSiteTrafficExplorer
             SELECT COALESCE(
               jsonb_agg(
                 jsonb_build_object('value', value, 'pageviews', pageviews)
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
             FROM (
               SELECT
                 browser AS value,
-                COUNT(*)::integer AS pageviews,
-                :browser_filtered AND browser IN (:browsers) AS selected
+                COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :browser)}
+              WHERE #{filter_predicate}
               GROUP BY browser
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           ),
@@ -552,19 +546,18 @@ class AdminDashboardSiteTrafficExplorer
             SELECT COALESCE(
               jsonb_agg(
                 jsonb_build_object('value', value, 'pageviews', pageviews)
-                ORDER BY selected DESC, pageviews DESC, value
+                ORDER BY pageviews DESC, value
               ),
               '[]'::jsonb
             )
             FROM (
               SELECT
                 host(ip_address) AS value,
-                COUNT(*)::integer AS pageviews,
-                :ip_filtered AND host(ip_address) IN (:ip_addresses) AS selected
+                COUNT(*)::integer AS pageviews
               FROM dimensioned
-              WHERE #{filter_predicate(except: :ip)}
+              WHERE #{filter_predicate}
               GROUP BY ip_address
-              ORDER BY selected DESC, pageviews DESC, value
+              ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
           )

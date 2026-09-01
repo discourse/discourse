@@ -1992,6 +1992,16 @@ RSpec.describe TopicsController do
           put "/t/#{topic.id}/recover.json"
           expect(response).to be_forbidden
         end
+
+        it "raises an exception when only the user's own deleted reply survives" do
+          Fabricate(:post, topic: topic, user: user, post_number: 2, user_deleted: true)
+          sign_in(user)
+
+          put "/t/#{topic.id}/recover.json"
+
+          expect(response).to be_forbidden
+          expect(topic.reload).to be_trashed
+        end
       end
 
       context "with permission" do
@@ -2101,6 +2111,24 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
           topic.reload
           expect(topic.trashed?).to be_truthy
+        end
+      end
+
+      describe "with a member of delete_all_posts_and_topics_allowed_groups" do
+        fab!(:group)
+        fab!(:group_member, :user)
+
+        before do
+          group.add(group_member)
+          SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+          sign_in(group_member)
+        end
+
+        it "deletes the topic" do
+          delete "/t/#{topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.trashed?).to eq(true)
         end
       end
 
@@ -3282,6 +3310,39 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body).not_to have_key("tags")
       expect(response.parsed_body).not_to have_key("tags_descriptions")
+    end
+
+    it "does not expose tags restricted to inaccessible categories" do
+      SiteSetting.tagging_enabled = true
+      public_tag = Fabricate(:tag, name: "public-tag", description: "public tag description")
+      restricted_tag =
+        Fabricate(:tag, name: "restricted-tag", description: "restricted tag description")
+      topic.tags = [public_tag, restricted_tag]
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      private_category.tags = [restricted_tag]
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
+        public_tag.name,
+      )
+      expect(response.parsed_body["tags_descriptions"]).to eq(
+        { public_tag.name => public_tag.description },
+      )
+
+      sign_in(admin)
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tags"].map { |tag| tag["name"] }).to contain_exactly(
+        public_tag.name,
+        restricted_tag.name,
+      )
+      expect(response.parsed_body["tags_descriptions"]).to eq(
+        public_tag.name => public_tag.description,
+        restricted_tag.name => restricted_tag.description,
+      )
     end
 
     it "does not expose links from hidden posts in topic details to non-staff viewers" do
@@ -5206,6 +5267,25 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
+      end
+
+      it "deletes topics for a member of delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+        target_topic = Fabricate(:post).topic
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [target_topic.id],
+              operation: {
+                type: "delete",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(target_topic.id)
+        expect(target_topic.reload.trashed?).to eq(true)
       end
 
       it "can dismiss sub-categories posts as read" do
@@ -7248,6 +7328,34 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["failed"]).to eq("FAILED")
         expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
+      it "does not disclose an existing user from a form-encoded array email invite" do
+        pm = Fabricate(:private_message_topic, user: user)
+
+        post "/t/#{pm.id}/invite.json", params: { email: [user_2.email, "@"] }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+        expect(response.body).not_to include(user_2.username)
+        expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
+      it "returns generic success without side effects when an authorized email invite matches an existing user" do
+        sign_in(admin)
+        pm = Fabricate(:private_message_topic, user: admin)
+        small_actions =
+          pm.posts.where(post_type: Post.types[:small_action], action_code: "invited_user")
+
+        expect do
+          post "/t/#{pm.id}/invite.json", params: { email: user_2.email }
+        end.to not_change { pm.reload.topic_allowed_users.count }.and not_change {
+                small_actions.reload.count
+              }.and not_change { Invite.count }.and not_change { EmailLog.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(pm.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
       end
 
       context "when user does not have permission to invite to the topic" do

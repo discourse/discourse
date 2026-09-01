@@ -46,6 +46,11 @@ const siteFixtures = {
         "hot",
         "unseen"
       ],
+      anonymous_list_filters: [
+        "latest",
+        "top",
+        "hot"
+      ],
       homepage_choices: [
         "latest",
         "new",
@@ -58,6 +63,7 @@ const siteFixtures = {
         "hot",
         "unread"
       ],
+      homepage_options: [],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",

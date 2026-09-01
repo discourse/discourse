@@ -236,6 +236,10 @@ export default class AgentEditor extends Component {
     }
   }
 
+  get supportsAddressing() {
+    return this.args.model.isNew || this.args.model.can_have_bot_user;
+  }
+
   get adminUser() {
     // Work around user not being extensible.
     const userClone = Object.assign({}, this.args.model?.user);
@@ -1363,68 +1367,42 @@ export default class AgentEditor extends Component {
             <field.Control />
           </form.Field>
 
-          {{#unless @model.isNew}}
-            <form.Container
-              @title={{i18n "discourse_ai.ai_agent.user"}}
-              @tooltip={{unless
-                data.user
-                (i18n "discourse_ai.ai_agent.create_user_help")
-              }}
-              class="ai-agent-editor__ai_bot_user"
-            >
-              {{#if data.user}}
-                <a
-                  class="avatar"
-                  href={{data.user.path}}
-                  data-user-card={{data.user.username}}
-                >
-                  {{dBoundAvatarTemplate data.user.avatar_template "small"}}
-                </a>
-                <LinkTo @route="adminUser" @model={{this.adminUser}}>
-                  {{data.user.username}}
-                </LinkTo>
-              {{else}}
-                <form.Button
-                  @action={{fn this.createUser form}}
-                  @label="discourse_ai.ai_agent.create_user"
-                  class="btn-default ai-agent-editor__create-user"
-                />
-              {{/if}}
-            </form.Container>
-          {{/unless}}
+          {{#if this.supportsAddressing}}
+            {{#unless @model.isNew}}
+              <form.Container
+                @title={{i18n "discourse_ai.ai_agent.user"}}
+                @tooltip={{unless
+                  data.user
+                  (i18n "discourse_ai.ai_agent.create_user_help")
+                }}
+                class="ai-agent-editor__ai_bot_user"
+              >
+                {{#if data.user}}
+                  <a
+                    class="avatar"
+                    href={{data.user.path}}
+                    data-user-card={{data.user.username}}
+                  >
+                    {{dBoundAvatarTemplate data.user.avatar_template "small"}}
+                  </a>
+                  <LinkTo @route="adminUser" @model={{this.adminUser}}>
+                    {{data.user.username}}
+                  </LinkTo>
+                {{else}}
+                  <form.Button
+                    @action={{fn this.createUser form}}
+                    @label="discourse_ai.ai_agent.create_user"
+                    class="btn-default ai-agent-editor__create-user"
+                  />
+                {{/if}}
+              </form.Container>
+            {{/unless}}
 
-          <form.Field
-            @name="allow_personal_messages"
-            @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
-            @tooltip={{i18n
-              "discourse_ai.ai_agent.allow_personal_messages_help"
-            }}
-            @showTitle={{false}}
-            @format="large"
-            @type="checkbox"
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-
-          <form.Field
-            @name="allow_topic_mentions"
-            @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.allow_topic_mentions_help"}}
-            @showTitle={{false}}
-            @format="large"
-            @type="checkbox"
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-
-          {{#if this.chatPluginEnabled}}
             <form.Field
-              @name="allow_chat_direct_messages"
-              @title={{i18n "discourse_ai.ai_agent.allow_chat_direct_messages"}}
+              @name="allow_personal_messages"
+              @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
               @tooltip={{i18n
-                "discourse_ai.ai_agent.allow_chat_direct_messages_help"
+                "discourse_ai.ai_agent.allow_personal_messages_help"
               }}
               @showTitle={{false}}
               @format="large"
@@ -1435,12 +1413,10 @@ export default class AgentEditor extends Component {
             </form.Field>
 
             <form.Field
-              @name="allow_chat_channel_mentions"
-              @title={{i18n
-                "discourse_ai.ai_agent.allow_chat_channel_mentions"
-              }}
+              @name="allow_topic_mentions"
+              @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
               @tooltip={{i18n
-                "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
+                "discourse_ai.ai_agent.allow_topic_mentions_help"
               }}
               @showTitle={{false}}
               @format="large"
@@ -1449,6 +1425,40 @@ export default class AgentEditor extends Component {
             >
               <field.Control />
             </form.Field>
+
+            {{#if this.chatPluginEnabled}}
+              <form.Field
+                @name="allow_chat_direct_messages"
+                @title={{i18n
+                  "discourse_ai.ai_agent.allow_chat_direct_messages"
+                }}
+                @tooltip={{i18n
+                  "discourse_ai.ai_agent.allow_chat_direct_messages_help"
+                }}
+                @showTitle={{false}}
+                @format="large"
+                @type="checkbox"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+
+              <form.Field
+                @name="allow_chat_channel_mentions"
+                @title={{i18n
+                  "discourse_ai.ai_agent.allow_chat_channel_mentions"
+                }}
+                @tooltip={{i18n
+                  "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
+                }}
+                @showTitle={{false}}
+                @format="large"
+                @type="checkbox"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+            {{/if}}
           {{/if}}
         </form.Section>
 

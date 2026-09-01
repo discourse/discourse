@@ -4524,16 +4524,11 @@ nb_NO:
       search:
         title: "Søk"
       site_traffic_explorer:
-        pageviews: "Sidevisninger"
+        metric_information: "Om %{metric}"
+        apply: "Bruk"
         view_more: "Vis mer"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP-adresse"
         filters:
           ip: "IP-adresse"
-        metrics:
-          pageviews:
-            label: "Sidevisninger"
         series:
           anonymous_human: "Anonym"
       dashboard:

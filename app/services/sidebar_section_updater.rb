@@ -30,32 +30,15 @@ class SidebarSectionUpdater
   private
 
   def update_link_order
-    order =
+    ordered_linkable_ids =
       @sidebar_section
         .sidebar_urls
         .sort_by do |url|
           @links_params.index { |link| link[:name] == url.name && link[:value] == url.value } || -1
         end
-        .each_with_index
-        .map { |url, index| [url.id, index] }
-        .to_h
+        .map(&:id)
 
-    set_order(order)
-  end
-
-  def set_order(order)
-    position_generator =
-      (0..@sidebar_section.sidebar_section_links.count * 2).excluding(
-        @sidebar_section.sidebar_section_links.map(&:position),
-      ).each
-
-    links =
-      @sidebar_section
-        .sidebar_section_links
-        .sort_by { |link| order[link.linkable_id] }
-        .map { |link| link.attributes.merge(position: position_generator.next) }
-
-    @sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
+    @sidebar_section.apply_links_order!(ordered_linkable_ids)
   end
 
   def publish_public_update

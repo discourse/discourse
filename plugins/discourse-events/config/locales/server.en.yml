@@ -21,8 +21,8 @@ en:
       event_started:
         title: Event started
   system_messages:
-    discourse_calendar_holiday_region_invalid: "The holiday region you provided does not exist."
-    discourse_calendar_enable_holiday_failed: "This holiday could not be enabled, it's already enabled or it's not disabled."
+    discourse_events_holiday_region_invalid: "The holiday region you provided does not exist."
+    discourse_events_enable_holiday_failed: "This holiday could not be enabled, it's already enabled or it's not disabled."
     discourse_post_event_bulk_invite_succeeded:
       title: "Event - Bulk Invite Succeeded"
       subject_template: "Bulk invite processed successfully"
@@ -81,7 +81,7 @@ en:
     livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Default calendar view"

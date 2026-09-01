@@ -1581,7 +1581,6 @@ ko:
     topic_view_duration_hours: "N시간마다 IP/사용자별로 새 주제 조회수를 계산합니다."
     user_profile_view_duration_hours: "N시간마다 IP/사용자별로 신규 사용자 프로필 조회수를 계산합니다."
     levenshtein_distance_spammer_emails: "스팸 발송자 이메일을 일치시킬 때 일부 일치를 허용하는 문자 수 차이입니다."
-    min_ban_entries_for_roll_up: "롤업 버튼을 클릭하면 최소 (N)개 엔트리가 있는 경우 새 서브넷 금지 엔트리가 생성됩니다."
     max_age_unmatched_emails: "(N)일 후 일치하지 않는 스크린된 이메일 엔트리를 삭제합니다."
     max_age_unmatched_ips: "(N)일 후 일치하지 않는 스크린된 IP 엔트리를 삭제합니다."
     num_flaggers_to_close_topic: "중재를 위해 주제를 자동으로 일시 중지하기 위한 최소 고유 신고자 수"

@@ -6138,23 +6138,18 @@ hu:
         title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
       site_traffic_explorer:
-        pageviews: "Oldalmegtekintések"
+        metric_information: "A(z) %{metric} névjegye"
+        remove_filter_value: "%{value} eltávolítás"
+        clear_all: "Összes törlése"
+        apply: "Alkalmaz"
         view_more: "Több megtekintése"
         cards:
           pages: "Oldalak"
           visitors: "Látogatók"
-        columns:
-          countries: "Ország"
-          top_urls: "Webcím"
-          browsers: "Böngésző"
-          ip_addresses: "ip cím"
         filters:
           country: "Ország"
           browser: "Böngésző"
           ip: "ip cím"
-        metrics:
-          pageviews:
-            label: "Oldalmegtekintések"
         series:
           anonymous_human: "Névtelen"
       dashboard:

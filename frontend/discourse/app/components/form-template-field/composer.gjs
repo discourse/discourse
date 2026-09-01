@@ -179,11 +179,13 @@ export default class FormTemplateFieldComposer extends Component {
         @onSetup={{this.onEditorSetup}}
       />
       {{! the editor is not a form control, so this stands in for it to carry the
-      value and native validation. must stay last: the error tip is only
-      inserted after a field with no next sibling }}
-      <input
+      value and native validation. a textarea (not an input) is required so
+      newlines survive value assignment — text inputs strip CR/LF per the HTML
+      value-sanitisation rules, which flattens the composer preview on edit.
+      must stay last: the error tip is only inserted after a field with no
+      next sibling }}
+      <textarea
         id={{this.validationInputId}}
-        type="text"
         name={{@id}}
         value={{this.composerValue}}
         required={{if @validations.required "required" ""}}
@@ -192,7 +194,7 @@ export default class FormTemplateFieldComposer extends Component {
         aria-hidden="true"
         {{on "invalid" this.handleInvalid}}
         {{on "input" this.handleValidationInput}}
-      />
+      ></textarea>
     </div>
   </template>
 }

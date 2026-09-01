@@ -2069,7 +2069,6 @@ fi:
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan sumean osuman."
     max_new_accounts_per_registration_ip: "Jos samasta IP-osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä. Poista raja käytöstä asettamalla arvoksi 0."
-    min_ban_entries_for_roll_up: "Kun Kokoa-painiketta painetaan, luodaan IP-porttikielloista aliverkon kattavia, kieltoja jos kieltoja on asettu vähintään (N) määrä."
     max_age_unmatched_emails: "Poista osumattomat seulotut sähköpostiosoitteet (N) päivän jälkeen."
     max_age_unmatched_ips: "Poista osumattomat seulotut IP-osoitteet (N) päivän jälkeen."
     num_flaggers_to_close_topic: "Kuinka monta eri merkitsijää tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"

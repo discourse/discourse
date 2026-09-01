@@ -127,10 +127,8 @@ RSpec.describe EmailLoginCode::Redeem do
         expect(result[:user].username).to eq("jane")
       end
 
-      it "defaults the name to the generated username" do
-        user = result[:user]
-
-        expect(user.name).to eq(user.username)
+      it "leaves the name blank rather than reusing the generated username" do
+        expect(result[:user].name).to be_blank
       end
 
       context "when a name is provided" do
@@ -268,12 +266,13 @@ RSpec.describe EmailLoginCode::Redeem do
 
       it { is_expected.to run_successfully }
 
-      it "unstages and activates the existing user" do
+      it "unstages and activates the existing user, keeping its name" do
         user = result[:user]
 
         expect(user.id).to eq(staged_user.id)
         expect(user).not_to be_staged
         expect(user).to be_active
+        expect(user.name).to eq(staged_user.name)
         expect(login_code.reload.consumed_at).to be_present
       end
     end

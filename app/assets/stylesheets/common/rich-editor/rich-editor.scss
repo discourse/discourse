@@ -340,6 +340,55 @@
     }
   }
 
+  // both faces share one grid cell, so swapping them does not move the document
+  .composer-preview-node {
+    position: relative;
+    display: grid;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    margin-block: var(--space-4);
+    overflow: hidden;
+
+    > * {
+      grid-area: 1 / 1;
+    }
+
+    &.ProseMirror-selectednode {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+
+    // hidden, but still holding its space. `&` is a complex selector here, so
+    // the hidden face is named in full rather than suffixed onto a second `&`
+    &:not(.--source) .composer-preview-node__source,
+    &.--source .composer-preview-node__preview {
+      visibility: hidden;
+    }
+
+    &__source pre {
+      margin: 0;
+      height: 100%;
+      overflow: auto;
+
+      // the code element paints the backdrop, so it must fill the taller face's row
+      code {
+        box-sizing: border-box;
+        min-height: 100%;
+        max-height: none;
+      }
+    }
+
+    &__preview {
+      user-select: none;
+      cursor: pointer;
+
+      // the editor's display rules would otherwise override a renderer's [hidden]
+      [hidden] {
+        display: none;
+      }
+    }
+  }
+
   .onebox-loading {
     border-radius: var(--d-border-radius);
     padding: 0 0.125rem;
@@ -367,6 +416,7 @@
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
 .fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-preview-toolbar"],
 .fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");

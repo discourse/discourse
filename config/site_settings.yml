@@ -15,7 +15,8 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                         in the UI.
+#                         in the UI. Only applies to pipe-separated list type settings (e.g. group_list), as the values
+#                         are merged into the setting's value on both read and write.
 # disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
@@ -699,6 +700,28 @@ login:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_random_usernames:
+    client: true
+    default: true
+    area: "login"
+    depends_on:
+      - enable_local_logins_via_code
+  random_username_adjectives:
+    type: list
+    list_type: compact
+    default: "agile|amber|azure|bold|brave|breezy|bright|calm|candid|cheery|civic|clever|cosmic|crisp|curious|daring|deft|eager|earnest|fabled|gentle|golden|happy|hardy|hearty|humble|jolly|keen|kind|lively|lucid|lunar|mellow|merry|mighty|nimble|noble|plucky|proud|quick|quiet|rapid|rustic|silent|silver|smart|snappy|solar|stellar|sunny|swift|tidy|upbeat|valiant|vivid|warm|witty|zesty"
+    area: "login"
+    validator: "RandomUsernameWordListValidator"
+    depends_on:
+      - enable_random_usernames
+  random_username_nouns:
+    type: list
+    list_type: compact
+    default: "acorn|badger|beacon|bison|breeze|brook|canyon|cedar|comet|condor|coral|cougar|coyote|crane|cricket|dolphin|ember|falcon|fern|finch|fjord|fox|gecko|glacier|harbor|heron|hawk|ibis|jaguar|lagoon|lark|lemur|lynx|maple|marmot|meadow|meteor|nebula|newt|orca|osprey|otter|owl|panda|pebble|penguin|pine|prairie|puffin|quokka|raven|reef|river|sequoia|sparrow|summit|tundra|walrus|willow|wren|zephyr"
+    area: "login"
+    validator: "RandomUsernameWordListValidator"
+    depends_on:
+      - enable_random_usernames
   enable_passkeys:
     client: true
     default: true
@@ -1033,8 +1056,8 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
-    mandatory_values: "admin|moderator|administrator|mod|sys|system|you|name|username|user|nickname|discourse|discourseorg|discourseforum|all|here"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here|random-username"
+    mandatory_values: "admin|moderator|administrator|mod|sys|system|you|name|username|user|nickname|discourse|discourseorg|discourseforum|all|here|random-username"
     area: "users"
   min_password_length:
     client: true
@@ -1409,7 +1432,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -4686,10 +4709,6 @@ dashboard:
     client: true
 
 experimental:
-  enable_site_traffic_explorer:
-    default: false
-    client: true
-    area: "experimental"
   reporting_improvements:
     default: false
     client: true
@@ -4709,7 +4728,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
@@ -4728,7 +4747,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
@@ -4784,7 +4803,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
       body_class: true

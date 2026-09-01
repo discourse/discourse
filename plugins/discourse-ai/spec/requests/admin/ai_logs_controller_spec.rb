@@ -17,6 +17,8 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
     case endpoint
     when :index
       get index_path, headers:
+    when :new_logs
+      get "/admin/plugins/discourse-ai/ai-logs/new.json", params: { since_id: 0 }, headers:
     when :show
       get "/admin/plugins/discourse-ai/ai-logs/#{log.id}.json", headers:
     when :retention
@@ -49,7 +51,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
     end
 
     it "denies anonymous users from every endpoint", :anonymous do
-      %i[index show retention].each do |endpoint|
+      %i[index show retention new_logs].each do |endpoint|
         request_ai_logs_endpoint(endpoint, log)
         expect(response.status).to eq(404),
         "expected #{endpoint} to be hidden from anonymous users, got #{response.status}"
@@ -61,7 +63,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       [user, moderator].each do |non_admin|
         sign_in(non_admin)
 
-        %i[index show retention].each do |endpoint|
+        %i[index show retention new_logs].each do |endpoint|
           request_ai_logs_endpoint(endpoint, log)
           expect(response.status).to eq(404),
           "expected #{endpoint} to be hidden from #{non_admin.username}"
@@ -73,7 +75,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       api_key = Fabricate(:api_key, user:)
       headers = { "Api-Key" => api_key.key, "Api-Username" => user.username }
 
-      %i[index show retention].each do |endpoint|
+      %i[index show retention new_logs].each do |endpoint|
         request_ai_logs_endpoint(endpoint, log, headers:)
         expect(response.status).to eq(404),
         "expected #{endpoint} to be hidden from a non-admin API key"
@@ -83,7 +85,7 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
     it "keeps every endpoint unavailable when the plugin is disabled" do
       SiteSetting.discourse_ai_enabled = false
 
-      %i[index show retention].each do |endpoint|
+      %i[index show retention new_logs].each do |endpoint|
         request_ai_logs_endpoint(endpoint, log)
         expect(response.status).to eq(404), "expected #{endpoint} to require the enabled plugin"
       end
@@ -247,6 +249,65 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([matching_log.id])
     end
 
+    it "searches logs by username and typed ID prefixes" do
+      search_user = Fabricate(:user, username: "agent99")
+      unmatched_user = Fabricate(:user, username: "someoneelse")
+      topic_log =
+        Fabricate(:ai_api_audit_log, user: search_user, topic_id: 424_242, post_id: 777_777)
+      unmatched_log = Fabricate(:ai_api_audit_log, user: unmatched_user)
+
+      get index_path, params: { search: "agent99" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "@agent99" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "@agent99 topic:424242" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "@" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to contain_exactly(
+        topic_log.id,
+        unmatched_log.id,
+      )
+
+      get index_path, params: { search: "424242" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "topic:424242" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "post:777777" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "log:#{topic_log.id}" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "AGENT99" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "agent99 topic:424242" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "agent99 post:777777" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "agent99 log:#{topic_log.id}" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "agent99 topic:1" }
+      expect(response.parsed_body["logs"]).to eq([])
+
+      get index_path, params: { search: "424242 agent99" }
+      expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([topic_log.id])
+
+      get index_path, params: { search: "424242 someoneelse" }
+      expect(response.parsed_body["logs"]).to eq([])
+
+      get index_path, params: { search: "agent99 someoneelse" }
+      expect(response.parsed_body["logs"]).to eq([])
+    end
+
     it "filters by seeded models and exposes them in filter metadata" do
       seeded_model = Fabricate(:seeded_model, id: -1)
       matching_log = Fabricate(:ai_api_audit_log, llm_model: seeded_model)
@@ -350,6 +411,136 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
       expect(response.status).to eq(400)
 
       get index_path, params: { start_date: "2024-01-01", end_date: "2026-01-02" }
+      expect(response.status).to eq(400)
+
+      get index_path, params: { search: ("a" * 201) }
+      expect(response.status).to eq(400)
+
+      get index_path, params: { search: "99999999999999999999" }
+      expect(response.status).to eq(400)
+
+      get index_path, params: { id: 2**63 }
+      expect(response.status).to eq(400)
+
+      get index_path, params: { unattributed: true, search: "@#{admin.username}" }
+      expect(response.status).to eq(400)
+    end
+
+    it "accepts ID searches beyond the range of a 32-bit integer" do
+      get index_path, params: { search: "log:#{2**31}" }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["logs"]).to eq([])
+
+      get index_path, params: { search: "log:#{2**63}" }
+      expect(response.status).to eq(400)
+    end
+
+    it "exposes the table's high-water mark so pollers can baseline an empty list" do
+      newest = Fabricate(:ai_api_audit_log, llm_model:)
+
+      get index_path, params: { search: "@#{user.username}" }
+
+      expect(response.parsed_body["logs"]).to eq([])
+      expect(response.parsed_body.dig("meta", "max_id")).to eq(newest.id)
+    end
+  end
+
+  describe "GET /admin/plugins/discourse-ai/ai-logs/new.json" do
+    fab!(:older_log) { Fabricate(:ai_api_audit_log, llm_model:) }
+
+    let(:new_logs_path) { "/admin/plugins/discourse-ai/ai-logs/new.json" }
+
+    it "counts logs created after since_id" do
+      Fabricate(:ai_api_audit_log, llm_model:, response_status: 500)
+
+      get new_logs_path, params: { since_id: older_log.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["new_logs_count"]).to eq(1)
+    end
+
+    it "returns zero when nothing is newer" do
+      get new_logs_path, params: { since_id: older_log.id }
+      expect(response.parsed_body["new_logs_count"]).to eq(0)
+    end
+
+    it "counts every retained log when since_id is zero" do
+      Fabricate(:ai_api_audit_log, llm_model:)
+      get new_logs_path, params: { since_id: 0 }
+      expect(response.parsed_body["new_logs_count"]).to eq(2)
+    end
+
+    it "respects the active outcome, model, feature, and user filters" do
+      other_model = Fabricate(:llm_model)
+      failed = Fabricate(:ai_api_audit_log, llm_model:, response_status: 500)
+      Fabricate(
+        :ai_api_audit_log,
+        llm_model: other_model,
+        feature_name: "spam",
+        response_status: 500,
+        user: admin,
+      )
+      Fabricate(:ai_api_audit_log, llm_model:, feature_name: "spam", response_status: 200)
+
+      get new_logs_path, params: { since_id: older_log.id, outcome: "failed" }
+      expect(response.parsed_body["new_logs_count"]).to eq(2)
+
+      get new_logs_path,
+          params: {
+            since_id: older_log.id,
+            outcome: "failed",
+            llm_id: other_model.id,
+            feature: "spam",
+          }
+      expect(response.parsed_body["new_logs_count"]).to eq(1)
+
+      get new_logs_path,
+          params: {
+            since_id: older_log.id,
+            outcome: "failed",
+            llm_id: other_model.id,
+            feature: "spam",
+            user_id: admin.id,
+          }
+      expect(response.parsed_body["new_logs_count"]).to eq(1)
+    end
+
+    it "respects the active search filter" do
+      user_log = Fabricate(:ai_api_audit_log, llm_model:, user: admin, feature_name: "summarize")
+      Fabricate(:ai_api_audit_log, llm_model:, feature_name: "else", user: admin)
+
+      get new_logs_path, params: { since_id: older_log.id, search: "@#{admin.username}" }
+      expect(response.parsed_body["new_logs_count"]).to eq(2)
+
+      get new_logs_path,
+          params: {
+            since_id: older_log.id,
+            search: "@#{admin.username} log:#{user_log.id}",
+          }
+      expect(response.parsed_body["new_logs_count"]).to eq(1)
+    end
+
+    it "rejects missing, negative, and non-numeric since_id values" do
+      get new_logs_path
+      expect(response.status).to eq(400)
+
+      get new_logs_path, params: { since_id: -1 }
+      expect(response.status).to eq(400)
+
+      get new_logs_path, params: { since_id: "abc" }
+      expect(response.status).to eq(400)
+
+      get new_logs_path, params: { since_id: 2**63 }
+      expect(response.status).to eq(400)
+    end
+
+    it "rejects the unattributed filter alongside a username search" do
+      get new_logs_path,
+          params: {
+            since_id: older_log.id,
+            unattributed: true,
+            search: "@#{admin.username}",
+          }
       expect(response.status).to eq(400)
     end
   end

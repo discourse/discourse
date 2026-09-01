@@ -135,6 +135,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(serializer_agent2["default_llm_id"]).to eq(llm_model.id)
       expect(serializer_agent2).not_to have_key("question_consolidator_llm_id")
       expect(serializer_agent2["user_id"]).to eq(agent2.user_id)
+      expect(serializer_agent2["can_have_bot_user"]).to eq(true)
       expect(serializer_agent2["user"]["id"]).to eq(agent2.user_id)
       expect(serializer_agent2["forced_tool_count"]).to eq(2)
 
@@ -421,6 +422,16 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       expect(response).to be_successful
       expect(response.parsed_body["user"]["id"]).to eq(ai_agent.user_id)
+    end
+
+    it "refuses for system agents that are never talked to" do
+      locale_detector =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
+
+      post "/admin/plugins/discourse-ai/ai-agents/#{locale_detector.id}/create-user.json"
+
+      expect(response.status).to eq(403)
+      expect(locale_detector.reload.user_id).to eq(nil)
     end
   end
 
@@ -1455,12 +1466,13 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       # trust level 0
       SiteSetting.ai_bot_allowed_groups = "10"
 
+      SiteSetting.ai_default_llm_model = llm.id
       fake_endpoint.fake_content = ["This is a test! Testing!", "An amazing title"]
 
       ai_agent.create_user!
       ai_agent.update!(
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-        default_llm_id: llm.id,
+        default_llm: nil,
         allow_personal_messages: true,
         system_prompt: "you are a helpful bot",
       )
