@@ -129,6 +129,27 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     )
   end
 
+  it "excludes shared drafts from details when the report guardian cannot see them" do
+    shared_drafts_category = Fabricate(:category)
+    SiteSetting.suppress_secured_categories_from_admin = true
+    SiteSetting.shared_drafts_category = shared_drafts_category.id
+    SiteSetting.shared_drafts_allowed_groups = Fabricate(:group).id
+    shared_draft_topic = solved_topic_in(shared_drafts_category)
+    Fabricate(:shared_draft, topic: shared_draft_topic, category: Fabricate(:category))
+    visible_topic = solved_topic_in(Fabricate(:category))
+    admin = Fabricate(:admin)
+
+    expect(admin.guardian.can_see_topic?(shared_draft_topic)).to be(false)
+
+    report = build(guardian: admin.guardian)
+
+    expect(report.total).to eq(2)
+    expect(report.related_items_totals).to eq(solved_topics: 1)
+    expect(report.related_items[:solved_topics].map { |item| item.dig(:topic, :title) }).to eq(
+      [visible_topic.title],
+    )
+  end
+
   it "registers the category_ids filter even when no filter is given" do
     report = build
 

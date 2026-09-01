@@ -215,6 +215,9 @@ after_initialize do
 
     guardian = report.guardian
     solved_topics = current_accepted_solutions.merge(Topic.listable_topics.secured(guardian))
+    if !guardian.can_see_shared_draft?
+      solved_topics = solved_topics.where.not(topic_id: SharedDraft.select(:topic_id))
+    end
 
     report.related_items_totals = { solved_topics: solved_topics.count }
 
