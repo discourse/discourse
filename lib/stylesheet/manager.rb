@@ -370,7 +370,7 @@ class Stylesheet::Manager
     cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id)
 
     cache.defer_get_set(cache_key) do
-      stylesheet = { color_scheme_id: color_scheme.id }
+      stylesheet = { color_scheme_id: color_scheme.id, theme_id: theme_id }
 
       builder =
         Builder.new(target: COLOR_SCHEME_STYLESHEET.to_sym, theme:, color_scheme:, manager: self)

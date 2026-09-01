@@ -416,7 +416,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard__swatch[data-pair-key='default']");
     assert
-      .dom("link[data-scheme-id]", document.documentElement)
+      .dom("link[data-scheme-preview]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
 
     assert
@@ -472,7 +472,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await click(".design-wizard__close");
     assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
     assert
-      .dom("link[data-scheme-id]", document.documentElement)
+      .dom("link[data-scheme-preview]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
 
     // previewing a categories homepage routed away from the banner's page
@@ -548,7 +548,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard__close");
     assert
-      .dom("link[data-scheme-id]", document.documentElement)
+      .dom("link[data-scheme-preview]", document.documentElement)
       .doesNotExist("closing leaves the current theme's palette untouched");
   });
 

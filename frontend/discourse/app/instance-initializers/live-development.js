@@ -65,6 +65,14 @@ class LiveDevelopmentInit {
         } else {
           document.location.reload(true);
         }
+      } else if (me.new_href && me.target === "color_definitions") {
+        let query = `link[data-target='color_definitions'][data-scheme-id='${me.color_scheme_id}']`;
+
+        if (me.theme_id) {
+          query += `[data-theme-id='${me.theme_id}']`;
+        }
+
+        this.refreshLastLink(query, me.new_href);
       } else if (me.new_href && me.target) {
         let query = `link[data-target='${me.target}']`;
 
@@ -72,20 +80,24 @@ class LiveDevelopmentInit {
           query += `[data-theme-id='${me.theme_id}']`;
         }
 
-        const links = document.querySelectorAll(query);
-
-        if (links.length > 0) {
-          const lastLink = links[links.length - 1];
-
-          // this check is useful when message-bus has multiple file updates
-          // it avoids the browser doing a lot of work for nothing
-          // should the filenames be unchanged
-          if (lastLink.href.split("/").pop() !== me.new_href.split("/").pop()) {
-            this.refreshCSS(lastLink, me.new_href);
-          }
-        }
+        this.refreshLastLink(query, me.new_href);
       }
     });
+  }
+
+  refreshLastLink(query, newHref) {
+    const links = document.querySelectorAll(query);
+
+    if (links.length > 0) {
+      const lastLink = links[links.length - 1];
+
+      // this check is useful when message-bus has multiple file updates
+      // it avoids the browser doing a lot of work for nothing
+      // should the filenames be unchanged
+      if (lastLink.href.split("/").pop() !== newHref.split("/").pop()) {
+        this.refreshCSS(lastLink, newHref);
+      }
+    }
   }
 
   refreshCSS(node, newHref) {
