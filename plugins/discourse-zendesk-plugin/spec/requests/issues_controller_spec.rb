@@ -116,6 +116,21 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
+    it "rejects allowed members while the Zendesk URL is blank" do
+      create_group = Fabricate(:group)
+      creator = Fabricate(:user)
+      create_group.add(creator)
+      SiteSetting.zendesk_create_ticket_allowed_groups = create_group.id
+      SiteSetting.zendesk_url = ""
+      topic = Fabricate(:post).topic
+      sign_in(creator)
+
+      post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(403)
+      expect(ticket_request).not_to have_been_requested
+    end
+
     it "rejects staff who cannot view the topic" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)

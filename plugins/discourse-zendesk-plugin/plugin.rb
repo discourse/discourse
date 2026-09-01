@@ -43,7 +43,7 @@ module ::DiscourseZendeskPlugin
     private
 
     def zendesk_ticket_accessible?(topic)
-      authenticated? && SiteSetting.zendesk_enabled? &&
+      authenticated? && SiteSetting.zendesk_enabled? && SiteSetting.zendesk_url.present? &&
         DiscourseZendeskPlugin::Helper.configured? && can_see?(topic)
     end
   end

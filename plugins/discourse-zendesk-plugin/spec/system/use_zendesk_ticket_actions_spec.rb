@@ -83,8 +83,8 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_no_actions
   end
 
-  it "hides Zendesk actions and the credential warning while credentials are incomplete" do
-    SiteSetting.zendesk_jobs_api_token = ""
+  it "hides Zendesk actions and the credential warning while the Zendesk URL is blank" do
+    SiteSetting.zendesk_url = ""
     sign_in(Fabricate(:moderator))
 
     topic_page.visit_topic(topic)
