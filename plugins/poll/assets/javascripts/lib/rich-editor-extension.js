@@ -27,21 +27,27 @@ const extension = {
       parseDOM: [
         {
           tag: "div.poll",
-          getAttrs: (dom) => ({
-            type: dom.getAttribute("data-poll-type"),
-            results: dom.getAttribute("data-poll-results"),
-            public: dom.getAttribute("data-poll-public"),
-            name: dom.getAttribute("data-poll-name"),
-            chartType: dom.getAttribute("data-poll-chart-type"),
-            close: dom.getAttribute("data-poll-close"),
-            groups: dom.getAttribute("data-poll-groups"),
-            dynamic: dom.getAttribute("data-poll-dynamic"),
-            max: dom.getAttribute("data-poll-max"),
-            min: dom.getAttribute("data-poll-min"),
-            status: dom.getAttribute("data-poll-status"),
-            order: dom.getAttribute("data-poll-order"),
-            step: dom.getAttribute("data-poll-step"),
-          }),
+          getAttrs: (dom) => {
+            const name = dom.getAttribute("data-poll-name");
+            const status = dom.getAttribute("data-poll-status");
+
+            return {
+              type: dom.getAttribute("data-poll-type"),
+              results: dom.getAttribute("data-poll-results"),
+              public: dom.getAttribute("data-poll-public"),
+              // cooking always writes the defaults out, the markdown doesn't need them
+              name: name === "poll" ? null : name,
+              chartType: dom.getAttribute("data-poll-charttype"),
+              close: dom.getAttribute("data-poll-close"),
+              groups: dom.getAttribute("data-poll-groups"),
+              dynamic: dom.getAttribute("data-poll-dynamic"),
+              max: dom.getAttribute("data-poll-max"),
+              min: dom.getAttribute("data-poll-min"),
+              status: status === "open" ? null : status,
+              order: dom.getAttribute("data-poll-order"),
+              step: dom.getAttribute("data-poll-step"),
+            };
+          },
         },
       ],
       toDOM: (node) => [
@@ -52,7 +58,7 @@ const extension = {
           "data-poll-results": node.attrs.results,
           "data-poll-public": node.attrs.public,
           "data-poll-name": node.attrs.name,
-          "data-poll-chart-type": node.attrs.chartType,
+          "data-poll-charttype": node.attrs.chartType,
           "data-poll-close": node.attrs.close,
           "data-poll-groups": node.attrs.groups,
           "data-poll-dynamic": node.attrs.dynamic,

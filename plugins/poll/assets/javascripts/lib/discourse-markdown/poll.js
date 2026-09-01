@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL = { name: "poll", status: "open" };
 const DEFAULT_MAXIMUM_OPTIONS = 20;
-const ALLOWED_ATTRIBUTES = [
+export const ALLOWED_ATTRIBUTES = [
   "chartType",
   "close",
   "groups",
