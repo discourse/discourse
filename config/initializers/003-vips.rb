@@ -4,7 +4,7 @@ require "discourse_vips"
 
 if !Rails.env.production?
   Rails.application.config.after_initialize do
-    next if !SiteSetting.enable_vips_image_processing
+    next if !GlobalSetting.enable_vips_image_processing
 
     DiscourseVips.version
   rescue DiscourseVips::Error => error

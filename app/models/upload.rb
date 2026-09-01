@@ -379,7 +379,7 @@ class Upload < ActiveRecord::Base
     color = nil
 
     color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg" ||
-      (SiteSetting.enable_vips_image_processing && extension == "ico")
+      (GlobalSetting.enable_vips_image_processing && extension == "ico")
 
     if color.nil?
       local_path ||=
@@ -397,7 +397,7 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          if SiteSetting.enable_vips_image_processing
+          if GlobalSetting.enable_vips_image_processing
             color =
               DiscourseVips.dominant_color(
                 input_path: local_path,

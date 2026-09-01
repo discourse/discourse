@@ -32,7 +32,7 @@ class LetterAvatar
 
   class << self
     def version
-      if SiteSetting.enable_vips_image_processing
+      if GlobalSetting.enable_vips_image_processing
         "#{VIPS_VERSION}_#{vips_version}"
       else
         "#{VERSION}_#{image_magick_version}"
@@ -81,7 +81,7 @@ class LetterAvatar
     def generate_fullsize(identity)
       filename = fullsize_path(identity)
 
-      if SiteSetting.enable_vips_image_processing
+      if GlobalSetting.enable_vips_image_processing
         DiscourseVips.letter_avatar(
           letter: ERB::Util.html_escape(identity.letter),
           output_path: filename,

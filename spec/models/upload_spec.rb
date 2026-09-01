@@ -990,20 +990,29 @@ RSpec.describe Upload do
     end
 
     it "uses libvips to calculate the dominant color when enabled" do
-      SiteSetting.enable_vips_image_processing = true
+      global_setting :enable_vips_image_processing, true
 
       expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("171613")
     end
 
+    it "normalizes a 16-bit dominant color when libvips is enabled" do
+      global_setting :enable_vips_image_processing, true
+
+      color = high_color_image.dominant_color(calculate_if_missing: true)
+
+      expect(color).to match(/\A[0-9A-F]{6}\z/)
+      expect(high_color_image.dominant_color).to eq(color)
+    end
+
     it "stores an empty dominant color for ICO images" do
-      SiteSetting.enable_vips_image_processing = true
+      global_setting :enable_vips_image_processing, true
 
       expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(ico_image.dominant_color).to eq("")
     end
 
     it "retries the dominant color after image processing fails" do
-      SiteSetting.enable_vips_image_processing = true
+      global_setting :enable_vips_image_processing, true
       DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq(nil)
@@ -1056,8 +1065,18 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
+    it "raises when ImageMagick returns an invalid dominant color" do
+      ImageMagick.stubs(:magick).returns("someinvalidoutput")
+
+      expect(invalid_image.dominant_color).to eq(nil)
+      expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
+        /Calculated dominant color but unable to parse output/,
+      )
+      expect(invalid_image.dominant_color).to eq(nil)
+    end
+
     it "stores an empty string for an invalid dominant color response" do
-      SiteSetting.enable_vips_image_processing = true
+      global_setting :enable_vips_image_processing, true
       DiscourseVips.stubs(:dominant_color).returns("invalid")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")

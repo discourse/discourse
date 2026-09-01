@@ -33,7 +33,7 @@ RSpec.describe LetterAvatar do
     end
 
     it "generates a PNG avatar with libvips when enabled" do
-      SiteSetting.enable_vips_image_processing = true
+      global_setting :enable_vips_image_processing, true
       username = "A"
       avatar_size = 45
 

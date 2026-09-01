@@ -3607,9 +3607,6 @@ developer:
   instrument_image_processing:
     default: false
     hidden: true
-  enable_vips_image_processing:
-    default: false
-    hidden: true
   warn_critical_js_deprecations:
     default: true
     client: true

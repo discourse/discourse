@@ -23,7 +23,7 @@ module DiscourseVips
       reset_worker_process
     end
 
-    def self.call(command, operation:, timeout: DEFAULT_TIMEOUT_SECONDS, nice: 10)
+    def self.call(command, operation:, timeout: DEFAULT_TIMEOUT_SECONDS, nice: nil)
       payload = { command: command.map(&:to_s), timeout:, nice: }
 
       ImageProcessing::Instrumentation.instrument(operation:) do

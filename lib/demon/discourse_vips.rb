@@ -17,6 +17,10 @@ class Demon::DiscourseVips < Demon::Base
     raise
   end
 
+  def self.after_fork
+    demons&.each_value(&:after_fork)
+  end
+
   def run
     @worker_process&.discard
     @worker_process =
@@ -41,6 +45,11 @@ class Demon::DiscourseVips < Demon::Base
     @worker_process = nil
     @pid = nil
     delete_pid_file(worker_pid)
+  end
+
+  def after_fork
+    @worker_process&.discard
+    @worker_process = nil
   end
 
   private

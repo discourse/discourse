@@ -104,7 +104,9 @@ before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"
-  Demon::DiscourseVips.start(logger: server.logger) if SiteSetting.enable_vips_image_processing
+  if GlobalSetting.enable_vips_image_processing
+    Demon::DiscourseVips.start(logger: server.logger)
+  end
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -162,7 +164,7 @@ before_service_worker_ready do |server, service_worker|
           Demon::Sidekiq.rss_memory_check
         end
 
-        Demon::DiscourseVips.ensure_running if SiteSetting.enable_vips_image_processing
+        Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
         DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
       rescue => e

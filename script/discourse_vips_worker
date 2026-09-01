@@ -117,7 +117,7 @@ class DiscourseVipsWorker
           rescue Vips::Error => error
             raise InvalidImage, error.message
           end
-        components = thumbnail.getpoint(0, 0).map(&:round)
+        components = thumbnail.cast(:uchar, shift: true).getpoint(0, 0).map(&:round)
         if thumbnail.has_alpha?
           alpha = components.pop / 255.0
           components.map! { |component| (component * alpha).round }

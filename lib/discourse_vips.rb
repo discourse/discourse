@@ -15,7 +15,12 @@ module DiscourseVips
   end
 
   def self.dominant_color(input_path:, timeout:)
-    Client.call(["dominant-color", input_path], operation: :upload_dominant_color, timeout:)
+    Client.call(
+      ["dominant-color", input_path],
+      operation: :upload_dominant_color,
+      timeout:,
+      nice: 10,
+    )
   end
 
   def self.before_fork
