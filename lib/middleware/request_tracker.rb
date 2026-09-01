@@ -813,7 +813,7 @@ class Middleware::RequestTracker
         raise
       end
     rescue => e
-      Rails.logger.error(
+      Rails.logger.warn(
         "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",
       )
     end
