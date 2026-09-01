@@ -97,6 +97,8 @@ class UserSilencer
   end
 
   def unsilence
+    return false if @user.silenced_till.blank?
+
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)

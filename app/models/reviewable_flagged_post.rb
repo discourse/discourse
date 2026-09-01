@@ -267,7 +267,9 @@ class ReviewableFlaggedPost < Reviewable
       notify_poster(performed_by)
       post.acting_user = performed_by
       post.unhide!
-      UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
+      if UserSilencer.was_silenced_for?(post)
+        UserSilencer.unsilence(post.user, performed_by, reviewable_id: id)
+      end
     end
 
     create_result(:success, :rejected, actions.map(&:user_id), false)

@@ -36,6 +36,16 @@ module Chat
       @flagged_by_user_ids ||= reviewable_scores.map(&:user_id)
     end
 
+    def silenced_for_this_message?
+      return false if !chat_message_creator&.silenced?
+
+      UserHistory.exists?(
+        action: UserHistory.actions[:silence_user],
+        target_user_id: chat_message_creator.id,
+        reviewable_id: id,
+      )
+    end
+
     def post
       nil
     end
@@ -110,11 +120,11 @@ module Chat
     end
 
     def perform_disagree_and_restore(performed_by, args)
-      disagree { chat_message.recover! }
+      disagree(performed_by) { chat_message.recover! }
     end
 
     def perform_disagree(performed_by, args)
-      disagree
+      disagree(performed_by)
     end
 
     def perform_ignore(performed_by, args)
@@ -139,10 +149,12 @@ module Chat
       end
     end
 
-    def disagree
+    def disagree(performed_by)
       yield if block_given?
 
-      UserSilencer.unsilence(chat_message_creator)
+      if silenced_for_this_message?
+        UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
+      end
 
       create_result(:success, :rejected) do |result|
         result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }

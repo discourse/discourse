@@ -613,6 +613,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(target_user.reload.silenced?).to eq(false)
     end
 
+    it "attributes the unsilence to the moderator and the reviewable" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      target_user = reviewable.post.user
+      reviewable.post.update(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: PostActionType.types[:spam],
+      )
+      UserSilencer.silence(target_user, moderator, post_id: reviewable.post.id)
+
+      reviewable.perform(moderator, :disagree_and_restore)
+
+      history =
+        UserHistory.find_by(
+          action: UserHistory.actions[:unsilence_user],
+          target_user_id: target_user.id,
+        )
+
+      expect(history.acting_user_id).to eq(moderator.id)
+      expect(history.reviewable_id).to eq(reviewable.id)
+    end
+
     context "with category group moderator" do
       fab!(:group)
       fab!(:category_moderator) { Fabricate(:user, refresh_auto_groups: true) }

@@ -63,13 +63,14 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
     expect(chat_message.reload.deleted_at).not_to be_present
   end
 
-  context "when the flagged message author is silenced" do
+  context "when the flagged message author was silenced for this message" do
     before do
       UserSilencer.silence(
         user,
         Discourse.system_user,
         silenced_till: 10.minutes.from_now,
         reason: I18n.t("chat.errors.auto_silence_from_flags"),
+        reviewable_id: reviewable.id,
       )
     end
 
@@ -84,6 +85,33 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       expect(user.reload.silenced?).to eq(false)
+    end
+
+    it "attributes the unsilence to the moderator and the reviewable" do
+      reviewable.perform(moderator, :disagree)
+
+      history =
+        UserHistory.find_by(action: UserHistory.actions[:unsilence_user], target_user_id: user.id)
+
+      expect(history.acting_user_id).to eq(moderator.id)
+      expect(history.reviewable_id).to eq(reviewable.id)
+    end
+  end
+
+  context "when the flagged message author was silenced for something else" do
+    before do
+      UserSilencer.silence(
+        user,
+        Discourse.system_user,
+        silenced_till: 10.minutes.from_now,
+        reason: "unrelated reason",
+      )
+    end
+
+    it "perform_disagree leaves the user silenced" do
+      reviewable.perform(moderator, :disagree)
+
+      expect(user.reload.silenced?).to eq(true)
     end
   end
 end
