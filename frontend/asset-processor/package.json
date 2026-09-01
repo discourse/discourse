@@ -33,7 +33,7 @@
     "postcss": "^8.5.26",
     "postcss-nesting": "^14.0.0",
     "postcss-value-parser": "^4.2.0",
-    "rolldown": "1.1.2",
+    "rolldown": "1.2.5",
     "source-map-js": "^1.2.1",
     "strip-test-selectors": "^0.1.0",
     "terser": "^5.47.1"
