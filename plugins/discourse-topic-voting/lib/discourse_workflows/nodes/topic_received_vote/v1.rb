@@ -13,7 +13,7 @@ if defined?(DiscourseWorkflows)
               color: "purple",
             },
             group: "discourse_triggers",
-            events: [:topic_voting_vote_created],
+            event: :topic_voting_vote_created,
             available: -> { SiteSetting.topic_voting_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_topic_voting",
             output_contracts: [

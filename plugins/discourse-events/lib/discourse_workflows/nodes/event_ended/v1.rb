@@ -15,7 +15,7 @@ if defined?(DiscourseWorkflows)
               color: "purple",
             },
             group: "discourse_triggers",
-            events: [:discourse_post_event_event_ended],
+            event: :discourse_post_event_event_ended,
             available: -> { SiteSetting.discourse_post_event_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_post_event",
             output_contracts: [

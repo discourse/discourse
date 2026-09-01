@@ -22,7 +22,7 @@ module DiscourseWorkflows
             color: "blue",
           },
           group: "discourse_triggers",
-          events: [:user_search],
+          event: :user_search,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
         )
 

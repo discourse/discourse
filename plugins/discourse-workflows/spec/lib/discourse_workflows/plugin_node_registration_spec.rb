@@ -11,7 +11,7 @@ RSpec.describe DiscourseWorkflows do
         description(
           name: "trigger:plugin_node_registration_test",
           version: "1.0",
-          events: [:plugin_node_registration_test_event],
+          event: :plugin_node_registration_test_event,
         )
 
         def initialize(payload, *)
@@ -57,6 +57,25 @@ RSpec.describe DiscourseWorkflows do
       DiscourseEvent.trigger(event_name, "payload")
 
       expect(handled).to eq([[node_class, ["payload"]]])
+    end
+
+    it "subscribes under the symbol DiscourseEvent key when the event is declared as a string" do
+      string_event_class =
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(
+            name: "trigger:plugin_node_registration_string_event_test",
+            version: "1.0",
+            event: "plugin_node_registration_test_event",
+          )
+        end
+
+      plugin.register_discourse_workflows_node(string_event_class)
+
+      DiscourseEvent.trigger(event_name, "payload")
+
+      expect(handled).to eq([[string_event_class, ["payload"]]])
+    ensure
+      unregister_workflow_nodes(string_event_class)
     end
 
     it "subscribes only once when the same node is registered again" do

@@ -15,7 +15,7 @@ if defined?(DiscourseWorkflows)
               color: "teal",
             },
             group: "discourse_triggers",
-            events: [:discourse_calendar_post_event_invitee_status_changed],
+            event: :discourse_calendar_post_event_invitee_status_changed,
             available: -> { SiteSetting.discourse_post_event_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_post_event",
             output_contracts: [

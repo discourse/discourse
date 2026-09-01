@@ -15,7 +15,7 @@ if defined?(DiscourseWorkflows)
               color: "teal",
             },
             group: "discourse_triggers",
-            events: [:chat_message_created],
+            event: :chat_message_created,
             available: -> { SiteSetting.chat_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_chat",
             output_contracts: [
