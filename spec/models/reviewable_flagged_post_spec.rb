@@ -545,6 +545,109 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "penalty_effect" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: author) }
+
+    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    let(:guardian) { Guardian.new(moderator) }
+
+    def effect_for(action_id)
+      action = reviewable.actions_for(guardian).to_a.find { |a| a.server_action == action_id.to_s }
+
+      raise "no #{action_id} action was built" if action.nil?
+
+      action.penalty_effect
+    end
+
+    it "is absent when the author has no penalty" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+
+      expect(effect_for(:delete_and_agree)).to eq(nil)
+      expect(effect_for(:disagree_and_restore)).to eq(nil)
+    end
+
+    it "marks actions that keep a silence that was applied for this post" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      expect(effect_for(:delete_and_agree)).to eq(:retains_penalty)
+      expect(effect_for(:agree_and_keep_hidden)).to eq(:retains_penalty)
+      expect(effect_for(:delete_and_ignore)).to eq(:retains_penalty)
+      expect(effect_for(:disagree_and_restore)).to eq(:lifts_penalty)
+    end
+
+    it "does not promise a lift when the silence is not linked to this post" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      other_post = Fabricate(:post, user: author)
+      UserSilencer.silence(author, moderator, post_id: other_post.id)
+
+      expect(effect_for(:disagree_and_restore)).to eq(:retains_penalty)
+    end
+
+    it "does not promise a lift for a suspension" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      UserSuspender.new(
+        author,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: flagged_post.id,
+      ).suspend
+
+      expect(effect_for(:disagree_and_restore)).to eq(:retains_penalty)
+    end
+  end
+
+  describe "#author_penalties" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: author) }
+
+    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+
+    it "is empty when the author has no penalty" do
+      expect(reviewable.author_penalties).to eq([])
+    end
+
+    it "describes a silence applied for this post" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id, reason: "spammy")
+
+      penalty = reviewable.author_penalties.sole
+
+      expect(penalty.kind).to eq(:silence)
+      expect(penalty.from_this_target).to eq(true)
+      expect(penalty.applied_by).to eq(moderator)
+      expect(penalty.automatic).to eq(false)
+      expect(penalty.reason).to include("spammy")
+      expect(penalty.applied_at).to be_present
+    end
+
+    it "marks a penalty applied by a bot as automatic" do
+      UserSilencer.silence(author, Discourse.system_user, post_id: flagged_post.id)
+
+      expect(reviewable.author_penalties.sole.automatic).to eq(true)
+    end
+
+    it "reports a silence that was not applied for this post" do
+      other_post = Fabricate(:post, user: author)
+      UserSilencer.silence(author, moderator, post_id: other_post.id)
+
+      expect(reviewable.author_penalties.sole.from_this_target).to eq(false)
+    end
+
+    it "reports both a silence and a suspension" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+      UserSuspender.new(
+        author,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+      ).suspend
+
+      expect(reviewable.author_penalties.map(&:kind)).to contain_exactly(:silence, :suspension)
+    end
+  end
+
   describe "#perform_unsilence_user_and_ignore" do
     it "unsilences the user and resolves the reviewable without restoring the deleted post" do
       reviewable = Fabricate(:reviewable_flagged_post)

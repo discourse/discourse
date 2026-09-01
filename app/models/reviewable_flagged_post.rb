@@ -179,6 +179,30 @@ class ReviewableFlaggedPost < Reviewable
     )
   end
 
+  def author_silenced?
+    !!target_created_by&.silenced?
+  end
+
+  def disagree_lifts_silence?
+    post&.hidden? && author_silenced? && UserSilencer.was_silenced_for?(post)
+  end
+
+  def penalty_effect_for(action_id)
+    return if author_penalties.empty?
+
+    lifts_silence =
+      case action_id
+      when :disagree, :disagree_and_restore
+        disagree_lifts_silence?
+      when :unsilence_user_and_ignore
+        user_silenced_for_post?
+      else
+        false
+      end
+
+    lifts_silence ? :lifts_penalty : :retains_penalty
+  end
+
   def perform_ignore_and_do_nothing(performed_by, args)
     actions =
       PostAction
