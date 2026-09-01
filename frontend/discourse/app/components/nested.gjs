@@ -39,6 +39,9 @@ const postExcerpt = helper(([post]) => {
 const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
 const STORED_SCROLL_ANCHORS = Object.create(null);
 
+// Exported so system specs can wait out the full restoration window.
+export const SCROLL_RESTORE_WINDOW_MS = 1250;
+
 export default class Nested extends Component {
   @service appEvents;
   @service currentUser;
@@ -440,7 +443,7 @@ export default class Nested extends Component {
       }
       this.#scrollRestoreCompletionTimer = setTimeout(() => {
         this.#cancelScrollRestoration({ clearAnchor: true });
-      }, 1250);
+      }, SCROLL_RESTORE_WINDOW_MS);
     });
   }
 
