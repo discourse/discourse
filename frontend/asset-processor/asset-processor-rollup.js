@@ -42,7 +42,7 @@ async function performRollup(modules, opts) {
 
   const fs = createVirtualFs(modules, basePath);
 
-  // Filled by `discourse-route-maps` in `buildStart`, before the entrypoint is generated from it.
+  // Filled in by `discourse-route-maps` before the entrypoint is generated from it.
   const routeTables = { bundleByRoute: {}, urls: [] };
   opts.routeTables = routeTables;
 
@@ -170,8 +170,7 @@ async function performRollup(modules, opts) {
     }
   }
 
-  // Ties each lazy route chunk back to the urls that reach it, so Ruby can preload it. Rollup is
-  // free to hoist the entrypoint module into a shared chunk, so find where it actually landed.
+  // Rollup may hoist the entrypoint module into a shared chunk, so find where it landed.
   function routeBundlesForEntry(entryName) {
     const entrypointModuleId = `${basePath}virtual:entrypoint:${entryName}`;
 
@@ -187,8 +186,7 @@ async function performRollup(modules, opts) {
       }
     }
 
-    // `routeTables.urls` is already ordered most specific first, which is the order Ruby
-    // matches them in.
+    // Already ordered most specific first, which is the order Ruby matches them in.
     return routeTables.urls
       .filter(({ bundleName }) => fileNameByBundle[bundleName])
       .map(({ bundleName, url }) => ({

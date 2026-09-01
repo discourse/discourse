@@ -5,13 +5,13 @@ import {
   routeTablesFor,
 } from "../route-map-parser";
 
-// Core's own maps, added to the tree by `Plugin::JsManager` so `resource` mounts can resolve.
-// They generate routes from site settings in loops, so they are the only maps read leniently.
+// Added to the tree by `Plugin::JsManager`. These build routes in loops, so they are read
+// leniently and a plugin's `resource` can mount on them.
 const CORE_MAPS = ["__core__/app-route-map.js", "__core__/admin-route-map.js"];
 
 const ROUTE_MAP_REGEX = /route-map\.js$/;
 
-// Fills `tables` before any module loads, because the entrypoint's own source depends on it.
+// Fills `tables` before any module loads, because the entrypoint's source is generated from it.
 export default function discourseRouteMaps({
   modules,
   label,
@@ -21,13 +21,11 @@ export default function discourseRouteMaps({
   return {
     name: "discourse-route-maps",
     buildStart() {
-      // Everything else imports its routes eagerly, so an unreadable map is none of our business.
       if (!staticModules) {
         return;
       }
 
-      // Only `Plugin::JsManager` supplies core's maps, and without them a `resource` mount
-      // cannot be resolved. Themes therefore derive no bundles, which is what they do today.
+      // Themes get no core maps, so they cannot resolve a `resource` mount and derive no bundles.
       if (!CORE_MAPS.some((filename) => modules[filename])) {
         return;
       }

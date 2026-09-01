@@ -60,14 +60,12 @@ window.moduleBroker = {
   },
 };
 
-// The default export is the bundle's cross-bundle API, reached by ESM import, and must not be
-// registered. Older bundles have no `compatModules`, where the two are the same object.
+// A bundle built before `compatModules` existed exports the same object as its default.
 function compatModulesOf(bundle) {
   return bundle.compatModules ?? bundle.default;
 }
 
-// `@embroider/router` finds these by route name and hands the default export to
-// `Resolver#addModules`, which expects the same namespacing as the eager modules.
+// `Resolver#addModules` expects the same namespacing as the eager modules.
 function registerRouteBundles(bundle, prefix) {
   window._embroiderRouteBundles_ ??= [];
 

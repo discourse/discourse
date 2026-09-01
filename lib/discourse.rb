@@ -495,9 +495,6 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
-    # A `staticModules` plugin can split routes into lazy chunks. If this request is for a URL
-    # one of them was declared under, preload it rather than let the router discover it after
-    # the plugin bundle has already been fetched and parsed.
     request_path = args[:request]&.path&.delete_prefix(Discourse.base_path)&.delete_prefix("/")
 
     assets = []

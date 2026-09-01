@@ -9,9 +9,7 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-// Looked up by name at runtime, so they have to be registered with `define()`. Routes are not
-// here: a route is reached through the bundle its route map put it in. Matched against the
-// top-level segment only — `discourse/components/chat/services/chat` is a component.
+// Looked up by name at runtime, so these have to stay registered with `define()`.
 const EAGER_DIRECTORIES = [
   "connectors",
   "services",
@@ -24,16 +22,14 @@ const EAGER_DIRECTORY_REGEX = new RegExp(
   `^[^/]+/(${EAGER_DIRECTORIES.join("|")})/`
 );
 
-// Everything else — components, helpers, modifiers, lib — is imported from `.gjs` under
-// `staticModules`, so it can be left to tree-shaking.
 function isEagerModule(compatModuleName) {
   return (
     EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
-    // `loadInitializers` enumerates the loader registry and matches these at any depth,
+    // Unanchored: `loadInitializers` scans the whole registry.
     /\/(pre-initializers|initializers|api-initializers|instance-initializers)\//.test(
       compatModuleName
     ) ||
-    // and `mapRoutes` matches on the suffix alone — plugins name these `<something>-route-map`.
+    // `mapRoutes` matches on the suffix alone.
     /route-map$/.test(compatModuleName)
   );
 }
@@ -42,15 +38,12 @@ function stripExtension(filename) {
   return filename.replace(/\.[^\.]+(\.es6)?$/, "");
 }
 
-// Turns the raw file list into `{ importPath, compatModuleName }` records, dropping type-only
-// declarations and warning about file types we cannot compile.
 function normalizeModules(moduleFilenames, label) {
   const records = [];
   const warnings = [];
   const seen = new Set();
 
   for (const moduleFilename of moduleFilenames) {
-    // Type-only declaration files have no runtime module to export.
     if (moduleFilename.endsWith(".d.ts")) {
       continue;
     }
@@ -97,10 +90,7 @@ function normalizeModules(moduleFilenames, label) {
   return { records, warnings };
 }
 
-// Route names are derived from file paths, the way Embroider does it: strip the
-// `routes/` / `controllers/` / `templates/` prefix and join the remaining segments with a dot.
-// Ember's resolver convention guarantees the path is the route name. Anchored for the same
-// reason `EAGER_DIRECTORY_REGEX` is — a component under `components/chat/routes/` is not a route.
+// Anchored to the top-level segment: a component under `components/chat/routes/` is not a route.
 const ROUTE_FILE_REGEX = /^[^/]+\/(routes|controllers|templates)\/(.+)$/;
 
 function routeNameFor(compatModuleName) {
@@ -112,8 +102,7 @@ function routeNameFor(compatModuleName) {
 
   const [, type, path] = match;
 
-  // Unlike a core app, Discourse nests connectors and classic component templates under
-  // `templates/`. They are not routes.
+  // Discourse nests connectors and classic component templates under `templates/` too.
   if (
     type === "templates" &&
     (path.startsWith("connectors/") || path.startsWith("components/"))
@@ -124,8 +113,7 @@ function routeNameFor(compatModuleName) {
   return path.split("/").join(".");
 }
 
-// Ember creates these without a `this.route` call, so they are never in a route map. They
-// belong to the bundle of the route they hang off.
+// Ember creates these without a `this.route` call, so no route map names them.
 const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
 
 function bundleNameFor(routeName, bundleByRoute) {
@@ -148,8 +136,6 @@ function bundleNameFor(routeName, bundleByRoute) {
   return null;
 }
 
-// Groups route files into the lazy bundle their route map declared, one per `bundleName`.
-// Anything with no bundle is left for the eager set.
 export function routeBundlesFor(records, bundleByRoute) {
   const bundles = new Map();
 
@@ -199,14 +185,9 @@ export default {
 
     const { records, warnings } = normalizeModules(moduleFilenames, label);
 
-    // QUnit discovers tests by executing the module that registers them, and a test bundle has
-    // nothing to lazily route to. Every test module must therefore be imported eagerly, so the
-    // test entrypoint opts out of `staticModules` tree-shaking even when the plugin declares it.
+    // QUnit only finds a test by running the module that registers it, so tests stay eager.
     const isTestEntrypoint = extra?.entrypointName === "test";
 
-    // `compatModules` is what core registers with `define()`; the default export is the
-    // cross-bundle lookup table that `babel-resolve-plugin-imports` indexes into. Without
-    // `staticModules` they are the same object, and every module is eagerly imported.
     if (isTestEntrypoint || !frontendConfig?.staticModules) {
       const identifiers = new Map(
         records.map((record, i) => [record, `Mod${i + 1}`])
@@ -225,7 +206,7 @@ export default {
       ].join("\n");
     }
 
-    // Declared with or without the `/index` suffix, matching how cross-plugin imports resolve.
+    // A cross-plugin import can spell it either way.
     const sharedPaths = new Set(
       (frontendConfig.sharedModules ?? []).flatMap((shared) => {
         const path = stripExtension(shared);
@@ -235,8 +216,6 @@ export default {
 
     const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
 
-    // A module that merely lives under `routes/` is reached through a plain import, the same way
-    // components and lib already are. What no route map names, and nothing imports, is dropped.
     const eager = records.filter((record) =>
       isEagerModule(record.compatModuleName)
     );
@@ -244,7 +223,6 @@ export default {
       sharedPaths.has(stripExtension(record.importPath))
     );
 
-    // A module can be both eager and shared, so import each at most once.
     const imported = [...new Set([...eager, ...shared])];
     const identifiers = new Map(
       imported.map((record, i) => [record, `Mod${i + 1}`])
@@ -270,8 +248,7 @@ export default {
       "",
     ].join("\n");
   },
-  // One lazy route bundle. `@embroider/router` awaits this and hands the default export to
-  // `Resolver#addModules`, so the shape must be a plain module map.
+  // The default export goes to `Resolver#addModules`, so it must be a plain module map.
   "virtual:route": (moduleFilenames, opts, bundleName) => {
     const label = opts.pluginName
       ? `PLUGIN ${opts.pluginName}`

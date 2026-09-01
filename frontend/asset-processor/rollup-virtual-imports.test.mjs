@@ -37,7 +37,7 @@ describe("virtual:entrypoint", () => {
       const output = entrypoint(MODULES);
 
       for (const filename of MODULES) {
-        // Connectors are imported with their extension intact; everything else is stripped.
+        // Connectors keep their extension; everything else is stripped.
         const importPath = filename.includes("/connectors/")
           ? filename
           : filename.replace(/\.\w+$/, "");
@@ -87,11 +87,7 @@ describe("virtual:entrypoint", () => {
         "discourse/initializers/chat-setup",
         "discourse/api-initializers/chat",
         "discourse/pre-initializers/chat-early",
-        // Plugins name their route maps `<something>-route-map`, and `mapRoutes` matches on the
-        // suffix alone.
         "discourse/chat-route-map",
-        // `.gjs` connectors keep their path; only `.hbs` connectors are rewritten under
-        // `templates/connectors/`.
         "discourse/connectors/user-menu/chat",
       ]) {
         expect(compatModules, name).toContain(`"${name}":`);
@@ -99,8 +95,6 @@ describe("virtual:entrypoint", () => {
     });
 
     it("does not register routes, controllers or route templates", () => {
-      // A route is reached through the bundle its route map put it in, so registering it here
-      // as well would defeat the split.
       for (const name of [
         "discourse/routes/chat/channel",
         "discourse/controllers/chat/channel",
@@ -111,8 +105,7 @@ describe("virtual:entrypoint", () => {
     });
 
     it("leaves invokables and lib code to be statically imported", () => {
-      // Components, helpers, modifiers and lib are reached through `.gjs` imports under
-      // staticModules, so they must not be registered — that is what lets them tree-shake.
+      // Registering these would stop them tree-shaking.
       expect(compatModules).not.toContain(
         '"discourse/helpers/format-chat-date"'
       );
@@ -159,8 +152,6 @@ describe("virtual:entrypoint", () => {
       "helpers/chat-fixtures.js",
     ];
 
-    // QUnit finds a test only by running the module that registers it, so a test bundle can never
-    // tree-shake — every module must be imported eagerly even when the plugin is `staticModules`.
     it("eagerly imports every module despite staticModules", () => {
       const output = entrypoint(
         TEST_MODULES,
@@ -184,7 +175,6 @@ describe("virtual:entrypoint", () => {
         { entrypointName: "main" }
       );
 
-      // Components and lib are reached through static imports, so they stay out of the eager set.
       expect(output).not.toContain('from "./components/chat-channel-test"');
       expect(output).not.toContain('from "./unit/lib/chat-utils-test"');
     });
@@ -208,8 +198,7 @@ describe("virtual:entrypoint", () => {
 
     const frontendConfig = { staticModules: true };
 
-    // What a route map declaring `bundleName` derives to. `chat.visualizer` names a second
-    // bundle, so it is not swept into `chat` with the rest of the subtree.
+    // `chat.visualizer` names its own bundle, so it is not swept into `chat`.
     const routeTables = {
       bundleByRoute: {
         chat: "chat",
@@ -230,8 +219,6 @@ describe("virtual:entrypoint", () => {
     });
 
     it("puts an implicit index route in its parent's bundle", () => {
-      // Ember creates `index`, `loading` and `error` without a `this.route` call, so they are
-      // never in a route map and would otherwise fall back to the eager set.
       const withIndex = entrypoint(
         [...ROUTE_MODULES, "discourse/routes/chat/index.js"],
         { frontendConfig, routeTables }
@@ -252,16 +239,13 @@ describe("virtual:entrypoint", () => {
       expect(compatModules).not.toContain('"discourse/routes/chat/channel"');
       expect(compatModules).not.toContain('"discourse/templates/chat/channel"');
 
-      // A route no map names is not registered either. Nothing can resolve it, so it is only in
-      // the build at all if something imports it.
+      // A route no map names is not registered either.
       expect(compatModules).not.toContain('"discourse/routes/browse":');
 
       expect(compatModules).toContain('"discourse/services/chat":');
     });
 
     it("does not mistake connectors or component templates for routes", () => {
-      // Discourse nests these under `templates/`, unlike a core app. Treating them as routes
-      // would give bundles named `connectors.*` and `components.*`.
       expect(output).not.toContain('import("virtual:route:connectors');
       expect(output).not.toContain('import("virtual:route:components');
       expect(output).not.toContain('"connectors.user-menu.chat"');
@@ -269,9 +253,6 @@ describe("virtual:entrypoint", () => {
     });
 
     it("only treats top-level routes/controllers/templates as routes", () => {
-      // `discourse/components/chat/routes/channel` is a component sitting in a directory called
-      // `routes`. Matching `routes/` at any depth would make it a route named `channel`, and
-      // register it eagerly instead of letting it be imported.
       const compatModules = output.slice(
         output.indexOf("const compatModules"),
         output.indexOf("const sharedModules")

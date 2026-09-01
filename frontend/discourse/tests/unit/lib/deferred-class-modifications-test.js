@@ -32,7 +32,6 @@ module("Unit | Lib | deferred-class-modifications", function (hooks) {
     registerModuleForModifyClass("chat-header", Header);
     assert.strictEqual(applied, 1);
 
-    // Taking them off first is what stops one that defers again from looping.
     registerModuleForModifyClass("chat-header", Header);
     assert.strictEqual(applied, 1);
   });

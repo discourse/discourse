@@ -81,7 +81,7 @@ export default function discourseVirtualLoader({
       } else if (fromBase.startsWith("virtual:route:")) {
         const bundleName = fromBase.replace("virtual:route:", "");
 
-        // Entrypoints share a compat-module namespace, so a bundle belongs to exactly one.
+        // Entrypoints share one namespace, so a bundle belongs to exactly one of them.
         for (const { modules } of Object.values(entrypoints)) {
           const source = availableVirtualImports["virtual:route"](
             modules,

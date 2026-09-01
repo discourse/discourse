@@ -5,8 +5,7 @@ module Plugin
     @cache = {}
     @url_glob_patterns = {}
 
-    # Core's own route maps. A plugin's route map can mount on a core route with `resource`, so
-    # the build needs these to derive the urls that reach the plugin's own routes.
+    # A plugin route map can mount on a core route, so the build needs these to derive its urls.
     CORE_ROUTE_MAPS = {
       "app-route-map.js" => "frontend/discourse/app/routes/app-route-map.js",
       "admin-route-map.js" => "frontend/discourse/admin/routes/admin-route-map.js",
@@ -67,8 +66,7 @@ module Plugin
       read_manifest(plugin_directory_name)[entrypoint_name]["externalPluginImports"]
     end
 
-    # The lazy route chunk to preload for `path`, if any. The first match wins, so a specific glob
-    # must be declared before a wildcard covering it.
+    # The first match wins, so the build emits the most specific glob first.
     def self.route_bundle_for_path(plugin_directory_name, entrypoint_name, path)
       bundles = read_manifest(plugin_directory_name).dig(entrypoint_name, "routeBundles")
 
@@ -77,15 +75,13 @@ module Plugin
       "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
     end
 
-    # A `*` matches one path segment, or the rest of the path when it is last, so `chat/*` also
-    # covers `chat` itself. A `**` matches one or more segments anywhere, and stands for a splat
-    # route segment: `/c/*category_slug_path_with_id/edit` has to match `c/announcements/5/edit`.
+    # `*` is one segment, or the rest of the path when it is last. `**` is one or more, and
+    # stands for a splat route segment.
     def self.url_glob_matches?(glob, path)
       path.match?(url_glob_pattern(glob))
     end
 
-    # The pattern is a pure function of the glob, so entries never go stale. Every asset on the
-    # page asks about the same handful of them on every request.
+    # A pattern only ever depends on its glob, so cached entries never go stale.
     def self.url_glob_pattern(glob)
       @url_glob_patterns[glob] ||= begin
         segments = glob.split("/")
@@ -106,9 +102,7 @@ module Plugin
             end
             .join("/")
 
-        if trailing_star
-          pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?"
-        end
+        pattern = segments.empty? ? ".*" : "#{pattern}(?:/.*)?" if trailing_star
 
         /\A#{pattern}\z/
       end
@@ -173,9 +167,8 @@ module Plugin
         end
       end
 
-      # Read from source rather than from core's build output, so plugin compilation does not
-      # have to wait on it. They are part of `tree`, so they also join the digest below: a core
-      # route change rebuilds every plugin.
+      # Read from source, so plugin compilation does not wait on core's build. Being in `tree`
+      # puts them in the digest below, so a core route change rebuilds every plugin.
       CORE_ROUTE_MAPS.each do |name, source_path|
         tree["__core__/#{name}"] = File.read(Rails.root.join(source_path))
       end

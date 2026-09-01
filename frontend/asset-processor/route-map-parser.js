@@ -1,8 +1,8 @@
-// Route maps are parsed, never run: plugin and theme code is not trusted enough to evaluate in
-// the asset processor. `mapping-router.js` stays the reference for what a map means, and the
-// rules below restate it — the two can drift, which is what the parity test guards.
+// Route maps are parsed, never run: plugin and theme code is not trusted enough to evaluate
+// here. `mapping-router.js` is the reference for what a map means, and these rules can drift
+// from it.
 
-// Ember's `dasherize`, which `BareRouter#lazyRoute` applies before matching a lazy route name.
+// `BareRouter#lazyRoute` dasherizes before matching, so derived names have to agree.
 function dasherize(value) {
   return value
     .replace(/([a-z\d])([A-Z])/g, "$1-$2")
@@ -101,8 +101,7 @@ function readBody(context, block) {
       continue;
     }
 
-    // Core's maps generate routes from site settings in loops the parser cannot read. Those
-    // routes are absent from the derived tree, which is a known gap.
+    // Core's maps build routes in loops. Those routes are missing from the derived tree.
     if (context.lenient) {
       continue;
     }
@@ -117,7 +116,6 @@ function readBody(context, block) {
   return routes;
 }
 
-// One `*-route-map` module. Returns the routes it declares, and the tree path it mounts on.
 export function parseRouteMap(
   ast,
   { filename, source, label, lenient = false }
@@ -182,10 +180,7 @@ export function parseRouteMap(
     fail(context, map ?? declaration, "`map` must be a function");
   }
 
-  // `bundleName` names the bundle for every route the map declares, so a map whose routes all
-  // belong together does not have to repeat it. A route may still name its own, which its
-  // subtree then inherits. `extra.path` and `extra.bundleName` are ignored by
-  // `mapping-router.js`, which reads only `resource` and `map`.
+  // `mapping-router.js` reads only `resource` and `map`, so the rest is ours to use.
   return {
     resource: resource.value.value,
     bundleName: bundleName?.value.value ?? null,
@@ -195,8 +190,8 @@ export function parseRouteMap(
 
 export { RouteMapError };
 
-// Mirrors `RouteNode` in `mapping-router.js`: a child with the same name is merged into, not
-// duplicated, so several maps can extend one route.
+// Mirrors `RouteNode`: a child with the same name is merged into, so several maps can extend
+// one route.
 function addRoutes(parent, routes, core, bundleName = null) {
   for (const route of routes) {
     let node = parent.byName.get(route.name);
@@ -224,8 +219,8 @@ function addRoutes(parent, routes, core, bundleName = null) {
   }
 }
 
-// `resource` names a path through the tree by the names given to `this.route`, which is not the
-// same as a route name: `admin.adminPlugins.show` walks to a route named `adminPlugins.show`.
+// `resource` walks the names given to `this.route`, which are not route names:
+// `admin.adminPlugins.show` reaches a route named `adminPlugins.show`.
 function findPath(root, resource) {
   let node = root;
 
@@ -267,8 +262,7 @@ function joinUrl(parent, path) {
   return [...parent.split("/"), ...path.split("/")].filter(Boolean).join("/");
 }
 
-// A `:dynamic` segment becomes `*`, which `url_glob_matches?` reads as exactly one segment. A
-// `*splat` eats the rest of the route's path, so it becomes `**`, which reads as one or more.
+// `url_glob_matches?` reads `*` as one segment and `**` as one or more.
 function globFor(url) {
   return url
     .split("/")
@@ -282,8 +276,7 @@ function globFor(url) {
     .join("/");
 }
 
-// A plugin route with no `bundleName` in its ancestry still gets a bundle. Nothing a plugin
-// declares belongs in the eager set, so this is the bundle everything else falls into.
+// Nothing a plugin declares is eager, so a route naming no bundle still falls into one.
 export const DEFAULT_BUNDLE_NAME = "default";
 
 export function deriveRoutes(root) {
@@ -326,8 +319,7 @@ function segmentCount(glob) {
   return glob.split("/").length;
 }
 
-// One url per bundle entry point. A glob already covered by a shallower one in the same bundle
-// adds nothing, because every url matches its own descendants.
+// A glob a shallower one in the same bundle already covers adds nothing.
 function urlsFor(globs) {
   const sorted = [...new Set(globs)].sort();
 
@@ -337,8 +329,7 @@ function urlsFor(globs) {
   );
 }
 
-// Route name to bundle, and the urls that reach each bundle. Urls are ordered most specific
-// first, so the first match wins correctly whatever order the routes were declared in.
+// Urls come out most specific first, so the first match wins whatever order routes were declared.
 export function routeTablesFor(derived) {
   const bundleByRoute = {};
   const globsByBundle = new Map();

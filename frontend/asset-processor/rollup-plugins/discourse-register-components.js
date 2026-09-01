@@ -3,11 +3,9 @@ import MagicString from "magic-string";
 const STORE = "discourse/lib/deferred-class-modifications";
 const BINDING = "__discourseComponentClass";
 
-// Anchored to the top-level segment, so `components/chat/routes/channel` is a component but
-// `routes/chat/components/thing` is not.
+// Anchored to the top-level segment, so `routes/chat/components/thing` is not a component.
 const COMPONENT_REGEX = /^[^/]+\/components\/(.+)$/;
 
-// `discourse/components/chat/header/icon.gjs` is looked up as `component:chat/header/icon`.
 function componentPathFor(id, basePath) {
   if (!id.startsWith(basePath)) {
     return null;
@@ -20,16 +18,14 @@ function componentPathFor(id, basePath) {
     : null;
 }
 
-// Components are reached by import, never registered with `define()`, so nothing can look one up
-// by name. Each module says what it is as it evaluates, which is also the point at which a
-// `modifyClass` call that arrived first can be applied.
+// Components are reached by import, so nothing can look one up by name. Each module says what
+// it is as it evaluates, which is when a `modifyClass` call that arrived first can be applied.
 export default function discourseRegisterComponents({ basePath }) {
   return {
     name: "discourse-register-components",
 
     transform: {
-      // After the gjs and babel transforms, so this parses plain JS and sees whatever class
-      // they ended up producing.
+      // After the gjs and babel transforms, so this parses plain JS.
       order: "post",
 
       handler(code, id) {
@@ -57,7 +53,7 @@ export default function discourseRegisterComponents({ basePath }) {
         } else if (declaration.type === "ClassDeclaration" && declaration.id) {
           binding = declaration.id.name;
         } else {
-          // An anonymous class, or any other expression, has nothing to pass along.
+          // An anonymous class, or any other expression, has no name to pass along.
           binding = BINDING;
           const terminated = code[exported.end - 1] === ";";
 

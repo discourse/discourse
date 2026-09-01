@@ -1,7 +1,5 @@
-// A `modifyClass` call can name a component that has not been evaluated yet, and components are
-// reached by import rather than registered with `define()`, so the container cannot find them.
-// Each component module registers itself as it evaluates, and the two meet here whichever way
-// round they happen.
+// A `modifyClass` call can name a component that has not been evaluated yet. Components are
+// reached by import, so the container cannot find one until its module runs and registers here.
 
 const pendingModifications = new Map();
 const lazyClasses = new Map();
@@ -19,9 +17,7 @@ export function deferClassModification(resolverName, pendingModification) {
   pendingModifications.set(resolverName, modifications);
 }
 
-// Appended to every plugin and theme component module by `discourse-register-components`. The
-// path is already in the form the resolver asks for, so `chat/header/icon` is
-// `component:chat/header/icon`.
+// Appended to every plugin and theme component module by `discourse-register-components`.
 export function registerModuleForModifyClass(path, klass) {
   const resolverName = `component:${path}`;
 

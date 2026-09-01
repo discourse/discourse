@@ -639,8 +639,7 @@ module("Unit | Ember | resolver", function (hooks) {
     const serviceModule =
       "discourse/plugins/my-fake-plugin/discourse/services/lazy-thing";
 
-    // Build both caches first, so this exercises the case a lazily-loaded route bundle hits:
-    // the template map and the suffix trie already exist by the time the modules show up.
+    // Build both caches first, the way a lazily-loaded route bundle finds them.
     expireModuleTrieCache();
     DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     resolve("service:some-service-to-populate-the-trie");
