@@ -337,6 +337,22 @@ RSpec.describe PushNotificationPusher do
         expect(user.push_subscriptions.count).to eq(1)
       end
 
+      it "rejects a subscription destroyed by the confirmation notification" do
+        params =
+          ActionController::Parameters.new(
+            endpoint: "expired-endpoint",
+            keys: {
+              p256dh: "",
+              auth: "auth",
+            },
+          ).permit(:endpoint, keys: %i[p256dh auth])
+
+        result = PushNotificationPusher.subscribe(user, params, "true")
+
+        expect(result).to eq(false)
+        expect(user.push_subscriptions).to be_empty
+      end
+
       it "transfers an existing browser subscription to the current user" do
         previous_user = Fabricate(:user)
         params =
@@ -367,8 +383,10 @@ RSpec.describe PushNotificationPusher do
         auth_token_id = auth_token.id
 
         auth_token.destroy!
-        PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token_id)
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token_id)
 
+        expect(result).to eq(false)
         expect(PushSubscription.where(user: user, data: params.to_json)).to be_empty
       end
 
@@ -387,8 +405,10 @@ RSpec.describe PushNotificationPusher do
         end
         PushSubscription.set_callback(:create, :after, invalidate_token)
 
-        PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
 
+        expect(result).to eq(false)
         expect(PushSubscription.where(user: user, data: params.to_json)).to be_empty
       ensure
         PushSubscription.skip_callback(:create, :after, invalidate_token) if invalidate_token
@@ -407,8 +427,10 @@ RSpec.describe PushNotificationPusher do
             },
           ).permit(:endpoint, keys: %i[p256dh auth])
 
-        PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
+        result =
+          PushNotificationPusher.subscribe(user, params, "false", user_auth_token_id: auth_token.id)
 
+        expect(result).to eq(true)
         expect(PushSubscription.where(user: user, data: params.to_json)).to exist
       end
     end

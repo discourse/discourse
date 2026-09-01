@@ -100,7 +100,7 @@ class PushNotificationPusher
       end
     end
 
-    return if !new_subscription
+    return false if !new_subscription
 
     if send_confirmation == "true"
       message = {
@@ -113,7 +113,10 @@ class PushNotificationPusher
       }
 
       send_notification(user, new_subscription, message)
+      return false if new_subscription.destroyed?
     end
+
+    true
   end
 
   def self.unsubscribe(user, subscription)

@@ -143,7 +143,7 @@ export class SubscribeUserNotificationsInit {
       })
       .then((result) => {
         let transport = null;
-        if (result === "subscribed") {
+        if (result === "subscribed" || result === "unconfirmed") {
           transport = "delivering";
         } else if (
           this.desktopNotifications.pushIntent !== "off" &&

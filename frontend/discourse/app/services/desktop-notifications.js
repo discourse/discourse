@@ -209,9 +209,15 @@ export default class DesktopNotificationsService extends Service {
       this.setIsEnabledBrowser(false);
     }
     if (this.pushIntent === "subscribed") {
-      await unsubscribePushNotification(this.currentUser, () => {
-        this.setIsEnabledPush(false);
-      });
+      const disabled = await unsubscribePushNotification(
+        this.currentUser,
+        () => {
+          this.setIsEnabledPush(false);
+        }
+      );
+      if (!disabled) {
+        return false;
+      }
     }
     setPushTransport(null);
 
@@ -248,9 +254,13 @@ export default class DesktopNotificationsService extends Service {
     }
 
     if (this.isPushNotificationsPreferred) {
-      const subscribed = await subscribePushNotification(() => {
-        this.setIsEnabledPush(true);
-      }, this.siteSettings.vapid_public_key_bytes);
+      const subscribed = await subscribePushNotification(
+        this.currentUser,
+        () => {
+          this.setIsEnabledPush(true);
+        },
+        this.siteSettings.vapid_public_key_bytes
+      );
 
       if (subscribed) {
         setPushTransport("delivering");

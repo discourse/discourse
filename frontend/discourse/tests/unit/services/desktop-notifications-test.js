@@ -7,6 +7,7 @@ import {
 } from "discourse/lib/desktop-notifications";
 import {
   keyValueStore as pushNotificationKeyValueStore,
+  pushNotificationConfirmationStore,
   pushNotificationPreferenceStore,
   userSubscriptionKey,
 } from "discourse/lib/push-notifications";
@@ -25,13 +26,12 @@ module("Unit | Service | desktop-notifications", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    const currentUser = this.owner.lookup("service:current-user");
     this.service.rearmConsentPrompt();
-    pushNotificationKeyValueStore.remove(
-      userSubscriptionKey(this.owner.lookup("service:current-user"))
-    );
-    pushNotificationPreferenceStore.remove(
-      userSubscriptionKey(this.owner.lookup("service:current-user"))
-    );
+    pushNotificationKeyValueStore.remove(userSubscriptionKey(currentUser));
+    pushNotificationKeyValueStore.remove("operation");
+    pushNotificationConfirmationStore.remove("active");
+    pushNotificationPreferenceStore.remove(userSubscriptionKey(currentUser));
     setPushTransport(null);
   });
 
@@ -161,7 +161,7 @@ module("Unit | Service | desktop-notifications", function (hooks) {
 
     const result = await this.service.reconcilePushSubscription();
 
-    assert.strictEqual(result, null);
+    assert.strictEqual(result, "unconfirmed");
     assert.strictEqual(
       this.service.pushIntent,
       "subscribed",

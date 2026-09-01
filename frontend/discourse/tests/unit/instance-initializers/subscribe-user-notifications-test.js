@@ -84,6 +84,18 @@ module(
       );
     });
 
+    test("avoids duplicate fallback for a previously confirmed endpoint", async function (assert) {
+      const instance = build("unconfirmed");
+
+      await reconcile(instance);
+
+      assert.strictEqual(
+        getPushTransport(),
+        "delivering",
+        "a transient resync failure does not duplicate a known working endpoint"
+      );
+    });
+
     test("a desktop alert retries push after reconciliation fails", async function (assert) {
       const clock = sinon.useFakeTimers();
       const instance = build(null);
