@@ -8,6 +8,10 @@
     width: 25%;
   }
 
+  &__category-cell > .badge-category__wrapper {
+    max-width: 100%;
+  }
+
   &__solved-by-users {
     display: grid;
     gap: var(--space-1);
@@ -33,5 +37,9 @@
     align-items: center;
     gap: var(--space-2);
     margin-block-start: var(--space-1);
+  }
+
+  &__topic-meta > .badge-category__wrapper {
+    max-width: 100%;
   }
 }
