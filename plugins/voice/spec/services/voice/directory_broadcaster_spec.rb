@@ -3,11 +3,9 @@
 RSpec.describe Voice::DirectoryBroadcaster do
   before { SiteSetting.voice_enabled = true }
 
-  it "publishes public room events without targets when allowed groups include everyone" do
-    # With the granular flag on, a stored `everyone` reads as logged_in_users
-    # and the publish is group-targeted instead (covered below).
-    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+  it "reaches anonymous subscribers through the anonymous_users pseudogroup when they are admitted" do
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     room = Fabricate(:voice_room, public: true)
 
     messages =
@@ -16,8 +14,20 @@ RSpec.describe Voice::DirectoryBroadcaster do
       end
 
     expect(messages.size).to eq(1)
-    expect(messages.first.user_ids).to be_nil
-    expect(messages.first.group_ids).to be_nil
+    expect(messages.first.group_ids).to contain_exactly(
+      Group::AUTO_GROUPS[:anonymous_users],
+      Group::AUTO_GROUPS[:logged_in_users],
+    )
+
+    # Anonymous message-bus clients carry only the anonymous_users
+    # pseudo-group (see config/initializers/004-message_bus.rb).
+    anonymous_client =
+      MessageBus::Client.new(
+        client_id: "anonymous",
+        user_id: nil,
+        group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+    expect(anonymous_client.allowed?(messages.first)).to eq(true)
   end
 
   it "excludes anonymous subscribers when allowed groups are logged_in_users" do
@@ -52,7 +62,7 @@ RSpec.describe Voice::DirectoryBroadcaster do
     expect(anonymous_client.allowed?(messages.first)).to eq(false)
   end
 
-  it "publishes without targets when allowed groups include anonymous_users" do
+  it "targets the anonymous_users pseudogroup when only anonymous access is configured" do
     SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:anonymous_users].to_s
     room = Fabricate(:voice_room, public: true)
 
@@ -62,7 +72,7 @@ RSpec.describe Voice::DirectoryBroadcaster do
       end
 
     expect(messages.first.user_ids).to be_nil
-    expect(messages.first.group_ids).to be_nil
+    expect(messages.first.group_ids).to contain_exactly(Group::AUTO_GROUPS[:anonymous_users])
   end
 
   it "targets members for private room events" do
@@ -78,7 +88,8 @@ RSpec.describe Voice::DirectoryBroadcaster do
 
   it "never publishes events for ephemeral rooms" do
     room = Fabricate(:voice_ephemeral_room, public: true)
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
 
     messages =
       MessageBus.track_publish(Voice.room_index_channel) do

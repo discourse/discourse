@@ -39,7 +39,8 @@ RSpec.describe Voice::RoomsController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
@@ -482,10 +483,7 @@ RSpec.describe Voice::RoomsController do
       expect(json["room"]["active_participants"].map { |p| p["id"] }).to include(user.id)
     end
 
-    it "broadcasts participants untargeted when access is open to everyone" do
-      # With the granular flag on, a stored `everyone` reads as
-      # logged_in_users and the broadcast is group-targeted instead.
-      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    it "broadcasts participants to the allowed groups, anonymous subscribers included" do
       sign_in(user)
       Voice::ParticipantTracker.add(room.id, other_participant.id)
 
@@ -498,8 +496,10 @@ RSpec.describe Voice::RoomsController do
 
       participants_message = messages.find { |message| message.data[:type] == "participants" }
       expect(participants_message).to be_present
-      expect(participants_message.user_ids).to be_nil
-      expect(participants_message.group_ids).to be_nil
+      expect(participants_message.group_ids).to include(
+        Group::AUTO_GROUPS[:anonymous_users],
+        Group::AUTO_GROUPS[:logged_in_users],
+      )
     end
 
     context "with user status integration" do
@@ -1927,7 +1927,8 @@ RSpec.describe Voice::RoomsController do
 
     before do
       SiteSetting.chat_enabled = true
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.chat_allowed_groups =
+        "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
       room.update!(chat_channel_id: channel.id)
     end
 

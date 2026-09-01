@@ -28,7 +28,8 @@ RSpec.describe Voice::ChatSession do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_chat_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     room.update!(chat_channel_id: channel.id, chat_idle_minutes: 15)
     described_class.clear(room.id)
   end

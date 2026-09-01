@@ -31,23 +31,13 @@ module ::Voice
   end
 
   # Pseudo-groups have no group_users rows, but a client's message-bus groups
-  # don't come only from that table: every logged-in client carries the
-  # logged_in_users pseudo-group (see config/initializers/004-message_bus.rb),
-  # so it can be targeted directly. Only access that includes anonymous
-  # visitors (everyone / anonymous_users) publishes untargeted — falling back
-  # to untargeted for logged_in_users would hand room directory and
-  # participant data to anonymous subscribers on predictable channels.
+  # don't come only from that table (see config/initializers/004-message_bus.rb):
+  # logged-in clients carry the logged_in_users pseudo-group and anonymous
+  # clients carry anonymous_users, so targeting the allowed groups reaches
+  # exactly the visitors who may see public rooms — anonymous ones included,
+  # when they are admitted.
   def self.public_room_message_bus_targets
-    allowed_group_ids = SiteSetting.voice_allowed_groups_map
-
-    anonymous_reachable_group_ids = [
-      Group::AUTO_GROUPS[:everyone],
-      Group::AUTO_GROUPS[:anonymous_users],
-    ]
-
-    return {} if allowed_group_ids.intersect?(anonymous_reachable_group_ids)
-
-    { group_ids: allowed_group_ids }
+    { group_ids: SiteSetting.voice_allowed_groups_map }
   end
 end
 

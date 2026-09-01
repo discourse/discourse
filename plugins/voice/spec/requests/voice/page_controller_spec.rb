@@ -21,7 +21,8 @@ RSpec.describe Voice::PageController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
   end
 
   describe "#show" do
@@ -59,7 +60,7 @@ RSpec.describe Voice::PageController do
       expect(response.status).to eq(403)
     end
 
-    it "renders for anonymous visitors when access is open to everyone" do
+    it "renders for anonymous visitors when anonymous visitors are admitted" do
       get "/voice/r/#{room.slug}"
 
       expect(response.status).to eq(200)

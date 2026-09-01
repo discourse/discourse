@@ -20,7 +20,8 @@ describe "Voice room chat panel" do
   before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_mesh_privacy_warning_enabled = false
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     chat_system_bootstrap(user, [channel])
     sign_in(user)
     install_voice_fake_media

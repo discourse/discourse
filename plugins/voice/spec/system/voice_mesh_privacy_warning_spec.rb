@@ -9,7 +9,8 @@ describe "Voice mesh privacy warning" do
   before do
     user.activate
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     sign_in(user)
     install_voice_fake_media
   end

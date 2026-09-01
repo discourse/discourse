@@ -11,7 +11,8 @@ RSpec.describe Voice::RoomsController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     Group.refresh_automatic_groups!
   end
 

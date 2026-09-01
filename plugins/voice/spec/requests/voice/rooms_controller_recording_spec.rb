@@ -30,7 +30,8 @@ RSpec.describe Voice::RoomsController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"

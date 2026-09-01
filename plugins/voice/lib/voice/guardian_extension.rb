@@ -2,31 +2,22 @@
 
 module Voice
   module GuardianExtension
+    # Access means participating — joining rooms, calling, appearing in
+    # rosters — so it always requires authentication. Anonymous visitors are
+    # served read-only through voice_public_access? instead.
     def can_access_voice?
       SiteSetting.voice_enabled? && authenticated? &&
-        user.in_any_groups?(SiteSetting.voice_allowed_groups_map)
+        in_any_groups?(SiteSetting.voice_allowed_groups_map)
     end
 
-    # Whether Voice is open to everyone, including anonymous visitors. This is
-    # the case when `voice_allowed_groups` includes the "everyone" (or, under
-    # the granular permissions model, "anonymous_users") pseudogroup, and it lets
-    # logged-out users browse (but not join) public rooms. Never true on
-    # login-required sites, where there are no anonymous visitors to serve.
-    #
-    # We read the stored setting rather than `voice_allowed_groups_map`
-    # because, with `granular_anonymous_and_logged_in_groups_permissions` enabled
-    # by default in core, the `_map` accessor rewrites the "everyone" pseudogroup
-    # (id 0) to "logged_in_users" (id 5), which would erase an admin's intent to
-    # admit anonymous visitors, and is indistinguishable from an admin who
-    # deliberately limited access to logged-in users only.
+    # Whether Voice is open to anonymous visitors, letting them browse (but
+    # not join) public rooms. Never true on login-required sites, where there
+    # are no anonymous visitors to serve.
     def voice_public_access?
       return false unless SiteSetting.voice_enabled?
       return false if SiteSetting.login_required
 
-      stored_group_ids = SiteSetting.voice_allowed_groups.to_s.split("|").map(&:to_i)
-      stored_group_ids.intersect?(
-        [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:anonymous_users]],
-      )
+      SiteSetting.voice_allowed_groups_map.include?(Group::AUTO_GROUPS[:anonymous_users])
     end
 
     def can_create_voice_room?

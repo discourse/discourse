@@ -36,7 +36,8 @@ RSpec.describe Voice::RoomsController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
     room.update!(room_type: Voice::Room::ROOM_TYPE_STAGE)
     Voice::ParticipantTracker.add(room.id, listener.id)

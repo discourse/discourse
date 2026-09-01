@@ -6,7 +6,8 @@ RSpec.describe Voice::CallsController do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_direct_calls_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
   end
 

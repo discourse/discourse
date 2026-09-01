@@ -29,8 +29,10 @@ RSpec.describe Voice::ChatThreadsController do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_chat_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     # Keep the signed-in user a plain member — not a global room manager — so
     # room visibility is decided by membership, not the create-room privilege.
     SiteSetting.voice_create_room_allowed_groups = Group::AUTO_GROUPS[:trust_level_4].to_s

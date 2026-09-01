@@ -138,10 +138,11 @@ RSpec.describe Voice::RoomHashtagDataSource do
       expect(described_class.lookup(guardian, ["general"])).to be_empty
     end
 
-    it "returns public rooms to anonymous users when access is open to everyone" do
+    it "returns public rooms to anonymous users when anonymous visitors are admitted" do
       expect(described_class.lookup(Guardian.new, ["general"])).to be_empty
 
-      SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+      SiteSetting.voice_allowed_groups =
+        "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
       expect(described_class.lookup(Guardian.new, %w[general secret-sessions]).map(&:slug)).to eq(
         ["general"],
       )

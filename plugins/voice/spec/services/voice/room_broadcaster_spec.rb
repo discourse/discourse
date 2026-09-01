@@ -7,11 +7,9 @@ RSpec.describe Voice::RoomBroadcaster do
   before { SiteSetting.voice_enabled = true }
 
   describe ".publish_participants" do
-    it "publishes without targets when allowed groups include everyone" do
-      # With the granular flag on, a stored `everyone` reads as logged_in_users
-      # and the publish is group-targeted instead (covered below).
-      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
-      SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+    it "reaches anonymous subscribers through the anonymous_users pseudogroup when they are admitted" do
+      SiteSetting.voice_allowed_groups =
+        "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
       Voice::ParticipantTracker.add(room.id, participant.id)
 
       messages =
@@ -20,8 +18,18 @@ RSpec.describe Voice::RoomBroadcaster do
         end
 
       expect(messages.size).to eq(1)
-      expect(messages.first.user_ids).to be_nil
-      expect(messages.first.group_ids).to be_nil
+      expect(messages.first.group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:anonymous_users],
+        Group::AUTO_GROUPS[:logged_in_users],
+      )
+
+      anonymous_client =
+        MessageBus::Client.new(
+          client_id: "anonymous",
+          user_id: nil,
+          group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+        )
+      expect(anonymous_client.allowed?(messages.first)).to eq(true)
     end
 
     it "targets logged-in subscribers, never anonymous ones, when allowed groups are logged_in_users" do

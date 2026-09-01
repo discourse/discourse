@@ -25,7 +25,8 @@ describe "Voice stage speak queue" do
     listener.activate
     SiteSetting.voice_enabled = true
     SiteSetting.voice_mesh_privacy_warning_enabled = false
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_video_enabled = true
   end
 

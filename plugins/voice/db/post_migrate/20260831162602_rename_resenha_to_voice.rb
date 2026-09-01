@@ -52,6 +52,14 @@ class RenameResenhaToVoice < ActiveRecord::Migration[8.0]
         AND REPLACE(name, 'resenha_', 'voice_') NOT IN (SELECT name FROM site_settings)
     SQL
 
+    # The old default admitted the deprecated `everyone` pseudogroup (0);
+    # anonymous_users + logged_in_users (4|5) is the equivalent going forward.
+    execute <<~SQL
+      UPDATE site_settings
+      SET value = '4|5'
+      WHERE name = 'voice_allowed_groups' AND value = '0'
+    SQL
+
     execute <<~SQL
       UPDATE reviewables
       SET type = 'ReviewableVoiceUser'

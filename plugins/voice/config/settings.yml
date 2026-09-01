@@ -5,21 +5,25 @@ plugins:
   voice_allowed_groups:
     type: group_list
     list_type: compact
-    default: "0"
+    default: "4|5" # auto groups anonymous_users, logged_in_users
     allow_any: false
     refresh: true
+    disallowed_groups: "0"
   voice_create_room_allowed_groups:
     type: group_list
     list_type: compact
-    default: "1|2|12"
+    default: "1|2|12" # auto groups admins, moderators, trust_level_2
     allow_any: false
     refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
   voice_direct_calls_allowed_groups:
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "0|4"
   voice_max_rooms_per_user:
     default: 5
   voice_max_invites_per_day:

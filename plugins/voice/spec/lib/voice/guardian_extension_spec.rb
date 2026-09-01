@@ -59,26 +59,20 @@ RSpec.describe Voice::GuardianExtension do
 
   before do
     SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
   describe "#voice_public_access?" do
-    it "is true when access is open to everyone on a public site" do
+    it "is true when anonymous visitors are admitted on a public site" do
       expect(anonymous_guardian.voice_public_access?).to eq(true)
     end
 
-    it "is false on login-required sites even when access is open to everyone" do
+    it "is false on login-required sites even when anonymous visitors are admitted" do
       SiteSetting.login_required = true
 
       expect(anonymous_guardian.voice_public_access?).to eq(false)
-    end
-
-    it "still admits anonymous visitors under granular group permissions" do
-      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-      SiteSetting.voice_allowed_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-
-      expect(anonymous_guardian.voice_public_access?).to eq(true)
     end
 
     it "is true when access is open to the anonymous_users pseudogroup" do
@@ -194,7 +188,7 @@ RSpec.describe Voice::GuardianExtension do
   end
 
   describe "#can_see_voice_room?" do
-    it "lets anonymous visitors see public rooms when access is open to everyone" do
+    it "lets anonymous visitors see public rooms when anonymous visitors are admitted" do
       expect(anonymous_guardian.can_see_voice_room?(public_room)).to eq(true)
     end
 
