@@ -93,6 +93,7 @@ export default class HamburgerDropdownWrapper extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="hamburger-dropdown-wrapper"
+      ...attributes
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}
@@ -103,7 +104,6 @@ export default class HamburgerDropdownWrapper extends Component {
           secondaryTargetSelector=".hamburger-dropdown"
         )
       }}
-      ...attributes
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}

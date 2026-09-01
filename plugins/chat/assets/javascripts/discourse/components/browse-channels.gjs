@@ -103,9 +103,9 @@ export default class BrowseChannels extends Component {
             {{#each this.tabs as |tab|}}
               <li class={{concat "chat-browse-view__filter -" tab}}>
                 <LinkTo
-                  @route={{concat "chat.browse." tab}}
                   class={{concat "chat-browse-view__filter-link -" tab}}
                   @current-when={{eq tab this.currentTab}}
+                  @route={{concat "chat.browse." tab}}
                 >
                   {{i18n (concat "chat.browse.filter_" tab)}}
                 </LinkTo>
@@ -130,9 +130,9 @@ export default class BrowseChannels extends Component {
       <div class="chat-browse-view__content_wrapper">
         <div class="chat-browse-view__content">
           <List
+            class="chat-browse-view__cards"
             @collection={{this.channelsCollection}}
             @filterFn={{this.filterChannelsByJoined}}
-            class="chat-browse-view__cards"
             as |list|
           >
             <list.Item as |channel|>
@@ -141,10 +141,10 @@ export default class BrowseChannels extends Component {
 
             <list.EmptyState>
               <DEmptyState
-                @title={{i18n "chat.empty_state.title"}}
                 @body={{i18n "chat.empty_state.direct_message"}}
-                @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}
                 @ctaAction={{this.showChatNewMessageModal}}
+                @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}
+                @title={{i18n "chat.empty_state.title"}}
               />
             </list.EmptyState>
           </List>

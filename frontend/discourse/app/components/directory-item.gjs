@@ -19,12 +19,12 @@ export default class DirectoryItem extends Component {
 
   <template>
     <div
-      role="row"
       class={{dConcatClass "directory-table__row" (if this.me "me")}}
+      role="row"
       ...attributes
     >
       <div class="directory-table__cell" role="rowheader">
-        <DUserInfo @user={{this.item.user}} @headingLevel={{3}} />
+        <DUserInfo @headingLevel={{3}} @user={{this.item.user}} />
       </div>
 
       {{#each this.columns as |column|}}
@@ -34,8 +34,8 @@ export default class DirectoryItem extends Component {
               <span>{{column.name}}</span>
             </span>
             <DirectoryItemUserFieldValue
-              @item={{this.item}}
               @column={{column}}
+              @item={{this.item}}
             />
           </div>
         {{else}}

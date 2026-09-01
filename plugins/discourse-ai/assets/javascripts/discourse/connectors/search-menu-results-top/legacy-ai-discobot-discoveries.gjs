@@ -61,9 +61,9 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
         {{/if}}
 
         <LegacyAiSearchDiscoveries
-          @searchTerm={{@outletArgs.searchTerm}}
-          @discoveryPreviewLength={{50}}
           @closeSearchMenu={{@outletArgs.closeSearchMenu}}
+          @discoveryPreviewLength={{50}}
+          @searchTerm={{@outletArgs.searchTerm}}
         />
 
         {{#if this.search.results.topics.length}}

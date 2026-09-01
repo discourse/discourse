@@ -19,16 +19,16 @@ export default <template>
         (if @channel.isClosed "--closed")
         (if @channel.isArchived "--archived")
       }}
+      data-channel-id={{@channel.id}}
       style={{trustHTML
         (concat "--chat-channel-card-border: #" @channel.chatable.color)
       }}
-      data-channel-id={{@channel.id}}
     >
       <div class="chat-channel-card__header">
         <LinkTo
-          @route="chat.channel"
-          @models={{@channel.routeModels}}
           class="chat-channel-card__name-container"
+          @models={{@channel.routeModels}}
+          @route="chat.channel"
         >
           <span class="chat-channel-card__name">
             {{#if @channel.emoji}}
@@ -41,8 +41,8 @@ export default <template>
           {{/if}}
           {{#if @channel.currentUserMembership.muted}}
             <span
-              class="chat-channel-card__muted"
               aria-label={{i18n "chat.muted"}}
+              class="chat-channel-card__muted"
               title={{i18n "chat.muted"}}
             >{{dIcon "d-muted"}}</span>
           {{/if}}
@@ -51,9 +51,9 @@ export default <template>
 
       <div class="chat-channel-card__cta">
         <PluginOutlet
+          @defaultGlimmer={{true}}
           @name="chat-channel-card-cta"
           @outletArgs={{lazyHash channel=@channel}}
-          @defaultGlimmer={{true}}
         >
           {{#if @channel.isFollowing}}
             <ToggleChannelMembershipButton
@@ -78,9 +78,9 @@ export default <template>
 
       {{#if (gt @channel.membershipsCount 0)}}
         <LinkTo
-          @route="chat.channel.info.members"
-          @models={{@channel.routeModels}}
           class="chat-channel-card__members"
+          @models={{@channel.routeModels}}
+          @route="chat.channel.info.members"
         >
           {{i18n
             "chat.channel.memberships_count"

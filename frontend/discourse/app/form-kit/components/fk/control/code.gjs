@@ -24,18 +24,18 @@ export default class FKControlCode extends FKBaseControl {
 
   <template>
     <AceEditor
-      @content={{this.initialValue}}
-      @onChange={{this.handleInput}}
-      @mode={{@lang}}
-      @disabled={{@field.disabled}}
-      @resizable={{true}}
+      aria-describedby={{@field.describedBy}}
+      aria-invalid={{if @field.error "true"}}
       class="form-kit__control-code"
-      style={{this.style}}
       id={{@field.id}}
       name={{@field.name}}
-      aria-invalid={{if @field.error "true"}}
-      aria-describedby={{@field.describedBy}}
+      style={{this.style}}
       ...attributes
+      @content={{this.initialValue}}
+      @disabled={{@field.disabled}}
+      @mode={{@lang}}
+      @onChange={{this.handleInput}}
+      @resizable={{true}}
     />
   </template>
 }

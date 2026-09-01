@@ -23,8 +23,8 @@ export default <template>
             <div class="url">
               {{i18n "errors.prev_page"}}
               <a
-                href={{@controller.requestUrl}}
                 data-auto-route="true"
+                href={{@controller.requestUrl}}
               >{{@controller.requestUrl}}</a>
             </div>
           {{/if}}
@@ -38,10 +38,10 @@ export default <template>
           <div class="buttons">
             {{#each @controller.enabledButtons as |buttonData|}}
               <DButton
-                @icon={{buttonData.icon}}
-                @action={{buttonData.action}}
-                @label={{buttonData.key}}
                 class={{buttonData.classes}}
+                @action={{buttonData.action}}
+                @icon={{buttonData.icon}}
+                @label={{buttonData.key}}
               />
             {{/each}}
             <DConditionalLoadingSpinner @condition={{@controller.loading}} />

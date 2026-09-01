@@ -57,12 +57,12 @@ export default class UpcomingChangeBadges extends Component {
       >
         <:trigger>
           <UpcomingChangeBadge
-            @icon="flask"
             @badgeClass={{concat "--status-" @upcomingChange.status}}
             @badgeLabelKey={{concat
               "admin.upcoming_changes.statuses."
               @upcomingChange.status
             }}
+            @icon="flask"
           >
 
             <span class="d-table-badge__info upcoming-change__badge-info">
@@ -73,22 +73,22 @@ export default class UpcomingChangeBadges extends Component {
       </DTooltip>
 
       <UpcomingChangeBadge
-        @icon={{this.impactRoleIcon @upcomingChange.impact_role}}
         @badgeClass={{concat "--impact-role-" @upcomingChange.impact_role}}
         @badgeLabelKey={{concat
           "admin.upcoming_changes.impact_roles."
           @upcomingChange.impact_role
         }}
+        @icon={{this.impactRoleIcon @upcomingChange.impact_role}}
       />
 
       <UpcomingChangeBadge
-        @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
         @badgeClass={{concat "--impact-type-" @upcomingChange.impact_type}}
         @badgeLabelKey={{concat
           "admin.upcoming_changes.impact_types."
           @upcomingChange.impact_type
           "_type"
         }}
+        @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
       />
     </div>
   </template>

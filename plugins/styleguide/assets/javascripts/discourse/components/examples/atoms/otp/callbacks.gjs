@@ -19,7 +19,7 @@ export default class OtpCallbacksExample extends Component {
   }
 
   <template>
-    <DOtp @onFill={{this.filled}} @onChange={{this.changed}} />
+    <DOtp @onChange={{this.changed}} @onFill={{this.filled}} />
 
     {{#if this.changedOutput}}
       <output>

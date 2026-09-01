@@ -315,6 +315,9 @@ export default class CreateInvite extends Component {
   <template>
     <DModal
       class="create-invite-modal"
+      @closeModal={{@closeModal}}
+      @hideFooter={{and this.simpleMode this.inviteCreated}}
+      @inline={{@inline}}
       @title={{i18n
         (if
           @model.editing
@@ -322,20 +325,17 @@ export default class CreateInvite extends Component {
           "user.invited.invite.new_title"
         )
       }}
-      @closeModal={{@closeModal}}
-      @hideFooter={{and this.simpleMode this.inviteCreated}}
-      @inline={{@inline}}
     >
       <:belowHeader>
         {{#if (or this.flashText @model.editing)}}
           <InviteModalAlert
-            @invite={{this.invite}}
             @alertClass={{this.flashClass}}
+            @invite={{this.invite}}
+            @onLinkInsert={{this.maybeFocusCopyButton}}
             @showInviteLink={{and
               this.inviteCreated
               (notEq this.flashClass "error")
             }}
-            @onLinkInsert={{this.maybeFocusCopyButton}}
           >
             {{#if this.flashText}}
               {{trustHTML this.flashText}}
@@ -369,38 +369,38 @@ export default class CreateInvite extends Component {
           </p>
           <p>
             <DButton
-              @display="link"
-              @action={{this.showAdvancedMode}}
-              @translatedLabel={{this.linkOptionsLabel}}
               class="edit-link-options"
+              @action={{this.showAdvancedMode}}
+              @display="link"
+              @translatedLabel={{this.linkOptionsLabel}}
             />
           </p>
         {{else}}
           <Form
             @data={{this.data}}
-            @onSubmit={{this.onFormSubmit}}
             @onRegisterApi={{this.registerApi}}
+            @onSubmit={{this.onFormSubmit}}
             {{didInsert this.maybeFocusFirstField}}
             as |form|
           >
             <form.Field
-              @name="description"
-              @type="input"
-              @title={{i18n "user.invited.invite.description"}}
               @description={{i18n "user.invited.invite.description_help"}}
               @format="full"
+              @name="description"
+              @title={{i18n "user.invited.invite.description"}}
+              @type="input"
               @validation={{this.descriptionValidation}}
               as |field|
             >
               <field.Control />
             </form.Field>
             <form.Field
-              @name="restrictTo"
-              @type="input"
-              @title={{i18n "user.invited.invite.restrict"}}
               @description={{i18n "user.invited.invite.restrict_help"}}
               @format="full"
+              @name="restrictTo"
               @onSet={{this.handleRestrictToChange}}
+              @title={{i18n "user.invited.invite.restrict"}}
+              @type="input"
               as |field|
             >
               <field.Control
@@ -412,26 +412,26 @@ export default class CreateInvite extends Component {
 
             {{#unless this.isEmailInvite}}
               <form.Field
+                @format="small"
                 @name="maxRedemptions"
                 @title={{i18n "user.invited.invite.max_redemptions_allowed"}}
                 @type="input-number"
-                @format="small"
                 @validation="required"
                 as |field|
               >
                 <field.Control
-                  min="1"
                   max={{this.maxRedemptionsAllowedLimit}}
+                  min="1"
                 />
               </form.Field>
             {{/unless}}
 
             {{#if this.inviteCreated}}
               <form.Field
-                @name="expiresAt"
-                @type="custom"
-                @title={{i18n "user.invited.invite.expires_at"}}
                 @format="full"
+                @name="expiresAt"
+                @title={{i18n "user.invited.invite.expires_at"}}
+                @type="custom"
                 @validation="required"
                 as |field|
               >
@@ -446,10 +446,10 @@ export default class CreateInvite extends Component {
               </form.Field>
             {{else}}
               <form.Field
-                @name="expiresAfterDays"
-                @type="select"
-                @title={{i18n "user.invited.invite.expires_after"}}
                 @format="full"
+                @name="expiresAfterDays"
+                @title={{i18n "user.invited.invite.expires_after"}}
+                @type="select"
                 @validation="required"
                 as |field|
               >
@@ -465,18 +465,18 @@ export default class CreateInvite extends Component {
 
             {{#if this.canArriveAtTopic}}
               <form.Field
-                @name="inviteToTopic"
-                @type="custom"
-                @title={{i18n "user.invited.invite.invite_to_topic"}}
                 @format="full"
+                @name="inviteToTopic"
+                @title={{i18n "user.invited.invite.invite_to_topic"}}
+                @type="custom"
                 as |field|
               >
                 <field.Control>
                   <TopicChooser
-                    @value={{field.value}}
                     @content={{this.topics}}
                     @onChange={{fn this.onChangeTopic field.set}}
                     @options={{hash additionalFilters="status:public"}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
@@ -484,18 +484,18 @@ export default class CreateInvite extends Component {
 
             {{#if this.canInviteToGroup}}
               <form.Field
-                @name="inviteToGroups"
-                @type="custom"
-                @title={{i18n "user.invited.invite.add_to_groups"}}
                 @format="full"
+                @name="inviteToGroups"
+                @title={{i18n "user.invited.invite.add_to_groups"}}
+                @type="custom"
                 as |field|
               >
                 <field.Control>
                   <GroupChooser
                     @content={{this.allGroups}}
-                    @value={{field.value}}
                     @labelProperty="name"
                     @onChange={{field.set}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
@@ -503,11 +503,11 @@ export default class CreateInvite extends Component {
 
             {{#if this.canSendEmailInvite}}
               <form.Field
-                @name="customMessage"
-                @type="textarea"
-                @title={{i18n "user.invited.invite.custom_message"}}
                 @description={{i18n "user.invited.invite.custom_message_help"}}
                 @format="full"
+                @name="customMessage"
+                @title={{i18n "user.invited.invite.custom_message"}}
+                @type="textarea"
                 as |field|
               >
                 <field.Control
@@ -524,41 +524,41 @@ export default class CreateInvite extends Component {
       <:footer>
         {{#if this.simpleMode}}
           <DButton
-            @label="user.invited.invite.create_link"
+            autofocus="true"
+            class="btn-primary save-invite"
             @action={{this.createLink}}
             @disabled={{this.saving}}
-            class="btn-primary save-invite"
-            autofocus="true"
+            @label="user.invited.invite.create_link"
           />
         {{else}}
           <DButton
+            class="btn-primary save-invite"
+            @action={{this.saveInvite}}
+            @disabled={{this.saving}}
             @label={{if
               this.inviteCreated
               "user.invited.invite.update_invite"
               "user.invited.invite.create_link"
             }}
-            @action={{this.saveInvite}}
-            @disabled={{this.saving}}
-            class="btn-primary save-invite"
           />
           {{#if this.canSendEmailInvite}}
             <DButton
+              autofocus="true"
+              class="btn-primary save-invite-and-send-email"
+              @action={{this.saveInviteAndSendEmail}}
+              @disabled={{this.saving}}
               @label={{if
                 this.inviteCreated
                 "user.invited.invite.update_invite_and_send_email"
                 "user.invited.invite.create_link_and_send_email"
               }}
-              @action={{this.saveInviteAndSendEmail}}
-              @disabled={{this.saving}}
-              autofocus="true"
-              class="btn-primary save-invite-and-send-email"
             />
           {{/if}}
         {{/if}}
         <DButton
-          @label="user.invited.invite.cancel"
-          @action={{this.cancel}}
           class="btn-transparent cancel-button"
+          @action={{this.cancel}}
+          @label="user.invited.invite.cancel"
         />
       </:footer>
     </DModal>
@@ -567,9 +567,9 @@ export default class CreateInvite extends Component {
 
 const InviteModalAlert = <template>
   <div
+    class="alert alert-{{@alertClass}}"
     id="modal-alert"
     role={{if (notEq @alertClass "error") "status" "alert"}}
-    class="alert alert-{{@alertClass}}"
   >
     <div class="input-group invite-link">
       <label for="invite-link">
@@ -594,18 +594,18 @@ class ShareOrCopyInviteLink extends Component {
 
   <template>
     <input
-      name="invite-link"
-      type="text"
       class="invite-link"
-      value={{@invite.link}}
+      name="invite-link"
       readonly={{true}}
+      type="text"
+      value={{@invite.link}}
     />
     {{#if (canNativeShare this.capabilities)}}
       <DButton
         class="btn-primary"
+        @action={{this.nativeShare}}
         @icon="share"
         @translatedLabel={{i18n "user.invited.invite.share_link"}}
-        @action={{this.nativeShare}}
       />
     {{else}}
       <DCopyButton

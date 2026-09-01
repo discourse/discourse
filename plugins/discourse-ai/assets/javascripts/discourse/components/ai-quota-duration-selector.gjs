@@ -86,19 +86,19 @@ export default class DurationSelector extends Component {
   <template>
     <div class="duration-selector" ...attributes>
       <ComboBox
-        @content={{this.presetOptions}}
-        @value={{this.selectedPresetId}}
-        @onChange={{this.onPresetChange}}
         class="duration-selector__preset"
+        @content={{this.presetOptions}}
+        @onChange={{this.onPresetChange}}
+        @value={{this.selectedPresetId}}
       />
 
       {{#if this.isCustom}}
         <div class="duration-selector__custom">
           <input
-            type="number"
-            value={{this.customHours}}
             class="duration-selector__hours-input"
             min="1"
+            type="number"
+            value={{this.customHours}}
             {{on "input" this.onCustomHoursChange}}
           />
           <span class="duration-selector__hours-label">

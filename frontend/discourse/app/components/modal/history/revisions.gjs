@@ -63,9 +63,9 @@ export default class Revisions extends Component {
 
   <template>
     <div
-      id="revisions"
-      data-post-id={{@model.post_id}}
       class={{@hiddenClasses}}
+      data-post-id={{@model.post_id}}
+      id="revisions"
       ...attributes
     >
       {{#if @model.locale_changes}}
@@ -214,8 +214,8 @@ export default class Revisions extends Component {
 
       <span>
         <PluginOutlet
-          @name="post-revisions"
           @connectorTagName="div"
+          @name="post-revisions"
           @outletArgs={{lazyHash model=@model}}
         />
       </span>
@@ -227,9 +227,9 @@ export default class Revisions extends Component {
         </div>
       {{else}}
         <LinksRedirect
+          class="row body-diff"
           {{didInsert @calculateBodyDiff @bodyDiffHTML}}
           {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
-          class="row body-diff"
         >
           {{trustHTML @bodyDiff}}
         </LinksRedirect>

@@ -78,32 +78,32 @@ export default class DataTablesManager extends PaginatedListManager {
 
   <template>
     <AdminTable
-      @items={{this.items}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.items}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
     >
       <:empty>
         <EmptyState
+          @buttonLabel="discourse_workflows.data_tables.add_first"
+          @description={{i18n
+            "discourse_workflows.data_tables.empty_description"
+          }}
           @emoji="wave"
+          @onAction={{this.addDataTable}}
           @title={{i18n
             "discourse_workflows.data_tables.empty_title"
             username=this.currentUser.displayName
           }}
-          @description={{i18n
-            "discourse_workflows.data_tables.empty_description"
-          }}
-          @buttonLabel="discourse_workflows.data_tables.add_first"
-          @onAction={{this.addDataTable}}
         />
       </:empty>
       <:toolbar>
         <DButton
-          @action={{this.addDataTable}}
-          @label="discourse_workflows.data_tables.add"
-          @icon="plus"
           class="btn-primary btn-small"
+          @action={{this.addDataTable}}
+          @icon="plus"
+          @label="discourse_workflows.data_tables.add"
         />
       </:toolbar>
       <:head>
@@ -121,9 +121,9 @@ export default class DataTablesManager extends PaginatedListManager {
       <:row as |dataTable|>
         <td class="d-table__cell --overview">
           <LinkTo
-            @route="adminPlugins.show.discourse-workflows-data-tables.show"
-            @model={{dataTable.id}}
             class="d-table__overview-link"
+            @model={{dataTable.id}}
+            @route="adminPlugins.show.discourse-workflows-data-tables.show"
           >
             <strong class="d-table__overview-name">{{dataTable.name}}</strong>
           </LinkTo>
@@ -143,9 +143,9 @@ export default class DataTablesManager extends PaginatedListManager {
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.deleteDataTable dataTable}}
               @label="discourse_workflows.delete"
-              class="btn-default btn-small"
             />
           </div>
         </td>

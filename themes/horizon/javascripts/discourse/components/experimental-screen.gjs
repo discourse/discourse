@@ -54,8 +54,8 @@ export default class ExperimentalScreen extends Component {
     {{#if this.shouldRender}}
       <ul
         class="experimental-screen"
-        {{didInsert this.onInsert}}
         style={{this.distanceStyles}}
+        {{didInsert this.onInsert}}
       >
         <li class="experimental-screen__top-left"></li>
         <li class="experimental-screen__top-right"></li>

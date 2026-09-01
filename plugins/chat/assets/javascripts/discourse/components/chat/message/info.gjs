@@ -139,9 +139,9 @@ export default class ChatMessageInfo extends Component {
           >
             {{#if this.interactive}}
               <button
-                type="button"
                 class="chat-message-info__username__name"
                 data-user-card={{@message.user.username}}
+                type="button"
               >{{this.name}}</button>
             {{else}}
               <span
@@ -183,7 +183,7 @@ export default class ChatMessageInfo extends Component {
         {{#if this.isFlagged}}
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
-              <LinkTo @route="review.show" @model={{@message.reviewableId}}>
+              <LinkTo @model={{@message.reviewableId}} @route="review.show">
                 {{dIcon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
@@ -194,9 +194,9 @@ export default class ChatMessageInfo extends Component {
 
         {{#if (and @threadContext @message.isOriginalThreadMessage)}}
           <LinkTo
-            @route={{this.route}}
-            @models={{this.routeModels}}
             class="chat-message-info__original-message"
+            @models={{this.routeModels}}
+            @route={{this.route}}
           >
             <span class="chat-message-info__original-message__text">
               {{i18n "chat.see_in"}}
@@ -214,9 +214,9 @@ export default class ChatMessageInfo extends Component {
       excluded: it names its author in its own text. }}
       <div class="chat-message-info -author-only sr-only">
         <button
-          type="button"
           class="chat-message-info__username__name"
           data-user-card={{@message.user.username}}
+          type="button"
         >{{this.name}}</button>
       </div>
     {{/if}}

@@ -1536,66 +1536,66 @@ export default class WorkflowsEditor extends Component {
 
   <template>
     <Form
-      @data={{this.formData}}
-      @onSubmit={{this.handleSubmit}}
-      @onRegisterApi={{this.registerApi}}
-      @onDirtyCheck={{this.ignoreDirty}}
       class="workflows-editor"
+      @data={{this.formData}}
+      @onDirtyCheck={{this.ignoreDirty}}
+      @onRegisterApi={{this.registerApi}}
+      @onSubmit={{this.handleSubmit}}
       as |form transientData|
     >
       <div class="workflows-editor__body">
         <WorkflowCanvas
-          @nodes={{transientData.nodes}}
-          @connections={{transientData.connections}}
-          @stickyNotes={{transientData.stickyNotes}}
-          @workflowId={{@workflow.id}}
           @autoArrangeRequest={{this.autoArrangeRequest}}
-          @onUpdateNodePositions={{this.updateNodePositions}}
-          @onEditNode={{this.editNode}}
-          @onRemoveNodes={{this.removeNodes}}
-          @onCreateConnection={{this.createConnection}}
+          @canRedo={{this.canRedo}}
+          @canUndo={{this.canUndo}}
+          @connections={{transientData.connections}}
+          @hasUnpublishedChanges={{@workflow.hasUnpublishedChanges}}
+          @nodes={{transientData.nodes}}
           @onAddNodeAtPosition={{this.addNodeAtPosition}}
           @onAddNodeToLoop={{this.addNodeToLoop}}
-          @onInsertNodeOnConnection={{this.insertNodeOnConnection}}
-          @onConnectionDelete={{this.deleteConnection}}
-          @onNodeDragEnd={{this.handleSubmit}}
-          @onAreaReady={{this.initializeUndo}}
-          @onReady={{this.openInitialNode}}
-          @onUndo={{this.undo}}
-          @onRedo={{this.redo}}
-          @canUndo={{this.canUndo}}
-          @canRedo={{this.canRedo}}
-          @onAutoLayout={{this.autoLayout}}
-          @onHydrateAutoLayout={{this.hydrateAutoLayout}}
-          @onSyncAutoLayout={{this.hydrateAutoLayout}}
-          @onOpenNodePanel={{this.openNodePanel}}
-          @onCloseNodePanel={{this.closeNodePanel}}
-          @onBrowseTemplates={{this.browseTemplates}}
-          @onDiscardWorkflow={{this.replaceWorkflow}}
-          @onWorkflowUpdated={{this.replaceWorkflow}}
-          @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
+          @onAreaReady={{this.initializeUndo}}
+          @onAutoLayout={{this.autoLayout}}
+          @onBrowseTemplates={{this.browseTemplates}}
+          @onCloseNodePanel={{this.closeNodePanel}}
+          @onConnectionDelete={{this.deleteConnection}}
+          @onCreateConnection={{this.createConnection}}
+          @onCutSelected={{this.cutSelected}}
+          @onDiscardWorkflow={{this.replaceWorkflow}}
+          @onEditNode={{this.editNode}}
+          @onHydrateAutoLayout={{this.hydrateAutoLayout}}
+          @onImportNodes={{this.importNodes}}
+          @onInsertNodeOnConnection={{this.insertNodeOnConnection}}
+          @onNodeDragEnd={{this.handleSubmit}}
+          @onOpenNodePanel={{this.openNodePanel}}
+          @onPasteEntities={{this.pasteEntities}}
+          @onReady={{this.openInitialNode}}
+          @onRedo={{this.redo}}
+          @onRemoveNodes={{this.removeNodes}}
+          @onRemoveSelected={{this.removeSelected}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}
+          @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
           @onStickyNoteMove={{this.stickyNoteMove}}
           @onStickyNoteResize={{this.stickyNoteResize}}
           @onStickyNoteUpdateText={{this.stickyNoteUpdateText}}
-          @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
-          @onRemoveSelected={{this.removeSelected}}
-          @onCutSelected={{this.cutSelected}}
-          @onPasteEntities={{this.pasteEntities}}
-          @workflow={{@workflow}}
+          @onSyncAutoLayout={{this.hydrateAutoLayout}}
+          @onUndo={{this.undo}}
+          @onUpdateNodePositions={{this.updateNodePositions}}
+          @onWorkflowUpdated={{this.replaceWorkflow}}
           @session={{this.workflowSession}}
+          @stickyNotes={{transientData.stickyNotes}}
+          @workflow={{@workflow}}
+          @workflowId={{@workflow.id}}
           @workflowPublished={{@workflow.activeVersionId}}
-          @hasUnpublishedChanges={{@workflow.hasUnpublishedChanges}}
         />
 
         {{#if this.nodePanelContext}}
           <NodePanel
             @nodeTypes={{this.filteredNodePanelTypes}}
-            @searchTerm={{this.nodePanelSearchTerm}}
+            @onClose={{this.closeNodePanel}}
             @onSearch={{this.searchNodePanel}}
             @onSelectNodeType={{this.selectNodeFromPanel}}
-            @onClose={{this.closeNodePanel}}
+            @searchTerm={{this.nodePanelSearchTerm}}
           />
         {{/if}}
       </div>

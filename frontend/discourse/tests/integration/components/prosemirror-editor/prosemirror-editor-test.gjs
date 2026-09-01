@@ -132,8 +132,8 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     await render(
       <template>
         <ProsemirrorEditor
-          @includeDefault={{false}}
           @extensions={{minimumExtensions}}
+          @includeDefault={{false}}
         />
       </template>
     );

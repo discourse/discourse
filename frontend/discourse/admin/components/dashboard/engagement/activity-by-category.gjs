@@ -193,9 +193,9 @@ export default class ActivityByCategory extends Component {
     >
       <div class="db-section__row-block-header">
         <LinkTo
-          @route="adminReports.show"
-          @model="activity_by_category"
           class="db-section__row-block-title --label"
+          @model="activity_by_category"
+          @route="adminReports.show"
         >
           {{i18n
             "admin.dashboard.sections.engagement.activity_by_category.title"
@@ -220,16 +220,16 @@ export default class ActivityByCategory extends Component {
                   }}
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "topics")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "topics")}}
                   >
                     {{i18n
@@ -242,16 +242,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "posts")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "posts")}}
                   >
                     {{i18n
@@ -264,16 +264,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "page_views")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "page_views")}}
                   >
                     {{i18n
@@ -286,16 +286,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "share")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "share")}}
                   >
                     {{i18n
@@ -308,16 +308,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "share_change")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "share_change")}}
                   >
                     {{i18n
@@ -339,23 +339,23 @@ export default class ActivityByCategory extends Component {
                       {{dCategoryBadge row.category}}
                     {{else}}
                       <span
+                        aria-hidden="true"
                         class="db-activity-table__swatch"
                         style={{row.swatchStyle}}
-                        aria-hidden="true"
                       ></span>
                       {{row.name}}
                     {{/if}}
                   </td>
                   <td class="db-activity-table__cell-number">
                     <LinkTo
-                      @route="discovery.filter"
                       @query={{row.topicsQuery}}
+                      @route="discovery.filter"
                     >
                       {{row.topicsFormatted}}
                     </LinkTo>
                   </td>
                   <td class="db-activity-table__cell-number">
-                    <LinkTo @route="discovery.filter" @query={{row.postsQuery}}>
+                    <LinkTo @query={{row.postsQuery}} @route="discovery.filter">
                       {{row.postsFormatted}}
                     </LinkTo>
                   </td>

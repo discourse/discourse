@@ -92,11 +92,11 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
         <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
-          @showTextFilter={{false}}
           @onResetFilters={{this.onReset}}
+          @showTextFilter={{false}}
         >
           <:actions>
-            <button type="button" class="custom-action">Custom action</button>
+            <button class="custom-action" type="button">Custom action</button>
           </:actions>
           <:content as |filteredData|>
             <div class="results">{{filteredData.length}}</div>
@@ -154,13 +154,13 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     await render(
       <template>
         <DFilterControls
-          @array={{SAMPLE_DATA}}
           @additionalFiltersActive={{this.additionalFiltersActive}}
-          @showTextFilter={{false}}
+          @array={{SAMPLE_DATA}}
           @onResetFilters={{this.onReset}}
+          @showTextFilter={{false}}
         >
           <:additionalFilters>
-            <input class="custom-filter" aria-label="Custom filter" />
+            <input aria-label="Custom filter" class="custom-filter" />
           </:additionalFilters>
         </DFilterControls>
       </template>
@@ -190,8 +190,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @inputPlaceholder="Search..."
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -320,9 +320,9 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
           @forceShowDropdownFilterToggle={{true}}
+          @searchableProps={{this.searchableProps}}
         />
       </template>
     );
@@ -413,8 +413,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -594,8 +594,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @onTextFilterChange={{this.onTextFilterChange}}
           @loading={{true}}
+          @onTextFilterChange={{this.onTextFilterChange}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -714,8 +714,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @onResetFilters={{this.resetCallback}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -743,8 +743,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @onTextFilterChange={{this.textFilterCallback}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -774,7 +774,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls @array={{this.data}}>
           <:actions>
-            <button type="button" class="custom-action">Custom Action</button>
+            <button class="custom-action" type="button">Custom Action</button>
           </:actions>
           <:content as |filteredData|>
             <div class="results">
@@ -825,8 +825,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @noResultsMessage="No items found matching your criteria"
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -998,8 +998,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1084,8 +1084,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
           @defaultDropdownValue={{this.defaultDropdownValue}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1123,10 +1123,10 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-          @dropdownOptions={{this.dropdownOptions}}
-          @textFilterQueryParam="filter"
           @dropdownFilterQueryParam="category"
+          @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1161,9 +1161,9 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
+          @initialTextFilter="third"
           @searchableProps={{this.searchableProps}}
           @textFilterQueryParam="filter"
-          @initialTextFilter="third"
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1194,8 +1194,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
           @dropdownFilterQueryParams={{this.dropdownFilterQueryParams}}
+          @dropdownOptions={{this.dropdownOptions}}
           @filterDropdownsExpanded={{false}}
         >
           <:content as |filteredData|>
@@ -1233,8 +1233,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
-          @showCustomEmptyState={{true}}
           @minItemsForFilter={{1}}
+          @showCustomEmptyState={{true}}
         >
           <:content>
             N/A

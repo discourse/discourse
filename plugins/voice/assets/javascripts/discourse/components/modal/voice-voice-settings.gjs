@@ -301,9 +301,9 @@ export default class VoiceVoiceSettingsModal extends Component {
 
   <template>
     <DModal
+      class="voice-voice-settings-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.voice_settings.title"}}
-      class="voice-voice-settings-modal"
     >
       <:body>
         <div class="voice-voice-settings">
@@ -312,11 +312,11 @@ export default class VoiceVoiceSettingsModal extends Component {
               {{i18n "voice.voice_settings.input_device"}}
             </label>
             <ComboBox
+              class="voice-voice-settings__input-select"
               @content={{this.inputDevices}}
-              @value={{this.voiceWebrtc.inputDeviceId}}
               @onChange={{this.onInputChange}}
               @options={{hash none=false}}
-              class="voice-voice-settings__input-select"
+              @value={{this.voiceWebrtc.inputDeviceId}}
             />
           </div>
 
@@ -328,26 +328,26 @@ export default class VoiceVoiceSettingsModal extends Component {
               <div class="voice-voice-settings__output-row">
                 {{#if this.showOutputPrompt}}
                   <DButton
+                    class="voice-voice-settings__choose-output-btn"
                     @action={{this.chooseOutputDevice}}
                     @icon="headphones"
                     @label="voice.voice_settings.choose_output"
-                    class="voice-voice-settings__choose-output-btn"
                   />
                 {{else}}
                   <ComboBox
+                    class="voice-voice-settings__output-select"
                     @content={{this.outputDevices}}
-                    @value={{this.voiceWebrtc.outputDeviceId}}
                     @onChange={{this.onOutputChange}}
                     @options={{hash none=false}}
-                    class="voice-voice-settings__output-select"
+                    @value={{this.voiceWebrtc.outputDeviceId}}
                   />
                 {{/if}}
                 <DButton
+                  class="voice-voice-settings__test-output-btn"
                   @action={{this.playOutputTest}}
+                  @disabled={{this.testingOutput}}
                   @icon="play"
                   @label="voice.voice_settings.test_output"
-                  @disabled={{this.testingOutput}}
-                  class="voice-voice-settings__test-output-btn"
                 />
               </div>
             </div>
@@ -391,12 +391,12 @@ export default class VoiceVoiceSettingsModal extends Component {
               {{i18n "voice.voice_settings.input_sensitivity"}}
             </label>
             <input
-              type="range"
-              id="voice-voice-settings-sensitivity"
-              min="0"
-              max="100"
-              value={{this.gateThreshold}}
               class="voice-voice-settings__sensitivity-slider"
+              id="voice-voice-settings-sensitivity"
+              max="100"
+              min="0"
+              type="range"
+              value={{this.gateThreshold}}
               {{on "input" this.onThresholdChange}}
             />
             <p class="voice-voice-settings__hint">
@@ -409,11 +409,11 @@ export default class VoiceVoiceSettingsModal extends Component {
               {{i18n "voice.voice_settings.noise_suppression"}}
             </label>
             <ComboBox
+              class="voice-voice-settings__noise-suppression-select"
               @content={{this.noiseSuppressionModeOptions}}
-              @value={{this.voiceWebrtc.noiseSuppressionMode}}
               @onChange={{this.onNoiseSuppressionModeChange}}
               @options={{hash none=false disabled=this.busy}}
-              class="voice-voice-settings__noise-suppression-select"
+              @value={{this.voiceWebrtc.noiseSuppressionMode}}
             />
             <p class="voice-voice-settings__hint">
               {{i18n "voice.voice_settings.noise_suppression_hint"}}
@@ -422,9 +422,9 @@ export default class VoiceVoiceSettingsModal extends Component {
 
           <div class="voice-voice-settings__field">
             <DToggleSwitch
-              @state={{this.voiceWebrtc.echoCancellation}}
-              @label="voice.voice_settings.echo_cancellation"
               class="voice-voice-settings__echo-cancellation-toggle"
+              @label="voice.voice_settings.echo_cancellation"
+              @state={{this.voiceWebrtc.echoCancellation}}
               {{on "click" this.toggleEchoCancellation}}
             />
             <p class="voice-voice-settings__hint">
@@ -434,9 +434,9 @@ export default class VoiceVoiceSettingsModal extends Component {
 
           <div class="voice-voice-settings__field">
             <DToggleSwitch
-              @state={{this.voiceWebrtc.autoGainControl}}
-              @label="voice.voice_settings.auto_gain_control"
               class="voice-voice-settings__auto-gain-toggle"
+              @label="voice.voice_settings.auto_gain_control"
+              @state={{this.voiceWebrtc.autoGainControl}}
               {{on "click" this.toggleAutoGainControl}}
             />
             <p class="voice-voice-settings__hint">
@@ -447,9 +447,9 @@ export default class VoiceVoiceSettingsModal extends Component {
           {{#if this.subtitlesAvailable}}
             <div class="voice-voice-settings__field">
               <DToggleSwitch
-                @state={{this.voiceWebrtc.subtitlesEnabled}}
-                @label="voice.voice_settings.subtitles"
                 class="voice-voice-settings__subtitles-toggle"
+                @label="voice.voice_settings.subtitles"
+                @state={{this.voiceWebrtc.subtitlesEnabled}}
                 {{on "click" this.toggleSubtitles}}
               />
               <p class="voice-voice-settings__hint">
@@ -464,11 +464,11 @@ export default class VoiceVoiceSettingsModal extends Component {
                 {{i18n "voice.voice_settings.quality"}}
               </label>
               <ComboBox
+                class="voice-voice-settings__quality-select"
                 @content={{this.qualityOptions}}
-                @value={{this.voiceWebrtc.voiceQuality}}
                 @onChange={{this.voiceWebrtc.setVoiceQuality}}
                 @options={{hash none=false}}
-                class="voice-voice-settings__quality-select"
+                @value={{this.voiceWebrtc.voiceQuality}}
               />
               <p class="voice-voice-settings__hint">
                 {{i18n "voice.voice_settings.quality_hint"}}

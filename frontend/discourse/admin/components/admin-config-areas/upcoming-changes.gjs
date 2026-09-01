@@ -161,28 +161,28 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   <template>
     <DFilterControls
       @array={{this.upcomingChanges}}
-      @searchableProps={{array
-        "humanized_name"
-        "description"
-        "plugin_identifier"
-        "setting"
-      }}
-      @dropdownOptions={{this.dropdownOptions}}
-      @inputPlaceholder={{i18n
-        "admin.upcoming_changes.filter.search_placeholder"
-      }}
-      @noResultsMessage={{i18n
-        "admin.upcoming_changes.filter.search_placeholder"
-      }}
-      @initialTextFilter={{@changeNamesFilter}}
-      @onResetFilters={{@onClearChangeNamesFilter}}
-      @textFilterQueryParam="changeNamesFilter"
       @dropdownFilterQueryParams={{hash
         status="status"
         type="type"
         impactRole="impactRole"
         enabled="enabled"
       }}
+      @dropdownOptions={{this.dropdownOptions}}
+      @initialTextFilter={{@changeNamesFilter}}
+      @inputPlaceholder={{i18n
+        "admin.upcoming_changes.filter.search_placeholder"
+      }}
+      @noResultsMessage={{i18n
+        "admin.upcoming_changes.filter.search_placeholder"
+      }}
+      @onResetFilters={{@onClearChangeNamesFilter}}
+      @searchableProps={{array
+        "humanized_name"
+        "description"
+        "plugin_identifier"
+        "setting"
+      }}
+      @textFilterQueryParam="changeNamesFilter"
     >
       <:content as |upcomingChanges|>
         <table class="d-table upcoming-changes-table">

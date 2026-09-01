@@ -4,8 +4,8 @@ import DShortcut from "discourse/ui-kit/d-shortcut";
 export default <template>
   <DShortcut @always={{true}} @keys="mod+b" as |shortcut|>
     <DButton
-      class="btn-default"
       aria-keyshortcuts={{shortcut.aria}}
+      class="btn-default"
       @icon="bold"
       @translatedLabel="Bold"
     >

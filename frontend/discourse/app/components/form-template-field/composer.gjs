@@ -158,7 +158,7 @@ export default class FormTemplateFieldComposer extends Component {
   <template>
     <div class="control-group form-template-field" data-field-type="composer">
       {{#if @attributes.label}}
-        <label id={{this.labelId}} class="form-template-field__label">
+        <label class="form-template-field__label" id={{this.labelId}}>
           {{@attributes.label}}
           {{#if @validations.required}}
             {{dIcon "asterisk" class="form-template-field__required-indicator"}}
@@ -173,10 +173,10 @@ export default class FormTemplateFieldComposer extends Component {
       {{/if}}
       <DEditor
         class="form-template-field__composer"
-        @value={{this.composerValue}}
         @change={{this.handleInput}}
-        @placeholder={{@attributes.placeholder}}
         @onSetup={{this.onEditorSetup}}
+        @placeholder={{@attributes.placeholder}}
+        @value={{this.composerValue}}
       />
       {{! the editor is not a form control, so this stands in for it to carry the
       value and native validation. a textarea (not an input) is required so
@@ -185,13 +185,13 @@ export default class FormTemplateFieldComposer extends Component {
       must stay last: the error tip is only inserted after a field with no
       next sibling }}
       <textarea
+        aria-hidden="true"
+        class="form-template-field__composer-hidden-input"
         id={{this.validationInputId}}
         name={{@id}}
-        value={{this.composerValue}}
         required={{if @validations.required "required" ""}}
-        class="form-template-field__composer-hidden-input"
         tabindex="-1"
-        aria-hidden="true"
+        value={{this.composerValue}}
         {{on "invalid" this.handleInvalid}}
         {{on "input" this.handleValidationInput}}
       ></textarea>

@@ -121,8 +121,8 @@ export default class UserMenuProfileTabContent extends Component {
       {{#if this.siteSettings.enable_user_status}}
         <li class="set-user-status">
           <DButton
-            @action={{this.setUserStatusClick}}
             class="btn-flat profile-tab-btn"
+            @action={{this.setUserStatusClick}}
           >
             {{#if this.currentUser.status}}
               {{dEmoji this.currentUser.status.emoji}}
@@ -150,8 +150,8 @@ export default class UserMenuProfileTabContent extends Component {
         title={{i18n "presence_toggle.title"}}
       >
         <DButton
-          @action={{this.togglePresence}}
           class="btn-flat profile-tab-btn"
+          @action={{this.togglePresence}}
         >
           {{dIcon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
           <span class="item-label">
@@ -171,8 +171,8 @@ export default class UserMenuProfileTabContent extends Component {
         }}
       >
         <DButton
-          @action={{this.doNotDisturbClick}}
           class="btn-flat profile-tab-btn"
+          @action={{this.doNotDisturbClick}}
         >
           {{dIcon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
           <span class="item-label">
@@ -191,7 +191,7 @@ export default class UserMenuProfileTabContent extends Component {
       <hr />
 
       <li class="summary">
-        <LinkTo @route="user.summary" @model={{this.currentUser}}>
+        <LinkTo @model={{this.currentUser}} @route="user.summary">
           {{dIcon "user"}}
           <span class="item-label">
             {{i18n "user.summary.title"}}
@@ -200,7 +200,7 @@ export default class UserMenuProfileTabContent extends Component {
       </li>
 
       <li class="activity">
-        <LinkTo @route="userActivity" @model={{this.currentUser}}>
+        <LinkTo @model={{this.currentUser}} @route="userActivity">
           {{dIcon "bars-staggered"}}
           <span class="item-label">
             {{i18n "user.activity_stream"}}
@@ -210,7 +210,7 @@ export default class UserMenuProfileTabContent extends Component {
 
       {{#if this.currentUser.can_invite_to_forum}}
         <li class="invites">
-          <LinkTo @route="userInvited" @model={{this.currentUser}}>
+          <LinkTo @model={{this.currentUser}} @route="userInvited">
             {{dIcon "user-plus"}}
             <span class="item-label">
               {{i18n "user.invited.title"}}
@@ -220,7 +220,7 @@ export default class UserMenuProfileTabContent extends Component {
       {{/if}}
 
       <li class="drafts">
-        <LinkTo @route="userActivity.drafts" @model={{this.currentUser}}>
+        <LinkTo @model={{this.currentUser}} @route="userActivity.drafts">
           {{dIcon "user_menu.drafts"}}
           <span class="item-label">
             {{#if this.currentUser.draft_count}}
@@ -236,7 +236,7 @@ export default class UserMenuProfileTabContent extends Component {
       </li>
 
       <li class="preferences">
-        <LinkTo @route="preferences" @model={{this.currentUser}}>
+        <LinkTo @model={{this.currentUser}} @route="preferences">
           {{dIcon "gear"}}
           <span class="item-label">
             {{i18n "user.preferences.title"}}
@@ -253,8 +253,8 @@ export default class UserMenuProfileTabContent extends Component {
           }}
         >
           <DButton
-            @action={{this.toggleAnonymous}}
             class="btn-flat profile-tab-btn"
+            @action={{this.toggleAnonymous}}
           >
             {{#if this.currentUser.is_anonymous}}
               {{dIcon "ban"}}
@@ -286,8 +286,8 @@ export default class UserMenuProfileTabContent extends Component {
 
       <li class="logout">
         <DButton
-          @action={{routeAction "logout"}}
           class="btn-flat profile-tab-btn"
+          @action={{routeAction "logout"}}
         >
           {{dIcon "right-from-bracket"}}
           <span class="item-label">

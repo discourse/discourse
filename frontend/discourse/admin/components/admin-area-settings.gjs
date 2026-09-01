@@ -78,7 +78,7 @@ export default class AdminAreaSettings extends Component {
 
   <template>
     {{#if this.showBreadcrumb}}
-      <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+      <DBreadcrumbsItem @label={{i18n "settings"}} @path={{@path}} />
     {{/if}}
 
     <div

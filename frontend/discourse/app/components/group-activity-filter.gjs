@@ -5,8 +5,8 @@ import { i18n } from "discourse-i18n";
 const GroupActivityFilter = <template>
   <li>
     <LinkTo
-      @route={{concat "group.activity." @filter}}
       @query={{hash category_id=@categoryId}}
+      @route={{concat "group.activity." @filter}}
     >
       {{i18n (concat "groups." @filter)}}
     </LinkTo>

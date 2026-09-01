@@ -52,12 +52,12 @@ export default class DashboardProblems extends Component {
                     }}
                   >
                     <AdminNotice
+                      @dismissCallback={{this.dismissProblem}}
                       @icon={{if
                         (eq problem.priority "high")
                         "triangle-exclamation"
                       }}
                       @problem={{problem}}
-                      @dismissCallback={{this.dismissProblem}}
                     />
                   </li>
                 {{/each}}
@@ -66,10 +66,10 @@ export default class DashboardProblems extends Component {
 
             <p class="actions">
               <DButton
+                class="btn-default"
                 @action={{@refreshProblems}}
                 @icon="arrows-rotate"
                 @label="admin.dashboard.refresh_problems"
-                class="btn-default"
               />
             </p>
           </DConditionalLoadingSection>

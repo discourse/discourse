@@ -7,82 +7,82 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-users admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.users.title"}}
       @descriptionLabel={{i18n "admin.config.users.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/accessing-a-user-s-admin-page/311859"
+      @titleLabel={{i18n "admin.config.users.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/users/list"
           @label={{i18n "admin.config.users.title"}}
+          @path="/admin/users/list"
         />
       </:breadcrumbs>
       <:actions as |actions|>
         {{#if @controller.currentUser.can_invite_to_forum}}
           <actions.Primary
-            @action={{routeAction "sendInvites"}}
-            @title="admin.invite.button_title"
-            @label="admin.invite.button_text"
             class="admin-users__header-send-invites"
+            @action={{routeAction "sendInvites"}}
+            @label="admin.invite.button_text"
+            @title="admin.invite.button_title"
           />
         {{/if}}
 
         {{#if @controller.currentUser.admin}}
           <actions.Primary
-            @action={{routeAction "exportUsers"}}
-            @title="admin.export_csv.button_title.user"
-            @label="admin.export_csv.button_text"
             class="admin-users__header-export-users"
+            @action={{routeAction "exportUsers"}}
+            @label="admin.export_csv.button_text"
+            @title="admin.export_csv.button_title.user"
           />
         {{/if}}
       </:actions>
       <:tabs>
         <DNavItem
-          @route="adminUsers.settings"
-          @label="settings"
           class="admin-users-tabs__settings"
+          @label="settings"
+          @route="adminUsers.settings"
         />
         <DNavItem
+          class="admin-users-tabs__active"
+          @label="admin.users.nav.active"
           @route="adminUsersList.show"
           @routeParam="active"
-          @label="admin.users.nav.active"
-          class="admin-users-tabs__active"
         />
         <DNavItem
+          class="admin-users-tabs__new"
+          @label="admin.users.nav.new"
           @route="adminUsersList.show"
           @routeParam="new"
-          @label="admin.users.nav.new"
-          class="admin-users-tabs__new"
         />
         <DNavItem
+          class="admin-users-tabs__staff"
+          @label="admin.users.nav.staff"
           @route="adminUsersList.show"
           @routeParam="staff"
-          @label="admin.users.nav.staff"
-          class="admin-users-tabs__staff"
         />
         <DNavItem
+          class="admin-users-tabs__suspended"
+          @label="admin.users.nav.suspended"
           @route="adminUsersList.show"
           @routeParam="suspended"
-          @label="admin.users.nav.suspended"
-          class="admin-users-tabs__suspended"
         />
         <DNavItem
+          class="admin-users-tabs__silenced"
+          @label="admin.users.nav.silenced"
           @route="adminUsersList.show"
           @routeParam="silenced"
-          @label="admin.users.nav.silenced"
-          class="admin-users-tabs__silenced"
         />
         <DNavItem
+          class="admin-users-tabs__staged"
+          @label="admin.users.nav.staged"
           @route="adminUsersList.show"
           @routeParam="staged"
-          @label="admin.users.nav.staged"
-          class="admin-users-tabs__staged"
         />
         <DNavItem
-          @route="adminGroups.index"
-          @label="groups.index.title"
           class="admin-users-tabs__groups"
+          @label="groups.index.title"
+          @route="adminGroups.index"
         />
       </:tabs>
     </DPageHeader>

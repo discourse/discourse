@@ -127,19 +127,19 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
       data-test-site-traffic-card={{@name}}
     >
       <div
+        aria-label={{@title}}
         class="site-traffic-explorer__tabs"
         role="tablist"
-        aria-label={{@title}}
       >
         {{#each @tabs as |tab index|}}
           <button
-            type="button"
-            role="tab"
-            id={{concat "site-traffic-" @name "-tab-" tab.dimension}}
             aria-controls={{concat "site-traffic-" @name "-panel"}}
             aria-selected={{if (eq index this.activeTabIndex) "true" "false"}}
-            tabindex={{if (eq index this.activeTabIndex) "0" "-1"}}
             class={{if (eq index this.activeTabIndex) "is-active"}}
+            id={{concat "site-traffic-" @name "-tab-" tab.dimension}}
+            role="tab"
+            tabindex={{if (eq index this.activeTabIndex) "0" "-1"}}
+            type="button"
             {{on "click" (fn this.selectTab index)}}
             {{on "keydown" (fn this.navigateTabs index)}}
           >
@@ -149,25 +149,25 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
       </div>
 
       <div
-        role="tabpanel"
-        id={{concat "site-traffic-" @name "-panel"}}
         aria-labelledby={{concat
           "site-traffic-"
           @name
           "-tab-"
           this.activeTab.dimension
         }}
+        id={{concat "site-traffic-" @name "-panel"}}
+        role="tabpanel"
       >
         <ul class="site-traffic-explorer__breakdown-list">
           {{#each this.visibleRows as |row index|}}
             <li>
               <SiteTrafficExplorerBreakdownRow
-                @row={{row}}
-                @dimension={{this.activeTab.dimension}}
-                @rowLink={{this.rowLink row}}
-                @inputId={{concat "site-traffic-" @name "-filter-" index}}
                 @checked={{this.isSelected row}}
+                @dimension={{this.activeTab.dimension}}
+                @inputId={{concat "site-traffic-" @name "-filter-" index}}
                 @onToggle={{fn this.toggleFilter row}}
+                @row={{row}}
+                @rowLink={{this.rowLink row}}
               />
             </li>
           {{else}}

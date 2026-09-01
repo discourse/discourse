@@ -244,9 +244,9 @@ export default class WorkflowNode extends Component {
         (if @node.selected "is-selected")
         (if this.isUnavailable "is-unavailable")
       }}
-      style={{this.dimensionsStyle}}
       data-client-id={{this.data.clientId}}
       data-unavailable={{if this.isUnavailable "true" "false"}}
+      style={{this.dimensionsStyle}}
       {{highlightOnInsert this.consumeInsertHighlight}}
     >
       <div class="workflow-rete-node__icon-row">
@@ -287,18 +287,18 @@ export default class WorkflowNode extends Component {
           <CanvasHoverToolbar @hoverSelector=".workflow-rete-node">
             {{#if this.showManualTrigger}}
               <DTooltip
-                @identifier="workflow-node-manual-trigger"
                 @content={{this.manualTriggerLabel}}
+                @identifier="workflow-node-manual-trigger"
               >
                 <:trigger>
                   <button
-                    type="button"
+                    aria-label={{this.manualTriggerLabel}}
                     class={{dConcatClass
                       "workflow-canvas-toolbar__btn --success"
                       (if this.isManuallyTriggerable "" "is-disabled")
                     }}
                     disabled={{if this.isManuallyTriggerable false true}}
-                    aria-label={{this.manualTriggerLabel}}
+                    type="button"
                     {{on "pointerdown" this.stopPropagation}}
                     {{on "click" this.handleManualTrigger}}
                   >
@@ -309,18 +309,18 @@ export default class WorkflowNode extends Component {
             {{/if}}
             {{#if this.showExecuteStep}}
               <DTooltip
-                @identifier="workflow-node-execute-step"
                 @content={{this.executeStepLabel}}
+                @identifier="workflow-node-execute-step"
               >
                 <:trigger>
                   <button
-                    type="button"
+                    aria-label={{this.executeStepLabel}}
                     class={{dConcatClass
                       "workflow-canvas-toolbar__btn --success"
                       (if this.isUnavailable "is-disabled")
                     }}
                     disabled={{if this.isUnavailable true false}}
-                    aria-label={{this.executeStepLabel}}
+                    type="button"
                     {{on "pointerdown" this.stopPropagation}}
                     {{on "click" this.handleExecuteStep}}
                   >
@@ -331,8 +331,8 @@ export default class WorkflowNode extends Component {
             {{/if}}
             {{#if this.dataTableId}}
               <button
-                type="button"
                 class="workflow-canvas-toolbar__btn"
+                type="button"
                 {{on "pointerdown" this.stopPropagation}}
                 {{on "click" this.handleEditDataTable}}
               >
@@ -340,8 +340,8 @@ export default class WorkflowNode extends Component {
               </button>
             {{/if}}
             <button
-              type="button"
               class="workflow-canvas-toolbar__btn"
+              type="button"
               {{on "pointerdown" this.stopPropagation}}
               {{on "click" this.handleDelete}}
             >
@@ -351,8 +351,8 @@ export default class WorkflowNode extends Component {
 
           {{#if this.isUnavailable}}
             <span
-              class="workflow-rete-node__unavailable-icon"
               aria-label={{this.unavailableReason}}
+              class="workflow-rete-node__unavailable-icon"
             >
               {{dIcon "triangle-exclamation"}}
             </span>
@@ -364,8 +364,8 @@ export default class WorkflowNode extends Component {
 
           {{#if this.issues.length}}
             <DTooltip
-              @identifier="workflow-node-issues"
               class="workflow-rete-node__issues-badge"
+              @identifier="workflow-node-issues"
               {{on "pointerdown" this.stopPropagation}}
               {{on "click" this.handleOpenIssues}}
             >
@@ -415,8 +415,8 @@ export default class WorkflowNode extends Component {
 
       {{#if this.isUnavailable}}
         <DTooltip
-          @identifier="workflow-node-unavailable"
           @content={{this.unavailableReason}}
+          @identifier="workflow-node-unavailable"
         >
           <:trigger>
             <span class="workflow-rete-node__unavailable-pill">

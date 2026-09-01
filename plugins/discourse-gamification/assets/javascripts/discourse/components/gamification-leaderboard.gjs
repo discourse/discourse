@@ -148,8 +148,8 @@ export default class GamificationLeaderboard extends Component {
       <div class="page__header">
         <h1 class="page__title">{{this.model.leaderboard.name}}</h1>
         <DButton
-          @action={{this.showLeaderboardInfo}}
           class="-ghost"
+          @action={{this.showLeaderboardInfo}}
           @icon="circle-info"
           @label={{unless this.site.mobileView "gamification.leaderboard.info"}}
         />
@@ -157,18 +157,18 @@ export default class GamificationLeaderboard extends Component {
 
       <div class="leaderboard__controls">
         <PeriodChooser
-          @period={{this.period}}
+          class="leaderboard__period-chooser"
           @action={{this.changePeriod}}
           @fullDay={{false}}
           @options={{hash
             disabled=this.model.leaderboard.period_filter_disabled
           }}
-          class="leaderboard__period-chooser"
+          @period={{this.period}}
         />
         {{#if this.currentUser.staff}}
           <a
-            href={{getURL "/admin/plugins/gamification"}}
             class="leaderboard__settings"
+            href={{getURL "/admin/plugins/gamification"}}
           >
             {{dIcon "gear"}}
             {{unless
@@ -183,10 +183,10 @@ export default class GamificationLeaderboard extends Component {
         <div class="leaderboard__not-ready">
           <p>{{this.model.reason}}</p>
           <DButton
+            class="btn-primary refresh"
+            @action={{this.refresh}}
             @icon="arrows-rotate"
             @label="gamification.leaderboard.refresh"
-            @action={{this.refresh}}
-            class="btn-primary refresh"
           />
         </div>
       {{else}}
@@ -197,8 +197,8 @@ export default class GamificationLeaderboard extends Component {
                 <div class="winner__crown">{{dIcon "crown"}}</div>
                 <div
                   class="winner__avatar clickable"
-                  role="button"
                   data-user-card={{winner.username}}
+                  role="button"
                 >
                   {{dAvatar winner imageSize="huge"}}
                   <div class="winner__rank">
@@ -242,7 +242,7 @@ export default class GamificationLeaderboard extends Component {
 
           <DLoadMore @action={{this.loadMore}}>
             {{#each this.ranking as |rank index|}}
-              <GamificationLeaderboardRow @rank={{rank}} @index={{index}} />
+              <GamificationLeaderboardRow @index={{index}} @rank={{rank}} />
             {{/each}}
           </DLoadMore>
           <DConditionalLoadingSpinner @condition={{this.loading}} />

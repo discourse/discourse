@@ -58,32 +58,32 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
-              @title={{button.title}}
-              @context={{@data.context}}
-              @content={{(button.popupMenu.options)}}
-              @header={{button.popupMenu.header}}
-              @onChange={{button.popupMenu.action}}
-              @onOpen={{button.action}}
-              @tabindex={{this.tabIndex button}}
-              @onKeydown={{this.rovingButtonBar}}
-              @icon={{button.icon}}
-              @triggerLabel={{button.popupMenu.triggerLabel}}
               @class={{dConcatClass
                 button.className
                 (if (this.isButtonActive button) "--active")
               }}
+              @content={{(button.popupMenu.options)}}
+              @context={{@data.context}}
+              @header={{button.popupMenu.header}}
+              @icon={{button.icon}}
+              @onChange={{button.popupMenu.action}}
+              @onKeydown={{this.rovingButtonBar}}
+              @onOpen={{button.action}}
+              @tabindex={{this.tabIndex button}}
+              @title={{button.title}}
+              @triggerLabel={{button.popupMenu.triggerLabel}}
             />
           {{else}}
             <DShortcut @keys={{button.shortcutKeys}} as |shortcut|>
               <DButton
+                aria-keyshortcuts={{shortcut.aria}}
                 class={{dConcatClass
                   "toolbar__button"
                   button.className
                   (if (this.isButtonActive button) "--active")
                 }}
-                aria-keyshortcuts={{shortcut.aria}}
-                tabindex={{this.tabIndex button}}
                 rel={{if button.href "noopener noreferrer"}}
+                tabindex={{this.tabIndex button}}
                 target={{if button.href "_blank"}}
                 @action={{unless button.href button.action}}
                 @disabled={{button.disabled}}

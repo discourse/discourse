@@ -41,28 +41,28 @@ export default class FeatureTopicOnProfile extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="feature-topic-on-profile choose-topic-modal"
       id="choosing-topic"
+      @closeModal={{@closeModal}}
       @title={{i18n "user.feature_topic_on_profile.title"}}
     >
       <:body>
         <ChooseTopic
-          @topicChangedCallback={{this.newTopicSelected}}
-          @currentTopicId={{@model.user.featured_topic.id}}
-          @loadOnInit={{true}}
           @additionalFilters="status:public"
+          @currentTopicId={{@model.user.featured_topic.id}}
           @label="user.feature_topic_on_profile.search_label"
+          @loadOnInit={{true}}
+          @topicChangedCallback={{this.newTopicSelected}}
         />
       </:body>
       <:footer>
         <DButton
-          @action={{this.save}}
           class="btn-primary save-featured-topic-on-profile"
+          @action={{this.save}}
           @disabled={{this.noTopicSelected}}
           @label="user.feature_topic_on_profile.save"
         />
-        <DButton @action={{@closeModal}} @label="cancel" class="btn-flat" />
+        <DButton class="btn-flat" @action={{@closeModal}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

@@ -237,9 +237,9 @@ export default class SidebarUserSections extends Component {
       <CustomSections
         @collapsable={{@collapsableSections}}
         @enableLinkDrop={{@enableLinkDrop}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.zoneRevealed}}
@@ -247,12 +247,12 @@ export default class SidebarUserSections extends Component {
             custom section. Pointer-only, like the drag it serves; creating a
             section by keyboard keeps its own path. }}
         <div
+          aria-hidden="true"
           class={{dConcatClass
             "sidebar-link-drop-target"
             (unless this.zoneArmed "is-arming")
             (if this.zoneHovered "is-active")
           }}
-          aria-hidden="true"
           {{dDragAndDropExternalTarget
             accepts=WEB_LINK_KINDS
             canDrop=this.canDropLink
@@ -282,9 +282,9 @@ export default class SidebarUserSections extends Component {
 
       <CategoriesSection
         @collapsable={{@collapsableSections}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.currentUser.display_sidebar_tags}}

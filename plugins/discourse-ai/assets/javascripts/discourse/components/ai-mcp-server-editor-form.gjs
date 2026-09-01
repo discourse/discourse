@@ -333,50 +333,50 @@ export default class AiMcpServerEditorForm extends Component {
 
   <template>
     <Form
-      @onSubmit={{this.save}}
-      @data={{this.formData}}
       class="ai-tool-editor ai-mcp-server-editor"
+      @data={{this.formData}}
+      @onSubmit={{this.save}}
       as |form data|
     >
       <form.Field
+        @format="large"
         @name="name"
         @title={{i18n "discourse_ai.mcp_servers.name"}}
-        @validation="required|length:1,100"
-        @format="large"
         @type="input"
+        @validation="required|length:1,100"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="description"
         @title={{i18n "discourse_ai.mcp_servers.description"}}
-        @validation="required|length:1,1000"
-        @format="large"
         @type="textarea"
-        as |field|
-      >
-        <field.Control />
-      </form.Field>
-
-      <form.Field
-        @name="url"
-        @title={{i18n "discourse_ai.mcp_servers.url"}}
         @validation="required|length:1,1000"
-        @onSet={{this.resetTestResult}}
-        @format="large"
-        @type="input"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
-        @name="auth_type"
-        @title={{i18n "discourse_ai.mcp_servers.auth_type"}}
-        @onSet={{this.resetTestResult}}
         @format="large"
+        @name="url"
+        @onSet={{this.resetTestResult}}
+        @title={{i18n "discourse_ai.mcp_servers.url"}}
+        @type="input"
+        @validation="required|length:1,1000"
+        as |field|
+      >
+        <field.Control />
+      </form.Field>
+
+      <form.Field
+        @format="large"
+        @name="auth_type"
+        @onSet={{this.resetTestResult}}
+        @title={{i18n "discourse_ai.mcp_servers.auth_type"}}
         @type="select"
         as |field|
       >
@@ -391,36 +391,36 @@ export default class AiMcpServerEditorForm extends Component {
 
       {{#if (eq data.auth_type "header_secret")}}
         <form.Field
+          @format="large"
           @name="ai_secret_id"
           @title={{i18n "discourse_ai.mcp_servers.secret"}}
-          @format="large"
           @type="custom"
           as |field|
         >
           <field.Control>
             <AiSecretSelector
-              @value={{field.value}}
-              @secrets={{@secrets}}
               @onChange={{field.set}}
+              @secrets={{@secrets}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
 
         <form.Field
+          @format="large"
           @name="auth_header"
           @title={{i18n "discourse_ai.mcp_servers.auth_header"}}
-          @validation="required|length:1,100"
-          @format="large"
           @type="input"
+          @validation="required|length:1,100"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Field
+          @format="large"
           @name="auth_scheme"
           @title={{i18n "discourse_ai.mcp_servers.auth_scheme"}}
-          @format="large"
           @type="input"
           as |field|
         >
@@ -430,10 +430,10 @@ export default class AiMcpServerEditorForm extends Component {
 
       {{#if (eq data.auth_type "oauth")}}
         <form.Field
-          @name="oauth_client_registration"
-          @title={{i18n "discourse_ai.mcp_servers.oauth_client_registration"}}
-          @onSet={{this.resetTestResult}}
           @format="large"
+          @name="oauth_client_registration"
+          @onSet={{this.resetTestResult}}
+          @title={{i18n "discourse_ai.mcp_servers.oauth_client_registration"}}
           @type="select"
           as |field|
         >
@@ -448,37 +448,37 @@ export default class AiMcpServerEditorForm extends Component {
 
         {{#if (eq data.oauth_client_registration "manual")}}
           <form.Field
+            @format="large"
             @name="oauth_client_id"
             @title={{i18n "discourse_ai.mcp_servers.oauth_client_id"}}
-            @validation="required|length:1,1000"
-            @format="large"
             @type="input"
+            @validation="required|length:1,1000"
             as |field|
           >
             <field.Control />
           </form.Field>
 
           <form.Field
+            @format="large"
             @name="oauth_client_secret_ai_secret_id"
             @title={{i18n "discourse_ai.mcp_servers.oauth_client_secret"}}
-            @format="large"
             @type="custom"
             as |field|
           >
             <field.Control>
               <AiSecretSelector
-                @value={{field.value}}
-                @secrets={{@secrets}}
                 @onChange={{field.set}}
+                @secrets={{@secrets}}
+                @value={{field.value}}
               />
             </field.Control>
           </form.Field>
         {{/if}}
 
         <form.Field
+          @format="large"
           @name="oauth_scopes"
           @title={{i18n "discourse_ai.mcp_servers.oauth_scopes"}}
-          @format="large"
           @type="input"
           as |field|
         >
@@ -486,17 +486,18 @@ export default class AiMcpServerEditorForm extends Component {
         </form.Field>
 
         <form.Button
+          class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
           @action={{this.toggleOauthAdvancedOptions}}
           @label={{if
             this.showOauthAdvancedOptions
             "discourse_ai.mcp_servers.oauth_hide_advanced_options"
             "discourse_ai.mcp_servers.oauth_show_advanced_options"
           }}
-          class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
         />
 
         {{#if this.showOauthAdvancedOptions}}
           <form.Field
+            @format="full"
             @name="oauth_authorization_params"
             @title={{i18n
               "discourse_ai.mcp_servers.oauth_authorization_params"
@@ -504,35 +505,35 @@ export default class AiMcpServerEditorForm extends Component {
             @tooltip={{i18n
               "discourse_ai.mcp_servers.oauth_authorization_params_help"
             }}
-            @format="full"
             @type="textarea"
             as |field|
           >
             <field.Control
-              @height={{100}}
               placeholder={{i18n
                 "discourse_ai.mcp_servers.oauth_authorization_params_placeholder"
               }}
+              @height={{100}}
             />
           </form.Field>
 
           <form.Field
+            @format="full"
             @name="oauth_token_params"
             @title={{i18n "discourse_ai.mcp_servers.oauth_token_params"}}
             @tooltip={{i18n "discourse_ai.mcp_servers.oauth_token_params_help"}}
-            @format="full"
             @type="textarea"
             as |field|
           >
             <field.Control
-              @height={{100}}
               placeholder={{i18n
                 "discourse_ai.mcp_servers.oauth_token_params_placeholder"
               }}
+              @height={{100}}
             />
           </form.Field>
 
           <form.Field
+            @format="full"
             @name="oauth_require_refresh_token"
             @title={{i18n
               "discourse_ai.mcp_servers.oauth_require_refresh_token"
@@ -540,7 +541,6 @@ export default class AiMcpServerEditorForm extends Component {
             @tooltip={{i18n
               "discourse_ai.mcp_servers.oauth_require_refresh_token_help"
             }}
-            @format="full"
             @type="checkbox"
             as |field|
           >
@@ -667,35 +667,35 @@ export default class AiMcpServerEditorForm extends Component {
             {{/if}}
 
             <form.Button
+              class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
               @action={{this.toggleOauthDetails}}
               @label={{if
                 this.showOauthDetails
                 "discourse_ai.mcp_servers.oauth_hide_details"
                 "discourse_ai.mcp_servers.oauth_show_details"
               }}
-              class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
             />
           </div>
         {{/unless}}
       {{/if}}
 
       <form.Field
+        @format="large"
         @name="timeout_seconds"
         @title={{i18n "discourse_ai.mcp_servers.timeout_seconds"}}
         @tooltip={{i18n "discourse_ai.mcp_servers.timeout_seconds_tooltip"}}
-        @validation="required|number"
-        @format="large"
         @type="input-number"
+        @validation="required|number"
         as |field|
       >
-        <field.Control @min={{1}} @max={{300}} lang="en" />
+        <field.Control lang="en" @max={{300}} @min={{1}} />
       </form.Field>
 
       <form.Field
-        @name="enabled"
-        @title={{i18n "discourse_ai.mcp_servers.enabled"}}
-        @showTitle={{false}}
         @format="large"
+        @name="enabled"
+        @showTitle={{false}}
+        @title={{i18n "discourse_ai.mcp_servers.enabled"}}
         @type="checkbox"
         as |field|
       >
@@ -728,39 +728,39 @@ export default class AiMcpServerEditorForm extends Component {
         {{#unless @model.isNew}}
           {{#if (eq data.auth_type "oauth")}}
             <form.Button
-              @action={{fn this.startOAuth data}}
-              @label={{this.oauthConnectLabelKey}}
-              @isLoading={{this.isConnecting}}
-              @disabled={{this.isDisconnecting}}
               class="btn-default"
+              @action={{fn this.startOAuth data}}
+              @disabled={{this.isDisconnecting}}
+              @isLoading={{this.isConnecting}}
+              @label={{this.oauthConnectLabelKey}}
             />
 
             {{#if this.canDisconnectOAuth}}
               <form.Button
-                @action={{this.disconnectOAuth}}
-                @label="discourse_ai.mcp_servers.oauth_disconnect"
-                @isLoading={{this.isDisconnecting}}
-                @disabled={{this.isConnecting}}
                 class="btn-default"
+                @action={{this.disconnectOAuth}}
+                @disabled={{this.isConnecting}}
+                @isLoading={{this.isDisconnecting}}
+                @label="discourse_ai.mcp_servers.oauth_disconnect"
               />
             {{/if}}
           {{/if}}
 
           <form.Button
+            class="btn-default"
             @action={{fn this.testConnection data}}
-            @label="discourse_ai.mcp_servers.test"
-            @isLoading={{this.isTesting}}
             @disabled={{and
               (eq data.auth_type "oauth")
               (not this.canTestOAuthConnection)
             }}
-            class="btn-default"
+            @isLoading={{this.isTesting}}
+            @label="discourse_ai.mcp_servers.test"
           />
 
           <form.Button
+            class="btn-danger"
             @action={{this.delete}}
             @label="discourse_ai.mcp_servers.delete"
-            class="btn-danger"
           />
         {{/unless}}
       </form.Actions>

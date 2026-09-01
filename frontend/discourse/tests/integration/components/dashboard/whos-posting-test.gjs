@@ -37,9 +37,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -74,9 +74,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{withGroup}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -94,9 +94,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -112,9 +112,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -126,9 +126,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{posters}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -145,9 +145,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{withSelection}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -163,7 +163,7 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
 
     await render(
       <template>
-        <WhosPosting @posters={{empty}} @startDate={{start}} @endDate={{end}} />
+        <WhosPosting @endDate={{end}} @posters={{empty}} @startDate={{start}} />
       </template>
     );
 
@@ -197,9 +197,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     await render(
       <template>
         <WhosPosting
+          @endDate={{end}}
           @posters={{noStaff}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );

@@ -57,9 +57,9 @@ export default class BadgePreview extends Component {
 
   <template>
     <DModal
+      class="badge-query-preview"
       @closeModal={{@closeModal}}
       @title={{i18n "admin.badges.preview.modal_title"}}
-      class="badge-query-preview"
     >
       <:body>
         {{#if @model.badge.errors}}

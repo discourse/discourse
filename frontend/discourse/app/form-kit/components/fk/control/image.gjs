@@ -22,14 +22,14 @@ export default class FKControlImage extends FKBaseControl {
 
   <template>
     <UppyImageUploader
+      class="form-kit__control-image no-repeat contain-image"
+      @disabled={{@field.disabled}}
       @id="{{@field.id}}-{{@field.name}}"
       @imageUrl={{this.imageUrl}}
-      @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
-      @type={{@type}}
-      @disabled={{@field.disabled}}
+      @onUploadDone={{this.setImage}}
       @placeholderUrl={{@placeholderUrl}}
-      class="form-kit__control-image no-repeat contain-image"
+      @type={{@type}}
     />
   </template>
 }

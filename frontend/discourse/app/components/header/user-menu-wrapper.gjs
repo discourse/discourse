@@ -44,6 +44,7 @@ export default class UserMenuWrapper extends Component {
   <template>
     <div
       class="user-menu-dropdown-wrapper"
+      ...attributes
       {{dCloseOnClickOutside
         this.clickOutside
         (hash
@@ -51,7 +52,6 @@ export default class UserMenuWrapper extends Component {
           secondaryTargetSelector=".user-menu-panel"
         )
       }}
-      ...attributes
     >
       <UserMenu @closeUserMenu={{fn @toggleUserMenu false}} />
     </div>

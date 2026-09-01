@@ -31,11 +31,11 @@ export default class SchemaSettingTypeIcon extends Component {
 
   <template>
     <DIconGridPicker
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @allowClear={{not this.required}}
+      @onChange={{this.onChange}}
       @showCaret={{true}}
       @showSelectedName={{true}}
+      @value={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

@@ -621,12 +621,12 @@ export default class NestedPost extends Component {
       {{#unless this.cloakingData.active}}
         {{#if @collapseParent}}
           <button
-            type="button"
+            aria-label={{i18n "nested_replies.collapse_parent"}}
             class="nested-post__parent-line-btn"
+            type="button"
             {{on "click" @collapseParent}}
             {{on "mouseenter" @highlightParentLine}}
             {{on "mouseleave" @unhighlightParentLine}}
-            aria-label={{i18n "nested_replies.collapse_parent"}}
           ></button>
         {{/if}}
         <div class="nested-post__gutter">
@@ -636,11 +636,11 @@ export default class NestedPost extends Component {
             </div>
           {{else if this.renderIgnoredPlaceholder}}
             <button
-              type="button"
+              aria-label={{i18n "nested_replies.toggle_ignored_content"}}
               class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
               data-post-number={{@post.post_number}}
-              aria-label={{i18n "nested_replies.toggle_ignored_content"}}
               disabled={{this.loadingIgnoredContent}}
+              type="button"
               {{on "click" this.revealIgnoredContent}}
             >
               {{#if this.loadingIgnoredContent}}
@@ -654,7 +654,7 @@ export default class NestedPost extends Component {
           {{/if}}
           {{#if (and this.showDepthLine (not this.effectiveCollapsed))}}
             <button
-              type="button"
+              aria-label={{this.depthLineLabel}}
               class={{dConcatClass
                 "nested-post__depth-line"
                 (if this.lineHighlighted "nested-post__depth-line--highlighted")
@@ -663,10 +663,10 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
+              type="button"
               {{on "click" this.handleDepthLine}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
-              aria-label={{this.depthLineLabel}}
             >
               {{#if this.showDepthLineIcon}}
                 <span class="nested-post__depth-line-icon">
@@ -679,9 +679,9 @@ export default class NestedPost extends Component {
         <div class="nested-post__main">
           {{#if this.effectiveCollapsed}}
             <button
-              type="button"
               class="nested-post__collapsed-bar"
               data-post-number={{@post.post_number}}
+              type="button"
               {{on "click" this.toggleExpanded}}
             >
               {{dIcon "discourse-circle-plus"}}
@@ -699,8 +699,8 @@ export default class NestedPost extends Component {
                 >{{@post.username}}</span>
               {{/if}}
               <span
-                class="nested-post__collapsed-separator"
                 aria-hidden="true"
+                class="nested-post__collapsed-separator"
               >&middot;</span>
               <span
                 class="nested-post__collapsed-reply-count"
@@ -719,20 +719,20 @@ export default class NestedPost extends Component {
                   <DButton
                     class="btn-flat toggle-deleted-content"
                     @action={{this.toggleDeletedContent}}
+                    @ariaLabel="post.controls.view_deleted"
                     @icon={{if
                       this.showDeletedContent
                       "far-eye-slash"
                       "far-eye"
                     }}
-                    @ariaLabel="post.controls.view_deleted"
                   />
                 {{/if}}
                 {{#if @post.can_recover}}
                   <DButton
                     class="btn-flat recover"
                     @action={{fn @recoverPost @post}}
-                    @icon="arrow-rotate-left"
                     @ariaLabel="post.controls.undelete"
+                    @icon="arrow-rotate-left"
                   />
                 {{/if}}
               </div>
@@ -783,11 +783,11 @@ export default class NestedPost extends Component {
                         @outletArgs={{postOutletArgs}}
                       >
                         <PostMetaData
-                          @post={{@post}}
                           @editPost={{fn @editPost @post}}
                           @multiSelect={{@multiSelect}}
-                          @selected={{this.selected}}
+                          @post={{@post}}
                           @selectBelow={{this.selectBelow}}
+                          @selected={{this.selected}}
                           @selectReplies={{this.selectReplies}}
                           @showHistory={{fn @showHistory @post}}
                           @togglePostSelection={{this.togglePostSelection}}
@@ -814,49 +814,49 @@ export default class NestedPost extends Component {
                     </div>
                     <section class="nested-post__menu post-menu-area clearfix">
                       <PostMenu
-                        @post={{@post}}
-                        @nestedReplyView={{true}}
                         @canCreatePost={{this.canCreatePost}}
+                        @changeNotice={{fn @changeNotice @post}}
+                        @changePostOwner={{fn @changePostOwner @post}}
                         @copyLink={{this.copyLink}}
                         @deletePost={{fn @deletePost @post}}
                         @editPost={{fn @editPost @post}}
-                        @recoverPost={{fn @recoverPost @post}}
-                        @replyToPost={{fn @replyToPost @post @depth}}
-                        @share={{this.share}}
-                        @showFlags={{fn @showFlags @post}}
-                        @changeNotice={{fn @changeNotice @post}}
-                        @changePostOwner={{fn @changePostOwner @post}}
                         @grantBadge={{fn @grantBadge @post}}
                         @lockPost={{fn @lockPost @post}}
-                        @unlockPost={{fn @unlockPost @post}}
+                        @nestedReplyView={{true}}
                         @permanentlyDeletePost={{fn
                           @permanentlyDeletePost
                           @post
                         }}
+                        @post={{@post}}
                         @rebakePost={{fn @rebakePost @post}}
-                        @showPagePublish={{@showPagePublish}}
-                        @togglePostType={{fn @togglePostType @post}}
-                        @toggleWiki={{fn @toggleWiki @post}}
-                        @unhidePost={{fn @unhidePost @post}}
-                        @toggleLike={{this.toggleLike}}
-                        @toggleReplies={{unless
-                          this.atMaxDepth
-                          this.handleReplies
-                        }}
+                        @recoverPost={{fn @recoverPost @post}}
                         @repliesShown={{if
                           this.atMaxDepth
                           true
                           this.effectiveExpanded
                         }}
+                        @replyToPost={{fn @replyToPost @post @depth}}
+                        @share={{this.share}}
+                        @showFlags={{fn @showFlags @post}}
                         @showLogin={{this.showLogin}}
+                        @showPagePublish={{@showPagePublish}}
+                        @toggleLike={{this.toggleLike}}
+                        @togglePostType={{fn @togglePostType @post}}
+                        @toggleReplies={{unless
+                          this.atMaxDepth
+                          this.handleReplies
+                        }}
+                        @toggleWiki={{fn @toggleWiki @post}}
+                        @unhidePost={{fn @unhidePost @post}}
+                        @unlockPost={{fn @unlockPost @post}}
                       />
                     </section>
                     {{#if this.showExpandRepliesButton}}
                       <NestedRepliesExpandButton
-                        @replyCount={{this.replyCount}}
                         @disabled={{this.loadingReplies}}
                         @isLoading={{this.loadingReplies}}
                         @onClick={{this.handleReplies}}
+                        @replyCount={{this.replyCount}}
                       />
                     {{/if}}
                     <PluginOutlet
@@ -869,8 +869,8 @@ export default class NestedPost extends Component {
                   {{#if this.showContinueThread}}
                     <div class="nested-post__controls">
                       <a
-                        href={{this.contextUrl}}
                         class="nested-post__continue-link"
+                        href={{this.contextUrl}}
                       >
                         {{i18n "nested_replies.continue_thread"}}
                       </a>
@@ -889,47 +889,47 @@ export default class NestedPost extends Component {
             )
           }}
             <NestedPostChildren
-              @topic={{@topic}}
-              @parentPostNumber={{@post.post_number}}
-              @preloadedChildren={{@children}}
-              @directReplyCount={{@post.direct_reply_count}}
-              @totalDescendantCount={{@post.total_descendant_count}}
-              @depth={{@depth}}
-              @path={{this.childPath}}
-              @sort={{@sort}}
-              @replyToPost={{@replyToPost}}
-              @editPost={{@editPost}}
-              @deletePost={{@deletePost}}
-              @recoverPost={{@recoverPost}}
-              @showFlags={{@showFlags}}
-              @showHistory={{@showHistory}}
+              @captureScrollAnchor={{@captureScrollAnchor}}
               @changeNotice={{@changeNotice}}
               @changePostOwner={{@changePostOwner}}
-              @grantBadge={{@grantBadge}}
-              @lockPost={{@lockPost}}
-              @unlockPost={{@unlockPost}}
-              @permanentlyDeletePost={{@permanentlyDeletePost}}
-              @rebakePost={{@rebakePost}}
-              @showPagePublish={{@showPagePublish}}
-              @togglePostType={{@togglePostType}}
-              @toggleWiki={{@toggleWiki}}
-              @unhidePost={{@unhidePost}}
+              @collapseFromDepth={{@collapseFromDepth}}
               @collapseParent={{this.toggleExpanded}}
-              @highlightParentLine={{this.highlightLine}}
-              @unhighlightParentLine={{this.unhighlightLine}}
-              @parentLineHighlighted={{this.lineHighlighted}}
+              @deletePost={{@deletePost}}
+              @depth={{@depth}}
+              @directReplyCount={{@post.direct_reply_count}}
+              @editPost={{@editPost}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
-              @scrollAnchor={{@scrollAnchor}}
-              @registerPost={{@registerPost}}
-              @collapseFromDepth={{@collapseFromDepth}}
               @focusPost={{@focusPost}}
-              @captureScrollAnchor={{@captureScrollAnchor}}
+              @grantBadge={{@grantBadge}}
+              @highlightParentLine={{this.highlightLine}}
+              @lockPost={{@lockPost}}
               @multiSelect={{@multiSelect}}
-              @togglePostSelection={{@togglePostSelection}}
-              @selectReplies={{@selectReplies}}
-              @selectBelow={{@selectBelow}}
+              @parentLineHighlighted={{this.lineHighlighted}}
+              @parentPostNumber={{@post.post_number}}
+              @path={{this.childPath}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
               @postSelected={{@postSelected}}
+              @preloadedChildren={{@children}}
+              @rebakePost={{@rebakePost}}
+              @recoverPost={{@recoverPost}}
+              @registerPost={{@registerPost}}
+              @replyToPost={{@replyToPost}}
+              @scrollAnchor={{@scrollAnchor}}
+              @selectBelow={{@selectBelow}}
+              @selectReplies={{@selectReplies}}
+              @showFlags={{@showFlags}}
+              @showHistory={{@showHistory}}
+              @showPagePublish={{@showPagePublish}}
+              @sort={{@sort}}
+              @togglePostSelection={{@togglePostSelection}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @topic={{@topic}}
+              @totalDescendantCount={{@post.total_descendant_count}}
+              @unhidePost={{@unhidePost}}
+              @unhighlightParentLine={{this.unhighlightLine}}
+              @unlockPost={{@unlockPost}}
             />
           {{/if}}
         </div>

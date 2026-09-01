@@ -149,16 +149,16 @@ export default class ReactionsReactionButton extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="discourse-reactions-reaction-button"
+      title={{this.title}}
       {{on "click" this.click}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
-      title={{this.title}}
     >
       {{#if @post.current_user_used_main_reaction}}
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
           @icon={{this.likedIcon}}
+          @translatedTitle={{this.title}}
         />
       {{else if @post.current_user_reaction}}
         <DButton
@@ -166,16 +166,16 @@ export default class ReactionsReactionButton extends Component {
           @translatedTitle={{this.title}}
         >
           <img
+            alt={{concat ":" @post.current_user_reaction.id}}
             class="btn-toggle-reaction-emoji reaction-button"
             src={{emojiUrlFor @post.current_user_reaction.id}}
-            alt={{concat ":" @post.current_user_reaction.id}}
           />
         </DButton>
       {{else}}
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-          @translatedTitle={{this.title}}
           @icon={{this.unlikedIcon}}
+          @translatedTitle={{this.title}}
         />
       {{/if}}
     </div>

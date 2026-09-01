@@ -70,13 +70,12 @@ export default class SummarizeAggregations extends Component {
 
   <template>
     <FixedCollection
-      @form={{@form}}
-      @formApi={{@formApi}}
       @configuration={{@configuration}}
       @connections={{@connections}}
       @credentials={{@credentials}}
       @fieldName={{@fieldName}}
-      @showLabel={{false}}
+      @form={{@form}}
+      @formApi={{@formApi}}
       @node={{@node}}
       @nodeDefinition={{@nodeDefinition}}
       @nodeParameters={{@nodeParameters}}
@@ -85,15 +84,16 @@ export default class SummarizeAggregations extends Component {
       @nodeTypes={{@nodeTypes}}
       @schema={{@schema}}
       @session={{@session}}
+      @showLabel={{false}}
       as |row|
     >
       <div class="workflows-summarize-row">
         <div class="workflows-summarize-row__line">
           <row.object.Field
-            @name="aggregation"
-            @title={{this.fieldTitle "aggregation"}}
-            @showTitle={{false}}
             class="workflows-summarize-row__lead"
+            @name="aggregation"
+            @showTitle={{false}}
+            @title={{this.fieldTitle "aggregation"}}
             as |field|
           >
             <field.Select @includeNone={{false}} as |select|>
@@ -107,19 +107,19 @@ export default class SummarizeAggregations extends Component {
 
           {{#if (isVisible (this.fieldSchema "field") row.item)}}
             <row.object.Field
-              @name="field"
-              @title={{this.fieldTitle "field"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="field"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "field"}}
               as |field|
             >
               <FieldPathControl
+                @connections={{@connections}}
                 @field={{field}}
-                @schema={{this.fieldSchema "field"}}
                 @node={{@node}}
                 @nodes={{@nodes}}
                 @nodeTypes={{@nodeTypes}}
-                @connections={{@connections}}
+                @schema={{this.fieldSchema "field"}}
                 @session={{@session}}
               />
             </row.object.Field>
@@ -135,10 +135,10 @@ export default class SummarizeAggregations extends Component {
             </span>
 
             <row.object.Field
-              @name="separate_by"
-              @title={{this.fieldTitle "separate_by"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="separate_by"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "separate_by"}}
               as |field|
             >
               <field.Select @includeNone={{false}} as |select|>
@@ -161,10 +161,10 @@ export default class SummarizeAggregations extends Component {
             </span>
 
             <row.object.Field
-              @name="custom_separator"
-              @title={{this.fieldTitle "custom_separator"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="custom_separator"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "custom_separator"}}
               as |field|
             >
               <field.Input />
@@ -180,15 +180,15 @@ export default class SummarizeAggregations extends Component {
           </span>
 
           <row.object.Field
-            @name="output_field_name"
-            @title={{this.fieldTitle "output_field_name"}}
-            @showTitle={{false}}
-            @placeholder={{derivedPlaceholder row.item}}
             class="workflows-summarize-row__control
               {{if
                 (isDerived row.item)
                 'workflows-summarize-row__control--derived'
               }}"
+            @name="output_field_name"
+            @placeholder={{derivedPlaceholder row.item}}
+            @showTitle={{false}}
+            @title={{this.fieldTitle "output_field_name"}}
             as |field|
           >
             <field.Input />

@@ -195,14 +195,14 @@ export default class AiSummaryModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.summarization.topic.title"}}
-      @closeModal={{this.handleClose}}
-      @bodyClass="ai-summary-modal__body"
       class="ai-summary-modal"
+      @bodyClass="ai-summary-modal__body"
+      @closeModal={{this.handleClose}}
+      @hideFooter={{not this.summarizedOn}}
+      @title={{i18n "discourse_ai.summarization.topic.title"}}
       {{didInsert this.subscribe @model.topic.id}}
       {{didUpdate this.subscribe @model.topic.id}}
       {{willDestroy this.unsubscribe}}
-      @hideFooter={{not this.summarizedOn}}
     >
       <:body>
         {{htmlClass "scrollable-modal"}}
@@ -241,10 +241,10 @@ export default class AiSummaryModal extends Component {
         {{/if}}
         {{#if this.canRegenerate}}
           <DButton
-            @label="summary.buttons.regenerate"
-            @title="summary.buttons.regenerate"
             @action={{this.regenerateSummary}}
             @icon="arrows-rotate"
+            @label="summary.buttons.regenerate"
+            @title="summary.buttons.regenerate"
           />
         {{/if}}
       </:footer>

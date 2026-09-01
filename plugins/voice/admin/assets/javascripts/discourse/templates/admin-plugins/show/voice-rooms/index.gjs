@@ -2,7 +2,7 @@ import VoiceRoomList from "discourse/plugins/voice/admin/components/voice-room-l
 
 export default <template>
   <VoiceRoomList
-    @rooms={{@controller.model.content}}
     @onDestroy={{@controller.destroyRoom}}
+    @rooms={{@controller.model.content}}
   />
 </template>

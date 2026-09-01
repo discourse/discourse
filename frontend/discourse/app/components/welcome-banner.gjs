@@ -284,17 +284,17 @@ export default class WelcomeBanner extends Component {
           <div class="search-menu welcome-banner__search-menu">
             {{#if this.showAdvancedSearchIcon}}
               <DButton
+                class="search-icon"
+                @href={{getURL "/search?expanded=true"}}
                 @icon="magnifying-glass"
                 @title="search.open_advanced"
-                @href={{getURL "/search?expanded=true"}}
-                class="search-icon"
               />
             {{/if}}
             <SearchMenu
+              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
               @searchInputPlaceholder="welcome_banner.search_placeholder"
-              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
             />
           </div>
           <PluginOutlet @name="welcome-banner-below-input" />

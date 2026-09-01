@@ -30,8 +30,8 @@ export default class AdminWatchedWordsActionNav extends Component {
       {{#each this.items as |watchedWordAction|}}
         <li class={{watchedWordAction.nameKey}}>
           <LinkTo
-            @route="adminWatchedWords.action"
             @model={{watchedWordAction.nameKey}}
+            @route="adminWatchedWords.action"
             {{on "click" this.onLinkClick}}
           >
             {{watchedWordAction.name}}

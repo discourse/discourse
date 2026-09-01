@@ -12,8 +12,6 @@ export default <template>
   <div class="admin-plugins-list-container">
 
     <DPageHeader
-      @hideTabs={{true}}
-      @titleLabel={{i18n "admin.config.plugins.title"}}
       @descriptionLabel={{trustHTML
         (concat
           (i18n "admin.config.plugins.header_description")
@@ -22,12 +20,14 @@ export default <template>
           "</a>"
         )
       }}
+      @hideTabs={{true}}
+      @titleLabel={{i18n "admin.config.plugins.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/plugins"
           @label={{i18n "admin.plugins.title"}}
+          @path="/admin/plugins"
         />
       </:breadcrumbs>
     </DPageHeader>
@@ -35,10 +35,10 @@ export default <template>
     {{#if @controller.model.length}}
       <DFilterControls
         @array={{@controller.model}}
-        @searchableProps={{@controller.searchableProps}}
         @dropdownOptions={{@controller.dropdownOptions}}
         @inputPlaceholder={{i18n "admin.plugins.filters.search_placeholder"}}
         @noResultsMessage={{i18n "admin.plugins.filters.no_results"}}
+        @searchableProps={{@controller.searchableProps}}
       >
         <:content as |filteredPlugins|>
           <AdminPluginsList @plugins={{filteredPlugins}} />
@@ -50,8 +50,8 @@ export default <template>
 
     <span>
       <PluginOutlet
-        @name="admin-below-plugins-index"
         @connectorTagName="div"
+        @name="admin-below-plugins-index"
         @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>

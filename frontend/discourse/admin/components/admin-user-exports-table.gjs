@@ -111,10 +111,10 @@ export default class extends Component {
           <DConditionalLoadingSpinner @condition={{this.userExportReloading}}>
 
             <DButton
+              class="btn-default"
               @action={{this.triggerUserExport}}
               @icon="download"
               @label="admin.user.exports.download.button"
-              class="btn-default"
             />
           </DConditionalLoadingSpinner>
         </div>

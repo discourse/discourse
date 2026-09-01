@@ -35,12 +35,12 @@ export default class AiTopicGist extends Component {
     {{#if this.shouldShow}}
       {{bodyClass "topic-list-layout-table-ai"}}
       {{#if this.hasGist}}
-        <a href={{@topic.lastUnreadUrl}} class="excerpt">
+        <a class="excerpt" href={{@topic.lastUnreadUrl}}>
           <div class="excerpt__contents">{{this.gist}}</div>
         </a>
       {{else}}
         {{#if this.escapedExcerpt}}
-          <a href={{@topic.lastUnreadUrl}} class="excerpt">
+          <a class="excerpt" href={{@topic.lastUnreadUrl}}>
             <div class="excerpt__contents">
               {{trustHTML this.escapedExcerpt}}
             </div>

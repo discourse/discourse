@@ -449,13 +449,13 @@ export default class GlimmerSiteHeader extends Component {
         <ImpersonationNotice />
       {{/if}}
       <Header
+        @animateMenu={{this.animateMenu}}
         @canSignUp={{@canSignUp}}
+        @showCreateAccount={{@showCreateAccount}}
+        @showLogin={{@showLogin}}
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}
         @toggleSidebar={{@toggleSidebar}}
-        @showCreateAccount={{@showCreateAccount}}
-        @showLogin={{@showLogin}}
-        @animateMenu={{this.animateMenu}}
         @topicInfo={{this.header.topicInfo}}
         @topicInfoVisible={{this.header.topicInfoVisible}}
       />

@@ -397,10 +397,10 @@ export default class History extends Component {
 
   <template>
     <DModal
-      @title={{i18n this.modalTitleKey}}
-      @closeModal={{@closeModal}}
       class="history-modal --max
         {{concat '--mode-' (dDasherize this.viewMode)}}"
+      @closeModal={{@closeModal}}
+      @title={{i18n this.modalTitleKey}}
     >
       <:body>
         {{#if this.error}}
@@ -409,28 +409,28 @@ export default class History extends Component {
         <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
           {{#if this.postRevision}}
             <Revision
-              @model={{this.postRevision}}
-              @previousCategory={{this.previousCategory}}
               @currentCategory={{this.currentCategory}}
               @displayInline={{this.displayInline}}
               @displaySideBySide={{this.displaySideBySide}}
               @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+              @model={{this.postRevision}}
+              @previousCategory={{this.previousCategory}}
               @viewMode={{this.viewMode}}
             />
             <Revisions
-              @model={{this.postRevision}}
-              @hiddenClasses={{this.hiddenClasses}}
-              @diffHidden={{this.diffHidden}}
-              @mobileView={{this.site.mobileView}}
-              @userChanges={{this.user_changes}}
-              @previousCategory={{this.previousCategory}}
-              @currentCategory={{this.currentCategory}}
-              @previousTagChanges={{this.previousTagChanges}}
-              @currentTagChanges={{this.currentTagChanges}}
-              @bodyDiffHTML={{this.bodyDiffHTML}}
               @bodyDiff={{this.bodyDiff}}
+              @bodyDiffHTML={{this.bodyDiffHTML}}
               @calculateBodyDiff={{this.calculateBodyDiff}}
+              @currentCategory={{this.currentCategory}}
+              @currentTagChanges={{this.currentTagChanges}}
+              @diffHidden={{this.diffHidden}}
+              @hiddenClasses={{this.hiddenClasses}}
+              @mobileView={{this.site.mobileView}}
+              @model={{this.postRevision}}
+              @previousCategory={{this.previousCategory}}
+              @previousTagChanges={{this.previousTagChanges}}
               @titleDiff={{this.titleDiff}}
+              @userChanges={{this.user_changes}}
               @viewMode={{this.viewMode}}
             />
           {{/if}}
@@ -440,28 +440,28 @@ export default class History extends Component {
         {{#if @model.editPost}}
           {{#if this.postRevision}}
             <TopicFooter
-              @model={{this.postRevision}}
-              @loadFirstVersion={{this.loadFirstVersion}}
-              @loadPreviousVersion={{this.loadPreviousVersion}}
-              @loadNextVersion={{this.loadNextVersion}}
-              @loadLastVersion={{this.loadLastVersion}}
-              @displayEdit={{this.displayEdit}}
-              @editPost={{this.editPost}}
-              @editButtonLabel={{this.editButtonLabel}}
-              @revertToVersion={{this.revertToVersion}}
-              @hideVersion={{this.hideVersion}}
-              @showVersion={{this.showVersion}}
-              @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
-              @loading={{this.loading}}
               @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
-              @loadFirstDisabled={{this.loadFirstDisabled}}
-              @loadPreviousDisabled={{this.loadPreviousDisabled}}
+              @displayEdit={{this.displayEdit}}
               @displayRevisions={{this.displayRevisions}}
-              @revisionsText={{this.revisionsText}}
-              @loadNextDisabled={{this.loadNextDisabled}}
-              @loadLastDisabled={{this.loadLastDisabled}}
-              @revertToRevisionText={{this.revertToRevisionText}}
+              @editButtonLabel={{this.editButtonLabel}}
+              @editPost={{this.editPost}}
+              @hideVersion={{this.hideVersion}}
               @isStaff={{this.currentUser.staff}}
+              @loadFirstDisabled={{this.loadFirstDisabled}}
+              @loadFirstVersion={{this.loadFirstVersion}}
+              @loading={{this.loading}}
+              @loadLastDisabled={{this.loadLastDisabled}}
+              @loadLastVersion={{this.loadLastVersion}}
+              @loadNextDisabled={{this.loadNextDisabled}}
+              @loadNextVersion={{this.loadNextVersion}}
+              @loadPreviousDisabled={{this.loadPreviousDisabled}}
+              @loadPreviousVersion={{this.loadPreviousVersion}}
+              @model={{this.postRevision}}
+              @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+              @revertToRevisionText={{this.revertToRevisionText}}
+              @revertToVersion={{this.revertToVersion}}
+              @revisionsText={{this.revisionsText}}
+              @showVersion={{this.showVersion}}
             />
           {{/if}}
         {{/if}}

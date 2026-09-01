@@ -26,7 +26,7 @@ export default class BackToForum extends Component {
   }
 
   <template>
-    <a href={{this.href}} class="sidebar-sections__back-to-forum">
+    <a class="sidebar-sections__back-to-forum" href={{this.href}}>
       {{dIcon "arrow-left"}}
 
       <span>{{i18n "sidebar.back_to_forum"}}</span>

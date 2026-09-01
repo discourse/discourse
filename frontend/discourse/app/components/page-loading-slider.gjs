@@ -77,17 +77,17 @@ export default class PageLoadingSlider extends Component {
   <template>
     {{#if (eq this.loadingSlider.mode "slider")}}
       <div
-        {{on "transitionend" this.onContainerTransitionEnd}}
-        style={{this.containerStyle}}
         class={{dConcatClass
           "loading-indicator-container"
           this.state
           (if this.capabilities.isAppWebview "discourse-hub-webview")
         }}
+        style={{this.containerStyle}}
+        {{on "transitionend" this.onContainerTransitionEnd}}
       >
         <div
-          {{on "transitionend" this.onBarTransitionEnd}}
           class="loading-indicator"
+          {{on "transitionend" this.onBarTransitionEnd}}
         >
         </div>
       </div>

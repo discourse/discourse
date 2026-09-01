@@ -42,36 +42,36 @@ export default class ComposerToggleSwitch extends Component {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <button
+      aria-checked={{if @state "true" "false"}}
+      aria-keyshortcuts={{if this.capabilities.hasKeyboard this.shortcut.aria}}
+      aria-label={{this.label}}
       class={{dConcatClass
         "composer-toggle-switch"
         (if @state "--rte" "--markdown")
       }}
-      type="button"
-      role="switch"
-      disabled={{@disabled}}
-      aria-checked={{if @state "true" "false"}}
-      aria-label={{this.label}}
-      aria-keyshortcuts={{if this.capabilities.hasKeyboard this.shortcut.aria}}
-      title={{this.label}}
       data-rich-editor={{@state}}
+      disabled={{@disabled}}
+      role="switch"
+      title={{this.label}}
+      type="button"
       ...attributes
       {{on "mousedown" this.mouseDown}}
       {{on "keydown" this.handleKeydown}}
     >
       <span class="composer-toggle-switch__slider">
         <span
+          aria-hidden="true"
           class={{dConcatClass
             "composer-toggle-switch__left-icon"
             (unless @state "--active")
           }}
-          aria-hidden="true"
         >{{dIcon "fab-markdown"}}</span>
         <span
+          aria-hidden="true"
           class={{dConcatClass
             "composer-toggle-switch__right-icon"
             (if @state "--active")
           }}
-          aria-hidden="true"
         >{{dIcon "a"}}</span>
       </span>
     </button>

@@ -22,9 +22,9 @@ module("Integration | Component | TopicListItem", function (hooks) {
     await render(
       <template>
         <TopicList
-          @topics={{topics}}
           @bulkSelectHelper={{bulkSelectHelper}}
           @canBulkSelect={{true}}
+          @topics={{topics}}
         />
       </template>
     );

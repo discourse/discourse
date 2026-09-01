@@ -144,19 +144,19 @@ export default class ToolbarPopupMenuOptions extends Component {
 
   <template>
     <DMenu
-      @identifier={{concat "toolbar-menu__" @class}}
-      @groupIdentifier="toolbar-menu"
-      @onRegisterApi={{this.onRegisterApi}}
-      @onShow={{@onOpen}}
-      @modalForMobile={{true}}
-      @placement="bottom"
+      tabindex="-1"
+      title={{@title}}
+      @class="toolbar-popup-menu-options"
       @fallbackPlacements={{array "top"}}
+      @groupIdentifier="toolbar-menu"
+      @identifier={{concat "toolbar-menu__" @class}}
+      @modalForMobile={{true}}
       @offset={{5}}
       @onKeydown={{@onKeydown}}
-      tabindex="-1"
+      @onRegisterApi={{this.onRegisterApi}}
+      @onShow={{@onOpen}}
+      @placement="bottom"
       @triggerClass={{dConcatClass "toolbar__button" @class}}
-      @class="toolbar-popup-menu-options"
-      title={{@title}}
     >
       <:trigger>
         {{dIcon (this.getIcon this.args)}}
@@ -175,9 +175,9 @@ export default class ToolbarPopupMenuOptions extends Component {
             <dropdown.item>
               <DShortcut @keys={{option.shortcutKeys}} as |shortcut|>
                 <DButton
+                  aria-keyshortcuts={{shortcut.aria}}
                   class={{dConcatClass (if (this.getActive option) "--active")}}
                   data-name={{option.name}}
-                  aria-keyshortcuts={{shortcut.aria}}
                   @action={{fn this.onSelect option}}
                   @icon={{this.getIcon option}}
                   @translatedTitle={{option.title}}

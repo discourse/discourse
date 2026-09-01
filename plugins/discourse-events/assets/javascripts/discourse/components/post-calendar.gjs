@@ -285,17 +285,17 @@ export default class PostCalendar extends Component {
 
   <template>
     <div
+      class="post-calendar"
       {{didInsert this.registerPostCalendar}}
       {{willDestroy this.teardownPostCalendar}}
-      class="post-calendar"
     >
       <FullCalendar
-        @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
-        @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
-        @onLoadEvents={{this.loadEvents}}
         @height={{@height}}
+        @leftHeaderToolbar={{this.leftHeaderToolbar}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{@post.id}}
+        @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
       />
     </div>
   </template>

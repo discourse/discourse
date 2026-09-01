@@ -19,10 +19,10 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
     await render(
       <template>
         <EmptyTopicFilter
+          @changeNewListSubset={{this.changeNewListSubset}}
           @newFilter={{true}}
           @newListSubset={{this.newListSubset}}
           @trackingCounts={{this.trackingCounts}}
-          @changeNewListSubset={{this.changeNewListSubset}}
         />
       </template>
     );
@@ -48,10 +48,10 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
     await render(
       <template>
         <EmptyTopicFilter
+          @changeNewListSubset={{this.changeNewListSubset}}
           @newFilter={{true}}
           @newListSubset={{this.newListSubset}}
           @trackingCounts={{this.trackingCounts}}
-          @changeNewListSubset={{this.changeNewListSubset}}
         />
       </template>
     );
@@ -74,10 +74,10 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
     await render(
       <template>
         <EmptyTopicFilter
+          @changeNewListSubset={{this.changeNewListSubset}}
           @newFilter={{true}}
           @newListSubset={{this.newListSubset}}
           @trackingCounts={{this.trackingCounts}}
-          @changeNewListSubset={{this.changeNewListSubset}}
         />
       </template>
     );
@@ -97,10 +97,10 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
     await render(
       <template>
         <EmptyTopicFilter
+          @changeNewListSubset={{this.changeNewListSubset}}
           @newFilter={{true}}
           @newListSubset={{this.newListSubset}}
           @trackingCounts={{this.trackingCounts}}
-          @changeNewListSubset={{this.changeNewListSubset}}
         />
       </template>
     );
@@ -125,7 +125,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
   test("renders new education text when newFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{true}} />
+        <EmptyTopicFilter @newFilter={{true}} @unreadFilter={{false}} />
       </template>
     );
 
@@ -139,7 +139,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
 
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{true}} />
+        <EmptyTopicFilter @newFilter={{true}} @unreadFilter={{false}} />
       </template>
     );
 
@@ -151,7 +151,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
   test("renders unread education text when unreadFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{true}} @newFilter={{false}} />
+        <EmptyTopicFilter @newFilter={{false}} @unreadFilter={{true}} />
       </template>
     );
 
@@ -163,7 +163,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
   test("renders generic education text when neither newFilter nor unreadFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{false}} />
+        <EmptyTopicFilter @newFilter={{false}} @unreadFilter={{false}} />
       </template>
     );
 

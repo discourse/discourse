@@ -284,10 +284,10 @@ export default class GoogleAdsense extends AdComponent {
         >
           <ins
             class="adsbygoogle"
-            style={{this.adInsStyle}}
             data-ad-client="ca-pub-{{this.publisher_id}}"
-            data-ad-slot={{this.ad_code}}
             data-ad-format={{this.autoAdFormat}}
+            data-ad-slot={{this.ad_code}}
+            style={{this.adInsStyle}}
           >
           </ins>
         </div>

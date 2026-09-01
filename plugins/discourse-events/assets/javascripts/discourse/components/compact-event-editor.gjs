@@ -682,10 +682,10 @@ export default class CompactEventEditor extends Component {
 
       <div class="composer-event__info">
         <DExpandingTextArea
-          rows="1"
-          value={{this.name}}
           class="composer-event__name-input"
           placeholder={{this.eventNamePlaceholder}}
+          rows="1"
+          value={{this.name}}
           {{on "input" this.onNameInput}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -698,10 +698,10 @@ export default class CompactEventEditor extends Component {
       {{#unless @hideAdvanced}}
         <div class="composer-event__more-dropdown">
           <DButton
-            @icon="gear"
-            @action={{this.openAdvanced}}
-            @title="discourse_post_event.edit_event"
             class="btn-flat"
+            @action={{this.openAdvanced}}
+            @icon="gear"
+            @title="discourse_post_event.edit_event"
           />
         </div>
       {{/unless}}
@@ -718,8 +718,8 @@ export default class CompactEventEditor extends Component {
         <div class="composer-event__all-day-toggle">
           <DToggleSwitch
             class="composer-event__all-day-switch"
-            @state={{this.allDay}}
             @label="discourse_post_event.composer.all_day"
+            @state={{this.allDay}}
             {{on "click" this.toggleAllDay}}
           />
         </div>
@@ -732,9 +732,9 @@ export default class CompactEventEditor extends Component {
         >
           <div class="composer-event__date-wrapper">
             <input
+              class="composer-event__date-input"
               type="date"
               value={{this.formattedStartDate}}
-              class="composer-event__date-input"
               {{on "change" this.onStartDateChange}}
               {{on "focus" this.focusDateInput}}
             />
@@ -744,18 +744,18 @@ export default class CompactEventEditor extends Component {
           </div>
           {{#unless this.allDay}}
             <input
+              class="composer-event__time-input"
               type="time"
               value={{this.formattedStartTime}}
-              class="composer-event__time-input"
               {{on "change" this.onStartTimeChange}}
             />
           {{/unless}}
           {{#if this.showInlineEndTime}}
             {{dIcon "arrow-right" class="composer-event__date-arrow"}}
             <input
+              class="composer-event__time-input"
               type="time"
               value={{this.formattedEndTime}}
-              class="composer-event__time-input"
               {{on "change" this.onEndTimeChange}}
             />
           {{/if}}
@@ -773,9 +773,9 @@ export default class CompactEventEditor extends Component {
           >
             <div class="composer-event__date-wrapper">
               <input
+                class="composer-event__date-input"
                 type="date"
                 value={{this.formattedEndDate}}
-                class="composer-event__date-input"
                 {{on "change" this.onEndDateChange}}
                 {{on "focus" this.focusDateInput}}
               />
@@ -790,9 +790,9 @@ export default class CompactEventEditor extends Component {
             </div>
             {{#unless this.allDay}}
               <input
+                class="composer-event__time-input"
                 type="time"
                 value={{this.formattedEndTime}}
-                class="composer-event__time-input"
                 {{on "change" this.onEndTimeChange}}
               />
             {{/unless}}
@@ -805,10 +805,10 @@ export default class CompactEventEditor extends Component {
       {{dIcon this.locationIcon}}
       <div class="composer-event__location-content">
         <input
-          type="text"
-          value={{this.location}}
           class="composer-event__location-input"
           placeholder={{this.locationPlaceholder}}
+          type="text"
+          value={{this.location}}
           {{on "input" (fn this.onLinkFieldInput "location")}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -816,8 +816,8 @@ export default class CompactEventEditor extends Component {
           <a
             class="composer-event__location-external-link"
             href={{this.displayLocation}}
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
             title="Visit {{this.location}}"
           >
             {{dIcon "up-right-from-square"}}
@@ -830,10 +830,10 @@ export default class CompactEventEditor extends Component {
       <section class="composer-event__url">
         {{dIcon "link"}}
         <input
-          type="text"
-          value={{this.url}}
           class="composer-event__url-input"
           placeholder={{i18n "discourse_post_event.composer.url_placeholder"}}
+          type="text"
+          value={{this.url}}
           {{on "input" (fn this.onLinkFieldInput "url")}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -844,15 +844,15 @@ export default class CompactEventEditor extends Component {
       <section class="composer-event__livestream">
         {{#if this.livestreamDisabled}}
           <DTooltip
-            @placement="top-start"
             class="composer-event__livestream-toggle"
+            @placement="top-start"
           >
             <:trigger>
               <DToggleSwitch
                 class="composer-event__livestream-switch"
-                @state={{this.livestream}}
-                @label="discourse_post_event.composer.livestream"
                 disabled
+                @label="discourse_post_event.composer.livestream"
+                @state={{this.livestream}}
               />
             </:trigger>
             <:content>
@@ -863,8 +863,8 @@ export default class CompactEventEditor extends Component {
           <div class="composer-event__livestream-toggle">
             <DToggleSwitch
               class="composer-event__livestream-switch"
-              @state={{this.livestream}}
               @label="discourse_post_event.composer.livestream"
+              @state={{this.livestream}}
               {{on "click" this.toggleLivestream}}
             />
           </div>
@@ -875,13 +875,13 @@ export default class CompactEventEditor extends Component {
     <section class="composer-event__attendees">
       {{dIcon "users"}}
       <input
-        type="number"
+        class="composer-event__max-attendees-input"
         inputmode="numeric"
         min="0"
-        step="1"
-        value={{this.displayMaxAttendees}}
         placeholder={{this.maxAttendeesPlaceholder}}
-        class="composer-event__max-attendees-input"
+        step="1"
+        type="number"
+        value={{this.displayMaxAttendees}}
         {{on "input" this.onMaxAttendeesInput}}
         {{on "blur" this.onMaxAttendeesBlur}}
       />
@@ -906,22 +906,22 @@ export default class CompactEventEditor extends Component {
           <:content>{{i18n entry.iconTitle}}</:content>
         </DTooltip>
         <input
-          type="number"
+          class="composer-event__reminder-value"
           inputmode="numeric"
           min="1"
           step="1"
+          type="number"
           value={{entry.reminder.value}}
-          class="composer-event__reminder-value"
           {{on "input" (fn this.onReminderValueInput entry.index)}}
         />
         <span class="composer-event__reminder-unit">
           {{entry.label}}
         </span>
         <DButton
-          @icon="xmark"
-          @action={{fn this.removeReminder entry.index}}
-          @title="discourse_post_event.composer.reminder.remove"
           class="btn-flat composer-event__reminder-remove"
+          @action={{fn this.removeReminder entry.index}}
+          @icon="xmark"
+          @title="discourse_post_event.composer.reminder.remove"
         />
       </section>
     {{/each}}
@@ -932,8 +932,8 @@ export default class CompactEventEditor extends Component {
         placeholder={{i18n
           "discourse_post_event.composer.description_placeholder"
         }}
-        value={{this.description}}
         rows="1"
+        value={{this.description}}
         {{on "input" this.onDescriptionInput}}
         {{on "focus" this.handleTextInputFocus}}
       />

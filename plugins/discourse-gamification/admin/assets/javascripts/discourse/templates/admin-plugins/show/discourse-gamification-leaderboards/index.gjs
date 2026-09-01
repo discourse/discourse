@@ -9,8 +9,8 @@ import AdminCreateLeaderboard from "discourse/plugins/discourse-gamification/adm
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/{{@controller.adminPluginNavManager.currentPlugin.name}}/leaderboards"
     @label={{i18n "gamification.leaderboard.title"}}
+    @path="/admin/plugins/{{@controller.adminPluginNavManager.currentPlugin.name}}/leaderboards"
   />
 
   <div class="discourse-gamification__leaderboards admin-detail">
@@ -18,17 +18,17 @@ export default <template>
       <:actions as |actions|>
         {{#if @controller.model.leaderboards}}
           <actions.Primary
-            @label="gamification.leaderboard.new"
-            @title="gamification.leaderboard.new"
             class="leaderboard-admin__btn-new"
             @action={{fn (mut @controller.creatingNew) true}}
+            @label="gamification.leaderboard.new"
+            @title="gamification.leaderboard.new"
           />
 
           <actions.Default
-            @label="gamification.recalculate"
-            @title="gamification.recalculate"
             class="leaderboard-admin__btn-recalculate"
             @action={{@controller.recalculateScores}}
+            @label="gamification.recalculate"
+            @title="gamification.recalculate"
           />
         {{/if}}
       </:actions>
@@ -52,8 +52,8 @@ export default <template>
               <tr id={{concat "leaderboard-admin__row-" leaderboard.id}}>
                 <td>
                   <LinkTo
-                    @route="gamificationLeaderboard.byName"
                     @model={{leaderboard.id}}
+                    @route="gamificationLeaderboard.byName"
                   >
                     {{leaderboard.name}}
                   </LinkTo>
@@ -70,16 +70,16 @@ export default <template>
                 <td style="width: 120px">
                   <div class="leaderboard-admin__listitem-action">
                     <LinkTo
-                      @route="adminPlugins.show.discourse-gamification-leaderboards.show"
-                      @model={{leaderboard}}
                       class="btn btn-default leaderboard-admin__edit btn-text btn-small"
+                      @model={{leaderboard}}
+                      @route="adminPlugins.show.discourse-gamification-leaderboards.show"
                     >{{i18n "gamification.edit"}} </LinkTo>
 
                     <DButton
                       class="btn-small leaderboard-admin__delete btn-danger"
+                      @action={{fn @controller.destroyLeaderboard leaderboard}}
                       @icon="trash-can"
                       @title="gamification.delete"
-                      @action={{fn @controller.destroyLeaderboard leaderboard}}
                     />
                   </div>
                 </td>
@@ -92,9 +92,9 @@ export default <template>
           <div class="admin-plugin-config-area__empty-list">
             {{i18n "gamification.leaderboard.none"}}
             <DButton
-              @label="gamification.leaderboard.cta"
               class="btn-default btn-small leaderboard-admin__cta-new"
               @action={{fn (mut @controller.creatingNew) true}}
+              @label="gamification.leaderboard.cta"
             />
           </div>
         {{/unless}}

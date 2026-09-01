@@ -6,30 +6,30 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.api_keys.title"}}
     @descriptionLabel={{i18n "admin.config.api_keys.header_description"}}
     @hideTabs={{@controller.hideTabs}}
+    @titleLabel={{i18n "admin.config.api_keys.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/api/keys"
         @label={{i18n "admin.config.api_keys.title"}}
+        @path="/admin/api/keys"
       />
     </:breadcrumbs>
     <:actions as |actions|>
-      <actions.Primary @route="adminApiKeys.new" @label="admin.api_keys.add" />
+      <actions.Primary @label="admin.api_keys.add" @route="adminApiKeys.new" />
     </:actions>
     <:tabs>
       <DNavItem
-        @route="adminApiKeys.settings"
-        @label="settings"
         class="admin-api-keys-tabs__settings"
+        @label="settings"
+        @route="adminApiKeys.settings"
       />
       <DNavItem
-        @route="adminApiKeys.index"
-        @label="admin.config.api_keys.title"
         class="admin-api-keys-tabs__index"
+        @label="admin.config.api_keys.title"
+        @route="adminApiKeys.index"
       />
     </:tabs>
   </DPageHeader>

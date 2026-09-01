@@ -41,9 +41,9 @@ export default class VoteBox extends Component {
   <template>
     <div class="voting-wrapper">
       <VoteButton
-        @topic={{@topic}}
         @addVote={{this.addVote}}
         @removeVote={{this.removeVote}}
+        @topic={{@topic}}
       />
       <VoteCount @topic={{@topic}} />
     </div>

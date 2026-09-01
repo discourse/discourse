@@ -10,41 +10,41 @@ import { i18n } from "discourse-i18n";
 export default <template>
   {{#if @controller.showRedesign}}
     <RedesignedAdminDashboard
+      @loadedSections={{@controller.loadedSections}}
+      @loadingSections={{@controller.loadingSections}}
+      @onIgnoreProblem={{@controller.ignoreProblem}}
+      @onRefreshProblems={{@controller.refreshSiteAdvice}}
+      @problems={{@controller.problems}}
+      @refreshSections={{@controller.fetchSections}}
+      @reorderSections={{@controller.reorderSections}}
+      @requestedEndDate={{@controller.endDate}}
       @requestedPeriod={{@controller.safePeriod}}
       @requestedStartDate={{@controller.startDate}}
-      @requestedEndDate={{@controller.endDate}}
-      @setPeriod={{@controller.setPeriod}}
-      @setCustomDateRange={{@controller.setCustomDateRange}}
-      @loadedSections={{@controller.loadedSections}}
-      @toggleSection={{@controller.toggleSection}}
-      @reorderSections={{@controller.reorderSections}}
-      @refreshSections={{@controller.fetchSections}}
-      @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
-      @problems={{@controller.problems}}
-      @onRefreshProblems={{@controller.refreshSiteAdvice}}
-      @onIgnoreProblem={{@controller.ignoreProblem}}
+      @setCustomDateRange={{@controller.setCustomDateRange}}
+      @setPeriod={{@controller.setPeriod}}
+      @toggleSection={{@controller.toggleSection}}
     />
   {{else}}
-    <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="admin-dashboard-top" />
 
     <DPageHeader
-      @titleLabel={{i18n "admin.dashboard.title"}}
       @descriptionLabel={{i18n "admin.config.dashboard.header_description"}}
       @hideTabs={{true}}
+      @titleLabel={{i18n "admin.dashboard.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin"
           @label={{i18n "admin.dashboard.title"}}
+          @path="/admin"
         />
       </:breadcrumbs>
     </DPageHeader>
 
     <PluginOutlet
-      @name="admin-dashboard-after-header"
       @connectorTagName="div"
+      @name="admin-dashboard-after-header"
     />
 
     {{#if @controller.showVersionChecks}}
@@ -65,22 +65,22 @@ export default <template>
       <ul class="nav nav-pills">
         <li class="navigation-item settings">
           <LinkTo
-            @route="adminReports.dashboardSettings"
             class="navigation-link"
+            @route="adminReports.dashboardSettings"
           >
             {{i18n "admin.config.reports.sub_pages.settings.title"}}
           </LinkTo>
         </li>
 
         <li class="navigation-item general">
-          <LinkTo @route="admin.dashboard.general" class="navigation-link">
+          <LinkTo class="navigation-link" @route="admin.dashboard.general">
             {{i18n "admin.dashboard.general_tab"}}
           </LinkTo>
         </li>
 
         {{#if @controller.isModerationTabVisible}}
           <li class="navigation-item moderation">
-            <LinkTo @route="admin.dashboardModeration" class="navigation-link">
+            <LinkTo class="navigation-link" @route="admin.dashboardModeration">
               {{i18n "admin.dashboard.moderation_tab"}}
             </LinkTo>
           </li>
@@ -88,7 +88,7 @@ export default <template>
 
         {{#if @controller.isSecurityTabVisible}}
           <li class="navigation-item security">
-            <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
+            <LinkTo class="navigation-link" @route="admin.dashboardSecurity">
               {{i18n "admin.dashboard.security_tab"}}
             </LinkTo>
           </li>
@@ -96,7 +96,7 @@ export default <template>
 
         {{#if @controller.isReportsTabVisible}}
           <li class="navigation-item reports">
-            <LinkTo @route="adminReports" class="navigation-link">
+            <LinkTo class="navigation-link" @route="adminReports">
               {{i18n "admin.dashboard.reports_tab"}}
             </LinkTo>
           </li>
@@ -109,7 +109,7 @@ export default <template>
     {{outlet}}
 
     <span>
-      <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
+      <PluginOutlet @connectorTagName="div" @name="admin-dashboard-bottom" />
     </span>
   {{/if}}
 </template>

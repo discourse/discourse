@@ -175,53 +175,53 @@ export default class ChatSelectionManager extends Component {
     >
       <div class="chat-selection-management__buttons">
         <DButton
+          class="btn-default"
+          id="chat-quote-btn"
+          @action={{this.quoteMessages}}
+          @disabled={{not this.anyMessagesSelected}}
           @icon="quote-left"
           @label="chat.selection.quote_selection"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.quoteMessages}}
-          id="chat-quote-btn"
-          class="btn-default"
         />
 
         <DButton
+          class="btn-default"
+          id="chat-copy-btn"
+          @action={{this.copyMessages}}
+          @disabled={{not this.anyMessagesSelected}}
           @icon="copy"
           @label="chat.selection.copy"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.copyMessages}}
-          id="chat-copy-btn"
-          class="btn-default"
         />
 
         {{#if this.enableMove}}
           <DButton
+            class="btn-default"
+            id="chat-move-to-channel-btn"
+            @action={{this.openMoveMessageModal}}
+            @disabled={{not this.anyMessagesSelected}}
             @icon="right-from-bracket"
             @label="chat.selection.move_selection_to_channel"
-            @disabled={{not this.anyMessagesSelected}}
-            @action={{this.openMoveMessageModal}}
-            id="chat-move-to-channel-btn"
-            class="btn-default"
           />
         {{/if}}
 
         <DButton
-          @icon="trash-can"
-          @translatedLabel={{this.deleteButtonTitle}}
+          class="btn-default"
+          id="chat-delete-btn"
+          @action={{this.openDeleteMessagesModal}}
           @disabled={{or
             (not this.anyMessagesSelected)
             (not this.canDeleteMessages)
             this.deleteCountLimitReached
           }}
-          @action={{this.openDeleteMessagesModal}}
-          id="chat-delete-btn"
-          class="btn-default"
+          @icon="trash-can"
+          @translatedLabel={{this.deleteButtonTitle}}
         />
 
         <DButton
+          class="btn-default cancel-btn"
+          id="chat-cancel-selection-btn"
+          @action={{this.cancelSelecting}}
           @icon="xmark"
           @label="chat.selection.cancel"
-          @action={{this.cancelSelecting}}
-          id="chat-cancel-selection-btn"
-          class="btn-default cancel-btn"
         />
       </div>
     </div>

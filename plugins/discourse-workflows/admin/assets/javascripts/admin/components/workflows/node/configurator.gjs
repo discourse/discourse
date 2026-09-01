@@ -496,10 +496,10 @@ export default class NodeConfigurator extends Component {
 
   <template>
     <DModal
-      @closeModal={{this.handleClose}}
-      @submitOnEnter={{false}}
-      @hideHeader={{true}}
       class="workflows-configurator-modal"
+      @closeModal={{this.handleClose}}
+      @hideHeader={{true}}
+      @submitOnEnter={{false}}
     >
       <:body>
         <div class="workflows-configurator-modal__header" {{this.focusModal}}>
@@ -513,26 +513,26 @@ export default class NodeConfigurator extends Component {
           {{/if}}
           {{#if this.isEditingName}}
             <input
+              class="workflows-configurator-modal__name-input"
               type="text"
               value={{this.nodeName}}
-              class="workflows-configurator-modal__name-input"
               {{this.focusNameInput}}
               {{on "input" this.updateNodeName}}
               {{on "keydown" this.handleNameKeydown}}
             />
             <div class="workflows-configurator-modal__name-actions">
               <DButton
+                class="btn-flat workflows-configurator-modal__save-name"
                 @action={{this.saveNodeName}}
+                @disabled={{not this.canSaveNodeName}}
                 @icon="check"
                 @title="discourse_workflows.save"
-                @disabled={{not this.canSaveNodeName}}
-                class="btn-flat workflows-configurator-modal__save-name"
               />
               <DButton
+                class="btn-flat workflows-configurator-modal__cancel-name"
                 @action={{this.cancelEditingName}}
                 @icon="xmark"
                 @title="discourse_workflows.cancel"
-                class="btn-flat workflows-configurator-modal__cancel-name"
               />
             </div>
             {{#if this.nodeNameError}}
@@ -548,10 +548,10 @@ export default class NodeConfigurator extends Component {
               {{on "click" this.startEditingName}}
             >{{this.nodeName}}</div>
             <DButton
+              class="btn-flat workflows-configurator-modal__edit-name"
               @action={{this.startEditingName}}
               @icon="pencil"
               @title="discourse_workflows.edit"
-              class="btn-flat workflows-configurator-modal__edit-name"
             />
           {{/if}}
           {{#if this.showSaveStatus}}
@@ -581,16 +581,16 @@ export default class NodeConfigurator extends Component {
           {{/if}}
           {{#if this.canExecuteStep}}
             <DButton
+              class="btn-small workflows-configurator-modal__execute-step"
               @action={{this.executeStep}}
               @icon="play"
               @label="discourse_workflows.execute_step.run"
-              class="btn-small workflows-configurator-modal__execute-step"
             />
           {{/if}}
           <DButton
+            class="btn-flat workflows-configurator-modal__close"
             @action={{this.handleClose}}
             @icon="xmark"
-            class="btn-flat workflows-configurator-modal__close"
           />
         </div>
         <DConditionalLoadingSpinner @condition={{this.isLoading}}>
@@ -613,34 +613,34 @@ export default class NodeConfigurator extends Component {
           >
             <div class="workflows-configurator-modal__column --left">
               <InputContext
+                @connections={{@model.connections}}
+                @hasConfiguration={{this.hasConfiguration}}
                 @node={{@model.node}}
                 @nodes={{@model.nodes}}
-                @connections={{@model.connections}}
-                @triggerType={{@model.triggerType}}
                 @nodeTypes={{this.nodeTypes}}
                 @session={{@model.session}}
-                @hasConfiguration={{this.hasConfiguration}}
+                @triggerType={{@model.triggerType}}
               />
             </div>
 
             <div class="workflows-configurator-modal__column --center">
               <div class="workflows-configurator__tabs">
                 <button
-                  type="button"
                   class={{dConcatClass
                     "workflows-configurator__tab"
                     (if (eq this.activeTab "parameters") "is-active")
                   }}
+                  type="button"
                   {{on "click" (fn this.switchTab "parameters")}}
                 >{{i18n
                     "discourse_workflows.configurator.tabs.parameters"
                   }}</button>
                 <button
-                  type="button"
                   class={{dConcatClass
                     "workflows-configurator__tab"
                     (if (eq this.activeTab "settings") "is-active")
                   }}
+                  type="button"
                   {{on "click" (fn this.switchTab "settings")}}
                 >{{i18n
                     "discourse_workflows.configurator.tabs.settings"
@@ -649,33 +649,33 @@ export default class NodeConfigurator extends Component {
 
               {{#if this.hasConfiguration}}
                 <Form
+                  class="workflows-configurator-form
+                    {{unless (eq this.activeTab 'parameters') 'is-hidden'}}"
                   @data={{this.initialConfiguration}}
                   @onRegisterApi={{this.registerParametersApi}}
                   @onSet={{this.scheduleSave}}
                   @validateOn="change"
-                  class="workflows-configurator-form
-                    {{unless (eq this.activeTab 'parameters') 'is-hidden'}}"
                   as |form transientData|
                 >
                   <PropertyEngineConfigurator
-                    @form={{form}}
-                    @formApi={{this.parametersApi}}
                     @configuration={{transientData}}
-                    @nodeType={{@model.node.type}}
-                    @schema={{this.propertySchema}}
+                    @connections={{@model.connections}}
                     @credentials={{this.credentialConfig}}
                     @credentialSlots={{this.credentialSlots}}
                     @credentialValue={{this.credentialValue}}
-                    @onCredentialSet={{this.handleCredentialSet}}
-                    @triggerType={{@model.triggerType}}
+                    @form={{form}}
+                    @formApi={{this.parametersApi}}
                     @node={{@model.node}}
                     @nodeParameters={{transientData}}
                     @nodes={{@model.nodes}}
-                    @connections={{@model.connections}}
+                    @nodeType={{@model.node.type}}
                     @nodeTypes={{this.nodeTypes}}
-                    @session={{@model.session}}
-                    @onChange={{this.scheduleSave}}
                     @onBeforeStartTestSession={{this.saveCurrentConfiguration}}
+                    @onChange={{this.scheduleSave}}
+                    @onCredentialSet={{this.handleCredentialSet}}
+                    @schema={{this.propertySchema}}
+                    @session={{@model.session}}
+                    @triggerType={{@model.triggerType}}
                   />
                   {{#each this.unanchoredCredentialSlots as |slot|}}
                     {{#if (credentialSlotVisible slot transientData)}}
@@ -702,20 +702,20 @@ export default class NodeConfigurator extends Component {
                   </div>
                 {{/if}}
                 <Form
+                  class="workflows-configurator-form"
                   @data={{this.settingsFormData}}
                   @onRegisterApi={{this.registerSettingsApi}}
                   @onSet={{this.scheduleSave}}
-                  class="workflows-configurator-form"
                   as |form|
                 >
                   <form.Field
+                    @format="full"
                     @name="notes"
+                    @onSet={{this.handleNotesSet}}
                     @title={{i18n
                       "discourse_workflows.configurator.description"
                     }}
                     @type="textarea"
-                    @format="full"
-                    @onSet={{this.handleNotesSet}}
                     as |field|
                   >
                     <field.Control
@@ -725,17 +725,17 @@ export default class NodeConfigurator extends Component {
                     />
                   </form.Field>
                   <form.Field
-                    @name="alwaysOutputData"
-                    @title={{i18n
-                      "discourse_workflows.configurator.always_output_data"
-                    }}
+                    class="workflows-configurator-form__setting-toggle"
                     @description={{i18n
                       "discourse_workflows.configurator.always_output_data_help"
                     }}
-                    @type="toggle"
                     @format="full"
+                    @name="alwaysOutputData"
                     @onSet={{this.handleAlwaysOutputDataSet}}
-                    class="workflows-configurator-form__setting-toggle"
+                    @title={{i18n
+                      "discourse_workflows.configurator.always_output_data"
+                    }}
+                    @type="toggle"
                     as |field|
                   >
                     <field.Control />
@@ -767,19 +767,19 @@ export default class NodeConfigurator extends Component {
             {{#if this.showsOutputContext}}
               <div class="workflows-configurator-modal__column --right">
                 <LivePreview
+                  @configuration={{this.configuration}}
                   @node={{@model.node}}
                   @nodeTypes={{this.nodeTypes}}
                   @session={{@model.session}}
-                  @configuration={{this.configuration}}
                 />
                 <OutputContext
+                  @configuration={{this.configuration}}
+                  @connections={{@model.connections}}
                   @node={{@model.node}}
                   @nodes={{@model.nodes}}
-                  @connections={{@model.connections}}
-                  @triggerType={{@model.triggerType}}
                   @nodeTypes={{this.nodeTypes}}
                   @session={{@model.session}}
-                  @configuration={{this.configuration}}
+                  @triggerType={{@model.triggerType}}
                 />
               </div>
             {{/if}}

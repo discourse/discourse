@@ -46,13 +46,13 @@ export default class SiteTextSummary extends Component {
   <template>
     <div
       class={{dConcatClass "site-text" (if @siteText.overridden "overridden")}}
-      {{didInsert this.highlightSearchTerm}}
       data-site-text-id={{@siteText.id}}
+      {{didInsert this.highlightSearchTerm}}
     >
       <DButton
-        @label="admin.site_text.edit"
-        @action={{fn @editAction @siteText}}
         class="btn-default site-text-edit"
+        @action={{fn @editAction @siteText}}
+        @label="admin.site_text.edit"
       />
       <h3 class="site-text-id">{{@siteText.id}}</h3>
       <div class="site-text-value">{{@siteText.value}}</div>

@@ -12,13 +12,13 @@ export default class PostMenuReadButton extends Component {
       <DButton
         class="post-action-menu__read read-indicator button-count"
         ...attributes
-        @ariaPressed={{@state.isWhoReadVisible}}
         @action={{@buttonActions.toggleWhoRead}}
+        @ariaPressed={{@state.isWhoReadVisible}}
+        @title="post.controls.read_indicator"
         @translatedAriaLabel={{i18n
           "post.sr_post_read_count_button"
           count=@post.readers_count
         }}
-        @title="post.controls.read_indicator"
       >
         {{@post.readers_count}}
       </DButton>

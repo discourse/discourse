@@ -24,7 +24,7 @@ export default class DPageSubheader extends Component {
         {{#if @titleLabel}}
           <h2 class="d-page-subheader__title">
             {{#if @titleUrl}}
-              <a href={{@titleUrl}} class="d-page-subheader__title-link">
+              <a class="d-page-subheader__title-link" href={{@titleUrl}}>
                 {{@titleLabel}}
               </a>
             {{else}}
@@ -36,10 +36,10 @@ export default class DPageSubheader extends Component {
           <div class="d-page-subheader__actions">
             {{#if this.site.mobileView}}
               <DMenu
+                class="btn-small btn-default"
+                @icon="ellipsis-vertical"
                 @identifier="d-page-subheader-mobile-actions"
                 @title={{i18n "more_options"}}
-                @icon="ellipsis-vertical"
-                class="btn-small btn-default"
               >
                 <:content>
                   <DDropdownMenu class="d-page-subheader__mobile-actions">

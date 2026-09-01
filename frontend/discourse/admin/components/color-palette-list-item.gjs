@@ -102,8 +102,8 @@ export default class ColorPaletteListItem extends Component {
         <div class="color-palette__details">
           {{#if this.canEdit}}
             <h3><LinkTo
-                @route="adminConfig.colorPalettes.show"
                 @model={{@scheme.id}}
+                @route="adminConfig.colorPalettes.show"
               >{{@scheme.description}}</LinkTo></h3>
           {{else}}
             <h3>{{@scheme.description}}</h3>
@@ -111,8 +111,8 @@ export default class ColorPaletteListItem extends Component {
           <div class="color-palette__theme-link">
             {{#if @scheme.theme_id}}
               <LinkTo
-                @route="adminCustomizeThemes.show"
                 @models={{array "themes" @scheme.theme_id}}
+                @route="adminCustomizeThemes.show"
               >
                 {{dIcon "link"}}
                 {{@scheme.theme_name}}
@@ -123,10 +123,10 @@ export default class ColorPaletteListItem extends Component {
           <div class="color-palette__badges">
             {{#if this.isDefaultLight}}
               <span
+                class="theme-card__badge --default"
                 title={{i18n
                   "admin.customize.colors.default_light_badge.title"
                 }}
-                class="theme-card__badge --default"
               >
                 {{dIcon "sun"}}
                 {{i18n "admin.customize.colors.default_light_badge.text"}}
@@ -135,8 +135,8 @@ export default class ColorPaletteListItem extends Component {
 
             {{#if this.isDefaultDark}}
               <span
-                title={{i18n "admin.customize.colors.default_dark_badge.title"}}
                 class="theme-card__badge --default"
+                title={{i18n "admin.customize.colors.default_dark_badge.title"}}
               >
                 {{dIcon "moon"}}
                 {{i18n "admin.customize.colors.default_dark_badge.text"}}
@@ -145,8 +145,8 @@ export default class ColorPaletteListItem extends Component {
 
             {{#if @scheme.user_selectable}}
               <span
-                title={{i18n "admin.customize.theme.user_selectable"}}
                 class="theme-card__badge --selectable"
+                title={{i18n "admin.customize.theme.user_selectable"}}
               >
                 {{dIcon "user-check"}}
                 {{i18n "admin.customize.theme.user_selectable_badge_label"}}
@@ -159,18 +159,18 @@ export default class ColorPaletteListItem extends Component {
           <DButtonTooltip>
             <:button>
               <DButton
-                @route="adminConfig.colorPalettes.show"
-                @routeModels={{array @scheme.id}}
-                @label="admin.customize.colors.edit"
                 class="btn-default"
                 @disabled={{not this.canEdit}}
+                @label="admin.customize.colors.edit"
+                @route="adminConfig.colorPalettes.show"
+                @routeModels={{array @scheme.id}}
               />
             </:button>
             <:tooltip>
               {{#unless this.canEdit}}
                 <DTooltip
-                  @icon="circle-info"
                   @content={{i18n "admin.customize.colors.system_palette"}}
+                  @icon="circle-info"
                 />
               {{/unless}}
             </:tooltip>
@@ -178,17 +178,18 @@ export default class ColorPaletteListItem extends Component {
 
           {{#if this.showSetAsDefault}}
             <DMenu
-              @triggerClass="btn-flat"
-              @modalForMobile={{true}}
               @icon="ellipsis"
-              @onRegisterApi={{this.onRegisterApi}}
               @isLoading={{this.isLoading}}
+              @modalForMobile={{true}}
+              @onRegisterApi={{this.onRegisterApi}}
+              @triggerClass="btn-flat"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   {{#unless this.isBuiltInDefault}}
                     <dropdown.item>
                       <DButton
+                        class="btn-transparent"
                         @action={{fn
                           this.handleAsyncAction
                           @toggleUserSelectable
@@ -204,13 +205,14 @@ export default class ColorPaletteListItem extends Component {
                           "admin.customize.theme.user_selectable_unavailable_button_label"
                           "admin.customize.theme.user_selectable_button_label"
                         }}
-                        class="btn-transparent"
                       />
                     </dropdown.item>
                   {{/unless}}
 
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent btn-palette-default"
+                      disabled={{this.isDefaultLight}}
                       @action={{fn
                         this.handleAsyncAction
                         @setAsDefaultThemePalette
@@ -219,12 +221,12 @@ export default class ColorPaletteListItem extends Component {
                       }}
                       @icon="far-star"
                       @translatedLabel={{fn this.setAsDefaultLabel "light"}}
-                      class="btn-transparent btn-palette-default"
-                      disabled={{this.isDefaultLight}}
                     />
                   </dropdown.item>
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent btn-palette-default"
+                      disabled={{this.isDefaultDark}}
                       @action={{fn
                         this.handleAsyncAction
                         @setAsDefaultThemePalette
@@ -233,14 +235,13 @@ export default class ColorPaletteListItem extends Component {
                       }}
                       @icon="star"
                       @translatedLabel={{fn this.setAsDefaultLabel "dark"}}
-                      class="btn-transparent btn-palette-default"
-                      disabled={{this.isDefaultDark}}
                     />
                   </dropdown.item>
 
                   {{#if this.canDelete}}
                     <dropdown.item>
                       <DButton
+                        class="btn-transparent --danger"
                         @action={{fn
                           this.handleAsyncAction
                           @deleteColorScheme
@@ -248,7 +249,6 @@ export default class ColorPaletteListItem extends Component {
                         }}
                         @icon="trash-can"
                         @label="admin.customize.delete"
-                        class="btn-transparent --danger"
                       />
                     </dropdown.item>
                   {{/if}}

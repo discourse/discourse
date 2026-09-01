@@ -299,9 +299,9 @@ export default class DTimeShortcutPicker extends Component {
       {{#each this.options key="id" as |option|}}
         {{#unless option.hidden}}
           <DTapTile
-            @tileId={{option.id}}
             @activeTile={{grid.activeTile}}
             @onChange={{this.selectShortcut}}
+            @tileId={{option.id}}
           >
 
             <div class="tap-tile-title">{{i18n option.label}}</div>
@@ -315,19 +315,19 @@ export default class DTimeShortcutPicker extends Component {
               <div class="tap-tile-date-input">
                 {{dIcon "calendar-days"}}
                 <DatePickerFuture
-                  @value={{this.customDate}}
                   @defaultDate={{this.defaultCustomDate}}
-                  @onSelect={{fn (mut this.customDate)}}
                   @id="custom-date"
+                  @onSelect={{fn (mut this.customDate)}}
+                  @value={{this.customDate}}
                 />
               </div>
               <div class="tap-tile-time-input">
                 {{dIcon "far-clock"}}
                 <Input
-                  placeholder="--:--"
-                  id="custom-time"
-                  @type="time"
                   class="time-input"
+                  id="custom-time"
+                  placeholder="--:--"
+                  @type="time"
                   @value={{this.customTime}}
                 />
               </div>
@@ -339,9 +339,9 @@ export default class DTimeShortcutPicker extends Component {
                 {{i18n "relative_time_picker.relative"}}
               </label>
               <DRelativeTimePicker
+                id="bookmark-relative-time-picker"
                 @durationMinutes={{this.selectedDurationMins}}
                 @onChange={{this.relativeTimeChanged}}
-                id="bookmark-relative-time-picker"
               />
             </div>
           {{/if}}

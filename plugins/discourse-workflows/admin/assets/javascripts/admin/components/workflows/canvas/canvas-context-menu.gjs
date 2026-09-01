@@ -134,55 +134,55 @@ export default class CanvasContextMenu extends Component {
       <div class="workflows-canvas__context-menu" style={{this.style}}>
         {{#if this.contextMenu.isCanvas}}
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.addNode}}
             @icon="plus"
             @translatedLabel={{i18n "discourse_workflows.canvas.add_step"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.addStickyNote}}
             @icon="note-sticky"
             @translatedLabel={{i18n "discourse_workflows.sticky_note.add"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.pasteSelection}}
             @icon="paste"
             @translatedLabel={{i18n "discourse_workflows.canvas.paste"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
         {{else}}
           {{#unless this.contextMenu.isUnavailable}}
             <DButton
+              class="btn-transparent workflows-canvas__context-menu-item"
               @action={{this.editNode}}
               @icon="pencil"
               @translatedLabel={{i18n "discourse_workflows.edit"}}
-              class="btn-transparent workflows-canvas__context-menu-item"
             />
           {{/unless}}
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.cutSelection}}
             @icon="scissors"
             @translatedLabel={{i18n "discourse_workflows.canvas.cut"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.copySelection}}
             @icon="copy"
             @translatedLabel={{i18n "discourse_workflows.canvas.copy"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
           <DButton
+            class="btn-transparent workflows-canvas__context-menu-item"
             @action={{this.pasteSelection}}
             @icon="paste"
             @translatedLabel={{i18n "discourse_workflows.canvas.paste"}}
-            class="btn-transparent workflows-canvas__context-menu-item"
           />
           <DButton
+            class="btn-transparent btn-danger workflows-canvas__context-menu-item"
             @action={{this.deleteNode}}
             @icon="trash-can"
             @translatedLabel={{i18n "discourse_workflows.delete"}}
-            class="btn-transparent btn-danger workflows-canvas__context-menu-item"
           />
         {{/if}}
       </div>

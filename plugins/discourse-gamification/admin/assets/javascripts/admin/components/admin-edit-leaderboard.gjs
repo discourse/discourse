@@ -154,30 +154,30 @@ export default class AdminEditLeaderboard extends Component {
 
   <template>
     <BackButton
-      @route="adminPlugins.show.discourse-gamification-leaderboards"
       @label="gamification.back"
+      @route="adminPlugins.show.discourse-gamification-leaderboards"
     />
     <Form
+      class="edit-create-leaderboard-form"
       @data={{this.formData}}
       @onSubmit={{this.save}}
-      class="edit-create-leaderboard-form"
       as |form|
     >
       <form.Field
         @name="name"
         @title={{i18n "gamification.leaderboard.name"}}
-        @validation="required"
         @type="input"
+        @validation="required"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Section
-        @title={{i18n "gamification.leaderboard.section.time_period"}}
         @subtitle={{i18n
           "gamification.leaderboard.section.time_period_description"
         }}
+        @title={{i18n "gamification.leaderboard.section.time_period"}}
       >
         <form.Row as |row|>
           <row.Col @size={{6}}>
@@ -219,14 +219,14 @@ export default class AdminEditLeaderboard extends Component {
           as |field|
         >
           <field.Control>
-            <PeriodInput @value={{field.value}} @onChange={{field.set}} />
+            <PeriodInput @onChange={{field.set}} @value={{field.value}} />
           </field.Control>
         </form.Field>
       </form.Section>
 
       <form.Section
-        @title={{i18n "gamification.leaderboard.section.groups"}}
         @subtitle={{i18n "gamification.leaderboard.section.groups_description"}}
+        @title={{i18n "gamification.leaderboard.section.groups"}}
       >
         <form.Field
           @name="included_groups_ids"
@@ -236,11 +236,11 @@ export default class AdminEditLeaderboard extends Component {
         >
           <field.Control>
             <GroupChooser
-              @id="leaderboard-edit__included-groups"
               @content={{this.siteGroups}}
-              @value={{field.value}}
+              @id="leaderboard-edit__included-groups"
               @labelProperty="name"
               @onChange={{field.set}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
@@ -253,11 +253,11 @@ export default class AdminEditLeaderboard extends Component {
         >
           <field.Control>
             <GroupChooser
-              @id="leaderboard-edit__excluded-groups"
               @content={{this.siteGroups}}
-              @value={{field.value}}
+              @id="leaderboard-edit__excluded-groups"
               @labelProperty="name"
               @onChange={{field.set}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
@@ -270,11 +270,11 @@ export default class AdminEditLeaderboard extends Component {
         >
           <field.Control>
             <GroupChooser
-              @id="leaderboard-edit__visible-groups"
               @content={{this.siteGroups}}
-              @value={{field.value}}
+              @id="leaderboard-edit__visible-groups"
               @labelProperty="name"
               @onChange={{field.set}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
@@ -293,11 +293,11 @@ export default class AdminEditLeaderboard extends Component {
           @title={{i18n "gamification.leaderboard.scorable_categories"}}
         >
           <form.Field
-            @name="scorable_category_ids"
-            @title={{i18n "gamification.leaderboard.scorable_categories"}}
             @description={{i18n
               "gamification.leaderboard.scorable_categories_help"
             }}
+            @name="scorable_category_ids"
+            @title={{i18n "gamification.leaderboard.scorable_categories"}}
             @type="custom"
             as |field|
           >
@@ -318,8 +318,8 @@ export default class AdminEditLeaderboard extends Component {
         </form.Section>
 
         <form.Section
-          @title={{i18n "gamification.leaderboard.score_overrides"}}
           @subtitle={{i18n "gamification.leaderboard.score_overrides_help"}}
+          @title={{i18n "gamification.leaderboard.score_overrides"}}
         >
           <form.Row as |row|>
             <row.Col @size={{6}}>

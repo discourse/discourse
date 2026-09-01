@@ -145,18 +145,18 @@ export default class DAutocompleteResults extends Component {
 
   <template>
     <div
+      tabindex="-1"
       {{didInsert this.handleInitialRender}}
       {{didUpdate this.handleUpdate this.selectedIndex this.templateHTML}}
       {{on "click" this.handleClick}}
-      tabindex="-1"
     >
       {{#if this.hasComponent}}
         {{#let @data.component as |AutocompleteComponent|}}
           <AutocompleteComponent
+            @onRender={{@data.onRender}}
+            @onSelect={{@data.onSelect}}
             @results={{this.results}}
             @selectedIndex={{this.selectedIndex}}
-            @onSelect={{@data.onSelect}}
-            @onRender={{@data.onRender}}
           />
         {{/let}}
       {{else}}

@@ -8,14 +8,14 @@ export default class ChatNavbarToggleDrawerButton extends Component {
 
   <template>
     <DButton
-      @icon={{if this.chatStateManager.isDrawerExpanded "minus" "angles-up"}}
+      class="btn-transparent no-text c-navbar__toggle-drawer-button"
       @action={{this.chat.toggleDrawer}}
+      @icon={{if this.chatStateManager.isDrawerExpanded "minus" "angles-up"}}
       @title={{if
         this.chatStateManager.isDrawerExpanded
         "chat.collapse"
         "chat.expand"
       }}
-      class="btn-transparent no-text c-navbar__toggle-drawer-button"
     />
   </template>
 }

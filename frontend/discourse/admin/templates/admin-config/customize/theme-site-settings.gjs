@@ -5,18 +5,18 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/config/customize/theme-site-settings"
     @label={{i18n
       "admin.config_areas.themes_and_components.theme_site_settings.title"
     }}
+    @path="/admin/config/customize/theme-site-settings"
   />
 
   <DPageSubheader
-    @titleLabel={{i18n
-      "admin.config_areas.themes_and_components.theme_site_settings.title"
-    }}
     @descriptionLabel={{i18n
       "admin.config_areas.themes_and_components.theme_site_settings.description"
+    }}
+    @titleLabel={{i18n
+      "admin.config_areas.themes_and_components.theme_site_settings.title"
     }}
   />
 

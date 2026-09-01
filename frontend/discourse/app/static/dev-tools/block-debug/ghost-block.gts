@@ -145,8 +145,8 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
       <DTooltip
         @identifier="block-debug-ghost"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{500}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "hover" "click")

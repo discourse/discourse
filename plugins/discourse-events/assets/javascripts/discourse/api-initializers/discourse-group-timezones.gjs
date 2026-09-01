@@ -3,8 +3,8 @@ import GroupTimezones from "../components/group-timezones";
 
 const GroupTimezonesShim = <template>
   <GroupTimezones
-    @members={{@data.members}}
     @group={{@data.group}}
+    @members={{@data.members}}
     @size={{@data.size}}
   />
 </template>;

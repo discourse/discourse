@@ -250,9 +250,9 @@ export default class VoiceVideoSettingsModal extends Component {
 
   <template>
     <DModal
+      class="voice-video-settings-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.video_settings.title"}}
-      class="voice-video-settings-modal"
     >
       <:body>
         <div class="voice-video-settings">
@@ -263,6 +263,9 @@ export default class VoiceVideoSettingsModal extends Component {
               </p>
             {{else if this.stream}}
               <video
+                autoplay
+                muted
+                playsinline
                 {{didInsert
                   (fn this.voiceWebrtc.attachVideoStream this.stream)
                 }}
@@ -270,9 +273,6 @@ export default class VoiceVideoSettingsModal extends Component {
                   (fn this.voiceWebrtc.attachVideoStream this.stream)
                   this.stream
                 }}
-                muted
-                autoplay
-                playsinline
               ></video>
             {{/if}}
           </div>
@@ -282,11 +282,11 @@ export default class VoiceVideoSettingsModal extends Component {
               {{i18n "voice.video_settings.camera"}}
             </label>
             <ComboBox
+              class="voice-video-settings__camera-select"
               @content={{this.videoDevices}}
-              @value={{this.voiceWebrtc.videoInputDeviceId}}
               @onChange={{this.onCameraChange}}
               @options={{hash none=false}}
-              class="voice-video-settings__camera-select"
+              @value={{this.voiceWebrtc.videoInputDeviceId}}
             />
           </div>
 
@@ -296,11 +296,11 @@ export default class VoiceVideoSettingsModal extends Component {
                 {{i18n "voice.video_settings.camera_quality"}}
               </label>
               <ComboBox
+                class="voice-video-settings__camera-quality-select"
                 @content={{this.cameraQualityOptions}}
-                @value={{this.voiceWebrtc.cameraQuality}}
                 @onChange={{this.onCameraQualityChange}}
                 @options={{hash none=false}}
-                class="voice-video-settings__camera-quality-select"
+                @value={{this.voiceWebrtc.cameraQuality}}
               />
               <p class="voice-video-settings__hint">
                 {{i18n "voice.video_settings.camera_quality_hint"}}
@@ -314,11 +314,11 @@ export default class VoiceVideoSettingsModal extends Component {
                 {{i18n "voice.video_settings.screen_quality"}}
               </label>
               <ComboBox
+                class="voice-video-settings__screen-quality-select"
                 @content={{this.screenQualityOptions}}
-                @value={{this.voiceWebrtc.screenQuality}}
                 @onChange={{this.voiceWebrtc.setScreenQuality}}
                 @options={{hash none=false}}
-                class="voice-video-settings__screen-quality-select"
+                @value={{this.voiceWebrtc.screenQuality}}
               />
               <p class="voice-video-settings__hint">
                 {{i18n "voice.video_settings.screen_quality_hint"}}
@@ -331,11 +331,11 @@ export default class VoiceVideoSettingsModal extends Component {
               {{i18n "voice.video_settings.screen_content"}}
             </label>
             <ComboBox
+              class="voice-video-settings__screen-content-select"
               @content={{this.screenContentOptions}}
-              @value={{this.voiceWebrtc.screenContent}}
               @onChange={{this.voiceWebrtc.setScreenContent}}
               @options={{hash none=false}}
-              class="voice-video-settings__screen-content-select"
+              @value={{this.voiceWebrtc.screenContent}}
             />
             <p class="voice-video-settings__hint">
               {{i18n "voice.video_settings.screen_content_hint"}}
@@ -345,9 +345,9 @@ export default class VoiceVideoSettingsModal extends Component {
           {{#if this.blurAvailable}}
             <div class="voice-video-settings__field">
               <DToggleSwitch
-                @state={{this.blurEnabled}}
-                @label="voice.video_settings.background_blur"
                 disabled={{or this.busy (not this.blurSupported)}}
+                @label="voice.video_settings.background_blur"
+                @state={{this.blurEnabled}}
                 {{on "click" this.toggleBlur}}
               />
               {{#unless this.blurSupported}}
@@ -366,12 +366,12 @@ export default class VoiceVideoSettingsModal extends Component {
                   {{i18n "voice.video_settings.blur_amount"}}
                 </label>
                 <input
-                  type="range"
-                  id="voice-video-settings-blur-amount"
-                  min="0"
-                  max="100"
-                  value={{this.blurAmount}}
                   class="voice-video-settings__blur-slider"
+                  id="voice-video-settings-blur-amount"
+                  max="100"
+                  min="0"
+                  type="range"
+                  value={{this.blurAmount}}
                   {{on "input" this.onAmountChange}}
                 />
               </div>

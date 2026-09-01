@@ -62,10 +62,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -87,10 +87,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -120,10 +120,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -177,10 +177,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -238,10 +238,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -268,10 +268,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
-            @triggerSearch={{this.triggerSearch}}
-            @updateTypeFilter={{this.updateTypeFilter}}
             @clearTopicContext={{this.clearTopicContext}}
             @searchTopics={{true}}
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
         </template>
       );
@@ -323,10 +323,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -365,10 +365,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -399,10 +399,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -440,10 +440,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -475,10 +475,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -507,10 +507,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -552,10 +552,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -593,11 +593,11 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @searchTopics={{true}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
-            @searchTopics={{true}}
           />
         </template>
       );
@@ -622,10 +622,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -656,10 +656,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -688,10 +688,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -715,11 +715,11 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
-            @triggerSearch={{this.triggerSearch}}
-            @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
             @clearTopicContext={{this.clearTopicContext}}
             @inPMInboxContext={{true}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
         </template>
       );
@@ -750,10 +750,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
+            @clearTopicContext={{this.clearTopicContext}}
+            @searchTermChanged={{this.searchTermChanged}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
           />
         </template>
       );
@@ -786,12 +786,12 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
-            @triggerSearch={{this.triggerSearch}}
-            @updateTypeFilter={{this.updateTypeFilter}}
-            @searchTermChanged={{this.searchTermChanged}}
             @clearTopicContext={{this.clearTopicContext}}
             @inPMInboxContext={{true}}
+            @searchTermChanged={{this.searchTermChanged}}
             @searchTopics={{true}}
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
         </template>
       );
@@ -811,10 +811,10 @@ module(
       await render(
         <template>
           <AiDiscoveriesSearchOptions
-            @triggerSearch={{this.triggerSearch}}
-            @updateTypeFilter={{this.updateTypeFilter}}
             @clearTopicContext={{this.clearTopicContext}}
             @searchTopics={{true}}
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
         </template>
       );

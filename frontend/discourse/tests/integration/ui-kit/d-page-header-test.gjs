@@ -10,11 +10,11 @@ import { i18n } from "discourse-i18n";
 const DPageHeaderActionsTestComponent = <template>
   <div class="d-page-header-actions-test-component">
     <@actions.Default
-      @route="adminBadges.award"
-      @routeModels="new"
+      class="award-badge"
       @icon="upload"
       @label="admin.badges.mass_award.title"
-      class="award-badge"
+      @route="adminBadges.award"
+      @routeModels="new"
     />
   </div>
 </template>;
@@ -37,7 +37,7 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
   test("@shouldDisplay", async function (assert) {
     await render(
       <template>
-        <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
+        <DPageHeader @shouldDisplay={{false}} @titleLabel="Wow so cool" />
       </template>
     );
     assert.dom(".d-page-header").doesNotExist();
@@ -49,8 +49,8 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
         <DPageHeader @titleLabel={{i18n "admin.titile"}}>
           <:breadcrumbs>
             <DBreadcrumbsItem
-              @path="/admin/badges"
               @label={{i18n "admin.badges.title"}}
+              @path="/admin/badges"
             />
           </:breadcrumbs>
         </DPageHeader>
@@ -109,9 +109,9 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
         <DPageHeader>
           <:tabs>
             <DNavItem
-              @route="admin.backups.settings"
-              @label="settings"
               class="d-backups-tabs__settings"
+              @label="settings"
+              @route="admin.backups.settings"
             />
           </:tabs>
         </DPageHeader>
@@ -134,27 +134,27 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
         <DPageHeader>
           <:actions as |actions|>
             <actions.Primary
-              @route="adminBadges.show"
-              @routeModels="new"
+              class="new-badge"
               @icon="plus"
               @label="admin.badges.new"
-              class="new-badge"
+              @route="adminBadges.show"
+              @routeModels="new"
             />
 
             <actions.Default
-              @route="adminBadges.award"
-              @routeModels="new"
+              class="award-badge"
               @icon="upload"
               @label="admin.badges.mass_award.title"
-              class="award-badge"
+              @route="adminBadges.award"
+              @routeModels="new"
             />
 
             <actions.Danger
-              @action={{someAction}}
-              @title="admin.badges.group_settings"
-              @label="admin.badges.group_settings"
-              @icon="gear"
               class="edit-groupings-btn"
+              @action={{someAction}}
+              @icon="gear"
+              @label="admin.badges.group_settings"
+              @title="admin.badges.group_settings"
             />
           </:actions>
         </DPageHeader>
@@ -186,12 +186,12 @@ module("Integration | ui-kit | DPageHeader", function (hooks) {
         <DPageHeader>
           <:actions as |actions|>
             <actions.Primary
-              @route="adminBadges.show"
-              @routeModels="new"
+              class="new-badge"
+              @disabled={{true}}
               @icon="plus"
               @label="admin.badges.new"
-              @disabled={{true}}
-              class="new-badge"
+              @route="adminBadges.show"
+              @routeModels="new"
             />
           </:actions>
         </DPageHeader>
@@ -231,19 +231,19 @@ module("Integration | ui-kit | DPageHeader | Mobile", function (hooks) {
         <DPageHeader>
           <:actions as |actions|>
             <actions.Primary
-              @route="adminBadges.show"
-              @routeModels="new"
+              class="new-badge"
               @icon="plus"
               @label="admin.badges.new"
-              class="new-badge"
+              @route="adminBadges.show"
+              @routeModels="new"
             />
 
             <actions.Default
-              @route="adminBadges.award"
-              @routeModels="new"
+              class="award-badge"
               @icon="upload"
               @label="admin.badges.mass_award.title"
-              class="award-badge"
+              @route="adminBadges.award"
+              @routeModels="new"
             />
           </:actions>
         </DPageHeader>

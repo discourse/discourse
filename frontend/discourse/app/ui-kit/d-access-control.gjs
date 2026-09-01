@@ -65,9 +65,9 @@ function rowTypeSortOrder(type) {
 
 const AccessControlPermissionTrigger = <template>
   <button
-    type="button"
     class="btn btn-default d-access-control__permission"
     disabled={{@disabled}}
+    type="button"
     ...attributes
   >
     <span class="d-button-label">
@@ -385,10 +385,9 @@ export default class DAccessControl extends Component {
     <div class="d-access-control">
       <DAccessControlGranteeChooser
         class="d-access-control__chooser"
-        @value={{null}}
-        @onChange={{this.onGranteeChosen}}
-        @labelProperty="name"
         @filterPlaceholder="access_control.manage.add_group"
+        @labelProperty="name"
+        @onChange={{this.onGranteeChosen}}
         @options={{hash
           aclTargetType=@aclTarget.type
           customSearchOptions=(hash
@@ -401,6 +400,7 @@ export default class DAccessControl extends Component {
           maximum=1
           none="access_control.manage.add_group"
         }}
+        @value={{null}}
       />
       {{#if this.rows.length}}
         <div class="d-access-control__rows">
@@ -411,8 +411,8 @@ export default class DAccessControl extends Component {
                 (if (eq row.type "user") "--user" "--group")
                 (if row.mandatory "--mandatory")
               }}
-              data-row-type={{row.type}}
               data-row-id={{row.id}}
+              data-row-type={{row.type}}
             >
               <span class="d-access-control__item">
                 <span class="d-access-control__item-icon">
@@ -442,15 +442,15 @@ export default class DAccessControl extends Component {
                 </span>
               </span>
               <DMenu
+                data-permission={{row.permission}}
+                @autofocus={{false}}
                 @identifier="d-access-control__permission-menu"
                 @modalForMobile={{true}}
-                @autofocus={{false}}
                 @triggerComponent={{component
                   AccessControlPermissionTrigger
                   label=(this.permissionLabel row.permission)
                   disabled=row.mandatory
                 }}
-                data-permission={{row.permission}}
               >
                 <:content as |args|>
                   <DDropdownMenu as |dropdown|>

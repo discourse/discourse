@@ -16,9 +16,9 @@ export default class WordCards extends Component {
         <div class="cards-container">
           {{#each this.topWords as |entry index|}}
             <WordCard
-              @word={{entry.word}}
               @count={{entry.score}}
               @index={{index}}
+              @word={{entry.word}}
             />
           {{/each}}
         </div>

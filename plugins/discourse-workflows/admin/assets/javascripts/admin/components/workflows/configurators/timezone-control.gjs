@@ -18,17 +18,17 @@ export default class TimezoneControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <TimezoneInput
-        @value={{@field.value}}
         @onChange={{@field.set}}
         @options={{hash none=this.none clearable=this.clearable}}
+        @value={{@field.value}}
       />
     </ExpressionWrapper>
   </template>

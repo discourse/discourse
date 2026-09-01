@@ -100,9 +100,7 @@ export default class Assignment extends Component {
       <AssignmentChooser
         autocomplete="off"
         @id="assignee-chooser"
-        @value={{this.assignee}}
         @onChange={{this.setAssignee}}
-        @showUserStatus={{true}}
         @options={{hash
           mobilePlacementStrategy="absolute"
           includeGroups=true
@@ -117,6 +115,8 @@ export default class Assignment extends Component {
           caretUpIcon="magnifying-glass"
           caretDownIcon="magnifying-glass"
         }}
+        @showUserStatus={{true}}
+        @value={{this.assignee}}
       />
 
       {{#if this.showAssigneeIeEmptyError}}
@@ -131,10 +131,10 @@ export default class Assignment extends Component {
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
         <ComboBox
-          @id="assign-status"
           @content={{this.assignStatusOptions}}
-          @value={{this.status}}
+          @id="assign-status"
           @onChange={{this.setStatus}}
+          @value={{this.status}}
         />
       </div>
     {{/if}}

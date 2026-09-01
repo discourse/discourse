@@ -21,38 +21,38 @@ export default <template>
     {{#if @controller.showPasskeyForm}}
       <div id="security-key">
         <DButton
+          class="btn-large btn-primary"
+          id="passkey-authenticate-button"
           @action={{@controller.authenticatePasskey}}
           @icon="user"
           @label="login.use_passkey"
-          id="passkey-authenticate-button"
-          class="btn-large btn-primary"
         />
       </div>
     {{else if @controller.showSecurityKeyForm}}
       <div id="security-key">
         <DButton
+          class="btn-large btn-primary"
+          id="security-key-authenticate-button"
           @action={{@controller.authenticateSecurityKey}}
           @icon="key"
           @label="login.security_key_authenticate"
-          id="security-key-authenticate-button"
-          class="btn-large btn-primary"
         />
       </div>
     {{else if (or @controller.showTotpForm @controller.showBackupCodesForm)}}
       <form class={{@controller.inputFormClass}}>
         <DSecondFactorInput
+          value={{@controller.secondFactorToken}}
           @onChange={{fn (mut @controller.secondFactorToken)}}
           @secondFactorMethod={{@controller.shownSecondFactorMethod}}
-          value={{@controller.secondFactorToken}}
         />
 
         <DButton
-          @isLoading={{@controller.isLoading}}
-          @disabled={{not @controller.isSecondFactorTokenValid}}
-          @action={{@controller.authenticateToken}}
-          @label="submit"
-          type="submit"
           class="btn-primary"
+          type="submit"
+          @action={{@controller.authenticateToken}}
+          @disabled={{not @controller.isSecondFactorTokenValid}}
+          @isLoading={{@controller.isLoading}}
+          @label="submit"
         />
       </form>
     {{/if}}
@@ -65,8 +65,8 @@ export default <template>
           {{/if}}
           <span>
             <a
-              href
               class="toggle-second-factor-method {{method.class}}"
+              href
               {{on "click" (fn @controller.useAnotherMethod method.id)}}
             >
               {{i18n method.translationKey}}

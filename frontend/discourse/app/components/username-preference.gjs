@@ -126,10 +126,10 @@ export default class UsernamePreference extends Component {
       <form class="form-horizontal">
         <div class="control-group">
           <Input
-            {{on "input" this.onInput}}
-            @value={{this.newUsername}}
-            maxlength={{this.maxLength}}
             class="input-xxlarge username-preference__input"
+            maxlength={{this.maxLength}}
+            @value={{this.newUsername}}
+            {{on "input" this.onInput}}
           />
 
           <div class="instructions">
@@ -144,11 +144,11 @@ export default class UsernamePreference extends Component {
 
         <div class="control-group">
           <DButton
+            class="btn-primary username-preference__submit"
+            type="submit"
             @action={{this.changeUsername}}
             @disabled={{this.saveDisabled}}
             @translatedLabel={{this.saveButtonText}}
-            type="submit"
-            class="btn-primary username-preference__submit"
           />
 
           <DModalCancel @close={{this.toggleEditing}} />
@@ -164,10 +164,10 @@ export default class UsernamePreference extends Component {
 
         {{#if @user.can_edit_username}}
           <DButton
+            class="btn-default btn-small username-preference__edit-username"
             @action={{this.toggleEditing}}
             @icon="pencil"
             @title="user.username.edit"
-            class="btn-default btn-small username-preference__edit-username"
           />
         {{/if}}
       </div>

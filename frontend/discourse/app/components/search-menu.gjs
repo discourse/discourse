@@ -464,19 +464,19 @@ export default class SearchMenu extends Component {
         >
           {{#if (and this.search.inTopicContext this.showSearchContext)}}
             <DButton
+              class="btn-default btn-small search-context"
+              @action={{this.clearTopicContext}}
               @icon="xmark"
               @label="search.in_this_topic"
               @title="search.in_this_topic_tooltip"
-              @action={{this.clearTopicContext}}
-              class="btn-default btn-small search-context"
             />
           {{else if (and this.inPMInboxContext this.showSearchContext)}}
             <DButton
+              class="btn-default btn-small search-context"
+              @action={{this.clearPMInboxContext}}
               @icon="xmark"
               @label="search.in_messages"
               @title="search.in_messages_tooltip"
-              @action={{this.clearPMInboxContext}}
-              class="btn-default btn-small search-context"
             />
           {{/if}}
 
@@ -486,19 +486,19 @@ export default class SearchMenu extends Component {
           />
 
           <SearchTerm
-            @location={{@location}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @typeFilter={{this.typeFilter}}
-            @updateTypeFilter={{this.updateTypeFilter}}
-            @triggerSearch={{this.triggerSearch}}
-            @fullSearch={{this.fullSearch}}
+            @autofocus={{@autofocusInput}}
             @clearPMInboxContext={{this.clearPMInboxContext}}
             @clearTopicContext={{this.clearTopicContext}}
             @closeSearchMenu={{this.close}}
-            @openSearchMenu={{this.open}}
-            @autofocus={{@autofocusInput}}
+            @fullSearch={{this.fullSearch}}
             @inputId={{this.searchInputId}}
             @inputPlaceholder={{this.searchInputPlaceholder}}
+            @location={{@location}}
+            @openSearchMenu={{this.open}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @triggerSearch={{this.triggerSearch}}
+            @typeFilter={{this.typeFilter}}
+            @updateTypeFilter={{this.updateTypeFilter}}
           />
 
           {{#if this.loading}}
@@ -523,44 +523,44 @@ export default class SearchMenu extends Component {
 
       {{#if @inlineResults}}
         <Results
-          @location={{@location}}
-          @searchInputId={{this.searchInputId}}
-          @loading={{this.loading}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
+          @clearSearch={{this.clearSearch}}
+          @clearTopicContext={{this.clearTopicContext}}
+          @closeSearchMenu={{this.close}}
+          @inPMInboxContext={{this.inPMInboxContext}}
           @invalidTerm={{this.invalidTerm}}
+          @isPMOnly={{this.isPMOnly}}
+          @loading={{this.loading}}
+          @location={{@location}}
+          @openAdvancedSearch={{this.openAdvancedSearch}}
+          @searchInputId={{this.searchInputId}}
+          @searchTermChanged={{this.searchTermChanged}}
+          @searchTopics={{this.includesTopics}}
           @suggestionKeyword={{this.suggestionKeyword}}
           @suggestionResults={{this.suggestionResults}}
-          @searchTopics={{this.includesTopics}}
-          @inPMInboxContext={{this.inPMInboxContext}}
-          @clearPMInboxContext={{this.clearPMInboxContext}}
-          @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
-          @closeSearchMenu={{this.close}}
-          @searchTermChanged={{this.searchTermChanged}}
-          @clearTopicContext={{this.clearTopicContext}}
-          @openAdvancedSearch={{this.openAdvancedSearch}}
-          @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
         <MenuPanel class="search-menu-panel">
           <Results
-            @location={{@location}}
-            @searchInputId={{this.searchInputId}}
-            @loading={{this.loading}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
+            @clearSearch={{this.clearSearch}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @closeSearchMenu={{this.close}}
+            @inPMInboxContext={{this.inPMInboxContext}}
             @invalidTerm={{this.invalidTerm}}
+            @isPMOnly={{this.isPMOnly}}
+            @loading={{this.loading}}
+            @location={{@location}}
+            @openAdvancedSearch={{this.openAdvancedSearch}}
+            @searchInputId={{this.searchInputId}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @searchTopics={{this.includesTopics}}
             @suggestionKeyword={{this.suggestionKeyword}}
             @suggestionResults={{this.suggestionResults}}
-            @searchTopics={{this.includesTopics}}
-            @inPMInboxContext={{this.inPMInboxContext}}
-            @clearPMInboxContext={{this.clearPMInboxContext}}
-            @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
-            @closeSearchMenu={{this.close}}
-            @searchTermChanged={{this.searchTermChanged}}
-            @clearTopicContext={{this.clearTopicContext}}
-            @openAdvancedSearch={{this.openAdvancedSearch}}
-            @clearSearch={{this.clearSearch}}
           />
         </MenuPanel>
       {{/if}}

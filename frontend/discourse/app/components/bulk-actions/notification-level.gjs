@@ -38,9 +38,9 @@ export default class NotificationLevel extends Component {
         <div class="controls">
           <label class="radio notification-level-radio checkbox-label">
             <DRadioButton
-              @value={{level.id}}
               @name="notification_level"
               @selection={{this.notificationLevelId}}
+              @value={{level.id}}
             />
             <strong>{{level.name}}</strong>
             <div class="description">{{trustHTML level.description}}</div>
@@ -50,8 +50,8 @@ export default class NotificationLevel extends Component {
     </div>
 
     <DButton
-      @disabled={{this.disabled}}
       @action={{this.changeNotificationLevel}}
+      @disabled={{this.disabled}}
       @label="topics.bulk.change_notification_level"
     />
   </template>

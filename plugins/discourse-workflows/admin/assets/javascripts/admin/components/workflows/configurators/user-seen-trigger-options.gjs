@@ -39,9 +39,9 @@ export default class UserSeenTriggerOptions extends Component {
 
   <template>
     <@form.Field
+      @format="full"
       @name="trigger_on_first_seen"
       @title={{i18n "discourse_workflows.user_seen.trigger_on_first_seen"}}
-      @format="full"
       @type="checkbox"
       as |field|
     >
@@ -53,13 +53,13 @@ export default class UserSeenTriggerOptions extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="full"
       @name="trigger_on_not_seen_for_more_than"
+      @onSet={{this.handleNotSeenForMoreThanSet}}
       @title={{i18n
         "discourse_workflows.user_seen.trigger_on_not_seen_for_more_than"
       }}
-      @format="full"
       @type="checkbox"
-      @onSet={{this.handleNotSeenForMoreThanSet}}
       as |field|
     >
       <field.Control>
@@ -72,24 +72,24 @@ export default class UserSeenTriggerOptions extends Component {
     {{#if this.notSeenForMoreThanEnabled}}
       <@form.Container class="workflows-user-seen-duration">
         <@form.Field
+          class="workflows-user-seen-duration__amount"
           @name="not_seen_for_amount"
-          @title={{i18n "discourse_workflows.user_seen.not_seen_for_amount"}}
           @showTitle={{false}}
+          @title={{i18n "discourse_workflows.user_seen.not_seen_for_amount"}}
           @type="input-number"
           @validation="required|integer|between:1,9007199254740991"
-          class="workflows-user-seen-duration__amount"
           as |field|
         >
           <field.Control />
         </@form.Field>
 
         <@form.Field
+          class="workflows-user-seen-duration__unit"
           @name="not_seen_for_unit"
-          @title={{i18n "discourse_workflows.user_seen.not_seen_for_unit"}}
           @showTitle={{false}}
+          @title={{i18n "discourse_workflows.user_seen.not_seen_for_unit"}}
           @type="select"
           @validation="required"
-          class="workflows-user-seen-duration__unit"
           as |field|
         >
           <field.Control @includeNone={{false}} as |select|>

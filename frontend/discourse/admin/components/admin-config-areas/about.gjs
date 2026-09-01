@@ -153,20 +153,20 @@ export default class AdminConfigAreasAbout extends Component {
 
   <template>
     <DPageHeader
-      @titleLabel={{i18n "admin.config.about.title"}}
+      @collapseActionsOnMobile={{false}}
       @descriptionLabel={{i18n
         "admin.config.about.header_description"
         (hash basePath=(dBasePath))
       }}
       @hideTabs={{true}}
-      @collapseActionsOnMobile={{false}}
       @learnMoreUrl="https://meta.discourse.org/t/understanding-and-customizing-the-about-page/332161"
+      @titleLabel={{i18n "admin.config.about.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/about"
           @label={{i18n "admin.config.about.title"}}
+          @path="/admin/config/about"
         />
       </:breadcrumbs>
     </DPageHeader>
@@ -177,26 +177,26 @@ export default class AdminConfigAreasAbout extends Component {
           {{#if this.contentLocalizationEnabled}}
             <div class="admin-config-area-about__language-toolbar">
               <Form
+                class="admin-config-area-about__locale-form"
                 @data={{this.localeSelectorData}}
                 @onSet={{this.updateLocaleField}}
-                class="admin-config-area-about__locale-form"
                 as |form|
               >
                 <form.Field
+                  class="admin-config-area-about__locale-selector"
+                  @format="large"
+                  @helpText={{this.localeSelectorHelpText}}
                   @name="locale"
+                  @showOptional={{false}}
                   @title={{i18n
                     "admin.config_areas.about.locale_selector.title"
                   }}
-                  @helpText={{this.localeSelectorHelpText}}
-                  @format="large"
-                  @showOptional={{false}}
                   @type="select"
-                  class="admin-config-area-about__locale-selector"
                   as |field|
                 >
                   <field.Control
-                    @includeNone={{false}}
                     class="admin-config-area-about__locale-selector-dropdown"
+                    @includeNone={{false}}
                     as |select|
                   >
                     {{#each this.availableLocales as |locale|}}
@@ -212,66 +212,66 @@ export default class AdminConfigAreasAbout extends Component {
 
           <DConditionalLoadingSpinner @condition={{this.loadingLocalizations}}>
             <AdminConfigAreaCard
-              @heading="admin.config_areas.about.general_settings"
-              @collapsable={{true}}
               class="admin-config-area-about__general-settings-section"
+              @collapsable={{true}}
+              @heading="admin.config_areas.about.general_settings"
             >
               <:content>
                 <AdminConfigAreasAboutGeneralSettings
                   @generalSettings={{this.generalSettings}}
-                  @localizations={{this.localizations}}
-                  @locale={{this.selectedLocale}}
-                  @isDefaultLocale={{this.isDefaultLocale}}
-                  @setGlobalSavingStatus={{this.setSavingStatus}}
                   @globalSavingStatus={{this.saving}}
+                  @isDefaultLocale={{this.isDefaultLocale}}
+                  @locale={{this.selectedLocale}}
+                  @localizations={{this.localizations}}
+                  @setGlobalSavingStatus={{this.setSavingStatus}}
                 />
               </:content>
             </AdminConfigAreaCard>
             {{#if this.isDefaultLocale}}
               <AdminConfigAreaCard
-                @heading="admin.config_areas.about.contact_information"
-                @collapsable={{true}}
                 class="admin-config-area-about__contact-information-section"
+                @collapsable={{true}}
+                @heading="admin.config_areas.about.contact_information"
               >
                 <:content>
                   <AdminConfigAreasAboutContactInformation
                     @contactInformation={{this.contactInformation}}
-                    @localizations={{this.localizations}}
-                    @locale={{this.selectedLocale}}
-                    @isDefaultLocale={{this.isDefaultLocale}}
-                    @setGlobalSavingStatus={{this.setSavingStatus}}
                     @globalSavingStatus={{this.saving}}
+                    @isDefaultLocale={{this.isDefaultLocale}}
+                    @locale={{this.selectedLocale}}
+                    @localizations={{this.localizations}}
+                    @setGlobalSavingStatus={{this.setSavingStatus}}
                   />
                 </:content>
               </AdminConfigAreaCard>
               <AdminConfigAreaCard
-                @heading="admin.config_areas.about.your_organization"
-                @description="admin.config_areas.about.your_organization_description"
-                @collapsable={{true}}
                 class="admin-config-area-about__your-organization-section"
+                @collapsable={{true}}
+                @description="admin.config_areas.about.your_organization_description"
+                @heading="admin.config_areas.about.your_organization"
               >
                 <:content>
                   <AdminConfigAreasAboutYourOrganization
-                    @yourOrganization={{this.yourOrganization}}
-                    @localizations={{this.localizations}}
-                    @locale={{this.selectedLocale}}
-                    @isDefaultLocale={{this.isDefaultLocale}}
-                    @setGlobalSavingStatus={{this.setSavingStatus}}
                     @globalSavingStatus={{this.saving}}
+                    @isDefaultLocale={{this.isDefaultLocale}}
+                    @locale={{this.selectedLocale}}
+                    @localizations={{this.localizations}}
+                    @setGlobalSavingStatus={{this.setSavingStatus}}
+                    @yourOrganization={{this.yourOrganization}}
                   />
                 </:content>
               </AdminConfigAreaCard>
               <AdminConfigAreaCard
-                @heading="admin.config_areas.about.extra_groups.heading"
-                @description="admin.config_areas.about.extra_groups.description"
-                @collapsable={{true}}
                 class="admin-config-area-about__extra-groups-section"
+                @collapsable={{true}}
+                @description="admin.config_areas.about.extra_groups.description"
+                @heading="admin.config_areas.about.extra_groups.heading"
               >
                 <:content>
                   <AdminConfigAreasAboutExtraGroups
                     @extraGroups={{this.extraGroups}}
-                    @setGlobalSavingStatus={{this.setSavingStatus}}
                     @globalSavingStatus={{this.saving}}
+                    @setGlobalSavingStatus={{this.setSavingStatus}}
                   />
                 </:content>
               </AdminConfigAreaCard>

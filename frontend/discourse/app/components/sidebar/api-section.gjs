@@ -19,20 +19,20 @@ export default class SidebarApiSection extends Component {
   <template>
     {{#if @section.filtered}}
       <Section
-        @sectionName={{@section.name}}
+        @activeLink={{@section.activeLink}}
+        @collapsable={{@collapsable}}
+        @collapsedByDefault={{@section.collapsedByDefault}}
+        @displaySection={{@section.displaySection}}
+        @expandWhenActive={{@expandWhenActive}}
+        @headerActions={{@section.actions}}
+        @headerActionsIcon={{@section.actionsIcon}}
         @headerLinkText={{@section.text}}
         @headerLinkTitle={{@section.title}}
-        @headerActionsIcon={{@section.actionsIcon}}
-        @headerActions={{@section.actions}}
-        @persistentActions={{@section.persistentActions}}
-        @willDestroy={{@section.willDestroy}}
-        @collapsable={{@collapsable}}
-        @displaySection={{@section.displaySection}}
         @hideSectionHeader={{@section.hideSectionHeader}}
-        @collapsedByDefault={{@section.collapsedByDefault}}
-        @activeLink={{@section.activeLink}}
-        @expandWhenActive={{@expandWhenActive}}
+        @persistentActions={{@section.persistentActions}}
         @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+        @sectionName={{@section.name}}
+        @willDestroy={{@section.willDestroy}}
       >
         {{#if
           (and @section.emptyStateComponent (not @section.filteredLinks.length))
@@ -45,24 +45,24 @@ export default class SidebarApiSection extends Component {
             {{#if @section.moreLinksInline}}
               {{#each this.moreLinks as |sectionLink|}}
                 <MoreSectionLink
-                  @sectionLink={{sectionLink}}
                   @scrollIntoView={{and
                     @scrollActiveLinkIntoView
                     (eq sectionLink.name @section.activeLink.name)
                   }}
+                  @sectionLink={{sectionLink}}
                 />
               {{/each}}
             {{else}}
               <MoreSectionLinks
-                @sectionLinks={{this.moreLinks}}
-                @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+                @hoistActiveLink={{@section.moreLinksHoistActiveLink}}
                 @identifier={{concat "sidebar-more-" @section.name}}
-                @triggerText={{@section.moreLinksTriggerText}}
+                @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+                @sectionLinks={{this.moreLinks}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}
                 @triggerSuffixValue={{@section.moreLinksTriggerSuffixValue}}
-                @hoistActiveLink={{@section.moreLinksHoistActiveLink}}
+                @triggerText={{@section.moreLinksTriggerText}}
               />
             {{/if}}
           {{/if}}
@@ -70,31 +70,7 @@ export default class SidebarApiSection extends Component {
 
         {{#each @section.filteredLinks key="name" as |link|}}
           <SectionLink
-            @linkName={{link.name}}
-            @linkClass={{link.classNames}}
-            @route={{link.route}}
-            @model={{link.model}}
-            @query={{link.query}}
-            @models={{link.models}}
-            @currentWhen={{link.currentWhen}}
-            @href={{link.href}}
-            @title={{link.title}}
             @badgeText={{link.badgeText}}
-            @contentCSSClass={{link.contentCSSClass}}
-            @prefixColor={{link.prefixColor}}
-            @prefixBadge={{link.prefixBadge}}
-            @prefixType={{link.prefixType}}
-            @prefixValue={{link.prefixValue}}
-            @prefixCSSClass={{link.prefixCSSClass}}
-            @suffixType={{link.suffixType}}
-            @suffixValue={{link.suffixValue}}
-            @suffixCSSClass={{link.suffixCSSClass}}
-            @hoverType={{link.hoverType}}
-            @hoverValue={{link.hoverValue}}
-            @hoverAction={{link.hoverAction}}
-            @hoverTitle={{link.hoverTitle}}
-            @didInsert={{link.didInsert}}
-            @willDestroy={{link.willDestroy}}
             @content={{link.text}}
             @contentComponent={{if
               link.contentComponent
@@ -102,12 +78,36 @@ export default class SidebarApiSection extends Component {
                 link.contentComponent (hash status=link.contentComponentArgs)
               )
             }}
-            @suffixComponent={{link.suffixComponent}}
-            @suffixArgs={{link.suffixArgs}}
+            @contentCSSClass={{link.contentCSSClass}}
+            @currentWhen={{link.currentWhen}}
+            @didInsert={{link.didInsert}}
+            @hoverAction={{link.hoverAction}}
+            @hoverTitle={{link.hoverTitle}}
+            @hoverType={{link.hoverType}}
+            @hoverValue={{link.hoverValue}}
+            @href={{link.href}}
+            @linkClass={{link.classNames}}
+            @linkName={{link.name}}
+            @model={{link.model}}
+            @models={{link.models}}
+            @prefixBadge={{link.prefixBadge}}
+            @prefixColor={{link.prefixColor}}
+            @prefixCSSClass={{link.prefixCSSClass}}
+            @prefixType={{link.prefixType}}
+            @prefixValue={{link.prefixValue}}
+            @query={{link.query}}
+            @route={{link.route}}
             @scrollIntoView={{and
               @scrollActiveLinkIntoView
               (eq link.name @section.activeLink.name)
             }}
+            @suffixArgs={{link.suffixArgs}}
+            @suffixComponent={{link.suffixComponent}}
+            @suffixCSSClass={{link.suffixCSSClass}}
+            @suffixType={{link.suffixType}}
+            @suffixValue={{link.suffixValue}}
+            @title={{link.title}}
+            @willDestroy={{link.willDestroy}}
           />
         {{/each}}
 
@@ -116,24 +116,24 @@ export default class SidebarApiSection extends Component {
             {{#if @section.moreLinksInline}}
               {{#each this.moreLinks as |sectionLink|}}
                 <MoreSectionLink
-                  @sectionLink={{sectionLink}}
                   @scrollIntoView={{and
                     @scrollActiveLinkIntoView
                     (eq sectionLink.name @section.activeLink.name)
                   }}
+                  @sectionLink={{sectionLink}}
                 />
               {{/each}}
             {{else}}
               <MoreSectionLinks
-                @sectionLinks={{this.moreLinks}}
-                @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+                @hoistActiveLink={{@section.moreLinksHoistActiveLink}}
                 @identifier={{concat "sidebar-more-" @section.name}}
-                @triggerText={{@section.moreLinksTriggerText}}
+                @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+                @sectionLinks={{this.moreLinks}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}
                 @triggerSuffixValue={{@section.moreLinksTriggerSuffixValue}}
-                @hoistActiveLink={{@section.moreLinksHoistActiveLink}}
+                @triggerText={{@section.moreLinksTriggerText}}
               />
             {{/if}}
           {{/if}}

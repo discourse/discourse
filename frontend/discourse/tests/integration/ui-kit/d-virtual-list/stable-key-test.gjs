@@ -58,9 +58,9 @@ module("Integration | ui-kit | DVirtualList | stable key", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimateSize}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimateSize}}
           as |item|
         >
           <div

@@ -40,11 +40,11 @@ export default class VoiceDashboard extends Component {
       <div class="voice-dashboard__header">
         <h2>{{i18n "voice.admin.dashboard.overview"}}</h2>
         <DashboardPeriodSelector
+          @endDate={{@controller.endDate}}
           @period={{@controller.period}}
+          @setCustomDateRange={{@controller.setCustomDateRange}}
           @setPeriod={{@controller.setPeriod}}
           @startDate={{@controller.startDate}}
-          @endDate={{@controller.endDate}}
-          @setCustomDateRange={{@controller.setCustomDateRange}}
         />
       </div>
 
@@ -122,9 +122,9 @@ export default class VoiceDashboard extends Component {
                   <td class="d-admin-row__overview">
                     {{#if u.username}}
                       <a
-                        href="/admin/users/{{u.user_id}}/{{u.username}}"
-                        data-user-card={{u.username}}
                         class="voice-dashboard__user-cell"
+                        data-user-card={{u.username}}
+                        href="/admin/users/{{u.user_id}}/{{u.username}}"
                       >
                         {{dAvatar u imageSize="small"}}
                         <span>{{u.username}}</span>

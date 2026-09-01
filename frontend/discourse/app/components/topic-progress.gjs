@@ -115,20 +115,20 @@ export default class TopicProgress extends Component {
     {{#if this.showBackButton}}
       <div class="progress-back-container">
         <DButton
-          @label="topic.timeline.back"
+          class="btn-primary btn-small progress-back"
           @action={{this.goBack}}
           @icon="arrow-down"
-          class="btn-primary btn-small progress-back"
+          @label="topic.timeline.back"
         />
       </div>
     {{/if}}
 
     <nav
-      title={{i18n "topic.progress.title"}}
       aria-label={{i18n "topic.progress.title"}}
       class={{if this.hideProgress "hidden"}}
       id="topic-progress"
       style={{trustHTML this.progressStyle}}
+      title={{i18n "topic.progress.title"}}
     >
       <div class="nums">
         <span>{{this.progressPosition}}</span>
@@ -140,6 +140,6 @@ export default class TopicProgress extends Component {
       <div class="bg"></div>
     </nav>
 
-    <PluginOutlet @name="after-topic-progress" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="after-topic-progress" />
   </template>
 }

@@ -24,8 +24,8 @@ module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{this.setting}}
           @model={{this.model}}
+          @setting={{this.setting}}
         />
       </template>
     );

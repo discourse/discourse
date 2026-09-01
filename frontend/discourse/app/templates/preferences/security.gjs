@@ -18,10 +18,10 @@ export default <template>
       <label class="control-label">{{i18n "user.password.title"}}</label>
       <div class="controls">
         <button
-          {{on "click" @controller.changePassword}}
-          disabled={{not @controller.canResetPassword}}
           class="btn btn-default"
+          disabled={{not @controller.canResetPassword}}
           id="change-password-button"
+          {{on "click" @controller.changePassword}}
         >
           {{dIcon "envelope"}}
           {{#if @controller.model.no_password}}
@@ -43,11 +43,11 @@ export default <template>
       {{#unless @controller.model.no_password}}
         <div class="controls">
           <button
-            {{on "click" @controller.removePassword}}
+            class="btn btn-danger"
             disabled={{not @controller.canRemovePassword}}
             hidden={{@controller.removePasswordInProgress}}
-            class="btn btn-danger"
             id="remove-password-link"
+            {{on "click" @controller.removePassword}}
           >
             {{dIcon "trash-can"}}
             {{i18n "user.change_password.remove"}}
@@ -78,10 +78,10 @@ export default <template>
 
         <div class="controls pref-second-factor">
           <DButton
+            class="btn-default btn-second-factor"
             @action={{@controller.manage2FA}}
             @icon="lock"
             @label="user.second_factor.enable"
-            class="btn-default btn-second-factor"
           />
         </div>
       </div>
@@ -105,9 +105,9 @@ export default <template>
             <div class="auth-token-icon">{{dIcon token.icon}}</div>
             {{#unless token.is_active}}
               <AuthTokenDropdown
-                @token={{token}}
                 @revokeAuthToken={{@controller.revokeAuthToken}}
                 @showToken={{@controller.showToken}}
+                @token={{token}}
               />
             {{/unless}}
             <div class="auth-token-first">
@@ -157,9 +157,9 @@ export default <template>
       {{/if}}
 
       <a
+        class="pull-right text-danger"
         href
         {{on "click" (fn @controller.revokeAuthToken null)}}
-        class="pull-right text-danger"
       >
         {{dIcon "right-from-bracket"}}
         <span>
@@ -173,8 +173,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-preferences-security"
       @connectorTagName="div"
+      @name="user-preferences-security"
       @outletArgs={{lazyHash model=@controller.model save=this.save}}
     />
   </span>
@@ -183,8 +183,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>

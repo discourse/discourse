@@ -113,8 +113,8 @@ function buildButtonComponent(workflow) {
         @action={{this.trigger}}
         @disabled={{this.triggering}}
         @icon={{if workflow.icon workflow.icon "bolt"}}
-        @translatedTitle={{workflow.label}}
         @translatedLabel={{if @showLabel workflow.label}}
+        @translatedTitle={{workflow.label}}
       />
     </template>
   }

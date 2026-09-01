@@ -100,14 +100,14 @@ export default class SharePanel extends Component {
 
     <div class="body">
       <DTextarea
-        @value={{this.shareUrl}}
-        @aria-label={{i18n "share.url"}}
         class="topic-share-url"
+        @aria-label={{i18n "share.url"}}
+        @value={{this.shareUrl}}
       />
 
       <div class="sources">
         {{#each this.sources as |source|}}
-          <ShareSource @source={{source}} @action={{this.share}} />
+          <ShareSource @action={{this.share}} @source={{source}} />
         {{/each}}
       </div>
     </div>

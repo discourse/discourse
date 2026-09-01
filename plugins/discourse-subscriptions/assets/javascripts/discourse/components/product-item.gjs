@@ -19,18 +19,18 @@ export default class ProductItem extends Component {
         <div class="product-purchase">
           {{#if this.product.repurchaseable}}
             <LinkTo
-              @route="subscribe.show"
-              @model={{this.product.id}}
               class="btn btn-primary"
+              @model={{this.product.id}}
+              @route="subscribe.show"
             >
               {{i18n "discourse_subscriptions.subscribe.title"}}
             </LinkTo>
 
             {{#if this.product.subscribed}}
               <LinkTo
-                @route="user.billing.subscriptions"
-                @model={{this.currentUser.username}}
                 class="billing-link"
+                @model={{this.currentUser.username}}
+                @route="user.billing.subscriptions"
               >
                 {{i18n "discourse_subscriptions.subscribe.view_past"}}
               </LinkTo>
@@ -43,18 +43,18 @@ export default class ProductItem extends Component {
               </span>
 
               <LinkTo
-                @route="user.billing.subscriptions"
-                @model={{this.currentUser.username}}
                 class="billing-link"
+                @model={{this.currentUser.username}}
+                @route="user.billing.subscriptions"
               >
                 {{i18n "discourse_subscriptions.subscribe.go_to_billing"}}
               </LinkTo>
             {{else}}
               <LinkTo
-                @route="subscribe.show"
-                @model={{this.product.id}}
-                @disabled={{this.product.subscribed}}
                 class="btn btn-primary"
+                @disabled={{this.product.subscribed}}
+                @model={{this.product.id}}
+                @route="subscribe.show"
               >
                 {{i18n "discourse_subscriptions.subscribe.title"}}
               </LinkTo>

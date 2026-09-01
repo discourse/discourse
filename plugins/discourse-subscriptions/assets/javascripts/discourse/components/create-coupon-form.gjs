@@ -49,10 +49,10 @@ export default class CreateCouponForm extends Component {
             {{i18n "discourse_subscriptions.admin.coupons.promo_code"}}
           </label>
           <input
-            {{on "input" (withEventValue (fn (mut this.promoCode)))}}
-            type="text"
             name="promo_code"
+            type="text"
             value={{this.promoCode}}
+            {{on "input" (withEventValue (fn (mut this.promoCode)))}}
           />
         </p>
 
@@ -62,15 +62,15 @@ export default class CreateCouponForm extends Component {
           </label>
           <ComboBox
             @content={{this.discountTypes}}
-            @value={{this.discountType}}
             @onChange={{fn (mut this.discountType)}}
+            @value={{this.discountType}}
           />
           <input
-            {{on "input" (withEventValue (fn (mut this.discount)))}}
             class="discount-amount"
-            type="text"
             name="amount"
+            type="text"
             value={{this.discount}}
+            {{on "input" (withEventValue (fn (mut this.discount)))}}
           />
         </p>
 
@@ -78,24 +78,24 @@ export default class CreateCouponForm extends Component {
           <label for="active">
             {{i18n "discourse_subscriptions.admin.coupons.active"}}
           </label>
-          <Input @type="checkbox" name="active" @checked={{this.active}} />
+          <Input name="active" @checked={{this.active}} @type="checkbox" />
         </p>
       </form>
 
       <DButton
+        class="btn-primary btn btn-icon"
         @action={{this.createNewCoupon}}
+        @icon="plus"
         @label="discourse_subscriptions.admin.coupons.create"
         @title="discourse_subscriptions.admin.coupons.create"
-        @icon="plus"
-        class="btn-primary btn btn-icon"
       />
 
       <DButton
-        @action={{this.cancelCreate}}
-        label="cancel"
-        @title="cancel"
-        @icon="xmark"
         class="btn btn-icon"
+        label="cancel"
+        @action={{this.cancelCreate}}
+        @icon="xmark"
+        @title="cancel"
       />
     </div>
   </template>

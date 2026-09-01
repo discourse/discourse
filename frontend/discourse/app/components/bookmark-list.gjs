@@ -219,8 +219,8 @@ export default class BookmarkList extends Component {
                   {{#if this.bulkSelectEnabled}}
                     <th class="bulk-select topic-list-data">
                       <DButton
-                        @action={{this.toggleBulkSelect}}
                         class="bulk-select btn-flat"
+                        @action={{this.toggleBulkSelect}}
                         @icon="list-check"
                         @title="bookmarks.bulk.toggle"
                       />
@@ -245,20 +245,20 @@ export default class BookmarkList extends Component {
 
                         {{/if~}}
                         <DButton
-                          @action={{this.selectAll}}
                           class="btn btn-default bulk-select-all"
+                          @action={{this.selectAll}}
                           @label="bookmarks.bulk.select_all"
                         />
                         <DButton
-                          @action={{this.clearAll}}
                           class="btn btn-default bulk-clear-all"
+                          @action={{this.clearAll}}
                           @label="bookmarks.bulk.clear_all"
                         />
                       </span>
                     {{else}}
                       <DButton
-                        @action={{this.toggleBulkSelect}}
                         class="btn-flat bulk-select"
+                        @action={{this.toggleBulkSelect}}
                         @icon="list-check"
                         @title="bookmarks.bulk.toggle"
                       />
@@ -290,10 +290,10 @@ export default class BookmarkList extends Component {
                   <td class="bulk-select bookmark-list-data">
                     <label for="bulk-select-{{bookmark.id}}">
                       <input
-                        type="checkbox"
                         class="bulk-select"
-                        id="bulk-select-{{bookmark.id}}"
                         data-id={{bookmark.id}}
+                        id="bulk-select-{{bookmark.id}}"
+                        type="checkbox"
                       />
                     </label>
                   </td>
@@ -336,10 +336,10 @@ export default class BookmarkList extends Component {
                         {{dTopicLink bookmark.topicForList}}
                       {{else}}
                         <a
-                          href={{bookmark.bookmarkable_url}}
-                          role="heading"
                           aria-level="2"
                           class="title"
+                          href={{bookmark.bookmarkable_url}}
+                          role="heading"
                         >
                           {{bookmark.fancy_title}}
                         </a>
@@ -364,9 +364,9 @@ export default class BookmarkList extends Component {
                     )
                   }}
                     <a
-                      href={{bookmark.bookmarkableUser.path}}
-                      data-user-card={{bookmark.user.username}}
                       class="avatar"
+                      data-user-card={{bookmark.user.username}}
+                      href={{bookmark.bookmarkableUser.path}}
                     >
                       {{dAvatar
                         bookmark.bookmarkableUser
@@ -390,9 +390,9 @@ export default class BookmarkList extends Component {
                   <td class="author-avatar topic-list-data">
                     {{#if bookmark.user.avatar_template}}
                       <a
-                        href={{bookmark.user.path}}
-                        data-user-card={{bookmark.user.username}}
                         class="avatar"
+                        data-user-card={{bookmark.user.username}}
+                        href={{bookmark.user.path}}
                       >
                         {{dAvatar
                           bookmark.user
@@ -412,9 +412,9 @@ export default class BookmarkList extends Component {
                 <td class="topic-list-data">
                   <BookmarkActionsDropdown
                     @bookmark={{bookmark}}
-                    @removeBookmark={{this.removeBookmark}}
-                    @editBookmark={{this.editBookmark}}
                     @clearBookmarkReminder={{this.clearBookmarkReminder}}
+                    @editBookmark={{this.editBookmark}}
+                    @removeBookmark={{this.removeBookmark}}
                     @togglePinBookmark={{this.togglePinBookmark}}
                   />
                 </td>

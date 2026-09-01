@@ -270,11 +270,11 @@ export default class DiscoursePostEvent extends Component {
         <div class="discourse-post-event-widget">
           {{#if event}}
             <Image
-              @imageUpload={{event.imageUpload}}
               @alt={{this.eventName}}
+              @imageUpload={{event.imageUpload}}
               @linkToPost={{@linkToPost}}
-              @postUrl={{event.post.url}}
               @post={{@post}}
+              @postUrl={{event.post.url}}
             />
             <header class="event-header" {{this.setupMessageBus}}>
               <div class="event-date">
@@ -328,19 +328,19 @@ export default class DiscoursePostEvent extends Component {
               <div class="event-header__controls">
                 {{#if event.creator}}
                   <MoreMenu
-                    @event={{event}}
-                    @isStandaloneEvent={{this.isStandaloneEvent}}
                     @composePrivateMessage={{routeAction
                       "composePrivateMessage"
                     }}
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
                   />
                 {{/if}}
 
                 {{#if @onClose}}
                   <DButton
                     class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
                     @action={{@onClose}}
+                    @icon="xmark"
                   />
                 {{/if}}
               </div>
@@ -383,7 +383,7 @@ export default class DiscoursePostEvent extends Component {
                 @expiredAndRecurring={{this.expiredAndRecurring}}
               />
               {{#if event.recurrence}}
-                <InfoSection @icon="arrows-rotate" class="event-recurrence">
+                <InfoSection class="event-recurrence" @icon="arrows-rotate">
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
@@ -399,8 +399,8 @@ export default class DiscoursePostEvent extends Component {
 
               {{#if this.withDescription}}
                 <Description
-                  @descriptionHtml={{event.descriptionHtml}}
                   @clamp={{this.clampDescription}}
+                  @descriptionHtml={{event.descriptionHtml}}
                 />
               {{/if}}
 

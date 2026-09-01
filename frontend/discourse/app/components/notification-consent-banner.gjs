@@ -61,16 +61,16 @@ export default class NotificationConsentBanner extends Component {
           <span>
             {{i18n "user.desktop_notifications.consent_prompt"}}
             <DButton
-              @display="link"
               @action={{this.turnon}}
+              @display="link"
               @label="user.desktop_notifications.enable"
             />
           </span>
           <DButton
-            @icon="xmark"
-            @action={{this.dismiss}}
-            @title="banner.close"
             class="btn-transparent close"
+            @action={{this.dismiss}}
+            @icon="xmark"
+            @title="banner.close"
           />
         </div>
       </div>

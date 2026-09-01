@@ -37,19 +37,19 @@ export default class Datetime extends Component {
   <template>
     <div class="date-time-setting">
       <Input
+        class="input-setting-date"
+        @disabled={{@disabled}}
         @type="datetime-local"
         @value={{this.localTime}}
-        @disabled={{@disabled}}
-        class="input-setting-date"
         {{on "input" this.convertToUniversalTime}}
       />
 
       {{#if @value}}
         <DButton
-          @icon="trash-can"
+          class="btn-small"
           @action={{this.reset}}
           @disabled={{@disabled}}
-          class="btn-small"
+          @icon="trash-can"
         />
       {{/if}}
     </div>

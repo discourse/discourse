@@ -100,9 +100,9 @@ export default class UserStatusModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user_status.set_custom_status"}}
-      @closeModal={{@closeModal}}
       class="user-status"
+      @closeModal={{@closeModal}}
+      @title={{i18n "user_status.set_custom_status"}}
     >
       <:body>
         <div class="control-group">
@@ -112,7 +112,7 @@ export default class UserStatusModal extends Component {
         {{#unless @model.hidePauseNotifications}}
           <div class="control-group pause-notifications">
             <label class="checkbox-label">
-              <Input @type="checkbox" @checked={{@model.pauseNotifications}} />
+              <Input @checked={{@model.pauseNotifications}} @type="checkbox" />
               {{i18n "user_status.pause_notifications"}}
             </label>
           </div>
@@ -124,31 +124,31 @@ export default class UserStatusModal extends Component {
           </label>
 
           <DTimeShortcutPicker
-            @timeShortcuts={{this.timeShortcuts}}
-            @hiddenOptions={{this.hiddenTimeShortcutOptions}}
-            @customLabels={{this.customTimeShortcutLabels}}
-            @prefilledDatetime={{this.prefilledDateTime}}
-            @onTimeSelected={{this.onTimeSelected}}
             @_itsatrap={{this._itsatrap}}
+            @customLabels={{this.customTimeShortcutLabels}}
+            @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+            @onTimeSelected={{this.onTimeSelected}}
+            @prefilledDatetime={{this.prefilledDateTime}}
+            @timeShortcuts={{this.timeShortcuts}}
           />
         </div>
       </:body>
 
       <:footer>
         <DButton
-          @label="user_status.save"
-          @disabled={{this.saveDisabled}}
-          @action={{this.saveAndClose}}
           class="btn-primary"
+          @action={{this.saveAndClose}}
+          @disabled={{this.saveDisabled}}
+          @label="user_status.save"
         />
 
         <DModalCancel @close={{@closeModal}} />
 
         {{#if this.showDeleteButton}}
           <DButton
-            @icon="trash-can"
-            @action={{this.delete}}
             class="delete-status btn-danger"
+            @action={{this.delete}}
+            @icon="trash-can"
           />
         {{/if}}
       </:footer>

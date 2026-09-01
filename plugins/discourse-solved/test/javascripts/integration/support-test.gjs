@@ -47,8 +47,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -71,8 +71,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -95,8 +95,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -118,8 +118,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -156,9 +156,9 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
+          @endDate={{endDate}}
           @period="custom"
           @startDate={{startDate}}
-          @endDate={{endDate}}
         />
       </template>
     );
@@ -188,8 +188,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -207,8 +207,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{single}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -226,8 +226,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{multiple}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -249,8 +249,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -270,8 +270,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -322,8 +322,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -352,8 +352,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -374,8 +374,8 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       <template>
         <SupportSection
           @data={{data}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
         />
       </template>
     );

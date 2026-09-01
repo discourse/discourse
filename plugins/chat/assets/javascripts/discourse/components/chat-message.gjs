@@ -679,6 +679,7 @@ export default class ChatMessage extends Component {
         }}
         data-id={{@message.id}}
         data-thread-id={{@message.thread.id}}
+        ...attributes
         {{willDestroy this.willDestroyMessage}}
         {{on "focusin" this.onFocusIn passive=true}}
         {{on "focusout" this.onFocusOut passive=true}}
@@ -691,16 +692,15 @@ export default class ChatMessage extends Component {
           this.onLongPressEnd
           this.onLongPressCancel
         }}
-        ...attributes
       >
         {{yield to="top"}}
 
         {{#if this.show}}
           {{#if this.pane.selectingMessages}}
             <Input
-              @type="checkbox"
               class="chat-message-selector"
               @checked={{@message.selected}}
+              @type="checkbox"
               {{on "click" this.toggleChecked}}
             />
           {{/if}}
@@ -708,17 +708,17 @@ export default class ChatMessage extends Component {
           {{#if this.deletedAndCollapsed}}
             <div class="chat-message-text -deleted">
               <DButton
+                class="btn-flat chat-message-expand"
                 @action={{this.expand}}
                 @translatedLabel={{this.deletedMessageLabel}}
-                class="btn-flat chat-message-expand"
               />
             </div>
           {{else if this.hiddenAndCollapsed}}
             <div class="chat-message-text -hidden">
               <DButton
+                class="btn-flat chat-message-expand"
                 @action={{this.expand}}
                 @label="chat.hidden"
-                class="btn-flat chat-message-expand"
               />
             </div>
           {{else}}
@@ -734,47 +734,47 @@ export default class ChatMessage extends Component {
                 />
               {{else}}
                 <ChatMessageAvatar
-                  @message={{@message}}
                   @interactive={{@interactive}}
+                  @message={{@message}}
                 />
               {{/if}}
 
               <div class="chat-message-content">
                 <ChatMessageInfo
+                  @context={{@context}}
+                  @dateMode={{@dateMode}}
+                  @interactive={{@interactive}}
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
-                  @context={{@context}}
-                  @interactive={{@interactive}}
                   @threadContext={{this.threadContext}}
-                  @dateMode={{@dateMode}}
                 />
 
                 <ChatMessageText
                   @cooked={{@message.cooked}}
-                  @uploads={{@message.uploads}}
-                  @edited={{@message.edited}}
                   @decorate={{this.decorateCookedMessage}}
+                  @edited={{@message.edited}}
+                  @uploads={{@message.uploads}}
                 >
                   {{#if @message.reactions.length}}
                     <div class="chat-message-reaction-list">
                       {{#each @message.reactions as |reaction|}}
                         <ChatMessageReaction
-                          @reaction={{reaction}}
-                          @onReaction={{this.messageInteractor.react}}
-                          @message={{@message}}
-                          @showTooltip={{true}}
                           @interactive={{@interactive}}
+                          @message={{@message}}
+                          @onReaction={{this.messageInteractor.react}}
+                          @reaction={{reaction}}
+                          @showTooltip={{true}}
                         />
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
+                          class="chat-message-reaction"
+                          @btnClass="btn-flat react-btn chat-message-react-btn"
                           @context="chat"
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
-                          @btnClass="btn-flat react-btn chat-message-react-btn"
                           @onClose={{this.onEmojiPickerClose}}
                           @onShow={{this.onEmojiPickerShow}}
-                          class="chat-message-reaction"
                         />
                       {{/if}}
                     </div>
@@ -785,9 +785,9 @@ export default class ChatMessage extends Component {
                   <div class="stop-streaming-btn-container">
                     <DButton
                       class="stop-streaming-btn"
+                      @action={{fn this.stopMessageStreaming @message}}
                       @icon="circle-stop"
                       @label="cancel"
-                      @action={{fn this.stopMessageStreaming @message}}
                     />
 
                   </div>
@@ -810,8 +810,8 @@ export default class ChatMessage extends Component {
 
         {{#if this.showActions}}
           <ChatMessageActionsDesktop
-            @message={{@message}}
             @context={{@context}}
+            @message={{@message}}
           />
         {{/if}}
       </div>

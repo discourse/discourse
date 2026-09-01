@@ -36,17 +36,17 @@ export default <template>
           <div class="body-page-button-container">
             {{#if @controller.application.canSignUp}}
               <DButton
+                class="btn-primary sign-up-button"
                 @action={{routeAction "showCreateAccount"}}
                 @label="sign_up"
-                class="btn-primary sign-up-button"
               />
             {{/if}}
 
             <DButton
+              class="btn-primary login-button"
               @action={{routeAction "showLogin"}}
               @icon="user"
               @label="log_in"
-              class="btn-primary login-button"
             />
           </div>
 

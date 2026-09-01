@@ -89,59 +89,59 @@ export default class WorkflowSettings extends Component {
 
   <template>
     <Form
-      @onSet={{this.submitForm}}
-      @data={{this.formData}}
       class="workflows-settings"
+      @data={{this.formData}}
+      @onSet={{this.submitForm}}
       as |form|
     >
       <form.Field
-        @name="errorWorkflowId"
-        @title={{i18n "discourse_workflows.settings.error_workflow"}}
         @description={{i18n
           "discourse_workflows.settings.error_workflow_description"
         }}
-        @type="custom"
         @format="full"
+        @name="errorWorkflowId"
+        @title={{i18n "discourse_workflows.settings.error_workflow"}}
+        @type="custom"
         as |field|
       >
         <field.Control>
           <ErrorWorkflowChooser
             @content={{this.errorWorkflowContent}}
-            @value={{field.value}}
             @onChange={{field.set}}
             @options={{hash
               none="discourse_workflows.settings.error_workflow_none"
               excludeWorkflowId=@workflow.id
             }}
+            @value={{field.value}}
           />
         </field.Control>
       </form.Field>
 
       <form.Field
-        @name="timezone"
-        @title={{i18n "discourse_workflows.settings.timezone"}}
         @description={{i18n
           "discourse_workflows.settings.timezone_description"
         }}
-        @type="custom"
         @format="full"
+        @name="timezone"
+        @title={{i18n "discourse_workflows.settings.timezone"}}
+        @type="custom"
         as |field|
       >
         <field.Control>
-          <TimezoneInput @value={{field.value}} @onChange={{field.set}} />
+          <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
         </field.Control>
       </form.Field>
 
       <form.Emphasis
-        @title={{i18n "discourse_workflows.settings.danger_zone"}}
         @subtitle={{i18n "discourse_workflows.settings.delete_description"}}
+        @title={{i18n "discourse_workflows.settings.danger_zone"}}
         @type="error"
       >
         <form.Actions>
           <form.Button
-            @label="discourse_workflows.delete"
-            @action={{this.deleteWorkflow}}
             class="btn-danger"
+            @action={{this.deleteWorkflow}}
+            @label="discourse_workflows.delete"
           />
         </form.Actions>
       </form.Emphasis>

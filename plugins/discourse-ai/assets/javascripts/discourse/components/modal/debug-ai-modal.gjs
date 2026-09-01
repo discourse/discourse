@@ -233,19 +233,19 @@ export default class DebugAiModal extends Component {
   <template>
     <DModal
       class="ai-debug-modal"
-      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
     >
       <:body>
         <ul class="nav nav-pills ai-debug-modal__nav">
           <li><a
-              href=""
               class={{this.requestActive}}
+              href=""
               {{on "click" this.requestClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.request"}}</a></li>
           <li><a
-              href=""
               class={{this.responseActive}}
+              href=""
               {{on "click" this.responseClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.response"}}</a></li>
         </ul>
@@ -308,11 +308,11 @@ export default class DebugAiModal extends Component {
           {{else}}
             <AiPayloadViewer
               class="ai-debug-modal__preview"
-              @payload={{this.activePayload}}
-              @unbounded={{true}}
               @emptyMessage={{i18n
                 "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
               }}
+              @payload={{this.activePayload}}
+              @unbounded={{true}}
             />
           {{/if}}
         {{/if}}
@@ -322,16 +322,16 @@ export default class DebugAiModal extends Component {
         {{#if this.info.prev_log_id}}
           <DButton
             class="btn ai-debug-modal__previous"
-            @icon="angles-left"
             @action={{this.prevLog}}
+            @icon="angles-left"
             @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
           />
         {{/if}}
         {{#if this.info.next_log_id}}
           <DButton
             class="btn ai-debug-modal__next"
-            @icon="angles-right"
             @action={{this.nextLog}}
+            @icon="angles-right"
             @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
           />
         {{/if}}
@@ -345,17 +345,17 @@ export default class DebugAiModal extends Component {
           {{/if}}
           {{#if this.copyValue}}
             <DCopyButton
-              @value={{this.copyValue}}
               @copyClass="btn-default ai-debug-modal__copy"
               @translatedLabel={{this.activeCopyLabel}}
               @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+              @value={{this.copyValue}}
             />
           {{else}}
             <DButton
               class="btn-default ai-debug-modal__copy"
+              @disabled={{true}}
               @icon="copy"
               @translatedLabel={{this.activeCopyLabel}}
-              @disabled={{true}}
             />
           {{/if}}
         </div>

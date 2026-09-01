@@ -52,18 +52,18 @@ export default class ThemeCardPreview extends Component {
     <div class="theme-card-preview__image-wrapper">
       {{#if this.currentScreenshotUrl}}
         <img
+          alt={{@theme.name}}
           class="theme-card-preview__image"
           src={{this.currentScreenshotUrl}}
-          alt={{@theme.name}}
         />
         {{#if this.hasBothScreenshots}}
           <DButton
+            class="btn-flat theme-card-preview__screenshot-toggle"
             @action={{this.toggleScreenshot}}
-            @translatedAriaLabel={{this.screenshotToggleLabel}}
             @icon={{this.screenshotToggleIcon}}
             @preventFocus={{true}}
+            @translatedAriaLabel={{this.screenshotToggleLabel}}
             @translatedTitle={{this.screenshotToggleLabel}}
-            class="btn-flat theme-card-preview__screenshot-toggle"
           />
         {{/if}}
       {{else}}

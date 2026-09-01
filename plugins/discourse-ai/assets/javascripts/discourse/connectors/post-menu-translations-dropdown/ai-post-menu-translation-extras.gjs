@@ -59,9 +59,9 @@ export default class AiPostMenuTranslationExtras extends Component {
     <@dropdown.item class="update-translations-menu__translate">
       <DButton
         class="post-action-menu__translate-translation"
-        @label="discourse_ai.translations.translations_menu.translate.label"
-        @icon="arrows-rotate"
         @action={{this.translate}}
+        @icon="arrows-rotate"
+        @label="discourse_ai.translations.translations_menu.translate.label"
         @title="discourse_ai.translations.translations_menu.translate.title"
       />
     </@dropdown.item>

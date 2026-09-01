@@ -16,7 +16,7 @@ export default <template>
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li><LinkTo @route="adminUser" @model={{@controller.user}}>{{dIcon
+        <li><LinkTo @model={{@controller.user}} @route="adminUser">{{dIcon
               "angle-left"
             }}
             &nbsp;{{@controller.user.username}}</LinkTo></li>
@@ -43,10 +43,10 @@ export default <template>
             <div class="control-group">
               <label>{{i18n "admin.badges.badge"}}</label>
               <ComboBox
-                @value={{@controller.selectedBadgeId}}
                 @content={{@controller.availableBadges}}
                 @onChange={{fn (mut @controller.selectedBadgeId)}}
                 @options={{hash filterable=true}}
+                @value={{@controller.selectedBadgeId}}
               />
             </div>
             <div class="control-group">
@@ -55,10 +55,10 @@ export default <template>
               /><small>{{i18n "admin.badges.reason_help"}}</small>
             </div>
             <DButton
+              class="btn-primary"
+              type="submit"
               @action={{@controller.performGrantBadge}}
               @label="admin.badges.grant"
-              type="submit"
-              class="btn-primary"
             />
           </form>
         </PluginOutlet>
@@ -88,7 +88,7 @@ export default <template>
                     @count={{userBadge.count}}
                   /></td>
                 <td>
-                  <LinkTo @route="adminUser" @model={{userBadge.granted_by}}>
+                  <LinkTo @model={{userBadge.granted_by}} @route="adminUser">
                     {{dAvatar userBadge.granted_by imageSize="tiny"}}
                     {{userBadge.granted_by.username}}
                   </LinkTo>
@@ -107,9 +107,9 @@ export default <template>
                     />
                   {{else}}
                     <DButton
+                      class="btn-danger"
                       @action={{fn @controller.revokeBadge userBadge}}
                       @label="admin.badges.revoke"
-                      class="btn-danger"
                     />
                   {{/if}}
                 </td>

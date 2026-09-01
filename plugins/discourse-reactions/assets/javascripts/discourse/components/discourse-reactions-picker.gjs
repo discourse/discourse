@@ -192,12 +192,12 @@ export default class DiscourseReactionsPicker extends Component {
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
-              @icon="discourse-emojis"
+              @btnClass="btn-icon btn-flat"
               @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
-              @onShow={{this.preventCollapse}}
+              @icon="discourse-emojis"
               @onClose={{this.reenableCollapse}}
-              @btnClass="btn-icon btn-flat"
+              @onShow={{this.preventCollapse}}
             />
           {{/if}}
         </div>

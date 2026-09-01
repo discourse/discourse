@@ -118,11 +118,11 @@ export default class ChooseTopic extends Component {
       </label>
 
       <input
+        id="choose-topic-title"
+        placeholder={{i18n "choose_topic.title.placeholder"}}
+        type="text"
         {{on "keydown" this.ignoreEnter}}
         {{on "input" this.onTopicTitleChange}}
-        type="text"
-        placeholder={{i18n "choose_topic.title.placeholder"}}
-        id="choose-topic-title"
       />
 
       <div class="choose-topic__search-results">
@@ -151,13 +151,13 @@ export default class ChooseTopic extends Component {
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label class="radio">
                     <input
-                      {{on "click" (fn this.chooseTopic t)}}
                       checked={{eq t.id @selectedTopicId}}
-                      type="radio"
-                      name="choose_topic_id"
                       id={{concat "choose-topic-" t.id}}
+                      name="choose_topic_id"
+                      type="radio"
+                      {{on "click" (fn this.chooseTopic t)}}
                     />
-                    <TopicStatus @topic={{t}} @disableActions={{true}} />
+                    <TopicStatus @disableActions={{true}} @topic={{t}} />
                     <span class="topic-title">
                       {{dReplaceEmoji t.title}}
                     </span>

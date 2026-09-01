@@ -24,7 +24,7 @@ export default class ScoreValue extends Component {
       <span class="score-value">
         <span class="score-number">{{this.numericValue}}</span>
         {{#if @label}}
-          <span title={{this.explanationTitle}} class="score-value-type">
+          <span class="score-value-type" title={{this.explanationTitle}}>
             {{this.explanationContent}}
           </span>
         {{/if}}

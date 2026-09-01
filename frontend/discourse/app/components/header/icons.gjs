@@ -111,25 +111,25 @@ export default class Icons extends Component {
         {{#if (eq entry.key "search")}}
           {{#if this.showSearchButton}}
             <Dropdown
-              @title="search.title"
+              class="search-dropdown"
+              @active={{this.search.visible}}
+              @href={{getURL "/search"}}
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
               @onWillDestroy={{fn @toggleSearchMenu null false}}
-              @active={{this.search.visible}}
-              @href={{getURL "/search"}}
-              class="search-dropdown"
+              @title="search.title"
             />
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
             <Dropdown
-              @title="hamburger_menu"
+              class="hamburger-dropdown"
+              @active={{this.header.hamburgerVisible}}
               @icon="bars"
               @iconId="toggle-hamburger-menu"
-              @active={{this.header.hamburgerVisible}}
               @onClick={{this.toggleHamburger}}
-              class="hamburger-dropdown"
+              @title="hamburger_menu"
             />
           {{/if}}
         {{else if (eq entry.key "user-menu")}}

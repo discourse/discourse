@@ -17,10 +17,10 @@ export default class ChatNavbarNewChannelButton extends Component {
   <template>
     {{#if this.currentUser.staff}}
       <DButton
+        class="c-navbar__new-channel-button btn-transparent"
         @action={{this.createChannel}}
         @icon="plus"
         @label={{if this.site.desktopView "chat.create_channel.title"}}
-        class="c-navbar__new-channel-button btn-transparent"
       />
     {{/if}}
   </template>

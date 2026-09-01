@@ -17,9 +17,9 @@ module(
       await render(
         <template>
           <div
+            aria-controls="rf-lb"
             class="controller"
             role="combobox"
-            aria-controls="rf-lb"
             tabindex="0"
           ></div>
           <div
@@ -82,9 +82,9 @@ module(
       await render(
         <template>
           <div
+            aria-controls="rf-lb"
             class="controller"
             role="combobox"
-            aria-controls="rf-lb"
             tabindex="0"
           ></div>
           <div

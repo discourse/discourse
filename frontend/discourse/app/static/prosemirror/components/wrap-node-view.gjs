@@ -90,10 +90,10 @@ export default class WrapNodeView extends Component {
 
   <template>
     {{~! strip whitespace ~}}<button
-      type="button"
       class="d-wrap-indicator btn-flat
         {{if this.isInline '--inline' '--block'}}"
       contenteditable="false"
+      type="button"
       {{on "click" this.editAttributes}}
     >{{~this.attributesDisplay~}}</button>
     {{~yield~}}{{~! strip whitespace ~}}

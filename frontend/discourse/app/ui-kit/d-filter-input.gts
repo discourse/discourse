@@ -87,27 +87,27 @@ export default class DFilterInput extends Component<DFilterInputSignature> {
       {{/if}}
 
       <input
+        autocapitalize="none"
+        autocomplete="off"
+        autocorrect="off"
+        class="filter-input"
+        type="text"
+        value={{@value}}
+        ...attributes
         {{this.registerInput}}
         {{this.focusState}}
         {{on "input" (if @filterAction @filterAction (noop))}}
-        type="text"
-        value={{@value}}
-        class="filter-input"
-        autocapitalize="none"
-        autocorrect="off"
-        autocomplete="off"
-        ...attributes
       />
 
       {{yield}}
 
       {{#if (and @onClearInput @value.length)}}
         <DButton
-          @icon="xmark"
-          @action={{this.onClearInput}}
-          @title={{i18n "filter_input.clear"}}
           aria-label={{i18n "filter_input.clear"}}
           class="btn-small btn-transparent filter-input-clear-btn"
+          @action={{this.onClearInput}}
+          @icon="xmark"
+          @title={{i18n "filter_input.clear"}}
         />
       {{/if}}
 

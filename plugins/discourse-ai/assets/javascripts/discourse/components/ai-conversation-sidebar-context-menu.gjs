@@ -68,22 +68,22 @@ export default class AiConversationSidebarContextMenu extends Component {
     <DDropdownMenu class="ai-conversation-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
+          class="ai-conversation-sidebar-link-menu__star-conversation"
           @action={{this.toggleStarred}}
           @disabled={{this.isTogglingStarred}}
           @icon={{this.starIcon}}
           @label={{this.starLabel}}
           @title={{this.starLabel}}
-          class="ai-conversation-sidebar-link-menu__star-conversation"
         />
       </dropdown.item>
       {{#if this.canShare}}
         <dropdown.item>
           <DButton
+            class="ai-conversation-sidebar-link-menu__share-conversation"
             @action={{this.share}}
             @icon="share-nodes"
             @label="discourse_ai.ai_bot.share_ai_conversation.name"
             @title="discourse_ai.ai_bot.share_ai_conversation.title"
-            class="ai-conversation-sidebar-link-menu__share-conversation"
           />
         </dropdown.item>
       {{/if}}

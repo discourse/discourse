@@ -264,16 +264,16 @@ export default class ChatDrawer extends Component {
 
     {{#if this.chatStateManager.isDrawerActive}}
       <div
-        data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
-        data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
         class={{dConcatClass
           "chat-drawer"
           (if
             this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed"
           )
         }}
-        {{chatResizableNode ".chat-drawer-resizer" this.didResize}}
+        data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
+        data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
         style={{this.drawerStyle}}
+        {{chatResizableNode ".chat-drawer-resizer" this.didResize}}
       >
         <div class="chat-drawer-container">
           <div class="chat-drawer-resizer"></div>
@@ -286,13 +286,13 @@ export default class ChatDrawer extends Component {
           />
 
           <this.chatDrawerRouter.component
-            @params={{this.chatDrawerRouter.params}}
-            @model={{this.chatDrawerRouter.model}}
-            @openURL={{this.openURL}}
-            @openInFullPage={{this.openInFullPage}}
-            @toggleExpand={{this.toggleExpand}}
             @close={{this.close}}
             @drawerActions={{this.drawerActions}}
+            @model={{this.chatDrawerRouter.model}}
+            @openInFullPage={{this.openInFullPage}}
+            @openURL={{this.openURL}}
+            @params={{this.chatDrawerRouter.params}}
+            @toggleExpand={{this.toggleExpand}}
           />
         </div>
       </div>

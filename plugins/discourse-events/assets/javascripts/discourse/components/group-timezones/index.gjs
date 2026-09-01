@@ -170,9 +170,9 @@ export default class GroupTimezones extends Component {
         {{i18n "group_timezones.group_availability" group=@group}}
       </span>
       <input
-        type="text"
-        placeholder={{i18n "group_timezones.search"}}
         class="group-timezones-filter"
+        placeholder={{i18n "group_timezones.search"}}
+        type="text"
         {{on "input" this.handleFilterChange}}
       />
     </div>
@@ -180,8 +180,8 @@ export default class GroupTimezones extends Component {
       {{#each this.groupedTimezones key="identifier" as |groupedTimezone|}}
         {{#if (eq groupedTimezone.type "discourse-group-timezone-new-day")}}
           <NewDay
-            @beforeDate={{groupedTimezone.beforeDate}}
             @afterDate={{groupedTimezone.afterDate}}
+            @beforeDate={{groupedTimezone.beforeDate}}
           />
         {{else}}
           <Timezone @groupedTimezone={{groupedTimezone}} />

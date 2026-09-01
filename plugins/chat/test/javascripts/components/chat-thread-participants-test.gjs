@@ -62,8 +62,8 @@ module("Component | <ChatThreadParticipants />", function (hooks) {
     await render(
       <template>
         <ChatThreadParticipants
-          @thread={{this.thread}}
           @includeOriginalMessageUser={{false}}
+          @thread={{this.thread}}
         />
       </template>
     );

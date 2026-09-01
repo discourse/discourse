@@ -718,13 +718,13 @@ export default class SiteSettingComponent extends Component {
 
   <template>
     <div
-      data-setting={{this.setting.setting}}
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
         {{if this.isDisabledByDependency 'disabled-by-dependency'}}
         {{if @inline 'inline-dependent-setting'}}"
+      data-setting={{this.setting.setting}}
       ...attributes
     >
       <div class="setting-label">
@@ -733,10 +733,10 @@ export default class SiteSettingComponent extends Component {
 
           {{#if this.staffLogFilter}}
             <LinkTo
-              @route="adminLogs.staffActionLogs"
-              @query={{hash filters=this.staffLogFilter force_refresh=true}}
               class="staff-action-log-link"
               title={{i18n "admin.settings.history"}}
+              @query={{hash filters=this.staffLogFilter force_refresh=true}}
+              @route="adminLogs.staffActionLogs"
             >
               <span class="history-icon">
                 {{dIcon "clock-rotate-left"}}
@@ -762,47 +762,47 @@ export default class SiteSettingComponent extends Component {
       <div class="setting-value">
         {{#if this.settingEditButton}}
           <DButton
+            class="btn-default setting-value-edit-button"
             @action={{this.settingEditButton.action}}
             @icon={{this.settingEditButton.icon}}
             @label={{this.settingEditButton.label}}
-            class="btn-default setting-value-edit-button"
           />
 
           <Description @description={{this.setting.description}} />
-          <JobStatus @status={{this.status}} @progress={{this.progress}} />
+          <JobStatus @progress={{this.progress}} @status={{this.status}} />
         {{else}}
           {{#if this.useFormKit}}
             <Form
               @data={{this.formKitData}}
+              @onRegisterApi={{this.registerFormApi}}
               @onSet={{this.onFormSet}}
               @onSubmit={{this.update}}
-              @onRegisterApi={{this.registerFormApi}}
               {{didUpdate this.syncFormValue this.buffered.value}}
               {{linkifySettingLinks this.formInlineDescription}}
               as |form|
             >
               <SettingDefinitionField
                 @definition={{this.definition}}
+                @disabled={{this.isDisabled}}
                 @form={{form}}
                 @format="full"
-                @showTitle={{false}}
                 @showControlTitle={{false}}
                 @showDescription={{false}}
-                @disabled={{this.isDisabled}}
+                @showTitle={{false}}
               />
             </Form>
             {{this.preview}}
           {{else}}
             <this.resolvedComponent
-              {{on "keydown" this._handleKeydown}}
-              @disabled={{this.isDisabled}}
-              @setting={{this.setting}}
-              @value={{this.buffered.value}}
-              @preview={{this.preview}}
-              @isSecret={{this.isSecret}}
               @allowAny={{this.allowAny}}
               @changeValueCallback={{this.changeValueCallback}}
+              @disabled={{this.isDisabled}}
+              @isSecret={{this.isSecret}}
+              @preview={{this.preview}}
+              @setting={{this.setting}}
               @setValidationMessage={{this.setValidationMessage}}
+              @value={{this.buffered.value}}
+              {{on "keydown" this._handleKeydown}}
             />
           {{/if}}
           <SettingValidationMessage
@@ -810,14 +810,14 @@ export default class SiteSettingComponent extends Component {
           />
           {{#if this.displayDescription}}
             <Description @description={{this.setting.description}} />
-            <JobStatus @status={{this.status}} @progress={{this.progress}} />
+            <JobStatus @progress={{this.progress}} @status={{this.status}} />
           {{/if}}
           {{#if this.inlineDependentSettings.length}}
             <div class="inline-dependent-settings">
               {{#each this.inlineDependentSettings as |dependentSetting|}}
                 <this.siteSettingComponent
-                  @setting={{dependentSetting}}
                   @inline={{true}}
+                  @setting={{dependentSetting}}
                 />
               {{/each}}
             </div>
@@ -858,27 +858,27 @@ export default class SiteSettingComponent extends Component {
       {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
+            class="ok setting-controls__ok"
             @action={{this.submit}}
+            @ariaLabel="admin.settings.save"
             @icon="check"
             @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.save"
-            class="ok setting-controls__ok"
           />
           <DButton
+            class="cancel setting-controls__cancel"
             @action={{this.cancel}}
+            @ariaLabel="admin.settings.cancel"
             @icon="xmark"
             @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.cancel"
-            class="cancel setting-controls__cancel"
           />
         </div>
       {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
         {{#if (and this.setting.secret (not this.useFormKit))}}
           <DButton
-            @action={{this.toggleSecret}}
-            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
-            @ariaLabel="admin.settings.unmask"
             class="btn-default setting-toggle-secret"
+            @action={{this.toggleSecret}}
+            @ariaLabel="admin.settings.unmask"
+            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
           />
         {{/if}}
 

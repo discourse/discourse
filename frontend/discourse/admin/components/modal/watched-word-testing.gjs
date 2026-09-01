@@ -147,19 +147,19 @@ export default class WatchedWordTesting extends Component {
 
   <template>
     <DModal
+      class="watched-words-test-modal"
+      @closeModal={{@closeModal}}
       @title={{i18n
         "admin.watched_words.test.modal_title"
         action=@model.watchedWord.name
       }}
-      @closeModal={{@closeModal}}
-      class="watched-words-test-modal"
     >
       <:body>
         <p>{{i18n "admin.watched_words.test.description"}}</p>
         <Textarea
-          @value={{this.value}}
-          name="test_value"
           autofocus="autofocus"
+          name="test_value"
+          @value={{this.value}}
         />
 
         {{#if this.matches}}

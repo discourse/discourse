@@ -135,16 +135,16 @@ export default class Assistant extends Component {
         />
         {{#each @results as |result|}}
           <AssistantItem
-            @tag={{result.tagName}}
             @additionalTags={{result.additionalTags}}
             @category={{result.category}}
-            @slug={{@slug}}
-            @withInLabel={{@withInLabel}}
             @isIntersection={{true}}
             @searchAllTopics={{true}}
             @searchTermChanged={{@searchTermChanged}}
+            @slug={{@slug}}
             @suggestionKeyword={{@suggestionKeyword}}
+            @tag={{result.tagName}}
             @typeClass="tag-intersection"
+            @withInLabel={{@withInLabel}}
           />
         {{/each}}
       {{else if (eq this.suggestionType "categoryOrTag")}}
@@ -156,23 +156,23 @@ export default class Assistant extends Component {
             {{! render category }}
             <AssistantItem
               @category={{result.model}}
-              @slug={{get this.fullSlugForCategoryMap result.model.id}}
-              @withInLabel={{@withInLabel}}
               @searchAllTopics={{true}}
               @searchTermChanged={{@searchTermChanged}}
+              @slug={{get this.fullSlugForCategoryMap result.model.id}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="category"
+              @withInLabel={{@withInLabel}}
             />
           {{else}}
             {{! render tag }}
             <AssistantItem
-              @tag={{result.name}}
-              @slug={{concat this.prefix "#" result.name}}
-              @withInLabel={{@withInLabel}}
               @searchAllTopics={{true}}
               @searchTermChanged={{@searchTermChanged}}
+              @slug={{concat this.prefix "#" result.name}}
               @suggestionKeyword={{@suggestionKeyword}}
+              @tag={{result.name}}
               @typeClass="tag"
+              @withInLabel={{@withInLabel}}
             />
           {{/if}}
         {{/each}}
@@ -181,32 +181,32 @@ export default class Assistant extends Component {
         {{#if this.userMatchesInTopic}}
           <AssistantItem
             @extraHint={{true}}
-            @user={{this.user}}
-            @slug={{concat this.prefix "@" this.user.username}}
-            @suffix={{i18n "search.in_topics_posts"}}
             @searchAllTopics={{true}}
             @searchTermChanged={{@searchTermChanged}}
+            @slug={{concat this.prefix "@" this.user.username}}
+            @suffix={{i18n "search.in_topics_posts"}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
+            @user={{this.user}}
           />
 
           <AssistantItem
-            @user={{this.user}}
+            @searchTermChanged={{@searchTermChanged}}
             @slug={{concat this.prefix "@" this.user.username}}
             @suffix={{i18n "search.in_this_topic"}}
-            @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
+            @user={{this.user}}
           />
         {{else}}
           {{#each @results as |result|}}
             <AssistantItem
-              @user={{result}}
-              @slug={{concat this.prefix "@" result.username}}
               @searchAllTopics={{true}}
               @searchTermChanged={{@searchTermChanged}}
+              @slug={{concat this.prefix "@" result.username}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="user"
+              @user={{result}}
             />
           {{/each}}
         {{/if}}
@@ -217,10 +217,10 @@ export default class Assistant extends Component {
         />
         {{#each this.suggestionShortcuts as |item|}}
           <AssistantItem
-            @slug={{concat this.prefix item}}
             @label={{item}}
             @searchAllTopics={{true}}
             @searchTermChanged={{@searchTermChanged}}
+            @slug={{concat this.prefix item}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="shortcut"
           />

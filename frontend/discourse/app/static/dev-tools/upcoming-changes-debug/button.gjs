@@ -41,13 +41,13 @@ export default class UpcomingChangesDebugButton extends Component {
   <template>
     <DMenu
       @identifier="upcoming-changes-debug-menu"
+      @modalForMobile={{false}}
+      @title={{i18n "dev_tools.toggle_upcoming_changes_debug"}}
       @triggerClass={{dConcatClass
         "toggle-upcoming-changes-menu"
         (if this.isActive "--active")
       }}
       @triggerComponent={{dElement "button"}}
-      @modalForMobile={{false}}
-      @title={{i18n "dev_tools.toggle_upcoming_changes_debug"}}
     >
       <:trigger>
         {{dIcon "flask"}}
@@ -57,8 +57,8 @@ export default class UpcomingChangesDebugButton extends Component {
           {{#each-in this.upcomingChanges as |changeSettingName|}}
             <label>
               <input
-                type="checkbox"
                 checked={{this.isChecked changeSettingName}}
+                type="checkbox"
                 {{on
                   "change"
                   (fn this.toggleUpcomingChangesDebug changeSettingName)

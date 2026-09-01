@@ -116,9 +116,9 @@ export default class ChatUsage extends Component {
 
             <div class="chat-message --right">
               <UserMessage
-                @user={{@user}}
-                @replyKey="reply_1"
                 @authorText={{this.authorText}}
+                @replyKey="reply_1"
+                @user={{@user}}
               />
             </div>
 
@@ -128,9 +128,9 @@ export default class ChatUsage extends Component {
 
             <div class="chat-message --right">
               <UserMessage
-                @user={{@user}}
-                @replyKey="reply_2"
                 @authorText={{this.authorText}}
+                @replyKey="reply_2"
+                @user={{@user}}
               />
             </div>
 
@@ -140,9 +140,9 @@ export default class ChatUsage extends Component {
 
             <div class="chat-message --right">
               <UserMessage
-                @user={{@user}}
-                @replyKey="reply_3"
                 @authorText={{this.authorText}}
+                @replyKey="reply_3"
+                @user={{@user}}
               />
             </div>
 
@@ -173,15 +173,15 @@ export default class ChatUsage extends Component {
             {{/if}}
 
             <div class="chat-message --right">
-              <UserMessage @user={{@user}} @authorText={{this.authorText}}>
+              <UserMessage @authorText={{this.authorText}} @user={{@user}}>
                 <img
-                  src={{getURL
-                    "/plugins/discourse-rewind/images/dancing_baby.gif"
-                  }}
                   alt={{i18n
                     "discourse_rewind.reports.chat_usage.dancing_baby_alt"
                   }}
                   class="chat-message__gif"
+                  src={{getURL
+                    "/plugins/discourse-rewind/images/dancing_baby.gif"
+                  }}
                 />
               </UserMessage>
             </div>

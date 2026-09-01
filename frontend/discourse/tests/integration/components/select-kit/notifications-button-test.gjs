@@ -23,11 +23,11 @@ module(
       await render(
         <template>
           <NotificationsButton
-            @value={{this.value}}
             @options={{hash
               i18nPrefix=this.i18nPrefix
               i18nPostfix=this.i18nPostfix
             }}
+            @value={{this.value}}
           />
         </template>
       );

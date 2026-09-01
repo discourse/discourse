@@ -79,9 +79,9 @@ export default class WizardStepComponent extends Component {
 
         <div class="wizard-container__step-footer">
           <button
-            {{on "click" this.jumpIn}}
-            type="button"
             class="wizard-container__button jump-in btn btn-primary"
+            type="button"
+            {{on "click" this.jumpIn}}
           >
             {{i18n "wizard.jump_in"}}
           </button>

@@ -621,9 +621,9 @@ export default class AiUsage extends Component {
   <template>
     <div class="ai-usage admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.usage.short_title"}}
-        @learnMoreUrl="https://meta.discourse.org/t/-/348677"
         @descriptionLabel={{i18n "discourse_ai.usage.subheader_description"}}
+        @learnMoreUrl="https://meta.discourse.org/t/-/348677"
+        @titleLabel={{i18n "discourse_ai.usage.short_title"}}
       />
       <div class="ai-usage__filters">
         <div class="ai-usage__filters-dates">
@@ -651,10 +651,10 @@ export default class AiUsage extends Component {
 
               <DDateTimeInputRange
                 @from={{this.fromDate}}
-                @to={{this.toDate}}
                 @onChange={{this.onChangeDateRange}}
                 @showFromTime={{false}}
                 @showToTime={{false}}
+                @to={{this.toDate}}
               />
 
               <DButton @action={{this.onRefreshDateRange}} @label="refresh" />
@@ -664,26 +664,26 @@ export default class AiUsage extends Component {
 
         <div class="ai-usage__filters-row">
           <ComboBox
-            @value={{this.selectedFeature}}
+            class="ai-usage__feature-selector"
             @content={{this.availableFeatures}}
             @onChange={{this.onFeatureChanged}}
             @options={{hash none="discourse_ai.usage.all_features"}}
-            class="ai-usage__feature-selector"
+            @value={{this.selectedFeature}}
           />
 
           <ComboBox
-            @value={{this.selectedModel}}
+            class="ai-usage__model-selector"
             @content={{this.availableModels}}
             @onChange={{this.onModelChanged}}
             @options={{hash none="discourse_ai.usage.all_models"}}
-            class="ai-usage__model-selector"
+            @value={{this.selectedModel}}
           />
         </div>
 
         <DConditionalLoadingSpinner @condition={{this.loadingData}}>
           <AdminConfigAreaCard
-            @heading="discourse_ai.usage.summary"
             class="ai-usage__summary"
+            @heading="discourse_ai.usage.summary"
           >
             <:content>
               <DStatTiles
@@ -695,10 +695,10 @@ export default class AiUsage extends Component {
                 {{#each this.metrics as |metric|}}
                   <tiles.Tile
                     class="bar"
-                    @label={{metric.label}}
                     @href={{metric.href}}
-                    @value={{metric.value}}
+                    @label={{metric.label}}
                     @tooltip={{metric.tooltip}}
+                    @value={{metric.value}}
                   />
                 {{/each}}
               </DStatTiles>
@@ -712,8 +712,8 @@ export default class AiUsage extends Component {
             <:content>
               <div class="ai-usage__chart-container">
                 <Chart
-                  @chartConfig={{this.chartConfig}}
                   class="ai-usage__chart"
+                  @chartConfig={{this.chartConfig}}
                 />
               </div>
             </:content>
@@ -787,9 +787,9 @@ export default class AiUsage extends Component {
                                 }}
                                 <DTooltip
                                   @identifier="ai-usage-feature-breakdown"
-                                  @placement="top"
                                   @interactive={{true}}
                                   @maxWidth={{600}}
+                                  @placement="top"
                                 >
                                   <:trigger>
                                     {{dIcon
@@ -1078,9 +1078,9 @@ export default class AiUsage extends Component {
                             <td class="ai-usage__users-cell">
                               <div class="user-info">
                                 <LinkTo
-                                  @route="user"
-                                  @model={{user.username}}
                                   class="username"
+                                  @model={{user.username}}
+                                  @route="user"
                                 >
                                   {{dAvatar user imageSize="tiny"}}
                                   {{user.username}}
@@ -1149,9 +1149,9 @@ export default class AiUsage extends Component {
                               <td class="ai-usage__users-cell">
                                 <div class="user-info">
                                   <LinkTo
-                                    @route="user"
-                                    @model={{user.username}}
                                     class="username"
+                                    @model={{user.username}}
+                                    @route="user"
                                   >
                                     {{dAvatar user imageSize="tiny"}}
                                     {{user.username}}

@@ -183,34 +183,34 @@ export default class ChatSearch extends Component {
     >
       <div class="chat-search__filters">
         <DFilterInput
-          {{dAutoFocus}}
-          @filterAction={{this.onFilterChange}}
-          @value={{@query}}
-          @icons={{hash left="magnifying-glass"}}
-          placeholder={{i18n "chat.search_view.filter_placeholder"}}
           class="no-blur"
+          placeholder={{i18n "chat.search_view.filter_placeholder"}}
+          @filterAction={{this.onFilterChange}}
+          @icons={{hash left="magnifying-glass"}}
           @onClearInput={{fn this.debounceFilterChange ""}}
+          @value={{@query}}
+          {{dAutoFocus}}
         />
 
         <DMenu
+          @icon="sort"
           @identifier="search-sort-options"
           @label={{this.sortLabel this.currentSort}}
-          @icon="sort"
         >
           <:content as |menu|>
             <DDropdownMenu as |dropdown|>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sortLabel "relevance"}}
                   class="btn-transparent"
                   @action={{fn this.setCurrentSorting "relevance" menu.close}}
+                  @translatedLabel={{this.sortLabel "relevance"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sortLabel "latest"}}
                   class="btn-transparent"
                   @action={{fn this.setCurrentSorting "latest" menu.close}}
+                  @translatedLabel={{this.sortLabel "latest"}}
                 />
               </dropdown.item>
             </DDropdownMenu>
@@ -220,25 +220,25 @@ export default class ChatSearch extends Component {
 
       {{#if @query.length}}
         {{#if this.messages.length}}
-          <div id="chat-search-instructions" class="sr-only">
+          <div class="sr-only" id="chat-search-instructions">
             {{i18n "chat.search_view.sr_instructions"}}
           </div>
 
           <ul
+            aria-label={{i18n "chat.search_view.results_list_label"}}
             class="chat-message-search-entries"
             role="listbox"
-            aria-label={{i18n "chat.search_view.results_list_label"}}
           >
             {{#each this.messages key="id" as |message|}}
               <li
+                aria-describedby="chat-search-instructions"
+                aria-label={{this.accessibleMessageLabel message}}
                 class="chat-message-search-entry"
                 role="option"
+                tabindex="0"
                 {{on "click" (fn this.visitMessage message)}}
                 {{on "keydown" (fn this.handleKeypress message)}}
                 {{dTabToSibling}}
-                tabindex="0"
-                aria-label={{this.accessibleMessageLabel message}}
-                aria-describedby="chat-search-instructions"
               >
                 <div class="chat-message-search-entry__info">
                   {{#unless @scopedChannelId}}
@@ -251,11 +251,11 @@ export default class ChatSearch extends Component {
                 </div>
 
                 <ChatMessageComponent
-                  @message={{message}}
+                  @dateMode="long"
                   @disableMouseEvents={{true}}
                   @includeSeparator={{false}}
                   @interactive={{false}}
-                  @dateMode="long"
+                  @message={{message}}
                 />
               </li>
             {{/each}}

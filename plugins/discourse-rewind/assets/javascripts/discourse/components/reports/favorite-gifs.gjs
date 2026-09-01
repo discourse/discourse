@@ -30,10 +30,10 @@ export default class FavoriteGifs extends Component {
             <div class="rewind-card scale">
               <div class="favorite-gifs__gif">
                 <img
-                  src={{gif.url}}
                   alt="GIF #{{idx}}"
                   class="favorite-gifs__image"
                   loading="lazy"
+                  src={{gif.url}}
                 />
                 <div class="favorite-gifs__stats">
                   <span class="favorite-gifs__stat">

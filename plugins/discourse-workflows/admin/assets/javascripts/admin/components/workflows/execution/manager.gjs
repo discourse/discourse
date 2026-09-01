@@ -253,22 +253,22 @@ export default class ExecutionsManager extends Component {
 
   <template>
     <AdminTable
-      @items={{this.executions}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.executions}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
       @selectable={{this.bulkMode}}
     >
       <:empty>
         <EmptyState
+          @description={{i18n
+            "discourse_workflows.executions.empty_description"
+          }}
           @emoji="wave"
           @title={{i18n
             "discourse_workflows.executions.empty_title"
             username=this.currentUser.displayName
-          }}
-          @description={{i18n
-            "discourse_workflows.executions.empty_description"
           }}
         />
       </:empty>
@@ -276,27 +276,27 @@ export default class ExecutionsManager extends Component {
         {{#if this.bulkMode}}
           {{#if toolbar.hasSelection}}
             <DButton
+              class="btn-danger btn-small"
               @action={{fn
                 this.deleteSelected
                 toolbar.selectedIds
                 toolbar.clearSelection
               }}
-              @label="discourse_workflows.executions.delete_selected"
               @icon="trash-can"
-              class="btn-danger btn-small"
+              @label="discourse_workflows.executions.delete_selected"
             />
           {{/if}}
           <DButton
+            class="btn-default btn-small"
             @action={{fn this.cancelBulkMode toolbar.clearSelection}}
             @label="discourse_workflows.executions.cancel_select"
-            class="btn-default btn-small"
           />
         {{else}}
           <DButton
-            @action={{this.enableBulkMode}}
-            @label="discourse_workflows.executions.select"
-            @icon="list-check"
             class="btn-default btn-small"
+            @action={{this.enableBulkMode}}
+            @icon="list-check"
+            @label="discourse_workflows.executions.select"
           />
         {{/if}}
       </:toolbar>
@@ -391,9 +391,9 @@ export default class ExecutionsManager extends Component {
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.showExecution execution}}
               @label="discourse_workflows.executions.show"
-              class="btn-default btn-small"
             />
           </div>
         </td>

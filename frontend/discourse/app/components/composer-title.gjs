@@ -257,19 +257,19 @@ export default class ComposerTitle extends Component {
 
   <template>
     <DTextField
-      @value={{this.composer.title}}
+      @aria-label={{this.titleAriaLabel}}
+      @autocomplete="off"
+      @disabled={{this.disabled}}
       @id="reply-title"
       @maxLength={{this.titleMaxLength}}
-      @placeholderKey={{this.composer.titlePlaceholder}}
       @placeholder={{this.composer.categoryTitlePlaceholder}}
-      @aria-label={{this.titleAriaLabel}}
-      @disabled={{this.disabled}}
-      @autocomplete="off"
+      @placeholderKey={{this.composer.titlePlaceholder}}
+      @value={{this.composer.title}}
     />
 
     <PluginOutlet
-      @name="after-composer-title-input"
       @connectorTagName="div"
+      @name="after-composer-title-input"
       @outletArgs={{lazyHash composer=this.composer}}
     />
 

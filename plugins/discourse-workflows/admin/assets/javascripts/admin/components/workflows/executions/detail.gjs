@@ -547,14 +547,14 @@ export default class ExecutionDetail extends Component {
 
           {{#if this.execution.workflow_call_caller.execution_url}}
             <DButton
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
               @route="adminPlugins.show.discourse-workflows.show.executions.show"
               @routeModels={{array
                 this.execution.workflow_call_caller.workflow_id
                 this.execution.workflow_call_caller.execution_id
               }}
-              @icon="up-right-from-square"
-              @label="discourse_workflows.executions.workflow_call_open_parent"
-              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
             />
           {{/if}}
         </div>
@@ -733,14 +733,14 @@ export default class ExecutionDetail extends Component {
 
                   {{#if step.workflow_call_run.execution_url}}
                     <DButton
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
                       @route="adminPlugins.show.discourse-workflows.show.executions.show"
                       @routeModels={{array
                         step.workflow_call_run.workflow_id
                         step.workflow_call_run.execution_id
                       }}
-                      @icon="up-right-from-square"
-                      @label="discourse_workflows.executions.workflow_call_open"
-                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
                     />
                   {{/if}}
 
@@ -792,10 +792,10 @@ export default class ExecutionDetail extends Component {
             }}
           </div>
           <DButton
+            class="btn-default btn-small"
             @action={{this.exportAsText}}
             @icon="download"
             @label="discourse_workflows.executions.export"
-            class="btn-default btn-small"
           />
         </div>
       </div>

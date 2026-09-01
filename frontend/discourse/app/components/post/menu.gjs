@@ -627,7 +627,6 @@ export default class PostMenu extends Component {
       <DSmallUserList
         class="who-read"
         @addSelf={{false}}
-        @isVisible={{this.isWhoReadVisible}}
         @count={{if
           this.remainingReaders
           this.remainingReaders
@@ -638,6 +637,7 @@ export default class PostMenu extends Component {
           "post.actions.people.read_capped"
           "post.actions.people.read"
         }}
+        @isVisible={{this.isWhoReadVisible}}
         @users={{this.readers}}
       />
       {{#if
@@ -646,11 +646,11 @@ export default class PostMenu extends Component {
         )
       }}
         <UserTip
+          @contentText={{i18n "user_tips.post_menu.content"}}
           @id="post_menu"
-          @triggerSelector=".post-controls .actions .show-more-actions"
           @placement="top"
           @titleText={{i18n "user_tips.post_menu.title"}}
-          @contentText={{i18n "user_tips.post_menu.content"}}
+          @triggerSelector=".post-controls .actions .show-more-actions"
         />
       {{/if}}
     </PluginOutlet>

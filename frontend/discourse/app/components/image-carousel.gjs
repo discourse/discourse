@@ -195,10 +195,10 @@ export default class ImageCarousel extends Component {
       {{#unless this.isSingle}}
         <div class="d-image-carousel__controls">
           <button
-            type="button"
+            aria-label={{i18n "carousel.previous"}}
             class="d-image-carousel__nav d-image-carousel__nav--prev"
             title={{i18n "carousel.previous"}}
-            aria-label={{i18n "carousel.previous"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
             {{dIcon "chevron-left"}}
@@ -208,16 +208,16 @@ export default class ImageCarousel extends Component {
             <div class="d-image-carousel__dots">
               {{#each this.items as |_item index|}}
                 <button
-                  type="button"
-                  class={{dConcatClass
-                    "d-image-carousel__dot"
-                    (if (eq this.currentIndex index) "active")
-                  }}
+                  aria-current={{if (eq this.currentIndex index) "true"}}
                   aria-label={{i18n
                     "carousel.go_to_slide"
                     index=(plusOne index)
                   }}
-                  aria-current={{if (eq this.currentIndex index) "true"}}
+                  class={{dConcatClass
+                    "d-image-carousel__dot"
+                    (if (eq this.currentIndex index) "active")
+                  }}
+                  type="button"
                   {{on "click" (fn this.scrollToIndex index)}}
                 ></button>
               {{/each}}
@@ -227,10 +227,10 @@ export default class ImageCarousel extends Component {
           {{/if}}
 
           <button
-            type="button"
+            aria-label={{i18n "carousel.next"}}
             class="d-image-carousel__nav d-image-carousel__nav--next"
             title={{i18n "carousel.next"}}
-            aria-label={{i18n "carousel.next"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
             {{dIcon "chevron-right"}}

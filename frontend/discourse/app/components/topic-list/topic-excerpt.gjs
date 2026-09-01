@@ -3,7 +3,7 @@ import { i18n } from "discourse-i18n";
 
 const TopicExcerpt = <template>
   {{#if @topic.hasExcerpt}}
-    <a href={{@topic.url}} class="topic-excerpt">
+    <a class="topic-excerpt" href={{@topic.url}}>
       {{dDirSpan @topic.escapedExcerpt htmlSafe="true"}}
 
       {{#if @topic.excerptTruncated}}

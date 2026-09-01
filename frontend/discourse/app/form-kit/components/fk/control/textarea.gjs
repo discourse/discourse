@@ -48,17 +48,17 @@ export default class FKControlTextarea extends FKBaseControl {
 
   <template>
     <this.textareaElement
-      {{on "input" this.handleInput}}
-      {{on "keydown" this.onKeyDown}}
-      style={{this.style}}
+      aria-describedby={{@field.describedBy}}
+      aria-invalid={{if @field.error "true"}}
+      class="form-kit__control-textarea"
       disabled={{@field.disabled}}
-      value={{@field.value}}
       id={{@field.id}}
       name={{@field.name}}
-      aria-invalid={{if @field.error "true"}}
-      aria-describedby={{@field.describedBy}}
-      class="form-kit__control-textarea"
+      style={{this.style}}
+      value={{@field.value}}
       ...attributes
+      {{on "input" this.handleInput}}
+      {{on "keydown" this.onKeyDown}}
     />
   </template>
 }

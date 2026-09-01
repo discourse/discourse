@@ -93,15 +93,15 @@ export default class PostVotingComment extends Component {
 
   <template>
     <div
-      id={{this.anchorId}}
       class="post-voting-comments__comment {{if @comment.deleted '--deleted'}}"
+      id={{this.anchorId}}
     >
       {{#if this.isEditing}}
         <PostVotingCommentEditor
           @id={{@comment.id}}
-          @raw={{@comment.raw}}
-          @onSave={{this.onSave}}
           @onCancel={{this.onCancel}}
+          @onSave={{this.onSave}}
+          @raw={{@comment.raw}}
         />
       {{else}}
         <div class="post-voting-comments__vote">
@@ -115,11 +115,11 @@ export default class PostVotingComment extends Component {
 
           <PostVotingButton
             @direction="up"
+            @disabled={{@disabled}}
             @loading={{@isVoting}}
-            @voted={{@comment.user_voted}}
             @removeVote={{this.removeVote}}
             @vote={{if this.currentUser this.vote (routeAction "showLogin")}}
-            @disabled={{@disabled}}
+            @voted={{@comment.user_voted}}
           />
         </div>
 
@@ -132,9 +132,9 @@ export default class PostVotingComment extends Component {
 
           {{#if @comment.username}}
             <a
-              href={{userPath @comment.username}}
               class="post-voting-comments__username"
               data-user-card={{@comment.username}}
+              href={{userPath @comment.username}}
             >
               {{formatUsername @comment.username}}
             </a>
@@ -149,11 +149,11 @@ export default class PostVotingComment extends Component {
           </span>
 
           <PostVotingCommentActions
-            @id={{@comment.id}}
-            @updateComment={{this.expandEditor}}
-            @removeComment={{@removeComment}}
             @comment={{@comment}}
             @disabled={{@disabled}}
+            @id={{@comment.id}}
+            @removeComment={{@removeComment}}
+            @updateComment={{this.expandEditor}}
           />
 
         </div>

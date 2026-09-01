@@ -52,8 +52,8 @@ export default class InstallThemeCard extends Component {
         <div class="theme-install-card__external-links">
           {{#each this.externalResources as |resource|}}
             <a
-              href={{resource.link}}
               class="external-link"
+              href={{resource.link}}
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -64,11 +64,11 @@ export default class InstallThemeCard extends Component {
         </div>
         <DButton
           class="btn-primary theme-install-card__install-button"
+          @action={{@openModal}}
+          @icon="upload"
           @translatedLabel={{i18n
             "admin.config_areas.themes_and_components.install"
           }}
-          @icon="upload"
-          @action={{@openModal}}
         />
       </:content>
     </AdminConfigAreaCard>

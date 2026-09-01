@@ -19,10 +19,10 @@ export default class Badge extends Component {
 
   <template>
     <a
-      href="{{@ctx.baseuri}}/badges/{{@ctx.badge.id}}/{{@ctx.badge.name}}"
       class="user-badge {{@ctx.badge.badgeTypeClassName}}"
-      title={{@ctx.badge.display_name}}
       data-badge-name={{@ctx.badge.name}}
+      href="{{@ctx.baseuri}}/badges/{{@ctx.badge.id}}/{{@ctx.badge.name}}"
+      title={{@ctx.badge.display_name}}
     >
       {{this.iconOrImageReplacement}}
       <span class="badge-display-name">{{@ctx.badge.display_name}}</span>

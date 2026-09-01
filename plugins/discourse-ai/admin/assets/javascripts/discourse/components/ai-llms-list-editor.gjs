@@ -76,7 +76,7 @@ class UsageItem extends Component {
   <template>
     {{#if this.target}}
       {{#if this.target.models}}
-        <LinkTo @route={{this.target.route}} @models={{this.target.models}}>
+        <LinkTo @models={{this.target.models}} @route={{this.target.route}}>
           {{@label}}
         </LinkTo>
       {{else}}
@@ -209,23 +209,23 @@ export default class AiLlmsListEditor extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-llms"
       @label={{i18n "discourse_ai.llms.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-llms"
     />
     <section class="ai-llm-list-editor admin-detail">
       {{#if @currentLlm}}
         <AiLlmEditor
-          @model={{@currentLlm}}
           @llms={{@llms}}
           @llmTemplate={{@llmTemplate}}
+          @model={{@currentLlm}}
         />
       {{else}}
         <DPageSubheader
-          @titleLabel={{i18n "discourse_ai.llms.short_title"}}
           @descriptionLabel={{i18n
             "discourse_ai.llms.preconfigured.description"
           }}
           @learnMoreUrl="https://meta.discourse.org/t/discourse-ai-large-language-model-llm-settings-page/319903"
+          @titleLabel={{i18n "discourse_ai.llms.short_title"}}
         />
 
         <AiDefaultLlmSelector />
@@ -246,8 +246,8 @@ export default class AiLlmsListEditor extends Component {
               <tbody>
                 {{#each @llms.content as |llm|}}
                   <tr
-                    data-llm-id={{llm.name}}
                     class="ai-llm-list__row d-table__row"
+                    data-llm-id={{llm.name}}
                   >
                     <td class="d-table__cell --overview">
 
@@ -265,8 +265,8 @@ export default class AiLlmsListEditor extends Component {
                           {{#each llm.used_by as |usage|}}
                             <li>
                               <UsageItem
-                                @usage={{usage}}
                                 @label={{this.localizeUsage usage}}
+                                @usage={{usage}}
                               />
                             </li>
                           {{/each}}
@@ -334,14 +334,14 @@ export default class AiLlmsListEditor extends Component {
           >
             {{#each this.preConfiguredLlms as |llm|}}
               <AdminSectionLandingItem
-                @titleLabelTranslated={{llm.name}}
+                class="ai-llms-list-editor__templates-list-item"
+                data-llm-id={{llm.id}}
                 @descriptionLabelTranslated={{this.modelDescription llm}}
                 @taglineLabel={{concat
                   "discourse_ai.llms.providers."
                   llm.provider
                 }}
-                data-llm-id={{llm.id}}
-                class="ai-llms-list-editor__templates-list-item"
+                @titleLabelTranslated={{llm.name}}
               >
                 <:buttons as |buttons|>
                   <buttons.Default

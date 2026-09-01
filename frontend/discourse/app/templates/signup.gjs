@@ -40,8 +40,8 @@ export default <template>
 
     <div class={{dConcatClass "signup-body" @controller.bodyClasses}}>
       <PluginOutlet
-        @name="create-account-before-modal-body"
         @connectorTagName="div"
+        @name="create-account-before-modal-body"
       />
 
       <div
@@ -99,25 +99,25 @@ export default <template>
             {{/if}}
             <div class="input-group create-account-email">
               <Input
-                {{on "focusout" @controller.checkEmailAvailability}}
-                {{on "focusin" @controller.scrollInputIntoView}}
-                @type="email"
-                @value={{@controller.accountEmail}}
-                disabled={{@controller.emailDisabled}}
-                autofocus="autofocus"
                 aria-describedby="account-email-validation account-email-validation-more-info"
                 aria-invalid={{@controller.emailValidation.failed}}
-                name="email"
-                id="new-account-email"
+                autofocus="autofocus"
                 class={{valueEntered @controller.accountEmail}}
+                disabled={{@controller.emailDisabled}}
+                id="new-account-email"
+                name="email"
+                @type="email"
+                @value={{@controller.accountEmail}}
+                {{on "focusout" @controller.checkEmailAvailability}}
+                {{on "focusin" @controller.scrollInputIntoView}}
               />
               <label class="alt-placeholder" for="new-account-email">
                 {{i18n "user.email.title"}}
               </label>
               {{#if @controller.showEmailValidation}}
                 <DInputTip
-                  @validation={{@controller.emailValidation}}
                   id="account-email-validation"
+                  @validation={{@controller.emailValidation}}
                 />
               {{else}}
                 <span class="more-info" id="account-email-validation-more-info">
@@ -137,18 +137,18 @@ export default <template>
 
             <div class="input-group create-account__username">
               <input
-                {{on "focusin" @controller.scrollInputIntoView}}
-                {{on "input" @controller.setAccountUsername}}
-                type="text"
-                value={{@controller.accountUsername}}
-                disabled={{@controller.usernameDisabled}}
-                maxlength={{@controller.maxUsernameLength}}
                 aria-describedby="username-validation username-validation-more-info"
                 aria-invalid={{@controller.usernameValidation.failed}}
                 autocomplete="off"
-                name="username"
-                id="new-account-username"
                 class={{valueEntered @controller.accountUsername}}
+                disabled={{@controller.usernameDisabled}}
+                id="new-account-username"
+                maxlength={{@controller.maxUsernameLength}}
+                name="username"
+                type="text"
+                value={{@controller.accountUsername}}
+                {{on "focusin" @controller.scrollInputIntoView}}
+                {{on "input" @controller.setAccountUsername}}
               />
               <label class="alt-placeholder" for="new-account-username">
                 {{i18n "user.username.title"}}
@@ -161,8 +161,8 @@ export default <template>
 
               {{else}}
                 <DInputTip
-                  @validation={{@controller.usernameValidation}}
                   id="username-validation"
+                  @validation={{@controller.usernameValidation}}
                 />
               {{/if}}
 
@@ -176,12 +176,12 @@ export default <template>
 
             {{#if (and @controller.showFullname @controller.fullnameRequired)}}
               <FullnameInput
-                @nameValidation={{@controller.nameValidation}}
-                @nameTitle={{@controller.nameTitle}}
+                class="input-group create-account__fullname required"
                 @accountName={{@controller.accountName}}
                 @nameDisabled={{@controller.nameDisabled}}
+                @nameTitle={{@controller.nameTitle}}
+                @nameValidation={{@controller.nameValidation}}
                 @onFocusIn={{@controller.scrollInputIntoView}}
-                class="input-group create-account__fullname required"
               />
             {{/if}}
 
@@ -199,15 +199,15 @@ export default <template>
             <div class="input-group create-account__password">
               {{#if @controller.passwordRequired}}
                 <DPasswordField
-                  {{on "focusin" @controller.scrollInputIntoView}}
-                  @value={{@controller.accountPassword}}
-                  @capsLockOn={{@controller.capsLockOn}}
-                  type={{if @controller.maskPassword "password" "text"}}
-                  autocomplete="current-password"
                   aria-describedby="password-validation password-validation-more-info"
                   aria-invalid={{@controller.passwordValidation.failed}}
-                  id="new-account-password"
+                  autocomplete="current-password"
                   class={{valueEntered @controller.accountPassword}}
+                  id="new-account-password"
+                  type={{if @controller.maskPassword "password" "text"}}
+                  @capsLockOn={{@controller.capsLockOn}}
+                  @value={{@controller.accountPassword}}
+                  {{on "focusin" @controller.scrollInputIntoView}}
                 />
                 <label class="alt-placeholder" for="new-account-password">
                   {{i18n "user.password.title"}}
@@ -220,8 +220,8 @@ export default <template>
                   <div class="create-account__password-tip-validation">
                     {{#if @controller.showPasswordValidation}}
                       <DInputTip
-                        @validation={{@controller.passwordValidation}}
                         id="password-validation"
+                        @validation={{@controller.passwordValidation}}
                       />
                     {{else if
                       @controller.siteSettings.show_signup_form_password_instructions
@@ -251,13 +251,13 @@ export default <template>
                   {{i18n "user.password_confirmation.title"}}
                 </label>
                 <HoneypotInput
-                  @id="new-account-confirmation"
                   @autocomplete="new-password"
+                  @id="new-account-confirmation"
                   @value={{@controller.accountHoneypot}}
                 />
                 <Input
-                  @value={{@controller.accountChallenge}}
                   id="new-account-challenge"
+                  @value={{@controller.accountChallenge}}
                 />
               </div>
             </div>
@@ -265,10 +265,10 @@ export default <template>
             {{#if @controller.requireInviteCode}}
               <div class="input-group create-account__invite-code">
                 <Input
-                  {{on "focusin" @controller.scrollInputIntoView}}
-                  @value={{@controller.inviteCode}}
-                  id="inviteCode"
                   class={{valueEntered @controller.inviteCode}}
+                  id="inviteCode"
+                  @value={{@controller.inviteCode}}
+                  {{on "focusin" @controller.scrollInputIntoView}}
                 />
                 <label class="alt-placeholder" for="invite-code">
                   {{i18n "user.invite_code.title"}}
@@ -293,12 +293,12 @@ export default <template>
               (and @controller.showFullname (not @controller.fullnameRequired))
             }}
               <FullnameInput
-                @nameValidation={{@controller.nameValidation}}
-                @nameTitle={{@controller.nameTitle}}
+                class="input-group create-account__fullname"
                 @accountName={{@controller.accountName}}
                 @nameDisabled={{@controller.nameDisabled}}
+                @nameTitle={{@controller.nameTitle}}
+                @nameValidation={{@controller.nameValidation}}
                 @onFocusIn={{@controller.scrollInputIntoView}}
-                class="input-group create-account__fullname"
               />
               <PluginOutlet
                 @name="create-account-after-fullname"
@@ -311,11 +311,11 @@ export default <template>
                 {{#each @controller.userFields as |f|}}
                   <div class="input-group">
                     <UserField
-                      {{on "focusin" @controller.scrollInputIntoView}}
-                      @field={{f.field}}
-                      @value={{f.value}}
-                      @validation={{f.validation}}
                       class={{valueEntered f.value}}
+                      @field={{f.field}}
+                      @validation={{f.validation}}
+                      @value={{f.value}}
+                      {{on "focusin" @controller.scrollInputIntoView}}
                     />
                   </div>
                 {{/each}}
@@ -334,12 +334,12 @@ export default <template>
           </form>
 
           <SignupPageCta
-            @formSubmitted={{@controller.formSubmitted}}
-            @hasAuthOptions={{@controller.hasAuthOptions}}
             @createAccount={{@controller.createAccount}}
-            @goToLogin={{@controller.goToLogin}}
-            @submitDisabled={{@controller.submitDisabled}}
             @disclaimerHtml={{@controller.disclaimerHtml}}
+            @formSubmitted={{@controller.formSubmitted}}
+            @goToLogin={{@controller.goToLogin}}
+            @hasAuthOptions={{@controller.hasAuthOptions}}
+            @submitDisabled={{@controller.submitDisabled}}
           />
         {{/if}}
 
@@ -356,8 +356,8 @@ export default <template>
         {{/if}}
         <div class="login-right-side">
           <LoginButtons
-            @externalLogin={{@controller.externalLogin}}
             @context="create-account"
+            @externalLogin={{@controller.externalLogin}}
           />
         </div>
       {{/if}}

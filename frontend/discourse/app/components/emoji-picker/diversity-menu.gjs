@@ -36,8 +36,8 @@ export default class EmojiPicker extends Component {
   <template>
     <DMenu
       @contentClass="emoji-picker__diversity-menu"
-      @triggerClass="emoji-picker__diversity-trigger btn-transparent"
       @onRegisterApi={{this.registerApi}}
+      @triggerClass="emoji-picker__diversity-trigger btn-transparent"
     >
       <:trigger>
         {{#if (eq this.emojiStore.diversity 1)}}
@@ -53,8 +53,8 @@ export default class EmojiPicker extends Component {
             <dropdown.item>
               <DButton
                 class="btn-transparent emoji-picker__diversity-item"
-                @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
                 data-level={{fitzpatrick.scale}}
+                @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
               >
                 {{#if fitzpatrick.scale}}
                   {{dReplaceEmoji (concat ":clap:t" fitzpatrick.scale ":")}}

@@ -11,12 +11,12 @@ export default class AdminReportTableRow extends Component {
     <tr class="admin-report-table-row" ...attributes>
       {{#each this.labels as |label|}}
         <AdminReportTableCell
-          @label={{label}}
           @data={{this.data}}
           @hasRelatedItems={{@hasRelatedItems}}
+          @label={{label}}
           @options={{this.options}}
-          @reportType={{@reportType}}
           @reportFilters={{@reportFilters}}
+          @reportType={{@reportType}}
         />
       {{/each}}
     </tr>

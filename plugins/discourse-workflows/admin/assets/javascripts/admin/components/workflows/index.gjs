@@ -247,20 +247,20 @@ export default class WorkflowsIndex extends Component {
       <div class="d-filter-controls workflows-index__filters">
         <div class="d-filter-controls__inputs">
           <DFilterInput
+            class="d-filter-controls__input"
             placeholder={{i18n "discourse_workflows.search_placeholder"}}
             @filterAction={{this.onNameFilterChange}}
-            @value={{this.nameFilter}}
-            class="d-filter-controls__input"
             @icons={{hash left="magnifying-glass"}}
+            @value={{this.nameFilter}}
           />
 
           <DMultiSelect
-            @loadFn={{this.loadTags}}
-            @selection={{this.tagSelection}}
-            @onChange={{this.onTagFilterChange}}
-            @label={{i18n "discourse_workflows.tags.filter_label"}}
-            @noResultsLabel={{i18n "discourse_workflows.tags.no_results"}}
             class="workflows-index__tag-filter"
+            @label={{i18n "discourse_workflows.tags.filter_label"}}
+            @loadFn={{this.loadTags}}
+            @noResultsLabel={{i18n "discourse_workflows.tags.no_results"}}
+            @onChange={{this.onTagFilterChange}}
+            @selection={{this.tagSelection}}
           >
             <:selection as |tag|>{{tag.name}}</:selection>
             <:result as |tag|>
@@ -276,30 +276,30 @@ export default class WorkflowsIndex extends Component {
           {{#unless this.filtering}}
             {{#if this.hasActiveFilters}}
               <DButton
+                class="btn-default d-filter-controls__reset"
+                @action={{this.resetFilters}}
                 @icon="arrow-rotate-left"
                 @label="filter_controls.reset"
-                @action={{this.resetFilters}}
-                class="btn-default d-filter-controls__reset"
               />
             {{/if}}
           {{/unless}}
         </div>
 
         <DButton
-          @action={{this.createWorkflow}}
-          @label="discourse_workflows.new_workflow"
-          @icon="plus"
           class="btn-primary workflows-index__new-btn"
+          @action={{this.createWorkflow}}
+          @icon="plus"
+          @label="discourse_workflows.new_workflow"
         />
       </div>
 
       {{#if this.resultSet.content.length}}
         <AdminTable
-          @items={{this.resultSet.content}}
-          @isLoading={{this.filtering}}
           @canLoadMore={{this.resultSet.canLoadMore}}
-          @loadMore={{this.loadMore}}
+          @isLoading={{this.filtering}}
+          @items={{this.resultSet.content}}
           @loadingMore={{this.loading}}
+          @loadMore={{this.loadMore}}
           @rowClass="workflows-index__row"
         >
           <:head>
@@ -329,8 +329,8 @@ export default class WorkflowsIndex extends Component {
               </div>
               {{#if workflow.createdBy}}
                 <a
-                  href={{workflow.createdBy.path}}
                   class="workflows-index__creator-link"
+                  href={{workflow.createdBy.path}}
                 >
                   {{dAvatar workflow.createdBy imageSize="tiny"}}
                 </a>
@@ -338,20 +338,20 @@ export default class WorkflowsIndex extends Component {
             </td>
             <td class="d-table__cell --overview workflows-index__name">
               <LinkTo
-                @route="adminPlugins.show.discourse-workflows.show"
-                @model={{workflow.id}}
                 class="d-table__overview-link"
+                @model={{workflow.id}}
+                @route="adminPlugins.show.discourse-workflows.show"
               >
                 <strong
                   class="d-table__overview-name"
                 >{{workflow.name}}</strong>
                 {{#if (eq workflow.lastExecutionStatus "error")}}
                   <span
-                    class="workflows-index__warning"
-                    role="img"
                     aria-label={{i18n
                       "discourse_workflows.last_execution_failed"
                     }}
+                    class="workflows-index__warning"
+                    role="img"
                     title={{i18n "discourse_workflows.last_execution_failed"}}
                   >
                     {{dIcon "triangle-exclamation"}}
@@ -362,8 +362,8 @@ export default class WorkflowsIndex extends Component {
                 <div class="d-table__badges workflows-index__tags">
                   {{#each workflow.tags as |tag|}}
                     <a
-                      href={{this.tagFilterHref tag}}
                       class="d-table-badge"
+                      href={{this.tagFilterHref tag}}
                       title={{i18n "discourse_workflows.tags.filter_by"}}
                       {{on "click" (fn this.addTagFilter tag)}}
                     >
@@ -379,8 +379,8 @@ export default class WorkflowsIndex extends Component {
               </div>
               {{#if workflow.updatedBy}}
                 <a
-                  href={{workflow.updatedBy.path}}
                   class="workflows-index__last-editor-link"
+                  href={{workflow.updatedBy.path}}
                 >
                   {{dAvatar workflow.updatedBy imageSize="tiny"}}
                   <span>{{workflow.updatedBy.username}}</span>
@@ -422,23 +422,23 @@ export default class WorkflowsIndex extends Component {
         <div class="d-filter-controls__no-results workflows-index__no-results">
           <p>{{i18n "discourse_workflows.no_workflows_found"}}</p>
           <DButton
+            class="btn-default"
+            @action={{this.resetFilters}}
             @icon="arrow-rotate-left"
             @label="filter_controls.reset"
-            @action={{this.resetFilters}}
-            class="btn-default"
           />
         </div>
       {{/if}}
     {{else}}
       <EmptyState
+        @buttonLabel="discourse_workflows.create_first_workflow"
+        @description={{i18n "discourse_workflows.empty_description"}}
         @emoji="wave"
+        @onAction={{this.createWorkflow}}
         @title={{i18n
           "discourse_workflows.empty_title"
           username=this.currentUser.displayName
         }}
-        @description={{i18n "discourse_workflows.empty_description"}}
-        @buttonLabel="discourse_workflows.create_first_workflow"
-        @onAction={{this.createWorkflow}}
       />
     {{/if}}
   </template>

@@ -53,14 +53,14 @@ export default class AdminHolidaysListItem extends Component {
       <td class="d-table__cell --controls">
         <div class="d-table__cell-actions">
           <DButton
+            class="btn-default btn-small"
             @action={{this.toggleEnableHoliday}}
+            @isLoading={{this.loading}}
             @label={{if
               this.isHolidayDisabled
               "discourse_events.enable_holiday"
               "discourse_events.disable_holiday"
             }}
-            @isLoading={{this.loading}}
-            class="btn-default btn-small"
           />
         </div>
       </td>

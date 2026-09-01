@@ -85,12 +85,12 @@ export default class PostMenuLikeButton extends Component {
           }}
           ...attributes
           data-post-id={{@post.id}}
-          @disabled={{this.disabled}}
           @action={{this.toggleLike}}
+          @ariaLabel={{this.title}}
+          @disabled={{this.disabled}}
           @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
-          @ariaLabel={{this.title}}
         />
       </div>
     {{else}}

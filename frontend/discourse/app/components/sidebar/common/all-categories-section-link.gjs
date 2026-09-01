@@ -16,11 +16,11 @@ export default class SidebarCommonAllCategoriesSectionLink extends Component {
 
   <template>
     <SectionLink
-      @linkName="all-categories"
       @content={{i18n "sidebar.all_categories"}}
-      @route="discovery.categories"
+      @linkName="all-categories"
       @prefixType="icon"
       @prefixValue="sidebar.all_categories"
+      @route="discovery.categories"
       @scrollIntoView={{this.scrollIntoView}}
     />
   </template>

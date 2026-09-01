@@ -54,11 +54,11 @@ export default class HeaderSearch extends Component {
               <div class="search-menu">
                 {{#if this.showAdvancedSearchIcon}}
                   <DButton
-                    @icon="magnifying-glass"
-                    @translatedLabel={{@buttonText}}
-                    @title="search.open_advanced"
                     class={{dConcatClass "btn search-icon" @buttonClass}}
                     @href={{this.advancedSearchButtonHref}}
+                    @icon="magnifying-glass"
+                    @title="search.open_advanced"
+                    @translatedLabel={{@buttonText}}
                   />
                 {{/if}}
 

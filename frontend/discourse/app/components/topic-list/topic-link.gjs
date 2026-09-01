@@ -16,9 +16,9 @@ export default class TopicLink extends Component {
     <PluginOutlet @name="topic-link" @outletArgs={{lazyHash topic=@topic}}>
       {{~! no whitespace ~}}
       <a
-        href={{this.url}}
-        data-topic-id={{@topic.id}}
         class="title"
+        data-topic-id={{@topic.id}}
+        href={{this.url}}
         ...attributes
       >
         {{~trustHTML @topic.fancyTitle~}}

@@ -215,17 +215,17 @@ export default class MultiSelect extends SelectKitComponent {
         as |HeaderComponent|
       }}
         <HeaderComponent
-          @tabindex={{this.tabindex}}
-          @value={{this.value}}
+          @id={{concat this.selectKit.uniqueID "-header"}}
           @selectedContent={{this.selectedContent}}
           @selectKit={{this.selectKit}}
-          @id={{concat this.selectKit.uniqueID "-header"}}
+          @tabindex={{this.tabindex}}
+          @value={{this.value}}
         />
       {{/let}}
 
       <SelectKitBody
-        @selectKit={{this.selectKit}}
         @id={{concat this.selectKit.uniqueID "-body"}}
+        @selectKit={{this.selectKit}}
       >
         {{#unless this.selectKit.options.useHeaderFilter}}
           {{#let
@@ -233,8 +233,8 @@ export default class MultiSelect extends SelectKitComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
               @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
 
@@ -249,9 +249,9 @@ export default class MultiSelect extends SelectKitComponent {
                 {{#each this.selectedContent as |item|}}
                   <SelectedChoiceComponent
                     @item={{item}}
-                    @selectKit={{this.selectKit}}
                     @mandatoryValues={{@mandatoryValues}}
                     @mandatoryValueTitle={{@mandatoryValueTitle}}
+                    @selectKit={{this.selectKit}}
                   />
                 {{/each}}
               {{/let}}

@@ -246,16 +246,16 @@ export default class ChatPinnedMessageBar extends Component {
         {{#if this.currentPin}}
           <div class="chat-pinned-bar__main">
             <button
-              type="button"
-              class="chat-pinned-bar__jump"
               aria-label={{i18n "chat.pinned_bar.jump_to_pinned"}}
+              class="chat-pinned-bar__jump"
+              type="button"
               {{on "click" this.jumpToCurrentPin}}
             ></button>
 
             {{#if this.hasMultiplePins}}
               <span
-                class="chat-pinned-bar__indicator"
                 aria-hidden="true"
+                class="chat-pinned-bar__indicator"
                 style={{this.indicatorStyle}}
               >
                 <span class="chat-pinned-bar__indicator-track">
@@ -285,15 +285,15 @@ export default class ChatPinnedMessageBar extends Component {
         {{! a lone pin has no list to open, and the excerpt wants the width }}
         {{#if this.hasMultiplePins}}
           <LinkTo
-            @route={{this.seeAllRoute}}
-            @models={{@channel.routeModels}}
+            aria-label={{this.seeAllLabel}}
             class={{if
               this.pinsPanelOpen
               "chat-pinned-bar__see-all btn no-text btn-transparent --active"
               "chat-pinned-bar__see-all btn no-text btn-transparent"
             }}
-            aria-label={{this.seeAllLabel}}
             title={{this.seeAllLabel}}
+            @models={{@channel.routeModels}}
+            @route={{this.seeAllRoute}}
           >
             {{dIcon "list"}}
             {{#if @channel.hasUnseenPins}}
@@ -303,11 +303,11 @@ export default class ChatPinnedMessageBar extends Component {
         {{/if}}
 
         <DButton
+          class="chat-pinned-bar__dismiss btn-transparent no-text"
           @action={{this.dismiss}}
+          @ariaLabel="chat.pinned_messages.dismiss"
           @icon="xmark"
           @title="chat.pinned_messages.dismiss"
-          @ariaLabel="chat.pinned_messages.dismiss"
-          class="chat-pinned-bar__dismiss btn-transparent no-text"
         />
       </div>
     {{/if}}

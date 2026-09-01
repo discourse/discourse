@@ -13,41 +13,41 @@ declare function resolveBox(separator: HTMLElement): HTMLElement | null;
 
 const Positives = <template>
   {{! The ordinary case: the box alone, in either form }}
-  <DResizeSeparator @measure={{box}} @label="Resize" />
+  <DResizeSeparator @label="Resize" @measure={{box}} />
   <DResizeSeparator
     @axis="horizontal"
-    @measure={{resolveBox}}
     @label="Resize"
+    @measure={{resolveBox}}
     @onResizeStart={{noop}}
   />
 
   {{! Sizes may still be supplied, and may be given alongside the box }}
   <DResizeSeparator
+    class="my-block__handle"
     @axis="vertical"
+    @label="Resize"
+    @max={{size}}
+    @measure={{box}}
+    @min={{size}}
+    @onResizeStart={{noop}}
     @side="end"
     @value={{size}}
-    @min={{size}}
-    @max={{size}}
-    @label="Resize"
-    @measure={{box}}
-    @onResizeStart={{noop}}
-    class="my-block__handle"
   />
   <DResizeSeparator
     @axis="horizontal"
-    @value={{measure}}
-    @min={{measure}}
-    @max={{measure}}
     @label="Resize"
+    @max={{measure}}
+    @min={{measure}}
+    @value={{measure}}
   >grip</DResizeSeparator>
   {{! A measured SIZE may honestly say "not yet": null withholds aria-valuenow.
     Bounds may not, so they stay non-nullable here. }}
   <DResizeSeparator
     @axis="horizontal"
-    @value={{measureMaybe}}
-    @min={{size}}
-    @max={{measure}}
     @label="Resize"
+    @max={{measure}}
+    @min={{size}}
+    @value={{measureMaybe}}
   />
 </template>;
 

@@ -90,9 +90,9 @@ export default class TrustLevelPipeline extends Component {
     <div class="db-tl-pipeline">
       <div class="db-section__row-block-header">
         <LinkTo
-          @route="adminReports.show"
-          @model="trust_level_pipeline"
           class="db-section__row-block-title --label"
+          @model="trust_level_pipeline"
+          @route="adminReports.show"
         >
           {{i18n
             "admin.dashboard.sections.engagement.trust_level_pipeline.title"
@@ -139,32 +139,32 @@ export default class TrustLevelPipeline extends Component {
                 <div class="db-tl-pipeline__bar-track">
                   {{#if row.hasBar}}
                     <span
+                      aria-hidden="true"
                       class={{dConcatClass
                         "db-tl-pipeline__bar"
                         (if row.barDown "--demoted")
                       }}
                       style={{row.barStyle}}
-                      aria-hidden="true"
                     ></span>
                   {{/if}}
                 </div>
                 {{#if row.hasClimbers}}
                   <span
-                    class="db-delta --pos"
                     aria-label={{i18n
                       "admin.dashboard.sections.engagement.trust_level_pipeline.arrivals_aria"
                       (hash count=row.promoted_in)
                     }}
+                    class="db-delta --pos"
                   >{{row.promotedInFormatted}}
                     {{dIcon "arrow-up"}}</span>
                 {{/if}}
                 {{#if row.hasDroppers}}
                   <span
-                    class="db-delta --neg"
                     aria-label={{i18n
                       "admin.dashboard.sections.engagement.trust_level_pipeline.demotions_in_aria"
                       (hash count=row.demoted_in)
                     }}
+                    class="db-delta --neg"
                   >{{dIcon "arrow-down"}}
                     {{row.demotedInFormatted}}</span>
                 {{/if}}

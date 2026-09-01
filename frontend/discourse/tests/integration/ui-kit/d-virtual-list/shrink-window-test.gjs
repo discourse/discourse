@@ -80,11 +80,11 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @overscan={{0}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
+          @overscan={{0}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -140,11 +140,11 @@ module("Integration | ui-kit | DVirtualList | shrink window", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @overscan={{0}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
+          @overscan={{0}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

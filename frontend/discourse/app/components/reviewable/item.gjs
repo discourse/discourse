@@ -679,8 +679,8 @@ export default class ReviewableItem extends Component {
     <div class="review-container">
 
       <div
-        data-reviewable-id={{@reviewable.id}}
         class="review-item {{this.customClasses}}"
+        data-reviewable-id={{@reviewable.id}}
       >
         <div class="review-item__primary-content">
           <div class="review-item__flag-summary">
@@ -698,10 +698,10 @@ export default class ReviewableItem extends Component {
               </div>
 
               <button
+                class="btn btn-transparent reviewable-permalink-copy"
+                title={{i18n "review.copy_permalink_title"}}
                 type="button"
                 {{on "click" this.copyPermalink}}
-                title={{i18n "review.copy_permalink_title"}}
-                class="btn btn-transparent reviewable-permalink-copy"
               >
                 {{dIcon "link"}}
               </button>
@@ -719,11 +719,11 @@ export default class ReviewableItem extends Component {
                   <div class="editable-field {{dDasherize f.id}}">
                     {{#let (get fieldComponents f.type) as |FieldComponent|}}
                       <FieldComponent
+                        @categoryChanged={{this.categoryChanged}}
+                        @tagCategoryId={{this.tagCategoryId}}
                         @tagName=""
                         @value={{editableValue @reviewable f.id}}
-                        @tagCategoryId={{this.tagCategoryId}}
                         @valueChanged={{fn this.valueChanged f.id}}
-                        @categoryChanged={{this.categoryChanged}}
                       />
                     {{/let}}
                   </div>
@@ -752,8 +752,8 @@ export default class ReviewableItem extends Component {
           <div class="review-item__insights">
             <div class="d-nav-submenu">
               <DHorizontalOverflowNav
-                @ariaLabel="Review tabs"
                 class="d-nav-submenu__tabs"
+                @ariaLabel="Review tabs"
               >
                 <li
                   class={{dConcatClass
@@ -762,8 +762,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "timeline") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "timeline")}}
                   >
                     {{i18n "review.timeline_and_notes"}}
@@ -776,8 +776,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "insights") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "insights")}}
                   >
                     {{i18n "review.insights.title"}}
@@ -793,8 +793,8 @@ export default class ReviewableItem extends Component {
             {{/if}}
             {{#if (eq this.state.activeTab "timeline")}}
               <ReviewableTimeline
-                @reviewable={{@reviewable}}
                 @historyEvents={{@reviewable.reviewable_histories}}
+                @reviewable={{@reviewable}}
               />
             {{/if}}
           </div>
@@ -818,18 +818,18 @@ export default class ReviewableItem extends Component {
                 </h3>
                 {{#if this.editing}}
                   <DButton
+                    class="btn-primary reviewable-action save-edit"
+                    @action={{this.saveEdit}}
                     @disabled={{this.disabled}}
                     @icon="check"
-                    @action={{this.saveEdit}}
                     @label="review.save"
-                    class="btn-primary reviewable-action save-edit"
                   />
                   <DButton
+                    class="btn-danger reviewable-action cancel-edit"
+                    @action={{this.cancelEdit}}
                     @disabled={{this.disabled}}
                     @icon="xmark"
-                    @action={{this.cancelEdit}}
                     @label="review.cancel"
-                    class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
                   {{#each @reviewable.bundled_actions as |bundle|}}
@@ -842,10 +842,10 @@ export default class ReviewableItem extends Component {
 
                   {{#if @reviewable.can_edit}}
                     <DButton
-                      @disabled={{this.disabled}}
-                      @action={{this.edit}}
-                      @label="review.edit"
                       class="reviewable-action btn-default edit"
+                      @action={{this.edit}}
+                      @disabled={{this.disabled}}
+                      @label="review.edit"
                     />
                   {{/if}}
                 {{/if}}
@@ -859,16 +859,16 @@ export default class ReviewableItem extends Component {
                 <div class="review-item__assigned">
                   {{dIcon "user-plus"}}
                   <ReviewableCreatedBy
-                    @showUsername={{true}}
                     @avatarSize="small"
+                    @showUsername={{true}}
                     @user={{@reviewable.claimed_by.user}}
                   />
                 </div>
               {{/if}}
               <ReviewableClaimedTopic
-                @topicId={{this.topicId}}
                 @claimedBy={{@reviewable.claimed_by}}
                 @onClaim={{this.claimedByChanged}}
+                @topicId={{this.topicId}}
               />
             </div>
           {{/if}}

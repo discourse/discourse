@@ -69,8 +69,8 @@ export default class VoiceRecordingList extends Component {
   <template>
     <section class="voice-recordings">
       <DPageSubheader
-        @titleLabel={{i18n "voice.admin.recordings_title"}}
         @descriptionLabel={{i18n "voice.admin.recordings.description"}}
+        @titleLabel={{i18n "voice.admin.recordings_title"}}
       />
 
       {{#if this.recordings.length}}
@@ -148,9 +148,9 @@ export default class VoiceRecordingList extends Component {
         <DConditionalLoadingSpinner @condition={{this.loadingMore}}>
           {{#if this.hasMore}}
             <DButton
+              class="btn-default voice-recordings__load-more"
               @action={{this.loadMore}}
               @label="voice.admin.recordings.load_more"
-              class="btn-default voice-recordings__load-more"
             />
           {{/if}}
         </DConditionalLoadingSpinner>

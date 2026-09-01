@@ -280,8 +280,7 @@ export default class DMenu<Data = unknown> extends Component<
 
   <template>
     <this.triggerComponent
-      {{this.registerTrigger}}
-      {{this.syncDisabled @disabled}}
+      aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       class={{dConcatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
@@ -289,13 +288,14 @@ export default class DMenu<Data = unknown> extends Component<
         @triggerClass
         @class
       }}
-      id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{on "keydown" this.forwardTabToContent}}
-      @componentArgs={{this.componentArgs}}
+      id={{this.menuInstance.id}}
       ...attributes
+      @componentArgs={{this.componentArgs}}
+      {{this.registerTrigger}}
+      {{this.syncDisabled @disabled}}
+      {{on "keydown" this.forwardTabToContent}}
     >
       {{#if (has-block "trigger")}}
         {{yield this.componentArgs to="trigger"}}
@@ -305,29 +305,29 @@ export default class DMenu<Data = unknown> extends Component<
     {{#if this.menuInstance.expanded}}
       {{#if this.menuInstance.renderInModal}}
         <DModal
-          @closeModal={{this.menuInstance.close}}
-          @hideHeader={{true}}
-          @autofocus={{this.options.autofocus}}
           class={{dConcatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
             @contentClass
             @class
           }}
-          @inline={{(isTesting)}}
-          data-identifier={{this.options.identifier}}
           data-content
+          data-identifier={{this.options.identifier}}
+          @autofocus={{this.options.autofocus}}
+          @closeModal={{this.menuInstance.close}}
+          @hideHeader={{true}}
+          @inline={{(isTesting)}}
           {{FloatKitNotifyPositioned this.menuInstance}}
         >
-          <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
+          <div aria-hidden="true" class="fk-d-menu-modal__grip"></div>
           {{#if (has-block)}}
             {{yield this.componentArgs}}
           {{else if (has-block "content")}}
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
             <this.options.component
-              @data={{this.options.data}}
               @close={{this.menuInstance.close}}
+              @data={{this.options.data}}
             />
           {{else if this.options.content}}
             {{this.options.content}}
@@ -335,18 +335,18 @@ export default class DMenu<Data = unknown> extends Component<
         </DModal>
       {{else}}
         <DFloatBody
-          @instance={{this.menuInstance}}
-          @trapTab={{this.options.trapTab}}
+          @inline={{this.options.inline}}
           @inlineTabOrder={{this.options.inlineTabOrder}}
+          @innerClass="fk-d-menu__inner-content"
+          @instance={{this.menuInstance}}
           @mainClass={{dConcatClass
             "fk-d-menu"
             (concat this.options.identifier "-content")
             @class
             @contentClass
           }}
-          @innerClass="fk-d-menu__inner-content"
           @role={{this.options.contentRole}}
-          @inline={{this.options.inline}}
+          @trapTab={{this.options.trapTab}}
           {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
@@ -355,8 +355,8 @@ export default class DMenu<Data = unknown> extends Component<
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
             <this.options.component
-              @data={{this.options.data}}
               @close={{this.menuInstance.close}}
+              @data={{this.options.data}}
             />
           {{else if this.options.content}}
             {{this.options.content}}

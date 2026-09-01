@@ -432,31 +432,31 @@ export default class PollUiBuilderModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "poll.ui_builder.title"}}
+      class="poll-ui-builder"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="poll-ui-builder"
+      @title={{i18n "poll.ui_builder.title"}}
     >
       <:body>
         <ul class="nav nav-pills poll-type">
           <li>
             <DButton
-              @action={{fn this.updatePollType "regular"}}
               class={{dConcatClass
                 "poll-type-value poll-type-value-regular"
                 (if this.isRegular "active")
               }}
+              @action={{fn this.updatePollType "regular"}}
             >
               {{i18n "poll.ui_builder.poll_type.regular"}}
             </DButton>
           </li>
           <li>
             <DButton
-              @action={{fn this.updatePollType "multiple"}}
               class={{dConcatClass
                 "poll-type-value poll-type-value-multiple"
                 (if this.isMultiple "active")
               }}
+              @action={{fn this.updatePollType "multiple"}}
             >
               {{i18n "poll.ui_builder.poll_type.multiple"}}
             </DButton>
@@ -464,11 +464,11 @@ export default class PollUiBuilderModal extends Component {
           {{#if this.showNumber}}
             <li>
               <DButton
-                @action={{fn this.updatePollType "number"}}
                 class={{dConcatClass
                   "poll-type-value poll-type-value-number"
                   (if this.isNumber "active")
                 }}
+                @action={{fn this.updatePollType "number"}}
               >
                 {{i18n "poll.ui_builder.poll_type.number"}}
               </DButton>
@@ -477,11 +477,11 @@ export default class PollUiBuilderModal extends Component {
           {{#if this.showRankedChoice}}
             <li>
               <DButton
-                @action={{fn this.updatePollType "ranked_choice"}}
                 class={{dConcatClass
                   "poll-type-value poll-type-value-ranked-choice"
                   (if this.isRankedChoice "active")
                 }}
+                @action={{fn this.updatePollType "ranked_choice"}}
               >
                 {{i18n "poll.ui_builder.poll_type.ranked_choice"}}
               </DButton>
@@ -495,9 +495,9 @@ export default class PollUiBuilderModal extends Component {
                 "poll.ui_builder.poll_title.label"
               }}</label>
             <input
-              {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
               type="text"
               value={{this.pollTitle}}
+              {{on "input" (withEventValue (fn (mut this.pollTitle)))}}
             />
           </div>
         {{/if}}
@@ -529,8 +529,8 @@ export default class PollUiBuilderModal extends Component {
                   />
                   {{#if this.canRemoveOption}}
                     <DButton
-                      @icon="trash-can"
                       @action={{fn this.removeOption option}}
+                      @icon="trash-can"
                     />
                   {{/if}}
                 </div>
@@ -538,10 +538,10 @@ export default class PollUiBuilderModal extends Component {
 
               <div class="poll-option-controls">
                 <DButton
+                  class="btn-default poll-option-add"
+                  @action={{fn this.addOption -1}}
                   @icon="plus"
                   @label="poll.ui_builder.poll_options.add"
-                  @action={{fn this.addOption -1}}
-                  class="btn-default poll-option-add"
                 />
                 {{#if
                   (and
@@ -563,11 +563,11 @@ export default class PollUiBuilderModal extends Component {
                   "poll.ui_builder.poll_config.min"
                 }}</label>
               <input
-                {{on "input" this.onChangePollMin}}
-                type="number"
-                value={{this.pollMin}}
                 class="poll-options-min"
                 min="1"
+                type="number"
+                value={{this.pollMin}}
+                {{on "input" this.onChangePollMin}}
               />
             </div>
 
@@ -576,11 +576,11 @@ export default class PollUiBuilderModal extends Component {
                   "poll.ui_builder.poll_config.max"
                 }}</label>
               <input
-                {{on "input" this.onChangePollMax}}
-                type="number"
-                value={{this.pollMax}}
                 class="poll-options-max"
                 min="1"
+                type="number"
+                value={{this.pollMax}}
+                {{on "input" this.onChangePollMax}}
               />
             </div>
 
@@ -590,11 +590,11 @@ export default class PollUiBuilderModal extends Component {
                     "poll.ui_builder.poll_config.step"
                   }}</label>
                 <input
-                  {{on "input" (withEventValue (fn (mut this.pollStep)))}}
+                  class="poll-options-step"
+                  min="1"
                   type="number"
                   value={{this.pollStep}}
-                  min="1"
-                  class="poll-options-step"
+                  {{on "input" (withEventValue (fn (mut this.pollStep)))}}
                 />
               </div>
             {{/if}}
@@ -607,9 +607,9 @@ export default class PollUiBuilderModal extends Component {
 
         <div class="input-group poll-public">
           <DToggleSwitch
-            @state={{this.publicPoll}}
-            @label="poll.ui_builder.poll_public.label"
             class="poll-toggle-public"
+            @label="poll.ui_builder.poll_public.label"
+            @state={{this.publicPoll}}
             {{on "click" this.togglePublic}}
           />
         </div>
@@ -617,9 +617,9 @@ export default class PollUiBuilderModal extends Component {
         {{#if this.showAdvanced}}
           <div class="input-group poll-dynamic">
             <DToggleSwitch
-              @state={{this.dynamic}}
-              @label="poll.ui_builder.poll_dynamic.label"
               class="poll-toggle-dynamic"
+              @label="poll.ui_builder.poll_dynamic.label"
+              @state={{this.dynamic}}
               {{on "click" (fn (mut this.dynamic) (not this.dynamic))}}
             />
           </div>
@@ -629,9 +629,9 @@ export default class PollUiBuilderModal extends Component {
               }}</label>
             <GroupChooser
               @content={{this.siteGroups}}
-              @value={{this.pollGroups}}
-              @onChange={{fn (mut this.pollGroups)}}
               @labelProperty="name"
+              @onChange={{fn (mut this.pollGroups)}}
+              @value={{this.pollGroups}}
               @valueProperty="name"
             />
           </div>
@@ -641,9 +641,9 @@ export default class PollUiBuilderModal extends Component {
                 "poll.ui_builder.automatic_close.label"
               }}</label>
             <DDateTimeInput
+              @clearable={{true}}
               @date={{this.pollAutoClose}}
               @onChange={{fn (mut this.pollAutoClose)}}
-              @clearable={{true}}
               @useGlobalPickerContainer={{true}}
             />
           </div>
@@ -653,11 +653,11 @@ export default class PollUiBuilderModal extends Component {
                 "poll.ui_builder.poll_result.label"
               }}</label>
             <ComboBox
+              class="poll-result"
               @content={{this.pollResults}}
+              @onChange={{fn (mut this.pollResult)}}
               @value={{this.pollResult}}
               @valueProperty="value"
-              @onChange={{fn (mut this.pollResult)}}
-              class="poll-result"
             />
           </div>
 
@@ -671,8 +671,8 @@ export default class PollUiBuilderModal extends Component {
                 <DRadioButton
                   @id="poll-chart-type-bar"
                   @name="poll-chart-type"
-                  @value="bar"
                   @selection={{this.chartType}}
+                  @value="bar"
                 />
                 <label for="poll-chart-type-bar">{{dIcon "chart-bar"}}
                   {{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
@@ -682,8 +682,8 @@ export default class PollUiBuilderModal extends Component {
                 <DRadioButton
                   @id="poll-chart-type-pie"
                   @name="poll-chart-type"
-                  @value="pie"
                   @selection={{this.chartType}}
+                  @value="pie"
                 />
                 <label for="poll-chart-type-pie">{{dIcon "chart-pie"}}
                   {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
@@ -694,14 +694,14 @@ export default class PollUiBuilderModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary insert-poll"
           @action={{this.insertPoll}}
+          @disabled={{this.disableInsert}}
           @icon="chart-bar"
           @label="poll.ui_builder.insert"
-          @disabled={{this.disableInsert}}
-          class="btn-primary insert-poll"
         />
 
-        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
+        <DButton class="btn-flat" @action={{@closeModal}} @label="cancel" />
 
         <AdvancedModeToggle
           @active={{this.showAdvanced}}

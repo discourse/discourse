@@ -467,9 +467,9 @@ export default class BulkTopicActions extends Component {
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal"
+      @closeModal={{@closeModal}}
+      @title={{@model.title}}
     >
       <:body>
         <DConditionalLoadingSection
@@ -520,8 +520,8 @@ export default class BulkTopicActions extends Component {
             {{#if this.isCategoryAction}}
               <p>
                 <CategoryChooser
-                  @value={{this.categoryId}}
                   @onChange={{this.onCategoryChange}}
+                  @value={{this.categoryId}}
                 />
               </p>
             {{/if}}
@@ -534,9 +534,9 @@ export default class BulkTopicActions extends Component {
                       class="radio notification-level-radio checkbox-label"
                     >
                       <DRadioButton
-                        @value={{level.id}}
                         @name="notification_level"
                         @selection={{this.notificationLevelId}}
+                        @value={{level.id}}
                       />
                       <strong>{{level.name}}</strong>
                       <div class="description">{{trustHTML
@@ -550,19 +550,19 @@ export default class BulkTopicActions extends Component {
 
             {{#if this.activeComponent}}
               <this.activeComponent
-                @onRegisterAction={{this.registerCustomAction}}
-                @setSubmitDisabled={{this.setSubmitDisabled}}
-                @topics={{this.activeComponentProps.topics}}
                 @afterBulkAction={{this.activeComponentProps.afterBulkAction}}
                 @categoryId={{this.activeComponentProps.categoryId}}
                 @onPerform={{this.activeComponentProps.onPerform}}
+                @onRegisterAction={{this.registerCustomAction}}
+                @setSubmitDisabled={{this.setSubmitDisabled}}
+                @topics={{this.activeComponentProps.topics}}
               />
             {{/if}}
 
             {{#if this.isPinAction}}
               <BulkPinOptions
-                @onPin={{this.performAction}}
                 @category={{this.soleCategory}}
+                @onPin={{this.performAction}}
               />
             {{/if}}
 
@@ -588,38 +588,38 @@ export default class BulkTopicActions extends Component {
       <:footer>
         {{#if this.hasFailures}}
           <DButton
-            @action={{this.closeWithRefresh}}
-            @label="close"
             class="btn-primary"
             id="bulk-topics-close"
+            @action={{this.closeWithRefresh}}
+            @label="close"
           />
         {{else if @model.showFooter}}
           {{#if @model.allowSilent}}
             <div class="topic-bulk-actions-options">
               <label
-                for="topic-bulk-action-options__notify"
                 class="checkbox-label"
+                for="topic-bulk-action-options__notify"
               >
                 <Input
                   id="topic-bulk-action-options__notify"
-                  @type="checkbox"
                   @checked={{this.notifyUsers}}
+                  @type="checkbox"
                 />{{i18n "topics.bulk.notify"}}</label>
             </div>
           {{/if}}
 
           <DButton
-            @action={{@closeModal}}
-            @label="cancel"
             class="btn-transparent d-modal-cancel"
             id="bulk-topics-cancel"
+            @action={{@closeModal}}
+            @label="cancel"
           />
           <DButton
+            class="btn-primary"
+            id="bulk-topics-confirm"
             @action={{this.performAction}}
             @disabled={{this.disabledSubmit}}
             @translatedLabel={{this.confirmButtonLabel}}
-            id="bulk-topics-confirm"
-            class="btn-primary"
           />
         {{/if}}
       </:footer>

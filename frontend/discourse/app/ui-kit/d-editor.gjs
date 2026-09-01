@@ -774,48 +774,48 @@ export default class DEditor extends Component {
             {{if this.isEditorFocused 'in-focus'}}"
         >
           <DConditionalInElement
-            @inline={{not @toolbarPortalTarget}}
-            @element={{@toolbarPortalTarget}}
             @append={{true}}
+            @element={{@toolbarPortalTarget}}
+            @inline={{not @toolbarPortalTarget}}
           >
             {{#if this.replacedToolbarInstance}}
               <DOverflowControls
-                @wrapperClass="d-editor-button-bar__wrap"
+                role="toolbar"
+                @buttonClass="d-editor-button-bar__scroll-btn"
                 @class={{dConcatClass
                   "d-editor-button-bar"
                   "--replaced-toolbar"
                   (if this.disabled "--disabled")
                 }}
-                @buttonClass="d-editor-button-bar__scroll-btn"
-                role="toolbar"
+                @wrapperClass="d-editor-button-bar__wrap"
               >
                 <DButton
+                  class="d-editor-button-bar__back"
                   @action={{this.resetToolbar}}
                   @icon="angle-left"
-                  @preventFocus={{true}}
                   @onKeyDown={{this.rovingButtonBar}}
-                  class="d-editor-button-bar__back"
+                  @preventFocus={{true}}
                 />
                 <ToolbarButtons
                   @data={{this.replacedToolbarInstance}}
-                  @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{false}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
                 />
               </DOverflowControls>
             {{else}}
               <DOverflowControls
-                @wrapperClass="d-editor-button-bar__wrap"
+                role="toolbar"
+                @buttonClass="d-editor-button-bar__scroll-btn"
                 @class={{dConcatClass
                   "d-editor-button-bar"
                   (if this.disabled "--disabled")
                 }}
-                @buttonClass="d-editor-button-bar__scroll-btn"
-                role="toolbar"
+                @wrapperClass="d-editor-button-bar__wrap"
               >
                 {{#if this.showEditorModeToggle}}
                   <ToggleSwitch
-                    @preventFocus={{true}}
                     @disabled={{@disableSubmit}}
+                    @preventFocus={{true}}
                     @state={{this.isRichEditorEnabled}}
                     {{on "click" this.toggleRichEditor}}
                     {{on "keydown" this.rovingButtonBar}}
@@ -823,8 +823,8 @@ export default class DEditor extends Component {
                 {{/if}}
                 <ToolbarButtons
                   @data={{this.toolbar}}
-                  @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{not this.showEditorModeToggle}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
                 />
               </DOverflowControls>
             {{/if}}
@@ -832,26 +832,26 @@ export default class DEditor extends Component {
 
           <DConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
-            @class="d-editor-input"
-            @onSetup={{this.setupEditor}}
-            @markdownOptions={{this.markdownOptions}}
-            @keymap={{this.keymap}}
-            @value={{this.value}}
-            @placeholder={{@placeholder}}
-            @disabled={{this.disabled}}
+            @categoryId={{@categoryId}}
             @change={{this.onChange}}
+            @class="d-editor-input"
+            @disabled={{this.disabled}}
             @focusIn={{this.handleFocusIn}}
             @focusOut={{this.handleFocusOut}}
-            @categoryId={{@categoryId}}
-            @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @keymap={{this.keymap}}
+            @markdownOptions={{this.markdownOptions}}
+            @onSetup={{this.setupEditor}}
+            @placeholder={{@placeholder}}
             @replaceToolbar={{this.replaceToolbar}}
             @toggleRichEditor={{this.toggleRichEditor}}
+            @topicId={{@topicId}}
+            @value={{this.value}}
           />
           <DPopupInputTip @validation={{this.validation}} />
           <PluginOutlet
-            @name="after-d-editor"
             @connectorTagName="div"
+            @name="after-d-editor"
             @outletArgs={{this.outletArgs}}
           />
         </div>
@@ -863,10 +863,10 @@ export default class DEditor extends Component {
         </div>
       {{else}}
         <DEditorPreview
-          @preview={{this.preview}}
           @forcePreview={{this.forcePreview}}
           @onPreviewUpdated={{this.previewUpdated}}
           @outletArgs={{this.outletArgs}}
+          @preview={{this.preview}}
         />
       {{/if}}
     </div>

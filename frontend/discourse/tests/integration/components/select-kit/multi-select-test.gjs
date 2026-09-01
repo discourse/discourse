@@ -35,7 +35,7 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
 
     await render(
       <template>
-        <MultiSelect @value={{this.value}} @content={{this.content}} />
+        <MultiSelect @content={{this.content}} @value={{this.value}} />
       </template>
     );
 
@@ -66,9 +66,9 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     await render(
       <template>
         <MultiSelect
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash maximum=1}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -93,9 +93,9 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     await render(
       <template>
         <MultiSelect
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash maximum=2}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -112,9 +112,9 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     await render(
       <template>
         <MultiSelect
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash maximum=2}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -142,9 +142,9 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     await render(
       <template>
         <MultiSelect
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash useHeaderSelectedCount=true}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -167,9 +167,9 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
     await render(
       <template>
         <MultiSelect
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash useHeaderSelectedCount=true}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -184,7 +184,7 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
 
     await render(
       <template>
-        <MultiSelect @value={{this.value}} @content={{this.content}} />
+        <MultiSelect @content={{this.content}} @value={{this.value}} />
       </template>
     );
 

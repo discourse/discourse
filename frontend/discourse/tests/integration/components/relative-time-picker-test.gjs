@@ -85,8 +85,8 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     await render(
       <template>
         <DRelativeTimePicker
-          @onChange={{update}}
           @durationMinutes={{testState.minutes}}
+          @onChange={{update}}
         />
       </template>
     );
@@ -290,7 +290,7 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     const update = (value) => (updatedValue = value);
     await render(
       <template>
-        <DRelativeTimePicker @onChange={{update}} @durationOutputUnit="hours" />
+        <DRelativeTimePicker @durationOutputUnit="hours" @onChange={{update}} />
       </template>
     );
 

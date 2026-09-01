@@ -171,20 +171,20 @@ export default class VoiceVideoTile extends Component {
     >
       {{#if this.showVideo}}
         <video
+          autoplay
           class="voice-video-tile__video"
+          muted
+          playsinline
           {{didInsert (fn this.voiceWebrtc.attachVideoStream this.stream)}}
           {{didUpdate
             (fn this.voiceWebrtc.attachVideoStream this.stream)
             this.stream
           }}
           {{this.trackVideoAspect this.handleAspect}}
-          muted
-          autoplay
-          playsinline
         ></video>
       {{else}}
         <div class="voice-video-tile__avatar">
-          <img src={{this.avatarSrc}} alt={{this.displayName}} />
+          <img alt={{this.displayName}} src={{this.avatarSrc}} />
         </div>
       {{/if}}
 
@@ -203,10 +203,10 @@ export default class VoiceVideoTile extends Component {
 
       {{#if this.canShowMenu}}
         <button
-          type="button"
+          aria-label={{i18n "voice.participant.menu_title"}}
           class="btn btn-icon no-text voice-video-tile__menu"
           title={{i18n "voice.participant.menu_title"}}
-          aria-label={{i18n "voice.participant.menu_title"}}
+          type="button"
           {{on "click" this.openTileMenu}}
         >
           {{dIcon "ellipsis-vertical"}}
@@ -215,10 +215,10 @@ export default class VoiceVideoTile extends Component {
 
       {{#if this.showVideo}}
         <button
-          type="button"
+          aria-label={{this.fullscreenTitle}}
           class="btn btn-icon no-text voice-video-tile__fullscreen"
           title={{this.fullscreenTitle}}
-          aria-label={{this.fullscreenTitle}}
+          type="button"
           {{on "click" this.toggleFullscreen}}
         >
           {{dIcon (if this.isFullscreen "compress" "expand")}}

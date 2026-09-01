@@ -9,8 +9,8 @@ export default <template>
   <ul class="schema-setting-editor__tree">
     {{#if @backButtonText}}
       <li
-        role="link"
         class="schema-setting-editor__tree-node --back-btn"
+        role="link"
         {{on "click" @clickBack}}
       >
         <div class="schema-setting-editor__tree-node-text">
@@ -22,24 +22,24 @@ export default <template>
 
     {{#each @data as |object index|}}
       <TreeNode
-        @index={{index}}
-        @object={{object}}
         @active={{eq @activeIndex index}}
-        @onClick={{fn @updateIndex index}}
-        @onChildClick={{@onChildClick}}
-        @schema={{@schema}}
         @addChildItem={{@addChildItem}}
         @generateSchemaTitle={{@generateSchemaTitle}}
+        @index={{index}}
+        @object={{object}}
+        @onChildClick={{@onChildClick}}
+        @onClick={{fn @updateIndex index}}
         @registerInputFieldObserver={{@registerInputFieldObserver}}
+        @schema={{@schema}}
       />
     {{/each}}
 
     <li class="schema-setting-editor__tree-node --parent --add-button">
       <DButton
-        @action={{@addItem}}
-        @translatedLabel={{@schema.name}}
-        @icon="plus"
         class="btn-transparent schema-setting-editor__tree-add-button --root"
+        @action={{@addItem}}
+        @icon="plus"
+        @translatedLabel={{@schema.name}}
       />
     </li>
   </ul>

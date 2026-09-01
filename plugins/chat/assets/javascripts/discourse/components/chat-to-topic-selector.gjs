@@ -85,8 +85,8 @@ export default class ChatToTopicSelector extends Component {
           <DRadioButton
             @id="move-to-new-topic"
             @name="move-to-entity"
-            @value={{this.newTopicSelection}}
             @selection={{this.selection}}
+            @value={{this.newTopicSelection}}
           />
           <b>{{i18n "topic.split_topic.radio_label"}}</b>
         </label>
@@ -95,8 +95,8 @@ export default class ChatToTopicSelector extends Component {
           <DRadioButton
             @id="move-to-existing-topic"
             @name="move-to-entity"
-            @value={{this.existingTopicSelection}}
             @selection={{this.selection}}
+            @value={{this.existingTopicSelection}}
           />
           <b>{{i18n "topic.merge_topic.radio_label"}}</b>
         </label>
@@ -106,8 +106,8 @@ export default class ChatToTopicSelector extends Component {
             <DRadioButton
               @id="move-to-new-message"
               @name="move-to-entity"
-              @value={{this.newMessageSelection}}
               @selection={{this.selection}}
+              @value={{this.newMessageSelection}}
             />
             <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
           </label>
@@ -123,26 +123,26 @@ export default class ChatToTopicSelector extends Component {
           </label>
 
           <DTextField
-            @value={{this.topicTitle}}
-            @placeholderKey="composer.title_placeholder"
             @id="split-topic-name"
+            @placeholderKey="composer.title_placeholder"
+            @value={{this.topicTitle}}
           />
 
           <label>{{i18n "categories.category"}}</label>
 
           <CategoryChooser
-            @id="new-topic-category-selector"
-            @value={{this.categoryId}}
-            @onChange={{fn (mut this.categoryId)}}
             class="small"
+            @id="new-topic-category-selector"
+            @onChange={{fn (mut this.categoryId)}}
+            @value={{this.categoryId}}
           />
 
           {{#if this.canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
             <TagChooser
-              @tags={{this.tags}}
-              @filterable={{true}}
               @categoryId={{this.categoryId}}
+              @filterable={{true}}
+              @tags={{this.tags}}
             />
           {{/if}}
         </form>
@@ -152,8 +152,8 @@ export default class ChatToTopicSelector extends Component {
         <p>{{this.existingTopicInstruction}}</p>
         <form>
           <ChooseTopic
-            @topicChangedCallback={{@topicChangedCallback}}
             @selectedTopicId={{@selectedTopicId}}
+            @topicChangedCallback={{@topicChangedCallback}}
           />
         </form>
       {{/if}}
@@ -167,14 +167,14 @@ export default class ChatToTopicSelector extends Component {
           </label>
 
           <DTextField
-            @value={{this.topicTitle}}
-            @placeholderKey="composer.title_placeholder"
             @id="split-message-title"
+            @placeholderKey="composer.title_placeholder"
+            @value={{this.topicTitle}}
           />
 
           {{#if this.canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser @tags={{this.tags}} @filterable={{true}} />
+            <TagChooser @filterable={{true}} @tags={{this.tags}} />
           {{/if}}
         </form>
       {{/if}}

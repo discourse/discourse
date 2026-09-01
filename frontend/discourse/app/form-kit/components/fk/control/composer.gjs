@@ -23,16 +23,16 @@ export default class FKControlComposer extends FKBaseControl {
 
   <template>
     <DEditor
-      @value={{readonly @field.value}}
-      @change={{this.handleInput}}
-      @disabled={{@field.disabled}}
-      @forceEditorMode={{@forceEditorMode}}
       class={{dConcatClass
         "form-kit__control-composer"
         (if @preview "--preview")
       }}
       style={{this.style}}
+      @change={{this.handleInput}}
+      @disabled={{@field.disabled}}
+      @forceEditorMode={{@forceEditorMode}}
       @textAreaId={{@field.id}}
+      @value={{readonly @field.value}}
     />
   </template>
 }

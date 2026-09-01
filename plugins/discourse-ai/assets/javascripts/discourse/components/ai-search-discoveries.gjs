@@ -488,9 +488,9 @@ export default class AiSearchDiscoveries extends Component {
             </p>
             {{#if this.currentUser.can_create_topic}}
               <DButton
-                @label="discourse_ai.discobot_discoveries.create_topic"
-                @action={{this.createTopic}}
                 class="btn-primary btn-small ai-search-discoveries__create-topic"
+                @action={{this.createTopic}}
+                @label="discourse_ai.discobot_discoveries.create_topic"
               />
             {{/if}}
           </div>
@@ -505,8 +505,8 @@ export default class AiSearchDiscoveries extends Component {
             {{on "click" this.handleDiscoveryClick}}
           >
             <DCookText
-              @rawText={{this.discobotDiscoveries.streamedText}}
               class="cooked"
+              @rawText={{this.discobotDiscoveries.streamedText}}
             />
           </article>
 
@@ -516,13 +516,13 @@ export default class AiSearchDiscoveries extends Component {
       {{#if @showSources}}
         {{#if this.hasSources}}
           <section
-            class="ai-discovery-sources"
             aria-labelledby="ai-discovery-sources-title"
+            class="ai-discovery-sources"
           >
             <header class="ai-discovery-sources__header">
               <h4
-                id="ai-discovery-sources-title"
                 class="ai-discovery-sources__title"
+                id="ai-discovery-sources-title"
               >
                 {{i18n
                   "discourse_ai.discobot_discoveries.sources.related_discussions"
@@ -593,28 +593,28 @@ export default class AiSearchDiscoveries extends Component {
           {{on "submit" this.continueConversation}}
         >
           <input
+            aria-label={{i18n
+              "discourse_ai.discobot_discoveries.follow_up.label"
+            }}
             class="ai-search-discoveries__follow-up-input"
-            type="text"
-            value={{this.followUpValue}}
+            disabled={{this.loadingConversationTopic}}
             maxlength="1000"
             placeholder={{i18n
               "discourse_ai.discobot_discoveries.follow_up.placeholder"
             }}
-            aria-label={{i18n
-              "discourse_ai.discobot_discoveries.follow_up.label"
-            }}
-            disabled={{this.loadingConversationTopic}}
+            type="text"
+            value={{this.followUpValue}}
             {{on "focus" this.clearSuggestedFollowUp}}
             {{on "input" this.updateFollowUpQuestion}}
           />
           <DButton
-            @type="submit"
-            @label={{this.continueConvoBtnLabel}}
+            class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
             @disabled={{or
               this.loadingConversationTopic
               (not this.canSubmitFollowUp)
             }}
-            class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
+            @label={{this.continueConvoBtnLabel}}
+            @type="submit"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>
@@ -624,16 +624,16 @@ export default class AiSearchDiscoveries extends Component {
       {{#if this.showAskAiDefaultToggle}}
         <div class="ai-search-discoveries__default-preference">
           <DToggleSwitch
-            @state={{this.askAiIsDefault}}
-            @label="discourse_ai.discobot_discoveries.make_default"
-            {{on "click" this.toggleAskAiDefault}}
             class="ai-search-discoveries__default-toggle"
+            @label="discourse_ai.discobot_discoveries.make_default"
+            @state={{this.askAiIsDefault}}
+            {{on "click" this.toggleAskAiDefault}}
           />
           <DButton
+            class="btn-transparent ai-search-discoveries__dismiss-default"
+            @action={{this.dismissAskAiDefaultToggle}}
             @icon="xmark"
             @title="discourse_ai.discobot_discoveries.dismiss_default_preference"
-            @action={{this.dismissAskAiDefaultToggle}}
-            class="btn-transparent ai-search-discoveries__dismiss-default"
           />
         </div>
       {{/if}}

@@ -435,15 +435,15 @@ export default class ComposerActions extends Component {
     {{#let this.templateData as |data|}}
       {{#if this.hasMenuContent}}
         <DMenu
-          @label={{data.label}}
-          @icon={{data.icon}}
-          @modalForMobile={{true}}
+          class="composer-actions"
           @closeOnClickOutside={{true}}
           @closeOnEscape={{true}}
+          @contentClass="composer-actions-dropdown"
+          @icon={{data.icon}}
+          @label={{data.label}}
+          @modalForMobile={{true}}
           @onRegisterApi={{this.registerDmenuApi}}
           @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
-          @contentClass="composer-actions-dropdown"
-          class="composer-actions"
         >
           <:trigger>
             {{dIcon "angle-down" class="composer-actions-caret"}}
@@ -457,8 +457,8 @@ export default class ComposerActions extends Component {
                     <DButton
                       class="composer-actions-btn
                         {{if availAction.description '--with-description'}}"
-                      @action={{fn this.onSelectAction availAction.id}}
                       data-action-id={{availAction.id}}
+                      @action={{fn this.onSelectAction availAction.id}}
                     >
                       <div class="composer-actions-btn__icons">
                         {{dIcon availAction.icon}}
@@ -500,8 +500,8 @@ export default class ComposerActions extends Component {
                         >
                           <div class="composer-toggle-item__icons">
                             <DToggleSwitch
-                              @state={{availAction.state}}
                               aria-label={{availAction.ariaLabel}}
+                              @state={{availAction.state}}
                             />
                           </div>
                           <div class="composer-toggle-item__texts">
@@ -525,6 +525,7 @@ export default class ComposerActions extends Component {
 
         {{#if this.showReplyTargetLink}}
           <a
+            aria-label={{this.replyTargetTitle}}
             class={{dConcatClass
               "composer-actions-reply-target-link btn btn-transparent"
               (if this.replyTargetLabel "btn-icon-text" "btn-icon no-text")
@@ -532,7 +533,6 @@ export default class ComposerActions extends Component {
             }}
             href={{this.replyTargetHref}}
             title={{this.replyTargetTitle}}
-            aria-label={{this.replyTargetTitle}}
           >
             {{dIcon "link"}}
             {{#if this.replyTargetLabel}}
@@ -547,19 +547,19 @@ export default class ComposerActions extends Component {
           class="composer-actions-trigger composer-actions-trigger--static composer-actions-trigger--editing"
         >
           <DTextField
-            @value={{this.composer.editReason}}
             @id="edit-reason"
             @maxlength="255"
             @placeholderKey="composer.edit_reason_placeholder"
+            @value={{this.composer.editReason}}
             {{dAutoFocus}}
           />
         </span>
       {{else if this.composer.canEdit}}
         <DButton
+          class="composer-actions-trigger composer-actions-trigger--static btn-transparent btn-icon-text"
           @action={{this.composer.displayEditReason}}
           @icon={{data.icon}}
           @label="composer.edit_reason"
-          class="composer-actions-trigger composer-actions-trigger--static btn-transparent btn-icon-text"
         />
       {{else}}
         <span class="composer-actions-trigger composer-actions-trigger--static">
@@ -570,17 +570,17 @@ export default class ComposerActions extends Component {
 
       {{#if this.composer.canToggleWhisper}}
         <DButton
+          class={{dConcatClass
+            "composer-whisper-indicator btn-transparent"
+            (if this.composerModel.whisper "--whispering" "--public")
+            (if this.site.mobileView "btn-small")
+          }}
           @action={{this.toggleWhisper}}
           @icon={{if this.composerModel.whisper "far-eye-slash" "far-eye"}}
           @label={{if
             this.composerModel.whisper
             "composer.whisper_indicator.whispering"
             "composer.whisper_indicator.public"
-          }}
-          class={{dConcatClass
-            "composer-whisper-indicator btn-transparent"
-            (if this.composerModel.whisper "--whispering" "--public")
-            (if this.site.mobileView "btn-small")
           }}
         />
       {{/if}}

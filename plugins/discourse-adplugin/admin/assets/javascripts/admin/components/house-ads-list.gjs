@@ -17,9 +17,9 @@ const HouseAdsList = <template>
           </td>
           <td class="d-table__cell --controls">
             <LinkTo
-              @route="adminPlugins.show.houseAds.show"
-              @model={{ad.id}}
               class="btn btn-small btn-default house-ads-table__edit"
+              @model={{ad.id}}
+              @route="adminPlugins.show.houseAds.show"
             >
               {{i18n "admin.adplugin.house_ads.edit"}}
             </LinkTo>

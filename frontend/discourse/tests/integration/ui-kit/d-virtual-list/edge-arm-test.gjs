@@ -53,11 +53,11 @@ module("Integration | ui-kit | DVirtualList | edge arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
           @onReachEnd={{onReachEnd}}
+          @onRegisterApi={{onRegisterApi}}
           @overscan={{0}}
           as |item|
         >
@@ -115,12 +115,12 @@ module("Integration | ui-kit | DVirtualList | edge arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
           @onReachEnd={{onReachEnd}}
           @onReachStart={{onReachStart}}
+          @onRegisterApi={{onRegisterApi}}
           @overscan={{0}}
           as |item|
         >
@@ -179,11 +179,11 @@ module("Integration | ui-kit | DVirtualList | edge arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
           @onReachEnd={{onReachEnd}}
+          @onRegisterApi={{onRegisterApi}}
           @overscan={{0}}
           as |item|
         >
@@ -227,11 +227,11 @@ module("Integration | ui-kit | DVirtualList | edge arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
           @onReachEnd={{onReachEnd}}
+          @onRegisterApi={{onRegisterApi}}
           @overscan={{0}}
           as |item|
         >

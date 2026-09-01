@@ -25,12 +25,12 @@ export default class UploadedImageList extends Component {
   <template>
     <div ...attributes>
       <DButton
-        @label="admin.site_settings.uploaded_image_list.label"
         @action={{fn
           this.showUploadModal
           (hash value=this.value setting=this.setting)
         }}
         @disabled={{@disabled}}
+        @label="admin.site_settings.uploaded_image_list.label"
       />
     </div>
   </template>

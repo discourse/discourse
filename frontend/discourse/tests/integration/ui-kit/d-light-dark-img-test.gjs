@@ -47,7 +47,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -90,7 +90,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -140,7 +140,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -190,7 +190,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 

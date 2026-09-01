@@ -130,24 +130,24 @@ export default class DiscourseReactionsUsersMenu extends Component {
         {{#if this.showFilters}}
           <div class="users-popup__header">
             <button
-              type="button"
               class={{dConcatClass
                 "users-popup__filter"
                 (unless this.activeFilter "is-active")
               }}
               data-reaction-filter="all"
+              type="button"
               {{on "click" (fn this.selectFilter null)}}
             >
               {{i18n "discourse_reactions.users_popup.all"}}
             </button>
             {{#each this.reactions as |reaction|}}
               <button
-                type="button"
                 class={{dConcatClass
                   "users-popup__filter"
                   (if (eq reaction.id this.activeFilter) "is-active")
                 }}
                 data-reaction-filter={{reaction.id}}
+                type="button"
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
                 {{dEmoji reaction.id}}

@@ -27,7 +27,7 @@ export default class DSection extends Component {
     {{/if}}
 
     {{#if (notEq @tagName "")}}
-      <section id={{@id}} class={{@class}} ...attributes>{{yield}}</section>
+      <section class={{@class}} id={{@id}} ...attributes>{{yield}}</section>
     {{else}}
       {{yield}}
     {{/if}}

@@ -12,9 +12,9 @@ const DesignWizardIntroSection = <template>
       <span>{{i18n "design_wizard.intro.autosave"}}</span>
     </p>
     <DButton
+      class="btn-primary design-wizard__intro-start"
       @action={{@onStart}}
       @label="design_wizard.intro.start"
-      class="btn-primary design-wizard__intro-start"
     />
   </div>
 </template>;

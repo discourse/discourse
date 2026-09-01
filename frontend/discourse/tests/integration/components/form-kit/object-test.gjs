@@ -28,10 +28,10 @@ module("Integration | Component | FormKit | Object", function (hooks) {
       <template>
         <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
           <form.Object @name="foo" as |object|>
-            <object.Field @type="input" @name="bar" @title="bar" as |field|>
+            <object.Field @name="bar" @title="bar" @type="input" as |field|>
               <field.Control />
             </object.Field>
-            <object.Field @type="input" @name="baz" @title="baz" as |field|>
+            <object.Field @name="baz" @title="baz" @type="input" as |field|>
               <field.Control />
             </object.Field>
           </form.Object>
@@ -65,10 +65,10 @@ module("Integration | Component | FormKit | Object", function (hooks) {
           <form.Object @name="one" as |one|>
             <one.Object @name="two" as |two|>
               <two.Object @name="three" as |three|>
-                <three.Field @type="input" @name="foo" @title="foo" as |field|>
+                <three.Field @name="foo" @title="foo" @type="input" as |field|>
                   <field.Control />
                 </three.Field>
-                <three.Field @type="input" @name="bar" @title="bar" as |field|>
+                <three.Field @name="bar" @title="bar" @type="input" as |field|>
                   <field.Control />
                 </three.Field>
               </two.Object>
@@ -95,7 +95,7 @@ module("Integration | Component | FormKit | Object", function (hooks) {
         >
           <form.Object @name="one" as |one|>
             <one.Collection @name="two" as |two twoIndex|>
-              <two.Field @type="input" @name="foo" @title="foo" as |field|>
+              <two.Field @name="foo" @title="foo" @type="input" as |field|>
                 <field.Control />
               </two.Field>
               <form.Button
@@ -132,9 +132,9 @@ module("Integration | Component | FormKit | Object", function (hooks) {
             {{#each (fieldKeys objectData) as |key|}}
               {{#let (get (getFieldMeta data.foo) key) as |params|}}
                 <object.Field
-                  @type={{fieldType params.type}}
                   @name={{key}}
                   @title={{key}}
+                  @type={{fieldType params.type}}
                   as |field|
                 >
                   <field.Control />

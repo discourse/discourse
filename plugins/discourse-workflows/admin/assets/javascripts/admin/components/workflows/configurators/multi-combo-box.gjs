@@ -205,21 +205,21 @@ export default class MultiComboBox extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <DynamicOptionsMultiSelect
         @content={{this.contentOptions}}
         @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
-        @value={{this.value}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.handleChange}}
         @options={{hash filterable=this.filterable none=this.none}}
+        @value={{this.value}}
+        @valueProperty="id"
       />
     </ExpressionWrapper>
   </template>

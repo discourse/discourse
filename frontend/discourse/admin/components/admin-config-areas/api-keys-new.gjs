@@ -199,7 +199,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
   }
 
   <template>
-    <BackButton @route="adminApiKeys.index" @label="admin.api_keys.back" />
+    <BackButton @label="admin.api_keys.back" @route="adminApiKeys.index" />
 
     <div class="admin-config-area">
       <div class="admin-config-area__primary-content">
@@ -254,44 +254,44 @@ export default class AdminConfigAreasApiKeysNew extends Component {
               <div class="generated-api-key__key-row">
                 <code class="generated-api-key">{{this.generatedApiKey}}</code>
                 <DButton
+                  class="btn-default generated-api-key__copy-btn"
                   @action={{this.copyApiKey}}
                   @icon="copy"
                   @label="admin.api_keys.copy_key"
-                  class="btn-default generated-api-key__copy-btn"
                 />
               </div>
 
               <DButton
-                @route="adminApiKeys.index"
-                @label="admin.api_keys.continue"
                 class="continue btn-default"
+                @label="admin.api_keys.continue"
+                @route="adminApiKeys.index"
               />
             </div>
           {{else}}
             <DConditionalLoadingSection @isLoading={{this.loadingScopes}}>
               <Form
-                @onSubmit={{this.save}}
                 @data={{this.formData}}
+                @onSubmit={{this.save}}
                 @validate={{this.atLeastOneGranularScope}}
                 as |form transientData|
               >
                 <form.Field
+                  @format="large"
                   @name="description"
                   @title={{i18n "admin.api.description"}}
-                  @format="large"
-                  @validation="required"
                   @type="input"
+                  @validation="required"
                   as |field|
                 >
                   <field.Control />
                 </form.Field>
 
                 <form.Field
+                  @format="large"
                   @name="user_mode"
                   @title={{i18n "admin.api.user_mode"}}
-                  @format="large"
-                  @validation="required"
                   @type="select"
+                  @validation="required"
                   as |field|
                 >
                   <field.Control as |select|>
@@ -305,32 +305,32 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
                 {{#if (eq transientData.user_mode "single")}}
                   <form.Field
+                    @format="large"
                     @name="user"
                     @title={{i18n "admin.api.user"}}
-                    @format="large"
-                    @validation="required"
                     @type="custom"
+                    @validation="required"
                     as |field|
                   >
                     <field.Control>
                       <EmailGroupUserChooser
-                        @value={{this.username}}
                         @onChange={{fn this.updateUsername field}}
                         @options={{hash
                           maximum=1
                           filterPlaceholder="admin.api.user_placeholder"
                         }}
+                        @value={{this.username}}
                       />
                     </field.Control>
                   </form.Field>
                 {{/if}}
 
                 <form.Field
+                  @format="large"
                   @name="scope_mode"
                   @title={{i18n "admin.api.scope_mode"}}
-                  @format="large"
-                  @validation="required"
                   @type="select"
+                  @validation="required"
                   as |field|
                 >
                   <field.Control as |select|>
@@ -359,8 +359,8 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     </thead>
                     <tbody>
                       <form.Object
-                        @name="scopes"
                         class="scopes-table__object"
+                        @name="scopes"
                         as |scopesObject scopesData|
                       >
                         {{#each (this.scopesDataKeys scopesData) as |scopeKey|}}
@@ -397,12 +397,12 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                               </td>
                               <td>
                                 <DButton
-                                  @icon="link"
+                                  class="btn-info"
                                   @action={{fn
                                     this.showURLs
                                     collectionData.urls
                                   }}
-                                  class="btn-info"
+                                  @icon="link"
                                 />
                               </td>
                               <td>
@@ -416,8 +416,8 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                   }}
                                     <paramsObject.Field
                                       @name={{name}}
-                                      @title={{name}}
                                       @showTitle={{false}}
+                                      @title={{name}}
                                       @type="input"
                                       as |field|
                                     >
@@ -437,9 +437,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                 <form.Actions>
                   <form.Submit class="save" @label="admin.api_keys.save" />
                   <form.Button
-                    @route="adminApiKeys.index"
-                    @label="admin.api_keys.cancel"
                     class="btn-default"
+                    @label="admin.api_keys.cancel"
+                    @route="adminApiKeys.index"
                   />
                 </form.Actions>
               </Form>

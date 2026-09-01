@@ -33,13 +33,13 @@ export default <template>
         {{#each @controller.sortedBadges as |ub|}}
           <DBadgeCard
             @badge={{ub.badge}}
-            @count={{ub.count}}
             @canFavorite={{ub.can_favorite}}
-            @isFavorite={{ub.is_favorite}}
-            @username={{@controller.username}}
             @canFavoriteMoreBadges={{@controller.canFavoriteMoreBadges}}
-            @onFavoriteClick={{fn @controller.favorite ub}}
+            @count={{ub.count}}
             @filterUser="true"
+            @isFavorite={{ub.is_favorite}}
+            @onFavoriteClick={{fn @controller.favorite ub}}
+            @username={{@controller.username}}
           />
         {{/each}}
         <PluginOutlet

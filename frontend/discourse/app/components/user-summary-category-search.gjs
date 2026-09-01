@@ -18,7 +18,7 @@ export default class UserSummaryCategorySearch extends Component {
 
   <template>
     {{#if @count}}
-      <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
+      <LinkTo @query={{hash q=this.searchParams}} @route="full-page-search">
         {{@count}}
       </LinkTo>
     {{else}}

@@ -10,8 +10,8 @@ const SELECTED = [1, 2];
 
 export default <template>
   <GroupChooser
-    @selected={{SELECTED}}
     @content={{GROUPS}}
     @onChange={{@onChange}}
+    @selected={{SELECTED}}
   />
 </template>

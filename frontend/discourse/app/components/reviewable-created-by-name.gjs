@@ -17,8 +17,8 @@ const ReviewableCreatedByName = <template>
       {{/if}}
     </span>
     <PluginOutlet
-      @name="after-reviewable-post-user"
       @connectorTagName="div"
+      @name="after-reviewable-post-user"
       @outletArgs={{lazyHash user=@user}}
     />
   </div>

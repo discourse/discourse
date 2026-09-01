@@ -95,10 +95,10 @@ export default class ChatChannelEmptyState extends Component {
   <template>
     {{#if this.currentUser}}
       <DEmptyState
+        @body={{@channel.description}}
         @identifier="chat-channel"
         @svgContent={{this.channelIcon}}
         @title={{this.title}}
-        @body={{@channel.description}}
       >
         <:tip>
           {{#if this.tip}}
@@ -139,10 +139,10 @@ export default class ChatChannelEmptyState extends Component {
     {{/if}}
     {{#unless this.currentUser}}
       <DEmptyState
+        @body={{@channel.description}}
         @identifier="chat-channel"
         @svgContent={{this.channelIcon}}
         @title={{this.title}}
-        @body={{@channel.description}}
       >
         <:tip>
           {{#if this.tip}}

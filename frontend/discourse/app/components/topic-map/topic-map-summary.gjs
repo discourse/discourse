@@ -253,13 +253,13 @@ export default class TopicMapSummary extends Component {
     >
       <DMenu
         @arrow={{true}}
+        @groupIdentifier="topic-map"
         @identifier="topic-map__views"
+        @inline={{true}}
         @interactive={{true}}
         @modalForMobile={{true}}
-        @placement="right"
-        @groupIdentifier="topic-map"
-        @inline={{true}}
         @onShow={{this.fetchViews}}
+        @placement="right"
       >
         <:trigger>
           {{dNumber this.minViewsCount noTitle="true"}}
@@ -272,8 +272,8 @@ export default class TopicMapSummary extends Component {
           <DConditionalLoadingSpinner @condition={{this.loading}}>
             {{#if this.shouldShowViewsChart}}
               <TopicViewsChart
-                @views={{this.views}}
                 @created={{@topic.created_at}}
+                @views={{this.views}}
               />
             {{else}}
               <TopicViews @views={{this.views}} />
@@ -294,13 +294,13 @@ export default class TopicMapSummary extends Component {
       {{#if this.hasLikes}}
         <DMenu
           @arrow={{true}}
+          @autofocus={{true}}
+          @groupIdentifier="topic-map"
           @identifier="topic-map__likes"
+          @inline={{true}}
           @interactive={{true}}
           @modalForMobile={{true}}
           @placement="right"
-          @groupIdentifier="topic-map"
-          @inline={{true}}
-          @autofocus={{true}}
         >
           <:trigger>
             {{dNumber @topic.like_count noTitle="true"}}
@@ -351,13 +351,13 @@ export default class TopicMapSummary extends Component {
       {{#if this.linksCount}}
         <DMenu
           @arrow={{true}}
+          @autofocus={{true}}
+          @groupIdentifier="topic-map"
           @identifier="topic-map__links"
+          @inline={{true}}
           @interactive={{true}}
           @modalForMobile={{true}}
-          @groupIdentifier="topic-map"
           @placement="right"
-          @inline={{true}}
-          @autofocus={{true}}
         >
           <:trigger>
             {{dNumber
@@ -376,11 +376,11 @@ export default class TopicMapSummary extends Component {
                 <li>
                   <TopicMapLink
                     @attachment={{link.attachment}}
-                    @title={{link.title}}
+                    @clickCount={{link.clicks}}
                     @rootDomain={{link.root_domain}}
+                    @title={{link.title}}
                     @url={{link.url}}
                     @userId={{link.user_id}}
-                    @clickCount={{link.clicks}}
                   />
                 </li>
               {{/each}}
@@ -388,10 +388,10 @@ export default class TopicMapSummary extends Component {
             </ul>
             {{#if this.hasMoreLinks}}
               <DButton
-                @action={{this.showAllLinks}}
-                @title="topic_map.links_shown"
-                @icon="chevron-down"
                 class="link-summary btn-flat"
+                @action={{this.showAllLinks}}
+                @icon="chevron-down"
+                @title="topic_map.links_shown"
               />
 
             {{/if}}
@@ -402,13 +402,13 @@ export default class TopicMapSummary extends Component {
       {{#if this.hasUsers}}
         <DMenu
           @arrow={{true}}
-          @identifier="topic-map__users"
-          @interactive={{true}}
-          @placement="right"
-          @modalForMobile={{true}}
-          @groupIdentifier="topic-map"
-          @inline={{true}}
           @autofocus={{true}}
+          @groupIdentifier="topic-map"
+          @identifier="topic-map__users"
+          @inline={{true}}
+          @interactive={{true}}
+          @modalForMobile={{true}}
+          @placement="right"
         >
           <:trigger>
             {{dNumber @topic.participant_count noTitle="true"}}
@@ -418,9 +418,9 @@ export default class TopicMapSummary extends Component {
           </:trigger>
           <:content>
             <TopicParticipants
+              @participants={{@topicDetails.participants}}
               @title={{i18n "topic_map.participants_title"}}
               @userFilters={{@postStream.userFilters}}
-              @participants={{@topicDetails.participants}}
             />
           </:content>
         </DMenu>
@@ -449,15 +449,15 @@ export default class TopicMapSummary extends Component {
         {{#if @topic.has_summary}}
           <div class="summarization-button">
             <DButton
+              class="btn-default top-replies"
               @action={{if
                 @postStream.summary
                 this.cancelFilter
                 this.showTopReplies
               }}
-              @translatedTitle={{this.topRepliesTitle}}
-              @translatedLabel={{this.topRepliesLabel}}
               @icon={{this.topRepliesIcon}}
-              class="btn-default top-replies"
+              @translatedLabel={{this.topRepliesLabel}}
+              @translatedTitle={{this.topRepliesTitle}}
             />
           </div>
         {{/if}}

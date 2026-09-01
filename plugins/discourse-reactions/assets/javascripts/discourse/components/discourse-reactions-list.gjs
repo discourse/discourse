@@ -5,7 +5,7 @@ const DiscourseReactionsList = <template>
     {{#if @post.reaction_users_count}}
       <span class="reactions">
         {{#each @post.reactions as |reaction|}}
-          <DiscourseReactionsListEmoji @reaction={{reaction}} @post={{@post}} />
+          <DiscourseReactionsListEmoji @post={{@post}} @reaction={{reaction}} />
         {{/each}}
       </span>
     {{/if}}

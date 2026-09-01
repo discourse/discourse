@@ -24,9 +24,9 @@ export default class StartPostingOption extends Component {
 
   <template>
     <button
-      type="button"
       class={{dConcatClass "start-posting-options-modal__card" this.name}}
       disabled={{this.disableAction}}
+      type="button"
       {{on "click" this.onSelect}}
     >
       <span class="start-posting-options-modal__title">

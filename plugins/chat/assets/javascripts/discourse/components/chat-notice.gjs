@@ -30,15 +30,15 @@ export default class ChatNotices extends Component {
       {{else}}
         <this.component
           @channel={{@channel}}
-          @notice={{@notice}}
           @clearNotice={{this.clearNotice}}
+          @notice={{@notice}}
         />
       {{/if}}
 
       <DButton
-        @icon="xmark"
-        @action={{this.clearNotice}}
         class="btn-transparent chat-notices__notice__clear"
+        @action={{this.clearNotice}}
+        @icon="xmark"
       />
     </div>
   </template>

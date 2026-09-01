@@ -323,20 +323,20 @@ const TranslationRow = <template>
       </label>
 
       <Input
-        @type="text"
-        @value={{@localization.value}}
-        id={{inputId}}
         class="sidebar-section-translations__value
           {{unless @localization.translated '--untranslated'}}"
+        id={{inputId}}
+        lang={{@localization.locale}}
         placeholder={{i18n
           "sidebar.sections.custom.localizations.untranslated"
         }}
-        lang={{@localization.locale}}
+        @type="text"
+        @value={{@localization.value}}
         {{on "input" (withEventValue (fn (mut @localization.value)))}}
       />
 
       {{#if @localization.invalidMessage}}
-        <div role="alert" aria-live="assertive" class="warning">
+        <div aria-live="assertive" class="warning" role="alert">
           {{@localization.invalidMessage}}
         </div>
       {{/if}}
@@ -1213,22 +1213,22 @@ export default class SidebarSectionForm extends Component {
 
   <template>
     <DModal
+      class="sidebar-section-form-modal --large"
       @autofocus={{this.modalAutofocus}}
       @closeModal={{@closeModal}}
-      @inline={{@inline}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
+      @inline={{@inline}}
       @title={{i18n this.header}}
-      class="sidebar-section-form-modal --large"
     >
       <:body>
         {{#if this.showingTranslations}}
           <div class="sidebar-section-translations">
             <DButton
+              class="btn-flat btn-text sidebar-section-translations__back"
               @action={{this.hideTranslations}}
               @icon="chevron-left"
               @label="sidebar.sections.custom.localizations.back"
-              class="btn-flat btn-text sidebar-section-translations__back"
             />
 
             {{#each this.translationGroups key="key" as |group|}}
@@ -1238,28 +1238,28 @@ export default class SidebarSectionForm extends Component {
               >
                 <div class="sidebar-section-translations__language-header">
                   <DNativeSelect
-                    @value={{group.locale}}
-                    @onChange={{fn this.setGroupLocale group}}
-                    @includeNone={{false}}
-                    class="sidebar-section-translations__language-select"
                     aria-label={{i18n
                       "sidebar.sections.custom.localizations.locale"
                     }}
+                    class="sidebar-section-translations__language-select"
+                    @includeNone={{false}}
+                    @onChange={{fn this.setGroupLocale group}}
+                    @value={{group.locale}}
                     as |select|
                   >
                     {{#each group.localeOptions key="value" as |locale|}}
                       <select.Option
-                        @value={{locale.value}}
                         disabled={{locale.disabled}}
+                        @value={{locale.value}}
                       >{{locale.name}}</select.Option>
                     {{/each}}
                   </DNativeSelect>
 
                   <DButton
+                    class="btn-flat btn-text sidebar-section-translations__remove-language"
                     @action={{fn this.removeLanguage group}}
                     @icon="trash-can"
                     @label="sidebar.sections.custom.localizations.remove_language"
-                    class="btn-flat btn-text sidebar-section-translations__remove-language"
                   />
                 </div>
 
@@ -1269,8 +1269,8 @@ export default class SidebarSectionForm extends Component {
                   </div>
 
                   <TranslationRow
-                    @source={{this.transformedModel.title}}
                     @localization={{group.sectionLocalization}}
+                    @source={{this.transformedModel.title}}
                   />
                 {{/if}}
 
@@ -1281,8 +1281,8 @@ export default class SidebarSectionForm extends Component {
 
                   {{#each group.links key="link.objectId" as |entry|}}
                     <TranslationRow
-                      @source={{entry.link.name}}
                       @localization={{entry.localization}}
+                      @source={{entry.link.name}}
                     />
                   {{/each}}
                 {{/if}}
@@ -1291,10 +1291,10 @@ export default class SidebarSectionForm extends Component {
 
             {{#if this.nextTranslationLocale}}
               <DButton
+                class="btn-flat btn-text sidebar-section-translations__add-language"
                 @action={{this.addLanguage}}
                 @icon="plus"
                 @label="sidebar.sections.custom.localizations.add_language"
-                class="btn-flat btn-text sidebar-section-translations__add-language"
               />
             {{/if}}
           </div>
@@ -1307,11 +1307,11 @@ export default class SidebarSectionForm extends Component {
                 </label>
 
                 <DNativeSelect
-                  @value={{this.transformedModel.locale}}
-                  @onChange={{this.setSourceLocale}}
-                  @includeNone={{false}}
                   class="sidebar-section-form__source-locale-select"
                   id="section-source-locale"
+                  @includeNone={{false}}
+                  @onChange={{this.setSourceLocale}}
+                  @value={{this.transformedModel.locale}}
                   as |select|
                 >
                   {{#each this.sourceLocaleOptions as |locale|}}
@@ -1336,11 +1336,11 @@ export default class SidebarSectionForm extends Component {
                 </label>
 
                 <Input
+                  class={{this.transformedModel.titleCssClass}}
+                  id="section-name"
                   name="section-name"
                   @type="text"
                   @value={{this.transformedModel.title}}
-                  class={{this.transformedModel.titleCssClass}}
-                  id="section-name"
                   {{on
                     "input"
                     (withEventValue (fn (mut this.transformedModel.title)))
@@ -1356,24 +1356,24 @@ export default class SidebarSectionForm extends Component {
             {{/unless}}
 
             <div
-              id="section-links-label"
               class="sidebar-section-form__links-label"
+              id="section-links-label"
             >
               {{i18n "sidebar.sections.custom.links.title"}}
             </div>
 
             <div
-              role="table"
               aria-labelledby="section-links-label"
               aria-rowcount={{this.activeLinks.length}}
               class="sidebar-section-form__links-wrapper"
+              role="table"
             >
 
               <div class="row-wrapper header" role="row">
                 <div
+                  aria-sort="none"
                   class="input-group link-icon"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1382,9 +1382,9 @@ export default class SidebarSectionForm extends Component {
                 </div>
 
                 <div
+                  aria-sort="none"
                   class="input-group link-name"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1393,9 +1393,9 @@ export default class SidebarSectionForm extends Component {
                 </div>
 
                 <div
+                  aria-sort="none"
                   class="input-group link-url"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1406,18 +1406,18 @@ export default class SidebarSectionForm extends Component {
 
               {{#each this.activeLinks key="objectId" as |link index|}}
                 <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveLinkIndex}}
-                  @focusNameInput={{eq
-                    link.objectId
-                    this.initialFocusLinkObjectId
-                  }}
+                  @deleteLink={{this.deleteLink}}
                   @duplicateValue={{has
                     this.duplicateLinkObjectIds
                     link.objectId
                   }}
-                  @deleteLink={{this.deleteLink}}
+                  @focusNameInput={{eq
+                    link.objectId
+                    this.initialFocusLinkObjectId
+                  }}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveLinkIndex}}
+                  @link={{link}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
@@ -1425,12 +1425,12 @@ export default class SidebarSectionForm extends Component {
 
             </div>
             <DButton
+              class="btn-flat btn-text add-link"
               @action={{this.addLink}}
-              @title="sidebar.sections.custom.links.add"
+              @ariaLabel="sidebar.sections.custom.links.add"
               @icon="plus"
               @label="sidebar.sections.custom.links.add"
-              @ariaLabel="sidebar.sections.custom.links.add"
-              class="btn-flat btn-text add-link"
+              @title="sidebar.sections.custom.links.add"
             />
 
             {{#if this.transformedModel.sectionType}}
@@ -1438,25 +1438,25 @@ export default class SidebarSectionForm extends Component {
               <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
               {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
                 <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                  @deleteLink={{this.deleteLink}}
                   @duplicateValue={{has
                     this.duplicateLinkObjectIds
                     link.objectId
                   }}
-                  @deleteLink={{this.deleteLink}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                  @link={{link}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
               <DButton
+                class="btn-flat btn-text add-link"
                 @action={{this.addSecondaryLink}}
-                @title="sidebar.sections.custom.links.add"
+                @ariaLabel="sidebar.sections.custom.links.add"
                 @icon="plus"
                 @label="sidebar.sections.custom.links.add"
-                @ariaLabel="sidebar.sections.custom.links.add"
-                class="btn-flat btn-text add-link"
+                @title="sidebar.sections.custom.links.add"
               />
             {{/if}}
 
@@ -1464,10 +1464,10 @@ export default class SidebarSectionForm extends Component {
               <hr />
 
               <DButton
+                class="btn-flat btn-text sidebar-section-form__manage-translations"
                 @action={{this.showTranslations}}
                 @icon="globe"
                 @translatedLabel={{this.translationsLabel}}
-                class="btn-flat btn-text sidebar-section-form__manage-translations"
               >
                 {{#if this.missingTranslationCount}}
                   <span class="sidebar-section-form__translations-incomplete">
@@ -1484,12 +1484,12 @@ export default class SidebarSectionForm extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          id="save-section"
           @action={{this.save}}
-          @label="sidebar.sections.custom.save"
           @ariaLabel="sidebar.sections.custom.save"
           @disabled={{not this.transformedModel.valid}}
-          id="save-section"
-          class="btn-primary"
+          @label="sidebar.sections.custom.save"
         />
         {{#if this.currentUser.admin}}
           <div
@@ -1499,8 +1499,8 @@ export default class SidebarSectionForm extends Component {
             <label class="checkbox-label">
               {{#if this.transformedModel.sectionType}}
                 <DTooltip
-                  @content={{i18n "sidebar.sections.custom.always_public"}}
                   class="always-public-tooltip"
+                  @content={{i18n "sidebar.sections.custom.always_public"}}
                 >
                   <:trigger>
                     {{dIcon "square-check"}}
@@ -1509,10 +1509,10 @@ export default class SidebarSectionForm extends Component {
                 </DTooltip>
               {{else}}
                 <Input
-                  @type="checkbox"
-                  @checked={{this.transformedModel.public}}
                   class="mark-public"
                   disabled={{this.transformedModel.sectionType}}
+                  @checked={{this.transformedModel.public}}
+                  @type="checkbox"
                   {{on "change" this.setPublic}}
                 />
                 <span>{{i18n "sidebar.sections.custom.public"}}</span>
@@ -1522,22 +1522,22 @@ export default class SidebarSectionForm extends Component {
         {{/if}}
         {{#if this.canDelete}}
           <DButton
-            @icon="trash-can"
-            @action={{this.delete}}
-            @label="sidebar.sections.custom.delete"
-            @ariaLabel="sidebar.sections.custom.delete"
-            id="delete-section"
             class="btn-danger delete"
+            id="delete-section"
+            @action={{this.delete}}
+            @ariaLabel="sidebar.sections.custom.delete"
+            @icon="trash-can"
+            @label="sidebar.sections.custom.delete"
           />
         {{/if}}
         {{#if this.transformedModel.sectionType}}
           <DButton
-            @action={{this.resetToDefault}}
-            @icon="arrow-rotate-left"
-            @title="sidebar.sections.custom.links.reset"
-            @label="sidebar.sections.custom.links.reset"
-            @ariaLabel="sidebar.sections.custom.links.reset"
             class="btn-flat btn-text reset-link"
+            @action={{this.resetToDefault}}
+            @ariaLabel="sidebar.sections.custom.links.reset"
+            @icon="arrow-rotate-left"
+            @label="sidebar.sections.custom.links.reset"
+            @title="sidebar.sections.custom.links.reset"
           />
         {{/if}}
       </:footer>

@@ -259,8 +259,6 @@ export default class ChatChannelRow extends Component {
 
   <template>
     <LinkTo
-      @route="chat.channel"
-      @models={{@channel.routeModels}}
       class={{dConcatClass
         "chat-channel-row"
         (if @channel.focused "focused")
@@ -270,8 +268,10 @@ export default class ChatChannelRow extends Component {
         (if this.channelHasUnread "has-unread")
         (if this.isLongPressing "is-long-pressed")
       }}
-      tabindex="0"
       data-chat-channel-id={{@channel.id}}
+      tabindex="0"
+      @models={{@channel.routeModels}}
+      @route="chat.channel"
       {{didInsert this.startTrackingStatus}}
       {{willDestroy this.stopTrackingStatus}}
       {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
@@ -287,10 +287,10 @@ export default class ChatChannelRow extends Component {
           (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
         }}
+        style={{this.rowStyle}}
         {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
         {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
         {{(if this.shouldReset (modifier this.onReset))}}
-        style={{this.rowStyle}}
       >
         <ChannelIcon @channel={{@channel}} />
         <div class="chat-channel-row__info">

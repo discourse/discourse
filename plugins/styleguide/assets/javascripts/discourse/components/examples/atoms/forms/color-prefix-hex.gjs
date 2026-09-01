@@ -2,8 +2,8 @@ import Form from "discourse/components/form";
 
 export default <template>
   <Form as |form|>
-    <form.Field @title="Color" @name="color" @type="color" as |field|>
-      <field.Control @prefixHex={{true}} placeholder="RRGGBB" />
+    <form.Field @name="color" @title="Color" @type="color" as |field|>
+      <field.Control placeholder="RRGGBB" @prefixHex={{true}} />
     </form.Field>
   </Form>
 </template>

@@ -27,8 +27,8 @@ module("Integration | Component | BulkActionsAssignUser", function (hooks) {
     await render(
       <template>
         <BulkActionsAssignUser
-          @onRegisterAction={{onRegisterAction}}
           @onPerform={{onPerform}}
+          @onRegisterAction={{onRegisterAction}}
         />
       </template>
     );

@@ -47,20 +47,20 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
   {{#if @instance.expanded}}
     {{#if @instance.renderInModal}}
       <DModal
-        @closeModal={{@instance.close}}
-        @hideHeader={{true}}
-        data-identifier={{@instance.options.identifier}}
-        data-content
         class={{dConcatClass
           "fk-d-menu-modal"
           (concat @instance.options.identifier "-content")
         }}
+        data-content
+        data-identifier={{@instance.options.identifier}}
+        @closeModal={{@instance.close}}
+        @hideHeader={{true}}
         {{FloatKitNotifyPositioned @instance}}
       >
         {{#if @instance.options.component}}
           <@instance.options.component
-            @data={{@instance.options.data}}
             @close={{@instance.close}}
+            @data={{@instance.options.data}}
           />
         {{else}}
           {{@instance.options.content}}
@@ -68,19 +68,19 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
       </DModal>
     {{else}}
       <DFloatBody
-        @instance={{@instance}}
-        @trapTab={{@trapTab}}
-        @inlineTabOrder={{@inlineTabOrder}}
-        @mainClass={{@mainClass}}
-        @innerClass={{@innerClass}}
-        @role={{@role}}
-        @portalOutletElement={{@instance.portalOutletElement}}
         @inline={{@inline}}
+        @inlineTabOrder={{@inlineTabOrder}}
+        @innerClass={{@innerClass}}
+        @instance={{@instance}}
+        @mainClass={{@mainClass}}
+        @portalOutletElement={{@instance.portalOutletElement}}
+        @role={{@role}}
+        @trapTab={{@trapTab}}
       >
         {{#if @instance.options.component}}
           <@instance.options.component
-            @data={{@instance.options.data}}
             @close={{@instance.close}}
+            @data={{@instance.options.data}}
           />
         {{else}}
           {{@instance.options.content}}

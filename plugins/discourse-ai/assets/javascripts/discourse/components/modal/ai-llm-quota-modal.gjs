@@ -79,40 +79,40 @@ export default class AiLlmQuotaModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.llms.quotas.add_title"}}
-      @closeModal={{@closeModal}}
       class="ai-llm-quota-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.llms.quotas.add_title"}}
     >
       <:body>
         <Form
-          @validate={{this.validateForm}}
-          @onSubmit={{this.save}}
           @data={{this.quota}}
+          @onSubmit={{this.save}}
+          @validate={{this.validateForm}}
           as |form data|
         >
           <form.Field
+            @format="large"
             @name="group_id"
             @title={{i18n "discourse_ai.llms.quotas.group"}}
-            @validation="required"
-            @format="large"
             @type="custom"
+            @validation="required"
             as |field|
           >
             <field.Control>
               <GroupChooser
-                @value={{data.group_id}}
                 @content={{this.availableGroups}}
                 @onChange={{fn this.setGroupId field}}
                 @options={{hash maximum=1}}
+                @value={{data.group_id}}
               />
             </field.Control>
           </form.Field>
 
           <form.Field
+            @format="large"
             @name="max_tokens"
             @title={{i18n "discourse_ai.llms.quotas.max_tokens"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_tokens_help"}}
-            @format="large"
             @type="input-number"
             as |field|
           >
@@ -120,10 +120,10 @@ export default class AiLlmQuotaModal extends Component {
           </form.Field>
 
           <form.Field
+            @format="large"
             @name="max_usages"
             @title={{i18n "discourse_ai.llms.quotas.max_usages"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_usages_help"}}
-            @format="large"
             @type="input-number"
             as |field|
           >
@@ -131,10 +131,10 @@ export default class AiLlmQuotaModal extends Component {
           </form.Field>
 
           <form.Field
+            @format="large"
             @name="max_cost"
             @title={{i18n "discourse_ai.llms.quotas.max_cost"}}
             @tooltip={{i18n "discourse_ai.llms.quotas.max_cost_help"}}
-            @format="large"
             @type="input-number"
             as |field|
           >
@@ -142,24 +142,24 @@ export default class AiLlmQuotaModal extends Component {
           </form.Field>
 
           <form.Field
+            @format="large"
             @name="duration_seconds"
             @title={{i18n "discourse_ai.llms.quotas.duration"}}
-            @validation="required"
-            @format="large"
             @type="custom"
+            @validation="required"
             as |field|
           >
             <field.Control>
               <DurationSelector
-                @value={{data.duration_seconds}}
                 @onChange={{field.set}}
+                @value={{data.duration_seconds}}
               />
             </field.Control>
           </form.Field>
 
           <form.Submit
-            @label="discourse_ai.llms.quotas.add"
             class="btn-primary"
+            @label="discourse_ai.llms.quotas.add"
           />
         </Form>
       </:body>

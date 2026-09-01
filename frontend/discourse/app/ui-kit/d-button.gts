@@ -241,8 +241,10 @@ export default class DButton extends Component<DButtonSignature> {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <this.wrapperElement
-      href={{@href}}
-      type={{unless @href (or @type "button")}}
+      aria-controls={{@ariaControls}}
+      aria-expanded={{this.computedAriaExpanded}}
+      aria-label={{this.computedAriaLabel}}
+      aria-pressed={{this.computedAriaPressed}}
       {{! For legacy compatibility. Prefer passing class as attributes. }}
       class={{dConcatClass
         @class
@@ -251,16 +253,14 @@ export default class DButton extends Component<DButtonSignature> {
         (if this.noText "no-text")
         this.btnContentClass
       }}
+      disabled={{this.isDisabled}}
+      form={{@form}}
+      href={{@href}}
       {{! For legacy compatibility. Prefer passing these as html attributes. }}
       id={{@id}}
-      form={{@form}}
-      aria-controls={{@ariaControls}}
-      aria-expanded={{this.computedAriaExpanded}}
-      aria-pressed={{this.computedAriaPressed}}
       tabindex={{@tabindex}}
-      disabled={{this.isDisabled}}
       title={{this.computedTitle}}
-      aria-label={{this.computedAriaLabel}}
+      type={{unless @href (or @type "button")}}
       ...attributes
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}

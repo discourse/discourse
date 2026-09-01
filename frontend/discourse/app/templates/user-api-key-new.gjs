@@ -17,10 +17,10 @@ export default <template>
       </div>
       <div>
         <DButton
+          class="btn-primary"
+          id="copy-api-key-btn"
           @action={{@controller.copy}}
           @translatedLabel={{i18n @controller.copyButtonLabel}}
-          id="copy-api-key-btn"
-          class="btn-primary"
         />
       </div>
     {{else}}
@@ -49,11 +49,11 @@ export default <template>
             {{i18n "user_api_key.logged_in_as"}}
           </span>
           <img
+            alt=""
             class="avatar"
+            height="24"
             src={{@controller.avatarUrl}}
             width="24"
-            height="24"
-            alt=""
           />
           <span class="authorize-api-key__username">
             {{@controller.page.current_user.username}}
@@ -110,16 +110,16 @@ export default <template>
         <form {{on "submit" @controller.authorize}}>
           <div class="authorize-api-key__buttons">
             <DButton
-              @isLoading={{@controller.isLoading}}
-              @action={{@controller.authorize}}
-              @label="user_api_key.authorize"
-              type="submit"
               class="btn-primary"
+              type="submit"
+              @action={{@controller.authorize}}
+              @isLoading={{@controller.isLoading}}
+              @label="user_api_key.authorize"
             />
             <DButton
+              class="btn-default"
               @href={{getURL "/"}}
               @label="user_api_key.deny"
-              class="btn-default"
             />
           </div>
         </form>

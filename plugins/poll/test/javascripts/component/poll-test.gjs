@@ -97,7 +97,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -171,7 +171,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     await click(
@@ -225,7 +225,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert.dom(".results li:nth-of-type(1) .option p").hasText("100% yes");
@@ -256,7 +256,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert.dom("ul.options").exists("options are shown");
@@ -294,7 +294,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -338,7 +338,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     requests = 0;
@@ -380,7 +380,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     requests = 0;
@@ -424,7 +424,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert.dom("ul.results").exists("results are shown for the saved vote");
@@ -438,7 +438,7 @@ module("Component | Poll", function (hooks) {
     assert.dom(".poll-buttons .cast-votes").exists();
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -474,7 +474,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     await click(
@@ -487,7 +487,7 @@ module("Component | Poll", function (hooks) {
       .exists("the option is selected but not yet cast");
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -528,7 +528,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -567,7 +567,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     await click(
@@ -621,7 +621,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     await click(
@@ -636,7 +636,7 @@ module("Component | Poll", function (hooks) {
       .exists("the option is ranked first before re-render");
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -672,7 +672,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     await click(
@@ -689,7 +689,7 @@ module("Component | Poll", function (hooks) {
     await settled();
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -730,7 +730,7 @@ module("Component | Poll", function (hooks) {
       }),
     });
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert.dom(".poll-buttons .cast-votes").isDisabled();
@@ -789,7 +789,7 @@ module("Component | Poll", function (hooks) {
     });
 
     await render(
-      <template><Poll @post={{ctx.post}} @poll={{ctx.poll}} /></template>
+      <template><Poll @poll={{ctx.poll}} @post={{ctx.post}} /></template>
     );
   }
 
@@ -907,7 +907,7 @@ module("Component | Poll", function (hooks) {
     assert.dom(".poll-voted-choices__choice").exists({ count: 1 });
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert
@@ -917,7 +917,7 @@ module("Component | Poll", function (hooks) {
     await click(".poll-buttons .amend-vote");
 
     await render(
-      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+      <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
     );
 
     assert

@@ -62,8 +62,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -104,9 +104,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -163,9 +163,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -205,8 +205,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -251,8 +251,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -309,9 +309,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -360,8 +360,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -461,9 +461,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -553,9 +553,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -606,9 +606,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -674,9 +674,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -753,9 +753,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @node={{this.node}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
@@ -809,8 +809,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -865,9 +865,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -930,9 +930,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1008,9 +1008,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1095,9 +1095,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1210,13 +1210,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
+            @onChange={{this.onChange}}
             @schema={{this.schema}}
             @session={{this.session}}
-            @onChange={{this.onChange}}
           />
         </Form>
       </template>
@@ -1308,8 +1308,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1356,8 +1356,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1405,8 +1405,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1464,8 +1464,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1596,10 +1596,10 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @connections={{this.connections}}
+            @form={{form}}
+            @formApi={{this.formApi}}
             @node={{this.node}}
             @nodes={{this.nodes}}
             @nodeType={{this.nodeType}}
@@ -1720,10 +1720,10 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @connections={{this.connections}}
+            @form={{form}}
+            @formApi={{this.formApi}}
             @node={{this.node}}
             @nodes={{this.nodes}}
             @nodeType={{this.nodeType}}
@@ -1784,8 +1784,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -1837,8 +1837,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @node={{this.node}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
@@ -1904,8 +1904,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @node={{this.node}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
@@ -1958,9 +1958,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2012,9 +2012,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2052,8 +2052,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2124,9 +2124,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -2193,8 +2193,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -2316,9 +2316,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @node={{this.node}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
@@ -2388,8 +2388,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
             @schema={{this.schema}}
@@ -2470,9 +2470,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @node={{this.node}}
             @nodeType={{this.nodeType}}
             @nodeTypes={{this.nodeTypes}}
@@ -2527,9 +2527,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2600,9 +2600,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2664,8 +2664,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <PropertyEngineConfigurator
-            @form={{form}}
             @configuration={{transientData}}
+            @form={{form}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2707,9 +2707,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2761,9 +2761,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}
@@ -2821,9 +2821,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           as |form transientData|
         >
           <PropertyEngineConfigurator
+            @configuration={{transientData}}
             @form={{form}}
             @formApi={{this.formApi}}
-            @configuration={{transientData}}
             @nodeType={{this.nodeType}}
             @schema={{this.schema}}
             @session={{this.session}}

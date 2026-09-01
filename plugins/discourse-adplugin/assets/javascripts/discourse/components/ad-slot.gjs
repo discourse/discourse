@@ -274,12 +274,12 @@ export default class AdSlot extends AdComponent {
       {{! Trick to force full destroy/re-render of component when route changes }}
       {{#each (array this.router.currentRoute)}}
         <Ad
-          @placement={{this.placement}}
           @category={{this.category}}
-          @postNumber={{this.postNumber}}
-          @indexNumber={{this.indexNumber}}
-          @tagName={{this.childTagName}}
           @colspan={{this.colspan}}
+          @indexNumber={{this.indexNumber}}
+          @placement={{this.placement}}
+          @postNumber={{this.postNumber}}
+          @tagName={{this.childTagName}}
         />
       {{/each}}
     {{/each}}

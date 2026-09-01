@@ -39,9 +39,9 @@ export default class ChatMessageInReplyToIndicator extends Component {
   <template>
     {{#if @message.inReplyTo}}
       <LinkTo
-        @route={{this.route}}
-        @models={{this.model}}
         class="chat-reply is-direct-reply"
+        @models={{this.model}}
+        @route={{this.route}}
       >
         {{dIcon "share" title="chat.in_reply_to"}}
 

@@ -247,21 +247,21 @@ export default class PostPolicy extends Component {
         <div class="policy-actions">
           {{#if this.post.policy_can_accept}}
             <DButton
-              @isLoading={{this.isLoading}}
-              @action={{this.acceptPolicy}}
               class={{this.acceptButtonClasses}}
-              @translatedLabel={{this.policy.accept}}
+              @action={{this.acceptPolicy}}
               @icon={{if this.post.policy_accepted "check"}}
+              @isLoading={{this.isLoading}}
+              @translatedLabel={{this.policy.accept}}
             />
           {{/if}}
 
           {{#if this.post.policy_can_revoke}}
             <DButton
-              @isLoading={{this.isLoading}}
-              @action={{this.revokePolicy}}
               class={{this.revokeButtonClasses}}
-              @translatedLabel={{this.policy.revoke}}
+              @action={{this.revokePolicy}}
               @icon={{if this.post.policy_revoked "check"}}
+              @isLoading={{this.isLoading}}
+              @translatedLabel={{this.policy.revoke}}
             />
           {{/if}}
         </div>
@@ -275,10 +275,10 @@ export default class PostPolicy extends Component {
 
           {{#if this.post.policy_accepted_by_count}}
             <a
-              href
-              {{on "click" this.toggleShowUsers}}
-              title={{i18n "discourse_policy.accepted_tooltip"}}
               class="toggle toggle-accepted"
+              href
+              title={{i18n "discourse_policy.accepted_tooltip"}}
+              {{on "click" this.toggleShowUsers}}
             >
               <span class="user-count">
                 {{this.post.policy_accepted_by_count}}
@@ -295,9 +295,9 @@ export default class PostPolicy extends Component {
 
                   {{#if this.remainingAcceptedUsers}}
                     <a
+                      class="load-more-users"
                       href
                       {{on "click" this.loadRemainingAcceptedUsers}}
-                      class="load-more-users"
                     >
                       +
                       {{this.remainingAcceptedUsers}}
@@ -313,10 +313,10 @@ export default class PostPolicy extends Component {
             <div class="separator"></div>
 
             <a
-              href
-              {{on "click" this.toggleShowUsers}}
-              title={{i18n "discourse_policy.not_accepted_tooltip"}}
               class="toggle toggle-not-accepted"
+              href
+              title={{i18n "discourse_policy.not_accepted_tooltip"}}
+              {{on "click" this.toggleShowUsers}}
             >
               <span class="user-count">
                 {{this.post.policy_not_accepted_by_count}}
@@ -335,9 +335,9 @@ export default class PostPolicy extends Component {
 
                 {{#if this.remainingNotAcceptedUsers}}
                   <a
+                    class="load-more-users"
                     href
                     {{on "click" this.loadRemainingNotAcceptedUsers}}
-                    class="load-more-users"
                   >
                     +
                     {{this.remainingNotAcceptedUsers}}
@@ -351,9 +351,9 @@ export default class PostPolicy extends Component {
 
         {{#if this.canManagePolicy}}
           <DButton
+            class="no-text btn-default edit-policy-settings-btn"
             @action={{this.editPolicy}}
             @icon="gear"
-            class="no-text btn-default edit-policy-settings-btn"
           />
         {{/if}}
       </div>

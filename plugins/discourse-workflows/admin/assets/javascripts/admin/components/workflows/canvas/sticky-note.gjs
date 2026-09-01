@@ -407,14 +407,14 @@ export default class StickyNote extends Component {
     >
       <CanvasHoverToolbar>
         <DTooltip
-          @identifier="sticky-note-change-color"
           @content={{i18n "discourse_workflows.sticky_note.change_color"}}
+          @identifier="sticky-note-change-color"
         >
           <:trigger>
             <button
-              type="button"
-              class="workflow-canvas-toolbar__btn"
               aria-expanded={{if this.colorPickerOpen "true" "false"}}
+              class="workflow-canvas-toolbar__btn"
+              type="button"
               {{on "pointerdown" stopPropagation}}
               {{on "click" this.toggleColorPicker}}
             >
@@ -423,13 +423,13 @@ export default class StickyNote extends Component {
           </:trigger>
         </DTooltip>
         <DTooltip
-          @identifier="sticky-note-delete"
           @content={{i18n "discourse_workflows.sticky_note.delete"}}
+          @identifier="sticky-note-delete"
         >
           <:trigger>
             <button
-              type="button"
               class="workflow-canvas-toolbar__btn"
+              type="button"
               {{on "pointerdown" stopPropagation}}
               {{on "click" this.handleDelete}}
             >
@@ -446,13 +446,13 @@ export default class StickyNote extends Component {
         >
           {{#each this.colorOptions as |colorOpt|}}
             <button
-              type="button"
               class={{dConcatClass
                 "workflow-sticky-note__color-swatch"
                 (if (eq @note.color colorOpt.name) "is-active")
               }}
               style={{swatchStyle colorOpt.bg}}
               title={{colorOpt.name}}
+              type="button"
               {{on "click" (fn this.selectColor colorOpt.name)}}
             />
           {{/each}}
@@ -463,8 +463,8 @@ export default class StickyNote extends Component {
         {{#if this.isEditing}}
           <textarea
             class="workflow-sticky-note__textarea"
-            value={{@note.text}}
             placeholder={{i18n "discourse_workflows.sticky_note.placeholder"}}
+            value={{@note.text}}
             {{dAutoFocus}}
             {{on "input" this.handleTextInput}}
             {{on "blur" this.stopEditing}}
@@ -486,14 +486,14 @@ export default class StickyNote extends Component {
 
       <div class="workflow-sticky-note__edges">
         <DResizeHandles
-          @handleClass="workflow-sticky-note__edge"
           @directions={{this.resizeEdges}}
-          @threshold={{this.dragLeniencePx}}
-          @stopPropagation={{true}}
-          @onResizeStart={{this.onEdgeResizeStart}}
+          @handleClass="workflow-sticky-note__edge"
           @onResize={{this.onEdgeResize}}
-          @onResizeEnd={{this.onEdgeResizeEnd}}
           @onResizeCancel={{this.onEdgeResizeCancel}}
+          @onResizeEnd={{this.onEdgeResizeEnd}}
+          @onResizeStart={{this.onEdgeResizeStart}}
+          @stopPropagation={{true}}
+          @threshold={{this.dragLeniencePx}}
         />
       </div>
     </div>

@@ -15,12 +15,11 @@ export default class ChoicesField extends BaseField {
 
   <template>
     <div class="field control-group">
-      <DAFieldLabel @label={{@label}} @field={{@field}} />
+      <DAFieldLabel @field={{@field}} @label={{@label}} />
 
       <div class="controls">
         {{#if this.multiselect}}
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{this.replacedContent}}
             @onChange={{this.onChangeChoices}}
             @options={{hash
@@ -28,10 +27,10 @@ export default class ChoicesField extends BaseField {
               clearable=true
               disabled=@field.isDisabled
             }}
+            @value={{@field.metadata.value}}
           />
         {{else}}
           <ComboBox
-            @value={{@field.metadata.value}}
             @content={{this.replacedContent}}
             @onChange={{this.mutValue}}
             @options={{hash
@@ -39,6 +38,7 @@ export default class ChoicesField extends BaseField {
               clearable=true
               disabled=@field.isDisabled
             }}
+            @value={{@field.metadata.value}}
           />
         {{/if}}
 

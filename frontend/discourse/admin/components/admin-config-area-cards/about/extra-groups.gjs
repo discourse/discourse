@@ -64,41 +64,41 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
   <template>
     <Form @data={{this.data}} @onSubmit={{this.save}} as |form|>
       <form.Field
+        @format="large"
         @name="aboutPageExtraGroups"
         @title={{i18n "admin.config_areas.about.extra_groups.groups"}}
-        @format="large"
         @type="custom"
         as |field|
       >
         <field.Control>
           <GroupChooser
             @content={{this.site.groups}}
-            @value={{field.value}}
             @onChange={{field.set}}
+            @value={{field.value}}
           />
         </field.Control>
       </form.Field>
 
       <form.Field
-        @name="aboutPageExtraGroupsInitialMembers"
-        @title={{i18n "admin.config_areas.about.extra_groups.initial_members"}}
         @description={{i18n
           "admin.config_areas.about.extra_groups.initial_members_description"
         }}
-        @validation="required"
         @format="large"
+        @name="aboutPageExtraGroupsInitialMembers"
+        @title={{i18n "admin.config_areas.about.extra_groups.initial_members"}}
         @type="input-number"
+        @validation="required"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="aboutPageExtraGroupsOrder"
         @title={{i18n "admin.config_areas.about.extra_groups.order"}}
-        @validation="required"
-        @format="large"
         @type="select"
+        @validation="required"
         as |field|
       >
         <field.Control as |select|>
@@ -111,9 +111,9 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="aboutPageExtraGroupsShowDescription"
         @title={{i18n "admin.config_areas.about.extra_groups.show_description"}}
-        @format="large"
         @type="checkbox"
         as |field|
       >
@@ -121,8 +121,8 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
       </form.Field>
 
       <form.Submit
-        @label="admin.config_areas.about.update"
         @disabled={{@globalSavingStatus}}
+        @label="admin.config_areas.about.update"
       />
     </Form>
   </template>

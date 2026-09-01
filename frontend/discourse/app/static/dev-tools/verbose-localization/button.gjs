@@ -18,11 +18,11 @@ export default class VerboseLocalizationButton extends Component {
 
   <template>
     <button
-      title={{i18n "dev_tools.toggle_verbose_localization"}}
       class={{dConcatClass
         "toggle-verbose-localization"
         (if I18n.verbose "--active")
       }}
+      title={{i18n "dev_tools.toggle_verbose_localization"}}
       {{on "click" this.toggleVerboseLocalization}}
     >
       {{dIcon "scroll"}}

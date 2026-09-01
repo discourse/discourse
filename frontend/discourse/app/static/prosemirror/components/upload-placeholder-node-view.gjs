@@ -58,10 +58,10 @@ export default class UploadPlaceholderNodeView extends Component {
     <span class="upload-placeholder__filename">{{this.filename}}</span>
     <span class="upload-placeholder__progress">{{this.progress}}%</span>
     <button
-      class="upload-placeholder__cancel btn-transparent no-text"
-      title={{i18n "cancel"}}
       aria-label={{i18n "cancel"}}
+      class="upload-placeholder__cancel btn-transparent no-text"
       contenteditable="false"
+      title={{i18n "cancel"}}
       {{on "click" this.cancel}}
     >{{icon "xmark"}}</button>
   </template>

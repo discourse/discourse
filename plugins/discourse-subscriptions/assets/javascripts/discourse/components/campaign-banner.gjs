@@ -263,7 +263,7 @@ export default class CampaignBanner extends Component {
             (concat "box-shadow: 5px 5px #" this.dropShadowColor)
           }}
         >
-          <DButton @icon="xmark" @action={{this.dismissBanner}} class="close" />
+          <DButton class="close" @action={{this.dismissBanner}} @icon="xmark" />
 
           <div
             class="campaign-banner-info"
@@ -288,10 +288,10 @@ export default class CampaignBanner extends Component {
 
               {{#if this.product}}
                 <LinkTo
-                  @route="subscribe.show"
-                  @model={{this.product}}
-                  @disabled={{this.product.subscribed}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @disabled={{this.product.subscribed}}
+                  @model={{this.product}}
+                  @route="subscribe.show"
                 >
                   {{dIcon "far-heart"}}
                   {{dIcon "heart" class="hover-heart"}}
@@ -299,8 +299,8 @@ export default class CampaignBanner extends Component {
                 </LinkTo>
               {{else}}
                 <LinkTo
-                  @route={{this.subscribeRoute}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @route={{this.subscribeRoute}}
                 >
                   {{dIcon "far-heart"}}
                   {{dIcon "heart" class="hover-heart"}}
@@ -375,8 +375,8 @@ export default class CampaignBanner extends Component {
               {{#if this.subscriberGoal}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.subscribers}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.subscribers}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
@@ -392,8 +392,8 @@ export default class CampaignBanner extends Component {
               {{else}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.amountRaised}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.amountRaised}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">

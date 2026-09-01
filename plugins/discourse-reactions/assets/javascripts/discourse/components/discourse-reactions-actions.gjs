@@ -736,8 +736,8 @@ export default class DiscourseReactionsActions extends Component {
 
   <template>
     <div
-      id={{this.elementId}}
       class="discourse-reactions-actions {{this.classes}}"
+      id={{this.elementId}}
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
@@ -766,12 +766,12 @@ export default class DiscourseReactionsActions extends Component {
       }}
         {{#if this.showReactionsPicker}}
           <DiscourseReactionsPicker
-            @post={{this.data}}
-            @scheduleCollapse={{this.scheduleCollapse}}
             @cancelCollapse={{this.cancelCollapse}}
             @disableClickOutside={{this.disableClickOutside}}
             @enableClickOutside={{this.enableClickOutside}}
+            @post={{this.data}}
             @reactionsPickerExpanded={{this.reactionsPickerExpanded}}
+            @scheduleCollapse={{this.scheduleCollapse}}
             @toggle={{this.toggle}}
           />
         {{/if}}

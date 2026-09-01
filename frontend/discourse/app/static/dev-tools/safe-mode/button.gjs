@@ -23,11 +23,11 @@ export default class SafeModeButton extends Component {
 
   <template>
     <button
-      title={{i18n "dev_tools.toggle_safe_mode"}}
       class={{dConcatClass
         "toggle-safe-mode"
         (if this.safeModeActive "--active")
       }}
+      title={{i18n "dev_tools.toggle_safe_mode"}}
       {{on "click" this.toggleSafeMode}}
     >
       {{dIcon "truck-medical"}}

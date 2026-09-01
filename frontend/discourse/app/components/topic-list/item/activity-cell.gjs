@@ -7,14 +7,14 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const ActivityCell = <template>
   <td
-    title={{trustHTML @topic.bumpedAtTitle}}
     class={{dConcatClass
       "activity num topic-list-data"
       (coldAgeClass @topic.createdAt startDate=@topic.bumpedAt class="")
     }}
+    title={{trustHTML @topic.bumpedAtTitle}}
     ...attributes
   >
-    <a href={{@topic.lastPostUrl}} class="post-activity">
+    <a class="post-activity" href={{@topic.lastPostUrl}}>
       {{~! no whitespace ~}}
       <PluginOutlet
         @name="topic-list-before-relative-date"

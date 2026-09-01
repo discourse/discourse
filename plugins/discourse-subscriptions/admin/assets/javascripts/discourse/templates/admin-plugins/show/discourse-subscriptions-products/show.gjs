@@ -16,8 +16,8 @@ export default <template>
         {{i18n "discourse_subscriptions.admin.products.product.name"}}
       </label>
       <Input
-        @type="text"
         name="name"
+        @type="text"
         @value={{@controller.model.product.name}}
       />
     </p>
@@ -28,9 +28,9 @@ export default <template>
       </label>
 
       <Textarea
+        class="discourse-subscriptions-admin-textarea"
         name="description"
         @value={{@controller.model.product.metadata.description}}
-        class="discourse-subscriptions-admin-textarea"
       />
 
       <div class="control-instructions">
@@ -48,8 +48,8 @@ export default <template>
       </label>
 
       <Input
-        @type="text"
         name="statement_descriptor"
+        @type="text"
         @value={{@controller.model.product.statement_descriptor}}
       />
 
@@ -66,9 +66,9 @@ export default <template>
       </label>
 
       <Input
-        @type="checkbox"
         name="repurchaseable"
         @checked={{@controller.model.product.metadata.repurchaseable}}
+        @type="checkbox"
       />
 
       <div class="control-instructions">
@@ -84,9 +84,9 @@ export default <template>
       </label>
 
       <Input
-        @type="checkbox"
         name="active"
         @checked={{@controller.model.product.active}}
+        @type="checkbox"
       />
 
       <div class="control-instructions">
@@ -113,9 +113,9 @@ export default <template>
           </th>
           <th class="td-right">
             <LinkTo
-              @route="adminPlugins.show.discourse-subscriptions-products.show.plans.show"
-              @models={{array @controller.model.product.id "new"}}
               class="btn"
+              @models={{array @controller.model.product.id "new"}}
+              @route="adminPlugins.show.discourse-subscriptions-products.show.plans.show"
             >
               {{i18n "discourse_subscriptions.admin.plans.operations.add"}}
             </LinkTo>
@@ -135,9 +135,9 @@ export default <template>
               </td>
               <td class="td-right">
                 <LinkTo
-                  @route="adminPlugins.show.discourse-subscriptions-products.show.plans.show"
-                  @models={{array @controller.model.product.id plan.id}}
                   class="btn no-text btn-icon"
+                  @models={{array @controller.model.product.id plan.id}}
+                  @route="adminPlugins.show.discourse-subscriptions-products.show.plans.show"
                 >
                   {{dIcon "far-pen-to-square"}}
                 </LinkTo>
@@ -160,24 +160,24 @@ export default <template>
 
   <div class="pull-right">
     <DButton
-      @label="cancel"
       @action={{@controller.cancelProduct}}
       @icon="xmark"
+      @label="cancel"
     />
 
     {{#if @controller.model.product.isNew}}
       <DButton
-        @label="discourse_subscriptions.admin.products.operations.create"
+        class="btn btn-primary"
         @action={{@controller.createProduct}}
         @icon="plus"
-        class="btn btn-primary"
+        @label="discourse_subscriptions.admin.products.operations.create"
       />
     {{else}}
       <DButton
-        @label="discourse_subscriptions.admin.products.operations.update"
+        class="btn btn-primary"
         @action={{@controller.updateProduct}}
         @icon="check"
-        class="btn btn-primary"
+        @label="discourse_subscriptions.admin.products.operations.update"
       />
     {{/if}}
   </div>

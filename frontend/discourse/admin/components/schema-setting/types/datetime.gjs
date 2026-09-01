@@ -46,11 +46,11 @@ export default class SchemaSettingTypeDatetime extends Component {
 
   <template>
     <Input
-      @type="datetime-local"
       class="--datetime"
+      required={{this.required}}
+      @type="datetime-local"
       @value={{this.localTime}}
       {{on "input" this.onInput}}
-      required={{this.required}}
     />
 
     <div class="schema-field__input-supporting-text">

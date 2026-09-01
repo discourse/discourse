@@ -144,9 +144,9 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__panel">
           <DButton
             class="btn-flat btn-icon-text"
+            @action={{this.toggleView}}
             @icon="discourse-compress"
             @label="discourse_ai.ai_artifact.collapse_view_label"
-            @action={{this.toggleView}}
           />
         </div>
       </div>
@@ -154,17 +154,17 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__click-to-run">
           <DButton
             class="btn btn-primary"
+            @action={{this.showArtifact}}
             @icon="play"
             @label="discourse_ai.ai_artifact.click_to_run_label"
-            @action={{this.showArtifact}}
           />
         </div>
       {{else}}
         <iframe
-          title="AI Artifact"
-          src={{this.artifactUrl}}
-          width="100%"
           frameborder="0"
+          src={{this.artifactUrl}}
+          title="AI Artifact"
+          width="100%"
           {{didInsert this.setDataAttributes}}
         ></iframe>
       {{/if}}
@@ -172,9 +172,9 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__footer">
           <DButton
             class="btn-transparent btn-icon-text ai-artifact__expand-button"
+            @action={{this.toggleView}}
             @icon="discourse-expand"
             @label="discourse_ai.ai_artifact.expand_view_label"
-            @action={{this.toggleView}}
           />
         </div>
       {{/if}}

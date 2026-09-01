@@ -87,20 +87,20 @@ export default class GroupFlairInputs extends Component {
         <div class="radios">
           <label class="radio-label" for="avatar-flair-icon">
             <DRadioButton
-              @name="avatar-flair-icon"
               @id="avatar-flair-icon"
-              @value="icon"
+              @name="avatar-flair-icon"
               @selection={{this.model.flair_type}}
+              @value="icon"
             />
             {{i18n "groups.flair_type.icon"}}
           </label>
 
           <label class="radio-label" for="avatar-flair-image">
             <DRadioButton
-              @name="avatar-flair-image"
               @id="avatar-flair-image"
-              @value="image"
+              @name="avatar-flair-image"
               @selection={{this.model.flair_type}}
+              @value="image"
             />
             {{i18n "groups.flair_type.image"}}
           </label>
@@ -108,20 +108,20 @@ export default class GroupFlairInputs extends Component {
 
         {{#if this.flairPreviewIcon}}
           <DIconGridPicker
-            @value={{this.model.flair_icon}}
-            @onChange={{fn (mut this.model.flair_icon)}}
-            @showCaret={{true}}
-            @onlyAvailable={{false}}
             @label={{unless this.model.flair_icon (i18n "select_placeholder")}}
+            @onChange={{fn (mut this.model.flair_icon)}}
+            @onlyAvailable={{false}}
+            @showCaret={{true}}
+            @value={{this.model.flair_icon}}
           />
         {{else if this.flairPreviewImage}}
           <UppyImageUploader
-            @imageUrl={{this.flairImageUrl}}
-            @onUploadDone={{this.setFlairImage}}
-            @onUploadDeleted={{this.removeFlairImage}}
-            @type="group_flair"
-            @id="group-flair-uploader"
             class="no-repeat contain-image"
+            @id="group-flair-uploader"
+            @imageUrl={{this.flairImageUrl}}
+            @onUploadDeleted={{this.removeFlairImage}}
+            @onUploadDone={{this.setFlairImage}}
+            @type="group_flair"
           />
           <div class="control-instructions">
             {{i18n "groups.flair_upload_description"}}
@@ -135,10 +135,10 @@ export default class GroupFlairInputs extends Component {
           }}</label>
 
         <DTextField
-          @name="flair_bg_color"
-          @value={{this.model.flair_bg_color}}
-          @placeholderKey="groups.flair_bg_color_placeholder"
           class="group-flair-bg-color input-xxlarge"
+          @name="flair_bg_color"
+          @placeholderKey="groups.flair_bg_color_placeholder"
+          @value={{this.model.flair_bg_color}}
         />
       </div>
 
@@ -149,10 +149,10 @@ export default class GroupFlairInputs extends Component {
             }}</label>
 
           <DTextField
-            @name="flair_color"
-            @value={{this.model.flair_color}}
-            @placeholderKey="groups.flair_color_placeholder"
             class="group-flair-color input-xxlarge"
+            @name="flair_color"
+            @placeholderKey="groups.flair_color_placeholder"
+            @value={{this.model.flair_color}}
           />
         </div>
       {{/if}}
@@ -163,11 +163,11 @@ export default class GroupFlairInputs extends Component {
         <div class="avatar-flair-preview">
           <div class="avatar-wrapper">
             <img
-              width="45"
+              alt
+              class="avatar actor"
               height="45"
               src={{this.demoAvatarUrl}}
-              class="avatar actor"
-              alt
+              width="45"
             />
           </div>
 
@@ -179,14 +179,14 @@ export default class GroupFlairInputs extends Component {
             )
           }}
             <DAvatarFlair
+              @flairBgColor={{this.model.flairBackgroundHexColor}}
+              @flairColor={{this.model.flairHexColor}}
               @flairName={{this.model.name}}
               @flairUrl={{if
                 this.flairPreviewIcon
                 this.model.flair_icon
                 (if this.flairPreviewImage this.flairImageUrl "")
               }}
-              @flairBgColor={{this.model.flairBackgroundHexColor}}
-              @flairColor={{this.model.flairHexColor}}
             />
           {{/if}}
         </div>

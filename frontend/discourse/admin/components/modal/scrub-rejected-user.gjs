@@ -27,10 +27,10 @@ export default class ScrubRejectedUserModal extends Component {
 
   <template>
     <DModal
-      @bodyClass="scrub-rejected-user"
       class="admin-scrub-rejected-user-modal"
-      @title={{i18n "review.user.scrub_record.confirm_title"}}
+      @bodyClass="scrub-rejected-user"
       @closeModal={{if this.isScrubbing null @closeModal}}
+      @title={{i18n "review.user.scrub_record.confirm_title"}}
     >
       <:body>
         <p>{{i18n "review.user.scrub_record.confirm_body"}}</p>
@@ -49,8 +49,8 @@ export default class ScrubRejectedUserModal extends Component {
         <DButton
           class="btn btn-danger"
           @action={{this.confirmScrub}}
-          @isLoading={{this.isScrubbing}}
           @disabled={{this.scrubButtonDisabled}}
+          @isLoading={{this.isScrubbing}}
           @label="review.user.scrub_record.confirm_button"
         />
         <DButton

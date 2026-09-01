@@ -43,7 +43,7 @@ export default class WebhookEventChooser extends Component {
 
   <template>
     <label class="hook-event">
-      <Input @type="checkbox" @checked={{this.enabled}} name="event-choice" />
+      <Input name="event-choice" @checked={{this.enabled}} @type="checkbox" />
       {{this.details}}
     </label>
   </template>

@@ -133,14 +133,14 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
-      id={{@inputId}}
-      class="search-term__input"
-      type="search"
-      autocomplete="off"
-      enterkeyhint="search"
-      value={{this.search.activeGlobalSearchTerm}}
-      placeholder={{i18n @inputPlaceholder}}
       aria-label={{i18n @inputPlaceholder}}
+      autocomplete="off"
+      class="search-term__input"
+      enterkeyhint="search"
+      id={{@inputId}}
+      placeholder={{i18n @inputPlaceholder}}
+      type="search"
+      value={{this.search.activeGlobalSearchTerm}}
       {{on "keyup" this.onKeyup}}
       {{on "keydown" this.onKeydown}}
       {{on "input" this.updateSearchTerm}}

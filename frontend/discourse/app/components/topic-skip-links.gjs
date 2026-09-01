@@ -123,9 +123,9 @@ class TopicSkipLinks extends Component {
         {{#if this.resumePostNumber}}
           {{#if this.resumeIsLastReply}}
             <SkipTo
-              @topic={{@topic}}
-              @postNumber={{this.resumePostNumber}}
               @onClick={{this.focusSelector}}
+              @postNumber={{this.resumePostNumber}}
+              @topic={{@topic}}
             >
               {{i18n
                 "skip_to_where_you_left_off_last"
@@ -134,9 +134,9 @@ class TopicSkipLinks extends Component {
             </SkipTo>
           {{else}}
             <SkipTo
-              @topic={{@topic}}
-              @postNumber={{this.resumePostNumber}}
               @onClick={{this.focusSelector}}
+              @postNumber={{this.resumePostNumber}}
+              @topic={{@topic}}
             >
               {{i18n
                 "skip_to_where_you_left_off"
@@ -145,9 +145,9 @@ class TopicSkipLinks extends Component {
             </SkipTo>
             {{#if this.topicHasMultiplePosts}}
               <SkipTo
-                @topic={{@topic}}
-                @postNumber={{this.lastPostNumber}}
                 @onClick={{this.focusSelector}}
+                @postNumber={{this.lastPostNumber}}
+                @topic={{@topic}}
               >
                 {{i18n "skip_to_last_reply"}}
               </SkipTo>
@@ -156,9 +156,9 @@ class TopicSkipLinks extends Component {
         {{else}}
           {{#if this.topicHasMultiplePosts}}
             <SkipTo
-              @topic={{@topic}}
-              @postNumber={{this.lastPostNumber}}
               @onClick={{this.focusSelector}}
+              @postNumber={{this.lastPostNumber}}
+              @topic={{@topic}}
             >
               {{i18n "skip_to_last_reply"}}
             </SkipTo>
@@ -166,9 +166,9 @@ class TopicSkipLinks extends Component {
         {{/if}}
         {{#if this.topicHasMultiplePosts}}
           <SkipTo
-            @topic={{@topic}}
-            @postNumber="1"
             @onClick={{this.focusSelector}}
+            @postNumber="1"
+            @topic={{@topic}}
           >
             {{i18n "skip_to_top"}}
           </SkipTo>

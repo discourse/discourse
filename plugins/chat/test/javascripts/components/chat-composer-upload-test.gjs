@@ -133,8 +133,8 @@ module("Component | ChatComposerUpload", function (hooks) {
       <template>
         <ChatComposerUpload
           @isDone={{true}}
-          @upload={{this.upload}}
           @onCancel={{fn this.removeUpload this.upload}}
+          @upload={{this.upload}}
         />
       </template>
     );
@@ -158,8 +158,8 @@ module("Component | ChatComposerUpload", function (hooks) {
     await render(
       <template>
         <ChatComposerUpload
-          @upload={{this.upload}}
           @onCancel={{fn this.removeUpload this.upload}}
+          @upload={{this.upload}}
         />
       </template>
     );

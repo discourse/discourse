@@ -218,27 +218,27 @@ export default class WebhookEvents extends Component {
     >
       <div class="web-hook-events-actions">
         <ComboBox
-          @value={{@status}}
+          class="delivery-status-filters"
           @content={{this.statuses}}
           @onChange={{fn (mut @status)}}
           @options={{hash none="admin.web_hooks.events.filter_status.all"}}
-          class="delivery-status-filters"
+          @value={{@status}}
         />
 
         <DButton
-          @icon="arrows-rotate"
-          @label="admin.web_hooks.events.redeliver_failed"
+          class="btn-default"
           @action={{this.redeliverFailed}}
           @disabled={{not this.redeliverEnabled}}
-          class="btn-default"
+          @icon="arrows-rotate"
+          @label="admin.web_hooks.events.redeliver_failed"
         />
 
         <DButton
-          @icon="paper-plane"
-          @label="admin.web_hooks.events.ping"
+          class="btn-default webhook-events__ping-button"
           @action={{this.ping}}
           @disabled={{not this.pingEnabled}}
-          class="btn-default webhook-events__ping-button"
+          @icon="paper-plane"
+          @label="admin.web_hooks.events.ping"
         />
       </div>
 
@@ -265,14 +265,14 @@ export default class WebhookEvents extends Component {
 
             {{#if this.hasIncoming}}
               <a
+                class="alert alert-info clickable"
                 href
                 tabindex="0"
                 {{on "click" this.showInserted}}
-                class="alert alert-info clickable"
               >
                 <DCountI18n
-                  @key="admin.web_hooks.events.incoming"
                   @count={{this.incomingCount}}
+                  @key="admin.web_hooks.events.incoming"
                 />
               </a>
             {{/if}}

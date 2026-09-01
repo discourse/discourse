@@ -31,40 +31,40 @@ export default class RedesignedAdminDashboard extends Component {
 
   <template>
     <DPageHeader
-      @titleLabel={{i18n "admin.dashboard.title"}}
-      @hideTabs={{true}}
       @collapseActionsOnMobile={{false}}
+      @hideTabs={{true}}
+      @titleLabel={{i18n "admin.dashboard.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin"
           @label={{i18n "admin.dashboard.title"}}
+          @path="/admin"
         />
       </:breadcrumbs>
 
       <:actions>
         <DashboardDateRange
-          @period={{@requestedPeriod}}
-          @startDate={{@requestedStartDate}}
           @endDate={{@requestedEndDate}}
-          @setPeriod={{@setPeriod}}
+          @period={{@requestedPeriod}}
           @setCustomDateRange={{@setCustomDateRange}}
+          @setPeriod={{@setPeriod}}
+          @startDate={{@requestedStartDate}}
         />
         {{#if this.currentUser.admin}}
           <DMenu
-            @identifier="db-configure"
             @icon="gear"
+            @identifier="db-configure"
             @label={{i18n "admin.dashboard.configure.button"}}
+            @modalForMobile={{true}}
             @title={{i18n "admin.dashboard.configure.tooltip"}}
             @triggerClass="btn-default"
-            @modalForMobile={{true}}
           >
             <:content>
               <ConfigureMenu
-                @sections={{this.configurationSections}}
                 @onReorder={{@reorderSections}}
                 @onToggleVisibility={{@toggleSection}}
+                @sections={{this.configurationSections}}
               />
             </:content>
           </DMenu>
@@ -73,8 +73,8 @@ export default class RedesignedAdminDashboard extends Component {
     </DPageHeader>
 
     <PluginOutlet
-      @name="admin-dashboard-after-header"
       @connectorTagName="div"
+      @name="admin-dashboard-after-header"
       @outletArgs={{lazyHash isNewDashboard=true}}
     />
 
@@ -85,9 +85,9 @@ export default class RedesignedAdminDashboard extends Component {
         </div>
       {{else if @loadedSections}}
         <DashboardSiteAdvice
-          @problems={{@problems}}
-          @onRefresh={{@onRefreshProblems}}
           @onIgnore={{@onIgnoreProblem}}
+          @onRefresh={{@onRefreshProblems}}
+          @problems={{@problems}}
         />
 
         {{#each @loadedSections.sections key="id" as |section|}}
@@ -95,62 +95,62 @@ export default class RedesignedAdminDashboard extends Component {
             <DashboardHighlights
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
-              @highlights={{section.data}}
-              @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
-              @fetchError={{section.error}}
-              @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
+              @fetchError={{section.error}}
+              @highlights={{section.data}}
+              @loading={{@loadingSections}}
+              @period={{@loadedSections.period}}
+              @startDate={{@loadedSections.startDate}}
             />
           {{else if (eq section.id "reports")}}
             <DashboardReports
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
               @data={{section.data}}
-              @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
-              @refreshSections={{@refreshSections}}
               @fetchError={{section.error}}
+              @refreshSections={{@refreshSections}}
+              @startDate={{@loadedSections.startDate}}
             />
           {{else if (eq section.id "traffic")}}
             <DashboardTraffic
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
-              @traffic={{section.data}}
-              @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
-              @fetchError={{section.error}}
-              @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
+              @fetchError={{section.error}}
+              @loading={{@loadingSections}}
+              @period={{@loadedSections.period}}
+              @startDate={{@loadedSections.startDate}}
+              @traffic={{section.data}}
             />
           {{else if (eq section.id "engagement")}}
             <DashboardEngagement
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
-              @engagement={{section.data}}
-              @loading={{@loadingSections}}
-              @fetchError={{section.error}}
-              @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
+              @engagement={{section.data}}
+              @fetchError={{section.error}}
+              @loading={{@loadingSections}}
+              @startDate={{@loadedSections.startDate}}
             />
           {{else if (eq section.id "system")}}
             <DashboardSystem
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
               @data={{section.data}}
-              @loading={{@loadingSections}}
               @fetchError={{section.error}}
+              @loading={{@loadingSections}}
             />
           {{else if (eq section.id "search")}}
             <DashboardSearch
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
-              @search={{section.data}}
-              @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
-              @fetchError={{section.error}}
-              @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
+              @fetchError={{section.error}}
+              @loading={{@loadingSections}}
+              @period={{@loadedSections.period}}
+              @search={{section.data}}
+              @startDate={{@loadedSections.startDate}}
             />
           {{else}}
             {{#let (sectionComponentFor section.id) as |PluginSection|}}
@@ -159,11 +159,11 @@ export default class RedesignedAdminDashboard extends Component {
                   class={{concat "--" section.id}}
                   data-section-id={{section.id}}
                   @data={{section.data}}
-                  @period={{@loadedSections.period}}
-                  @loading={{@loadingSections}}
-                  @fetchError={{section.error}}
-                  @startDate={{@loadedSections.startDate}}
                   @endDate={{@loadedSections.endDate}}
+                  @fetchError={{section.error}}
+                  @loading={{@loadingSections}}
+                  @period={{@loadedSections.period}}
+                  @startDate={{@loadedSections.startDate}}
                 />
               {{/if}}
             {{/let}}
@@ -171,7 +171,7 @@ export default class RedesignedAdminDashboard extends Component {
         {{/each}}
 
         {{#unless @loadedSections.sections.length}}
-          <div class="db-main__empty" role="status" aria-live="polite">
+          <div aria-live="polite" class="db-main__empty" role="status">
             {{#if this.currentUser.admin}}
               {{i18n "admin.dashboard.configure.empty_state_admin"}}
             {{else}}

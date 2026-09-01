@@ -133,44 +133,44 @@ export default class TopicDismissButtons extends Component {
       <div class="row dismiss-container-{{@position}}">
         {{~#if @showDismissRead~}}
           <DButton
-            @action={{this.dismissReadPosts}}
-            @translatedLabel={{this.dismissLabel}}
-            @title="topics.bulk.dismiss_tooltip"
-            id="dismiss-topics-{{@position}}"
             class="btn-default dismiss-read"
+            id="dismiss-topics-{{@position}}"
+            @action={{this.dismissReadPosts}}
+            @title="topics.bulk.dismiss_tooltip"
+            @translatedLabel={{this.dismissLabel}}
           />
         {{~/if~}}
         {{~#if @showResetNew~}}
           {{#if @showNewDismissCombo}}
             <DComboButton
-              @hasMenu={{this.showDismissNewMenu}}
-              @btnTypeClass="btn-default dismiss-read"
               class="topic-dismiss-buttons__combo"
+              @btnTypeClass="btn-default dismiss-read"
+              @hasMenu={{this.showDismissNewMenu}}
               as |combo|
             >
               <combo.Button
+                class="topic-dismiss-buttons__button"
+                id="dismiss-new-{{@position}}"
                 @action={{this.dismissNew}}
                 @translatedLabel={{this.dismissNewLabel}}
-                id="dismiss-new-{{@position}}"
-                class="topic-dismiss-buttons__button"
               />
 
               <combo.Menu
-                @identifier="dismiss-new-menu"
-                @onRegisterApi={{this.registerDMenu}}
-                @modalForMobile={{true}}
                 aria-label={{i18n "topics.bulk.dismiss_new_menu"}}
-                id="dismiss-new-menu-{{@position}}"
                 class="topic-dismiss-buttons__menu"
+                id="dismiss-new-menu-{{@position}}"
+                @identifier="dismiss-new-menu"
+                @modalForMobile={{true}}
+                @onRegisterApi={{this.registerDMenu}}
               >
                 <DDropdownMenu as |dropdown|>
                   <dropdown.item class="topic-dismiss-buttons__menu-item">
                     <DButton
+                      class="dismiss-new-stop-tracking"
                       @action={{this.dismissNewAndStopTracking}}
                       @translatedLabel={{i18n
                         "topics.bulk.dismiss_and_stop_tracking"
                       }}
-                      class="dismiss-new-stop-tracking"
                     />
                   </dropdown.item>
                 </DDropdownMenu>
@@ -178,11 +178,11 @@ export default class TopicDismissButtons extends Component {
             </DComboButton>
           {{else}}
             <DButton
-              @action={{@resetNew}}
-              @translatedLabel={{this.dismissNewLabel}}
-              @icon="check"
-              id="dismiss-new-{{@position}}"
               class="btn-default dismiss-read"
+              id="dismiss-new-{{@position}}"
+              @action={{@resetNew}}
+              @icon="check"
+              @translatedLabel={{this.dismissNewLabel}}
             />
           {{/if}}
         {{~/if~}}

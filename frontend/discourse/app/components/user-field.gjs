@@ -23,10 +23,10 @@ export default class UserField extends Component {
   <template>
     {{#let (get this.components @field.field_type) as |UserFieldComponent|}}
       <UserFieldComponent
-        @field={{@field}}
-        @value={{@value}}
-        @validation={{@validation}}
         ...attributes
+        @field={{@field}}
+        @validation={{@validation}}
+        @value={{@value}}
       />
     {{/let}}
   </template>

@@ -20,11 +20,11 @@ import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent
-    @linkToPost={{true}}
+    @clampDescription={{true}}
     @event={{@data.event}}
+    @linkToPost={{true}}
     @onClose={{@data.onClose}}
     @withDescription={{true}}
-    @clampDescription={{true}}
   />
 </template>;
 
@@ -218,6 +218,7 @@ export default class FullCalendar extends Component {
 
   <template>
     <div
+      ...attributes
       {{didInsert this.setupCalendar}}
       {{didUpdate
         this.updateCalendar
@@ -226,7 +227,6 @@ export default class FullCalendar extends Component {
         this.capabilities.viewport.md
       }}
       {{this.forceUpdateSize}}
-      ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}
     </div>

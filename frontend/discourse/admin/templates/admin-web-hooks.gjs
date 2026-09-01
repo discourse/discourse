@@ -6,21 +6,21 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-webhooks admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.webhooks.title"}}
       @descriptionLabel={{i18n "admin.config.webhooks.header_description"}}
       @hideTabs={{true}}
+      @titleLabel={{i18n "admin.config.webhooks.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/api/web_hooks"
           @label={{i18n "admin.config.webhooks.title"}}
+          @path="/admin/api/web_hooks"
         />
       </:breadcrumbs>
       <:actions as |actions|>
         <actions.Primary
-          @route="adminWebHooks.new"
           @label="admin.web_hooks.add"
+          @route="adminWebHooks.new"
         />
       </:actions>
     </DPageHeader>

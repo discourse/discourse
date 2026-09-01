@@ -15,9 +15,9 @@ export default class SilenceDetails extends Component {
         </div>
       </label>
       <DTextField
-        @value={{this.reason}}
-        @placeholderKey="admin.user.silence_reason_placeholder"
         class="silence-reason"
+        @placeholderKey="admin.user.silence_reason_placeholder"
+        @value={{this.reason}}
       />
     </div>
 
@@ -27,9 +27,9 @@ export default class SilenceDetails extends Component {
       </div>
     </label>
     <Textarea
-      @value={{this.message}}
       class="silence-message"
       placeholder={{i18n "admin.user.silence_message_placeholder"}}
+      @value={{this.message}}
     />
   </template>
 }

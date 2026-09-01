@@ -151,8 +151,8 @@ export default function dElement(
       const fallback = <template>
         {{! @glint-nocheck: @ember/component (ClassicComponent) is not glint-typed }}
         <ClassicComponent
-          @tagName={{tagName}}
           ...attributes
+          @tagName={{tagName}}
         >{{yield}}</ClassicComponent>
       </template>;
       fallbacks.set(tagName, fallback);

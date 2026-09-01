@@ -51,9 +51,9 @@ export default class AdminConfigAreasWebhooksList extends Component {
             <tbody class="d-table__body">
               {{#each @webhooks.content as |webhook|}}
                 <WebhookItem
-                  @webhook={{webhook}}
                   @deliveryStatuses={{@webhooks.extras.delivery_statuses}}
                   @destroy={{this.destroyWebhook}}
+                  @webhook={{webhook}}
                 />
               {{/each}}
               {{#if @webhooks.loadingMore}}
@@ -70,9 +70,9 @@ export default class AdminConfigAreasWebhooksList extends Component {
         </DLoadMore>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="admin-web_hooks__add-web_hook"
           @ctaLabel="admin.web_hooks.add"
           @ctaRoute="adminWebHooks.new"
-          @ctaClass="admin-web_hooks__add-web_hook"
           @emptyLabel="admin.web_hooks.none"
         />
       {{/if}}

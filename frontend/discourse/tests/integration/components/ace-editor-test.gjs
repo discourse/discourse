@@ -25,7 +25,7 @@ module("Integration | Component | AceEditor", function (hooks) {
   test("css editor", async function (assert) {
     await render(
       <template>
-        <AceEditor @mode="css" style="width: 300px; height: 200px" />
+        <AceEditor style="width: 300px; height: 200px" @mode="css" />
       </template>
     );
     assert.dom(".ace_editor").exists("it renders the ace editor");
@@ -35,9 +35,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="html"
-          @content="<b>wat</b>"
           style="width: 300px; height: 200px"
+          @content="<b>wat</b>"
+          @mode="html"
         />
       </template>
     );
@@ -48,9 +48,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 200px"
+          @content="SELECT * FROM users"
+          @mode="sql"
         />
       </template>
     );
@@ -61,9 +61,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="yaml"
-          @content="test: true"
           style="width: 300px; height: 200px"
+          @content="test: true"
+          @mode="yaml"
         />
       </template>
     );
@@ -74,9 +74,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="javascript"
-          @content="test: true"
           style="width: 300px; height: 200px"
+          @content="test: true"
+          @mode="javascript"
         />
       </template>
     );
@@ -87,10 +87,10 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
+          style="width: 300px; height: 200px"
           @content="SELECT * FROM users"
           @disabled={{true}}
-          style="width: 300px; height: 200px"
+          @mode="sql"
         />
       </template>
     );
@@ -105,9 +105,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 220px; min-height: 200px; max-height: 240px"
+          @content="SELECT * FROM users"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>
@@ -162,9 +162,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 220px; min-height: 200px"
+          @content="SELECT * FROM users"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>
@@ -188,9 +188,9 @@ module("Integration | Component | AceEditor", function (hooks) {
       <template>
         <button class="focus-sentinel" type="button">Keep focus</button>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 260px; min-height: 200px"
+          @content="SELECT * FROM users"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>
@@ -233,15 +233,15 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT 1"
           style="width: 300px; height: 240px; min-height: 200px; max-height: 500px"
+          @content="SELECT 1"
+          @mode="sql"
           @resizable={{true}}
         />
         <AceEditor
-          @mode="sql"
-          @content="SELECT 2"
           style="width: 300px; height: 320px; min-height: 200px; max-height: 500px"
+          @content="SELECT 2"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>
@@ -268,9 +268,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 300px; min-height: 200px; max-height: 360px"
+          @content="SELECT * FROM users"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>
@@ -314,9 +314,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     await render(
       <template>
         <AceEditor
-          @mode="sql"
-          @content="SELECT * FROM users"
           style="width: 300px; height: 260px; min-height: 200px"
+          @content="SELECT * FROM users"
+          @mode="sql"
           @resizable={{true}}
         />
       </template>

@@ -683,15 +683,15 @@ export default class VoiceCallWidget extends Component {
     {{! eslint-disable ember/template-no-pointer-down-event-binding, ember/template-no-invalid-interactive }}
     {{#if this.shouldRender}}
       <section
+        aria-label={{i18n "voice.widget.title" room=this.room.name}}
         class={{dConcatClass
           "voice-call-widget"
           (if this.resizing "--resizing")
           (if this.dragging "--dragging")
           (if this.extraMinimized "--extra-minimized")
         }}
-        style={{this.widgetStyle}}
         data-room-id={{this.room.id}}
-        aria-label={{i18n "voice.widget.title" room=this.room.name}}
+        style={{this.widgetStyle}}
         {{didInsert this.registerWidget}}
         {{didInsert this.watchWidgetRoom this.room.id}}
         {{on "pointermove" this.dragWidget}}
@@ -701,9 +701,9 @@ export default class VoiceCallWidget extends Component {
         {{#unless this.extraMinimized}}
           <header class="voice-call-widget__header">
             <div
+              aria-level="2"
               class="voice-call-widget__room"
               role="heading"
-              aria-level="2"
               {{on "mousedown" this.startDrag}}
               {{on "touchstart" this.startDrag}}
             >
@@ -722,11 +722,11 @@ export default class VoiceCallWidget extends Component {
           >
             {{#each this.tiles key="participant.id" as |tile|}}
               <VoiceVideoTile
-                @room={{this.room}}
-                @participant={{tile.participant}}
                 @isSelf={{tile.isSelf}}
-                @showVideo={{tile.showVideo}}
                 @onAspect={{this.noopAspect}}
+                @participant={{tile.participant}}
+                @room={{this.room}}
+                @showVideo={{tile.showVideo}}
               />
             {{/each}}
 
@@ -736,23 +736,23 @@ export default class VoiceCallWidget extends Component {
 
             {{#if this.overflowCount}}
               <button
-                type="button"
+                aria-label={{this.overflowTitle}}
                 class="voice-call-widget__overflow-tile"
                 title={{this.overflowTitle}}
-                aria-label={{this.overflowTitle}}
+                type="button"
                 {{on "click" this.openRoom}}
               >
                 <span
-                  class="voice-call-widget__overflow-avatars"
                   aria-hidden="true"
+                  class="voice-call-widget__overflow-avatars"
                 >
                   {{#each this.overflowAvatars key="id" as |avatar|}}
-                    <img src={{avatar.src}} alt="" />
+                    <img alt="" src={{avatar.src}} />
                   {{/each}}
                 </span>
                 <span
-                  class="voice-call-widget__overflow-count"
                   aria-hidden="true"
+                  class="voice-call-widget__overflow-count"
                 >{{this.overflowLabel}}</span>
               </button>
             {{/if}}
@@ -762,26 +762,26 @@ export default class VoiceCallWidget extends Component {
         <footer class="voice-call-widget__controls">
           {{#if this.extraMinimized}}
             <DButton
+              class="voice-call-widget__expand"
               @action={{this.expandWidget}}
               @icon="expand"
               @translatedTitle={{this.expandWidgetTitle}}
-              class="voice-call-widget__expand"
             />
           {{else}}
             <VoiceCallControls @room={{this.room}} />
             <DButton
+              class="btn-default"
               @action={{this.openRoom}}
               @icon="expand"
               @translatedTitle={{this.openRoomTitle}}
-              class="btn-default"
             />
             <DMenu
-              @identifier="voice-widget-room-menu"
-              @icon="ellipsis-vertical"
-              @title={{i18n "voice.room.more"}}
               @ariaLabel={{i18n "voice.room.more"}}
-              @placement="top-end"
+              @icon="ellipsis-vertical"
+              @identifier="voice-widget-room-menu"
               @modalForMobile={{true}}
+              @placement="top-end"
+              @title={{i18n "voice.room.more"}}
               @triggerClass="btn-default"
             >
               <:content as |roomMenu|>
@@ -789,29 +789,29 @@ export default class VoiceCallWidget extends Component {
                   {{#if this.chatAvailable}}
                     <dropdown.item>
                       <DButton
+                        class="btn-transparent"
                         @action={{fn this.openChatFromMenu roomMenu.close}}
                         @icon="far-comment"
                         @translatedLabel={{this.chatTitle}}
-                        class="btn-transparent"
                       />
                     </dropdown.item>
                   {{/if}}
                   {{#if this.room.can_invite}}
                     <dropdown.item>
                       <DButton
+                        class="btn-transparent"
                         @action={{fn this.openInviteModal roomMenu.close}}
                         @icon="user-plus"
                         @label="voice.invite.menu"
-                        class="btn-transparent"
                       />
                     </dropdown.item>
                   {{/if}}
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent"
                       @action={{fn this.openRoomInfo roomMenu.close}}
                       @icon="circle-info"
                       @label="voice.room.info"
-                      class="btn-transparent"
                     />
                   </dropdown.item>
                 </DDropdownMenu>
@@ -819,10 +819,10 @@ export default class VoiceCallWidget extends Component {
             </DMenu>
           {{/if}}
           <DButton
-            @action={{this.leaveRoom}}
-            @icon="phone-slash"
-            @ariaLabel="voice.room.leave"
             class="btn-danger voice-call-widget__leave"
+            @action={{this.leaveRoom}}
+            @ariaLabel="voice.room.leave"
+            @icon="phone-slash"
           />
         </footer>
 
@@ -830,11 +830,11 @@ export default class VoiceCallWidget extends Component {
           {{#each this.resizeCorners as |corner|}}
             {{#unless this.extraMinimized}}
               <div
+                aria-hidden="true"
                 class={{dConcatClass
                   "voice-call-widget__resize"
                   (concat "--" corner)
                 }}
-                aria-hidden="true"
                 {{on "mousedown" (fn this.startResize corner)}}
                 {{on "touchstart" (fn this.startResize corner)}}
               ></div>

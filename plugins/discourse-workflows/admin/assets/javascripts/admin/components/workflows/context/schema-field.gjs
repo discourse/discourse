@@ -96,8 +96,8 @@ export default class SchemaField extends Component {
         <ul class="workflows-schema-field-list is-nested">
           {{#each @field.children as |child|}}
             <SchemaField
-              @field={{child}}
               @draggable={{@draggable}}
+              @field={{child}}
               @parentPath={{this.fieldId}}
             />
           {{/each}}

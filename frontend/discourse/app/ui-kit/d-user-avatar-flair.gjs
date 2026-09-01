@@ -36,10 +36,10 @@ export default class DUserAvatarFlair extends Component {
   <template>
     {{#if this.flair}}
       <DAvatarFlair
-        @flairName={{this.flair.flairName}}
-        @flairUrl={{this.flair.flairUrl}}
         @flairBgColor={{this.flair.flairBgColor}}
         @flairColor={{this.flair.flairColor}}
+        @flairName={{this.flair.flairName}}
+        @flairUrl={{this.flair.flairUrl}}
       />
     {{/if}}
   </template>

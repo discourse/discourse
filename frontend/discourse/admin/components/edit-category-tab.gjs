@@ -73,7 +73,7 @@ export default class EditCategoryTab extends Component {
       class={{dConcatClass (if this.active "active") this.tabClassName}}
       ...attributes
     >
-      <a href {{on "click" this.select}} class={{if this.active "active"}}>
+      <a class={{if this.active "active"}} href {{on "click" this.select}}>
         {{this.title}}
       </a>
     </li>

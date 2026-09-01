@@ -31,8 +31,8 @@ export default class BulkInviteSampleCsvFile extends Component {
   <template>
     <div ...attributes>
       <DButton
-        @label="discourse_post_event.bulk_invite_modal.download_sample_csv"
         @action={{this.downloadSampleCsv}}
+        @label="discourse_post_event.bulk_invite_modal.download_sample_csv"
       />
     </div>
   </template>

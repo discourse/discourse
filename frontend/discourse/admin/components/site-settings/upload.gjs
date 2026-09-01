@@ -20,11 +20,11 @@ const BACKGROUND_SIZE_COVER_SETTINGS = ["welcome_banner_image"];
 
 const ImagePreview = <template>
   <a
-    {{@applyLightbox}}
-    href={{@cdnUrl}}
-    title={{@fileName}}
-    rel="nofollow ugc noopener"
     class="lightbox"
+    href={{@cdnUrl}}
+    rel="nofollow ugc noopener"
+    title={{@fileName}}
+    {{@applyLightbox}}
   >
     <div class="meta">
       <span class="informations">
@@ -38,10 +38,10 @@ const ImagePreview = <template>
 
   <div class="expand-overlay">
     <DButton
+      class="btn-default btn-small file-uploader-lightbox-btn"
       @action={{@onToggleLightbox}}
       @icon="discourse-expand"
       @title="expand"
-      class="btn-default btn-small file-uploader-lightbox-btn"
     />
   </div>
 </template>;
@@ -58,11 +58,11 @@ const FilePreview = <template>
       {{/if}}
     </div>
     <a
-      href={{@cdnUrl}}
-      download={{@fileName}}
-      target="_blank"
-      rel="nofollow ugc noopener noreferrer"
       class="btn btn-default btn-small no-text download-btn"
+      download={{@fileName}}
+      href={{@cdnUrl}}
+      rel="nofollow ugc noopener noreferrer"
+      target="_blank"
       title={{i18n "admin.site_settings.download_file"}}
     >
       {{dIcon "download"}}
@@ -267,12 +267,12 @@ export default class SiteSettingUpload extends Component {
 
   <template>
     <div
-      id={{this.settingId}}
       class={{dConcatClass
         "file-uploader"
         (if @value "has-file" "no-file")
         (if this.isImageFile "has-image")
       }}
+      id={{this.settingId}}
     >
       <div
         class={{dConcatClass
@@ -288,9 +288,9 @@ export default class SiteSettingUpload extends Component {
               @cdnUrl={{this.fileCdnUrl}}
               @fileName={{this.fileName}}
               @filesize={{this.filesize}}
-              @width={{this.imageWidth}}
               @height={{this.imageHeight}}
               @onToggleLightbox={{this.toggleLightbox}}
+              @width={{this.imageWidth}}
             />
           {{else}}
             <FilePreview
@@ -305,17 +305,17 @@ export default class SiteSettingUpload extends Component {
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
                 {{if this.isUploading 'hidden'}}"
-              title={{this.disabledReason}}
               for={{this.inputId}}
               tabindex="0"
+              title={{this.disabledReason}}
               {{on "keydown" this.onKeydown}}
             >
               {{dIcon "upload"}}
               <DPickFilesButton
-                @registerFileInput={{this.uppyUpload.setup}}
-                @fileInputDisabled={{this.disabled}}
                 @acceptedFormatsOverride={{this.acceptedFormats}}
+                @fileInputDisabled={{this.disabled}}
                 @fileInputId={{this.inputId}}
+                @registerFileInput={{this.uppyUpload.setup}}
               />
               {{i18n "upload_selector.select_file"}}
             </label>
@@ -326,8 +326,8 @@ export default class SiteSettingUpload extends Component {
             >
               <div
                 aria-label={{this.uploadStatusLabel}}
-                role="progressbar"
                 class="progress-bar-container"
+                role="progressbar"
               >
                 <div class="progress-bar" style={{this.progressBarStyle}}></div>
               </div>
@@ -348,26 +348,26 @@ export default class SiteSettingUpload extends Component {
         <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
-            title={{this.disabledReason}}
             for={{this.inputId}}
             tabindex="0"
+            title={{this.disabledReason}}
             {{on "keydown" this.onKeydown}}
           >
             {{dIcon "upload"}}
             <DPickFilesButton
-              @registerFileInput={{this.uppyUpload.setup}}
-              @fileInputDisabled={{this.disabled}}
               @acceptedFormatsOverride={{this.acceptedFormats}}
+              @fileInputDisabled={{this.disabled}}
               @fileInputId={{this.inputId}}
+              @registerFileInput={{this.uppyUpload.setup}}
             />
             {{i18n "upload_selector.change"}}
           </label>
           <DButton
-            @action={{this.deleteUpload}}
-            @icon="trash-can"
-            @disabled={{this.disabled}}
-            @label="upload_selector.delete"
             class="btn-danger btn-small"
+            @action={{this.deleteUpload}}
+            @disabled={{this.disabled}}
+            @icon="trash-can"
+            @label="upload_selector.delete"
           />
         </div>
       {{/if}}

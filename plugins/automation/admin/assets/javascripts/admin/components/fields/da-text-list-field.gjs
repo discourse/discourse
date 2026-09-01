@@ -8,16 +8,16 @@ export default class TextListField extends BaseField {
   <template>
     <section class="field text-list-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{@field.metadata.value}}
-            @onChange={{this.mutValue}}
             @nameProperty={{null}}
-            @valueProperty={{null}}
+            @onChange={{this.mutValue}}
             @options={{hash allowAny=true disabled=@field.isDisabled}}
+            @value={{@field.metadata.value}}
+            @valueProperty={{null}}
           />
 
           <DAFieldDescription @description={{@description}} />

@@ -28,10 +28,10 @@ export default class SettingFieldGroup extends Component {
   <template>
     <@field.Control>
       <ComboBox
-        @value={{this.groupId}}
         @content={{this.groupChoices}}
         @onChange={{this.onChange}}
         @options={{hash clearable=true disabled=@field.disabled}}
+        @value={{this.groupId}}
       />
     </@field.Control>
   </template>

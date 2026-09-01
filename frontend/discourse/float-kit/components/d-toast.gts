@@ -93,8 +93,9 @@ export default class DToast extends Component<DToastSignature> {
 
   <template>
     <output
-      role={{if @toast.options.autoClose "status" "log"}}
       class={{dConcatClass "fk-d-toast" @toast.options.class}}
+      data-test-duration={{this.duration}}
+      role={{if @toast.options.autoClose "status" "log"}}
       {{autoCloseToast
         close=@toast.close
         duration=this.duration
@@ -102,16 +103,15 @@ export default class DToast extends Component<DToastSignature> {
         enabled=@toast.options.autoClose
       }}
       {{dSwipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
-      data-test-duration={{this.duration}}
     >
       <@toast.options.component
-        @data={{@toast.options.data}}
         @close={{@toast.close}}
+        @data={{@toast.options.data}}
+        @onRegisterProgressBar={{this.registerProgressBar}}
         @showProgressBar={{and
           @toast.options.showProgressBar
           @toast.options.autoClose
         }}
-        @onRegisterProgressBar={{this.registerProgressBar}}
       />
     </output>
   </template>
