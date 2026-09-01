@@ -1,11 +1,36 @@
+@use "lib/viewport";
+
 .solved-admin-report-related-items {
-  &__topic-cell {
-    width: 50%;
+  &__table tr {
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
-  &__solved-by-cell,
-  &__category-cell {
+  &__topic-cell {
+    width: 40%;
+
+    @include viewport.until(sm) {
+      grid-column: 1 / -1;
+      width: auto;
+    }
+  }
+
+  &__solved-by-cell {
     width: 25%;
+
+    @include viewport.until(sm) {
+      width: auto;
+    }
+  }
+
+  &__category-cell {
+    width: 35%;
+
+    @include viewport.until(sm) {
+      width: auto;
+    }
   }
 
   &__category-cell > .badge-category__wrapper {
@@ -40,6 +65,8 @@
   }
 
   &__topic-meta > .badge-category__wrapper {
+    flex: 1 1 0;
+    min-width: 0;
     max-width: 100%;
   }
 }

@@ -59,7 +59,9 @@ export default class SolvedAdminReportRelatedItems extends Component {
           {{/if}}
         </p>
 
-        <table class="table admin-report-related-items__table">
+        <table
+          class="table admin-report-related-items__table solved-admin-report-related-items__table"
+        >
           <thead>
             <tr>
               <th class="solved-admin-report-related-items__topic-cell">
