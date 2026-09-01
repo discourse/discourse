@@ -15,7 +15,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#show" do
-    it "includes Zendesk ticket data for members of a create group" do
+    it "returns create and view access with ticket details for a create-group member" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
@@ -34,7 +34,7 @@ RSpec.describe TopicsController do
       )
     end
 
-    it "includes Zendesk ticket data for members of a view group" do
+    it "returns view access with ticket details for a view-group member" do
       view_group = Fabricate(:group)
       viewer = Fabricate(:user)
       view_group.add(viewer)
@@ -53,7 +53,7 @@ RSpec.describe TopicsController do
       )
     end
 
-    it "omits Zendesk ticket data for users outside the allowed groups" do
+    it "returns no ticket access or details for users outside the allowed groups" do
       sign_in(Fabricate(:user))
 
       get "/t/#{topic.id}.json"
@@ -66,7 +66,7 @@ RSpec.describe TopicsController do
       expect(response.parsed_body).not_to have_key(DiscourseZendeskPlugin::ZENDESK_URL_FIELD)
     end
 
-    it "omits Zendesk ticket data while credentials are incomplete" do
+    it "returns no ticket access or details when Zendesk credentials are incomplete" do
       SiteSetting.zendesk_jobs_api_token = ""
       sign_in(Fabricate(:moderator))
 

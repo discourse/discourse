@@ -48,7 +48,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
   end
 
   describe "#create" do
-    it "lets staff create a Zendesk ticket by default" do
+    it "creates a Zendesk ticket for staff by default" do
       moderator = Fabricate(:moderator)
       topic = Fabricate(:post).topic
       sign_in(moderator)
@@ -59,7 +59,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).to have_been_requested.once
     end
 
-    it "lets a member of a custom create group create a Zendesk ticket" do
+    it "creates a Zendesk ticket for members of a configured create group" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
@@ -73,7 +73,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).to have_been_requested.once
     end
 
-    it "rejects staff after staff is removed from the allowed groups" do
+    it "returns forbidden when staff is excluded from the allowed groups" do
       moderator = Fabricate(:moderator)
       SiteSetting.zendesk_create_ticket_allowed_groups = ""
       SiteSetting.zendesk_view_ticket_allowed_groups = ""
@@ -86,7 +86,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "rejects members who can only view Zendesk tickets" do
+    it "returns forbidden for members of a view-only group" do
       view_group = Fabricate(:group)
       viewer = Fabricate(:user)
       view_group.add(viewer)
@@ -101,7 +101,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "rejects allowed members while Zendesk credentials are incomplete" do
+    it "returns forbidden when Zendesk credentials are incomplete" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
@@ -116,7 +116,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "rejects allowed members while the Zendesk URL is blank" do
+    it "returns forbidden when the Zendesk URL is blank" do
       create_group = Fabricate(:group)
       creator = Fabricate(:user)
       create_group.add(creator)
@@ -131,7 +131,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "rejects staff who cannot view the topic" do
+    it "returns forbidden when staff cannot view the topic" do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
       pm = Fabricate(:private_message_topic, user: admin)
@@ -145,7 +145,7 @@ RSpec.describe DiscourseZendeskPlugin::IssuesController do
       expect(ticket_request).not_to have_been_requested
     end
 
-    it "rejects anonymous users" do
+    it "returns forbidden for anonymous users" do
       topic = Fabricate(:post).topic
 
       post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }

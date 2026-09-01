@@ -44,7 +44,7 @@ RSpec.describe "Zendesk ticket actions" do
     )
   end
 
-  it "lets a member of a create group create and then view a Zendesk ticket" do
+  it "lets a create-group member create and then view a Zendesk ticket" do
     create_group = Fabricate(:group)
     creator = Fabricate(:user)
     create_group.add(creator)
@@ -60,7 +60,7 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_view_action(ticket_url)
   end
 
-  it "lets a member of a view group open an existing Zendesk ticket" do
+  it "shows a view-group member the existing Zendesk ticket action" do
     view_group = Fabricate(:group)
     viewer = Fabricate(:user)
     view_group.add(viewer)
@@ -75,7 +75,7 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_view_action(ticket_url)
   end
 
-  it "hides Zendesk actions from users outside the allowed groups" do
+  it "keeps Zendesk ticket actions hidden from users outside the allowed groups" do
     sign_in(Fabricate(:user))
 
     topic_page.visit_topic(topic)
@@ -83,7 +83,7 @@ RSpec.describe "Zendesk ticket actions" do
     expect(zendesk_actions).to have_no_actions
   end
 
-  it "hides Zendesk actions and the credential warning while the Zendesk URL is blank" do
+  it "keeps Zendesk ticket actions and the setup warning hidden when the Zendesk URL is blank" do
     SiteSetting.zendesk_url = ""
     sign_in(Fabricate(:moderator))
 

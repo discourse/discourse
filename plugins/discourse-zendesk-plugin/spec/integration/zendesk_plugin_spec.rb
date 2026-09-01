@@ -35,14 +35,14 @@ RSpec.describe "Discourse Zendesk Plugin" do
     describe "Storage Preparation" do
       let(:zendesk_enabled_default) { false }
 
-      it "has zendesk_url & zendesk_enabled site settings" do
+      it "defines the Zendesk URL and disabled state defaults" do
         expect(SiteSetting.zendesk_url).to eq(zendesk_url_default)
         expect(SiteSetting.zendesk_enabled).to eq(zendesk_enabled_default)
       end
     end
 
     describe "zendesk_job_push_only_author_posts?" do
-      it "disabled by default" do
+      it "disables author-only post pushing by default" do
         expect(SiteSetting.zendesk_job_push_only_author_posts?).to be_falsey
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe "Discourse Zendesk Plugin" do
         )
       end
 
-      it "creates a new zendesk ticket" do
+      it "creates a Zendesk ticket for the topic" do
         post "/zendesk-plugin/issues.json", params: { topic_id: topic.id }
 
         expect(WebMock).to have_requested(:post, zendesk_api_ticket_url).with { |req|
