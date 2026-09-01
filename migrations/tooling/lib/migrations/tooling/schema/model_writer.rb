@@ -40,7 +40,11 @@ module Migrations
           emit "    private_constant :SQL"
           emit
 
-          emit_conflict_strategy(table)
+          singleton_open = table.conflict_strategy == :ignore
+          if singleton_open
+            emit "    class << self"
+            emit_conflict_strategy(table)
+          end
 
           if table.model_mode == :extended
             emit "    # -- custom code --"
@@ -49,14 +53,18 @@ module Migrations
             emit
           end
 
-          emit method_documentation(table.name, columns)
-          emit "    def self.create("
-          emit method_parameters(columns)
-          emit "    )"
-          emit "      #{@model_namespace}.insert("
-          emit "        SQL,"
-          emit insertion_arguments(columns)
+          documentation = method_documentation(table.name, columns)
+          documentation = documentation.gsub(/^/, "  ") if singleton_open
+          emit documentation
+          emit "    class << self" unless singleton_open
+          emit "      def create("
+          emit method_parameters(columns).gsub(/^/, "  ")
           emit "      )"
+          emit "        #{@model_namespace}.insert("
+          emit "          SQL,"
+          emit insertion_arguments(columns).gsub(/^/, "  ")
+          emit "        )"
+          emit "      end"
           emit "    end"
           (@namespace_parts.size + 1).times { emit "  end" }
         ensure
@@ -85,9 +93,9 @@ module Migrations
         def emit_conflict_strategy(table)
           return unless table.conflict_strategy == :ignore
 
-          emit "    def self.conflict_strategy"
-          emit "      :ignore"
-          emit "    end"
+          emit "      def conflict_strategy"
+          emit "        :ignore"
+          emit "      end"
           emit
         end
 

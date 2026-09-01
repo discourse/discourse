@@ -22,7 +22,7 @@ class DiscourseConnectProvider < DiscourseConnectBase
       parsed_payload = Rack::Utils.parse_query(payload)
       return_sso_url = lookup_return_sso_url(parsed_payload)
 
-      raise ParseError if !return_sso_url
+      raise DiscourseConnectBase::ParseError if !return_sso_url
 
       sso_secret ||= lookup_sso_secret(return_sso_url, parsed_payload)
 

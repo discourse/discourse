@@ -65,7 +65,7 @@ module DiscourseAi
         end
 
         def fetch_data(report, opts)
-          threshold = SENTIMENT_THRESHOLD
+          threshold = DiscourseAi::Sentiment::SentimentAnalysisReport::SENTIMENT_THRESHOLD
           model_name = DiscourseAi::Sentiment::PostClassification.active_model_name_for(:sentiment)
 
           grouping = (report.filters.dig(:group_by) || GROUP_BY_FILTER_DEFAULT).to_sym

@@ -9,7 +9,7 @@ module DiscourseAi
         def register!(plugin)
           plugin.add_report("overall_sentiment") do |report|
             report.modes = [:stacked_chart]
-            threshold = SENTIMENT_THRESHOLD
+            threshold = DiscourseAi::Sentiment::SentimentDashboardReport::SENTIMENT_THRESHOLD
             model_name =
               DiscourseAi::Sentiment::PostClassification.active_model_name_for(:sentiment)
 

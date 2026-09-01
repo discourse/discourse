@@ -169,7 +169,9 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         model_content = File.read(File.join(paths[:models], "user.rb"))
         expect(model_content).to include("INSERT INTO users")
         expect(model_content).not_to include("INSERT OR IGNORE")
-        expect(model_content).not_to include("def self.conflict_strategy")
+        expect(model_content).to include("class << self")
+        expect(model_content).to include("def create")
+        expect(model_content).not_to include("def conflict_strategy")
       end
     end
 
@@ -185,7 +187,9 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
 
         model_content = File.read(File.join(paths[:models], "user.rb"))
         expect(model_content).to include("INSERT OR IGNORE INTO users")
-        expect(model_content).to include("def self.conflict_strategy")
+        expect(model_content).to include("class << self")
+        expect(model_content).to include("def conflict_strategy")
+        expect(model_content).to include("def create")
         expect(model_content).to include(":ignore")
       end
     end

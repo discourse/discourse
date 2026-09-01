@@ -29,7 +29,7 @@ class Demon::Sidekiq < ::Demon::Base
       sidekiq_processes_for_current_hostname = {}
 
       Sidekiq::ProcessSet.new.each do |process|
-        if process["hostname"] == HOSTNAME
+        if process["hostname"] == Demon::Sidekiq::HOSTNAME
           sidekiq_processes_for_current_hostname[process["pid"]] = process
         end
       end
@@ -63,7 +63,7 @@ class Demon::Sidekiq < ::Demon::Base
         if daemon_rss_bytes > max_allowed_sidekiq_rss_bytes
           Rails.logger.warn(
             "Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" %
-              [(daemon_rss_bytes.to_f / 1.megabyte), HOSTNAME],
+              [(daemon_rss_bytes.to_f / 1.megabyte), Demon::Sidekiq::HOSTNAME],
           )
 
           daemon.restart
