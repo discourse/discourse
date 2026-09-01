@@ -15,65 +15,6 @@ export default class ReactionsReactionButton extends Component {
   @service site;
   @service currentUser;
 
-  @action
-  click() {
-    this.args.cancelCollapse();
-
-    const currentUserReaction = this.args.post.current_user_reaction;
-    if (!this.capabilities.touch || this.site.desktopView) {
-      this.args.toggleFromButton({
-        reaction: currentUserReaction
-          ? currentUserReaction.id
-          : this.siteSettings.discourse_reactions_reaction_for_like,
-      });
-    }
-  }
-
-  @action
-  pointerOver(event) {
-    if (event.pointerType !== "mouse") {
-      return;
-    }
-
-    this.args.cancelCollapse();
-
-    // Anonymous users haven't authenticated yet — they can still pick a
-    // reaction, it gets deferred until login. Archived topics reject
-    // reactions server-side; closed topics still accept them.
-    if (!this.currentUser) {
-      if (this.args.post.topic?.archived) {
-        return;
-      }
-      this.args.toggleReactions(event);
-      return;
-    }
-
-    const likeAction = this.args.post.likeAction;
-    if (!likeAction?.canToggle) {
-      return;
-    }
-
-    const currentUserReaction = this.args.post.current_user_reaction;
-    if (
-      currentUserReaction &&
-      !currentUserReaction.can_undo &&
-      isBlank(likeAction.can_undo)
-    ) {
-      return;
-    }
-
-    this.args.toggleReactions(event);
-  }
-
-  @action
-  pointerOut(event) {
-    if (event.pointerType !== "mouse") {
-      return;
-    }
-
-    this.args.scheduleCollapse("collapseReactionsPicker");
-  }
-
   get likedIcon() {
     const icon = this.siteSettings.discourse_reactions_like_icon;
     // Map "heart" to the d-liked alias to follow core replacement pattern
@@ -143,6 +84,65 @@ export default class ReactionsReactionButton extends Component {
     }
 
     return options ? i18n(title, options) : i18n(title);
+  }
+
+  @action
+  click() {
+    this.args.cancelCollapse();
+
+    const currentUserReaction = this.args.post.current_user_reaction;
+    if (!this.capabilities.touch || this.site.desktopView) {
+      this.args.toggleFromButton({
+        reaction: currentUserReaction
+          ? currentUserReaction.id
+          : this.siteSettings.discourse_reactions_reaction_for_like,
+      });
+    }
+  }
+
+  @action
+  pointerOver(event) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    this.args.cancelCollapse();
+
+    // Anonymous users haven't authenticated yet — they can still pick a
+    // reaction, it gets deferred until login. Archived topics reject
+    // reactions server-side; closed topics still accept them.
+    if (!this.currentUser) {
+      if (this.args.post.topic?.archived) {
+        return;
+      }
+      this.args.toggleReactions(event);
+      return;
+    }
+
+    const likeAction = this.args.post.likeAction;
+    if (!likeAction?.canToggle) {
+      return;
+    }
+
+    const currentUserReaction = this.args.post.current_user_reaction;
+    if (
+      currentUserReaction &&
+      !currentUserReaction.can_undo &&
+      isBlank(likeAction.can_undo)
+    ) {
+      return;
+    }
+
+    this.args.toggleReactions(event);
+  }
+
+  @action
+  pointerOut(event) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    this.args.scheduleCollapse("collapseReactionsPicker");
   }
 
   <template>

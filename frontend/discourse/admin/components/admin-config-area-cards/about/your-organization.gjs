@@ -32,6 +32,14 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
     };
   }
 
+  get #savePath() {
+    if (this.args.isDefaultLocale) {
+      return "/admin/config/about.json";
+    }
+
+    return "/admin/config/about/localizations.json";
+  }
+
   @action
   async save(data) {
     this.args.setGlobalSavingStatus(true);
@@ -61,14 +69,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
     } finally {
       this.args.setGlobalSavingStatus(false);
     }
-  }
-
-  get #savePath() {
-    if (this.args.isDefaultLocale) {
-      return "/admin/config/about.json";
-    }
-
-    return "/admin/config/about/localizations.json";
   }
 
   #settingValue(settingName, setting) {

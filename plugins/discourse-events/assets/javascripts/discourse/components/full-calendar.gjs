@@ -72,6 +72,29 @@ export default class FullCalendar extends Component {
     }
   }
 
+  get defaultLeftHeaderToolbar() {
+    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
+  }
+
+  get headerToolbar() {
+    return {
+      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
+      center: this.args.centerHeaderToolbar ?? "title",
+      right:
+        this.args.rightHeaderToolbar ??
+        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
+    };
+  }
+
+  get initialView() {
+    const normalizedView = normalizeViewForCalendar(this.args.initialView);
+
+    return (
+      normalizedView ||
+      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
+    );
+  }
+
   @action
   async setupCalendar(element) {
     const calendarModule = await loadFullCalendar();
@@ -191,29 +214,6 @@ export default class FullCalendar extends Component {
       this.calendar.setOption("headerToolbar", this.headerToolbar);
       this.calendar.refetchEvents();
     }
-  }
-
-  get defaultLeftHeaderToolbar() {
-    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
-  }
-
-  get headerToolbar() {
-    return {
-      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
-      center: this.args.centerHeaderToolbar ?? "title",
-      right:
-        this.args.rightHeaderToolbar ??
-        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
-    };
-  }
-
-  get initialView() {
-    const normalizedView = normalizeViewForCalendar(this.args.initialView);
-
-    return (
-      normalizedView ||
-      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
-    );
   }
 
   <template>

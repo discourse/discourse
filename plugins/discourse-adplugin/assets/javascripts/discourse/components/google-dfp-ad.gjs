@@ -411,6 +411,29 @@ export default class GoogleDfpAd extends AdComponent {
     }
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.dfp,
+        ad_plugin_house_ad_id: null,
+        placement: this.placement,
+      },
+    };
+  }
+
+  willRender() {
+    super.willRender(...arguments);
+
+    if (!this.get("showAd")) {
+      return;
+    }
+  }
+
+  @on("willDestroyElement")
+  cleanup() {
+    destroySlot(this.get("divId"));
+  }
+
   @on("didInsertElement")
   _initGoogleDFP() {
     if (isTesting()) {
@@ -443,29 +466,6 @@ export default class GoogleDfpAd extends AdComponent {
         }
       });
     });
-  }
-
-  buildImpressionPayload() {
-    return {
-      ad_plugin_impression: {
-        ad_type: this.site.ad_types.dfp,
-        ad_plugin_house_ad_id: null,
-        placement: this.placement,
-      },
-    };
-  }
-
-  willRender() {
-    super.willRender(...arguments);
-
-    if (!this.get("showAd")) {
-      return;
-    }
-  }
-
-  @on("willDestroyElement")
-  cleanup() {
-    destroySlot(this.get("divId"));
   }
 
   <template>

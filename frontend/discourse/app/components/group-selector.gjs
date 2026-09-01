@@ -14,6 +14,20 @@ export default class GroupSelector extends Component {
     this.initializeSelectedGroups();
   }
 
+  get placeholder() {
+    return this.args.placeholderKey ? i18n(this.args.placeholderKey) : "";
+  }
+
+  get loadFn() {
+    return async (term) => {
+      if (!this.args.groupFinder) {
+        return [];
+      }
+
+      return this.args.groupFinder(term);
+    };
+  }
+
   initializeSelectedGroups() {
     const groupNames = this.args.groupNames;
     if (isEmpty(groupNames)) {
@@ -31,20 +45,6 @@ export default class GroupSelector extends Component {
     this.selectedGroups = names
       .filter((name) => name && name.length > 0)
       .map((name) => ({ id: name, name }));
-  }
-
-  get placeholder() {
-    return this.args.placeholderKey ? i18n(this.args.placeholderKey) : "";
-  }
-
-  get loadFn() {
-    return async (term) => {
-      if (!this.args.groupFinder) {
-        return [];
-      }
-
-      return this.args.groupFinder(term);
-    };
   }
 
   @action

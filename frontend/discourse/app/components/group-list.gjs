@@ -19,16 +19,6 @@ export default class GroupList extends Component {
   @service currentUser;
   @service router;
 
-  @action
-  new() {
-    this.router.transitionTo("groups.new");
-  }
-
-  @action
-  loadMore() {
-    this.args.groups?.loadMore();
-  }
-
   get types() {
     const types = [];
     const typeFilters = this.args.groups.extras.type_filters;
@@ -40,6 +30,16 @@ export default class GroupList extends Component {
     }
 
     return types;
+  }
+
+  @action
+  new() {
+    this.router.transitionTo("groups.new");
+  }
+
+  @action
+  loadMore() {
+    this.args.groups?.loadMore();
   }
 
   <template>

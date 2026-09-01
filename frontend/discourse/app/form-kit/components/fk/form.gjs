@@ -72,6 +72,20 @@ class FKForm extends Component {
     this.router.off("routeWillChange", this.checkIsDirty);
   }
 
+  get validateOn() {
+    return this.args.validateOn ?? VALIDATION_TYPES.submit;
+  }
+
+  get fieldValidationEvent() {
+    const { validateOn } = this;
+
+    if (validateOn === VALIDATION_TYPES.submit) {
+      return undefined;
+    }
+
+    return validateOn;
+  }
+
   @action
   async checkIsDirty(transition) {
     let triggerConfirm;
@@ -102,20 +116,6 @@ class FKForm extends Component {
         },
       });
     }
-  }
-
-  get validateOn() {
-    return this.args.validateOn ?? VALIDATION_TYPES.submit;
-  }
-
-  get fieldValidationEvent() {
-    const { validateOn } = this;
-
-    if (validateOn === VALIDATION_TYPES.submit) {
-      return undefined;
-    }
-
-    return validateOn;
   }
 
   @action

@@ -13,10 +13,6 @@ export default class PresencePendingPeers {
     this.#onExpired = onExpired;
   }
 
-  #key(roomId, userId) {
-    return `${roomId}:${userId}`;
-  }
-
   mark(roomId, userId) {
     const key = this.#key(roomId, userId);
     if (this.#keys.has(key)) {
@@ -58,5 +54,9 @@ export default class PresencePendingPeers {
         this.#keys.delete(key);
       }
     }
+  }
+
+  #key(roomId, userId) {
+    return `${roomId}:${userId}`;
   }
 }

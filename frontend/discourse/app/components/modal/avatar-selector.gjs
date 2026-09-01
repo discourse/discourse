@@ -25,16 +25,16 @@ export default class AvatarSelectorModal extends Component {
   @tracked gravatarFailed = false;
   @tracked _selected = null;
 
-  get user() {
-    return this.args.model.user;
-  }
-
   get selected() {
     return this._selected ?? this.defaultSelection;
   }
 
   set selected(value) {
     this._selected = value;
+  }
+
+  get user() {
+    return this.args.model.user;
   }
 
   get submitDisabled() {

@@ -19,16 +19,6 @@ export default class ChatMessageInfo extends Component {
   @service site;
   @service siteSettings;
 
-  @bind
-  trackStatus() {
-    this.#user?.statusManager.trackStatus();
-  }
-
-  @bind
-  stopTrackingStatus() {
-    this.#user?.statusManager.stopTrackingStatus();
-  }
-
   get usernameClasses() {
     const user = this.#user;
 
@@ -103,6 +93,16 @@ export default class ChatMessageInfo extends Component {
     } else {
       return "chat.channel.near-message-with-thread";
     }
+  }
+
+  @bind
+  trackStatus() {
+    this.#user?.statusManager.trackStatus();
+  }
+
+  @bind
+  stopTrackingStatus() {
+    this.#user?.statusManager.stopTrackingStatus();
   }
 
   <template>

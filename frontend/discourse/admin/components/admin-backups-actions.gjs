@@ -11,6 +11,18 @@ export default class AdminBackupsActions extends Component {
   @service site;
   @service dialog;
 
+  get rollbackDisabled() {
+    return !this.rollbackEnabled;
+  }
+
+  get rollbackEnabled() {
+    return (
+      this.args.backups.canRollback &&
+      this.args.backups.restoreEnabled &&
+      !this.args.backups.isOperationRunning
+    );
+  }
+
   @action
   toggleReadOnlyMode() {
     if (!this.site.isReadOnly) {
@@ -24,18 +36,6 @@ export default class AdminBackupsActions extends Component {
     } else {
       this.#toggleReadOnlyMode(false);
     }
-  }
-
-  get rollbackDisabled() {
-    return !this.rollbackEnabled;
-  }
-
-  get rollbackEnabled() {
-    return (
-      this.args.backups.canRollback &&
-      this.args.backups.restoreEnabled &&
-      !this.args.backups.isOperationRunning
-    );
   }
 
   async #toggleReadOnlyMode(enable) {

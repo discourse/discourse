@@ -275,48 +275,28 @@ export default class SelectKit extends Component {
     );
   }
 
-  _modifyComponentForRowWrapper(collection, item) {
-    let component = this.modifyComponentForRow(collection, item);
-    return component || SelectKitRow;
+  @computed("content.[]", "selectKit.filter")
+  get autoFilterable() {
+    return (
+      this.selectKit.filter &&
+      this.options.autoFilterable &&
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
+    );
+  }
+
+  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
+  get collections() {
+    return this._collections.map((identifier) => {
+      return {
+        identifier,
+        content: this.selectKit.modifyContentForCollection(identifier),
+      };
+    });
   }
 
   modifyComponentForRow() {}
 
-  _modifyContentForCollectionWrapper(identifier) {
-    let collection = this.modifyContentForCollection(identifier);
-
-    if (!collection) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          collection = this.errorsCollection;
-          break;
-        default:
-          collection = this.mainCollection;
-          break;
-      }
-    }
-
-    return collection;
-  }
-
   modifyContentForCollection() {}
-
-  _modifyComponentForCollectionWrapper(identifier) {
-    let component = this.modifyComponentForCollection(identifier);
-
-    if (!component) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          component = ErrorsCollection;
-          break;
-        default:
-          component = SelectKitCollection;
-          break;
-      }
-    }
-
-    return component;
-  }
 
   modifyComponentForCollection() {}
 
@@ -427,25 +407,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  @computed("content.[]", "selectKit.filter")
-  get autoFilterable() {
-    return (
-      this.selectKit.filter &&
-      this.options.autoFilterable &&
-      this.content.length >= FILTER_VISIBILITY_THRESHOLD
-    );
-  }
-
-  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
-  get collections() {
-    return this._collections.map((identifier) => {
-      return {
-        identifier,
-        content: this.selectKit.modifyContentForCollection(identifier),
-      };
-    });
-  }
-
   createContentFromInput(input) {
     return input;
   }
@@ -511,6 +472,276 @@ export default class SelectKit extends Component {
   insertAfterCollection(identifier, insertedIdentifier) {
     const index = this._collections.indexOf(identifier);
     this.insertCollectionAtIndex(insertedIdentifier, index + 1);
+  }
+
+  modifyContent(content) {
+    return content;
+  }
+
+  modifyNoSelection() {
+    if (this.selectKit.options.translatedNone) {
+      return this.defaultItem(null, this.selectKit.options.translatedNone);
+    }
+
+    let none = this.selectKit.options.none;
+    if (isNone(none) && !this.selectKit.options.allowAny) {
+      return null;
+    }
+
+    if (
+      isNone(none) &&
+      this.selectKit.options.allowAny &&
+      !this.selectKit.isExpanded
+    ) {
+      return null;
+    }
+
+    let item;
+    switch (typeof none) {
+      case "string":
+        item = this.defaultItem(null, i18n(none));
+        break;
+      default:
+        item = none;
+    }
+
+    return item;
+  }
+
+  modifySelection(item) {
+    return item;
+  }
+
+  deselect() {
+    this.clearErrors();
+    this.selectKit.change(null, null);
+  }
+
+  deselectByValue(value) {
+    if (isNone(value)) {
+      return;
+    }
+
+    const item = this.itemForValue(value, this.selectedContent);
+    this.deselect(item);
+  }
+
+  append() {
+    // do nothing on general case
+  }
+
+  search(filter) {
+    let content = this.content || [];
+    if (filter) {
+      filter = this._normalize(filter);
+      content = content.filter((c) => {
+        const name = this._normalize(this.getName(c));
+        return name?.includes(filter);
+      });
+    }
+    return content;
+  }
+
+  triggerSearch(filter) {
+    this._searchPromise && cancel(this._searchPromise);
+
+    this._searchPromise = this._searchWrapper(filter || this.selectKit.filter);
+  }
+
+  select(value, item) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
+    // A row may explicitly carry a blank value (e.g. "use the default");
+    // selecting it is a real selection, not a clear.
+    if (!isPresent(value) && !(value === "" && item)) {
+      this._onClearSelection();
+    } else {
+      const existingItem = this.findValue(this.mainCollection, item);
+      if (existingItem) {
+        if (!this.validateSelect(item)) {
+          return;
+        }
+      }
+
+      this.selectKit.change(value, item || this.defaultItem(value, value));
+    }
+  }
+
+  updateFloatingUiPosition() {
+    const referenceElement = this.getHeader();
+    const floatingElement = this._bodyElement();
+
+    const strategy = this._computePlacementStrategy();
+    floatingElement.style.position = strategy;
+
+    let width;
+    let minWidth;
+
+    const middleware = [
+      {
+        name: "minWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            return state;
+          }
+
+          return size({
+            apply({ rects }) {
+              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
+            },
+          }).fn(state);
+        },
+      },
+      {
+        name: "flip",
+        fn: (state) => {
+          const top =
+            this.selectKit.options.verticalOffset +
+            (parseInt(
+              document.documentElement.style.getPropertyValue(
+                "--header-offset"
+              ),
+              10
+            ) || 0);
+
+          let bottom = this.selectKit.options.verticalOffset;
+          if (this.capabilities.isIOS) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--safe-area-inset-bottom")
+                  .trim(),
+                10
+              ) || 0;
+          }
+          if (this.site.mobileView) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--footer-nav-height")
+                  .trim(),
+                10
+              ) || 0;
+          }
+
+          return flip({
+            padding: { top, bottom },
+            fallbackStrategy: "initialPlacement",
+          }).fn(state);
+        },
+      },
+      shift({ limiter: limitShift() }),
+      offset(this.selectKit.options.verticalOffset),
+      {
+        name: "applySmallScreenOffset",
+        fn: (state) => {
+          if (window.innerWidth > 450) {
+            return state;
+          }
+
+          let { x } = state.elements.reference.getBoundingClientRect();
+          if (strategy === "fixed") {
+            return { x: 10, y: state.y };
+          } else {
+            return { x: -x + 10, y: state.y };
+          }
+        },
+      },
+      {
+        name: "applySmallScreenMaxWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            width = `${window.innerWidth - 20}px`;
+          }
+
+          return state;
+        },
+      },
+      hide(),
+    ];
+
+    return computePosition(referenceElement, floatingElement, {
+      placement: this._computePlacement(),
+      strategy,
+      middleware,
+    }).then(({ x, y, placement, middlewareData }) => {
+      const style = {
+        width,
+        minWidth,
+        top: "0",
+        left: "0",
+        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
+      };
+
+      if (middlewareData.hide && !this.capabilities.isIOS) {
+        if (middlewareData.hide.referenceHidden) {
+          style.visibility = "hidden";
+          style.pointerEvents = "none";
+        } else {
+          style.visibility = "visible";
+          style.pointerEvents = "auto";
+        }
+      }
+
+      this.selectKit.set("isPlacedAbove", placement.startsWith("top"));
+      Object.assign(floatingElement.style, style);
+    });
+  }
+
+  getFilterInput() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
+  }
+
+  getHeader() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
+  }
+
+  handleDeprecations() {
+    this._deprecateValueAttribute();
+    this._deprecateMutations();
+    this._handleDeprecatedArgs();
+  }
+
+  _modifyComponentForRowWrapper(collection, item) {
+    let component = this.modifyComponentForRow(collection, item);
+    return component || SelectKitRow;
+  }
+
+  _modifyContentForCollectionWrapper(identifier) {
+    let collection = this.modifyContentForCollection(identifier);
+
+    if (!collection) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          collection = this.errorsCollection;
+          break;
+        default:
+          collection = this.mainCollection;
+          break;
+      }
+    }
+
+    return collection;
+  }
+
+  _modifyComponentForCollectionWrapper(identifier) {
+    let component = this.modifyComponentForCollection(identifier);
+
+    if (!component) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          component = ErrorsCollection;
+          break;
+        default:
+          component = SelectKitCollection;
+          break;
+      }
+    }
+
+    return component;
   }
 
   _onInput(event) {
@@ -599,50 +830,12 @@ export default class SelectKit extends Component {
     return applyContentPluginApiCallbacks(content, this);
   }
 
-  modifyContent(content) {
-    return content;
-  }
-
   _modifyNoSelectionWrapper() {
     return this.modifyNoSelection();
   }
 
-  modifyNoSelection() {
-    if (this.selectKit.options.translatedNone) {
-      return this.defaultItem(null, this.selectKit.options.translatedNone);
-    }
-
-    let none = this.selectKit.options.none;
-    if (isNone(none) && !this.selectKit.options.allowAny) {
-      return null;
-    }
-
-    if (
-      isNone(none) &&
-      this.selectKit.options.allowAny &&
-      !this.selectKit.isExpanded
-    ) {
-      return null;
-    }
-
-    let item;
-    switch (typeof none) {
-      case "string":
-        item = this.defaultItem(null, i18n(none));
-        break;
-      default:
-        item = none;
-    }
-
-    return item;
-  }
-
   _modifySelectionWrapper(item) {
     return this.modifySelection(item);
-  }
-
-  modifySelection(item) {
-    return item;
   }
 
   _onKeydownWrapper(event) {
@@ -695,42 +888,6 @@ export default class SelectKit extends Component {
     }
 
     return boundaryAction;
-  }
-
-  deselect() {
-    this.clearErrors();
-    this.selectKit.change(null, null);
-  }
-
-  deselectByValue(value) {
-    if (isNone(value)) {
-      return;
-    }
-
-    const item = this.itemForValue(value, this.selectedContent);
-    this.deselect(item);
-  }
-
-  append() {
-    // do nothing on general case
-  }
-
-  search(filter) {
-    let content = this.content || [];
-    if (filter) {
-      filter = this._normalize(filter);
-      content = content.filter((c) => {
-        const name = this._normalize(this.getName(c));
-        return name?.includes(filter);
-      });
-    }
-    return content;
-  }
-
-  triggerSearch(filter) {
-    this._searchPromise && cancel(this._searchPromise);
-
-    this._searchPromise = this._searchWrapper(filter || this.selectKit.filter);
   }
 
   _searchWrapper(filter) {
@@ -925,28 +1082,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  select(value, item) {
-    if (typeof item?.onSelect === "function") {
-      item.onSelect(this.selectKit, item);
-      return;
-    }
-
-    // A row may explicitly carry a blank value (e.g. "use the default");
-    // selecting it is a real selection, not a clear.
-    if (!isPresent(value) && !(value === "" && item)) {
-      this._onClearSelection();
-    } else {
-      const existingItem = this.findValue(this.mainCollection, item);
-      if (existingItem) {
-        if (!this.validateSelect(item)) {
-          return;
-        }
-      }
-
-      this.selectKit.change(value, item || this.defaultItem(value, value));
-    }
-  }
-
   _onClearSelection() {
     this.selectKit.change(null, null);
   }
@@ -1028,127 +1163,6 @@ export default class SelectKit extends Component {
     });
   }
 
-  updateFloatingUiPosition() {
-    const referenceElement = this.getHeader();
-    const floatingElement = this._bodyElement();
-
-    const strategy = this._computePlacementStrategy();
-    floatingElement.style.position = strategy;
-
-    let width;
-    let minWidth;
-
-    const middleware = [
-      {
-        name: "minWidth",
-        fn: (state) => {
-          if (window.innerWidth <= 450) {
-            return state;
-          }
-
-          return size({
-            apply({ rects }) {
-              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
-            },
-          }).fn(state);
-        },
-      },
-      {
-        name: "flip",
-        fn: (state) => {
-          const top =
-            this.selectKit.options.verticalOffset +
-            (parseInt(
-              document.documentElement.style.getPropertyValue(
-                "--header-offset"
-              ),
-              10
-            ) || 0);
-
-          let bottom = this.selectKit.options.verticalOffset;
-          if (this.capabilities.isIOS) {
-            bottom +=
-              parseInt(
-                getComputedStyle(document.documentElement)
-                  .getPropertyValue("--safe-area-inset-bottom")
-                  .trim(),
-                10
-              ) || 0;
-          }
-          if (this.site.mobileView) {
-            bottom +=
-              parseInt(
-                getComputedStyle(document.documentElement)
-                  .getPropertyValue("--footer-nav-height")
-                  .trim(),
-                10
-              ) || 0;
-          }
-
-          return flip({
-            padding: { top, bottom },
-            fallbackStrategy: "initialPlacement",
-          }).fn(state);
-        },
-      },
-      shift({ limiter: limitShift() }),
-      offset(this.selectKit.options.verticalOffset),
-      {
-        name: "applySmallScreenOffset",
-        fn: (state) => {
-          if (window.innerWidth > 450) {
-            return state;
-          }
-
-          let { x } = state.elements.reference.getBoundingClientRect();
-          if (strategy === "fixed") {
-            return { x: 10, y: state.y };
-          } else {
-            return { x: -x + 10, y: state.y };
-          }
-        },
-      },
-      {
-        name: "applySmallScreenMaxWidth",
-        fn: (state) => {
-          if (window.innerWidth <= 450) {
-            width = `${window.innerWidth - 20}px`;
-          }
-
-          return state;
-        },
-      },
-      hide(),
-    ];
-
-    return computePosition(referenceElement, floatingElement, {
-      placement: this._computePlacement(),
-      strategy,
-      middleware,
-    }).then(({ x, y, placement, middlewareData }) => {
-      const style = {
-        width,
-        minWidth,
-        top: "0",
-        left: "0",
-        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
-      };
-
-      if (middlewareData.hide && !this.capabilities.isIOS) {
-        if (middlewareData.hide.referenceHidden) {
-          style.visibility = "hidden";
-          style.pointerEvents = "none";
-        } else {
-          style.visibility = "visible";
-          style.pointerEvents = "auto";
-        }
-      }
-
-      this.selectKit.set("isPlacedAbove", placement.startsWith("top"));
-      Object.assign(floatingElement.style, style);
-    });
-  }
-
   _scrollToCurrent() {
     if (this.value && this.mainCollection) {
       let highlighted;
@@ -1206,20 +1220,6 @@ export default class SelectKit extends Component {
         input.selectionStart = input.selectionEnd = input.value.length;
       }
     }
-  }
-
-  getFilterInput() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
-  }
-
-  getHeader() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
-  }
-
-  handleDeprecations() {
-    this._deprecateValueAttribute();
-    this._deprecateMutations();
-    this._handleDeprecatedArgs();
   }
 
   _computePlacementStrategy() {

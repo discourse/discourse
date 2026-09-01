@@ -464,6 +464,26 @@ export default class PluginOutlet extends Component {
     return undefined;
   }
 
+  // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
+  // in recent versions of ember so we need to migrate to outletArgs
+  @cached
+  get outletArgs() {
+    return this.args.outletArgs || this.args.args || {};
+  }
+
+  @cached
+  get outletArgsWithDeprecations() {
+    if (!this.args.deprecatedArgs) {
+      return this.outletArgs;
+    }
+
+    return buildArgsWithDeprecations(
+      this.outletArgs,
+      this.args.deprecatedArgs || {},
+      { outletName: this.args.name }
+    );
+  }
+
   @bind
   getConnectors({ hasBlock } = {}) {
     const aliases = this.normalizedAliases;
@@ -541,26 +561,6 @@ export default class PluginOutlet extends Component {
     }
 
     return false;
-  }
-
-  // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
-  // in recent versions of ember so we need to migrate to outletArgs
-  @cached
-  get outletArgs() {
-    return this.args.outletArgs || this.args.args || {};
-  }
-
-  @cached
-  get outletArgsWithDeprecations() {
-    if (!this.args.deprecatedArgs) {
-      return this.outletArgs;
-    }
-
-    return buildArgsWithDeprecations(
-      this.outletArgs,
-      this.args.deprecatedArgs || {},
-      { outletName: this.args.name }
-    );
   }
 
   @bind

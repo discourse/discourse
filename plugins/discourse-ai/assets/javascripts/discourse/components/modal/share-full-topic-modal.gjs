@@ -32,6 +32,12 @@ export default class ShareModal extends Component {
     return trustHTML(context.join("\n"));
   }
 
+  get primaryLabel() {
+    return this.shareKey
+      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
+      : "discourse_ai.ai_bot.share_full_topic_modal.share";
+  }
+
   async generateShareURL() {
     try {
       const response = await ajax(
@@ -54,12 +60,6 @@ export default class ShareModal extends Component {
       popupAjaxError(e);
       return;
     }
-  }
-
-  get primaryLabel() {
-    return this.shareKey
-      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
-      : "discourse_ai.ai_bot.share_full_topic_modal.share";
   }
 
   @action

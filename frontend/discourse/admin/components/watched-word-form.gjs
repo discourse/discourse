@@ -52,20 +52,6 @@ export default class WatchedWordForm extends Component {
     }
   }
 
-  @observes("words.[]")
-  removeMessage() {
-    if (this.showMessage && !isEmpty(this.words)) {
-      this.set("showMessage", false);
-    }
-  }
-
-  @observes("actionKey")
-  actionChanged() {
-    this.setProperties({
-      showMessage: false,
-    });
-  }
-
   @computed("words.[]")
   get isUniqueWord() {
     const existingWords = this.filteredContent || [];
@@ -84,6 +70,20 @@ export default class WatchedWordForm extends Component {
     });
 
     return !duplicate;
+  }
+
+  @observes("words.[]")
+  removeMessage() {
+    if (this.showMessage && !isEmpty(this.words)) {
+      this.set("showMessage", false);
+    }
+  }
+
+  @observes("actionKey")
+  actionChanged() {
+    this.setProperties({
+      showMessage: false,
+    });
   }
 
   @action

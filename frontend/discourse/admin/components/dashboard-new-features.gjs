@@ -27,6 +27,41 @@ export default class DashboardNewFeatures extends Component {
     this.args.onCheckForFeatures(this.loadNewFeatures);
   }
 
+  get groupedNewFeatures() {
+    return Object.keys(this.newFeatures)
+      .map((date) => {
+        const visibleFeatures = this.newFeatures[date];
+
+        if (visibleFeatures.length === 0) {
+          return null;
+        }
+
+        return {
+          date: moment
+            .tz(date, this.currentUser.user_option.timezone)
+            .format("MMMM YYYY"),
+          features: visibleFeatures,
+        };
+      })
+      .filter((item) => item != null);
+  }
+
+  get emptyLabel() {
+    if (this.feedError) {
+      return i18n("admin.dashboard.new_features.no_new_features_error", {
+        url: "https://releases.discourse.org/",
+      });
+    }
+
+    if (this.groupedNewFeatures.length === 0) {
+      return i18n("admin.dashboard.new_features.no_new_features_found", {
+        url: "https://releases.discourse.org/",
+      });
+    }
+
+    return "";
+  }
+
   @bind
   async loadNewFeatures(opts = {}) {
     opts.forceRefresh ||= false;
@@ -80,41 +115,6 @@ export default class DashboardNewFeatures extends Component {
       element.classList.add("--highlighted");
       discourseLater(() => element.classList.remove("--highlighted"), 2000);
     });
-  }
-
-  get groupedNewFeatures() {
-    return Object.keys(this.newFeatures)
-      .map((date) => {
-        const visibleFeatures = this.newFeatures[date];
-
-        if (visibleFeatures.length === 0) {
-          return null;
-        }
-
-        return {
-          date: moment
-            .tz(date, this.currentUser.user_option.timezone)
-            .format("MMMM YYYY"),
-          features: visibleFeatures,
-        };
-      })
-      .filter((item) => item != null);
-  }
-
-  get emptyLabel() {
-    if (this.feedError) {
-      return i18n("admin.dashboard.new_features.no_new_features_error", {
-        url: "https://releases.discourse.org/",
-      });
-    }
-
-    if (this.groupedNewFeatures.length === 0) {
-      return i18n("admin.dashboard.new_features.no_new_features_found", {
-        url: "https://releases.discourse.org/",
-      });
-    }
-
-    return "";
   }
 
   <template>

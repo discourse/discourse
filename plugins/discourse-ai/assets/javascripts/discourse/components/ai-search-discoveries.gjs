@@ -134,29 +134,6 @@ export default class AiSearchDiscoveries extends Component {
     );
   }
 
-  @bind
-  async _updateDiscovery(update) {
-    if (this.query === update.query) {
-      this.discobotDiscoveries.onDiscoveryUpdate(update);
-    }
-  }
-
-  @bind
-  unsubscribe() {
-    this.messageBus.unsubscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
-  @bind
-  subscribe() {
-    this.messageBus.subscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
   get query() {
     return (
       this.args?.searchTerm ||
@@ -295,6 +272,35 @@ export default class AiSearchDiscoveries extends Component {
     return "discourse_ai.discobot_discoveries.follow_up.submit";
   }
 
+  get askAiDefaultDismissKey() {
+    return `ask-ai-default-dismissed-${this.currentUser?.id}`;
+  }
+
+  get askAiDefaultDismissed() {
+    // the stored value is not tracked, so the dismissal this session is what
+    // takes the control off screen without waiting for a reload
+    return (
+      this.dismissedAskAiDefault ||
+      Boolean(this.keyValueStore.get(this.askAiDefaultDismissKey))
+    );
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
   @action
   async triggerDiscovery() {
     this.discobotDiscoveries.triggerDiscovery(this.query);
@@ -326,19 +332,6 @@ export default class AiSearchDiscoveries extends Component {
     if (this.args.closeSearchMenu) {
       this.args.closeSearchMenu();
     }
-  }
-
-  get askAiDefaultDismissKey() {
-    return `ask-ai-default-dismissed-${this.currentUser?.id}`;
-  }
-
-  get askAiDefaultDismissed() {
-    // the stored value is not tracked, so the dismissal this session is what
-    // takes the control off screen without waiting for a reload
-    return (
-      this.dismissedAskAiDefault ||
-      Boolean(this.keyValueStore.get(this.askAiDefaultDismissKey))
-    );
   }
 
   @action
@@ -451,6 +444,13 @@ export default class AiSearchDiscoveries extends Component {
       canTagTopics: this.currentUser.can_tag_topics,
       maxTitleLength: this.siteSettings.max_topic_title_length,
     });
+  }
+
+  @bind
+  async _updateDiscovery(update) {
+    if (this.query === update.query) {
+      this.discobotDiscoveries.onDiscoveryUpdate(update);
+    }
   }
 
   <template>

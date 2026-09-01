@@ -63,12 +63,40 @@ export default class AdminDashboardController extends Controller {
     );
   }
 
-  #customDate(value, edge) {
-    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
-      return null;
-    }
-    const parsed = moment(value, "YYYY-MM-DD", true);
-    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  get showRedesign() {
+    return this.siteSettings.dashboard_improvements;
+  }
+
+  @computed("siteSettings.version_checks")
+  get showVersionChecks() {
+    return this.siteSettings.version_checks;
+  }
+
+  @computed("siteSettings.dashboard_visible_tabs")
+  get visibleTabs() {
+    return (this.siteSettings.dashboard_visible_tabs || "")
+      .split("|")
+      .filter(Boolean);
+  }
+
+  @computed("visibleTabs")
+  get isModerationTabVisible() {
+    return this.visibleTabs.includes("moderation");
+  }
+
+  @computed("visibleTabs")
+  get isSecurityTabVisible() {
+    return this.visibleTabs.includes("security");
+  }
+
+  @computed("visibleTabs")
+  get isReportsTabVisible() {
+    return this.visibleTabs.includes("reports");
+  }
+
+  @computed("problemsFetchedAt")
+  get problemsTimestamp() {
+    return moment(this.problemsFetchedAt).format("LLL");
   }
 
   @action
@@ -111,41 +139,6 @@ export default class AdminDashboardController extends Controller {
 
     this.#applyConfigOptimistically(nextConfig);
     this.#persistConfiguration(nextConfig, previous, { needsRefetch: false });
-  }
-
-  #applyConfigOptimistically(nextConfig) {
-    for (const section of this.loadedSections?.sections ?? []) {
-      this._sectionDataCache.set(section.id, section.data);
-    }
-
-    this.loadedSections = {
-      ...this.loadedSections,
-      sections: nextConfig
-        .filter((s) => s.visible && this._sectionDataCache.has(s.id))
-        .map((s) => ({ id: s.id, data: this._sectionDataCache.get(s.id) })),
-      configuration: { sections: nextConfig },
-    };
-  }
-
-  async #persistConfiguration(sections, revertTo, { needsRefetch } = {}) {
-    const saveId = ++this._configSaveId;
-
-    try {
-      await ajax("/admin/dashboard/configuration.json", {
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify({ sections }),
-      });
-
-      if (needsRefetch && saveId === this._configSaveId) {
-        await this.fetchSections();
-      }
-    } catch (e) {
-      if (saveId === this._configSaveId) {
-        this.loadedSections = revertTo;
-      }
-      popupAjaxError(e);
-    }
   }
 
   @action
@@ -193,37 +186,6 @@ export default class AdminDashboardController extends Controller {
         this.loadingSections = false;
       }
     }
-  }
-
-  get showRedesign() {
-    return this.siteSettings.dashboard_improvements;
-  }
-
-  @computed("siteSettings.version_checks")
-  get showVersionChecks() {
-    return this.siteSettings.version_checks;
-  }
-
-  @computed("siteSettings.dashboard_visible_tabs")
-  get visibleTabs() {
-    return (this.siteSettings.dashboard_visible_tabs || "")
-      .split("|")
-      .filter(Boolean);
-  }
-
-  @computed("visibleTabs")
-  get isModerationTabVisible() {
-    return this.visibleTabs.includes("moderation");
-  }
-
-  @computed("visibleTabs")
-  get isSecurityTabVisible() {
-    return this.visibleTabs.includes("security");
-  }
-
-  @computed("visibleTabs")
-  get isReportsTabVisible() {
-    return this.visibleTabs.includes("reports");
   }
 
   fetchProblems() {
@@ -274,25 +236,6 @@ export default class AdminDashboardController extends Controller {
     }
   }
 
-  async _loadProblems() {
-    this.setProperties({
-      loadingProblems: true,
-      problemsFetchedAt: new Date(),
-    });
-
-    try {
-      const model = await AdminDashboard.fetchProblems();
-      this.problems = model.problems;
-    } finally {
-      this.loadingProblems = false;
-    }
-  }
-
-  @computed("problemsFetchedAt")
-  get problemsTimestamp() {
-    return moment(this.problemsFetchedAt).format("LLL");
-  }
-
   @action
   refreshProblems() {
     this._loadProblems();
@@ -317,6 +260,63 @@ export default class AdminDashboardController extends Controller {
       );
     } catch (error) {
       popupAjaxError(error);
+    }
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  }
+
+  #applyConfigOptimistically(nextConfig) {
+    for (const section of this.loadedSections?.sections ?? []) {
+      this._sectionDataCache.set(section.id, section.data);
+    }
+
+    this.loadedSections = {
+      ...this.loadedSections,
+      sections: nextConfig
+        .filter((s) => s.visible && this._sectionDataCache.has(s.id))
+        .map((s) => ({ id: s.id, data: this._sectionDataCache.get(s.id) })),
+      configuration: { sections: nextConfig },
+    };
+  }
+
+  async #persistConfiguration(sections, revertTo, { needsRefetch } = {}) {
+    const saveId = ++this._configSaveId;
+
+    try {
+      await ajax("/admin/dashboard/configuration.json", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ sections }),
+      });
+
+      if (needsRefetch && saveId === this._configSaveId) {
+        await this.fetchSections();
+      }
+    } catch (e) {
+      if (saveId === this._configSaveId) {
+        this.loadedSections = revertTo;
+      }
+      popupAjaxError(e);
+    }
+  }
+
+  async _loadProblems() {
+    this.setProperties({
+      loadingProblems: true,
+      problemsFetchedAt: new Date(),
+    });
+
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } finally {
+      this.loadingProblems = false;
     }
   }
 }

@@ -28,6 +28,23 @@ interface DToastSignature {
 export default class DToast extends Component<DToastSignature> {
   @tracked progressBar?: HTMLElement;
 
+  get duration() {
+    const duration = this.args.toast.options.duration;
+
+    if (duration === "long") {
+      return 5000;
+    } else if (duration === "short") {
+      return 3000;
+    } else {
+      deprecated(
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
+    }
+  }
+
   @action
   registerProgressBar(element: HTMLElement) {
     this.progressBar = element;
@@ -53,23 +70,6 @@ export default class DToast extends Component<DToastSignature> {
       await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, 0);
-    }
-  }
-
-  get duration() {
-    const duration = this.args.toast.options.duration;
-
-    if (duration === "long") {
-      return 5000;
-    } else if (duration === "short") {
-      return 3000;
-    } else {
-      deprecated(
-        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
-        { id: "float-kit.d-toast.duration" }
-      );
-
-      return duration;
     }
   }
 

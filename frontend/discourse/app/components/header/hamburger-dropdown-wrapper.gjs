@@ -18,6 +18,17 @@ const CLOSE_ON_CLICK_SELECTORS =
 export default class HamburgerDropdownWrapper extends Component {
   @service navigationMenu;
 
+  get forceMainSidebarPanel() {
+    // NOTE: In this scenario, we are forcing the sidebar to be shown
+    // when the navigation mode is hamburger. We still need to show the
+    // main panel in the hamburger menu, regardless of what is in the sidebar.
+    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
+      return true;
+    }
+
+    return false;
+  }
+
   @action
   toggleNavigation() {
     this.args.toggleNavigationMenu(
@@ -76,17 +87,6 @@ export default class HamburgerDropdownWrapper extends Component {
     } else {
       this.toggleNavigation();
     }
-  }
-
-  get forceMainSidebarPanel() {
-    // NOTE: In this scenario, we are forcing the sidebar to be shown
-    // when the navigation mode is hamburger. We still need to show the
-    // main panel in the hamburger menu, regardless of what is in the sidebar.
-    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
-      return true;
-    }
-
-    return false;
   }
 
   <template>

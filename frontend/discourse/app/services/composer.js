@@ -153,32 +153,6 @@ export default class ComposerService extends Service {
     window.removeEventListener("beforeunload", this._beaconSaveDraft);
   }
 
-  @bind
-  _beaconSaveDraft() {
-    if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
-      return;
-    }
-
-    cancel(this._saveDraftDebounce);
-    this._saveDraftDebounce = null;
-
-    const draftSequence = this.model.draftSequence;
-    this.model.set("draftSequence", draftSequence + 1);
-
-    Draft.saveBeacon(
-      this.model.draftKey,
-      draftSequence,
-      this.model.serializeDraftData(),
-      this.messageBus.clientId,
-      this.session.csrfToken
-    );
-  }
-
-  @computed("site.mobileView", "showPreview")
-  get forcePreview() {
-    return this.site?.mobileView && this.showPreview;
-  }
-
   @computed("site.categoriesList")
   get categories() {
     return this.site?.categoriesList;
@@ -219,24 +193,6 @@ export default class ComposerService extends Service {
 
   set whisperer(value) {
     this._whispererOverride = value;
-  }
-
-  @computed("model.creatingTopic", "isStaffUser")
-  get canUnlistTopic() {
-    return this.model?.creatingTopic && this.isStaffUser;
-  }
-
-  @computed("model.action", "isStaffUser", "currentUser.trust_level")
-  get canToggleNoBump() {
-    return (
-      this.model?.action === Composer.REPLY &&
-      (this.isStaffUser || this.currentUser?.trust_level === 4)
-    );
-  }
-
-  @computed("replyingToWhisper", "model.whisper")
-  get isWhispering() {
-    return this.replyingToWhisper || this.model?.whisper;
   }
 
   get showPreview() {
@@ -290,6 +246,72 @@ export default class ComposerService extends Service {
     this._allowPreview = value;
   }
 
+  @computed(
+    "model.loading",
+    "isUploading",
+    "isProcessingUpload",
+    "_disableSubmit"
+  )
+  get disableSubmit() {
+    return (
+      this.model?.loading ||
+      this.isUploading ||
+      this.isProcessingUpload ||
+      this._disableSubmit
+    );
+  }
+
+  set disableSubmit(value) {
+    this.set("_disableSubmit", value);
+  }
+
+  get formTemplateInitialValues() {
+    return this._formTemplateInitialValues;
+  }
+
+  set formTemplateInitialValues(values) {
+    this.set("_formTemplateInitialValues", values);
+  }
+
+  @computed
+  get showToolbar() {
+    return (
+      this._toolbarEnabled ??
+      this.keyValueStore.get("toolbar-enabled") !== "false"
+    );
+  }
+
+  set showToolbar(val) {
+    this._toolbarEnabled = val;
+    this.keyValueStore.set({
+      key: "toolbar-enabled",
+      value: val ? "true" : "false",
+    });
+  }
+
+  @computed("site.mobileView", "showPreview")
+  get forcePreview() {
+    return this.site?.mobileView && this.showPreview;
+  }
+
+  @computed("model.creatingTopic", "isStaffUser")
+  get canUnlistTopic() {
+    return this.model?.creatingTopic && this.isStaffUser;
+  }
+
+  @computed("model.action", "isStaffUser", "currentUser.trust_level")
+  get canToggleNoBump() {
+    return (
+      this.model?.action === Composer.REPLY &&
+      (this.isStaffUser || this.currentUser?.trust_level === 4)
+    );
+  }
+
+  @computed("replyingToWhisper", "model.whisper")
+  get isWhispering() {
+    return this.replyingToWhisper || this.model?.whisper;
+  }
+
   /**
    * @returns {import("discourse/controllers/topic").default};
    */
@@ -313,11 +335,6 @@ export default class ComposerService extends Service {
     );
   }
 
-  @observes("showPreview", "allowPreview")
-  previewVisibilityChanged() {
-    this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
-  }
-
   get isOpen() {
     return this.model?.composeState === Composer.OPEN;
   }
@@ -328,25 +345,6 @@ export default class ComposerService extends Service {
 
   get privateMessageDraftKey() {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
-  }
-
-  @computed(
-    "model.loading",
-    "isUploading",
-    "isProcessingUpload",
-    "_disableSubmit"
-  )
-  get disableSubmit() {
-    return (
-      this.model?.loading ||
-      this.isUploading ||
-      this.isProcessingUpload ||
-      this._disableSubmit
-    );
-  }
-
-  set disableSubmit(value) {
-    this.set("_disableSubmit", value);
   }
 
   @computed("model.category", "skipFormTemplate")
@@ -382,34 +380,11 @@ export default class ComposerService extends Service {
     return this.get("model.topic.user_id");
   }
 
-  get formTemplateInitialValues() {
-    return this._formTemplateInitialValues;
-  }
-
-  set formTemplateInitialValues(values) {
-    this.set("_formTemplateInitialValues", values);
-  }
-
-  @action
-  onSelectFormTemplate(formTemplate) {
-    this.selectedFormTemplate = formTemplate;
-  }
-
   @computed("showPreview")
   get toggleText() {
     return this.showPreview
       ? i18n("composer.hide_preview")
       : i18n("composer.show_preview");
-  }
-
-  @observes("showPreview")
-  showPreviewChanged() {
-    if (this.site.desktopView) {
-      this.keyValueStore.set({
-        key: "composer.showPreview",
-        value: this.showPreview,
-      });
-    }
   }
 
   @computed(
@@ -437,22 +412,6 @@ export default class ComposerService extends Service {
     }
 
     return "title";
-  }
-
-  @computed
-  get showToolbar() {
-    return (
-      this._toolbarEnabled ??
-      this.keyValueStore.get("toolbar-enabled") !== "false"
-    );
-  }
-
-  set showToolbar(val) {
-    this._toolbarEnabled = val;
-    this.keyValueStore.set({
-      key: "toolbar-enabled",
-      value: val ? "true" : "false",
-    });
   }
 
   @computed("model.canEditTitle", "model.creatingPrivateMessage")
@@ -562,32 +521,6 @@ export default class ComposerService extends Service {
     );
   }
 
-  _setupPopupMenuOption(option) {
-    // Backwards compatibility support for when we used to accept a function.
-    // This can be dropped when `addToolbarPopupMenuOptionsCallback` is removed from `plugin-api.js`.
-    if (typeof option === "function") {
-      option = option(this);
-    }
-
-    if (typeof option === "undefined") {
-      return null;
-    }
-
-    const conditionType = typeof option.condition;
-
-    if (conditionType === "undefined") {
-      option.condition = true;
-    } else if (conditionType === "boolean") {
-      // uses existing value
-    } else if (conditionType === "function") {
-      option.condition = option.condition(this);
-    } else {
-      option.condition = this.get(option.condition);
-    }
-
-    return option;
-  }
-
   @computed("model.requiredCategoryMissing", "model.replyLength")
   get disableTextarea() {
     return this.model?.requiredCategoryMissing && this.model?.replyLength === 0;
@@ -687,34 +620,6 @@ export default class ComposerService extends Service {
     );
   }
 
-  @action
-  openChangeReplyToModal() {
-    const model = this.model;
-    if (!model) {
-      return;
-    }
-
-    this.modal.show(ChangeReplyTo, {
-      model: {
-        topic: model.topic,
-        editingPostNumber: model.post?.post_number,
-        currentPostNumber: model.reply_to_post_number,
-        onSelect: (post) => {
-          if (!post) {
-            model.setReplyTo(null, null);
-            return;
-          }
-          model.setReplyTo(post.post_number, {
-            id: post.user_id,
-            username: post.username,
-            name: post.name,
-            avatar_template: post.avatar_template,
-          });
-        },
-      },
-    });
-  }
-
   @computed(
     "model.creatingPrivateMessage",
     "model.targetRecipients",
@@ -796,6 +701,108 @@ export default class ComposerService extends Service {
     }
   }
 
+  @computed("model.categoryId", "lastValidatedAt")
+  get categoryValidation() {
+    if (
+      !this.siteSettings.allow_uncategorized_topics &&
+      !this.model?.categoryId
+    ) {
+      return EmberObject.create({
+        failed: true,
+        reason: i18n("composer.error.category_missing"),
+        lastShownAt: this.lastValidatedAt,
+      });
+    }
+  }
+
+  @computed("model.category", "model.tags", "lastValidatedAt")
+  get tagValidation() {
+    const tagsArray = this.model?.tags || [];
+    if (
+      this.site.can_tag_topics &&
+      !this.currentUser.staff &&
+      this.model?.category
+    ) {
+      // category.minimumRequiredTags incorporates both minimum_required_tags, and required_tag_groups
+      if (this.model?.category?.minimumRequiredTags > tagsArray.length) {
+        return EmberObject.create({
+          failed: true,
+          reason: i18n("composer.error.tags_missing", {
+            count: this.model?.category?.minimumRequiredTags,
+          }),
+          lastShownAt: this.lastValidatedAt,
+        });
+      }
+    }
+  }
+
+  @computed("model.viewFullscreen", "model.showFullScreenExitPrompt")
+  get showFullScreenPrompt() {
+    return (
+      this.model?.viewFullscreen &&
+      this.model?.showFullScreenExitPrompt &&
+      !this.capabilities.touch
+    );
+  }
+
+  @computed("model.action")
+  get canEdit() {
+    return this.model?.action === "edit" && this.currentUser.can_edit;
+  }
+
+  @computed("model.composeState")
+  get visible() {
+    return this.model?.composeState && this.model?.composeState !== "closed";
+  }
+
+  @observes("showPreview", "allowPreview")
+  previewVisibilityChanged() {
+    this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
+  }
+
+  @action
+  onSelectFormTemplate(formTemplate) {
+    this.selectedFormTemplate = formTemplate;
+  }
+
+  @observes("showPreview")
+  showPreviewChanged() {
+    if (this.site.desktopView) {
+      this.keyValueStore.set({
+        key: "composer.showPreview",
+        value: this.showPreview,
+      });
+    }
+  }
+
+  @action
+  openChangeReplyToModal() {
+    const model = this.model;
+    if (!model) {
+      return;
+    }
+
+    this.modal.show(ChangeReplyTo, {
+      model: {
+        topic: model.topic,
+        editingPostNumber: model.post?.post_number,
+        currentPostNumber: model.reply_to_post_number,
+        onSelect: (post) => {
+          if (!post) {
+            model.setReplyTo(null, null);
+            return;
+          }
+          model.setReplyTo(post.post_number, {
+            id: post.user_id,
+            username: post.username,
+            name: post.name,
+            avatar_template: post.avatar_template,
+          });
+        },
+      },
+    });
+  }
+
   /**
    * Opens the composer when uncertain if it's already open or has a draft.
    * Supports appending text once the composer is open.
@@ -820,45 +827,6 @@ export default class ComposerService extends Service {
       this._focusAndInsertText,
       opts.insertText
     );
-  }
-
-  async _openComposerForFocus(opts) {
-    if (this.get("model.viewOpen")) {
-      return;
-    }
-
-    const opened = this.openIfDraft();
-    if (opened) {
-      return;
-    }
-
-    if (opts.topic) {
-      return await this.open({
-        action: Composer.REPLY,
-        draftKey: opts.topic.get("draft_key"),
-        draftSequence: opts.topic.get("draft_sequence"),
-        topic: opts.topic,
-        ...(opts.openOpts || {}),
-      });
-    }
-
-    if (opts.fallbackToNewTopic) {
-      return await this.open({
-        action: CREATE_TOPIC,
-        draftKey: this.topicDraftKey,
-        ...(opts.openOpts || {}),
-      });
-    }
-  }
-
-  _focusAndInsertText(insertText) {
-    next(() =>
-      document.querySelector(".d-editor-container .d-editor-input")?.focus()
-    );
-
-    if (insertText) {
-      this.model.appendText(insertText, null, { new_line: true });
-    }
   }
 
   @action
@@ -1787,6 +1755,230 @@ export default class ComposerService extends Service {
       .join(",");
   }
 
+  async destroyDraft(draftSequence = null) {
+    const key = this.get("model.draftKey");
+    if (!key) {
+      return;
+    }
+
+    if (this._saveDraftPromise) {
+      await this._saveDraftPromise;
+      return await this.destroyDraft();
+    }
+
+    const sequence = draftSequence || this.get("model.draftSequence");
+    await Draft.clear(key, sequence);
+    this.appEvents.trigger("draft:destroyed", key);
+  }
+
+  cancelComposer() {
+    this.skipAutoSave = true;
+
+    cancel(this._saveDraftDebounce);
+
+    return new Promise((resolve) => {
+      if (this.get("model.anyDirty")) {
+        this.modal.show(DiscardDraftModal, {
+          model: {
+            confirmMessageKey: this.get("model.editingPost")
+              ? "post.cancel_composer.confirm_edit"
+              : "post.cancel_composer.confirm",
+            discardButtonKey: this.get("model.editingPost")
+              ? "post.cancel_composer.discard_edit"
+              : "post.cancel_composer.discard",
+            onDestroyDraft: () => {
+              return this.destroyDraft()
+                .then(() => {
+                  this.model.clearState();
+                  this.close();
+                })
+                .finally(() => {
+                  this.appEvents.trigger("composer:cancelled");
+                  resolve(true);
+                });
+            },
+            onCancelDiscard: () => resolve(false),
+          },
+        });
+      } else {
+        // it is possible there is some sort of crazy draft with no body ... just give up on it
+        this.destroyDraft()
+          .then(() => {
+            this.model.clearState();
+            this.close();
+          })
+          .finally(() => {
+            this.appEvents.trigger("composer:cancelled");
+            resolve();
+          });
+      }
+    }).finally(() => {
+      this.skipAutoSave = false;
+    });
+  }
+
+  saveAndCloseComposer() {
+    // Always save the draft if the user had typed something
+    // or had started setting up a title/tags/category
+    if (this.model.anyDirty) {
+      this.skipAutoSave = true;
+      this._saveDraft(true);
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      this.skipAutoSave = false;
+      return true;
+    } else {
+      // Otherwise just close the composer and discard any empty draft
+      return this.cancelComposer();
+    }
+  }
+
+  unshrink() {
+    this.model.set("composeState", Composer.OPEN);
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      this.model.composerHeight
+    );
+  }
+
+  shrink() {
+    this.collapse();
+  }
+
+  collapse() {
+    this._saveDraft();
+    this.set("model.composeState", Composer.DRAFT);
+    document.documentElement.style.setProperty("--composer-height", "40px");
+  }
+
+  toggleFullscreen() {
+    this._saveDraft();
+
+    const composer = this.model;
+
+    if (composer?.viewFullscreen) {
+      composer?.set("composeState", Composer.OPEN);
+    } else {
+      composer?.set("composeState", Composer.FULLSCREEN);
+      composer?.set("showFullScreenExitPrompt", true);
+    }
+  }
+
+  close() {
+    // the 'fullscreen-composer' class is added to remove scrollbars from the
+    // document while in fullscreen mode. If the composer is closed for any reason
+    // this class should be removed
+
+    const elem = document.documentElement;
+    elem.classList.remove("fullscreen-composer");
+    elem.classList.remove("composer-open");
+
+    document.activeElement?.blur();
+    document.documentElement.style.removeProperty("--composer-height");
+    this.setProperties({
+      model: null,
+      lastValidatedAt: null,
+      _allowPreview: null,
+    });
+
+    // This is a temporary solution to reset the saved form template state while we don't store drafts
+    this.set("formTemplateInitialValues", undefined);
+
+    this.composerActionState.clear();
+  }
+
+  clearLastValidatedAt() {
+    this.set("lastValidatedAt", null);
+    this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  @bind
+  _beaconSaveDraft() {
+    if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
+      return;
+    }
+
+    cancel(this._saveDraftDebounce);
+    this._saveDraftDebounce = null;
+
+    const draftSequence = this.model.draftSequence;
+    this.model.set("draftSequence", draftSequence + 1);
+
+    Draft.saveBeacon(
+      this.model.draftKey,
+      draftSequence,
+      this.model.serializeDraftData(),
+      this.messageBus.clientId,
+      this.session.csrfToken
+    );
+  }
+
+  _setupPopupMenuOption(option) {
+    // Backwards compatibility support for when we used to accept a function.
+    // This can be dropped when `addToolbarPopupMenuOptionsCallback` is removed from `plugin-api.js`.
+    if (typeof option === "function") {
+      option = option(this);
+    }
+
+    if (typeof option === "undefined") {
+      return null;
+    }
+
+    const conditionType = typeof option.condition;
+
+    if (conditionType === "undefined") {
+      option.condition = true;
+    } else if (conditionType === "boolean") {
+      // uses existing value
+    } else if (conditionType === "function") {
+      option.condition = option.condition(this);
+    } else {
+      option.condition = this.get(option.condition);
+    }
+
+    return option;
+  }
+
+  async _openComposerForFocus(opts) {
+    if (this.get("model.viewOpen")) {
+      return;
+    }
+
+    const opened = this.openIfDraft();
+    if (opened) {
+      return;
+    }
+
+    if (opts.topic) {
+      return await this.open({
+        action: Composer.REPLY,
+        draftKey: opts.topic.get("draft_key"),
+        draftSequence: opts.topic.get("draft_sequence"),
+        topic: opts.topic,
+        ...(opts.openOpts || {}),
+      });
+    }
+
+    if (opts.fallbackToNewTopic) {
+      return await this.open({
+        action: CREATE_TOPIC,
+        draftKey: this.topicDraftKey,
+        ...(opts.openOpts || {}),
+      });
+    }
+  }
+
+  _focusAndInsertText(insertText) {
+    next(() =>
+      document.querySelector(".d-editor-container .d-editor-input")?.focus()
+    );
+
+    if (insertText) {
+      this.model.appendText(insertText, null, { new_line: true });
+    }
+  }
+
   // Given a potential instance and options, set the model for this composer.
   async _setModel(optionalComposerModel, opts) {
     this.set("linkLookup", null);
@@ -1892,97 +2084,6 @@ export default class ComposerService extends Service {
     }
   }
 
-  async destroyDraft(draftSequence = null) {
-    const key = this.get("model.draftKey");
-    if (!key) {
-      return;
-    }
-
-    if (this._saveDraftPromise) {
-      await this._saveDraftPromise;
-      return await this.destroyDraft();
-    }
-
-    const sequence = draftSequence || this.get("model.draftSequence");
-    await Draft.clear(key, sequence);
-    this.appEvents.trigger("draft:destroyed", key);
-  }
-
-  cancelComposer() {
-    this.skipAutoSave = true;
-
-    cancel(this._saveDraftDebounce);
-
-    return new Promise((resolve) => {
-      if (this.get("model.anyDirty")) {
-        this.modal.show(DiscardDraftModal, {
-          model: {
-            confirmMessageKey: this.get("model.editingPost")
-              ? "post.cancel_composer.confirm_edit"
-              : "post.cancel_composer.confirm",
-            discardButtonKey: this.get("model.editingPost")
-              ? "post.cancel_composer.discard_edit"
-              : "post.cancel_composer.discard",
-            onDestroyDraft: () => {
-              return this.destroyDraft()
-                .then(() => {
-                  this.model.clearState();
-                  this.close();
-                })
-                .finally(() => {
-                  this.appEvents.trigger("composer:cancelled");
-                  resolve(true);
-                });
-            },
-            onCancelDiscard: () => resolve(false),
-          },
-        });
-      } else {
-        // it is possible there is some sort of crazy draft with no body ... just give up on it
-        this.destroyDraft()
-          .then(() => {
-            this.model.clearState();
-            this.close();
-          })
-          .finally(() => {
-            this.appEvents.trigger("composer:cancelled");
-            resolve();
-          });
-      }
-    }).finally(() => {
-      this.skipAutoSave = false;
-    });
-  }
-
-  saveAndCloseComposer() {
-    // Always save the draft if the user had typed something
-    // or had started setting up a title/tags/category
-    if (this.model.anyDirty) {
-      this.skipAutoSave = true;
-      this._saveDraft(true);
-      this.model.clearState();
-      this.close();
-      this.appEvents.trigger("composer:cancelled");
-      this.skipAutoSave = false;
-      return true;
-    } else {
-      // Otherwise just close the composer and discard any empty draft
-      return this.cancelComposer();
-    }
-  }
-
-  unshrink() {
-    this.model.set("composeState", Composer.OPEN);
-    document.documentElement.style.setProperty(
-      "--composer-height",
-      this.model.composerHeight
-    );
-  }
-
-  shrink() {
-    this.collapse();
-  }
-
   _saveDraft(showToast = false) {
     cancel(this._saveDraftDebounce);
 
@@ -2048,107 +2149,6 @@ export default class ComposerService extends Service {
         );
       }
     }
-  }
-
-  @computed("model.categoryId", "lastValidatedAt")
-  get categoryValidation() {
-    if (
-      !this.siteSettings.allow_uncategorized_topics &&
-      !this.model?.categoryId
-    ) {
-      return EmberObject.create({
-        failed: true,
-        reason: i18n("composer.error.category_missing"),
-        lastShownAt: this.lastValidatedAt,
-      });
-    }
-  }
-
-  @computed("model.category", "model.tags", "lastValidatedAt")
-  get tagValidation() {
-    const tagsArray = this.model?.tags || [];
-    if (
-      this.site.can_tag_topics &&
-      !this.currentUser.staff &&
-      this.model?.category
-    ) {
-      // category.minimumRequiredTags incorporates both minimum_required_tags, and required_tag_groups
-      if (this.model?.category?.minimumRequiredTags > tagsArray.length) {
-        return EmberObject.create({
-          failed: true,
-          reason: i18n("composer.error.tags_missing", {
-            count: this.model?.category?.minimumRequiredTags,
-          }),
-          lastShownAt: this.lastValidatedAt,
-        });
-      }
-    }
-  }
-
-  collapse() {
-    this._saveDraft();
-    this.set("model.composeState", Composer.DRAFT);
-    document.documentElement.style.setProperty("--composer-height", "40px");
-  }
-
-  toggleFullscreen() {
-    this._saveDraft();
-
-    const composer = this.model;
-
-    if (composer?.viewFullscreen) {
-      composer?.set("composeState", Composer.OPEN);
-    } else {
-      composer?.set("composeState", Composer.FULLSCREEN);
-      composer?.set("showFullScreenExitPrompt", true);
-    }
-  }
-
-  @computed("model.viewFullscreen", "model.showFullScreenExitPrompt")
-  get showFullScreenPrompt() {
-    return (
-      this.model?.viewFullscreen &&
-      this.model?.showFullScreenExitPrompt &&
-      !this.capabilities.touch
-    );
-  }
-
-  close() {
-    // the 'fullscreen-composer' class is added to remove scrollbars from the
-    // document while in fullscreen mode. If the composer is closed for any reason
-    // this class should be removed
-
-    const elem = document.documentElement;
-    elem.classList.remove("fullscreen-composer");
-    elem.classList.remove("composer-open");
-
-    document.activeElement?.blur();
-    document.documentElement.style.removeProperty("--composer-height");
-    this.setProperties({
-      model: null,
-      lastValidatedAt: null,
-      _allowPreview: null,
-    });
-
-    // This is a temporary solution to reset the saved form template state while we don't store drafts
-    this.set("formTemplateInitialValues", undefined);
-
-    this.composerActionState.clear();
-  }
-
-  @computed("model.action")
-  get canEdit() {
-    return this.model?.action === "edit" && this.currentUser.can_edit;
-  }
-
-  @computed("model.composeState")
-  get visible() {
-    return this.model?.composeState && this.model?.composeState !== "closed";
-  }
-
-  clearLastValidatedAt() {
-    this.set("lastValidatedAt", null);
-    this.appEvents.trigger("composer-service:last-validated-at-cleared");
   }
 
   _initialLocale(opts) {

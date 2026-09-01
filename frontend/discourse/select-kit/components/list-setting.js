@@ -27,18 +27,18 @@ export default class ListSetting extends MultiSelectComponent {
     return this.choices;
   }
 
-  modifyComponentForRow(collection) {
-    if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
-      return CreateColorRow;
-    }
-  }
-
   @computed("settingName")
   get selectedChoiceComponent() {
     if (this.settingName?.includes("color")) {
       return SelectedChoiceColor;
     } else {
       return SelectedChoice;
+    }
+  }
+
+  modifyComponentForRow(collection) {
+    if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
+      return CreateColorRow;
     }
   }
 

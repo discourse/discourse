@@ -151,6 +151,10 @@ export default class DButton extends Component<DButtonSignature> {
     }
   }
 
+  get wrapperElement() {
+    return dElement(this.args.href ? "a" : "button");
+  }
+
   @action
   keyDown(e: KeyboardEvent) {
     if (this.args.onKeyDown) {
@@ -232,10 +236,6 @@ export default class DButton extends Component<DButtonSignature> {
 
       return false;
     }
-  }
-
-  get wrapperElement() {
-    return dElement(this.args.href ? "a" : "button");
   }
 
   <template>

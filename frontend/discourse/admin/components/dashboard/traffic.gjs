@@ -107,10 +107,6 @@ export default class DashboardTraffic extends Component {
     return `${this.#kpiValue("direct_traffic") ?? 0}%`;
   }
 
-  #kpiValue(key) {
-    return this.args.traffic?.kpis?.[key]?.value;
-  }
-
   get showSessionMetrics() {
     return this.#kpiValue("bounce_rate") !== undefined;
   }
@@ -183,6 +179,10 @@ export default class DashboardTraffic extends Component {
   formatTrendPercent(value) {
     const precision = value < 1 ? 1 : 0;
     return `${I18n.toNumber(value, { precision })}%`;
+  }
+
+  #kpiValue(key) {
+    return this.args.traffic?.kpis?.[key]?.value;
   }
 
   #dateFrom(value) {

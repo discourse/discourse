@@ -47,25 +47,6 @@ export default class BulkUserSuspendConfirmation extends Component {
     );
   }
 
-  #logError(line) {
-    this.#log(line, "error");
-  }
-
-  #logSuccess(line) {
-    this.#log(line, "success");
-  }
-
-  #logNeutral(line) {
-    this.#log(line, "neutral");
-  }
-
-  #log(line, type) {
-    this.logs.push({
-      line,
-      type,
-    });
-  }
-
   @bind
   onSuspendProgress(data) {
     if (data.success) {
@@ -138,6 +119,25 @@ export default class BulkUserSuspendConfirmation extends Component {
     if (this.callAfterBulkSuspend) {
       this.args.model?.afterBulkAction();
     }
+  }
+
+  #logError(line) {
+    this.#log(line, "error");
+  }
+
+  #logSuccess(line) {
+    this.#log(line, "success");
+  }
+
+  #logNeutral(line) {
+    this.#log(line, "neutral");
+  }
+
+  #log(line, type) {
+    this.logs.push({
+      line,
+      type,
+    });
   }
 
   <template>

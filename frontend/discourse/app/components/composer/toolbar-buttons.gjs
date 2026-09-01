@@ -7,11 +7,6 @@ import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToolbarButtons extends Component {
-  @action
-  tabIndex(button) {
-    return button === this.firstButton ? 0 : button.tabindex;
-  }
-
   // the tab stop must be a rendered button: the leading one may be hidden by its condition
   get firstButton() {
     const { isFirst = true } = this.args;
@@ -27,12 +22,17 @@ export default class ComposerToolbarButtons extends Component {
       .find((button) => this.isActionable(button) && button.condition(context));
   }
 
-  isActionable(button) {
-    return button.type !== "separator" && !button.disabled;
-  }
-
   get rovingButtonBar() {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
+  }
+
+  @action
+  tabIndex(button) {
+    return button === this.firstButton ? 0 : button.tabindex;
+  }
+
+  isActionable(button) {
+    return button.type !== "separator" && !button.disabled;
   }
 
   /** The title with the drawn shortcut appended, when one is shown. */

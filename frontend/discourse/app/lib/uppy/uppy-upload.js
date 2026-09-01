@@ -114,6 +114,22 @@ export default class UppyUpload {
     validateConfig(this.config);
   }
 
+  get #resolvedAdditionalParams() {
+    if (typeof this.config.additionalParams === "function") {
+      return this.config.additionalParams();
+    } else {
+      return this.config.additionalParams;
+    }
+  }
+
+  get #resolvedDropTargetOptions() {
+    if (typeof this.config.uploadDropTargetOptions === "function") {
+      return this.config.uploadDropTargetOptions();
+    } else {
+      return this.config.uploadDropTargetOptions;
+    }
+  }
+
   teardown() {
     this.messageBus.unsubscribe(`/uploads/${this.config.type}`);
 
@@ -380,14 +396,6 @@ export default class UppyUpload {
     this._fileInputEl.click();
   }
 
-  #triggerInProgressUploadsEvent() {
-    this.config.onProgressUploadsChanged?.(this.inProgressUploads);
-    this.appEvents.trigger(
-      `upload-mixin:${this.config.id}:in-progress-uploads`,
-      this.inProgressUploads
-    );
-  }
-
   /**
    * If auto upload is disabled, use this function to start the upload process.
    */
@@ -400,6 +408,54 @@ export default class UppyUpload {
     }
     this.uploading = true;
     return this.uppyWrapper.uppyInstance?.upload();
+  }
+
+  @bind
+  cancelSingleUpload(data) {
+    this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+    this.#removeInProgressUpload(data.fileId);
+  }
+
+  @bind
+  cancelAllUploads() {
+    this.uppyWrapper.uppyInstance?.cancelAll();
+    this.inProgressUploads.length = 0;
+    this.#triggerInProgressUploadsEvent();
+  }
+
+  @bind
+  async addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
+    files = Array.isArray(files) ? files : [files];
+
+    try {
+      this.uppyWrapper.uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: this.config.id,
+            name: file.name,
+            type: file.type,
+            data: file,
+            meta: { pasted: opts.pasted },
+          };
+        })
+      );
+    } catch (err) {
+      warn(`error adding files to uppy: ${err}`, {
+        id: "discourse.upload.uppy-add-files-error",
+      });
+    }
+  }
+
+  #triggerInProgressUploadsEvent() {
+    this.config.onProgressUploadsChanged?.(this.inProgressUploads);
+    this.appEvents.trigger(
+      `upload-mixin:${this.config.id}:in-progress-uploads`,
+      this.inProgressUploads
+    );
   }
 
   #useXHRUploads() {
@@ -478,46 +534,6 @@ export default class UppyUpload {
     );
   }
 
-  @bind
-  cancelSingleUpload(data) {
-    this.uppyWrapper.uppyInstance.removeFile(data.fileId);
-    this.#removeInProgressUpload(data.fileId);
-  }
-
-  @bind
-  cancelAllUploads() {
-    this.uppyWrapper.uppyInstance?.cancelAll();
-    this.inProgressUploads.length = 0;
-    this.#triggerInProgressUploadsEvent();
-  }
-
-  @bind
-  async addFiles(files, opts = {}) {
-    if (!this.session.csrfToken) {
-      await updateCsrfToken();
-    }
-
-    files = Array.isArray(files) ? files : [files];
-
-    try {
-      this.uppyWrapper.uppyInstance.addFiles(
-        files.map((file) => {
-          return {
-            source: this.config.id,
-            name: file.name,
-            type: file.type,
-            data: file,
-            meta: { pasted: opts.pasted },
-          };
-        })
-      );
-    } catch (err) {
-      warn(`error adding files to uppy: ${err}`, {
-        id: "discourse.upload.uppy-add-files-error",
-      });
-    }
-  }
-
   #completeExternalUpload(file) {
     return ajax(`${this.config.uploadRootPath}/complete-external-upload`, {
       type: "POST",
@@ -526,22 +542,6 @@ export default class UppyUpload {
         this.#resolvedAdditionalParams
       ),
     });
-  }
-
-  get #resolvedAdditionalParams() {
-    if (typeof this.config.additionalParams === "function") {
-      return this.config.additionalParams();
-    } else {
-      return this.config.additionalParams;
-    }
-  }
-
-  get #resolvedDropTargetOptions() {
-    if (typeof this.config.uploadDropTargetOptions === "function") {
-      return this.config.uploadDropTargetOptions();
-    } else {
-      return this.config.uploadDropTargetOptions;
-    }
   }
 
   #reset() {

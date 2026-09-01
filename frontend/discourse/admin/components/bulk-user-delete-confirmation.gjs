@@ -40,25 +40,6 @@ export default class BulkUserDeleteConfirmation extends Component {
     );
   }
 
-  #logError(line) {
-    this.#log(line, "error");
-  }
-
-  #logSuccess(line) {
-    this.#log(line, "success");
-  }
-
-  #logNeutral(line) {
-    this.#log(line, "neutral");
-  }
-
-  #log(line, type) {
-    this.logs.push({
-      line,
-      type,
-    });
-  }
-
   @bind
   onDeleteProgress(data) {
     if (data.success) {
@@ -141,6 +122,25 @@ export default class BulkUserDeleteConfirmation extends Component {
   @action
   toggleBlockIpAndEmail(event) {
     this.blockIpAndEmail = event.target.checked;
+  }
+
+  #logError(line) {
+    this.#log(line, "error");
+  }
+
+  #logSuccess(line) {
+    this.#log(line, "success");
+  }
+
+  #logNeutral(line) {
+    this.#log(line, "neutral");
+  }
+
+  #log(line, type) {
+    this.logs.push({
+      line,
+      type,
+    });
   }
 
   <template>

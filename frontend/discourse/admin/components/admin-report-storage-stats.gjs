@@ -10,11 +10,6 @@ import I18n, { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class AdminReportStorageStats extends Component {
-  @computed("siteSettings.backup_location")
-  get backupLocation() {
-    return this.siteSettings.backup_location;
-  }
-
   @computed("model.data.backups")
   get backupStats() {
     return this.model?.data?.backups;
@@ -31,6 +26,11 @@ export default class AdminReportStorageStats extends Component {
 
   set uploadStats(value) {
     set(this, "model.data.uploads", value);
+  }
+
+  @computed("siteSettings.backup_location")
+  get backupLocation() {
+    return this.siteSettings.backup_location;
   }
 
   @computed("backupStats")

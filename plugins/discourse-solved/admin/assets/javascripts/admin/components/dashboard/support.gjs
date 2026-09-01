@@ -103,26 +103,6 @@ export default class SupportSection extends Component {
     };
   }
 
-  #direction(kpi, { noPriorDirection } = {}) {
-    if (kpi?.value == null) {
-      return "unavailable";
-    }
-
-    if (kpi.previous_value == null && noPriorDirection) {
-      return noPriorDirection;
-    }
-
-    const previousValue = kpi.previous_value ?? 0;
-    const roundedChange = Math.round(kpi.value - previousValue);
-    if (roundedChange > 0) {
-      return "up";
-    } else if (roundedChange < 0) {
-      return "down";
-    }
-
-    return "flat";
-  }
-
   get resolutionRate() {
     const kpi = this.data?.kpis?.resolution_rate ?? {};
     const value = kpi.value ?? 0;
@@ -191,14 +171,6 @@ export default class SupportSection extends Component {
     return allSupport.length > 0 ? this.#categoryTerm(allSupport) : null;
   }
 
-  #categoryTerm(categories) {
-    const slugs = categories.map((category) => Category.slugFor(category, ":"));
-    // `=` restricts to these exact categories, excluding subcategories, to
-    // match the dashboard's own count (accepted answers are opt-in per
-    // category and never inherited by subcategories).
-    return `=category:${slugs.join(",")}`;
-  }
-
   get dateRangeTerms() {
     const terms = [];
     if (this.args.startDate) {
@@ -261,27 +233,6 @@ export default class SupportSection extends Component {
     this.#persistSelection();
   }
 
-  #persistSelection() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax("/admin/dashboard/sections/support/settings/categories.json", {
-      type: "PUT",
-      contentType: "application/json",
-      data: JSON.stringify({
-        category_ids: this.selectedCategories.map((c) => c.id),
-      }),
-    }).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n("admin.dashboard.sections.support.save_error"),
-        },
-      });
-    });
-  }
-
   @action
   onPeriodChange() {
     if (this.selectedCategories.length === 0) {
@@ -318,6 +269,55 @@ export default class SupportSection extends Component {
     } finally {
       this.loading = false;
     }
+  }
+
+  #direction(kpi, { noPriorDirection } = {}) {
+    if (kpi?.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null && noPriorDirection) {
+      return noPriorDirection;
+    }
+
+    const previousValue = kpi.previous_value ?? 0;
+    const roundedChange = Math.round(kpi.value - previousValue);
+    if (roundedChange > 0) {
+      return "up";
+    } else if (roundedChange < 0) {
+      return "down";
+    }
+
+    return "flat";
+  }
+
+  #categoryTerm(categories) {
+    const slugs = categories.map((category) => Category.slugFor(category, ":"));
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/support/settings/categories.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n("admin.dashboard.sections.support.save_error"),
+        },
+      });
+    });
   }
 
   <template>

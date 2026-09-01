@@ -125,6 +125,34 @@ export default class WorkflowCanvas extends Component {
     );
   }
 
+  get nodeEntries() {
+    return this.rete.renderer.nodeEntryList;
+  }
+
+  get connectionEntries() {
+    return this.rete.renderer.connectionEntryList;
+  }
+
+  get handleEntries() {
+    return [
+      ...this.rete.renderer.outputHandleEntryList,
+      ...this.rete.renderer.inputHandleEntryList,
+    ].map((entry) => ({
+      ...entry,
+      svgStyle: trustHTML(
+        `overflow:visible;position:absolute;pointer-events:none;z-index:2;left:${entry.svgLeft}px;top:${entry.svgTop}px;width:50px;height:20px`
+      ),
+    }));
+  }
+
+  get areaContentElement() {
+    return this.rete.areaContentElement;
+  }
+
+  get showEmptyState() {
+    return !this.isLoading && (this.args.nodes || []).length === 0;
+  }
+
   @action
   openAiPanel() {
     this.aiPanelOpen = true;
@@ -241,6 +269,292 @@ export default class WorkflowCanvas extends Component {
   registerContainer(element) {
     this.containerElement = element;
     this.#maybeSetupCanvas();
+  }
+
+  @action
+  consumeInsertHighlight(clientId) {
+    return this.#pendingInsertHighlights.delete(clientId);
+  }
+
+  @action
+  async syncToRete() {
+    await this.#queueSync();
+  }
+
+  @action
+  handleConnectionToolbarAdd(connectionInfo) {
+    this.args.onOpenNodePanel?.({
+      connectionSource: connectionInfo.sourceClientId,
+      connectionSourceOutput: connectionInfo.sourceOutput,
+      connectionSourceOutputIndex: connectionInfo.sourceOutputIndex,
+      connectionTarget: connectionInfo.targetClientId,
+      connectionTargetInput: connectionInfo.targetInput,
+      connectionTargetInputIndex: connectionInfo.targetInputIndex,
+    });
+  }
+
+  @action
+  handleConnectionToolbarDelete(connectionInfo) {
+    this.args.onConnectionDelete?.(
+      connectionInfo.sourceClientId,
+      connectionInfo.sourceOutput,
+      connectionInfo.targetClientId,
+      connectionInfo.targetInput,
+      connectionInfo.sourceOutputIndex,
+      connectionInfo.targetInputIndex
+    );
+  }
+
+  @action
+  handleLoopBackAdd(loopNodeClientId) {
+    this.args.onOpenNodePanel?.({ loopNodeClientId });
+  }
+
+  @action
+  handleHandleAdd(nodeClientId, outputKey, inputKey, e) {
+    e.stopPropagation();
+    this.args.onOpenNodePanel?.(
+      outputKey !== null
+        ? { sourceClientId: nodeClientId, sourceOutput: outputKey }
+        : { targetClientId: nodeClientId, targetInput: inputKey || "main" }
+    );
+  }
+
+  @action
+  registerContextMenu(api) {
+    this.contextMenuApi = api;
+  }
+
+  @action
+  handleContextMenu(event) {
+    this.contextMenuApi?.open(event);
+  }
+
+  @action
+  openNodePanelAtCenter() {
+    this.#invokeAtViewportCenter(this.args.onOpenNodePanel);
+  }
+
+  @action
+  browseTemplates() {
+    this.args.onBrowseTemplates?.();
+  }
+
+  @action
+  async selectStickyNote(clientId) {
+    await this.rete.selectStickyNote(clientId, {
+      onStickyNoteTranslate: buildStickyNoteTranslateHandler(
+        () => this.args.stickyNotes,
+        this.args.onStickyNoteMove
+      ),
+      onStickyNoteUnselect: () => {
+        this.selectionVersion++;
+      },
+    });
+    this.selectionVersion++;
+  }
+
+  @action
+  copySelected(selection = null) {
+    this.contextMenuApi?.close();
+    this.#copySelectedPayload(selection);
+  }
+
+  @action
+  cutSelected(selection = null) {
+    this.contextMenuApi?.close();
+    const selectedIds = this.#selectedIds(selection);
+
+    if (!this.#copySelectedPayload(selectedIds)) {
+      return;
+    }
+
+    this.args.onCutSelected?.({
+      nodeIds: [...selectedIds.nodeIds],
+      stickyNoteIds: [...selectedIds.stickyNoteIds],
+    });
+    this.rete.selector.unselectAll();
+    this.selectionVersion++;
+  }
+
+  @action
+  handlePasteEvent(event) {
+    if (!this.rete) {
+      return;
+    }
+
+    const text = event.clipboardData?.getData("text/plain");
+    const payload = this.clipboardWritePending
+      ? null
+      : parseCanvasClipboardText(text);
+    const useLocalPayload = !payload && this.clipboardPayload;
+    const pastePayload = payloadForCanvasClipboardPaste(
+      payload,
+      useLocalPayload ? this.clipboardPayload : null
+    );
+
+    if (!pastePayload) {
+      return;
+    }
+
+    event.preventDefault();
+    const isLocal =
+      useLocalPayload ||
+      isSerializedCanvasClipboardPayload(text, this.serializedClipboardPayload);
+
+    this.#pastePayload(pastePayload, {
+      target: isLocal ? null : this.rete.viewportCenter(),
+      useSourceOffset: isLocal,
+    });
+  }
+
+  @action
+  async pasteFromClipboard(target = null) {
+    this.contextMenuApi?.close();
+    const result = await this.#readClipboardPayload();
+    const systemPayload = this.clipboardWritePending ? null : result.payload;
+    const useLocalPayload = !systemPayload && this.clipboardPayload;
+    const payload = payloadForCanvasClipboardPaste(
+      systemPayload,
+      useLocalPayload ? this.clipboardPayload : null
+    );
+
+    if (!payload) {
+      this.#showNothingToPaste();
+      return;
+    }
+
+    this.#pastePayload(payload, {
+      target,
+      useSourceOffset: !target && (result.isLocal || useLocalPayload),
+    });
+  }
+
+  @action
+  addStickyNoteAtCenter(closeFn) {
+    closeFn?.();
+    this.#invokeAtViewportCenter(this.args.onAddStickyNote);
+  }
+
+  @action
+  deleteStickyNote(clientId) {
+    this.args.onRemoveSelected?.({
+      nodeIds: [],
+      stickyNoteIds: [clientId],
+    });
+    this.selectionVersion++;
+  }
+
+  @action
+  async translateSelected(draggedClientId, dx, dy) {
+    const { stickyNoteIds } = this.rete.getSelectedIds();
+
+    for (const stickyNoteId of stickyNoteIds) {
+      if (stickyNoteId === draggedClientId) {
+        continue;
+      }
+
+      const note = (this.args.stickyNotes || []).find(
+        (stickyNote) => stickyNote.clientId === stickyNoteId
+      );
+      if (note) {
+        this.args.onStickyNoteMove?.(stickyNoteId, {
+          x: note.position.x + dx,
+          y: note.position.y + dy,
+        });
+      }
+    }
+
+    await this.rete.translateSelectedEntities(
+      draggedClientId,
+      "sticky-note",
+      dx,
+      dy,
+      { labels: ["node"] }
+    );
+  }
+
+  @action
+  deleteSelected(selection = null) {
+    const { nodeIds, stickyNoteIds } = this.#selectedIds(selection);
+    if (nodeIds.size > 0 || stickyNoteIds.size > 0) {
+      this.args.onRemoveSelected?.({
+        nodeIds: [...nodeIds],
+        stickyNoteIds: [...stickyNoteIds],
+      });
+      this.rete.selector.unselectAll();
+      this.selectionVersion++;
+    }
+  }
+
+  @action
+  async zoomIn() {
+    await this.#applyZoom(this.#ZOOM_STEP);
+  }
+
+  @action
+  async zoomOut() {
+    await this.#applyZoom(-this.#ZOOM_STEP);
+  }
+
+  @action
+  async fitToView() {
+    await this.rete.fitToView(this.#stickyNoteRects());
+  }
+
+  @action
+  async autoLayout() {
+    const positions = await this.rete.autoArrange();
+    this.args.onAutoLayout?.(positions);
+    await this.rete.fitToView(this.#stickyNoteRects());
+  }
+
+  @action
+  exportWorkflow(closeFn) {
+    closeFn();
+    exportWorkflowToFile(
+      this.args.nodes,
+      this.args.connections,
+      this.args.stickyNotes,
+      this.args.workflow
+    );
+  }
+
+  @action
+  openImportDialog(closeFn) {
+    closeFn();
+    this.fileInput?.click();
+  }
+
+  @action
+  registerFileInput(element) {
+    this.fileInput = element;
+  }
+
+  @action
+  async handleFileSelected(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) {
+      return;
+    }
+    try {
+      const result = parseWorkflowImport(await file.text());
+      if (result.error) {
+        this.#showImportError(
+          result.error === "version" ? "import_version_error" : "import_error"
+        );
+        return;
+      }
+      this.args.onImportNodes?.(
+        result.nodes,
+        result.connections,
+        result.stickyNotes,
+        result.staticData
+      );
+    } catch {
+      this.#showImportError();
+    }
   }
 
   #keyboardActions() {
@@ -417,11 +731,6 @@ export default class WorkflowCanvas extends Component {
     this.#syncedNodeClientIds = clientIds;
   }
 
-  @action
-  consumeInsertHighlight(clientId) {
-    return this.#pendingInsertHighlights.delete(clientId);
-  }
-
   async #performSync() {
     const snapshot = {
       nodes: this.#nodes(),
@@ -527,115 +836,9 @@ export default class WorkflowCanvas extends Component {
     );
   }
 
-  @action
-  async syncToRete() {
-    await this.#queueSync();
-  }
-
-  get nodeEntries() {
-    return this.rete.renderer.nodeEntryList;
-  }
-
-  get connectionEntries() {
-    return this.rete.renderer.connectionEntryList;
-  }
-
-  get handleEntries() {
-    return [
-      ...this.rete.renderer.outputHandleEntryList,
-      ...this.rete.renderer.inputHandleEntryList,
-    ].map((entry) => ({
-      ...entry,
-      svgStyle: trustHTML(
-        `overflow:visible;position:absolute;pointer-events:none;z-index:2;left:${entry.svgLeft}px;top:${entry.svgTop}px;width:50px;height:20px`
-      ),
-    }));
-  }
-
-  get areaContentElement() {
-    return this.rete.areaContentElement;
-  }
-
-  @action
-  handleConnectionToolbarAdd(connectionInfo) {
-    this.args.onOpenNodePanel?.({
-      connectionSource: connectionInfo.sourceClientId,
-      connectionSourceOutput: connectionInfo.sourceOutput,
-      connectionSourceOutputIndex: connectionInfo.sourceOutputIndex,
-      connectionTarget: connectionInfo.targetClientId,
-      connectionTargetInput: connectionInfo.targetInput,
-      connectionTargetInputIndex: connectionInfo.targetInputIndex,
-    });
-  }
-
-  @action
-  handleConnectionToolbarDelete(connectionInfo) {
-    this.args.onConnectionDelete?.(
-      connectionInfo.sourceClientId,
-      connectionInfo.sourceOutput,
-      connectionInfo.targetClientId,
-      connectionInfo.targetInput,
-      connectionInfo.sourceOutputIndex,
-      connectionInfo.targetInputIndex
-    );
-  }
-
-  @action
-  handleLoopBackAdd(loopNodeClientId) {
-    this.args.onOpenNodePanel?.({ loopNodeClientId });
-  }
-
-  @action
-  handleHandleAdd(nodeClientId, outputKey, inputKey, e) {
-    e.stopPropagation();
-    this.args.onOpenNodePanel?.(
-      outputKey !== null
-        ? { sourceClientId: nodeClientId, sourceOutput: outputKey }
-        : { targetClientId: nodeClientId, targetInput: inputKey || "main" }
-    );
-  }
-
-  get showEmptyState() {
-    return !this.isLoading && (this.args.nodes || []).length === 0;
-  }
-
-  @action
-  registerContextMenu(api) {
-    this.contextMenuApi = api;
-  }
-
-  @action
-  handleContextMenu(event) {
-    this.contextMenuApi?.open(event);
-  }
-
   #invokeAtViewportCenter(callback) {
     this.contextMenuApi?.close();
     callback?.(this.rete.viewportCenter());
-  }
-
-  @action
-  openNodePanelAtCenter() {
-    this.#invokeAtViewportCenter(this.args.onOpenNodePanel);
-  }
-
-  @action
-  browseTemplates() {
-    this.args.onBrowseTemplates?.();
-  }
-
-  @action
-  async selectStickyNote(clientId) {
-    await this.rete.selectStickyNote(clientId, {
-      onStickyNoteTranslate: buildStickyNoteTranslateHandler(
-        () => this.args.stickyNotes,
-        this.args.onStickyNoteMove
-      ),
-      onStickyNoteUnselect: () => {
-        this.selectionVersion++;
-      },
-    });
-    this.selectionVersion++;
   }
 
   #selectedIds(selection = null) {
@@ -701,29 +904,6 @@ export default class WorkflowCanvas extends Component {
     return payload;
   }
 
-  @action
-  copySelected(selection = null) {
-    this.contextMenuApi?.close();
-    this.#copySelectedPayload(selection);
-  }
-
-  @action
-  cutSelected(selection = null) {
-    this.contextMenuApi?.close();
-    const selectedIds = this.#selectedIds(selection);
-
-    if (!this.#copySelectedPayload(selectedIds)) {
-      return;
-    }
-
-    this.args.onCutSelected?.({
-      nodeIds: [...selectedIds.nodeIds],
-      stickyNoteIds: [...selectedIds.stickyNoteIds],
-    });
-    this.rete.selector.unselectAll();
-    this.selectionVersion++;
-  }
-
   #positionedPayload(payload, { target = null, useSourceOffset = false } = {}) {
     const sourceOffset = useSourceOffset ? (this.pasteOffset += 20) : 0;
 
@@ -758,116 +938,6 @@ export default class WorkflowCanvas extends Component {
     }
   }
 
-  @action
-  handlePasteEvent(event) {
-    if (!this.rete) {
-      return;
-    }
-
-    const text = event.clipboardData?.getData("text/plain");
-    const payload = this.clipboardWritePending
-      ? null
-      : parseCanvasClipboardText(text);
-    const useLocalPayload = !payload && this.clipboardPayload;
-    const pastePayload = payloadForCanvasClipboardPaste(
-      payload,
-      useLocalPayload ? this.clipboardPayload : null
-    );
-
-    if (!pastePayload) {
-      return;
-    }
-
-    event.preventDefault();
-    const isLocal =
-      useLocalPayload ||
-      isSerializedCanvasClipboardPayload(text, this.serializedClipboardPayload);
-
-    this.#pastePayload(pastePayload, {
-      target: isLocal ? null : this.rete.viewportCenter(),
-      useSourceOffset: isLocal,
-    });
-  }
-
-  @action
-  async pasteFromClipboard(target = null) {
-    this.contextMenuApi?.close();
-    const result = await this.#readClipboardPayload();
-    const systemPayload = this.clipboardWritePending ? null : result.payload;
-    const useLocalPayload = !systemPayload && this.clipboardPayload;
-    const payload = payloadForCanvasClipboardPaste(
-      systemPayload,
-      useLocalPayload ? this.clipboardPayload : null
-    );
-
-    if (!payload) {
-      this.#showNothingToPaste();
-      return;
-    }
-
-    this.#pastePayload(payload, {
-      target,
-      useSourceOffset: !target && (result.isLocal || useLocalPayload),
-    });
-  }
-
-  @action
-  addStickyNoteAtCenter(closeFn) {
-    closeFn?.();
-    this.#invokeAtViewportCenter(this.args.onAddStickyNote);
-  }
-
-  @action
-  deleteStickyNote(clientId) {
-    this.args.onRemoveSelected?.({
-      nodeIds: [],
-      stickyNoteIds: [clientId],
-    });
-    this.selectionVersion++;
-  }
-
-  @action
-  async translateSelected(draggedClientId, dx, dy) {
-    const { stickyNoteIds } = this.rete.getSelectedIds();
-
-    for (const stickyNoteId of stickyNoteIds) {
-      if (stickyNoteId === draggedClientId) {
-        continue;
-      }
-
-      const note = (this.args.stickyNotes || []).find(
-        (stickyNote) => stickyNote.clientId === stickyNoteId
-      );
-      if (note) {
-        this.args.onStickyNoteMove?.(stickyNoteId, {
-          x: note.position.x + dx,
-          y: note.position.y + dy,
-        });
-      }
-    }
-
-    await this.rete.translateSelectedEntities(
-      draggedClientId,
-      "sticky-note",
-      dx,
-      dy,
-      { labels: ["node"] }
-    );
-  }
-
-  @action
-  deleteSelected(selection = null) {
-    const { nodeIds, stickyNoteIds } = this.#selectedIds(selection);
-    if (nodeIds.size > 0 || stickyNoteIds.size > 0) {
-      this.args.onRemoveSelected?.({
-        nodeIds: [...nodeIds],
-        stickyNoteIds: [...stickyNoteIds],
-      });
-      this.rete.selector.unselectAll();
-      this.selectionVersion++;
-    }
-  }
-
   async #applyZoom(delta) {
     const currentK = this.rete.transform.k;
     const newK = Math.max(
@@ -877,80 +947,10 @@ export default class WorkflowCanvas extends Component {
     await this.rete.zoomAtViewportCenter(newK);
   }
 
-  @action
-  async zoomIn() {
-    await this.#applyZoom(this.#ZOOM_STEP);
-  }
-
-  @action
-  async zoomOut() {
-    await this.#applyZoom(-this.#ZOOM_STEP);
-  }
-
-  @action
-  async fitToView() {
-    await this.rete.fitToView(this.#stickyNoteRects());
-  }
-
-  @action
-  async autoLayout() {
-    const positions = await this.rete.autoArrange();
-    this.args.onAutoLayout?.(positions);
-    await this.rete.fitToView(this.#stickyNoteRects());
-  }
-
-  @action
-  exportWorkflow(closeFn) {
-    closeFn();
-    exportWorkflowToFile(
-      this.args.nodes,
-      this.args.connections,
-      this.args.stickyNotes,
-      this.args.workflow
-    );
-  }
-
-  @action
-  openImportDialog(closeFn) {
-    closeFn();
-    this.fileInput?.click();
-  }
-
-  @action
-  registerFileInput(element) {
-    this.fileInput = element;
-  }
-
   #showImportError(key = "import_error") {
     this.toasts.error({
       data: { message: i18n(`discourse_workflows.canvas.${key}`) },
     });
-  }
-
-  @action
-  async handleFileSelected(event) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) {
-      return;
-    }
-    try {
-      const result = parseWorkflowImport(await file.text());
-      if (result.error) {
-        this.#showImportError(
-          result.error === "version" ? "import_version_error" : "import_error"
-        );
-        return;
-      }
-      this.args.onImportNodes?.(
-        result.nodes,
-        result.connections,
-        result.stickyNotes,
-        result.staticData
-      );
-    } catch {
-      this.#showImportError();
-    }
   }
 
   <template>

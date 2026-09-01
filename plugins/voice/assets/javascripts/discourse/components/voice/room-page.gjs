@@ -168,13 +168,6 @@ export default class VoiceRoomPage extends Component {
     });
   }
 
-  #isPublishing(participant) {
-    if (participant.id === this.currentUser?.id) {
-      return !!this.voiceWebrtc.localVideoKind;
-    }
-    return participant.is_video_on || participant.is_screen_sharing;
-  }
-
   get ringingEntries() {
     return activeRingingEntries(this.room, this.ringingClock);
   }
@@ -203,6 +196,91 @@ export default class VoiceRoomPage extends Component {
 
   get presentationLayout() {
     return this.layoutMode === LAYOUT_PRESENTATION;
+  }
+
+  get layoutIcon() {
+    return this.presentationLayout ? "person-chalkboard" : "table-cells";
+  }
+
+  get gridFullscreenTitle() {
+    return this.gridFullscreen
+      ? i18n("voice.video.exit_fullscreen")
+      : i18n("voice.video.fullscreen_all");
+  }
+
+  get gridStyle() {
+    if (
+      !this.tiledLayout ||
+      !this.tiles.length ||
+      !this.gridWidth ||
+      !this.gridHeight
+    ) {
+      return null;
+    }
+
+    const aspects = [
+      ...this.tiles.map(
+        (tile) =>
+          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
+      ),
+      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
+    ];
+
+    const rowHeight = bestRowHeight(
+      this.gridWidth,
+      this.gridHeight,
+      aspects,
+      this.gridGap
+    );
+
+    if (rowHeight <= 0) {
+      return null;
+    }
+
+    return trustHTML(`--voice-tile-height: ${rowHeight}px;`);
+  }
+
+  get chatAvailable() {
+    return this.room.chat_available;
+  }
+
+  get chatVisible() {
+    return this.chatOpen && this.joined && this.chatAvailable;
+  }
+
+  get chatToggleTitle() {
+    return this.chatOpen ? i18n("voice.chat.close") : i18n("voice.chat.open");
+  }
+
+  get chatRendered() {
+    return this.chatVisible || this.chatClosing;
+  }
+
+  get transcriptAvailable() {
+    return this.voiceWebrtc.subtitlesAvailable;
+  }
+
+  get transcribing() {
+    return this.voiceWebrtc.isTranscribingRoom(this.room.id);
+  }
+
+  get transcriptToggleTitle() {
+    return this.transcribing
+      ? i18n("voice.transcript.stop")
+      : i18n("voice.transcript.start");
+  }
+
+  get transcriptDraftable() {
+    return (
+      this.voiceWebrtc.transcriptEntries.length > 0 &&
+      Number(this.voiceWebrtc.transcriptEntriesRoomId) === Number(this.room.id)
+    );
+  }
+
+  get transcriptDraftLabel() {
+    return this.transcribing
+      ? i18n("voice.transcript.stop_and_open")
+      : i18n("voice.transcript.draft_topic");
   }
 
   @action
@@ -284,16 +362,6 @@ export default class VoiceRoomPage extends Component {
     toggleFullscreen(this.gridElement);
   }
 
-  get layoutIcon() {
-    return this.presentationLayout ? "person-chalkboard" : "table-cells";
-  }
-
-  get gridFullscreenTitle() {
-    return this.gridFullscreen
-      ? i18n("voice.video.exit_fullscreen")
-      : i18n("voice.video.fullscreen_all");
-  }
-
   @action
   reportTileAspect(participantId, aspect) {
     const current = this.tileAspects.get(participantId) ?? null;
@@ -308,38 +376,6 @@ export default class VoiceRoomPage extends Component {
       nextAspects.delete(participantId);
     }
     this.tileAspects = nextAspects;
-  }
-
-  get gridStyle() {
-    if (
-      !this.tiledLayout ||
-      !this.tiles.length ||
-      !this.gridWidth ||
-      !this.gridHeight
-    ) {
-      return null;
-    }
-
-    const aspects = [
-      ...this.tiles.map(
-        (tile) =>
-          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
-      ),
-      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
-    ];
-
-    const rowHeight = bestRowHeight(
-      this.gridWidth,
-      this.gridHeight,
-      aspects,
-      this.gridGap
-    );
-
-    if (rowHeight <= 0) {
-      return null;
-    }
-
-    return trustHTML(`--voice-tile-height: ${rowHeight}px;`);
   }
 
   @action
@@ -385,18 +421,6 @@ export default class VoiceRoomPage extends Component {
     this.router.replaceWith(`discovery.${defaultHomepage()}`);
   }
 
-  get chatAvailable() {
-    return this.room.chat_available;
-  }
-
-  get chatVisible() {
-    return this.chatOpen && this.joined && this.chatAvailable;
-  }
-
-  get chatToggleTitle() {
-    return this.chatOpen ? i18n("voice.chat.close") : i18n("voice.chat.open");
-  }
-
   @action
   toggleChat() {
     this.setChatOpen(!this.chatOpen);
@@ -423,10 +447,6 @@ export default class VoiceRoomPage extends Component {
     }
     this.chatOpen = open;
     this.router.transitionTo({ queryParams: { chat: open } });
-  }
-
-  get chatRendered() {
-    return this.chatVisible || this.chatClosing;
   }
 
   @action
@@ -464,66 +484,16 @@ export default class VoiceRoomPage extends Component {
     this.toggleChat();
   }
 
-  get transcriptAvailable() {
-    return this.voiceWebrtc.subtitlesAvailable;
-  }
-
-  get transcribing() {
-    return this.voiceWebrtc.isTranscribingRoom(this.room.id);
-  }
-
-  get transcriptToggleTitle() {
-    return this.transcribing
-      ? i18n("voice.transcript.stop")
-      : i18n("voice.transcript.start");
-  }
-
   @action
   toggleTranscriptFromMenu(closeMenu) {
     closeMenu?.();
     this.voiceWebrtc.toggleTranscriptRecording(this.room.id);
   }
 
-  get transcriptDraftable() {
-    return (
-      this.voiceWebrtc.transcriptEntries.length > 0 &&
-      Number(this.voiceWebrtc.transcriptEntriesRoomId) === Number(this.room.id)
-    );
-  }
-
-  get transcriptDraftLabel() {
-    return this.transcribing
-      ? i18n("voice.transcript.stop_and_open")
-      : i18n("voice.transcript.draft_topic");
-  }
-
   @action
   draftTranscriptTopic(closeMenu) {
     closeMenu?.();
     this.voiceWebrtc.openTranscriptDraft();
-  }
-
-  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
-  // normal full-width menu item, matching core's channel context menu.
-  #openSubmenu(event, parentMenu, items, onSelect) {
-    // Anchor to the row button, not the clicked icon/label, so the submenu
-    // opens flush to the row's right edge.
-    const anchor = event.target.closest(".btn") ?? event.target;
-    this.menu.show(anchor, {
-      identifier: SUBMENU,
-      groupIdentifier: SUBMENU,
-      component: VoiceCallSubmenu,
-      placement: "right-start",
-      offset: { mainAxis: 8, crossAxis: -5 },
-      modalForMobile: true,
-      data: {
-        items,
-        onSelect: (id) => {
-          onSelect(id);
-          this.menu.close(parentMenu);
-        },
-      },
-    });
   }
 
   @action
@@ -547,6 +517,36 @@ export default class VoiceRoomPage extends Component {
       ],
       this.setLayoutMode
     );
+  }
+
+  #isPublishing(participant) {
+    if (participant.id === this.currentUser?.id) {
+      return !!this.voiceWebrtc.localVideoKind;
+    }
+    return participant.is_video_on || participant.is_screen_sharing;
+  }
+
+  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
+  // normal full-width menu item, matching core's channel context menu.
+  #openSubmenu(event, parentMenu, items, onSelect) {
+    // Anchor to the row button, not the clicked icon/label, so the submenu
+    // opens flush to the row's right edge.
+    const anchor = event.target.closest(".btn") ?? event.target;
+    this.menu.show(anchor, {
+      identifier: SUBMENU,
+      groupIdentifier: SUBMENU,
+      component: VoiceCallSubmenu,
+      placement: "right-start",
+      offset: { mainAxis: 8, crossAxis: -5 },
+      modalForMobile: true,
+      data: {
+        items,
+        onSelect: (id) => {
+          onSelect(id);
+          this.menu.close(parentMenu);
+        },
+      },
+    });
   }
 
   <template>

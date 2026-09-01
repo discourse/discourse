@@ -14,6 +14,14 @@ export default class SchemaField extends Component {
     return this.args.field.children?.length > 0;
   }
 
+  get fieldId() {
+    const { field, parentPath } = this.args;
+    if (field.id?.startsWith?.("$")) {
+      return field.id;
+    }
+    return parentPath ? `${parentPath}.${field.id}` : field.id;
+  }
+
   typeIcon(type) {
     let icons = {
       string: "discourse-text",
@@ -32,14 +40,6 @@ export default class SchemaField extends Component {
   toggleChildren(event) {
     event.preventDefault();
     this.collapsed = !this.collapsed;
-  }
-
-  get fieldId() {
-    const { field, parentPath } = this.args;
-    if (field.id?.startsWith?.("$")) {
-      return field.id;
-    }
-    return parentPath ? `${parentPath}.${field.id}` : field.id;
   }
 
   @action

@@ -178,13 +178,6 @@ export default class ChatPinnedMessageBar extends Component {
     }
   }
 
-  #updatePinnedMessage(updated) {
-    if (!updated || !this.pins.some((pin) => pin.message?.id === updated.id)) {
-      return;
-    }
-    this.loadPins();
-  }
-
   @action
   async loadPins() {
     if (!this.showBar) {
@@ -201,16 +194,6 @@ export default class ChatPinnedMessageBar extends Component {
       }
     } catch {
       // keep the previously loaded pins on a transient failure
-    }
-  }
-
-  #reconcileDismissal() {
-    const dismissedAbove = pinsDismissedAboveId(this.args.channel);
-    if (
-      dismissedAbove != null &&
-      newestPinId(this.visiblePins) > dismissedAbove
-    ) {
-      resetPinsDismissal(this.args.channel);
     }
   }
 
@@ -231,6 +214,23 @@ export default class ChatPinnedMessageBar extends Component {
   @action
   dismiss() {
     dismissPinsUpTo(this.args.channel, newestPinId(this.visiblePins));
+  }
+
+  #updatePinnedMessage(updated) {
+    if (!updated || !this.pins.some((pin) => pin.message?.id === updated.id)) {
+      return;
+    }
+    this.loadPins();
+  }
+
+  #reconcileDismissal() {
+    const dismissedAbove = pinsDismissedAboveId(this.args.channel);
+    if (
+      dismissedAbove != null &&
+      newestPinId(this.visiblePins) > dismissedAbove
+    ) {
+      resetPinsDismissal(this.args.channel);
+    }
   }
 
   <template>

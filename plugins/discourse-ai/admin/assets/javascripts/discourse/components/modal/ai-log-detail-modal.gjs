@@ -31,32 +31,6 @@ export default class AiLogDetailModal extends Component {
     next(() => this.load());
   }
 
-  @action
-  async load() {
-    this.loading = true;
-    this.failed = false;
-    this.notFound = false;
-    this.showRawResponse = false;
-
-    try {
-      const log = await ajax(
-        `/admin/plugins/discourse-ai/ai-logs/${this.args.model.logId}.json`
-      );
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.log = log;
-      }
-    } catch (error) {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.failed = true;
-        this.notFound = error.jqXHR?.status === 404;
-      }
-    } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.loading = false;
-      }
-    }
-  }
-
   get tabs() {
     const tabs = [
       { id: "request", label: i18n("discourse_ai.logs.detail.request") },
@@ -195,10 +169,6 @@ export default class AiLogDetailModal extends Component {
     return this.log?.time_to_first_token_msecs != null;
   }
 
-  seconds(milliseconds) {
-    return (milliseconds / 1000).toFixed(1);
-  }
-
   get hasCost() {
     return Number(this.log?.spending) > 0;
   }
@@ -215,6 +185,36 @@ export default class AiLogDetailModal extends Component {
 
   get postUrl() {
     return this.log?.post_id ? getURL(`/p/${this.log.post_id}`) : null;
+  }
+
+  @action
+  async load() {
+    this.loading = true;
+    this.failed = false;
+    this.notFound = false;
+    this.showRawResponse = false;
+
+    try {
+      const log = await ajax(
+        `/admin/plugins/discourse-ai/ai-logs/${this.args.model.logId}.json`
+      );
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.log = log;
+      }
+    } catch (error) {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.failed = true;
+        this.notFound = error.jqXHR?.status === 404;
+      }
+    } finally {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.loading = false;
+      }
+    }
+  }
+
+  seconds(milliseconds) {
+    return (milliseconds / 1000).toFixed(1);
   }
 
   @action

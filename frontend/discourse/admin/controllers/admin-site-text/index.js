@@ -76,37 +76,6 @@ export default class AdminSiteTextIndexController extends Controller {
     );
   }
 
-  async _performSearch() {
-    try {
-      this.model = await this.store.find("site-text", {
-        q: this.q,
-        overridden: this.resolvedOverridden,
-        outdated: this.resolvedOutdated,
-        locale: this.resolvedLocale,
-        untranslated: this.resolvedUntranslated,
-        only_selected_locale: this.resolvedOnlySelectedLocale,
-        page: this.#page,
-      });
-
-      if (this.#page === 0) {
-        this.#results.length = 0;
-      }
-
-      this.#results.push(this.model.content);
-      this.canLoadMore = this.model.extras?.has_more ?? false;
-    } finally {
-      this.searching = false;
-    }
-  }
-
-  resetSearch() {
-    this.#page = 0;
-    this.#results.length = 0;
-    this.canLoadMore = true;
-    this.searching = true;
-    this._performSearch();
-  }
-
   get availableLocales() {
     return this.siteSettings.available_locales;
   }
@@ -117,6 +86,14 @@ export default class AdminSiteTextIndexController extends Controller {
         return l.value === this.model.extras.fallback_locale;
       }).name;
     }
+  }
+
+  resetSearch() {
+    this.#page = 0;
+    this.#results.length = 0;
+    this.canLoadMore = true;
+    this.searching = true;
+    this._performSearch();
   }
 
   @action
@@ -180,5 +157,28 @@ export default class AdminSiteTextIndexController extends Controller {
   @action
   showReseedModal() {
     this.modal.show(ReseedModal);
+  }
+
+  async _performSearch() {
+    try {
+      this.model = await this.store.find("site-text", {
+        q: this.q,
+        overridden: this.resolvedOverridden,
+        outdated: this.resolvedOutdated,
+        locale: this.resolvedLocale,
+        untranslated: this.resolvedUntranslated,
+        only_selected_locale: this.resolvedOnlySelectedLocale,
+        page: this.#page,
+      });
+
+      if (this.#page === 0) {
+        this.#results.length = 0;
+      }
+
+      this.#results.push(this.model.content);
+      this.canLoadMore = this.model.extras?.has_more ?? false;
+    } finally {
+      this.searching = false;
+    }
   }
 }

@@ -84,6 +84,13 @@ export default class DRelativeTimePicker extends Component {
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }
 
+  get outputDuration() {
+    if (this.args.durationOutputUnit === "hours") {
+      return this.duration / HOUR;
+    }
+    return this.duration;
+  }
+
   minutesFromInputValueAndInterval(duration, interval) {
     if (isNaN(duration)) {
       return null;
@@ -161,13 +168,6 @@ export default class DRelativeTimePicker extends Component {
     }
 
     this.args.onChange?.(this.outputDuration);
-  }
-
-  get outputDuration() {
-    if (this.args.durationOutputUnit === "hours") {
-      return this.duration / HOUR;
-    }
-    return this.duration;
   }
 
   @action

@@ -118,13 +118,6 @@ export default class SiteSettingUpload extends Component {
       : { imagesOnly: true };
   }
 
-  formatExtensions(separator = ", ") {
-    return this.args.setting.authorized_extensions
-      .split("|")
-      .map((ext) => `.${ext}`)
-      .join(separator);
-  }
-
   get acceptedFormats() {
     if (this.args.setting.authorized_extensions) {
       return this.formatExtensions(",");
@@ -238,6 +231,13 @@ export default class SiteSettingUpload extends Component {
     }
 
     return parts.length > 0 ? parts.join(" · ") : null;
+  }
+
+  formatExtensions(separator = ", ") {
+    return this.args.setting.authorized_extensions
+      .split("|")
+      .map((ext) => `.${ext}`)
+      .join(separator);
   }
 
   @action

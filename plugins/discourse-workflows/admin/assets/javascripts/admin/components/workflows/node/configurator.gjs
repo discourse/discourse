@@ -137,34 +137,6 @@ export default class NodeConfigurator extends Component {
     );
   }
 
-  async #loadTypes() {
-    this.nodeTypes = await this.workflowsNodeTypes.load();
-    this.#applyDefaults();
-    this.#setSavedBaseline(this.configuration, this.initialNodeName);
-  }
-
-  #applyDefaults() {
-    const config = this.initialConfiguration;
-
-    for (const [key, fs] of Object.entries(this.propertySchema)) {
-      if (config[key] != null) {
-        continue;
-      }
-      if (fs.default !== undefined) {
-        config[key] = fs.default;
-      } else if (
-        fieldType(fs) === "collection" ||
-        fieldType(fs) === "fixed_collection"
-      ) {
-        config[key] = {};
-      } else if (fieldType(fs) === "assignment_collection") {
-        config[key] = { assignments: [] };
-      } else if (fieldType(fs) === "array") {
-        config[key] = [];
-      }
-    }
-  }
-
   get nodeTypeDefaultName() {
     return nodeTypeLabel(this.resolvedNodeType);
   }
@@ -231,6 +203,67 @@ export default class NodeConfigurator extends Component {
 
   get canSaveNodeName() {
     return this.trimmedNodeName.length > 0 && !this.nodeNameError;
+  }
+
+  get runScopeLabel() {
+    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, {
+      typeVersion: this.args.model.node.typeVersion,
+      configuration: this.configuration,
+    });
+    return labelKey ? i18n(labelKey) : null;
+  }
+
+  get configuration() {
+    if (!this.parametersApi) {
+      return this.configurationWithDirectSettings(this.initialConfiguration);
+    }
+
+    const config = {};
+    for (const key of [
+      ...Object.keys(this.propertySchema),
+      ...NODE_DIRECT_SETTING_KEYS,
+    ]) {
+      let value = this.parametersApi.get(key);
+      if (
+        value === undefined &&
+        Object.hasOwn(this.initialConfiguration, key)
+      ) {
+        value = this.initialConfiguration[key];
+      }
+      if (value !== undefined) {
+        config[key] = value;
+      }
+    }
+
+    return this.configurationWithDirectSettings(config);
+  }
+
+  get settingsConfiguration() {
+    if (!this.settingsApi) {
+      return this.settingsFormData;
+    }
+
+    return {
+      notes: this.settingsApi.get("notes") || "",
+      notesInFlow: this.settingsApi.get("notesInFlow") === true,
+      alwaysOutputData: this.settingsApi.get("alwaysOutputData") === true,
+    };
+  }
+
+  get isDirty() {
+    const nameDirty = this.nodeName !== this.initialNodeName;
+    const configurationDirty =
+      JSON.stringify(this.configuration) !==
+      JSON.stringify(this.initialConfiguration);
+    return nameDirty || configurationDirty;
+  }
+
+  get showSaveStatus() {
+    return this.saveStatus === "saving" || this.saveStatus === "saved";
+  }
+
+  get canExecuteStep() {
+    return shouldShowExecuteStep(this.args.model.node);
   }
 
   @action
@@ -322,51 +355,6 @@ export default class NodeConfigurator extends Component {
     }
   }
 
-  get runScopeLabel() {
-    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, {
-      typeVersion: this.args.model.node.typeVersion,
-      configuration: this.configuration,
-    });
-    return labelKey ? i18n(labelKey) : null;
-  }
-
-  get configuration() {
-    if (!this.parametersApi) {
-      return this.configurationWithDirectSettings(this.initialConfiguration);
-    }
-
-    const config = {};
-    for (const key of [
-      ...Object.keys(this.propertySchema),
-      ...NODE_DIRECT_SETTING_KEYS,
-    ]) {
-      let value = this.parametersApi.get(key);
-      if (
-        value === undefined &&
-        Object.hasOwn(this.initialConfiguration, key)
-      ) {
-        value = this.initialConfiguration[key];
-      }
-      if (value !== undefined) {
-        config[key] = value;
-      }
-    }
-
-    return this.configurationWithDirectSettings(config);
-  }
-
-  get settingsConfiguration() {
-    if (!this.settingsApi) {
-      return this.settingsFormData;
-    }
-
-    return {
-      notes: this.settingsApi.get("notes") || "",
-      notesInFlow: this.settingsApi.get("notesInFlow") === true,
-      alwaysOutputData: this.settingsApi.get("alwaysOutputData") === true,
-    };
-  }
-
   configurationWithDirectSettings(config) {
     return {
       ...config,
@@ -377,16 +365,77 @@ export default class NodeConfigurator extends Component {
     };
   }
 
-  get isDirty() {
-    const nameDirty = this.nodeName !== this.initialNodeName;
-    const configurationDirty =
-      JSON.stringify(this.configuration) !==
-      JSON.stringify(this.initialConfiguration);
-    return nameDirty || configurationDirty;
+  @action
+  scheduleSave() {
+    cancel(this.autosaveTimer);
+    this.autosaveTimer = later(() => {
+      this.#saveConfiguration({ throwOnError: true }).catch(() => {
+        this.saveStatus = null;
+        this.isSaveStatusFading = false;
+      });
+    }, AUTOSAVE_DELAY_MS);
   }
 
-  get showSaveStatus() {
-    return this.saveStatus === "saving" || this.saveStatus === "saved";
+  @action
+  async saveCurrentConfiguration() {
+    cancel(this.autosaveTimer);
+    await this.#saveConfiguration({ throwOnError: true });
+  }
+
+  @action
+  handleClose() {
+    if (this.isDirty) {
+      cancel(this.autosaveTimer);
+      this.args.model.onSave(
+        this.configuration,
+        this.trimmedNodeName || this.initialNodeName
+      );
+    }
+    this.args.closeModal();
+    this.args.model.session.clearEditingContext();
+  }
+
+  @action
+  async executeStep() {
+    try {
+      await this.saveCurrentConfiguration();
+      await runExecuteStep({
+        clientId: this.args.model.node.clientId || this.args.model.node.id,
+        workflowId: this.args.model.session?.workflowId,
+        toasts: this.toasts,
+        router: this.router,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  async #loadTypes() {
+    this.nodeTypes = await this.workflowsNodeTypes.load();
+    this.#applyDefaults();
+    this.#setSavedBaseline(this.configuration, this.initialNodeName);
+  }
+
+  #applyDefaults() {
+    const config = this.initialConfiguration;
+
+    for (const [key, fs] of Object.entries(this.propertySchema)) {
+      if (config[key] != null) {
+        continue;
+      }
+      if (fs.default !== undefined) {
+        config[key] = fs.default;
+      } else if (
+        fieldType(fs) === "collection" ||
+        fieldType(fs) === "fixed_collection"
+      ) {
+        config[key] = {};
+      } else if (fieldType(fs) === "assignment_collection") {
+        config[key] = { assignments: [] };
+      } else if (fieldType(fs) === "array") {
+        config[key] = [];
+      }
+    }
   }
 
   #cancelTimers() {
@@ -442,55 +491,6 @@ export default class NodeConfigurator extends Component {
 
     if (!this.isDirty) {
       this.#setSavedStatus();
-    }
-  }
-
-  @action
-  scheduleSave() {
-    cancel(this.autosaveTimer);
-    this.autosaveTimer = later(() => {
-      this.#saveConfiguration({ throwOnError: true }).catch(() => {
-        this.saveStatus = null;
-        this.isSaveStatusFading = false;
-      });
-    }, AUTOSAVE_DELAY_MS);
-  }
-
-  @action
-  async saveCurrentConfiguration() {
-    cancel(this.autosaveTimer);
-    await this.#saveConfiguration({ throwOnError: true });
-  }
-
-  @action
-  handleClose() {
-    if (this.isDirty) {
-      cancel(this.autosaveTimer);
-      this.args.model.onSave(
-        this.configuration,
-        this.trimmedNodeName || this.initialNodeName
-      );
-    }
-    this.args.closeModal();
-    this.args.model.session.clearEditingContext();
-  }
-
-  get canExecuteStep() {
-    return shouldShowExecuteStep(this.args.model.node);
-  }
-
-  @action
-  async executeStep() {
-    try {
-      await this.saveCurrentConfiguration();
-      await runExecuteStep({
-        clientId: this.args.model.node.clientId || this.args.model.node.id,
-        workflowId: this.args.model.session?.workflowId,
-        toasts: this.toasts,
-        router: this.router,
-      });
-    } catch (e) {
-      popupAjaxError(e);
     }
   }
 

@@ -126,122 +126,6 @@ export default class StickyNote extends Component {
     document.removeEventListener("click", this.handleDocumentClick);
   }
 
-  /**
-   * Converts a pointer delta from screen pixels into canvas units.
-   *
-   * @param {{x: number, y: number}} delta - The pointer delta in screen pixels.
-   * @param {number} [zoom] - The zoom snapshotted when the gesture began. Reading
-   *   it live would re-divide the whole accumulated delta by the new factor and
-   *   make the note jump, since the delta is measured from the original press.
-   * @returns {{dx: number, dy: number}} The same delta in canvas units.
-   */
-  #inCanvasUnits(delta, zoom) {
-    const factor = zoom ?? this.args.zoom ?? 1;
-    return { dx: delta.x / factor, dy: delta.y / factor };
-  }
-
-  /**
-   * Emits the box this gesture's edge implies, working in edge space.
-   *
-   * Each boundary moves from where it sat at this gesture's own press, and the
-   * three it does not own are read live. That way dragging one edge and then the
-   * opposite one composes. Deriving a width from a press-time snapshot instead
-   * would make the second drag overwrite the first.
-   *
-   * @param {string} edge - The compass edge being dragged.
-   * @param {object} dragInfo - The gesture report, carrying the pointer delta
-   *   and the box and zoom this gesture snapshotted at its own press.
-   */
-  #applyEdgeResize(edge, dragInfo) {
-    const { origin, zoom } = dragInfo.session;
-    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, zoom);
-
-    const live = { ...this.args.note.position, ...this.args.note.size };
-    let left = live.x;
-    let right = live.x + live.width;
-    let top = live.y;
-    let bottom = live.y + live.height;
-
-    if (edge.includes("e")) {
-      right = Math.max(left + MIN_WIDTH, origin.x + origin.width + dx);
-    }
-    if (edge.includes("w")) {
-      left = Math.min(right - MIN_WIDTH, origin.x + dx);
-    }
-    if (edge.includes("s")) {
-      bottom = Math.max(top + MIN_HEIGHT, origin.y + origin.height + dy);
-    }
-    if (edge.includes("n")) {
-      top = Math.min(bottom - MIN_HEIGHT, origin.y + dy);
-    }
-
-    this.args.onResize?.({ width: right - left, height: bottom - top });
-    // A trailing edge cannot move the origin, and emitting it unchanged would
-    // rebuild the whole note list for nothing.
-    if (edge.includes("w") || edge.includes("n")) {
-      this.args.onMove?.({ x: left, y: top });
-    }
-  }
-
-  #applyNoteDrag(info) {
-    const { dx, dy } = this.#inCanvasUnits(info.delta, this.#dragZoom);
-
-    this.args.onMove?.({
-      x: this.#dragOrigin.x + dx,
-      y: this.#dragOrigin.y + dy,
-    });
-
-    // Any co-selected notes move by the increment since the last report, not by
-    // the total, because they are translated relative to wherever they now sit.
-    const incrementalDx = dx - this.#appliedDx;
-    const incrementalDy = dy - this.#appliedDy;
-    if (incrementalDx !== 0 || incrementalDy !== 0) {
-      this.args.onTranslateSelected?.(incrementalDx, incrementalDy);
-    }
-    this.#appliedDx = dx;
-    this.#appliedDy = dy;
-  }
-
-  #openMutation() {
-    this.#openGestures += 1;
-    if (this.#openGestures === 1) {
-      this.args.onBeforeMutation?.();
-    }
-  }
-
-  #closeMutation() {
-    if (this.#openGestures === 0) {
-      return;
-    }
-    this.#openGestures -= 1;
-    if (this.#openGestures === 0) {
-      this.args.onAfterMutation?.();
-    }
-  }
-
-  #closeNoteDrag() {
-    if (this.#noteDragOpen) {
-      this.#closeMutation();
-    }
-    this.#noteDragOpen = false;
-    this.#dragZoom = null;
-  }
-
-  #closeEdgeResize(dragInfo) {
-    if (dragInfo.session.opened) {
-      dragInfo.session.opened = false;
-      this.#closeMutation();
-    }
-  }
-
-  #abandonMutation() {
-    if (this.#openGestures === 0) {
-      return;
-    }
-    this.#openGestures = 0;
-    this.args.onAfterMutation?.();
-  }
-
   @action
   onNoteDragStart(event) {
     // The handles carry `stopPropagation`, but one already holding a gesture
@@ -382,6 +266,122 @@ export default class StickyNote extends Component {
   handleDelete(event) {
     event.stopPropagation();
     this.args.onDelete?.();
+  }
+
+  /**
+   * Converts a pointer delta from screen pixels into canvas units.
+   *
+   * @param {{x: number, y: number}} delta - The pointer delta in screen pixels.
+   * @param {number} [zoom] - The zoom snapshotted when the gesture began. Reading
+   *   it live would re-divide the whole accumulated delta by the new factor and
+   *   make the note jump, since the delta is measured from the original press.
+   * @returns {{dx: number, dy: number}} The same delta in canvas units.
+   */
+  #inCanvasUnits(delta, zoom) {
+    const factor = zoom ?? this.args.zoom ?? 1;
+    return { dx: delta.x / factor, dy: delta.y / factor };
+  }
+
+  /**
+   * Emits the box this gesture's edge implies, working in edge space.
+   *
+   * Each boundary moves from where it sat at this gesture's own press, and the
+   * three it does not own are read live. That way dragging one edge and then the
+   * opposite one composes. Deriving a width from a press-time snapshot instead
+   * would make the second drag overwrite the first.
+   *
+   * @param {string} edge - The compass edge being dragged.
+   * @param {object} dragInfo - The gesture report, carrying the pointer delta
+   *   and the box and zoom this gesture snapshotted at its own press.
+   */
+  #applyEdgeResize(edge, dragInfo) {
+    const { origin, zoom } = dragInfo.session;
+    const { dx, dy } = this.#inCanvasUnits(dragInfo.delta, zoom);
+
+    const live = { ...this.args.note.position, ...this.args.note.size };
+    let left = live.x;
+    let right = live.x + live.width;
+    let top = live.y;
+    let bottom = live.y + live.height;
+
+    if (edge.includes("e")) {
+      right = Math.max(left + MIN_WIDTH, origin.x + origin.width + dx);
+    }
+    if (edge.includes("w")) {
+      left = Math.min(right - MIN_WIDTH, origin.x + dx);
+    }
+    if (edge.includes("s")) {
+      bottom = Math.max(top + MIN_HEIGHT, origin.y + origin.height + dy);
+    }
+    if (edge.includes("n")) {
+      top = Math.min(bottom - MIN_HEIGHT, origin.y + dy);
+    }
+
+    this.args.onResize?.({ width: right - left, height: bottom - top });
+    // A trailing edge cannot move the origin, and emitting it unchanged would
+    // rebuild the whole note list for nothing.
+    if (edge.includes("w") || edge.includes("n")) {
+      this.args.onMove?.({ x: left, y: top });
+    }
+  }
+
+  #applyNoteDrag(info) {
+    const { dx, dy } = this.#inCanvasUnits(info.delta, this.#dragZoom);
+
+    this.args.onMove?.({
+      x: this.#dragOrigin.x + dx,
+      y: this.#dragOrigin.y + dy,
+    });
+
+    // Any co-selected notes move by the increment since the last report, not by
+    // the total, because they are translated relative to wherever they now sit.
+    const incrementalDx = dx - this.#appliedDx;
+    const incrementalDy = dy - this.#appliedDy;
+    if (incrementalDx !== 0 || incrementalDy !== 0) {
+      this.args.onTranslateSelected?.(incrementalDx, incrementalDy);
+    }
+    this.#appliedDx = dx;
+    this.#appliedDy = dy;
+  }
+
+  #openMutation() {
+    this.#openGestures += 1;
+    if (this.#openGestures === 1) {
+      this.args.onBeforeMutation?.();
+    }
+  }
+
+  #closeMutation() {
+    if (this.#openGestures === 0) {
+      return;
+    }
+    this.#openGestures -= 1;
+    if (this.#openGestures === 0) {
+      this.args.onAfterMutation?.();
+    }
+  }
+
+  #closeNoteDrag() {
+    if (this.#noteDragOpen) {
+      this.#closeMutation();
+    }
+    this.#noteDragOpen = false;
+    this.#dragZoom = null;
+  }
+
+  #closeEdgeResize(dragInfo) {
+    if (dragInfo.session.opened) {
+      dragInfo.session.opened = false;
+      this.#closeMutation();
+    }
+  }
+
+  #abandonMutation() {
+    if (this.#openGestures === 0) {
+      return;
+    }
+    this.#openGestures = 0;
+    this.args.onAfterMutation?.();
   }
 
   <template>

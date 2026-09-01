@@ -364,6 +364,17 @@ export default class AdminSearchDataSource extends Service {
     return filteredResults.sort((a, b) => b.score - a.score);
   }
 
+  urlForSetting({ setting, primaryArea, category, plugin }) {
+    this.#ensureSettingLinkData();
+
+    return new SettingLinkFormatter(
+      this.router,
+      { setting, plugin, primary_area: primaryArea, category },
+      this.plugins,
+      this.settingPageMap
+    ).buildURL();
+  }
+
   #addPageLink(navMapSection, link, parentLabel = null) {
     const formattedPageLink = new PageLinkFormatter(
       this.router,
@@ -386,17 +397,6 @@ export default class AdminSearchDataSource extends Service {
     });
 
     return formattedPageLink.label;
-  }
-
-  urlForSetting({ setting, primaryArea, category, plugin }) {
-    this.#ensureSettingLinkData();
-
-    return new SettingLinkFormatter(
-      this.router,
-      { setting, plugin, primary_area: primaryArea, category },
-      this.plugins,
-      this.settingPageMap
-    ).buildURL();
   }
 
   // Builds just the data needed to resolve a setting's config page URL (the

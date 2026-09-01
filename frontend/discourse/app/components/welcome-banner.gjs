@@ -149,32 +149,6 @@ export default class WelcomeBanner extends Component {
     });
   }
 
-  #shouldDisplayForRoute(
-    welcome_banner_page_visibility,
-    top_menu,
-    currentRouteName
-  ) {
-    switch (welcome_banner_page_visibility) {
-      case "top_menu_pages":
-        return top_menu
-          .split("|")
-          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
-      case "homepage":
-        return currentRouteName === `discovery.${defaultHomepage()}`;
-      case "discovery":
-        return currentRouteName.startsWith("discovery.");
-      case "all_pages":
-        return (
-          !currentRouteName.startsWith("admin") &&
-          !ALL_PAGES_EXCLUDED_ROUTES.some(
-            (routeName) => routeName === currentRouteName
-          )
-        );
-      default:
-        return false;
-    }
-  }
-
   get headerText() {
     const site_name = this.siteSettings.title || "";
 
@@ -249,6 +223,32 @@ export default class WelcomeBanner extends Component {
       return trustHTML(
         `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
+    }
+  }
+
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
+    switch (welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return top_menu
+          .split("|")
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
+      case "homepage":
+        return currentRouteName === `discovery.${defaultHomepage()}`;
+      case "discovery":
+        return currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return (
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
+      default:
+        return false;
     }
   }
 

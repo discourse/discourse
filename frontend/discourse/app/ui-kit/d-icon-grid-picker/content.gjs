@@ -209,6 +209,19 @@ export default class DIconGridPickerContent extends Component {
     return this.displayFavorites.length > 0 && !this.filter;
   }
 
+  get resultAnnouncement() {
+    if (!this.icons) {
+      return "";
+    }
+
+    return i18n(
+      this.hasMore
+        ? "d_icon_grid_picker.results_loaded"
+        : "d_icon_grid_picker.results_count",
+      { count: this.icons.length }
+    );
+  }
+
   /**
    * Starts a new search: paging belongs to the search that produced it, so the
    * grid stops growing and any page still in flight is discarded on arrival.
@@ -350,51 +363,6 @@ export default class DIconGridPickerContent extends Component {
     )?.focus();
   }
 
-  get resultAnnouncement() {
-    if (!this.icons) {
-      return "";
-    }
-
-    return i18n(
-      this.hasMore
-        ? "d_icon_grid_picker.results_loaded"
-        : "d_icon_grid_picker.results_count",
-      { count: this.icons.length }
-    );
-  }
-
-  /**
-   * @param {number} page
-   * @param {AbortSignal} [signal]
-   * @returns {Promise<{icons: Array<{id: string, symbol?: string}>, has_more: boolean}>}
-   */
-  async #fetchPage(page, signal) {
-    const request = /** @type {Promise<any> & {abort: () => void}} */ (
-      ajax("/svg-sprite/picker-search", {
-        data: {
-          filter: this.filter.trim(),
-          only_available: this.args.onlyAvailable ?? true,
-          page,
-        },
-      })
-    );
-
-    signal?.addEventListener("abort", () => request.abort(), { once: true });
-
-    return await request;
-  }
-
-  /**
-   * Whether an async continuation still belongs to the live component and to
-   * the search that started it.
-   *
-   * @param {number} search
-   * @returns {boolean}
-   */
-  #isCurrent(search) {
-    return this.#search === search && !this.isDestroying && !this.isDestroyed;
-  }
-
   /**
    * Loads the first page of icons. Used as the `@asyncData` callback for the
    * `AsyncContent` loader, which debounces it and aborts superseded searches.
@@ -477,6 +445,38 @@ export default class DIconGridPickerContent extends Component {
   selectIcon(icon) {
     addExtraSpriteSymbols([icon]);
     this.args.onSelect(icon.id);
+  }
+
+  /**
+   * @param {number} page
+   * @param {AbortSignal} [signal]
+   * @returns {Promise<{icons: Array<{id: string, symbol?: string}>, has_more: boolean}>}
+   */
+  async #fetchPage(page, signal) {
+    const request = /** @type {Promise<any> & {abort: () => void}} */ (
+      ajax("/svg-sprite/picker-search", {
+        data: {
+          filter: this.filter.trim(),
+          only_available: this.args.onlyAvailable ?? true,
+          page,
+        },
+      })
+    );
+
+    signal?.addEventListener("abort", () => request.abort(), { once: true });
+
+    return await request;
+  }
+
+  /**
+   * Whether an async continuation still belongs to the live component and to
+   * the search that started it.
+   *
+   * @param {number} search
+   * @returns {boolean}
+   */
+  #isCurrent(search) {
+    return this.#search === search && !this.isDestroying && !this.isDestroyed;
   }
 
   <template>

@@ -34,15 +34,6 @@ export default class GroupFlairInputs extends Component {
       : "";
   }
 
-  @on("didInsertElement")
-  _loadIcon() {
-    const icon = convertIconClass(this.model.flair_icon || "");
-
-    if (icon) {
-      ensureSpriteSymbol(icon);
-    }
-  }
-
   @computed("model.flair_type")
   get flairPreviewImage() {
     return this.model?.flair_type && this.model?.flair_type === "image";
@@ -75,6 +66,15 @@ export default class GroupFlairInputs extends Component {
       flair_url: null,
       flair_upload_id: null,
     });
+  }
+
+  @on("didInsertElement")
+  _loadIcon() {
+    const icon = convertIconClass(this.model.flair_icon || "");
+
+    if (icon) {
+      ensureSpriteSymbol(icon);
+    }
   }
 
   <template>

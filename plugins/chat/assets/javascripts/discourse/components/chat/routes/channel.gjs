@@ -16,12 +16,6 @@ export default class ChatRoutesChannel extends Component {
 
   @tracked isFiltering = false;
 
-  @action
-  toggleIsFiltering() {
-    this.isFiltering = !this.isFiltering;
-    this.chat.activeMessage = null;
-  }
-
   get canSearchChat() {
     return this.currentUser && this.siteSettings.chat_search_enabled;
   }
@@ -62,6 +56,12 @@ export default class ChatRoutesChannel extends Component {
     return this.chatTrackingStateManager.hasUnreadThreads({
       exclude: this.args.channel,
     });
+  }
+
+  @action
+  toggleIsFiltering() {
+    this.isFiltering = !this.isFiltering;
+    this.chat.activeMessage = null;
   }
 
   <template>

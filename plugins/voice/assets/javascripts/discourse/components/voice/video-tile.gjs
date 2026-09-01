@@ -50,62 +50,12 @@ export default class VoiceVideoTile extends Component {
     return trustHTML(`aspect-ratio: ${this.aspect ?? DEFAULT_TILE_ASPECT};`);
   }
 
-  @action
-  handleAspect(aspect) {
-    this.aspect = aspect;
-    this.args.onAspect?.(this.participant.id, aspect);
-  }
-
-  @action
-  setFullscreen(isFullscreen) {
-    this.isFullscreen = isFullscreen;
-  }
-
-  @action
-  toggleFullscreen(event) {
-    toggleTileFullscreen(event.currentTarget.closest(".voice-video-tile"));
-  }
-
   // The menu only offers audio controls for a call the user is in, so
   // page visitors who haven't joined the room don't get one.
   get canShowMenu() {
     return (
       this.voiceWebrtc.connectionStateFor(this.args.room?.id) === "connected"
     );
-  }
-
-  @action
-  openContextMenu(event) {
-    if (!this.canShowMenu) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    this.#showParticipantMenu(virtualElementFromEvent(event), "bottom-start");
-  }
-
-  @action
-  openTileMenu(event) {
-    event.stopPropagation();
-    this.#showParticipantMenu(event.currentTarget, "top-end");
-  }
-
-  #showParticipantMenu(anchor, placement) {
-    this.menu.show(anchor, {
-      identifier: "voice-participant-menu",
-      component: VoiceParticipantSidebarContextMenu,
-      placement,
-      modalForMobile: true,
-      data: {
-        room: this.args.room,
-        participant: this.participant,
-        canManageRoom: this.args.room?.can_manage,
-        isCurrentUser: this.args.isSelf,
-        isSpotlighted: this.args.spotlighted,
-        onSpotlight: this.args.onSpotlight,
-      },
-    });
   }
 
   get fullscreenTitle() {
@@ -153,6 +103,56 @@ export default class VoiceVideoTile extends Component {
     return prioritizeNameInUx(this.participant.name)
       ? this.participant.name
       : this.participant.username;
+  }
+
+  @action
+  handleAspect(aspect) {
+    this.aspect = aspect;
+    this.args.onAspect?.(this.participant.id, aspect);
+  }
+
+  @action
+  setFullscreen(isFullscreen) {
+    this.isFullscreen = isFullscreen;
+  }
+
+  @action
+  toggleFullscreen(event) {
+    toggleTileFullscreen(event.currentTarget.closest(".voice-video-tile"));
+  }
+
+  @action
+  openContextMenu(event) {
+    if (!this.canShowMenu) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.#showParticipantMenu(virtualElementFromEvent(event), "bottom-start");
+  }
+
+  @action
+  openTileMenu(event) {
+    event.stopPropagation();
+    this.#showParticipantMenu(event.currentTarget, "top-end");
+  }
+
+  #showParticipantMenu(anchor, placement) {
+    this.menu.show(anchor, {
+      identifier: "voice-participant-menu",
+      component: VoiceParticipantSidebarContextMenu,
+      placement,
+      modalForMobile: true,
+      data: {
+        room: this.args.room,
+        participant: this.participant,
+        canManageRoom: this.args.room?.can_manage,
+        isCurrentUser: this.args.isSelf,
+        isSpotlighted: this.args.spotlighted,
+        onSpotlight: this.args.onSpotlight,
+      },
+    });
   }
 
   <template>

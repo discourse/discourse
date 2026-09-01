@@ -30,6 +30,61 @@ export default class SchemaSettingNewEditor extends Component {
   data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
   schema = this.args.schema;
 
+  get backButtonText() {
+    if (this.history.length === 0) {
+      return;
+    }
+
+    const lastHistory = this.history.at(-1);
+
+    return i18n("admin.customize.schema.back_button", {
+      name: this.generateSchemaTitle(
+        this.#resolveDataFromPaths(lastHistory.dataPaths)[lastHistory.index],
+        this.#resolveSchemaFromPaths(lastHistory.schemaPaths),
+        lastHistory.index
+      ),
+    });
+  }
+
+  get activeData() {
+    return this.#resolveDataFromPaths(this.activeDataPaths);
+  }
+
+  get activeSchema() {
+    return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
+  }
+
+  get fields() {
+    const list = [];
+    const activeObject = this.activeData[this.activeIndex];
+
+    if (activeObject) {
+      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
+        if (spec.type === "objects") {
+          continue;
+        }
+
+        list.push({
+          name,
+          spec,
+          value: activeObject[name],
+          description: this.fieldDescription(name, spec),
+          label: this.fieldLabel(name, spec),
+        });
+      }
+    }
+
+    return list;
+  }
+
+  get canMoveUp() {
+    return this.activeIndex > 0;
+  }
+
+  get canMoveDown() {
+    return this.activeIndex < this.activeData.length - 1;
+  }
+
   @action
   onChildClick(index, propertyName, parentNodeIndex) {
     this.history.push({
@@ -70,58 +125,6 @@ export default class SchemaSettingNewEditor extends Component {
     return title || `${schema.name} ${index + 1}`;
   }
 
-  get backButtonText() {
-    if (this.history.length === 0) {
-      return;
-    }
-
-    const lastHistory = this.history.at(-1);
-
-    return i18n("admin.customize.schema.back_button", {
-      name: this.generateSchemaTitle(
-        this.#resolveDataFromPaths(lastHistory.dataPaths)[lastHistory.index],
-        this.#resolveSchemaFromPaths(lastHistory.schemaPaths),
-        lastHistory.index
-      ),
-    });
-  }
-
-  get activeData() {
-    return this.#resolveDataFromPaths(this.activeDataPaths);
-  }
-
-  #resolveDataFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.data;
-    }
-
-    let data = this.data;
-
-    paths.forEach((path) => {
-      data = data[path];
-    });
-
-    return data;
-  }
-
-  get activeSchema() {
-    return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
-  }
-
-  #resolveSchemaFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.schema;
-    }
-
-    let schema = this.schema;
-
-    paths.forEach((path) => {
-      schema = schema.properties[path].schema;
-    });
-
-    return schema;
-  }
-
   @action
   registerInputFieldObserver(index, callback) {
     this.inputFieldObserver[index] = callback;
@@ -157,29 +160,6 @@ export default class SchemaSettingNewEditor extends Component {
 
   fieldDescription(fieldName, spec) {
     return this.descriptions(fieldName, "description") || spec?.description;
-  }
-
-  get fields() {
-    const list = [];
-    const activeObject = this.activeData[this.activeIndex];
-
-    if (activeObject) {
-      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
-        if (spec.type === "objects") {
-          continue;
-        }
-
-        list.push({
-          name,
-          spec,
-          value: activeObject[name],
-          description: this.fieldDescription(name, spec),
-          label: this.fieldLabel(name, spec),
-        });
-      }
-    }
-
-    return list;
   }
 
   @action
@@ -261,28 +241,6 @@ export default class SchemaSettingNewEditor extends Component {
     }
   }
 
-  #swapAdjacentItems(fromIndex, toIndex) {
-    const item = this.activeData[fromIndex];
-    const fromCallback = this.inputFieldObserver[fromIndex];
-    const toCallback = this.inputFieldObserver[toIndex];
-
-    // Move the data
-    this.activeData.splice(fromIndex, 1);
-    this.activeData.splice(toIndex, 0, item);
-
-    // Swap the observer callbacks to match new positions
-    this.inputFieldObserver[toIndex] = fromCallback;
-    this.inputFieldObserver[fromIndex] = toCallback;
-  }
-
-  get canMoveUp() {
-    return this.activeIndex > 0;
-  }
-
-  get canMoveDown() {
-    return this.activeIndex < this.activeData.length - 1;
-  }
-
   @action
   saveChanges() {
     this.saveButtonDisabled = true;
@@ -304,15 +262,46 @@ export default class SchemaSettingNewEditor extends Component {
       .finally(() => (this.saveButtonDisabled = false));
   }
 
-  async _confirmRemove(warning) {
-    return new Promise((resolve) => {
-      this.dialog.deleteConfirm({
-        title: warning?.title,
-        message: warning?.message,
-        didCancel: () => resolve(false),
-        didConfirm: () => resolve(true),
-      });
+  #resolveDataFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.data;
+    }
+
+    let data = this.data;
+
+    paths.forEach((path) => {
+      data = data[path];
     });
+
+    return data;
+  }
+
+  #resolveSchemaFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.schema;
+    }
+
+    let schema = this.schema;
+
+    paths.forEach((path) => {
+      schema = schema.properties[path].schema;
+    });
+
+    return schema;
+  }
+
+  #swapAdjacentItems(fromIndex, toIndex) {
+    const item = this.activeData[fromIndex];
+    const fromCallback = this.inputFieldObserver[fromIndex];
+    const toCallback = this.inputFieldObserver[toIndex];
+
+    // Move the data
+    this.activeData.splice(fromIndex, 1);
+    this.activeData.splice(toIndex, 0, item);
+
+    // Swap the observer callbacks to match new positions
+    this.inputFieldObserver[toIndex] = fromCallback;
+    this.inputFieldObserver[fromIndex] = toCallback;
   }
 
   /**
@@ -343,6 +332,17 @@ export default class SchemaSettingNewEditor extends Component {
 
     // Return the input after converting any arrays to TrackedArrays
     return input;
+  }
+
+  async _confirmRemove(warning) {
+    return new Promise((resolve) => {
+      this.dialog.deleteConfirm({
+        title: warning?.title,
+        message: warning?.message,
+        didCancel: () => resolve(false),
+        didConfirm: () => resolve(true),
+      });
+    });
   }
 
   <template>

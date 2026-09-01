@@ -192,6 +192,28 @@ export default class DiscourseReactionsActions extends Component {
     return classes.join(" ");
   }
 
+  get elementId() {
+    if (!this.data?.id) {
+      return null;
+    }
+    return `discourse-reactions-actions-${this.data.id}-${
+      this.args.position || "right"
+    }`;
+  }
+
+  get showReactionsPicker() {
+    if (!this.reactionsPickerExpanded) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until they log in.
+    if (!this.currentUser) {
+      return this.canReact;
+    }
+
+    return this.data.user_id !== this.currentUser.id;
+  }
+
   @action
   toggleReactions(event) {
     if (!this.reactionsPickerExpanded) {
@@ -601,15 +623,6 @@ export default class DiscourseReactionsActions extends Component {
     this._collapseHandler = later(this, this[handler], 500);
   }
 
-  get elementId() {
-    if (!this.data?.id) {
-      return null;
-    }
-    return `discourse-reactions-actions-${this.data.id}-${
-      this.args.position || "right"
-    }`;
-  }
-
   @action
   clickOutside() {
     if (this.clickOutsideDisabled) {
@@ -681,6 +694,11 @@ export default class DiscourseReactionsActions extends Component {
     });
   }
 
+  @action
+  registerContainerElement(element) {
+    this.containerElement = element;
+  }
+
   _captureState(post) {
     return {
       current_user_reaction: post.current_user_reaction
@@ -714,24 +732,6 @@ export default class DiscourseReactionsActions extends Component {
     } else {
       return i18n("errors.desc.unknown");
     }
-  }
-
-  get showReactionsPicker() {
-    if (!this.reactionsPickerExpanded) {
-      return false;
-    }
-
-    // Anonymous users can pick a reaction — it gets deferred until they log in.
-    if (!this.currentUser) {
-      return this.canReact;
-    }
-
-    return this.data.user_id !== this.currentUser.id;
-  }
-
-  @action
-  registerContainerElement(element) {
-    this.containerElement = element;
   }
 
   <template>

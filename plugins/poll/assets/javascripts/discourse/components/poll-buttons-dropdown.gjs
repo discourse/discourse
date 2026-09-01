@@ -60,11 +60,6 @@ export default class PollButtonsDropdownComponent extends Component {
     this.getDropdownButtonState = false;
   }
 
-  @action
-  dropDownClick(dropDownAction) {
-    this.args.dropDownClick(dropDownAction);
-  }
-
   get getDropdownContent() {
     const contents = [];
     const isAdmin = this.currentUser && this.currentUser.admin;
@@ -126,6 +121,11 @@ export default class PollButtonsDropdownComponent extends Component {
 
   get showDropdownAsButton() {
     return this.getDropdownContent.length === 1;
+  }
+
+  @action
+  dropDownClick(dropDownAction) {
+    this.args.dropDownClick(dropDownAction);
   }
 
   <template>

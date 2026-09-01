@@ -140,29 +140,6 @@ export default class PollUiBuilderModal extends Component {
     );
   }
 
-  @bind
-  enforceMinMaxValues() {
-    if (this.isMultiple) {
-      if (
-        this.pollMin <= 0 ||
-        this.pollMin >= this.pollMax ||
-        this.pollMin >= this.pollOptionsCount
-      ) {
-        this.pollMin = this.pollOptionsCount > 0 ? 1 : 0;
-      }
-
-      if (
-        this.pollMax <= 0 ||
-        this.pollMin >= this.pollMax ||
-        this.pollMax > this.pollOptionsCount
-      ) {
-        this.pollMax = this.pollOptionsCount;
-      }
-    } else if (this.isNumber) {
-      this.pollMax = this.siteSettings.poll_maximum_options;
-    }
-  }
-
   get pollOutput() {
     let pollHeader = "[poll";
     let output = "";
@@ -314,11 +291,27 @@ export default class PollUiBuilderModal extends Component {
     return !this.minMaxValueValidation.ok || !this.minNumOfOptionsValidation.ok;
   }
 
-  _comboboxOptions(startIndex, endIndex) {
-    return [...Array(endIndex - startIndex).keys()].map((number) => ({
-      value: number + startIndex,
-      name: number + startIndex,
-    }));
+  @bind
+  enforceMinMaxValues() {
+    if (this.isMultiple) {
+      if (
+        this.pollMin <= 0 ||
+        this.pollMin >= this.pollMax ||
+        this.pollMin >= this.pollOptionsCount
+      ) {
+        this.pollMin = this.pollOptionsCount > 0 ? 1 : 0;
+      }
+
+      if (
+        this.pollMax <= 0 ||
+        this.pollMin >= this.pollMax ||
+        this.pollMax > this.pollOptionsCount
+      ) {
+        this.pollMax = this.pollOptionsCount;
+      }
+    } else if (this.isNumber) {
+      this.pollMax = this.siteSettings.poll_maximum_options;
+    }
   }
 
   @action
@@ -428,6 +421,13 @@ export default class PollUiBuilderModal extends Component {
   @action
   togglePublic() {
     this.publicPoll = !this.publicPoll;
+  }
+
+  _comboboxOptions(startIndex, endIndex) {
+    return [...Array(endIndex - startIndex).keys()].map((number) => ({
+      value: number + startIndex,
+      name: number + startIndex,
+    }));
   }
 
   <template>

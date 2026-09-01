@@ -31,22 +31,26 @@ export default class DAutocompleteResults extends Component {
     return this.args.data.getSelectedIndex?.() || 0;
   }
 
-  _applySelectedClass(wrapperElement, selectedIndex) {
-    const links = wrapperElement.querySelectorAll(RESULT_ITEM_SELECTOR);
-
-    // Always remove existing selected classes first
-    const selectedElements = wrapperElement.querySelectorAll(
-      SELECTED_RESULT_SELECTOR
-    );
-    selectedElements.forEach((element) =>
-      element.classList.remove(SELECTED_CLASS)
-    );
-
-    if (selectedIndex >= 0 && links[selectedIndex]) {
-      links[selectedIndex].classList.add(SELECTED_CLASS);
+  get templateHTML() {
+    if (!this.args.data.template) {
+      return "";
     }
 
-    return links;
+    const template = this.args.data.template({ options: this.results });
+
+    if (!this.isInitialRender || this.selectedIndex < 0) {
+      return trustHTML(template);
+    }
+
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = template;
+    this._applySelectedClass(tempDiv, this.selectedIndex);
+
+    return trustHTML(tempDiv.innerHTML);
+  }
+
+  get hasComponent() {
+    return !!this.args.data.component;
   }
 
   scrollToSelected(wrapperElement) {
@@ -121,26 +125,22 @@ export default class DAutocompleteResults extends Component {
     this.args.data.onRender?.(this.results);
   }
 
-  get templateHTML() {
-    if (!this.args.data.template) {
-      return "";
+  _applySelectedClass(wrapperElement, selectedIndex) {
+    const links = wrapperElement.querySelectorAll(RESULT_ITEM_SELECTOR);
+
+    // Always remove existing selected classes first
+    const selectedElements = wrapperElement.querySelectorAll(
+      SELECTED_RESULT_SELECTOR
+    );
+    selectedElements.forEach((element) =>
+      element.classList.remove(SELECTED_CLASS)
+    );
+
+    if (selectedIndex >= 0 && links[selectedIndex]) {
+      links[selectedIndex].classList.add(SELECTED_CLASS);
     }
 
-    const template = this.args.data.template({ options: this.results });
-
-    if (!this.isInitialRender || this.selectedIndex < 0) {
-      return trustHTML(template);
-    }
-
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = template;
-    this._applySelectedClass(tempDiv, this.selectedIndex);
-
-    return trustHTML(tempDiv.innerHTML);
-  }
-
-  get hasComponent() {
-    return !!this.args.data.component;
+    return links;
   }
 
   <template>

@@ -146,30 +146,6 @@ export default class WhosPosting extends Component {
     });
   }
 
-  #persist() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax("/admin/dashboard/sections/engagement/settings/whos_posting.json", {
-      type: "PUT",
-      contentType: "application/json",
-      data: JSON.stringify({
-        category_ids: this.selectedCategories.map((c) => c.id),
-        groups: this.selectedGroups,
-      }),
-    }).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n(
-            "admin.dashboard.sections.engagement.whos_posting.save_error"
-          ),
-        },
-      });
-    });
-  }
-
   @action
   onPeriodChange() {
     const hasCustomSelection =
@@ -215,6 +191,30 @@ export default class WhosPosting extends Component {
     } finally {
       this.loading = false;
     }
+  }
+
+  #persist() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/engagement/settings/whos_posting.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+        groups: this.selectedGroups,
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.whos_posting.save_error"
+          ),
+        },
+      });
+    });
   }
 
   <template>

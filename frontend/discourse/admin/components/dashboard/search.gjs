@@ -72,24 +72,6 @@ export default class DashboardSearch extends Component {
     };
   }
 
-  #direction(kpi, change) {
-    if (kpi.value == null) {
-      return "unavailable";
-    }
-
-    if (kpi.previous_value == null || kpi.previous_value === 0) {
-      return kpi.value > 0 ? "up" : "flat";
-    }
-
-    if (change > 0) {
-      return "up";
-    } else if (change < 0) {
-      return "down";
-    }
-
-    return "flat";
-  }
-
   get totalSearchesValue() {
     return formatCount(this.args.search.kpis.total_searches.value);
   }
@@ -135,6 +117,24 @@ export default class DashboardSearch extends Component {
     }
 
     return this.args.search.trending_period;
+  }
+
+  #direction(kpi, change) {
+    if (kpi.value == null) {
+      return "unavailable";
+    }
+
+    if (kpi.previous_value == null || kpi.previous_value === 0) {
+      return kpi.value > 0 ? "up" : "flat";
+    }
+
+    if (change > 0) {
+      return "up";
+    } else if (change < 0) {
+      return "down";
+    }
+
+    return "flat";
   }
 
   <template>

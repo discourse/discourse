@@ -500,21 +500,15 @@ export default class Category extends RestModel {
     this.setupCategoryTypes();
   }
 
-  setupCategoryTypes() {
-    this.categoryTypes = trackedObject(this.category_types);
+  @computed("parent_category_id", "site.categories.[]")
+  get parentCategory() {
+    if (this.parent_category_id) {
+      return Category.findById(this.parent_category_id);
+    }
   }
 
-  setupGroupsAndPermissions() {
-    if (!this.available_groups) {
-      return;
-    }
-
-    if (this.group_permissions) {
-      this.permissions = this.group_permissions.map((elem) => {
-        removeValueFromArray(this.available_groups, elem.group_name);
-        return trackedObject(elem);
-      });
-    }
+  set parentCategory(newParentCategory) {
+    this.set("parent_category_id", newParentCategory?.id);
   }
 
   @dependentKeyCompat
@@ -546,17 +540,6 @@ export default class Category extends RestModel {
         category: this,
       }
     );
-  }
-
-  @computed("parent_category_id", "site.categories.[]")
-  get parentCategory() {
-    if (this.parent_category_id) {
-      return Category.findById(this.parent_category_id);
-    }
-  }
-
-  set parentCategory(newParentCategory) {
-    this.set("parent_category_id", newParentCategory?.id);
   }
 
   get subcategories() {
@@ -785,6 +768,52 @@ export default class Category extends RestModel {
     return this.topicTrackingState.countNew({ categoryId: this.id });
   }
 
+  @computed("topics")
+  get latestTopic() {
+    if (this.topics && this.topics.length) {
+      return this.topics[0];
+    }
+  }
+
+  @computed("topics")
+  get featuredTopics() {
+    if (this.topics && this.topics.length) {
+      return this.topics.slice(0, this.num_featured_topics || 2);
+    }
+  }
+
+  @computed("id")
+  get isUncategorizedCategory() {
+    return Category.isUncategorized(this.id);
+  }
+
+  get canCreateTopic() {
+    return this.permission === PermissionType.FULL;
+  }
+
+  get subcategoryWithCreateTopicPermission() {
+    return this.subcategories?.find(
+      (subcategory) => subcategory.canCreateTopic
+    );
+  }
+
+  setupCategoryTypes() {
+    this.categoryTypes = trackedObject(this.category_types);
+  }
+
+  setupGroupsAndPermissions() {
+    if (!this.available_groups) {
+      return;
+    }
+
+    if (this.group_permissions) {
+      this.permissions = this.group_permissions.map((elem) => {
+        removeValueFromArray(this.available_groups, elem.group_name);
+        return trackedObject(elem);
+      });
+    }
+  }
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -861,39 +890,6 @@ export default class Category extends RestModel {
     });
   }
 
-  _categoryTypeSaveProperties(id) {
-    const props = {
-      category_type_site_settings: this.category_type_site_settings,
-      category_type_settings: this.category_type_settings,
-    };
-
-    if (!id && this.categoryTypes) {
-      const primaryType = Object.keys(this.categoryTypes)[0];
-      if (this.category_types?.includes(primaryType)) {
-        props.category_type = primaryType;
-      }
-    }
-
-    return props;
-  }
-
-  _pluginSaveProperties() {
-    return extraSavePropertiesFor("category", this);
-  }
-
-  _permissionsForUpdate() {
-    const permissions = this.permissions;
-    let rval = {};
-    if (permissions.length) {
-      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
-    } else {
-      // empty permissions => staff-only access
-      rval[Site.currentProp("groupsById")[AUTO_GROUPS.staff.id].name] =
-        PermissionType.FULL;
-    }
-    return rval;
-  }
-
   destroy() {
     return ajax(`/categories/${this.id || this.slug}`, {
       type: "DELETE",
@@ -936,20 +932,6 @@ export default class Category extends RestModel {
     delete this.categoryTypes[type];
   }
 
-  @computed("topics")
-  get latestTopic() {
-    if (this.topics && this.topics.length) {
-      return this.topics[0];
-    }
-  }
-
-  @computed("topics")
-  get featuredTopics() {
-    if (this.topics && this.topics.length) {
-      return this.topics.slice(0, this.num_featured_topics || 2);
-    }
-  }
-
   setNotification(notification_level) {
     this.currentUser.set(
       "muted_category_ids",
@@ -973,19 +955,37 @@ export default class Category extends RestModel {
     );
   }
 
-  @computed("id")
-  get isUncategorizedCategory() {
-    return Category.isUncategorized(this.id);
+  _categoryTypeSaveProperties(id) {
+    const props = {
+      category_type_site_settings: this.category_type_site_settings,
+      category_type_settings: this.category_type_settings,
+    };
+
+    if (!id && this.categoryTypes) {
+      const primaryType = Object.keys(this.categoryTypes)[0];
+      if (this.category_types?.includes(primaryType)) {
+        props.category_type = primaryType;
+      }
+    }
+
+    return props;
   }
 
-  get canCreateTopic() {
-    return this.permission === PermissionType.FULL;
+  _pluginSaveProperties() {
+    return extraSavePropertiesFor("category", this);
   }
 
-  get subcategoryWithCreateTopicPermission() {
-    return this.subcategories?.find(
-      (subcategory) => subcategory.canCreateTopic
-    );
+  _permissionsForUpdate() {
+    const permissions = this.permissions;
+    let rval = {};
+    if (permissions.length) {
+      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    } else {
+      // empty permissions => staff-only access
+      rval[Site.currentProp("groupsById")[AUTO_GROUPS.staff.id].name] =
+        PermissionType.FULL;
+    }
+    return rval;
   }
 }
 

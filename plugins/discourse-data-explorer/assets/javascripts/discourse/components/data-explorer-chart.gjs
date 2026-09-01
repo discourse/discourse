@@ -29,6 +29,21 @@ export default class DataExplorerChart extends Component {
     return this._buildSingleSeriesConfig(gridColor, labelColor);
   }
 
+  @bind
+  async initChart(canvas) {
+    const Chart = await loadChartJS();
+    const context = canvas.getContext("2d");
+    this.chart = new Chart(context, this.config);
+  }
+
+  @action
+  updateChartData(canvas) {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    this.initChart(canvas);
+  }
+
   _buildSingleSeriesConfig(gridColor, labelColor) {
     const isLine = this.args.chartType === "line";
     const tertiaryRgb = themeColor("--tertiary-rgb");
@@ -233,21 +248,6 @@ export default class DataExplorerChart extends Component {
       intersect: false,
       callbacks,
     };
-  }
-
-  @bind
-  async initChart(canvas) {
-    const Chart = await loadChartJS();
-    const context = canvas.getContext("2d");
-    this.chart = new Chart(context, this.config);
-  }
-
-  @action
-  updateChartData(canvas) {
-    if (this.chart) {
-      this.chart.destroy();
-    }
-    this.initChart(canvas);
   }
 
   <template>

@@ -177,6 +177,12 @@ export default class AiBotConversations extends Component {
     return this.creditStatus?.hard_limit_reached === true;
   }
 
+  get sendOnMetaEnter() {
+    return (
+      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
+    );
+  }
+
   @action
   async setAgentId(id) {
     this.aiBotConversationsHiddenSubmit.agentId = id;
@@ -191,25 +197,6 @@ export default class AiBotConversations extends Component {
   async setLlmId(llmModelId) {
     this.selectedLlmId = llmModelId;
     await this.#checkCreditStatus(llmModelId, "llm");
-  }
-
-  async #checkCreditStatus(id, type) {
-    // Clear status immediately to prevent stale data
-    this.creditStatus = null;
-
-    if (!id) {
-      return;
-    }
-
-    try {
-      this.creditStatus =
-        type === "agent"
-          ? await this.aiCredits.getAgentCreditStatus(id)
-          : await this.aiCredits.getLlmModelCreditStatus(id);
-    } catch {
-      // Fail open - allow usage if credit check fails
-      this.creditStatus = null;
-    }
   }
 
   @action
@@ -232,12 +219,6 @@ export default class AiBotConversations extends Component {
     this._autoExpandTextarea();
     this.aiBotConversationsHiddenSubmit.inputValue =
       value.target?.value || value;
-  }
-
-  get sendOnMetaEnter() {
-    return (
-      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
-    );
   }
 
   @action
@@ -403,6 +384,25 @@ export default class AiBotConversations extends Component {
       this.uploads = trackedArray();
     } catch (error) {
       popupAjaxError(error);
+    }
+  }
+
+  async #checkCreditStatus(id, type) {
+    // Clear status immediately to prevent stale data
+    this.creditStatus = null;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      this.creditStatus =
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
+          : await this.aiCredits.getLlmModelCreditStatus(id);
+    } catch {
+      // Fail open - allow usage if credit check fails
+      this.creditStatus = null;
     }
   }
 

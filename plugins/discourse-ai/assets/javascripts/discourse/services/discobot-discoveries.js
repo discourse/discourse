@@ -58,6 +58,25 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.resetStreaming();
   }
 
+  get showDiscoveryTitle() {
+    return Boolean(
+      this.discovery.length > 0 ||
+      this.sources.length > 0 ||
+      this.loadingDiscoveries ||
+      this.discoveryTimedOut ||
+      this.answerable === false ||
+      this.errorMessage
+    );
+  }
+
+  get isStreaming() {
+    return this.smoothStreamer.isStreaming;
+  }
+
+  get streamedText() {
+    return this.smoothStreamer?.renderedText;
+  }
+
   async onDiscoveryUpdate(update) {
     if (update.request_id !== this.activeRequestId) {
       return;
@@ -174,25 +193,6 @@ export default class DiscobotDiscoveries extends Service {
   dismissDiscovery() {
     this.resetDiscovery();
     this.lastQuery = "";
-  }
-
-  get showDiscoveryTitle() {
-    return Boolean(
-      this.discovery.length > 0 ||
-      this.sources.length > 0 ||
-      this.loadingDiscoveries ||
-      this.discoveryTimedOut ||
-      this.answerable === false ||
-      this.errorMessage
-    );
-  }
-
-  get isStreaming() {
-    return this.smoothStreamer.isStreaming;
-  }
-
-  get streamedText() {
-    return this.smoothStreamer?.renderedText;
   }
 
   @action

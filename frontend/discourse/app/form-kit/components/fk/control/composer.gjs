@@ -8,17 +8,17 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 export default class FKControlComposer extends FKBaseControl {
   static controlType = "composer";
 
-  @action
-  handleInput(event) {
-    this.args.field.set(event.target.value);
-  }
-
   get style() {
     if (!this.args.height) {
       return;
     }
 
     return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
+  }
+
+  @action
+  handleInput(event) {
+    this.args.field.set(event.target.value);
   }
 
   <template>

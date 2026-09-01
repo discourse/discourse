@@ -16,6 +16,15 @@ export default class JumpToPost extends Component {
     return this.args.model.topic.postStream.filteredPostsCount;
   }
 
+  @action
+  jump() {
+    if (this.postNumber) {
+      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
+    } else if (this.postDate) {
+      this._jumpToDate(this.postDate);
+    }
+  }
+
   _jumpToIndex(postsCounts, postNumber) {
     const where = Math.min(postsCounts, Math.max(1, parseInt(postNumber, 10)));
     this.args.model.jumpToIndex(where);
@@ -25,15 +34,6 @@ export default class JumpToPost extends Component {
   _jumpToDate(date) {
     this.args.model.jumpToDate(date);
     this.args.closeModal();
-  }
-
-  @action
-  jump() {
-    if (this.postNumber) {
-      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
-    } else if (this.postDate) {
-      this._jumpToDate(this.postDate);
-    }
   }
 
   <template>

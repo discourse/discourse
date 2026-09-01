@@ -11,18 +11,21 @@ import ItemScope from "../item-scope";
 export default class RovingTabindexStrategy {
   #scope: ItemScope;
   #config: DRovingFocusConfig;
+
   /**
    * Items already demoted to `tabindex="-1"`. Identity tracking prevents an incoming authored
    * `tabindex="0"` from creating a second tab stop; weak references do not retain removed items.
    */
   #stamped = new WeakSet<HTMLElement>();
   #tabStopHolder: HTMLElement | null = null;
+
   /**
    * The last focused item and its raw-item index, retained to distinguish removal from focus
    * moving away and to address its positional replacement.
    */
   #lastFocusedItem: HTMLElement | null = null;
   #lastFocusedIndex = -1;
+
   /**
    * The previous render's items, used only to distinguish one removal from whole-list replacement.
    */

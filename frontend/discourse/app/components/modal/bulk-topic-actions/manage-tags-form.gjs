@@ -63,20 +63,6 @@ export default class ManageTagsForm extends Component {
     this.args.setSubmitDisabled?.(this.#isEmpty());
   }
 
-  #isEmpty() {
-    const removeAll = this.formApi.get("remove_all_tags") ?? false;
-    const removeTags = this.formApi.get("remove_tags") ?? [];
-    const addTags = this.formApi.get("add_tags") ?? [];
-    const rows = this.formApi.get("replace_rows") ?? [];
-
-    return (
-      !removeAll &&
-      addTags.length === 0 &&
-      removeTags.length === 0 &&
-      rows.every((row) => this.#replaceRowStatus(row) === "empty")
-    );
-  }
-
   @action
   validateReplaceRows(data, { addError, removeError }) {
     const title = i18n("topic_bulk_actions.manage_tags.replace.title");
@@ -105,6 +91,20 @@ export default class ManageTagsForm extends Component {
   @action
   onSubmit(data) {
     this.args.onPerform?.({ type: "manage_tags", ...this.#buildPayload(data) });
+  }
+
+  #isEmpty() {
+    const removeAll = this.formApi.get("remove_all_tags") ?? false;
+    const removeTags = this.formApi.get("remove_tags") ?? [];
+    const addTags = this.formApi.get("add_tags") ?? [];
+    const rows = this.formApi.get("replace_rows") ?? [];
+
+    return (
+      !removeAll &&
+      addTags.length === 0 &&
+      removeTags.length === 0 &&
+      rows.every((row) => this.#replaceRowStatus(row) === "empty")
+    );
   }
 
   #replaceRowStatus(row) {

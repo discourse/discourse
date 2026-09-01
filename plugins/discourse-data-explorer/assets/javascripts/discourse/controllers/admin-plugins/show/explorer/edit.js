@@ -71,37 +71,6 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  snapshotPristine() {
-    if (!this.model) {
-      return;
-    }
-    this._pristine = {
-      name: this.model.name ?? "",
-      description: this.model.description ?? "",
-      sql: this.model.sql ?? "",
-      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
-    };
-    this.dirty = false;
-  }
-
-  recomputeDirty() {
-    if (!this._pristine) {
-      this.dirty = true;
-      return;
-    }
-    const current = {
-      name: this.model.name ?? "",
-      description: this.model.description ?? "",
-      sql: this.model.sql ?? "",
-      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
-    };
-    this.dirty =
-      current.name !== this._pristine.name ||
-      current.description !== this._pristine.description ||
-      current.sql !== this._pristine.sql ||
-      current.group_ids !== this._pristine.group_ids;
-  }
-
   // While a query is running (or AI is generating) the actions in the action
   // bar shouldn't be usable — the interstitial "Save changes and run" state
   // is confusing otherwise.
@@ -181,6 +150,37 @@ export default class PluginsExplorerController extends Controller {
   /** The one place the weak handle is dereferenced. */
   get #panes() {
     return this.#resolvedPanes?.deref() ?? null;
+  }
+
+  snapshotPristine() {
+    if (!this.model) {
+      return;
+    }
+    this._pristine = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty = false;
+  }
+
+  recomputeDirty() {
+    if (!this._pristine) {
+      this.dirty = true;
+      return;
+    }
+    const current = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty =
+      current.name !== this._pristine.name ||
+      current.description !== this._pristine.description ||
+      current.sql !== this._pristine.sql ||
+      current.group_ids !== this._pristine.group_ids;
   }
 
   initView() {
@@ -345,13 +345,6 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  _teardownAi() {
-    this._aiGenerationToken++;
-    this._teardownAiGeneration?.();
-    this._teardownAiGeneration = null;
-    this.aiGenerating = false;
-  }
-
   @action
   async save() {
     try {
@@ -366,36 +359,6 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
-  }
-
-  async _importQuery(file) {
-    const json = await this._readFileAsTextAsync(file);
-    const query = this._parseQuery(json);
-    const record = this.store.createRecord("query", query);
-    const response = await record.save();
-    return response.target;
-  }
-
-  _parseQuery(json) {
-    const parsed = JSON.parse(json);
-    const query = parsed.query;
-    if (!query || !query.sql) {
-      throw new TypeError();
-    }
-    query.id = 0; // 0 means no Id yet
-    return query;
-  }
-
-  _readFileAsTextAsync(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-
-      reader.readAsText(file);
-    });
   }
 
   @action
@@ -565,5 +528,42 @@ export default class PluginsExplorerController extends Controller {
     if (this.shouldAutoRun) {
       this.run();
     }
+  }
+
+  _teardownAi() {
+    this._aiGenerationToken++;
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
+    this.aiGenerating = false;
+  }
+
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  }
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
+    }
+    query.id = 0; // 0 means no Id yet
+    return query;
+  }
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
   }
 }

@@ -12,6 +12,16 @@ export default class ComposerToggleSwitch extends Component {
 
   shortcut = formatShortcut("ctrl+m");
 
+  get label() {
+    const key = this.args.state
+      ? "composer.switch_to_markdown"
+      : "composer.switch_to_rich_text";
+    if (!this.capabilities.hasKeyboard) {
+      return i18n(`${key}_no_shortcut`);
+    }
+    return i18n(key, { keyboardShortcut: this.shortcut.label });
+  }
+
   @action
   mouseDown(event) {
     if (this.args.preventFocus) {
@@ -27,16 +37,6 @@ export default class ComposerToggleSwitch extends Component {
       event.preventDefault();
     }
     return result;
-  }
-
-  get label() {
-    const key = this.args.state
-      ? "composer.switch_to_markdown"
-      : "composer.switch_to_rich_text";
-    if (!this.capabilities.hasKeyboard) {
-      return i18n(`${key}_no_shortcut`);
-    }
-    return i18n(key, { keyboardShortcut: this.shortcut.label });
   }
 
   <template>

@@ -31,6 +31,61 @@ export default class AiMcpServerEditorForm extends Component {
     this.showOauthAdvancedOptions = this.hasOauthAdvancedOptions(this.formData);
   }
 
+  get authTypes() {
+    return [
+      {
+        id: "none",
+        name: i18n("discourse_ai.mcp_servers.auth_types.none"),
+      },
+      {
+        id: "header_secret",
+        name: i18n("discourse_ai.mcp_servers.auth_types.header_secret"),
+      },
+      {
+        id: "oauth",
+        name: i18n("discourse_ai.mcp_servers.auth_types.oauth"),
+      },
+    ];
+  }
+
+  get oauthClientRegistrations() {
+    return [
+      {
+        id: "client_metadata_document",
+        name: i18n(
+          "discourse_ai.mcp_servers.oauth_client_registration_types.client_metadata_document"
+        ),
+      },
+      {
+        id: "manual",
+        name: i18n(
+          "discourse_ai.mcp_servers.oauth_client_registration_types.manual"
+        ),
+      },
+    ];
+  }
+
+  get oauthStatusLabelKey() {
+    return `discourse_ai.mcp_servers.oauth_statuses.${
+      this.args.model.oauth_status || "disconnected"
+    }`;
+  }
+
+  get oauthConnectLabelKey() {
+    return this.canDisconnectOAuth
+      ? "discourse_ai.mcp_servers.oauth_reconnect"
+      : "discourse_ai.mcp_servers.oauth_connect";
+  }
+
+  get canDisconnectOAuth() {
+    const status = this.args.model.oauth_status;
+    return status === "connected" || status === "refresh_failed";
+  }
+
+  get canTestOAuthConnection() {
+    return this.args.model.oauth_status === "connected";
+  }
+
   buildFormData() {
     const { model } = this.args;
 
@@ -118,61 +173,6 @@ export default class AiMcpServerEditorForm extends Component {
     this.dialog.alert({
       message: error?.message || String(error),
     });
-  }
-
-  get authTypes() {
-    return [
-      {
-        id: "none",
-        name: i18n("discourse_ai.mcp_servers.auth_types.none"),
-      },
-      {
-        id: "header_secret",
-        name: i18n("discourse_ai.mcp_servers.auth_types.header_secret"),
-      },
-      {
-        id: "oauth",
-        name: i18n("discourse_ai.mcp_servers.auth_types.oauth"),
-      },
-    ];
-  }
-
-  get oauthClientRegistrations() {
-    return [
-      {
-        id: "client_metadata_document",
-        name: i18n(
-          "discourse_ai.mcp_servers.oauth_client_registration_types.client_metadata_document"
-        ),
-      },
-      {
-        id: "manual",
-        name: i18n(
-          "discourse_ai.mcp_servers.oauth_client_registration_types.manual"
-        ),
-      },
-    ];
-  }
-
-  get oauthStatusLabelKey() {
-    return `discourse_ai.mcp_servers.oauth_statuses.${
-      this.args.model.oauth_status || "disconnected"
-    }`;
-  }
-
-  get oauthConnectLabelKey() {
-    return this.canDisconnectOAuth
-      ? "discourse_ai.mcp_servers.oauth_reconnect"
-      : "discourse_ai.mcp_servers.oauth_connect";
-  }
-
-  get canDisconnectOAuth() {
-    const status = this.args.model.oauth_status;
-    return status === "connected" || status === "refresh_failed";
-  }
-
-  get canTestOAuthConnection() {
-    return this.args.model.oauth_status === "connected";
   }
 
   @action

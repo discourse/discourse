@@ -41,6 +41,12 @@ export default class extends Component {
     return !isEmpty(this.userExport);
   }
 
+  get userExportExpiry() {
+    return i18n("admin.user.exports.download.expires_in", {
+      count: this.userExport.retain_hours,
+    });
+  }
+
   @bind
   onExportProgress(data) {
     if (data.user_export_id === this.model.id) {
@@ -78,12 +84,6 @@ export default class extends Component {
           popupAjaxError(err);
         }
       },
-    });
-  }
-
-  get userExportExpiry() {
-    return i18n("admin.user.exports.download.expires_in", {
-      count: this.userExport.retain_hours,
     });
   }
 

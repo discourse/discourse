@@ -43,6 +43,24 @@ export default class InvitePanel extends Component {
     this.setGroupOptions();
   }
 
+  @computed("inviteModel.id")
+  get topicId() {
+    return this.inviteModel?.id;
+  }
+
+  set topicId(value) {
+    set(this, "inviteModel.id", value);
+  }
+
+  @computed("invitingToTopic")
+  get allowExistingMembers() {
+    return this.invitingToTopic;
+  }
+
+  set allowExistingMembers(value) {
+    set(this, "invitingToTopic", value);
+  }
+
   @computed("currentUser.staff")
   get isStaff() {
     return this.currentUser?.staff;
@@ -51,15 +69,6 @@ export default class InvitePanel extends Component {
   @computed("currentUser.admin")
   get isAdmin() {
     return this.currentUser?.admin;
-  }
-
-  @computed("inviteModel.id")
-  get topicId() {
-    return this.inviteModel?.id;
-  }
-
-  set topicId(value) {
-    set(this, "inviteModel.id", value);
   }
 
   @computed("inviteModel.archetype")
@@ -77,23 +86,9 @@ export default class InvitePanel extends Component {
     return this.invitingToTopic && this.inviteModel?.category?.read_restricted;
   }
 
-  @computed("invitingToTopic")
-  get allowExistingMembers() {
-    return this.invitingToTopic;
-  }
-
-  set allowExistingMembers(value) {
-    set(this, "invitingToTopic", value);
-  }
-
   @computed()
   get customMessagePlaceholder() {
     return i18n(`invite.custom_message_placeholder`);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.reset();
   }
 
   @computed(
@@ -282,22 +277,6 @@ export default class InvitePanel extends Component {
     return this.isPrivateTopic ? "required" : "optional";
   }
 
-  successMessage(invitee) {
-    if (this.isInviteeGroup) {
-      return i18n("topic.invite_private.success_group");
-    } else if (this.isPM) {
-      return i18n("topic.invite_private.success");
-    } else if (this.invitingExistingUserToTopic) {
-      return i18n("topic.invite_reply.success_existing_email", {
-        invitee,
-      });
-    } else if (emailValid(invitee)) {
-      return i18n("topic.invite_reply.success_email", { invitee });
-    } else {
-      return i18n("topic.invite_reply.success_username");
-    }
-  }
-
   @computed("isPM", "ajaxError")
   get errorMessage() {
     if (this.ajaxError) {
@@ -313,6 +292,27 @@ export default class InvitePanel extends Component {
     return this.canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.reset();
+  }
+
+  successMessage(invitee) {
+    if (this.isInviteeGroup) {
+      return i18n("topic.invite_private.success_group");
+    } else if (this.isPM) {
+      return i18n("topic.invite_private.success");
+    } else if (this.invitingExistingUserToTopic) {
+      return i18n("topic.invite_reply.success_existing_email", {
+        invitee,
+      });
+    } else if (emailValid(invitee)) {
+      return i18n("topic.invite_reply.success_email", { invitee });
+    } else {
+      return i18n("topic.invite_reply.success_username");
+    }
   }
 
   // Reset the modal to allow a new user to be invited.

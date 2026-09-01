@@ -72,31 +72,6 @@ export default class LocalDatesCreate extends Component {
     return !deepEqual(this.currentUserTimezone, this.options?.timezone);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.send("focusFrom");
-  }
-
-  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
-  configChanged() {
-    this._renderPreview();
-  }
-
-  @debounce(INPUT_DELAY)
-  async _renderPreview() {
-    if (this.markup) {
-      const result = await cook(this.markup);
-      this.set("currentPreview", result);
-
-      schedule("afterRender", () => {
-        applyLocalDates(
-          document.querySelectorAll(".preview .discourse-local-date"),
-          this.siteSettings
-        );
-      });
-    }
-  }
-
   @computed("date", "toDate", "toTime")
   get isRange() {
     return this.date && (this.toDate || this.toTime);
@@ -288,10 +263,6 @@ export default class LocalDatesCreate extends Component {
     ];
   }
 
-  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
-    return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
-  }
-
   @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
   get markup() {
     let text;
@@ -327,12 +298,6 @@ export default class LocalDatesCreate extends Component {
       : i18n("discourse_local_dates.create.form.until");
   }
 
-  @action
-  updateFormat(format, event) {
-    event?.preventDefault();
-    this.set("format", format);
-  }
-
   @computed("fromSelected", "toSelected")
   get selectedDate() {
     return this.fromSelected ? this.date : this.toDate;
@@ -341,6 +306,22 @@ export default class LocalDatesCreate extends Component {
   @computed("fromSelected", "toSelected")
   get selectedTime() {
     return this.fromSelected ? this.time : this.toTime;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.send("focusFrom");
+  }
+
+  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  configChanged() {
+    this._renderPreview();
+  }
+
+  @action
+  updateFormat(format, event) {
+    event?.preventDefault();
+    this.set("format", format);
   }
 
   @action
@@ -406,6 +387,25 @@ export default class LocalDatesCreate extends Component {
   @action
   cancel() {
     this.closeModal();
+  }
+
+  @debounce(INPUT_DELAY)
+  async _renderPreview() {
+    if (this.markup) {
+      const result = await cook(this.markup);
+      this.set("currentPreview", result);
+
+      schedule("afterRender", () => {
+        applyLocalDates(
+          document.querySelectorAll(".preview .discourse-local-date"),
+          this.siteSettings
+        );
+      });
+    }
+  }
+
+  _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
+    return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
   }
 
   <template>

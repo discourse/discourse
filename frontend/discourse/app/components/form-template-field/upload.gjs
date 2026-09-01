@@ -38,6 +38,16 @@ export default class FormTemplateFieldUpload extends Component {
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
   }
 
+  get uploadStatusLabel() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing
+      ? "form_templates.upload_field.uploading"
+      : "form_templates.upload_field.upload";
+  }
+
+  get disabled() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
+  }
+
   @action
   handleReplaceText(oldVal, newVal) {
     if (!this.uploadValue?.includes(oldVal)) {
@@ -55,16 +65,6 @@ export default class FormTemplateFieldUpload extends Component {
     schedule("afterRender", () => {
       this.args.onChange?.();
     });
-  }
-
-  get uploadStatusLabel() {
-    return this.uppyUpload.uploading || this.uppyUpload.processing
-      ? "form_templates.upload_field.uploading"
-      : "form_templates.upload_field.upload";
-  }
-
-  get disabled() {
-    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   /**

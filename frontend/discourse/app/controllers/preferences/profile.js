@@ -113,15 +113,6 @@ export default class ProfileController extends Controller {
     document.querySelector(".feature-topic-on-profile-btn")?.focus();
   }
 
-  _missingRequiredFields(siteFields, userFields) {
-    return siteFields
-      .filter(
-        (siteField) =>
-          siteField.requirement === "for_all_users" && !userFields[siteField.id]
-      )
-      .map((field) => EmberObject.create({ field, value: "" }));
-  }
-
   @action
   clearFeaturedTopicFromProfile() {
     this.dialog.yesNoConfirm({
@@ -141,24 +132,6 @@ export default class ProfileController extends Controller {
   @action
   useCurrentTimezone() {
     this.model.set("user_option.timezone", moment.tz.guess(true));
-  }
-
-  @action
-  _updateUserFields() {
-    const model = this.model,
-      userFields = this.userFields;
-
-    if (!isEmpty(userFields)) {
-      const modelFields = model.get("user_fields");
-      if (!isEmpty(modelFields)) {
-        userFields.forEach(function (uf) {
-          const value = uf.get("value");
-          modelFields[uf.get("field.id").toString()] = isEmpty(value)
-            ? null
-            : value;
-        });
-      }
-    }
   }
 
   @action
@@ -192,5 +165,32 @@ export default class ProfileController extends Controller {
         }
       })
       .catch(popupAjaxError);
+  }
+
+  _missingRequiredFields(siteFields, userFields) {
+    return siteFields
+      .filter(
+        (siteField) =>
+          siteField.requirement === "for_all_users" && !userFields[siteField.id]
+      )
+      .map((field) => EmberObject.create({ field, value: "" }));
+  }
+
+  @action
+  _updateUserFields() {
+    const model = this.model,
+      userFields = this.userFields;
+
+    if (!isEmpty(userFields)) {
+      const modelFields = model.get("user_fields");
+      if (!isEmpty(modelFields)) {
+        userFields.forEach(function (uf) {
+          const value = uf.get("value");
+          modelFields[uf.get("field.id").toString()] = isEmpty(value)
+            ? null
+            : value;
+        });
+      }
+    }
   }
 }

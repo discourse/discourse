@@ -140,81 +140,6 @@ export function buildResolver(baseName) {
       }
     }
 
-    // We overwrite this instead of `normalize` so we still get the benefits of the cache.
-    _normalize(fullName) {
-      const deprecationInfo = DEPRECATED_MODULES.get(fullName);
-      if (deprecationInfo) {
-        if (!deprecationInfo.silent) {
-          deprecated(
-            `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
-            {
-              since: deprecationInfo.since,
-              id: "discourse.resolver-resolutions",
-            }
-          );
-        }
-        fullName = deprecationInfo.newName;
-      }
-
-      const original = super._normalize(fullName);
-
-      const split = fullName.split(":");
-      const type = split[0];
-
-      let normalized;
-      if (type === "template" && split[1]?.includes("connectors/")) {
-        // The default normalize implementation will skip dasherizing component template names
-        // We need the same for our connector templates names
-        normalized = "template:" + split[1].replace(/_/g, "-");
-      } else {
-        normalized = super._normalize(fullName);
-      }
-
-      // This is code that we don't really want to keep long term. The main situation where we need it is for
-      // doing stuff like `controllerFor('adminWatchedWords.action')` where the real route name
-      // is actually `adminWatchedWords.action`. The default behavior for the former is to
-      // normalize to `adminWatchedWordsAction` where the latter becomes `adminWatchedWords.action`.
-      // While these end up looking up the same file ultimately, they are treated as different
-      // items and so we can end up with two distinct version of the controller!
-      if (
-        split.length > 1 &&
-        (type === "controller" || type === "route" || type === "template")
-      ) {
-        let corrected;
-        // This should only apply when there's a dot or slash in the name
-        if (split[1].includes(".") || split[1].includes("/")) {
-          // Check to see if the dasherized version exists. If it does we want to
-          // normalize to that eagerly so the normalized versions of the dotted/slashed and
-          // dotless/slashless match.
-          const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
-
-          const adminBase = `admin/${type}s/`;
-          if (
-            lookupModuleBySuffix(`${type}s/${dashed}`) ||
-            requirejs.entries[adminBase + dashed] ||
-            requirejs.entries[adminBase + dashed.replace(/^admin[-]/, "")] ||
-            requirejs.entries[
-              adminBase + dashed.replace(/^admin[-]/, "").replace(/-/g, "_")
-            ]
-          ) {
-            corrected = type + ":" + dashed;
-          }
-        }
-
-        if (corrected && corrected !== normalized) {
-          normalized = corrected;
-        }
-      }
-
-      if (original !== normalized) {
-        deprecated(
-          `Looking up '${normalized}' is no longer permitted. Rename to '${original}' instead`,
-          { id: "discourse.deprecated-resolver-normalization" }
-        );
-      }
-      return normalized;
-    }
-
     findModuleName(parsedName) {
       let resolved = super.findModuleName(parsedName);
 
@@ -421,6 +346,81 @@ export function buildResolver(baseName) {
           return DiscourseTemplateMap.identifySource(candidate);
         }
       }
+    }
+
+    // We overwrite this instead of `normalize` so we still get the benefits of the cache.
+    _normalize(fullName) {
+      const deprecationInfo = DEPRECATED_MODULES.get(fullName);
+      if (deprecationInfo) {
+        if (!deprecationInfo.silent) {
+          deprecated(
+            `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
+            {
+              since: deprecationInfo.since,
+              id: "discourse.resolver-resolutions",
+            }
+          );
+        }
+        fullName = deprecationInfo.newName;
+      }
+
+      const original = super._normalize(fullName);
+
+      const split = fullName.split(":");
+      const type = split[0];
+
+      let normalized;
+      if (type === "template" && split[1]?.includes("connectors/")) {
+        // The default normalize implementation will skip dasherizing component template names
+        // We need the same for our connector templates names
+        normalized = "template:" + split[1].replace(/_/g, "-");
+      } else {
+        normalized = super._normalize(fullName);
+      }
+
+      // This is code that we don't really want to keep long term. The main situation where we need it is for
+      // doing stuff like `controllerFor('adminWatchedWords.action')` where the real route name
+      // is actually `adminWatchedWords.action`. The default behavior for the former is to
+      // normalize to `adminWatchedWordsAction` where the latter becomes `adminWatchedWords.action`.
+      // While these end up looking up the same file ultimately, they are treated as different
+      // items and so we can end up with two distinct version of the controller!
+      if (
+        split.length > 1 &&
+        (type === "controller" || type === "route" || type === "template")
+      ) {
+        let corrected;
+        // This should only apply when there's a dot or slash in the name
+        if (split[1].includes(".") || split[1].includes("/")) {
+          // Check to see if the dasherized version exists. If it does we want to
+          // normalize to that eagerly so the normalized versions of the dotted/slashed and
+          // dotless/slashless match.
+          const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
+
+          const adminBase = `admin/${type}s/`;
+          if (
+            lookupModuleBySuffix(`${type}s/${dashed}`) ||
+            requirejs.entries[adminBase + dashed] ||
+            requirejs.entries[adminBase + dashed.replace(/^admin[-]/, "")] ||
+            requirejs.entries[
+              adminBase + dashed.replace(/^admin[-]/, "").replace(/-/g, "_")
+            ]
+          ) {
+            corrected = type + ":" + dashed;
+          }
+        }
+
+        if (corrected && corrected !== normalized) {
+          normalized = corrected;
+        }
+      }
+
+      if (original !== normalized) {
+        deprecated(
+          `Looking up '${normalized}' is no longer permitted. Rename to '${original}' instead`,
+          { id: "discourse.deprecated-resolver-normalization" }
+        );
+      }
+      return normalized;
     }
   };
 }

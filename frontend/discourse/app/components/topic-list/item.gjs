@@ -101,6 +101,45 @@ export default class Item extends Component {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
   }
 
+  get useMobileLayout() {
+    return applyValueTransformer(
+      "topic-list-item-mobile-layout",
+      this.site.mobileView,
+      this.#transformerContext
+    );
+  }
+
+  get additionalClasses() {
+    return applyValueTransformer(
+      "topic-list-item-class",
+      [],
+      this.#transformerContext
+    );
+  }
+
+  get style() {
+    const parts = applyValueTransformer(
+      "topic-list-item-style",
+      [],
+      this.#transformerContext
+    );
+
+    const safeParts = parts.filter(Boolean).filter((part) => {
+      if (isHTMLSafe(part)) {
+        return true;
+      }
+      // eslint-disable-next-line no-console
+      console.error(
+        "topic-list-item-style must be formed of htmlSafe strings. Skipped unsafe value:",
+        part
+      );
+    });
+
+    if (safeParts.length) {
+      return trustHTML(safeParts.join("\n"));
+    }
+  }
+
   @action
   navigateToTopic(topic, href) {
     this.historyStore.set("lastTopicIdViewed", topic.id);
@@ -238,45 +277,6 @@ export default class Item extends Component {
     if (event.key === "Enter" && wantsNewWindow(event)) {
       event.preventDefault();
       window.open(this.args.topic.lastUnreadUrl, "_blank");
-    }
-  }
-
-  get useMobileLayout() {
-    return applyValueTransformer(
-      "topic-list-item-mobile-layout",
-      this.site.mobileView,
-      this.#transformerContext
-    );
-  }
-
-  get additionalClasses() {
-    return applyValueTransformer(
-      "topic-list-item-class",
-      [],
-      this.#transformerContext
-    );
-  }
-
-  get style() {
-    const parts = applyValueTransformer(
-      "topic-list-item-style",
-      [],
-      this.#transformerContext
-    );
-
-    const safeParts = parts.filter(Boolean).filter((part) => {
-      if (isHTMLSafe(part)) {
-        return true;
-      }
-      // eslint-disable-next-line no-console
-      console.error(
-        "topic-list-item-style must be formed of htmlSafe strings. Skipped unsafe value:",
-        part
-      );
-    });
-
-    if (safeParts.length) {
-      return trustHTML(safeParts.join("\n"));
     }
   }
 

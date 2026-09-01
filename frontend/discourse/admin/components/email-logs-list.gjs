@@ -51,25 +51,6 @@ export default class EmailLogsList extends Component {
     });
   };
 
-  @action
-  initializeComponent() {
-    if (!this.initialized) {
-      this.initialized = true;
-
-      // router.currentURL, unlike window.location, is also correct under the
-      // test environment's mock location
-      const params = searchParamsFromPath(this.router.currentURL);
-
-      const initialValues = {};
-      this.args.filters?.forEach((filter) => {
-        initialValues[filter.property] = params.get(filter.name) || "";
-      });
-      this.filterValues = initialValues;
-
-      this.loadLogs();
-    }
-  }
-
   get sourceModel() {
     return this.args.sourceModel || EmailLog;
   }
@@ -99,6 +80,25 @@ export default class EmailLogsList extends Component {
       !this.allLoaded &&
       !this.loading
     );
+  }
+
+  @action
+  initializeComponent() {
+    if (!this.initialized) {
+      this.initialized = true;
+
+      // router.currentURL, unlike window.location, is also correct under the
+      // test environment's mock location
+      const params = searchParamsFromPath(this.router.currentURL);
+
+      const initialValues = {};
+      this.args.filters?.forEach((filter) => {
+        initialValues[filter.property] = params.get(filter.name) || "";
+      });
+      this.filterValues = initialValues;
+
+      this.loadLogs();
+    }
   }
 
   @action

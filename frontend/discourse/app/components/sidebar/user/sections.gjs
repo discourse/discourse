@@ -59,6 +59,10 @@ export default class SidebarUserSections extends Component {
     cancel(this.#armTimer);
   }
 
+  get mainPanel() {
+    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
+  }
+
   /**
    * Arms the reveal dwell: only where link drop is enabled at all, and only
    * for a drag that declares a real URL. A drag carrying only text may well
@@ -143,10 +147,6 @@ export default class SidebarUserSections extends Component {
     this.modal.show(SidebarSectionForm, {
       model: { link },
     });
-  }
-
-  get mainPanel() {
-    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
   }
 
   /**

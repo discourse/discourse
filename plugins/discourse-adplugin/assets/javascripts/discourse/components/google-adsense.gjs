@@ -146,39 +146,6 @@ export default class GoogleAdsense extends AdComponent {
     super.init();
   }
 
-  async _triggerAds() {
-    if (isTesting()) {
-      return; // Don't load external JS during tests
-    }
-
-    this.set("adRequested", true);
-
-    await loadAdsense();
-
-    if (this.isDestroyed || this.isDestroying) {
-      // Component removed from DOM before script loaded
-      return;
-    }
-
-    try {
-      const adsbygoogle = (window.adsbygoogle ||= []);
-      adsbygoogle.push({}); // ask AdSense to fill one ad unit
-    } catch (ex) {
-      // eslint-disable-next-line no-console
-      console.error("Adsense error:", ex);
-    }
-  }
-
-  didInsertElement() {
-    super.didInsertElement();
-
-    if (!this.get("showAd")) {
-      return;
-    }
-
-    scheduleOnce("afterRender", this, this._triggerAds);
-  }
-
   @computed("ad_width")
   get isResponsive() {
     return ["auto", "fluid"].includes(this.ad_width);
@@ -254,6 +221,16 @@ export default class GoogleAdsense extends AdComponent {
     );
   }
 
+  didInsertElement() {
+    super.didInsertElement();
+
+    if (!this.get("showAd")) {
+      return;
+    }
+
+    scheduleOnce("afterRender", this, this._triggerAds);
+  }
+
   buildImpressionPayload() {
     return {
       ad_plugin_impression: {
@@ -262,6 +239,29 @@ export default class GoogleAdsense extends AdComponent {
         placement: this.placement,
       },
     };
+  }
+
+  async _triggerAds() {
+    if (isTesting()) {
+      return; // Don't load external JS during tests
+    }
+
+    this.set("adRequested", true);
+
+    await loadAdsense();
+
+    if (this.isDestroyed || this.isDestroying) {
+      // Component removed from DOM before script loaded
+      return;
+    }
+
+    try {
+      const adsbygoogle = (window.adsbygoogle ||= []);
+      adsbygoogle.push({}); // ask AdSense to fill one ad unit
+    } catch (ex) {
+      // eslint-disable-next-line no-console
+      console.error("Adsense error:", ex);
+    }
   }
 
   <template>

@@ -52,13 +52,6 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     return findActiveLink(this.sectionLinks, this.router);
   }
 
-  // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
-  // unnecessarily.
-  @debounce(300)
-  _refreshCounts() {
-    this.sectionLinks.forEach((sectionLink) => sectionLink.refreshCounts());
-  }
-
   @cached
   get categories() {
     if (this.currentUser.sidebarCategoryIds?.length > 0) {
@@ -74,10 +67,6 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
   get hasDefaultSidebarCategories() {
     return hasDefaultSidebarCategories(this.siteSettings);
-  }
-
-  createCategory() {
-    this.categoryTypeChooser.createCategory();
   }
 
   @cached
@@ -105,6 +94,17 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
   get headerActionsIcon() {
     return this.headerActions.length > 1 ? "ellipsis-vertical" : "pencil";
+  }
+
+  createCategory() {
+    this.categoryTypeChooser.createCategory();
+  }
+
+  // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
+  // unnecessarily.
+  @debounce(300)
+  _refreshCounts() {
+    this.sectionLinks.forEach((sectionLink) => sectionLink.refreshCounts());
   }
 
   <template>

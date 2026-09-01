@@ -157,6 +157,48 @@ export default class VoiceVideoSettingsModal extends Component {
     ];
   }
 
+  @action
+  async onCameraChange(deviceId) {
+    await this.voiceWebrtc.setVideoInputDevice(deviceId);
+    if (!this.usingLiveStream) {
+      await this.startPreview();
+    }
+  }
+
+  @action
+  async onCameraQualityChange(tier) {
+    this.voiceWebrtc.setCameraQuality(tier);
+    if (!this.usingLiveStream) {
+      await this.startPreview();
+    }
+  }
+
+  @action
+  async toggleBlur() {
+    if (this.busy || !this.blurUsable) {
+      return;
+    }
+
+    this.busy = true;
+    try {
+      await this.voiceWebrtc.toggleVideoBlur();
+      if (!this.usingLiveStream) {
+        await this.#applyPreviewEffect();
+      }
+    } finally {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.busy = false;
+      }
+    }
+  }
+
+  @action
+  onAmountChange(event) {
+    const value = parseInt(event.target.value, 10);
+    this.voiceWebrtc.setVideoBlurAmount(value);
+    this.#previewBlur?.setAmount(value);
+  }
+
   async #applyPreviewEffect(epoch = this.#previewEpoch) {
     this.#previewBlur?.teardown();
     this.#previewBlur = null;
@@ -204,48 +246,6 @@ export default class VoiceVideoSettingsModal extends Component {
     }
 
     this.previewStream = null;
-  }
-
-  @action
-  async onCameraChange(deviceId) {
-    await this.voiceWebrtc.setVideoInputDevice(deviceId);
-    if (!this.usingLiveStream) {
-      await this.startPreview();
-    }
-  }
-
-  @action
-  async onCameraQualityChange(tier) {
-    this.voiceWebrtc.setCameraQuality(tier);
-    if (!this.usingLiveStream) {
-      await this.startPreview();
-    }
-  }
-
-  @action
-  async toggleBlur() {
-    if (this.busy || !this.blurUsable) {
-      return;
-    }
-
-    this.busy = true;
-    try {
-      await this.voiceWebrtc.toggleVideoBlur();
-      if (!this.usingLiveStream) {
-        await this.#applyPreviewEffect();
-      }
-    } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.busy = false;
-      }
-    }
-  }
-
-  @action
-  onAmountChange(event) {
-    const value = parseInt(event.target.value, 10);
-    this.voiceWebrtc.setVideoBlurAmount(value);
-    this.#previewBlur?.setAmount(value);
   }
 
   <template>

@@ -22,14 +22,6 @@ export default class AdminReportsShowController extends Controller {
   filters = null;
   chart_grouping = null;
 
-  setBackLink({ route, query, label }) {
-    this.backLink = { route, query, label };
-  }
-
-  resetBackLink() {
-    this.backLink = DEFAULT_BACK_LINK;
-  }
-
   @computed("model.type")
   get reportOptions() {
     let options = { table: { perPage: 50, limit: 50 } };
@@ -51,5 +43,13 @@ export default class AdminReportsShowController extends Controller {
     options.chartGrouping = this.chart_grouping;
 
     return options;
+  }
+
+  setBackLink({ route, query, label }) {
+    this.backLink = { route, query, label };
+  }
+
+  resetBackLink() {
+    this.backLink = DEFAULT_BACK_LINK;
   }
 }

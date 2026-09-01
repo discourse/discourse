@@ -205,16 +205,6 @@ export default class WorkflowNode extends Component {
     return this.data.configuration?.data_table_id;
   }
 
-  @action
-  handleEditDataTable(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows-data-tables.show",
-      this.dataTableId
-    );
-  }
-
   get iconBlockStyle() {
     return nodeTypeStyle(this.resolvedNodeType);
   }
@@ -232,6 +222,16 @@ export default class WorkflowNode extends Component {
       return [];
     }
     return getNodeIssues(this.data.configuration, nodeType.properties);
+  }
+
+  @action
+  handleEditDataTable(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-workflows-data-tables.show",
+      this.dataTableId
+    );
   }
 
   <template>

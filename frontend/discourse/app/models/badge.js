@@ -65,11 +65,6 @@ export default class Badge extends RestModel {
     );
   }
 
-  @computed("id")
-  get newBadge() {
-    return this.id == null;
-  }
-
   @computed("image_url")
   get image() {
     return this.image_url;
@@ -79,9 +74,20 @@ export default class Badge extends RestModel {
     set(this, "image_url", value);
   }
 
+  @computed("id")
+  get newBadge() {
+    return this.id == null;
+  }
+
   @computed
   get url() {
     return getURL(`/badges/${this.id}/${this.slug}`);
+  }
+
+  @computed("badge_type.name")
+  get badgeTypeClassName() {
+    const type = this.badge_type?.name || "";
+    return `badge-type-${type.toLowerCase()}`;
   }
 
   updateFromJson(json) {
@@ -95,12 +101,6 @@ export default class Badge extends RestModel {
         }
       });
     }
-  }
-
-  @computed("badge_type.name")
-  get badgeTypeClassName() {
-    const type = this.badge_type?.name || "";
-    return `badge-type-${type.toLowerCase()}`;
   }
 
   save(data) {

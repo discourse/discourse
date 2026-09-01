@@ -7,6 +7,14 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 export default class ComposerUserSelector extends Component {
   _groups = [];
 
+  @computed("recipients")
+  get splitRecipients() {
+    if (Array.isArray(this.recipients)) {
+      return this.recipients;
+    }
+    return this.recipients ? this.recipients.split(",").filter(Boolean) : [];
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -15,12 +23,13 @@ export default class ComposerUserSelector extends Component {
     }
   }
 
-  @computed("recipients")
-  get splitRecipients() {
-    if (Array.isArray(this.recipients)) {
-      return this.recipients;
-    }
-    return this.recipients ? this.recipients.split(",").filter(Boolean) : [];
+  @action
+  updateRecipients(selected, content) {
+    const newGroups = content
+      .filter((group) => group.isGroup)
+      .map((item) => item.id);
+    this._updateGroups(selected, newGroups);
+    this.set("recipients", selected.join(","));
   }
 
   _updateGroups(selected, newGroups) {
@@ -37,15 +46,6 @@ export default class ComposerUserSelector extends Component {
       _groups: Array.from(groups),
       hasGroups: groups.length > 0,
     });
-  }
-
-  @action
-  updateRecipients(selected, content) {
-    const newGroups = content
-      .filter((group) => group.isGroup)
-      .map((item) => item.id);
-    this._updateGroups(selected, newGroups);
-    this.set("recipients", selected.join(","));
   }
 
   <template>

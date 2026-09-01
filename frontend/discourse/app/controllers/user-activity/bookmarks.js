@@ -26,6 +26,15 @@ export default class UserActivityBookmarksController extends Controller {
   bulkSelectHelper = new BulkSelectHelper(this);
 
   @computed("q")
+  get searchTerm() {
+    return this._searchTerm !== undefined ? this._searchTerm : this.q;
+  }
+
+  set searchTerm(value) {
+    this._searchTerm = value;
+  }
+
+  @computed("q")
   get inSearchMode() {
     return !isEmpty(this.q);
   }
@@ -33,15 +42,6 @@ export default class UserActivityBookmarksController extends Controller {
   @dependentKeyCompat
   get noContent() {
     return this.model?.bookmarks?.length === 0;
-  }
-
-  @computed("q")
-  get searchTerm() {
-    return this._searchTerm !== undefined ? this._searchTerm : this.q;
-  }
-
-  set searchTerm(value) {
-    this._searchTerm = value;
   }
 
   @computed()
@@ -94,6 +94,19 @@ export default class UserActivityBookmarksController extends Controller {
     this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
   }
 
+  transform(bookmark) {
+    const bookmarkModel = Bookmark.create(bookmark);
+    bookmarkModel.topicStatus = EmberObject.create({
+      closed: bookmark.closed,
+      archived: bookmark.archived,
+      is_warning: bookmark.is_warning,
+      pinned: false,
+      unpinned: false,
+      invisible: bookmark.invisible,
+    });
+    return bookmarkModel;
+  }
+
   _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
       return Promise.resolve();
@@ -129,18 +142,5 @@ export default class UserActivityBookmarksController extends Controller {
       this.model.bookmarks.push(...bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }
-  }
-
-  transform(bookmark) {
-    const bookmarkModel = Bookmark.create(bookmark);
-    bookmarkModel.topicStatus = EmberObject.create({
-      closed: bookmark.closed,
-      archived: bookmark.archived,
-      is_warning: bookmark.is_warning,
-      pinned: false,
-      unpinned: false,
-      invisible: bookmark.invisible,
-    });
-    return bookmarkModel;
   }
 }

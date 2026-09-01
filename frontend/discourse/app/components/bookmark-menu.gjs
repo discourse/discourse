@@ -32,20 +32,6 @@ export default class BookmarkMenu extends Component {
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
 
-  @action
-  setReminderShortcuts() {
-    this.reminderAtOptions = [
-      this.timeShortcuts.twoHours(),
-      this.timeShortcuts.tomorrow(),
-      this.timeShortcuts.threeDays(),
-    ];
-
-    const custom = this.timeShortcuts.custom();
-    custom.label = "time_shortcut.more_options";
-    custom.icon = "far-calendar-plus";
-    this.reminderAtOptions.push(custom);
-  }
-
   get bookmarkManager() {
     return this.args.bookmarkManager;
   }
@@ -120,6 +106,20 @@ export default class BookmarkMenu extends Component {
     } else {
       return i18n("bookmarked.title");
     }
+  }
+
+  @action
+  setReminderShortcuts() {
+    this.reminderAtOptions = [
+      this.timeShortcuts.twoHours(),
+      this.timeShortcuts.tomorrow(),
+      this.timeShortcuts.threeDays(),
+    ];
+
+    const custom = this.timeShortcuts.custom();
+    custom.label = "time_shortcut.more_options";
+    custom.icon = "far-calendar-plus";
+    this.reminderAtOptions.push(custom);
   }
 
   @action

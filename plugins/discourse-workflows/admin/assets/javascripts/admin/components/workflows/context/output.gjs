@@ -120,6 +120,18 @@ export default class OutputContext extends Component {
     return this.outputPreview.fields || [];
   }
 
+  get singleItemCountLabel() {
+    return this.outputPreview.itemCountLabel;
+  }
+
+  get emptyOutputMessage() {
+    return this.outputPreview.emptyMessage;
+  }
+
+  get canTogglePin() {
+    return this.singleOutputNode && (this.isPinned || this.canPin);
+  }
+
   itemCountLabel(summary) {
     if (!summary?.itemCount) {
       return null;
@@ -128,10 +140,6 @@ export default class OutputContext extends Component {
     return i18n("discourse_workflows.configurator.schema_item_count", {
       count: summary.itemCount,
     });
-  }
-
-  get singleItemCountLabel() {
-    return this.outputPreview.itemCountLabel;
   }
 
   emptyMessage(summary) {
@@ -146,10 +154,6 @@ export default class OutputContext extends Component {
     }
 
     return i18n("discourse_workflows.configurator.no_output_context");
-  }
-
-  get emptyOutputMessage() {
-    return this.outputPreview.emptyMessage;
   }
 
   @action
@@ -168,10 +172,6 @@ export default class OutputContext extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
-  }
-
-  get canTogglePin() {
-    return this.singleOutputNode && (this.isPinned || this.canPin);
   }
 
   <template>

@@ -118,16 +118,6 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
   }
 
   /**
-   * Checks if an args object has any entries.
-   *
-   * @param args - The arguments object to check.
-   * @returns True if args is non-null and has at least one key.
-   */
-  hasArgs(args: Record<string, unknown> | undefined): boolean {
-    return args != null && Object.keys(args).length > 0;
-  }
-
-  /**
    * Returns the display name for the block, including ID if set.
    * Format: "blockName" or "blockName(#id)".
    *
@@ -138,6 +128,16 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
       return `${this.args.blockName}(#${this.args.blockId})`;
     }
     return this.args.blockName;
+  }
+
+  /**
+   * Checks if an args object has any entries.
+   *
+   * @param args - The arguments object to check.
+   * @returns True if args is non-null and has at least one key.
+   */
+  hasArgs(args: Record<string, unknown> | undefined): boolean {
+    return args != null && Object.keys(args).length > 0;
   }
 
   <template>

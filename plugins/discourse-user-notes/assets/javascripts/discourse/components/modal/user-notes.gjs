@@ -13,10 +13,6 @@ export default class UserNotesModal extends Component {
   @service dialog;
   @service store;
 
-  #refreshCount() {
-    this.args.model.callback?.(this.args.model.note.length);
-  }
-
   get subtitle() {
     return applyValueTransformer("user-notes-modal-subtitle", "", {
       model: this.args.model,
@@ -75,6 +71,10 @@ export default class UserNotesModal extends Component {
           .catch(popupAjaxError);
       },
     });
+  }
+
+  #refreshCount() {
+    this.args.model.callback?.(this.args.model.note.length);
   }
 
   <template>

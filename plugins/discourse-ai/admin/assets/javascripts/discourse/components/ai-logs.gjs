@@ -109,44 +109,6 @@ export default class AiLogs extends Component {
     }
   }
 
-  @action
-  syncDetailsFromLocation() {
-    const logId = new URL(window.location.href).searchParams.get("details");
-    if (logId && String(logId) !== String(this._openLogId)) {
-      this.openDetails(logId, { updateUrl: false });
-    } else if (!logId && this._openLogId) {
-      this._openLogId = undefined;
-      this.modal.close();
-    }
-  }
-
-  mergedFeatures(features = [], logs = []) {
-    return [
-      ...new Set([
-        ...features,
-        ...logs.map((log) => log.feature_name).filter(Boolean),
-      ]),
-    ].sort();
-  }
-
-  initializeFilters(params = {}) {
-    this.selectedPeriod = params.period || undefined;
-    this.selectedOutcome = params.outcome || undefined;
-    this.hasRetries =
-      params.has_retries === "true" || params.has_retries === true;
-    this.selectedModel = params.model ? String(params.model) : undefined;
-    this.selectedFeature = params.feature || undefined;
-    this.searchText = params.search || "";
-    this.unattributed =
-      params.unattributed === "true" || params.unattributed === true;
-    this.startDate = params.start_date
-      ? moment(params.start_date).toDate()
-      : moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
-    this.endDate = params.end_date
-      ? moment(params.end_date).toDate()
-      : new Date();
-  }
-
   get periodOptions() {
     return [
       { id: "hour", name: i18n("discourse_ai.logs.periods.hour") },
@@ -239,14 +201,6 @@ export default class AiLogs extends Component {
     return this.keyValueStore.get("filter_drawer") !== "collapsed";
   }
 
-  @action
-  persistDrawerState(expanded) {
-    this.keyValueStore.set({
-      key: "filter_drawer",
-      value: expanded ? "expanded" : "collapsed",
-    });
-  }
-
   get additionalFiltersActive() {
     return Boolean(
       this.selectedFeature || this.hasRetries || this.unattributed
@@ -318,6 +272,60 @@ export default class AiLogs extends Component {
       search: this.searchText.trim() || null,
       unattributed: this.unattributed ? "true" : null,
     };
+  }
+
+  get hasNewLogs() {
+    return this.newLogsCount > 0;
+  }
+
+  get pollIntervalMs() {
+    return newLogsPollIntervalMs(this._emptyPolls);
+  }
+
+  @action
+  syncDetailsFromLocation() {
+    const logId = new URL(window.location.href).searchParams.get("details");
+    if (logId && String(logId) !== String(this._openLogId)) {
+      this.openDetails(logId, { updateUrl: false });
+    } else if (!logId && this._openLogId) {
+      this._openLogId = undefined;
+      this.modal.close();
+    }
+  }
+
+  mergedFeatures(features = [], logs = []) {
+    return [
+      ...new Set([
+        ...features,
+        ...logs.map((log) => log.feature_name).filter(Boolean),
+      ]),
+    ].sort();
+  }
+
+  initializeFilters(params = {}) {
+    this.selectedPeriod = params.period || undefined;
+    this.selectedOutcome = params.outcome || undefined;
+    this.hasRetries =
+      params.has_retries === "true" || params.has_retries === true;
+    this.selectedModel = params.model ? String(params.model) : undefined;
+    this.selectedFeature = params.feature || undefined;
+    this.searchText = params.search || "";
+    this.unattributed =
+      params.unattributed === "true" || params.unattributed === true;
+    this.startDate = params.start_date
+      ? moment(params.start_date).toDate()
+      : moment().subtract(CUSTOM_DEFAULT_DAYS, "days").toDate();
+    this.endDate = params.end_date
+      ? moment(params.end_date).toDate()
+      : new Date();
+  }
+
+  @action
+  persistDrawerState(expanded) {
+    this.keyValueStore.set({
+      key: "filter_drawer",
+      value: expanded ? "expanded" : "collapsed",
+    });
   }
 
   updateUrl(extra = {}) {
@@ -446,18 +454,10 @@ export default class AiLogs extends Component {
     }
   }
 
-  get hasNewLogs() {
-    return this.newLogsCount > 0;
-  }
-
   // an empty filtered list has no newest row to poll against, so fall back to
   // the table's high-water mark — otherwise every row would count as new
   captureNewLogsBaseline() {
     this._sinceId = this.logs[0]?.id || this.meta.max_id || 0;
-  }
-
-  get pollIntervalMs() {
-    return newLogsPollIntervalMs(this._emptyPolls);
   }
 
   schedulePoll() {

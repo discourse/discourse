@@ -20,10 +20,6 @@ const STEPS = ["theme", "colors", "homepage"];
 export default class DesignWizardControls extends Component {
   @service designWizard;
 
-  goToStepLabel(index) {
-    return i18n("design_wizard.step_label", { index: index + 1 });
-  }
-
   get currentStep() {
     return STEPS[this.designWizard.stepIndex] ?? STEPS[0];
   }
@@ -46,6 +42,10 @@ export default class DesignWizardControls extends Component {
   // would either be lost or save selections the reload is about to discard
   get busy() {
     return this.designWizard.applyingTheme;
+  }
+
+  goToStepLabel(index) {
+    return i18n("design_wizard.step_label", { index: index + 1 });
   }
 
   @action

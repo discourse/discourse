@@ -138,11 +138,6 @@ export default class ReviewableItem extends Component {
     return this.state.updates !== null;
   }
 
-  @bind
-  resolveReviewableComponent(type) {
-    return resolveReviewableComponent(getOwner(this), type);
-  }
-
   get customClasses() {
     const { reviewable } = this.args;
     let classes = dasherize(reviewable?.type);
@@ -292,6 +287,244 @@ export default class ReviewableItem extends Component {
     return "review.flagged_as";
   }
 
+  get permalink() {
+    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
+  }
+
+  @bind
+  resolveReviewableComponent(type) {
+    return resolveReviewableComponent(getOwner(this), type);
+  }
+
+  @action
+  clientScrub() {
+    this.modal.show(ScrubRejectedUserModal, {
+      model: {
+        confirmScrub: this.scrubRejectedUser,
+      },
+    });
+  }
+
+  @bind
+  async scrubRejectedUser(reason) {
+    const { id } = this.args.reviewable;
+
+    try {
+      await ajax({ url: `/review/${id}/scrub`, type: "PUT", data: { reason } });
+      this.store.find("reviewable", id);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  clientSuspend(reviewable, performAction) {
+    return this._penalize("showSuspendModal", reviewable, performAction);
+  }
+
+  clientSilence(reviewable, performAction) {
+    return this._penalize("showSilenceModal", reviewable, performAction);
+  }
+
+  async clientEdit(reviewable, performAction) {
+    if (!this.currentUser) {
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
+    }
+    const post = await this.store.find("post", reviewable.post_id);
+    const topic_json = await Topic.find(post.topic_id, {});
+
+    const topic = Topic.create(topic_json);
+    post.set("topic", topic);
+
+    if (!post.can_edit) {
+      return false;
+    }
+
+    const opts = {
+      post,
+      action: Composer.EDIT,
+      draftKey: post.get("topic.draft_key"),
+      draftSequence: post.get("topic.draft_sequence"),
+      skipJumpOnSave: true,
+    };
+
+    this.composer.open(opts);
+
+    return performAction();
+  }
+
+  @action
+  explainReviewable(reviewable, event) {
+    event.preventDefault();
+    this.modal.show(ExplainReviewableModal, {
+      model: { reviewable },
+    });
+  }
+
+  @action
+  switchTab(tabName, event) {
+    event.preventDefault();
+    this.state.activeTab = tabName;
+    if (tabName === "insights") {
+      this.state.insightsOpened = true;
+    }
+  }
+
+  @action
+  edit() {
+    this.state.updates = trackedObject({});
+  }
+
+  @action
+  cancelEdit() {
+    this.state.updates = null;
+  }
+
+  @action
+  saveEdit() {
+    this.updating = true;
+    return this.args.reviewable
+      .update({ ...this.state.updates })
+      .then(() => (this.state.updates = null))
+      .catch(popupAjaxError)
+      .finally(() => (this.updating = false));
+  }
+
+  @action
+  categoryChanged(categoryId) {
+    const category =
+      Category.findById(categoryId) ?? Category.findUncategorized();
+
+    this.#updateField("category_id", category.id);
+  }
+
+  @action
+  valueChanged(fieldId, event) {
+    this.#updateField(fieldId, event.target.value);
+  }
+
+  @action
+  async perform(performableAction) {
+    if (this.updating) {
+      return;
+    }
+
+    const message = performableAction.get("confirm_message");
+    const requireRejectReason = performableAction.get("require_reject_reason");
+    const actionModalClass = requireRejectReason
+      ? RejectReasonReviewableModal
+      : actionModalClassMap[performableAction.server_action];
+
+    if (message) {
+      if (await this.#claimReviewable()) {
+        const confirmOptions = {
+          message,
+          didConfirm: () => this._performConfirmed(performableAction),
+          // Claiming happens before the prompt, so release it if nothing is performed.
+          didCancel: () => this.#unclaimAutomaticReviewable(),
+        };
+
+        if (performableAction.get("confirm_destructive")) {
+          this.dialog.deleteConfirm(confirmOptions);
+        } else {
+          this.dialog.confirm(confirmOptions);
+        }
+      }
+    } else if (actionModalClass) {
+      if (await this.#claimReviewable()) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.args.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
+        });
+      }
+    } else {
+      return this._performConfirmed(performableAction);
+    }
+  }
+
+  @action
+  claimedByChanged(claimedBy) {
+    this.args.reviewable.claimed_by = claimedBy;
+  }
+
+  @action
+  async copyPermalink(event) {
+    const button = event.currentTarget;
+
+    // cmd/ctrl+click or middle-click to open in new tab
+    if (event.metaKey || event.ctrlKey || event.button === 1) {
+      window.open(this.permalink, "_blank");
+      return;
+    }
+
+    try {
+      await clipboardCopy(this.permalink);
+      showAlert(
+        this.args.reviewable.id,
+        "reviewable-permalink-copy",
+        "review.copy_link_feedback",
+        { actionBtn: button }
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to copy to clipboard:", error);
+    }
+  }
+
+  async #claimReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic) {
+      // We can't claim a reviewable without a topic, so treat it as claimed
+      return true;
+    }
+
+    if (!reviewable.claimed_by) {
+      const claim = this.store.createRecord("reviewable-claimed-topic");
+
+      try {
+        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
+        reviewable.claimed_by = { user: this.currentUser, automatic: true };
+      } catch (e) {
+        popupAjaxError(e);
+        return false;
+      }
+    }
+
+    return reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
+  async #unclaimAutomaticReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
+      return;
+    }
+
+    try {
+      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      reviewable.claimed_by = null;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  #updateField(fieldId, value) {
+    const [key, nestedKey] = fieldId.split(".");
+    const updates = this.state.updates;
+
+    if (nestedKey) {
+      updates[key] = { ...updates[key], [nestedKey]: value };
+    } else {
+      updates[key] = value;
+    }
+  }
+
   @bind
   _updateClaimedBy(data) {
     if (data.topic_id !== this.topicId) {
@@ -426,62 +659,6 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  @action
-  clientScrub() {
-    this.modal.show(ScrubRejectedUserModal, {
-      model: {
-        confirmScrub: this.scrubRejectedUser,
-      },
-    });
-  }
-
-  @bind
-  async scrubRejectedUser(reason) {
-    const { id } = this.args.reviewable;
-
-    try {
-      await ajax({ url: `/review/${id}/scrub`, type: "PUT", data: { reason } });
-      this.store.find("reviewable", id);
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
-  }
-
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
-  }
-
-  async clientEdit(reviewable, performAction) {
-    if (!this.currentUser) {
-      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
-    }
-    const post = await this.store.find("post", reviewable.post_id);
-    const topic_json = await Topic.find(post.topic_id, {});
-
-    const topic = Topic.create(topic_json);
-    post.set("topic", topic);
-
-    if (!post.can_edit) {
-      return false;
-    }
-
-    const opts = {
-      post,
-      action: Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
-      skipJumpOnSave: true,
-    };
-
-    this.composer.open(opts);
-
-    return performAction();
-  }
-
   _penalize(adminToolMethod, reviewable, performAction) {
     let adminTools = this.adminTools;
     if (adminTools) {
@@ -495,183 +672,6 @@ export default class ReviewableItem extends Component {
         reviewableId: reviewable.id,
         before: performAction,
       });
-    }
-  }
-
-  async #claimReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic) {
-      // We can't claim a reviewable without a topic, so treat it as claimed
-      return true;
-    }
-
-    if (!reviewable.claimed_by) {
-      const claim = this.store.createRecord("reviewable-claimed-topic");
-
-      try {
-        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
-        reviewable.claimed_by = { user: this.currentUser, automatic: true };
-      } catch (e) {
-        popupAjaxError(e);
-        return false;
-      }
-    }
-
-    return reviewable.claimed_by?.user?.id === this.currentUser.id;
-  }
-
-  async #unclaimAutomaticReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
-      return;
-    }
-
-    try {
-      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
-        type: "DELETE",
-        data: { automatic: true },
-      });
-      reviewable.claimed_by = null;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  explainReviewable(reviewable, event) {
-    event.preventDefault();
-    this.modal.show(ExplainReviewableModal, {
-      model: { reviewable },
-    });
-  }
-
-  @action
-  switchTab(tabName, event) {
-    event.preventDefault();
-    this.state.activeTab = tabName;
-    if (tabName === "insights") {
-      this.state.insightsOpened = true;
-    }
-  }
-
-  @action
-  edit() {
-    this.state.updates = trackedObject({});
-  }
-
-  @action
-  cancelEdit() {
-    this.state.updates = null;
-  }
-
-  @action
-  saveEdit() {
-    this.updating = true;
-    return this.args.reviewable
-      .update({ ...this.state.updates })
-      .then(() => (this.state.updates = null))
-      .catch(popupAjaxError)
-      .finally(() => (this.updating = false));
-  }
-
-  @action
-  categoryChanged(categoryId) {
-    const category =
-      Category.findById(categoryId) ?? Category.findUncategorized();
-
-    this.#updateField("category_id", category.id);
-  }
-
-  @action
-  valueChanged(fieldId, event) {
-    this.#updateField(fieldId, event.target.value);
-  }
-
-  #updateField(fieldId, value) {
-    const [key, nestedKey] = fieldId.split(".");
-    const updates = this.state.updates;
-
-    if (nestedKey) {
-      updates[key] = { ...updates[key], [nestedKey]: value };
-    } else {
-      updates[key] = value;
-    }
-  }
-
-  @action
-  async perform(performableAction) {
-    if (this.updating) {
-      return;
-    }
-
-    const message = performableAction.get("confirm_message");
-    const requireRejectReason = performableAction.get("require_reject_reason");
-    const actionModalClass = requireRejectReason
-      ? RejectReasonReviewableModal
-      : actionModalClassMap[performableAction.server_action];
-
-    if (message) {
-      if (await this.#claimReviewable()) {
-        const confirmOptions = {
-          message,
-          didConfirm: () => this._performConfirmed(performableAction),
-          // Claiming happens before the prompt, so release it if nothing is performed.
-          didCancel: () => this.#unclaimAutomaticReviewable(),
-        };
-
-        if (performableAction.get("confirm_destructive")) {
-          this.dialog.deleteConfirm(confirmOptions);
-        } else {
-          this.dialog.confirm(confirmOptions);
-        }
-      }
-    } else if (actionModalClass) {
-      if (await this.#claimReviewable()) {
-        this.modal.show(actionModalClass, {
-          model: {
-            reviewable: this.args.reviewable,
-            performConfirmed: this._performConfirmed,
-            action: performableAction,
-          },
-        });
-      }
-    } else {
-      return this._performConfirmed(performableAction);
-    }
-  }
-
-  @action
-  claimedByChanged(claimedBy) {
-    this.args.reviewable.claimed_by = claimedBy;
-  }
-
-  get permalink() {
-    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
-  }
-
-  @action
-  async copyPermalink(event) {
-    const button = event.currentTarget;
-
-    // cmd/ctrl+click or middle-click to open in new tab
-    if (event.metaKey || event.ctrlKey || event.button === 1) {
-      window.open(this.permalink, "_blank");
-      return;
-    }
-
-    try {
-      await clipboardCopy(this.permalink);
-      showAlert(
-        this.args.reviewable.id,
-        "reviewable-permalink-copy",
-        "review.copy_link_feedback",
-        { actionBtn: button }
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to copy to clipboard:", error);
     }
   }
 

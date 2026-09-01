@@ -61,13 +61,6 @@ export default class AdminBadgesShow extends Component {
     return this.adminBadges.badgeGroupings;
   }
 
-  @action
-  currentBadgeGrouping(data) {
-    return this.adminBadges.badgeGroupings.find(
-      (bg) => bg.id === data.badge_grouping_id
-    )?.name;
-  }
-
   get badgeTriggers() {
     return this.adminBadges.badgeTriggers;
   }
@@ -80,14 +73,6 @@ export default class AdminBadgesShow extends Component {
     return `badges.${this.args.badge.i18n_name}.`;
   }
 
-  sanitizeDescription(text) {
-    return trustHTML(sanitize(text));
-  }
-
-  hasQuery(query) {
-    return query?.trim?.()?.length > 0;
-  }
-
   // Form methods.
   @cached
   get formData() {
@@ -98,6 +83,21 @@ export default class AdminBadgesShow extends Component {
     }
 
     return data;
+  }
+
+  @action
+  currentBadgeGrouping(data) {
+    return this.adminBadges.badgeGroupings.find(
+      (bg) => bg.id === data.badge_grouping_id
+    )?.name;
+  }
+
+  sanitizeDescription(text) {
+    return trustHTML(sanitize(text));
+  }
+
+  hasQuery(query) {
+    return query?.trim?.()?.length > 0;
   }
 
   @action

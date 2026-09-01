@@ -37,21 +37,6 @@ export default class DCopyButton extends Component {
     return this.showCopied ? this.args.translatedLabelAfterCopy : "";
   }
 
-  _showCopied() {
-    this.showCopied = true;
-
-    discourseDebounce(this._restoreButton, 3000);
-  }
-
-  @bind
-  _restoreButton() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.showCopied = false;
-  }
-
   @action
   async copy() {
     let value = this.args.value;
@@ -78,6 +63,21 @@ export default class DCopyButton extends Component {
       this.args.copied?.();
       this._showCopied();
     } catch {}
+  }
+
+  _showCopied() {
+    this.showCopied = true;
+
+    discourseDebounce(this._restoreButton, 3000);
+  }
+
+  @bind
+  _restoreButton() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.showCopied = false;
   }
 
   <template>

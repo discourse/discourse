@@ -34,6 +34,14 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
     };
   }
 
+  get #savePath() {
+    if (this.args.isDefaultLocale) {
+      return "/admin/config/about.json";
+    }
+
+    return "/admin/config/about/localizations.json";
+  }
+
   @action
   setContactUsername(usernames, { set }) {
     set("contactUsername", usernames[0] || null);
@@ -66,14 +74,6 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
     } finally {
       this.args.setGlobalSavingStatus(false);
     }
-  }
-
-  get #savePath() {
-    if (this.args.isDefaultLocale) {
-      return "/admin/config/about.json";
-    }
-
-    return "/admin/config/about/localizations.json";
   }
 
   #saveData(data) {

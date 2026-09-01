@@ -36,6 +36,22 @@ export default class SidebarState extends Service {
     return this.#hiders.size > 0;
   }
 
+  get currentPanel() {
+    return this.panels.find((panel) => panel.key === this.currentPanelKey);
+  }
+
+  get combinedMode() {
+    return this.mode === COMBINED_MODE;
+  }
+
+  get showMainPanel() {
+    return this.currentPanelKey === MAIN_PANEL;
+  }
+
+  get sanitizedFilter() {
+    return escapeRegExp(this.filter.toLowerCase().trim());
+  }
+
   registerHider(ref) {
     this.#hiders.add(ref);
 
@@ -50,10 +66,6 @@ export default class SidebarState extends Service {
     }
     this.currentPanelKey = name;
     this.restorePreviousState();
-  }
-
-  get currentPanel() {
-    return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
 
   setSeparatedMode() {
@@ -121,18 +133,6 @@ export default class SidebarState extends Service {
     } else {
       this.hideSwitchPanelButtons();
     }
-  }
-
-  get combinedMode() {
-    return this.mode === COMBINED_MODE;
-  }
-
-  get showMainPanel() {
-    return this.currentPanelKey === MAIN_PANEL;
-  }
-
-  get sanitizedFilter() {
-    return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
   clearFilter() {

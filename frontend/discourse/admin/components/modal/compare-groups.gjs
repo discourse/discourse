@@ -43,25 +43,6 @@ export default class CompareGroups extends Component {
     );
   }
 
-  buildRows() {
-    SYNTHETIC_KEYS.forEach((key) => {
-      this.rowsByKey.set(key, {
-        key,
-        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
-        description: i18n(
-          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
-        ),
-      });
-    });
-
-    (this.site.groups ?? [])
-      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
-      .forEach((group) => {
-        const key = groupToken(group.id);
-        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
-      });
-  }
-
   get enabledRows() {
     return this.list.enabledOrder
       .map((key) => this.rowsByKey.get(key))
@@ -92,6 +73,25 @@ export default class CompareGroups extends Component {
 
   get lastEnabledIndex() {
     return this.enabledRows.length - 1;
+  }
+
+  buildRows() {
+    SYNTHETIC_KEYS.forEach((key) => {
+      this.rowsByKey.set(key, {
+        key,
+        title: i18n(`admin.dashboard.sections.engagement.whos_posting.${key}`),
+        description: i18n(
+          `admin.dashboard.sections.engagement.whos_posting.modal.descriptions.${key}`
+        ),
+      });
+    });
+
+    (this.site.groups ?? [])
+      .filter((group) => !EXCLUDED_AUTO_GROUP_IDS.includes(group.id))
+      .forEach((group) => {
+        const key = groupToken(group.id);
+        this.rowsByKey.set(key, { key, title: group.full_name || group.name });
+      });
   }
 
   @action

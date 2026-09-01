@@ -58,84 +58,6 @@ export default class NestedPostChildren extends Component {
     ].join(":");
   }
 
-  @action
-  hydrateFromArgs() {
-    this._hydrateFromArgs();
-  }
-
-  _cacheKeyFor(
-    parentPostNumber = this.args.parentPostNumber,
-    topicId = this.args.topic?.id
-  ) {
-    return `${topicId}:${parentPostNumber}`;
-  }
-
-  _hydrateFromArgs() {
-    if (this._identityKey === this.identityKey) {
-      return;
-    }
-
-    this._identityKey = this.identityKey;
-    this._activeCacheKey = this._cacheKeyFor();
-    this.childNodes = [];
-    this.loading = false;
-    this.page = 0;
-    this.hasMore = false;
-    this.loadingMore = false;
-    this.loaded = false;
-    this._fetchedFromServer = false;
-
-    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
-    if (cached) {
-      this.childNodes = cached.childNodes;
-      this.page = cached.page;
-      this.hasMore = this.usesFlatDescendantPagination
-        ? this.expectedCount > this.childNodes.length
-        : cached.hasMore;
-      this.loaded = true;
-      this._fetchedFromServer = cached.fetchedFromServer;
-      return;
-    }
-
-    if (this.args.preloadedChildren?.length > 0) {
-      this.childNodes = this.args.preloadedChildren;
-      this.loaded = true;
-      this.hasMore = this.expectedCount > this.childNodes.length;
-    } else if (this.args.directReplyCount > 0) {
-      this.loadChildren();
-    }
-  }
-
-  _reportToCache(cacheKey = this._activeCacheKey) {
-    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
-      return;
-    }
-    this.args.fetchedChildrenCache.set(cacheKey, {
-      childNodes: this.childNodes,
-      page: this.page,
-      hasMore: this.hasMore,
-      fetchedFromServer: this._fetchedFromServer,
-    });
-  }
-
-  _onChildCreated({ topicId, post, parentPostNumber }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.parentPostNumber
-    ) {
-      return;
-    }
-
-    const alreadyExists = this._includesPost(this.childNodes, post);
-    if (alreadyExists) {
-      return;
-    }
-
-    this.childNodes = [{ post, children: [] }, ...this.childNodes];
-    this.loaded = true;
-    this._reportToCache();
-  }
-
   get childDepth() {
     return this.args.depth + 1;
   }
@@ -163,6 +85,11 @@ export default class NestedPostChildren extends Component {
       return i18n("nested_replies.load_more_children", { count });
     }
     return i18n("nested_replies.load_more_children_generic");
+  }
+
+  @action
+  hydrateFromArgs() {
+    this._hydrateFromArgs();
   }
 
   async loadChildren() {
@@ -268,6 +195,79 @@ export default class NestedPostChildren extends Component {
         this.loadingMore = false;
       }
     }
+  }
+
+  _cacheKeyFor(
+    parentPostNumber = this.args.parentPostNumber,
+    topicId = this.args.topic?.id
+  ) {
+    return `${topicId}:${parentPostNumber}`;
+  }
+
+  _hydrateFromArgs() {
+    if (this._identityKey === this.identityKey) {
+      return;
+    }
+
+    this._identityKey = this.identityKey;
+    this._activeCacheKey = this._cacheKeyFor();
+    this.childNodes = [];
+    this.loading = false;
+    this.page = 0;
+    this.hasMore = false;
+    this.loadingMore = false;
+    this.loaded = false;
+    this._fetchedFromServer = false;
+
+    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
+    if (cached) {
+      this.childNodes = cached.childNodes;
+      this.page = cached.page;
+      this.hasMore = this.usesFlatDescendantPagination
+        ? this.expectedCount > this.childNodes.length
+        : cached.hasMore;
+      this.loaded = true;
+      this._fetchedFromServer = cached.fetchedFromServer;
+      return;
+    }
+
+    if (this.args.preloadedChildren?.length > 0) {
+      this.childNodes = this.args.preloadedChildren;
+      this.loaded = true;
+      this.hasMore = this.expectedCount > this.childNodes.length;
+    } else if (this.args.directReplyCount > 0) {
+      this.loadChildren();
+    }
+  }
+
+  _reportToCache(cacheKey = this._activeCacheKey) {
+    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
+      return;
+    }
+    this.args.fetchedChildrenCache.set(cacheKey, {
+      childNodes: this.childNodes,
+      page: this.page,
+      hasMore: this.hasMore,
+      fetchedFromServer: this._fetchedFromServer,
+    });
+  }
+
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
+      return;
+    }
+
+    const alreadyExists = this._includesPost(this.childNodes, post);
+    if (alreadyExists) {
+      return;
+    }
+
+    this.childNodes = [{ post, children: [] }, ...this.childNodes];
+    this.loaded = true;
+    this._reportToCache();
   }
 
   _childrenForTopic(children, topicId) {

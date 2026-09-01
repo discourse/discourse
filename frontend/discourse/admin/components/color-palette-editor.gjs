@@ -21,6 +21,26 @@ const Picker = class extends Component {
 
   @tracked invalid = false;
 
+  get displayedColor() {
+    const color = this.args.color.hex;
+    return normalizeHex(color);
+  }
+
+  get activeValue() {
+    const color = this.args.color.hex;
+
+    if (color) {
+      return `#${normalizeHex(color)}`;
+    }
+  }
+
+  get disabledEditForSystemDescription() {
+    if (!this.args.system) {
+      return null;
+    }
+    return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
+  }
+
   @action
   onInput(event) {
     const color = event.target.value.replace(/^#/, "");
@@ -129,26 +149,6 @@ const Picker = class extends Component {
         },
       });
     }
-  }
-
-  get displayedColor() {
-    const color = this.args.color.hex;
-    return normalizeHex(color);
-  }
-
-  get activeValue() {
-    const color = this.args.color.hex;
-
-    if (color) {
-      return `#${normalizeHex(color)}`;
-    }
-  }
-
-  get disabledEditForSystemDescription() {
-    if (!this.args.system) {
-      return null;
-    }
-    return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
   }
 
   <template>

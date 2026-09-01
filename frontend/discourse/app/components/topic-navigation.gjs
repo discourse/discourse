@@ -97,30 +97,6 @@ export default class TopicNavigation extends Component {
     this.#heightQuery?.teardown();
   }
 
-  setupAppEvents() {
-    this.appEvents
-      .on("topic:current-post-scrolled", this.topicScrolled)
-      .on("topic:jump-to-post", this.collapseFullscreen)
-      .on("topic:keyboard-trigger", this.keyboardTrigger)
-      .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-      .on("composer:resized", this.updateComposerHeight);
-
-    registerDestructor(this, () => {
-      this.appEvents
-        .off("topic:current-post-scrolled", this.topicScrolled)
-        .off("topic:jump-to-post", this.collapseFullscreen)
-        .off("topic:keyboard-trigger", this.keyboardTrigger)
-        .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-        .off("composer:resized", this.updateComposerHeight);
-    });
-  }
-
-  setupWidthQuery() {
-    const query = new TrackedMediaQuery(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
-    registerDestructor(this, () => query.teardown());
-    return query;
-  }
-
   get renderTimeline() {
     // Expanded == mobile fullscreen mode; always render.
     if (this.info.topicProgressExpanded) {
@@ -160,13 +136,28 @@ export default class TopicNavigation extends Component {
     return this.#buildHeightQuery(threshold);
   }
 
-  #buildHeightQuery(threshold) {
-    this.#heightQuery?.teardown();
-    this.#heightQuery =
-      threshold === null
-        ? null
-        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
-    return this.#heightQuery;
+  setupAppEvents() {
+    this.appEvents
+      .on("topic:current-post-scrolled", this.topicScrolled)
+      .on("topic:jump-to-post", this.collapseFullscreen)
+      .on("topic:keyboard-trigger", this.keyboardTrigger)
+      .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+      .on("composer:resized", this.updateComposerHeight);
+
+    registerDestructor(this, () => {
+      this.appEvents
+        .off("topic:current-post-scrolled", this.topicScrolled)
+        .off("topic:jump-to-post", this.collapseFullscreen)
+        .off("topic:keyboard-trigger", this.keyboardTrigger)
+        .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+        .off("composer:resized", this.updateComposerHeight);
+    });
+  }
+
+  setupWidthQuery() {
+    const query = new TrackedMediaQuery(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
+    registerDestructor(this, () => query.teardown());
+    return query;
   }
 
   @bind
@@ -293,6 +284,15 @@ export default class TopicNavigation extends Component {
       [{ transform: `translate3d(0, ${this.pxClosed}px, 0)` }],
       { fill: "forwards" }
     );
+  }
+
+  #buildHeightQuery(threshold) {
+    this.#heightQuery?.teardown();
+    this.#heightQuery =
+      threshold === null
+        ? null
+        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    return this.#heightQuery;
   }
 
   <template>

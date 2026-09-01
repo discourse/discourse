@@ -88,14 +88,6 @@ export default class ChatChannel extends Component {
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
 
-  @action
-  registerScroller(element) {
-    this.scroller = element;
-    this.#userScrollEvents.forEach((event) =>
-      element.addEventListener(event, this.#markUserScroll, { passive: true })
-    );
-  }
-
   @cached
   get messagesLoader() {
     return new ChatMessagesLoader(getOwner(this), this.args.channel);
@@ -127,6 +119,14 @@ export default class ChatChannel extends Component {
   @cached
   get hiddenMessageIds() {
     return new Set((this.args.hiddenMessageIds ?? []).map(Number));
+  }
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
+    this.#userScrollEvents.forEach((event) =>
+      element.addEventListener(event, this.#markUserScroll, { passive: true })
+    );
   }
 
   @action
@@ -643,6 +643,38 @@ export default class ChatChannel extends Component {
     this.args.channel.resetDraft(this.currentUser);
   }
 
+  @action
+  resendStagedMessage(stagedMessage) {
+    this.pane.sending = true;
+
+    stagedMessage.error = null;
+
+    const data = {
+      cooked: stagedMessage.cooked,
+      message: stagedMessage.message,
+      upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+      staged_id: stagedMessage.id,
+    };
+
+    this.chatApi
+      .sendMessage(this.args.channel.id, data)
+      .catch((error) => {
+        this._onSendError(data.staged_id, error);
+      })
+      .finally(() => {
+        this.pane.sending = false;
+      });
+  }
+
+  @action
+  onCloseFullScreen() {
+    this.chatStateManager.prefersDrawer();
+
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
+      DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+    });
+  }
+
   async #sendEditMessage(message) {
     this.pane.sending = true;
 
@@ -693,6 +725,29 @@ export default class ChatChannel extends Component {
     }
   }
 
+  #cancelHandlers() {
+    cancel(this._debouncedHighlightOrFetchMessageHandler);
+    cancel(this._debouncedUpdateLastReadMessageHandler);
+    cancel(this._debouncedFillPaneAttemptHandler);
+  }
+
+  #preloadThreadTrackingState(thread, threadTracking) {
+    if (!threadTracking[thread.id]) {
+      return;
+    }
+
+    thread.tracking.unreadCount = threadTracking[thread.id].unread_count;
+    thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
+    thread.tracking.watchedThreadsUnreadCount =
+      threadTracking[thread.id].watched_threads_unread_count;
+  }
+
+  #flushIgnoreNextScroll() {
+    const prev = this._ignoreNextScroll;
+    this._ignoreNextScroll = false;
+    return prev;
+  }
+
   _onSendError(id, error) {
     const stagedMessage =
       this.args.channel.messagesManager.findStagedMessage(id);
@@ -708,38 +763,6 @@ export default class ChatChannel extends Component {
     }
 
     this.resetComposerMessage();
-  }
-
-  @action
-  resendStagedMessage(stagedMessage) {
-    this.pane.sending = true;
-
-    stagedMessage.error = null;
-
-    const data = {
-      cooked: stagedMessage.cooked,
-      message: stagedMessage.message,
-      upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-      staged_id: stagedMessage.id,
-    };
-
-    this.chatApi
-      .sendMessage(this.args.channel.id, data)
-      .catch((error) => {
-        this._onSendError(data.staged_id, error);
-      })
-      .finally(() => {
-        this.pane.sending = false;
-      });
-  }
-
-  @action
-  onCloseFullScreen() {
-    this.chatStateManager.prefersDrawer();
-
-    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
-      DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
-    });
   }
 
   @bind
@@ -772,29 +795,6 @@ export default class ChatChannel extends Component {
     event.preventDefault();
     this.composer.focus({ addText: event.key });
     return;
-  }
-
-  #cancelHandlers() {
-    cancel(this._debouncedHighlightOrFetchMessageHandler);
-    cancel(this._debouncedUpdateLastReadMessageHandler);
-    cancel(this._debouncedFillPaneAttemptHandler);
-  }
-
-  #preloadThreadTrackingState(thread, threadTracking) {
-    if (!threadTracking[thread.id]) {
-      return;
-    }
-
-    thread.tracking.unreadCount = threadTracking[thread.id].unread_count;
-    thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
-    thread.tracking.watchedThreadsUnreadCount =
-      threadTracking[thread.id].watched_threads_unread_count;
-  }
-
-  #flushIgnoreNextScroll() {
-    const prev = this._ignoreNextScroll;
-    this._ignoreNextScroll = false;
-    return prev;
   }
 
   <template>

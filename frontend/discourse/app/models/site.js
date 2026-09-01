@@ -114,16 +114,6 @@ export default class Site extends RestModel {
     return map;
   }
 
-  groupName(groupId) {
-    const group = this.groupsById[groupId];
-    return group ? group.name : null;
-  }
-
-  groupFullName(groupId) {
-    const group = this.groupsById[groupId];
-    return group ? group.full_name : null;
-  }
-
   @dependentKeyCompat
   get desktopView() {
     return !this.mobileView;
@@ -215,21 +205,6 @@ export default class Site extends RestModel {
     return trackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
-  collectUserFields(fields) {
-    fields = fields || {};
-
-    let siteFields = this.user_fields;
-
-    if (!isEmpty(siteFields)) {
-      return siteFields.map((f) => {
-        let value = fields ? fields[f.id.toString()] : null;
-        value = value || trustHTML("&mdash;");
-        return { name: f.name, value };
-      });
-    }
-    return [];
-  }
-
   // Sort subcategories under parents
   @cached
   get sortedCategories() {
@@ -262,27 +237,45 @@ export default class Site extends RestModel {
     return trackedCategories;
   }
 
-  postActionTypeById(id) {
-    return this.get("postActionByIdLookup.action" + id);
-  }
-
-  topicFlagTypeById(id) {
-    return this.get("topicFlagByIdLookup.action" + id);
-  }
-
-  #transformTags(tags) {
-    if (!tags) {
-      return [];
-    }
-    return tags.map((tag) => this.store.createRecord("tag", tag));
-  }
-
   get topTags() {
     return this.#transformTags(this.top_tags);
   }
 
   get categoryTopTags() {
     return this.#transformTags(this.category_top_tags);
+  }
+
+  groupName(groupId) {
+    const group = this.groupsById[groupId];
+    return group ? group.name : null;
+  }
+
+  groupFullName(groupId) {
+    const group = this.groupsById[groupId];
+    return group ? group.full_name : null;
+  }
+
+  collectUserFields(fields) {
+    fields = fields || {};
+
+    let siteFields = this.user_fields;
+
+    if (!isEmpty(siteFields)) {
+      return siteFields.map((f) => {
+        let value = fields ? fields[f.id.toString()] : null;
+        value = value || trustHTML("&mdash;");
+        return { name: f.name, value };
+      });
+    }
+    return [];
+  }
+
+  postActionTypeById(id) {
+    return this.get("postActionByIdLookup.action" + id);
+  }
+
+  topicFlagTypeById(id) {
+    return this.get("topicFlagByIdLookup.action" + id);
   }
 
   removeCategory(id) {
@@ -321,6 +314,13 @@ export default class Site extends RestModel {
       categories.push(newCategory);
       return newCategory;
     }
+  }
+
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
   }
 }
 

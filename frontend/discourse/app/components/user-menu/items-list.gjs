@@ -67,6 +67,13 @@ export default class UserMenuItemsList extends Component {
     await this.#load();
   }
 
+  @action
+  dismissButtonClick() {
+    throw new Error(
+      `dismissButtonClick must be implemented in ${this.constructor.name}.`
+    );
+  }
+
   async #load() {
     const cached = this.#getCachedItems();
     if (cached?.length) {
@@ -101,13 +108,6 @@ export default class UserMenuItemsList extends Component {
     if (key) {
       this.session.set(`user-menu-items:${key}`, newItems);
     }
-  }
-
-  @action
-  dismissButtonClick() {
-    throw new Error(
-      `dismissButtonClick must be implemented in ${this.constructor.name}.`
-    );
   }
 
   <template>

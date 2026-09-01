@@ -64,11 +64,6 @@ export default class ChatThread extends Component {
     onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
-  @action
-  registerScroller(element) {
-    this.scroller = element;
-  }
-
   @cached
   get messagesLoader() {
     return new ChatMessagesLoader(getOwner(this), this.args.thread);
@@ -85,6 +80,11 @@ export default class ChatThread extends Component {
 
   get pendingContextKey() {
     return this.args.thread?.id ? `thread:${this.args.thread.id}` : null;
+  }
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
   }
 
   @action
@@ -465,6 +465,25 @@ export default class ChatThread extends Component {
     );
   }
 
+  @action
+  async scrollToBottom() {
+    this._ignoreNextScroll = true;
+    await scrollListToBottom(this.scroller);
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+    this.paneState.clearPendingMessages();
+  }
+
+  @action
+  async scrollToTop() {
+    this._ignoreNextScroll = true;
+    await scrollListToTop(this.scroller);
+  }
+
+  @action
+  resendStagedMessage() {}
+
   async #sendNewMessage(message) {
     if (this.chatThreadPane.sending) {
       return;
@@ -537,25 +556,6 @@ export default class ChatThread extends Component {
       this.chatThreadPane.sending = false;
     }
   }
-
-  @action
-  async scrollToBottom() {
-    this._ignoreNextScroll = true;
-    await scrollListToBottom(this.scroller);
-    if (this.paneState.shouldMarkRead()) {
-      this.debouncedUpdateLastReadMessage();
-    }
-    this.paneState.clearPendingMessages();
-  }
-
-  @action
-  async scrollToTop() {
-    this._ignoreNextScroll = true;
-    await scrollListToTop(this.scroller);
-  }
-
-  @action
-  resendStagedMessage() {}
 
   #onSendError(stagedId, error) {
     const stagedMessage =

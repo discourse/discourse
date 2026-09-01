@@ -36,6 +36,14 @@ export default class AdminSiteTextEdit extends Controller {
     return this.siteText?.status === "outdated";
   }
 
+  @computed("buffered.value", "siteText.interpolation_keys")
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      this.get("buffered.value"),
+      this.siteText.interpolation_keys
+    );
+  }
+
   @action
   trackTextarea(event) {
     this.#activeTextarea = event.target;
@@ -123,13 +131,5 @@ export default class AdminSiteTextEdit extends Controller {
         this.siteText.set("status", "up_to_date");
       })
       .catch(popupAjaxError);
-  }
-
-  @computed("buffered.value", "siteText.interpolation_keys")
-  get interpolationKeysWithStatus() {
-    return computeInterpolationKeysWithStatus(
-      this.get("buffered.value"),
-      this.siteText.interpolation_keys
-    );
   }
 }

@@ -28,11 +28,6 @@ export default class ValueList extends Component {
 
   @tracked _noneKeyOverride;
 
-  @computed("newValue")
-  get inputInvalid() {
-    return isEmpty(this.newValue);
-  }
-
   @computed("addKey")
   get noneKey() {
     if (this._noneKeyOverride !== undefined) {
@@ -43,6 +38,21 @@ export default class ValueList extends Component {
 
   set noneKey(value) {
     this._noneKeyOverride = value;
+  }
+
+  @computed("newValue")
+  get inputInvalid() {
+    return isEmpty(this.newValue);
+  }
+
+  @computed("choices.[]", "collection.[]")
+  get filteredChoices() {
+    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
+  }
+
+  @computed("collection")
+  get showUpDownButtons() {
+    return this.collection.length - 1 ? true : false;
   }
 
   didReceiveAttrs() {
@@ -57,11 +67,6 @@ export default class ValueList extends Component {
       "collection",
       this._splitValues(this.values, this.inputDelimiter || "\n")
     );
-  }
-
-  @computed("choices.[]", "collection.[]")
-  get filteredChoices() {
-    return makeArray(this.choices).filter((i) => !this.collection?.includes(i));
   }
 
   keyDown(event) {
@@ -156,11 +161,6 @@ export default class ValueList extends Component {
     }
 
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
-  }
-
-  @computed("collection")
-  get showUpDownButtons() {
-    return this.collection.length - 1 ? true : false;
   }
 
   _splitValues(values, delimiter) {

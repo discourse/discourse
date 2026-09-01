@@ -10,16 +10,6 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 export default class EditCategoryTabsHorizontalTemplate extends Component {
-  evaluateTabCondition(tab, controller) {
-    if (!tab.condition) {
-      return true;
-    }
-    return tab.condition({
-      category: controller.model,
-      siteSettings: controller.siteSettings,
-    });
-  }
-
   get dynamicCategoryTypeTabs() {
     return Object.values(this.args.controller.model.categoryTypes ?? {}).filter(
       (type) => type.id !== "discussion" && type.visible
@@ -38,6 +28,16 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
       this.visiblePrimaryTabs.length > 0 ||
       this.dynamicCategoryTypeTabs.length > 0
     );
+  }
+
+  evaluateTabCondition(tab, controller) {
+    if (!tab.condition) {
+      return true;
+    }
+    return tab.condition({
+      category: controller.model,
+      siteSettings: controller.siteSettings,
+    });
   }
 
   <template>

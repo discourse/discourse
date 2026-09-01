@@ -15,10 +15,6 @@ export default class ParticipantAudio {
     this.#isDeafened = isDeafened;
   }
 
-  #key(roomId, userId) {
-    return `${roomId}:${userId}`;
-  }
-
   trackElement(roomId, userId, element, role = "voice") {
     const key = this.#key(roomId, userId);
     const elements = this.#elements.get(key) || {};
@@ -74,6 +70,10 @@ export default class ParticipantAudio {
         applyOutputDevice(element, deviceId);
       }
     }
+  }
+
+  #key(roomId, userId) {
+    return `${roomId}:${userId}`;
   }
 
   #applyTo(key, elements) {

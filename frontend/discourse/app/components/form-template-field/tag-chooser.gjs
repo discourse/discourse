@@ -31,10 +31,6 @@ export default class TagChooserField extends Component {
     }));
   }
 
-  _tagId(tag) {
-    return typeof tag === "object" ? tag.id : null;
-  }
-
   get filteredSelectedValues() {
     return this.tags.filter((tag) =>
       this.formattedChoices.some((choice) => choice.id === this._tagId(tag))
@@ -45,6 +41,10 @@ export default class TagChooserField extends Component {
     return this.tags.filter((tag) =>
       this.args.choices.some((choice) => choice.id === this._tagId(tag))
     );
+  }
+
+  get tags() {
+    return this.composer.get("model.tags") || [];
   }
 
   @action
@@ -79,10 +79,6 @@ export default class TagChooserField extends Component {
     } else {
       this.args.onChange(this.tags);
     }
-  }
-
-  get tags() {
-    return this.composer.get("model.tags") || [];
   }
 
   @action
@@ -135,6 +131,10 @@ export default class TagChooserField extends Component {
     return this.filteredSelectedValues.some(
       (tag) => this._tagId(tag) === tagId
     );
+  }
+
+  _tagId(tag) {
+    return typeof tag === "object" ? tag.id : null;
   }
 
   <template>

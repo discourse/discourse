@@ -102,17 +102,6 @@ export default class PostMetaDataPosterName extends Component {
     return !this.shouldDisplayIconsBefore;
   }
 
-  @bind
-  withBadgeDescription(badge) {
-    // Alter the badge description to show that the badge was granted for this post.
-    badge.description = i18n("post.badge_granted_tooltip", {
-      username: this.args.post.username,
-      badge_name: badge.name,
-    });
-
-    return badge;
-  }
-
   get #suppressSimilarName() {
     const sanitizedName = this.#sanitizeName(this.user.name);
     const sanitizedUsername = this.#sanitizeName(this.user.username);
@@ -129,6 +118,17 @@ export default class PostMetaDataPosterName extends Component {
         username: this.user.username,
       }
     );
+  }
+
+  @bind
+  withBadgeDescription(badge) {
+    // Alter the badge description to show that the badge was granted for this post.
+    badge.description = i18n("post.badge_granted_tooltip", {
+      username: this.args.post.username,
+      badge_name: badge.name,
+    });
+
+    return badge;
   }
 
   #sanitizeName(name) {

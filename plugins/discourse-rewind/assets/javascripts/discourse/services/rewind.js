@@ -10,20 +10,20 @@ export default class Rewind extends Service {
 
   @tracked _isEnabled = this.currentUser?.user_option?.discourse_rewind_enabled;
 
-  get active() {
-    return this.currentUser?.is_rewind_active;
-  }
-
-  get dismissed() {
-    return this._isDismissed ?? false;
-  }
-
   get enabled() {
     return this._isEnabled ?? true;
   }
 
   set enabled(value) {
     this._isEnabled = value;
+  }
+
+  get active() {
+    return this.currentUser?.is_rewind_active;
+  }
+
+  get dismissed() {
+    return this._isDismissed ?? false;
   }
 
   /**

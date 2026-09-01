@@ -166,16 +166,6 @@ export default class Nested extends Component {
     this.viewportTracker.destroy();
   }
 
-  @action
-  maybeLoadMoreRoots({ selectedArticle, articles }) {
-    if (!this.args.hasMoreRoots || this.args.loadingMore) {
-      return;
-    }
-    if (selectedArticle === articles[articles.length - 1]) {
-      this.args.loadMoreRoots?.();
-    }
-  }
-
   get emptyPath() {
     return [];
   }
@@ -241,10 +231,6 @@ export default class Nested extends Component {
     return this.postLevelScrollAnchor(this.args.scrollAnchor);
   }
 
-  postLevelScrollAnchor(anchor) {
-    return Number.isFinite(anchor?.scrollY) ? null : anchor;
-  }
-
   get focusedNode() {
     return this.focusedPath.at(-1);
   }
@@ -263,6 +249,24 @@ export default class Nested extends Component {
 
   get targetScrollKey() {
     return `${this.args.targetPostNumber}:${this.args.rootNodes?.[0]?._renderKey}`;
+  }
+
+  get #storedScrollAnchors() {
+    return STORED_SCROLL_ANCHORS;
+  }
+
+  @action
+  maybeLoadMoreRoots({ selectedArticle, articles }) {
+    if (!this.args.hasMoreRoots || this.args.loadingMore) {
+      return;
+    }
+    if (selectedArticle === articles[articles.length - 1]) {
+      this.args.loadMoreRoots?.();
+    }
+  }
+
+  postLevelScrollAnchor(anchor) {
+    return Number.isFinite(anchor?.scrollY) ? null : anchor;
   }
 
   @action
@@ -322,6 +326,201 @@ export default class Nested extends Component {
     return this.findScrollAnchor();
   }
 
+  @action
+  persistScrollAnchor() {
+    if (this.isDestroying || this.isDestroyed || this.#restoringStoredScroll) {
+      return;
+    }
+
+    const anchor = this.findScrollAnchor();
+    if (anchor) {
+      this.args.saveScrollPosition?.(anchor);
+      this.#saveStoredScrollAnchor(
+        anchor,
+        this.isMobileFocused ? null : this.args.postNumber
+      );
+    }
+  }
+
+  @action
+  restoreStoredScrollAnchor() {
+    const anchor = this.args.scrollAnchor || this.#loadStoredScrollAnchor();
+    if (!anchor) {
+      return;
+    }
+
+    this.#cancelledScrollAnchorKey = null;
+    this.#restoreScrollAnchorAfterRender(anchor);
+  }
+
+  @action
+  restoreUpdatedScrollAnchor() {
+    if (!this.args.scrollAnchor) {
+      return;
+    }
+
+    const anchorKey = this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
+    if (anchorKey && anchorKey === this.#cancelledScrollAnchorKey) {
+      return;
+    }
+
+    this.#restoreScrollAnchorAfterRender(this.args.scrollAnchor);
+  }
+
+  findScrollAnchor() {
+    const articles = document.querySelectorAll(
+      ".nested-view__roots .nested-post [data-post-number]"
+    );
+    let best = null;
+    let bestDistance = Infinity;
+
+    for (const article of articles) {
+      const postElement = article.closest(".nested-post") || article;
+      const rect = postElement.getBoundingClientRect();
+      const distance = Math.abs(rect.top);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = {
+          postNumber: Number(article.dataset.postNumber),
+          offsetFromTop: rect.top,
+          scrollY: window.scrollY,
+        };
+      }
+    }
+
+    return best;
+  }
+
+  scrollAnchorForPath(path) {
+    const rootNode = path?.[0];
+    const postNumber = rootNode?.post?.post_number;
+    if (!postNumber) {
+      return null;
+    }
+
+    const postElement = document.querySelector(
+      `.nested-view [data-post-number="${postNumber}"]`
+    );
+    const element = postElement?.closest(".nested-post") || postElement;
+    if (!element) {
+      return { postNumber, offsetFromTop: this.header.headerOffset };
+    }
+
+    return {
+      postNumber,
+      offsetFromTop: element.getBoundingClientRect().top,
+      scrollY: window.scrollY,
+    };
+  }
+
+  @action
+  scrollMobileFocusIntoContext(element) {
+    if (!this.isMobileFocused || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    const ancestorRows = element.querySelectorAll(
+      ".nested-view__mobile-ancestor"
+    );
+    const target =
+      ancestorRows[ancestorRows.length - 1] ||
+      element.querySelector(".nested-view__mobile-focus-back");
+    if (!target) {
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+    window.scrollTo({
+      top: window.scrollY + rect.top - this.#stickyHeaderBottom(),
+      behavior: "auto",
+    });
+  }
+
+  @action
+  applyInitialFocusedPath() {
+    if (!this.site.mobileView) {
+      return;
+    }
+
+    const key = this.initialFocusedPathKey;
+
+    if (!this.args.initialFocusedPath?.length) {
+      this.#initialFocusedPathKey = key;
+      if (this.focusedPath.length > 0) {
+        this.focusDirection = "back";
+        this.focusedPath = [];
+      }
+      return;
+    }
+
+    if (key === this.#initialFocusedPathKey) {
+      return;
+    }
+
+    this.#initialFocusedPathKey = key;
+    this.focusDirection = "forward";
+    this.focusedPath = this.args.initialFocusedPath;
+    this.#registerFocusedPath(this.focusedPath);
+  }
+
+  @action
+  syncFocusFromURL() {
+    if (this.isDestroying || this.isDestroyed || !this.site.mobileView) {
+      return;
+    }
+
+    const postNumber = this.#postNumberFromCurrentURL();
+    if (postNumber === undefined) {
+      return;
+    }
+
+    if (!postNumber) {
+      const storedAnchor = this.#loadStoredScrollAnchor();
+      const anchor =
+        this.mobileReturnAnchor ||
+        storedAnchor ||
+        (this.focusedPath.length > 0
+          ? this.scrollAnchorForPath(this.focusedPath)
+          : null);
+
+      this.args.setFocusedPostNumber?.(null, []);
+      if (this.focusedPath.length > 0) {
+        this.focusDirection = "back";
+      }
+      this.mobileReturnAnchor = anchor;
+      this.focusedPath = [];
+
+      if (anchor) {
+        this.#restoreScrollAnchorAfterRender(anchor);
+      } else {
+        this.#restoringStoredScroll = false;
+      }
+      return;
+    }
+
+    const path = this.#focusedPathsByPostNumber.get(postNumber);
+    if (!path) {
+      this.#restoringStoredScroll = false;
+      return;
+    }
+
+    this.args.setFocusedPostNumber?.(postNumber, path);
+    this.focusDirection =
+      path.length >= this.focusedPath.length ? "forward" : "back";
+    this.focusedPath = path;
+    this.#restoringStoredScroll = false;
+  }
+
+  @action
+  scheduleTargetScroll() {
+    this.#scheduleTargetScroll();
+  }
+
+  @action
+  forceScheduleTargetScroll() {
+    this.#scheduleTargetScroll({ force: true });
+  }
+
   #handleScroll() {
     if (!this.#restoringStoredScroll) {
       this.persistScrollAnchor();
@@ -372,47 +571,6 @@ export default class Nested extends Component {
     this.#activeScrollAnchorKey = null;
     this.#lastRestoredScrollY = null;
     this.#restoringStoredScroll = false;
-  }
-
-  @action
-  persistScrollAnchor() {
-    if (this.isDestroying || this.isDestroyed || this.#restoringStoredScroll) {
-      return;
-    }
-
-    const anchor = this.findScrollAnchor();
-    if (anchor) {
-      this.args.saveScrollPosition?.(anchor);
-      this.#saveStoredScrollAnchor(
-        anchor,
-        this.isMobileFocused ? null : this.args.postNumber
-      );
-    }
-  }
-
-  @action
-  restoreStoredScrollAnchor() {
-    const anchor = this.args.scrollAnchor || this.#loadStoredScrollAnchor();
-    if (!anchor) {
-      return;
-    }
-
-    this.#cancelledScrollAnchorKey = null;
-    this.#restoreScrollAnchorAfterRender(anchor);
-  }
-
-  @action
-  restoreUpdatedScrollAnchor() {
-    if (!this.args.scrollAnchor) {
-      return;
-    }
-
-    const anchorKey = this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
-    if (anchorKey && anchorKey === this.#cancelledScrollAnchorKey) {
-      return;
-    }
-
-    this.#restoreScrollAnchorAfterRender(this.args.scrollAnchor);
   }
 
   #restoreScrollAnchorAfterRender(anchor) {
@@ -503,10 +661,6 @@ export default class Nested extends Component {
     }
   }
 
-  get #storedScrollAnchors() {
-    return STORED_SCROLL_ANCHORS;
-  }
-
   #scrollAnchorKey(postNumber = this.args.postNumber) {
     const parts = [this.args.topic.id];
     if (this.args.sort) {
@@ -521,159 +675,15 @@ export default class Nested extends Component {
     return `nested-view-scroll:${parts.join(":")}`;
   }
 
-  findScrollAnchor() {
-    const articles = document.querySelectorAll(
-      ".nested-view__roots .nested-post [data-post-number]"
-    );
-    let best = null;
-    let bestDistance = Infinity;
-
-    for (const article of articles) {
-      const postElement = article.closest(".nested-post") || article;
-      const rect = postElement.getBoundingClientRect();
-      const distance = Math.abs(rect.top);
-      if (distance < bestDistance) {
-        bestDistance = distance;
-        best = {
-          postNumber: Number(article.dataset.postNumber),
-          offsetFromTop: rect.top,
-          scrollY: window.scrollY,
-        };
-      }
-    }
-
-    return best;
-  }
-
-  scrollAnchorForPath(path) {
-    const rootNode = path?.[0];
-    const postNumber = rootNode?.post?.post_number;
-    if (!postNumber) {
-      return null;
-    }
-
-    const postElement = document.querySelector(
-      `.nested-view [data-post-number="${postNumber}"]`
-    );
-    const element = postElement?.closest(".nested-post") || postElement;
-    if (!element) {
-      return { postNumber, offsetFromTop: this.header.headerOffset };
-    }
-
-    return {
-      postNumber,
-      offsetFromTop: element.getBoundingClientRect().top,
-      scrollY: window.scrollY,
-    };
-  }
-
-  @action
-  scrollMobileFocusIntoContext(element) {
-    if (!this.isMobileFocused || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const ancestorRows = element.querySelectorAll(
-      ".nested-view__mobile-ancestor"
-    );
-    const target =
-      ancestorRows[ancestorRows.length - 1] ||
-      element.querySelector(".nested-view__mobile-focus-back");
-    if (!target) {
-      return;
-    }
-
-    const rect = target.getBoundingClientRect();
-    window.scrollTo({
-      top: window.scrollY + rect.top - this.#stickyHeaderBottom(),
-      behavior: "auto",
-    });
-  }
-
   #stickyHeaderBottom() {
     const headerWrap = document.querySelector(".d-header-wrap");
     return Math.max(0, headerWrap?.getBoundingClientRect().bottom || 0);
-  }
-
-  @action
-  applyInitialFocusedPath() {
-    if (!this.site.mobileView) {
-      return;
-    }
-
-    const key = this.initialFocusedPathKey;
-
-    if (!this.args.initialFocusedPath?.length) {
-      this.#initialFocusedPathKey = key;
-      if (this.focusedPath.length > 0) {
-        this.focusDirection = "back";
-        this.focusedPath = [];
-      }
-      return;
-    }
-
-    if (key === this.#initialFocusedPathKey) {
-      return;
-    }
-
-    this.#initialFocusedPathKey = key;
-    this.focusDirection = "forward";
-    this.focusedPath = this.args.initialFocusedPath;
-    this.#registerFocusedPath(this.focusedPath);
   }
 
   #focusedPathKey(path) {
     return (path || [])
       .map((node) => `${node._renderKey || node.post?.id}:${node.post?.id}`)
       .join(":");
-  }
-
-  @action
-  syncFocusFromURL() {
-    if (this.isDestroying || this.isDestroyed || !this.site.mobileView) {
-      return;
-    }
-
-    const postNumber = this.#postNumberFromCurrentURL();
-    if (postNumber === undefined) {
-      return;
-    }
-
-    if (!postNumber) {
-      const storedAnchor = this.#loadStoredScrollAnchor();
-      const anchor =
-        this.mobileReturnAnchor ||
-        storedAnchor ||
-        (this.focusedPath.length > 0
-          ? this.scrollAnchorForPath(this.focusedPath)
-          : null);
-
-      this.args.setFocusedPostNumber?.(null, []);
-      if (this.focusedPath.length > 0) {
-        this.focusDirection = "back";
-      }
-      this.mobileReturnAnchor = anchor;
-      this.focusedPath = [];
-
-      if (anchor) {
-        this.#restoreScrollAnchorAfterRender(anchor);
-      } else {
-        this.#restoringStoredScroll = false;
-      }
-      return;
-    }
-
-    const path = this.#focusedPathsByPostNumber.get(postNumber);
-    if (!path) {
-      this.#restoringStoredScroll = false;
-      return;
-    }
-
-    this.args.setFocusedPostNumber?.(postNumber, path);
-    this.focusDirection =
-      path.length >= this.focusedPath.length ? "forward" : "back";
-    this.focusedPath = path;
-    this.#restoringStoredScroll = false;
   }
 
   #pushURLForFocusedPath(path) {
@@ -729,16 +739,6 @@ export default class Nested extends Component {
     const target = withoutPrefix(url);
 
     return current === target;
-  }
-
-  @action
-  scheduleTargetScroll() {
-    this.#scheduleTargetScroll();
-  }
-
-  @action
-  forceScheduleTargetScroll() {
-    this.#scheduleTargetScroll({ force: true });
   }
 
   #scheduleTargetScroll({ force = false } = {}) {

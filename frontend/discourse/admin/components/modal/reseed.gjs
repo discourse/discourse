@@ -32,10 +32,6 @@ export default class Reseed extends Component {
     }
   }
 
-  _extractSelectedIds(items) {
-    return items.filter((item) => item.selected).map((item) => item.id);
-  }
-
   @action
   async reseed() {
     try {
@@ -55,6 +51,10 @@ export default class Reseed extends Component {
     } finally {
       this.reseeding = false;
     }
+  }
+
+  _extractSelectedIds(items) {
+    return items.filter((item) => item.selected).map((item) => item.id);
   }
 
   <template>

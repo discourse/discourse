@@ -16,6 +16,16 @@ export default class SchemaSettingTypeDatetime extends Component {
     : "";
   required = this.args.spec.required;
 
+  get validationErrorMessage() {
+    if (!this.touched) {
+      return;
+    }
+
+    if (this.value.length === 0 && this.required) {
+      return i18n("admin.customize.schema.fields.required");
+    }
+  }
+
   @action
   onInput(event) {
     this.touched = true;
@@ -32,16 +42,6 @@ export default class SchemaSettingTypeDatetime extends Component {
     const utcValue = moment(datetime).utc().format();
     this.args.onChange(utcValue);
     this.value = utcValue;
-  }
-
-  get validationErrorMessage() {
-    if (!this.touched) {
-      return;
-    }
-
-    if (this.value.length === 0 && this.required) {
-      return i18n("admin.customize.schema.fields.required");
-    }
   }
 
   <template>

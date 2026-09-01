@@ -37,10 +37,6 @@ export default class HouseAdForm extends Component {
     return i18n("admin.adplugin.house_ads.category_chooser_description");
   }
 
-  previewDisabled(data) {
-    return !data.html;
-  }
-
   get formData() {
     const model = this.args.model;
     return {
@@ -53,6 +49,10 @@ export default class HouseAdForm extends Component {
       group_ids: model.groups || [],
       routes: model.routes || [],
     };
+  }
+
+  previewDisabled(data) {
+    return !data.html;
   }
 
   @action

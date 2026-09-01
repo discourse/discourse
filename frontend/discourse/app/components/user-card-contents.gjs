@@ -58,6 +58,15 @@ export default class UserCardContents extends CardContentsBase {
   // If inside a topic
   topicPostCount = null;
 
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
   @computed("siteSettings.allow_profile_backgrounds")
   get allowBackgrounds() {
     return this.siteSettings.allow_profile_backgrounds;
@@ -76,15 +85,6 @@ export default class UserCardContents extends CardContentsBase {
   @computed("siteSettings.moderators_view_emails")
   get canModeratorsViewEmails() {
     return this.siteSettings.moderators_view_emails;
-  }
-
-  @computed("topic.postStream")
-  get postStream() {
-    return this.topic?.postStream;
-  }
-
-  set postStream(value) {
-    set(this, "topic.postStream", value);
   }
 
   @computed("topicPostCount")
@@ -285,6 +285,16 @@ export default class UserCardContents extends CardContentsBase {
     }
   }
 
+  @computed("user.primary_group_name")
+  get primaryGroup() {
+    return `group-${this.user?.primary_group_name}`;
+  }
+
+  @computed("user.profile_hidden", "user.inactive")
+  get contentHidden() {
+    return this.user?.profile_hidden || this.user?.inactive;
+  }
+
   @observes("user.card_background_upload_url")
   addBackground() {
     if (!this.allowBackgrounds) {
@@ -298,65 +308,6 @@ export default class UserCardContents extends CardContentsBase {
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     this.element.style.backgroundImage = bg;
-  }
-
-  @computed("user.primary_group_name")
-  get primaryGroup() {
-    return `group-${this.user?.primary_group_name}`;
-  }
-
-  @computed("user.profile_hidden", "user.inactive")
-  get contentHidden() {
-    return this.user?.profile_hidden || this.user?.inactive;
-  }
-
-  @onEvent("didInsertElement")
-  _inserted() {
-    this.appEvents.on("dom:clean", this, this.cleanUp);
-  }
-
-  @onEvent("didDestroyElement")
-  _destroyed() {
-    this.appEvents.off("dom:clean", this, this.cleanUp);
-  }
-
-  async _showCallback(username) {
-    this.setProperties({ visible: true, loading: true });
-
-    const args = {
-      forCard: true,
-      include_post_count_for: this.get("topic.id"),
-    };
-
-    try {
-      const user = await User.findByUsername(username, args);
-
-      if (user.topic_post_count) {
-        this.set(
-          "topicPostCount",
-          user.topic_post_count[args.include_post_count_for]
-        );
-      }
-      this.setProperties({ user });
-      this.user.statusManager.trackStatus();
-
-      return user;
-    } catch {
-      this._close();
-    } finally {
-      this.set("loading", null);
-    }
-  }
-
-  _close() {
-    this.user?.statusManager.stopTrackingStatus();
-
-    this.setProperties({
-      user: null,
-      topicPostCount: null,
-    });
-
-    super._close(...arguments);
   }
 
   cleanUp() {
@@ -414,6 +365,55 @@ export default class UserCardContents extends CardContentsBase {
   @action
   checkEmail(user) {
     user.checkEmail();
+  }
+
+  @onEvent("didInsertElement")
+  _inserted() {
+    this.appEvents.on("dom:clean", this, this.cleanUp);
+  }
+
+  @onEvent("didDestroyElement")
+  _destroyed() {
+    this.appEvents.off("dom:clean", this, this.cleanUp);
+  }
+
+  async _showCallback(username) {
+    this.setProperties({ visible: true, loading: true });
+
+    const args = {
+      forCard: true,
+      include_post_count_for: this.get("topic.id"),
+    };
+
+    try {
+      const user = await User.findByUsername(username, args);
+
+      if (user.topic_post_count) {
+        this.set(
+          "topicPostCount",
+          user.topic_post_count[args.include_post_count_for]
+        );
+      }
+      this.setProperties({ user });
+      this.user.statusManager.trackStatus();
+
+      return user;
+    } catch {
+      this._close();
+    } finally {
+      this.set("loading", null);
+    }
+  }
+
+  _close() {
+    this.user?.statusManager.stopTrackingStatus();
+
+    this.setProperties({
+      user: null,
+      topicPostCount: null,
+    });
+
+    super._close(...arguments);
   }
 
   <template>

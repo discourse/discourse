@@ -29,13 +29,6 @@ export default class ThemesListItem extends Component {
     return this.children.length > 0;
   }
 
-  @action
-  handleClick(event) {
-    if (!event.target.classList.contains("others-count")) {
-      this.args.navigateToTheme();
-    }
-  }
-
   get children() {
     let children = this.args.theme?.get("childThemes");
     if (this.args.theme?.get("component") || !children) {
@@ -64,6 +57,13 @@ export default class ThemesListItem extends Component {
       return 0;
     }
     return childrenCount - MAX_COMPONENTS;
+  }
+
+  @action
+  handleClick(event) {
+    if (!event.target.classList.contains("others-count")) {
+      this.args.navigateToTheme();
+    }
   }
 
   @action

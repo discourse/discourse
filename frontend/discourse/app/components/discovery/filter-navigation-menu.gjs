@@ -91,16 +91,16 @@ export default class FilterNavigationMenu extends Component {
     this.trackedMenuListData.selectedIndex = value;
   }
 
-  clearSelection() {
-    this.selectedIndex = -1;
-  }
-
   get nothingSelected() {
     return this.selectedIndex === -1;
   }
 
   get placeholder() {
     return this.args.placeholder || i18n("filter.placeholder");
+  }
+
+  clearSelection() {
+    this.selectedIndex = -1;
   }
 
   @action

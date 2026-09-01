@@ -52,6 +52,116 @@ export default class Group extends RestModel {
   requestersLimit = null;
   requestersOffset = null;
 
+  @dependentKeyCompat
+  get watchingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_category_ids).then(() =>
+        this.notifyPropertyChange("watching_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_category_ids"));
+  }
+
+  set watchingCategories(categories) {
+    this.set(
+      "watching_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get trackingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.tracking_category_ids &&
+      !Category.hasAsyncFoundAll(this.tracking_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
+        this.notifyPropertyChange("tracking_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("tracking_category_ids"));
+  }
+
+  set trackingCategories(categories) {
+    this.set(
+      "tracking_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get watchingFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_first_post_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watching_first_post_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_first_post_category_ids"));
+  }
+
+  set watchingFirstPostCategories(categories) {
+    this.set(
+      "watching_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.regular_category_ids &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("regular_category_ids"));
+  }
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.muted_category_ids &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("muted_category_ids"));
+  }
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
   @computed("mentionable_level")
   get canEveryoneMention() {
     return this.mentionable_level === 99;
@@ -72,6 +182,30 @@ export default class Group extends RestModel {
   @computed("automatic")
   get type() {
     return this.automatic ? "automatic" : "custom";
+  }
+
+  @computed("display_name", "name")
+  get displayName() {
+    return this.display_name || this.name;
+  }
+
+  @computed("flair_bg_color")
+  get flairBackgroundHexColor() {
+    return this.flair_bg_color
+      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+      : null;
+  }
+
+  @computed("flair_color")
+  get flairHexColor() {
+    return this.flair_color
+      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+      : null;
+  }
+
+  @computed("visibility_level")
+  get isPrivate() {
+    return this.visibility_level > 1;
   }
 
   async reloadMembers(params, refresh) {
@@ -187,151 +321,6 @@ export default class Group extends RestModel {
     } else {
       await this.reloadMembers({}, true);
     }
-  }
-
-  _filterMembers(usernames) {
-    return this.reloadMembers({ filter: usernames.join(",") });
-  }
-
-  @computed("display_name", "name")
-  get displayName() {
-    return this.display_name || this.name;
-  }
-
-  @computed("flair_bg_color")
-  get flairBackgroundHexColor() {
-    return this.flair_bg_color
-      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
-      : null;
-  }
-
-  @computed("flair_color")
-  get flairHexColor() {
-    return this.flair_color
-      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
-      : null;
-  }
-
-  @computed("visibility_level")
-  get isPrivate() {
-    return this.visibility_level > 1;
-  }
-
-  @observes("isPrivate", "canEveryoneMention")
-  _updateAllowMembershipRequests() {
-    if (this.isPrivate || !this.canEveryoneMention) {
-      this.set("allow_membership_requests", false);
-    }
-  }
-
-  @dependentKeyCompat
-  get watchingCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watching_category_ids &&
-      !Category.hasAsyncFoundAll(this.watching_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watching_category_ids).then(() =>
-        this.notifyPropertyChange("watching_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watching_category_ids"));
-  }
-
-  set watchingCategories(categories) {
-    this.set(
-      "watching_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get trackingCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.tracking_category_ids &&
-      !Category.hasAsyncFoundAll(this.tracking_category_ids)
-    ) {
-      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
-        this.notifyPropertyChange("tracking_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("tracking_category_ids"));
-  }
-
-  set trackingCategories(categories) {
-    this.set(
-      "tracking_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get watchingFirstPostCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watching_first_post_category_ids &&
-      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
-        this.notifyPropertyChange("watching_first_post_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watching_first_post_category_ids"));
-  }
-
-  set watchingFirstPostCategories(categories) {
-    this.set(
-      "watching_first_post_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get regularCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.regular_category_ids &&
-      !Category.hasAsyncFoundAll(this.regular_category_ids)
-    ) {
-      Category.asyncFindByIds(this.regular_category_ids).then(() =>
-        this.notifyPropertyChange("regular_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("regular_category_ids"));
-  }
-
-  set regularCategories(categories) {
-    this.set(
-      "regular_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get mutedCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.muted_category_ids &&
-      !Category.hasAsyncFoundAll(this.muted_category_ids)
-    ) {
-      Category.asyncFindByIds(this.muted_category_ids).then(() =>
-        this.notifyPropertyChange("muted_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("muted_category_ids"));
-  }
-
-  set mutedCategories(categories) {
-    this.set(
-      "muted_category_ids",
-      categories.map((c) => c.id)
-    );
   }
 
   asJSON() {
@@ -509,5 +498,16 @@ export default class Group extends RestModel {
       type: "POST",
       data: { reason },
     });
+  }
+
+  _filterMembers(usernames) {
+    return this.reloadMembers({ filter: usernames.join(",") });
+  }
+
+  @observes("isPrivate", "canEveryoneMention")
+  _updateAllowMembershipRequests() {
+    if (this.isPrivate || !this.canEveryoneMention) {
+      this.set("allow_membership_requests", false);
+    }
   }
 }

@@ -20,11 +20,6 @@ export default class AdminCustomizeThemesEditController extends Controller {
     return getURL(`/admin/themes/${this.model?.id}/preview`);
   }
 
-  setTargetName(name) {
-    const target = this.get("model.targets").find((t) => t.name === name);
-    this.set("currentTarget", target && target.id);
-  }
-
   @computed("currentTarget")
   get currentTargetName() {
     const target = this.get("model.targets").find(
@@ -41,6 +36,11 @@ export default class AdminCustomizeThemesEditController extends Controller {
   @computed("model.changed", "model.isSaving")
   get saveDisabled() {
     return !this.model?.changed || this.model?.isSaving;
+  }
+
+  setTargetName(name) {
+    const target = this.get("model.targets").find((t) => t.name === name);
+    this.set("currentTarget", target && target.id);
   }
 
   @action

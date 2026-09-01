@@ -34,6 +34,14 @@ export default class NestedOp extends Component {
     return nestedPostUrl(this.args.topic, this.args.post.post_number);
   }
 
+  get canCreatePost() {
+    return this.currentUser && this.args.topic?.details?.can_create_post;
+  }
+
+  get selected() {
+    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
+  }
+
   @action
   copyLink() {
     if (this.site.mobileView) {
@@ -85,14 +93,6 @@ export default class NestedOp extends Component {
         popupAjaxError(e);
       }
     }
-  }
-
-  get canCreatePost() {
-    return this.currentUser && this.args.topic?.details?.can_create_post;
-  }
-
-  get selected() {
-    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
   }
 
   @action

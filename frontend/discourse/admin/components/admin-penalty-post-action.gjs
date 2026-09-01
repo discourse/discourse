@@ -51,10 +51,6 @@ export default class AdminPenaltyPostAction extends Component {
     return this.user.post_count - this.user.topic_count;
   }
 
-  canSubmitDeleteAll() {
-    return this.postAction === "delete_all" && this.confirmDeleteAll;
-  }
-
   get readyToDeleteAll() {
     return this.canSubmitDeleteAll();
   }
@@ -67,6 +63,10 @@ export default class AdminPenaltyPostAction extends Component {
         REPLIES: this.repliesCount,
       }
     );
+  }
+
+  canSubmitDeleteAll() {
+    return this.postAction === "delete_all" && this.confirmDeleteAll;
   }
 
   @action

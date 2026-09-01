@@ -58,44 +58,6 @@ export default class ComposerActions extends Component {
     });
   }
 
-  @action
-  refreshReplyTargetObserver() {
-    this.#disconnectReplyTargetObserver();
-
-    const postId = this.post?.id;
-    if (!postId || !this.isOnComposerTopic) {
-      this.replyTargetInViewport = false;
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      const element = document.querySelector(
-        `article[data-post-id="${postId}"]`
-      );
-
-      if (!element) {
-        this.replyTargetInViewport = false;
-        return;
-      }
-
-      this.#observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          this.replyTargetInViewport = entry.isIntersecting;
-        }
-      });
-      this.#observer.observe(element);
-    });
-  }
-
-  #disconnectReplyTargetObserver() {
-    this.#observer?.disconnect();
-    this.#observer = null;
-  }
-
   get action() {
     return this.args.action;
   }
@@ -167,6 +129,188 @@ export default class ComposerActions extends Component {
       actions: availableActions,
       hasActions: availableActions.length > 0,
     };
+  }
+
+  get hasToggles() {
+    return (
+      this.composer.canToggleWhisper ||
+      this.composer.canToggleNoBump ||
+      this.composer.canUnlistTopic
+    );
+  }
+
+  get hasMenuContent() {
+    return this.templateData.hasActions || this.hasToggles;
+  }
+
+  get replyTargetHref() {
+    if (this.action !== REPLY) {
+      return null;
+    }
+
+    const options = this.replyOptions;
+    if (this.post && options?.postLink) {
+      return options.postLink.href;
+    }
+    if (options?.topicLink) {
+      return options.topicLink.href;
+    }
+    return null;
+  }
+
+  get isOnComposerTopic() {
+    const composerTopicId = this.composerModel?.topic?.id;
+    if (!composerTopicId) {
+      return false;
+    }
+
+    let route = this.router.currentRoute;
+    while (route) {
+      if (route.name === "topic") {
+        return parseInt(route.params?.id, 10) === composerTopicId;
+      }
+      route = route.parent;
+    }
+    return false;
+  }
+
+  get isReplyTargetOnScreen() {
+    return this.replyTargetInViewport;
+  }
+
+  get replyTargetLabel() {
+    if (this.post) {
+      return this.replyOptions?.postLink?.anchor;
+    }
+    if (this.isOnComposerTopic && !this.site.mobileView) {
+      return null;
+    }
+    return (
+      this.composerModel?.topic?.title || this.replyOptions?.topicLink?.anchor
+    );
+  }
+
+  get showReplyTargetLink() {
+    if (!this.replyTargetHref) {
+      return false;
+    }
+
+    if (this.site.mobileView) {
+      return true;
+    }
+
+    if (this.post) {
+      return !this.isReplyTargetOnScreen;
+    }
+
+    return !this.isOnComposerTopic;
+  }
+
+  get replyTargetTitle() {
+    if (this.post) {
+      return i18n("composer.composer_actions.reply_to_post.label", {
+        postUsername: this._postDisplayName(this.post),
+        postNumber: this.post.post_number,
+      });
+    }
+    return this.isPrivateMessage
+      ? i18n("composer.composer_actions.reply_to_message.label")
+      : i18n("composer.composer_actions.reply_to_topic.label");
+  }
+
+  @action
+  refreshReplyTargetObserver() {
+    this.#disconnectReplyTargetObserver();
+
+    const postId = this.post?.id;
+    if (!postId || !this.isOnComposerTopic) {
+      this.replyTargetInViewport = false;
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const element = document.querySelector(
+        `article[data-post-id="${postId}"]`
+      );
+
+      if (!element) {
+        this.replyTargetInViewport = false;
+        return;
+      }
+
+      this.#observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          this.replyTargetInViewport = entry.isIntersecting;
+        }
+      });
+      this.#observer.observe(element);
+    });
+  }
+
+  @action
+  toggleWhisper() {
+    this.composerModel.toggleProperty("whisper");
+  }
+
+  @action
+  runToggleAction(actionFn, event) {
+    event.preventDefault();
+    actionFn();
+  }
+
+  @action
+  registerDmenuApi(api) {
+    this.dmenuApi = api;
+  }
+
+  @action
+  async onSelectAction(actionId) {
+    await this.dmenuApi?.close({ focusTrigger: true });
+
+    const options = this.composerModel.getProperties(
+      "draftKey",
+      "draftSequence",
+      "title",
+      "reply",
+      "disableScopedCategory",
+      "whisper",
+      "noBump",
+      "unlistTopic"
+    );
+
+    this.composerActionState.remember({ topic: this.topic, post: this.post });
+
+    const registeredAction = registeredComposerActions().find(
+      (registeredComposerAction) => registeredComposerAction.id === actionId
+    );
+    if (registeredAction) {
+      registeredAction.action(this.composerModel, this);
+      return;
+    }
+
+    const handled = await this.composerActionState.selectAction(actionId, {
+      options,
+      composerModel: this.composerModel,
+      topic: this.topic,
+      post: this.post,
+    });
+
+    if (!handled) {
+      applyBehaviorTransformer("composer-actions-on-select", () => {}, {
+        actionId,
+        options,
+        model: this.composerModel,
+      });
+    }
+  }
+
+  #disconnectReplyTargetObserver() {
+    this.#observer?.disconnect();
+    this.#observer = null;
   }
 
   _labelText() {
@@ -285,150 +429,6 @@ export default class ComposerActions extends Component {
         description: opts.description ? i18n(opts.description) : undefined,
         icon: opts.icon,
       }));
-  }
-
-  get hasToggles() {
-    return (
-      this.composer.canToggleWhisper ||
-      this.composer.canToggleNoBump ||
-      this.composer.canUnlistTopic
-    );
-  }
-
-  get hasMenuContent() {
-    return this.templateData.hasActions || this.hasToggles;
-  }
-
-  get replyTargetHref() {
-    if (this.action !== REPLY) {
-      return null;
-    }
-
-    const options = this.replyOptions;
-    if (this.post && options?.postLink) {
-      return options.postLink.href;
-    }
-    if (options?.topicLink) {
-      return options.topicLink.href;
-    }
-    return null;
-  }
-
-  get isOnComposerTopic() {
-    const composerTopicId = this.composerModel?.topic?.id;
-    if (!composerTopicId) {
-      return false;
-    }
-
-    let route = this.router.currentRoute;
-    while (route) {
-      if (route.name === "topic") {
-        return parseInt(route.params?.id, 10) === composerTopicId;
-      }
-      route = route.parent;
-    }
-    return false;
-  }
-
-  get isReplyTargetOnScreen() {
-    return this.replyTargetInViewport;
-  }
-
-  get replyTargetLabel() {
-    if (this.post) {
-      return this.replyOptions?.postLink?.anchor;
-    }
-    if (this.isOnComposerTopic && !this.site.mobileView) {
-      return null;
-    }
-    return (
-      this.composerModel?.topic?.title || this.replyOptions?.topicLink?.anchor
-    );
-  }
-
-  get showReplyTargetLink() {
-    if (!this.replyTargetHref) {
-      return false;
-    }
-
-    if (this.site.mobileView) {
-      return true;
-    }
-
-    if (this.post) {
-      return !this.isReplyTargetOnScreen;
-    }
-
-    return !this.isOnComposerTopic;
-  }
-
-  get replyTargetTitle() {
-    if (this.post) {
-      return i18n("composer.composer_actions.reply_to_post.label", {
-        postUsername: this._postDisplayName(this.post),
-        postNumber: this.post.post_number,
-      });
-    }
-    return this.isPrivateMessage
-      ? i18n("composer.composer_actions.reply_to_message.label")
-      : i18n("composer.composer_actions.reply_to_topic.label");
-  }
-
-  @action
-  toggleWhisper() {
-    this.composerModel.toggleProperty("whisper");
-  }
-
-  @action
-  runToggleAction(actionFn, event) {
-    event.preventDefault();
-    actionFn();
-  }
-
-  @action
-  registerDmenuApi(api) {
-    this.dmenuApi = api;
-  }
-
-  @action
-  async onSelectAction(actionId) {
-    await this.dmenuApi?.close({ focusTrigger: true });
-
-    const options = this.composerModel.getProperties(
-      "draftKey",
-      "draftSequence",
-      "title",
-      "reply",
-      "disableScopedCategory",
-      "whisper",
-      "noBump",
-      "unlistTopic"
-    );
-
-    this.composerActionState.remember({ topic: this.topic, post: this.post });
-
-    const registeredAction = registeredComposerActions().find(
-      (registeredComposerAction) => registeredComposerAction.id === actionId
-    );
-    if (registeredAction) {
-      registeredAction.action(this.composerModel, this);
-      return;
-    }
-
-    const handled = await this.composerActionState.selectAction(actionId, {
-      options,
-      composerModel: this.composerModel,
-      topic: this.topic,
-      post: this.post,
-    });
-
-    if (!handled) {
-      applyBehaviorTransformer("composer-actions-on-select", () => {}, {
-        actionId,
-        options,
-        model: this.composerModel,
-      });
-    }
   }
 
   <template>

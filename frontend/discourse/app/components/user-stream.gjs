@@ -31,13 +31,6 @@ export default class UserStreamComponent extends Component {
     this.updateBulkSelectPosts();
   }
 
-  @action
-  updateBulkSelectPosts() {
-    if (this.isDraftsRoute && this.args.stream?.content) {
-      this.bulkSelectHelper.updatePosts(this.args.stream.content);
-    }
-  }
-
   get isDraftsRoute() {
     return this.router.currentRouteName === "userActivity.drafts";
   }
@@ -81,6 +74,13 @@ export default class UserStreamComponent extends Component {
     }
 
     return "username";
+  }
+
+  @action
+  updateBulkSelectPosts() {
+    if (this.isDraftsRoute && this.args.stream?.content) {
+      this.bulkSelectHelper.updatePosts(this.args.stream.content);
+    }
   }
 
   @action

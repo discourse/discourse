@@ -54,19 +54,6 @@ export default class ShareTargetModal extends Component {
     return !!this.body;
   }
 
-  #addFilesWhenReady(files) {
-    if (!files.length) {
-      return;
-    }
-
-    // Capture `files` in the closure rather than reading from `this` — the
-    // modal is torn down by closeModal() before the composer's uploader is
-    // ready and fires this event.
-    this.appEvents.one("composer:uploader-ready", () => {
-      this.appEvents.trigger("composer:add-files", files);
-    });
-  }
-
   @action
   createTopic() {
     this.#addFilesWhenReady(this.files);
@@ -88,6 +75,19 @@ export default class ShareTargetModal extends Component {
       data: { message: i18n("share_target.added_to_reply") },
     });
     this.args.closeModal();
+  }
+
+  #addFilesWhenReady(files) {
+    if (!files.length) {
+      return;
+    }
+
+    // Capture `files` in the closure rather than reading from `this` — the
+    // modal is torn down by closeModal() before the composer's uploader is
+    // ready and fires this event.
+    this.appEvents.one("composer:uploader-ready", () => {
+      this.appEvents.trigger("composer:add-files", files);
+    });
   }
 
   <template>

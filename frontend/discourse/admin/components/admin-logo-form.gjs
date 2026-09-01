@@ -26,24 +26,27 @@ export default class AdminLogoForm extends Component {
     this.#loadPlaceholders();
   }
 
-  @bind
-  async #loadPlaceholders() {
-    this.loading = true;
-    try {
-      const result = await ajax("/admin/config/site_settings.json", {
-        data: {
-          categories: ["branding"],
-        },
-      });
-
-      result.site_settings.forEach((setting) => {
-        if (setting.placeholder) {
-          this.placeholders[setting.setting] = setting.placeholder;
-        }
-      });
-    } finally {
-      this.loading = false;
-    }
+  @cached
+  get formData() {
+    return {
+      logo: this.siteSettings.logo,
+      logo_dark_required: !!this.siteSettings.logo_dark,
+      logo_dark: this.siteSettings.logo_dark,
+      large_icon: this.siteSettings.large_icon,
+      favicon: this.siteSettings.favicon,
+      logo_small: this.siteSettings.logo_small,
+      logo_small_dark_required: !!this.siteSettings.logo_small_dark,
+      logo_small_dark: this.siteSettings.logo_small_dark,
+      mobile_logo: this.siteSettings.mobile_logo,
+      mobile_logo_dark_required: !!this.siteSettings.mobile_logo_dark,
+      mobile_logo_dark: this.siteSettings.mobile_logo_dark,
+      manifest_icon: this.siteSettings.manifest_icon,
+      manifest_screenshots: this.siteSettings.manifest_screenshots,
+      apple_touch_icon: this.siteSettings.apple_touch_icon,
+      digest_logo: this.siteSettings.digest_logo,
+      opengraph_image: this.siteSettings.opengraph_image,
+      x_summary_large_image: this.siteSettings.x_summary_large_image,
+    };
   }
 
   @action
@@ -99,27 +102,24 @@ export default class AdminLogoForm extends Component {
     field.set(selected.join("|"));
   }
 
-  @cached
-  get formData() {
-    return {
-      logo: this.siteSettings.logo,
-      logo_dark_required: !!this.siteSettings.logo_dark,
-      logo_dark: this.siteSettings.logo_dark,
-      large_icon: this.siteSettings.large_icon,
-      favicon: this.siteSettings.favicon,
-      logo_small: this.siteSettings.logo_small,
-      logo_small_dark_required: !!this.siteSettings.logo_small_dark,
-      logo_small_dark: this.siteSettings.logo_small_dark,
-      mobile_logo: this.siteSettings.mobile_logo,
-      mobile_logo_dark_required: !!this.siteSettings.mobile_logo_dark,
-      mobile_logo_dark: this.siteSettings.mobile_logo_dark,
-      manifest_icon: this.siteSettings.manifest_icon,
-      manifest_screenshots: this.siteSettings.manifest_screenshots,
-      apple_touch_icon: this.siteSettings.apple_touch_icon,
-      digest_logo: this.siteSettings.digest_logo,
-      opengraph_image: this.siteSettings.opengraph_image,
-      x_summary_large_image: this.siteSettings.x_summary_large_image,
-    };
+  @bind
+  async #loadPlaceholders() {
+    this.loading = true;
+    try {
+      const result = await ajax("/admin/config/site_settings.json", {
+        data: {
+          categories: ["branding"],
+        },
+      });
+
+      result.site_settings.forEach((setting) => {
+        if (setting.placeholder) {
+          this.placeholders[setting.setting] = setting.placeholder;
+        }
+      });
+    } finally {
+      this.loading = false;
+    }
   }
 
   <template>

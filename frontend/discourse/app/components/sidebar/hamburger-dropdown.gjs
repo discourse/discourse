@@ -17,6 +17,14 @@ export default class SidebarHamburgerDropdown extends Component {
   @service site;
   @service sidebarState;
 
+  get collapsableSections() {
+    if (this.site.mobileView || this.site.narrowDesktopView) {
+      return true;
+    } else {
+      return this.args.collapsableSections;
+    }
+  }
+
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("sidebar-hamburger-dropdown:rendered");
@@ -30,14 +38,6 @@ export default class SidebarHamburgerDropdown extends Component {
         firstLink.focus();
       }
     });
-  }
-
-  get collapsableSections() {
-    if (this.site.mobileView || this.site.narrowDesktopView) {
-      return true;
-    } else {
-      return this.args.collapsableSections;
-    }
   }
 
   <template>

@@ -28,6 +28,14 @@ export default class AdminFontsForm extends Component {
 
   updateExistingUsers = null;
 
+  get formData() {
+    return {
+      base_font: this.siteSettings.base_font,
+      heading_font: this.siteSettings.heading_font,
+      default_text_size: this.siteSettings.default_text_size,
+    };
+  }
+
   @bind
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
@@ -101,14 +109,6 @@ export default class AdminFontsForm extends Component {
         },
       });
     }
-  }
-
-  get formData() {
-    return {
-      base_font: this.siteSettings.base_font,
-      heading_font: this.siteSettings.heading_font,
-      default_text_size: this.siteSettings.default_text_size,
-    };
   }
 
   <template>

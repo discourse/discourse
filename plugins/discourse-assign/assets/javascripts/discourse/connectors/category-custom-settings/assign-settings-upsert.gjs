@@ -41,17 +41,17 @@ export default class AssignSettingsUpsert extends Component {
     return this.globalAssignAllowedGroupIds.join("|");
   }
 
+  get assignableGroups() {
+    return (this.site.groups || [])
+      .filter((group) => group.id !== AUTO_GROUPS.everyone.id)
+      .map((group) => ({ ...group, id: group.id.toString() }));
+  }
+
   groupIdsFromValue(value) {
     return (value || "")
       .split("|")
       .filter(Boolean)
       .filter((groupId) => parseInt(groupId, 10) !== AUTO_GROUPS.everyone.id);
-  }
-
-  get assignableGroups() {
-    return (this.site.groups || [])
-      .filter((group) => group.id !== AUTO_GROUPS.everyone.id)
-      .map((group) => ({ ...group, id: group.id.toString() }));
   }
 
   @action

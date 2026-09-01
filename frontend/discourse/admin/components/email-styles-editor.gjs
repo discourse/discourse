@@ -27,6 +27,15 @@ export default class EmailStylesEditor extends Component {
     this._editorIdOverride = value;
   }
 
+  @computed("styles", "fieldName")
+  get editorContents() {
+    return this.styles[this.fieldName];
+  }
+
+  set editorContents(value) {
+    this.styles.setField(this.fieldName, value);
+  }
+
   @computed("fieldName")
   get currentEditorMode() {
     return this.fieldName === "css" ? "scss" : this.fieldName;
@@ -38,15 +47,6 @@ export default class EmailStylesEditor extends Component {
       this.get(`styles.${this.fieldName}`) ===
       this.get(`styles.default_${this.fieldName}`)
     );
-  }
-
-  @computed("styles", "fieldName")
-  get editorContents() {
-    return this.styles[this.fieldName];
-  }
-
-  set editorContents(value) {
-    this.styles.setField(this.fieldName, value);
   }
 
   @action

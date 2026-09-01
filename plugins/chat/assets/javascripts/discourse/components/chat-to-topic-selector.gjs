@@ -30,21 +30,6 @@ export default class ChatToTopicSelector extends Component {
   chatMessageIds = null;
   chatChannelId = null;
 
-  @computed("selection")
-  get newTopic() {
-    return this.selection === NEW_TOPIC_SELECTION;
-  }
-
-  @computed("selection")
-  get existingTopic() {
-    return this.selection === EXISTING_TOPIC_SELECTION;
-  }
-
-  @computed("selection")
-  get newMessage() {
-    return this.selection === NEW_MESSAGE_SELECTION;
-  }
-
   @computed("site.can_create_tag")
   get canAddTags() {
     return this.site?.can_create_tag;
@@ -61,6 +46,21 @@ export default class ChatToTopicSelector extends Component {
 
   set canTagMessages(value) {
     set(this, "site.can_tag_pms", value);
+  }
+
+  @computed("selection")
+  get newTopic() {
+    return this.selection === NEW_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get existingTopic() {
+    return this.selection === EXISTING_TOPIC_SELECTION;
+  }
+
+  @computed("selection")
+  get newMessage() {
+    return this.selection === NEW_MESSAGE_SELECTION;
   }
 
   @computed()

@@ -178,29 +178,6 @@ export default class BlockSettingCondition extends BlockCondition {
   }
 
   /**
-   * Checks if a list setting contains a specific value.
-   * Handles both array and pipe-separated string formats.
-   *
-   * Values are converted to strings before comparison to handle cases where
-   * `searchValue` might be a number but the setting stores string values
-   * (e.g., checking for `123` in `"123|456"`).
-   */
-  #settingContains(settingValue: unknown, searchValue: string): boolean {
-    if (Array.isArray(settingValue)) {
-      // Convert all values to strings for consistent matching
-      return settingValue.map(String).includes(String(searchValue));
-    }
-
-    if (typeof settingValue === "string") {
-      // List settings are often pipe-separated strings like "latest|new|unread"
-      const items = settingValue.split("|").map((s) => s.trim());
-      return items.includes(String(searchValue));
-    }
-
-    return false;
-  }
-
-  /**
    * Returns the resolved setting value for debug logging.
    * Includes a warning note with "did you mean" suggestion if the setting doesn't exist.
    */
@@ -244,5 +221,28 @@ export default class BlockSettingCondition extends BlockCondition {
       value: settingsSource[name],
       hasValue: true,
     };
+  }
+
+  /**
+   * Checks if a list setting contains a specific value.
+   * Handles both array and pipe-separated string formats.
+   *
+   * Values are converted to strings before comparison to handle cases where
+   * `searchValue` might be a number but the setting stores string values
+   * (e.g., checking for `123` in `"123|456"`).
+   */
+  #settingContains(settingValue: unknown, searchValue: string): boolean {
+    if (Array.isArray(settingValue)) {
+      // Convert all values to strings for consistent matching
+      return settingValue.map(String).includes(String(searchValue));
+    }
+
+    if (typeof settingValue === "string") {
+      // List settings are often pipe-separated strings like "latest|new|unread"
+      const items = settingValue.split("|").map((s) => s.trim());
+      return items.includes(String(searchValue));
+    }
+
+    return false;
   }
 }

@@ -256,10 +256,6 @@ export default class ExecutionDetail extends Component {
     this.#progress.destroy();
   }
 
-  get currentTime() {
-    return this.#progress.currentTime;
-  }
-
   get execution() {
     return this.liveExecution?.id === this.args.execution.id
       ? this.liveExecution
@@ -268,6 +264,10 @@ export default class ExecutionDetail extends Component {
 
   set execution(value) {
     this.liveExecution = value;
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
   }
 
   get isPending() {
@@ -303,6 +303,92 @@ export default class ExecutionDetail extends Component {
     this.#progress.unsubscribe();
     this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
+  }
+
+  @action
+  exportAsText() {
+    const execution = this.execution;
+    const lines = [];
+
+    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
+    lines.push(`Execution ID: ${execution.id}`);
+    lines.push(`Status: ${execution.status}`);
+    lines.push(`Started: ${execution.started_at ?? "—"}`);
+    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
+    lines.push(
+      `Total time: ${formatDuration(
+        execution.started_at,
+        execution.finished_at,
+        this.isRunning ? this.currentTime : null
+      )}`
+    );
+
+    if (execution.error) {
+      lines.push(`\nError: ${execution.error}`);
+    }
+
+    lines.push("\n" + "=".repeat(60));
+
+    execution.steps?.forEach((step, index) => {
+      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
+      lines.push(`  Type: ${step.node_type}`);
+      const operationLabel = this.operationLabel(step);
+      if (operationLabel) {
+        lines.push(`  Operation: ${operationLabel}`);
+      }
+      lines.push(`  Status: ${step.status}`);
+      lines.push(
+        `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
+      );
+
+      if (step.metadata?.conditions) {
+        lines.push("  Conditions:");
+        step.metadata.conditions.forEach((c) => {
+          const result = c.passed ? "PASS" : "FAIL";
+          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
+          lines.push(
+            `    [${result}] ${expr}${formatValue(c.left)} ${c.operator} ${c.right != null ? formatValue(c.right) : ""}`
+          );
+        });
+      }
+
+      if (step.metadata?.logs?.length) {
+        lines.push("  Console:");
+        lines.push(
+          ...formatLogs(step.metadata.logs)
+            .split("\n")
+            .map((l) => `    ${l}`)
+        );
+      }
+
+      if (step.input && Object.keys(step.input).length > 0) {
+        lines.push(
+          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.output && Object.keys(step.output).length > 0) {
+        lines.push(
+          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.error) {
+        const label = step.status === "skipped" ? "Reason" : "Error";
+        lines.push(`  ${label}: ${step.error}`);
+      }
+
+      lines.push("-".repeat(60));
+    });
+
+    const text = lines.join("\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `discourse-workflows-execution-${execution.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   #syncLiveUpdates() {
@@ -409,92 +495,6 @@ export default class ExecutionDetail extends Component {
         }
       }
     }
-  }
-
-  @action
-  exportAsText() {
-    const execution = this.execution;
-    const lines = [];
-
-    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
-    lines.push(`Execution ID: ${execution.id}`);
-    lines.push(`Status: ${execution.status}`);
-    lines.push(`Started: ${execution.started_at ?? "—"}`);
-    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
-    lines.push(
-      `Total time: ${formatDuration(
-        execution.started_at,
-        execution.finished_at,
-        this.isRunning ? this.currentTime : null
-      )}`
-    );
-
-    if (execution.error) {
-      lines.push(`\nError: ${execution.error}`);
-    }
-
-    lines.push("\n" + "=".repeat(60));
-
-    execution.steps?.forEach((step, index) => {
-      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
-      lines.push(`  Type: ${step.node_type}`);
-      const operationLabel = this.operationLabel(step);
-      if (operationLabel) {
-        lines.push(`  Operation: ${operationLabel}`);
-      }
-      lines.push(`  Status: ${step.status}`);
-      lines.push(
-        `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
-      );
-
-      if (step.metadata?.conditions) {
-        lines.push("  Conditions:");
-        step.metadata.conditions.forEach((c) => {
-          const result = c.passed ? "PASS" : "FAIL";
-          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
-          lines.push(
-            `    [${result}] ${expr}${formatValue(c.left)} ${c.operator} ${c.right != null ? formatValue(c.right) : ""}`
-          );
-        });
-      }
-
-      if (step.metadata?.logs?.length) {
-        lines.push("  Console:");
-        lines.push(
-          ...formatLogs(step.metadata.logs)
-            .split("\n")
-            .map((l) => `    ${l}`)
-        );
-      }
-
-      if (step.input && Object.keys(step.input).length > 0) {
-        lines.push(
-          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
-        );
-      }
-
-      if (step.output && Object.keys(step.output).length > 0) {
-        lines.push(
-          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
-        );
-      }
-
-      if (step.error) {
-        const label = step.status === "skipped" ? "Reason" : "Error";
-        lines.push(`  ${label}: ${step.error}`);
-      }
-
-      lines.push("-".repeat(60));
-    });
-
-    const text = lines.join("\n");
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `discourse-workflows-execution-${execution.id}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   <template>

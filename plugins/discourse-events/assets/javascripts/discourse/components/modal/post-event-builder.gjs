@@ -59,30 +59,6 @@ export default class PostEventBuilder extends Component {
   // the advanced screen.
   @tracked formData = this.#snapshotFormData();
 
-  #initAttendanceMode() {
-    if (this.event.status === "standalone") {
-      return "none";
-    }
-    return this.event.maxAttendees ? "upTo" : "unlimited";
-  }
-
-  #initStartsAt() {
-    if (this.event.allDay) {
-      return moment(this.event.startsAt, "YYYY-MM-DD");
-    }
-    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
-  }
-
-  #initEndsAt() {
-    if (!this.event.endsAt) {
-      return null;
-    }
-    if (this.event.allDay) {
-      return moment(this.event.endsAt, "YYYY-MM-DD");
-    }
-    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
-  }
-
   get showTime() {
     return !this.allDay;
   }
@@ -100,194 +76,6 @@ export default class PostEventBuilder extends Component {
 
   get event() {
     return this.args.model.event;
-  }
-
-  #snapshotFormData() {
-    return {
-      name: this.event.name ?? "",
-      location: this.event.location ?? "",
-      url: this.event.url ?? "",
-      description: this.event.description ?? "",
-      startsAt: this.startsAt ?? null,
-      endsAt: this.endsAt ?? null,
-      allDay: !!this.event.allDay,
-      showLocalTime: !!this.event.showLocalTime,
-      chatEnabled: !!this.event.chatEnabled,
-      livestream: !!this.event.livestream,
-      attendanceMode: this.attendanceMode,
-      maxAttendees: this.event.maxAttendees ?? null,
-      eventType:
-        this.event.status === "standalone"
-          ? this.previousRsvpStatus || "public"
-          : this.event.status || "public",
-      rawInvitees: this.event.rawInvitees ?? [],
-      recurrence: this.event.recurrence ?? null,
-      imageUpload: this.event.imageUpload?.url ?? null,
-      timezone: this.event.timezone ?? null,
-      reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
-      customFields: this.#formCustomFields(),
-    };
-  }
-
-  #formCustomFields() {
-    const fields = {};
-    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
-      fields[customFieldFormName(key)] = value;
-    }
-    return fields;
-  }
-
-  @action
-  registerForm(api) {
-    this.formApi = api;
-  }
-
-  // mirror and change back to event model to keep compact view synced
-  @action
-  syncFieldToEvent(field, value, { set }) {
-    set(field, value);
-    this.event[field] = value;
-  }
-
-  @action
-  syncLinkToEvent(field, value, { set }) {
-    set(field, value);
-    this.event[field] = value;
-    this.#resetInvalidLivestream(set);
-  }
-
-  #livestreamSource() {
-    return livestreamSource(this.event.location, this.event.url);
-  }
-
-  #resetInvalidLivestream(set) {
-    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
-      set("livestream", false);
-      this.event.livestream = false;
-    }
-  }
-
-  @action
-  handleAllDayChange(value, { set }) {
-    set("allDay", value);
-    this.updateAllDay(value);
-  }
-
-  @action
-  handleAttendanceModeChange(value, { set }) {
-    set("attendanceMode", value);
-    // setAttendanceMode mirrors the resulting state back to the form
-    this.setAttendanceMode(value);
-  }
-
-  @action
-  handleMaxAttendeesChange(value, { set }) {
-    set("maxAttendees", value);
-    if (value === 0) {
-      this.setAttendanceMode("none");
-      return;
-    }
-    if (value > 0) {
-      this.#applyUpToValue(value);
-      return;
-    }
-    // just clear the data
-    this.event.maxAttendees = null;
-  }
-
-  #applyUpToValue(value) {
-    if (this.event.status === "standalone") {
-      this.event.status = this.previousRsvpStatus || "public";
-      this.event.reminders = (this.event.reminders || []).map((r) =>
-        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-      );
-      this.#syncRemindersToForm();
-    }
-    this.attendanceMode = "upTo";
-    this.event.maxAttendees = value;
-    this.previousMaxAttendees = value;
-    this.formApi?.setProperties({
-      attendanceMode: "upTo",
-      maxAttendees: value,
-      eventType: this.event.status,
-    });
-  }
-
-  @action
-  handleEventTypeChange(value, { set }) {
-    set("eventType", value);
-    this.onChangeStatus(value);
-  }
-
-  // GroupSelector uses (_, newGroups). Adapt to the form's field setter and
-  // mirror onto event so the BBCode build picks it up.
-  @action
-  handleInviteesChange(_, newInvitees) {
-    this.formApi?.set("rawInvitees", newInvitees);
-    this.event.rawInvitees = newInvitees;
-  }
-
-  @action
-  handleRecurrenceChange(value, { set }) {
-    set("recurrence", value);
-    this.setRecurrence(value);
-  }
-
-  @action
-  handleImageChange(value, { set }) {
-    set("imageUpload", value?.url ?? null);
-    this.event.imageUpload = value ?? null;
-  }
-
-  @action
-  handleTimezoneChange(value, { set }) {
-    set("timezone", value);
-    // setNewTimezone re-anchors startsAt/endsAt in the new zone.
-    this.setNewTimezone(value);
-  }
-
-  @action
-  handleReminderFieldChange(field, index, value, { set }) {
-    set(field, value);
-    if (!this.event.reminders?.[index]) {
-      return;
-    }
-    this.event.reminders = this.event.reminders.map((r, i) =>
-      i === index ? { ...r, [field]: value } : r
-    );
-  }
-
-  @action
-  handleAddReminder(addItemToCollection) {
-    const def = defaultReminderFor({
-      startsAt: this.startsAt,
-      endsAt: this.endsAt,
-      allDay: this.allDay,
-    });
-    const reminder = {
-      type: this.allowsRsvps ? def.type : "bumpTopic",
-      value: def.value,
-      unit: def.unit,
-      period: def.period,
-    };
-    this.event.addReminder(reminder);
-    addItemToCollection("reminders", { ...reminder });
-  }
-
-  @action
-  handleRemoveReminder(index, collectionRemove) {
-    this.event.reminders.splice(index, 1);
-    collectionRemove(index);
-  }
-
-  #syncRemindersToForm() {
-    if (!this.formApi) {
-      return;
-    }
-    this.formApi.set(
-      "reminders",
-      (this.event.reminders ?? []).map((r) => ({ ...r }))
-    );
   }
 
   get reminderTypes() {
@@ -331,11 +119,6 @@ export default class PostEventBuilder extends Component {
         name: i18n("discourse_post_event.builder_modal.reminders.units.weeks"),
       },
     ];
-  }
-
-  @action
-  revealUrl() {
-    this.urlRevealed = true;
   }
 
   get locationLabel() {
@@ -457,6 +240,129 @@ export default class PostEventBuilder extends Component {
     };
   }
 
+  get allowsRsvps() {
+    return this.event.status !== "standalone";
+  }
+
+  @action
+  registerForm(api) {
+    this.formApi = api;
+  }
+
+  // mirror and change back to event model to keep compact view synced
+  @action
+  syncFieldToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+  }
+
+  @action
+  syncLinkToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+    this.#resetInvalidLivestream(set);
+  }
+
+  @action
+  handleAllDayChange(value, { set }) {
+    set("allDay", value);
+    this.updateAllDay(value);
+  }
+
+  @action
+  handleAttendanceModeChange(value, { set }) {
+    set("attendanceMode", value);
+    // setAttendanceMode mirrors the resulting state back to the form
+    this.setAttendanceMode(value);
+  }
+
+  @action
+  handleMaxAttendeesChange(value, { set }) {
+    set("maxAttendees", value);
+    if (value === 0) {
+      this.setAttendanceMode("none");
+      return;
+    }
+    if (value > 0) {
+      this.#applyUpToValue(value);
+      return;
+    }
+    // just clear the data
+    this.event.maxAttendees = null;
+  }
+
+  @action
+  handleEventTypeChange(value, { set }) {
+    set("eventType", value);
+    this.onChangeStatus(value);
+  }
+
+  // GroupSelector uses (_, newGroups). Adapt to the form's field setter and
+  // mirror onto event so the BBCode build picks it up.
+  @action
+  handleInviteesChange(_, newInvitees) {
+    this.formApi?.set("rawInvitees", newInvitees);
+    this.event.rawInvitees = newInvitees;
+  }
+
+  @action
+  handleRecurrenceChange(value, { set }) {
+    set("recurrence", value);
+    this.setRecurrence(value);
+  }
+
+  @action
+  handleImageChange(value, { set }) {
+    set("imageUpload", value?.url ?? null);
+    this.event.imageUpload = value ?? null;
+  }
+
+  @action
+  handleTimezoneChange(value, { set }) {
+    set("timezone", value);
+    // setNewTimezone re-anchors startsAt/endsAt in the new zone.
+    this.setNewTimezone(value);
+  }
+
+  @action
+  handleReminderFieldChange(field, index, value, { set }) {
+    set(field, value);
+    if (!this.event.reminders?.[index]) {
+      return;
+    }
+    this.event.reminders = this.event.reminders.map((r, i) =>
+      i === index ? { ...r, [field]: value } : r
+    );
+  }
+
+  @action
+  handleAddReminder(addItemToCollection) {
+    const def = defaultReminderFor({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    });
+    const reminder = {
+      type: this.allowsRsvps ? def.type : "bumpTopic",
+      value: def.value,
+      unit: def.unit,
+      period: def.period,
+    };
+    this.event.addReminder(reminder);
+    addItemToCollection("reminders", { ...reminder });
+  }
+
+  @action
+  handleRemoveReminder(index, collectionRemove) {
+    this.event.reminders.splice(index, 1);
+    collectionRemove(index);
+  }
+
+  @action
+  revealUrl() {
+    this.urlRevealed = true;
+  }
+
   @action
   onCompactChange(state) {
     this.event.name = state.name;
@@ -513,25 +419,6 @@ export default class PostEventBuilder extends Component {
       this.formData = this.#snapshotFormData();
       this.urlRevealed ||= !!this.event.url;
       this.screen = "advanced";
-    }
-  }
-
-  #captureConfig() {
-    return {
-      startsAt: this.startsAt,
-      endsAt: this.endsAt,
-      allDay: this.allDay,
-    };
-  }
-
-  #reconcileReminder(prevConfig) {
-    const next = reconcileDefaultReminder(
-      this.event.reminders,
-      prevConfig,
-      this.#captureConfig()
-    );
-    if (next !== this.event.reminders) {
-      this.event.reminders = next;
     }
   }
 
@@ -618,10 +505,6 @@ export default class PostEventBuilder extends Component {
         : value;
     this.onChangeDates({ from: this.startsAt, to });
     set(to);
-  }
-
-  get allowsRsvps() {
-    return this.event.status !== "standalone";
   }
 
   @action
@@ -751,6 +634,123 @@ export default class PostEventBuilder extends Component {
       this.flash = extractError(e);
     } finally {
       this.isSaving = false;
+    }
+  }
+
+  #initAttendanceMode() {
+    if (this.event.status === "standalone") {
+      return "none";
+    }
+    return this.event.maxAttendees ? "upTo" : "unlimited";
+  }
+
+  #initStartsAt() {
+    if (this.event.allDay) {
+      return moment(this.event.startsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #initEndsAt() {
+    if (!this.event.endsAt) {
+      return null;
+    }
+    if (this.event.allDay) {
+      return moment(this.event.endsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #snapshotFormData() {
+    return {
+      name: this.event.name ?? "",
+      location: this.event.location ?? "",
+      url: this.event.url ?? "",
+      description: this.event.description ?? "",
+      startsAt: this.startsAt ?? null,
+      endsAt: this.endsAt ?? null,
+      allDay: !!this.event.allDay,
+      showLocalTime: !!this.event.showLocalTime,
+      chatEnabled: !!this.event.chatEnabled,
+      livestream: !!this.event.livestream,
+      attendanceMode: this.attendanceMode,
+      maxAttendees: this.event.maxAttendees ?? null,
+      eventType:
+        this.event.status === "standalone"
+          ? this.previousRsvpStatus || "public"
+          : this.event.status || "public",
+      rawInvitees: this.event.rawInvitees ?? [],
+      recurrence: this.event.recurrence ?? null,
+      imageUpload: this.event.imageUpload?.url ?? null,
+      timezone: this.event.timezone ?? null,
+      reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+      customFields: this.#formCustomFields(),
+    };
+  }
+
+  #formCustomFields() {
+    const fields = {};
+    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
+      fields[customFieldFormName(key)] = value;
+    }
+    return fields;
+  }
+
+  #livestreamSource() {
+    return livestreamSource(this.event.location, this.event.url);
+  }
+
+  #resetInvalidLivestream(set) {
+    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
+      set("livestream", false);
+      this.event.livestream = false;
+    }
+  }
+
+  #applyUpToValue(value) {
+    if (this.event.status === "standalone") {
+      this.event.status = this.previousRsvpStatus || "public";
+      this.event.reminders = (this.event.reminders || []).map((r) =>
+        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+      );
+      this.#syncRemindersToForm();
+    }
+    this.attendanceMode = "upTo";
+    this.event.maxAttendees = value;
+    this.previousMaxAttendees = value;
+    this.formApi?.setProperties({
+      attendanceMode: "upTo",
+      maxAttendees: value,
+      eventType: this.event.status,
+    });
+  }
+
+  #syncRemindersToForm() {
+    if (!this.formApi) {
+      return;
+    }
+    this.formApi.set(
+      "reminders",
+      (this.event.reminders ?? []).map((r) => ({ ...r }))
+    );
+  }
+
+  #captureConfig() {
+    return {
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    };
+  }
+
+  #reconcileReminder(prevConfig) {
+    const next = reconcileDefaultReminder(
+      this.event.reminders,
+      prevConfig,
+      this.#captureConfig()
+    );
+    if (next !== this.event.reminders) {
+      this.event.reminders = next;
     }
   }
 

@@ -174,9 +174,37 @@ export default class SearchAdvancedOptions extends Component {
     );
   }
 
-  @action
-  _collapseFilters() {
-    this.isExpanded = false;
+  @computed(
+    "searchedTerms.username",
+    "searchedTerms.category.id",
+    "searchedTerms.tags.[]",
+    "searchedTerms.in.[]",
+    "searchedTerms.special.all_tags",
+    "searchedTerms.status",
+    "searchedTerms.min_posts",
+    "searchedTerms.max_posts",
+    "searchedTerms.min_views",
+    "searchedTerms.max_views",
+    "searchedTerms.time.days"
+  )
+  get activeFilterCount() {
+    const t = this.searchedTerms;
+    if (!t) {
+      return 0;
+    }
+    return [
+      t.username,
+      t.category?.id,
+      t.tags?.length,
+      t.in?.length,
+      t.special?.all_tags,
+      t.status,
+      t.min_posts,
+      t.max_posts,
+      t.min_views,
+      t.max_views,
+      t.time?.days,
+    ].filter(Boolean).length;
   }
 
   didReceiveAttrs() {
@@ -499,6 +527,16 @@ export default class SearchAdvancedOptions extends Component {
     this[updateFnName]();
   }
 
+  @action
+  toggleFilters() {
+    this.isExpanded = !this.isExpanded;
+  }
+
+  @action
+  _collapseFilters() {
+    this.isExpanded = false;
+  }
+
   _updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get("searchedTerms.tags");
@@ -767,44 +805,6 @@ export default class SearchAdvancedOptions extends Component {
 
   _updateSearchTerm(searchTerm) {
     this.onChangeSearchTerm(searchTerm.trim());
-  }
-
-  @computed(
-    "searchedTerms.username",
-    "searchedTerms.category.id",
-    "searchedTerms.tags.[]",
-    "searchedTerms.in.[]",
-    "searchedTerms.special.all_tags",
-    "searchedTerms.status",
-    "searchedTerms.min_posts",
-    "searchedTerms.max_posts",
-    "searchedTerms.min_views",
-    "searchedTerms.max_views",
-    "searchedTerms.time.days"
-  )
-  get activeFilterCount() {
-    const t = this.searchedTerms;
-    if (!t) {
-      return 0;
-    }
-    return [
-      t.username,
-      t.category?.id,
-      t.tags?.length,
-      t.in?.length,
-      t.special?.all_tags,
-      t.status,
-      t.min_posts,
-      t.max_posts,
-      t.min_views,
-      t.max_views,
-      t.time?.days,
-    ].filter(Boolean).length;
-  }
-
-  @action
-  toggleFilters() {
-    this.isExpanded = !this.isExpanded;
   }
 
   <template>

@@ -58,20 +58,6 @@ export default class TopicProgress extends Component {
     return readPos < stream.length - 1 && readPos > this.progressPosition;
   }
 
-  _topicScrolled(event) {
-    if (this.docked) {
-      this.setProperties({
-        progressPosition: this.get("postStream.filteredPostsCount"),
-        _streamPercentage: 100,
-      });
-    } else {
-      this.setProperties({
-        progressPosition: event.postIndex,
-        _streamPercentage: (event.percent * 100).toFixed(2),
-      });
-    }
-  }
-
   @computed("_streamPercentage")
   get progressStyle() {
     return `--progress-bg-width: ${this._streamPercentage || 0}%`;
@@ -105,6 +91,20 @@ export default class TopicProgress extends Component {
   @action
   goBack() {
     this.jumpToPost(this.get("topic.last_read_post_number"));
+  }
+
+  _topicScrolled(event) {
+    if (this.docked) {
+      this.setProperties({
+        progressPosition: this.get("postStream.filteredPostsCount"),
+        _streamPercentage: 100,
+      });
+    } else {
+      this.setProperties({
+        progressPosition: event.postIndex,
+        _streamPercentage: (event.percent * 100).toFixed(2),
+      });
+    }
   }
 
   <template>

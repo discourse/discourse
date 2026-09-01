@@ -213,33 +213,6 @@ export default class GlimmerSiteHeader extends Component {
     this.recalculateHeaderOffset();
   }
 
-  _handleArrowKeysNav(event) {
-    const activeTab = document.querySelector(
-      ".menu-tabs-container .btn.active"
-    );
-    if (activeTab) {
-      let activeTabNumber = Number(
-        document.activeElement.dataset.tabNumber || activeTab.dataset.tabNumber
-      );
-      const maxTabNumber =
-        document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-      const isNext = event.key === "ArrowDown";
-      let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-      if (isNext && nextTab > maxTabNumber) {
-        nextTab = 0;
-      }
-      if (!isNext && nextTab < 0) {
-        nextTab = maxTabNumber;
-      }
-      event.preventDefault();
-      document
-        .querySelector(
-          `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-        )
-        .focus();
-    }
-  }
-
   @action
   animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
@@ -299,62 +272,6 @@ export default class GlimmerSiteHeader extends Component {
 
       this._animate = false;
     });
-  }
-
-  @bind
-  _animateOpening(panel, event = null) {
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      durationMs = getMaxAnimationTimeMs(
-        this.pxClosed / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-      easing: "ease-out",
-    };
-    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
-    cloakElement?.animate?.([{ opacity: 1 }], timing);
-    this.pxClosed = null;
-  }
-
-  @bind
-  _animateClosing(event, panel, menuOrigin) {
-    this._animate = true;
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      const distancePx = PANEL_WIDTH - this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(
-        distancePx / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-    };
-
-    let endPosition = -PANEL_WIDTH; //origin left
-    if (menuOrigin === "right") {
-      endPosition = PANEL_WIDTH;
-    }
-    panel.animate(
-      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
-      timing
-    );
-    if (cloakElement) {
-      cloakElement.animate([{ opacity: 0 }], timing);
-      cloakElement.style.display = "none";
-
-      // to ensure that the cloak is cleared after animation we need to toggle any active menus
-      if (this.header.hamburgerVisible || this.header.userVisible) {
-        this.header.hamburgerVisible = false;
-        this.header.userVisible = false;
-      }
-    }
-    this.pxClosed = null;
   }
 
   @bind
@@ -428,6 +345,89 @@ export default class GlimmerSiteHeader extends Component {
       ],
       { fill: "forwards" }
     );
+  }
+
+  _handleArrowKeysNav(event) {
+    const activeTab = document.querySelector(
+      ".menu-tabs-container .btn.active"
+    );
+    if (activeTab) {
+      let activeTabNumber = Number(
+        document.activeElement.dataset.tabNumber || activeTab.dataset.tabNumber
+      );
+      const maxTabNumber =
+        document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+      const isNext = event.key === "ArrowDown";
+      let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+      if (isNext && nextTab > maxTabNumber) {
+        nextTab = 0;
+      }
+      if (!isNext && nextTab < 0) {
+        nextTab = maxTabNumber;
+      }
+      event.preventDefault();
+      document
+        .querySelector(
+          `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+        )
+        .focus();
+    }
+  }
+
+  @bind
+  _animateOpening(panel, event = null) {
+    const cloakElement = document.querySelector(".header-cloak");
+    let durationMs = getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      durationMs = getMaxAnimationTimeMs(
+        this.pxClosed / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs > 0 ? durationMs : 0,
+      fill: "forwards",
+      easing: "ease-out",
+    };
+    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
+    cloakElement?.animate?.([{ opacity: 1 }], timing);
+    this.pxClosed = null;
+  }
+
+  @bind
+  _animateClosing(event, panel, menuOrigin) {
+    this._animate = true;
+    const cloakElement = document.querySelector(".header-cloak");
+    let durationMs = getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      const distancePx = PANEL_WIDTH - this.pxClosed;
+      durationMs = getMaxAnimationTimeMs(
+        distancePx / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs > 0 ? durationMs : 0,
+      fill: "forwards",
+    };
+
+    let endPosition = -PANEL_WIDTH; //origin left
+    if (menuOrigin === "right") {
+      endPosition = PANEL_WIDTH;
+    }
+    panel.animate(
+      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
+      timing
+    );
+    if (cloakElement) {
+      cloakElement.animate([{ opacity: 0 }], timing);
+      cloakElement.style.display = "none";
+
+      // to ensure that the cloak is cleared after animation we need to toggle any active menus
+      if (this.header.hamburgerVisible || this.header.userVisible) {
+        this.header.hamburgerVisible = false;
+        this.header.userVisible = false;
+      }
+    }
+    this.pxClosed = null;
   }
 
   <template>

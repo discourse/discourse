@@ -23,6 +23,11 @@ export default class DDateTimeInput extends Component {
     return this.date && this.get("showTime") ? this.date.minutes() : null;
   }
 
+  @computed("timezone")
+  get resolvedTimezone() {
+    return this.timezone || moment.tz.guess();
+  }
+
   @action
   onClear() {
     this.onChange(null);
@@ -71,11 +76,6 @@ export default class DDateTimeInput extends Component {
         this.resolvedTimezone
       )
     );
-  }
-
-  @computed("timezone")
-  get resolvedTimezone() {
-    return this.timezone || moment.tz.guess();
   }
 
   <template>

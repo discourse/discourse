@@ -51,6 +51,25 @@ export default class ToolbarPopupMenuOptions extends Component {
     this.dMenu?.destroy();
   }
 
+  get convertedContent() {
+    return this.args.content
+      .map(this.#convertMenuOption.bind(this))
+      .filter(Boolean);
+  }
+
+  get textManipulationState() {
+    return this.args.context?.textManipulation?.state;
+  }
+
+  get triggerLabel() {
+    const label = this.args.triggerLabel;
+    if (typeof label === "function") {
+      return label({ state: this.textManipulationState });
+    }
+
+    return label;
+  }
+
   @action
   async onSelect(option) {
     await this.dMenu?.close();
@@ -60,6 +79,20 @@ export default class ToolbarPopupMenuOptions extends Component {
   @action
   onRegisterApi(api) {
     this.dMenu = api;
+  }
+
+  @action
+  getActive(option) {
+    return option.active?.({ state: this.textManipulationState });
+  }
+
+  @action
+  getIcon(config) {
+    if (typeof config.icon === "function") {
+      return config.icon?.({ state: this.textManipulationState });
+    }
+
+    return config.icon;
   }
 
   #convertMenuOption(content) {
@@ -107,39 +140,6 @@ export default class ToolbarPopupMenuOptions extends Component {
       return title;
     }
     return `${title} (${formatShortcut(shortcutKeys).label})`;
-  }
-
-  get convertedContent() {
-    return this.args.content
-      .map(this.#convertMenuOption.bind(this))
-      .filter(Boolean);
-  }
-
-  get textManipulationState() {
-    return this.args.context?.textManipulation?.state;
-  }
-
-  @action
-  getActive(option) {
-    return option.active?.({ state: this.textManipulationState });
-  }
-
-  @action
-  getIcon(config) {
-    if (typeof config.icon === "function") {
-      return config.icon?.({ state: this.textManipulationState });
-    }
-
-    return config.icon;
-  }
-
-  get triggerLabel() {
-    const label = this.args.triggerLabel;
-    if (typeof label === "function") {
-      return label({ state: this.textManipulationState });
-    }
-
-    return label;
   }
 
   <template>

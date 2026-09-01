@@ -67,50 +67,11 @@ export default class Bookmark extends RestModel {
     return getURL(`/bookmarks/${this.id}`);
   }
 
-  destroy() {
-    if (this.newBookmark) {
-      return Promise.resolve();
-    }
-
-    return ajax(this.url, {
-      type: "DELETE",
-    });
-  }
-
-  attachedTo() {
-    return {
-      target: this.bookmarkable_type.toLowerCase(),
-      targetId: this.bookmarkable_id,
-    };
-  }
-
-  togglePin() {
-    if (this.newBookmark) {
-      return Promise.resolve();
-    }
-
-    return ajax(this.url + "/toggle_pin", {
-      type: "PUT",
-    });
-  }
-
-  pinAction() {
-    return this.pinned ? "unpin" : "pin";
-  }
-
   @computed("topic_id", "highest_post_number", "bookmarkable_url")
   get lastPostUrl() {
     return this.topic_id
       ? this.urlForPostNumber(this.highest_post_number)
       : this.bookmarkable_url;
-  }
-
-  urlForPostNumber(postNumber) {
-    let url = getURL(`/t/${this.topic_id}`);
-    if (postNumber > 0) {
-      url += `/${postNumber}`;
-    }
-    return url;
   }
 
   @computed("bumped_at", "createdAt")
@@ -218,5 +179,44 @@ export default class Bookmark extends RestModel {
   @computed("reminder_at", "name")
   get hasMetadata() {
     return this.reminder_at || this.name;
+  }
+
+  destroy() {
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
+
+    return ajax(this.url, {
+      type: "DELETE",
+    });
+  }
+
+  attachedTo() {
+    return {
+      target: this.bookmarkable_type.toLowerCase(),
+      targetId: this.bookmarkable_id,
+    };
+  }
+
+  togglePin() {
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
+
+    return ajax(this.url + "/toggle_pin", {
+      type: "PUT",
+    });
+  }
+
+  pinAction() {
+    return this.pinned ? "unpin" : "pin";
+  }
+
+  urlForPostNumber(postNumber) {
+    let url = getURL(`/t/${this.topic_id}`);
+    if (postNumber > 0) {
+      url += `/${postNumber}`;
+    }
+    return url;
   }
 }

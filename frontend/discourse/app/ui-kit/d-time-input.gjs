@@ -58,28 +58,6 @@ export default class DTimeInput extends Component {
   minutes = null;
   relativeDate = null;
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (isPresent(this.date)) {
-      this.setProperties({
-        hours: this.date.hours(),
-        minutes: this.date.minutes(),
-      });
-    }
-
-    if (
-      !isPresent(this.date) &&
-      !isPresent(this.hours) &&
-      !isPresent(this.minutes)
-    ) {
-      this.setProperties({
-        hours: null,
-        minutes: null,
-      });
-    }
-  }
-
   @computed("relativeDate", "date")
   get minimumTime() {
     if (this.relativeDate) {
@@ -161,6 +139,28 @@ export default class DTimeInput extends Component {
   get time() {
     if (isPresent(this.hours) && isPresent(this.minutes)) {
       return parseInt(this.hours, 10) * 60 + parseInt(this.minutes, 10);
+    }
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (isPresent(this.date)) {
+      this.setProperties({
+        hours: this.date.hours(),
+        minutes: this.date.minutes(),
+      });
+    }
+
+    if (
+      !isPresent(this.date) &&
+      !isPresent(this.hours) &&
+      !isPresent(this.minutes)
+    ) {
+      this.setProperties({
+        hours: null,
+        minutes: null,
+      });
     }
   }
 

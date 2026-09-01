@@ -77,59 +77,6 @@ export default class UpsertCategoryGeneral extends Component {
     }));
   }
 
-  @bind
-  mapCategoryTypeIdsToTypes(ids) {
-    if (!ids?.length) {
-      return [];
-    }
-
-    return ids
-      .map((id) => this.categoryTypes.find((type) => type.id === id))
-      .filter(Boolean);
-  }
-
-  @action
-  registerDescriptionListener() {
-    this.appEvents.on("composer:edited-post", this, this._refreshDescription);
-  }
-
-  @action
-  unregisterDescriptionListener() {
-    this.appEvents.off("composer:edited-post", this, this._refreshDescription);
-  }
-
-  @action
-  checkDescriptionOverflow(element) {
-    if (!this.descriptionExpanded) {
-      this.descriptionOverflows = element.scrollHeight > element.clientHeight;
-    }
-  }
-
-  @action
-  toggleDescriptionExpanded() {
-    this.descriptionExpanded = !this.descriptionExpanded;
-  }
-
-  async _refreshDescription() {
-    const category = this.args.category;
-    if (!category?.id) {
-      return;
-    }
-
-    const result = await Category.reloadById(category.id);
-    if (result?.category?.description) {
-      category.set("description", result.category.description);
-      this.descriptionHtml = result.category.description;
-
-      this.toasts.success({
-        duration: "short",
-        data: {
-          message: i18n("category.description_updated"),
-        },
-      });
-    }
-  }
-
   get showDescription() {
     const category = this.args.category;
     return (
@@ -144,38 +91,6 @@ export default class UpsertCategoryGeneral extends Component {
     }
 
     return trustHTML(i18n("category.no_description"));
-  }
-
-  @action
-  async editCategoryDescription() {
-    this.loadingDescription = true;
-
-    try {
-      const topicData = await ajax(`${this.args.category.topic_url}.json`);
-      const firstPost = topicData.post_stream?.posts?.[0];
-      if (!firstPost) {
-        return;
-      }
-
-      this.composer.close();
-
-      const post = this.store.createRecord("post", firstPost);
-      const topic = this.store.createRecord("topic", topicData);
-      post.set("topic", topic);
-
-      await this.composer.open({
-        post,
-        topic,
-        action: Composer.EDIT,
-        draftKey: topicData.draft_key || `topic_${topicData.id}`,
-        draftSequence: topicData.draft_sequence ?? 0,
-        skipJumpOnSave: true,
-      });
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loadingDescription = false;
-    }
   }
 
   // This needs to be dynamic because the name of the everyone group can be changed by admins
@@ -243,29 +158,6 @@ export default class UpsertCategoryGeneral extends Component {
     );
 
     return groups.filter((g) => parentGroupIds.has(g.id));
-  }
-
-  @action
-  onChangeAccessGroups(groupIds) {
-    const existingPermissions = this.permissions || [];
-
-    const newPermissions = groupIds.map((groupId) => {
-      const existingPermission = existingPermissions.find(
-        (p) => p.group_id === groupId
-      );
-
-      if (existingPermission) {
-        return existingPermission;
-      }
-
-      return {
-        group_id: groupId,
-        group_name: this.site.groupsById[groupId]?.name,
-        permission_type: PermissionType.FULL,
-      };
-    });
-
-    this.#setFormPermissions(newPermissions);
   }
 
   get allowSubCategoriesAsParent() {
@@ -338,6 +230,106 @@ export default class UpsertCategoryGeneral extends Component {
     return trustHTML(i18n(key));
   }
 
+  get #currentPermissionsArePrivate() {
+    const currentPermissions = this.permissions || [];
+    return (
+      currentPermissions.length > 0 &&
+      !currentPermissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id)
+    );
+  }
+
+  get isEditingExistingCategory() {
+    return this.args.category.id != null;
+  }
+
+  @bind
+  mapCategoryTypeIdsToTypes(ids) {
+    if (!ids?.length) {
+      return [];
+    }
+
+    return ids
+      .map((id) => this.categoryTypes.find((type) => type.id === id))
+      .filter(Boolean);
+  }
+
+  @action
+  registerDescriptionListener() {
+    this.appEvents.on("composer:edited-post", this, this._refreshDescription);
+  }
+
+  @action
+  unregisterDescriptionListener() {
+    this.appEvents.off("composer:edited-post", this, this._refreshDescription);
+  }
+
+  @action
+  checkDescriptionOverflow(element) {
+    if (!this.descriptionExpanded) {
+      this.descriptionOverflows = element.scrollHeight > element.clientHeight;
+    }
+  }
+
+  @action
+  toggleDescriptionExpanded() {
+    this.descriptionExpanded = !this.descriptionExpanded;
+  }
+
+  @action
+  async editCategoryDescription() {
+    this.loadingDescription = true;
+
+    try {
+      const topicData = await ajax(`${this.args.category.topic_url}.json`);
+      const firstPost = topicData.post_stream?.posts?.[0];
+      if (!firstPost) {
+        return;
+      }
+
+      this.composer.close();
+
+      const post = this.store.createRecord("post", firstPost);
+      const topic = this.store.createRecord("topic", topicData);
+      post.set("topic", topic);
+
+      await this.composer.open({
+        post,
+        topic,
+        action: Composer.EDIT,
+        draftKey: topicData.draft_key || `topic_${topicData.id}`,
+        draftSequence: topicData.draft_sequence ?? 0,
+        skipJumpOnSave: true,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingDescription = false;
+    }
+  }
+
+  @action
+  onChangeAccessGroups(groupIds) {
+    const existingPermissions = this.permissions || [];
+
+    const newPermissions = groupIds.map((groupId) => {
+      const existingPermission = existingPermissions.find(
+        (p) => p.group_id === groupId
+      );
+
+      if (existingPermission) {
+        return existingPermission;
+      }
+
+      return {
+        group_id: groupId,
+        group_name: this.site.groupsById[groupId]?.name,
+        permission_type: PermissionType.FULL,
+      };
+    });
+
+    this.#setFormPermissions(newPermissions);
+  }
+
   @action
   buildTransientModel(transientData) {
     return Category.create({
@@ -363,40 +355,6 @@ export default class UpsertCategoryGeneral extends Component {
         transientData: this.args.transientData,
       }
     );
-  }
-
-  #applyVisibilityChange(value) {
-    // Save current permissions before switching to public
-    if (value === "public" && this.isPrivateCategory) {
-      this.#previousPermissions = (this.permissions || []).map((p) => ({
-        ...p,
-      }));
-    }
-
-    this.args.form.set("visibility", value);
-
-    if (value === "public") {
-      this.#setFormPermissions([this.#everyoneFullPermission]);
-    } else if (value === "group_restricted") {
-      if (this.#previousPermissions?.length) {
-        this.#setFormPermissions(this.#previousPermissions);
-        this.#previousPermissions = null;
-      } else {
-        this.#setFormPermissions([]);
-      }
-    }
-  }
-
-  get #currentPermissionsArePrivate() {
-    const currentPermissions = this.permissions || [];
-    return (
-      currentPermissions.length > 0 &&
-      !currentPermissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id)
-    );
-  }
-
-  get isEditingExistingCategory() {
-    return this.args.category.id != null;
   }
 
   @bind
@@ -435,34 +393,6 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   onRegisterTypeSelectorDMenuApi(api) {
     this.typeSelectorDMenuApi = api;
-  }
-
-  #parentPermissionsAllowEveryone(parentPermissions) {
-    return parentPermissions.some(
-      (p) => p.group_id === AUTO_GROUPS.everyone.id
-    );
-  }
-
-  #currentPermissionsAreSubsetOf(parentPermissions) {
-    const parentGroupIds = new Set(parentPermissions.map((p) => p.group_id));
-    return (this.permissions || []).every((p) =>
-      parentGroupIds.has(p.group_id)
-    );
-  }
-
-  #shouldRetainPermissionsForParent(parentPermissions) {
-    if (!this.isEditingExistingCategory) {
-      return false;
-    }
-
-    if (this.#parentPermissionsAllowEveryone(parentPermissions)) {
-      return true;
-    }
-
-    return (
-      this.#currentPermissionsArePrivate &&
-      this.#currentPermissionsAreSubsetOf(parentPermissions)
-    );
   }
 
   @action
@@ -565,22 +495,6 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
-  #colorDifference(color1, color2) {
-    const r1 = parseInt(color1.substr(0, 2), 16);
-    const g1 = parseInt(color1.substr(2, 2), 16);
-    const b1 = parseInt(color1.substr(4, 2), 16);
-
-    const r2 = parseInt(color2.substr(0, 2), 16);
-    const g2 = parseInt(color2.substr(2, 2), 16);
-    const b2 = parseInt(color2.substr(4, 2), 16);
-
-    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
-    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
-    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
-
-    return rDiff + gDiff + bDiff;
-  }
-
   @action
   validateColor(name, color, { addError }) {
     color = color.trim();
@@ -616,8 +530,94 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
+  #applyVisibilityChange(value) {
+    // Save current permissions before switching to public
+    if (value === "public" && this.isPrivateCategory) {
+      this.#previousPermissions = (this.permissions || []).map((p) => ({
+        ...p,
+      }));
+    }
+
+    this.args.form.set("visibility", value);
+
+    if (value === "public") {
+      this.#setFormPermissions([this.#everyoneFullPermission]);
+    } else if (value === "group_restricted") {
+      if (this.#previousPermissions?.length) {
+        this.#setFormPermissions(this.#previousPermissions);
+        this.#previousPermissions = null;
+      } else {
+        this.#setFormPermissions([]);
+      }
+    }
+  }
+
+  #parentPermissionsAllowEveryone(parentPermissions) {
+    return parentPermissions.some(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
+  }
+
+  #currentPermissionsAreSubsetOf(parentPermissions) {
+    const parentGroupIds = new Set(parentPermissions.map((p) => p.group_id));
+    return (this.permissions || []).every((p) =>
+      parentGroupIds.has(p.group_id)
+    );
+  }
+
+  #shouldRetainPermissionsForParent(parentPermissions) {
+    if (!this.isEditingExistingCategory) {
+      return false;
+    }
+
+    if (this.#parentPermissionsAllowEveryone(parentPermissions)) {
+      return true;
+    }
+
+    return (
+      this.#currentPermissionsArePrivate &&
+      this.#currentPermissionsAreSubsetOf(parentPermissions)
+    );
+  }
+
+  #colorDifference(color1, color2) {
+    const r1 = parseInt(color1.substr(0, 2), 16);
+    const g1 = parseInt(color1.substr(2, 2), 16);
+    const b1 = parseInt(color1.substr(4, 2), 16);
+
+    const r2 = parseInt(color2.substr(0, 2), 16);
+    const g2 = parseInt(color2.substr(2, 2), 16);
+    const b2 = parseInt(color2.substr(4, 2), 16);
+
+    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
+    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
+    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
+
+    return rDiff + gDiff + bDiff;
+  }
+
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
+  }
+
+  async _refreshDescription() {
+    const category = this.args.category;
+    if (!category?.id) {
+      return;
+    }
+
+    const result = await Category.reloadById(category.id);
+    if (result?.category?.description) {
+      category.set("description", result.category.description);
+      this.descriptionHtml = result.category.description;
+
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("category.description_updated"),
+        },
+      });
+    }
   }
 
   <template>

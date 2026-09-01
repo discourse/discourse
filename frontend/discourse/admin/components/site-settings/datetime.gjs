@@ -5,6 +5,17 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class Datetime extends Component {
+  get localTime() {
+    if (!this.args.value) {
+      return "";
+    }
+
+    // Convert UTC ISO string to local datetime-local format
+    return moment(this.args.value)
+      .local()
+      .format(moment.HTML5_FMT.DATETIME_LOCAL);
+  }
+
   @action
   convertToUniversalTime(event) {
     const datetime = event.target.value;
@@ -21,17 +32,6 @@ export default class Datetime extends Component {
   @action
   reset() {
     this.args.changeValueCallback("");
-  }
-
-  get localTime() {
-    if (!this.args.value) {
-      return "";
-    }
-
-    // Convert UTC ISO string to local datetime-local format
-    return moment(this.args.value)
-      .local()
-      .format(moment.HTML5_FMT.DATETIME_LOCAL);
   }
 
   <template>

@@ -133,24 +133,6 @@ export default class InputContext extends Component {
     return this.args.session?.lastExecutionRunData || {};
   }
 
-  itemCountLabel(summary) {
-    if (!summary?.itemCount) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_item_count", {
-      count: summary.itemCount,
-    });
-  }
-
-  emptyMessage(summary) {
-    if (summary?.itemCount > 0) {
-      return i18n("discourse_workflows.configurator.no_input_fields");
-    }
-
-    return i18n("discourse_workflows.configurator.no_input_context");
-  }
-
   get inputSections() {
     return this.inputConnections
       .map((connection) => {
@@ -205,16 +187,6 @@ export default class InputContext extends Component {
       .filter(Boolean);
   }
 
-  inputConnectionLabel(inputIndex) {
-    if (this.inputConnections.length < 2 && inputIndex === 0) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_input_label", {
-      number: inputIndex + 1,
-    });
-  }
-
   get environmentFields() {
     return environmentFields(
       this.workflowsNodeTypes.expressionContext,
@@ -267,6 +239,34 @@ export default class InputContext extends Component {
         };
       })
       .filter((ancestor) => ancestor.fields.length);
+  }
+
+  itemCountLabel(summary) {
+    if (!summary?.itemCount) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_item_count", {
+      count: summary.itemCount,
+    });
+  }
+
+  emptyMessage(summary) {
+    if (summary?.itemCount > 0) {
+      return i18n("discourse_workflows.configurator.no_input_fields");
+    }
+
+    return i18n("discourse_workflows.configurator.no_input_context");
+  }
+
+  inputConnectionLabel(inputIndex) {
+    if (this.inputConnections.length < 2 && inputIndex === 0) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_input_label", {
+      number: inputIndex + 1,
+    });
   }
 
   <template>

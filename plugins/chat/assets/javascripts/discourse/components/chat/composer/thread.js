@@ -17,28 +17,6 @@ export default class ChatComposerThread extends ChatComposer {
 
   composerId = "thread-composer";
 
-  @debounce(2000)
-  persistDraft() {
-    this.chatDraftsManager.add(
-      this.draft,
-      this.args.thread.channel.id,
-      this.args.thread.id
-    );
-  }
-
-  @action
-  destroyDraft() {
-    this.chatDraftsManager.remove(
-      this.args.thread.channel.id,
-      this.args.thread.id
-    );
-  }
-
-  @action
-  resetDraft() {
-    this.args.thread.resetDraft(this.currentUser);
-  }
-
   get draft() {
     return this.args.thread.draft;
   }
@@ -61,6 +39,28 @@ export default class ChatComposerThread extends ChatComposer {
 
   get lastMessage() {
     return this.args.thread.messagesManager.findLastMessage();
+  }
+
+  @debounce(2000)
+  persistDraft() {
+    this.chatDraftsManager.add(
+      this.draft,
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
+  }
+
+  @action
+  destroyDraft() {
+    this.chatDraftsManager.remove(
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
+  }
+
+  @action
+  resetDraft() {
+    this.args.thread.resetDraft(this.currentUser);
   }
 
   lastUserMessage(user) {

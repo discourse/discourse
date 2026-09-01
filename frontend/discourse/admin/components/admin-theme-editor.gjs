@@ -43,6 +43,25 @@ export default class AdminThemeEditor extends Component {
 
   warning = null;
 
+  @computed("fieldName", "currentTargetName", "theme")
+  get activeSection() {
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
+  }
+
+  set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
+    this.theme.setField(this.currentTargetName, this.fieldName, value);
+  }
+
   @computed("fieldName", "currentTargetName")
   get editorId() {
     return `${this.fieldName}|${this.currentTargetName}`;
@@ -102,25 +121,6 @@ export default class AdminThemeEditor extends Component {
       });
     }
     return "";
-  }
-
-  @computed("fieldName", "currentTargetName", "theme")
-  get activeSection() {
-    const themeValue = this.theme.getField(
-      this.currentTargetName,
-      this.fieldName
-    );
-    if (!themeValue && this.fieldName === "js") {
-      return JS_DEFAULT_VALUE;
-    }
-    return themeValue;
-  }
-
-  set activeSection(value) {
-    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
-      value = "";
-    }
-    this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
   @computed("maximized")

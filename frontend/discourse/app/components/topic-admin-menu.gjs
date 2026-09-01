@@ -19,23 +19,6 @@ export default class TopicAdminMenu extends Component {
   @service currentUser;
   @service siteSettings;
 
-  @action
-  onRegisterApi(api) {
-    this.dMenu = api;
-  }
-
-  @action
-  async onButtonAction(buttonAction) {
-    await this.dMenu.close();
-    this.args[buttonAction]?.();
-  }
-
-  @action
-  async onExtraButtonAction(buttonAction) {
-    await this.dMenu.close();
-    buttonAction?.();
-  }
-
   get extraButtons() {
     return this.adminTopicMenuButtons.callbacks
       .map((callback) => {
@@ -163,6 +146,23 @@ export default class TopicAdminMenu extends Component {
     return this.args.topic.get("is_nested_view")
       ? "nested_replies.topic_admin_menu.disable_nested_replies"
       : "nested_replies.topic_admin_menu.enable_nested_replies";
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  async onButtonAction(buttonAction) {
+    await this.dMenu.close();
+    this.args[buttonAction]?.();
+  }
+
+  @action
+  async onExtraButtonAction(buttonAction) {
+    await this.dMenu.close();
+    buttonAction?.();
   }
 
   @action

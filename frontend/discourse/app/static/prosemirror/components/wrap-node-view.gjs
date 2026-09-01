@@ -70,6 +70,14 @@ export default class WrapNodeView extends Component {
     }
   }
 
+  selectNode() {
+    this.args.dom.classList.add("ProseMirror-selectednode");
+  }
+
+  deselectNode() {
+    this.args.dom.classList.remove("ProseMirror-selectednode");
+  }
+
   #updateAttributes(attrsString) {
     const pos = this.args.getPos();
     const attrs = parseAttributesString(attrsString);
@@ -78,14 +86,6 @@ export default class WrapNodeView extends Component {
     tr.setNodeMarkup(pos, null, { data: attrs });
     tr.setSelection(NodeSelection.create(tr.doc, pos));
     this.args.view.dispatch(tr);
-  }
-
-  selectNode() {
-    this.args.dom.classList.add("ProseMirror-selectednode");
-  }
-
-  deselectNode() {
-    this.args.dom.classList.remove("ProseMirror-selectednode");
   }
 
   <template>

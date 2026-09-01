@@ -228,6 +228,14 @@ class DecorateHtmlHelper {
     this.#context = context;
   }
 
+  get model() {
+    return this.#model;
+  }
+
+  get context() {
+    return this.#context;
+  }
+
   /**
    * Renders a Glimmer component into a specified target HTML element with provided data.
    * Handles deprecation warnings if invalid parameters are passed.
@@ -258,14 +266,6 @@ class DecorateHtmlHelper {
       append: opts.append ?? true,
     };
     this.#renderGlimmerInfos.push(info);
-  }
-
-  get model() {
-    return this.#model;
-  }
-
-  get context() {
-    return this.#context;
   }
 
   getModel() {

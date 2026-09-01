@@ -88,6 +88,15 @@ export default class PostStream extends Component {
       .filter((num) => !isNaN(num));
   }
 
+  get shouldShowFilteredNotice() {
+    return (
+      this.args.streamFilters &&
+      Object.keys(this.args.streamFilters).length &&
+      (Object.keys(this.gapsBefore).length > 0 ||
+        Object.keys(this.gapsAfter).length > 0)
+    );
+  }
+
   // Indexed rather than wrapped: a per-render wrapper is a new value each
   // recompute, invalidating `@post` and rebuilding unchanged cooked HTML.
   @bind
@@ -98,15 +107,6 @@ export default class PostStream extends Component {
   @bind
   nextPost(index) {
     return this.posts[index + 1] ?? null;
-  }
-
-  get shouldShowFilteredNotice() {
-    return (
-      this.args.streamFilters &&
-      Object.keys(this.args.streamFilters).length &&
-      (Object.keys(this.gapsBefore).length > 0 ||
-        Object.keys(this.gapsAfter).length > 0)
-    );
   }
 
   isPlaceholder(post) {

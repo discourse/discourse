@@ -15,14 +15,6 @@ export default class SchemaSettingTypeString extends Component {
   maxLength = this.args.spec.validations?.max_length;
   required = this.args.spec.required;
 
-  @action
-  onInput(event) {
-    this.touched = true;
-    const newValue = event.currentTarget.value;
-    this.args.onChange(newValue);
-    this.value = newValue;
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -43,6 +35,14 @@ export default class SchemaSettingTypeString extends Component {
         count: this.minLength,
       });
     }
+  }
+
+  @action
+  onInput(event) {
+    this.touched = true;
+    const newValue = event.currentTarget.value;
+    this.args.onChange(newValue);
+    this.value = newValue;
   }
 
   <template>

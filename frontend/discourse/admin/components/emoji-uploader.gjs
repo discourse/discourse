@@ -64,6 +64,24 @@ export default class EmojiUploader extends Component {
     return !isEmpty(this.group);
   }
 
+  @computed("uppyUpload.uploading", "uppyUpload.uploadProgress")
+  get buttonLabel() {
+    if (this.uppyUpload?.uploading) {
+      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload?.uploadProgress}%`;
+    } else {
+      return i18n("admin.emoji.choose_files");
+    }
+  }
+
+  @computed("uppyUpload.uploading")
+  get buttonIcon() {
+    if (this.uppyUpload?.uploading) {
+      return "spinner";
+    } else {
+      return "plus";
+    }
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     this.set("newEmojiGroups", this.emojiGroups);
@@ -84,24 +102,6 @@ export default class EmojiUploader extends Component {
   @action
   chooseFiles() {
     this.uppyUpload.openPicker();
-  }
-
-  @computed("uppyUpload.uploading", "uppyUpload.uploadProgress")
-  get buttonLabel() {
-    if (this.uppyUpload?.uploading) {
-      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload?.uploadProgress}%`;
-    } else {
-      return i18n("admin.emoji.choose_files");
-    }
-  }
-
-  @computed("uppyUpload.uploading")
-  get buttonIcon() {
-    if (this.uppyUpload?.uploading) {
-      return "spinner";
-    } else {
-      return "plus";
-    }
   }
 
   <template>

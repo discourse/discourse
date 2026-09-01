@@ -41,6 +41,16 @@ export default class CellEditor extends Component {
     return String(this.args.value);
   }
 
+  get inputType() {
+    if (this.columnType === "number") {
+      return "number";
+    }
+    if (this.columnType === "date") {
+      return "date";
+    }
+    return "text";
+  }
+
   @action
   startEditing() {
     if (this.columnType === "boolean") {
@@ -84,16 +94,6 @@ export default class CellEditor extends Component {
 
   formatDateValue(value) {
     return String(value).slice(0, 10);
-  }
-
-  get inputType() {
-    if (this.columnType === "number") {
-      return "number";
-    }
-    if (this.columnType === "date") {
-      return "date";
-    }
-    return "text";
   }
 
   <template>

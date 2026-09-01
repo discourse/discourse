@@ -135,6 +135,10 @@ export default class TopicBookmarksMenu extends Component {
     return classes.join(" ");
   }
 
+  get #timezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
+  }
+
   @action
   onRegisterApi(api) {
     this.dMenu = api;
@@ -322,10 +326,6 @@ export default class TopicBookmarksMenu extends Component {
       }
     }
     this.topic.removeBookmark(bookmarkId);
-  }
-
-  get #timezone() {
-    return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
 
   <template>

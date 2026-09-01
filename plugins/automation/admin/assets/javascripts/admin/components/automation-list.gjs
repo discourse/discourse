@@ -23,6 +23,10 @@ const RUN_THRESHOLD = 10;
 export default class AutomationList extends Component {
   @service dialog;
 
+  get logsUrl() {
+    return getURL("/logs?search=discourse-automation");
+  }
+
   @action
   async destroyAutomation(automation) {
     automation.set("isDeleting", true);
@@ -77,10 +81,6 @@ export default class AutomationList extends Component {
     return i18n("discourse_automation.models.automation.runs_this_month", {
       count: stats.last_month.total_runs,
     });
-  }
-
-  get logsUrl() {
-    return getURL("/logs?search=discourse-automation");
   }
 
   <template>

@@ -9,17 +9,17 @@ export default class FKControlCode extends FKBaseControl {
 
   initialValue = this.args.field.value || "";
 
-  @action
-  handleInput(content) {
-    this.args.field.set(content);
-  }
-
   get style() {
     if (!this.args.height) {
       return;
     }
 
     return trustHTML(`height: ${escapeExpression(this.args.height)}px`);
+  }
+
+  @action
+  handleInput(content) {
+    this.args.field.set(content);
   }
 
   <template>

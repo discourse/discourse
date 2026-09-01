@@ -14,6 +14,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DashboardProblems extends Component {
+  get problems() {
+    return this.args.problems.toSorted((a, b) =>
+      compare(a?.priority, b?.priority)
+    );
+  }
+
   @action
   async dismissProblem(problem) {
     try {
@@ -22,12 +28,6 @@ export default class DashboardProblems extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
-  }
-
-  get problems() {
-    return this.args.problems.toSorted((a, b) =>
-      compare(a?.priority, b?.priority)
-    );
   }
 
   <template>

@@ -28,6 +28,10 @@ export default class UploadPlaceholderNodeView extends Component {
     this.appEvents.off(this.#progressEvent, this, this.onProgress);
   }
 
+  get filename() {
+    return this.args.node.attrs.filename;
+  }
+
   onProgress(percentage) {
     this.progress = percentage;
   }
@@ -38,10 +42,6 @@ export default class UploadPlaceholderNodeView extends Component {
 
   deselectNode() {
     this.args.dom.classList.remove("ProseMirror-selectednode");
-  }
-
-  get filename() {
-    return this.args.node.attrs.filename;
   }
 
   @action

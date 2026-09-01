@@ -87,6 +87,24 @@ export default class TopicTrackingState extends EmberObject {
     this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
   }
 
+  get mutedTopics() {
+    return this.currentUser?.muted_topics || [];
+  }
+
+  get unmutedTopics() {
+    return this.currentUser?.unmuted_topics || [];
+  }
+
+  /**
+   * Used to determine whether to show the message at the top of the topic list
+   * e.g. "see 1 new or updated topic"
+   *
+   * @method hasIncoming
+   */
+  get hasIncoming() {
+    return this.incomingCount > 0;
+  }
+
   /**
    * Subscribe to MessageBus channels which are used for publishing changes
    * to the tracking state. Each message received will modify state for
@@ -172,14 +190,6 @@ export default class TopicTrackingState extends EmberObject {
     ) {
       DiscourseURL.redirectTo("/");
     }
-  }
-
-  get mutedTopics() {
-    return this.currentUser?.muted_topics || [];
-  }
-
-  get unmutedTopics() {
-    return this.currentUser?.unmuted_topics || [];
   }
 
   trackMutedOrUnmutedTopic(data) {
@@ -410,16 +420,6 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   /**
-   * Used to determine whether to show the message at the top of the topic list
-   * e.g. "see 1 new or updated topic"
-   *
-   * @method hasIncoming
-   */
-  get hasIncoming() {
-    return this.incomingCount > 0;
-  }
-
-  /**
    * Removes the topic ID provided from the tracker state.
    *
    * Calls onStateChange callbacks.
@@ -540,10 +540,6 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     this.messageCount++;
-  }
-
-  _generateCallbackId() {
-    return Math.random().toString(12).slice(2, 11);
   }
 
   onStateChange(cb) {
@@ -769,6 +765,26 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
+  modifyState(topic, data) {
+    this._setState({ topic, data });
+  }
+
+  modifyStateProp(topic, prop, data) {
+    const state = this.findState(topic);
+    if (state) {
+      state[prop] = data;
+      this._afterStateChange();
+    }
+  }
+
+  findState(topicOrId) {
+    return this.states.get(this._stateKey(topicOrId));
+  }
+
+  _generateCallbackId() {
+    return Math.random().toString(12).slice(2, 11);
+  }
+
   _setState({ topic, data, skipAfterStateChange }) {
     const stateKey = this._stateKey(topic);
     const oldState = this.states.get(stateKey);
@@ -784,22 +800,6 @@ export default class TopicTrackingState extends EmberObject {
     } else {
       return false;
     }
-  }
-
-  modifyState(topic, data) {
-    this._setState({ topic, data });
-  }
-
-  modifyStateProp(topic, prop, data) {
-    const state = this.findState(topic);
-    if (state) {
-      state[prop] = data;
-      this._afterStateChange();
-    }
-  }
-
-  findState(topicOrId) {
-    return this.states.get(this._stateKey(topicOrId));
   }
 
   /*

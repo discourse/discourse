@@ -127,61 +127,6 @@ export default class AdminSiteTrafficController extends Controller {
     );
   }
 
-  #customDate(value, edge) {
-    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
-      return null;
-    }
-
-    const parsed = moment(value, "YYYY-MM-DD", true);
-    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
-  }
-
-  #decorateTraffic(traffic) {
-    const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = (traffic.active_filters ?? []).map((filter) =>
-      filter.key === "country"
-        ? { ...filter, label: countryName(filter.value) }
-        : filter
-    );
-    const dimensions = {
-      ...traffic.dimensions,
-      countries: countries.map((row) => ({
-        ...row,
-        label: countryName(row.value),
-      })),
-    };
-
-    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
-      const rows = dimensions[dimensionKey] ?? [];
-      const activeRows = activeFilters.filter(
-        (filter) => filter.key === filterKey
-      );
-      if (activeRows.length === 0) {
-        continue;
-      }
-
-      const activeValues = new Set(activeRows.map((filter) => filter.value));
-      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
-      dimensions[dimensionKey] = [
-        ...activeRows.map(
-          (filter) =>
-            rowsByValue.get(filter.value) ?? {
-              value: filter.value,
-              label: filter.label,
-              pageviews: 0,
-            }
-        ),
-        ...rows.filter((row) => !activeValues.has(row.value)),
-      ].slice(0, DIMENSION_LIMIT);
-    }
-
-    return {
-      ...traffic,
-      dimensions,
-      active_filters: activeFilters,
-    };
-  }
-
   loadTraffic(model) {
     this.#resetDraftFilters();
     this.traffic = model.traffic ? this.#decorateTraffic(model.traffic) : null;
@@ -282,6 +227,61 @@ export default class AdminSiteTrafficController extends Controller {
     this.#resetDraftFilters();
     this.traffic = null;
     this.fetchError = null;
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  }
+
+  #decorateTraffic(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const activeFilters = (traffic.active_filters ?? []).map((filter) =>
+      filter.key === "country"
+        ? { ...filter, label: countryName(filter.value) }
+        : filter
+    );
+    const dimensions = {
+      ...traffic.dimensions,
+      countries: countries.map((row) => ({
+        ...row,
+        label: countryName(row.value),
+      })),
+    };
+
+    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
+      const rows = dimensions[dimensionKey] ?? [];
+      const activeRows = activeFilters.filter(
+        (filter) => filter.key === filterKey
+      );
+      if (activeRows.length === 0) {
+        continue;
+      }
+
+      const activeValues = new Set(activeRows.map((filter) => filter.value));
+      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
+      dimensions[dimensionKey] = [
+        ...activeRows.map(
+          (filter) =>
+            rowsByValue.get(filter.value) ?? {
+              value: filter.value,
+              label: filter.label,
+              pageviews: 0,
+            }
+        ),
+        ...rows.filter((row) => !activeValues.has(row.value)),
+      ].slice(0, DIMENSION_LIMIT);
+    }
+
+    return {
+      ...traffic,
+      dimensions,
+      active_filters: activeFilters,
+    };
   }
 
   #appliedValues(key) {

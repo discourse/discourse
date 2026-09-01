@@ -109,9 +109,40 @@ export default abstract class FloatKitInstance {
     return this.hoverGracePeriod > 0;
   }
 
+  get triggers(): string[] {
+    const triggers = this.options.triggers;
+
+    if (typeof triggers === "object" && !Array.isArray(triggers)) {
+      return this.site.mobileView
+        ? (triggers.mobile ?? ["click"])
+        : (triggers.desktop ?? ["click"]);
+    }
+
+    return triggers ?? ["click"];
+  }
+
+  get untriggers(): string[] {
+    const untriggers = this.options.untriggers;
+
+    if (typeof untriggers === "object" && !Array.isArray(untriggers)) {
+      return this.site.mobileView
+        ? (untriggers.mobile ?? ["click"])
+        : (untriggers.desktop ?? ["click"]);
+    }
+
+    return untriggers ?? ["click"];
+  }
+
+  get shouldTrapPointerDown() {
+    return true;
+  }
+
   abstract onClick(event: MouseEvent): Promise<void>;
+
   abstract onPointerMove(event: PointerEvent): Promise<void>;
+
   abstract onPointerLeave(event: PointerEvent): Promise<void>;
+
   abstract onTrigger(event?: Event): Promise<void>;
 
   @action
@@ -412,33 +443,5 @@ export default abstract class FloatKitInstance {
             break;
         }
       });
-  }
-
-  get triggers(): string[] {
-    const triggers = this.options.triggers;
-
-    if (typeof triggers === "object" && !Array.isArray(triggers)) {
-      return this.site.mobileView
-        ? (triggers.mobile ?? ["click"])
-        : (triggers.desktop ?? ["click"]);
-    }
-
-    return triggers ?? ["click"];
-  }
-
-  get untriggers(): string[] {
-    const untriggers = this.options.untriggers;
-
-    if (typeof untriggers === "object" && !Array.isArray(untriggers)) {
-      return this.site.mobileView
-        ? (untriggers.mobile ?? ["click"])
-        : (untriggers.desktop ?? ["click"]);
-    }
-
-    return untriggers ?? ["click"];
-  }
-
-  get shouldTrapPointerDown() {
-    return true;
   }
 }

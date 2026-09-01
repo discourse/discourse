@@ -204,21 +204,6 @@ export default class AiBotDockedComposer extends Component {
     this.showToolbar = !this.showToolbar;
   }
 
-  #swapPlaceholderForPost(postId) {
-    // data-post-id is the database ID; the DOM id uses post_number instead.
-    const postEl = document.querySelector(`[data-post-id="${postId}"]`);
-    if (!postEl) {
-      return false;
-    }
-    postEl.classList.add("ai-bot-streaming-placeholder");
-    if (this.#placeholderEl) {
-      this.#placeholderEl.style.display = "none";
-      this.#placeholderEl = null;
-    }
-    this.pendingBotReply = false;
-    return true;
-  }
-
   @action
   handleBotReplyStarted({ topicId, postId }) {
     if (topicId !== this.topicId || !postId) {
@@ -324,15 +309,6 @@ export default class AiBotDockedComposer extends Component {
     }
   }
 
-  async #startEditing(post) {
-    const fullPost = await this.store.find("post", post.id);
-    this.editingPost = fullPost;
-    this.#composerApi?.setReply(fullPost.raw);
-    schedule("afterRender", () => {
-      this.#composerEl?.querySelector(".d-editor-input")?.focus();
-    });
-  }
-
   @action
   cancelEditing() {
     this.editingPost = null;
@@ -367,29 +343,6 @@ export default class AiBotDockedComposer extends Component {
       }
     }
     return result;
-  }
-
-  async #submitEdit(raw) {
-    const post = this.editingPost;
-
-    const result = await ajax(`/posts/${post.id}.json`, {
-      type: "PUT",
-      data: { post: { raw } },
-    });
-
-    const topic = this.topic;
-    const loadedPost = topic?.postStream?.findLoadedPost(post.id);
-    if (loadedPost) {
-      loadedPost.setProperties({
-        raw: result.post.raw,
-        cooked: result.post.cooked,
-        version: result.post.version,
-        updated_at: result.post.updated_at,
-      });
-    }
-
-    this.editingPost = null;
-    return { ok: true };
   }
 
   @action
@@ -463,6 +416,53 @@ export default class AiBotDockedComposer extends Component {
       top: document.documentElement.scrollHeight,
       behavior: "smooth",
     });
+  }
+
+  #swapPlaceholderForPost(postId) {
+    // data-post-id is the database ID; the DOM id uses post_number instead.
+    const postEl = document.querySelector(`[data-post-id="${postId}"]`);
+    if (!postEl) {
+      return false;
+    }
+    postEl.classList.add("ai-bot-streaming-placeholder");
+    if (this.#placeholderEl) {
+      this.#placeholderEl.style.display = "none";
+      this.#placeholderEl = null;
+    }
+    this.pendingBotReply = false;
+    return true;
+  }
+
+  async #startEditing(post) {
+    const fullPost = await this.store.find("post", post.id);
+    this.editingPost = fullPost;
+    this.#composerApi?.setReply(fullPost.raw);
+    schedule("afterRender", () => {
+      this.#composerEl?.querySelector(".d-editor-input")?.focus();
+    });
+  }
+
+  async #submitEdit(raw) {
+    const post = this.editingPost;
+
+    const result = await ajax(`/posts/${post.id}.json`, {
+      type: "PUT",
+      data: { post: { raw } },
+    });
+
+    const topic = this.topic;
+    const loadedPost = topic?.postStream?.findLoadedPost(post.id);
+    if (loadedPost) {
+      loadedPost.setProperties({
+        raw: result.post.raw,
+        cooked: result.post.cooked,
+        version: result.post.version,
+        updated_at: result.post.updated_at,
+      });
+    }
+
+    this.editingPost = null;
+    return { ok: true };
   }
 
   <template>

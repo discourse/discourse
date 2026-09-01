@@ -57,60 +57,6 @@ export default class AiUsage extends Component {
     }
   }
 
-  initializeFilters(queryParams = {}) {
-    const hasCustomDateParams = queryParams.start_date || queryParams.end_date;
-
-    if (
-      queryParams.period === CUSTOM_PERIOD ||
-      (!this.isPresetPeriod(queryParams.period) && hasCustomDateParams)
-    ) {
-      this.selectedPeriod = CUSTOM_PERIOD;
-      this.isCustomDateActive = true;
-      this.startDate =
-        this.parseDateParam(queryParams.start_date) || this.startDate;
-      this.endDate = this.parseDateParam(queryParams.end_date) || this.endDate;
-    } else if (this.isPresetPeriod(queryParams.period)) {
-      this.selectedPeriod = queryParams.period;
-      this.isCustomDateActive = false;
-      this.setPeriodDates(queryParams.period);
-    } else {
-      this.selectedPeriod = DEFAULT_PERIOD;
-      this.isCustomDateActive = false;
-      this.setPeriodDates(DEFAULT_PERIOD);
-    }
-
-    this.selectedFeature = queryParams.feature || undefined;
-    this.selectedModel = queryParams.model
-      ? String(queryParams.model)
-      : undefined;
-  }
-
-  isPresetPeriod(period) {
-    return PRESET_PERIODS.includes(period);
-  }
-
-  parseDateParam(date) {
-    if (!date) {
-      return null;
-    }
-
-    const parsedDate = moment(date, DATE_FORMAT, true);
-    if (parsedDate.isValid()) {
-      return parsedDate.toDate();
-    }
-
-    const parsedDateTime = moment(date);
-    return parsedDateTime.isValid() ? parsedDateTime.toDate() : null;
-  }
-
-  formatDateParam(date) {
-    return date ? moment(date).format(DATE_FORMAT) : null;
-  }
-
-  formatRequestDate(date) {
-    return moment(date).format();
-  }
-
   get requestStartDate() {
     return this.selectedPeriod === CUSTOM_PERIOD
       ? this.formatDateParam(this.startDate)
@@ -139,48 +85,6 @@ export default class AiUsage extends Component {
     };
   }
 
-  @action
-  async fetchData() {
-    const requestId = (this._dataRequestId = (this._dataRequestId || 0) + 1);
-    const response = await ajax(
-      "/admin/plugins/discourse-ai/ai-usage-report.json",
-      { data: this.reportParams }
-    );
-
-    if (
-      requestId !== this._dataRequestId ||
-      this.isDestroying ||
-      this.isDestroyed
-    ) {
-      return;
-    }
-
-    this.data = response;
-    if (!this.selectedFeature && !this.selectedModel) {
-      this.filterOptionsData = response;
-    }
-    this.loadingData = false;
-  }
-
-  async fetchFilterOptions() {
-    const requestId = (this._filterOptionsRequestId =
-      (this._filterOptionsRequestId || 0) + 1);
-    const response = await ajax(
-      "/admin/plugins/discourse-ai/ai-usage-report.json",
-      { data: this.baseReportParams }
-    );
-
-    if (
-      requestId !== this._filterOptionsRequestId ||
-      this.isDestroying ||
-      this.isDestroyed
-    ) {
-      return;
-    }
-
-    this.filterOptionsData = response;
-  }
-
   get filterQueryParams() {
     const queryParams = {
       period:
@@ -200,61 +104,6 @@ export default class AiUsage extends Component {
     return queryParams;
   }
 
-  updateQueryParams() {
-    this.router.transitionTo(this.router.currentRouteName, {
-      queryParams: this.filterQueryParams,
-    });
-  }
-
-  @action
-  async onFilterChange() {
-    this.updateQueryParams();
-    await this.fetchData();
-  }
-
-  async onDateRangeFilterChange() {
-    this.updateQueryParams();
-
-    if (this.selectedFeature || this.selectedModel) {
-      await Promise.all([this.fetchData(), this.fetchFilterOptions()]);
-    } else {
-      await this.fetchData();
-    }
-  }
-
-  @action
-  onFeatureChanged(value) {
-    this.selectedFeature = value || undefined;
-    this.onFilterChange();
-  }
-
-  @action
-  onModelChanged(value) {
-    this.selectedModel = value ? String(value) : undefined;
-    this.onFilterChange();
-  }
-
-  @action
-  addCurrencyChar(element) {
-    element.querySelectorAll(".d-stat-tile__label").forEach((label) => {
-      if (
-        label.innerText.trim() === i18n("discourse_ai.usage.total_spending")
-      ) {
-        const valueElement = label
-          .closest(".d-stat-tile")
-          ?.querySelector(".d-stat-tile__value");
-        if (valueElement) {
-          valueElement.innerText = `$${valueElement.innerText}`;
-        }
-      }
-    });
-  }
-
-  @bind
-  takeUsers(start, end) {
-    return this.data.users.slice(start, end);
-  }
-
   get userSplitPoint() {
     if (!this.data?.users) {
       return 0;
@@ -265,14 +114,6 @@ export default class AiUsage extends Component {
     }
 
     return Math.ceil(this.data.users.length / 2);
-  }
-
-  normalizeTimeSeriesData(data) {
-    return normalizeAiUsageTimeSeriesData(
-      data,
-      this.data.period,
-      this.data.summary?.date_range
-    );
   }
 
   get metrics() {
@@ -441,6 +282,200 @@ export default class AiUsage extends Component {
     };
   }
 
+  get availableFeatures() {
+    const features =
+      this.filterOptionsData?.features || this.data?.features || [];
+
+    return features.map((feature) => ({
+      id: feature.feature_name,
+      name: feature.feature_name,
+    }));
+  }
+
+  get availableModels() {
+    const models = this.filterOptionsData?.models || this.data?.models || [];
+
+    return models.map((model) => ({
+      id: String(model.id),
+      name: model.llm,
+    }));
+  }
+
+  get periodOptions() {
+    return [
+      { id: "day", name: i18n("discourse_ai.usage.periods.last_day") },
+      { id: "week", name: i18n("discourse_ai.usage.periods.last_week") },
+      { id: "month", name: i18n("discourse_ai.usage.periods.last_month") },
+    ];
+  }
+
+  get fromDate() {
+    return this._startDate || this.startDate;
+  }
+
+  get toDate() {
+    return this._endDate || this.endDate;
+  }
+
+  initializeFilters(queryParams = {}) {
+    const hasCustomDateParams = queryParams.start_date || queryParams.end_date;
+
+    if (
+      queryParams.period === CUSTOM_PERIOD ||
+      (!this.isPresetPeriod(queryParams.period) && hasCustomDateParams)
+    ) {
+      this.selectedPeriod = CUSTOM_PERIOD;
+      this.isCustomDateActive = true;
+      this.startDate =
+        this.parseDateParam(queryParams.start_date) || this.startDate;
+      this.endDate = this.parseDateParam(queryParams.end_date) || this.endDate;
+    } else if (this.isPresetPeriod(queryParams.period)) {
+      this.selectedPeriod = queryParams.period;
+      this.isCustomDateActive = false;
+      this.setPeriodDates(queryParams.period);
+    } else {
+      this.selectedPeriod = DEFAULT_PERIOD;
+      this.isCustomDateActive = false;
+      this.setPeriodDates(DEFAULT_PERIOD);
+    }
+
+    this.selectedFeature = queryParams.feature || undefined;
+    this.selectedModel = queryParams.model
+      ? String(queryParams.model)
+      : undefined;
+  }
+
+  isPresetPeriod(period) {
+    return PRESET_PERIODS.includes(period);
+  }
+
+  parseDateParam(date) {
+    if (!date) {
+      return null;
+    }
+
+    const parsedDate = moment(date, DATE_FORMAT, true);
+    if (parsedDate.isValid()) {
+      return parsedDate.toDate();
+    }
+
+    const parsedDateTime = moment(date);
+    return parsedDateTime.isValid() ? parsedDateTime.toDate() : null;
+  }
+
+  formatDateParam(date) {
+    return date ? moment(date).format(DATE_FORMAT) : null;
+  }
+
+  formatRequestDate(date) {
+    return moment(date).format();
+  }
+
+  @action
+  async fetchData() {
+    const requestId = (this._dataRequestId = (this._dataRequestId || 0) + 1);
+    const response = await ajax(
+      "/admin/plugins/discourse-ai/ai-usage-report.json",
+      { data: this.reportParams }
+    );
+
+    if (
+      requestId !== this._dataRequestId ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
+      return;
+    }
+
+    this.data = response;
+    if (!this.selectedFeature && !this.selectedModel) {
+      this.filterOptionsData = response;
+    }
+    this.loadingData = false;
+  }
+
+  async fetchFilterOptions() {
+    const requestId = (this._filterOptionsRequestId =
+      (this._filterOptionsRequestId || 0) + 1);
+    const response = await ajax(
+      "/admin/plugins/discourse-ai/ai-usage-report.json",
+      { data: this.baseReportParams }
+    );
+
+    if (
+      requestId !== this._filterOptionsRequestId ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
+      return;
+    }
+
+    this.filterOptionsData = response;
+  }
+
+  updateQueryParams() {
+    this.router.transitionTo(this.router.currentRouteName, {
+      queryParams: this.filterQueryParams,
+    });
+  }
+
+  @action
+  async onFilterChange() {
+    this.updateQueryParams();
+    await this.fetchData();
+  }
+
+  async onDateRangeFilterChange() {
+    this.updateQueryParams();
+
+    if (this.selectedFeature || this.selectedModel) {
+      await Promise.all([this.fetchData(), this.fetchFilterOptions()]);
+    } else {
+      await this.fetchData();
+    }
+  }
+
+  @action
+  onFeatureChanged(value) {
+    this.selectedFeature = value || undefined;
+    this.onFilterChange();
+  }
+
+  @action
+  onModelChanged(value) {
+    this.selectedModel = value ? String(value) : undefined;
+    this.onFilterChange();
+  }
+
+  @action
+  addCurrencyChar(element) {
+    element.querySelectorAll(".d-stat-tile__label").forEach((label) => {
+      if (
+        label.innerText.trim() === i18n("discourse_ai.usage.total_spending")
+      ) {
+        const valueElement = label
+          .closest(".d-stat-tile")
+          ?.querySelector(".d-stat-tile__value");
+        if (valueElement) {
+          valueElement.innerText = `$${valueElement.innerText}`;
+        }
+      }
+    });
+  }
+
+  @bind
+  takeUsers(start, end) {
+    return this.data.users.slice(start, end);
+  }
+
+  normalizeTimeSeriesData(data) {
+    return normalizeAiUsageTimeSeriesData(
+      data,
+      this.data.period,
+      this.data.summary?.date_range
+    );
+  }
+
   spendingValue(row) {
     return (
       row.total_spending ??
@@ -508,33 +543,6 @@ export default class AiUsage extends Component {
     return this.getCostModelsForFeature(featureName).length > 0;
   }
 
-  get availableFeatures() {
-    const features =
-      this.filterOptionsData?.features || this.data?.features || [];
-
-    return features.map((feature) => ({
-      id: feature.feature_name,
-      name: feature.feature_name,
-    }));
-  }
-
-  get availableModels() {
-    const models = this.filterOptionsData?.models || this.data?.models || [];
-
-    return models.map((model) => ({
-      id: String(model.id),
-      name: model.llm,
-    }));
-  }
-
-  get periodOptions() {
-    return [
-      { id: "day", name: i18n("discourse_ai.usage.periods.last_day") },
-      { id: "week", name: i18n("discourse_ai.usage.periods.last_week") },
-      { id: "month", name: i18n("discourse_ai.usage.periods.last_month") },
-    ];
-  }
-
   @action
   setPeriodDates(period) {
     const now = moment();
@@ -591,14 +599,6 @@ export default class AiUsage extends Component {
     this.onDateRangeFilterChange();
     this._startDate = null;
     this._endDate = null;
-  }
-
-  get fromDate() {
-    return this._startDate || this.startDate;
-  }
-
-  get toDate() {
-    return this._endDate || this.endDate;
   }
 
   @bind

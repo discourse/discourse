@@ -36,6 +36,15 @@ export default class DateTimeField extends BaseField {
     </section>
   </template>
 
+  get localTime() {
+    return (
+      this.args.field.metadata.value &&
+      moment(this.args.field.metadata.value)
+        .local()
+        .format(moment.HTML5_FMT.DATETIME_LOCAL)
+    );
+  }
+
   @action
   convertToUniversalTime(event) {
     const date = event.target.value;
@@ -49,14 +58,5 @@ export default class DateTimeField extends BaseField {
   @action
   reset() {
     this.mutValue(null);
-  }
-
-  get localTime() {
-    return (
-      this.args.field.metadata.value &&
-      moment(this.args.field.metadata.value)
-        .local()
-        .format(moment.HTML5_FMT.DATETIME_LOCAL)
-    );
   }
 }

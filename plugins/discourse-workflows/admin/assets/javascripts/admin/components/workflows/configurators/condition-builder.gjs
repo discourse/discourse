@@ -161,20 +161,6 @@ export default class ConditionBuilder extends Component {
     this.args.formApi?.get(this.args.fieldName) || []
   ).map((item) => this.#buildConditionSchema(item));
 
-  #buildConditionSchema(item) {
-    return {
-      opSchema: operationSchema(item),
-      singleValue: isSingleValueOperator(item?.operator?.operation),
-      rvSchema: rightValueSchema(item),
-    };
-  }
-
-  #updateSchemaAtIndex(index, schema) {
-    const newSchemas = [...this.conditionSchemas];
-    newSchemas[index] = schema;
-    this.conditionSchemas = newSchemas;
-  }
-
   get fieldOptions() {
     if (this.args.fieldOptions) {
       return this.args.fieldOptions;
@@ -301,6 +287,20 @@ export default class ConditionBuilder extends Component {
       ...this.conditionSchemas[index],
       singleValue: isSingleValueOperator(value),
     });
+  }
+
+  #buildConditionSchema(item) {
+    return {
+      opSchema: operationSchema(item),
+      singleValue: isSingleValueOperator(item?.operator?.operation),
+      rvSchema: rightValueSchema(item),
+    };
+  }
+
+  #updateSchemaAtIndex(index, schema) {
+    const newSchemas = [...this.conditionSchemas];
+    newSchemas[index] = schema;
+    this.conditionSchemas = newSchemas;
   }
 
   <template>

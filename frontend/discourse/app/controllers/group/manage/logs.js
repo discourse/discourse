@@ -27,25 +27,6 @@ export default class GroupManageLogsController extends Controller {
     };
   }
 
-  @observes(
-    "filters.action",
-    "filters.acting_user",
-    "filters.target_user",
-    "filters.subject"
-  )
-  _refreshModel() {
-    this.get("group.model")
-      .findLogs(0, this.filterParams)
-      .then((results) => {
-        this.set("offset", 0);
-
-        this.model.setProperties({
-          logs: results.logs,
-          all_loaded: results.all_loaded,
-        });
-      });
-  }
-
   reset() {
     this.setProperties({
       offset: 0,
@@ -76,5 +57,24 @@ export default class GroupManageLogsController extends Controller {
   @action
   clearFilter(key) {
     this.set(`filters.${key}`, "");
+  }
+
+  @observes(
+    "filters.action",
+    "filters.acting_user",
+    "filters.target_user",
+    "filters.subject"
+  )
+  _refreshModel() {
+    this.get("group.model")
+      .findLogs(0, this.filterParams)
+      .then((results) => {
+        this.set("offset", 0);
+
+        this.model.setProperties({
+          logs: results.logs,
+          all_loaded: results.all_loaded,
+        });
+      });
   }
 }

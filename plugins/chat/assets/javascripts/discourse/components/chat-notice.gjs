@@ -12,13 +12,13 @@ const COMPONENT_DICT = {
 export default class ChatNotices extends Component {
   @service("chat-channel-notices-manager") noticesManager;
 
+  get component() {
+    return COMPONENT_DICT[this.args.notice.type];
+  }
+
   @action
   clearNotice() {
     this.noticesManager.clearNotice(this.args.notice);
-  }
-
-  get component() {
-    return COMPONENT_DICT[this.args.notice.type];
   }
 
   <template>

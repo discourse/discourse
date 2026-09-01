@@ -193,6 +193,24 @@ export default class VoiceCallControls extends Component {
       : i18n("voice.room.recording_start");
   }
 
+  get currentInputDeviceName() {
+    return this.audioInputDevices.find(
+      (device) => device.id === this.voiceWebrtc.inputDeviceId
+    )?.name;
+  }
+
+  get currentOutputDeviceName() {
+    return this.audioOutputDevices.find(
+      (device) => device.id === this.voiceWebrtc.outputDeviceId
+    )?.name;
+  }
+
+  get currentVideoDeviceName() {
+    return this.videoInputDevices.find(
+      (device) => device.id === this.voiceWebrtc.videoInputDeviceId
+    )?.name;
+  }
+
   @action
   toggleMute() {
     this.voiceWebrtc.toggleMute();
@@ -266,31 +284,6 @@ export default class VoiceCallControls extends Component {
     this.modal.show(VoiceVideoSettingsModal);
   }
 
-  #systemDefaultDevice() {
-    return {
-      id: SYSTEM_DEFAULT_DEVICE_ID,
-      name: i18n("voice.devices.system_default"),
-    };
-  }
-
-  get currentInputDeviceName() {
-    return this.audioInputDevices.find(
-      (device) => device.id === this.voiceWebrtc.inputDeviceId
-    )?.name;
-  }
-
-  get currentOutputDeviceName() {
-    return this.audioOutputDevices.find(
-      (device) => device.id === this.voiceWebrtc.outputDeviceId
-    )?.name;
-  }
-
-  get currentVideoDeviceName() {
-    return this.videoInputDevices.find(
-      (device) => device.id === this.voiceWebrtc.videoInputDeviceId
-    )?.name;
-  }
-
   @action
   openNoiseSuppressionMenu(_actionArg, event) {
     this.#openSubmenu(
@@ -331,37 +324,6 @@ export default class VoiceCallControls extends Component {
     this.videoInputDevices = [this.#systemDefaultDevice(), ...inputs];
   }
 
-  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
-  // normal full-width menu item, matching core's channel context menu.
-  #openSubmenu(event, parentMenu, items, onSelect) {
-    // Anchor to the row button, not the clicked icon/label, so the submenu
-    // opens flush to the row's right edge.
-    const anchor = event.target.closest(".btn") ?? event.target;
-    this.menu.show(anchor, {
-      identifier: SUBMENU,
-      groupIdentifier: SUBMENU,
-      component: VoiceCallSubmenu,
-      placement: "right-start",
-      offset: { mainAxis: 8, crossAxis: -5 },
-      modalForMobile: true,
-      data: {
-        items,
-        onSelect: (id) => {
-          onSelect(id);
-          this.menu.close(parentMenu);
-        },
-      },
-    });
-  }
-
-  #deviceItems(devices, currentId) {
-    return devices.map((device) => ({
-      id: device.id,
-      label: device.name,
-      selected: device.id === currentId,
-    }));
-  }
-
   @action
   openInputDeviceMenu(_actionArg, event) {
     this.#openSubmenu(
@@ -396,6 +358,44 @@ export default class VoiceCallControls extends Component {
       ),
       (id) => this.voiceWebrtc.setVideoInputDevice(id)
     );
+  }
+
+  #systemDefaultDevice() {
+    return {
+      id: SYSTEM_DEFAULT_DEVICE_ID,
+      name: i18n("voice.devices.system_default"),
+    };
+  }
+
+  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
+  // normal full-width menu item, matching core's channel context menu.
+  #openSubmenu(event, parentMenu, items, onSelect) {
+    // Anchor to the row button, not the clicked icon/label, so the submenu
+    // opens flush to the row's right edge.
+    const anchor = event.target.closest(".btn") ?? event.target;
+    this.menu.show(anchor, {
+      identifier: SUBMENU,
+      groupIdentifier: SUBMENU,
+      component: VoiceCallSubmenu,
+      placement: "right-start",
+      offset: { mainAxis: 8, crossAxis: -5 },
+      modalForMobile: true,
+      data: {
+        items,
+        onSelect: (id) => {
+          onSelect(id);
+          this.menu.close(parentMenu);
+        },
+      },
+    });
+  }
+
+  #deviceItems(devices, currentId) {
+    return devices.map((device) => ({
+      id: device.id,
+      label: device.name,
+      selected: device.id === currentId,
+    }));
   }
 
   <template>

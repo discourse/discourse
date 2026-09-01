@@ -69,14 +69,14 @@ export default class AdminBackupsLogs extends Component {
     super.willDestroy(...arguments);
   }
 
+  get lastLog() {
+    return this.args.logs.at(-1);
+  }
+
   #resetFormattedLogs() {
     this.formattedLogs = "";
     this.#processedLogCount = 0;
     this.#lastProcessedLog = null;
-  }
-
-  get lastLog() {
-    return this.args.logs.at(-1);
   }
 
   <template>

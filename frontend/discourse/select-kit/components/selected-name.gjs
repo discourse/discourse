@@ -41,21 +41,6 @@ export default class SelectedName extends Component {
     this._langOverride = value;
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    // we can't listen on `item.nameProperty` given it's variable
-    this.setProperties({
-      headerLabel: this.getProperty(this.item, "labelProperty"),
-      headerTitle: this.getProperty(this.item, "titleProperty"),
-      headerLang: this.getProperty(this.item, "langProperty"),
-      name: this.getName(this.item),
-      renderIcon: this.canDisplayIcon,
-      value:
-        this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
-    });
-  }
-
   @computed("selectKit.options.shouldDisplayIcon")
   get canDisplayIcon() {
     return this.selectKit.options.shouldDisplayIcon ?? true;
@@ -98,6 +83,21 @@ export default class SelectedName extends Component {
     const _icon = makeArray(this._safeProperty("icon", this.item));
     const icons = makeArray(this._safeProperty("icons", this.item));
     return _icon.concat(icons).filter(Boolean);
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    // we can't listen on `item.nameProperty` given it's variable
+    this.setProperties({
+      headerLabel: this.getProperty(this.item, "labelProperty"),
+      headerTitle: this.getProperty(this.item, "titleProperty"),
+      headerLang: this.getProperty(this.item, "langProperty"),
+      name: this.getName(this.item),
+      renderIcon: this.canDisplayIcon,
+      value:
+        this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
+    });
   }
 
   _safeProperty(name, content) {

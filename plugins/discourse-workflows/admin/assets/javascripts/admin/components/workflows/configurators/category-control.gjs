@@ -88,10 +88,6 @@ export default class CategoryControl extends Component {
       this.updateSelectedCategories(previousRequest);
   }
 
-  #sameIds(a, b) {
-    return a.length === b.length && a.every((id, index) => id === b[index]);
-  }
-
   @action
   handleChange(categoryId) {
     this.args.field.set(categoryId == null ? "" : String(categoryId));
@@ -102,6 +98,10 @@ export default class CategoryControl extends Component {
     categories = categories || [];
     this.selectedCategories = categories;
     this.args.field.set(categories.map((category) => category.id));
+  }
+
+  #sameIds(a, b) {
+    return a.length === b.length && a.every((id, index) => id === b[index]);
   }
 
   <template>

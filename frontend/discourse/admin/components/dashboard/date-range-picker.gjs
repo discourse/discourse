@@ -133,6 +133,14 @@ export default class DashboardDateRangePicker extends Component {
     return this.hoverRangeEnd ? this.pendingStart : null;
   }
 
+  get startInputValue() {
+    return this.currentStart ? this.currentStart.format("YYYY/MM/DD") : "";
+  }
+
+  get endInputValue() {
+    return this.currentEnd ? this.currentEnd.format("YYYY/MM/DD") : "";
+  }
+
   @action
   weeksFor(monthStart) {
     const start = monthStart.clone().startOf("month").startOf("week");
@@ -381,14 +389,6 @@ export default class DashboardDateRangePicker extends Component {
         .startOf("month")
         .subtract(this.showTwoMonths ? 1 : 0, "month");
     }
-  }
-
-  get startInputValue() {
-    return this.currentStart ? this.currentStart.format("YYYY/MM/DD") : "";
-  }
-
-  get endInputValue() {
-    return this.currentEnd ? this.currentEnd.format("YYYY/MM/DD") : "";
   }
 
   parseTypedDate(value) {

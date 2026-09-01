@@ -63,18 +63,6 @@ export default class WorkflowsIndex extends Component {
     return this.workflowTags.map((tag) => tag.name);
   }
 
-  normalizeTagName(tag) {
-    return (tag || "").trim().toLowerCase().replace(/\s+/g, " ");
-  }
-
-  normalizeTagFilter(tagsParam) {
-    return (tagsParam || "")
-      .split(",")
-      .map((tag) => this.normalizeTagName(tag))
-      .filter(Boolean)
-      .filter((tag) => this.availableTagNames.includes(tag));
-  }
-
   get resultSet() {
     return this.filteredResultSet ?? this.args.workflows;
   }
@@ -85,6 +73,18 @@ export default class WorkflowsIndex extends Component {
 
   get tagSelection() {
     return this.workflowTags.filter((tag) => this.tagFilter.includes(tag.name));
+  }
+
+  normalizeTagName(tag) {
+    return (tag || "").trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  normalizeTagFilter(tagsParam) {
+    return (tagsParam || "")
+      .split(",")
+      .map((tag) => this.normalizeTagName(tag))
+      .filter(Boolean)
+      .filter((tag) => this.availableTagNames.includes(tag));
   }
 
   @action

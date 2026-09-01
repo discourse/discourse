@@ -25,6 +25,13 @@ export default class GroupsFormProfileFields extends Component {
     return !this.model?.automatic;
   }
 
+  @computed("basicNameValidation", "uniqueNameValidation")
+  get nameValidation() {
+    return this.uniqueNameValidation
+      ? this.uniqueNameValidation
+      : this.basicNameValidation;
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     const name = this.get("model.name");
@@ -36,11 +43,8 @@ export default class GroupsFormProfileFields extends Component {
     }
   }
 
-  @computed("basicNameValidation", "uniqueNameValidation")
-  get nameValidation() {
-    return this.uniqueNameValidation
-      ? this.uniqueNameValidation
-      : this.basicNameValidation;
+  checkGroupNameDebounced() {
+    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   @observes("nameInput")
@@ -73,10 +77,6 @@ export default class GroupsFormProfileFields extends Component {
     this.checkGroupNameDebounced();
 
     return this._failedInputValidation(i18n("admin.groups.new.name.checking"));
-  }
-
-  checkGroupNameDebounced() {
-    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   _checkGroupName() {

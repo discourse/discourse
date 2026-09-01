@@ -187,6 +187,49 @@ export default class BuildWithAiModal extends Component {
     );
   }
 
+  get aiCodePreviews() {
+    return (this.aiProposal?.operations || [])
+      .map((operation, index) =>
+        this.#codePreviewForOperation(operation, index)
+      )
+      .filter(Boolean);
+  }
+
+  get aiCreatedAgentResources() {
+    const resources = this.aiProposal?.created_resources || [];
+    const resourcesByClientId = new Map(
+      resources
+        .filter(
+          (resource) => resource?.type === "ai_agent" && resource.client_id
+        )
+        .map((resource) => [resource.client_id, resource])
+    );
+
+    return (this.aiProposal?.operations || [])
+      .filter((operation) => operation?.op === "create_ai_agent")
+      .map((operation, index) => {
+        const agent = operation.agent || operation.ai_agent || {};
+        const resource = resourcesByClientId.get(operation.client_id) || {};
+        const name = resource.name || agent.name;
+
+        if (!name) {
+          return null;
+        }
+
+        return {
+          key: `${operation.client_id || index}-${name}`,
+          name,
+          description: resource.description || agent.description,
+          systemPrompt: resource.system_prompt || agent.system_prompt,
+        };
+      })
+      .filter(Boolean);
+  }
+
+  get aiShowingProgress() {
+    return this.aiGenerating && this.aiProgressEvents.length > 0;
+  }
+
   @action
   aiQuestionText(question) {
     if (typeof question === "string") {
@@ -244,53 +287,145 @@ export default class BuildWithAiModal extends Component {
     return this.#aiClarificationAnswer(question, index).custom;
   }
 
-  get aiCodePreviews() {
-    return (this.aiProposal?.operations || [])
-      .map((operation, index) =>
-        this.#codePreviewForOperation(operation, index)
-      )
-      .filter(Boolean);
-  }
-
-  get aiCreatedAgentResources() {
-    const resources = this.aiProposal?.created_resources || [];
-    const resourcesByClientId = new Map(
-      resources
-        .filter(
-          (resource) => resource?.type === "ai_agent" && resource.client_id
-        )
-        .map((resource) => [resource.client_id, resource])
-    );
-
-    return (this.aiProposal?.operations || [])
-      .filter((operation) => operation?.op === "create_ai_agent")
-      .map((operation, index) => {
-        const agent = operation.agent || operation.ai_agent || {};
-        const resource = resourcesByClientId.get(operation.client_id) || {};
-        const name = resource.name || agent.name;
-
-        if (!name) {
-          return null;
-        }
-
-        return {
-          key: `${operation.client_id || index}-${name}`,
-          name,
-          description: resource.description || agent.description,
-          systemPrompt: resource.system_prompt || agent.system_prompt,
-        };
-      })
-      .filter(Boolean);
-  }
-
-  get aiShowingProgress() {
-    return this.aiGenerating && this.aiProgressEvents.length > 0;
-  }
-
   aiProgressMessage(event) {
     return (
       event.message || i18n(`discourse_workflows.ai.progress.${event.stage}`)
     );
+  }
+
+  @action
+  updateAiPrompt(event) {
+    this.aiPrompt = event.target.value;
+  }
+
+  @action
+  returnToAiPrompt() {
+    this.unsubscribeFromAiAuthoring();
+    this.aiGenerating = false;
+    this.aiProgressEvents = [];
+    this.aiResponse = null;
+    this.aiSessionId = null;
+    this.aiGenerationId = null;
+    this.aiClarificationAnswers = {};
+    this.aiClarificationQuestionIndex = 0;
+    this.aiError = null;
+  }
+
+  @action
+  async submitAiPrompt() {
+    if (this.aiSubmitDisabled) {
+      return;
+    }
+
+    await this.#submitAiMessage(this.aiPrompt.trim());
+  }
+
+  @action
+  selectAiClarificationOption(question, index, option) {
+    const label = this.aiClarificationOptionLabel(option);
+    if (!label) {
+      return;
+    }
+
+    const answer = this.#aiClarificationAnswer(question, index);
+    let selected;
+
+    if (this.aiQuestionMultiSelect(question)) {
+      selected = answer.selected.includes(label)
+        ? answer.selected.filter((value) => value !== label)
+        : [...answer.selected, label];
+    } else {
+      selected = [label];
+    }
+
+    this.#setAiClarificationAnswer(question, index, {
+      ...answer,
+      selected,
+    });
+  }
+
+  @action
+  updateAiClarificationCustom(question, index, event) {
+    const answer = this.#aiClarificationAnswer(question, index);
+
+    this.#setAiClarificationAnswer(question, index, {
+      ...answer,
+      custom: event.target.value,
+    });
+  }
+
+  @action
+  previousAiClarificationQuestion() {
+    if (this.aiGenerating) {
+      return;
+    }
+
+    this.aiClarificationQuestionIndex = Math.max(
+      this.aiCurrentQuestionIndex - 1,
+      0
+    );
+  }
+
+  @action
+  async continueAiClarificationQuestion() {
+    if (this.aiClarificationCurrentQuestionDisabled) {
+      return;
+    }
+
+    if (this.aiLastClarificationQuestion) {
+      await this.submitAiClarification();
+      return;
+    }
+
+    this.aiClarificationQuestionIndex = this.aiCurrentQuestionIndex + 1;
+  }
+
+  @action
+  async submitAiClarification() {
+    if (this.aiClarificationSubmitDisabled) {
+      return;
+    }
+
+    await this.#submitAiMessage(this.#aiClarificationMessage());
+  }
+
+  @action
+  async applyAiProposal() {
+    if (!this.aiSessionId || !this.aiProposal) {
+      return;
+    }
+
+    try {
+      const response = await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/ai/apply.json`,
+        {
+          type: "POST",
+          data: {
+            session_id: this.aiSessionId,
+          },
+        }
+      );
+      this.args.onApply?.(response.workflow);
+      this.returnToAiPrompt();
+      this.aiPrompt = "";
+      this.args.onClose?.();
+      this.toasts.success({
+        data: { message: i18n("discourse_workflows.ai.applied") },
+      });
+    } catch (error) {
+      this.aiError = this.#ajaxErrorMessage(error);
+    }
+  }
+
+  unsubscribeFromAiAuthoring() {
+    if (this.aiAuthoringChannel && this.aiAuthoringHandler) {
+      this.messageBus.unsubscribe(
+        this.aiAuthoringChannel,
+        this.aiAuthoringHandler
+      );
+    }
+    this.aiAuthoringChannel = null;
+    this.aiAuthoringHandler = null;
   }
 
   #codePreviewForOperation(operation, index) {
@@ -439,130 +574,6 @@ export default class BuildWithAiModal extends Component {
     }
   }
 
-  @action
-  updateAiPrompt(event) {
-    this.aiPrompt = event.target.value;
-  }
-
-  @action
-  returnToAiPrompt() {
-    this.unsubscribeFromAiAuthoring();
-    this.aiGenerating = false;
-    this.aiProgressEvents = [];
-    this.aiResponse = null;
-    this.aiSessionId = null;
-    this.aiGenerationId = null;
-    this.aiClarificationAnswers = {};
-    this.aiClarificationQuestionIndex = 0;
-    this.aiError = null;
-  }
-
-  @action
-  async submitAiPrompt() {
-    if (this.aiSubmitDisabled) {
-      return;
-    }
-
-    await this.#submitAiMessage(this.aiPrompt.trim());
-  }
-
-  @action
-  selectAiClarificationOption(question, index, option) {
-    const label = this.aiClarificationOptionLabel(option);
-    if (!label) {
-      return;
-    }
-
-    const answer = this.#aiClarificationAnswer(question, index);
-    let selected;
-
-    if (this.aiQuestionMultiSelect(question)) {
-      selected = answer.selected.includes(label)
-        ? answer.selected.filter((value) => value !== label)
-        : [...answer.selected, label];
-    } else {
-      selected = [label];
-    }
-
-    this.#setAiClarificationAnswer(question, index, {
-      ...answer,
-      selected,
-    });
-  }
-
-  @action
-  updateAiClarificationCustom(question, index, event) {
-    const answer = this.#aiClarificationAnswer(question, index);
-
-    this.#setAiClarificationAnswer(question, index, {
-      ...answer,
-      custom: event.target.value,
-    });
-  }
-
-  @action
-  previousAiClarificationQuestion() {
-    if (this.aiGenerating) {
-      return;
-    }
-
-    this.aiClarificationQuestionIndex = Math.max(
-      this.aiCurrentQuestionIndex - 1,
-      0
-    );
-  }
-
-  @action
-  async continueAiClarificationQuestion() {
-    if (this.aiClarificationCurrentQuestionDisabled) {
-      return;
-    }
-
-    if (this.aiLastClarificationQuestion) {
-      await this.submitAiClarification();
-      return;
-    }
-
-    this.aiClarificationQuestionIndex = this.aiCurrentQuestionIndex + 1;
-  }
-
-  @action
-  async submitAiClarification() {
-    if (this.aiClarificationSubmitDisabled) {
-      return;
-    }
-
-    await this.#submitAiMessage(this.#aiClarificationMessage());
-  }
-
-  @action
-  async applyAiProposal() {
-    if (!this.aiSessionId || !this.aiProposal) {
-      return;
-    }
-
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/ai/apply.json`,
-        {
-          type: "POST",
-          data: {
-            session_id: this.aiSessionId,
-          },
-        }
-      );
-      this.args.onApply?.(response.workflow);
-      this.returnToAiPrompt();
-      this.aiPrompt = "";
-      this.args.onClose?.();
-      this.toasts.success({
-        data: { message: i18n("discourse_workflows.ai.applied") },
-      });
-    } catch (error) {
-      this.aiError = this.#ajaxErrorMessage(error);
-    }
-  }
-
   #subscribeToAiAuthoring(generationId) {
     const channel = `/discourse-workflows/ai-authoring/${generationId}`;
     const handler = (message) => {
@@ -589,17 +600,6 @@ export default class BuildWithAiModal extends Component {
     this.aiAuthoringChannel = channel;
     this.aiAuthoringHandler = handler;
     this.messageBus.subscribe(channel, handler, -1);
-  }
-
-  unsubscribeFromAiAuthoring() {
-    if (this.aiAuthoringChannel && this.aiAuthoringHandler) {
-      this.messageBus.unsubscribe(
-        this.aiAuthoringChannel,
-        this.aiAuthoringHandler
-      );
-    }
-    this.aiAuthoringChannel = null;
-    this.aiAuthoringHandler = null;
   }
 
   <template>

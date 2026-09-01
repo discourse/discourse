@@ -8,13 +8,6 @@ import AiLlmSelector from "./ai-llm-selector";
 export default class RagOptionsFk extends Component {
   @tracked showIndexingOptions = false;
 
-  @action
-  toggleIndexingOptions(event) {
-    this.showIndexingOptions = !this.showIndexingOptions;
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
   get indexingOptionsText() {
     return this.showIndexingOptions
       ? i18n("discourse_ai.rag.options.hide_indexing_options")
@@ -23,6 +16,13 @@ export default class RagOptionsFk extends Component {
 
   get visionLlms() {
     return this.args.llms.filter((llm) => llm.vision_enabled);
+  }
+
+  @action
+  toggleIndexingOptions(event) {
+    this.showIndexingOptions = !this.showIndexingOptions;
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   <template>

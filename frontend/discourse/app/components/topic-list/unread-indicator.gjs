@@ -17,13 +17,13 @@ export default class UnreadIndicator extends Component {
     this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
   }
 
+  get unreadIndicatorChannel() {
+    return `/private-messages/unread-indicator/${this.args.topic.id}`;
+  }
+
   @bind
   onMessage(data) {
     this.args.topic.set("unread_by_group_member", data.show_indicator);
-  }
-
-  get unreadIndicatorChannel() {
-    return `/private-messages/unread-indicator/${this.args.topic.id}`;
   }
 
   <template>

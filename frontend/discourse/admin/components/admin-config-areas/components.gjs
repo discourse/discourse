@@ -390,6 +390,10 @@ class ComponentRow extends Component {
     );
   }
 
+  get exportAction() {
+    return attachmentDownloadStrategy() === "native" ? undefined : this.export;
+  }
+
   @action
   async toggleEnabled() {
     this.disableToggle = true;
@@ -454,10 +458,6 @@ class ComponentRow extends Component {
     } finally {
       this.updating = false;
     }
-  }
-
-  get exportAction() {
-    return attachmentDownloadStrategy() === "native" ? undefined : this.export;
   }
 
   @action

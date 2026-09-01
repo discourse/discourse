@@ -133,13 +133,6 @@ export default class DFilterControls extends Component {
     );
   }
 
-  #validatedUrlValue(params, paramName, options) {
-    const value = params.get(paramName);
-    return value !== null && options.some((option) => option.value === value)
-      ? value
-      : null;
-  }
-
   get array() {
     return Array.isArray(this.args.array) ? this.args.array : [];
   }
@@ -283,6 +276,12 @@ export default class DFilterControls extends Component {
     return filtered;
   }
 
+  get singleDropdownLabel() {
+    return this.dropdownOptions.find(
+      (option) => option.value === this.defaultDropdownValue
+    )?.label;
+  }
+
   /**
    * Allows searchable props in the format user.name, this function gets the
    * nested value based on a dot-separated path.
@@ -310,12 +309,6 @@ export default class DFilterControls extends Component {
     const options = this.dropdownOptions[key] || [];
     return options.find((option) => option.value === this.defaultValue(key))
       ?.label;
-  }
-
-  get singleDropdownLabel() {
-    return this.dropdownOptions.find(
-      (option) => option.value === this.defaultDropdownValue
-    )?.label;
   }
 
   @action
@@ -469,6 +462,13 @@ export default class DFilterControls extends Component {
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
+  }
+
+  #validatedUrlValue(params, paramName, options) {
+    const value = params.get(paramName);
+    return value !== null && options.some((option) => option.value === value)
+      ? value
+      : null;
   }
 
   <template>

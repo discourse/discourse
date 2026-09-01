@@ -412,68 +412,6 @@ export default class SidebarSectionForm extends Component {
     }
   }
 
-  initLink(link, sectionLocale) {
-    return new SectionLink({
-      router: this.router,
-      icon: link.icon,
-      name: link.name,
-      value: link.value,
-      id: link.id,
-      objectId: this.nextObjectId,
-      segment: link.segment,
-      localizations: this.initLocalizations(
-        link.localizations,
-        LinkLocalization
-      ),
-      locale: link.locale || sectionLocale,
-      canLocalize: link.can_localize ?? link.canLocalize,
-    });
-  }
-
-  initLocalizations(localizations, klass) {
-    return (localizations || []).map((localization) => new klass(localization));
-  }
-
-  create() {
-    return ajax(`/sidebar_sections`, {
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        title: this.transformedModel.title,
-        public: this.transformedModel.public,
-        locale: this.serializeSectionSourceLocale(),
-        localizations: this.serializeSectionLocalizations(),
-        links: this.transformedModel.links.map((link) => {
-          return {
-            icon: link.icon,
-            name: link.name,
-            value: link.path,
-            locale: this.serializeLinkSourceLocale(link),
-            localizations: this.serializeLinkLocalizations(link),
-          };
-        }),
-      }),
-    })
-      .then((data) => {
-        this.currentUser.set(
-          "sidebar_sections",
-          this.currentUser.sidebar_sections.concat(data.sidebar_section)
-        );
-        this.closeModal({ createdSection: data.sidebar_section });
-      })
-      .catch((e) => {
-        this.flash = sanitize(extractError(e));
-        this.flashType = "error";
-      });
-  }
-
-  update() {
-    return this.wasPublic || this.isPublic
-      ? this.#updateWithConfirm()
-      : this.#updateCall();
-  }
-
   get clearedTranslationCount() {
     const cleared = (record) =>
       record.localizations.filter(
@@ -485,73 +423,6 @@ export default class SidebarSectionForm extends Component {
       (this.showLocalizations ? cleared(this.transformedModel) : 0) +
       this.localizableLinks.reduce((count, link) => count + cleared(link), 0)
     );
-  }
-
-  #updateWithConfirm() {
-    const messages = [
-      this.isPublic
-        ? i18n("sidebar.sections.custom.update_public_confirm")
-        : i18n("sidebar.sections.custom.mark_as_private_confirm"),
-    ];
-
-    if (this.clearedTranslationCount > 0) {
-      messages.push(
-        i18n("sidebar.sections.custom.localizations.remove_cleared_confirm", {
-          count: this.clearedTranslationCount,
-        })
-      );
-    }
-
-    return this.dialog.yesNoConfirm({
-      message: messages.join("<br><br>"),
-      didConfirm: () => {
-        return this.#updateCall();
-      },
-    });
-  }
-
-  #updateCall() {
-    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
-      type: "PUT",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        title: this.transformedModel.title,
-        public: this.transformedModel.public,
-        locale: this.serializeSectionSourceLocale(),
-        localizations: this.serializeSectionLocalizations(),
-        links: this.transformedModel.links
-          .concat(this.transformedModel?.secondaryLinks || [])
-          .map((link) => {
-            return {
-              id: link.id,
-              icon: link.icon,
-              name: link.name,
-              value: link.path,
-              segment: link.segment,
-              _destroy: link._destroy,
-              locale: this.serializeLinkSourceLocale(link),
-              localizations: this.serializeLinkLocalizations(link),
-            };
-          }),
-      }),
-    })
-      .then((data) => {
-        const newSidebarSections = this.currentUser.sidebar_sections.map(
-          (section) => {
-            if (section.id === data["sidebar_section"].id) {
-              return data["sidebar_section"];
-            }
-            return section;
-          }
-        );
-        this.currentUser.set("sidebar_sections", newSidebarSections);
-        this.closeModal();
-      })
-      .catch((e) => {
-        this.flash = sanitize(extractError(e));
-        this.flashType = "error";
-      });
   }
 
   get activeLinks() {
@@ -651,18 +522,6 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.links
       .concat(this.transformedModel.secondaryLinks || [])
       .filter((link) => !link._destroy && this.canLocalizeLink(link));
-  }
-
-  canLocalizeLink(link) {
-    return this.transformedModel.customSection || link.canLocalize;
-  }
-
-  #activeLocalizations(record) {
-    return record.localizations.filter(
-      (localization) =>
-        !localization._destroy &&
-        !isSameLocale(localization.locale, record.locale)
-    );
   }
 
   @cached
@@ -770,48 +629,6 @@ export default class SidebarSectionForm extends Component {
     );
   }
 
-  #isTranslationTarget(locale) {
-    if (
-      this.showLocalizations &&
-      !isSameLocale(locale, this.transformedModel.locale)
-    ) {
-      return true;
-    }
-
-    return this.localizableLinks.some(
-      (link) => !isSameLocale(link.locale, locale)
-    );
-  }
-
-  #groupKey(locale) {
-    if (!this.groupKeys.has(locale)) {
-      this.groupKeys.set(locale, `group-${this.nextGroupKey++}`);
-    }
-
-    return this.groupKeys.get(locale);
-  }
-
-  #localeOptionsFor(locale) {
-    const options = this.localeOptions;
-    const own = options.some((option) => option.value === locale)
-      ? []
-      : this.#toLocaleOptions([locale]);
-
-    return [...options, ...own].map((option) => ({
-      ...option,
-      disabled:
-        option.value !== locale &&
-        this.translationLocales.includes(option.value),
-    }));
-  }
-
-  #toLocaleOptions(locales) {
-    return uniqueItemsFromArray(locales.filter(Boolean)).map((locale) => ({
-      name: this.languageNameLookup.getLanguageName(locale),
-      value: locale,
-    }));
-  }
-
   get showLocalizations() {
     return (
       this.currentUser?.admin &&
@@ -843,6 +660,76 @@ export default class SidebarSectionForm extends Component {
 
   get wasPublic() {
     return this.model?.section?.public;
+  }
+
+  get canDelete() {
+    return this.transformedModel.id && !this.transformedModel.sectionType;
+  }
+
+  initLink(link, sectionLocale) {
+    return new SectionLink({
+      router: this.router,
+      icon: link.icon,
+      name: link.name,
+      value: link.value,
+      id: link.id,
+      objectId: this.nextObjectId,
+      segment: link.segment,
+      localizations: this.initLocalizations(
+        link.localizations,
+        LinkLocalization
+      ),
+      locale: link.locale || sectionLocale,
+      canLocalize: link.can_localize ?? link.canLocalize,
+    });
+  }
+
+  initLocalizations(localizations, klass) {
+    return (localizations || []).map((localization) => new klass(localization));
+  }
+
+  create() {
+    return ajax(`/sidebar_sections`, {
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        locale: this.serializeSectionSourceLocale(),
+        localizations: this.serializeSectionLocalizations(),
+        links: this.transformedModel.links.map((link) => {
+          return {
+            icon: link.icon,
+            name: link.name,
+            value: link.path,
+            locale: this.serializeLinkSourceLocale(link),
+            localizations: this.serializeLinkLocalizations(link),
+          };
+        }),
+      }),
+    })
+      .then((data) => {
+        this.currentUser.set(
+          "sidebar_sections",
+          this.currentUser.sidebar_sections.concat(data.sidebar_section)
+        );
+        this.closeModal({ createdSection: data.sidebar_section });
+      })
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
+
+  update() {
+    return this.wasPublic || this.isPublic
+      ? this.#updateWithConfirm()
+      : this.#updateCall();
+  }
+
+  canLocalizeLink(link) {
+    return this.transformedModel.customSection || link.canLocalize;
   }
 
   @afterRender
@@ -891,10 +778,6 @@ export default class SidebarSectionForm extends Component {
     );
   }
 
-  get canDelete() {
-    return this.transformedModel.id && !this.transformedModel.sectionType;
-  }
-
   @bind
   deleteLink(link) {
     if (link.id) {
@@ -912,12 +795,6 @@ export default class SidebarSectionForm extends Component {
   showTranslations() {
     this.#syncLocalizationSlots();
     this.showingTranslations = true;
-  }
-
-  #syncLocalizationSlots() {
-    this.translationGroups
-      .map((group) => group.locale)
-      .forEach((locale) => this.#addLocalizationSlots(locale));
   }
 
   @action
@@ -981,84 +858,6 @@ export default class SidebarSectionForm extends Component {
     this.#addLocalizationSlots(locale);
   }
 
-  #moveLocalization(localizations, localization, locale) {
-    if (!localization || localization.locale === locale) {
-      return;
-    }
-
-    const occupant = localizations.find(
-      (other) => other !== localization && other.locale === locale
-    );
-
-    if (!occupant) {
-      localization.locale = locale;
-      return;
-    }
-
-    occupant.value = localization.value;
-    occupant._destroy = undefined;
-    this.#discardLocalization(localizations, localization);
-  }
-
-  #addLocalizationSlots(locale) {
-    if (
-      this.showLocalizations &&
-      !isSameLocale(locale, this.transformedModel.locale) &&
-      !this.#reclaimLocalization(this.transformedModel.localizations, locale)
-    ) {
-      this.transformedModel.localizations.push(
-        new SectionLocalization({ locale })
-      );
-    }
-
-    this.localizableLinks.forEach((link) => {
-      if (isSameLocale(link.locale, locale)) {
-        return;
-      }
-
-      if (!this.#reclaimLocalization(link.localizations, locale)) {
-        link.localizations.push(new LinkLocalization({ locale }));
-      }
-    });
-  }
-
-  #reclaimLocalization(localizations, locale) {
-    const existing = localizations.find(
-      (localization) => localization.locale === locale
-    );
-
-    if (existing) {
-      existing._destroy = undefined;
-    }
-
-    return existing;
-  }
-
-  #removeLocalizationSlots(locale) {
-    this.groupKeys.delete(locale);
-
-    this.#discardLocalizations(this.transformedModel.localizations, locale);
-    this.localizableLinks.forEach((link) =>
-      this.#discardLocalizations(link.localizations, locale)
-    );
-  }
-
-  #discardLocalizations(localizations, locale) {
-    localizations
-      .filter((localization) => localization.locale === locale)
-      .forEach((localization) =>
-        this.#discardLocalization(localizations, localization)
-      );
-  }
-
-  #discardLocalization(localizations, localization) {
-    if (localization.id) {
-      localization._destroy = "1";
-    } else {
-      removeValueFromArray(localizations, localization);
-    }
-  }
-
   @action
   setSourceLocale(locale) {
     this.transformedModel.locale = locale;
@@ -1097,24 +896,6 @@ export default class SidebarSectionForm extends Component {
     }
 
     return this.#serializeLocalizations(link.localizations);
-  }
-
-  #serializeLocalizations(localizations) {
-    return localizations
-      .map((localization) => {
-        const { id, locale, _destroy, translated } = localization;
-
-        if (_destroy || !translated) {
-          return id ? { id, locale, _destroy: "1" } : null;
-        }
-
-        return {
-          id,
-          locale,
-          [localization.constructor.key]: localization.value,
-        };
-      })
-      .filter(Boolean);
   }
 
   @action
@@ -1209,6 +990,225 @@ export default class SidebarSectionForm extends Component {
           });
       },
     });
+  }
+
+  #updateWithConfirm() {
+    const messages = [
+      this.isPublic
+        ? i18n("sidebar.sections.custom.update_public_confirm")
+        : i18n("sidebar.sections.custom.mark_as_private_confirm"),
+    ];
+
+    if (this.clearedTranslationCount > 0) {
+      messages.push(
+        i18n("sidebar.sections.custom.localizations.remove_cleared_confirm", {
+          count: this.clearedTranslationCount,
+        })
+      );
+    }
+
+    return this.dialog.yesNoConfirm({
+      message: messages.join("<br><br>"),
+      didConfirm: () => {
+        return this.#updateCall();
+      },
+    });
+  }
+
+  #updateCall() {
+    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
+      type: "PUT",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        locale: this.serializeSectionSourceLocale(),
+        localizations: this.serializeSectionLocalizations(),
+        links: this.transformedModel.links
+          .concat(this.transformedModel?.secondaryLinks || [])
+          .map((link) => {
+            return {
+              id: link.id,
+              icon: link.icon,
+              name: link.name,
+              value: link.path,
+              segment: link.segment,
+              _destroy: link._destroy,
+              locale: this.serializeLinkSourceLocale(link),
+              localizations: this.serializeLinkLocalizations(link),
+            };
+          }),
+      }),
+    })
+      .then((data) => {
+        const newSidebarSections = this.currentUser.sidebar_sections.map(
+          (section) => {
+            if (section.id === data["sidebar_section"].id) {
+              return data["sidebar_section"];
+            }
+            return section;
+          }
+        );
+        this.currentUser.set("sidebar_sections", newSidebarSections);
+        this.closeModal();
+      })
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
+
+  #activeLocalizations(record) {
+    return record.localizations.filter(
+      (localization) =>
+        !localization._destroy &&
+        !isSameLocale(localization.locale, record.locale)
+    );
+  }
+
+  #isTranslationTarget(locale) {
+    if (
+      this.showLocalizations &&
+      !isSameLocale(locale, this.transformedModel.locale)
+    ) {
+      return true;
+    }
+
+    return this.localizableLinks.some(
+      (link) => !isSameLocale(link.locale, locale)
+    );
+  }
+
+  #groupKey(locale) {
+    if (!this.groupKeys.has(locale)) {
+      this.groupKeys.set(locale, `group-${this.nextGroupKey++}`);
+    }
+
+    return this.groupKeys.get(locale);
+  }
+
+  #localeOptionsFor(locale) {
+    const options = this.localeOptions;
+    const own = options.some((option) => option.value === locale)
+      ? []
+      : this.#toLocaleOptions([locale]);
+
+    return [...options, ...own].map((option) => ({
+      ...option,
+      disabled:
+        option.value !== locale &&
+        this.translationLocales.includes(option.value),
+    }));
+  }
+
+  #toLocaleOptions(locales) {
+    return uniqueItemsFromArray(locales.filter(Boolean)).map((locale) => ({
+      name: this.languageNameLookup.getLanguageName(locale),
+      value: locale,
+    }));
+  }
+
+  #syncLocalizationSlots() {
+    this.translationGroups
+      .map((group) => group.locale)
+      .forEach((locale) => this.#addLocalizationSlots(locale));
+  }
+
+  #moveLocalization(localizations, localization, locale) {
+    if (!localization || localization.locale === locale) {
+      return;
+    }
+
+    const occupant = localizations.find(
+      (other) => other !== localization && other.locale === locale
+    );
+
+    if (!occupant) {
+      localization.locale = locale;
+      return;
+    }
+
+    occupant.value = localization.value;
+    occupant._destroy = undefined;
+    this.#discardLocalization(localizations, localization);
+  }
+
+  #addLocalizationSlots(locale) {
+    if (
+      this.showLocalizations &&
+      !isSameLocale(locale, this.transformedModel.locale) &&
+      !this.#reclaimLocalization(this.transformedModel.localizations, locale)
+    ) {
+      this.transformedModel.localizations.push(
+        new SectionLocalization({ locale })
+      );
+    }
+
+    this.localizableLinks.forEach((link) => {
+      if (isSameLocale(link.locale, locale)) {
+        return;
+      }
+
+      if (!this.#reclaimLocalization(link.localizations, locale)) {
+        link.localizations.push(new LinkLocalization({ locale }));
+      }
+    });
+  }
+
+  #reclaimLocalization(localizations, locale) {
+    const existing = localizations.find(
+      (localization) => localization.locale === locale
+    );
+
+    if (existing) {
+      existing._destroy = undefined;
+    }
+
+    return existing;
+  }
+
+  #removeLocalizationSlots(locale) {
+    this.groupKeys.delete(locale);
+
+    this.#discardLocalizations(this.transformedModel.localizations, locale);
+    this.localizableLinks.forEach((link) =>
+      this.#discardLocalizations(link.localizations, locale)
+    );
+  }
+
+  #discardLocalizations(localizations, locale) {
+    localizations
+      .filter((localization) => localization.locale === locale)
+      .forEach((localization) =>
+        this.#discardLocalization(localizations, localization)
+      );
+  }
+
+  #discardLocalization(localizations, localization) {
+    if (localization.id) {
+      localization._destroy = "1";
+    } else {
+      removeValueFromArray(localizations, localization);
+    }
+  }
+
+  #serializeLocalizations(localizations) {
+    return localizations
+      .map((localization) => {
+        const { id, locale, _destroy, translated } = localization;
+
+        if (_destroy || !translated) {
+          return id ? { id, locale, _destroy: "1" } : null;
+        }
+
+        return {
+          id,
+          locale,
+          [localization.constructor.key]: localization.value,
+        };
+      })
+      .filter(Boolean);
   }
 
   <template>

@@ -140,42 +140,6 @@ export default class NestedPost extends Component {
     }
   }
 
-  #registerPost() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#postRegistered = true;
-    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
-  }
-
-  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.post.post_number
-    ) {
-      return;
-    }
-
-    const post = this.args.post;
-    post.set("direct_reply_count", (post.direct_reply_count || 0) + 1);
-    post.set("total_descendant_count", (post.total_descendant_count || 0) + 1);
-    this._childWasCreated = true;
-
-    if (!this.expanded) {
-      this.expanded = true;
-      this.collapsed = false;
-      this.args.expansionState?.set(this.args.post.post_number, {
-        expanded: true,
-        collapsed: false,
-      });
-    }
-
-    if (isOwnPost && this.mobileFocusEnabled) {
-      this.args.focusPost(this.childPathWithNewChild(childPost));
-    }
-  }
-
   get isRoot() {
     return this.args.depth === 0;
   }
@@ -266,32 +230,6 @@ export default class NestedPost extends Component {
     ];
   }
 
-  childPathWithChildren(children) {
-    return [
-      ...(this.args.path || []),
-      { post: this.args.post, children: children || [] },
-    ];
-  }
-
-  childPathWithNewChild(childPost) {
-    const children = this.args.children || [];
-    const hasChild = children.some(
-      (node) =>
-        node.post?.id === childPost?.id ||
-        node.post?.post_number === childPost?.post_number
-    );
-
-    return [
-      ...(this.args.path || []),
-      {
-        post: this.args.post,
-        children: hasChild
-          ? children
-          : [{ post: childPost, children: [] }, ...children],
-      },
-    ];
-  }
-
   get mobileFocusEnabled() {
     return this.site.mobileView && this.args.focusPost;
   }
@@ -346,6 +284,40 @@ export default class NestedPost extends Component {
     return i18n("nested_replies.collapse");
   }
 
+  get childCacheKey() {
+    return `${this.args.topic?.id}:${this.args.post.post_number}`;
+  }
+
+  get nestedShareUrl() {
+    return nestedPostUrl(this.args.topic, this.args.post.post_number);
+  }
+
+  childPathWithChildren(children) {
+    return [
+      ...(this.args.path || []),
+      { post: this.args.post, children: children || [] },
+    ];
+  }
+
+  childPathWithNewChild(childPost) {
+    const children = this.args.children || [];
+    const hasChild = children.some(
+      (node) =>
+        node.post?.id === childPost?.id ||
+        node.post?.post_number === childPost?.post_number
+    );
+
+    return [
+      ...(this.args.path || []),
+      {
+        post: this.args.post,
+        children: hasChild
+          ? children
+          : [{ post: childPost, children: [] }, ...children],
+      },
+    ];
+  }
+
   @action
   toggleExpanded() {
     if (!this.hasReplies) {
@@ -383,10 +355,6 @@ export default class NestedPost extends Component {
       expanded: this.expanded,
       collapsed: this.collapsed,
     });
-  }
-
-  get childCacheKey() {
-    return `${this.args.topic?.id}:${this.args.post.post_number}`;
   }
 
   async childrenForMobileFocus() {
@@ -515,10 +483,6 @@ export default class NestedPost extends Component {
     this.lineHighlighted = false;
   }
 
-  get nestedShareUrl() {
-    return nestedPostUrl(this.args.topic, this.args.post.post_number);
-  }
-
   @action
   copyLink() {
     if (this.site.mobileView) {
@@ -592,6 +556,42 @@ export default class NestedPost extends Component {
   @action
   showLogin() {
     getOwner(this).lookup("route:application").send("showLogin");
+  }
+
+  #registerPost() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.#postRegistered = true;
+    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
+  }
+
+  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.post.post_number
+    ) {
+      return;
+    }
+
+    const post = this.args.post;
+    post.set("direct_reply_count", (post.direct_reply_count || 0) + 1);
+    post.set("total_descendant_count", (post.total_descendant_count || 0) + 1);
+    this._childWasCreated = true;
+
+    if (!this.expanded) {
+      this.expanded = true;
+      this.collapsed = false;
+      this.args.expansionState?.set(this.args.post.post_number, {
+        expanded: true,
+        collapsed: false,
+      });
+    }
+
+    if (isOwnPost && this.mobileFocusEnabled) {
+      this.args.focusPost(this.childPathWithNewChild(childPost));
+    }
   }
 
   <template>

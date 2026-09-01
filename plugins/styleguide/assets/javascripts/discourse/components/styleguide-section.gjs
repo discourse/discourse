@@ -11,11 +11,6 @@ import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section
 
 @tagName("")
 export default class StyleguideSection extends Component {
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    window.scrollTo(0, 0);
-  }
-
   @computed("section")
   get sectionClass() {
     if (this.section) {
@@ -30,6 +25,11 @@ export default class StyleguideSection extends Component {
     if (this.section) {
       return `/styleguide/${this.section.category}/${this.section.id}`;
     }
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+    window.scrollTo(0, 0);
   }
 
   <template>

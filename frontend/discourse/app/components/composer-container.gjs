@@ -114,6 +114,17 @@ export default class ComposerContainer extends Component {
     return this.siteSettings.enable_composer_redesign;
   }
 
+  get availableContentLocalizationLocales() {
+    const originalPostLocale = this.composer.model?.post?.locale;
+
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      }));
+  }
+
   @action
   onSwipeStart(state, event) {
     // :focus-within keeps the match when a NodeView input inside the editor
@@ -184,17 +195,6 @@ export default class ComposerContainer extends Component {
   @action
   setToolbarPortalTarget(element) {
     this.toolbarPortalTarget = element;
-  }
-
-  get availableContentLocalizationLocales() {
-    const originalPostLocale = this.composer.model?.post?.locale;
-
-    return this.siteSettings.available_content_localization_locales
-      .filter(({ value }) => value !== originalPostLocale)
-      .map(({ value }) => ({
-        name: this.languageNameLookup.getLanguageName(value),
-        value,
-      }));
   }
 
   @action
@@ -282,16 +282,16 @@ export default class ComposerContainer extends Component {
     this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
   }
 
+  composerResized() {
+    this.appEvents.trigger("composer:resized");
+  }
+
   _triggerComposerResized() {
     this.composerResizeDebounceHandler = discourseDebounce(
       this,
       this.composerResized,
       300
     );
-  }
-
-  composerResized() {
-    this.appEvents.trigger("composer:resized");
   }
 
   <template>

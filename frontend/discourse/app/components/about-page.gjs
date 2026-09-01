@@ -205,6 +205,10 @@ export default class AboutPage extends Component {
     });
   }
 
+  get showExtraGroups() {
+    return !isBlank(this.siteSettings.about_page_extra_groups);
+  }
+
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
     const statKeys = Object.keys(stats);
@@ -230,10 +234,6 @@ export default class AboutPage extends Component {
       }
     }
     return configs;
-  }
-
-  get showExtraGroups() {
-    return !isBlank(this.siteSettings.about_page_extra_groups);
   }
 
   <template>

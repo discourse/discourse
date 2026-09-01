@@ -54,18 +54,6 @@ export default class DiscoursePostEventDates extends Component {
     return this._buildFormat(endsAt, { includeYear, includeTime });
   }
 
-  _buildFormat(date, { includeYear, includeTime }) {
-    const formatParts = ["ddd, MMM D"];
-    if (includeYear) {
-      formatParts.push("YYYY");
-    }
-
-    const dateString = formatParts.join(", ");
-    const timeString = includeTime ? " LT" : "";
-
-    return `\u0022${dateString}${timeString}\u0022`;
-  }
-
   get isSingleDayEvent() {
     return this.startsAt.isSame(this.endsAt, "day");
   }
@@ -217,6 +205,18 @@ export default class DiscoursePostEventDates extends Component {
       }
       this.htmlDates = trustHTML(dates);
     }
+  }
+
+  _buildFormat(date, { includeYear, includeTime }) {
+    const formatParts = ["ddd, MMM D"];
+    if (includeYear) {
+      formatParts.push("YYYY");
+    }
+
+    const dateString = formatParts.join(", ");
+    const timeString = includeTime ? " LT" : "";
+
+    return `\u0022${dateString}${timeString}\u0022`;
   }
 
   <template>

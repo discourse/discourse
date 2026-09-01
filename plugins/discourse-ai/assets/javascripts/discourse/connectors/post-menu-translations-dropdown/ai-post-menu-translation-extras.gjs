@@ -18,16 +18,6 @@ export default class AiPostMenuTranslationExtras extends Component {
   @service dialog;
   @service toasts;
 
-  async #translate() {
-    try {
-      await ajax(`/discourse-ai/translate/posts/${this.args.post.id}`, {
-        type: "POST",
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   @action
   translate() {
     const confirmMessage = i18n(
@@ -53,6 +43,16 @@ export default class AiPostMenuTranslationExtras extends Component {
         }
       },
     });
+  }
+
+  async #translate() {
+    try {
+      await ajax(`/discourse-ai/translate/posts/${this.args.post.id}`, {
+        type: "POST",
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

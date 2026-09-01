@@ -68,6 +68,25 @@ class PinnedOptionsTrigger extends Component {
 }
 
 export default class PinnedOptions extends Component {
+  get options() {
+    const globally = this.args.topic?.pinned_globally ? GLOBALLY : "";
+
+    return [
+      {
+        id: PINNED,
+        title: i18n(`topic_statuses.pinned${globally}.title`),
+        description: i18n(`topic_statuses.pinned${globally}.help`),
+        icon: "thumbtack",
+      },
+      {
+        id: UNPINNED,
+        title: i18n("topic_statuses.unpinned.title"),
+        description: i18n("topic_statuses.unpinned.help"),
+        icon: "thumbtack unpinned",
+      },
+    ];
+  }
+
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
@@ -89,25 +108,6 @@ export default class PinnedOptions extends Component {
   isSelectedClass(optionId) {
     const currentValue = this.args.value ? PINNED : UNPINNED;
     return currentValue === optionId ? "-selected" : "";
-  }
-
-  get options() {
-    const globally = this.args.topic?.pinned_globally ? GLOBALLY : "";
-
-    return [
-      {
-        id: PINNED,
-        title: i18n(`topic_statuses.pinned${globally}.title`),
-        description: i18n(`topic_statuses.pinned${globally}.help`),
-        icon: "thumbtack",
-      },
-      {
-        id: UNPINNED,
-        title: i18n("topic_statuses.unpinned.title"),
-        description: i18n("topic_statuses.unpinned.help"),
-        icon: "thumbtack unpinned",
-      },
-    ];
   }
 
   <template>

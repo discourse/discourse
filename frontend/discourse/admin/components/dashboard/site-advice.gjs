@@ -17,6 +17,18 @@ export default class DashboardSiteAdvice extends Component {
   @tracked refreshing = false;
   @tracked ignoringId = null;
 
+  get sortedProblems() {
+    return [...this.args.problems].sort(
+      (a, b) => compare(a?.priority, b?.priority) || compare(a?.id, b?.id)
+    );
+  }
+
+  get title() {
+    return i18n("admin.dashboard.site_advice.title", {
+      count: this.args.problems.length,
+    });
+  }
+
   @action
   async refresh() {
     this.refreshing = true;
@@ -35,18 +47,6 @@ export default class DashboardSiteAdvice extends Component {
     } finally {
       this.ignoringId = null;
     }
-  }
-
-  get sortedProblems() {
-    return [...this.args.problems].sort(
-      (a, b) => compare(a?.priority, b?.priority) || compare(a?.id, b?.id)
-    );
-  }
-
-  get title() {
-    return i18n("admin.dashboard.site_advice.title", {
-      count: this.args.problems.length,
-    });
   }
 
   <template>

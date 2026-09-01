@@ -85,14 +85,6 @@ export default class ContentLanguagePreferencesModal extends Component {
     return getURL("/login");
   }
 
-  #toOptions(locales) {
-    return (locales ?? []).map(({ value }) => ({
-      name: this.languageNameLookup.getLanguageName(value),
-      value,
-      id: value,
-    }));
-  }
-
   @action
   registerFormApi(formApi) {
     this.formApi = formApi;
@@ -167,6 +159,14 @@ export default class ContentLanguagePreferencesModal extends Component {
       popupAjaxError(error);
       this.saving = false;
     }
+  }
+
+  #toOptions(locales) {
+    return (locales ?? []).map(({ value }) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+      id: value,
+    }));
   }
 
   <template>

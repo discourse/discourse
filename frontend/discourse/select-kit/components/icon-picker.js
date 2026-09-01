@@ -34,6 +34,11 @@ export default class IconPicker extends MultiSelectComponent {
     this.insertAfterCollection(MAIN_COLLECTION, MORE_ICONS_COLLECTION);
   }
 
+  @computed("value.[]")
+  get content() {
+    return makeArray(this.value).map(this._processIcon);
+  }
+
   modifyComponentForCollection(collection) {
     if (collection === MORE_ICONS_COLLECTION) {
       return FilterForMore;
@@ -46,11 +51,6 @@ export default class IconPicker extends MultiSelectComponent {
         shouldShowMoreTip: this._hasMore,
       };
     }
-  }
-
-  @computed("value.[]")
-  get content() {
-    return makeArray(this.value).map(this._processIcon);
   }
 
   search(filter = "") {
@@ -76,6 +76,14 @@ export default class IconPicker extends MultiSelectComponent {
     }
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this._cachedIconsList = null;
+    this._cachedHasMore = false;
+    this._hasMore = false;
+  }
+
   _processIcon(icon) {
     const iconName = typeof icon === "object" ? icon.id : icon,
       strippedIconName = convertIconClass(iconName);
@@ -85,14 +93,6 @@ export default class IconPicker extends MultiSelectComponent {
       name: iconName,
       icon: strippedIconName,
     };
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this._cachedIconsList = null;
-    this._cachedHasMore = false;
-    this._hasMore = false;
   }
 
   @action

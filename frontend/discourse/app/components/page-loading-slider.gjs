@@ -29,6 +29,11 @@ export default class PageLoadingSlider extends Component {
     }
   }
 
+  get containerStyle() {
+    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
+    return trustHTML(`--loading-duration: ${duration}s`);
+  }
+
   @bind
   stateChanged(loading) {
     if (this._deferredStateChange) {
@@ -46,11 +51,6 @@ export default class PageLoadingSlider extends Component {
     } else {
       this.state = "done";
     }
-  }
-
-  get containerStyle() {
-    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
-    return trustHTML(`--loading-duration: ${duration}s`);
   }
 
   @action

@@ -34,39 +34,6 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
     this.#loadTags();
   }
 
-  async #loadTags() {
-    try {
-      this.tagsLoading = true;
-
-      const findArgs = {};
-
-      if (this.filter) {
-        findArgs.filter = this.filter;
-      }
-
-      if (this.onlySelected) {
-        if (this.selectedTags.size === 0) {
-          this.tags = [];
-          return;
-        }
-
-        findArgs.only_tags = [...this.selectedTags].join(",");
-      } else if (this.onlyUnselected) {
-        findArgs.exclude_tags = [...this.selectedTags].join(",");
-      }
-
-      try {
-        const tags = await this.store.findAll("listTag", findArgs);
-        this.tags = tags;
-      } catch (error) {
-        popupAjaxError(error);
-      }
-    } finally {
-      this.tagsLoading = false;
-      this.disableFiltering = false;
-    }
-  }
-
   @action
   didInsertTag(element) {
     const tagName = element.dataset.tagName;
@@ -128,11 +95,6 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
   }
 
-  #performFiltering(filter) {
-    this.filter = filter.toLowerCase();
-    this.#loadTags();
-  }
-
   @action
   deselectAll() {
     this.selectedTags.clear();
@@ -170,6 +132,44 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
     } finally {
       this.saving = false;
     }
+  }
+
+  async #loadTags() {
+    try {
+      this.tagsLoading = true;
+
+      const findArgs = {};
+
+      if (this.filter) {
+        findArgs.filter = this.filter;
+      }
+
+      if (this.onlySelected) {
+        if (this.selectedTags.size === 0) {
+          this.tags = [];
+          return;
+        }
+
+        findArgs.only_tags = [...this.selectedTags].join(",");
+      } else if (this.onlyUnselected) {
+        findArgs.exclude_tags = [...this.selectedTags].join(",");
+      }
+
+      try {
+        const tags = await this.store.findAll("listTag", findArgs);
+        this.tags = tags;
+      } catch (error) {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.tagsLoading = false;
+      this.disableFiltering = false;
+    }
+  }
+
+  #performFiltering(filter) {
+    this.filter = filter.toLowerCase();
+    this.#loadTags();
   }
 
   <template>

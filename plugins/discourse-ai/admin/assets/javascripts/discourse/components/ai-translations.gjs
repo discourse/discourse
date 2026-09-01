@@ -77,28 +77,6 @@ export default class AiTranslations extends Component {
     this._loadCategories();
   }
 
-  async _loadCategories() {
-    const ids = this.args.model?.category_ids || [];
-    if (ids.length) {
-      this.categories = await Category.asyncFindByIds(ids);
-    }
-  }
-
-  @bind
-  loadProgress() {
-    return ajax("/admin/plugins/discourse-ai/ai-translations/progress.json");
-  }
-
-  async _checkCredits() {
-    try {
-      this.creditStatus =
-        await this.aiCredits.getFeatureCreditStatus("locale_detector");
-    } catch {
-      this.creditStatus = null;
-    }
-    this.creditCheckComplete = true;
-  }
-
   get creditLimitReached() {
     return this.creditStatus?.hard_limit_reached === true;
   }
@@ -210,6 +188,36 @@ export default class AiTranslations extends Component {
       "adminPlugins.show.discourse-ai-features.edit",
       this.args.model.translation_id
     );
+  }
+
+  get isLoadingExpandedTargetDetails() {
+    return this.loadingTargetDetails[this.expandedTargetType];
+  }
+
+  get hasExpandedTargetDetailError() {
+    return this.targetDetailErrors[this.expandedTargetType];
+  }
+
+  get isDetailStateOverlay() {
+    return Boolean(
+      this.displayedTargetDetails &&
+      (this.isLoadingExpandedTargetDetails || this.hasExpandedTargetDetailError)
+    );
+  }
+
+  get expandedTargetTitle() {
+    if (!this.expandedTargetType) {
+      return null;
+    }
+
+    return i18n(
+      `discourse_ai.translations.model_progress.targets.${this.expandedTargetType}.title`
+    );
+  }
+
+  @bind
+  loadProgress() {
+    return ajax("/admin/plugins/discourse-ai/ai-translations/progress.json");
   }
 
   @action
@@ -462,6 +470,28 @@ export default class AiTranslations extends Component {
     this._loadTargetDetails(targetType);
   }
 
+  @action
+  retryTargetDetails() {
+    this._loadTargetDetails(this.expandedTargetType, { retry: true });
+  }
+
+  async _loadCategories() {
+    const ids = this.args.model?.category_ids || [];
+    if (ids.length) {
+      this.categories = await Category.asyncFindByIds(ids);
+    }
+  }
+
+  async _checkCredits() {
+    try {
+      this.creditStatus =
+        await this.aiCredits.getFeatureCreditStatus("locale_detector");
+    } catch {
+      this.creditStatus = null;
+    }
+    this.creditCheckComplete = true;
+  }
+
   async _loadTargetDetails(targetType, { retry = false } = {}) {
     if (this.targetDetails[targetType] && !retry) {
       this.displayedTargetDetails = this.targetDetails[targetType];
@@ -527,36 +557,6 @@ export default class AiTranslations extends Component {
     if (!keepDisplayed) {
       this.displayedTargetDetails = null;
     }
-  }
-
-  get isLoadingExpandedTargetDetails() {
-    return this.loadingTargetDetails[this.expandedTargetType];
-  }
-
-  get hasExpandedTargetDetailError() {
-    return this.targetDetailErrors[this.expandedTargetType];
-  }
-
-  get isDetailStateOverlay() {
-    return Boolean(
-      this.displayedTargetDetails &&
-      (this.isLoadingExpandedTargetDetails || this.hasExpandedTargetDetailError)
-    );
-  }
-
-  get expandedTargetTitle() {
-    if (!this.expandedTargetType) {
-      return null;
-    }
-
-    return i18n(
-      `discourse_ai.translations.model_progress.targets.${this.expandedTargetType}.title`
-    );
-  }
-
-  @action
-  retryTargetDetails() {
-    this._loadTargetDetails(this.expandedTargetType, { retry: true });
   }
 
   <template>

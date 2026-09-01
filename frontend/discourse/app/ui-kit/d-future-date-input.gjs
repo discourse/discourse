@@ -52,28 +52,6 @@ export default class DFutureDateInput extends Component {
     return isEmpty(this._date);
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this.label) {
-      this.set("displayLabel", i18n(this.label));
-    }
-
-    if (this.input) {
-      const dateTime = moment(this.input);
-      const closestShortcut = this._findClosestShortcut(dateTime);
-      if (!this.noRelativeOptions && closestShortcut) {
-        this.set("selection", closestShortcut.id);
-      } else {
-        this.setProperties({
-          selection: TIME_SHORTCUT_TYPES.CUSTOM,
-          _date: dateTime.format("YYYY-MM-DD"),
-          _time: dateTime.format("HH:mm"),
-        });
-      }
-    }
-  }
-
   @computed("customShortcuts")
   get shortcuts() {
     let shortcuts;
@@ -106,6 +84,28 @@ export default class DFutureDateInput extends Component {
         icon: s.icon,
       };
     });
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (this.label) {
+      this.set("displayLabel", i18n(this.label));
+    }
+
+    if (this.input) {
+      const dateTime = moment(this.input);
+      const closestShortcut = this._findClosestShortcut(dateTime);
+      if (!this.noRelativeOptions && closestShortcut) {
+        this.set("selection", closestShortcut.id);
+      } else {
+        this.setProperties({
+          selection: TIME_SHORTCUT_TYPES.CUSTOM,
+          _date: dateTime.format("YYYY-MM-DD"),
+          _time: dateTime.format("HH:mm"),
+        });
+      }
+    }
   }
 
   @action

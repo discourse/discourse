@@ -23,6 +23,15 @@ export default class DDateInput extends Component {
   useNativePicker = isInputDateSupported();
   _picker = null;
 
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || i18n("dates.placeholder");
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
+
   @computed("site.mobileView")
   get inputType() {
     return this.useNativePicker ? "date" : "text";
@@ -82,6 +91,12 @@ export default class DDateInput extends Component {
     if (this._picker && !this.date) {
       this._picker.setDate(null);
     }
+  }
+
+  @action
+  onChangeDate(event) {
+    this._toggleHasValueClass(event.target.value);
+    this._handleSelection(event.target.value);
   }
 
   async _loadPikadayPicker(container) {
@@ -152,15 +167,6 @@ export default class DDateInput extends Component {
     }
   }
 
-  @computed("_placeholder")
-  get placeholder() {
-    return this._placeholder || i18n("dates.placeholder");
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
-  }
-
   _opts() {
     return null;
   }
@@ -176,12 +182,6 @@ export default class DDateInput extends Component {
     } else {
       input.classList.remove("--has-value");
     }
-  }
-
-  @action
-  onChangeDate(event) {
-    this._toggleHasValueClass(event.target.value);
-    this._handleSelection(event.target.value);
   }
 
   <template>

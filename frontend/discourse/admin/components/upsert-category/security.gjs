@@ -106,10 +106,6 @@ export default class UpsertCategorySecurity extends Component {
     return (this.permissions?.length ?? 0) >= 3;
   }
 
-  #setFormPermissions(permissions) {
-    this.args.form.set("permissions", permissions);
-  }
-
   @action
   onSelectGroup(groupId) {
     const newPermissions = [
@@ -168,6 +164,10 @@ export default class UpsertCategorySecurity extends Component {
       return permission;
     });
     this.#setFormPermissions(newPermissions);
+  }
+
+  #setFormPermissions(permissions) {
+    this.args.form.set("permissions", permissions);
   }
 
   <template>

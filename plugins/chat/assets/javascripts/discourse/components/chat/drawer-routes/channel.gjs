@@ -15,11 +15,6 @@ export default class ChatDrawerRoutesChannel extends Component {
 
   @tracked isFiltering = false;
 
-  @action
-  toggleIsFiltering() {
-    this.isFiltering = !this.isFiltering;
-  }
-
   get canSearchChat() {
     return this.currentUser && this.siteSettings.chat_search_enabled;
   }
@@ -36,6 +31,11 @@ export default class ChatDrawerRoutesChannel extends Component {
     } else {
       return "chat.channels";
     }
+  }
+
+  @action
+  toggleIsFiltering() {
+    this.isFiltering = !this.isFiltering;
   }
 
   <template>

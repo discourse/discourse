@@ -76,6 +76,22 @@ function prepareSidebarSectionClass(Section, routerService) {
       return this.#applyFilter(this.moreLinks);
     }
 
+    @cached
+    get activeLink() {
+      return findActiveLink(
+        [...this.filteredLinks, ...(this.filteredMoreLinks || [])],
+        routerService
+      );
+    }
+
+    get filtered() {
+      return (
+        !this.filterable ||
+        this.filteredLinks?.length > 0 ||
+        this.filteredMoreLinks?.length > 0
+      );
+    }
+
     #applyFilter(links) {
       if (!links?.length) {
         return links;
@@ -100,22 +116,6 @@ function prepareSidebarSectionClass(Section, routerService) {
           )
         );
       });
-    }
-
-    @cached
-    get activeLink() {
-      return findActiveLink(
-        [...this.filteredLinks, ...(this.filteredMoreLinks || [])],
-        routerService
-      );
-    }
-
-    get filtered() {
-      return (
-        !this.filterable ||
-        this.filteredLinks?.length > 0 ||
-        this.filteredMoreLinks?.length > 0
-      );
     }
   };
 }

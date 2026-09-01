@@ -45,23 +45,6 @@ export default class WebhookEvents extends Component {
     return this.incomingCount > 0;
   }
 
-  async loadEvents() {
-    this.loading = true;
-
-    try {
-      this.events = await this.store.findAll("web-hook-event", {
-        webhookId: this.args.webhookId,
-        status: this.args.status,
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
-
-    this.redeliverEnabled = this.failedEventIds.length;
-  }
-
   get failedEventIds() {
     return this.events.content
       .filter(
@@ -84,6 +67,23 @@ export default class WebhookEvents extends Component {
     ];
   }
 
+  async loadEvents() {
+    this.loading = true;
+
+    try {
+      this.events = await this.store.findAll("web-hook-event", {
+        webhookId: this.args.webhookId,
+        status: this.args.status,
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+
+    this.redeliverEnabled = this.failedEventIds.length;
+  }
+
   @bind
   reloadEvents() {
     if (this.loading) {
@@ -102,39 +102,6 @@ export default class WebhookEvents extends Component {
   @bind
   unsubscribe() {
     this.messageBus.unsubscribe("/web_hook_events/*", this._addIncoming);
-  }
-
-  @bind
-  _addIncoming(data) {
-    if (data.event_type === "ping") {
-      this.pingEnabled = true;
-    }
-
-    if (data.type === "redelivered") {
-      const event = this.events.content.find(
-        (e) => e.id === data.web_hook_event.id
-      );
-
-      event.setProperties({
-        response_body: data.web_hook_event.response_body,
-        response_headers: data.web_hook_event.response_headers,
-        status: data.web_hook_event.status,
-        redelivering: false,
-      });
-      return;
-    }
-
-    if (data.type === "redelivery_failed") {
-      const event = this.events.content.find(
-        (e) => e.id === data.web_hook_event_id
-      );
-      event.set("redelivering", false);
-      return;
-    }
-
-    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
-      this.incomingEventIds.push(data.web_hook_event_id);
-    }
   }
 
   @action
@@ -207,6 +174,39 @@ export default class WebhookEvents extends Component {
         }
       },
     });
+  }
+
+  @bind
+  _addIncoming(data) {
+    if (data.event_type === "ping") {
+      this.pingEnabled = true;
+    }
+
+    if (data.type === "redelivered") {
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event.id
+      );
+
+      event.setProperties({
+        response_body: data.web_hook_event.response_body,
+        response_headers: data.web_hook_event.response_headers,
+        status: data.web_hook_event.status,
+        redelivering: false,
+      });
+      return;
+    }
+
+    if (data.type === "redelivery_failed") {
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event_id
+      );
+      event.set("redelivering", false);
+      return;
+    }
+
+    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
+      this.incomingEventIds.push(data.web_hook_event_id);
+    }
   }
 
   <template>

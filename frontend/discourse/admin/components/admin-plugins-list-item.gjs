@@ -20,21 +20,6 @@ export default class AdminPluginsListItem extends Component {
   @service sidebarState;
   @service router;
 
-  @action
-  async togglePluginEnabled(plugin) {
-    const oldValue = plugin.enabled;
-    const newValue = !oldValue;
-
-    try {
-      plugin.enabled = newValue;
-      await SiteSetting.update(plugin.enabledSetting, newValue);
-      this.session.requiresRefresh = true;
-    } catch (err) {
-      plugin.enabled = oldValue;
-      popupAjaxError(err);
-    }
-  }
-
   get isAdminSearchFiltered() {
     if (!this.sidebarState.filter) {
       return false;
@@ -90,6 +75,21 @@ export default class AdminPluginsListItem extends Component {
         queryParams: { filter: `plugin:${this.args.plugin.name}` },
       }
     );
+  }
+
+  @action
+  async togglePluginEnabled(plugin) {
+    const oldValue = plugin.enabled;
+    const newValue = !oldValue;
+
+    try {
+      plugin.enabled = newValue;
+      await SiteSetting.update(plugin.enabledSetting, newValue);
+      this.session.requiresRefresh = true;
+    } catch (err) {
+      plugin.enabled = oldValue;
+      popupAjaxError(err);
+    }
   }
 
   <template>

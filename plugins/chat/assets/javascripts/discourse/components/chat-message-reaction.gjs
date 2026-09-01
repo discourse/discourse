@@ -128,27 +128,6 @@ export default class ChatMessageReaction extends Component {
   #reactionsUsersPopupInstance = null;
   #closeReactionsUsersPopupTimer = null;
 
-  // Close on a short delay so moving the pointer across the gap between the
-  // reaction and the popup (or briefly off either) doesn't dismiss it.
-  @bind
-  scheduleCloseReactionsUsersPopup() {
-    cancel(this.#closeReactionsUsersPopupTimer);
-    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
-      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
-    }, 250);
-  }
-
-  @bind
-  openReactionsUsersPopup() {
-    this.cancelCloseReactionsUsersPopup();
-    this.#reactionsUsersPopupInstance?.show();
-  }
-
-  @bind
-  cancelCloseReactionsUsersPopup() {
-    cancel(this.#closeReactionsUsersPopupTimer);
-  }
-
   // When the new reactions popup is enabled the reaction opens a users popup, so
   // the names tooltip is suppressed here.
   get useReactionsUsersPopup() {
@@ -191,6 +170,40 @@ export default class ChatMessageReaction extends Component {
     return i18n("chat.reactions.add", { emoji });
   }
 
+  @cached
+  get popoverContent() {
+    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
+      return;
+    }
+
+    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
+  }
+
+  get description() {
+    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
+  }
+
+  // Close on a short delay so moving the pointer across the gap between the
+  // reaction and the popup (or briefly off either) doesn't dismiss it.
+  @bind
+  scheduleCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
+      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
+    }, 250);
+  }
+
+  @bind
+  openReactionsUsersPopup() {
+    this.cancelCloseReactionsUsersPopup();
+    this.#reactionsUsersPopupInstance?.show();
+  }
+
+  @bind
+  cancelCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+  }
+
   @action
   handleClick(event) {
     event.stopPropagation();
@@ -204,19 +217,6 @@ export default class ChatMessageReaction extends Component {
       this.args.reaction.emoji,
       this.args.reaction.reacted ? "remove" : "add"
     );
-  }
-
-  @cached
-  get popoverContent() {
-    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
-      return;
-    }
-
-    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
-  }
-
-  get description() {
-    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
   }
 
   <template>

@@ -52,28 +52,8 @@ export default class VoiceRoomForm extends Component {
     );
   }
 
-  @action
-  async loadChatChannels() {
-    if (!this.showChatSettings) {
-      return;
-    }
-    try {
-      const collection = this.chatApi.channels();
-      await collection.load();
-      this.chatChannels = (collection.items ?? []).filter(
-        (channel) => channel.threadingEnabled
-      );
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   get maxParticipantsValidation() {
     return "integer|number:2,200";
-  }
-
-  isStageType(roomType) {
-    return roomType === "stage";
   }
 
   get roomTypeOptions() {
@@ -106,6 +86,26 @@ export default class VoiceRoomForm extends Component {
       return this.args.room?.id ? "voice.admin.update" : "voice.admin.create";
     }
     return "voice.room.save";
+  }
+
+  @action
+  async loadChatChannels() {
+    if (!this.showChatSettings) {
+      return;
+    }
+    try {
+      const collection = this.chatApi.channels();
+      await collection.load();
+      this.chatChannels = (collection.items ?? []).filter(
+        (channel) => channel.threadingEnabled
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  isStageType(roomType) {
+    return roomType === "stage";
   }
 
   @action

@@ -51,6 +51,29 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     this.set("subscribed", false);
   }
 
+  @dependentKeyCompat
+  get users() {
+    if (this.get("subscribed")) {
+      return this._presenceState.users;
+    }
+  }
+
+  @computed("_presenceState.count", "subscribed")
+  get count() {
+    if (!this.subscribed) {
+      return;
+    }
+    return this._presenceState?.count;
+  }
+
+  @computed("_presenceState.count", "subscribed")
+  get countOnly() {
+    if (!this.subscribed) {
+      return;
+    }
+    return this._presenceState?.countOnly;
+  }
+
   // Mark the current user as 'present' in this channel
   // By default, the user will temporarily 'leave' the channel when
   // the current tab is in the background, or has no interaction for more than 60 seconds.
@@ -108,29 +131,6 @@ class PresenceChannel extends EmberObject.extend(Evented) {
   @bind
   _publishChange() {
     this.trigger("change", this);
-  }
-
-  @dependentKeyCompat
-  get users() {
-    if (this.get("subscribed")) {
-      return this._presenceState.users;
-    }
-  }
-
-  @computed("_presenceState.count", "subscribed")
-  get count() {
-    if (!this.subscribed) {
-      return;
-    }
-    return this._presenceState?.count;
-  }
-
-  @computed("_presenceState.count", "subscribed")
-  get countOnly() {
-    if (!this.subscribed) {
-      return;
-    }
-    return this._presenceState?.countOnly;
   }
 }
 

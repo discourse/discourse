@@ -97,6 +97,45 @@ export default class ChatChannelRow extends Component {
     cancel(this._removeClickSuppressorHandler);
   }
 
+  get shouldHandleSwipe() {
+    if (!this.capabilities.touch) {
+      return false;
+    }
+
+    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
+  }
+
+  get isSwipeToClearNotifications() {
+    return !this.args.channel.isDirectMessageChannel;
+  }
+
+  get leaveDirectMessageLabel() {
+    return i18n("chat.direct_messages.close");
+  }
+
+  get leaveChannelLabel() {
+    return i18n("chat.channel_settings.leave_channel");
+  }
+
+  get channelHasUnread() {
+    return (
+      this.args.channel.tracking.unreadCount > 0 ||
+      this.args.channel.unreadThreadsCountSinceLastViewed > 0
+    );
+  }
+
+  get shouldRenderLastMessage() {
+    return (
+      this.site.mobileView &&
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.lastMessage
+    );
+  }
+
+  get #firstDirectMessageUser() {
+    return this.args.channel?.chatable?.users?.[0];
+  }
+
   @bind
   onSwipeStart(event) {
     this._initialX = event.changedTouches[0].screenX;
@@ -138,23 +177,6 @@ export default class ChatChannelRow extends Component {
       }
     } else {
       this.shouldReset = true;
-    }
-  }
-
-  #clearNotifications() {
-    const channel = this.args.channel;
-    if (!channel.currentUserMembership) {
-      return;
-    }
-
-    const lastMessageId = channel.lastMessage?.id;
-    channel.tracking.reset();
-    channel.updateLastViewedAt();
-
-    if (lastMessageId) {
-      this.chatApi
-        .markChannelAsRead(channel.id, lastMessageId)
-        .catch(popupAjaxError);
     }
   }
 
@@ -208,45 +230,6 @@ export default class ChatChannelRow extends Component {
     });
   }
 
-  get shouldHandleSwipe() {
-    if (!this.capabilities.touch) {
-      return false;
-    }
-
-    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
-  }
-
-  get isSwipeToClearNotifications() {
-    return !this.args.channel.isDirectMessageChannel;
-  }
-
-  get leaveDirectMessageLabel() {
-    return i18n("chat.direct_messages.close");
-  }
-
-  get leaveChannelLabel() {
-    return i18n("chat.channel_settings.leave_channel");
-  }
-
-  get channelHasUnread() {
-    return (
-      this.args.channel.tracking.unreadCount > 0 ||
-      this.args.channel.unreadThreadsCountSinceLastViewed > 0
-    );
-  }
-
-  get shouldRenderLastMessage() {
-    return (
-      this.site.mobileView &&
-      this.args.channel.isDirectMessageChannel &&
-      this.args.channel.lastMessage
-    );
-  }
-
-  get #firstDirectMessageUser() {
-    return this.args.channel?.chatable?.users?.[0];
-  }
-
   @action
   startTrackingStatus() {
     this.#firstDirectMessageUser?.statusManager.trackStatus();
@@ -255,6 +238,23 @@ export default class ChatChannelRow extends Component {
   @action
   stopTrackingStatus() {
     this.#firstDirectMessageUser?.statusManager.stopTrackingStatus();
+  }
+
+  #clearNotifications() {
+    const channel = this.args.channel;
+    if (!channel.currentUserMembership) {
+      return;
+    }
+
+    const lastMessageId = channel.lastMessage?.id;
+    channel.tracking.reset();
+    channel.updateLastViewedAt();
+
+    if (lastMessageId) {
+      this.chatApi
+        .markChannelAsRead(channel.id, lastMessageId)
+        .catch(popupAjaxError);
+    }
   }
 
   <template>

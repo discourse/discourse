@@ -83,20 +83,44 @@ export default class DTimeShortcutPicker extends Component {
     return this.customDate && this.customTime;
   }
 
-  @on("init")
-  _setupPicker() {
-    this.setProperties({
-      userTimezone: this.currentUser.user_option.timezone,
-      hiddenOptions: this.hiddenOptions || [],
-      customOptions: this.customOptions || [],
-      customLabels: this.customLabels || {},
-    });
+  @computed("timeShortcuts", "hiddenOptions", "customLabels", "userTimezone")
+  get options() {
+    this._loadLastUsedCustomDatetime();
 
-    if (this.prefilledDatetime) {
-      this.parsePrefilledDatetime();
+    let options;
+    if (this.timeShortcuts && this.timeShortcuts.length) {
+      options = this.timeShortcuts;
+    } else {
+      options = defaultTimeShortcuts(this.userTimezone);
+    }
+    options = hideDynamicTimeShortcuts(
+      options,
+      this.userTimezone,
+      this.siteSettings
+    );
+
+    let specialOptions = specialShortcutOptions();
+    if (this.lastCustomDate && this.lastCustomTime) {
+      let lastCustom = specialOptions.find(
+        (option) => option.id === TIME_SHORTCUT_TYPES.LAST_CUSTOM
+      );
+      lastCustom.time = this.parsedLastCustomDatetime;
+      lastCustom.timeFormatKey = "dates.long_no_year";
+      lastCustom.hidden = false;
+    }
+    options = options.concat(specialOptions);
+
+    if (this.hiddenOptions.length > 0) {
+      options.forEach((opt) => {
+        if (this.hiddenOptions.includes(opt.id)) {
+          opt.hidden = true;
+        }
+      });
     }
 
-    this._bindKeyboardShortcuts();
+    this._applyCustomLabels(options, this.customLabels);
+    options.forEach((o) => (o.timeFormatted = formatTime(o)));
+    return options;
   }
 
   @observes("prefilledDatetime")
@@ -136,81 +160,12 @@ export default class DTimeShortcutPicker extends Component {
     });
   }
 
-  _loadLastUsedCustomDatetime() {
-    const lastTime = this.keyValueStore.lastCustomTime;
-    const lastDate = this.keyValueStore.lastCustomDate;
-
-    if (lastTime && lastDate) {
-      let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
-
-      if (!parsed.isValid() || parsed < now(this.userTimezone)) {
-        return;
-      }
-
-      this.setProperties({
-        lastCustomDate: lastDate,
-        lastCustomTime: lastTime,
-        parsedLastCustomDatetime: parsed,
-      });
-    }
-  }
-
-  _bindKeyboardShortcuts() {
-    Object.keys(BINDINGS).forEach((shortcut) => {
-      this._itsatrap.bind(shortcut, () => {
-        let binding = BINDINGS[shortcut];
-        this.send(binding.handler, ...binding.args);
-        return false;
-      });
-    });
-  }
-
   @observes("customDate", "customTime")
   customDatetimeChanged() {
     if (!this.customDatetimeFilled) {
       return;
     }
     this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
-  }
-
-  @computed("timeShortcuts", "hiddenOptions", "customLabels", "userTimezone")
-  get options() {
-    this._loadLastUsedCustomDatetime();
-
-    let options;
-    if (this.timeShortcuts && this.timeShortcuts.length) {
-      options = this.timeShortcuts;
-    } else {
-      options = defaultTimeShortcuts(this.userTimezone);
-    }
-    options = hideDynamicTimeShortcuts(
-      options,
-      this.userTimezone,
-      this.siteSettings
-    );
-
-    let specialOptions = specialShortcutOptions();
-    if (this.lastCustomDate && this.lastCustomTime) {
-      let lastCustom = specialOptions.find(
-        (option) => option.id === TIME_SHORTCUT_TYPES.LAST_CUSTOM
-      );
-      lastCustom.time = this.parsedLastCustomDatetime;
-      lastCustom.timeFormatKey = "dates.long_no_year";
-      lastCustom.hidden = false;
-    }
-    options = options.concat(specialOptions);
-
-    if (this.hiddenOptions.length > 0) {
-      options.forEach((opt) => {
-        if (this.hiddenOptions.includes(opt.id)) {
-          opt.hidden = true;
-        }
-      });
-    }
-
-    this._applyCustomLabels(options, this.customLabels);
-    options.forEach((o) => (o.timeFormatted = formatTime(o)));
-    return options;
   }
 
   @action
@@ -272,6 +227,51 @@ export default class DTimeShortcutPicker extends Component {
     if (this.onTimeSelected) {
       this.onTimeSelected(type, dateTime);
     }
+  }
+
+  @on("init")
+  _setupPicker() {
+    this.setProperties({
+      userTimezone: this.currentUser.user_option.timezone,
+      hiddenOptions: this.hiddenOptions || [],
+      customOptions: this.customOptions || [],
+      customLabels: this.customLabels || {},
+    });
+
+    if (this.prefilledDatetime) {
+      this.parsePrefilledDatetime();
+    }
+
+    this._bindKeyboardShortcuts();
+  }
+
+  _loadLastUsedCustomDatetime() {
+    const lastTime = this.keyValueStore.lastCustomTime;
+    const lastDate = this.keyValueStore.lastCustomDate;
+
+    if (lastTime && lastDate) {
+      let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
+
+      if (!parsed.isValid() || parsed < now(this.userTimezone)) {
+        return;
+      }
+
+      this.setProperties({
+        lastCustomDate: lastDate,
+        lastCustomTime: lastTime,
+        parsedLastCustomDatetime: parsed,
+      });
+    }
+  }
+
+  _bindKeyboardShortcuts() {
+    Object.keys(BINDINGS).forEach((shortcut) => {
+      this._itsatrap.bind(shortcut, () => {
+        let binding = BINDINGS[shortcut];
+        this.send(binding.handler, ...binding.args);
+        return false;
+      });
+    });
   }
 
   _applyCustomLabels(options, customLabels) {

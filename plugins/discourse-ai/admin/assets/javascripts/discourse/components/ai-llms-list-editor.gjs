@@ -92,52 +92,6 @@ export default class AiLlmsListEditor extends Component {
   @service adminPluginNavManager;
   @service router;
 
-  formatResetDate(dateString) {
-    const resetDate = new Date(dateString);
-    const options = {
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: "UTC",
-    };
-    return resetDate.toLocaleString(undefined, options);
-  }
-
-  @action
-  modelDescription(llm) {
-    // this is a bit of an odd object, it can be an llm model or a preset model
-    // handle both flavors
-
-    // in the case of model
-    let key;
-    if (typeof llm.id === "number") {
-      key = `${llm.provider}-${llm.name}`;
-    } else {
-      // case of preset
-      key = llm.id.replace(/[.:\/]/g, "-");
-    }
-
-    key = `discourse_ai.llms.model_description.${key}`;
-    if (I18n.lookup(key, { ignoreMissing: true })) {
-      return i18n(key);
-    }
-    return "";
-  }
-
-  @action
-  preseededDescription(llm) {
-    if (isPreseeded(llm)) {
-      return i18n("discourse_ai.llms.preseeded_model_description", {
-        model: llm.name,
-      });
-    }
-  }
-
-  sanitizedTranslationKey(id) {
-    return id.replace(/\./g, "-");
-  }
-
   get hasLlmElements() {
     return this.args.llms.content.length !== 0;
   }
@@ -185,6 +139,52 @@ export default class AiLlmsListEditor extends Component {
     });
 
     return options;
+  }
+
+  formatResetDate(dateString) {
+    const resetDate = new Date(dateString);
+    const options = {
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "UTC",
+    };
+    return resetDate.toLocaleString(undefined, options);
+  }
+
+  @action
+  modelDescription(llm) {
+    // this is a bit of an odd object, it can be an llm model or a preset model
+    // handle both flavors
+
+    // in the case of model
+    let key;
+    if (typeof llm.id === "number") {
+      key = `${llm.provider}-${llm.name}`;
+    } else {
+      // case of preset
+      key = llm.id.replace(/[.:\/]/g, "-");
+    }
+
+    key = `discourse_ai.llms.model_description.${key}`;
+    if (I18n.lookup(key, { ignoreMissing: true })) {
+      return i18n(key);
+    }
+    return "";
+  }
+
+  @action
+  preseededDescription(llm) {
+    if (isPreseeded(llm)) {
+      return i18n("discourse_ai.llms.preseeded_model_description", {
+        model: llm.name,
+      });
+    }
+  }
+
+  sanitizedTranslationKey(id) {
+    return id.replace(/\./g, "-");
   }
 
   @action

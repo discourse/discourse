@@ -90,6 +90,14 @@ export default class UserFieldsValidationHelper {
     this.initializeUserFields();
   }
 
+  get userFieldsValidation() {
+    if (!this.userFields) {
+      return validResult();
+    }
+    const invalidUserField = this.userFields.find((f) => f.validation.failed);
+    return invalidUserField ? invalidUserField.validation : validResult();
+  }
+
   initializeUserFields() {
     let userFields = this.getUserFields();
     if (userFields) {
@@ -106,13 +114,5 @@ export default class UserFieldsValidationHelper {
           })
       );
     }
-  }
-
-  get userFieldsValidation() {
-    if (!this.userFields) {
-      return validResult();
-    }
-    const invalidUserField = this.userFields.find((f) => f.validation.failed);
-    return invalidUserField ? invalidUserField.validation : validResult();
   }
 }

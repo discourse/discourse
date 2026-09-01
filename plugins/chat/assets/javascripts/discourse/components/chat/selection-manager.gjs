@@ -47,6 +47,13 @@ export default class ChatSelectionManager extends Component {
     });
   }
 
+  get deleteButtonTitle() {
+    return i18n("chat.selection.delete", {
+      selectionCount: this.selectedMessageIds.length,
+      totalCount: DELETE_COUNT_LIMIT,
+    });
+  }
+
   canDeleteMessage(id) {
     const message = this.args.messagesManager?.findMessage(id);
 
@@ -62,13 +69,6 @@ export default class ChatSelectionManager extends Component {
         message.channel?.canModifyMessages?.(this.currentUser)
       );
     }
-  }
-
-  get deleteButtonTitle() {
-    return i18n("chat.selection.delete", {
-      selectionCount: this.selectedMessageIds.length,
-      totalCount: DELETE_COUNT_LIMIT,
-    });
   }
 
   @bind
