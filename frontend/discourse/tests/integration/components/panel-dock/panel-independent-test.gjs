@@ -217,6 +217,12 @@ module(
         clientX: 300,
         pointerId: 7,
       });
+      assert
+        .dom(document.body)
+        .hasClass(
+          "d-resizing-ew",
+          "the gesture holds the resize cursor on the body"
+        );
       await triggerEvent(resizer, "pointerup", {
         button: 0,
         clientX: 700,
@@ -247,6 +253,12 @@ module(
         [7],
         "the matching pointer capture is released"
       );
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "d-resizing-ew",
+          "the cursor is released with the gesture"
+        );
     });
 
     test("a second pointer cannot replace an active drag or strand its capture", async function (assert) {

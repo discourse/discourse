@@ -36,7 +36,6 @@
       // inward once the panel is docked to the right.
       inset-inline-end: calc(var(--space-2) / -2);
       width: var(--space-2);
-      cursor: col-resize;
     }
   }
 
@@ -51,7 +50,6 @@
       inset-block: 0;
       inset-inline-start: calc(var(--space-2) / -2);
       width: var(--space-2);
-      cursor: col-resize;
     }
   }
 
@@ -68,7 +66,6 @@
       inset-block-start: calc(var(--space-2) / -2);
       height: var(--space-2);
       width: auto;
-      cursor: row-resize;
     }
   }
 

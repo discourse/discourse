@@ -5,10 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { trustHTML } from "@ember/template";
+import booleanString from "discourse/helpers/boolean-string";
+import type { Side } from "discourse/lib/geometry";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { eq, or } from "discourse/truth-helpers";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import { i18n } from "discourse-i18n";
 
 const STORE_NAMESPACE = "d_panel_dock_";
@@ -181,6 +183,15 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   }
 
   /**
+   * The separator's `@side` — the anchored edge along the active axis, which
+   * is the dock side itself. It collapses to two values because a bottom dock
+   * anchors at its block-end edge, so only a start dock resolves to `"start"`.
+   */
+  get anchoredSide(): Side {
+    return this._side === "start" ? "start" : "end";
+  }
+
+  /**
    * The sizes, as custom properties for the stylesheet to consume.
    *
    * Custom properties rather than inline dimensions keep the sizing rules in
@@ -335,7 +346,10 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
                           "d-panel-dock__dock-button"
                           (concat "--" side)
                         }}
-                        aria-pressed={{if (this.isSide side) "true" "false"}}
+                        aria-pressed={{booleanString
+                          (this.isSide side)
+                          omitFalse=false
+                        }}
                         aria-label={{i18n (concat "panel_dock.dock_" side)}}
                         title={{i18n (concat "panel_dock.dock_" side)}}
                         {{on "click" (fn this.setSide side)}}
@@ -399,25 +413,17 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
             {{yield to="body"}}
           </div>
 
-          <div
+          <DResizeSeparator
             class="d-panel-dock__resizer"
-            role="separator"
-            aria-orientation={{if this.isBottom "horizontal" "vertical"}}
-            aria-label={{i18n "panel_dock.resize"}}
-            aria-valuenow={{this.size}}
-            aria-valuemin={{this.minSize}}
-            aria-valuemax={{this.maxSize}}
-            tabindex="0"
-            {{dResizeEdge
-              value=this.size
-              min=this.minSize
-              max=this.maxSize
-              axis=(if this.isBottom "vertical" "horizontal")
-              side=(if (this.isSide "start") "start" "end")
-              onResize=this.previewSize
-              onResizeEnd=this.commitSize
-            }}
-          ></div>
+            @axis={{if this.isBottom "vertical" "horizontal"}}
+            @side={{this.anchoredSide}}
+            @value={{this.size}}
+            @min={{this.minSize}}
+            @max={{this.maxSize}}
+            @label={{i18n "panel_dock.resize"}}
+            @onResize={{this.previewSize}}
+            @onResizeEnd={{this.commitSize}}
+          />
         </div>
       </div>
     {{/if}}

@@ -138,6 +138,13 @@ module("Integration | Component | DPanelDock", function (hooks) {
     );
 
     assert.dom("[data-test-panel='b']").exists("the controlled tab renders");
+    assert
+      .dom("[role='tab'][aria-selected='true']")
+      .hasAttribute(
+        "tabindex",
+        "0",
+        "the tab stop seeds on the selected tab, not the first"
+      );
 
     await click(document.querySelectorAll("[role='tab']")[0]);
     assert.deepEqual(activated, ["alpha"], "a click still reports");

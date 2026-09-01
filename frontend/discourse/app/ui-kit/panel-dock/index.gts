@@ -4,8 +4,10 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type { ComponentLike } from "@glint/template";
+import booleanString from "discourse/helpers/boolean-string";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import PanelDockChassis, {
   type DockSide,
 } from "discourse/ui-kit/panel-dock/-internals/panel";
@@ -57,7 +59,6 @@ interface DPanelDockSignature {
 }
 
 type RenderedTab = DPanelDockTab & {
-  index: number;
   panelId: string;
   tabId: string;
 };
@@ -66,20 +67,19 @@ type RenderedTab = DPanelDockTab & {
  * A context-identified, tabbed panel docked to a viewport edge.
  *
  * Tab selection is internal unless `@activeTab` is supplied. Keyboard focus
- * follows the manual-activation tabs pattern, so arrow keys move focus and
- * Enter or Space activates the focused tab.
+ * follows the manual-activation tabs pattern: the roving-focus modifier moves
+ * focus with the arrow keys and activation stays explicit, on Enter, Space or
+ * a click.
  */
 export default class DPanelDock extends Component<DPanelDockSignature> {
   // Deliberately not seeded from args: reading them during construction
   // consumes upstream tracked state, and the getter already falls back to
   // the first tab while this holds no live id.
   @tracked _activeTab: string | undefined;
-  @tracked _focusedTabIndex = 0;
 
   get tabs(): RenderedTab[] {
-    return this.args.tabs.map((tab, index) => ({
+    return this.args.tabs.map((tab) => ({
       ...tab,
-      index,
       panelId: `d-panel-dock-${this.args.context}-panel-${tab.id}`,
       tabId: `d-panel-dock-${this.args.context}-tab-${tab.id}`,
     }));
@@ -111,18 +111,12 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
     return this.activeTab?.tabId;
   }
 
-  get focusedTabIndex() {
-    return Math.min(this._focusedTabIndex, Math.max(this.tabs.length - 1, 0));
-  }
-
   get hasMultipleTabs() {
     return this.tabs.length > 1;
   }
 
   @action
-  activateTab(id: string, index: number) {
-    this._focusedTabIndex = index;
-
+  activateTab(id: string) {
     if (this.args.activeTab === undefined) {
       this._activeTab = id;
     }
@@ -131,43 +125,11 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
   }
 
   @action
-  focusTab(index: number) {
-    this._focusedTabIndex = index;
-  }
-
-  @action
-  handleTabKeydown(id: string, index: number, event: KeyboardEvent) {
-    let targetIndex: number | undefined;
-
-    switch (event.key) {
-      case "ArrowLeft":
-        targetIndex = (index - 1 + this.tabs.length) % this.tabs.length;
-        break;
-      case "ArrowRight":
-        targetIndex = (index + 1) % this.tabs.length;
-        break;
-      case "Home":
-        targetIndex = 0;
-        break;
-      case "End":
-        targetIndex = this.tabs.length - 1;
-        break;
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        this.activateTab(id, index);
-        return;
-      default:
-        return;
+  activateFromElement(item: HTMLElement) {
+    const tab = this.tabs.find((candidate) => candidate.tabId === item.id);
+    if (tab) {
+      this.activateTab(tab.id);
     }
-
-    event.preventDefault();
-    this._focusedTabIndex = targetIndex;
-
-    const tablist = (event.currentTarget as HTMLElement).parentElement;
-    tablist
-      ?.querySelectorAll<HTMLButtonElement>("[role='tab']")
-      [targetIndex]?.focus();
   }
 
   <template>
@@ -186,19 +148,26 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
             class="d-panel-dock__tabs"
             role="tablist"
             aria-label={{i18n "panel_dock.tabs"}}
+            {{dRovingFocus
+              orientation="horizontal"
+              itemSelector="[role='tab']"
+              wrap=true
+              itemsKey=@tabs
+              onActivate=this.activateFromElement
+            }}
           >
-            {{#each this.tabs as |tab|}}
+            {{#each this.tabs key="id" as |tab|}}
               <button
                 id={{tab.tabId}}
                 type="button"
                 class="d-panel-dock__tab"
                 role="tab"
                 aria-controls={{tab.panelId}}
-                aria-selected={{if (eq tab.id this.activeTabId) "true" "false"}}
-                tabindex={{if (eq tab.index this.focusedTabIndex) "0" "-1"}}
-                {{on "focus" (fn this.focusTab tab.index)}}
-                {{on "keydown" (fn this.handleTabKeydown tab.id tab.index)}}
-                {{on "click" (fn this.activateTab tab.id tab.index)}}
+                aria-selected={{booleanString
+                  (eq tab.id this.activeTabId)
+                  omitFalse=false
+                }}
+                {{on "click" (fn this.activateTab tab.id)}}
               >
                 {{tab.label}}
               </button>
