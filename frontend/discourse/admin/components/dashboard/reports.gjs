@@ -16,7 +16,9 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import { eq, gt } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
@@ -56,6 +58,10 @@ class AnimateReflow extends Modifier {
   modify(element, [signature], { disabled }) {
     if (disabled) {
       this.previousRect = null;
+      return;
+    }
+
+    if (prefersReducedMotion() || isTesting()) {
       return;
     }
 

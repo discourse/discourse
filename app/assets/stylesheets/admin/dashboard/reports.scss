@@ -65,7 +65,10 @@
     width: 12px;
     height: 12px;
     opacity: 0.35;
-    transition: opacity 0.15s ease;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity 0.15s ease;
+    }
 
     &.--se {
       /*! rtl:ignore */
