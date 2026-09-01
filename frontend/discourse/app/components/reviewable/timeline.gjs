@@ -8,6 +8,10 @@ import ReviewableNoteForm from "discourse/components/reviewable/note-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
+import {
+  penaltyIcon,
+  penaltyPastTense,
+} from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { and, eq } from "discourse/truth-helpers";
@@ -141,6 +145,25 @@ export default class ReviewableTimeline extends Component {
         }
       });
     }
+
+    this.args.reviewable.author_penalties?.forEach((penalty) => {
+      if (!penalty.from_this_target || !penalty.applied_at) {
+        return;
+      }
+
+      events.push({
+        type: `author_${penaltyPastTense(penalty.kind)}`,
+        date: penalty.applied_at,
+        user: penalty.applied_by,
+        icon: penaltyIcon(penalty.kind),
+        titleKey: penalty.automatic
+          ? `review.timeline.author_${penaltyPastTense(penalty.kind)}_automatically`
+          : `review.timeline.author_${penaltyPastTense(penalty.kind)}_by`,
+        description: penalty.reason
+          ? trustHTML(sanitize(penalty.reason))
+          : null,
+      });
+    });
 
     // Add notes events
     this.args.reviewable.reviewable_notes?.forEach((note) => {

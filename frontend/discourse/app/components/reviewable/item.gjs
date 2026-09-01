@@ -815,6 +815,7 @@ export default class ReviewableItem extends Component {
                       @bundle={{bundle}}
                       @performAction={{this.perform}}
                       @reviewableUpdating={{this.disabled}}
+                      @authorPenalties={{@reviewable.author_penalties}}
                     />
                   {{/each}}
 

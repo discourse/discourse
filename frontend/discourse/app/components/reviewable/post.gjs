@@ -60,7 +60,10 @@ export default class ReviewablePost extends Component {
       <div class="review-item__meta-label">{{this.userLabel}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @user={{@reviewable.target_created_by}}
+          @penalties={{@reviewable.author_penalties}}
+        />
       </div>
     </div>
 

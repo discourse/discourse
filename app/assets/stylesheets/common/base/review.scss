@@ -196,6 +196,10 @@
     border-bottom: 1px solid var(--content-border-color);
   }
 
+  .reviewable-penalty-icon {
+    color: var(--danger);
+  }
+
   &__meta-content {
     display: grid;
     gap: var(--space-4);

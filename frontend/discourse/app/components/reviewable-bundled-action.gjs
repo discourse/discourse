@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import { penaltyEffectDescription } from "discourse/lib/reviewable-penalty";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
@@ -13,6 +14,26 @@ export default class ReviewableBundledAction extends Component {
 
   get multiple() {
     return this.args.bundle.actions.length > 1;
+  }
+
+  get bundleActions() {
+    return this.args.bundle.actions.map((bundledAction) => {
+      const effect = penaltyEffectDescription(
+        bundledAction,
+        this.args.authorPenalties
+      );
+
+      if (!effect) {
+        return bundledAction;
+      }
+
+      return {
+        ...bundledAction,
+        description: [bundledAction.description, effect]
+          .filter(Boolean)
+          .join(" "),
+      };
+    });
   }
 
   get first() {
@@ -43,7 +64,7 @@ export default class ReviewableBundledAction extends Component {
       <DropdownSelectBox
         @nameProperty="label"
         @valueProperty="action_name"
-        @content={{@bundle.actions}}
+        @content={{this.bundleActions}}
         @onChange={{this.perform}}
         @options={{hash
           showCaret=true
