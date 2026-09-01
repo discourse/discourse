@@ -502,8 +502,13 @@ class SessionController < ApplicationController
     # the behavior for emails we refuse to deliver to.
     return render json: success_json if login_code_honeypot_fails?
 
-    EmailLoginCode::Request.call(service_params) do |result|
+    EmailLoginCode::Request.call(
+      service_params.deep_merge(ip_address: request.remote_ip),
+    ) do |result|
       on_success { render json: success_json }
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
@@ -1029,6 +1034,15 @@ class SessionController < ApplicationController
     { error: I18n.t("email_login_code.invalid_code") }
   end
 
+  def login_code_registration_ip_limit_error
+    {
+      error:
+        I18n.t(
+          "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+        ),
+    }
+  end
+
   def login_code_account_error(user)
     ip_error =
       user.errors.find do |error|
@@ -1036,11 +1050,7 @@ class SessionController < ApplicationController
           error.type.in?(%i[blocked max_new_accounts_per_registration_ip])
       end
 
-    if ip_error
-      { error: I18n.t("email_login_code.account_creation_failed") }
-    else
-      invalid_login_code
-    end
+    ip_error ? { error: ip_error.message } : invalid_login_code
   end
 
   def invalid_credentials
