@@ -17,8 +17,8 @@ class Demon::DiscourseVips < Demon::Base
     raise
   end
 
-  def self.after_fork
-    demons&.each_value(&:after_fork)
+  def self.release_inherited_worker
+    demons&.each_value(&:release_inherited_worker)
   end
 
   def run
@@ -47,7 +47,7 @@ class Demon::DiscourseVips < Demon::Base
     delete_pid_file(worker_pid)
   end
 
-  def after_fork
+  def release_inherited_worker
     @worker_process&.discard
     @worker_process = nil
   end

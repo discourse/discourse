@@ -2,9 +2,10 @@
 # frozen_string_literal: true
 
 ENV["RAILS_ENV"] ||= "test"
-ENV["DISCOURSE_ENABLE_VIPS_IMAGE_PROCESSING"] = "true"
 
 require_relative "../config/environment"
+
+GlobalSetting.define_singleton_method(:enable_vips_image_processing) { true }
 
 require "base64"
 require "chunky_png"

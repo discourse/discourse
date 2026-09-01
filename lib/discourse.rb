@@ -1072,7 +1072,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    Demon::DiscourseVips.after_fork if defined?(Demon::DiscourseVips)
+    Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
 
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork

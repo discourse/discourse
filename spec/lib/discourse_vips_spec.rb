@@ -7,6 +7,28 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".dominant_color" do
+    def dominant_color(filename)
+      described_class.dominant_color(input_path: file_from_fixtures(filename).path, timeout: 5)
+    end
+
+    it "ignores RGB values in fully transparent pixels" do
+      expect(dominant_color("dominant-color-hidden-rgb.png")).to eq("FF0000")
+    end
+
+    it "weights partially transparent pixels by their alpha" do
+      expect(dominant_color("dominant-color-semitransparent.png")).to eq("AA0055")
+    end
+
+    it "returns black for a fully transparent image" do
+      expect(dominant_color("dominant-color-transparent.png")).to eq("000000")
+    end
+
+    it "normalizes floating-point JXL color values" do
+      expect(dominant_color("dominant-color-float.jxl")).to eq("89BCFF")
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version

@@ -1000,7 +1000,7 @@ RSpec.describe Upload do
 
       color = high_color_image.dominant_color(calculate_if_missing: true)
 
-      expect(color).to match(/\A[0-9A-F]{6}\z/)
+      expect(color).to eq("00A0F0")
       expect(high_color_image.dominant_color).to eq(color)
     end
 

@@ -111,22 +111,40 @@ class DiscourseVipsWorker
             VipsForeignLoadJxl
           ],
         )
-        thumbnail =
+        components =
           begin
-            Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+            image = Vips::Image.new_from_file(input_path, access: :sequential)
+            if image.has_alpha?
+              alpha_weighted_components(normalize_color(image))
+            else
+              thumbnail = Vips::Image.thumbnail(input_path, 1, height: 1, size: :force)
+              normalize_color(thumbnail).getpoint(0, 0).first(3).map(&:round)
+            end
           rescue Vips::Error => error
             raise InvalidImage, error.message
           end
-        components = thumbnail.cast(:uchar, shift: true).getpoint(0, 0).map(&:round)
-        if thumbnail.has_alpha?
-          alpha = components.pop / 255.0
-          components.map! { |component| (component * alpha).round }
-        end
-        components = [components.first] * 3 if thumbnail.bands < 3
-        format("%02X%02X%02X", *components.first(3))
+        format("%02X%02X%02X", *components)
       end
     end
     private_class_method :dominant_color
+
+    def self.normalize_color(image)
+      image = image.colourspace(:srgb)
+      image *= 255 if %i[float double].include?(image.format)
+      image.cast(:uchar, shift: true)
+    end
+    private_class_method :normalize_color
+
+    def self.alpha_weighted_components(image)
+      alpha = image[image.bands - 1]
+      weighted_colors = image.extract_band(0, n: 3) * alpha
+      statistics = alpha.bandjoin(weighted_colors).stats
+      alpha_sum = statistics.getpoint(2, 1).first
+      return [0, 0, 0] if alpha_sum.zero?
+
+      3.times.map { |band| (statistics.getpoint(2, band + 2).first / alpha_sum).round }
+    end
+    private_class_method :alpha_weighted_components
 
     def self.block_loaders(allowed: [])
       Vips.block_untrusted(true)
