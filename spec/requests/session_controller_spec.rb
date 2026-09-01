@@ -960,6 +960,29 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to be_nil
       end
 
+      it "renders the account limit error when the request IP has created too many accounts" do
+        ip_address = "192.0.2.1"
+        SiteSetting.max_new_accounts_per_registration_ip = 2
+        2.times { Fabricate(:user, ip_address:, trust_level: TrustLevel[0]) }
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+             },
+             env: {
+               REMOTE_ADDR: ip_address,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(
+          I18n.t("email_login_code.account_creation_failed"),
+        )
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
       context "when required signup fields exist" do
         fab!(:user_field)
 
