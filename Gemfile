@@ -230,10 +230,7 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
-gem "landlock",
-    git: "https://github.com/discourse/ruby-landlock.git",
-    branch: "tgxworld/capture-fork",
-    require: false
+gem "landlock", require: false
 
 gem "sshkey", require: false
 
