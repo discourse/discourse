@@ -36,18 +36,18 @@ RSpec.describe "JSON:API queries", type: :request do
 
   fab!(:analysts) { Fabricate(:group, name: "analysts") }
 
-  before { [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) }
-           SiteSetting.data_explorer_enabled = true
-           sign_in(user)
-           get path, params: query_parameters
-   }
+  before do
+    [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) }
+    SiteSetting.data_explorer_enabled = true
+    sign_in(user)
+    get path, params: query_parameters
+  end
 
   let(:base) { "http://test.localhost/api/data-explorer" }
   let(:root) { "http://test.localhost/api" }
   let(:query_parameters) { {} }
   let(:user) { admin }
   let(:parsed_body) { JSON.parse(response.body) }
-
 
   shared_examples "a request only for admins" do
     context "when the user is not an admin" do

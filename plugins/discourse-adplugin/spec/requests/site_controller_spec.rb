@@ -28,53 +28,47 @@ RSpec.describe SiteController do
       category_ids: [],
     )
     AdPlugin::HouseAd.create(
-          name: "logged-in-ad-with-category",
-          html: "<div>LOGGED IN WITH CATEGORY</div>",
-          visible_to_logged_in_users: true,
-          visible_to_anons: false,
-          group_ids: [group.id],
-          category_ids: [private_category.id],
-        )
+      name: "logged-in-ad-with-category",
+      html: "<div>LOGGED IN WITH CATEGORY</div>",
+      visible_to_logged_in_users: true,
+      visible_to_anons: false,
+      group_ids: [group.id],
+      category_ids: [private_category.id],
+    )
 
     AdPlugin::HouseAd.create(
-          name: "logged-in-ad-with-group",
-          html: "<div>LOGGED IN WITH GROUP</div>",
-          visible_to_logged_in_users: true,
-          visible_to_anons: false,
-          group_ids: [group_2.id],
-          category_ids: [],
-        )
+      name: "logged-in-ad-with-group",
+      html: "<div>LOGGED IN WITH GROUP</div>",
+      visible_to_logged_in_users: true,
+      visible_to_anons: false,
+      group_ids: [group_2.id],
+      category_ids: [],
+    )
 
     AdPlugin::HouseAd.create(
-          name: "everyone-ad",
-          html: "<div>EVERYONE</div>",
-          visible_to_logged_in_users: true,
-          visible_to_anons: true,
-          group_ids: [],
-          category_ids: [],
-        )
+      name: "everyone-ad",
+      html: "<div>EVERYONE</div>",
+      visible_to_logged_in_users: true,
+      visible_to_anons: true,
+      group_ids: [],
+      category_ids: [],
+    )
 
     AdPlugin::HouseAd.create(
-          name: "everyone-group-ad",
-          html: "<div>EVERYONE</div>",
-          visible_to_logged_in_users: true,
-          visible_to_anons: false,
-          group_ids: [Group::AUTO_GROUPS[:everyone]],
-          category_ids: [],
-        )
+      name: "everyone-group-ad",
+      html: "<div>EVERYONE</div>",
+      visible_to_logged_in_users: true,
+      visible_to_anons: false,
+      group_ids: [Group::AUTO_GROUPS[:everyone]],
+      category_ids: [],
+    )
 
     enable_current_plugin
     AdPlugin::HouseAdSetting.update(
       "topic_list_top",
       "logged-in-ad|anon-ad|everyone-ad|logged-in-ad-with-category|logged-in-ad-with-group|everyone-group-ad",
     )
-
   end
-
-
-
-
-
 
   describe "#site" do
     context "when logged in" do

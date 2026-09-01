@@ -364,7 +364,6 @@ RSpec.describe Stylesheet::Manager do
       expect(digest1).not_to eq(digest2)
     end
 
-
     it "can correctly account for theme uploads in digest" do
       theme = Fabricate(:theme)
 

@@ -22,9 +22,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
         it "doesn't duplicate records when there more than one summary type" do
           Fabricate(:ai_summary, target: topic_ai_gist.target)
 
-          expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(
-            topic_ai_gist.target_id,
-          )
+          expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(topic_ai_gist.target_id)
         end
 
         it "doesn't exclude records when the topic has a single different summary" do
@@ -82,8 +80,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
         it "selects the localized gist and respects the automatic-translation preference" do
           topic_ai_gist.target.update!(locale: "en")
-          english_gist =
-            topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
+          english_gist = topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
           japanese_gist =
             Fabricate(
               :topic_ai_gist,

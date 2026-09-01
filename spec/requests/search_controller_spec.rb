@@ -31,20 +31,21 @@ RSpec.describe SearchController do
       Discourse.redis.flushdb
     end
 
-
     after { Discourse.redis.flushdb }
 
     context "when overloaded" do
-      before do
-        global_setting :disable_search_queue_threshold, 0.2
-        freeze_time 0.3.seconds.from_now
-      end
-
-      let! :start_time do
+      let(:start_time) do
         freeze_time
         Time.now
       end
 
+      let(:current_time) { freeze_time 0.3.seconds.from_now }
+
+      before do
+        global_setting :disable_search_queue_threshold, 0.2
+        start_time
+        current_time
+      end
 
       it "errors on #query" do
         get "/search/query.json",

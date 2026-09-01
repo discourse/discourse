@@ -15,7 +15,6 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
     Fabricate(:topic_user, user: user, topic: post_2.topic)
   end
 
-
   # This and reaction_user_2 use the ReactionManager so the proper PostActionCreator
   # records are created, rather than building this all manually.
   let!(:reaction_user) do

@@ -127,18 +127,18 @@ RSpec.describe WebHook do
         fab!(:wildcard_hook, :wildcard_web_hook)
 
         it "enqueues hooks with ids" do
-            WebHook.enqueue_hooks(:post, :post_created)
+          WebHook.enqueue_hooks(:post, :post_created)
 
-            job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
+          job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
-            expect(job_args["web_hook_id"]).to eq(post_hook.id)
-            expect(job_args["event_type"]).to eq("post")
+          expect(job_args["web_hook_id"]).to eq(post_hook.id)
+          expect(job_args["event_type"]).to eq("post")
 
-            job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+          job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-            expect(job_args["web_hook_id"]).to eq(wildcard_hook.id)
-            expect(job_args["event_type"]).to eq("post")
-          end
+          expect(job_args["web_hook_id"]).to eq(wildcard_hook.id)
+          expect(job_args["event_type"]).to eq("post")
+        end
       end
     end
   end

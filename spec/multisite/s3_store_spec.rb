@@ -208,7 +208,6 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
       s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "etag"))
     end
 
-
     describe "when secure attachments are enabled" do
       it "returns signed URL with correct path" do
         test_multisite_connection("default") do

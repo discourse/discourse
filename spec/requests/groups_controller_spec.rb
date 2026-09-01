@@ -1028,9 +1028,7 @@ RSpec.describe GroupsController do
         UserCustomField.create!(user_id: user.id, name: user_field_name, value: "A custom field")
         sign_in(user)
         SiteSetting.public_user_custom_fields = user_field_name
-
       end
-
 
       it "shows the custom fields" do
         get "/groups/#{group.name}/members.json", params: { include_custom_fields: true }

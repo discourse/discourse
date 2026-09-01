@@ -39,9 +39,7 @@ RSpec.describe Compression::Engine do
       end
     end
 
-    before do
-      compressed_path
-    end
+    before { compressed_path }
 
     context "when working with zip files" do
       let(:extension) { ".zip" }

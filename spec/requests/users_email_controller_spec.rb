@@ -284,10 +284,7 @@ RSpec.describe UsersEmailController do
     it "raises an error when new email domain is present in blocked_email_domains site setting" do
       SiteSetting.blocked_email_domains = "mailinator.com"
 
-      put "/u/#{user.username}/preferences/email.json",
-          params: {
-            email: "not_good@mailinator.com",
-          }
+      put "/u/#{user.username}/preferences/email.json", params: { email: "not_good@mailinator.com" }
       expect(response).to_not be_successful
     end
 

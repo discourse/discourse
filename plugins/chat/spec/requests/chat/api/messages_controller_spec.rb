@@ -316,9 +316,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           )
         end
 
-        let(:thread) do
-          Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
-        end
+        let(:thread) { Fabricate(:chat_thread, channel: chat_channel, original_message: message_1) }
 
         it "sends a message for regular user when staff-only is disabled and they are following channel" do
           expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
@@ -343,7 +341,6 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           expect(response.status).to eq(200)
           expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
         end
-
 
         it "does not update the last_read_message_id for the user who sent the message" do
           post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }

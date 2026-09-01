@@ -18,6 +18,40 @@ RSpec.describe Email::Receiver, "#process!" do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  shared_examples "creates topic with forwarded message as quote" do |destination, address|
+    it "creates topic with forwarded message as quote" do
+      expect { process(:forwarded_email_1) }.to change(Topic, :count)
+
+      topic = Topic.last
+      if destination == :category
+        expect(topic.category).to eq(Category.where(email_in: address).first)
+      else
+        expect(topic.archetype).to eq(Archetype.private_message)
+        expect(topic.allowed_groups).to eq(Group.where(incoming_email: address))
+      end
+
+      post = Post.last
+
+      expect(post.user.email).to eq("ba@bar.com")
+      expect(post.raw).to eq(<<~RAW.chomp)
+        @team, can you have a look at this email below?
+
+        [quote]
+        From: Some One &lt;some@one\\.com&gt;
+        To: Ba Bar &lt;ba@bar\\.com&gt;
+        Date: Mon, 1 Dec 2016 00:13:37 \\+0100
+        Subject: Discoursing much?
+
+        Hello Ba Bar,
+
+        Discoursing much today?
+
+        XoXo
+        [/quote]
+      RAW
+    end
+  end
+
   shared_examples "does not create staged users" do |email_name, expected_exception|
     it "does not create staged users" do
       staged_user_count = User.where(staged: true).count
@@ -63,9 +97,7 @@ RSpec.describe Email::Receiver, "#process!" do
   end
 
   context "when the body is blank" do
-    include_examples "does not create staged users",
-                     :no_body,
-                     Email::Receiver::NoBodyDetectedError
+    include_examples "does not create staged users", :no_body, Email::Receiver::NoBodyDetectedError
   end
 
   context "when unsubscribe via email is not allowed" do
@@ -156,9 +188,7 @@ RSpec.describe Email::Receiver, "#process!" do
         fab!(:category) do
           Fabricate(:category, email_in: "team@bar.com", email_in_allow_strangers: true)
         end
-        include_examples "creates topic with forwarded message as quote",
-                         :category,
-                         "team@bar.com"
+        include_examples "creates topic with forwarded message as quote", :category, "team@bar.com"
       end
 
       context "with a category which doesn't allow strangers" do
@@ -185,7 +215,6 @@ RSpec.describe Email::Receiver, "#process!" do
     fab!(:user2) { Fabricate(:user, email: "someone_else@bar.com") }
     fab!(:topic) { create_topic(category: category, user: user) }
     fab!(:post) { create_post(topic: topic, user: user) }
-
 
     context "when the email address isn't matching the one we sent the notification to" do
       include_examples "does not create staged users",

@@ -448,9 +448,11 @@ describe DiscourseAutomation::Scriptable do
         user_1 = User.find_by_email(email_1)
         user_2 = User.find_by_email(email_2)
 
-        expect(
-          Topic.private_messages.first.topic_allowed_users.pluck(:user_id),
-        ).to contain_exactly(Discourse.system_user.id, user_1.id, user_2.id)
+        expect(Topic.private_messages.first.topic_allowed_users.pluck(:user_id)).to contain_exactly(
+          Discourse.system_user.id,
+          user_1.id,
+          user_2.id,
+        )
       end
     end
 
@@ -479,9 +481,10 @@ describe DiscourseAutomation::Scriptable do
         }.to change { Topic.private_messages.count }.by(1)
 
         new_user = User.find_by_email("john@doe.com")
-        expect(
-          Topic.private_messages.first.topic_allowed_users.pluck(:user_id),
-        ).to contain_exactly(Discourse.system_user.id, new_user.id)
+        expect(Topic.private_messages.first.topic_allowed_users.pluck(:user_id)).to contain_exactly(
+          Discourse.system_user.id,
+          new_user.id,
+        )
       end
     end
   end

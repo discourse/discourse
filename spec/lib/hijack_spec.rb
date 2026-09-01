@@ -35,9 +35,7 @@ RSpec.describe Hijack do
       end
     end
 
-    before do
-      Middleware::RequestTracker.register_detailed_request_logger logger
-    end
+    before { Middleware::RequestTracker.register_detailed_request_logger logger }
 
     after { Middleware::RequestTracker.unregister_detailed_request_logger logger }
 

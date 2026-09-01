@@ -29,11 +29,6 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     sign_in(current_user)
   end
 
-
-
-
-
-
   fab!(:leaderboard) do
     Fabricate(:gamification_leaderboard, name: "test", created_by_id: current_user.id)
   end
@@ -64,7 +59,6 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
       default_period: 5,
     )
   end
-
 
   describe "#respond" do
     it "returns users and their calculated scores" do

@@ -30,7 +30,6 @@ describe Chat::MessageBookmarkable do
   end
   let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: message2) }
 
-
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
       expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(

@@ -324,9 +324,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       context "when auth mode is unsupported" do
         before do
           update_workflow_node(workflow, "webhook-1") do |node|
-            node.merge(
-              "parameters" => node["parameters"].merge("authentication" => "unknown_mode"),
-            )
+            node.merge("parameters" => node["parameters"].merge("authentication" => "unknown_mode"))
           end
           publish_workflow!(workflow)
         end

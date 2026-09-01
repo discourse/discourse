@@ -225,8 +225,7 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
         Fabricate(
           :post,
           topic:,
-          cooked:
-            '<p><img src="/images/emoji/twitter/smile.png" class="emoji" alt=":smile:"></p>',
+          cooked: '<p><img src="/images/emoji/twitter/smile.png" class="emoji" alt=":smile:"></p>',
         )
       end
 

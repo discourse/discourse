@@ -465,7 +465,6 @@ RSpec.describe WebhooksController do
       expect(email_log.reload.bounced).to eq(false)
     end
 
-
     it "hard bounces" do
       SiteSetting.mandrill_authentication_key = "test"
       WebhooksController.any_instance.stubs(:valid_mandrill_signature?).returns(true)

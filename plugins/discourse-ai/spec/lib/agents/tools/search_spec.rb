@@ -42,7 +42,6 @@ RSpec.describe DiscourseAi::Agents::Tools::Search do
     c
   end
 
-
   describe "#invoke" do
     it "can retrieve options from agent correctly" do
       agent_options = {

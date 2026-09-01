@@ -11,7 +11,6 @@ describe DiscourseAi::Translation::SidebarSectionLocaleDetector do
   fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "Participate", locale: nil) }
   fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Welcome", value: "/welcome", locale: nil) }
 
-
   def language_detector_stub(text:, locale:)
     detector = instance_double(DiscourseAi::Translation::LanguageDetector)
     allow(DiscourseAi::Translation::LanguageDetector).to receive(:new).with(text).and_return(

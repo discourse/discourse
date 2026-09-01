@@ -183,8 +183,7 @@ RSpec.describe "Visit channel" do
 
         it "navigates from a specific message to another channel without error" do
           early_message = Fabricate(:chat_message, chat_channel: category_channel_1)
-          other_channel =
-            Fabricate(:category_channel, chatable: category_channel_1.chatable)
+          other_channel = Fabricate(:category_channel, chatable: category_channel_1.chatable)
           other_channel_message = Fabricate(:chat_message, chat_channel: other_channel)
           30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
           other_channel.add(current_user)

@@ -179,8 +179,6 @@ RSpec.describe Theme do
     let!(:child) { Fabricate(:theme, component: true) }
     let!(:child2) { Fabricate(:theme, component: true) }
 
-
-
     it "returns an empty array if no ids are passed" do
       expect(Theme.transform_ids(nil)).to eq([])
     end

@@ -9,13 +9,13 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:bookmark3) { Fabricate(:bookmark, user: user) }
 
-  before { [bookmark1, bookmark2, bookmark3]
-           bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
-           bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
-           bookmark3.update_column(:reminder_at, five_minutes_ago)
-           Discourse.redis.flushdb
-   }
-
+  before do
+    [bookmark1, bookmark2, bookmark3]
+    bookmark1.update_column(:reminder_at, five_minutes_ago - 10.minutes)
+    bookmark2.update_column(:reminder_at, five_minutes_ago - 5.minutes)
+    bookmark3.update_column(:reminder_at, five_minutes_ago)
+    Discourse.redis.flushdb
+  end
 
   it "sends every reminder and sets the reminder_last_sent_at" do
     job.execute

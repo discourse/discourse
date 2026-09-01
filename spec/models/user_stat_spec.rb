@@ -31,7 +31,6 @@ RSpec.describe UserStat do
           stat.update_column :topics_entered, 0
         end
 
-
         it "adds one to the topics entered" do
           expect { UserStat.update_view_counts }.to change { stat.reload.topics_entered }.to 1
         end
@@ -65,9 +64,7 @@ RSpec.describe UserStat do
           )
           user.update_column :last_seen_at, 1.second.ago
           stat.update_column :posts_read_count, 0
-
         end
-
 
         it "increases posts_read_count" do
           expect { UserStat.update_view_counts }.to change { stat.reload.posts_read_count }.to 1

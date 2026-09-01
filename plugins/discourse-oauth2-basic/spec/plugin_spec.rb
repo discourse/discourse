@@ -25,7 +25,6 @@ describe OAuth2BasicAuthenticator do
       )
     end
 
-
     it "finds user by email" do
       authenticator.expects(:fetch_user_details).returns(email: user.email)
       result = authenticator.after_authenticate(auth)
@@ -291,20 +290,18 @@ describe OAuth2BasicAuthenticator do
         SiteSetting.oauth2_fetch_user_details = true
         SiteSetting.oauth2_email_verified = true
         png =
-                  Base64.decode64(
-                    "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
-                  )
+          Base64.decode64(
+            "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
+          )
         stub_request(:get, "http://avatar.example.com/avatar.png").to_return(
           body: png,
           headers: {
             "Content-Type" => "image/png",
           },
         )
-
       end
 
       let(:job_klass) { Jobs::DownloadAvatarFromUrl }
-
 
       it "enqueues a download_avatar_from_url job for existing user" do
         authenticator.expects(:fetch_user_details).returns(

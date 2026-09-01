@@ -1383,7 +1383,7 @@ RSpec.describe ApplicationController do
     end
   end
 
-    # Using /bootstrap.json because it returns a locale-dependent value
+  # Using /bootstrap.json because it returns a locale-dependent value
   def headers(locale)
     { HTTP_ACCEPT_LANGUAGE: locale }
   end

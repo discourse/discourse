@@ -198,7 +198,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       shared_examples "finds correct plural keys" do
-        before do
+        it "finds the correct plural keys for the locale" do
           I18n.backend.store_translations(
             :en,
             colour: {
@@ -206,9 +206,6 @@ RSpec.describe Admin::SiteTextsController do
               other: "%{count} colours",
             },
           )
-        end
-
-        it "finds the correct plural keys for the locale" do
           SiteSetting.default_locale = locale
 
           get "/admin/customize/site_texts.json", params: { q: "colour", locale: locale }
@@ -222,8 +219,7 @@ RSpec.describe Admin::SiteTextsController do
 
           expected_search_result =
             expected_translations.map do |key, value|
-              overridden =
-                defined?(expected_overridden) ? expected_overridden[key] || false : false
+              overridden = defined?(expected_overridden) ? expected_overridden[key] || false : false
               interpolation_keys =
                 (
                   if defined?(expected_interpolation_keys)

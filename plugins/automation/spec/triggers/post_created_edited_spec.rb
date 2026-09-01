@@ -285,9 +285,7 @@ describe "PostCreatedEdited" do
         SiteSetting.email_in = true
         SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
         SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
-
       end
-
 
       it "fires the trigger" do
         list = capture_contexts { Email::Receiver.new(email("html_reply")).process! }

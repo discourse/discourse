@@ -19,17 +19,18 @@ RSpec.describe HeatSettingsUpdater do
     end
 
     context "with low activity" do
-      before { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2)
-               Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
-               Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
-               Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
-               Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
-               Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
-               Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
-               Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
-               Fabricate(:topic, views: 100, posts_count: 10, like_count: 0)
-               Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2)   }
-
+      before do
+        Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2)
+        Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
+        Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
+        Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1)
+        Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
+        Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
+        Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
+        Fabricate(:topic, views: 800, posts_count: 10, like_count: 0)
+        Fabricate(:topic, views: 100, posts_count: 10, like_count: 0)
+        Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2)
+      end
 
       it "doesn't make settings lower than defaults" do
         expect { update_settings }.to_not change { UserHistory.count }
@@ -47,17 +48,18 @@ RSpec.describe HeatSettingsUpdater do
     end
 
     context "with similar activity" do
-      before { Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201)
-               Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
-               Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
-               Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
-               Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
-               Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
-               Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
-               Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
-               Fabricate(:topic, views: 100, posts_count: 100, like_count: 1)
-               Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201)   }
-
+      before do
+        Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201)
+        Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
+        Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
+        Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99)
+        Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
+        Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
+        Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
+        Fabricate(:topic, views: 1010, posts_count: 100, like_count: 51)
+        Fabricate(:topic, views: 100, posts_count: 100, like_count: 1)
+        Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201)
+      end
 
       it "doesn't make small changes" do
         expect { update_settings }.to_not change { UserHistory.count }
@@ -66,16 +68,18 @@ RSpec.describe HeatSettingsUpdater do
     end
 
     context "with increased activity" do
-      before { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230)
-               Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220)
-               Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126)
-               Fabricate(:topic, views: 4010, posts_count: 99, like_count: 116)
-               Fabricate(:topic, views: 4005, posts_count: 99, like_count: 106)
-               Fabricate(:topic, views: 2040, posts_count: 99, like_count: 84)
-               Fabricate(:topic, views: 2030, posts_count: 99, like_count: 74)
-               Fabricate(:topic, views: 2020, posts_count: 99, like_count: 64)
-               Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54)
-               Fabricate(:topic, views: 100, posts_count: 100, like_count: 1)  }
+      before do
+        Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230)
+        Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220)
+        Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126)
+        Fabricate(:topic, views: 4010, posts_count: 99, like_count: 116)
+        Fabricate(:topic, views: 4005, posts_count: 99, like_count: 106)
+        Fabricate(:topic, views: 2040, posts_count: 99, like_count: 84)
+        Fabricate(:topic, views: 2030, posts_count: 99, like_count: 74)
+        Fabricate(:topic, views: 2020, posts_count: 99, like_count: 64)
+        Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54)
+        Fabricate(:topic, views: 100, posts_count: 100, like_count: 1)
+      end
 
       it "changes settings when difference is significant" do
         expect { update_settings }.to change { UserHistory.count }.by(6)

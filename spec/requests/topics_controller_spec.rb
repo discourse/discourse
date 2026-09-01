@@ -271,8 +271,7 @@ RSpec.describe TopicsController do
         it "moves the child posts too" do
           sign_in(moderator)
           p1 = Fabricate(:post, topic: topic, user: moderator)
-          p2 =
-            Fabricate(:post, topic: topic, user: moderator, reply_to_post_number: p1.post_number)
+          p2 = Fabricate(:post, topic: topic, user: moderator, reply_to_post_number: p1.post_number)
           PostReply.create(post_id: p1.id, reply_post_id: p2.id)
 
           post "/t/#{topic.id}/move-posts.json",
@@ -2299,9 +2298,7 @@ RSpec.describe TopicsController do
 
     context "when updating shared drafts" do
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
-      fab!(:shared_draft) do
-        Fabricate(:shared_draft, topic: topic, category: Fabricate(:category))
-      end
+      fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: Fabricate(:category)) }
 
       it "changes destination category" do
         put "/t/#{topic.id}.json", params: { category_id: category.id }
@@ -2489,10 +2486,7 @@ RSpec.describe TopicsController do
       end
 
       it "returns errors when the rate limit is exceeded" do
-        EditRateLimiter
-          .any_instance
-          .expects(:performed!)
-          .raises(RateLimiter::LimitExceeded.new(60))
+        EditRateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
 
         put "/t/#{topic.slug}/#{topic.id}.json",
             params: {
@@ -2538,129 +2532,125 @@ RSpec.describe TopicsController do
       end
 
       context "with tags" do
-          before { SiteSetting.tagging_enabled = true }
+        before { SiteSetting.tagging_enabled = true }
 
-          it "can add a tag to topic" do
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
+        it "can add a tag to topic" do
+          expect do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+          end.to change { topic.reload.first_post.revisions.count }.by(1)
 
-            expect(response.status).to eq(200)
-            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
-          end
+          expect(response.status).to eq(200)
+          expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+        end
 
-          it "can create a tag" do
-            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
+        it "can create a tag" do
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+          expect do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
+          end.to change { topic.reload.first_post.revisions.count }.by(1)
 
-            expect(response.status).to eq(200)
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
-          end
+          expect(response.status).to eq(200)
+          expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+        end
 
-          it "can change the category and create a new tag" do
-            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json",
-                  params: {
-                    tags: ["newtag"],
-                    category_id: category.id,
-                  }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
-          end
-
-          it "can add a tag to wiki topic" do
-            SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
-            topic.first_post.update!(wiki: true)
-            sign_in(user_2)
-
-            expect do
-              put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] }
-            end.not_to change { topic.reload.first_post.revisions.count }
-
-            expect(response.status).to eq(403)
-            user_2.groups << Group.find_by(name: "trust_level_2")
-
-            expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
-              topic.reload.first_post.revisions.count
-            }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
-          end
-
-          it "can remove a tag" do
-            topic.tags << tag
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [""] }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.tags).to eq([])
-          end
-
-          it "does not cause a revision when tags have not changed" do
-            topic.tags << tag
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
-            end.not_to change { topic.reload.first_post.revisions.count }
-
-            expect(response.status).to eq(200)
-          end
-
-          it "returns canonical tags in the response when synonyms are submitted" do
-            canonical = Fabricate(:tag, name: "apple-inc")
-            Fabricate(:tag, name: "aapl", target_tag: canonical)
-            Fabricate(:tag, name: "appl", target_tag: canonical)
-
-            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
-              "apple-inc",
-            )
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
-          end
-
-          it "does not include tags in the response when tags were not part of the update" do
+        it "can change the category and create a new tag" do
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+          expect do
             put "/t/#{topic.slug}/#{topic.id}.json",
                 params: {
-                  title: "This is a new title for the topic",
+                  tags: ["newtag"],
+                  category_id: category.id,
                 }
+          end.to change { topic.reload.first_post.revisions.count }.by(1)
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).not_to have_key("tags")
-          end
-
-          it "does not create a revision when only synonyms of existing tags are submitted" do
-            canonical = Fabricate(:tag, name: "apple-inc")
-            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
-            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
-            topic.tags << canonical
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json",
-                  params: {
-                    tags: [
-                      { id: aapl.id, name: "aapl" },
-                      { id: appl.id, name: "appl" },
-                      { id: canonical.id, name: "apple-inc" },
-                    ],
-                  }
-            end.not_to change { topic.reload.first_post.revisions.count }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
-              "apple-inc",
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
         end
+
+        it "can add a tag to wiki topic" do
+          SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+          topic.first_post.update!(wiki: true)
+          sign_in(user_2)
+
+          expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.not_to change {
+            topic.reload.first_post.revisions.count
+          }
+
+          expect(response.status).to eq(403)
+          user_2.groups << Group.find_by(name: "trust_level_2")
+
+          expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
+            topic.reload.first_post.revisions.count
+          }.by(1)
+
+          expect(response.status).to eq(200)
+          expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+        end
+
+        it "can remove a tag" do
+          topic.tags << tag
+
+          expect do put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [""] } end.to change {
+            topic.reload.first_post.revisions.count
+          }.by(1)
+
+          expect(response.status).to eq(200)
+          expect(topic.tags).to eq([])
+        end
+
+        it "does not cause a revision when tags have not changed" do
+          topic.tags << tag
+
+          expect do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+          end.not_to change { topic.reload.first_post.revisions.count }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "returns canonical tags in the response when synonyms are submitted" do
+          canonical = Fabricate(:tag, name: "apple-inc")
+          Fabricate(:tag, name: "aapl", target_tag: canonical)
+          Fabricate(:tag, name: "appl", target_tag: canonical)
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly("apple-inc")
+          expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
+        end
+
+        it "does not include tags in the response when tags were not part of the update" do
+          put "/t/#{topic.slug}/#{topic.id}.json",
+              params: {
+                title: "This is a new title for the topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("tags")
+        end
+
+        it "does not create a revision when only synonyms of existing tags are submitted" do
+          canonical = Fabricate(:tag, name: "apple-inc")
+          aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+          appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+          topic.tags << canonical
+
+          expect do
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [
+                    { id: aapl.id, name: "aapl" },
+                    { id: appl.id, name: "appl" },
+                    { id: canonical.id, name: "apple-inc" },
+                  ],
+                }
+          end.not_to change { topic.reload.first_post.revisions.count }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly("apple-inc")
+        end
+      end
 
       it "returns success when updating with empty tags on a topic with no tags" do
         expect(topic.tags).to be_empty
@@ -2742,9 +2732,7 @@ RSpec.describe TopicsController do
         end.not_to change { topic.reload.first_post.revisions.count }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
-          "apple-inc",
-        )
+        expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly("apple-inc")
       end
 
       it "does not remove tag if no params is given" do
@@ -2810,15 +2798,15 @@ RSpec.describe TopicsController do
       end
 
       it "creates a revision when all tags are removed from a topic" do
-      topic.tags << tag
+        topic.tags << tag
 
-      expect do
-        put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
-      end.to change { topic.reload.first_post.revisions.count }.by(1)
+        expect do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
+        end.to change { topic.reload.first_post.revisions.count }.by(1)
 
-      expect(response.status).to eq(200)
-      expect(topic.reload.tags).to be_empty
-    end
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to be_empty
+      end
 
       context "when topic is private" do
         before do
@@ -5843,11 +5831,11 @@ RSpec.describe TopicsController do
   end
 
   context "when resetting new topics without a signed-in user" do
-      it "returns a forbidden response" do
-        put "/topics/reset-new.json"
-        expect(response.status).to eq(403)
-      end
+    it "returns a forbidden response" do
+      put "/topics/reset-new.json"
+      expect(response.status).to eq(403)
     end
+  end
 
   context "when resetting new topics as a signed-in user" do
     let(:old_date) { 2.years.ago }
@@ -5932,13 +5920,13 @@ RSpec.describe TopicsController do
           (tracked_topic_ids + [Fabricate(:topic).id, Fabricate(:topic).id]).freeze
         end
 
+        before { topic_ids }
+
         it "updates the user_stat new_since column and dismisses all the new topics" do
           old_new_since = user.user_stat.new_since
 
           put "/topics/reset-new.json?tracked=false", params: { dismiss_topics: true }
-          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(
-            7,
-          )
+          expect(DismissedTopicUser.where(user_id: user.id, topic_id: topic_ids).count).to eq(7)
           expect(user.reload.user_stat.new_since > old_new_since).to eq(true)
         end
 
@@ -6026,9 +6014,7 @@ RSpec.describe TopicsController do
         fab!(:topic_in_private_child_category) do
           Fabricate(:topic, category: private_child_category)
         end
-        fab!(:topic_in_public_child_category) do
-          Fabricate(:topic, category: public_child_category)
-        end
+        fab!(:topic_in_public_child_category) { Fabricate(:topic, category: public_child_category) }
 
         it "doesn't dismiss topics in private child categories that the user can't see" do
           messages =
@@ -6264,9 +6250,7 @@ RSpec.describe TopicsController do
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
         expect(messages[0].user_ids).to eq([user.id])
-        expect(messages[0].data["message_type"]).to eq(
-          TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
-        )
+        expect(messages[0].data["message_type"]).to eq(TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE)
         expect(messages[0].data["payload"]["topic_ids"]).to eq([topic3.id])
         expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([topic3.id])
       end
@@ -6340,9 +6324,7 @@ RSpec.describe TopicsController do
       expect(topics).to eq([unread_topic])
       expect(DismissedTopicUser.where(user: user).count).to eq(1)
       expect(DismissedTopicUser.where(user: user).first.topic_id).to eq(new_topic.id)
-      expect(topic_user.reload.notification_level).to eq(
-        NotificationLevels.topic_levels[:tracking],
-      )
+      expect(topic_user.reload.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
     end
 
     it "dismisses unread topics" do
@@ -6359,9 +6341,7 @@ RSpec.describe TopicsController do
       topics = TopicQuery.new(user).new_and_unread_results(limit: false)
       expect(topics).to eq([new_topic])
       expect(DismissedTopicUser.count).to eq(0)
-      expect(topic_user.reload.notification_level).to eq(
-        NotificationLevels.topic_levels[:tracking],
-      )
+      expect(topic_user.reload.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
     end
 
     it "untrack topics" do
@@ -6370,9 +6350,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_ids"]).to eq([unread_topic.id])
 
-      expect(topic_user.reload.notification_level).to eq(
-        NotificationLevels.topic_levels[:regular],
-      )
+      expect(topic_user.reload.notification_level).to eq(NotificationLevels.topic_levels[:regular])
     end
 
     it "dismisses new topics, unread posts and untrack" do
@@ -7847,13 +7825,7 @@ RSpec.describe TopicsController do
         end
 
         it "localizes topic for crawler" do
-          get topic.relative_url,
-              env: {
-                "HTTP_USER_AGENT" => bot_user_agent,
-              },
-              params: {
-                tl: "ja",
-              }
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }, params: { tl: "ja" }
 
           expect(response.body).to include(ja_topic.title)
           # breadcrumbs
@@ -7864,13 +7836,7 @@ RSpec.describe TopicsController do
         it "does not persist localized fancy_title to the database when topic fancy_title is null" do
           topic.update_column(:fancy_title, nil)
 
-          get topic.relative_url,
-              env: {
-                "HTTP_USER_AGENT" => bot_user_agent,
-              },
-              params: {
-                tl: "ja",
-              }
+          get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }, params: { tl: "ja" }
 
           expect(response.status).to eq(200)
 

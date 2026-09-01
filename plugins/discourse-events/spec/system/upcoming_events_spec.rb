@@ -438,24 +438,24 @@ describe "Upcoming Events" do
 
   describe "calendar navigation and views" do
     describe "today button" do
-        it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
-          visit("/upcoming-events/month/2025/8/1")
+      it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.today
+
+        upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
+      end
+
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
+          visit("/upcoming-events/day/2025/8/1")
 
           upcoming_events.today
 
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
-        end
-
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
-            visit("/upcoming-events/day/2025/8/1")
-
-            upcoming_events.today
-
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/6/2")
-          end
+          upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/6/2")
         end
       end
+    end
 
     describe "next button" do
       it "navigates to next month" do

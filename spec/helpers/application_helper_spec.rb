@@ -939,9 +939,7 @@ RSpec.describe ApplicationHelper do
     end
 
     context "with custom light scheme" do
-      let(:new_color_scheme) do
-        Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true)
-      end
+      let(:new_color_scheme) { Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true) }
 
       before do
         user.user_option.color_scheme_id = new_color_scheme.id

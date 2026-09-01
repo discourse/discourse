@@ -6,9 +6,7 @@ RSpec.describe CensoredWordsValidator, "#validate_each" do
   let(:attribute) { :raw }
 
   context "when there are censored words for action" do
-    before do
-      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad")
-    end
+    before { Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad") }
 
     context "when compiled_regexps_for_action is empty" do
       before { WordWatcher.stubs(:compiled_regexps_for_action).returns([]) }

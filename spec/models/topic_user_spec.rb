@@ -61,9 +61,6 @@ RSpec.describe TopicUser do
 
   fab!(:user)
 
-
-
-
   def ensure_topic_user
     TopicUser.change(user, topic, last_emailed_post_number: 1)
   end

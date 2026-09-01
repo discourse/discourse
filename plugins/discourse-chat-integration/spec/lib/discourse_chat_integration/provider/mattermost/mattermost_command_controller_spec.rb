@@ -109,9 +109,7 @@ describe "Mattermost Command Controller", type: :request do
 
           json = response.parsed_body
 
-          expect(json["text"]).to eq(
-            I18n.t("chat_integration.provider.mattermost.create.created"),
-          )
+          expect(json["text"]).to eq(I18n.t("chat_integration.provider.mattermost.create.created"))
 
           chan =
             DiscourseChatIntegration::Channel

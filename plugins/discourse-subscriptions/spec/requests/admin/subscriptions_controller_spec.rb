@@ -12,14 +12,11 @@ RSpec.describe DiscourseSubscriptions::Admin::SubscriptionsController do
   end
   let(:user) { Fabricate(:user) }
 
-
   it "is a subclass of AdminController" do
     expect(DiscourseSubscriptions::Admin::SubscriptionsController < ::Admin::AdminController).to eq(
       true,
     )
   end
-
-
 
   context "when unauthenticated" do
     it "does nothing" do

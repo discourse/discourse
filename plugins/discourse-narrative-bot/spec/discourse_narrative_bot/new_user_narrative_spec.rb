@@ -219,16 +219,16 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       it "creates the right reply when the user replies to the topic" do
-          narrative.expects(:enqueue_timeout_job).with(user).once
+        narrative.expects(:enqueue_timeout_job).with(user).once
 
-          narrative.input(:reply, user, post: post)
-          new_post = Post.last
+        narrative.input(:reply, user, post: post)
+        new_post = Post.last
 
-          expect(new_post.raw).to eq(
-            I18n.t("discourse_narrative_bot.new_user_narrative.bookmark.not_found", base_uri: ""),
-          )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
-        end
+        expect(new_post.raw).to eq(
+          I18n.t("discourse_narrative_bot.new_user_narrative.bookmark.not_found", base_uri: ""),
+        )
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_bookmark)
+      end
 
       describe "when rate_limit_new_user_create_post site setting is disabled" do
         before { SiteSetting.rate_limit_new_user_create_post = 0 }
@@ -253,10 +253,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(
-            I18n.t(
-              "discourse_narrative_bot.new_user_narrative.onebox.instructions",
-              base_uri: "",
-            ),
+            I18n.t("discourse_narrative_bot.new_user_narrative.onebox.instructions", base_uri: ""),
           )
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
@@ -362,21 +359,21 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when the reply contains the skip trigger" do
-          it "creates the right reply" do
-            post.update!(raw: skip_trigger.upcase)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger.upcase)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t("discourse_narrative_bot.new_user_narrative.emoji.instructions", base_uri: ""),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.emoji.instructions", base_uri: ""),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
         end
+      end
 
       describe "when emoji is disabled" do
         before { SiteSetting.enable_emoji = false }
@@ -391,12 +388,12 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
               #{I18n.t("discourse_narrative_bot.new_user_narrative.onebox.reply", base_uri: "")}
 
               #{
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.mention.instructions",
-                discobot_username: discobot_username,
-                base_uri: "",
-              )
-            }
+            I18n.t(
+              "discourse_narrative_bot.new_user_narrative.mention.instructions",
+              discobot_username: discobot_username,
+              base_uri: "",
+            )
+          }
             RAW
 
           expect(new_post.raw).to eq(expected_raw.chomp)
@@ -446,24 +443,24 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       it "creates the next tutorial reply when the user sends the skip trigger" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        post.update!(raw: skip_trigger)
+        described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+        new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.flag.instructions",
-                guidelines_url: Discourse.base_url + "/guidelines",
-                about_url: Discourse.base_url + "/about",
-                base_uri: "",
-              ),
-            )
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.flag.instructions",
+            guidelines_url: Discourse.base_url + "/guidelines",
+            about_url: Discourse.base_url + "/about",
+            base_uri: "",
+          ),
+        )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-          end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
 
       describe "when allow_flagging_staff is false" do
         it "goes to the right state" do
@@ -618,24 +615,24 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       it "creates the next tutorial reply when the user sends the skip trigger" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        post.update!(raw: skip_trigger)
+        described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+        new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.flag.instructions",
-                guidelines_url: Discourse.base_url + "/guidelines",
-                about_url: Discourse.base_url + "/about",
-                base_uri: "",
-              ),
-            )
+        expect(new_post.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.flag.instructions",
+            guidelines_url: Discourse.base_url + "/guidelines",
+            about_url: Discourse.base_url + "/about",
+            base_uri: "",
+          ),
+        )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-          end
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
 
       describe "when allow_flagging_staff is false" do
         it "goes to the right state" do
@@ -714,24 +711,21 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when the reply contains the skip trigger" do
-          it "creates the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.quoting.instructions",
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.quoting.instructions", base_uri: ""),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_quote)
         end
+      end
 
       ["**bold**", "__italic__", "[b]bold[/b]", "[i]italic[/i]"].each do |raw|
         it "creates the right reply" do
@@ -779,37 +773,34 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when the reply contains the skip trigger" do
-          it "creates the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.images.instructions",
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t("discourse_narrative_bot.new_user_narrative.images.instructions", base_uri: ""),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
-          end
-
-          it "uses correct path to images on subfolder installs" do
-            GlobalSetting.stubs(:relative_url_root).returns("/forum")
-            Discourse.stubs(:base_path).returns("/forum")
-
-            post.update!(raw: skip_trigger)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_images)
         end
+
+        it "uses correct path to images on subfolder installs" do
+          GlobalSetting.stubs(:relative_url_root).returns("/forum")
+          Discourse.stubs(:base_path).returns("/forum")
+
+          post.update!(raw: skip_trigger)
+
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
+          new_post = Post.last
+
+          expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
+        end
+      end
 
       describe "when embedded_media_post_allowed_groups does not include the user" do
         before do
@@ -877,25 +868,25 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       describe "when the reply contains the skip trigger" do
-          it "creates the right reply" do
-            post.update!(raw: skip_trigger)
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+        it "creates the right reply" do
+          post.update!(raw: skip_trigger)
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-            new_post = Post.last
+          new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.new_user_narrative.mention.instructions",
-                discobot_username: discobot_username,
-                base_uri: "",
-              ),
-            )
+          expect(new_post.raw).to eq(
+            I18n.t(
+              "discourse_narrative_bot.new_user_narrative.mention.instructions",
+              discobot_username: discobot_username,
+              base_uri: "",
+            ),
+          )
 
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
         end
+      end
 
       describe "when user mentions is disabled" do
         before { SiteSetting.enable_mentions = false }
@@ -1066,14 +1057,14 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
 
       it "creates the right reply when the user replies to the topic" do
-          narrative.input(:reply, user, post: other_post)
-          new_post = Post.last
+        narrative.input(:reply, user, post: other_post)
+        new_post = Post.last
 
-          expect(new_post.raw).to eq(
-            I18n.t("discourse_narrative_bot.new_user_narrative.flag.not_found", base_uri: ""),
-          )
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
-        end
+        expect(new_post.raw).to eq(
+          I18n.t("discourse_narrative_bot.new_user_narrative.flag.not_found", base_uri: ""),
+        )
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+      end
 
       describe "when reply contains the skip trigger" do
         it "creates the right reply" do
@@ -1085,10 +1076,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           new_post = Post.last
 
           expect(new_post.raw).to eq(
-            I18n.t(
-              "discourse_narrative_bot.new_user_narrative.search.instructions",
-              base_uri: "",
-            ),
+            I18n.t("discourse_narrative_bot.new_user_narrative.search.instructions", base_uri: ""),
           )
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_search)

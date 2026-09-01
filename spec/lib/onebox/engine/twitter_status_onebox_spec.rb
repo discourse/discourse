@@ -66,9 +66,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     let(:link) { "https://twitter.com/Metallica/status/1128068672289890305" }
     let(:onebox_fixture) { "twitterstatus_quoted" }
 
-    before do
-      stub_request(:head, link)
-    end
+    before { stub_request(:head, link) }
 
     let(:full_name) { "Metallica" }
     let(:screen_name) { "Metallica" }

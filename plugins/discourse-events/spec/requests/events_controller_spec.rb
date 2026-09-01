@@ -480,70 +480,70 @@ module DiscourseEvents::Events
       before { sign_in(user) }
 
       context "when doing csv bulk invite" do
-          let(:valid_file) do
-            file = Tempfile.new("valid.csv")
-            file.write("bob,going\n")
-            file.write("sam,interested\n")
-            file.write("the_foo_bar_group,not_going\n")
-            file.rewind
-            file
+        let(:valid_file) do
+          file = Tempfile.new("valid.csv")
+          file.write("bob,going\n")
+          file.write("sam,interested\n")
+          file.write("the_foo_bar_group,not_going\n")
+          file.rewind
+          file
+        end
+
+        let(:empty_file) do
+          file = Tempfile.new("invalid.pdf")
+          file.rewind
+          file
+        end
+
+        context "when current user can manage the event" do
+          it "returns an error when no file is given" do
+            post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
+            expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
           end
 
-          let(:empty_file) do
-            file = Tempfile.new("invalid.pdf")
-            file.rewind
-            file
+          it "returns an error when an empty file is given" do
+            post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
+                 params: {
+                   file: fixture_file_upload(empty_file),
+                 }
+            expect(response.status).to eq(422)
           end
 
-          context "when current user can manage the event" do
-            it "returns an error when no file is given" do
-              post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
-              expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
-            end
-
-            it "returns an error when an empty file is given" do
+          it "enqueues the job and returns 200 when a valid file is given" do
+            Jobs.run_later!
+            expect_enqueued_with(
+              job: :discourse_post_event_bulk_invite,
+              args: {
+                "event_id" => event_1.id,
+                "invitees" => [
+                  { "identifier" => "bob", "attendance" => "going" },
+                  { "identifier" => "sam", "attendance" => "interested" },
+                  { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
+                ],
+                "current_user_id" => user.id,
+              },
+            ) do
               post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
-                     params: {
-                       file: fixture_file_upload(empty_file),
-                     }
-              expect(response.status).to eq(422)
+                   params: {
+                     file: fixture_file_upload(valid_file),
+                   }
             end
 
-            it "enqueues the job and returns 200 when a valid file is given" do
-              Jobs.run_later!
-              expect_enqueued_with(
-                job: :discourse_post_event_bulk_invite,
-                args: {
-                  "event_id" => event_1.id,
-                  "invitees" => [
-                    { "identifier" => "bob", "attendance" => "going" },
-                    { "identifier" => "sam", "attendance" => "interested" },
-                    { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
-                  ],
-                  "current_user_id" => user.id,
-                },
-              ) do
-                post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
-                     params: {
-                       file: fixture_file_upload(valid_file),
-                     }
-              end
-
-              expect(response.status).to eq(200)
-            end
-          end
-
-          context "when current user can’t manage the event" do
-            let(:lurker) { Fabricate(:user) }
-
-            before { sign_in(lurker) }
-
-            it "returns an error" do
-              post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
-              expect(response.status).to eq(403)
-            end
+            expect(response.status).to eq(200)
           end
         end
+
+        context "when current user can’t manage the event" do
+          let(:lurker) { Fabricate(:user) }
+
+          before { sign_in(lurker) }
+
+          it "returns an error" do
+            post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json"
+            expect(response.status).to eq(403)
+          end
+        end
+      end
 
       context "when doing bulk invite" do
         context "when current user can manage the event" do
@@ -554,9 +554,9 @@ module DiscourseEvents::Events
 
           it "returns an error when empty invitees are given" do
             post "/discourse-post-event/events/#{event_1.id}/bulk-invite.json",
-                   params: {
-                     invitees: [],
-                   }
+                 params: {
+                   invitees: [],
+                 }
             expect(response.status).to eq(400)
           end
 
@@ -680,9 +680,7 @@ module DiscourseEvents::Events
         end
 
         before do
-          private_event.create_invitees(
-            [{ user_id: invitee.id, status: Invitee.statuses[:going] }],
-          )
+          private_event.create_invitees([{ user_id: invitee.id, status: Invitee.statuses[:going] }])
           sign_in(viewer)
         end
 
@@ -717,8 +715,7 @@ module DiscourseEvents::Events
           Fabricate(
             :event,
             original_starts_at: 1.day.from_now,
-            post:
-              Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: subcategory)),
+            post: Fabricate(:post, post_number: 1, topic: Fabricate(:topic, category: subcategory)),
           )
         end
 
@@ -941,7 +938,6 @@ module DiscourseEvents::Events
         message: "private chat message body",
       )
     end
-
 
     context "when the viewer is anonymous" do
       before do

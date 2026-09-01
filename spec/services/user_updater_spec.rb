@@ -377,7 +377,6 @@ RSpec.describe UserUpdater do
       expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
-
     context "with user_notification_schedule" do
       it "allows users to create their notification schedule when it doesn't exist previously" do
         expect(user.user_notification_schedule).to be_nil

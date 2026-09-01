@@ -121,9 +121,7 @@ RSpec.describe "React to message" do
           channel.hover_message(message_1)
           find(".chat-message-actions [data-emoji-name=\"+1\"]").click
 
-          expect(channel.message_reactions_list(message_1)).to have_css(
-            "[data-emoji-name=\"+1\"]",
-          )
+          expect(channel.message_reactions_list(message_1)).to have_css("[data-emoji-name=\"+1\"]")
         end
       end
     end
@@ -144,21 +142,20 @@ RSpec.describe "React to message" do
   context "when current user and another have reacted" do
     fab!(:another_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
 
-    before { category_channel_1.add(another_user)
-             Chat::MessageReactor.new(current_user, category_channel_1).react!(
-                     message_id: message_1.id,
-                     react_action: :add,
-                     emoji: "woman_detective",
-                   )
+    before do
+      category_channel_1.add(another_user)
+      Chat::MessageReactor.new(current_user, category_channel_1).react!(
+        message_id: message_1.id,
+        react_action: :add,
+        emoji: "woman_detective",
+      )
 
-             Chat::MessageReactor.new(another_user, category_channel_1).react!(
-                     message_id: message_1.id,
-                     react_action: :add,
-                     emoji: "woman_detective",
-                   )
-     }
-
-
+      Chat::MessageReactor.new(another_user, category_channel_1).react!(
+        message_id: message_1.id,
+        react_action: :add,
+        emoji: "woman_detective",
+      )
+    end
 
     context "when removing the reaction" do
       it "removes only the reaction from the current user" do

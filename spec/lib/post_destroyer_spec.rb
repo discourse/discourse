@@ -321,38 +321,38 @@ RSpec.describe PostDestroyer do
       end
 
       context "when recovered by user with access to moderate topic category" do
-          fab!(:review_user, :user)
+        fab!(:review_user, :user)
 
-          before do
-            SiteSetting.enable_category_group_moderation = true
-            review_group = Fabricate(:group)
-            review_category = Fabricate(:category)
-            Fabricate(:category_moderation_group, category: review_category, group: review_group)
-            reply.topic.update!(category: review_category)
-            review_group.users << review_user
-            ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
-          end
-
-          def changes_deleted_at_to_nil
-            PostDestroyer.new(Discourse.system_user, reply, context: "Automated testing").destroy
-            reply.reload
-            expect(reply.user_deleted).to eq(false)
-            expect(reply.deleted_at).not_to eq(nil)
-
-            PostDestroyer.new(review_user, reply).recover
-            reply.reload
-            expect(reply.deleted_at).to eq(nil)
-          end
-
-          it "changes deleted_at to nil for a post with a Reviewable record" do
-            changes_deleted_at_to_nil
-          end
-
-          it "changes deleted_at to nil when the topic is deleted" do
-            reply.topic.trash!
-            changes_deleted_at_to_nil
-          end
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          review_group = Fabricate(:group)
+          review_category = Fabricate(:category)
+          Fabricate(:category_moderation_group, category: review_category, group: review_group)
+          reply.topic.update!(category: review_category)
+          review_group.users << review_user
+          ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
         end
+
+        def changes_deleted_at_to_nil
+          PostDestroyer.new(Discourse.system_user, reply, context: "Automated testing").destroy
+          reply.reload
+          expect(reply.user_deleted).to eq(false)
+          expect(reply.deleted_at).not_to eq(nil)
+
+          PostDestroyer.new(review_user, reply).recover
+          reply.reload
+          expect(reply.deleted_at).to eq(nil)
+        end
+
+        it "changes deleted_at to nil for a post with a Reviewable record" do
+          changes_deleted_at_to_nil
+        end
+
+        it "changes deleted_at to nil when the topic is deleted" do
+          reply.topic.trash!
+          changes_deleted_at_to_nil
+        end
+      end
     end
   end
 

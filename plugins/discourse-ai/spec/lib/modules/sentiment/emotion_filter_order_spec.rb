@@ -112,26 +112,22 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
       classification: classification_1,
     )
     Fabricate(
-          :sentiment_classification,
-          target: post_2,
-          model_used: model_used,
-          classification: classification_2,
-        )
+      :sentiment_classification,
+      target: post_2,
+      model_used: model_used,
+      classification: classification_2,
+    )
 
     Fabricate(
-          :sentiment_classification,
-          target: post_3,
-          model_used: model_used,
-          classification: classification_3,
-        )
+      :sentiment_classification,
+      target: post_3,
+      model_used: model_used,
+      classification: classification_3,
+    )
 
     enable_current_plugin
     described_class.register!(plugin)
-
   end
-
-
-
 
   it "registers emotion filters" do
     emotions = %w[

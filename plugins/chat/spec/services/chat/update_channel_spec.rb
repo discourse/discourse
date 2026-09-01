@@ -27,9 +27,7 @@ RSpec.describe Chat::UpdateChannel do
 
   context "when channel is a category one" do
     let(:message) do
-      MessageBus
-        .track_publish(Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL) { result }
-        .first
+      MessageBus.track_publish(Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL) { result }.first
     end
 
     it { is_expected.to run_successfully }

@@ -41,7 +41,6 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
       sign_in(user)
     end
 
-
     describe "index" do
       plans_json =
         File.read(

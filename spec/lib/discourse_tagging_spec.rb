@@ -1129,9 +1129,7 @@ RSpec.describe DiscourseTagging do
 
   describe "filter_visible" do
     fab!(:hidden_tag, :tag)
-    before do
-      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
-    end
+    before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     fab!(:topic) { Fabricate(:topic, tags: [tag1, tag2, tag3, hidden_tag]) }
 
@@ -1183,1153 +1181,1162 @@ RSpec.describe DiscourseTagging do
   end
 
   describe "tag_topic_by_names" do
-  context "with a tag restricted to other categories" do
-    fab!(:allowed_category, :category)
-    fab!(:other_category, :category)
-    fab!(:restricted_tag_group) { Fabricate(:tag_group, tag_names: ["events"]) }
-    fab!(:topic_in_other_category) { Fabricate(:topic, category: other_category) }
+    context "with a tag restricted to other categories" do
+      fab!(:allowed_category, :category)
+      fab!(:other_category, :category)
+      fab!(:restricted_tag_group) { Fabricate(:tag_group, tag_names: ["events"]) }
+      fab!(:topic_in_other_category) { Fabricate(:topic, category: other_category) }
 
-    before do
-      CategoryTagGroup.create!(category: allowed_category, tag_group: restricted_tag_group)
-    end
-
-    it "names the offending category instead of a generic error, even for admins" do
-      valid =
-        DiscourseTagging.tag_topic_by_names(
-          topic_in_other_category,
-          Guardian.new(admin),
-          ["events"],
-        )
-
-      expect(valid).to eq(false)
-      expect(topic_in_other_category.errors[:base]&.first).to eq(
-        I18n.t(
-          "tags.forbidden.tag_not_allowed_in_category",
-          count: 1,
-          tags: "events",
-          category: other_category.name,
-        ),
-      )
-    end
-  end
-
-  context "with visible but restricted tags" do
-    fab!(:topic)
-
-    before { create_staff_only_tags(["alpha"]) }
-
-    it "regular users can't add staff-only tags" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
-      expect(valid).to eq(false)
-      expect(topic.errors[:base]&.first).to eq(
-        I18n.t("tags.restricted_tag_disallowed", tag: "alpha"),
-      )
-    end
-
-    it "does not send a discourse event for regular users who can't add staff-only tags" do
-      events =
-        DiscourseEvent.track_events do
-          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
-        end
-      expect(events.count).to eq(0)
-    end
-
-    it "staff can add staff-only tags" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ["alpha"])
-      expect(valid).to eq(true)
-      expect(topic.errors[:base]).to be_empty
-    end
-
-    it "sends a discourse event when the staff adds a staff-only tag" do
-      old_tag_names = topic.tags.pluck(:name)
-      admin_guardian = Guardian.new(admin)
-      tag_changed_event =
-        DiscourseEvent
-          .track_events { DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["alpha"]) }
-          .last
-      expect(tag_changed_event[:event_name]).to eq(:topic_tags_changed)
-      expect(tag_changed_event[:params].first).to eq(topic)
-      expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
-      expect(tag_changed_event[:params].second[:new_tag_names]).to eq(["alpha"])
-      expect(tag_changed_event[:params].second[:user]).to eq(admin_guardian.user)
-    end
-
-    context "with admin-only tags" do
-      let(:tag_group) do
-        Fabricate(
-          :tag_group,
-          name: "Admin Announcements",
-          permissions: {
-            "admins" => 1,
-          },
-          tag_names: ["announcements"],
-        )
+      before do
+        CategoryTagGroup.create!(category: allowed_category, tag_group: restricted_tag_group)
       end
 
-      before { create_admin_only_tags(["announcements"]) }
+      it "names the offending category instead of a generic error, even for admins" do
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic_in_other_category,
+            Guardian.new(admin),
+            ["events"],
+          )
 
-      it "admins can use admin-only tags" do
-        valid = DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["announcements"])
-        expect(valid).to eq(true)
-        expect(topic.errors[:base]).to be_empty
-        expect(topic.tags.pluck(:name)).to contain_exactly("announcements")
+        expect(valid).to eq(false)
+        expect(topic_in_other_category.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.forbidden.tag_not_allowed_in_category",
+            count: 1,
+            tags: "events",
+            category: other_category.name,
+          ),
+        )
       end
+    end
 
-      it "moderators can't use admin-only tags" do
-        valid = DiscourseTagging.tag_topic_by_names(topic, moderator_guardian, ["announcements"])
+    context "with visible but restricted tags" do
+      fab!(:topic)
+
+      before { create_staff_only_tags(["alpha"]) }
+
+      it "regular users can't add staff-only tags" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
         expect(valid).to eq(false)
         expect(topic.errors[:base]&.first).to eq(
-          I18n.t("tags.restricted_tag_disallowed", tag: "announcements"),
+          I18n.t("tags.restricted_tag_disallowed", tag: "alpha"),
         )
       end
-    end
 
-    context "with non-staff users in tag group groups" do
-      fab!(:non_staff_group) { Fabricate(:group, name: "non_staff_group") }
+      it "does not send a discourse event for regular users who can't add staff-only tags" do
+        events =
+          DiscourseEvent.track_events do
+            DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
+          end
+        expect(events.count).to eq(0)
+      end
 
-      before { create_limited_tags("Group for Non-Staff", non_staff_group.id, ["alpha"]) }
-
-      it "can use hidden tag if in correct group" do
-        non_staff_group.add(user)
-
-        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
-
+      it "staff can add staff-only tags" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ["alpha"])
         expect(valid).to eq(true)
         expect(topic.errors[:base]).to be_empty
       end
 
-      it "returns error if user is not in correct group" do
-        user2 = Fabricate(:user)
-        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user2), ["alpha"])
-        expect(valid).to eq(false)
-      end
-    end
-  end
-
-  it "respects category allow_global_tags setting" do
-    tag = Fabricate(:tag)
-    other_tag = Fabricate(:tag)
-    tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
-    category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
-    other_category = Fabricate(:category, allowed_tags: [other_tag.name])
-    topic = Fabricate(:topic, category: category)
-
-    result =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(admin),
-        [tag.name, other_tag.name, "hello"],
-      )
-    expect(result).to eq(true)
-    expect(topic.tags.pluck(:name)).to contain_exactly(tag.name)
-
-    category.update!(allow_global_tags: true)
-    result =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(admin),
-        [tag.name, other_tag.name, "hello"],
-      )
-    expect(result).to eq(true)
-    expect(topic.tags.pluck(:name)).to contain_exactly(tag.name, "hello")
-  end
-
-  it "raises an error if no tags could be updated" do
-    tag = Fabricate(:tag)
-    other_tag = Fabricate(:tag)
-    tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
-    category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
-    other_category = Fabricate(:category, allowed_tags: [other_tag.name])
-    topic = Fabricate(:topic, category: category)
-
-    result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [other_tag.name])
-    expect(result).to eq(false)
-    expect(topic.tags.pluck(:name)).to be_blank
-  end
-
-  it "can remove tags and keep existent ones" do
-    tag1 = Fabricate(:tag)
-    tag2 = Fabricate(:tag)
-    topic = Fabricate(:topic, tags: [tag1, tag2])
-    Fabricate(:category, allowed_tags: [tag1.name])
-
-    result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
-
-    expect(result).to eq(true)
-    expect(topic.reload.tags.pluck(:name)).to eq([tag1.name])
-  end
-
-  context "when respecting category minimum_required_tags setting" do
-    fab!(:category) { Fabricate(:category, minimum_required_tags: 2) }
-    fab!(:topic) { Fabricate(:topic, category: category) }
-
-    it "when tags are not present" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
-      expect(valid).to eq(false)
-      expect(topic.errors[:base]&.first).to eq(
-        I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
-      )
-    end
-
-    it "when tags are less than minimum_required_tags" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
-      expect(valid).to eq(false)
-      expect(topic.errors[:base]&.first).to eq(
-        I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
-      )
-    end
-
-    it "when tags are equal to minimum_required_tags" do
-      valid =
-        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
-      expect(valid).to eq(true)
-      expect(topic.errors[:base]).to be_empty
-    end
-
-    it "lets admin tag a topic regardless of minimum_required_tags" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
-      expect(valid).to eq(true)
-      expect(topic.errors[:base]).to be_empty
-    end
-  end
-
-  context "with hidden tags" do
-    fab!(:hidden_tag, :tag)
-    before do
-      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
-    end
-
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
-
-    it "user cannot add hidden tag by knowing its name" do
-      expect(
-        PostRevisor.new(post).revise!(
-          topic.user,
-          raw: post.raw + " edit",
-          tags: [hidden_tag.name],
-        ),
-      ).to be_falsey
-      expect(topic.reload.tags).to be_empty
-    end
-
-    it "admin can add hidden tag" do
-      expect(
-        PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name]),
-      ).to be_truthy
-      expect(topic.reload.tags).to eq([hidden_tag])
-    end
-
-    it "user does not get an error when editing their topic with a hidden tag" do
-      PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])
-
-      expect(
-        PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: []),
-      ).to be_truthy
-
-      expect(topic.reload.tags).to eq([hidden_tag])
-    end
-  end
-
-  context "with tag group with parent tag" do
-  let(:topic) { Fabricate(:topic, user: user) }
-  let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
-  let(:tag_group) { Fabricate(:tag_group, parent_tag_id: tag1.id) }
-
-  before { tag_group.tags = [tag3] }
-
-  it "can tag with parent" do
-    valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
-    expect(valid).to eq(true)
-    expect(topic.reload.tags.map(&:name)).to eq([tag1.name])
-  end
-
-  it "can tag with parent and a tag" do
-    valid =
-      DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag3.name])
-    expect(valid).to eq(true)
-    expect(topic.reload.tags.map(&:name)).to contain_exactly(*[tag1, tag3].map(&:name))
-  end
-
-  it "adds all parent tags that are missing" do
-    parent_tag = Fabricate(:tag, name: "parent")
-    tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
-    tag_group2.tags = [tag2]
-    valid =
-      DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name, tag2.name])
-    expect(valid).to eq(true)
-    expect(topic.reload.tags.map(&:name)).to contain_exactly(
-      *[tag1, tag2, tag3, parent_tag].map(&:name),
-    )
-  end
-
-  it "fails when parent tag missing will conflict with another tag from tag group set to one tag per topic" do
-    parent_tag = Fabricate(:tag, name: "parent-1")
-    parent_tag2 = Fabricate(:tag, name: "parent-2")
-    parent_tag_group =
-      Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
-
-    tag4 = Fabricate(:tag, name: "fun4")
-    tag5 = Fabricate(:tag, name: "fun5")
-
-    child_tag_group =
-      Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
-    child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
-
-    tag_limited_category =
-      Fabricate(
-        :category,
-        allowed_tag_groups: [
-          parent_tag_group.name,
-          child_tag_group.name,
-          child_tag_group2.name,
-        ],
-      )
-
-    topic = Fabricate(:topic, category: tag_limited_category)
-
-    # tag2 will insert parent_tag which is missing. parent_tag will conflict with parent_tag2
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [parent_tag2.name, tag2.name],
-      )
-    expect(valid).to eq(false)
-    expect(topic.errors[:base]&.first).to eq(
-      I18n.t(
-        "tags.limited_to_one_tag_from_group",
-        tags: [parent_tag2.name, tag2.name].sort.join(", "),
-      ),
-    )
-
-    topic = Fabricate(:topic, category: tag_limited_category)
-
-    # tag4 will insert parent_tag2 which is missing. parent_tag will conflict with parent_tag2
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [parent_tag.name, tag1.name, tag4.name],
-      )
-    expect(valid).to eq(false)
-    expect(topic.errors[:base]&.first).to eq(
-      I18n.t(
-        "tags.limited_to_one_tag_from_group",
-        tags: [parent_tag.name, tag4.name].sort.join(", "),
-      ),
-    )
-  end
-
-  it "fails when multiple parent tag missing will conflict with another tag from tag group set to one tag per topic" do
-    parent_tag = Fabricate(:tag, name: "parent-1")
-    parent_tag2 = Fabricate(:tag, name: "parent-2")
-    parent_tag3 = Fabricate(:tag, name: "parent-3")
-    parent_tag_group =
-      Fabricate(:tag_group, tags: [parent_tag, parent_tag2, parent_tag3], one_per_topic: true)
-
-    tag4 = Fabricate(:tag, name: "fun4")
-    tag5 = Fabricate(:tag, name: "fun5")
-
-    child_tag_group =
-      Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
-    child_tag_group2 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag2.id)
-    child_tag_group3 = Fabricate(:tag_group, tags: [tag5], parent_tag_id: parent_tag3.id)
-
-    tag_limited_category =
-      Fabricate(
-        :category,
-        allowed_tag_groups: [
-          parent_tag_group.name,
-          child_tag_group.name,
-          child_tag_group2.name,
-          child_tag_group3.name,
-        ],
-      )
-
-    topic = Fabricate(:topic, category: tag_limited_category)
-
-    # tag4 and tag5 will insert parent_tag2 and parent_tag3 which are missing. they will conflict with parent_tag
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [parent_tag.name, tag4.name, tag5.name],
-      )
-    expect(valid).to eq(false)
-    expect(topic.errors[:base]&.first).to eq(
-      I18n.t(
-        "tags.limited_to_one_tag_from_group",
-        tags: [parent_tag.name, tag4.name, tag5.name].sort.join(", "),
-      ),
-    )
-  end
-
-  it "fails when multiple parent tag missing will conflict in tag group set to one tag per topic" do
-    parent_tag = Fabricate(:tag, name: "parent-1")
-    parent_tag2 = Fabricate(:tag, name: "parent-2")
-    parent_tag_group =
-      Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
-
-    tag4 = Fabricate(:tag, name: "fun4")
-    tag5 = Fabricate(:tag, name: "fun5")
-
-    child_tag_group =
-      Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
-    child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
-
-    tag_limited_category =
-      Fabricate(
-        :category,
-        allowed_tag_groups: [
-          parent_tag_group.name,
-          child_tag_group.name,
-          child_tag_group2.name,
-        ],
-      )
-
-    topic = Fabricate(:topic, category: tag_limited_category)
-
-    # tag1 and tag4 will insert parent_tag and parent_tag2 which are missing. they will conflict with each other
-    valid =
-      DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag4.name])
-    expect(valid).to eq(false)
-    expect(topic.errors[:base]&.first).to eq(
-      I18n.t(
-        "tags.limited_to_one_tag_from_group",
-        tags: [tag1.name, tag4.name].sort.join(", "),
-      ),
-    )
-  end
-
-  it "fails with multiple errors when parent tag missing will conflict in more than one tag group set to one tag per topic" do
-    parent_tag = Fabricate(:tag, name: "parent-1")
-    parent_tag2 = Fabricate(:tag, name: "parent-2")
-    parent_tag_group =
-      Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
-
-    parent_tag3 = Fabricate(:tag, name: "parent-3")
-    parent_tag4 = Fabricate(:tag, name: "parent-4")
-    parent_tag_group2 =
-      Fabricate(:tag_group, tags: [parent_tag3, parent_tag4], one_per_topic: true)
-
-    tag4 = Fabricate(:tag, name: "fun4")
-
-    child_tag_group = Fabricate(:tag_group, tags: [tag1], parent_tag_id: parent_tag.id)
-    child_tag_group2 = Fabricate(:tag_group, tags: [tag2], parent_tag_id: parent_tag2.id)
-    child_tag_group3 = Fabricate(:tag_group, tags: [tag3], parent_tag_id: parent_tag3.id)
-    child_tag_group4 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag4.id)
-
-    tag_limited_category =
-      Fabricate(
-        :category,
-        allowed_tag_groups: [
-          parent_tag_group.name,
-          parent_tag_group2.name,
-          child_tag_group.name,
-          child_tag_group2.name,
-          child_tag_group3.name,
-          child_tag_group4.name,
-        ],
-      )
-
-    topic = Fabricate(:topic, category: tag_limited_category)
-
-    # tag2 will insert parent_tag2 which is missing. it will conflict with parent_tag
-    # tag4 will insert parent_tag4 which is missing. it will conflict with parent_tag3
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [parent_tag.name, tag2.name, parent_tag3.name, tag4.name],
-      )
-    expect(valid).to eq(false)
-    expect(topic.errors[:base]).to contain_exactly(
-      *[[parent_tag.name, tag2.name], [parent_tag3.name, tag4.name]].map do |conflicting_tags|
-        I18n.t("tags.limited_to_one_tag_from_group", tags: conflicting_tags.sort.join(", "))
-      end,
-    )
-  end
-
-  it "adds only the necessary parent tags" do
-    common = Fabricate(:tag, name: "common")
-    tag_group.tags = [tag3, common]
-
-    parent_tag = Fabricate(:tag, name: "parent")
-    tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
-    tag_group2.tags = [tag2, common]
-
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [parent_tag.name, common.name],
-      )
-    expect(valid).to eq(true)
-    expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
-  end
-
-  context "when a tag belongs to tag groups restricted to different categories" do
-  fab!(:category_a_tag) { Fabricate(:tag, name: "cat-a-tag") }
-  fab!(:parent_a) { Fabricate(:tag, name: "parent-a") }
-  fab!(:parent_b) { Fabricate(:tag, name: "parent-b") }
-
-  fab!(:tag_group_a) { Fabricate(:tag_group, parent_tag_id: parent_a.id, tags: [tag3]) }
-  fab!(:tag_group_b) { Fabricate(:tag_group, parent_tag_id: parent_b.id, tags: [tag3]) }
-  fab!(:category_a_tag_group) { Fabricate(:tag_group, tags: [category_a_tag]) }
-  fab!(:global_parent_tag) { Fabricate(:tag, name: "global-parent") }
-  fab!(:global_only_tag) { Fabricate(:tag, name: "global-only-tag") }
-  fab!(:global_tag_group) do
-    Fabricate(:tag_group, parent_tag_id: global_parent_tag.id, tags: [global_only_tag])
-  end
-
-  fab!(:category_a) do
-    Fabricate(:category, allowed_tag_groups: [tag_group_a.name, category_a_tag_group.name])
-  end
-  fab!(:category_b) { Fabricate(:category, allowed_tag_groups: [tag_group_b.name]) }
-
-  it "only adds parent tags from tag groups restricted to the topic's category" do
-    topic_in_a = Fabricate(:topic, category: category_a)
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic_in_a,
-        Guardian.new(user),
-        [category_a_tag.name, tag3.name],
-      )
-    expect(valid).to eq(true)
-    tag_names = topic_in_a.reload.tags.map(&:name)
-    expect(tag_names).to include(parent_a.name)
-    expect(tag_names).not_to include(parent_b.name)
-  end
-
-  it "does not add parent tags from category-restricted groups when topic is in an unrestricted category" do
-    unrestricted_category = Fabricate(:category)
-    topic = Fabricate(:topic, category: unrestricted_category)
-    valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
-    expect(valid).to eq(true)
-    tag_names = topic.reload.tags.map(&:name)
-    expect(tag_names).not_to include(parent_a.name)
-    expect(tag_names).not_to include(parent_b.name)
-  end
-
-  it "adds parent tags from global tag groups when the category allows them" do
-    category_a.update!(allow_global_tags: true)
-    topic = Fabricate(:topic, category: category_a)
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [category_a_tag.name, global_only_tag.name],
-      )
-    expect(valid).to eq(true)
-    tag_names = topic.reload.tags.map(&:name)
-    expect(tag_names).to include(global_parent_tag.name)
-  end
-
-  it "adds parents from global and category-specific tag groups when allowed" do
-    category_a.update!(allow_global_tags: true)
-    global_tag_group.tags = [global_only_tag, tag3]
-
-    topic = Fabricate(:topic, category: category_a)
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [category_a_tag.name, tag3.name, global_only_tag.name],
-      )
-    expect(valid).to eq(true)
-    tag_names = topic.reload.tags.map(&:name)
-    expect(tag_names).to include(parent_a.name)
-    expect(tag_names).to include(global_parent_tag.name)
-    expect(tag_names).not_to include(parent_b.name)
-  end
-
-  it "does not add parent tags from global groups when the category disallows them" do
-    category_a.update!(allow_global_tags: false)
-    category_a_tag_group.tags = [category_a_tag, global_only_tag]
-
-    topic = Fabricate(:topic, category: category_a)
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [category_a_tag.name, global_only_tag.name],
-      )
-    expect(valid).to eq(true)
-    tag_names = topic.reload.tags.map(&:name)
-    expect(tag_names).not_to include(global_parent_tag.name)
-  end
-
-  it "still adds category-specific parent tags when global tags are disallowed" do
-    category_a.update!(allow_global_tags: false)
-    topic = Fabricate(:topic, category: category_a)
-    valid =
-      DiscourseTagging.tag_topic_by_names(
-        topic,
-        Guardian.new(user),
-        [category_a_tag.name, tag3.name],
-      )
-    expect(valid).to eq(true)
-    tag_names = topic.reload.tags.map(&:name)
-    expect(tag_names).to include(parent_a.name)
-    expect(tag_names).not_to include(parent_b.name)
-  end
-end
-
-  context "when enforcing required tags from a tag group" do
-    fab!(:category)
-    fab!(:tag_group)
-    fab!(:topic) { Fabricate(:topic, category: category) }
-
-    before do
-      tag_group.tags = [tag1, tag2]
-      category.update(
-        category_required_tag_groups: [
-          CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
-        ],
-      )
-    end
-
-    it "when no tags are present" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
-      expect(valid).to eq(false)
-      expect(topic.errors[:base]&.first).to eq(
-        I18n.t(
-          "tags.required_tags_from_group",
-          count: 1,
-          tag_group_name: tag_group.name,
-          tags: tag_group.tags.pluck(:name).join(", "),
-        ),
-      )
-    end
-
-    it "when tags are not part of the tag group" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
-      expect(valid).to eq(false)
-      expect(topic.errors[:base]&.first).to eq(
-        I18n.t(
-          "tags.required_tags_from_group",
-          count: 1,
-          tag_group_name: tag_group.name,
-          tags: tag_group.tags.pluck(:name).join(", "),
-        ),
-      )
-    end
-
-    it "when requirement is met" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
-      expect(valid).to eq(true)
-      valid =
-        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
-      expect(valid).to eq(true)
-      valid =
-        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag2.name, tag3.name])
-      expect(valid).to eq(true)
-    end
-
-    it "lets staff ignore the restriction" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [])
-      expect(valid).to eq(true)
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag3.name])
-      expect(valid).to eq(true)
-    end
-  end
-
-  context "with tag synonyms" do
-    fab!(:topic)
-
-    fab!(:syn1) { Fabricate(:tag, name: "synonym1", target_tag: tag1) }
-    fab!(:syn2) { Fabricate(:tag, name: "synonym2", target_tag: tag1) }
-
-    it "uses the base tag when a synonym is given" do
-      valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [syn1.name])
-      expect(valid).to eq(true)
-      expect(topic.errors[:base]).to be_empty
-      expect_same_tag_names(topic.reload.tags, [tag1])
-    end
-
-    it "handles multiple synonyms for the same tag" do
-      valid =
-        DiscourseTagging.tag_topic_by_names(
-          topic,
-          Guardian.new(user),
-          [tag1.name, syn1.name, syn2.name],
-        )
-      expect(valid).to eq(true)
-      expect(topic.errors[:base]).to be_empty
-      expect_same_tag_names(topic.reload.tags, [tag1])
-    end
-  end
-end
-
-  describe ".tag_topic" do
-    fab!(:topic)
-    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
-    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
-
-    it "allows tagging topics by an array of tag names" do
-      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), %w[tag1 tag2])
-      expect(valid).to eq(true)
-      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
-    end
-
-    it "allows tagging topics by an array of hash with the id key" do
-      valid =
-        DiscourseTagging.tag_topic(
-          topic,
-          Guardian.new(admin),
-          [{ id: tag1.id, name: "tHE wROnG nAme" }, { id: tag2.id, name: "tag2" }],
-        )
-      expect(valid).to eq(true)
-      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
-    end
-
-    it "allows tagging topics using new tags" do
-      valid =
-        DiscourseTagging.tag_topic(
-          topic,
-          Guardian.new(admin),
-          [{ name: "new-tag-a" }, { name: "new-tag-b" }],
-        )
-      expect(valid).to eq(true)
-      expect(topic.reload.tags.pluck(:name)).to contain_exactly("new-tag-a", "new-tag-b")
-    end
-
-    it "can tag topics using old and new tags" do
-      valid =
-        DiscourseTagging.tag_topic(
-          topic,
-          Guardian.new(admin),
-          [{ id: tag1.id, name: "tag1" }, { name: "brand-new" }],
-        )
-      expect(valid).to eq(true)
-      expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "brand-new")
-    end
-
-    it "clears tags when given blank input" do
-      topic.tags = [tag1]
-      topic.save!
-      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), [])
-      expect(valid).to eq(true)
-      expect(topic.reload.tags).to be_empty
-    end
-  end
-
-  describe "tag_topic_by_ids" do
-    fab!(:topic)
-    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
-    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
-
-    it "tags a topic using tag IDs" do
-      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [tag1.id, tag2.id])
-      expect(valid).to eq(true)
-      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
-    end
-
-    it "returns false for non-existent IDs" do
-      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [-1])
-      expect(valid).to eq(true) # succeeds but with no tags
-      expect(topic.reload.tags).to be_empty
-    end
-
-    it "clears tags when given empty array" do
-      topic.tags = [tag1]
-      topic.save!
-      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [])
-      expect(valid).to eq(true)
-      expect(topic.reload.tags).to be_empty
-    end
-  end
-
-  describe "#tags_for_saving" do
-    it "returns empty array if input is nil" do
-      expect(described_class.tags_for_saving(nil, guardian)).to eq([])
-    end
-
-    it "returns empty array if input is empty" do
-      expect(described_class.tags_for_saving([], guardian)).to eq([])
-    end
-
-    it "returns empty array if can't tag topics" do
-      guardian.stubs(:can_tag_topics?).returns(false)
-      expect(described_class.tags_for_saving(["newtag"], guardian)).to eq([])
-    end
-
-    describe "can tag topics but not create tags" do
-      before do
-        guardian.stubs(:can_create_tag?).returns(false)
-        guardian.stubs(:can_tag_topics?).returns(true)
+      it "sends a discourse event when the staff adds a staff-only tag" do
+        old_tag_names = topic.tags.pluck(:name)
+        admin_guardian = Guardian.new(admin)
+        tag_changed_event =
+          DiscourseEvent
+            .track_events { DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["alpha"]) }
+            .last
+        expect(tag_changed_event[:event_name]).to eq(:topic_tags_changed)
+        expect(tag_changed_event[:params].first).to eq(topic)
+        expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
+        expect(tag_changed_event[:params].second[:new_tag_names]).to eq(["alpha"])
+        expect(tag_changed_event[:params].second[:user]).to eq(admin_guardian.user)
       end
 
-      it "returns empty array if all tags are new" do
-        expect(described_class.tags_for_saving(%w[newtag newtagplz], guardian)).to eq([])
-      end
+      context "with admin-only tags" do
+        let(:tag_group) do
+          Fabricate(
+            :tag_group,
+            name: "Admin Announcements",
+            permissions: {
+              "admins" => 1,
+            },
+            tag_names: ["announcements"],
+          )
+        end
 
-      it "returns only existing tag names" do
-        Fabricate(:tag, name: "oldtag")
-        Fabricate(:tag, name: "oldTag2")
-        expect(
-          described_class.tags_for_saving(%w[newtag oldtag oldtag2], guardian),
-        ).to contain_exactly("oldtag", "oldTag2")
-      end
-    end
+        before { create_admin_only_tags(["announcements"]) }
 
-    describe "can tag topics and create tags" do
-      before do
-        guardian.stubs(:can_create_tag?).returns(true)
-        guardian.stubs(:can_tag_topics?).returns(true)
-      end
+        it "admins can use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["announcements"])
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+          expect(topic.tags.pluck(:name)).to contain_exactly("announcements")
+        end
 
-      it "returns given tag names if can create new tags and tag topics" do
-        expect(described_class.tags_for_saving(%w[newtag1 newtag2], guardian).try(:sort)).to eq(
-          %w[newtag1 newtag2],
-        )
-      end
-
-      it "only sanitizes new tags" do
-        # for backwards compat
-        Tag.new(name: "math=fun").save(validate: false)
-        expect(
-          described_class.tags_for_saving(%w[math=fun fun*2@gmail.com], guardian).try(:sort),
-        ).to eq(%w[math=fun fun2gmail.com].sort)
-      end
-    end
-
-    describe "clean_tag" do
-      it "downcases new tags if setting enabled" do
-        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
-
-        SiteSetting.force_lowercase_tags = false
-        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
-      end
-
-      it "removes zero-width spaces" do
-        expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
-      end
-
-      it "allows periods in the middle of tag names" do
-        expect(DiscourseTagging.clean_tag("node.js")).to eq("node.js")
-        expect(DiscourseTagging.clean_tag(".node.js.")).to eq("node.js")
-      end
-
-      it "removes multiple consecutive dashes" do
-        expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
-        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
-      end
-    end
-
-    describe "with plugin modifiers" do
-      let!(:plugin) { Plugin::Instance.new }
-      let!(:modifier) { :tags_for_saving }
-
-      let!(:modify_tag_names_block) do
-        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags.map! { |t| "plugin-#{t}" } }
-      end
-
-      let!(:add_tag_block) do
-        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags << "added-by-plugin" }
-      end
-
-      let!(:remove_tag_block) do
-        Proc.new do |saving_tags, tag_names, guardian, opts|
-          saving_tags.delete_if { |t| t == "tag2" }
+        it "moderators can't use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, moderator_guardian, ["announcements"])
+          expect(valid).to eq(false)
+          expect(topic.errors[:base]&.first).to eq(
+            I18n.t("tags.restricted_tag_disallowed", tag: "announcements"),
+          )
         end
       end
 
-      it "allows plugins to modify tag names before saving" do
-        DiscoursePluginRegistry.register_modifier(plugin, modifier, &modify_tag_names_block)
+      context "with non-staff users in tag group groups" do
+        fab!(:non_staff_group) { Fabricate(:group, name: "non_staff_group") }
 
-        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
-          %w[plugin-tag1 plugin-tag2].sort,
-        )
-      ensure
-        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &modify_tag_names_block)
-      end
+        before { create_limited_tags("Group for Non-Staff", non_staff_group.id, ["alpha"]) }
 
-      it "allows plugins to add tag names before saving" do
-        DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_tag_block)
+        it "can use hidden tag if in correct group" do
+          non_staff_group.add(user)
 
-        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
-          %w[tag1 tag2 added-by-plugin].sort,
-        )
-      ensure
-        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_tag_block)
-      end
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["alpha"])
 
-      it "allows plugins to remove tag names before saving" do
-        DiscoursePluginRegistry.register_modifier(plugin, modifier, &remove_tag_block)
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+        end
 
-        expect(described_class.tags_for_saving(%w[tag1 tag2 tag3], guardian).try(:sort)).to eq(
-          %w[tag1 tag3].sort,
-        )
-      ensure
-        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &remove_tag_block)
+        it "returns error if user is not in correct group" do
+          user2 = Fabricate(:user)
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user2), ["alpha"])
+          expect(valid).to eq(false)
+        end
       end
     end
-  end
 
-  describe "Tag in multiple tag groups" do
-    fab!(:parent, :tag)
-    fab!(:child, :tag)
-    fab!(:no_show_tag, :tag)
+    it "respects category allow_global_tags setting" do
+      tag = Fabricate(:tag)
+      other_tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
+      other_category = Fabricate(:category, allowed_tags: [other_tag.name])
+      topic = Fabricate(:topic, category: category)
 
-    fab!(:no_show_tag_group) do
-      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
+      result =
+        DiscourseTagging.tag_topic_by_names(
+          topic,
+          Guardian.new(admin),
+          [tag.name, other_tag.name, "hello"],
+        )
+      expect(result).to eq(true)
+      expect(topic.tags.pluck(:name)).to contain_exactly(tag.name)
+
+      category.update!(allow_global_tags: true)
+      result =
+        DiscourseTagging.tag_topic_by_names(
+          topic,
+          Guardian.new(admin),
+          [tag.name, other_tag.name, "hello"],
+        )
+      expect(result).to eq(true)
+      expect(topic.tags.pluck(:name)).to contain_exactly(tag.name, "hello")
     end
 
-    fab!(:child_tag_group) do
-      Fabricate(
-        :tag_group,
-        permissions: {
-          "everyone" => 1,
-        },
-        tag_names: [child.name, no_show_tag.name],
-        parent_tag_id: parent.id,
-      )
+    it "raises an error if no tags could be updated" do
+      tag = Fabricate(:tag)
+      other_tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      category = Fabricate(:category, allowed_tag_groups: [tag_group.name])
+      other_category = Fabricate(:category, allowed_tags: [other_tag.name])
+      topic = Fabricate(:topic, category: category)
+
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [other_tag.name])
+      expect(result).to eq(false)
+      expect(topic.tags.pluck(:name)).to be_blank
     end
 
-    fab!(:parent_tag_group) do
-      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [parent.name])
+    it "can remove tags and keep existent ones" do
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      topic = Fabricate(:topic, tags: [tag1, tag2])
+      Fabricate(:category, allowed_tags: [tag1.name])
+
+      result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
+
+      expect(result).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to eq([tag1.name])
     end
 
-    fab!(:category) do
-      Fabricate(:category, allowed_tag_groups: [parent_tag_group.name, child_tag_group.name])
+    context "when respecting category minimum_required_tags setting" do
+      fab!(:category) { Fabricate(:category, minimum_required_tags: 2) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+
+      it "when tags are not present" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
+        )
+      end
+
+      it "when tags are less than minimum_required_tags" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
+        )
+      end
+
+      it "when tags are equal to minimum_required_tags" do
+        valid =
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+      end
+
+      it "lets admin tag a topic regardless of minimum_required_tags" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+      end
     end
 
-    # this test is to make sure that the parent tag is the only one returned when the child tag is also in a tag group
-    # allowed in the category
-    it "onlies return the parent tag" do
-      tags =
-        DiscourseTagging.filter_allowed_tags(
-          Guardian.new(user),
-          selected_tags: nil,
-          for_input: true,
-          category: category,
-          term: "",
-        ).map(&:name)
+    context "with hidden tags" do
+      fab!(:hidden_tag, :tag)
+      before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
-      expect(tags).to include(parent.name)
-      expect(tags).not_to include(child.name)
-      expect(tags).not_to include(no_show_tag.name)
+      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+
+      it "user cannot add hidden tag by knowing its name" do
+        expect(
+          PostRevisor.new(post).revise!(
+            topic.user,
+            raw: post.raw + " edit",
+            tags: [hidden_tag.name],
+          ),
+        ).to be_falsey
+        expect(topic.reload.tags).to be_empty
+      end
+
+      it "admin can add hidden tag" do
+        expect(
+          PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name]),
+        ).to be_truthy
+        expect(topic.reload.tags).to eq([hidden_tag])
+      end
+
+      it "user does not get an error when editing their topic with a hidden tag" do
+        PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])
+
+        expect(
+          PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: []),
+        ).to be_truthy
+
+        expect(topic.reload.tags).to eq([hidden_tag])
+      end
     end
-  end
 
-  describe "staff_tag_names" do
-    fab!(:tag)
+    context "with tag group with parent tag" do
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+      let(:tag_group) { Fabricate(:tag_group, parent_tag_id: tag1.id) }
 
-    fab!(:staff_tag, :tag)
-    fab!(:other_staff_tag, :tag)
+      before { tag_group.tags = [tag3] }
 
-    let!(:staff_tag_group) do
-      Fabricate(
-        :tag_group,
-        permissions: {
-          "staff" => 1,
-          "everyone" => 3,
-        },
-        tag_names: [staff_tag.name],
-      )
+      it "can tag with parent" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to eq([tag1.name])
+      end
+
+      it "can tag with parent and a tag" do
+        valid =
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag3.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(*[tag1, tag3].map(&:name))
+      end
+
+      it "adds all parent tags that are missing" do
+        parent_tag = Fabricate(:tag, name: "parent")
+        tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
+        tag_group2.tags = [tag2]
+        valid =
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name, tag2.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(
+          *[tag1, tag2, tag3, parent_tag].map(&:name),
+        )
+      end
+
+      it "fails when parent tag missing will conflict with another tag from tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag2 will insert parent_tag which is missing. parent_tag will conflict with parent_tag2
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag2.name, tag2.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag2.name, tag2.name].sort.join(", "),
+          ),
+        )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag4 will insert parent_tag2 which is missing. parent_tag will conflict with parent_tag2
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag1.name, tag4.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag.name, tag4.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails when multiple parent tag missing will conflict with another tag from tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag3 = Fabricate(:tag, name: "parent-3")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2, parent_tag3], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag2.id)
+        child_tag_group3 = Fabricate(:tag_group, tags: [tag5], parent_tag_id: parent_tag3.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+              child_tag_group3.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag4 and tag5 will insert parent_tag2 and parent_tag3 which are missing. they will conflict with parent_tag
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag4.name, tag5.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [parent_tag.name, tag4.name, tag5.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails when multiple parent tag missing will conflict in tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+        tag5 = Fabricate(:tag, name: "fun5")
+
+        child_tag_group =
+          Fabricate(:tag_group, tags: [tag1, tag2, tag3], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag4, tag5], parent_tag_id: parent_tag2.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag1 and tag4 will insert parent_tag and parent_tag2 which are missing. they will conflict with each other
+        valid =
+          DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag4.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.limited_to_one_tag_from_group",
+            tags: [tag1.name, tag4.name].sort.join(", "),
+          ),
+        )
+      end
+
+      it "fails with multiple errors when parent tag missing will conflict in more than one tag group set to one tag per topic" do
+        parent_tag = Fabricate(:tag, name: "parent-1")
+        parent_tag2 = Fabricate(:tag, name: "parent-2")
+        parent_tag_group =
+          Fabricate(:tag_group, tags: [parent_tag, parent_tag2], one_per_topic: true)
+
+        parent_tag3 = Fabricate(:tag, name: "parent-3")
+        parent_tag4 = Fabricate(:tag, name: "parent-4")
+        parent_tag_group2 =
+          Fabricate(:tag_group, tags: [parent_tag3, parent_tag4], one_per_topic: true)
+
+        tag4 = Fabricate(:tag, name: "fun4")
+
+        child_tag_group = Fabricate(:tag_group, tags: [tag1], parent_tag_id: parent_tag.id)
+        child_tag_group2 = Fabricate(:tag_group, tags: [tag2], parent_tag_id: parent_tag2.id)
+        child_tag_group3 = Fabricate(:tag_group, tags: [tag3], parent_tag_id: parent_tag3.id)
+        child_tag_group4 = Fabricate(:tag_group, tags: [tag4], parent_tag_id: parent_tag4.id)
+
+        tag_limited_category =
+          Fabricate(
+            :category,
+            allowed_tag_groups: [
+              parent_tag_group.name,
+              parent_tag_group2.name,
+              child_tag_group.name,
+              child_tag_group2.name,
+              child_tag_group3.name,
+              child_tag_group4.name,
+            ],
+          )
+
+        topic = Fabricate(:topic, category: tag_limited_category)
+
+        # tag2 will insert parent_tag2 which is missing. it will conflict with parent_tag
+        # tag4 will insert parent_tag4 which is missing. it will conflict with parent_tag3
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, tag2.name, parent_tag3.name, tag4.name],
+          )
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]).to contain_exactly(
+          *[[parent_tag.name, tag2.name], [parent_tag3.name, tag4.name]].map do |conflicting_tags|
+            I18n.t("tags.limited_to_one_tag_from_group", tags: conflicting_tags.sort.join(", "))
+          end,
+        )
+      end
+
+      it "adds only the necessary parent tags" do
+        common = Fabricate(:tag, name: "common")
+        tag_group.tags = [tag3, common]
+
+        parent_tag = Fabricate(:tag, name: "parent")
+        tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
+        tag_group2.tags = [tag2, common]
+
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic,
+            Guardian.new(user),
+            [parent_tag.name, common.name],
+          )
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
+      end
+
+      context "when a tag belongs to tag groups restricted to different categories" do
+        fab!(:category_a_tag) { Fabricate(:tag, name: "cat-a-tag") }
+        fab!(:parent_a) { Fabricate(:tag, name: "parent-a") }
+        fab!(:parent_b) { Fabricate(:tag, name: "parent-b") }
+
+        fab!(:tag_group_a) { Fabricate(:tag_group, parent_tag_id: parent_a.id, tags: [tag3]) }
+        fab!(:tag_group_b) { Fabricate(:tag_group, parent_tag_id: parent_b.id, tags: [tag3]) }
+        fab!(:category_a_tag_group) { Fabricate(:tag_group, tags: [category_a_tag]) }
+        fab!(:global_parent_tag) { Fabricate(:tag, name: "global-parent") }
+        fab!(:global_only_tag) { Fabricate(:tag, name: "global-only-tag") }
+        fab!(:global_tag_group) do
+          Fabricate(:tag_group, parent_tag_id: global_parent_tag.id, tags: [global_only_tag])
+        end
+
+        fab!(:category_a) do
+          Fabricate(:category, allowed_tag_groups: [tag_group_a.name, category_a_tag_group.name])
+        end
+        fab!(:category_b) { Fabricate(:category, allowed_tag_groups: [tag_group_b.name]) }
+
+        it "only adds parent tags from tag groups restricted to the topic's category" do
+          topic_in_a = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic_in_a,
+              Guardian.new(user),
+              [category_a_tag.name, tag3.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic_in_a.reload.tags.map(&:name)
+          expect(tag_names).to include(parent_a.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+
+        it "does not add parent tags from category-restricted groups when topic is in an unrestricted category" do
+          unrestricted_category = Fabricate(:category)
+          topic = Fabricate(:topic, category: unrestricted_category)
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).not_to include(parent_a.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+
+        it "adds parent tags from global tag groups when the category allows them" do
+          category_a.update!(allow_global_tags: true)
+          topic = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic,
+              Guardian.new(user),
+              [category_a_tag.name, global_only_tag.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).to include(global_parent_tag.name)
+        end
+
+        it "adds parents from global and category-specific tag groups when allowed" do
+          category_a.update!(allow_global_tags: true)
+          global_tag_group.tags = [global_only_tag, tag3]
+
+          topic = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic,
+              Guardian.new(user),
+              [category_a_tag.name, tag3.name, global_only_tag.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).to include(parent_a.name)
+          expect(tag_names).to include(global_parent_tag.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+
+        it "does not add parent tags from global groups when the category disallows them" do
+          category_a.update!(allow_global_tags: false)
+          category_a_tag_group.tags = [category_a_tag, global_only_tag]
+
+          topic = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic,
+              Guardian.new(user),
+              [category_a_tag.name, global_only_tag.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).not_to include(global_parent_tag.name)
+        end
+
+        it "still adds category-specific parent tags when global tags are disallowed" do
+          category_a.update!(allow_global_tags: false)
+          topic = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic,
+              Guardian.new(user),
+              [category_a_tag.name, tag3.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).to include(parent_a.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+      end
+
+      context "when enforcing required tags from a tag group" do
+        fab!(:category)
+        fab!(:tag_group)
+        fab!(:topic) { Fabricate(:topic, category: category) }
+
+        before do
+          tag_group.tags = [tag1, tag2]
+          category.update(
+            category_required_tag_groups: [
+              CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+            ],
+          )
+        end
+
+        it "when no tags are present" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+          expect(valid).to eq(false)
+          expect(topic.errors[:base]&.first).to eq(
+            I18n.t(
+              "tags.required_tags_from_group",
+              count: 1,
+              tag_group_name: tag_group.name,
+              tags: tag_group.tags.pluck(:name).join(", "),
+            ),
+          )
+        end
+
+        it "when tags are not part of the tag group" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
+          expect(valid).to eq(false)
+          expect(topic.errors[:base]&.first).to eq(
+            I18n.t(
+              "tags.required_tags_from_group",
+              count: 1,
+              tag_group_name: tag_group.name,
+              tags: tag_group.tags.pluck(:name).join(", "),
+            ),
+          )
+        end
+
+        it "when requirement is met" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+          expect(valid).to eq(true)
+          valid =
+            DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
+          expect(valid).to eq(true)
+          valid =
+            DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag2.name, tag3.name])
+          expect(valid).to eq(true)
+        end
+
+        it "lets staff ignore the restriction" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [])
+          expect(valid).to eq(true)
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag3.name])
+          expect(valid).to eq(true)
+        end
+      end
+
+      context "with tag synonyms" do
+        fab!(:topic)
+
+        fab!(:syn1) { Fabricate(:tag, name: "synonym1", target_tag: tag1) }
+        fab!(:syn2) { Fabricate(:tag, name: "synonym2", target_tag: tag1) }
+
+        it "uses the base tag when a synonym is given" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [syn1.name])
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+          expect_same_tag_names(topic.reload.tags, [tag1])
+        end
+
+        it "handles multiple synonyms for the same tag" do
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic,
+              Guardian.new(user),
+              [tag1.name, syn1.name, syn2.name],
+            )
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+          expect_same_tag_names(topic.reload.tags, [tag1])
+        end
+      end
     end
 
-    it "returns all staff tags" do
-      expect(DiscourseTagging.staff_tag_names).to contain_exactly(staff_tag.name)
+    describe ".tag_topic" do
+      fab!(:topic)
+      fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+      fab!(:tag2) { Fabricate(:tag, name: "tag2") }
 
-      staff_tag_group.update(tag_names: [staff_tag.name, other_staff_tag.name])
-      expect(DiscourseTagging.staff_tag_names).to contain_exactly(
-        staff_tag.name,
-        other_staff_tag.name,
-      )
+      it "allows tagging topics by an array of tag names" do
+        valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), %w[tag1 tag2])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
 
-      staff_tag_group.update(tag_names: [other_staff_tag.name])
-      expect(DiscourseTagging.staff_tag_names).to contain_exactly(other_staff_tag.name)
+      it "allows tagging topics by an array of hash with the id key" do
+        valid =
+          DiscourseTagging.tag_topic(
+            topic,
+            Guardian.new(admin),
+            [{ id: tag1.id, name: "tHE wROnG nAme" }, { id: tag2.id, name: "tag2" }],
+          )
+        expect(valid).to eq(true)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "allows tagging topics using new tags" do
+        valid =
+          DiscourseTagging.tag_topic(
+            topic,
+            Guardian.new(admin),
+            [{ name: "new-tag-a" }, { name: "new-tag-b" }],
+          )
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.pluck(:name)).to contain_exactly("new-tag-a", "new-tag-b")
+      end
+
+      it "can tag topics using old and new tags" do
+        valid =
+          DiscourseTagging.tag_topic(
+            topic,
+            Guardian.new(admin),
+            [{ id: tag1.id, name: "tag1" }, { name: "brand-new" }],
+          )
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "brand-new")
+      end
+
+      it "clears tags when given blank input" do
+        topic.tags = [tag1]
+        topic.save!
+        valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), [])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags).to be_empty
+      end
     end
-  end
 
-  describe "#add_or_create_synonyms" do
-    it "can add an existing tag" do
-      expect {
+    describe "tag_topic_by_ids" do
+      fab!(:topic)
+      fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+      fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+      it "tags a topic using tag IDs" do
+        valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [tag1.id, tag2.id])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "returns false for non-existent IDs" do
+        valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [-1])
+        expect(valid).to eq(true) # succeeds but with no tags
+        expect(topic.reload.tags).to be_empty
+      end
+
+      it "clears tags when given empty array" do
+        topic.tags = [tag1]
+        topic.save!
+        valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags).to be_empty
+      end
+    end
+
+    describe "#tags_for_saving" do
+      it "returns empty array if input is nil" do
+        expect(described_class.tags_for_saving(nil, guardian)).to eq([])
+      end
+
+      it "returns empty array if input is empty" do
+        expect(described_class.tags_for_saving([], guardian)).to eq([])
+      end
+
+      it "returns empty array if can't tag topics" do
+        guardian.stubs(:can_tag_topics?).returns(false)
+        expect(described_class.tags_for_saving(["newtag"], guardian)).to eq([])
+      end
+
+      describe "can tag topics but not create tags" do
+        before do
+          guardian.stubs(:can_create_tag?).returns(false)
+          guardian.stubs(:can_tag_topics?).returns(true)
+        end
+
+        it "returns empty array if all tags are new" do
+          expect(described_class.tags_for_saving(%w[newtag newtagplz], guardian)).to eq([])
+        end
+
+        it "returns only existing tag names" do
+          Fabricate(:tag, name: "oldtag")
+          Fabricate(:tag, name: "oldTag2")
+          expect(
+            described_class.tags_for_saving(%w[newtag oldtag oldtag2], guardian),
+          ).to contain_exactly("oldtag", "oldTag2")
+        end
+      end
+
+      describe "can tag topics and create tags" do
+        before do
+          guardian.stubs(:can_create_tag?).returns(true)
+          guardian.stubs(:can_tag_topics?).returns(true)
+        end
+
+        it "returns given tag names if can create new tags and tag topics" do
+          expect(described_class.tags_for_saving(%w[newtag1 newtag2], guardian).try(:sort)).to eq(
+            %w[newtag1 newtag2],
+          )
+        end
+
+        it "only sanitizes new tags" do
+          # for backwards compat
+          Tag.new(name: "math=fun").save(validate: false)
+          expect(
+            described_class.tags_for_saving(%w[math=fun fun*2@gmail.com], guardian).try(:sort),
+          ).to eq(%w[math=fun fun2gmail.com].sort)
+        end
+      end
+
+      describe "clean_tag" do
+        it "downcases new tags if setting enabled" do
+          expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
+
+          SiteSetting.force_lowercase_tags = false
+          expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
+        end
+
+        it "removes zero-width spaces" do
+          expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
+        end
+
+        it "allows periods in the middle of tag names" do
+          expect(DiscourseTagging.clean_tag("node.js")).to eq("node.js")
+          expect(DiscourseTagging.clean_tag(".node.js.")).to eq("node.js")
+        end
+
+        it "removes multiple consecutive dashes" do
+          expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
+          expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
+        end
+      end
+
+      describe "with plugin modifiers" do
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :tags_for_saving }
+
+        let!(:modify_tag_names_block) do
+          Proc.new do |saving_tags, tag_names, guardian, opts|
+            saving_tags.map! { |t| "plugin-#{t}" }
+          end
+        end
+
+        let!(:add_tag_block) do
+          Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags << "added-by-plugin" }
+        end
+
+        let!(:remove_tag_block) do
+          Proc.new do |saving_tags, tag_names, guardian, opts|
+            saving_tags.delete_if { |t| t == "tag2" }
+          end
+        end
+
+        it "allows plugins to modify tag names before saving" do
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &modify_tag_names_block)
+
+          expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+            %w[plugin-tag1 plugin-tag2].sort,
+          )
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &modify_tag_names_block)
+        end
+
+        it "allows plugins to add tag names before saving" do
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_tag_block)
+
+          expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+            %w[tag1 tag2 added-by-plugin].sort,
+          )
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_tag_block)
+        end
+
+        it "allows plugins to remove tag names before saving" do
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &remove_tag_block)
+
+          expect(described_class.tags_for_saving(%w[tag1 tag2 tag3], guardian).try(:sort)).to eq(
+            %w[tag1 tag3].sort,
+          )
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &remove_tag_block)
+        end
+      end
+    end
+
+    describe "Tag in multiple tag groups" do
+      fab!(:parent, :tag)
+      fab!(:child, :tag)
+      fab!(:no_show_tag, :tag)
+
+      fab!(:no_show_tag_group) do
+        Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
+      end
+
+      fab!(:child_tag_group) do
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "everyone" => 1,
+          },
+          tag_names: [child.name, no_show_tag.name],
+          parent_tag_id: parent.id,
+        )
+      end
+
+      fab!(:parent_tag_group) do
+        Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [parent.name])
+      end
+
+      fab!(:category) do
+        Fabricate(:category, allowed_tag_groups: [parent_tag_group.name, child_tag_group.name])
+      end
+
+      # this test is to make sure that the parent tag is the only one returned when the child tag is also in a tag group
+      # allowed in the category
+      it "onlies return the parent tag" do
+        tags =
+          DiscourseTagging.filter_allowed_tags(
+            Guardian.new(user),
+            selected_tags: nil,
+            for_input: true,
+            category: category,
+            term: "",
+          ).map(&:name)
+
+        expect(tags).to include(parent.name)
+        expect(tags).not_to include(child.name)
+        expect(tags).not_to include(no_show_tag.name)
+      end
+    end
+
+    describe "staff_tag_names" do
+      fab!(:tag)
+
+      fab!(:staff_tag, :tag)
+      fab!(:other_staff_tag, :tag)
+
+      let!(:staff_tag_group) do
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => 1,
+            "everyone" => 3,
+          },
+          tag_names: [staff_tag.name],
+        )
+      end
+
+      it "returns all staff tags" do
+        expect(DiscourseTagging.staff_tag_names).to contain_exactly(staff_tag.name)
+
+        staff_tag_group.update(tag_names: [staff_tag.name, other_staff_tag.name])
+        expect(DiscourseTagging.staff_tag_names).to contain_exactly(
+          staff_tag.name,
+          other_staff_tag.name,
+        )
+
+        staff_tag_group.update(tag_names: [other_staff_tag.name])
+        expect(DiscourseTagging.staff_tag_names).to contain_exactly(other_staff_tag.name)
+      end
+    end
+
+    describe "#add_or_create_synonyms" do
+      it "can add an existing tag" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name]),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "can add an existing tag by ID" do
+        expect {
+          expect(DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [tag2.id])).to eq(
+            true,
+          )
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "can add an existing tag when both tags added to same topic" do
+        topic = Fabricate(:topic, tags: [tag1, tag2, tag3])
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name]),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect_same_tag_names(topic.reload.tags, [tag1, tag3])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "can add existing tag with wrong case" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name.upcase]),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "removes target tag name from synonyms if present" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              new_synonym_names: [tag1.name, tag2.name],
+            ),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "ignores target tag ID passed in synonym_tag_ids" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              synonym_tag_ids: [tag1.id, tag2.id],
+              new_synonym_names: [],
+            ),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "replaces topic synonym tags with target tag" do
+        tag4, tag5 = 2.times.collect { Fabricate(:tag) }
+        topic = Fabricate(:topic, tags: [tag2, tag3, tag4])
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              new_synonym_names: [tag2.name, tag3.name],
+            ),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2, tag3])
+        expect_same_tag_names(topic.reload.tags, [tag1, tag4])
+        expect(tag5.reload).to be_present
+      end
+
+      it "can create new tags" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"]),
+          ).to eq(true)
+        }.to change { Tag.count }.by(1)
+        s = Tag.where_name("synonym1").first
+        expect_same_tag_names(tag1.reload.synonyms, [s])
+        expect(s.target_tag).to eq(tag1)
+      end
+
+      it "generates slug for new tags" do
+        DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"])
+        s = Tag.where_name("synonym1").first
+        expect(s.slug).to eq("synonym1")
+      end
+
+      it "can add existing and new tags" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              new_synonym_names: [tag2.name, "synonym1"],
+            ),
+          ).to eq(true)
+        }.to change { Tag.count }.by(1)
+        s = Tag.where_name("synonym1").first
+        expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
+        expect(s.target_tag).to eq(tag1)
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "can add existing tags by ID and new tags by name" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              synonym_tag_ids: [tag2.id],
+              new_synonym_names: ["synonym1"],
+            ),
+          ).to eq(true)
+        }.to change { Tag.count }.by(1)
+        s = Tag.where_name("synonym1").first
+        expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
+        expect(s.target_tag).to eq(tag1)
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
+
+      it "can change a synonym's target tag" do
+        synonym = Fabricate(:tag, name: "synonym1", target_tag: tag1)
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(tag2, new_synonym_names: [synonym.name]),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag2.reload.synonyms, [synonym])
+        expect(tag1.reload.synonyms.count).to eq(0)
+        expect(synonym.reload.target_tag).to eq(tag2)
+      end
+
+      it "doesn't allow tags that have synonyms to become synonyms" do
+        tag2.synonyms << Fabricate(:tag)
+        value = DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])
+        expect(value).to be_a(Hash)
+        expect(value).to have_key(tag2.name)
+        expect(tag1.reload.synonyms.count).to eq(0)
+        expect(tag2.reload.synonyms.count).to eq(1)
+      end
+
+      it "changes tag of topics" do
+        topic = Fabricate(:topic, tags: [tag2])
         expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
           true,
         )
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
+        expect_same_tag_names(topic.reload.tags, [tag1])
 
-    it "can add an existing tag by ID" do
-      expect {
-        expect(DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [tag2.id])).to eq(
-          true,
-        )
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
+        tag1.reload
 
-    it "can add an existing tag when both tags added to same topic" do
-      topic = Fabricate(:topic, tags: [tag1, tag2, tag3])
-      expect {
-        expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
-          true,
-        )
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect_same_tag_names(topic.reload.tags, [tag1, tag3])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
+        expect(tag1.public_topic_count).to eq(1)
+        expect(tag1.staff_topic_count).to eq(1)
 
-    it "can add existing tag with wrong case" do
-      expect {
+        tag2.reload
+
+        expect(tag2.public_topic_count).to eq(0)
+        expect(tag2.staff_topic_count).to eq(0)
+      end
+
+      it "returns true for empty inputs" do
+        expect(DiscourseTagging.add_or_create_synonyms(tag1)).to eq(true)
         expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name.upcase]),
+          DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [], new_synonym_names: []),
         ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
+        expect(tag1.reload.synonyms.count).to eq(0)
+      end
 
-    it "removes target tag name from synonyms if present" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag1.name, tag2.name]),
-        ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
-
-    it "ignores target tag ID passed in synonym_tag_ids" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(
-            tag1,
-            synonym_tag_ids: [tag1.id, tag2.id],
-            new_synonym_names: [],
-          ),
-        ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
-
-    it "replaces topic synonym tags with target tag" do
-      tag4, tag5 = 2.times.collect { Fabricate(:tag) }
-      topic = Fabricate(:topic, tags: [tag2, tag3, tag4])
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name, tag3.name]),
-        ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2, tag3])
-      expect_same_tag_names(topic.reload.tags, [tag1, tag4])
-      expect(tag5.reload).to be_present
-    end
-
-    it "can create new tags" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"]),
-        ).to eq(true)
-      }.to change { Tag.count }.by(1)
-      s = Tag.where_name("synonym1").first
-      expect_same_tag_names(tag1.reload.synonyms, [s])
-      expect(s.target_tag).to eq(tag1)
-    end
-
-    it "generates slug for new tags" do
-      DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"])
-      s = Tag.where_name("synonym1").first
-      expect(s.slug).to eq("synonym1")
-    end
-
-    it "can add existing and new tags" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name, "synonym1"]),
-        ).to eq(true)
-      }.to change { Tag.count }.by(1)
-      s = Tag.where_name("synonym1").first
-      expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
-      expect(s.target_tag).to eq(tag1)
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
-
-    it "can add existing tags by ID and new tags by name" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(
-            tag1,
-            synonym_tag_ids: [tag2.id],
-            new_synonym_names: ["synonym1"],
-          ),
-        ).to eq(true)
-      }.to change { Tag.count }.by(1)
-      s = Tag.where_name("synonym1").first
-      expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
-      expect(s.target_tag).to eq(tag1)
-      expect(tag2.reload.target_tag).to eq(tag1)
-    end
-
-    it "can change a synonym's target tag" do
-      synonym = Fabricate(:tag, name: "synonym1", target_tag: tag1)
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(tag2, new_synonym_names: [synonym.name]),
-        ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag2.reload.synonyms, [synonym])
-      expect(tag1.reload.synonyms.count).to eq(0)
-      expect(synonym.reload.target_tag).to eq(tag2)
-    end
-
-    it "doesn't allow tags that have synonyms to become synonyms" do
-      tag2.synonyms << Fabricate(:tag)
-      value = DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])
-      expect(value).to be_a(Hash)
-      expect(value).to have_key(tag2.name)
-      expect(tag1.reload.synonyms.count).to eq(0)
-      expect(tag2.reload.synonyms.count).to eq(1)
-    end
-
-    it "changes tag of topics" do
-      topic = Fabricate(:topic, tags: [tag2])
-      expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
-        true,
-      )
-      expect_same_tag_names(topic.reload.tags, [tag1])
-
-      tag1.reload
-
-      expect(tag1.public_topic_count).to eq(1)
-      expect(tag1.staff_topic_count).to eq(1)
-
-      tag2.reload
-
-      expect(tag2.public_topic_count).to eq(0)
-      expect(tag2.staff_topic_count).to eq(0)
-    end
-
-    it "returns true for empty inputs" do
-      expect(DiscourseTagging.add_or_create_synonyms(tag1)).to eq(true)
-      expect(
-        DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [], new_synonym_names: []),
-      ).to eq(true)
-      expect(tag1.reload.synonyms.count).to eq(0)
-    end
-
-    it "deduplicates when same tag passed as both ID and name" do
-      expect {
-        expect(
-          DiscourseTagging.add_or_create_synonyms(
-            tag1,
-            synonym_tag_ids: [tag2.id],
-            new_synonym_names: [tag2.name],
-          ),
-        ).to eq(true)
-      }.to_not change { Tag.count }
-      expect_same_tag_names(tag1.reload.synonyms, [tag2])
-      expect(tag2.reload.target_tag).to eq(tag1)
+      it "deduplicates when same tag passed as both ID and name" do
+        expect {
+          expect(
+            DiscourseTagging.add_or_create_synonyms(
+              tag1,
+              synonym_tag_ids: [tag2.id],
+              new_synonym_names: [tag2.name],
+            ),
+          ).to eq(true)
+        }.to_not change { Tag.count }
+        expect_same_tag_names(tag1.reload.synonyms, [tag2])
+        expect(tag2.reload.target_tag).to eq(tag1)
+      end
     end
   end
-end
 end

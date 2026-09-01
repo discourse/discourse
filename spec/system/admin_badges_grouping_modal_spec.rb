@@ -11,7 +11,6 @@ describe "Admin Badges Grouping Modal" do
   let(:badges_page) { PageObjects::Pages::AdminBadges.new }
   let(:badges_groupings_page) { PageObjects::Pages::AdminBadgesGroupings.new }
 
-
   context "when adding a new grouping" do
     it "saves it" do
       badges_page.visit_page(Badge::Autobiographer).edit_groupings

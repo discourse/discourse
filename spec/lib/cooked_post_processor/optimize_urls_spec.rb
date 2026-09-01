@@ -153,11 +153,7 @@ RSpec.describe CookedPostProcessor, "#optimize_urls" do
         upload.update_column(:secure, true)
 
         the_post =
-          Fabricate(
-            :post,
-            user: user_with_auto_groups,
-            raw: "This post has a custom emoji :trout:",
-          )
+          Fabricate(:post, user: user_with_auto_groups, raw: "This post has a custom emoji :trout:")
         the_post.cook(the_post.raw)
 
         cpp = CookedPostProcessor.new(the_post)

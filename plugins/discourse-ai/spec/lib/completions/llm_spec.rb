@@ -44,8 +44,6 @@ RSpec.describe DiscourseAi::Completions::Llm do
   fab!(:user)
   fab!(:model, :llm_model)
 
-
-
   def stub_response(status: 200, body: success_body)
     WebMock.stub_request(:post, model.url).to_return(
       status:,

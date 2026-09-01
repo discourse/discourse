@@ -21,7 +21,6 @@ RSpec.describe Assignment do
     let!(:assignment1) { Fabricate(:topic_assignment, assigned_to: group) }
     let!(:assignment2) { Fabricate(:post_assignment, assigned_to: group) }
 
-
     it "returns active assignments for the group" do
       expect(assignments).to contain_exactly(assignment1, assignment2)
     end

@@ -186,7 +186,6 @@ RSpec.describe Discourse do
       DiscoursePluginRegistry.reset!
     end
 
-
     it "can find plugins correctly" do
       expect(Discourse.plugins).to include(plugin1, plugin2)
 
@@ -730,10 +729,6 @@ RSpec.describe Discourse do
 
     let!(:theme) { Fabricate(:theme) }
     let!(:upload) { Fabricate(:s3_image_upload) }
-
-
-
-
 
     it "invalidates all theme settings and CSS caches" do
       Stylesheet::Manager.clear_theme_cache!

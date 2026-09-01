@@ -287,8 +287,7 @@ RSpec.describe Guardian, "#can_edit?" do
 
         it "returns false when the post topic's category allow_unlimited_owner_edits_on_first_post but the post is not the first in the topic" do
           old_post.topic.category.update(allow_unlimited_owner_edits_on_first_post: true)
-          new_post =
-            Fabricate(:post, user: owner, topic: old_post.topic, created_at: 6.minutes.ago)
+          new_post = Fabricate(:post, user: owner, topic: old_post.topic, created_at: 6.minutes.ago)
           expect(Guardian.new(owner).can_edit?(new_post)).to be_falsey
         end
 

@@ -103,8 +103,6 @@ RSpec.describe ThemesInstallTask do
       expect(Theme.where(name: "fail!").exists?).to eq(false)
     end
 
-
-
     describe "no options" do
       it "installs a theme" do
         ThemesInstallTask.install(some_theme: theme_repo_url)

@@ -381,9 +381,7 @@ RSpec.describe NotificationsController do
       context "with notifications for inaccessible topics" do
         fab!(:sender) { Fabricate.build(:topic_allowed_user, user: Fabricate(:coding_horror)) }
         fab!(:allowed_user) { Fabricate.build(:topic_allowed_user, user: user) }
-        fab!(:another_allowed_user) do
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
-        end
+        fab!(:another_allowed_user) { Fabricate.build(:topic_allowed_user, user: Fabricate(:user)) }
         fab!(:allowed_pm) do
           Fabricate(
             :private_message_topic,
@@ -535,12 +533,7 @@ RSpec.describe NotificationsController do
           )
         end
         fab!(:topic_localization_ja) do
-          Fabricate(
-            :topic_localization,
-            topic: english_topic,
-            locale: "ja",
-            fancy_title: "こんにちは世界",
-          )
+          Fabricate(:topic_localization, topic: english_topic, locale: "ja", fancy_title: "こんにちは世界")
         end
         fab!(:notification) do
           Fabricate(

@@ -14,7 +14,6 @@ describe "DFP External Ads" do
   fab!(:user) { Fabricate(:user, trust_level: 1) }
   fab!(:topic)
 
-
   describe "DFP ads with impression tracking" do
     before do
       SiteSetting.ad_plugin_enable_tracking = true

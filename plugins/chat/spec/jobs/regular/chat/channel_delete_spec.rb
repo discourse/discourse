@@ -84,9 +84,7 @@ describe Jobs::Chat::ChannelDelete do
       hotlinked_media:
         Chat::MessageHotlinkedMedia.where(chat_message_id: deletion_context[:message_ids]).count,
       messages: Chat::Message.where(id: deletion_context[:message_ids]).count,
-      reactions: Chat::MessageReaction.where(
-        chat_message_id: deletion_context[:message_ids],
-      ).count,
+      reactions: Chat::MessageReaction.where(chat_message_id: deletion_context[:message_ids]).count,
     }
   end
 

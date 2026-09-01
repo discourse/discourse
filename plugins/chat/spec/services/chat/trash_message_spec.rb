@@ -200,11 +200,7 @@ RSpec.describe Chat::TrashMessage do
 
       context "when message is pinned" do
         fab!(:pin) do
-          Fabricate(
-            :chat_pinned_message,
-            chat_message: message,
-            chat_channel: message.chat_channel,
-          )
+          Fabricate(:chat_pinned_message, chat_message: message, chat_channel: message.chat_channel)
         end
 
         it "destroys the pin" do

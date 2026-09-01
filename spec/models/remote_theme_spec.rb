@@ -682,8 +682,6 @@ RSpec.describe RemoteTheme do
     end
   end
 
-
-
   describe "#github_diff_link" do
     it "is blank for non-github repos" do
       expect(gitlab_repo.github_diff_link).to be_blank

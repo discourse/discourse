@@ -63,8 +63,7 @@ RSpec.describe CookedPostProcessor, "#post_process" do
         HTML
       Oneboxer.stubs(:cached_onebox).with(not_oneboxed_url).returns(nil)
 
-      %i[head get].each do |method|
-        stub_request(method, url).to_return(status: 200, body: <<~RAW)
+      %i[head get].each { |method| stub_request(method, url).to_return(status: 200, body: <<~RAW) }
             <html>
               <head>
                 <title>#{title}</title>
@@ -73,7 +72,6 @@ RSpec.describe CookedPostProcessor, "#post_process" do
               </head>
             </html>
             RAW
-      end
     end
 
     after do
@@ -296,8 +294,7 @@ RSpec.describe CookedPostProcessor, "#post_process" do
 
       it "includes responsive images on demand" do
         upload.update!(width: 2000, height: 1500, filesize: 10_000, dominant_color: "FFFFFF")
-        post =
-          Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
+        post = Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
 
         # fake some optimized images
         OptimizedImage.create!(
@@ -354,8 +351,7 @@ RSpec.describe CookedPostProcessor, "#post_process" do
 
       it "doesn't include response images for cropped images" do
         upload.update!(width: 200, height: 4000, filesize: 12_345)
-        post =
-          Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
+        post = Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
 
         # fake some optimized images
         OptimizedImage.create!(
@@ -394,15 +390,11 @@ RSpec.describe CookedPostProcessor, "#post_process" do
       end
 
       context "when valid" do
-        let(:image_sizes) do
-          { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } }
-        end
+        let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } } }
 
         it "uses them" do
           expect(cpp.html).to match(%r{src="http://foo.bar/image.png" width="111" height="222"})
-          expect(cpp.html).to match(
-            %r{src="http://domain.com/picture.jpg" width="50" height="42"},
-          )
+          expect(cpp.html).to match(%r{src="http://domain.com/picture.jpg" width="50" height="42"})
           expect(cpp).to be_dirty
         end
       end
@@ -544,8 +536,7 @@ RSpec.describe CookedPostProcessor, "#post_process" do
         end
 
         it "does not add lightbox when the image source is a URL" do
-          url =
-            "http://test.discourse/#{upload_path}/original/1X/1234567890123456.svg?somepamas"
+          url = "http://test.discourse/#{upload_path}/original/1X/1234567890123456.svg?somepamas"
           url_post = Fabricate(:post, user: user_with_auto_groups, raw: "<img src=\"#{url}\">")
           processor = CookedPostProcessor.new(url_post, disable_dominant_color: true)
           FastImage.expects(:size).returns([1750, 2000])
@@ -557,7 +548,6 @@ RSpec.describe CookedPostProcessor, "#post_process" do
           )
         end
       end
-
     end
 
     context "with s3_uploads" do
@@ -587,9 +577,7 @@ RSpec.describe CookedPostProcessor, "#post_process" do
         )
       end
 
-      let(:secure_uploads_url) do
-        "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png"
-      end
+      let(:secure_uploads_url) { "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png" }
 
       let(:cooked_html) { <<~HTML }
           <p><div class="lightbox-wrapper"><a class="lightbox" href="#{secure_uploads_url}" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.png?dl=1" title="large.png"><img src="#{secure_uploads_url}" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
@@ -736,10 +724,10 @@ RSpec.describe CookedPostProcessor, "#post_process" do
 
       before do
         set_subfolder "/subfolder"
-        stub_request(
-          :get,
-          "http://#{Discourse.current_hostname}/subfolder#{upload.url}",
-        ).to_return(status: 200, body: File.new(Discourse.store.path_for(upload)))
+        stub_request(:get, "http://#{Discourse.current_hostname}/subfolder#{upload.url}").to_return(
+          status: 200,
+          body: File.new(Discourse.store.path_for(upload)),
+        )
 
         SiteSetting.max_image_height = 2000
         SiteSetting.create_thumbnails = true

@@ -132,9 +132,7 @@ RSpec.describe ExternalUploadManager do
         let(:client_sha1) { "blahblah" }
 
         it "raises an error, deletes the stub" do
-          expect { manager.transform! }.to raise_error(
-            ExternalUploadManager::ChecksumMismatchError,
-          )
+          expect { manager.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
           expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
 
           bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
@@ -143,9 +141,7 @@ RSpec.describe ExternalUploadManager do
 
         it "does not delete the stub if enable_upload_debug_mode" do
           SiteSetting.enable_upload_debug_mode = true
-          expect { manager.transform! }.to raise_error(
-            ExternalUploadManager::ChecksumMismatchError,
-          )
+          expect { manager.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
           external_stub = ExternalUploadStub.find(external_upload_stub.id)
           expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
 

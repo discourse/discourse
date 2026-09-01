@@ -505,8 +505,6 @@ RSpec.describe Jobs::ExportCsvFile do
     end
   end
 
-
-
   def to_hash(row)
     Hash[*user_list_header.zip(row).flatten]
   end

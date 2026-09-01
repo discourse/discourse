@@ -35,12 +35,9 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
     SiteSetting.discourse_automation_enabled = true
   end
 
-
   let!(:upload_reference) { Fabricate(:upload_reference, upload: upload, target: post) }
 
   let!(:file_upload_reference) { Fabricate(:upload_reference, upload: file_upload, target: post) }
-
-
 
   context "when using recurring trigger" do
     fab!(:automation) do

@@ -120,9 +120,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
 
       context "with DM channel reply threads" do
         fab!(:other_user, :user)
-        fab!(:dm_channel) do
-          Fabricate(:direct_message_channel, users: [current_user, other_user])
-        end
+        fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
         fab!(:first_message) do
           Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
         end

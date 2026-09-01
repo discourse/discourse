@@ -34,9 +34,7 @@ class MockRateLimiter
 end
 
 RSpec.describe "rate limits" do
-  fab!(:api_key_record, :api_key)
-
-  let(:api_key) { api_key_record.key }
+  let(:api_key) { Fabricate(:api_key).key }
   let!(:api_username) { "system" }
 
   around { |example| stub_const(Object, :RateLimiter, MockRateLimiter) { example.run } }

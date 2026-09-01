@@ -14,7 +14,6 @@ RSpec.describe About do
     )
   end
 
-
   describe "#stats" do
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }

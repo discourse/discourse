@@ -113,7 +113,6 @@ RSpec.describe Search do
       fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
-
       it "are visible to staff users" do
         result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:admin)))
         expect(result.tags).to contain_exactly(hidden_tag)
@@ -2016,9 +2015,7 @@ RSpec.describe Search do
     end
 
     describe ".execute" do
-      let(:old_min_search_term_length) do
-        SiteSetting.defaults.get(:min_search_term_length)
-      end
+      let(:old_min_search_term_length) { SiteSetting.defaults.get(:min_search_term_length) }
 
       before do
         old_min_search_term_length
@@ -3121,7 +3118,6 @@ RSpec.describe Search do
       Fabricate(:post, raw: "สวัสดี Rágis hello")
     end
 
-
     it("allows strips correctly") do
       results = Search.execute("hello", type_filter: "topic")
       expect(results.posts.length).to eq(1)
@@ -3145,7 +3141,6 @@ RSpec.describe Search do
       SiteSetting.search_ignore_accents = false
       Fabricate(:post, raw: "สวัสดี Régis hello")
     end
-
 
     it("allows strips correctly") do
       results = Search.execute("hello", type_filter: "topic")

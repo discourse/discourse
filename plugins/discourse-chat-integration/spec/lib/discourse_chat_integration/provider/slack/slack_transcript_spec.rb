@@ -107,7 +107,6 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider::SlackTranscrip
 
   let(:transcript) { described_class.new(channel_name: "#general", channel_id: "G1234") }
 
-
   it "doesn't raise an error when there are no messages to guess" do
     transcript.instance_variable_set(:@messages, [])
     expect(transcript.guess_first_message(skip_messages: 1)).to eq(false)

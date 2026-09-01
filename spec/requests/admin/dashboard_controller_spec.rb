@@ -1808,7 +1808,6 @@ RSpec.describe Admin::DashboardController do
         )
         sign_in(admin)
         SiteSetting.site_traffic_explorer_event_limit = 2
-
       end
 
       let!(:middle) do
@@ -1827,7 +1826,6 @@ RSpec.describe Admin::DashboardController do
           **event_attributes,
         )
       end
-
 
       it "returns no more than the configured pageview cap" do
         get "/admin/dashboard/site-traffic-explorer.json", params: request_params

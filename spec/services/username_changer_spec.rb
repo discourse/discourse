@@ -532,12 +532,12 @@ RSpec.describe UsernameChanger do
       end
 
       context "when there is a simple quote" do
-          let(:quoted_post) do
-            create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
-          end
-          let(:avatar_url) { user.avatar_template_url.gsub("{size}", "48") }
+        let(:quoted_post) do
+          create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
+        end
+        let(:avatar_url) { user.avatar_template_url.gsub("{size}", "48") }
 
-          let(:raw) { <<~RAW }
+        let(:raw) { <<~RAW }
               Lorem ipsum
 
               [quote="foo, post:1, topic:#{quoted_post.topic.id}"]
@@ -545,7 +545,7 @@ RSpec.describe UsernameChanger do
               [/quote]
             RAW
 
-          let(:expected_raw) { <<~RAW.strip }
+        let(:expected_raw) { <<~RAW.strip }
               Lorem ipsum
 
               [quote="bar, post:1, topic:#{quoted_post.topic.id}"]
@@ -553,7 +553,7 @@ RSpec.describe UsernameChanger do
               [/quote]
             RAW
 
-          let(:expected_cooked) { <<~HTML.rstrip }
+        let(:expected_cooked) { <<~HTML.rstrip }
               <p>Lorem ipsum</p>
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
@@ -565,16 +565,16 @@ RSpec.describe UsernameChanger do
               </aside>
             HTML
 
-          it "replaces the username in quote tags when the post is deleted" do
-            post =
-              create_post_and_change_username(raw: raw) do |p|
-                PostDestroyer.new(Discourse.system_user, p, context: "Automated testing").destroy
-              end
+        it "replaces the username in quote tags when the post is deleted" do
+          post =
+            create_post_and_change_username(raw: raw) do |p|
+              PostDestroyer.new(Discourse.system_user, p, context: "Automated testing").destroy
+            end
 
-            expect(post.raw).to eq(expected_raw)
-            expect(post.cooked).to match_html(expected_cooked)
-          end
+          expect(post.raw).to eq(expected_raw)
+          expect(post.cooked).to match_html(expected_cooked)
         end
+      end
 
       context "when there are oneboxes" do
         let(:quoted_post) do

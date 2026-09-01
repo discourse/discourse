@@ -307,7 +307,6 @@ RSpec.describe TopicsController do
         SiteSetting.solved_allow_multiple_solutions = true
       end
 
-
       it "includes two acceptedAnswers and a suggestedAnswer in qaschema" do
         get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
         doc = parsed_crawler_body

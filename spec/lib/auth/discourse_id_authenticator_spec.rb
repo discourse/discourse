@@ -155,7 +155,6 @@ describe Auth::DiscourseIdAuthenticator do
     end
   end
 
-
   describe "after_authenticate" do
     it "works and syncs username, email, name, avatar" do
       result = authenticator.after_authenticate(hash)

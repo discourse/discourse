@@ -54,9 +54,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
       BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
-
     end
-
 
     context "when the contract is invalid" do
       let(:params) { super().except(:start_date) }

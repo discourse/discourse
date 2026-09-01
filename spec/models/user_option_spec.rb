@@ -156,23 +156,23 @@ RSpec.describe UserOption do
     end
 
     it "has no reason when top is not in the `SiteSetting.top_menu`" do
-        SiteSetting.redirect_users_to_top_page = true
-        SiteSetting.top_menu = "latest"
-        expect(user.user_option.redirected_to_top).to eq(nil)
-      end
+      SiteSetting.redirect_users_to_top_page = true
+      SiteSetting.top_menu = "latest"
+      expect(user.user_option.redirected_to_top).to eq(nil)
+    end
 
     context "when top is in the `SiteSetting.top_menu`" do
-    before do
+      before do
         SiteSetting.redirect_users_to_top_page = true
         SiteSetting.top_menu = "latest|top"
       end
 
-    it "has no reason when there are not enough topics" do
-      SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
-      expect(user.user_option.redirected_to_top).to eq(nil)
-    end
+      it "has no reason when there are not enough topics" do
+        SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
+        expect(user.user_option.redirected_to_top).to eq(nil)
+      end
 
-    describe "a new user when there are enough topics" do
+      describe "a new user when there are enough topics" do
         before do
           SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly)
           user.stubs(:trust_level).returns(0)
@@ -209,23 +209,23 @@ RSpec.describe UserOption do
         end
       end
 
-    describe "an older user when there are enough topics" do
-      before do
-        SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly)
-        user.stubs(:trust_level).returns(1)
-      end
+      describe "an older user when there are enough topics" do
+        before do
+          SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly)
+          user.stubs(:trust_level).returns(1)
+        end
 
-      it "has a reason when the user hasn't been seen in a month" do
-        user.last_seen_at = 2.months.ago
-        user.user_option.expects(:update_last_redirected_to_top!).once
+        it "has a reason when the user hasn't been seen in a month" do
+          user.last_seen_at = 2.months.ago
+          user.user_option.expects(:update_last_redirected_to_top!).once
 
-        expect(user.user_option.redirected_to_top).to eq(
-          reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
-          period: :monthly,
-        )
+          expect(user.user_option.redirected_to_top).to eq(
+            reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
+            period: :monthly,
+          )
+        end
       end
     end
-  end
   end
 
   describe ".user_tzinfo" do

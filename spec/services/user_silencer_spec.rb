@@ -104,9 +104,7 @@ RSpec.describe UserSilencer do
         end
       end
 
-      before do
-        DiscourseEvent.on(:user_silenced, &override_silence_message)
-      end
+      before { DiscourseEvent.on(:user_silenced, &override_silence_message) }
 
       after { DiscourseEvent.off(:user_silenced, &override_silence_message) }
 

@@ -249,7 +249,6 @@ describe "Homepage" do
         theme.add_relative_theme!(:child, component)
       end
 
-
       include_examples "a custom homepage"
     end
   end
@@ -281,9 +280,7 @@ describe "Homepage" do
       component.theme_modifier_set.save!
       theme.add_relative_theme!(:child, component)
       theme.set_default!
-
     end
-
 
     include_examples "a custom homepage"
   end

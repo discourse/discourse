@@ -221,7 +221,6 @@ RSpec.describe(DiscourseRewind::FetchReport) do
 
       let(:params) { { index: 0, for_user_username: other_user.username } }
 
-
       it "allows access to the report" do
         expect(result).to be_success
         expect(result.for_user).to eq(other_user)

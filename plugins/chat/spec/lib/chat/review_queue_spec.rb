@@ -203,7 +203,6 @@ describe Chat::ReviewQueue do
       expect(flag_msg["reviewable_id"]).to eq(new_reviewable.id)
     end
 
-
     context "when creating a notify_user flag" do
       it "creates a companion PM" do
         queue.flag_message(

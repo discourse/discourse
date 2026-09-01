@@ -381,15 +381,13 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
           raw: "This is about features and performance",
         )
         Fabricate(
-                  :post,
-                  topic: topic,
-                  user: user,
-                  post_number: 3,
-                  raw: "Definitely a bug report here",
-                )
-
+          :post,
+          topic: topic,
+          user: user,
+          post_number: 3,
+          raw: "Definitely a bug report here",
+        )
       end
-
 
       it "includes multiple posts for context when max_posts_for_context > 1" do
         mock_response = { "tags" => %w[bug feature], "confidence" => 90 }.to_json

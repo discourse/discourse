@@ -647,18 +647,15 @@ RSpec.describe Email::MessageBuilder do
       expect(build_args[:from]).to eq("\"Dog Talk\" <#{SiteSetting.notification_email}>")
     end
 
-
     it "allows us to override from" do
       expect(custom_from[:from]).to eq(finn_email)
     end
-
 
     it "allows us to alias the from address" do
       expect(aliased_from.build_args[:from]).to eq(
         "\"Finn the Dog\" <#{SiteSetting.notification_email}>",
       )
     end
-
 
     it "allows us to alias a custom from address" do
       expect(custom_aliased_from.build_args[:from]).to eq("\"Finn the Dog\" <#{finn_email}>")

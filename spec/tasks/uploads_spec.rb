@@ -71,9 +71,7 @@ RSpec.describe "tasks/uploads" do
         it "writes a file with the post IDs to rebake" do
           invoke_task
 
-          expect(File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")).to eq(
-            true,
-          )
+          expect(File.exist?("secure_upload_analyse_and_update_posts_for_rebake.json")).to eq(true)
           expect(
             JSON.parse(File.read("secure_upload_analyse_and_update_posts_for_rebake.json")),
           ).to eq({ "post_ids" => [post_1.id, post_2.id, post_3.id] })

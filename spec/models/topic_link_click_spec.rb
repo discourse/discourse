@@ -113,7 +113,6 @@ RSpec.describe TopicLinkClick do
         end
       end
 
-
       it "returns the url" do
         url = described_class.create_from(url: "/relative-url", post_id: post.id, ip: "127.0.0.1")
         expect(url).to eq("/relative-url")

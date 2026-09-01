@@ -1575,9 +1575,7 @@ RSpec.describe InvitesController do
       end
 
       context "when user was invited via link" do
-        before do
-          invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required])
-        end
+        before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
         it "sends an activation email and does not activate the user" do
           expect do

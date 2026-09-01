@@ -93,6 +93,5 @@ RSpec.describe SiteSettings::DeprecatedSettings do
         end
       end
     end
-
   end
 end

@@ -8,7 +8,6 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
     SiteSetting.tagging_enabled = true
   end
 
-
   fab!(:tag)
   fab!(:topic) { Fabricate(:topic, tags: [tag]) }
   fab!(:user)

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 describe "HashtagAutocompleteService multisite registry", type: :multisite do
-  MockPlugin = Struct.new(:setting_provider) do
-    def enabled?
-      setting_provider.find("bookmark_hashtag_enabled")&.value == "true"
+  MockPlugin =
+    Struct.new(:setting_provider) do
+      def enabled?
+        setting_provider.find("bookmark_hashtag_enabled")&.value == "true"
+      end
     end
-  end
 
   it "does not include the data source if one of the multisites has the plugin disabled" do
     setting_provider = SiteSettings::LocalProcessProvider.new

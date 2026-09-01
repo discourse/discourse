@@ -365,8 +365,7 @@ RSpec.describe FileStore::S3Store do
             .expects(:put)
             .with(
               has_entries(
-                content_disposition:
-                  "attachment; filename=\"data.xml\"; filename*=UTF-8''data.xml",
+                content_disposition: "attachment; filename=\"data.xml\"; filename*=UTF-8''data.xml",
               ),
             )
             .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
@@ -1156,5 +1155,4 @@ RSpec.describe FileStore::S3Store do
       last_modified: upload.created_at,
     )
   end
-
 end

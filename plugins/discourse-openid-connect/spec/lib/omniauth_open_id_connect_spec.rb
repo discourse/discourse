@@ -128,7 +128,6 @@ describe OmniAuth::Strategies::OpenIDConnect do
     end
 
     describe "callback_phase" do
-      let(:auth_params) { strategy.authorize_params }
       let(:token) do
         payload = {
           iss: "https://id.example.com/",
@@ -136,7 +135,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
           aud: "appid",
           iat: Time.now.to_i - 30,
           exp: Time.now.to_i + 120,
-          nonce: auth_params[:nonce],
+          nonce: strategy.session["omniauth.nonce"],
           name: "My Auth Token Name",
           email: "tokenemail@example.com",
         }
@@ -144,6 +143,8 @@ describe OmniAuth::Strategies::OpenIDConnect do
       end
 
       before do
+        auth_params = strategy.authorize_params
+
         strategy.stubs(:full_host).returns("https://example.com")
 
         strategy.stubs(:request).returns(mock)
@@ -151,7 +152,6 @@ describe OmniAuth::Strategies::OpenIDConnect do
           .request
           .stubs(:params)
           .returns("state" => auth_params[:state], "code" => "supersecretcode")
-
       end
 
       it "handles error redirects correctly" do
@@ -339,9 +339,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
           "Content-Type" => "application/json",
         },
       )
-
     end
-
 
     it "uses mTLS authentication instead of client_secret" do
       expect(strategy.options.client_options.auth_scheme).to eq(:tls_client_auth)

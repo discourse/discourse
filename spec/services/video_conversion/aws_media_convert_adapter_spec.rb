@@ -82,7 +82,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(Discourse).to receive(:warn_exception)
     allow(Jobs).to receive(:enqueue_in)
     allow(OptimizedVideo).to receive(:create_for)
-
   end
 
   let!(:upload) { Fabricate(:video_upload, user: user) }
@@ -103,7 +102,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   let(:post_relation) { instance_double(ActiveRecord::Relation) }
   # The ACL resource class is Aws::S3::ObjectAcl in aws-sdk-s3 v3
   let(:acl_object) { instance_double(Aws::S3::ObjectAcl) }
-
 
   describe ".build_conversion_settings" do
     it "honors rotation metadata from uploaded videos" do

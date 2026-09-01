@@ -357,43 +357,43 @@ RSpec.describe OptimizedImage do
       end
 
       context "when the thumbnail is properly generated with secure uploads disabled" do
-          let(:s3_upload) { Fabricate(:upload_s3) }
-          let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
+        let(:s3_upload) { Fabricate(:upload_s3) }
+        let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
 
-          before do
-            stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
-            stub_request(:get, "http://#{s3_upload.url}").to_return(
-              status: 200,
-              body: file_from_fixtures("logo.png"),
-            )
-            stub_request(
-              :put,
-              %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
-            ).to_return(status: 200, headers: { "ETag" => "someetag" })
-          end
-
-          it "downloads a copy of the original image" do
-            oi = OptimizedImage.create_for(s3_upload, 100, 200)
-
-            expect(oi.sha1).to_not be_nil
-            expect(oi.extension).to eq(".png")
-            expect(oi.width).to eq(100)
-            expect(oi.height).to eq(200)
-            expect(oi.url).to match(
-              %r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
-            )
-            expect(oi.filesize).to be > 0
-
-            oi.filesize = nil
-
-            stub_request(
-              :get,
-              %r{http://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
-            ).to_return(status: 200, body: file_from_fixtures("resized.png"))
-
-            expect(oi.filesize).to be > 0
-          end
+        before do
+          stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
+          stub_request(:get, "http://#{s3_upload.url}").to_return(
+            status: 200,
+            body: file_from_fixtures("logo.png"),
+          )
+          stub_request(
+            :put,
+            %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
+          ).to_return(status: 200, headers: { "ETag" => "someetag" })
         end
+
+        it "downloads a copy of the original image" do
+          oi = OptimizedImage.create_for(s3_upload, 100, 200)
+
+          expect(oi.sha1).to_not be_nil
+          expect(oi.extension).to eq(".png")
+          expect(oi.width).to eq(100)
+          expect(oi.height).to eq(200)
+          expect(oi.url).to match(
+            %r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
+          )
+          expect(oi.filesize).to be > 0
+
+          oi.filesize = nil
+
+          stub_request(
+            :get,
+            %r{http://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
+          ).to_return(status: 200, body: file_from_fixtures("resized.png"))
+
+          expect(oi.filesize).to be > 0
+        end
+      end
     end
   end
 

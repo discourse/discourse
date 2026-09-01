@@ -4,10 +4,11 @@ RSpec.describe Notification do
   fab!(:user)
   fab!(:coding_horror)
 
-  before { NotificationEmailer.enable
-           NotificationEmailer.disable
-           NotificationEmailer.disable   }
-
+  before do
+    NotificationEmailer.enable
+    NotificationEmailer.disable
+    NotificationEmailer.disable
+  end
 
   it { is_expected.to validate_presence_of :notification_type }
   it { is_expected.to validate_presence_of :data }
@@ -550,7 +551,6 @@ RSpec.describe Notification do
       notification.save!
     end
   end
-
 
   describe ".prioritized_list" do
     def create(**opts)

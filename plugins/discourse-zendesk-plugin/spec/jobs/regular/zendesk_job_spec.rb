@@ -48,11 +48,26 @@ RSpec.describe Jobs::ZendeskJob do
   end
 
   context "with zendesk enabled" do
-      let(:zendesk_enabled) { true }
+    let(:zendesk_enabled) { true }
 
+    context "when topic has existing zendesk ticket" do
       let(:ticket_id) { "1234" }
 
-      context "when category is NOT in autogenerate list" do
+      context "when category is not in the autogenerate list and author-only posting is disabled" do
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
+        end
+
+        it "adds a comment from the topic author" do
+          job.expects(:add_comment).with(post, ticket_id).once
+          execute
+        end
+      end
+
+      context "when author-only posting is disabled and the post is from another user" do
+        let(:post_user) { other_user }
+
         before do
           Post.expects(:find_by).with(id: post.id).returns(post).once
           job.expects(:create_ticket).never
@@ -62,33 +77,34 @@ RSpec.describe Jobs::ZendeskJob do
           job.expects(:add_comment).with(post, ticket_id).once
           execute
         end
+      end
 
-        context "when post not from topic author" do
-          let(:post_user) { other_user }
+      context "when author-only posting is enabled and the post is from the topic author" do
+        let(:zendesk_job_push_only_author_posts) { true }
 
-          it "adds the comment" do
-            job.expects(:add_comment).with(post, ticket_id).once
-            execute
-          end
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
         end
 
-        context "with author-only posting enabled and a post from the topic author" do
-          let(:zendesk_job_push_only_author_posts) { true }
+        it "adds the comment" do
+          job.expects(:add_comment).with(post, ticket_id).once
+          execute
+        end
+      end
 
-          it "adds the comment" do
-            job.expects(:add_comment).with(post, ticket_id).once
-            execute
-          end
+      context "when author-only posting is enabled and the post is from another user" do
+        let(:zendesk_job_push_only_author_posts) { true }
+        let(:post_user) { other_user }
+
+        before do
+          Post.expects(:find_by).with(id: post.id).returns(post).once
+          job.expects(:create_ticket).never
         end
 
-        context "with author-only posting enabled and a post from another user" do
-          let(:zendesk_job_push_only_author_posts) { true }
-          let(:post_user) { other_user }
-
-          it "does not add the comment" do
-            job.expects(:add_comment).never
-            execute
-          end
+        it "does not add the comment" do
+          job.expects(:add_comment).never
+          execute
         end
       end
 
@@ -107,61 +123,62 @@ RSpec.describe Jobs::ZendeskJob do
       end
     end
 
-  context "when topic does NOT have existing zendesk ticket" do
-    let(:ticket_id) { nil }
-    let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 1) }
+    context "when topic does NOT have existing zendesk ticket" do
+      let(:ticket_id) { nil }
+      let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 1) }
 
-    context "when category is NOT in autogenerate list" do
-      before { Post.expects(:find_by).with(id: post.id).returns(post).once }
+      context "when category is NOT in autogenerate list" do
+        before { Post.expects(:find_by).with(id: post.id).returns(post).once }
 
-      it "does not create a ticket" do
-        job.expects(:create_ticket).never
-        job.expects(:add_comment).never
-        execute
+        it "does not create a ticket" do
+          job.expects(:create_ticket).never
+          job.expects(:add_comment).never
+          execute
+        end
+      end
+
+      context "when category is in autogenerate list" do
+        let(:zendesk_autogenerate_all_categories) { true }
+
+        before { Post.expects(:find_by).with(id: post.id).returns(post).once }
+
+        it "creates a ticket" do
+          job.expects(:create_ticket).with(post).once
+          job.expects(:add_comment).never
+          execute
+        end
       end
     end
 
-    context "when category is in autogenerate list" do
+    context "when zendesk_job_push_all_posts is disabled" do
+      let(:zendesk_job_push_all_posts) { false }
       let(:zendesk_autogenerate_all_categories) { true }
 
-      before { Post.expects(:find_by).with(id: post.id).returns(post).once }
+      context "with first post" do
+        let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 1) }
+        let(:ticket_id) { nil }
 
-      it "creates a ticket" do
-        job.expects(:create_ticket).with(post).once
-        job.expects(:add_comment).never
-        execute
+        before { Post.expects(:find_by).with(id: post.id).returns(post).once }
+
+        it "creates a ticket" do
+          job.expects(:create_ticket).with(post).once
+          execute
+        end
+      end
+
+      context "with reply post" do
+        let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 2) }
+
+        before { Post.expects(:find_by).with(id: post.id).returns(post).once }
+
+        it "does not process the post" do
+          job.expects(:create_ticket).never
+          job.expects(:add_comment).never
+          execute
+        end
       end
     end
   end
-
-  context "when zendesk_job_push_all_posts is disabled" do
-  let(:zendesk_job_push_all_posts) { false }
-  let(:zendesk_autogenerate_all_categories) { true }
-
-  context "with first post" do
-    let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 1) }
-    let(:ticket_id) { nil }
-
-    before { Post.expects(:find_by).with(id: post.id).returns(post).once }
-
-    it "creates a ticket" do
-      job.expects(:create_ticket).with(post).once
-      execute
-    end
-  end
-
-  context "with reply post" do
-    let(:post) { Fabricate(:post, topic: topic, user: post_user, post_number: 2) }
-
-    before { Post.expects(:find_by).with(id: post.id).returns(post).once }
-
-    it "does not process the post" do
-      job.expects(:create_ticket).never
-      job.expects(:add_comment).never
-      execute
-    end
-  end
-end
 
   describe "#execute" do
     context "when only OAuth credentials are configured" do

@@ -28,10 +28,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
     it "users:alice returns topics where alice participated" do
       ids =
-        TopicsFilter
-          .new(guardian: Guardian.new)
-          .filter_from_query_string("users:alice")
-          .pluck(:id)
+        TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("users:alice").pluck(:id)
       expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
       expect(ids).not_to include(topic_by_u2.id)
     end
@@ -84,10 +81,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
     it "group:group1 returns topics with participants from the group or group-allowed PMs" do
       ids =
-        TopicsFilter
-          .new(guardian: Guardian.new)
-          .filter_from_query_string("group:group1")
-          .pluck(:id)
+        TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("group:group1").pluck(:id)
       expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
     end
 
@@ -174,10 +168,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
       post.update_column(:deleted_at, Time.zone.now)
 
       ids =
-        TopicsFilter
-          .new(guardian: Guardian.new)
-          .filter_from_query_string("group:group1")
-          .pluck(:id)
+        TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("group:group1").pluck(:id)
       expect(ids).not_to include(topic.id)
     end
 
@@ -283,10 +274,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
     describe "when query string is `in:pinned`" do
       it "returns topics that are pinned" do
         expect(
-          TopicsFilter
-            .new(guardian: Guardian.new)
-            .filter_from_query_string("in:pinned")
-            .pluck(:id),
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:pinned").pluck(:id),
         ).to contain_exactly(pinned_topic.id)
       end
 
@@ -365,25 +353,18 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
       end
 
       it "anonymous user with in:new returns none" do
-        ids =
-          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:new").pluck(:id)
+        ids = TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:new").pluck(:id)
         expect(ids).to be_empty
       end
     end
 
     describe "when query string is `in:bookmarked`" do
       fab!(:bookmark) do
-        BookmarkManager.new(user).create_for(
-          bookmarkable_id: topic.id,
-          bookmarkable_type: "Topic",
-        )
+        BookmarkManager.new(user).create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
       end
 
       fab!(:bookmark2) do
-        BookmarkManager.new(admin).create_for(
-          bookmarkable_id: topic.id,
-          bookmarkable_type: "Topic",
-        )
+        BookmarkManager.new(admin).create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
       end
 
       it "does not return any topics when user is anonymous" do
@@ -531,9 +512,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
       fab!(:tag_watching_first_post, :tag)
       fab!(:tag_regular, :tag)
 
-      fab!(:topic_in_watched_category) do
-        Fabricate(:topic, category: category_watching_first_post)
-      end
+      fab!(:topic_in_watched_category) { Fabricate(:topic, category: category_watching_first_post) }
       fab!(:topic_in_regular_category) { Fabricate(:topic, category: category_regular) }
       fab!(:topic_with_watched_tag) { Fabricate(:topic, tags: [tag_watching_first_post]) }
       fab!(:topic_with_regular_tag) { Fabricate(:topic, tags: [tag_regular]) }
@@ -866,10 +845,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
                 "category:category2 -=category:category2:category2-subcategory",
               )
               .pluck(:id),
-          ).to contain_exactly(
-            topic_in_category2.id,
-            topic_in_category2_subcategory_subcategory.id,
-          )
+          ).to contain_exactly(topic_in_category2.id, topic_in_category2_subcategory_subcategory.id)
         end
       end
     end
@@ -924,10 +900,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
               .new(guardian: Guardian.new)
               .filter_from_query_string("category:subcategory")
               .pluck(:id),
-          ).to contain_exactly(
-            topic_in_category_subcategory.id,
-            topic_in_category2_subcategory.id,
-          )
+          ).to contain_exactly(topic_in_category_subcategory.id, topic_in_category2_subcategory.id)
         end
       end
 
@@ -960,10 +933,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
               .new(guardian: Guardian.new)
               .filter_from_query_string("category:category:subcategory,category2:subcategory")
               .pluck(:id),
-          ).to contain_exactly(
-            topic_in_category_subcategory.id,
-            topic_in_category2_subcategory.id,
-          )
+          ).to contain_exactly(topic_in_category_subcategory.id, topic_in_category2_subcategory.id)
         end
       end
 
@@ -990,29 +960,25 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
         it "returns topics matching the full category ancestor chain" do
           expect(
-              TopicsFilter
-                .new(guardian: Guardian.new)
-                .filter_from_query_string("category:category:subcategory:sub-subcategory")
-                .pluck(:id),
-            ).to contain_exactly(topic_in_category_subcategory_subcategory.id)
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("category:category:subcategory:sub-subcategory")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category_subcategory_subcategory.id)
         end
 
         it "returns topics matching an exact category ancestor chain" do
           expect(
-              TopicsFilter
-                .new(guardian: Guardian.new)
-                .filter_from_query_string("=category:category2:subcategory")
-                .pluck(:id),
-            ).to contain_exactly(topic_in_category2_subcategory.id)
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("=category:category2:subcategory")
+              .pluck(:id),
+          ).to contain_exactly(topic_in_category2_subcategory.id)
         end
 
         it "returns topics in a category ancestor chain and its subcategories" do
           category2_subcategory_subcategory2 =
-              Fabricate(
-                :category,
-                parent_category: category2_subcategory,
-                name: "sub-subcategory2",
-              )
+            Fabricate(:category, parent_category: category2_subcategory, name: "sub-subcategory2")
 
           topic_in_category2_subcategory_subcategory2 =
             Fabricate(:topic, category: category2_subcategory_subcategory2)
@@ -1031,14 +997,14 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
         it "returns topics from every category matching a nested slug" do
           expect(
-              TopicsFilter
-                .new(guardian: Guardian.new)
-                .filter_from_query_string("category:sub-subcategory")
-                .pluck(:id),
-            ).to contain_exactly(
-              topic_in_category_subcategory_subcategory.id,
-              topic_in_category2_subcategory_subcategory.id,
-            )
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("category:sub-subcategory")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_in_category_subcategory_subcategory.id,
+            topic_in_category2_subcategory_subcategory.id,
+          )
         end
       end
     end
@@ -1087,10 +1053,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
     it "onlies return topics that have not been closed or archived when query string is `status:open`" do
       expect(
-        TopicsFilter
-          .new(guardian: Guardian.new)
-          .filter_from_query_string("status:open")
-          .pluck(:id),
+        TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("status:open").pluck(:id),
       ).to contain_exactly(topic.id)
     end
 
@@ -1255,11 +1218,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
             .new(guardian: Guardian.new)
             .filter_from_query_string("-tag:synonym1")
             .pluck(:id),
-        ).to contain_exactly(
-          topic_without_tag.id,
-          topic_with_tag2.id,
-          topic_with_group_only_tag.id,
-        )
+        ).to contain_exactly(topic_without_tag.id, topic_with_tag2.id, topic_with_group_only_tag.id)
       end
     end
 
@@ -1509,10 +1468,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
     it "onlies return topics that are not tagged with specified tag when query string is `-tags:tag1`" do
       expect(
-        TopicsFilter
-          .new(guardian: Guardian.new)
-          .filter_from_query_string("-tags:tag1")
-          .pluck(:id),
+        TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("-tags:tag1").pluck(:id),
       ).to contain_exactly(topic_without_tag.id, topic_with_tag2.id, topic_with_group_only_tag.id)
     end
 
@@ -1544,10 +1500,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
 
       it "returns topics that are tagged with the specified tag" do
         expect(
-          TopicsFilter
-            .new(guardian: Guardian.new)
-            .filter_from_query_string("tag:日べé1")
-            .pluck(:id),
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("tag:日べé1").pluck(:id),
         ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
       end
     end
@@ -1749,10 +1702,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
     describe "when query string is `locale:en`" do
       it "onlies return topics with locale en" do
         expect(
-          TopicsFilter
-            .new(guardian: Guardian.new)
-            .filter_from_query_string("locale:en")
-            .pluck(:id),
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("locale:en").pluck(:id),
         ).to contain_exactly(en_topic.id)
       end
     end
@@ -1859,9 +1809,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
         expect(
           TopicsFilter
             .new(guardian: Guardian.new)
-            .filter_from_query_string(
-              "created-by:@#{user.username} created-by:@#{user2.username}",
-            )
+            .filter_from_query_string("created-by:@#{user.username} created-by:@#{user2.username}")
             .pluck(:id),
         ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
       end
@@ -2010,9 +1958,7 @@ RSpec.describe TopicsFilter, "#filter_from_query_string" do
       end
 
       fab!(:user_in_private_group) { Fabricate(:user).tap { |u| private_group.add(u) } }
-      fab!(:user_in_super_private_group) do
-        Fabricate(:user).tap { |u| super_private_group.add(u) }
-      end
+      fab!(:user_in_super_private_group) { Fabricate(:user).tap { |u| super_private_group.add(u) } }
 
       fab!(:topic_by_private_group_user) { Fabricate(:topic, user: user_in_private_group) }
       fab!(:topic_by_super_private_group_owner) do

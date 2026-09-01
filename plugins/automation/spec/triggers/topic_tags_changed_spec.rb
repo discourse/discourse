@@ -21,7 +21,6 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
   end
 
-
   context "when watching a cool tag" do
     before do
       automation.upsert_field!(

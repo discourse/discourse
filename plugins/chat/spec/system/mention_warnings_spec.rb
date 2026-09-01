@@ -59,9 +59,7 @@ RSpec.describe "Mentions warnings" do
 
         it "displays a warning" do
           chat_page.visit_channel(channel_1)
-          channel_page.type_in_composer(
-            "@#{user_2.username} @#{publicly_mentionable_group.name} ",
-          )
+          channel_page.type_in_composer("@#{user_2.username} @#{publicly_mentionable_group.name} ")
 
           expect(page).to have_css(".chat-mention-warnings")
           expect(page.find(".chat-mention-warnings-list__simple")).to be_present

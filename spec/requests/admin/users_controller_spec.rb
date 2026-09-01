@@ -1726,6 +1726,7 @@ RSpec.describe Admin::UsersController do
 
         before do
           TopicLink.extract_from(post_with_external_links)
+          urls
         end
 
         it "blocks the urls if block_url param is true" do

@@ -1474,146 +1474,143 @@ RSpec.describe TagsController do
     end
   end
 
-  fab!(:tag)
-  fab!(:other_tag, :tag)
-  fab!(:third_tag, :tag)
+  describe "#show_latest" do
+    fab!(:tag)
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
-  fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
-  fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
-  fab!(:all_tag_topic) { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
+    fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
+    fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
+    fab!(:all_tag_topic) { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
-  context "with tagging disabled" do
-    it "returns 404" do
-      SiteSetting.tagging_enabled = false
-      get "/tag/#{tag.name}/l/latest.json"
-      expect(response.status).to eq(404)
-    end
-  end
-
-  context "with tagging enabled" do
-    def parse_topic_ids
-      response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
-    end
-
-    it "can filter by tag" do
-      get "/tag/#{tag.name}/l/latest.json"
-      expect(response.status).to eq(200)
-    end
-
-    it "can render a topic list from the latest endpoint" do
-      get "/tag/#{tag.slug}/#{tag.id}/l/latest"
-      expect(response.status).to eq(200)
-      expect(response.body).to include("topic-list")
-    end
-
-    it "can filter by two tags" do
-      single_tag_topic
-      multi_tag_topic
-      all_tag_topic
-
-      get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: other_tag.name }
-
-      expect(response.status).to eq(200)
-
-      topic_ids = parse_topic_ids
-      expect(topic_ids).to include(all_tag_topic.id)
-      expect(topic_ids).to include(multi_tag_topic.id)
-      expect(topic_ids).to_not include(single_tag_topic.id)
-    end
-
-    it "can filter by multiple tags" do
-      single_tag_topic
-      multi_tag_topic
-      all_tag_topic
-
-      get "/tag/#{tag.name}/l/latest.json",
-          params: {
-            additional_tag_names: "#{other_tag.name}/#{third_tag.name}",
-          }
-
-      expect(response.status).to eq(200)
-
-      topic_ids = parse_topic_ids
-      expect(topic_ids).to include(all_tag_topic.id)
-      expect(topic_ids).to_not include(multi_tag_topic.id)
-      expect(topic_ids).to_not include(single_tag_topic.id)
-    end
-
-    it "does not find any tags when a tag which doesn't exist is passed" do
-      single_tag_topic
-
-      get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: "notatag" }
-
-      expect(response.status).to eq(200)
-
-      topic_ids = parse_topic_ids
-      expect(topic_ids).to_not include(single_tag_topic.id)
-    end
-
-    it "can filter by category and tag" do
-      get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
-      expect(response.status).to eq(200)
-    end
-
-    it "can filter by category, sub-category, and tag" do
-      get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}/l/latest.json"
-      expect(response.status).to eq(200)
-    end
-
-    it "can filter by category, no sub-category, and tag" do
-      get "/tags/c/#{category.slug}/none/#{tag.name}/l/latest.json"
-      expect(response.status).to eq(200)
-    end
-
-    it "can handle subcategories with the same name" do
-      category2 = Fabricate(:category)
-      subcategory2 =
-        Fabricate(
-          :category,
-          parent_category_id: category2.id,
-          name: subcategory.name,
-          slug: subcategory.slug,
-        )
-      t = Fabricate(:topic, category_id: subcategory2.id, tags: [other_tag])
-      get "/tags/c/#{category2.slug}/#{subcategory2.slug}/#{other_tag.name}/l/latest.json"
-
-      expect(response.status).to eq(200)
-
-      topic_ids = parse_topic_ids
-      expect(topic_ids).to include(t.id)
-    end
-
-    context "when logged in" do
-      before { sign_in(user) }
-
-      it "can filter by bookmarked" do
-        get "/tag/#{tag.name}/l/bookmarks.json"
-
-        expect(response.status).to eq(200)
-      end
-
-      it "returns a 404 when tag is restricted" do
-        _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
-
-        get "/tag/test/l/latest.json"
+    context "with tagging disabled" do
+      it "returns 404" do
+        SiteSetting.tagging_enabled = false
+        get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(404)
+      end
+    end
 
-        sign_in(admin)
+    context "with tagging enabled" do
+      def parse_topic_ids
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      end
 
-        get "/tag/test/l/latest.json"
+      it "can filter by tag" do
+        get "/tag/#{tag.name}/l/latest.json"
         expect(response.status).to eq(200)
       end
 
-      context "with muted tags" do
-        before do
+      it "can render a topic list from the latest endpoint" do
+        get "/tag/#{tag.slug}/#{tag.id}/l/latest"
+        expect(response.status).to eq(200)
+        expect(response.body).to include("topic-list")
+      end
+
+      it "can filter by two tags" do
+        single_tag_topic
+        multi_tag_topic
+        all_tag_topic
+
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: other_tag.name }
+
+        expect(response.status).to eq(200)
+
+        topic_ids = parse_topic_ids
+        expect(topic_ids).to include(all_tag_topic.id)
+        expect(topic_ids).to include(multi_tag_topic.id)
+        expect(topic_ids).to_not include(single_tag_topic.id)
+      end
+
+      it "can filter by multiple tags" do
+        single_tag_topic
+        multi_tag_topic
+        all_tag_topic
+
+        get "/tag/#{tag.name}/l/latest.json",
+            params: {
+              additional_tag_names: "#{other_tag.name}/#{third_tag.name}",
+            }
+
+        expect(response.status).to eq(200)
+
+        topic_ids = parse_topic_ids
+        expect(topic_ids).to include(all_tag_topic.id)
+        expect(topic_ids).to_not include(multi_tag_topic.id)
+        expect(topic_ids).to_not include(single_tag_topic.id)
+      end
+
+      it "does not find any tags when a tag which doesn't exist is passed" do
+        single_tag_topic
+
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: "notatag" }
+
+        expect(response.status).to eq(200)
+
+        topic_ids = parse_topic_ids
+        expect(topic_ids).to_not include(single_tag_topic.id)
+      end
+
+      it "can filter by category and tag" do
+        get "/tags/c/#{category.slug}/#{tag.name}/l/latest.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "can filter by category, sub-category, and tag" do
+        get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}/l/latest.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "can filter by category, no sub-category, and tag" do
+        get "/tags/c/#{category.slug}/none/#{tag.name}/l/latest.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "can handle subcategories with the same name" do
+        category2 = Fabricate(:category)
+        subcategory2 =
+          Fabricate(
+            :category,
+            parent_category_id: category2.id,
+            name: subcategory.name,
+            slug: subcategory.slug,
+          )
+        t = Fabricate(:topic, category_id: subcategory2.id, tags: [other_tag])
+        get "/tags/c/#{category2.slug}/#{subcategory2.slug}/#{other_tag.name}/l/latest.json"
+
+        expect(response.status).to eq(200)
+
+        topic_ids = parse_topic_ids
+        expect(topic_ids).to include(t.id)
+      end
+
+      context "when logged in" do
+        before { sign_in(user) }
+
+        it "can filter by bookmarked" do
+          get "/tag/#{tag.name}/l/bookmarks.json"
+
+          expect(response.status).to eq(200)
+        end
+
+        it "returns a 404 when tag is restricted" do
+          _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(404)
+
+          sign_in(admin)
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(200)
+        end
+
+        it "includes topics when filtered by muted tag" do
           TagUser.create!(
             user_id: user.id,
             tag_id: tag.id,
             notification_level: CategoryUser.notification_levels[:muted],
           )
-        end
-
-        it "includes topics when filtered by muted tag" do
           single_tag_topic
 
           get "/tag/#{tag.name}/l/latest.json"
@@ -1624,6 +1621,11 @@ RSpec.describe TagsController do
         end
 
         it "includes topics when filtered by category and muted tag" do
+          TagUser.create!(
+            user_id: user.id,
+            tag_id: tag.id,
+            notification_level: CategoryUser.notification_levels[:muted],
+          )
           category = Fabricate(:category)
           single_tag_topic.update!(category: category)
 

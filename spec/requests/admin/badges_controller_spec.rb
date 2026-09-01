@@ -462,9 +462,7 @@ RSpec.describe Admin::BadgesController do
               granted_badge_id: badge.id,
               action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
             },
-          ) do
-            put "/admin/badges/#{badge.id}.json", params: { name: "Första Gillningen Någonsin" }
-          end
+          ) { put "/admin/badges/#{badge.id}.json", params: { name: "Första Gillningen Någonsin" } }
         end
       end
     end

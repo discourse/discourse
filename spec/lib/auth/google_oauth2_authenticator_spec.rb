@@ -142,9 +142,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         )
       end
 
-      before do
-        SiteSetting.google_oauth2_hd = "domain.com"
-      end
+      before { SiteSetting.google_oauth2_hd = "domain.com" }
 
       context "when enabled" do
         let(:private_key) { OpenSSL::PKey::RSA.generate(2048) }

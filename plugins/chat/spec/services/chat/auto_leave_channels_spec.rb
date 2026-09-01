@@ -60,16 +60,16 @@ RSpec.describe Chat::AutoLeaveChannels do
     end
 
     context "when the category's permission changes" do
-        fab!(:user) { Fabricate(:user, trust_level: 1) }
-        fab!(:group)
-        fab!(:category) { Fabricate(:private_category, group:) }
-        fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
-        fab!(:uccm) { Fabricate(:user_chat_channel_membership, user:, chat_channel:) }
+      fab!(:user) { Fabricate(:user, trust_level: 1) }
+      fab!(:group)
+      fab!(:category) { Fabricate(:private_category, group:) }
+      fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
+      fab!(:uccm) { Fabricate(:user_chat_channel_membership, user:, chat_channel:) }
 
-        before do
-          group.add(user)
-          CategoryGroup.where(category:).destroy_all
-        end
+      before { group.add(user) }
+
+      context "when there's no permission anymore" do
+        before { CategoryGroup.where(category:).destroy_all }
 
         it "removes user membership" do
           expect { result }.to change { ::Chat::UserChatChannelMembership.count }.from(1).to(0)
@@ -109,59 +109,62 @@ RSpec.describe Chat::AutoLeaveChannels do
 
           expect { result }.not_to change { ::Chat::UserChatChannelMembership.count }.from(1)
         end
+      end
 
-        context "with another category/channel/user" do
-          let(:params) { { event: :generic_event } }
+      context "when another category, channel, and user lose permission" do
+        let(:params) { { event: :generic_event } }
 
-          fab!(:user_2) { Fabricate(:user, trust_level: 1) }
-          fab!(:category_2) { Fabricate(:private_category, group:) }
-          fab!(:chat_channel_2) { Fabricate(:chat_channel, chatable: category_2) }
-          fab!(:uccm_2) do
-            Fabricate(:user_chat_channel_membership, user: user_2, chat_channel: chat_channel_2)
-          end
+        before { CategoryGroup.where(category:).destroy_all }
 
-          it "supports filtering by user_id" do
-            expect { described_class.call(params: params.merge(user_id: user.id)) }.to change {
-              ::Chat::UserChatChannelMembership.count
-            }.from(2).to(1)
-          end
+        fab!(:user_2) { Fabricate(:user, trust_level: 1) }
+        fab!(:category_2) { Fabricate(:private_category, group:) }
+        fab!(:chat_channel_2) { Fabricate(:chat_channel, chatable: category_2) }
+        fab!(:uccm_2) do
+          Fabricate(:user_chat_channel_membership, user: user_2, chat_channel: chat_channel_2)
+        end
 
-          it "supports filtering by channel_id" do
-            expect {
-              described_class.call(params: params.merge(channel_id: chat_channel.id))
-            }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
-          end
+        it "supports filtering by user_id" do
+          expect { described_class.call(params: params.merge(user_id: user.id)) }.to change {
+            ::Chat::UserChatChannelMembership.count
+          }.from(2).to(1)
+        end
 
-          it "supports filtering by category_id" do
-            expect {
-              described_class.call(params: params.merge(category_id: category.id))
-            }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
-          end
+        it "supports filtering by channel_id" do
+          expect {
+            described_class.call(params: params.merge(channel_id: chat_channel.id))
+          }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
+        end
+
+        it "supports filtering by category_id" do
+          expect {
+            described_class.call(params: params.merge(category_id: category.id))
+          }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
         end
       end
 
-    it "removes membership when permission is 'readonly'" do
-      CategoryGroup.find_by(category:, group:).update!(
-        permission_type: CategoryGroup.permission_types[:readonly],
-      )
+      it "removes membership when permission is 'readonly'" do
+        CategoryGroup.find_by(category:, group:).update!(
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
 
-      expect { result }.to change { ::Chat::UserChatChannelMembership.count }.from(1).to(0)
+        expect { result }.to change { ::Chat::UserChatChannelMembership.count }.from(1).to(0)
+      end
+
+      it "does not remove membership when permission is 'create_post'" do
+        CategoryGroup.find_by(category:, group:).update!(
+          permission_type: CategoryGroup.permission_types[:create_post],
+        )
+
+        expect { result }.not_to change { ::Chat::UserChatChannelMembership.count }.from(1)
+      end
+
+      it "does not remove membership when permission is 'full'" do
+        CategoryGroup.find_by(category:, group:).update!(
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        expect { result }.not_to change { ::Chat::UserChatChannelMembership.count }.from(1)
+      end
     end
-
-    it "does not remove membership when permission is 'create_post'" do
-      CategoryGroup.find_by(category:, group:).update!(
-        permission_type: CategoryGroup.permission_types[:create_post],
-      )
-
-      expect { result }.not_to change { ::Chat::UserChatChannelMembership.count }.from(1)
-    end
-
-    it "does not remove membership when permission is 'full'" do
-    CategoryGroup.find_by(category:, group:).update!(
-        permission_type: CategoryGroup.permission_types[:full],
-      )
-
-    expect { result }.not_to change { ::Chat::UserChatChannelMembership.count }.from(1)
-  end
   end
 end

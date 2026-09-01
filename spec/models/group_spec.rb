@@ -142,7 +142,6 @@ RSpec.describe Group do
     end
   end
 
-
   describe "validation" do
     let(:group) { build(:group) }
 

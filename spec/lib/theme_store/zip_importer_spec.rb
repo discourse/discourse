@@ -4,9 +4,7 @@
 require "theme_store/zip_importer"
 
 RSpec.describe ThemeStore::ZipImporter do
-  let(:temp_folder) do
-    "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
-  end
+  let(:temp_folder) { "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}" }
 
   before do
     FileUtils.mkdir(temp_folder)

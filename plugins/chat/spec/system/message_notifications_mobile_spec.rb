@@ -4,15 +4,14 @@ RSpec.describe "Message notifications - mobile", mobile: true do
   fab!(:current_user, :user)
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
-  before { PageObjects::Pages::ChatChannel.new
-           SiteSetting.navigation_menu = "sidebar"
-           chat_system_bootstrap
-           sign_in(current_user)
-   }
+  before do
+    PageObjects::Pages::ChatChannel.new
+    SiteSetting.navigation_menu = "sidebar"
+    chat_system_bootstrap
+    sign_in(current_user)
+  end
 
   let!(:channels_index_page) { PageObjects::Components::Chat::ChannelsIndex.new }
-
-
 
   def create_message(chat_channel, message: nil, user: Fabricate(:user))
     Fabricate(:chat_message_with_service, chat_channel:, message:, user:)
@@ -65,13 +64,13 @@ RSpec.describe "Message notifications - mobile", mobile: true do
         before { channel_1.membership_for(current_user).update!(muted: true) }
 
         it "doesn't show notifications for a new message" do
-        visit("/chat")
+          visit("/chat")
 
-        create_message(channel_1, user: user_1)
+          create_message(channel_1, user: user_1)
 
-        expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
-        expect(channels_index_page).to have_no_unread_channel(channel_1)
-      end
+          expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
+          expect(channels_index_page).to have_no_unread_channel(channel_1)
+        end
       end
 
       context "when a message is created" do
@@ -163,12 +162,8 @@ RSpec.describe "Message notifications - mobile", mobile: true do
       end
 
       context "with threads" do
-        fab!(:message) do
-          Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
-        end
-        fab!(:thread) do
-          Fabricate(:chat_thread, channel: dm_channel_1, original_message: message)
-        end
+        fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user) }
+        fab!(:thread) { Fabricate(:chat_thread, channel: dm_channel_1, original_message: message) }
 
         before { dm_channel_1.membership_for(current_user).mark_read!(message.id) }
 

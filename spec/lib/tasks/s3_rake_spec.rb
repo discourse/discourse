@@ -29,7 +29,6 @@ RSpec.describe "s3:upload_assets rake task" do
   let(:task) { Rake::Task["s3:upload_assets"] }
   let(:logger) { instance_double(Logger) }
 
-
   describe "error handling" do
     let(:test_assets) do
       [

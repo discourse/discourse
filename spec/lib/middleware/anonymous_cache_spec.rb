@@ -418,13 +418,13 @@ RSpec.describe Middleware::AnonymousCache do
     end
 
     def get(path, options)
-      request_state[:env] =
-        env(
-          { "REQUEST_URI" => path, "PATH_INFO" => path, "REQUEST_PATH" => path }.merge(
-            options[:headers],
-          ),
-        )
-      request_state[:status], request_state[:response_header], request_state[:response] = middleware.call(request_state[:env])
+      request_state[:env] = env(
+        { "REQUEST_URI" => path, "PATH_INFO" => path, "REQUEST_PATH" => path }.merge(
+          options[:headers],
+        ),
+      )
+      request_state[:status], request_state[:response_header], request_state[:response] =
+        middleware.call(request_state[:env])
     end
 
     it "applies allowed_crawler_user_agents correctly" do

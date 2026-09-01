@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::GoogleDocsOnebox do
-  let(:link) { "https://docs.google.com/document/d/DOC_KEY/pub" }
-
-  before do
-    stub_request(:get, link).to_return(status: 200, body: onebox_response("googledocs"))
+  include_context "with engines" do
+    let(:link) { "https://docs.google.com/document/d/DOC_KEY/pub" }
   end
 
-  include_context "with engines"
+  before { stub_request(:get, link).to_return(status: 200, body: onebox_response("googledocs")) }
+
   it_behaves_like "an engine"
 
   describe "#to_html" do

@@ -47,18 +47,18 @@ describe Jobs::DiscoursePostEventBulkInvite do
     end
 
     context "with valid params when the current user can’t act on the event" do
-        let(:lurker) { Fabricate(:user) }
+      let(:lurker) { Fabricate(:user) }
 
-        it "raises an error" do
-          expect {
-            Jobs::DiscoursePostEventBulkInvite.new.execute(
-              event_id: post_event_1.id,
-              invitees: [{ identifier: "bob", attendance: "going" }],
-              current_user_id: lurker.id,
-            )
-          }.to raise_error(Discourse::InvalidAccess)
-        end
+      it "raises an error" do
+        expect {
+          Jobs::DiscoursePostEventBulkInvite.new.execute(
+            event_id: post_event_1.id,
+            invitees: [{ identifier: "bob", attendance: "going" }],
+            current_user_id: lurker.id,
+          )
+        }.to raise_error(Discourse::InvalidAccess)
       end
+    end
 
     context "when current user can act on event" do
       let(:invitee_1) { Fabricate(:user) }

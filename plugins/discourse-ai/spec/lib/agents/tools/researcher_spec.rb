@@ -24,7 +24,6 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   fab!(:post) { Fabricate(:post, topic: topic_with_tags) }
   fab!(:another_post, :post)
 
-
   it "uses custom researcher_llm and applies token limits correctly" do
     # Create a second LLM model to test the researcher_llm option
     secondary_llm_model = Fabricate(:llm_model, name: "secondary_model")

@@ -200,9 +200,7 @@ RSpec.describe TopicTrackingState do
   describe "#publish_unread" do
     let(:other_user) { Fabricate(:user) }
 
-    before do
-      Fabricate(:topic_user_watching, topic: topic, user: other_user)
-    end
+    before { Fabricate(:topic_user_watching, topic: topic, user: other_user) }
 
     it "can correctly publish unread" do
       message =

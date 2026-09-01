@@ -273,7 +273,6 @@ RSpec.describe ThemeField do
     field
   end
 
-
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"
     field = create_yaml_field(yaml)

@@ -4,12 +4,11 @@ RSpec.describe DiscourseAi::Agents::Tools::DiscourseMetaSearch do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     stub_request(:get, "https://meta.discourse.org/site.json").to_return(
-          status: 200,
-          body: mock_site_json,
-          headers: {
-          },
-        )
-
+      status: 200,
+      body: mock_site_json,
+      headers: {
+      },
+    )
   end
 
   fab!(:llm_model) { Fabricate(:llm_model, max_prompt_tokens: 8192) }
@@ -24,7 +23,6 @@ RSpec.describe DiscourseAi::Agents::Tools::DiscourseMetaSearch do
   end
 
   let(:mock_site_json) { plugin_file_from_fixtures("site.json", "search_meta").read }
-
 
   it "searches meta.discourse.org" do
     stub_request(:get, "https://meta.discourse.org/search.json?q=test").to_return(

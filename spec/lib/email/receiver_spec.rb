@@ -982,5 +982,4 @@ RSpec.describe Email::Receiver do
     expect(incoming_email.cc_addresses).to include("a@example.com")
     expect(incoming_email.cc_addresses).to include("c@example.com")
   end
-
 end

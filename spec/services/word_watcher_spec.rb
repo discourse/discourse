@@ -370,9 +370,11 @@ RSpec.describe WordWatcher do
           SiteSetting.watched_words_regular_expressions = true
           Fabricate(:watched_word, word: "p(rivate|ublic)", action: WatchedWord.actions[:block])
 
-          expect(
-            matches_all("PUBLIC: Discourse is great for public discourse"),
-          ).to contain_exactly("PUBLIC", "Discourse", "public")
+          expect(matches_all("PUBLIC: Discourse is great for public discourse")).to contain_exactly(
+            "PUBLIC",
+            "Discourse",
+            "public",
+          )
         end
       end
 

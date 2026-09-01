@@ -122,7 +122,6 @@ RSpec.describe SitemapController do
       Discourse.cache.delete("sitemap/news")
     end
 
-
     it "returns a sitemap with topics bumped in the last 72 hours" do
       topic = Fabricate(:topic, bumped_at: 71.hours.ago)
       old_topic = Fabricate(:topic, bumped_at: 73.hours.ago)

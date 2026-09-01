@@ -37,7 +37,6 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
       DiscourseGamification::LeaderboardCachedView.create_all
     end
 
-
     it "#{described_class} updates scores for action in the category configured" do
       expect(user.gamification_score).to eq(0)
       SiteSetting.scorable_categories = category_allowed.id.to_s
@@ -94,8 +93,8 @@ RSpec.shared_examples "No Score Value" do
   end
 end
 
-RSpec.describe DiscourseGamification::Scorable do
-  describe DiscourseGamification::LikeReceived do
+RSpec.describe DiscourseGamification do
+  RSpec.describe DiscourseGamification::LikeReceived do
     it_behaves_like "Scorable Type" do
       before do
         Fabricate.times(10, :post, user: current_user)
@@ -161,7 +160,9 @@ RSpec.describe DiscourseGamification::Scorable do
     it_behaves_like "No Score Value" do
       # don't count deleted post towards score
       let(:deleted_topic) { Fabricate(:deleted_topic, user: current_user) }
-      let(:post) { Fabricate(:post, topic: deleted_topic, user: current_user, deleted_at: Time.now) }
+      let(:post) do
+        Fabricate(:post, topic: deleted_topic, user: current_user, deleted_at: Time.now)
+      end
       let(:class_action_fabricator_for_deleted_object) do
         Fabricate(:post_action, user: current_user, post: post)
       end
@@ -184,7 +185,12 @@ RSpec.describe DiscourseGamification::Scorable do
         Fabricate(:post, user: current_user, post_number: 1)
 
         # small action are not counted
-        Fabricate(:post, post_type: Post.types[:moderator_action], user: current_user, post_number: 2)
+        Fabricate(
+          :post,
+          post_type: Post.types[:moderator_action],
+          user: current_user,
+          post_number: 2,
+        )
 
         # hidden posts are not counted
         Fabricate(
@@ -403,5 +409,4 @@ RSpec.describe DiscourseGamification::Scorable do
       end
     end
   end
-
 end

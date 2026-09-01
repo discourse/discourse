@@ -25,8 +25,10 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
       # The shard template is migrated fresh from the same schema (no data), so
       # shards stay empty even when the run DB already has rows.
-      scheduler_context[:shard_manager] =
-        Migrations::Conversion::ShardManager.new(canonical_path: db_path, migrations_path:)
+      scheduler_context[:shard_manager] = Migrations::Conversion::ShardManager.new(
+        canonical_path: db_path,
+        migrations_path:,
+      )
       scheduler_context[:writer] = Migrations::Database::Connection.new(path: db_path)
       Migrations::Database::IntermediateDB.setup(writer)
       begin

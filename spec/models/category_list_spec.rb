@@ -215,7 +215,6 @@ RSpec.describe CategoryList do
         )
       end
 
-
       def displayable_topics
         category_list = CategoryList.new(Guardian.new(user), include_topics: true)
         category_list.categories.find { |c| c.id == topic_category.id }.displayable_topics

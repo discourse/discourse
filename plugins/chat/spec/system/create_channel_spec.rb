@@ -177,7 +177,7 @@ RSpec.describe "Create channel" do
         fab!(:user_1, :user)
         fab!(:private_category) { Fabricate(:private_category, group: group_1) }
 
-        before do
+        def open_auto_join_dialog
           group_1.add(user_1)
           channel_modal.select_category(private_category)
           channel_modal.toggle_auto_join
@@ -185,6 +185,8 @@ RSpec.describe "Create channel" do
         end
 
         it "displays the warning for one group" do
+          open_auto_join_dialog
+
           expect(dialog).to have_content(
             I18n.t(
               "js.chat.create_channel.auto_join_users.warning_1_group",
@@ -197,6 +199,8 @@ RSpec.describe "Create channel" do
         it "displays the warning for two groups" do
           group_2 = Fabricate(:group)
           CategoryGroup.create(group: group_2, category: private_category)
+          open_auto_join_dialog
+
           sorted_names = [group_1.name, group_2.name].sort
           expect(dialog).to have_content(
             I18n.t(
@@ -213,6 +217,8 @@ RSpec.describe "Create channel" do
           CategoryGroup.create(group: group_2, category: private_category)
           group_3 = Fabricate(:group)
           CategoryGroup.create(group: group_3, category: private_category)
+          open_auto_join_dialog
+
           # NOTE: This has to be hardcoded because the I18n module in ruby
           # does not support messageFormat.
           first_group = [group_1.name, group_2.name, group_3.name].sort.first

@@ -10,7 +10,6 @@ describe "Admin Badges Page" do
 
   let(:badges_page) { PageObjects::Pages::AdminBadges.new }
 
-
   context "with system badge" do
     it "displays badge" do
       badges_page.visit_page(Badge::Autobiographer)

@@ -124,7 +124,6 @@ RSpec.describe UploadCreator, "#create_for" do
       expect(upload.user_uploads.count).to eq(2)
     end
 
-
     it "truncates long extension names" do
       expect do
         UploadCreator.new(file2, "fake.long-FileExtension").create_for(user.id)
@@ -201,9 +200,7 @@ RSpec.describe UploadCreator, "#create_for" do
     it "adds an error to the upload" do
       SiteSetting.max_image_size_kb = 1
       upload =
-        UploadCreator.new(file, filename, force_optimize: true).create_for(
-          Discourse.system_user.id,
-        )
+        UploadCreator.new(file, filename, force_optimize: true).create_for(Discourse.system_user.id)
       expect(upload.errors.full_messages.first).to eq(
         "#{I18n.t("upload.images.too_large_humanized", max_size: "1 KB")}",
       )
@@ -263,10 +260,7 @@ RSpec.describe UploadCreator, "#create_for" do
 
     it "honors every EXIF orientation when storing JPEG uploads" do
       expected_color_grids.each do |orientation, expected_color_grid|
-        with_jpeg_orientation(
-          source_path: source_path,
-          orientation: orientation,
-        ) do |oriented_file|
+        with_jpeg_orientation(source_path: source_path, orientation: orientation) do |oriented_file|
           upload =
             described_class.new(
               oriented_file,
@@ -460,9 +454,7 @@ RSpec.describe UploadCreator, "#create_for" do
 
         it "does not convert to jpeg when png_to_jpg_quality is 100" do
           upload =
-            UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
-              user.id,
-            )
+            UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(user.id)
 
           expect(upload.extension).to eq("png")
           expect(File.extname(upload.url)).to eq(".png")

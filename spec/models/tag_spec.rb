@@ -108,9 +108,7 @@ RSpec.describe Tag do
         ]
         private_category.set_permissions(admins: :full)
         private_category.save!
-
       end
-
 
       it "works correctly" do
         expect(Tag.top_tags(category: category1)).to eq(
@@ -184,7 +182,6 @@ RSpec.describe Tag do
         Fabricate(:topic, tags: [tag, hidden_tag])
       end
 
-
       it "returns all tags to staff" do
         expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(
           { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
@@ -245,7 +242,6 @@ RSpec.describe Tag do
         Fabricate(:topic, tags: [localized_tag])
       end
 
-
       it "returns original names when localization disabled" do
         SiteSetting.content_localization_enabled = false
         I18n.locale = "ja"
@@ -300,9 +296,7 @@ RSpec.describe Tag do
       )
     end
 
-    before do
-      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
-    end
+    before { 2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") } }
 
     it "returns nothing if user is not a staff" do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty

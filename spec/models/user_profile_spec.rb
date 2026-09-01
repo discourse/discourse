@@ -8,47 +8,45 @@ RSpec.describe UserProfile do
     fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
     context "when the location contains watched words" do
-        before { profile.location = location }
+      before { profile.location = location }
 
-        context "when watched words are of type 'Block'" do
-          let(:location) { "bad location" }
+      context "when watched words are of type 'Block'" do
+        let(:location) { "bad location" }
 
-          it "is not valid" do
-            profile.valid?
-            expect(profile.errors[:base].size).to eq(1)
-            expect(profile.errors.messages[:base]).to include(/you can't post the word/)
-          end
-        end
-
-        context "when watched words are of type 'Censor'" do
-          before do
-            Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
-          end
-
-          let(:location) { "censored location" }
-
-          it "censors the words upon saving" do
-            expect { profile.save! }.to change { profile.location }.to eq "■■■■■■■■ location"
-          end
-        end
-
-        context "when watched words are of type 'Replace'" do
-          let(:location) { "word to replace" }
-
-          before do
-            Fabricate(
-              :watched_word,
-              word: "to replace",
-              replacement: "replaced",
-              action: WatchedWord.actions[:replace],
-            )
-          end
-
-          it "replaces the words upon saving" do
-            expect { profile.save! }.to change { profile.location }.to eq "word replaced"
-          end
+        it "is not valid" do
+          profile.valid?
+          expect(profile.errors[:base].size).to eq(1)
+          expect(profile.errors.messages[:base]).to include(/you can't post the word/)
         end
       end
+
+      context "when watched words are of type 'Censor'" do
+        before { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+
+        let(:location) { "censored location" }
+
+        it "censors the words upon saving" do
+          expect { profile.save! }.to change { profile.location }.to eq "■■■■■■■■ location"
+        end
+      end
+
+      context "when watched words are of type 'Replace'" do
+        let(:location) { "word to replace" }
+
+        before do
+          Fabricate(
+            :watched_word,
+            word: "to replace",
+            replacement: "replaced",
+            action: WatchedWord.actions[:replace],
+          )
+        end
+
+        it "replaces the words upon saving" do
+          expect { profile.save! }.to change { profile.location }.to eq "word replaced"
+        end
+      end
+    end
 
     context "when it is > 3000 characters" do
       before { profile.location = "a" * 3500 }

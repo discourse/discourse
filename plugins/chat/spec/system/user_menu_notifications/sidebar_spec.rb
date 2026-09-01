@@ -142,7 +142,14 @@ RSpec.describe "User menu notifications | sidebar" do
         end
 
         it "shows a mention notification when the message is in a thread" do
-          message.update!(thread: Fabricate(:chat_thread, channel: channel_1))
+          threaded_message =
+            Fabricate(
+              :chat_message,
+              thread: Fabricate(:chat_thread, channel: channel_1),
+              user: other_user,
+              message: "this is fine @#{current_user.username}",
+              use_service: true,
+            )
           visit("/discuss")
 
           find(".header-dropdown-toggle.current-user").click
@@ -153,7 +160,8 @@ RSpec.describe "User menu notifications | sidebar" do
 
           expect(find("#quick-access-chat-notifications")).to have_link(
             I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
-            href: "/discuss/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{message.thread_id}",
+            href:
+              "/discuss/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{threaded_message.thread_id}",
           )
         end
       end

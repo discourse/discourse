@@ -26,9 +26,7 @@ describe "Creating Invites" do
     sign_in(user)
     user_invited_pending_page.visit(user)
     open_invite_modal
-
   end
-
 
   it "is possible to create an invite link without toggling the advanced options" do
     cdp.allow_clipboard

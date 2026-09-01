@@ -700,11 +700,9 @@ RSpec.describe "Managing Posts solved status" do
       Fabricate(:category_moderation_group, category: p1.topic.category, group: group_user.group)
       SiteSetting.enable_category_group_moderation = true
       sign_in(user_gm)
-
     end
 
     let(:user_gm) { group_user.user }
-
 
     it "can accept a solution" do
       post "/solution/accept.json", params: { id: p1.id }

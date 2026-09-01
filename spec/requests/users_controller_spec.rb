@@ -280,7 +280,6 @@ RSpec.describe UsersController do
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
-
     end
   end
 
@@ -829,7 +828,12 @@ RSpec.describe UsersController do
     end
 
     let(:post_user_params) do
-      { name: new_user.name, username: new_user.username, password: "strongpassword", email: new_user.email }
+      {
+        name: new_user.name,
+        username: new_user.username,
+        password: "strongpassword",
+        email: new_user.email,
+      }
     end
 
     def post_user(extra_params = {})
@@ -1670,14 +1674,21 @@ RSpec.describe UsersController do
     end
 
     context "when password param is missing" do
-      let(:create_params) { { name: new_user.name, username: new_user.username, email: new_user.email } }
+      let(:create_params) do
+        { name: new_user.name, username: new_user.username, email: new_user.email }
+      end
 
       include_examples "failed signup"
     end
 
     context "with a reserved username" do
       let(:create_params) do
-        { name: new_user.name, username: "Reserved", email: new_user.email, password: "strongpassword" }
+        {
+          name: new_user.name,
+          username: "Reserved",
+          email: new_user.email,
+          password: "strongpassword",
+        }
       end
 
       before { SiteSetting.reserved_usernames = "a|reserved|b" }
@@ -1747,7 +1758,12 @@ RSpec.describe UsersController do
 
       context "without a value for the fields" do
         let(:create_params) do
-          { name: new_user.name, password: "watwatwat", username: new_user.username, email: new_user.email }
+          {
+            name: new_user.name,
+            password: "watwatwat",
+            username: new_user.username,
+            email: new_user.email,
+          }
         end
 
         include_examples "failed signup"
@@ -1834,9 +1850,9 @@ RSpec.describe UsersController do
         it "value is required only on sign-up" do
           user_field.on_signup!
 
-          expect do
-            put update_user_url, params: { user_fields: { field_id => "" } }
-          end.to change { user1.reload.user_fields[field_id] }.from(nil).to("")
+          expect do put update_user_url, params: { user_fields: { field_id => "" } } end.to change {
+            user1.reload.user_fields[field_id]
+          }.from(nil).to("")
 
           put update_user_url, params: { user_fields: { field_id => valid_options } }
 
@@ -1854,9 +1870,9 @@ RSpec.describe UsersController do
             put update_user_url, params: { user_fields: { field_id => nil } }
           end.to change { user1.reload.user_fields[field_id] }.from(valid_options).to(nil)
 
-          expect do
-            put update_user_url, params: { user_fields: { field_id => "" } }
-          end.to change { user1.reload.user_fields[field_id] }.from(nil).to("")
+          expect do put update_user_url, params: { user_fields: { field_id => "" } } end.to change {
+            user1.reload.user_fields[field_id]
+          }.from(nil).to("")
         end
       end
 
@@ -1910,41 +1926,41 @@ RSpec.describe UsersController do
       end
 
       context "when creating a user with custom field values" do
-      include_context "with values for custom fields"
+        include_context "with values for custom fields"
 
-      it "succeeds without the optional field" do
-        post "/u.json", params: create_params
-        expect(response.status).to eq(200)
-        inserted = User.find_by_email(new_user.email)
-        expect(inserted).to be_present
-        expect(inserted.custom_fields).to be_present
-        expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
-        expect(inserted.custom_fields["user_field_#{another_field.id}"]).to eq("value2")
-        expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to be_blank
+        it "succeeds without the optional field" do
+          post "/u.json", params: create_params
+          expect(response.status).to eq(200)
+          inserted = User.find_by_email(new_user.email)
+          expect(inserted).to be_present
+          expect(inserted.custom_fields).to be_present
+          expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
+          expect(inserted.custom_fields["user_field_#{another_field.id}"]).to eq("value2")
+          expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to be_blank
+        end
+
+        it "succeeds with the optional field" do
+          create_params[:user_fields][optional_field.id.to_s] = "value3"
+          post "/u.json", params: create_params.merge(create_params)
+          expect(response.status).to eq(200)
+          inserted = User.find_by_email(new_user.email)
+          expect(inserted).to be_present
+          expect(inserted.custom_fields).to be_present
+          expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
+          expect(inserted.custom_fields["user_field_#{another_field.id}"]).to eq("value2")
+          expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to eq("value3")
+        end
+
+        it "trims excessively long fields" do
+          create_params[:user_fields][optional_field.id.to_s] = ("x" * 3000)
+          post "/u.json", params: create_params.merge(create_params)
+          expect(response.status).to eq(200)
+          inserted = User.find_by_email(new_user.email)
+
+          val = inserted.custom_fields["user_field_#{optional_field.id}"]
+          expect(val.length).to eq(UserField.max_length)
+        end
       end
-
-      it "succeeds with the optional field" do
-        create_params[:user_fields][optional_field.id.to_s] = "value3"
-        post "/u.json", params: create_params.merge(create_params)
-        expect(response.status).to eq(200)
-        inserted = User.find_by_email(new_user.email)
-        expect(inserted).to be_present
-        expect(inserted.custom_fields).to be_present
-        expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
-        expect(inserted.custom_fields["user_field_#{another_field.id}"]).to eq("value2")
-        expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to eq("value3")
-      end
-
-      it "trims excessively long fields" do
-        create_params[:user_fields][optional_field.id.to_s] = ("x" * 3000)
-        post "/u.json", params: create_params.merge(create_params)
-        expect(response.status).to eq(200)
-        inserted = User.find_by_email(new_user.email)
-
-        val = inserted.custom_fields["user_field_#{optional_field.id}"]
-        expect(val.length).to eq(UserField.max_length)
-      end
-    end
     end
 
     context "with only optional custom fields" do
@@ -2857,8 +2873,7 @@ RSpec.describe UsersController do
       it "updates watched tags in everyone tag group" do
         SiteSetting.tagging_enabled = true
         tags = [Fabricate(:tag), Fabricate(:tag)]
-        group =
-          Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        group = Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
         tag_group = Fabricate(:tag_group, tags: tags)
         Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
         tag_synonym = Fabricate(:tag, target_tag: tags[1])
@@ -3191,9 +3206,7 @@ RSpec.describe UsersController do
             expect(response.status).to eq(200)
           end.to change { user.sidebar_section_links.count }.from(1).to(2)
 
-          expect(SidebarSectionLink.exists?(user: user, linkable: restricted_category)).to eq(
-            true,
-          )
+          expect(SidebarSectionLink.exists?(user: user, linkable: restricted_category)).to eq(true)
         end
 
         it "allows user to remove all tag sidebar section links" do
@@ -3521,47 +3534,47 @@ RSpec.describe UsersController do
         end
 
         it "doesn't set user status when the feature is disabled" do
-            SiteSetting.enable_user_status = false
-            put "/u/#{user.username}.json",
-                params: {
-                  status: {
-                    emoji: "tooth",
-                    description: "off to dentist",
-                  },
-                }
-            expect(response.status).to eq(200)
+          SiteSetting.enable_user_status = false
+          put "/u/#{user.username}.json",
+              params: {
+                status: {
+                  emoji: "tooth",
+                  description: "off to dentist",
+                },
+              }
+          expect(response.status).to eq(200)
 
-            user.reload
-            expect(user.user_status).to be_nil
-          end
+          user.reload
+          expect(user.user_status).to be_nil
+        end
 
         it "doesn't update user status when the feature is disabled" do
-            SiteSetting.enable_user_status = false
-            old_status = { emoji: "tooth", description: "off to dentist" }
-            user.set_status!(old_status[:description], old_status[:emoji])
-            user.reload
+          SiteSetting.enable_user_status = false
+          old_status = { emoji: "tooth", description: "off to dentist" }
+          user.set_status!(old_status[:description], old_status[:emoji])
+          user.reload
 
-            new_status = { emoji: "man_surfing", description: "surfing" }
-            put "/u/#{user.username}.json", params: { status: new_status }
-            expect(response.status).to eq(200)
+          new_status = { emoji: "man_surfing", description: "surfing" }
+          put "/u/#{user.username}.json", params: { status: new_status }
+          expect(response.status).to eq(200)
 
-            user.reload
-            expect(user.user_status).not_to be_nil
-            expect(user.user_status.emoji).to eq(old_status[:emoji])
-            expect(user.user_status.description).to eq(old_status[:description])
-          end
+          user.reload
+          expect(user.user_status).not_to be_nil
+          expect(user.user_status.emoji).to eq(old_status[:emoji])
+          expect(user.user_status.description).to eq(old_status[:description])
+        end
 
         it "doesn't clear user status when the feature is disabled" do
-            SiteSetting.enable_user_status = false
-            user.set_status!("off to dentist", "tooth")
-            user.reload
+          SiteSetting.enable_user_status = false
+          user.set_status!("off to dentist", "tooth")
+          user.reload
 
-            put "/u/#{user.username}.json", params: { status: nil }
-            expect(response.status).to eq(200)
+          put "/u/#{user.username}.json", params: { status: nil }
+          expect(response.status).to eq(200)
 
-            user.reload
-            expect(user.user_status).not_to be_nil
-          end
+          user.reload
+          expect(user.user_status).not_to be_nil
+        end
       end
 
       context "as a staff user" do
@@ -5338,31 +5351,31 @@ RSpec.describe UsersController do
         end
 
         it "doesn't fetch an external provider user for a non-admin" do
-            configure_external_provider
-            sign_in(user1)
-            get "/u/by-external/google_oauth2/myuid.json"
-            expect(response.status).to eq(403)
-          end
+          configure_external_provider
+          sign_in(user1)
+          get "/u/by-external/google_oauth2/myuid.json"
+          expect(response.status).to eq(403)
+        end
 
         it "fetches a user from an external provider" do
-            configure_external_provider
-            get "/u/by-external/google_oauth2/myuid.json"
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["user"]["username"]).to eq(user1.username)
-          end
+          configure_external_provider
+          get "/u/by-external/google_oauth2/myuid.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user"]["username"]).to eq(user1.username)
+        end
 
         it "fails when the external provider is disabled" do
-            configure_external_provider
-            SiteSetting.enable_google_oauth2_logins = false
-            get "/u/by-external/google_oauth2/myuid.json"
-            expect(response.status).to eq(404)
-          end
+          configure_external_provider
+          SiteSetting.enable_google_oauth2_logins = false
+          get "/u/by-external/google_oauth2/myuid.json"
+          expect(response.status).to eq(404)
+        end
 
         it "returns 404 for a missing external provider user" do
-            configure_external_provider
-            get "/u/by-external/google_oauth2/myotheruid.json"
-            expect(response.status).to eq(404)
-          end
+          configure_external_provider
+          get "/u/by-external/google_oauth2/myotheruid.json"
+          expect(response.status).to eq(404)
+        end
       end
 
       describe "include_post_count_for" do
@@ -7315,7 +7328,7 @@ RSpec.describe UsersController do
 
           expect(user1.associated_accounts.length).to eq(2)
 
-            #succeeds removing the first account since there's still a second one
+          #succeeds removing the first account since there's still a second one
           post "/u/#{user1.username}/preferences/revoke-account.json",
                params: {
                  provider_name: "testprovider2",
@@ -7568,9 +7581,7 @@ RSpec.describe UsersController do
           )
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
           simulate_localhost_passkey_challenge
-
         end
-
 
         it "returns a successful response for the correct user" do
           user1.create_or_fetch_secure_identifier

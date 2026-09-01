@@ -122,7 +122,6 @@ describe PostVoting::CommentReviewQueue do
       end
     end
 
-
     context "when creating a notify_user flag" do
       it "creates a companion PM" do
         queue.flag_comment(

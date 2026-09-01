@@ -104,31 +104,32 @@ RSpec.describe "i18n integrity checks" do
   end
 
   context "with fallbacks" do
-  before do
-    I18n.backend = I18n::Backend::DiscourseI18n.new
-    I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
-    I18n.reload!
-    I18n.init_accelerator!
-  end
+    before do
+      I18n.backend = I18n::Backend::DiscourseI18n.new
+      I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
+      I18n.reload!
+      I18n.init_accelerator!
+    end
 
-  it "finds the fallback translation" do
-    I18n.backend.store_translations(:en, test: "en test")
-
-    I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") }
-  end
-
-  context "when in a multi-threaded environment" do
     it "finds the fallback translation" do
       I18n.backend.store_translations(:en, test: "en test")
 
-      thread = Thread.new { I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") } }
+      I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") }
+    end
 
-      begin
-        thread.join
-      ensure
-        thread.exit
+    context "when in a multi-threaded environment" do
+      it "finds the fallback translation" do
+        I18n.backend.store_translations(:en, test: "en test")
+
+        thread =
+          Thread.new { I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") } }
+
+        begin
+          thread.join
+        ensure
+          thread.exit
+        end
       end
     end
   end
-end
 end

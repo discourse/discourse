@@ -45,7 +45,6 @@ RSpec.describe Chat::Channel::Policy::MessageCreation do
           expect(result).to be_falsey
         end
       end
-
     end
 
     context "when category channel" do

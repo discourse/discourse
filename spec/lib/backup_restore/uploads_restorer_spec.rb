@@ -216,10 +216,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
     end
 
     it "doesn't remap when `cdn_url` in `backup_metadata` is empty" do
-      expect_no_remap(
-        target_site_name: target_site_name,
-        metadata: [source_site_type, no_cdn_url],
-      )
+      expect_no_remap(target_site_name: target_site_name, metadata: [source_site_type, no_cdn_url])
     end
 
     it "remaps to new `cdn_url` when `cdn_url` changes to a different value" do
@@ -252,17 +249,11 @@ RSpec.describe BackupRestore::UploadsRestorer do
 
   shared_examples "remaps from local storage" do
     it "doesn't remap when `s3_base_url` in `backup_metadata` is empty" do
-      expect_no_remap(
-        target_site_name: target_site_name,
-        metadata: [source_site_type, s3_base_url],
-      )
+      expect_no_remap(target_site_name: target_site_name, metadata: [source_site_type, s3_base_url])
     end
 
     it "doesn't remap when `s3_cdn_url` in `backup_metadata` is empty" do
-      expect_no_remap(
-        target_site_name: target_site_name,
-        metadata: [source_site_type, s3_cdn_url],
-      )
+      expect_no_remap(target_site_name: target_site_name, metadata: [source_site_type, s3_cdn_url])
     end
   end
 

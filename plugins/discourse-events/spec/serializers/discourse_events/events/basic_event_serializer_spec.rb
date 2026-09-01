@@ -14,7 +14,6 @@ describe DiscourseEvents::Events::BasicEventSerializer do
   fab!(:post) { Fabricate(:post, topic:) }
   fab!(:event) { Fabricate(:event, post:) }
 
-
   it "includes custom_fields so they are readable from event listings" do
     json = described_class.new(event, scope: Guardian.new, root: false).as_json
     expect(json[:custom_fields]["team"]).to eq("rocket")

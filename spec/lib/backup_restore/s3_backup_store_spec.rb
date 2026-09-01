@@ -128,11 +128,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       size: 17,
       last_modified: Time.parse("2018-09-13T15:10:00Z"),
     }
-    objects << {
-      key: "default/a.tgz",
-      size: 29,
-      last_modified: Time.parse("2018-02-11T09:27:00Z"),
-    }
+    objects << { key: "default/a.tgz", size: 29, last_modified: Time.parse("2018-02-11T09:27:00Z") }
     objects << {
       key: "default/r.sql.gz",
       size: 11,

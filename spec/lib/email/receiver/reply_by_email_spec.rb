@@ -66,7 +66,7 @@ RSpec.describe Email::Receiver, "#process!" do
     )
   end
 
-    # bounce handling depends on reply_by_email being enabled
+  # bounce handling depends on reply_by_email being enabled
   describe "bounces" do
     it "raises a BouncerEmailError" do
       expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
@@ -134,8 +134,6 @@ RSpec.describe Email::Receiver, "#process!" do
           SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
         end
 
-
-
         it "creates a post with the bounce error" do
           expect { process(:hard_bounce_via_verp) }.to raise_error(
             Email::Receiver::BouncedEmailError,
@@ -171,9 +169,7 @@ RSpec.describe Email::Receiver, "#process!" do
     fab!(:topic) { create_topic(category: category, user: user) }
     fab!(:post) { create_post(topic: topic) }
 
-    before do
-      Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
-    end
+    before { Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post) }
 
     let :topic_user do
       TopicUser.find_by(topic_id: topic.id, user_id: user.id)
@@ -219,9 +215,7 @@ RSpec.describe Email::Receiver, "#process!" do
 
     it "works when sent to an alternative reply address" do
       SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
-      expect { process(:reply_user_matching_alternativereplyaddr) }.to change {
-        topic.posts.count
-      }
+      expect { process(:reply_user_matching_alternativereplyaddr) }.to change { topic.posts.count }
     end
 
     it "raises a TopicNotFoundError when the topic was deleted" do

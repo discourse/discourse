@@ -14,7 +14,6 @@ describe TopicQuery do
 
   include_context "with group that is allowed to assign"
 
-
   def assign_to(topic:, user:, assignee:)
     topic.tap { |assigned_topic| Assigner.new(assigned_topic, user).assign(assignee) }
   end

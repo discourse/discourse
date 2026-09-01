@@ -250,7 +250,6 @@ RSpec.describe UrlHelper do
         )
       end
     end
-
   end
 
   describe "rails_route_from_url" do

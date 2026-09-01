@@ -5,23 +5,23 @@ require "spam_handler"
 RSpec.describe SpamHandler do
   describe "#should_prevent_registration_from_ip?" do
     it "handles a spam post" do
-        # max_new_accounts_per_registration_ip = 0 disables the check
-        SiteSetting.max_new_accounts_per_registration_ip = 0
+      # max_new_accounts_per_registration_ip = 0 disables the check
+      SiteSetting.max_new_accounts_per_registration_ip = 0
 
-        Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+
+      # only prevents registration for TL0
+      SiteSetting.max_new_accounts_per_registration_ip = 2
+
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
+      expect {
         Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
-
-        # only prevents registration for TL0
-        SiteSetting.max_new_accounts_per_registration_ip = 2
-
-        Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
-        Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
-
-        Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
-        expect {
-          Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
-        }.to raise_error(ActiveRecord::RecordInvalid)
-      end
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
 
     it "doesn't limit registrations since there is a TL2+ user with that IP" do
       # setup

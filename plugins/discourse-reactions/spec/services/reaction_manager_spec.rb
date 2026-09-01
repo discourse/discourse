@@ -99,95 +99,95 @@ RSpec.describe DiscourseReactions::ReactionManager do
     end
 
     context "when the existing reaction was a ReactionUser" do
-        let!(:reaction_user) do
-          Fabricate(:reaction_user, user: user, post: post, reaction: reaction_plus_one)
+      let!(:reaction_user) do
+        Fabricate(:reaction_user, user: user, post: post, reaction: reaction_plus_one)
+      end
+
+      context "when the user has permission to delete the ReactionUser" do
+        it "removes the ReactionUser for the old +1 reaction" do
+          reaction_manager.toggle!
+          expect(DiscourseReactions::ReactionUser.find_by(id: reaction_user.id)).to be_nil
         end
 
-        context "when the user has permission to delete the ReactionUser" do
-          it "removes the ReactionUser for the old +1 reaction" do
-            reaction_manager.toggle!
-            expect(DiscourseReactions::ReactionUser.find_by(id: reaction_user.id)).to be_nil
-          end
-
-          it "removes any PostAction that exists as well" do
-            expect { reaction_manager.toggle! }.to change { PostAction.count }.by(-1)
-          end
-
-          it "adds a new ReactionUser record for the new reaction -1 but not PostAction because of discourse_reactions_excluded_from_like" do
-            reaction_manager.toggle!
-            expect(
-              DiscourseReactions::ReactionUser.find_by(
-                reaction: reaction_minus_one,
-                user: user,
-                post: post,
-              ),
-            ).to be_present
-            expect(
-              PostAction.find_by(
-                post: post,
-                user: user,
-                post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
-              ),
-            ).to be_nil
-          end
-
-          it "adds a new ReactionUser record and a PostAction record for reaction hugs" do
-            described_class.new(reaction_value: "hugs", user: user, post: post).toggle!
-            expect(
-              DiscourseReactions::ReactionUser.find_by(
-                reaction: reaction_hugs,
-                user: user,
-                post: post,
-              ),
-            ).to be_present
-            expect(
-              PostAction.find_by(
-                post: post,
-                user: user,
-                post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
-              ),
-            ).to be_present
-          end
-
-          it "deletes any notifications for the old Reaction and creates a notification for the new reaction" do
-            DiscourseReactions::ReactionNotification.new(reaction_plus_one, user).create
-            expect { reaction_manager.toggle! }.not_to change { Notification.count }
-            expect(
-              Notification.where(
-                notification_type: Notification.types[:reaction],
-                topic_id: post.topic_id,
-                user_id: post.user_id,
-                post_number: post.post_number,
-              ).count,
-            ).to eq(1)
-          end
-
-          it "removes the Reaction record attached to the post when no more users have reacted to it" do
-            expect { reaction_manager.toggle! }.to change {
-              DiscourseReactions::Reaction.where(id: reaction_plus_one).count
-            }.by(-1)
-          end
-
-          it "only removes the old ReactionUser when the previous and new reactions match" do
-            reaction_user.update!(reaction: reaction_minus_one)
-            expect { reaction_manager.toggle! }.to change {
-              DiscourseReactions::ReactionUser.count
-            }.by(-1).and change { PostAction.count }.by(-1)
-          end
+        it "removes any PostAction that exists as well" do
+          expect { reaction_manager.toggle! }.to change { PostAction.count }.by(-1)
         end
 
-        context "when the user does not have permission to delete the ReactionUser" do
-          before do
-            reaction_user.update!(
-              created_at: Time.zone.now - (SiteSetting.post_undo_action_window_mins + 1).minutes,
-            )
-          end
+        it "adds a new ReactionUser record for the new reaction -1 but not PostAction because of discourse_reactions_excluded_from_like" do
+          reaction_manager.toggle!
+          expect(
+            DiscourseReactions::ReactionUser.find_by(
+              reaction: reaction_minus_one,
+              user: user,
+              post: post,
+            ),
+          ).to be_present
+          expect(
+            PostAction.find_by(
+              post: post,
+              user: user,
+              post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+            ),
+          ).to be_nil
+        end
 
-          it "raises an error" do
-            expect { reaction_manager.toggle! }.to raise_error(Discourse::InvalidAccess)
-          end
+        it "adds a new ReactionUser record and a PostAction record for reaction hugs" do
+          described_class.new(reaction_value: "hugs", user: user, post: post).toggle!
+          expect(
+            DiscourseReactions::ReactionUser.find_by(
+              reaction: reaction_hugs,
+              user: user,
+              post: post,
+            ),
+          ).to be_present
+          expect(
+            PostAction.find_by(
+              post: post,
+              user: user,
+              post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+            ),
+          ).to be_present
+        end
+
+        it "deletes any notifications for the old Reaction and creates a notification for the new reaction" do
+          DiscourseReactions::ReactionNotification.new(reaction_plus_one, user).create
+          expect { reaction_manager.toggle! }.not_to change { Notification.count }
+          expect(
+            Notification.where(
+              notification_type: Notification.types[:reaction],
+              topic_id: post.topic_id,
+              user_id: post.user_id,
+              post_number: post.post_number,
+            ).count,
+          ).to eq(1)
+        end
+
+        it "removes the Reaction record attached to the post when no more users have reacted to it" do
+          expect { reaction_manager.toggle! }.to change {
+            DiscourseReactions::Reaction.where(id: reaction_plus_one).count
+          }.by(-1)
+        end
+
+        it "only removes the old ReactionUser when the previous and new reactions match" do
+          reaction_user.update!(reaction: reaction_minus_one)
+          expect { reaction_manager.toggle! }.to change {
+            DiscourseReactions::ReactionUser.count
+          }.by(-1).and change { PostAction.count }.by(-1)
         end
       end
+
+      context "when the user does not have permission to delete the ReactionUser" do
+        before do
+          reaction_user.update!(
+            created_at: Time.zone.now - (SiteSetting.post_undo_action_window_mins + 1).minutes,
+          )
+        end
+
+        it "raises an error" do
+          expect { reaction_manager.toggle! }.to raise_error(Discourse::InvalidAccess)
+        end
+      end
+    end
 
     context "when the existing reaction counted as a PostAction (Like) without a matching ReactionUser" do
       let!(:post_action) do

@@ -587,8 +587,6 @@ describe AdminDashboardSectionConfiguration do
       )
     end
 
-
-
     def register_support_section(enabled: true)
       plugin.register_admin_dashboard_section(
         id: "support",
@@ -598,7 +596,6 @@ describe AdminDashboardSectionConfiguration do
         },
       ) { {} }
     end
-
 
     it "creates a section row on the fly when persisting a plugin section's setting for the first time" do
       register_support_section

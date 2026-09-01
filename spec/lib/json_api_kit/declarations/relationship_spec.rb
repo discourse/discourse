@@ -39,7 +39,6 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
     end
   end
 
-
   describe "#listing" do
     subject(:related_listing) { relationship.listing(params, guardian:, scoped_to:) }
 

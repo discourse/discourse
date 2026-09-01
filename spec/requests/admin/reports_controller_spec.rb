@@ -30,7 +30,6 @@ RSpec.describe Admin::ReportsController do
       end
     end
 
-
     it "excludes page view mobile reports" do
       get "/admin/reports.json"
       expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(

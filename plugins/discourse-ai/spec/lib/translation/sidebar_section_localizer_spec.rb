@@ -12,7 +12,6 @@ describe DiscourseAi::Translation::SidebarSectionLocalizer do
   fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "Participate") }
   fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Welcome", value: "/welcome") }
 
-
   def short_text_translator_stub(text:, target_locale:, translated:)
     translator = instance_double(DiscourseAi::Translation::ShortTextTranslator)
     allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new).with(

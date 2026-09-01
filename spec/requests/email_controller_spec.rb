@@ -255,7 +255,6 @@ RSpec.describe EmailController do
       )
     end
 
-
     context "when unsubscribing from digest" do
       let(:key_type) { UnsubscribeKey::DIGEST_TYPE }
       let(:post) { nil }

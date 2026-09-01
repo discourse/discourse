@@ -62,18 +62,12 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it { is_expected.to fail_a_policy(:can_accept_answer) }
     end
 
-
     it { is_expected.to run_successfully }
 
     context "when a previous answer was already accepted" do
       fab!(:existing_solved) { Fabricate(:solved_topic, topic:) }
       fab!(:existing_topic_answer) do
-        Fabricate(
-          :topic_answer,
-          solved_topic: existing_solved,
-          post: post_1,
-          accepter: acting_user,
-        )
+        Fabricate(:topic_answer, solved_topic: existing_solved, post: post_1, accepter: acting_user)
       end
       fab!(:previous_user_action) do
         UserAction.log_action!(
@@ -90,9 +84,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "replaces the accepted answer" do
-        expect { result }.to change { topic.reload.topic_answers.first.post }.from(post_1).to(
-          post,
-        )
+        expect { result }.to change { topic.reload.topic_answers.first.post }.from(post_1).to(post)
       end
 
       it "revokes the previous answer's solved credit" do
@@ -148,10 +140,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
           ).and change {
                   UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
                 }.by(-1).and change {
-                        UserAction.where(
-                          action_type: UserAction::SOLVED,
-                          target_post: post_2,
-                        ).count
+                        UserAction.where(action_type: UserAction::SOLVED, target_post: post_2).count
                       }.by(-1)
         end
       end
@@ -183,10 +172,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       it "notifies the post author" do
         expect { result }.to change {
-          Notification.where(
-            notification_type: Notification.types[:custom],
-            user: post.user,
-          ).count
+          Notification.where(notification_type: Notification.types[:custom], user: post.user).count
         }.by(1)
       end
     end
@@ -198,10 +184,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       it "does not notify the post author" do
         expect { result }.not_to change {
-          Notification.where(
-            notification_type: Notification.types[:custom],
-            user: post.user,
-          ).count
+          Notification.where(notification_type: Notification.types[:custom], user: post.user).count
         }
       end
     end
@@ -211,10 +194,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       it "does not notify the post author" do
         expect { result }.not_to change {
-          Notification.where(
-            notification_type: Notification.types[:custom],
-            user: post.user,
-          ).count
+          Notification.where(notification_type: Notification.types[:custom], user: post.user).count
         }
       end
     end
@@ -273,10 +253,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       it "does not notify the topic owner" do
         expect { result }.not_to change {
-          Notification.where(
-            notification_type: Notification.types[:custom],
-            user: topic.user,
-          ).count
+          Notification.where(notification_type: Notification.types[:custom], user: topic.user).count
         }
       end
     end
@@ -325,10 +302,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
 
       it "does not notify muted users" do
         expect { result }.not_to change {
-          Notification.where(
-            notification_type: Notification.types[:custom],
-            user: muted_user,
-          ).count
+          Notification.where(notification_type: Notification.types[:custom], user: muted_user).count
         }
       end
 
@@ -354,10 +328,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it "uses the topic_solved_notification message" do
         result
         notification =
-          Notification.find_by(
-            notification_type: Notification.types[:custom],
-            user: watching_user,
-          )
+          Notification.find_by(notification_type: Notification.types[:custom], user: watching_user)
         data = JSON.parse(notification.data)
         expect(data["message"]).to eq("solved.topic_solved_notification")
         expect(data["title"]).to eq("solved.notification.topic_solved_title")
@@ -394,10 +365,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it "links to the solution post" do
         result
         notification =
-          Notification.find_by(
-            notification_type: Notification.types[:custom],
-            user: watching_user,
-          )
+          Notification.find_by(notification_type: Notification.types[:custom], user: watching_user)
         expect(notification.post_number).to eq(post.post_number)
       end
 

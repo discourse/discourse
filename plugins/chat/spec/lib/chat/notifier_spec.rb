@@ -6,11 +6,7 @@ describe Chat::Notifier do
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user_2, :user)
     fab!(:chat_group) do
-      Fabricate(
-        :group,
-        users: [user_1, user_2],
-        mentionable_level: Group::ALIAS_LEVELS[:everyone],
-      )
+      Fabricate(:group, users: [user_1, user_2], mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
 
     before do

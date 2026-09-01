@@ -28,7 +28,6 @@ RSpec.describe Report do
     end
   end
 
-
   shared_examples "no data" do
     context "with no data" do
       it "returns an empty report" do
@@ -1097,7 +1096,6 @@ RSpec.describe Report do
 
     include_examples "no data"
 
-
     context "with moderators order" do
       before do
         Fabricate(:post, user: sam)
@@ -1262,7 +1260,6 @@ RSpec.describe Report do
 
       include_examples "with data x/y"
 
-
       context "with category filtering" do
         let(:report) { Report.find("flags", filters: { category: category_2.id }) }
 
@@ -1270,12 +1267,12 @@ RSpec.describe Report do
       end
 
       context "with subcategories" do
-          let(:report) do
-            Report.find("flags", filters: { category: category_1.id, include_subcategories: true })
-          end
-
-          include_examples "category filtering on subcategories"
+        let(:report) do
+          Report.find("flags", filters: { category: category_1.id, include_subcategories: true })
         end
+
+        include_examples "category filtering on subcategories"
+      end
     end
   end
 
@@ -1295,7 +1292,6 @@ RSpec.describe Report do
 
       include_examples "with data x/y"
 
-
       context "with category filtering" do
         let(:report) { Report.find("topics", filters: { category: category_2.id }) }
 
@@ -1303,12 +1299,12 @@ RSpec.describe Report do
       end
 
       context "with subcategories" do
-          let(:report) do
-            Report.find("topics", filters: { category: category_1.id, include_subcategories: true })
-          end
-
-          include_examples "category filtering on subcategories"
+        let(:report) do
+          Report.find("topics", filters: { category: category_1.id, include_subcategories: true })
         end
+
+        include_examples "category filtering on subcategories"
+      end
     end
   end
 
@@ -1369,7 +1365,6 @@ RSpec.describe Report do
 
       include_examples "with data x/y"
 
-
       context "with category filtering" do
         let(:report) { Report.find("posts", filters: { category: category_2.id }) }
 
@@ -1377,12 +1372,12 @@ RSpec.describe Report do
       end
 
       context "with subcategories" do
-          let(:report) do
-            Report.find("posts", filters: { category: category_1.id, include_subcategories: true })
-          end
-
-          include_examples "category filtering on subcategories"
+        let(:report) do
+          Report.find("posts", filters: { category: category_1.id, include_subcategories: true })
         end
+
+        include_examples "category filtering on subcategories"
+      end
     end
   end
 
@@ -1404,7 +1399,6 @@ RSpec.describe Report do
 
       include_examples "with data x/y"
 
-
       context "with category filtering" do
         let(:report) do
           Report.find("topics_with_no_response", filters: { category: category_2.id })
@@ -1414,18 +1408,18 @@ RSpec.describe Report do
       end
 
       context "with subcategories" do
-          let(:report) do
-            Report.find(
-              "topics_with_no_response",
-              filters: {
-                category: category_1.id,
-                include_subcategories: true,
-              },
-            )
-          end
-
-          include_examples "category filtering on subcategories"
+        let(:report) do
+          Report.find(
+            "topics_with_no_response",
+            filters: {
+              category: category_1.id,
+              include_subcategories: true,
+            },
+          )
         end
+
+        include_examples "category filtering on subcategories"
+      end
     end
   end
 
@@ -1453,7 +1447,6 @@ RSpec.describe Report do
 
       include_examples "with data x/y"
 
-
       context "with category filtering" do
         let(:report) { Report.find("likes", filters: { category: category_2.id }) }
 
@@ -1461,12 +1454,12 @@ RSpec.describe Report do
       end
 
       context "with subcategories" do
-          let(:report) do
-            Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
-          end
-
-          include_examples "category filtering on subcategories"
+        let(:report) do
+          Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
         end
+
+        include_examples "category filtering on subcategories"
+      end
     end
   end
 

@@ -274,7 +274,6 @@ RSpec.describe Email::Sender do
         message.header["X-Discourse-Topic-Id"] = topic.id
       end
 
-
       it "doesn't set References or In-Reply-To headers on the first post, only generates a Message-ID and saves it against the post" do
         message.header["X-Discourse-Post-Id"] = post_1.id
 
@@ -603,9 +602,7 @@ RSpec.describe Email::Sender do
     context "when secure uploads enabled" do
       let(:secure_image_file) { file_from_fixtures("logo.png", "images") }
       let(:secure_image) do
-        UploadCreator.new(secure_image_file, "secure_logo.png").create_for(
-          Discourse.system_user.id,
-        )
+        UploadCreator.new(secure_image_file, "secure_logo.png").create_for(Discourse.system_user.id)
       end
 
       before do
@@ -927,9 +924,7 @@ RSpec.describe Email::Sender do
     let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
     let(:email_log) { EmailLog.last }
 
-    before do
-      email_sender.send
-    end
+    before { email_sender.send }
 
     it "has the current user_id" do
       expect(email_log.user_id).to eq(user.id)

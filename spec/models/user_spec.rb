@@ -233,50 +233,50 @@ RSpec.describe User do
   end
 
   describe "#username" do
-      it { is_expected.to validate_presence_of :username }
+    it { is_expected.to validate_presence_of :username }
 
-      describe "when username already exists" do
-        it "is not valid" do
-          new_user = Fabricate.build(:user, username: user.username.upcase)
+    describe "when username already exists" do
+      it "is not valid" do
+        new_user = Fabricate.build(:user, username: user.username.upcase)
 
-          expect(new_user).to_not be_valid
+        expect(new_user).to_not be_valid
 
-          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
-        end
-      end
-
-      describe "when group with a same name already exists" do
-        it "is not valid" do
-          new_user = Fabricate.build(:user, username: group.name.upcase)
-
-          expect(new_user).to_not be_valid
-
-          expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
-        end
-      end
-
-      it "is not valid if username changes to be same as password" do
-        user.username = "myawesomepassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:username, :same_as_password),
-        )
-      end
-
-      it "is not valid if username lowercase changes to be same as password" do
-        user.username = "MyAwesomePassword"
-        expect(user).to_not be_valid
-        expect(user.errors.full_messages.first).to include(
-          user_error_message(:username, :same_as_password),
-        )
-      end
-
-      describe "when a username is an integer" do
-        it "is converted to a string on normalization" do
-          expect(User.normalize_username(123)).to eq("123") # This is possible via the API
-        end
+        expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
       end
     end
+
+    describe "when group with a same name already exists" do
+      it "is not valid" do
+        new_user = Fabricate.build(:user, username: group.name.upcase)
+
+        expect(new_user).to_not be_valid
+
+        expect(new_user.errors.full_messages.first).to include(I18n.t(:"user.username.unique"))
+      end
+    end
+
+    it "is not valid if username changes to be same as password" do
+      user.username = "myawesomepassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:username, :same_as_password),
+      )
+    end
+
+    it "is not valid if username lowercase changes to be same as password" do
+      user.username = "MyAwesomePassword"
+      expect(user).to_not be_valid
+      expect(user.errors.full_messages.first).to include(
+        user_error_message(:username, :same_as_password),
+      )
+    end
+
+    describe "when a username is an integer" do
+      it "is converted to a string on normalization" do
+        expect(User.normalize_username(123)).to eq("123") # This is possible via the API
+      end
+    end
+  end
 
   describe "name" do
     it "is not valid if it changes to be the same as the password" do
@@ -305,7 +305,6 @@ RSpec.describe User do
     let(:user) { Fabricate.build(:user) }
 
     it { is_expected.to validate_presence_of :primary_email }
-
 
     describe "when record has a valid email" do
       it "is valid" do
@@ -369,33 +368,31 @@ RSpec.describe User do
     before { user.set_user_field(user_field.id, value) }
 
     context "when watched words are of type 'Block'" do
-        let(:value) { "bad user field value" }
+      let(:value) { "bad user field value" }
 
-        context "when user field is public" do
-          it "is not valid" do
-            user.valid?
-            expect(user.errors[:base].size).to eq(1)
-            expect(user.errors.messages[:base]).to include(/you can't post the word/)
-          end
-        end
-
-        context "when user field is private" do
-          before { user_field.update(show_on_profile: false) }
-
-          it { is_expected.to be_valid }
-        end
-
-        context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
-          before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
-
-          it { is_expected.to be_valid }
+      context "when user field is public" do
+        it "is not valid" do
+          user.valid?
+          expect(user.errors[:base].size).to eq(1)
+          expect(user.errors.messages[:base]).to include(/you can't post the word/)
         end
       end
+
+      context "when user field is private" do
+        before { user_field.update(show_on_profile: false) }
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+        before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+        it { is_expected.to be_valid }
+      end
+    end
 
     context "when watched words are of type 'Censor'" do
-      before do
-        Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
-      end
+      before { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
 
       let(:value) { "censored word" }
 
@@ -552,9 +549,7 @@ RSpec.describe User do
     end
 
     context "when resetting user fields" do
-      before do
-        Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
-      end
+      before { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
 
       let(:value) { nil }
 
@@ -1490,15 +1485,15 @@ RSpec.describe User do
     end
 
     context "if the provided timezone is valid" do
-        let(:timezone) { "Australia/Melbourne" }
+      let(:timezone) { "Australia/Melbourne" }
 
-        context "if no timezone exists on user option" do
-          it "sets the timezone for the user" do
-            user.update_timezone_if_missing(timezone)
-            expect(user.reload.user_option.timezone).to eq(timezone)
-          end
+      context "if no timezone exists on user option" do
+        it "sets the timezone for the user" do
+          user.update_timezone_if_missing(timezone)
+          expect(user.reload.user_option.timezone).to eq(timezone)
         end
       end
+    end
 
     context "if the timezone is not valid" do
       let(:timezone) { "Jupiter" }
@@ -2669,22 +2664,19 @@ RSpec.describe User do
         granted_at: Time.now,
       )
       UserBadge.create(
-              badge_id: Badge::Member,
-              user: user,
-              granted_by: Discourse.system_user,
-              granted_at: Time.now,
-            )
+        badge_id: Badge::Member,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
 
       UserBadge.create(
-              badge_id: Badge::FirstLike,
-              user: user,
-              granted_by: Discourse.system_user,
-              granted_at: Time.now,
-            )
-
+        badge_id: Badge::FirstLike,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
     end
-
-
 
     it "displays badges in the correct order" do
       expect(user.featured_user_badges.map(&:badge_id)).to eq(
@@ -3467,32 +3459,32 @@ RSpec.describe User do
   end
 
   context "when granting admin status" do
-      context "when there is a reviewable" do
-        fab!(:user, :reviewable_user)
+    context "when there is a reviewable" do
+      fab!(:user, :reviewable_user)
 
-        context "when the user isn’t approved yet" do
-          it "approves the associated reviewable" do
-            expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
-          end
-        end
-
-        context "when the user is already approved" do
-          before { user.perform(Discourse.system_user, :approve_user) }
-
-          it "does nothing" do
-            expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
-          end
+      context "when the user isn’t approved yet" do
+        it "approves the associated reviewable" do
+          expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
         end
       end
 
-      context "when there is no reviewable" do
-        let(:user) { Fabricate(:user, approved: false) }
+      context "when the user is already approved" do
+        before { user.perform(Discourse.system_user, :approve_user) }
 
-        it "approves the user" do
-          expect { user.grant_admin! }.to change { user.reload.approved }.to true
+        it "does nothing" do
+          expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
         end
       end
     end
+
+    context "when there is no reviewable" do
+      let(:user) { Fabricate(:user, approved: false) }
+
+      it "approves the user" do
+        expect { user.grant_admin! }.to change { user.reload.approved }.to true
+      end
+    end
+  end
 
   context "when granting moderator status" do
     context "when there is a reviewable" do

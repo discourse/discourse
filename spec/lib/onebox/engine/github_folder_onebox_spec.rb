@@ -2,17 +2,17 @@
 
 RSpec.describe Onebox::Engine::GithubFolderOnebox do
   context "without fragments" do
-    let(:link) { "https://github.com/discourse/discourse/tree/main/spec/fixtures" }
-    let(:uri) { link }
+    include_context "with engines" do
+      let(:link) { "https://github.com/discourse/discourse/tree/main/spec/fixtures" }
+    end
 
     before do
-      stub_request(:get, uri).to_return(
+      stub_request(:get, link).to_return(
         status: 200,
         body: onebox_response(described_class.onebox_name),
       )
     end
 
-    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do

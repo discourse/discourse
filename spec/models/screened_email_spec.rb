@@ -93,9 +93,11 @@ RSpec.describe ScreenedEmail do
     end
 
     context "when action_type is :block" do
-      before do
+      let(:screened_email) do
         Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:block])
       end
+
+      before { screened_email }
 
       it { is_expected.to eq(true) }
 
@@ -103,9 +105,11 @@ RSpec.describe ScreenedEmail do
     end
 
     context "when action_type is :do_nothing" do
-      before do
+      let(:screened_email) do
         Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:do_nothing])
       end
+
+      before { screened_email }
 
       it { is_expected.to eq(false) }
 

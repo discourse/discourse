@@ -138,8 +138,7 @@ RSpec.describe PublishedPagesController do
 
       it "omits hidden tags from body classes" do
         hidden_tag = Fabricate(:tag, name: "admins-only")
-        hidden_tag_group =
-          Fabricate(:tag_group, name: "Admins only", tag_names: [hidden_tag.name])
+        hidden_tag_group = Fabricate(:tag_group, name: "Admins only", tag_names: [hidden_tag.name])
         hidden_tag_group.permissions = [
           [Group::AUTO_GROUPS[:admins], TagGroupPermission.permission_types[:full]],
         ]
@@ -197,9 +196,9 @@ RSpec.describe PublishedPagesController do
         expect(response.parsed_body["published_page"]["slug"]).to eq("i-hate-salt")
         expect(response.parsed_body["published_page"]["public"]).to eq(false)
 
-        expect(
-          PublishedPage.exists?(topic_id: response.parsed_body["published_page"]["id"]),
-        ).to eq(true)
+        expect(PublishedPage.exists?(topic_id: response.parsed_body["published_page"]["id"])).to eq(
+          true,
+        )
         expect(
           UserHistory.exists?(
             acting_user_id: admin.id,
@@ -222,9 +221,9 @@ RSpec.describe PublishedPagesController do
         expect(response.parsed_body["published_page"]["slug"]).to eq("i-hate-salt")
         expect(response.parsed_body["published_page"]["public"]).to eq(true)
 
-        expect(
-          PublishedPage.exists?(topic_id: response.parsed_body["published_page"]["id"]),
-        ).to eq(true)
+        expect(PublishedPage.exists?(topic_id: response.parsed_body["published_page"]["id"])).to eq(
+          true,
+        )
       end
 
       it "returns an error if the slug is already taken" do

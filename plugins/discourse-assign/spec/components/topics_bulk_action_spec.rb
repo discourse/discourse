@@ -15,7 +15,6 @@ describe TopicsBulkAction do
 
   include_context "with group that is allowed to assign"
 
-
   describe "assign_topics" do
     it "assigns multiple topics to a user" do
       changed_ids =

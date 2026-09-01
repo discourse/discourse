@@ -284,7 +284,6 @@ RSpec.describe Reviewable, type: :model do
           expect(list[1].id).to eq(r1.id)
         end
 
-
         it "includes low-priority queued posts when searching for pending reviewables" do
           SiteSetting.reviewable_default_visibility = :high
           Reviewable.set_priorities(high: 10)

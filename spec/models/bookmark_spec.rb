@@ -127,7 +127,6 @@ RSpec.describe Bookmark do
         )
       end
 
-
       it "gets the count of bookmarks grouped by date within the last 30 days by default" do
         expect(Bookmark.count_per_day).to eq(
           { 1.day.ago.to_date => 1, 2.days.ago.to_date => 1, 3.days.ago.to_date => 2 },

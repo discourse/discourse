@@ -37,7 +37,6 @@ describe "StalledWiki" do
     expect(triggerable.settings[DiscourseAutomation::Triggerable::MANUAL_TRIGGER_KEY]).to eq(true)
   end
 
-
   it "supports manual triggering" do
     DiscourseAutomation::AutomationSerializer.new(automation, root: "automation").as_json
   end
@@ -74,12 +73,7 @@ describe "StalledWiki" do
       fab!(:category)
 
       before do
-        automation.upsert_field!(
-          "stalled_after",
-          "choices",
-          { value: "PT10H" },
-          target: "trigger",
-        )
+        automation.upsert_field!("stalled_after", "choices", { value: "PT10H" }, target: "trigger")
         automation.upsert_field!(
           "retriggered_after",
           "choices",
@@ -109,8 +103,7 @@ describe "StalledWiki" do
             { force_new_version: true, revised_at: 40.minutes.ago },
           )
 
-          list =
-            capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
           expect(list).to be_empty
         end
@@ -126,8 +119,7 @@ describe "StalledWiki" do
             { force_new_version: true, revised_at: 1.month.ago },
           )
 
-          list =
-            capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
           expect(list.length).to eq(1)
           expect(list[0]["kind"]).to eq("stalled_wiki")
@@ -142,8 +134,7 @@ describe "StalledWiki" do
             { force_new_version: true, revised_at: 40.minutes.ago },
           )
 
-          list =
-            capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
           expect(list).to be_empty
         end
@@ -202,12 +193,7 @@ describe "StalledWiki" do
 
     context "when retriggered_after is not set" do
       before do
-        automation.upsert_field!(
-          "retriggered_after",
-          "choices",
-          { value: nil },
-          target: "trigger",
-        )
+        automation.upsert_field!("retriggered_after", "choices", { value: nil }, target: "trigger")
       end
 
       it "doesn't trigger again for previously triggered posts" do

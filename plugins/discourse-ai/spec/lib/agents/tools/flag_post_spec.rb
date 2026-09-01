@@ -17,7 +17,6 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
   fab!(:llm_model)
   fab!(:post)
 
-
   def tool(params = nil, agent_options: {}, **kwargs)
     params ||= kwargs
     described_class.new(
@@ -28,7 +27,6 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
       agent_options: agent_options,
     )
   end
-
 
   it "flags the post when flag_post is true" do
     result = nil

@@ -4,10 +4,7 @@ RSpec.describe Onebox::Engine::JSON do
   let(:link) { "http://stackoverflow.com" }
 
   before do
-    stub_request(:get, link).to_return(
-      status: 200,
-      body: onebox_response("stackexchange-question"),
-    )
+    stub_request(:get, link).to_return(status: 200, body: onebox_response("stackexchange-question"))
   end
 
   describe "#raw" do

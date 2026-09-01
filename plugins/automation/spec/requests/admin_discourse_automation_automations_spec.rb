@@ -472,7 +472,7 @@ describe DiscourseAutomation::AdminAutomationsController do
         it "includes error counts when an automation has errors" do
           freeze_time DateTime.parse("2023-01-01")
 
-            # Simulate 3 runs with 2 errors for automation1
+          # Simulate 3 runs with 2 errors for automation1
           DiscourseAutomation::Stat.log(automation1.id) { "success" }
           expect {
             DiscourseAutomation::Stat.log(automation1.id) { raise "error 1" }

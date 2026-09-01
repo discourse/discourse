@@ -90,7 +90,6 @@ RSpec.describe DestroyTask do
     let!(:p3) { Fabricate(:post, topic: t2) }
     let!(:p4) { Fabricate(:post, topic: t2) }
 
-
     context "when permanent deletion is enabled" do
       it "destroys posts listed and creates staff action logs" do
         SiteSetting.can_permanently_delete = true

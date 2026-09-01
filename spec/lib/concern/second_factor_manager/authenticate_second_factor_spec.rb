@@ -19,6 +19,14 @@ RSpec.describe SecondFactorManager, "#authenticate_second_factor" do
   let(:params) { {} }
   let(:server_session) { ServerSession.new("some-prefix") }
 
+  def disable_totp
+    user.user_second_factors.totps.first.update!(enabled: false)
+  end
+
+  def disable_security_key
+    user.security_keys.first.destroy!
+  end
+
   context "when neither security keys nor totp/backup codes are enabled" do
     before { disable_security_key && disable_totp }
 
@@ -83,7 +91,6 @@ RSpec.describe SecondFactorManager, "#authenticate_second_factor" do
       DiscourseWebauthn.stage_challenge(user, server_session)
       DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
     end
-
 
     context "when the passkey assertion is valid" do
       let(:params) do
@@ -253,6 +260,7 @@ RSpec.describe SecondFactorManager, "#authenticate_second_factor" do
         end
 
         it "returns an error when the user does not have TOTP enabled" do
+          params
           user.totps.destroy_all
           params[:second_factor_token] = "test"
           result = user.authenticate_second_factor(params, server_session)
@@ -302,9 +310,7 @@ RSpec.describe SecondFactorManager, "#authenticate_second_factor" do
       before { Fabricate(:user_second_factor_backup, user: user) }
 
       context "when backup code params are provided" do
-        let(:params) do
-          { second_factor_token: "iAmValidBackupCode", second_factor_method: method }
-        end
+        let(:params) { { second_factor_token: "iAmValidBackupCode", second_factor_method: method } }
 
         it "validates enabled backup codes" do
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)

@@ -15,8 +15,10 @@ RSpec.describe Jobs::FeatureTopicUsers do
 
     fab!(:coding_horror)
     fab!(:evil_trout)
-    before { create_post(topic: topic, user: coding_horror)
-             create_post(topic: topic, user: evil_trout)  }
+    before do
+      create_post(topic: topic, user: coding_horror)
+      create_post(topic: topic, user: evil_trout)
+    end
 
     it "does not feature the OP" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)

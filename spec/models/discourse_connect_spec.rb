@@ -79,7 +79,6 @@ RSpec.describe DiscourseConnect do
     expect(sso.email).to eq "sam@sam.com"
   end
 
-
   it "bans bad external id" do
     sso = new_discourse_sso
     sso.username = "test"

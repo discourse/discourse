@@ -1452,11 +1452,7 @@ describe PostRevisor do
 
       it "doesn't add the tags" do
         result =
-          post_revisor.revise!(
-            user,
-            raw: "lets totally update the body",
-            tags: %w[totally update],
-          )
+          post_revisor.revise!(user, raw: "lets totally update the body", tags: %w[totally update])
         expect(result).to eq(true)
         post.reload
         expect(post.topic.tags.size).to eq(0)
@@ -1512,11 +1508,7 @@ describe PostRevisor do
       it "can't add staff-only tags" do
         create_staff_only_tags(["important"])
         result =
-          post_revisor.revise!(
-            user,
-            raw: "lets totally update the body",
-            tags: %w[important stuff],
-          )
+          post_revisor.revise!(user, raw: "lets totally update the body", tags: %w[important stuff])
         expect(result).to eq(false)
         expect(post.topic.errors.present?).to eq(true)
       end
@@ -1562,8 +1554,7 @@ describe PostRevisor do
         end
 
         it "staff-only tags can't be removed" do
-          result =
-            post_revisor.revise!(user, raw: "lets totally update the body", tags: ["stuff"])
+          result = post_revisor.revise!(user, raw: "lets totally update the body", tags: ["stuff"])
           expect(result).to eq(false)
           expect(post.topic.errors.present?).to eq(true)
           post.reload
@@ -1579,8 +1570,7 @@ describe PostRevisor do
         end
 
         it "staff-only tags can be removed by staff" do
-          result =
-            post_revisor.revise!(admin, raw: "lets totally update the body", tags: ["stuff"])
+          result = post_revisor.revise!(admin, raw: "lets totally update the body", tags: ["stuff"])
           expect(result).to eq(true)
           post.reload
           expect(post.topic.tags.map(&:name)).to eq(["stuff"])

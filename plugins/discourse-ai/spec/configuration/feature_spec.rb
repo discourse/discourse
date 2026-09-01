@@ -13,7 +13,6 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) { block.call }
   end
 
-
   describe "#llm_model" do
     context "when agent is not found" do
       it "returns nil when agent_id is invalid" do

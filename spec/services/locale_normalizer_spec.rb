@@ -34,6 +34,5 @@ describe LocaleNormalizer do
     it "returns true for locales with the same base language" do
       expect(described_class.is_same?("zh-CN", "zh_TW")).to be true
     end
-
   end
 end

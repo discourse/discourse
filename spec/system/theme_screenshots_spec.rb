@@ -72,7 +72,6 @@ describe "Theme screenshots" do
     base
   end
 
-
   it "captures screenshots" do
     FileUtils.rm_f(Dir.glob(File.join(raw_dir, "*.png")))
 

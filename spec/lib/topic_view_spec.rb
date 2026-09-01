@@ -281,9 +281,7 @@ RSpec.describe TopicView do
 
       context "when a staff user is ignored" do
         let!(:admin) { Fabricate(:user, admin: true) }
-        before do
-          Fabricate(:ignored_user, user: evil_trout, ignored_user: admin)
-        end
+        before { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
 
         let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
@@ -512,8 +510,6 @@ RSpec.describe TopicView do
         Fabricate(:post, topic: topic, user: user)
         Fabricate(:post, topic: topic, user: user)
       end
-
-
 
       it "returns the next page" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
@@ -1095,7 +1091,6 @@ RSpec.describe TopicView do
       )
       topic_view.topic.reload
     end
-
 
     it "returns the right read time" do
       SiteSetting.read_time_word_count = 500

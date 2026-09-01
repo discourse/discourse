@@ -25,7 +25,6 @@ RSpec.describe "a listing read from a cursor" do
     end
   end
 
-
   def cursor_for(record) = cursor_of(sorted_listing[:data].detect { it[:id] == record.id.to_s })
 
   it "reads a page from the cursor of every row" do

@@ -258,8 +258,6 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
       let(:base_time) { Time.parse("2024-07-28 00:30:00 UTC") } # 8:30 AM Singapore
       let(:singapore_tz) { "Asia/Singapore" }
 
-
-
       it "shows correct data across timezone boundaries" do
         report =
           DiscourseAi::Completions::Report.new(

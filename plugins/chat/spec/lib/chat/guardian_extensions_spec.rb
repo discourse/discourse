@@ -293,24 +293,22 @@ RSpec.describe Chat::GuardianExtensions do
           SiteSetting.allow_chat_in_anonymous_mode = true
           anonymous = AnonymousShadowCreator.get(user)
           expect(anonymous.id).to be_present
-          expect(
-            Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable),
-          ).to eq(true)
-          expect(Guardian.new(user).can_post_in_chatable?(private_channel.chatable)).to eq(
+          expect(Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable)).to eq(
             true,
           )
+          expect(Guardian.new(user).can_post_in_chatable?(private_channel.chatable)).to eq(true)
         end
 
         it "doesn't allow a shadow account to chat when its master account cannot chat" do
           SiteSetting.allow_chat_in_anonymous_mode = true
           anonymous = AnonymousShadowCreator.get(non_chatter)
           expect(anonymous.id).to be_present
-          expect(
-            Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable),
-          ).to eq(false)
-          expect(
-            Guardian.new(non_chatter).can_post_in_chatable?(private_channel.chatable),
-          ).to eq(false)
+          expect(Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable)).to eq(
+            false,
+          )
+          expect(Guardian.new(non_chatter).can_post_in_chatable?(private_channel.chatable)).to eq(
+            false,
+          )
         end
 
         it "doesn't allow a shadow account to chat when anonymous chat is disabled" do

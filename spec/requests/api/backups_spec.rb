@@ -66,7 +66,6 @@ RSpec.describe "backups" do
         expected_response_schema = load_spec_schema("success_ok_response")
         schema expected_response_schema
 
-
         let(:params) { { "with_uploads" => false } }
 
         it_behaves_like "a JSON endpoint", 200 do

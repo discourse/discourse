@@ -477,7 +477,6 @@ RSpec.describe CategoriesController do
         Fabricate(:category, user: admin)
       end
 
-
       it "paginates results when lazy_load_categories is enabled" do
         SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
@@ -755,11 +754,7 @@ RSpec.describe CategoriesController do
 
         it "does not create a category when the category type is unavailable" do
           Categories::Types::Discussion.stubs(:available?).returns(false)
-          post "/categories.json",
-               params: {
-                 name: "Test Category",
-                 category_type: "discussion",
-               }
+          post "/categories.json", params: { name: "Test Category", category_type: "discussion" }
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to be_present
           expect(response.parsed_body["errors"].first).to eq(
@@ -1076,11 +1071,7 @@ RSpec.describe CategoriesController do
       end
 
       it "logs the changes correctly" do
-        category.update!(
-          permissions: {
-            "admins" => CategoryGroup.permission_types[:create_post],
-          },
-        )
+        category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
 
         put "/categories/#{category.id}.json",
             params: {

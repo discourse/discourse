@@ -63,9 +63,7 @@ RSpec.describe Chat::RemoveUserFromChannel do
           result
 
           expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
-          expect(channel.chatable.direct_message_users.where(user_id: user.id).exists?).to eq(
-            false,
-          )
+          expect(channel.chatable.direct_message_users.where(user_id: user.id).exists?).to eq(false)
         end
 
         it "recomputes user count" do

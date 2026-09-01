@@ -273,11 +273,7 @@ RSpec.describe Chat::SearchChatable do
 
       it "can filter by slug" do
         searched_channel =
-          Fabricate(
-            :direct_message_channel,
-            users: [current_user, sam, charlie],
-            slug: "capybara",
-          )
+          Fabricate(:direct_message_channel, users: [current_user, sam, charlie], slug: "capybara")
         params[:term] = "capybara"
 
         expect(result.direct_message_channels).to contain_exactly(searched_channel)

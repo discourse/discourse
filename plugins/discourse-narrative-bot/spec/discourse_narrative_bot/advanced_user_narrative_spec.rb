@@ -144,86 +144,86 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   end
 
   context "when editing tutorial" do
-      before do
-        narrative.set_data(
-          user,
-          state: :tutorial_edit,
-          topic_id: topic.id,
-          track: described_class.to_s,
-          tutorial_edit: {
-            post_id: first_post.id,
-          },
+    before do
+      narrative.set_data(
+        user,
+        state: :tutorial_edit,
+        topic_id: topic.id,
+        track: described_class.to_s,
+        tutorial_edit: {
+          post_id: first_post.id,
+        },
+      )
+    end
+
+    context "when post is not in the right topic" do
+      it "does not do anything" do
+        other_post
+        narrative.expects(:enqueue_timeout_job).with(user).never
+
+        expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_edit)
+      end
+    end
+
+    context "when user replies to the post" do
+      it "creates the right reply" do
+        post
+        narrative.expects(:enqueue_timeout_job).with(user).once
+
+        expect { narrative.input(:reply, user, post: post) }.to change { Post.count }.by(1)
+
+        expect(Post.last.raw).to eq(
+          I18n.t(
+            "discourse_narrative_bot.advanced_user_narrative.edit.not_found",
+            url: first_post.url,
+            base_uri: "",
+          ),
         )
       end
 
-      context "when post is not in the right topic" do
-        it "does not do anything" do
-          other_post
-          narrative.expects(:enqueue_timeout_job).with(user).never
-
-          expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_edit)
-        end
-      end
-
-      context "when user replies to the post" do
+      context "when reply contains the skip trigger" do
         it "creates the right reply" do
-          post
-          narrative.expects(:enqueue_timeout_job).with(user).once
+          post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
+          described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
-          expect { narrative.input(:reply, user, post: post) }.to change { Post.count }.by(1)
+          DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-          expect(Post.last.raw).to eq(
+          new_post = Post.last
+
+          expect(new_post.raw).to eq(
             I18n.t(
-              "discourse_narrative_bot.advanced_user_narrative.edit.not_found",
-              url: first_post.url,
+              "discourse_narrative_bot.advanced_user_narrative.delete.instructions",
               base_uri: "",
             ),
           )
-        end
 
-        context "when reply contains the skip trigger" do
-          it "creates the right reply" do
-            post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
-            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-
-            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
-
-            new_post = Post.last
-
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.advanced_user_narrative.delete.instructions",
-                base_uri: "",
-              ),
-            )
-
-            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
-          end
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
         end
       end
+    end
 
-      context "when user edits the right post" do
-        let(:post_2) { Fabricate(:post, user: post.user, topic: post.topic) }
+    context "when user edits the right post" do
+      let(:post_2) { Fabricate(:post, user: post.user, topic: post.topic) }
 
-        it "creates the right reply" do
-          post_2
+      it "creates the right reply" do
+        post_2
 
-          expect do
-            PostRevisor.new(post_2).revise!(post_2.user, raw: "something new")
-          end.to change { Post.count }.by(1)
+        expect do PostRevisor.new(post_2).revise!(post_2.user, raw: "something new") end.to change {
+          Post.count
+        }.by(1)
 
-          expected_raw = <<~RAW
+        expected_raw = <<~RAW
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.edit.reply", base_uri: "")}
 
           #{I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.instructions", base_uri: "")}
           RAW
 
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
-        end
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
       end
     end
+  end
 
   context "when deleting tutorial" do
     before do
@@ -243,10 +243,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         new_post = Post.last
 
         expect(new_post.raw).to eq(
-          I18n.t(
-            "discourse_narrative_bot.advanced_user_narrative.delete.not_found",
-            base_uri: "",
-          ),
+          I18n.t("discourse_narrative_bot.advanced_user_narrative.delete.not_found", base_uri: ""),
         )
 
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_delete)
@@ -355,10 +352,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
     context "when user replies to the topic" do
       it "creates the right reply" do
-        narrative.set_data(
-          user,
-          narrative.get_data(user).merge(tutorial_recover: { post_id: "1" }),
-        )
+        narrative.set_data(user, narrative.get_data(user).merge(tutorial_recover: { post_id: "1" }))
 
         narrative.expects(:enqueue_timeout_job).with(user).once
 
@@ -366,10 +360,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         new_post = Post.last
 
         expect(new_post.raw).to eq(
-          I18n.t(
-            "discourse_narrative_bot.advanced_user_narrative.recover.not_found",
-            base_uri: "",
-          ),
+          I18n.t("discourse_narrative_bot.advanced_user_narrative.recover.not_found", base_uri: ""),
         )
 
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_recover)
@@ -745,10 +736,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.input(:reply, user, post: post)
 
         expect(Post.last.raw).to eq(
-          I18n.t(
-            "discourse_narrative_bot.advanced_user_narrative.details.not_found",
-            base_uri: "",
-          ),
+          I18n.t("discourse_narrative_bot.advanced_user_narrative.details.not_found", base_uri: ""),
         )
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
       end

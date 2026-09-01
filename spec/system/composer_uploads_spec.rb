@@ -181,7 +181,6 @@ describe "Uploading files in the composer" do
     before { SiteSetting.enable_auto_grid_images = true }
 
     %w[en fr de].each do |locale|
-
       context "when the locale is #{locale}" do
         before { SiteSetting.default_locale = locale }
 

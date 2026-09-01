@@ -103,7 +103,6 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
         I18n.t("webauthn.validation.unsupported_public_key_algorithm_error"),
       )
     end
-
   end
 
   context "when the attestation format is not supported" do
@@ -126,7 +125,6 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
         I18n.t("webauthn.validation.unsupported_attestation_format_error"),
       )
     end
-
   end
 
   context "when the credential id is already in use for any user" do

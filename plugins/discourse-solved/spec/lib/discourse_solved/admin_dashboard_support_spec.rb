@@ -259,12 +259,10 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       answer = Fabricate(:post, topic:, user: staff_user)
       Fabricate(:solved_topic, topic:, answer_post: answer)
       restricted_category.custom_fields[
-              DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-            ] = "true"
+        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+      ] = "true"
       restricted_category.save!
-
     end
-
 
     it "excludes categories the viewer cannot see" do
       as_admin = dashboard[:topic_outcomes][:resolved]

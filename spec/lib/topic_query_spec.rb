@@ -1824,16 +1824,12 @@ RSpec.describe TopicQuery do
       let(:group) { Fabricate(:group) }
       let(:another_group) { Fabricate(:group) }
 
-      before do
+      let(:topic) do
         Fabricate(
           :private_message_topic,
           topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
           topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
         )
-        group.add(group_user)
-        another_group.add(user)
-        Group.user_trust_level_change!(user.id, user.trust_level)
-        Group.user_trust_level_change!(group_user.id, group_user.trust_level)
       end
 
       let!(:private_message) do
@@ -1855,9 +1851,18 @@ RSpec.describe TopicQuery do
         )
       end
 
+      before do
+        topic
+        private_message
+        private_group_topic
+        group.add(group_user)
+        another_group.add(user)
+        Group.user_trust_level_change!(user.id, user.trust_level)
+        Group.user_trust_level_change!(group_user.id, group_user.trust_level)
+      end
 
       context "as user not part of group" do
-        before { Fabricate(:user) }
+        let(:user) { Fabricate(:user) }
 
         it "does not return topics by the group user" do
           expect(suggested_topics).to eq([private_message.id])
@@ -1865,7 +1870,7 @@ RSpec.describe TopicQuery do
       end
 
       context "as user part of group" do
-        before { group_user }
+        let(:user) { group_user }
 
         it "returns the group topics" do
           expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
@@ -1935,7 +1940,6 @@ RSpec.describe TopicQuery do
 
       let!(:fully_read_closed) { Fabricate(:post, user: creator).topic }
       let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
-
 
       it "operates correctly" do
         # Note, this is a pretty slow integration test

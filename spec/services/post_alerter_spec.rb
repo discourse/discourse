@@ -867,10 +867,11 @@ RSpec.describe PostAlerter do
     let(:mention_post) { create_post_with_alerts(user: user, raw: "Hello @eviltrout") }
     let(:topic) { mention_post.topic }
 
-    before { Jobs.run_immediately!
-             group.bulk_add([alice.id, eve.id])
-             group.bulk_add([alice.id, eve.id])   }
-
+    before do
+      Jobs.run_immediately!
+      group.bulk_add([alice.id, eve.id])
+      group.bulk_add([alice.id, eve.id])
+    end
 
     it "notifies a user" do
       expect { mention_post }.to change(evil_trout.notifications, :count).by(1)
@@ -928,7 +929,6 @@ RSpec.describe PostAlerter do
     fab!(:group) do
       Fabricate(:group, name: "group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
     end
-
 
     def create_post_with_alerts(args = {})
       post = Fabricate(:post, args)
@@ -1084,10 +1084,7 @@ RSpec.describe PostAlerter do
 
         it "does not notify about @group mention" do
           args = { user: bob, topic: pm_topic, raw: "Hello @group" }
-          expect { create_post_with_alerts(args) }.to_not add_notification(
-            alice,
-            :group_mentioned,
-          )
+          expect { create_post_with_alerts(args) }.to_not add_notification(alice, :group_mentioned)
         end
       end
 
@@ -1478,7 +1475,6 @@ RSpec.describe PostAlerter do
       expect(messages.first.data[:username]).to eq("username")
       expect(messages.first.data[:post_url]).to eq(post.url)
     end
-
 
     it "applies the post_alerter_live_notification_payload modifier" do
       plugin_instance = Plugin::Instance.new

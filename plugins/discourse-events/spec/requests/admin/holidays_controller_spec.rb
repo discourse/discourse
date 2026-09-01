@@ -9,47 +9,47 @@ module Admin::DiscourseEvents
 
     describe "#index" do
       context "when the calendar plugin is enabled" do
-          let(:discourse_events_enabled) { true }
+        let(:discourse_events_enabled) { true }
 
-          before { sign_in(admin) }
+        before { sign_in(admin) }
 
-          it "returns a list of holidays for a given region" do
-            freeze_time DateTime.parse("2022-12-24 12:00")
+        it "returns a list of holidays for a given region" do
+          freeze_time DateTime.parse("2022-12-24 12:00")
 
-            get "/admin/discourse-calendar/holiday-regions/mx/holidays.json"
+          get "/admin/discourse-calendar/holiday-regions/mx/holidays.json"
 
-            expect(response.parsed_body["holidays"]).to include(
-              {
-                "date" => "2022-01-01",
-                "name" => "Año nuevo",
-                "regions" => ["mx"],
-                "disabled" => false,
-              },
-              {
-                "date" => "2022-09-16",
-                "name" => "Día de la Independencia",
-                "regions" => ["mx"],
-                "disabled" => false,
-              },
-            )
-          end
-
-          it "returns a 422 and an error message for an invalid region" do
-            get "/admin/discourse-calendar/holiday-regions/regionxyz/holidays.json"
-
-            expect(response.status).to eq(422)
-            expect(response.parsed_body["errors"]).to include(
-              I18n.t("system_messages.discourse_events_holiday_region_invalid"),
-            )
-          end
+          expect(response.parsed_body["holidays"]).to include(
+            {
+              "date" => "2022-01-01",
+              "name" => "Año nuevo",
+              "regions" => ["mx"],
+              "disabled" => false,
+            },
+            {
+              "date" => "2022-09-16",
+              "name" => "Día de la Independencia",
+              "regions" => ["mx"],
+              "disabled" => false,
+            },
+          )
         end
 
-      it "returns a 404 for a member" do
-      sign_in(member)
-      get "/admin/discourse-calendar/holiday-regions/mx/holidays.json"
+        it "returns a 422 and an error message for an invalid region" do
+          get "/admin/discourse-calendar/holiday-regions/regionxyz/holidays.json"
 
-      expect(response.status).to eq(404)
-    end
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("system_messages.discourse_events_holiday_region_invalid"),
+          )
+        end
+      end
+
+      it "returns a 404 for a member" do
+        sign_in(member)
+        get "/admin/discourse-calendar/holiday-regions/mx/holidays.json"
+
+        expect(response.status).to eq(404)
+      end
 
       context "when the calendar plugin is not enabled" do
         let(:discourse_events_enabled) { false }

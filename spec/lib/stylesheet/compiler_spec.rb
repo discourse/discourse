@@ -43,7 +43,6 @@ RSpec.describe Stylesheet::Compiler do
       )
     end
 
-
     it "theme stylesheet should be able to access theme asset variables" do
       theme.reload.with_scss_load_paths do |load_paths|
         css, _map =

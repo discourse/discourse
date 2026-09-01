@@ -6,11 +6,11 @@ RSpec.describe DiscourseAi::AiCreditsController do
   before { enable_current_plugin }
 
   context "when requesting status while not logged in" do
-      it "returns a 403" do
-        get "/discourse-ai/credits/status.json"
-        expect(response.status).to eq(403)
-      end
+    it "returns a 403" do
+      get "/discourse-ai/credits/status.json"
+      expect(response.status).to eq(403)
     end
+  end
 
   context "when logged in" do
     before { sign_in(user) }
@@ -83,10 +83,7 @@ RSpec.describe DiscourseAi::AiCreditsController do
         Fabricate(
           :ai_agent,
           default_llm_id: llm_model.id,
-          allowed_group_ids: [
-            Group::AUTO_GROUPS[:everyone],
-            Group::AUTO_GROUPS[:logged_in_users],
-          ],
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
         )
       end
 
@@ -155,10 +152,7 @@ RSpec.describe DiscourseAi::AiCreditsController do
         Fabricate(
           :ai_agent,
           default_llm_id: llm_model.id,
-          allowed_group_ids: [
-            Group::AUTO_GROUPS[:everyone],
-            Group::AUTO_GROUPS[:logged_in_users],
-          ],
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
         )
       end
 
@@ -211,10 +205,7 @@ RSpec.describe DiscourseAi::AiCreditsController do
         Fabricate(
           :ai_agent,
           default_llm_id: llm_model.id,
-          allowed_group_ids: [
-            Group::AUTO_GROUPS[:everyone],
-            Group::AUTO_GROUPS[:logged_in_users],
-          ],
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]],
         )
       end
       fab!(:llm_credit_allocation) do

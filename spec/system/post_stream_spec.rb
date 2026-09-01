@@ -62,7 +62,6 @@ describe "Post stream" do
 
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
-
     it "hides and shows content above the post stream based on loaded posts" do
       topic_page.visit_topic(topic, post_number: 30)
       expect(page).to have_css("[data-post-number='30']")

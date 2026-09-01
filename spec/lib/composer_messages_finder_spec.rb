@@ -480,7 +480,6 @@ RSpec.describe ComposerMessagesFinder do
 
     let(:edit_post_finder) { ComposerMessagesFinder.new(user, composer_action: "edit") }
 
-
     it "returns nothing even if it normally would" do
       expect(edit_post_finder.find).to eq(nil)
     end

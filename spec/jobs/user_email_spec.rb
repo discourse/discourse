@@ -875,27 +875,27 @@ RSpec.describe Jobs::UserEmail do
 
       context "when user is suspended" do
         let :sent_message do
-            Jobs::UserEmail.new.message_for_email(
-              suspended,
-              pm_from_staff,
-              "user_private_message",
-              pm_notification,
-            )
-          end
+          Jobs::UserEmail.new.message_for_email(
+            suspended,
+            pm_from_staff,
+            "user_private_message",
+            pm_notification,
+          )
+        end
         let(:pm_notification) do
-            Fabricate(
-              :notification,
-              user: suspended,
-              topic: pm_from_staff.topic,
-              post_number: pm_from_staff.post_number,
-              data: { original_post_id: pm_from_staff.id }.to_json,
-            )
-          end
+          Fabricate(
+            :notification,
+            user: suspended,
+            topic: pm_from_staff.topic,
+            post_number: pm_from_staff.post_number,
+            data: { original_post_id: pm_from_staff.id }.to_json,
+          )
+        end
         let(:pm_from_staff) do
-            Fabricate(:post, user: Fabricate(:moderator)).tap do |post|
-              post.topic.topic_allowed_users.create!(user_id: suspended.id)
-            end
+          Fabricate(:post, user: Fabricate(:moderator)).tap do |post|
+            post.topic.topic_allowed_users.create!(user_id: suspended.id)
           end
+        end
 
         it "doesn't send email for a pm from a regular user" do
           msg, err =
@@ -910,13 +910,11 @@ RSpec.describe Jobs::UserEmail do
           expect(err).not_to eq(nil)
         end
 
-
-
         it "sends an email for a private message from staff" do
-            msg, err = sent_message
-            expect(msg).not_to be(nil)
-            expect(err).to be(nil)
-          end
+          msg, err = sent_message
+          expect(msg).not_to be(nil)
+          expect(err).to be(nil)
+        end
 
         it "sends a staff private message even if user was last seen recently" do
           suspended.update_column(:last_seen_at, 1.minute.ago)

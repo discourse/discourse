@@ -11,16 +11,17 @@ RSpec.describe TopicBookmarkable do
   let!(:topic1) { Fabricate(:topic) }
   let!(:topic2) { Fabricate(:topic) }
   let!(:post) { Fabricate(:post, topic: topic1) }
-  before { Fabricate(:post, topic: topic2)
-           Fabricate(:bookmark)
-           Fabricate(:topic_user, user: user, topic: topic1)
-           Fabricate(:topic_user, user: user, topic: topic2)  }
+  before do
+    Fabricate(:post, topic: topic2)
+    Fabricate(:bookmark)
+    Fabricate(:topic_user, user: user, topic: topic1)
+    Fabricate(:topic_user, user: user, topic: topic2)
+  end
 
   let!(:bookmark1) do
     Fabricate(:bookmark, user: user, bookmarkable: topic1, name: "something i gotta do")
   end
   let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: topic2) }
-
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

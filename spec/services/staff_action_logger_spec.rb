@@ -397,8 +397,6 @@ RSpec.describe StaffActionLogger do
       )
     end
 
-
-
     it "raises an error when theme setting is invalid" do
       expect {
         logger.log_theme_setting_change(:inexistent_setting, nil, nil, theme)

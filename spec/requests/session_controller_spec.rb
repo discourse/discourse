@@ -348,39 +348,35 @@ RSpec.describe SessionController do
 
         it "does not log in with an incorrect TOTP code" do
           post "/session/email-login/#{email_token.token}.json",
-                 params: {
-                   second_factor_token: "0000",
-                   second_factor_method: UserSecondFactor.methods[:totp],
-                 }
+               params: {
+                 second_factor_token: "0000",
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               }
 
           expect(response.status).to eq(200)
 
-          expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.invalid_second_factor_code"),
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
           expect(session[:current_user_id]).to eq(nil)
         end
 
         it "does not log in with an incorrect backup code" do
           post "/session/email-login/#{email_token.token}.json",
-                 params: {
-                   second_factor_token: "0000",
-                   second_factor_method: UserSecondFactor.methods[:backup_codes],
-                 }
+               params: {
+                 second_factor_token: "0000",
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+               }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.invalid_second_factor_code"),
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
           expect(session[:current_user_id]).to eq(nil)
         end
 
         it "logs in with a valid TOTP code" do
           post "/session/email-login/#{email_token.token}.json",
-                 params: {
-                   second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-                   second_factor_method: UserSecondFactor.methods[:totp],
-                 }
+               params: {
+                 second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               }
 
           expect(response.parsed_body["success"]).to eq("OK")
           expect(session[:current_user_id]).to eq(user.id)
@@ -388,27 +384,27 @@ RSpec.describe SessionController do
 
         it "logs in with a valid backup code" do
           post "/session/email-login/#{email_token.token}.json",
-                 params: {
-                   second_factor_token: "iAmValidBackupCode",
-                   second_factor_method: UserSecondFactor.methods[:backup_codes],
-                 }
+               params: {
+                 second_factor_token: "iAmValidBackupCode",
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+               }
 
           expect(response.parsed_body["success"]).to eq("OK")
           expect(session[:current_user_id]).to eq(user.id)
         end
 
         it "does not log in when security key params are provided but only TOTP is enabled" do
-        post "/session/email-login/#{email_token.token}.json",
+          post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_token: "foo",
                  second_factor_method: UserSecondFactor.methods[:totp],
                }
 
-        expect(response.status).to eq(200)
+          expect(response.status).to eq(200)
 
-        expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
-        expect(session[:current_user_id]).to eq(nil)
-      end
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
+          expect(session[:current_user_id]).to eq(nil)
+        end
       end
 
       context "when user has only security key enabled" do
@@ -2033,6 +2029,7 @@ RSpec.describe SessionController do
         SiteSetting.auth_overrides_name = true
 
         user.create_single_sign_on_record(external_id: "997", last_payload: "")
+        suggested_username
       end
 
       it "stores the external attributes" do
@@ -2833,82 +2830,76 @@ RSpec.describe SessionController do
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.invalid_second_factor_method"),
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_method"))
         end
 
         it "returns an error for an invalid TOTP code" do
-            post "/session.json",
-                 params: {
-                   login: user.username,
-                   password: "myawesomepassword",
-                   second_factor_token: "00000000",
-                   second_factor_method: UserSecondFactor.methods[:totp],
-                 }
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: "00000000",
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               }
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["error"]).to eq(
-              I18n.t("login.invalid_second_factor_code"),
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
+        end
 
         it "returns an error for an invalid backup code" do
-            post "/session.json",
-                 params: {
-                   login: user.username,
-                   password: "myawesomepassword",
-                   second_factor_token: "00000000",
-                   second_factor_method: UserSecondFactor.methods[:backup_codes],
-                 }
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: "00000000",
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+               }
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["error"]).to eq(
-              I18n.t("login.invalid_second_factor_code"),
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
+        end
 
         it "logs the user in with a valid TOTP code" do
-            post "/session.json",
-                 params: {
-                   login: user.username,
-                   password: "myawesomepassword",
-                   second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-                   second_factor_method: UserSecondFactor.methods[:totp],
-                 }
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["error"]).not_to be_present
-            user.reload
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          user.reload
 
-            expect(session[:current_user_id]).to eq(user.id)
-            expect(user.user_auth_tokens.count).to eq(1)
+          expect(session[:current_user_id]).to eq(user.id)
+          expect(user.user_auth_tokens.count).to eq(1)
 
-            unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
-            expect(UserAuthToken.hash_token(unhashed_token)).to eq(
-              user.user_auth_tokens.first.auth_token,
-            )
-          end
+          unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
+          expect(UserAuthToken.hash_token(unhashed_token)).to eq(
+            user.user_auth_tokens.first.auth_token,
+          )
+        end
 
         it "logs the user in with a valid backup code" do
-            post "/session.json",
-                 params: {
-                   login: user.username,
-                   password: "myawesomepassword",
-                   second_factor_token: "iAmValidBackupCode",
-                   second_factor_method: UserSecondFactor.methods[:backup_codes],
-                 }
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["error"]).not_to be_present
-            user.reload
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: "iAmValidBackupCode",
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          user.reload
 
-            expect(session[:current_user_id]).to eq(user.id)
-            expect(user.user_auth_tokens.count).to eq(1)
+          expect(session[:current_user_id]).to eq(user.id)
+          expect(user.user_auth_tokens.count).to eq(1)
 
-            unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
-            expect(UserAuthToken.hash_token(unhashed_token)).to eq(
-              user.user_auth_tokens.first.auth_token,
-            )
-          end
+          unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
+          expect(UserAuthToken.hash_token(unhashed_token)).to eq(
+            user.user_auth_tokens.first.auth_token,
+          )
+        end
       end
 
       describe "with a blocked IP" do
@@ -3797,7 +3788,6 @@ RSpec.describe SessionController do
           )
         end
 
-
         it "exposes the passkey credentials separately from security keys" do
           post "/session/2fa/test-action", xhr: true
           nonce = response.parsed_body["second_factor_challenge_nonce"]
@@ -3840,7 +3830,6 @@ RSpec.describe SessionController do
           SiteSetting.allow_passkeys_for_2fa = false
           Fabricate(:passkey_with_random_credential, user: user)
         end
-
 
         it "does not expose the passkey" do
           post "/session/2fa/test-action", xhr: true

@@ -39,9 +39,6 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
-
-
-
   it "does not leak state cause changes are not linked" do
     t1 =
       Thread.new do
@@ -271,9 +268,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after do
-        settings.remove_override!(:test_setting)
-      end
+      after { settings.remove_override!(:test_setting) }
 
       it "has the correct override" do
         settings.test_setting = 100
@@ -346,9 +341,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after do
-        settings.remove_override!(:test_str)
-      end
+      after { settings.remove_override!(:test_str) }
 
       it "coerces int to string" do
         settings.test_str = 100
@@ -476,9 +469,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after do
-        settings.remove_override!(:validated_setting)
-      end
+      after { settings.remove_override!(:validated_setting) }
 
       it "stores valid values" do
         test_enum_class.expects(:valid_value?).with("fr").returns(true)
@@ -506,9 +497,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when overridden" do
-      after do
-        settings.remove_override!(:test_setting)
-      end
+      after { settings.remove_override!(:test_setting) }
 
       it "has the correct override" do
         settings.test_setting = 101
@@ -563,9 +552,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after do
-      settings.remove_override!(:validated_setting)
-    end
+    after { settings.remove_override!(:validated_setting) }
 
     it "stores valid values" do
       EmailSettingValidator.any_instance.expects(:valid_value?).returns(true)
@@ -593,9 +580,7 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
-    after do
-      settings.remove_override!(:datetime_setting)
-    end
+    after { settings.remove_override!(:datetime_setting) }
 
     it "stores valid datetime values" do
       settings.datetime_setting = "2024-12-29T15:30:00Z"

@@ -39,83 +39,82 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "with approve_post" do
-        it "triggers an extensibility event" do
-          event =
-            DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve_post) }
-          expect(event).to be_present
-          expect(event[:params].first).to eq(reviewable)
-        end
-
-        it "creates a post" do
-          topic_count, post_count = Topic.count, Post.count
-          result = nil
-
-          Jobs.run_immediately!
-          event =
-            DiscourseEvent.track(:before_create_notifications_for_users) do
-              result = reviewable.perform(moderator, :approve_post)
-            end
-
-          expect(result.success?).to eq(true)
-          expect(result.created_post).to be_present
-          expect(event).to be_present
-          expect(result.created_post).to be_valid
-          expect(result.created_post.topic).to eq(topic)
-          expect(result.created_post.custom_fields["hello"]).to eq("world")
-          expect(result.created_post_topic).to eq(topic)
-          expect(result.created_post.user).to eq(reviewable.target_created_by)
-          expect(reviewable.target_id).to eq(result.created_post.id)
-
-          expect(Topic.count).to eq(topic_count)
-          expect(Post.count).to eq(post_count + 1)
-
-          notifications =
-            Notification.where(
-              user: reviewable.target_created_by,
-              notification_type: Notification.types[:post_approved],
-            )
-          expect(notifications).to be_present
-
-          # We can't approve twice
-          expect { reviewable.perform(moderator, :approve_post) }.to raise_error(
-            Reviewable::InvalidAction,
-          )
-        end
-
-        it "skips validations" do
-          reviewable.payload["raw"] = "x"
-          result = reviewable.perform(moderator, :approve_post)
-          expect(result.created_post).to be_present
-        end
-
-        it "Allows autosilenced users to post" do
-          newuser = reviewable.created_by
-          newuser.update!(trust_level: 0)
-          post = Fabricate(:post, user: newuser)
-          PostActionCreator.spam(moderator, post)
-          Reviewable.set_priorities(high: 1.0)
-          SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:low]
-          SiteSetting.num_users_to_silence_new_user = 1
-          expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
-
-          result = reviewable.perform(moderator, :approve_post)
-          expect(result.success?).to eq(true)
-        end
-
-        it "logs a staff action linked to the reviewable" do
-          expect { reviewable.perform(moderator, :approve_post) }.to change {
-            UserHistory.where(
-              action: UserHistory.actions[:post_approved],
-              reviewable_id: reviewable.id,
-            ).count
-          }.by(1)
-        end
+      it "triggers an extensibility event" do
+        event =
+          DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve_post) }
+        expect(event).to be_present
+        expect(event[:params].first).to eq(reviewable)
       end
+
+      it "creates a post" do
+        topic_count, post_count = Topic.count, Post.count
+        result = nil
+
+        Jobs.run_immediately!
+        event =
+          DiscourseEvent.track(:before_create_notifications_for_users) do
+            result = reviewable.perform(moderator, :approve_post)
+          end
+
+        expect(result.success?).to eq(true)
+        expect(result.created_post).to be_present
+        expect(event).to be_present
+        expect(result.created_post).to be_valid
+        expect(result.created_post.topic).to eq(topic)
+        expect(result.created_post.custom_fields["hello"]).to eq("world")
+        expect(result.created_post_topic).to eq(topic)
+        expect(result.created_post.user).to eq(reviewable.target_created_by)
+        expect(reviewable.target_id).to eq(result.created_post.id)
+
+        expect(Topic.count).to eq(topic_count)
+        expect(Post.count).to eq(post_count + 1)
+
+        notifications =
+          Notification.where(
+            user: reviewable.target_created_by,
+            notification_type: Notification.types[:post_approved],
+          )
+        expect(notifications).to be_present
+
+        # We can't approve twice
+        expect { reviewable.perform(moderator, :approve_post) }.to raise_error(
+          Reviewable::InvalidAction,
+        )
+      end
+
+      it "skips validations" do
+        reviewable.payload["raw"] = "x"
+        result = reviewable.perform(moderator, :approve_post)
+        expect(result.created_post).to be_present
+      end
+
+      it "Allows autosilenced users to post" do
+        newuser = reviewable.created_by
+        newuser.update!(trust_level: 0)
+        post = Fabricate(:post, user: newuser)
+        PostActionCreator.spam(moderator, post)
+        Reviewable.set_priorities(high: 1.0)
+        SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:low]
+        SiteSetting.num_users_to_silence_new_user = 1
+        expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
+
+        result = reviewable.perform(moderator, :approve_post)
+        expect(result.success?).to eq(true)
+      end
+
+      it "logs a staff action linked to the reviewable" do
+        expect { reviewable.perform(moderator, :approve_post) }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:post_approved],
+            reviewable_id: reviewable.id,
+          ).count
+        }.by(1)
+      end
+    end
 
     context "with reject_post" do
       it "triggers an extensibility event" do
-        event =
-          DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
+        event = DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
         expect(event).to be_present
         expect(event[:params].first).to eq(reviewable)
       end

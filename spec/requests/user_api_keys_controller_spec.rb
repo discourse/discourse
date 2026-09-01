@@ -371,9 +371,7 @@ RSpec.describe UserApiKeysController do
         )
         sign_in(user)
         SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-
       end
-
 
       it "requires registered client auth_redirect to stay on the global allowlist" do
         SiteSetting.allowed_user_api_auth_redirects = "https://good.example.com/callback"

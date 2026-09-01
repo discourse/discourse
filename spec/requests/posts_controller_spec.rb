@@ -1486,7 +1486,6 @@ RSpec.describe PostsController do
 
     include_examples "action requires login", :post, "/posts.json"
 
-
     it "prevents regular users from publishing a global banner while creating a topic" do
       ApplicationLayoutPreloader.banner_json_cache.clear
       sign_in(user_trust_level_1)
@@ -4665,9 +4664,7 @@ RSpec.describe PostsController do
       let(:current_user) { user }
 
       context "when there are existing pending posts" do
-        let!(:owner_pending_posts) do
-          Fabricate.times(2, :reviewable_queued_post, created_by: user)
-        end
+        let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
         before { Fabricate(:reviewable_queued_post) }
 
         let(:expected_keys) do
@@ -4706,9 +4703,7 @@ RSpec.describe PostsController do
       let(:current_user) { moderator }
 
       context "when there are existing pending posts" do
-        let!(:owner_pending_posts) do
-          Fabricate.times(2, :reviewable_queued_post, created_by: user)
-        end
+        let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
         before { Fabricate(:reviewable_queued_post) }
 
         let(:expected_keys) do

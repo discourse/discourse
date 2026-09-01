@@ -26,7 +26,6 @@ RSpec.describe ThemeJavascriptsController do
     JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
   end
 
-
   describe "#show" do
     def update_digest_and_get(digest)
       # actually set digest to make sure 404 is raised by router

@@ -70,9 +70,7 @@ RSpec.describe Guardian, "#can_remove_allowed_users?" do
 
       describe "when user is the creator of the topic" do
         it "returns false" do
-          expect(Guardian.new(topic.user).can_remove_allowed_users?(topic, topic.user)).to eq(
-            false,
-          )
+          expect(Guardian.new(topic.user).can_remove_allowed_users?(topic, topic.user)).to eq(false)
         end
       end
 

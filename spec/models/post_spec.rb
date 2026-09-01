@@ -163,25 +163,25 @@ RSpec.describe Post do
     end
 
     context "if login_required with secure uploads enabled" do
-        before do
-          setup_s3
-          SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-          SiteSetting.secure_uploads = true
-          SiteSetting.login_required = true
-        end
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_uploads = true
+        SiteSetting.login_required = true
+      end
 
-        it "returns true" do
-          expect(post.should_secure_uploads?).to eq(true)
-        end
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
 
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
 
-          it "returns false" do
-            expect(post.should_secure_uploads?).to eq(false)
-          end
+        it "returns false" do
+          expect(post.should_secure_uploads?).to eq(false)
         end
       end
+    end
 
     context "if the topic category is read_restricted" do
       let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }

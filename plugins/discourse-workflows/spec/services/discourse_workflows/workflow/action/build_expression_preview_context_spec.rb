@@ -33,12 +33,12 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
   end
 
   context "without a workflow" do
-      let(:workflow) { nil }
+    let(:workflow) { nil }
 
-      it "returns the default context" do
-        expect(context).to eq({ "$json" => {}, "$trigger" => {} })
-      end
+    it "returns the default context" do
+      expect(context).to eq({ "$json" => {}, "$trigger" => {} })
     end
+  end
 
   context "with a workflow" do
     fab!(:workflow) do
@@ -135,30 +135,30 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
 
         it "uses the connected upstream output when the current node only has a skipped run" do
           execution.execution_data.update!(
-              data: {
-                "entries" => {
-                },
-                "context" => {
-                },
-                "node_contexts" => {
-                },
-                "run_data" =>
-                  run_data_for(
-                    "trigger-1",
-                    node_name: "Topic created",
-                    node_type: "trigger:topic_created",
-                    items: items,
-                  ).deep_merge(
-                    run_data_for(
-                      "action-1",
-                      node_name: "Tag topic",
-                      node_type: "action:topic_tags",
-                      items: items,
-                      status: "skipped",
-                    ),
-                  ),
+            data: {
+              "entries" => {
               },
-            )
+              "context" => {
+              },
+              "node_contexts" => {
+              },
+              "run_data" =>
+                run_data_for(
+                  "trigger-1",
+                  node_name: "Topic created",
+                  node_type: "trigger:topic_created",
+                  items: items,
+                ).deep_merge(
+                  run_data_for(
+                    "action-1",
+                    node_name: "Tag topic",
+                    node_type: "action:topic_tags",
+                    items: items,
+                    status: "skipped",
+                  ),
+                ),
+            },
+          )
           context = described_class.call(workflow: workflow, node_id: "action-1")
           expect(context["$json"]).to eq({ "title" => "From past run" })
           expect(context["__input_item"]).to eq(items.first)
@@ -257,9 +257,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
       end
 
       context "when the current node is connected to a non-primary upstream output" do
-        subject(:context) do
-          described_class.call(workflow: branched_workflow, node_id: "action-1")
-        end
+        subject(:context) { described_class.call(workflow: branched_workflow, node_id: "action-1") }
 
         let(:primary_items) { [{ "json" => { "matched" => true } }] }
         let(:rejected_items) { [{ "json" => { "matched" => false } }] }

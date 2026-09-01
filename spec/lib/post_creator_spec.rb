@@ -1299,9 +1299,7 @@ RSpec.describe PostCreator do
     fab!(:allowed_user, :user)
 
     context "when post author is allowed" do
-      before do
-        Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
-      end
+      before { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
 
       it "allows the private message" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
@@ -1321,9 +1319,7 @@ RSpec.describe PostCreator do
     end
 
     context "when personal messages are disabled" do
-      before do
-        Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
-      end
+      before { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
 
       it "rejects the private message" do
         allowed_user.user_option.update!(allow_private_messages: false)
@@ -1352,9 +1348,7 @@ RSpec.describe PostCreator do
     fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
-      before do
-        Fabricate(:allowed_pm_user, user: not_allowed_user, allowed_pm_user: allowed_user)
-      end
+      before { Fabricate(:allowed_pm_user, user: not_allowed_user, allowed_pm_user: allowed_user) }
 
       it "rejects the private message" do
         not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
@@ -1420,9 +1414,7 @@ RSpec.describe PostCreator do
     fab!(:not_allowed_user, :user)
 
     context "when post author is not allowed" do
-      before do
-        Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
-      end
+      before { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
 
       it "rejects the private message" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)

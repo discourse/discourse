@@ -198,12 +198,7 @@ RSpec.describe Chat::TrashMessages do
 
         it "updates the thread last_message_id to the previous message in the thread" do
           next_message =
-            Fabricate(
-              :chat_message,
-              thread: thread,
-              user: current_user,
-              chat_channel: chat_channel,
-            )
+            Fabricate(:chat_message, thread: thread, user: current_user, chat_channel: chat_channel)
           params[:message_ids] = [message2.id, next_message.id]
           thread.update!(last_message: next_message)
           result

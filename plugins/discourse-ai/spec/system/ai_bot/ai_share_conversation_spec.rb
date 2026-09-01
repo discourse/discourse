@@ -23,7 +23,6 @@ RSpec.describe "Share conversation via link" do
     )
   end
 
-
   it "does not show share button for my own PMs without bot" do
     visit(pm.url)
     expect(Guardian.new(admin).can_share_ai_bot_conversation?(pm)).to eq(false)

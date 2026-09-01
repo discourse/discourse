@@ -19,21 +19,21 @@ RSpec.describe TranslationOverride do
       end
 
       it "is not valid when interpolation keys are missing" do
-          translation_override =
-            TranslationOverride.upsert!(
-              I18n.locale,
-              "user_notifications.user_did_something",
-              "%{key} %{omg}",
-            )
-
-          expect(translation_override.errors.full_messages).to include(
-            I18n.t(
-              "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-              keys: "key, omg",
-              count: 2,
-            ),
+        translation_override =
+          TranslationOverride.upsert!(
+            I18n.locale,
+            "user_notifications.user_did_something",
+            "%{key} %{omg}",
           )
-        end
+
+        expect(translation_override.errors.full_messages).to include(
+          I18n.t(
+            "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+            keys: "key, omg",
+            count: 2,
+          ),
+        )
+      end
 
       context "when custom interpolation keys are included" do
         %w[
@@ -49,8 +49,7 @@ RSpec.describe TranslationOverride do
             interpolation_key_names =
               described_class.custom_interpolation_keys("user_notifications.user_")
 
-            string_with_interpolation_keys =
-              interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
 
             translation_override =
               TranslationOverride.upsert!(
@@ -101,30 +100,30 @@ RSpec.describe TranslationOverride do
       end
 
       describe "valid pluralized keys" do
-          it "converts zero to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.zero", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts two to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.two", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts few to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.few", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts many to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.many", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
+        it "converts zero to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.zero", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
         end
+
+        it "converts two to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.two", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+
+        it "converts few to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.few", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+
+        it "converts many to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.many", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+      end
 
       describe "invalid keys" do
         it "does not transform 'tonz'" do

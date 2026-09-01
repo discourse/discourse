@@ -126,5 +126,4 @@ RSpec.describe "Plugin homepages" do
     Rails.application.reload_routes!
     Site.clear_cache
   end
-
 end

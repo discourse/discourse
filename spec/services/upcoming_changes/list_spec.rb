@@ -294,9 +294,9 @@ RSpec.describe UpcomingChanges::List do
       expect { result }.to change {
         admin.reload.custom_fields["last_visited_upcoming_changes_at"]
       }.to be_present
-      expect(
-        Time.zone.parse(admin.custom_fields["last_visited_upcoming_changes_at"]),
-      ).to be_within(1.minute).of(Time.current)
+      expect(Time.zone.parse(admin.custom_fields["last_visited_upcoming_changes_at"])).to be_within(
+        1.minute,
+      ).of(Time.current)
     end
 
     context "when guardian is the system user" do

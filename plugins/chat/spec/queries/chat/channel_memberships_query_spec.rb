@@ -150,16 +150,8 @@ describe Chat::ChannelMembershipsQuery do
     fab!(:channel_1, :category_channel)
 
     before do
-      Chat::UserChatChannelMembership.create(
-        user: user_1,
-        chat_channel: channel_1,
-        following: true,
-      )
-      Chat::UserChatChannelMembership.create(
-        user: user_2,
-        chat_channel: channel_1,
-        following: true,
-      )
+      Chat::UserChatChannelMembership.create(user: user_1, chat_channel: channel_1, following: true)
+      Chat::UserChatChannelMembership.create(user: user_2, chat_channel: channel_1, following: true)
     end
 
     describe "offset param" do
@@ -183,16 +175,8 @@ describe Chat::ChannelMembershipsQuery do
     fab!(:channel_1, :category_channel)
 
     before do
-      Chat::UserChatChannelMembership.create(
-        user: user_1,
-        chat_channel: channel_1,
-        following: true,
-      )
-      Chat::UserChatChannelMembership.create(
-        user: user_2,
-        chat_channel: channel_1,
-        following: true,
-      )
+      Chat::UserChatChannelMembership.create(user: user_1, chat_channel: channel_1, following: true)
+      Chat::UserChatChannelMembership.create(user: user_2, chat_channel: channel_1, following: true)
     end
 
     it "filters the results" do
@@ -207,16 +191,8 @@ describe Chat::ChannelMembershipsQuery do
     fab!(:channel_1, :category_channel)
 
     before do
-      Chat::UserChatChannelMembership.create(
-        user: user_1,
-        chat_channel: channel_1,
-        following: true,
-      )
-      Chat::UserChatChannelMembership.create(
-        user: user_2,
-        chat_channel: channel_1,
-        following: true,
-      )
+      Chat::UserChatChannelMembership.create(user: user_1, chat_channel: channel_1, following: true)
+      Chat::UserChatChannelMembership.create(user: user_2, chat_channel: channel_1, following: true)
     end
 
     context "when prioritizes username in ux is enabled" do

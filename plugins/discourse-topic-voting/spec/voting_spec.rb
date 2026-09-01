@@ -14,7 +14,6 @@ describe DiscourseTopicVoting do
   let!(:topic0) { Fabricate(:topic, category: category1) }
   let!(:topic1) { Fabricate(:topic, category: category2) }
 
-
   it "doesn't allow users to vote more than they are allowed" do
     SiteSetting.topic_voting_tl1_vote_limit = 1
     user0.update!(trust_level: 1)

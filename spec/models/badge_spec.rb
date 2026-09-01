@@ -284,9 +284,7 @@ RSpec.describe Badge do
     let(:first_flag_badge) { Badge.find(Badge::FirstFlag) }
 
     context "when using an out-of-the-box flag" do
-      before do
-        Fabricate(:flag_post_action, post: flagged_post, user: flagging_user)
-      end
+      before { Fabricate(:flag_post_action, post: flagged_post, user: flagging_user) }
 
       it "grants the badge" do
         expect { BadgeGranter.backfill(first_flag_badge) }.to change {
@@ -305,7 +303,6 @@ RSpec.describe Badge do
           post_action_type_id: PostActionType.types[:custom_stahp],
         )
       end
-
 
       it "grants the badge" do
         expect { BadgeGranter.backfill(first_flag_badge) }.to change {
