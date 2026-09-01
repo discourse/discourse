@@ -67,6 +67,10 @@ import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
 } from "discourse/lib/customization-source";
+import {
+  deferClassModification,
+  lazyClassFor,
+} from "discourse/lib/deferred-class-modifications";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -242,8 +246,7 @@ class _PluginApi {
     return this.container.lookup(path);
   }
 
-  _resolveClass(resolverName, opts) {
-    opts = opts || {};
+  _resolveClass(resolverName) {
     const normalized = this.container.registry.normalize(resolverName);
     if (
       this.container.cache[normalized] ||
@@ -260,18 +263,7 @@ class _PluginApi {
 
     let klass;
     if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized);
-    }
-
-    if (!klass) {
-      if (!opts.ignoreMissing) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          consolePrefix(),
-          `"${normalized}" was not found by modifyClass`
-        );
-      }
-      return;
+      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
     }
 
     return klass;
@@ -299,8 +291,13 @@ class _PluginApi {
   modifyClass(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClass");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      // The module may not have been evaluated yet, and registers itself when it is.
+      deferClassModification(
+        this.container.registry.normalize(resolverName),
+        () => this.modifyClass(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -340,8 +337,12 @@ class _PluginApi {
   modifyClassStatic(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClassStatic");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      deferClassModification(
+        this.container.registry.normalize(resolverName),
+        () => this.modifyClassStatic(resolverName, changes, opts)
+      );
       return;
     }
 
