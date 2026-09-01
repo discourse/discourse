@@ -1,0 +1,155 @@
+plugins:
+  voice_enabled:
+    default: false
+    client: true
+  voice_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "4|5" # auto groups anonymous_users, logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0"
+  voice_create_room_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2|12" # auto groups admins, moderators, trust_level_2
+    allow_any: false
+    refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
+  voice_direct_calls_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+  voice_max_rooms_per_user:
+    default: 5
+  voice_max_invites_per_day:
+    default: 100
+    min: 1
+    max: 5000
+  voice_ephemeral_room_ttl_minutes:
+    default: 30
+    min: 5
+    max: 10080
+  voice_participant_ttl_seconds:
+    default: 30
+  voice_max_room_participants:
+    default: 50
+    min: 2
+    max: 200
+  voice_stun_servers:
+    default: "stun:stun.l.google.com:19302|stun:global.stun.twilio.com:3478"
+  voice_turn_servers:
+    default: ""
+  voice_turn_username:
+    default: ""
+  voice_turn_credential:
+    default: ""
+    secret: true
+  voice_turn_secret:
+    default: ""
+    secret: true
+  voice_turn_secret_servers:
+    default: ""
+    validator: "VoiceTurnSecretServersValidator"
+  voice_livekit_url:
+    default: ""
+    validator: "VoiceLivekitUrlValidator"
+  voice_livekit_api_key:
+    default: ""
+  voice_livekit_api_secret:
+    default: ""
+    secret: true
+  voice_livekit_room_policy:
+    default: "disabled"
+    type: enum
+    choices:
+      - disabled
+      - per_room
+      - all_rooms
+    validator: "VoiceLivekitPolicyValidator"
+  voice_livekit_room_prefix:
+    default: ""
+  voice_livekit_mesh_fallback:
+    default: false
+  voice_livekit_recording_enabled:
+    default: false
+    client: true
+  voice_livekit_recording_filepath:
+    default: "voice/{room_name}-{utc}"
+  voice_video_enabled:
+    default: true
+    client: true
+  voice_video_max_publishers:
+    default: 8
+    min: 2
+    max: 16
+    client: true
+  voice_video_background_blur_enabled:
+    default: true
+    client: true
+  voice_subtitles_enabled:
+    default: false
+    client: true
+  voice_stt_model_base_url:
+    default: ""
+    client: true
+  voice_max_voice_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  voice_max_camera_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  voice_max_screen_share_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  voice_idle_threshold_minutes:
+    default: 5
+    min: 0
+    max: 60
+    client: true
+  voice_afk_auto_mute_threshold_minutes:
+    default: 15
+    min: 0
+    max: 120
+    client: true
+  voice_afk_disconnect_threshold_minutes:
+    default: 30
+    min: 0
+    max: 240
+    client: true
+  voice_auto_status_enabled:
+    default: true
+    client: true
+  voice_mesh_privacy_warning_enabled:
+    default: true
+    client: true
+  voice_badges_enabled:
+    default: false
+  voice_analytics_enabled:
+    default: true
+  voice_session_retention_days:
+    default: 400
+    min: 7
+    max: 3650
+  voice_chat_enabled:
+    default: true
+    client: true

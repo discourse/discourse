@@ -76,6 +76,9 @@
 !/plugins/discourse-cakeday
 !/plugins/discourse-rewind
 !/plugins/discourse-workflows
+!/plugins/voice
+/plugins/voice/gems
+/plugins/voice/public/javascripts
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
