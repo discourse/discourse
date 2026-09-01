@@ -5,10 +5,6 @@ import { cellAround, findTable } from "./grid";
 import handleTablePaste from "./paste";
 import { fixTables } from "./repair";
 
-/**
- * Cell-aware keyboard navigation and repair for structures that generic
- * editing would otherwise leave ragged.
- */
 export default function tableEditing() {
   return new Plugin({
     props: {
@@ -25,11 +21,14 @@ export default function tableEditing() {
     },
 
     appendTransaction(transactions, oldState, newState) {
-      const docChanged = transactions.some((tr) => tr.docChanged);
-      if (docChanged && !onlyCellContentChanged(oldState.doc, newState.doc)) {
-        return fixTables(newState, null);
+      if (!transactions.some((tr) => tr.docChanged)) {
+        return null;
       }
-      return null;
+
+      const changed = repairableRange(oldState.doc, newState.doc);
+      return changed
+        ? fixTables(newState, null, changed.from, changed.to)
+        : null;
     },
   });
 }
@@ -151,21 +150,31 @@ function handleDeleteKeyDown(view, event) {
   return handled;
 }
 
-function onlyCellContentChanged(oldDoc, newDoc) {
+/** Returns the changed span that may contain a malformed table. */
+function repairableRange(oldDoc, newDoc) {
   const start = oldDoc.content.findDiffStart(newDoc.content);
   if (start === null) {
-    return true;
+    return null;
   }
 
   const end = oldDoc.content.findDiffEnd(newDoc.content);
-  if (!end) {
-    return false;
-  }
-
-  return (
+  if (
+    end &&
     changeInsideOneCell(oldDoc, start, end.a) &&
     changeInsideOneCell(newDoc, start, end.b)
-  );
+  ) {
+    return null;
+  }
+
+  const size = newDoc.content.size;
+  const last = end ? end.b : size;
+
+  // Widened by one either side: `nodesBetween` skips a node that begins or ends
+  // exactly on the boundary, and a deletion collapses to a single position.
+  return {
+    from: Math.max(Math.min(start, last) - 1, 0),
+    to: Math.min(Math.max(start, last) + 1, size),
+  };
 }
 
 function changeInsideOneCell(doc, from, to) {

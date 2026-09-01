@@ -557,25 +557,6 @@
       font-size: var(--font-down-1);
     }
 
-    .d-button-label {
-      display: grid;
-      flex: 1;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: var(--space-6);
-      text-align: start;
-    }
-
-    // Present but quiet: the label is what is being read, the keys are a hint.
-    .shortcut {
-      min-width: 0;
-      padding: 0;
-      background: transparent;
-      color: var(--token-color-text-subtlest);
-      font-size: var(--font-down-2);
-      font-weight: var(--token-font-weight-regular);
-    }
-
     &:hover,
     &:focus-visible {
       background-color: var(--token-color-surface-hovered);

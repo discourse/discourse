@@ -1,9 +1,10 @@
 import { Fragment } from "prosemirror-model";
 import { isTable, tableGrid } from "./grid";
 
-export function fixTables(state, tr) {
+/** Repairs malformed table structures within a document range. */
+export function fixTables(state, tr, from = 0, to = state.doc.content.size) {
   const tables = [];
-  state.doc.descendants((node, pos) => {
+  state.doc.nodesBetween(from, to, (node, pos) => {
     if (!node.isBlock) {
       return false;
     }

@@ -1473,6 +1473,27 @@ module(
       );
     });
 
+    test("pasting a table alongside other content keeps the other content", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+
+      await selectCell(view, 1, 1);
+      view.pasteHTML("<hr><table><tbody><tr><td>x1</td></tr></tbody></table>");
+      await settled();
+
+      let horizontalRules = 0;
+      editor.view.state.doc.descendants((node) => {
+        if (node.type.name === "horizontal_rule") {
+          horizontalRules++;
+        }
+      });
+      assert.strictEqual(
+        horizontalRules,
+        1,
+        "a non-text block beside the table is not dropped"
+      );
+    });
+
     test("structural edits undo in one step", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
