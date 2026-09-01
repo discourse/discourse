@@ -1,0 +1,11 @@
+boards:
+  boards_enabled:
+    default: false
+    client: true
+  boards_manage_board_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2" # admins and moderators by default
+    allow_any: false
+    client: true
+    mandatory_values: "1" # auto group admins

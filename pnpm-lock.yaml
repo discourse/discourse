@@ -729,6 +729,12 @@ importers:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.6.0-06d03da3'
 
+  plugins/boards:
+    dependencies:
+      discourse:
+        specifier: npm:@discourse/types@*
+        version: '@discourse/types@2026.9.0-eb242063'
+
   plugins/chat:
     dependencies:
       discourse:
@@ -1858,6 +1864,10 @@ packages:
 
   '@discourse/types@2026.7.0-ded677e0':
     resolution: {integrity: sha512-rN0+p2Hr4NkDyef60h0jmRHabUy354YFLsJgJjmcuUeDyQSJZ0GdKAfMUFTAc+LIli34MQRJjnk8vmnxW396Fg==}
+    engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
+
+  '@discourse/types@2026.9.0-eb242063':
+    resolution: {integrity: sha512-u1KukGjlYXg6owV5WNWc4oCVWATBu0MZPHxBotZ3581hv5+atHtdHwjKFLA7b8pwJe9gZrJc9Pmcc9axk3g4Tg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -9618,6 +9628,8 @@ snapshots:
   '@discourse/types@2026.6.0-06d03da3': {}
 
   '@discourse/types@2026.7.0-ded677e0': {}
+
+  '@discourse/types@2026.9.0-eb242063': {}
 
   '@discourse/webp@1.5.0':
     dependencies:

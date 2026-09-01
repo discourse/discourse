@@ -8,6 +8,14 @@ plugins:
       - discourse_automation_stats
       - discourse_automation_user_global_notices
     columns: {}
+  boards:
+    tables:
+      - discourse_kanban_board_histories
+      - discourse_kanban_boards
+      - discourse_kanban_card_histories
+      - discourse_kanban_cards
+      - discourse_kanban_columns
+    columns: {}
   chat:
     tables:
       - chat_channel_archives
@@ -222,6 +230,7 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
+  boards: 047bb23732cb53e5abd0f1a8b2abb926
   chat: 43ee047298d56af4fad013d534155812
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'

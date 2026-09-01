@@ -17,6 +17,7 @@ packages:
 - "frontend/asset-processor"
 - "frontend/discourse-types"
 - "plugins/automation"
+- "plugins/boards"
 - "plugins/chat"
 - "plugins/checklist"
 - "plugins/discourse-adplugin"
