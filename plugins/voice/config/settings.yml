@@ -2,6 +2,15 @@ plugins:
   voice_enabled:
     default: false
     client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      allow_enabled_for:
+        - "everyone"
+      learn_more_url: "https://meta.discourse.org/t/-/411337"
+      requires_plugin_enabled: false
+      permanent_warning: false
   voice_allowed_groups:
     type: group_list
     list_type: compact
