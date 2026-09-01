@@ -71,7 +71,8 @@ RSpec.describe "JSON:API versioning", type: :request do
       expect(error).to eq(
         refusal(
           title: "Api-Version is in the future",
-          detail: "The current version is #{first_version}.",
+          detail:
+            "Api-Version must not be later than today in UTC. The current version is #{first_version}.",
           header: "Api-Version",
         ).deep_stringify_keys,
       )

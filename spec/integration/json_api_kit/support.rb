@@ -63,6 +63,7 @@ module JsonApiKitSpec
     anchor :title
     anchor :last_posted_at
     anchor(:mine) { |topics, guardian| topics.where(user_id: guardian.user&.id) }
+    anchor(:without_replies) { |topics, _guardian| topics.where(posts_count: 0) }
 
     attribute :title
     attribute :created_at
@@ -71,6 +72,7 @@ module JsonApiKitSpec
     has_one :category, resource: CategoryResource
     has_many :tags, resource: TagResource
     has_many :posts, resource: PostResource
+    has_many :ordered_posts, resource: PostResource
 
     includes "user.groups", "user.groups.users", "posts.topic", "posts.user", "posts.user.groups"
   end
@@ -96,14 +98,30 @@ RSpec.shared_context "with a listing of topics" do
   let(:current) { "https://example.com/api/topics" }
   let(:query) { {} }
   let(:scoped_to) { nil }
+  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
   let(:urls) { JsonApiKit::Urls.new(base:, current:, parameters: query) }
 
   let(:document) do
-    JsonApiKit::Document::Collection.for(params, resource:, guardian:, urls:, scoped_to:).to_h
+    JsonApiKit::Document::Collection.for(
+      params,
+      resource:,
+      guardian:,
+      urls:,
+      glossary:,
+      scoped_to:,
+    ).to_h
   end
 
   def one_document(id, **options)
-    JsonApiKit::Document::Individual.for(id, params, resource:, guardian:, urls:, **options).to_h
+    JsonApiKit::Document::Individual.for(
+      id,
+      params,
+      resource:,
+      guardian:,
+      urls:,
+      glossary:,
+      **options,
+    ).to_h
   end
 
   def listing_of(parameters)
@@ -112,17 +130,18 @@ RSpec.shared_context "with a listing of topics" do
       resource:,
       guardian:,
       urls: JsonApiKit::Urls.new(base:, current:),
+      glossary:,
       scoped_to:,
     ).to_h
   end
 
   def cursor_of(row) = row[:meta][:page][:cursor]
 
-  def topic_object(topic, fields: %w[title created_at], **members)
+  def topic_object(topic, fields: %w[title createdAt], **members)
     resource_object(
       "topics",
       topic,
-      { "title" => topic.title, "created_at" => topic.created_at }.slice(*fields),
+      { "title" => topic.title, "createdAt" => topic.created_at }.slice(*fields),
       **members,
     )
   end
@@ -143,8 +162,8 @@ RSpec.shared_context "with a listing of topics" do
     resource_object("tags", tag, { "name" => tag.name }.slice(*fields), **members)
   end
 
-  def post_object(post, fields: %w[post_number], **members)
-    resource_object("posts", post, { "post_number" => post.post_number }.slice(*fields), **members)
+  def post_object(post, fields: %w[postNumber], **members)
+    resource_object("posts", post, { "postNumber" => post.post_number }.slice(*fields), **members)
   end
 
   def resource_object(type, row, attributes, cursor: nil, relationships: nil)

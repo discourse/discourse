@@ -3,7 +3,7 @@
 module JsonApiKit
   class Timeline
     # The day this API was first released.
-    FIRST_RELEASE = "2026-08-31"
+    FIRST_RELEASE = ApiVersion.parse("2026-08-31")
 
     class << self
       delegate :first, :current, :resolve, to: :core
@@ -13,8 +13,8 @@ module JsonApiKit
       def core = @core ||= new([FIRST_RELEASE])
     end
 
-    def initialize(dates)
-      @versions = dates.map { ApiVersion.parse(it) }.sort
+    def initialize(versions)
+      @versions = versions.sort
     end
 
     def first = versions.first

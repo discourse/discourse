@@ -6,8 +6,8 @@ module JsonApiKit
       class << self
         def contract_class = Request::Contract::Collection
 
-        def for(parameters, resource:, guardian:, urls:, scoped_to: nil)
-          build(parameters, resource:, urls:) { resource.all(it, guardian:, scoped_to:) }
+        def for(parameters, resource:, guardian:, urls:, glossary:, scoped_to: nil)
+          build(parameters, resource:, urls:, glossary:) { resource.all(it, guardian:, scoped_to:) }
         end
       end
 
@@ -15,7 +15,9 @@ module JsonApiKit
 
       def primary_records = query.records
 
-      def data = contents.primary.map { ResourceObject.new(it, urls:, meta: page_meta(it)).to_h }
+      def data
+        contents.primary.map { ResourceObject.new(it, urls:, glossary:, meta: page_meta(it)).to_h }
+      end
 
       def page_meta(record)
         return {} unless query.item_cursors?

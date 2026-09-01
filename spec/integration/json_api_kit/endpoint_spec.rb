@@ -132,13 +132,13 @@ RSpec.describe "a JSON:API endpoint", type: :request do
     context "when the request anchors the page on one row" do
       let(:query) do
         {
-          "sort" => "created_at",
+          "sort" => "createdAt",
           "page" => {
             "anchor" => {
               "id" => oldest.id.to_s,
             },
-            "before_size" => "0",
-            "after_size" => "1",
+            "beforeSize" => "0",
+            "afterSize" => "1",
           },
         }
       end

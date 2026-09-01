@@ -5,7 +5,7 @@ require_relative "support"
 RSpec.describe "a page of a listing" do
   include_context "with a listing of topics"
 
-  let(:params) { { sort: { created_at: :asc }, page: { size: 2 } } }
+  let(:params) { { sort: { createdAt: :asc }, page: { size: 2 } } }
   let(:query) { { "page" => { "size" => "2" } } }
 
   it "returns the first page and links to the next" do
@@ -20,7 +20,7 @@ RSpec.describe "a page of a listing" do
   end
 
   context "when the page size holds the whole listing" do
-    let(:params) { { sort: { created_at: :asc }, page: { size: 5 } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { size: 5 } } }
     let(:query) { { "page" => { "size" => "5" } } }
 
     it "returns every row and links to no other page" do
@@ -51,7 +51,7 @@ RSpec.describe "a page of a listing" do
 
   context "when the page follows the first page" do
     let(:cursor) { cursor_of_record(oldest, sort: { created_at: :asc }) }
-    let(:params) { { sort: { created_at: :asc }, page: { size: 1, after: cursor } } }
+    let(:params) { { sort: { createdAt: :asc }, page: { size: 1, after: cursor } } }
     let(:query) { { "page" => { "size" => "1", "after" => cursor } } }
 
     it "returns the page and links either side of it" do

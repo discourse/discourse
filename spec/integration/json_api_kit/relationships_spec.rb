@@ -391,7 +391,7 @@ RSpec.describe "a document with related records" do
 
     context "when the page is centred on an anchor" do
       let(:params) do
-        { include: %w[user], page: { anchor: { id: topic.id }, before_size: 1, after_size: 1 } }
+        { include: %w[user], page: { anchor: { id: topic.id }, beforeSize: 1, afterSize: 1 } }
       end
 
       it "reads them in one query" do

@@ -12,6 +12,6 @@ module JsonApiKit
     include Negotiating
     include Versioning
     include Serving
-    include Reading
+    include Fetching
   end
 end

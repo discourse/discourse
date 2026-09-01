@@ -4,7 +4,7 @@ RSpec.describe JsonApiKit::Timeline do
   let(:earliest) { JsonApiKit::ApiVersion.parse("2026-09-01") }
   let(:middle) { JsonApiKit::ApiVersion.parse("2026-11-15") }
   let(:latest) { JsonApiKit::ApiVersion.parse("2027-01-05") }
-  let(:timeline) { described_class.new([earliest, middle, latest].map(&:to_s)) }
+  let(:timeline) { described_class.new([earliest, middle, latest]) }
 
   before do
     freeze_time(Date.new(2027, 1, 20))
