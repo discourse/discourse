@@ -688,6 +688,7 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_discourse_pricing: "Load Discourse pricing"
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
         view_image: "Inspect image"
@@ -746,6 +747,7 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_discourse_pricing: "Load the official Discourse hosting pricing page"
         read_artifact: "Read a web artifact using the AI Bot"
         search_uploaded_documents: "Search documents uploaded to this agent"
         view_image: "Inspect an image available during this task"
@@ -803,6 +805,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_discourse_pricing: "Loaded the official Discourse hosting pricing page"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
         search_uploaded_documents:
@@ -1104,6 +1107,9 @@ en:
           hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
           secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
           themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
+      load_discourse_pricing:
+        errors:
+          fetch_failed: "The official Discourse pricing page could not be loaded."
 
     reviewables:
       ai_tool_action:
