@@ -78,18 +78,8 @@ export default function handlePaste(view, event, slice) {
 }
 
 function pastedRows(slice) {
-  let table = null;
-  slice.content.descendants((node) => {
-    if (table) {
-      return false;
-    }
-    if (isTable(node)) {
-      table = node;
-      return false;
-    }
-  });
-
-  if (!table) {
+  const table = slice.content.childCount === 1 && slice.content.firstChild;
+  if (!table || !isTable(table)) {
     return null;
   }
 
