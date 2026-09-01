@@ -590,6 +590,7 @@ module(
         pointerType: "touch",
       });
       await waitFor('.fk-d-menu-modal[data-identifier="composer-table-menu"]');
+      await settled();
 
       assert
         .dom(".composer-table-menu__duplicate-row")
