@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   it "combines Discourse knowledge, general administration, and site-setting tools" do
     expect(assistant.tools).to eq(
       [
-        DiscourseAi::Agents::Tools::LoadDiscoursePricing,
+        DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
         DiscourseAi::Agents::Tools::ListCategories,
         DiscourseAi::Agents::Tools::ListTags,
@@ -63,11 +63,14 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new)
 
     expect(prompt.system_message_text).to include(
-      "For questions about official Discourse hosting plans, pricing, or billing, call `load_discourse_pricing`",
+      "For questions about official Discourse hosting plans, pricing, or billing, call `load_discourse_website_page` with `page_name` set to `pricing`",
       "For general questions about Discourse, call `search_meta_discourse` twice before answering",
       "For questions about this site's configuration or content, use the relevant site and administration tools",
     )
-    expect(prompt.tools.map(&:name)).to include("load_discourse_pricing", "search_meta_discourse")
+    expect(prompt.tools.map(&:name)).to include(
+      "load_discourse_website_page",
+      "search_meta_discourse",
+    )
   end
 
   it "removes its retired code-managed RAG document source" do
