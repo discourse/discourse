@@ -597,10 +597,6 @@ body.crawler {
   &__content {
     min-width: 0;
 
-    > .poll-info {
-      display: none;
-    }
-
     > :is(h1, h2, h3, h4, h5, h6) {
       font-size: inherit;
       font-weight: normal;
@@ -641,6 +637,12 @@ body.crawler {
 
   &__info {
     display: contents;
+  }
+
+  // outranks the cooked poll styles, which also apply inside the editor:
+  // the parsed info node is replaced by the one rendered below it
+  &.poll &__content > .poll-info {
+    display: none;
   }
 
   &[data-poll-type="multiple"] &__content > ul > li::before {
