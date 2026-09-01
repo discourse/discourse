@@ -3107,9 +3107,7 @@ RSpec.describe UsersController do
           expect(json["user"]["id"]).to eq user.id
         end
 
-        context "with sidebar" do
-          before { SiteSetting.navigation_menu = "sidebar" }
-
+        context "with sidebar section links" do
           it "does not remove category or tag sidebar section links when params are not present" do
             Fabricate(:category_sidebar_section_link, user: user)
             Fabricate(:tag_sidebar_section_link, user: user)

@@ -10,11 +10,11 @@ describe "Admin | Sidebar Navigation" do
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:filter) { PageObjects::Components::Filter.new }
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-
-    sign_in(admin)
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { sign_in(admin) }
 
   it "shows the sidebar when navigating to an admin route and hides it when leaving" do
     visit("/latest")

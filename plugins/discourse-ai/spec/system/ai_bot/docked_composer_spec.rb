@@ -50,12 +50,15 @@ RSpec.describe "AI Bot docked composer" do
   fab!(:regular_topic) { Fabricate(:topic, user: user) }
   fab!(:regular_post) { Fabricate(:post, topic: regular_topic, user: user, raw: "Regular topic") }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
     pm.save!
     toggle_enabled_bots(bots: [claude_2])
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
     SiteSetting.ai_bot_enable_docked_composer = true
     Jobs.run_immediately!

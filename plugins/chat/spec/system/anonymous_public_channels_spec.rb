@@ -49,7 +49,7 @@ RSpec.describe "Anonymous public chat channels" do
   end
 
   it "lets visitors open public chat channels from the sidebar drawer" do
-    SiteSetting.navigation_menu = "sidebar"
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
 
     visit("/")
     chat_page.prefers_drawer

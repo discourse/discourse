@@ -8,10 +8,11 @@ describe "Topic tracking state" do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
 
-  before do
-    SiteSetting.tagging_enabled = true
-    SiteSetting.navigation_menu = "sidebar"
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { SiteSetting.tagging_enabled = true }
 
   def publish_new_topic(tags)
     new_topic = Fabricate(:topic, tags:)

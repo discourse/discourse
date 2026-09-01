@@ -1827,14 +1827,14 @@ RSpec.describe SiteSettingExtension do
       it "returns the correct JSON" do
         SiteSetting.refresh!
         expect(SiteSetting.theme_site_settings_json_uncached(theme_1.id)).to eq(
-          %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
+          %Q|{"enable_welcome_banner":false,"navigation_menu":"sidebar","search_experience":"search_icon"}|,
         )
       end
 
       it "returns default JSON when the theme_id is null" do
         SiteSetting.refresh!
         expect(SiteSetting.theme_site_settings_json_uncached(nil)).to eq(
-          %Q|{"enable_welcome_banner":true,"search_experience":"search_icon"}|,
+          %Q|{"enable_welcome_banner":true,"navigation_menu":"sidebar","search_experience":"search_icon"}|,
         )
       end
     end

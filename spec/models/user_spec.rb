@@ -139,7 +139,6 @@ RSpec.describe User do
       end
 
       before do
-        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
         SiteSetting.default_navigation_menu_categories = "#{category.id}|#{secured_category.id}"
         SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
@@ -2837,9 +2836,7 @@ RSpec.describe User do
       expect(message).to eq(nil)
     end
 
-    context "with sidebar based navigation menu" do
-      before { SiteSetting.navigation_menu = "sidebar" }
-
+    context "with notification count payloads" do
       it "adds all_unread_notifications and grouped_unread_notifications to the payload" do
         user.update!(admin: true)
         Fabricate(:notification, user: user, notification_type: 1)
