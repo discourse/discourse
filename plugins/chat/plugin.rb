@@ -178,6 +178,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
+    Upload.prepend Chat::UploadExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
@@ -203,7 +204,7 @@ after_initialize do
         "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists?
+      ).exists? || Chat::MessageHotlinkedMedia.where(upload_id: upload.id).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do

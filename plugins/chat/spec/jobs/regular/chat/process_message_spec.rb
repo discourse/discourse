@@ -70,6 +70,90 @@ describe Jobs::Chat::ProcessMessage do
     end
   end
 
+  describe "pull hotlinked images" do
+    it "enqueues the pull job when download_remote_images_to_local is enabled" do
+      SiteSetting.download_remote_images_to_local = true
+
+      expect_enqueued_with(
+        job: Jobs::Chat::PullHotlinkedImages,
+        args: {
+          chat_message_id: chat_message.id,
+        },
+      ) { described_class.new.execute(chat_message_id: chat_message.id) }
+    end
+
+    it "does not enqueue the pull job when download_remote_images_to_local is disabled" do
+      SiteSetting.download_remote_images_to_local = false
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: chat_message.id)
+      end
+    end
+
+    it "does not enqueue the pull job when chat uploads are disabled" do
+      SiteSetting.download_remote_images_to_local = true
+      SiteSetting.chat_allow_uploads = false
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: chat_message.id)
+      end
+    end
+
+    # the pull job re-cooks through here, so the enqueue has to happen outside
+    # our own mutex or the inline re-cook blocks on the lock we still hold
+    it "does not block on its own lock when the pull job runs inline" do
+      image_url = "http://wiki.mozilla.org/images/2/2e/Longcat1.gif"
+      stub_request(:get, image_url).to_return(
+        body:
+          Base64.decode64(
+            "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
+          ),
+        headers: {
+          "Content-Type" => "image/gif",
+        },
+      )
+      stub_image_size
+      Jobs.run_immediately!
+      SiteSetting.download_remote_images_to_local = true
+      SiteSetting.download_remote_images_threshold = 0
+      message = Fabricate(:chat_message, message: "![longcat](#{image_url})")
+
+      Timeout.timeout(10) { described_class.new.execute(chat_message_id: message.id) }
+
+      expect(message.reload.cooked).not_to include(image_url)
+    end
+
+    # the pull job re-cooks through here, so honouring the flag is what stops
+    # the two jobs enqueueing each other
+    it "does not enqueue the pull job when it was the pull job that asked for the re-cook" do
+      SiteSetting.download_remote_images_to_local = true
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(
+          chat_message_id: chat_message.id,
+          skip_pull_hotlinked_images: true,
+        )
+      end
+    end
+  end
+
+  it "removes hotlinked media that is no longer present after re-cooking" do
+    image_url = "https://example.com/old.png"
+    message = Fabricate(:chat_message, message: "![](#{image_url})")
+    record =
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: message,
+        url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+        status: :downloaded,
+        upload: Fabricate(:upload),
+      )
+    message.update_columns(message: "no image")
+
+    expect { described_class.new.execute(chat_message_id: message.id) }.to change {
+      Chat::MessageHotlinkedMedia.exists?(record.id)
+    }.from(true).to(false)
+  end
+
   describe "skip_notifications" do
     fab!(:user)
     fab!(:mentioned_user, :user)

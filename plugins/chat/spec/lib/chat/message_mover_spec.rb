@@ -117,6 +117,13 @@ describe Chat::MessageMover do
       mention = Fabricate(:user_chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
+      hotlinked_media =
+        Chat::MessageHotlinkedMedia.create!(
+          chat_message: message1,
+          url: "//example.com/cat.png",
+          status: :downloaded,
+          upload: Fabricate(:upload),
+        )
       move!
 
       moved_messages =
@@ -129,6 +136,7 @@ describe Chat::MessageMover do
       expect(mention.reload.chat_message_id).to eq(moved_messages.second.id)
       expect(revision.reload.chat_message_id).to eq(moved_messages.third.id)
       expect(webhook_event.reload.chat_message_id).to eq(moved_messages.third.id)
+      expect(hotlinked_media.reload.chat_message_id).to eq(moved_messages.first.id)
     end
 
     it "does not preserve reply chains using in_reply_to_id" do
