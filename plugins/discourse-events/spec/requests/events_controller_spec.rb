@@ -2,14 +2,16 @@
 
 module DiscourseEvents::Events
   describe DiscourseEvents::EventsController do
-    before do
-      Jobs.run_immediately!
+    before do |example|
       SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
-      SiteSetting.displayed_invitees_limit = 3
+      if example.metadata[:event_index]
+        Jobs.run_immediately!
+        SiteSetting.displayed_invitees_limit = 3
+      end
     end
 
-    describe "#index" do
+    describe "#index", event_index: true do
       it "does not result in N+1 queries problem when multiple events are returned" do
         # Warmup
         get "/discourse-post-event/events.json"
@@ -873,154 +875,156 @@ module DiscourseEvents::Events
         end
       end
     end
-  end
 
-  describe "bulk invite respects capacity" do
-    before do
-      SiteSetting.discourse_events_enabled = true
-      SiteSetting.discourse_post_event_enabled = true
+    describe "bulk invite respects capacity" do
+      before do
+        SiteSetting.discourse_events_enabled = true
+        SiteSetting.discourse_post_event_enabled = true
+      end
+
+      let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post1) { Fabricate(:post, user: user, topic: topic) }
+      let!(:event) { Fabricate(:event, post: post1, max_attendees: 1) }
+
+      it "skips creating going when full" do
+        sign_in(user)
+        user1 = Fabricate(:user)
+        user2 = Fabricate(:user)
+
+        expect_enqueued_with(
+          job: :discourse_post_event_bulk_invite,
+          args: {
+            "event_id" => event.id,
+            "invitees" => [
+              { "identifier" => user1.username, "attendance" => "going" },
+              { "identifier" => user2.username, "attendance" => "going" },
+            ],
+            "current_user_id" => user.id,
+          },
+        ) do
+          post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
+               params: {
+                 invitees: [
+                   { "identifier" => user1.username, "attendance" => "going" },
+                   { "identifier" => user2.username, "attendance" => "going" },
+                 ],
+               }
+        end
+
+        Jobs.run_immediately!
+        event.reload
+        expect(event.invitees.with_status(:going).count).to be <= 1
+      end
     end
 
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    let(:topic) { Fabricate(:topic, user: user) }
-    let(:post1) { Fabricate(:post, user: user, topic: topic) }
-    let!(:event) { Fabricate(:event, post: post1, max_attendees: 1) }
+    describe "#show" do
+      before do
+        SiteSetting.discourse_events_enabled = true
+        SiteSetting.discourse_post_event_enabled = true
+        chat_channel.update!(last_message: chat_message)
+      end
 
-    it "skips creating going when full" do
-      sign_in(user)
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
+      fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: admin_user, category: category) }
+      fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+      fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
+      fab!(:event) do
+        Fabricate(:event, post: post_1, chat_enabled: true, chat_channel: chat_channel)
+      end
+      fab!(:chat_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: chat_channel,
+          user: admin_user,
+          message: "private chat message body",
+        )
+      end
 
-      expect_enqueued_with(
-        job: :discourse_post_event_bulk_invite,
-        args: {
-          "event_id" => event.id,
-          "invitees" => [
-            { "identifier" => user1.username, "attendance" => "going" },
-            { "identifier" => user2.username, "attendance" => "going" },
-          ],
-          "current_user_id" => user.id,
-        },
-      ) do
+      context "when the viewer is anonymous" do
+        before do
+          SiteSetting.chat_enabled = true
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        end
+
+        it "does not include the chat channel block or last message body" do
+          get "/discourse-post-event/events/#{event.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["event"]).not_to have_key("channel")
+          expect(response.body).not_to include("private chat message body")
+        end
+      end
+
+      context "when the viewer cannot join the chat channel" do
+        fab!(:viewer, :user)
+
+        before do
+          SiteSetting.chat_enabled = true
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+          sign_in(viewer)
+        end
+
+        it "does not include the chat channel block or last message body" do
+          get "/discourse-post-event/events/#{event.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["event"]).not_to have_key("channel")
+          expect(response.body).not_to include("private chat message body")
+        end
+      end
+
+      context "when the viewer can join the chat channel" do
+        before do
+          SiteSetting.chat_enabled = true
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+          sign_in(admin_user)
+        end
+
+        it "includes the chat channel block with the last message body" do
+          get "/discourse-post-event/events/#{event.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["event"]["channel"]).to be_present
+          expect(response.body).to include("private chat message body")
+        end
+      end
+    end
+
+    describe "anonymous access to EventsController" do
+      before do
+        SiteSetting.discourse_events_enabled = true
+        SiteSetting.discourse_post_event_enabled = true
+      end
+
+      fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+      fab!(:topic) { Fabricate(:topic, user: admin_user) }
+      fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+      fab!(:event) { Fabricate(:event, post: post_1) }
+
+      it "requires login for invite" do
+        post "/discourse-post-event/events/#{event.id}/invite.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "requires login for destroy" do
+        delete "/discourse-post-event/events/#{event.id}.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "requires login for bulk_invite" do
         post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
              params: {
-               invitees: [
-                 { "identifier" => user1.username, "attendance" => "going" },
-                 { "identifier" => user2.username, "attendance" => "going" },
-               ],
+               invitees: [{ "identifier" => "bob", "attendance" => "going" }],
              }
+        expect(response.status).to eq(403)
       end
 
-      Jobs.run_immediately!
-      event.reload
-      expect(event.invitees.with_status(:going).count).to be <= 1
-    end
-  end
-
-  describe "#show" do
-    before do
-      SiteSetting.discourse_events_enabled = true
-      SiteSetting.discourse_post_event_enabled = true
-      chat_channel.update!(last_message: chat_message)
-    end
-
-    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    fab!(:category)
-    fab!(:topic) { Fabricate(:topic, user: admin_user, category: category) }
-    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
-    fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
-    fab!(:event) { Fabricate(:event, post: post_1, chat_enabled: true, chat_channel: chat_channel) }
-    fab!(:chat_message) do
-      Fabricate(
-        :chat_message,
-        chat_channel: chat_channel,
-        user: admin_user,
-        message: "private chat message body",
-      )
-    end
-
-    context "when the viewer is anonymous" do
-      before do
-        SiteSetting.chat_enabled = true
-        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      it "requires login for csv_bulk_invite" do
+        post "/discourse-post-event/events/#{event.id}/csv-bulk-invite.json"
+        expect(response.status).to eq(403)
       end
-
-      it "does not include the chat channel block or last message body" do
-        get "/discourse-post-event/events/#{event.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["event"]).not_to have_key("channel")
-        expect(response.body).not_to include("private chat message body")
-      end
-    end
-
-    context "when the viewer cannot join the chat channel" do
-      fab!(:viewer, :user)
-
-      before do
-        SiteSetting.chat_enabled = true
-        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-        sign_in(viewer)
-      end
-
-      it "does not include the chat channel block or last message body" do
-        get "/discourse-post-event/events/#{event.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["event"]).not_to have_key("channel")
-        expect(response.body).not_to include("private chat message body")
-      end
-    end
-
-    context "when the viewer can join the chat channel" do
-      before do
-        SiteSetting.chat_enabled = true
-        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-        sign_in(admin_user)
-      end
-
-      it "includes the chat channel block with the last message body" do
-        get "/discourse-post-event/events/#{event.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["event"]["channel"]).to be_present
-        expect(response.body).to include("private chat message body")
-      end
-    end
-  end
-
-  describe "anonymous access to EventsController" do
-    before do
-      SiteSetting.discourse_events_enabled = true
-      SiteSetting.discourse_post_event_enabled = true
-    end
-
-    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    fab!(:topic) { Fabricate(:topic, user: admin_user) }
-    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
-    fab!(:event) { Fabricate(:event, post: post_1) }
-
-    it "requires login for invite" do
-      post "/discourse-post-event/events/#{event.id}/invite.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "requires login for destroy" do
-      delete "/discourse-post-event/events/#{event.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "requires login for bulk_invite" do
-      post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
-           params: {
-             invitees: [{ "identifier" => "bob", "attendance" => "going" }],
-           }
-      expect(response.status).to eq(403)
-    end
-
-    it "requires login for csv_bulk_invite" do
-      post "/discourse-post-event/events/#{event.id}/csv-bulk-invite.json"
-      expect(response.status).to eq(403)
     end
   end
 end

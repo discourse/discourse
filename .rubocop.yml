@@ -86,10 +86,6 @@ RSpec/LetSetup:
 
 RSpec/MultipleDescribes:
   Enabled: true
-  Exclude:
-    - "**/spec/requests/**/*"
-    - "**/spec/system/**/*"
-    - "**/spec/features/**/*"
 
 RSpec/NestedGroups:
   Enabled: true
