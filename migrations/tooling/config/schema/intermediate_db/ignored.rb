@@ -230,6 +230,12 @@ Migrations::Tooling::Schema.ignored do
          :translation_overrides,
          :unsubscribe_keys,
          :upcoming_change_events,
+         :voice_co_presences,
+         :voice_invites,
+         :voice_recordings,
+         :voice_room_memberships,
+         :voice_rooms,
+         :voice_sessions,
          :watched_word_groups,
          :watched_words,
          :web_crawler_requests

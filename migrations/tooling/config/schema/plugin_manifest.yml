@@ -25,6 +25,7 @@ plugins:
       - chat_mention_notifications
       - chat_mentions
       - chat_message_custom_fields
+      - chat_message_hotlinked_media
       - chat_message_interactions
       - chat_message_links
       - chat_message_reactions
@@ -104,9 +105,11 @@ plugins:
       - model_accuracies
       - post_custom_prompts
       - rag_document_fragments
+      - rag_document_sources
       - shared_ai_conversations
     columns:
       user_options:
+        - ai_ask_ai_default
         - ai_search_discoveries
         - auto_image_caption
   discourse-assign:
@@ -214,11 +217,13 @@ plugins:
       - discourse_workflows_execution_data
       - discourse_workflows_execution_stats
       - discourse_workflows_executions
+      - discourse_workflows_tags
       - discourse_workflows_variables
       - discourse_workflows_webhooks
       - discourse_workflows_workflow_call_runs
       - discourse_workflows_workflow_dependencies
       - discourse_workflows_workflow_publish_history
+      - discourse_workflows_workflow_tags
       - discourse_workflows_workflow_versions
       - discourse_workflows_workflows
     columns: {}
@@ -228,13 +233,22 @@ plugins:
       - poll_votes
       - polls
     columns: {}
+  voice:
+    tables:
+      - voice_co_presences
+      - voice_invites
+      - voice_recordings
+      - voice_room_memberships
+      - voice_rooms
+      - voice_sessions
+    columns: {}
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
-  boards: 047bb23732cb53e5abd0f1a8b2abb926
-  chat: 43ee047298d56af4fad013d534155812
+  boards: 3f7be99d5aaac4cf66318ef036e231a2
+  chat: 3324ff0e829d9282accc917503038f18
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: 4ff4f60e8c1744603f7f8590f8f99447
+  discourse-ai: 1dbe6a6155758187d0a34e7fb0b24181
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
@@ -260,9 +274,10 @@ plugin_checksums:
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: 46b2e6fd1e8668786b498f0c06846f70
+  discourse-workflows: 61c0d4b94a17ad401490893981b23dd4
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
+  voice: 23e33508822e87035b4bee0925d26eff
 failed_plugins: []
 incomplete: false
