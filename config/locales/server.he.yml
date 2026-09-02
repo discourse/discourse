@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 he:
+  llms_txt:
+    sections:
+      optional: "רשות"
+    links:
+      search:
+        label: "חיפוש"
+      categories:
+        label: "קטגוריות"
+      about:
+        label: "אודות"
+      guidelines:
+        label: "הנחיות"
   dates:
     short_date_no_year: "D בMMM"
     short_date: "D בMMM,‏ YYYY"
@@ -100,7 +112,6 @@ he:
         name_too_long:
           one: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מתו אחד."
           two: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג משני תווים."
-          many: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מ־%{count} תווים."
           other: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מ־%{count} תווים."
         too_many_pending_migrations: "יש יותר מדי הסבות ממתינות בערכת העיצוב הזאת. אסור לערכות עיצוב לקיים יותר מ־100 הסבות בעדכון יחיד"
         out_of_sequence: "ההסבה ‚%{name}’ חרגה מהרצף. להסבה האחרונה לערכת העיצוב הזאת תועדה גרסה מספר %{current} שהיא עדכנית יותר מההסבה החדשה"
@@ -134,12 +145,10 @@ he:
       string_value_not_valid_min:
         one: "הערך חייב להיות באורך של תו לפחות."
         two: "הערך חייב להיות באורך של שני תווים לפחות."
-        many: "הערך חייב להיות באורך של %{count} תווים לפחות."
         other: "הערך חייב להיות באורך של %{count} תווים לפחות."
       string_value_not_valid_max:
         one: "הערך חייב להיות באורך של תו לכל היותר."
         two: "הערך חייב להיות באורך של %{count} תווים לכל היותר."
-        many: "הערך חייב להיות באורך של %{count} תווים לכל היותר."
         other: "הערך חייב להיות באורך של %{count} תווים לכל היותר."
       objects:
         humanize_required: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות קיים."
@@ -161,22 +170,18 @@ he:
         humanize_categories_value_not_valid_min:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות לפחות מזהה קטגוריה אחד."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות שני מזהי קטגוריות."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} מזהי קטגוריות."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} מזהי קטגוריות."
         categories_value_not_valid_min:
           one: "חייב להיות לפחות מזהה קטגוריה אחד"
           two: "חייבים להיות לפחות שני מזהי קטגוריות"
-          many: "חייבים להיות לפחות %{count} מזהי קטגוריות"
           other: "חייבים להיות לפחות %{count} מזהי קטגוריות"
         humanize_categories_value_not_valid_max:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה קטגוריה אחד לכל היותר."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות שני מזהי קטגוריות לכל היותר."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} מזהי קטגוריות לכל היותר."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} מזהי קטגוריות לכל היותר."
         categories_value_not_valid_max:
           one: "חייב להיות מזהה קטגוריה אחד לכל היותר"
           two: "חייבים להיות שני מזהי קטגוריות לכל היותר"
-          many: "חייבים להיות %{count} מזהי קטגוריות לכל היותר"
           other: "חייבים להיות %{count} מזהי קטגוריות לכל היותר"
         humanize_not_valid_topic_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה נושא תקין."
         not_valid_topic_value: "חייב להיות מזהה נושא תקין"
@@ -187,66 +192,54 @@ he:
         humanize_groups_value_not_valid_min:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה קבוצה אחד לפחות."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות שני מזהי קבוצות לפחות."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} מזהי קבוצות לפחות."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} מזהי קבוצות לפחות."
         groups_value_not_valid_min:
           one: "חייב להיות לפחות מזהה קבוצה אחד"
           two: "חייבים להיות לפחות שני מזהי קבוצות"
-          many: "חייבים להיות לפחות %{count} מזהי קבוצות"
           other: "חייבים להיות לפחות %{count} מזהי קבוצות"
         humanize_groups_value_not_valid_max:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה קבוצה אחד לכל היותר."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבות להיות שני מזהי קבוצות לכל היותר."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבות להיות %{count} מזהי קבוצות לכל היותר."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבות להיות %{count} מזהי קבוצות לכל היותר."
         groups_value_not_valid_max:
           one: "חייב להיות מזהה קבוצה אחד לכל היותר"
           two: "חייבים להיות שני מזהי קבוצות לכל היותר"
-          many: "חייבים להיות %{count} מזהי קבוצות לכל היותר"
           other: "חייבים להיות %{count} מזהי קבוצות לכל היותר"
         humanize_not_valid_tags_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב מערך של תגיות שם תקינות."
         not_valid_tags_value: "חייב להיות מערך של שמות תגיות חוקיים"
         humanize_tags_value_not_valid_min:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות לפחות שם תגית אחד."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות שני שמות תגיות."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} שמות תגיות."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} שמות תגיות."
         tags_value_not_valid_min:
           one: "חייב להיות לפחות שם תגית אחד"
           two: "חייבים להיות לפחות שני שמות תגיות"
-          many: "חייבים להיות לפחות %{count} שמות תגיות"
           other: "חייבים להיות לפחות %{count} שמות תגיות"
         humanize_tags_value_not_valid_max:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ יכולה להיות תגית אחת לכל היותר."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ יכולות להיות שתי תגיות לכל היותר."
-          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ יכולות להיות %{count} תגיות לכל היותר."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ יכולות להיות %{count} תגיות לכל היותר."
         tags_value_not_valid_max:
           one: "יכולה להיות תגית אחת לכל היותר"
           two: "יכולות להיות שתי תגיות לכל היותר"
-          many: "יכולות להיות %{count} תגיות לכל היותר"
           other: "יכולות להיות %{count} תגיות לכל היותר"
         humanize_not_valid_upload_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה העלאה תקין."
         not_valid_upload_value: "חייב להיות מזהה העלאה תקין"
         humanize_string_value_not_valid_min:
           one: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של תו אחד לפחות."
           two: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של שני תווים לפחות."
-          many: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של %{count} תווים לפחות."
           other: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של %{count} תווים לפחות."
         string_value_not_valid_min:
           one: "חייב להיות באורך של תו לפחות"
           two: "חייב להיות באורך של שני תווים לפחות"
-          many: "חייב להיות באורך של %{count} תווים לפחות"
           other: "חייב להיות באורך של %{count} תווים לפחות"
         humanize_string_value_not_valid_max:
           one: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של תו לכל היותר."
           two: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של שני תווים לכל היותר."
-          many: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של %{count} תווים לכל היותר."
           other: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות באורך של %{count} תווים לכל היותר."
         string_value_not_valid_max:
           one: "חייב להיות באורך של תו לכל היותר"
           two: "חייב להיות באורך של שני תווים לכל היותר"
-          many: "חייב להיות באורך של %{count} תווים לכל היותר"
           other: "חייב להיות באורך של %{count} תווים לכל היותר"
         humanize_number_value_not_valid_min: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות גדול מאשר או שווה לערך %{min}."
         number_value_not_valid_min: "חייב להיות גדול או שווה ל־%{min}"
@@ -269,7 +262,6 @@ he:
       continuing_old_discussion:
         one: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיום (%{count})."
         two: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיומיים (%{count})."
-        many: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
         other: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מ־%{count} ימים."
       errors:
         empty_email_error: "מתרחש כאשר הודעת הדוא״ל הגולמית שקיבלנו הייתה ריקה."
@@ -301,7 +293,6 @@ he:
       too_long_validation:
         one: "מוגבל לאורך של תו: הקלדת %{length}."
         two: "מוגבל לאורך של שני תווים: הקלדת %{length}."
-        many: "מוגבל לאורך של %{count} תווים: הקלדת %{length}."
         other: "מוגבל לאורך של %{count} תווים: הקלדת %{length}."
       invalid_boolean: "בוליאני שגוי."
       taken: "כבר תפוס"
@@ -337,22 +328,18 @@ he:
       restrict_dependent_destroy:
         one: "לא ניתן להסיר כיוון שיש רשומה תלויה %{record}"
         two: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
-        many: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
         other: "לא ניתן להסיר רשומה כיוון שיש רשומה תלויה %{record}"
       too_long:
         one: ארוך מדי (תו אחד לכל היותר)
         two: ארוך מדי (%{count} תווים לכל היותר)
-        many: ארוך מדי (%{count} תווים לכל היותר)
         other: ארוך מדי (%{count} תווים לכל היותר)
       too_short:
         one: קצר מדי (תו אחד לפחות)
         two: קצר מדי (%{count} תווים לפחות)
-        many: קצר מדי (%{count} תווים לפחות)
         other: קצר מדי (%{count} תווים לפחות)
       wrong_length:
         one: באורך שגוי (אמור להיות באורך של תו אחד)
         two: באורך שגוי (אמור להיות באורך של %{count} תווים)
-        many: באורך שגוי (אמור להיות באורך של %{count} תווים)
         other: באורך שגוי (אמור להיות באורך של %{count} תווים)
       other_than: "צריך להיות שונה מ־%{count}"
       auth_overrides_username: "יש לעדכן את שם המשתמש בצד ספק האימות, מאחר שההגדרה `auth_overrides_username` (דריסת שם משתמש מצד האימות) פעילה."
@@ -362,7 +349,6 @@ he:
       header:
         one: "שגיאה מנעה את השמירה של %{model}."
         two: ! "%{count} שגיאות מנעו את השמירה של %{model}"
-        many: ! "%{count} שגיאות מנעו את השמירה של %{model}"
         other: ! "%{count} שגיאות מנעו את השמירה של %{model}"
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
@@ -376,7 +362,6 @@ he:
       invalid_choice:
         one: "‚%{name}’ היא בחירה שגויה."
         two: "‚%{name}’ הן בחירות שגויות."
-        many: "‚%{name}’ הן בחירות שגויות."
         other: "‚%{name}’ הן בחירות שגויות."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שנעשה בה שימוש ברשימה אחרת."
       default_tags_already_selected: "לא ניתן לבחור תגית שנעשה בה שימוש ברשימה אחרת"
@@ -404,7 +389,6 @@ he:
       missing_data:
         one: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה של האתר הזה כיוון שלא ניתן היה למצוא את התגית oEmbed / OpenGraph הבאה: %{missing_attributes}"
         two: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה של האתר הזה כיוון שלא ניתן היה למצוא את תגיות ה־oEmbed / OpenGraph הבאות: %{missing_attributes}"
-        many: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה של האתר הזה כיוון שלא ניתן היה למצוא את תגיות ה־oEmbed / OpenGraph הבאות: %{missing_attributes}"
         other: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה של האתר הזה כיוון שלא ניתן היה למצוא את תגיות ה־oEmbed / OpenGraph הבאות: %{missing_attributes}"
   word_connector:
     comma: ", "
@@ -433,7 +417,6 @@ he:
     rate_limit:
       one: "כבר שלחת הזמנה %{count} ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
       two: "כבר שלחת %{count} הזמנות ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
-      many: "כבר שלחת %{count} הזמנות ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
       other: "כבר שלחת %{count} הזמנות ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     disabled_errors:
@@ -492,24 +475,20 @@ he:
   reading_time_minutes:
     one: "דקה 🕑"
     two: "%{count} דקות 🕑"
-    many: "%{count} דקות 🕑"
     other: "%{count} דקות 🕑"
   likes: "לייקים"
   likes_count:
     one: "%{count} ❤"
     two: "%{count} ❤"
-    many: "%{count} ❤"
     other: "%{count} ❤"
   action_already_performed: "אופס! כבר ביצעת את הפעולה הזאת. אולי כדאי לרענן את העמוד?"
   too_many_replies:
     one: "משתמשים חדשים מוגבלים זמנית לתגובה אחת לאותו הנושא, עמך הסליחה."
     two: "משתמשים חדשים מוגבלים זמנית ל־%{count} תגובות לאותו הנושא, עמך הסליחה."
-    many: "משתמשים חדשים מוגבלים זמנית ל־%{count} תגובות לאותו הנושא, עמך הסליחה."
     other: "משתמשים חדשים מוגבלים זמנית ל־%{count} תגובות לאותו הנושא, עמך הסליחה."
   max_consecutive_replies:
     one: "אסור לפרסם יותר מתגובה אחת ברצף. נא לערוך את התגובה הקודמת שלך או להמתין לתגובה ממישהו אחר."
     two: "אסור לפרסם למעלה מ־%{count} תגובות רצופות. נא לערוך את התגובה הקודמת שלך או להמתין לתגובה ממישהו אחר."
-    many: "אסור לפרסם למעלה מ־%{count} תגובות רצופות. נא לערוך את התגובה הקודמת שלך או להמתין לתגובה ממישהו אחר."
     other: "אסור לפרסם למעלה מ־%{count} תגובות רצופות. נא לערוך את התגובה הקודמת שלך או להמתין לתגובה ממישהו אחר."
   embed:
     start_discussion: "התחלת דיון"
@@ -523,7 +502,6 @@ he:
     more_replies:
       one: "תגובה נוספת"
       two: "%{count} תגובות נוספות"
-      many: "%{count} תגובות נוספות"
       other: "%{count} תגובות נוספות"
     loading: "דיון נטען…"
     permalink: "קישור קבוע"
@@ -532,12 +510,10 @@ he:
     replies:
       one: "תגובה אחת"
       two: "%{count} תגובות"
-      many: "%{count} תגובות"
       other: "%{count} תגובות"
     likes:
       one: "לייק %{count}"
       two: "%{count} לייקים"
-      many: "%{count} לייקים"
       other: "%{count} לייקים"
     last_reply: "תגובה אחרונה"
     created: "נוצר"
@@ -546,33 +522,28 @@ he:
   too_many_mentions:
     one: "מצטערים, ניתן לאזכר משתמש אחד בלבד בפוסט"
     two: "מצטערים, ניתן לאזכר %{count} משתמשים בפוסט בלבד"
-    many: "מצטערים, ניתן לאזכר %{count} משתמשים בפוסט בלבד"
     other: "מצטערים, ניתן לאזכר %{count} משתמשים בפוסט בלבד"
   no_mentions_allowed_newuser: "משתמשים חדשים לא יכולים להזכיר משתמשים אחרים, עמך הסליחה."
   too_many_mentions_newuser:
     one: "משתמשים חדשים יכולים להזכיר רק משתמש אחד בפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
-    many: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
   no_embedded_media_allowed_group: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
   no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
   too_many_embedded_media:
     one: "משתמשים חדשים יכולים להוסיף רק פריט מדיה אחד מוטמע לפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
-    many: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
   no_attachments_allowed: "משתמשים חדשים לא יכולים להוסיף קבצים לפוסטים, עמך הסליחה."
   too_many_attachments:
     one: "משתמשים חדשים יכולים לצרף רק קובץ אחד לפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים לצרף רק %{count} קבצים לפוסט, עמך הסליחה."
-    many: "משתמשים חדשים יכולים לצרף רק %{count} קבצים לפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים לצרף רק %{count} קבצים לפוסט, עמך הסליחה."
   no_links_allowed: "משתמשים חדשים לא יכולים להוסיף קישורים לפוסטים, עמך הסליחה."
   links_require_trust: "אין לך אפשרות לכלול קישורים בפוסטים שלך, עמך הסליחה."
   too_many_links:
     one: "משתמשים חדשים יכולים להוסיף רק קישור אחד בפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים להוסיף רק %{count} קישורים בפוסט, עמך הסליחה."
-    many: "משתמשים חדשים יכולים להוסיף רק %{count} קישורים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להוסיף רק %{count} קישורים בפוסט, עמך הסליחה."
   contains_blocked_word: "אסור לפרסם את המילה ‚%{word}’, עמך הסליחה."
   contains_blocked_words: "אי אפשר לפרסם את זה, עמך הסליחה. מילים אסורות: %{words}."
@@ -601,12 +572,10 @@ he:
   rss_num_posts:
     one: "פוסט %{count}"
     two: "%{count} פוסטים"
-    many: "%{count} פוסטים"
     other: "%{count} פוסטים"
   rss_num_participants:
     one: "משתתף %{count}"
     two: "%{count} משתתפים"
-    many: "%{count} משתתפים"
     other: "%{count} משתתפים"
   read_full_topic: "קריאת הנושא במלואו"
   private_message_abbrev: "הודעה"
@@ -658,20 +627,17 @@ he:
       bulk_add:
         one: "נוסף משתמש %{count} לקבוצה."
         two: "נוספו %{count} משתמשים לקבוצה."
-        many: "נוספו %{count} משתמשים לקבוצה."
         other: "נוספו %{count} משתמשים לקבוצה."
     errors:
       default_notification_level_users_limit:
         one: "אי אפשר להגדיר את רמת ההתראות כברירת מחדל על קבוצות שגודלן הוא יותר ממשתמש אחד. קבוצה שגויה: %{group_name}"
         two: "אי אפשר להגדיר את רמת ההתראות כברירת מחדל על קבוצות שגודלן הוא יותר מ־%{count} משתמשים. קבוצה שגויה: %{group_name}"
-        many: "אי אפשר להגדיר את רמת ההתראות כברירת מחדל על קבוצות שגודלן הוא יותר מ־%{count} משתמשים. קבוצה שגויה: %{group_name}"
         other: "אי אפשר להגדיר את רמת ההתראות כברירת מחדל על קבוצות שגודלן הוא יותר מ־%{count} משתמשים. קבוצה שגויה: %{group_name}"
       grant_trust_level_not_valid: "‚%{trust_level}’ אינה דרגת אמון תקפה."
       can_not_modify_automatic: "אין לך אפשרות לערוך קבוצה אוטומטית"
       member_already_exist:
         one: "המשתמש ‚%{username}’ כבר חבר בקבוצה."
         two: "המשתמשים הבאים כבר חברים בקבוצה: %{username}"
-        many: "המשתמשים הבאים כבר חברים בקבוצה: %{username}"
         other: "המשתמשים הבאים כבר חברים בקבוצה: %{username}"
       invalid_domain: "‚%{domain}’ אינו שם מתחם תקף."
       too_many_domains: "יותר מדי שמות תחום. %{max} לכל היותר."
@@ -683,7 +649,6 @@ he:
       adding_too_many_users:
         one: "ניתן להוסיף עד משתמש %{count} בבת־אחת"
         two: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
-        many: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
         other: "ניתן להוסיף עד %{count} משתמשים בבת־אחת"
       usernames_or_emails_required: "שמות משתמשים או כתובות דוא״ל חייבים להיות נוכחים"
       no_invites_with_discourse_connect: "ניתן להזמין רק משתמשים רשומים כאשר DiscourseConnect מופעל"
@@ -725,7 +690,6 @@ he:
     until_posts:
       one: "פוסט אחד"
       two: "%{count} פוסטים"
-      many: "%{count} פוסטים"
       other: "%{count} פוסטים"
     "new-topic": |
       תודה על תרומתך לאתר %{site_name}!
@@ -743,7 +707,6 @@ he:
     get_a_room:
       one: הגבת ל־‎@%{reply_username} פעם אחת, הידעת שניתן לשלוח הודעה אישית במקום זאת?
       two: הגבת ל־‎@%{reply_username} פעמיים, הידעת שניתן לשלוח הודעה אישית במקום?
-      many: הגבת ל־‎@%{reply_username} ‏%{count} פעמים, הידעת שניתן לשלוח הודעה אישית במקום?
       other: הגבת ל־‎@%{reply_username} ‏%{count} פעמים, הידעת שניתן לשלוח הודעה אישית במקום?
     dont_feed_the_trolls: הפוסט הזה סומן לתשומת לב המפקחים. כתיבת תגובה עם תוכן שלילי עלולה לעודד עוד התנהגות שלילית - להמשיך?
     too_many_replies: |
@@ -843,7 +806,6 @@ he:
               invalid_interpolation_keys:
                 one: "מפתח השילוב הבא שגוי: %{keys}"
                 two: "מפתחות השילוב הבאים שגויים: %{keys}"
-                many: "מפתחות השילוב הבאים שגויים: %{keys}"
                 other: "מפתחות השילוב הבאים שגויים: %{keys}"
         watched_word:
           attributes:
@@ -903,7 +865,6 @@ he:
       description_too_long:
         one: "התיאור ארוך מדי (תו לכל היותר)."
         two: "התיאור ארוך מדי (שני תווים לכל היותר)."
-        many: "התיאור ארוך מדי (%{count} תווים לכל היותר)."
         other: "התיאור ארוך מדי (%{count} תווים לכל היותר)."
       permission_conflict: "כל קבוצה שמורשית לגשת לתת־קטגוריה חייבת שתהיה לה גם גישה לקטגוריית ההורה. לקבוצות הבאות יש גישה לאחת מתת־הקטגוריות אך אין להן גישה לקטגוריית ההורה: %{group_names}."
       disallowed_topic_tags: "לנושא זה יש תגיות שאסור להשתמש בהן בקטגוריה הזו: ‚%{tags}’"
@@ -917,7 +878,6 @@ he:
       topic_exists:
         one: "אין אפשרות למחוק קטגוריה זו כיוון שהיא מכילה נושא בודד. שהוא גם הנושא הוותיק ביותר: %{topic_link}."
         two: "אין אפשרות למחוק קטגוריה זו כיוון שהיא מכילה %{count} נושאים. הנושא הוותיק ביותר הוא %{topic_link}."
-        many: "אין אפשרות למחוק קטגוריה זו כיוון שהיא מכילה %{count} נושאים. הנושא הוותיק ביותר הוא %{topic_link}."
         other: "אין אפשרות למחוק קטגוריה זו כיוון שהיא מכילה %{count} נושאים. הנושא הוותיק ביותר הוא %{topic_link}."
       topic_exists_no_oldest: "לא ניתן להסיר קטגוריה זו משום שסך הנושאים הוא %{count}."
     uncategorized_description: "נושאים שלא דורשים קטגוריה מסויימת, או שאינם מתאימים לאף קטגוריה קיימת."
@@ -941,7 +901,6 @@ he:
     has_likes:
       one: "לייק %{count}"
       two: "%{count} לייקים"
-      many: "%{count} לייקים"
       other: "%{count} לייקים"
     cannot_permanently_delete:
       wait_or_different_admin: "עליך להמתין %{time_left} בטרם מחיקת הפוסט הזה לצמיתות או שעל מנהל או מנהלת אחרים לעשות זאת."
@@ -966,17 +925,14 @@ he:
     hours:
       one: "שעה"
       two: "שעתיים"
-      many: "%{count} שעות"
       other: "%{count} שעות"
     minutes:
       one: "דקה"
       two: "%{count} דקות"
-      many: "%{count} דקות"
       other: "%{count} דקות"
     seconds:
       one: "שנייה"
       two: "%{count} שניות"
-      many: "%{count} שניות"
       other: "%{count} שניות"
     short_time: "שניות ספורות"
   datetime:
@@ -985,57 +941,46 @@ he:
       less_than_x_seconds:
         one: "פחות משנייה"
         two: "פחות מ־%{count} שניות"
-        many: "פחות מ־%{count} שניות"
         other: "פחות מ־%{count} שניות"
       x_seconds:
         one: "שנייה"
         two: "%{count} שניות"
-        many: "%{count} שניות"
         other: "%{count} שניות"
       less_than_x_minutes:
         one: "פחות מדקה"
         two: "פחות מ־%{count} דקות"
-        many: "פחות מ־%{count} דקות"
         other: "פחות מ־%{count} דקות"
       x_minutes:
         one: "דקה"
         two: "%{count} דקות"
-        many: "%{count} דקות"
         other: "%{count} דקות"
       about_x_hours:
         one: "שעה"
         two: "שעתיים"
-        many: "%{count} שעות"
         other: "%{count} שעות"
       x_days:
         one: "יום"
         two: "יומיים"
-        many: "%{count} יום"
         other: "%{count} ימים"
       about_x_months:
         one: "חודש"
         two: "חודשיים"
-        many: "%{count} חודשים"
         other: "%{count} חודשים"
       x_months:
         one: "חודש"
         two: "חודשיים"
-        many: "%{count} חודשים"
         other: "%{count} חודשים"
       about_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנה"
         other: "%{count} שנים"
       over_x_years:
         one: "למעלה משנה"
         two: "למעלה משנתיים"
-        many: "למעלה מ־%{count} שנה"
         other: "למעלה מ־%{count} שנים"
       almost_x_years:
         one: "שנה"
         two: "שנתיים"
-        many: "%{count} שנה"
         other: "%{count} שנים"
     distance_in_words_verbose:
       half_a_minute: "ממש עכשיו"
@@ -1043,52 +988,42 @@ he:
       x_seconds:
         one: "לפני שנייה"
         two: "לפני %{count} שניות"
-        many: "לפני %{count} שניות"
         other: "לפני %{count} שניות"
       less_than_x_minutes:
         one: "לפני פחות מדקה"
         two: "לפני פחות מ־%{count} דקות"
-        many: "לפני פחות מ־%{count} דקות"
         other: "לפני פחות מ־%{count} דקות"
       x_minutes:
         one: "לפני דקה"
         two: "לפני %{count} דקות"
-        many: "לפני %{count} דקות"
         other: "לפני %{count} דקות"
       about_x_hours:
         one: "לפני שעה"
         two: "לפני שעתיים"
-        many: "לפני %{count} שעות"
         other: "לפני %{count} שעות"
       x_days:
         one: "אתמול"
         two: "לפני יומיים"
-        many: "לפני %{count} ימים"
         other: "לפני %{count} ימים"
       about_x_months:
         one: "לפני חודש בערך"
         two: "לפני חודשיים בערך"
-        many: "לפני %{count} חודשים בערך"
         other: "לפני %{count} חודשים בערך"
       x_months:
         one: "לפני חודש"
         two: "לפני חודשיים"
-        many: "לפני %{count} חודשים"
         other: "לפני %{count} חודשים"
       about_x_years:
         one: "לפני שנה בערך"
         two: "לפני שנתיים בערך"
-        many: "לפני %{count} שנה בערך"
         other: "לפני %{count} שנים בערך"
       over_x_years:
         one: "לפני למעלה משנה"
         two: "לפני למעלה משנתיים"
-        many: "לפני למעלה מ־%{count} שנה"
         other: "לפני למעלה מ־%{count} שנים"
       almost_x_years:
         one: "לפני שנה כמעט"
         two: "לפני שנתיים כמעט"
-        many: "לפני %{count} שנה כמעט"
         other: "לפני %{count} שנים כמעט"
   password_reset:
     no_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
@@ -1420,6 +1355,11 @@ he:
       types:
         new_members: "חברים חדשים"
         staff: "סגל"
+    posters_by_member_type_members:
+      labels:
+        user: "משתמש"
+        count: "פרסומים"
+        share: "שיתוף"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1813,7 +1753,6 @@ he:
       email_polling_errored_recently:
         one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
         two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-        many: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
         other: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
       missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
       bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
@@ -2261,7 +2200,6 @@ he:
     user_profile_view_duration_hours: "ספרו צפיות בפרופיל משתמש פעם אחת לכל IP/משתמש בכל N שעות"
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     max_new_accounts_per_registration_ip: "אם יש כבר (n) חשבונות בדרגת אמון 0 מכתובת IP זו (ואף אחד מהם אינו חבר צוות, או בדרגת אמון 2 ומעלה), לא יתקבלו עוד הרשמות מכתובת IP זו. הגדרה ל־0 תשבית את המגבלה."
-    min_ban_entries_for_roll_up: "בעת לחיצה על לחצן הגלילה למעלה, ייוצר איסור כניסת משנה (subnet ban entry) חדשה אם יש לפחות (N) ערכים."
     max_age_unmatched_emails: "למחוק רשומות דוא״ל במעקב שלא קיבלו התאמה לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
@@ -2594,12 +2532,10 @@ he:
       invalid_string_min:
         one: "חייב להיות תו לפחות."
         two: "חייבים להיות שני תווים לפחות."
-        many: "חייבים להיות %{count} תווים לפחות."
         other: "חייבים להיות %{count} תווים לפחות."
       invalid_string_max:
         one: "אסור יותר מתו."
         two: "אסור יותר משני תווים."
-        many: "אסור יותר מ־%{count} תווים."
         other: "אסור יותר מ־%{count} תווים."
       invalid_json: "JSON פגום."
       invalid_object: "פריט שגוי."
@@ -2635,7 +2571,6 @@ he:
       list_value_count:
         one: "הרשימה חייבת להכיל ערך אחד בדיוק."
         two: "הרשימה חייבת להכיל בדיוק שני ערכים."
-        many: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
         other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
@@ -2780,7 +2715,6 @@ he:
     edit_reason:
       one: "פוסט מוזג על ידי %{username}"
       two: "%{count} פוסטים מוזגו על ידי %{username}"
-      many: "%{count} פוסטים מוזגו על ידי %{username}"
       other: "%{count} פוסטים מוזגו על ידי %{username}"
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
@@ -2790,22 +2724,18 @@ he:
     new_topic_moderator_post:
       one: "אחד הפוסטים פוצל לנושא חדש: %{topic_link}"
       two: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
-      many: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
       other: "%{count} פוסטים פוצלו לנושא חדש: %{topic_link}"
     new_message_moderator_post:
       one: "אחד הפוסטים פוצל להודעה חדשה: %{topic_link}"
       two: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
-      many: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
       other: "%{count} פוסטים פוצלו להודעה חדשה: %{topic_link}"
     existing_topic_moderator_post:
       one: "אחד הפוסטים אוחד לנושא קיים: %{topic_link}"
       two: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
-      many: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
       other: "%{count} פוסטים אוחדו לנושא קיים: %{topic_link}"
     existing_message_moderator_post:
       one: "אחד הפוסטים מוזג להודעה קיימת: %{topic_link}"
       two: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
-      many: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
       other: "%{count} פוסטים מוזגו להודעה קיימת: %{topic_link}"
   change_owner:
     post_revision_text: "הבעלות הועברה"
@@ -2818,72 +2748,58 @@ he:
     autoclosed_message_max_posts:
       one: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
       two: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
-      many: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
       other: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי של תגובות: %{count} ."
     autoclosed_topic_max_posts:
       one: "נושא זה נסגר אוטומטית לאחר שהגיע למספר המקסימלי של תגובות: %{count}."
       two: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
-      many: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
       other: "נושא זה נסגר אוטומטית אחרי שהגיע למספר המקסימלי של תגובות: %{count} ."
     autoclosed_enabled_days:
       one: "הנושא הזה ננעל אוטומטית לאחר יום אחד. תגובות חדשות לא מתקבלות."
       two: "נושא זה נסגר באופן אוטומטי לאחר %{count} ימים. לא ניתן להוסיף תגובות חדשות."
-      many: "נושא זה נסגר באופן אוטומטי לאחר %{count} ימים. לא ניתן להוסיף תגובות חדשות."
       other: "נושא זה נסגר באופן אוטומטי לאחר %{count} ימים. לא ניתן להוסיף תגובות חדשות."
     autoclosed_enabled_hours:
       one: "נושא זה ננעל לאחר שעה אחת. לא ניתן להוסיף תגובות חדשות."
       two: "נושא זה נסגר אוטומטית לאחר %{count} שעות. לא ניתן להוסיף תגובות חדשות."
-      many: "נושא זה נסגר אוטומטית לאחר %{count} שעות. לא ניתן להוסיף תגובות חדשות."
       other: "נושא זה נסגר אוטומטית לאחר %{count} שעות. לא ניתן להוסיף תגובות חדשות."
     autoclosed_enabled_minutes:
       one: "הנושא הזה ננעל אוטומטית לאחר דקה. תגובות חדשות לא מתקבלות."
       two: "הנושא הזה נסגר אוטומטית לאחר %{count} דקות. תגובות חדשות לא מתקבלות."
-      many: "הנושא הזה נסגר אוטומטית לאחר %{count} דקות. תגובות חדשות לא מתקבלות."
       other: "הנושא הזה נסגר אוטומטית לאחר %{count} דקות. תגובות חדשות לא מתקבלות."
     autoclosed_enabled_lastpost_days:
       one: "נושא זה ננעל אוטומטית לאחר יום אחד מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       two: "נושא זה נסגר אוטומטית לאחר %{count} ימים מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
-      many: "נושא זה נסגר אוטומטית לאחר %{count} ימים מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       other: "נושא זה נסגר אוטומטית לאחר %{count} ימים מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
     autoclosed_enabled_lastpost_hours:
       one: "נושא זה נסגר שעה לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
       two: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
-      many: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
       other: "נושא זה נסגר אוטומטית %{count} שעות לאחר התגובה האחרונה. תגובות נוספות אינן מותרות יותר."
     autoclosed_enabled_lastpost_minutes:
       one: "נושא זה ננעל אוטומטית לאחר דקה מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       two: "נושא זה נסגר אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
-      many: "נושא זה נסגר אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
       other: "נושא זה נסגר אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
     autoclosed_disabled_days:
       one: "נושא זה נפתח אוטומטית לאחר יום %{count}."
       two: "נושא זה נפתח אוטומטית לאחר %{count} ימים."
-      many: "נושא זה נפתח אוטומטית לאחר %{count} ימים."
       other: "נושא זה נפתח אוטומטית לאחר %{count} ימים."
     autoclosed_disabled_hours:
       one: "נושא זה נפתח אוטומטית לאחר שעה %{count}."
       two: "נושא זה נפתח אוטומטית לאחר %{count} שעות."
-      many: "נושא זה נפתח אוטומטית לאחר %{count} שעות."
       other: "נושא זה נפתח אוטומטית לאחר %{count} שעות."
     autoclosed_disabled_minutes:
       one: "נושא זה נפתח אוטומטית לאחר דקה %{count}."
       two: "נושא זה נפתוח אוטומטית לאחר %{count} דקות."
-      many: "נושא זה נפתוח אוטומטית לאחר %{count} דקות."
       other: "נושא זה נפתוח אוטומטית לאחר %{count} דקות."
     autoclosed_disabled_lastpost_days:
       one: "הנושא נפתח אוטומטית יום %{count} אחרי התגובה האחרונה."
       two: "הנושא נפתח אוטומטית %{count} ימים אחרי התגובה האחרונה."
-      many: "הנושא נפתח אוטומטית %{count} ימים אחרי התגובה האחרונה."
       other: "הנושא נפתח אוטומטית %{count} ימים אחרי התגובה האחרונה."
     autoclosed_disabled_lastpost_hours:
       one: "נושא זה נפתח אוטומטית שעה %{count} אחרי התגובה האחרונה."
       two: "נושא זה נפתח אוטומטית %{count} שעות אחרי התגובה האחרונה."
-      many: "נושא זה נפתח אוטומטית %{count} שעות אחרי התגובה האחרונה."
       other: "נושא זה נפתח אוטומטית %{count} שעות אחרי התגובה האחרונה."
     autoclosed_disabled_lastpost_minutes:
       one: "נושא זה נפתח אוטומטית דקה %{count} אחרי התגובה האחרונה."
       two: "נושא זה נפתח אוטומטית %{count} דקות אחרי התגובה האחרונה."
-      many: "נושא זה נפתח אוטומטית %{count} דקות אחרי התגובה האחרונה."
       other: "נושא זה נפתח אוטומטית %{count} דקות אחרי התגובה האחרונה."
     autoclosed_disabled: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
@@ -2981,7 +2897,6 @@ he:
     deactivated_by_inactivity:
       one: "להשבית אוטומטית לאחר יום (%{count}) ללא פעילות"
       two: "להשבית אוטומטית לאחר יומיים (%{count}) ללא פעילות"
-      many: "להשבית אוטומטית לאחר %{count} ימים ללא פעילות"
       other: "להשבית אוטומטית לאחר %{count} ימים ללא פעילות"
     activated_by_staff: "הופעל על ידי הצוות"
     new_user_typed_too_fast: "משתמש חדש הקליד מהר מדי"
@@ -2990,12 +2905,10 @@ he:
       short:
         one: "חייב להיות תו אחד לפחות"
         two: "חייבים להיות לפחות שני תווים"
-        many: "חייבים להיות לפחות %{count} תווים"
         other: "חייבים להיות לפחות %{count} תווים"
       long:
         one: "אסור יותר מתו"
         two: "אסור יותר משני תווים"
-        many: "אסור יותר מ־%{count} תווים"
         other: "אסור יותר מ־%{count} תווים"
       too_long: "ארוך מדי"
       characters: "חייב לכלול מספרים, אותיות, מינוסים, נקודות וקווים תחתיים בלבד"
@@ -3028,7 +2941,6 @@ he:
     cannot_delete_has_posts:
       one: "למשתמש %{username} יש פוסט %{count} בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
       two: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
-      many: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
       other: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
     cannot_bulk_delete: "חלק מהמשתמשים לא נמחקו כי הם חברי הנהלה, יש להם יותר מדי פוסטים או שיש להם פוסט ישן מאוד."
     cannot_remove_all_auth: "חייב להיות לך לפחות חשבון אחד משויך, מפתח גישה/passkey אחד או סיסמה מוגדרים."
@@ -3183,7 +3095,6 @@ he:
   temporarily_closed_due_to_flags:
     one: "נושא זה נעול זמנית למשך שעה (%{count}) לפחות עקב מספר רב של סימונים בדגל מהקהילה."
     two: "נושא זה נעול זמנית למשך שעתיים (%{count}) לפחות עקב מספר רב של סימונים בדגל מהקהילה."
-    many: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
     other: "נושא זה נעול זמנית למשך %{count} שעות לפחות עקב מספר רב של סימונים בדגל מהקהילה."
   system_messages:
     reviewables_reminder:
@@ -3191,7 +3102,6 @@ he:
       text_body_template:
         one: "%{mentions} פריטים הוגשו לפני למעלה משעה %{count}. [נא לסקור אותם](%{base_url}/review)."
         two: "%{mentions} פריטים הוגשו לפני למעלה משעתיים (%{count}). [נא לסקור אותם](%{base_url}/review)."
-        many: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_url}/review)."
         other: "%{mentions} פריטים הוגשו לפני למעלה מ־%{count} שעות. [נא לסקור אותם](%{base_url}/review)."
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
@@ -3785,7 +3695,6 @@ he:
       subject_template:
         one: "משתמש %{count} ממתין לאישורכם"
         two: "%{count} משתמשים ממתינים לאישורכם"
-        many: "%{count} משתמשים ממתינים לאישורכם"
         other: "%{count} משתמשים ממתינים לאישורכם"
       text_body_template: |
         ישנן הרשמות של משתמשים חדשים שממתינות לאישור (או דחייה) לפני שיתאפשר להם לגשת לפורום זה.
@@ -3808,7 +3717,6 @@ he:
       subject_template:
         one: "פוסט ממתין לסקירה"
         two: "2 פוסטים ממתינים לסקירה"
-        many: "%{count} פוסטים ממתינים לסקירה"
         other: "%{count} פוסטים ממתינים לסקירה"
       text_body_template: |
         שלום,
@@ -3834,7 +3742,6 @@ he:
     reached_limit:
       one: "לתשומת ליבך: אנו שולחים הודעת דוא״ל %{count} בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו."
       two: "לתשומת ליבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על המעורבות שלך!"
-      many: "לתשומת ליבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על המעורבות העשירה שלך!"
       other: "לתשומת ליבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על המעורבות העשירה שלך!"
     in_reply_to: "בתגובה ל"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
@@ -3854,7 +3761,6 @@ he:
     more_pm_participants:
       one: "%{participants} ועוד %{count}"
       two: "%{participants} ועוד %{count}"
-      many: "%{participants} ועוד %{count}"
       other: "%{participants} ועוד %{count}"
     invited_group_to_private_message_body: "הקבוצה  @%{group_name} הוזמנה להתכתבות על ידי %{username} \n\n> **[%{topic_title}](%{topic_url})**\n>\n> %{topic_excerpt}\n\nבאתר\n\n> %{site_title} -- %{site_description}\n\nכדי להצטרף להודעה יש ללחוץ על הקישור שלהלן:\n\n%{topic_url}\n"
     invited_to_private_message_body: |
@@ -4587,7 +4493,6 @@ he:
         too_many_csv_entries:
           one: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מרשומה.
           two: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
-          many: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
           other: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
         badge_disabled: נא לפעיל את העיטור %{badge_name} תחילה.
         cant_grant_multiple_times: לא ניתן להעניק את %{badge_name} מספר פעמים לאותו המשתמש.
@@ -4847,7 +4752,6 @@ he:
     minimum_required_tags:
       one: "עליך לבחור לפחות בתגית %{count}."
       two: "עליך לבחור לפחות %{count} תגיות."
-      many: "עליך לבחור לפחות %{count} תגיות."
       other: "עליך לבחור לפחות %{count} תגיות."
     upload_row_too_long: "בקובץ ה־CSV אמורה להופיע תגית אחת בכל שורה. מותר להוסיף פסיק לאחר תגית ואז את שם קבוצת התגיות."
     bulk_create:
@@ -4856,23 +4760,19 @@ he:
       invalid:
         one: "לא ניתן להשתמש בתגית שבחרת"
         two: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
-        many: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
         other: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
       has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
       restricted_tags_cannot_be_used_in_category:
         one: 'לא ניתן להשתמש בתגית „%{tags}” בקטגוריה „%{category}”. נא להסיר אותה.'
         two: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
-        many: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
         other: 'לא ניתן להשתמש בתגיות הבאות בקטגוריה „%{category}”: %{tags}. נא להסיר אותן.'
       category_does_not_allow_tags:
         one: 'בקטגוריה „%{category}” אסור להשתמש בתגית „%{tags}”. נא להסיר אותה.'
         two: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
-        many: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
         other: 'בקטגוריה „%{category}” אסור להשתמש בתגיות הבאות: „%{tags}”. נא להסיר אותן.'
     required_tags_from_group:
       one: "עליך לכלול לפחות תגית %{tag_group_name} %{count}. התגיות בקבוצה הזאת הן: %{tags}."
       two: "עליך לכלול לפחות %{count} תגיות %{tag_group_name}. התגיות בקבוצה הזאת הן: %{tags}."
-      many: "עליך לכלול לפחות %{count} תגיות %{tag_group_name}. התגיות בקבוצה הזאת הן: %{tags}."
       other: "עליך לכלול לפחות %{count} תגיות %{tag_group_name}. התגיות בקבוצה הזאת הן: %{tags}."
     limited_to_one_tag_from_group: "אי אפשר להשתמש בתגיות %{tags} בו־זמנית. נא לכלול רק אחת מהן."
     invalid_target_tag: "לא יכול להיות מילה נרדפת של מילה נרדפת"
@@ -5008,12 +4908,10 @@ he:
       automatic_revoked:
         one: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיום (%{count})"
         two: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיומיים (%{count})"
-        many: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
         other: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
       automatic_revoked_max_life:
         one: "נשלל אוטומטית, נוצר לפני למעלה מיום"
         two: "נשלל אוטומטית, נוצר לפני למעלה מיומיים"
-        many: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
         other: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
       revoked: נשל
       restored: שוחזר
@@ -5047,11 +4945,14 @@ he:
       group: "משתמשים שאינם בקבוצות שצוינו חייבים שהתגובות שלהם תאושרנה על ידי הסגל. ר׳ %{link}"
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
+      fast_typer_time:
+        one: "שנייה"
+        two: "%{count} שניות"
+        other: "%{count} שניות"
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
       watched_word:
         one: "הפוסט הזה מכיל מילה במעקב, המילה המסומנת היא: %{words}. פרטים נוספים בקישור %{link}."
         two: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
-        many: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
         other: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. מידע נוסף תחת %{link}."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. מידע נוסף ב־%{link}."
@@ -5257,7 +5158,6 @@ he:
     topic_title_with_sequence:
       one: "%{topic_title} (חלק %{count})"
       two: "%{topic_title} (חלק %{count})"
-      many: "%{topic_title} (חלק %{count})"
       other: "%{topic_title} (חלק %{count})"
     post_raw: "המשך של הדיון %{parent_url}.\n\nדיונים קודמים:\n\n%{previous_topics}"
     small_action_post_raw: "ניתן להמשיך את הדיון תחת %{new_title}."

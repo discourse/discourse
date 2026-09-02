@@ -16,6 +16,7 @@ import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
+import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -97,6 +98,7 @@ import { clearAddedTrackedTopicProperties } from "discourse/models/topic";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -119,7 +121,7 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDSelectAssertions } from "./d-select-assertions";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
@@ -217,8 +219,10 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  noteKeyboardEvidence();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
+  resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetExtraClasses();
   clearOutletCache();
@@ -504,7 +508,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
-setupDSelectAssertions();
+setupDNativeSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {

@@ -76,6 +76,11 @@ ja:
           solved: "解決済み"
           unsolved: "未解決"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "トピック"
+            category: "カテゴリ"
       web_hooks:
         solved_event:
           group_name: "解決済みイベント"

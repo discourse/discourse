@@ -9,9 +9,17 @@ RSpec.describe Report do
       expect(Report.dashboard_excluded_report_types).to include("my_custom_report")
     end
 
-    it "does not record report types by default" do
+    it "records report types with admin-only related items" do
+      Report.add_report("my_custom_report", admin_only_related_items: true) { |report| }
+      Report.add_report("my_custom_report") { |report| }
+
+      expect(Report.admin_only_related_items_report_types).to include("my_custom_report")
+    end
+
+    it "does not record report options by default" do
       Report.add_report("my_custom_report") { |report| }
       expect(Report.dashboard_excluded_report_types).not_to include("my_custom_report")
+      expect(Report.admin_only_related_items_report_types).not_to include("my_custom_report")
     end
   end
 
@@ -572,8 +580,8 @@ RSpec.describe Report do
 
   describe "signups report" do
     it "returns the current data and previous period count" do
-      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
-      Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
+      first_signup = Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+      second_signup = Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
       Fabricate(:user, created_at: Time.zone.local(2026, 3, 31, 12))
 
       report =
@@ -582,10 +590,82 @@ RSpec.describe Report do
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
+          limit: 2,
+          guardian: Discourse.system_user.guardian,
+          include_related_items: true,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
       expect(report.prev_period).to eq(1)
+      expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [second_signup.username, first_signup.username],
+      )
+      expect(report.related_items_totals).to eq(users: 2)
+
+      summary_report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          limit: 1,
+          guardian: Discourse.system_user.guardian,
+          include_related_items: true,
+        )
+
+      expect(summary_report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [second_signup.username],
+      )
+      expect(summary_report.related_items_totals).to eq(users: 2)
+    end
+
+    it "skips related items when the report has no guardian" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          include_related_items: true,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
+    end
+
+    it "skips related items when the guardian is not an admin" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          :signups,
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          guardian: Fabricate(:moderator).guardian,
+          include_related_items: true,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.type).to eq("signups")
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
+    end
+
+    it "skips related items unless they are requested" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          guardian: Discourse.system_user.guardian,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
     end
   end
 
@@ -637,10 +717,37 @@ RSpec.describe Report do
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           facets: [:prev_period],
+          limit: 2,
+          guardian: Discourse.system_user.guardian,
+          include_related_items: true,
         )
 
       expect(report.data.sum { |point| point[:y] }).to eq(2)
       expect(report.prev_period).to eq(1)
+      expect(report.related_items[:users].map { |item| item[:user][:username] }).to eq(
+        [another_current_contributor.username, current_contributor.username],
+      )
+      expect(report.related_items_totals).to eq(users: 2)
+    end
+
+    it "skips related items when the report has no guardian" do
+      contributor = Fabricate(:user)
+      contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 1, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 1, 12),
+      )
+
+      report =
+        Report.find(
+          "new_contributors",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          include_related_items: true,
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(1)
+      expect(report.related_items).to be_nil
+      expect(report.related_items_totals).to be_nil
     end
   end
 
@@ -1971,6 +2078,18 @@ RSpec.describe Report do
         .expects(:write)
         .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 60.minutes)
       Report.cache(valid_report)
+    end
+
+    it "does not read or write cached related-item reports" do
+      guardian = Discourse.system_user.guardian
+      related_report = Report._get("signups", guardian:, include_related_items: true)
+      Report.cache(related_report)
+
+      expect(Report.find_cached("signups", guardian:)).to be_nil
+
+      Report.cache(Report._get("signups", guardian:))
+
+      expect(Report.find_cached("signups", guardian:, include_related_items: true)).to be_nil
     end
   end
 

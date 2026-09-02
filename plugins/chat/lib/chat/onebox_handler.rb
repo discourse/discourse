@@ -40,6 +40,7 @@ module Chat
       {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
+        base_path: Discourse.base_path,
         color: chat_channel.chatable.color,
         channel_badge: build_channel_badge(chat_channel),
       }

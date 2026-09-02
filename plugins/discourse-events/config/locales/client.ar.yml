@@ -7,11 +7,10 @@
 ar:
   admin_js:
     admin:
-      calendar: "الأحداث"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
-          discourse_calendar: "الأحداث"
+          discourse_events: "الأحداث"
       web_hooks:
         calendar_event:
           group_name: "حدث تقويم"
@@ -32,7 +31,8 @@ ar:
           fields:
             topic_id:
               label: معرِّف الموضوع
-    discourse_calendar:
+    discourse_events:
+      title: "الأحداث"
       livestream:
         zoom:
           join: "الانضمام إلى Zoom"
@@ -40,19 +40,10 @@ ar:
           load_error: "لقد غادرت الندوة عبر الإنترنت أو يتعذَّر علينا تحميل Zoom في هذه الصفحة."
           too_early: "يمكنك الانضمام إلى الندوة عبر الإنترنت عند اقتراب وقت بدء الحدث."
           view_topic: "عرض موضوع الحدث"
-          not_started_retrying:
-            zero: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانية..."
-            one: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد ثانية واحدة (%{count})..."
-            two: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد ثانيتين (%{count})..."
-            few: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثوانٍ..."
-            many: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانيةً..."
-            other: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانية..."
-          not_started_trying_again: "جارٍ محاولة الانضمام إلى الندوة عبر الإنترنت مرة أخرى الآن..."
         chat:
           rsvp_to_event: "أكِّد حضورك للحدث لبدء الدردشة"
           rsvp_to_event_with_link: "أكِّد حضورك <a href='%{url}'>للحدث</a> لبدء الدردشة"
           rsvp_body: "تواصل مع الحضور الآخرين قبل الحدث وأثنائه وبعده."
-      invite_user_notification: "دعاك %{username} إلى: %{description}"
       preferences:
         all_events_description: "جميع أحداث المنتدى"
         my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
@@ -346,6 +337,8 @@ ar:
         week: "الأسبوع"
         day: "اليوم"
         year: "العام"
+    discourse_calendar:
+      invite_user_notification: "دعاك %{username} إلى: %{description}"
     group_timezones:
       search: "بحث..."
       group_availability: "توافر %{group}"

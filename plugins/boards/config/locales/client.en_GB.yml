@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+en_GB:
+  js:
+    boards:
+      manage:
+        constraint_categories: "Categories"
+        columns:
+          color: "Colour"

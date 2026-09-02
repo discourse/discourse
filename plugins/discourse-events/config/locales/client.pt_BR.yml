@@ -7,11 +7,10 @@
 pt_BR:
   admin_js:
     admin:
-      calendar: "Eventos"
       site_settings:
         categories:
           discourse_post_event: "Evento do Discourse"
-          discourse_calendar: "Eventos"
+          discourse_events: "Eventos"
   js:
     notifications:
       titles:
@@ -26,8 +25,8 @@ pt_BR:
           fields:
             topic_id:
               label: ID do tópico
-    discourse_calendar:
-      invite_user_notification: "%{username} convidou para participar de %{description}"
+    discourse_events:
+      title: "Eventos"
       on_holiday: "No feriado"
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"
@@ -318,6 +317,8 @@ pt_BR:
         week: "Semana"
         day: "Dia"
         year: "Ano"
+    discourse_calendar:
+      invite_user_notification: "%{username} convidou para participar de %{description}"
     group_timezones:
       search: "Pesquisar..."
       group_availability: "disponibilidade de %{group}"

@@ -17,6 +17,7 @@ RSpec.describe "Anonymous public chat channels" do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:login_page) { PageObjects::Pages::Login.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
     chat_system_bootstrap
@@ -62,6 +63,33 @@ RSpec.describe "Anonymous public chat channels" do
 
     chat_drawer_page.click_preview_card_login
     expect(login_page).to be_open
+  end
+
+  it "keeps the forum navigation visible when visitors open full-page chat" do
+    SiteSetting.navigation_menu = "sidebar"
+
+    visit("/")
+    expect(sidebar).to have_section("community")
+
+    chat_page.visit_channels
+
+    expect(page).to have_current_path("/chat/channels")
+    expect(chat_page).to have_public_channel(public_channel)
+    expect(sidebar).to have_section("community")
+  end
+
+  it "uses the site's separate sidebar mode for visitors" do
+    SiteSetting.navigation_menu = "sidebar"
+    SiteSetting.chat_separate_sidebar_mode = "always"
+
+    visit("/")
+    expect(sidebar).to have_section("community")
+
+    chat_page.visit_channels
+
+    expect(page).to have_current_path("/chat/channels")
+    expect(chat_sidebar_page).to have_channel(public_channel)
+    expect(sidebar).to have_no_section("community")
   end
 
   it "keeps visitors out of browse" do

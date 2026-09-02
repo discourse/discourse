@@ -41,6 +41,8 @@ export default class LocalDatesCreate extends Component {
   timezone = null;
   fromSelected = null;
   toSelected = null;
+  countdown = null;
+  displayedTimezone = null;
 
   init() {
     super.init(...arguments);
@@ -55,6 +57,25 @@ export default class LocalDatesCreate extends Component {
       timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
+
+    const { initialValues } = this.model;
+
+    if (initialValues) {
+      this.setProperties(initialValues);
+      // open the advanced pane when the date carries an option only editable there
+      this.set(
+        "advancedMode",
+        !!(
+          initialValues.format ||
+          initialValues.recurring ||
+          initialValues.timezones?.length
+        )
+      );
+    }
+  }
+
+  get isEditing() {
+    return !!this.model.initialValues;
   }
 
   @computed("date")
@@ -197,13 +218,23 @@ export default class LocalDatesCreate extends Component {
     });
   }
 
-  @computed("recurring", "timezones", "timezone", "format")
+  @computed(
+    "recurring",
+    "timezones",
+    "timezone",
+    "format",
+    "countdown",
+    "displayedTimezone"
+  )
   get options() {
     return EmberObject.create({
       recurring: this.recurring,
       timezones: this.timezones,
       timezone: this.timezone,
       format: this.format,
+      // no UI of their own: carried through so editing a date keeps them
+      countdown: this.countdown,
+      displayedTimezone: this.displayedTimezone,
     });
   }
 
@@ -410,7 +441,11 @@ export default class LocalDatesCreate extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_local_dates.title"}}
+      @title={{if
+        this.isEditing
+        (i18n "discourse_local_dates.edit")
+        (i18n "discourse_local_dates.title")
+      }}
       @closeModal={{@closeModal}}
       class="discourse-local-dates-create-modal --large"
     >
@@ -596,7 +631,11 @@ export default class LocalDatesCreate extends Component {
         {{#if this.isValid}}
           <DButton
             @action={{this.save}}
-            @label="discourse_local_dates.create.form.insert"
+            @label={{if
+              this.isEditing
+              "discourse_local_dates.create.form.save"
+              "discourse_local_dates.create.form.insert"
+            }}
             class="btn-primary"
           />
         {{/if}}

@@ -38,6 +38,11 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      copied: "복사되었습니다"
+      ai_decoded_transcript:
+        type: "형식"
+        error: "에러"
+        response: "응답"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -137,8 +142,6 @@ ko:
         successful: "성공"
         failed: "실패"
         unknown: "알수없음"
-        topic_id: "글 ID"
-        post_id: "글 ID"
         time: "시간"
         when: "언제"
         request: "요청"
@@ -150,6 +153,7 @@ ko:
         post_short: "%{id}번째 글"
         duration: "기간"
         actions: "작업"
+        view_details: "세부 정보"
         periods:
           day: "지난 24시간"
           week: "지난 7일"
@@ -315,8 +319,11 @@ ko:
           since:
             other: "약 %{count}시간"
       discobot_discoveries:
-        regular_results: "글"
-        collapse: "축소"
-        tooltip:
-          actions:
-            disable: "비활성화"
+        legacy:
+          regular_results: "글"
+          collapse: "축소"
+          tooltip:
+            actions:
+              disable: "비활성화"
+        search_all_topics: "모든 글"
+        search_messages: "메시지"

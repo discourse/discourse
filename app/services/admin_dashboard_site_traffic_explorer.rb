@@ -10,7 +10,6 @@ class AdminDashboardSiteTrafficExplorer
   private_constant :STATEMENT_TIMEOUT_MS
 
   FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
-  private_constant :FILTER_KEYS
 
   FILTER_DIMENSIONS = {
     top_url: "top_urls",
@@ -32,14 +31,14 @@ class AdminDashboardSiteTrafficExplorer
   params do
     attribute :start_date, :date
     attribute :end_date, :date
-    attribute :traffic_type, :string
-    attribute :top_url, :string
-    attribute :entry_url, :string
-    attribute :referrer, :string
-    attribute :country, :string
-    attribute :network, :string
-    attribute :browser, :string
-    attribute :ip, :string
+    attribute :traffic_type, :array
+    attribute :top_url, :array
+    attribute :entry_url, :array
+    attribute :referrer, :array
+    attribute :country, :array
+    attribute :network, :array
+    attribute :browser, :array
+    attribute :ip, :array
 
     validates :start_date, :end_date, presence: true
     validate :start_date_precedes_end_date
@@ -58,16 +57,21 @@ class AdminDashboardSiteTrafficExplorer
 
     def normalize_filter(key, value)
       return nil if value.nil?
+
+      raise Discourse::InvalidParameters.new(key) if value.empty? || value.size > DIMENSION_LIMIT
+
+      value.map { |item| normalize_filter_value(key, item) }.uniq
+    end
+
+    def normalize_filter_value(key, value)
       return "" if key == :referrer && value == ""
       raise Discourse::InvalidParameters.new(key) if value.blank?
 
       case key
       when :traffic_type
-        traffic_types = value.to_s.split(",").uniq
-        if traffic_types.empty? || (traffic_types - TRAFFIC_TYPE_VALUES).any?
-          raise Discourse::InvalidParameters.new(key)
-        end
-        TRAFFIC_TYPE_VALUES.select { |traffic_type| traffic_types.include?(traffic_type) }
+        traffic_type = value.to_s
+        raise Discourse::InvalidParameters.new(key) if !TRAFFIC_TYPE_VALUES.include?(traffic_type)
+        traffic_type
       when :top_url, :entry_url
         BrowserPageviewEventUrlNormalizer.normalize_site_path(value) ||
           raise(Discourse::InvalidParameters.new(key))
@@ -144,13 +148,21 @@ class AdminDashboardSiteTrafficExplorer
       end_date: end_date + 1.day,
       cap: cap,
       site_host: BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
-      top_url: filters[:top_url],
-      entry_url: filters[:entry_url],
-      referrer: filters[:referrer],
-      country: filters[:country],
-      network_asn: filters[:network],
-      browser: filters[:browser] && BrowserPageviewEvent.browsers.fetch(filters[:browser]),
-      ip_address: filters[:ip],
+      top_url_filtered: filters[:top_url].present?,
+      top_urls: filters[:top_url].presence || [nil],
+      entry_url_filtered: filters[:entry_url].present?,
+      entry_urls: filters[:entry_url].presence || [nil],
+      referrer_filtered: filters[:referrer].present?,
+      referrers: filters[:referrer].presence || [nil],
+      country_filtered: filters[:country].present?,
+      countries: filters[:country].presence || [nil],
+      network_filtered: filters[:network].present?,
+      network_asns: filters[:network].presence || [nil],
+      browser_filtered: filters[:browser].present?,
+      browsers:
+        filters[:browser]&.map { |browser| BrowserPageviewEvent.browsers.fetch(browser) } || [nil],
+      ip_filtered: filters[:ip].present?,
+      ip_addresses: filters[:ip].presence || [nil],
       traffic_type_filtered: filters[:traffic_type].present?,
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
       include_anonymous: filters[:traffic_type]&.include?("anonymous"),
@@ -161,6 +173,28 @@ class AdminDashboardSiteTrafficExplorer
         BrowserPageviewSessionEngagementDailyRollup.bounce_engaged_seconds_threshold,
       dimension_limit: DIMENSION_LIMIT,
     }
+  end
+
+  def filter_predicate
+    predicates = {
+      top_url: "(NOT :top_url_filtered OR normalized_url IN (:top_urls))",
+      entry_url: "(NOT :entry_url_filtered OR entry_url IN (:entry_urls))",
+      referrer: "(NOT :referrer_filtered OR referrer IN (:referrers))",
+      country: "(NOT :country_filtered OR country_code IN (:countries))",
+      network: "(NOT :network_filtered OR asn IN (:network_asns))",
+      browser: "(NOT :browser_filtered OR browser IN (:browsers))",
+      ip: "(NOT :ip_filtered OR host(ip_address) IN (:ip_addresses))",
+      traffic_type: <<~SQL.squish,
+          (
+            NOT :traffic_type_filtered
+            OR (:include_logged_in AND NOT likely_crawler AND user_id IS NOT NULL)
+            OR (:include_anonymous AND NOT likely_crawler AND user_id IS NULL)
+            OR (:include_likely_crawler AND likely_crawler)
+          )
+        SQL
+    }
+
+    predicates.values.join("\n          AND ")
   end
 
   def query(start_date:, end_date:)
@@ -231,7 +265,7 @@ class AdminDashboardSiteTrafficExplorer
           ) AS likely_crawler
         FROM population
       ),
-      dimensioned AS (
+      dimensioned AS MATERIALIZED (
         SELECT
           classified.created_at,
           classified.session_id,
@@ -251,39 +285,10 @@ class AdminDashboardSiteTrafficExplorer
           END AS referrer
         FROM classified
       ),
-      filtered AS MATERIALIZED (
+      filtered AS NOT MATERIALIZED (
         SELECT *
         FROM dimensioned
-        WHERE (:top_url IS NULL OR normalized_url = :top_url)
-          AND (
-            :entry_url IS NULL
-            OR entry_url = :entry_url
-          )
-          AND (
-            :referrer IS NULL
-            OR referrer = :referrer
-          )
-          AND (:country IS NULL OR country_code = :country)
-          AND (:network_asn IS NULL OR asn = :network_asn)
-          AND (:browser IS NULL OR browser = :browser)
-          AND (:ip_address IS NULL OR host(ip_address) = :ip_address)
-          AND (
-            NOT :traffic_type_filtered
-            OR (
-              :include_logged_in
-              AND NOT likely_crawler
-              AND user_id IS NOT NULL
-            )
-            OR (
-              :include_anonymous
-              AND NOT likely_crawler
-              AND user_id IS NULL
-            )
-            OR (
-              :include_likely_crawler
-              AND likely_crawler
-            )
-          )
+        WHERE #{filter_predicate}
       ),
       sessions AS (
         SELECT session_id, COUNT(*) AS pageviews
@@ -321,19 +326,6 @@ class AdminDashboardSiteTrafficExplorer
           COALESCE(SUM(pageviews), 0)::integer AS pageviews,
           COALESCE(SUM(logged_in_human_pageviews), 0)::integer AS logged_in_pageviews
         FROM series_rows
-      ),
-      bounded_dimension_rows AS MATERIALIZED (
-        SELECT
-          CASE
-            WHEN GROUPING(country_code) = 0 THEN 'countries'
-            WHEN GROUPING(browser) = 0 THEN 'browsers'
-          END AS dimension,
-          country_code,
-          browser,
-          COUNT(*)::integer AS pageviews,
-          MIN(ip_address) AS representative_ip
-        FROM filtered
-        GROUP BY GROUPING SETS ((country_code), (browser))
       )
       SELECT
         (
@@ -359,16 +351,24 @@ class AdminDashboardSiteTrafficExplorer
         ) AS oldest_pageview_at,
         jsonb_build_object(
           'country', (
-            SELECT host(MIN(ip_address))
-            FROM population
-            WHERE :country IS NOT NULL
-              AND country_code = :country
+            SELECT COALESCE(jsonb_object_agg(country_code, representative_ip), '{}'::jsonb)
+            FROM (
+              SELECT country_code, host(MIN(ip_address)) AS representative_ip
+              FROM population
+              WHERE :country_filtered
+                AND country_code IN (:countries)
+              GROUP BY country_code
+            ) rows
           ),
           'network', (
-            SELECT host(MIN(ip_address))
-            FROM population
-            WHERE :network_asn IS NOT NULL
-              AND asn = :network_asn
+            SELECT COALESCE(jsonb_object_agg(asn, representative_ip), '{}'::jsonb)
+            FROM (
+              SELECT asn, host(MIN(ip_address)) AS representative_ip
+              FROM population
+              WHERE :network_filtered
+                AND asn IN (:network_asns)
+              GROUP BY asn
+            ) rows
           )
         ) AS active_filter_representative_ips,
         jsonb_build_object(
@@ -390,10 +390,8 @@ class AdminDashboardSiteTrafficExplorer
           END,
           'average_session_duration_seconds', CASE
             WHEN session_summary.distinct_sessions = 0 THEN 0
-            ELSE ROUND(
-              session_summary.engaged_seconds::numeric /
-                session_summary.distinct_sessions
-            )::integer
+            ELSE session_summary.engaged_seconds::numeric /
+              session_summary.distinct_sessions
           END
         ) AS summary,
         COALESCE(
@@ -422,9 +420,12 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT normalized_url AS value, COUNT(*)::integer AS pageviews
-              FROM filtered
-              WHERE normalized_url IS NOT NULL
+              SELECT
+                normalized_url AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
+                AND normalized_url IS NOT NULL
               GROUP BY normalized_url
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -439,9 +440,12 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT entry_url AS value, COUNT(*)::integer AS pageviews
-              FROM filtered
-              WHERE entry_url IS NOT NULL
+              SELECT
+                entry_url AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
+                AND entry_url IS NOT NULL
               GROUP BY entry_url
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -456,9 +460,12 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT referrer AS value, COUNT(*)::integer AS pageviews
-              FROM filtered
-              WHERE referrer IS NOT NULL
+              SELECT
+                referrer AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
+                AND referrer IS NOT NULL
               GROUP BY referrer
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -479,11 +486,12 @@ class AdminDashboardSiteTrafficExplorer
             FROM (
               SELECT
                 country_code AS value,
-                pageviews,
-                host(representative_ip) AS representative_ip
-              FROM bounded_dimension_rows
-              WHERE dimension = 'countries'
+                COUNT(*)::integer AS pageviews,
+                host(MIN(ip_address)) AS representative_ip
+              FROM dimensioned
+              WHERE #{filter_predicate}
                 AND country_code IS NOT NULL
+              GROUP BY country_code
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -505,8 +513,9 @@ class AdminDashboardSiteTrafficExplorer
                 'AS' || asn AS value,
                 COUNT(*)::integer AS pageviews,
                 host(MIN(ip_address)) AS representative_ip
-              FROM filtered
-              WHERE asn IS NOT NULL
+              FROM dimensioned
+              WHERE #{filter_predicate}
+                AND asn IS NOT NULL
               GROUP BY asn
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -521,9 +530,12 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT browser AS value, pageviews
-              FROM bounded_dimension_rows
-              WHERE dimension = 'browsers'
+              SELECT
+                browser AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
+              GROUP BY browser
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
             ) rows
@@ -537,8 +549,11 @@ class AdminDashboardSiteTrafficExplorer
               '[]'::jsonb
             )
             FROM (
-              SELECT host(ip_address) AS value, COUNT(*)::integer AS pageviews
-              FROM filtered
+              SELECT
+                host(ip_address) AS value,
+                COUNT(*)::integer AS pageviews
+              FROM dimensioned
+              WHERE #{filter_predicate}
               GROUP BY ip_address
               ORDER BY pageviews DESC, value
               LIMIT :dimension_limit
@@ -597,15 +612,21 @@ class AdminDashboardSiteTrafficExplorer
         )
       end
 
-      canonical_value = key == :network ? "AS#{value}" : value
       dimension = FILTER_DIMENSIONS.fetch(key)
-      [
+      value.map do |item|
+        canonical_value = key == :network ? "AS#{item}" : item
+        representative_ip_key = key == :network ? item.to_s : canonical_value.to_s
         {
           key: key,
           value: canonical_value,
-          label: dimension_label(dimension, canonical_value, representative_ips[key.to_s]),
-        },
-      ]
+          label:
+            dimension_label(
+              dimension,
+              canonical_value,
+              representative_ips.dig(key.to_s, representative_ip_key),
+            ),
+        }
+      end
     end
   end
 

@@ -34,6 +34,10 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
       ai_tool_approval:
         loading: "Učitavanje..."
         tool: "Akcije"
@@ -117,8 +121,6 @@ sr:
         apply: "Primeni"
         failed: "Neuspešno"
         unknown: "Nepoznato"
-        topic_id: "ID Teme"
-        post_id: "ID Poruke"
         time: "Vreme"
         when: "Kada"
         user: "Korisnik"
@@ -127,6 +129,7 @@ sr:
         post: "Post"
         post_short: "Poruka %{id}"
         actions: "Akcije"
+        view_details: "Detalji"
         periods:
           day: "Последња 24 сата"
           week: "Последњих 7 дана"
@@ -249,8 +252,10 @@ sr:
           table:
             total_count: "Ukupno"
       discobot_discoveries:
-        regular_results: "Teme"
-        collapse: "Spusti"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Teme"
+          collapse: "Spusti"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_messages: "Poruke"

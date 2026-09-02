@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hy:
+  llms_txt:
+    sections:
+      optional: "Ընտրովի"
+    links:
+      search:
+        label: "Որոնում"
+      categories:
+        label: "Կատեգորիաներ"
+      about:
+        label: "Մասին"
+      guidelines:
+        label: "Ուղեցույց"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -781,6 +793,11 @@ hy:
         share: "Կիսվել"
       types:
         staff: "Անձնակազմ"
+    posters_by_member_type_members:
+      labels:
+        user: "Օգտատեր"
+        count: "Գրառումներ"
+        share: "Կիսվել"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1322,7 +1339,6 @@ hy:
     topic_view_duration_hours: "Հաշվարկել թեմայի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     user_profile_view_duration_hours: "Հաշվարկել օգտատիրոջ պրոֆիլի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     levenshtein_distance_spammer_emails: "Սպամմերի էլ. նամակների համապատասխանեցման ժամանակ սիմվոլների տարբերության քանակը, որը դեռևս թույլ կտա անորոշ համընկնում:"
-    min_ban_entries_for_roll_up: "Խմբավորել կոճակը սեղմելիս կստեղծվի նոր սուբնեթի արգելքի մուտք, եթե կա առնվազն (N) մուտք:"
     max_age_unmatched_emails: "Ջնջել չհամընկած ցուցադրված էլ. մուտքերը (N) օր հետո:"
     max_age_unmatched_ips: "Ջնջել չհամընկնող ցուադրված IP մուտքերը (N) օր անց:"
     num_flaggers_to_close_topic: "Չկրկնվող դրոշակավորողների նվազագույն քանակը, որը պահանջվում է միջամտության համար թեմայի ավտոմատ դադարեցման համար:"
@@ -2817,6 +2833,10 @@ hy:
       low: "Բարձր"
       medium: "Միջին"
       high: "Ցածր"
+    reasons:
+      fast_typer_time:
+        one: "%{count} վայրկյան"
+        other: "%{count} վայրկյան"
     actions:
       agree:
         title: "Այո"

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 es:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Acerca de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1285,6 +1297,11 @@ es:
         share: "Compartir"
       types:
         staff: "Personal"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicaciones"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1844,7 +1861,6 @@ es:
     allowed_iframes: "Una lista de prefijos de URL de iframe src que Discourse puede permitir de forma segura en las publicaciones. * se puede usar para que coincida con cualquier número de caracteres que no sean /."
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
-    llms_txt: "Sube un archivo de texto para que se publique en /llms.txt para los rastreadores de LLM. Consulta <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para obtener más información."
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP). Otras fuentes de host se ignoran, ya que está activada la dinámica estricta."
@@ -2128,7 +2144,6 @@ es:
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas de nivel de confianza 0 en esta IP (y ninguna es de un miembro del personal o tiene al menos nivel de confianza), bloquear nuevos registros desde esa dirección. Poner a 0 para desactivar este límite."
-    min_ban_entries_for_roll_up: "Al hacer clic en el botón agrupar, se creará un nuevo rango de entradas prohibidas si hay al menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidos que no coincidan después de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para su intervención"
@@ -4954,6 +4969,9 @@ es:
       group: "Los usuarios que no pertenezcan a los grupos especificados deben tener respuestas aprobadas por el personal. Ver %{link}."
       new_topics_unless_trust_level: "El personal debe aprobar los temas de usuarios con niveles de confianza bajos. Ver %{link}."
       fast_typer: "El usuario escribió su primera publicación sospechosamente rápido, lo que le hace sospechoso de ser un bot o un spammer. Ver %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "La primera publicación del usuario nuevo coincide con el ajuste %{link}."
       watched_word:
         one: "Esta publicación incluía una palabra vigilada. La palabra es: %{words}. Consulta los %{link} para obtener más información."

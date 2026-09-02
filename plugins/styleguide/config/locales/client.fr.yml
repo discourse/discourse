@@ -14,6 +14,9 @@ fr:
     styleguide:
       title: "Guide de style"
       welcome: "Pour commencer, choisissez une section dans le menu de navigation."
+      example:
+        kind:
+          component: "Composant"
       categories:
         syntax: Syntaxe
         atoms: Atomes
@@ -95,6 +98,31 @@ fr:
           title: "Plus de sujets"
         post_menu:
           title: "Menu du message"
+        roving_focus:
+          toolbar:
+            bold: "Gras"
+            italic: "Italique"
+            copy: "Copie"
+          tags:
+            remove: "Supprimer %{tag}"
+            design: "Conception"
+            support: "Assistance"
+          adjacent:
+            label: "Filtres"
+            field: "Rechercher"
+            placeholder: "Rechercher des sujets"
+            open: "Ouvert"
+            recent: "Récents"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Chaque jour"
+            weekly: "Chaque semaine"
+            monthly: "Chaque mois"
+            never: "Jamais"
+          tree:
+            components: "Composants"
+            select: "Sélectionner"
         docked_composer:
           title: "Panneau d'édition ancré"
         modal:

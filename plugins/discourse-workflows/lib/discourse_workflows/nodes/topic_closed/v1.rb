@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "grey",
           },
           group: "discourse_triggers",
-          events: [:topic_status_updated],
+          event: :topic_status_updated,
           output_contracts: [{ schema: Schema::TOPIC_LIST_ITEM_SCHEMA }],
           properties: {
             category_ids: {

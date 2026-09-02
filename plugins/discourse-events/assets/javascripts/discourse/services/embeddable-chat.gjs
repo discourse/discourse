@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
+import { isPastEventTimeframe } from "../models/discourse-post-event-event";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
@@ -26,6 +27,23 @@ export default class EmbeddableChat extends Service {
     );
   }
 
+  get isPathAllowed() {
+    const allowedPaths =
+      this.siteSettings.livestream_embeddable_chat_allowed_paths
+        .split("|")
+        .map((path) => path.trim())
+        .filter(Boolean);
+
+    const currentURL = this.router.currentURL.split("?")[0];
+
+    return allowedPaths.some((path) => {
+      const normalized = path.endsWith("/") ? path.slice(0, -1) : path;
+      return (
+        currentURL === normalized || currentURL.startsWith(`${normalized}/`)
+      );
+    });
+  }
+
   canRenderChatChannel(mobileViewAllowed = false) {
     if (
       this.isMobileViewport === mobileViewAllowed &&
@@ -33,15 +51,7 @@ export default class EmbeddableChat extends Service {
       this.currentUser &&
       this.userCanChat
     ) {
-      const allowedPaths =
-        this.siteSettings.livestream_embeddable_chat_allowed_paths.split("|");
-      const withinPathsAllowed = allowedPaths.some(
-        (path) =>
-          this.router.currentURL.includes(path) ||
-          this.router.currentURL.startsWith(path)
-      );
-
-      if (withinPathsAllowed && this.chatChannelId) {
+      if (this.isPathAllowed && this.chatChannelId) {
         return !this.isChannelOpenInDrawer;
       }
     }
@@ -68,6 +78,29 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
+  }
+
+  get showLivestreamHeaderChatIcon() {
+    return (
+      this.isMobileViewport &&
+      !!this.chatChannelId &&
+      !this.hasActiveZoomLivestream
+    );
+  }
+
+  get hasActiveZoomLivestream() {
+    if (!this.siteSettings.livestream_zoom_enabled) {
+      return false;
+    }
+
+    const event = this.topic?.postStream?.posts?.find(
+      (post) => post.post_number === 1
+    )?.event;
+
+    return (
+      !!event?.is_zoom_livestream &&
+      !isPastEventTimeframe(event.all_day, event.starts_at, event.ends_at)
+    );
   }
 
   get topicController() {

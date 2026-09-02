@@ -34,6 +34,11 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
+        response: "Odgovor"
       ai_tool_approval:
         loading: "Obrađuje..."
         tool: "Action"
@@ -113,8 +118,6 @@ bs_BA:
         successful: "Uspješan"
         failed: "Neuspješno"
         unknown: "Unknown"
-        topic_id: "ID teme"
-        post_id: "ID objave"
         time: "Vrijeme"
         when: "When"
         request: "Zatraži"
@@ -125,6 +128,7 @@ bs_BA:
         post_short: "Post %{id}"
         duration: "Trajanje"
         actions: "Akcije"
+        view_details: "Details"
         periods:
           custom: "Custom"
         detail:
@@ -252,8 +256,10 @@ bs_BA:
           table:
             total_count: "Suma"
       discobot_discoveries:
-        regular_results: "Topics"
-        collapse: "Spusti"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Topics"
+          collapse: "Spusti"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_messages: "Poruke"

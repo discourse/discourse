@@ -190,6 +190,13 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      copied: "הועתק"
+      ai_decoded_transcript:
+        tool: "כלי"
+        arguments: "ארגומנטים"
+        type: "סוג"
+        error: "תקלה"
+        response: "תשובה"
       discourse_workflows:
         ai_agent:
           mode: "מצב"
@@ -212,7 +219,6 @@ he:
         llm:
           one: "LLM/מש״ג:"
           two: "LLMים:"
-          many: "LLMים:"
           other: "LLMים:"
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
@@ -221,7 +227,6 @@ he:
         expand_list:
           one: "(עוד %{count})"
           two: "(עוד %{count})"
-          many: "(עוד %{count})"
           other: "(עוד %{count})"
         collapse_list: "(להציג פחות)"
         bot:
@@ -243,7 +248,7 @@ he:
         search:
           name: "חיפוש"
           description: "שיפור חוויית החיפוש על ידי אספקת תשובות שנוצרו על ידי בינה מלאכותית לשאילתות"
-          discoveries: "תגליות"
+          ask_ai: "לשאול בינה מלאכותית"
         embeddings:
           name: "הטמעות"
           hyde: "HyDE"
@@ -285,7 +290,6 @@ he:
           schedule_topic_success:
             one: "תזמון תרגום לפוסט שלא תורגם."
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
-            many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
         spam:
           name: "ספאם"
@@ -328,17 +332,14 @@ he:
           eta_minutes:
             one: "דקה"
             two: "שתי דקות"
-            many: "%{count} דקות"
             other: "%{count} דקות"
           eta_hours:
             one: "שעה"
             two: "שעתיים"
-            many: "%{count} שעות"
             other: "%{count} שעות"
           eta_days:
             one: "יום"
             two: "יומיים"
-            many: "%{count} יום"
             other: "%{count} ימים"
         progress_chart:
           title: "התקדמות התרגום"
@@ -346,7 +347,6 @@ he:
           bar_done:
             one: "פוסט"
             two: "שני פוסטים"
-            many: "שני פוסטים"
             other: "שני פוסטים"
         theme_translations:
           translate:
@@ -441,11 +441,10 @@ he:
         retry: "ניסיון נוסף"
         apply: "החלה"
         all_models: "כל המודלים"
+        all_features: "כל היכולות"
         successful: "הצליח"
         failed: "נכשל"
         unknown: "לא ידוע"
-        topic_id: "מזהה נושא"
-        post_id: "מזהה פוסט"
         time: "מועד"
         when: "מתי"
         outcome: "תוצאה"
@@ -461,6 +460,7 @@ he:
         duration: "משך"
         cost: "עלות"
         actions: "פעולות"
+        view_details: "פרטים"
         periods:
           hour: "השעה האחרונה"
           day: "24 השעות האחרונות"
@@ -483,7 +483,6 @@ he:
           replies:
             one: "החלה על התגובה הראשונה בלבד"
             two: "החלה על שתי התגובות הראשונות בלבד"
-            many: "החלה על שתי התגובות הראשונות בלבד"
             other: "החלה על שתי התגובות הראשונות בלבד"
         name: "שם"
         edit: "עריכה"
@@ -557,7 +556,6 @@ he:
         features_list:
           one: "תכונה:"
           two: "תכונות:"
-          many: "תכונות:"
           other: "תכונות:"
         llms_list: "LLM/מש״ג:"
       rag:
@@ -703,7 +701,6 @@ he:
         in_use_warning:
           one: "המודל הזה משמש את %{settings}. אם לא מוגדר כראוי, היכולת לא תעבוד כמצופה."
           two: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
-          many: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
@@ -862,12 +859,6 @@ he:
         provider_fields:
           model_name: "שם המודל"
         semantic_search: "נושאים (סמנטיקה)"
-        semantic_search_results:
-          unavailable: "תוצאות בינה מלאכותית לא זמינות"
-        semantic_search_tooltips:
-          invalid_sort: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"
-        semantic_search_unavailable_tooltip: "יש לסדר את תוצאות החיפוש לפי רלוונטיות להצגת תוצאות בינה מלאכותית"
-        ai_generated_result: "תוצאות חיפוש שנמצאו באמצעות בינה מלאכותית"
         quick_search:
           suffix: "בכל הנושאים והפוסטים עם בינה מלאכותית"
       ai_artifact:
@@ -941,7 +932,6 @@ he:
           min_input_length_message:
             one: "אורך ההודעה חייב להיות באורך של תו ומעלה"
             two: "אורך ההודעה חייב להיות באורך של שני תווים ומעלה"
-            many: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
             other: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
           messages_sidebar_title: "שיחות"
           today: "היום"
@@ -977,7 +967,6 @@ he:
           since:
             one: "השעה האחרונה"
             two: "השעתיים האחרונות"
-            many: "%{count} השעות האחרונות"
             other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
@@ -986,7 +975,6 @@ he:
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
-            many: "יצירת %{count} תקצירים מחדש נכשלה"
             other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:
@@ -994,19 +982,28 @@ he:
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
       discobot_discoveries:
-        main_title: "תגליות Discobot"
-        regular_results: "נושאים"
-        tell_me_more: "אשמח לדעת עוד…"
-        continue_convo: "המשך בשיחה…"
+        main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"
-        collapse: "צמצום"
-        timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
-        tooltip:
-          header: "חיפוש מופעל בינה מלאכותית"
-          content: "חיפוש בשפה טבעית מופעל על גבי %{model}"
-          actions:
-            info: "איך זה עובד?"
-            disable: "השבתה"
+        legacy:
+          main_title: "תגליות Discobot"
+          regular_results: "נושאים"
+          tell_me_more: "אשמח לדעת עוד…"
+          continue_convo: "המשך בשיחה…"
+          loading_convo: "הדיון נטען"
+          collapse: "צמצום"
+          timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
+          tooltip:
+            header: "חיפוש מופעל בינה מלאכותית"
+            content: "חיפוש בשפה טבעית מופעל על גבי %{model}"
+            actions:
+              info: "איך זה עובד?"
+              disable: "השבתה"
+        search_type: "בינה מלאכותית"
+        search_all_topics: "כל הנושאים"
+        search_messages: "הודעות"
+        ask_ai: "בינה מלאכותית"
+        sources:
+          related_discussions: "נושאים קשורים"
       user_preferences:
         empty: "אין הגדרות תואמות זמינות בשלב זה"
     review:

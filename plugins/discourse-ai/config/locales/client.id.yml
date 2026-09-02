@@ -84,6 +84,10 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      copied: "Disalin"
+      ai_decoded_transcript:
+        type: "Tipe"
+        error: "Gangguan"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -109,6 +113,7 @@ id:
           reset: "Reset"
         search:
           name: "Cari"
+          ask_ai: "Tanya AI"
         image_caption:
           setting_groups:
             settings: "Pengaturan"
@@ -161,7 +166,6 @@ id:
         apply: "menerapkan"
         failed: "Gagal"
         unknown: "Tidak diketahui"
-        topic_id: "ID Topik"
         time: "Waktu"
         when: "Ketika"
         model: "Model"
@@ -171,6 +175,7 @@ id:
         post: "Postingan"
         duration: "Durasi"
         actions: "Aksi"
+        view_details: "Detil"
         periods:
           day: "24 jam terakhir"
           week: "7 hari terakhir"
@@ -291,7 +296,6 @@ id:
         providers:
           google: "Google"
         semantic_search: "Topik (Semantik)"
-        ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
       ai_bot:
@@ -345,8 +349,14 @@ id:
         topic:
           title: "Ringkasan topik"
       discobot_discoveries:
-        regular_results: "Topik"
-        collapse: "Persempit"
-        tooltip:
-          actions:
-            disable: "Nonaktifkan"
+        main_title: "Tanya AI"
+        legacy:
+          regular_results: "Topik"
+          collapse: "Persempit"
+          tooltip:
+            actions:
+              disable: "Nonaktifkan"
+        search_type: "AI"
+        search_all_topics: "Semua topik"
+        search_messages: "Pesan"
+        ask_ai: "AI"

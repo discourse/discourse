@@ -51,6 +51,12 @@ ca:
     topic_statuses:
       solved:
         help: "Aquest tema té una solució"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Categoria"
     discourse_automation:
       triggerables:
         first_accepted_solution:

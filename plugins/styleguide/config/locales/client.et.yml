@@ -7,6 +7,9 @@
 et:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Komponent"
       sections:
         typography:
           example: "Tere tulemast Discourse'i"
@@ -26,6 +29,21 @@ et:
           title: "Postitus"
         more_topics:
           title: "Veel teemasid"
+        roving_focus:
+          toolbar:
+            copy: "Kopeeri"
+          adjacent:
+            label: "Filtrid"
+            field: "Otsi"
+            open: "Ava"
+            recent: "Viimased"
+          combobox:
+            daily: "Igapäevaselt"
+            weekly: "Iganädalaselt"
+            monthly: "Igakuiselt"
+            never: "Mitte kunagi"
+          tree:
+            components: "Komponendid"
         tooltips:
           description: "Kirjeldus"
           header: "Päis"

@@ -7,19 +7,48 @@
 ro:
   js:
     user_api_key:
+      title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
       deny: "Anulează"
+      logged_in_as: "Autentificat ca"
+      permissions_header: 'Aceasta va permite „%{application_name}” să:'
+      redirect_warning: "Autorizarea vă va redirecționa către"
+      expiry_notice: 'Această cheie pentru „%{application_name}” va expira pe %{expires_at}.'
+      copy_key: "Copiază cheia"
       copied: "Copiat!"
+      otp_description: 'Doriți să permiteți „%{application_name}” să acceseze acest site?'
       no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
       generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
       device:
+        title: "Autorizați o aplicație"
+        enter_code: "Introduceți codul afișat în aplicație."
         code: "Cod"
+        enter_full_code: "Introduceți codul complet pentru a autoriza această aplicație."
         continue: "Continuă"
+        invalid_code: "Ne pare rău, codul este invalid. Verificați codul și încercați din nou."
+        expired_code: "Ne pare rău, codul a expirat sau a fost deja utilizat. Solicitați un cod nou din aplicație și încercați din nou."
+        authorize_title: 'Autorizează „%{application_name}”'
+        expiry_notice: "Expiră: %{expires_at}"
+        no_expiry_warning: "Această cheie nu va expira automat. Autorizați-o doar dacă aveți încredere deplină în aplicație."
+        unregistered_app_warning: "Această aplicație nu este înregistrată sau verificată de acest site. Continuați doar dacă aveți încredere deplină în sursa codului."
+        complete: "Autorizare completă"
+        denied: "Autorizație refuzată"
+        return_to_cli: "Acum puteți reveni la terminal sau la aplicație."
     blocks:
       ghost:
         status: "Stare"
+        conditions: "Condiții"
+        arguments: "Argumente"
+        container_args: "Argumente container"
+        in_location: "în"
         hidden: "ascuns"
+        not_registered: "neînregistrat"
+        no_visible_children: "fără copii vizibili"
         failed: "eșuată"
+      ghost_reasons:
+        optional_missing_hint: "Acest bloc opțional nu este redat deoarece nu este înregistrat."
+        no_visible_children_hint: "Acest bloc container nu este redat deoarece niciunul dintre copiii săi nu este vizibil."
+        condition_failed_hint: "Acest bloc nu este redat deoarece condițiile sale au eșuat."
     access_control:
       manage:
         access_permission_editor: "Editor"
@@ -471,6 +500,7 @@ ro:
         theme: "Temă"
         fonts: "Fonturi"
         homepage: "Pagina principală"
+        search: "Caută"
       colors:
         light: "Luminos"
         dark: "Întunecat"
@@ -2211,6 +2241,9 @@ ro:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      tab: "Filă"
+      delete: "Șterge"
+      home: "Acasă"
     category_row:
       subcategory_count:
         one: "+%{count} subcategorie"
@@ -2315,6 +2348,8 @@ ro:
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
       switch_to_markdown: "Comută la editorul standard Markdown (%{keyboardShortcut})"
       switch_to_rich_text: "Comută la noul editor de text îmbogățit (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Comută la editorul standard Markdown"
+      switch_to_rich_text_no_shortcut: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -2509,10 +2544,10 @@ ro:
         search_field: "Câmp de căutare în antetul site-ului"
         search_icon: "Pictogramă de căutare lângă avatar profil"
       type:
-        default: "Subiecte/postări"
+        default: "Articole"
         users: "Utilizatori"
         categories: "Categorii"
-        categories_and_tags: "Categorii/etichete"
+        categories_and_tags: "Categorii și etichete"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
@@ -3002,7 +3037,6 @@ ro:
       reply_as_new_private_message: "Răspunde cu un mesaj nou aceluiași destinatar"
       continue_discussion: "În continuarea discuției de la %{postLink}:"
       follow_quote: "mergi la postarea citată"
-      show_full: "Arată postarea în întregime"
       collapse: "restrânge"
       load_more_replies: "încarcă mai multe răspunsuri"
       sr_load_more_replies: "Încarcă mai multe răspunsuri încorporate"
@@ -3547,7 +3581,6 @@ ro:
     invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       search_placeholder: "Caută o scurtătură după descriere sau combinație de taste"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Scurtături de tastatură"
       search_ctrl_f_tip: "Pentru a căuta pe întregul forum, apasă pe <kbd>/</kbd>"
       description_header: "Descriere"
@@ -3942,6 +3975,11 @@ ro:
         group_traffic: "Trafic"
         group_members: "Membri"
         group_other: "Altele"
+        related_items:
+          users:
+            title: "Utilizatori"
+          labels:
+            user: "Utilizator"
       config_sections:
         account:
           title: "Cont"
@@ -4112,7 +4150,6 @@ ro:
           header_description: "Configurează setările de căutare, inclusiv înregistrarea în jurnal și tokenizarea pentru limbile chineză și japoneză"
         search_everything:
           title: "Căutare"
-          header_description: "Găsește orice în interfața de administrare aici. Poți filtra rezultatele mai jos, iar preferințele tale vor fi memorate. Pentru a deschide această căutare oriunde în interfața de administrare, apasă %{shortcutHTML}."
         security:
           title: "Securitate"
           header_description: "Configurează setările de securitate, inclusiv autentificarea cu doi factori, privilegiile de moderator și politicile de securitate a conținutului"
@@ -4289,19 +4326,16 @@ ro:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
       site_traffic_explorer:
-        pageviews: "Vizualizări"
+        metric_information: "Despre %{metric}"
+        remove_filter_value: "Înlătură %{value}"
+        clear_all: "Șterge tot"
+        apply: "Aplică"
         view_more: "Vezi mai multe"
         cards:
           pages: "Pagini"
           visitors: "Vizitatori"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Adresă IP"
         filters:
           ip: "Adresă IP"
-        metrics:
-          pageviews:
-            label: "Vizualizări"
         series:
           anonymous_human: "Anonimi"
       dashboard:
@@ -4352,6 +4386,8 @@ ro:
               share: "Partajează"
             whos_posting:
               staff: "Echipa"
+              modal:
+                apply: "Salvează"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nou"
@@ -4364,6 +4400,9 @@ ro:
             table:
               searches: "Căutări"
               status: "Stare"
+          system:
+            title: "Sistem"
+            status: "Stare"
         reports_section:
           header_action: "Gestionează"
           add: "Adaugă raport"
@@ -4413,6 +4452,15 @@ ro:
           monthly: Lunar
           weekly: Săptămânal
           groups: "Toate grupurile"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} utilizator"
+              few: "%{count} de utilizatori"
+              other: "%{count} utilizatori"
+            posts_count:
+              one: "o postare"
+              few: "%{count} postări"
+              other: "%{count} de postări"
           sort_button: "Sortează după %{column}"
           sort_ascending: "crescător"
           sort_descending: "descrescător"

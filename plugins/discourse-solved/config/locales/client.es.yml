@@ -97,6 +97,11 @@ es:
           solved: "están resueltos"
           unsolved: "están sin resolver"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Categoría"
       web_hooks:
         solved_event:
           group_name: "Evento resuelto"

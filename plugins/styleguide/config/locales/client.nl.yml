@@ -13,6 +13,9 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
+      example:
+        kind:
+          component: "Onderdeel"
       categories:
         syntax: Syntax
         atoms: Atomen
@@ -39,6 +42,8 @@ nl:
           title: "Kleuren"
         dialog:
           title: "Dialoog"
+        drag_and_drop:
+          locked: "Vergrendeld"
         icons:
           title: "Pictogrammen"
           full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
@@ -94,6 +99,29 @@ nl:
           title: "Meer topics"
         post_menu:
           title: "Berichtmenu"
+        roving_focus:
+          toolbar:
+            copy: "Kopiëren"
+          tags:
+            remove: "%{tag} verwijderen"
+            design: "Ontwerp"
+            support: "Steunen"
+          adjacent:
+            label: "Filters"
+            field: "Zoeken"
+            placeholder: "Topics zoeken"
+            open: "Openen"
+            recent: "Recent"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Dagelijks"
+            weekly: "Wekelijks"
+            monthly: "Maandelijks"
+            never: "Nooit"
+          tree:
+            components: "Onderdelen"
+            select: "Selecteren"
         docked_composer:
           title: "Gedockte editor"
         modal:

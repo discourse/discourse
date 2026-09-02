@@ -1,5 +1,4 @@
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
-import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import type Site from "discourse/models/site";
 import type { CapabilitiesService } from "discourse/services/capabilities";
@@ -69,8 +68,8 @@ export interface PopupMenuOption {
   translatedTitle?: string;
   /** Keyboard shortcut that invokes the option. */
   shortcut?: string;
-  /** Shortcut exposed to assistive technology. */
-  ariaKeyshortcuts?: string;
+  /** The shortcut in binding spelling (`mod+b`), for display and announcement. */
+  shortcutKeys?: string;
   /** Whether the option is available. */
   condition: boolean | (() => boolean);
   /** Whether the active option displays its status icon. */
@@ -121,8 +120,8 @@ export interface ToolbarButton {
   title: string;
   /** Keyboard shortcut that invokes the button. */
   shortcut?: string;
-  /** Shortcut exposed to assistive technology. */
-  ariaKeyshortcuts?: string;
+  /** The shortcut in binding spelling (`mod+b`), for display and announcement. */
+  shortcutKeys?: string;
   /** Whether the button is inserted at the beginning of its group. */
   unshift?: boolean;
   /** Reports whether the button matches the editor state. */
@@ -244,30 +243,19 @@ export class ToolbarBase {
     };
 
     // Main button shortcut bindings and title text.
+    // The shortcut suffix is added where the button renders, since it is
+    // shown only when a keyboard is likely.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
+    createdButton.title = title;
     if (buttonAttrs.shortcut) {
-      const shortcutKeyTranslated = translateModKey(
-        buttonAttrs.shortcut.length === 1
-          ? buttonAttrs.shortcut.toUpperCase()
-          : buttonAttrs.shortcut
-      );
-      const shortcutTitle = `${translateModKey(
-        PLATFORM_KEY_MODIFIER + " "
-      )}${shortcutKeyTranslated}`;
-
-      if (buttonAttrs.hideShortcutInTitle) {
-        createdButton.title = title;
-      } else {
-        createdButton.title = `${title} (${shortcutTitle})`;
-      }
+      createdButton.shortcutKeys = `mod+${buttonAttrs.shortcut}`;
+      createdButton.hideShortcutInTitle = buttonAttrs.hideShortcutInTitle;
 
       // These shortcuts are actually bound in the keymap inside
       // components/d-editor.gjs
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
-
-      createdButton.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
     } else {
       createdButton.title = title;
     }
@@ -280,22 +268,13 @@ export class ToolbarBase {
 
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
-          const shortcutKeyTranslated = translateModKey(
-            option.shortcut.length === 1
-              ? option.shortcut.toUpperCase()
-              : option.shortcut
-          );
-          const shortcutTitle = `${translateModKey(
-            PLATFORM_KEY_MODIFIER + " "
-          )}${shortcutKeyTranslated}`;
+          option.shortcutKeys = `mod+${option.shortcut}`;
 
           // These shortcuts are actually bound in the keymap inside
           // components/d-editor.gjs
           this.shortcuts[
             `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
           ] = option;
-
-          option.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
         }
       });
     }

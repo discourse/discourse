@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 lt:
+  llms_txt:
+    sections:
+      optional: "Pasirinktinai"
+    links:
+      search:
+        label: "Paieška"
+      categories:
+        label: "Kategorijos"
+      about:
+        label: "Apie"
+      guidelines:
+        label: "Instrukcijos"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -926,6 +938,11 @@ lt:
         share: "Dalintis"
       types:
         staff: "Personalas"
+    posters_by_member_type_members:
+      labels:
+        user: "Narys"
+        count: "Pranešimai"
+        share: "Dalintis"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -2618,6 +2635,11 @@ lt:
     reasons:
       post_count: "Pirmąsias kelias kiekvieno vartotojo žinutes turi patvirtinti darbuotojai. Žr. %{link}."
       trust_level: "Vartotojai, kurių patikimumo lygis yra žemas, turi turėti atsakymus, kuriuos patvirtina darbuotojai. Žr. %{link}."
+      fast_typer_time:
+        one: "%{count} sekundė"
+        few: "%{count} sekundės"
+        many: "%{count} sekundžių"
+        other: "%{count} sekundžių"
       suspect_user: "Šis naujas vartotojas įvedė profilio informaciją neskaitydamas jokių temų ar įrašų, o tai rodo, kad jie gali būti šlamšto siuntėjai. Žr. %{link}."
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."

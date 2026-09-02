@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "final_destination"
+require "image_processing/instrumentation"
 require "mini_mime"
 require "open-uri"
 
@@ -131,10 +132,12 @@ class FileHelper
   end
 
   def self.optimize_image!(filename, allow_pngquant: false)
-    image_optim(
-      allow_pngquant: allow_pngquant,
-      strip_image_metadata: SiteSetting.strip_image_metadata,
-    ).optimize_image!(filename)
+    ImageProcessing::Instrumentation.instrument(operation: :image_optim) do
+      image_optim(
+        allow_pngquant: allow_pngquant,
+        strip_image_metadata: SiteSetting.strip_image_metadata,
+      ).optimize_image!(filename)
+    end
   end
 
   def self.image_optim(allow_pngquant: false, strip_image_metadata: true)

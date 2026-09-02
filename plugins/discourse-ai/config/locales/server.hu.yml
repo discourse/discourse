@@ -22,6 +22,8 @@ hu:
         suspend_user: "Felhasználó felfüggesztése"
         silence_user: "Felhasználó némítása"
         edit_post: "Bejegyzés szerkesztése"
+        edit_tag: "Címke szerkesztése"
+        create_category: "Kategória létrehozása"
         move_posts: "Bejegyzések áthelyezése"
         search: "Keresés"
         tags: "Címkék felsorolása"
@@ -29,6 +31,7 @@ hu:
         summarize: "Összefoglalás"
       tool_help:
         delete_topic: "Téma törlése"
+        create_category: "Új kategória létrehozása"
       close_topic:
         errors:
           not_found: "A téma nem található."
@@ -38,10 +41,10 @@ hu:
       delete_topic:
         errors:
           not_found: "A téma nem található."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "A téma nem található."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "A téma nem található."
       set_topic_timer:

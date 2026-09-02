@@ -153,6 +153,12 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      copied: "Skopírované"
+      ai_decoded_transcript:
+        tool: "Nástroj"
+        type: "Typ"
+        error: "Chyba"
+        response: "Odpoveď"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -200,7 +206,7 @@ sk:
         search:
           name: "Hľadať"
           description: "Zlepšuje zážitok z vyhľadávania poskytovaním odpovedí na otázky generovaných umelou inteligenciou"
-          discoveries: "Objavy"
+          ask_ai: "Spýtajte sa AI"
         embeddings:
           name: "Vkladania"
           description: "Vytvára sémantické reprezentácie textu a podporuje funkcie ako Súvisiace témy a Vyhľadávanie pomocou umelej inteligencie."
@@ -373,11 +379,10 @@ sk:
         retry: "Skúste to znova"
         apply: "Použi"
         all_models: "Všetky modely"
+        all_features: "Všetky funkcie"
         successful: "Úspešné"
         failed: "Nepodarilo sa"
         unknown: "Neznáma"
-        topic_id: "ID témy"
-        post_id: "ID príspevku"
         time: "Čas"
         when: "Kedy"
         outcome: "Výsledok"
@@ -392,6 +397,7 @@ sk:
         post_short: "Príspevok %{id}"
         duration: "Trvanie"
         actions: "Akcie"
+        view_details: "Detaily"
         periods:
           hour: "Posledná hodina"
           day: "Posledných 24 hodín"
@@ -785,13 +791,8 @@ sk:
         provider_fields:
           model_name: "Názov modelu"
         semantic_search: "Témy (sémantické)"
-        semantic_search_results:
-          unavailable: "Výsledky AI nie sú k dispozícii"
         semantic_search_tooltips:
           results_explanation: "Ak je táto funkcia povolená, pod ňu sa pridajú ďalšie výsledky vyhľadávania s AI."
-          invalid_sort: "Výsledky vyhľadávania musia byť zoradené podľa relevantnosti, aby sa zobrazovali výsledky AI"
-        semantic_search_unavailable_tooltip: "Výsledky vyhľadávania musia byť zoradené podľa relevantnosti, aby sa zobrazovali výsledky AI"
-        ai_generated_result: "Výsledok vyhľadávania nájdený pomocou AI"
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
@@ -912,19 +913,28 @@ sk:
             expanded: "Rozšírené"
             expanded_description: "so súhrnmi AI"
       discobot_discoveries:
-        main_title: "Objavy Discobot"
-        regular_results: "Témy"
-        tell_me_more: "Povedz mi viac..."
-        continue_convo: "Pokračovať v konverzácii..."
+        main_title: "Spýtajte sa AI"
         loading_convo: "Načítanie konverzácie"
-        collapse: "Zbaliť"
-        timed_out: "Discobot nenašiel žiadne objavy. Niečo sa pokazilo."
-        tooltip:
-          header: "Vyhľadávanie na báze umelej inteligencie"
-          content: "Vyhľadávanie v prirodzenom jazyku pomocou %{model}"
-          actions:
-            info: "Ako to funguje?"
-            disable: "Zakázať"
+        legacy:
+          main_title: "Objavy Discobot"
+          regular_results: "Témy"
+          tell_me_more: "Povedz mi viac..."
+          continue_convo: "Pokračovať v konverzácii..."
+          loading_convo: "Načítanie konverzácie"
+          collapse: "Zbaliť"
+          timed_out: "Discobot nenašiel žiadne objavy. Niečo sa pokazilo."
+          tooltip:
+            header: "Vyhľadávanie na báze umelej inteligencie"
+            content: "Vyhľadávanie v prirodzenom jazyku pomocou %{model}"
+            actions:
+              info: "Ako to funguje?"
+              disable: "Zakázať"
+        search_type: "AI"
+        search_all_topics: "Všetky témy"
+        search_messages: "Správy"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Súvisiace témy"
       user_preferences:
         empty: "V súčasnosti nie sú k dispozícii žiadne relevantné nastavenia"
     review:

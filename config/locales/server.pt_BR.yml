@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Pesquisar"
+      categories:
+        label: "Categorias"
+      about:
+        label: "Sobre"
+      guidelines:
+        label: "Diretrizes"
   dates:
     short_date_no_year: "D de MMM"
     short_date: "D de MMM de YYYY"
@@ -1274,6 +1286,11 @@ pt_BR:
         share: "Compartilhar"
       types:
         staff: "Equipe"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuário(a)"
+        count: "Postagens"
+        share: "Compartilhar"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1830,7 +1847,6 @@ pt_BR:
     allowed_iframes: "A lista de prefixos de URL do src iframe que o Discourse pode permitir com segurança nas postagens.* pode ser usado para corresponder a qualquer quantidade de caracteres diferentes de /."
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
-    llms_txt: "Faça o upload de um arquivo de texto para ser disponibilizado em /llms.txt para os crawlers de LLM. Veja <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para mais informações."
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
     content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a> (CSP). Outras fontes de hosts são ignoradas, pois a dinâmica estrita está ativada."
@@ -2113,7 +2129,6 @@ pt_BR:
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário(a) uma vez por IP/usuário(a) a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer correspondência de e-mails de remetentes de spam, o tamanho da diferença de caracteres que ainda causará uma correspondência aproximada."
     max_new_accounts_per_registration_ip: "Se já houver (n) contas com o nível de confiança 0 deste IP (e nenhum for membro da equipe ou tiver NC2 ou mais alto), pare de aceitar novas assinaturas desse IP. Defina para 0 para desativar o limite."
-    min_ban_entries_for_roll_up: "Ao clicar no botão Combinar, uma entrada de banimento de subrede será criada se houver ao menos (N) entradas."
     max_age_unmatched_emails: "Excluir entradas de e-mails filtrados sem correspondência após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados sem correspondência após (N) dias."
     num_flaggers_to_close_topic: "Quantidade mínima de usuários(as) sinalizadores únicos(as) exigidos para que um tópico seja automaticamente pausado por intervenção"
@@ -4870,6 +4885,9 @@ pt_BR:
       group: "Usuários(as) que não estiverem nos grupos especificados devem ter as respostas aprovadas pela equipe. Confira %{link}."
       new_topics_unless_trust_level: "Usuários(as) com níveis de confiança baixos precisam ter tópicos aprovados pela equipe. Veja %{link}."
       fast_typer: "O(a) novo(a) usuário(a) digitou sua primeira postagem desconfiadamente rápido, há suspeita de comportamento de robô ou remetente de spam. Veja %{link}."
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       auto_silence_regex: "Novo(a) usuário(a) cuja primeira postagem correspponde à configuração %{link}."
       watched_word:
         one: "Esta postagem inclui uma palavra acompanhada, a palavra sinalizada é: %{words}. Veja %{link} para obter mais informações."

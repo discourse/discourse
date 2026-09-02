@@ -22,6 +22,8 @@ hr:
         search: "Pretraživanje"
         time: "Vrijeme"
         summarize: "Rezimirati"
+      tool_help:
+        create_category: "Stvorite novu kategoriju"
       close_topic:
         errors:
           not_found: "Tema nije pronađena."
@@ -31,10 +33,13 @@ hr:
       delete_topic:
         errors:
           not_found: "Tema nije pronađena."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tema nije pronađena."
       edit_category:
+        errors:
+          not_found: "Kategorija nije pronađena."
+      change_topic_category:
         errors:
           not_found: "Tema nije pronađena."
           category_not_found: "Kategorija nije pronađena."

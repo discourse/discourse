@@ -228,6 +228,14 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      copied: "Gekopieerd"
+      ai_decoded_transcript:
+        thinking: "Denken"
+        tool: "Tool"
+        arguments: "Argumenten"
+        type: "Type"
+        error: "Fout"
+        response: "Antwoord"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -297,9 +305,11 @@ nl:
         search:
           name: "Zoeken"
           description: "Verbetert de zoekervaring door AI-gegenereerde antwoorden op vragen te bieden"
-          discoveries: "Ontdekkingen"
+          ask_ai: "AI vragen"
           setting_groups:
             settings: "Basisinstellingen"
+            agents: "Agenten"
+            access_control: "Toegangsbeheer"
         embeddings:
           name: "Insluitingen"
           description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
@@ -535,11 +545,10 @@ nl:
         retry: "Opnieuw proberen"
         apply: "Toepassen"
         all_models: "Alle modellen"
+        all_features: "Alle functies"
         successful: "Gelukt"
         failed: "Mislukt"
         unknown: "Onbekend"
-        topic_id: "Topic-ID"
-        post_id: "Bericht-ID"
         time: "Tijd"
         when: "Wanneer"
         outcome: "Resultaat"
@@ -555,8 +564,7 @@ nl:
         duration: "Duur"
         cost: "Kosten"
         actions: "Acties"
-        filters:
-          period: "Tijdsperiode"
+        view_details: "Details"
         periods:
           hour: "Afgelopen uur"
           day: "Afgelopen 24 uur"
@@ -617,7 +625,6 @@ nl:
         create_user: Gebruiker maken
         create_user_help: Je kunt optioneel een gebruiker aan deze agent koppelen. Als je dat doet, gebruikt de AI deze gebruiker om op verzoeken te antwoorden.
         default_llm: Standaard taalmodel
-        default_llm_help: Het te gebruiken standaard taalmodel voor deze agent. Vereist als je de agent wilt vermelden in openbare berichten.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
@@ -1143,17 +1150,10 @@ nl:
         provider_fields:
           model_name: "Modelnaam"
         semantic_search: "Topics (semantisch)"
-        semantic_search_results:
-          toggle: "AI-resultaten"
-          unavailable: "AI-resultaten niet beschikbaar"
-          zero_results_expanded: "Geen resultaten gevonden, %{count} AI-resultaten weergegeven"
         semantic_search_tooltips:
           results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."
-          invalid_sort: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
           not_submitted: "Dien een zoekopdracht in om AI-resultaten in te schakelen"
           no_results: "Geen AI-resultaten voor deze zoekopdracht gevonden"
-        semantic_search_unavailable_tooltip: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
-        ai_generated_result: "Zoekresultaat gevonden met AI"
         ai_results_notice:
           no_results: "Geen exacte overeenkomsten, maar hier zijn enkele gerelateerde resultaten."
           few_results:
@@ -1295,20 +1295,29 @@ nl:
             expanded: "Uitgebreid"
             expanded_description: "met AI-samenvattingen"
       discobot_discoveries:
-        main_title: "Discobot-ontdekkingen"
-        regular_results: "Topics"
-        tell_me_more: "Vertel me meer..."
-        continue_convo: "Conversatie voortzetten..."
+        main_title: "AI vragen"
         loading_convo: "Conversatie laden"
-        collapse: "Samenvouwen"
-        timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
         user_setting: "AI-zoekontdekkingen inschakelen"
-        tooltip:
-          header: "AI-gestuurd zoeken"
-          content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
-          actions:
-            info: "Hoe werkt het?"
-            disable: "Uitschakelen"
+        legacy:
+          main_title: "Discobot-ontdekkingen"
+          regular_results: "Topics"
+          tell_me_more: "Vertel me meer..."
+          continue_convo: "Conversatie voortzetten..."
+          loading_convo: "Conversatie laden"
+          collapse: "Samenvouwen"
+          timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
+          tooltip:
+            header: "AI-gestuurd zoeken"
+            content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
+            actions:
+              info: "Hoe werkt het?"
+              disable: "Uitschakelen"
+        search_type: "AI"
+        search_all_topics: "Alle topics"
+        search_messages: "Berichten"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Gerelateerde topics"
       user_preferences:
         empty: "Er zijn op dit moment geen relevante instellingen beschikbaar"
     review:

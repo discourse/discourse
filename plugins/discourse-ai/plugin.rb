@@ -90,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_modifier(:site_setting_result) do |setting_result|
+    if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
+      setting_result[:disabled] = true
+    end
+    setting_result
+  end
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
@@ -128,13 +135,12 @@ after_initialize do
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
     DiscourseAi::Discover::EntryPoint.new,
+    DiscourseAi::Discoveries::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
-  #register_problem_check ProblemCheck::AiCreditSoftLimit
-  #register_problem_check ProblemCheck::AiCreditHardLimit
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
@@ -148,18 +154,16 @@ after_initialize do
     end
   end
 
-  # when an account is removed, clear the user's own logs and the logs tied to
-  # the content being deleted with the account. the content callback runs before
-  # discourse reassigns/soft-deletes the user's posts, so ownership is still intact.
-  on(:user_destroyed) { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id) }
+  on(:user_destroyed) do |user|
+    DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
+    DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
+    AiAgent.detach_user!(user.id)
+  end
 
   register_user_destroyer_on_content_deletion_callback(
     Proc.new { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user_content(user) },
   )
 
-  # outside account deletion, only purge logs once the content is permanently
-  # gone; a soft-deleted (trashed) post or topic is still recoverable, so its
-  # audit log must remain
   on(:post_destroyed) do |post|
     if !Post.with_deleted.exists?(post.id)
       DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
@@ -256,4 +260,39 @@ after_initialize do
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
   end
+
+  add_custom_reviewable_filter(
+    [
+      :ai_triage_automation_id,
+      Proc.new do |results, value|
+        context = "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}%"
+        if value != :all
+          automation_id = value.is_a?(Integer) ? value : value.to_s[/\A\d+\z/]&.to_i
+          next results if !automation_id || automation_id <= 0
+
+          context = DiscourseAi::Automation.triage_automation_score_context(automation_id)
+        end
+
+        results.where(<<~SQL, context:)
+            EXISTS (
+              SELECT 1
+              FROM reviewable_scores
+              WHERE reviewable_scores.reviewable_id = reviewables.id
+              AND reviewable_scores.context LIKE :context
+            )
+          SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_ai:triage",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseAutomation::Automation
+        .where(script: %w[llm_triage llm_agent_triage])
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "ai_triage_automation:#{id}", name:, value: id } }
+    end,
+  )
 end

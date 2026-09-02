@@ -50,6 +50,12 @@ zh_CN:
             delete_ai_secret: "删除 AI 秘密"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
+    admin:
+      site_settings:
+        ai_ask_ai_summary_detail:
+          quiet: "安静（一句话，无标题）"
+          balanced: "平衡（一段简短的文字）"
+          detailed: "详细说明（两到三段简短文字）"
     discourse_workflows:
       node_unavailable:
         requires_ai: "需要启用 AI 插件"
@@ -233,6 +239,20 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      copied: "已复制"
+      view_raw: "查看原始数据"
+      view_decoded: "查看解码结果"
+      ai_decoded_transcript:
+        thinking: "正在思考"
+        tool_calls: "工具调用"
+        tool_results: "工具结果"
+        tool: "工具"
+        arguments: "参数"
+        tool_result: "工具结果"
+        call_id: "来电显示"
+        type: "类型"
+        error: "错误"
+        response: "回答"
       post_image_captions:
         edit: "编辑 AI 图片说明"
         title: "编辑 AI 图片说明"
@@ -324,9 +344,12 @@ zh_CN:
         search:
           name: "搜索"
           description: "通过提供 AI 生成的查询回答来增强搜索体验"
-          discoveries: "发现"
+          discoveries: "发现（已弃用）"
+          ask_ai: "询问 AI"
           setting_groups:
             settings: "基本设置"
+            agents: "智能体"
+            access_control: "访问控制"
         embeddings:
           name: "嵌入向量"
           description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
@@ -393,6 +416,7 @@ zh_CN:
           topic_title_translator: "话题标题翻译器"
           short_text_translator: "短文本翻译器"
           schedule_untranslated: "安排翻译"
+          schedule_topic_only_success: "已安排该主题的翻译。"
           schedule_topic_success:
             other: "已安排翻译 %{count} 个未翻译的帖子。"
           schedule_topic_error: "无法安排翻译。请重试。"
@@ -419,6 +443,8 @@ zh_CN:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
+        max_locales_reached: "您最多只能选择 %{max} 种语言。"
+        locale_count: "%{count}/%{max} 已选择"
         category_scope: "类别"
         category_scope_description: "选择自动翻译应用于所有类别、公开类别还是所选类别中的内容。"
         cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
@@ -486,6 +512,8 @@ zh_CN:
           localization_settings: "应用语言设置"
           enable_translations: "启用自动翻译"
           enable_translations_disabled: "您必须添加受支持的语言才能启用翻译功能。"
+          show_language_switcher: "在标题栏显示语言切换器。"
+          show_language_switcher_description: "让每个人都能选择一种语言，并用这种语言查看您的网站。"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
@@ -609,13 +637,22 @@ zh_CN:
         credit_allocations: "点数分配"
       logs:
         short_title: "日志"
+        description: "检查发送给人工智能模型的各个请求及其响应"
+        refresh: "刷新日志"
         retry: "重试"
         apply: "应用"
+        clear_filters: "清除所有筛选条件"
+        all_outcomes: "所有结果"
         all_models: "所有模型"
+        all_features: "所有功能"
         successful: "成功"
         failed: "失败"
-        topic_id: "话题 ID"
-        post_id: "帖子 ID"
+        unknown: "未知"
+        has_retries: "有重试次数"
+        retried: "重试"
+        unattributed: "未注明出处"
+        search_placeholder: "按用户名或 ID 搜索（例如 @user1 topic:123 log:45）"
+        feature_placeholder: "功能名称"
         time: "时间"
         when: "时间"
         outcome: "成果"
@@ -624,34 +661,90 @@ zh_CN:
         request: "请求"
         provider: "提供商"
         user: "用户"
+        tokens: "Token"
+        tokens_pair: "%{request} → %{response}"
+        tokens_aria: "%{request} 输入标记和 %{response} 输出标记"
+        tokens_unavailable: "令牌数量不可用"
+        cache_read_tokens: "缓存读取"
+        cache_write_tokens: "缓存写入"
         context: "上下文"
         topic: "话题"
+        topic_short: "主题 %{id}"
         post: "帖子"
         post_short: "帖子 %{id}"
         duration: "持续时间"
+        tokens_direction: "令牌（输入→输出）"
+        first_token: "第一个令牌"
         cost: "成本"
         actions: "操作"
-        filters:
-          period: "时间段"
+        table_caption: "人工智能向语言模型发送的请求及其结果"
+        view_details: "详细信息"
+        no_results: "没有人工智能日志符合这些筛选条件。"
+        no_logs: "未发现保留的AI日志。"
+        new_logs_count:
+          other: "查看 %{count} 新日志"
         periods:
+          hour: "最后一小时"
           day: "过去 24 小时"
           week: "过去 7 天"
           custom: "自定义"
         detail:
+          title: "AI日志 #%{id}"
           request: "请求"
           response: "回答"
           context: "上下文"
+          attempts: "尝试"
+          tabs_label: "AI日志有效载荷部分"
           copy_request: "复制请求"
           copy_response: "复制回答"
+          copy_raw_response: "复制原始响应"
+          copy_context: "复制上下文"
+          payload_unavailable: "有效载荷不可用"
+          payload_truncated: "此有效载荷过大，无法完整显示，已被截断。"
+          load_error: "找不到此日志。它可能已被保留策略删除。"
+          generic_load_error: "此日志加载失败，请重试。"
           network_error: "网络错误"
+          outcome_with_status: "%{outcome} (%{status})"
+          duration_seconds: "%{seconds} s"
+          attempt: "状态 %{status}，延迟 %{delay} 毫秒"
         retention:
+          configure: "配置保留"
+          title: "日志保留"
+          lifecycle_label: "日志首先以完整有效载荷的形式保留，然后以摘要的形式保留，最后删除。"
+          detailed_stage: "满载荷"
           summary_stage: "摘要"
           deleted_stage: "已删除"
+          hint: "天数从请求日期开始计算。0 表示没有单独的限制。"
+          detailed_title: "满载荷（天）"
+          detailed_help: "原始请求和响应。0 会保留它们，直到摘要被删除。"
+          summary_title: "摘要（天数）"
+          summary_help: "审核元数据。0 会永久保留。"
+          invalid_order: "摘要的保存时间至少要与有效载荷的保存时间一样长。"
+          valid_range: "请输入 0 到 %{max} 之间的整数。"
+          destructive_warning: "缩短数据保留期限会在下次清理时永久删除数据，此操作无法撤销。"
+          meta: "使用 %{size} · 清理工作每日运行 · 使用数据不受影响"
           save: "保存"
+          saved: "保留策略已保存。清理工作将在 24 小时内完成。"
+          lifecycle:
+            complete_forever: "日志永久保存"
+            detail_until_delete: "完整日志保留 %{summary} 天后删除"
+            summary_forever: "有效载荷保留 %{detailed} 天，摘要永久保留"
+            finite: "有效载荷保留 %{detailed} 天，摘要保留 %{summary} 天，然后删除"
       ai_agent:
         ai_tools: "工具"
         native_tools_help: "启用“始终使用默认语言模型”且所选默认语言模型支持提供商原生工具时，这些工具（例如网络搜索或页面获取）将显示。"
         mcp_servers: "MCP 服务器"
+        subagents: "子代理"
+        subagents_help: "允许此代理将任务委派给选定的代理。仅当至少有一个选定的代理可用时，才会添加生成工具。"
+        subagents_summary:
+          other: "此代理可以委托给 %{count} 代理。"
+        subagent_disabled: "%{name} （已禁用）"
+        subagent_tool_name: "子代理授权（上限）"
+        invalid_subagent_ids: "子代理 ID 必须是一个整数列表。"
+        too_many_subagents: "一个代理人最多可以拥有 %{max} 个子代理人"
+        subagent_self: "一个代理不能将自身选为子代理"
+        subagents_not_found: "所选子代理 ID 不存在： %{ids}"
+        subagent_tool_collision: "拥有子代理的代理无法配置名为 spawn_agent 的工具。"
         mcp_server_tools_help: "所选 MCP 服务器默认会公开所有工具。您可以针对每个智能体筛选工具，以减少 token 使用量并专注于特定工具。"
         mcp_server_tool_count:
           other: "%{count} 个工具"
@@ -672,6 +765,7 @@ zh_CN:
         export: "导出"
         import: "导入"
         import_error_conflict: "导入 %{name} 时检测到冲突，您是否要更新现有智能体？"
+        import_error_missing_subagents: "导入此代理之前，必须存在以下子代理： %{names}。"
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
@@ -681,6 +775,7 @@ zh_CN:
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传
+        vision_enabled_help: 如果启用，当所选模型使用原生图像输入或将图像处理委托给另一个模型时，此代理可以包含帖子和聊天中的图像。
         vision_max_pixels: 最大图片尺寸
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
@@ -694,7 +789,7 @@ zh_CN:
         create_user: 创建用户
         create_user_help: 您可以选择为此智能体附加一个用户。如果这样做，AI 将使用此用户来回复请求。
         default_llm: 默认语言模型
-        default_llm_help: 用于此智能体的默认语言模型。如果您希望在公开帖子中提及该智能体，则为必选项。
+        default_llm_help: 此代理使用的默认语言模型。如果留空，则使用站点默认语言模型。
         system_prompt: 系统提示
         forced_tool_strategy: 强制工具策略
         allow_chat_direct_messages: "允许聊天直接消息"
@@ -801,6 +896,23 @@ zh_CN:
         llms_list: "LLM："
       rag:
         title: "RAG"
+        sources:
+          title: "URL来源"
+          description: "定期获取并索引为代理知识的网页。"
+          urls: "网址"
+          urls_description: "每行输入一个网址。"
+          refresh_interval_hours: "每隔（小时）刷新一次"
+          add: "添加 URL 源"
+          edit: "编辑 URL 来源"
+          save: "保存 URL 源"
+          modal_title: "配置 URL 源"
+          empty: "未配置URL源。"
+          summary:
+            other: "%{count} URL 来源"
+          more:
+            other: "还有 %{count} 更多网址"
+          too_many: "输入的网址数量不得超过 %{count} 个。"
+          invalid_url: "无效网址： %{url}"
         options:
           rag_chunk_tokens: "上传分块 token"
           rag_chunk_tokens_help: "RAG 模型中为每个分块使用的 token 数。增大 token 数会增加 AI 可以使用的上下文数量。（更改 token 数将为所有上传内容重新编制索引）"
@@ -987,9 +1099,18 @@ zh_CN:
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
         vision_enabled: "支持图片输入"
+        vision_mode: "图像处理"
+        vision_mode_help: "禁用此选项将阻止图像处理。使用其他模型会添加一个由原生视觉模型支持的图像查看工具。原生图像输入会将图像直接发送到此模型。"
         vision_modes:
           disabled:
             title: "已禁用"
+          delegated:
+            title: "使用其他模型"
+          native:
+            title: "原生图像输入"
+        vision_model: "视觉模型"
+        vision_model_help: "委托会增加模型请求次数、延迟和成本。仅支持原生图像输入的模型。"
+        no_native_vision_models: "在使用其他视觉模型之前，请先配置一个具有原生图像输入的模型。"
         allowed_attachment_types: "允许的文档附件"
         attachment_types_placeholder: "选择或输入扩展名（例如，pdf、txt、csv、docx、xlsx）"
         ai_bot_user: "AI 机器人用户"
@@ -1040,6 +1161,7 @@ zh_CN:
           ai_embeddings_semantic_search: "AI 搜索"
           ai_spam: "垃圾信息"
           automation: "自动化 (%{agent})"
+          vision_delegate: "模型视觉（%{agent}）"
         in_use_warning:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
@@ -1261,15 +1383,15 @@ zh_CN:
           model_name: "模型名称"
         semantic_search: "话题（语义）"
         semantic_search_results:
-          toggle: "AI 结果"
-          unavailable: "AI 结果不可用"
-          zero_results_expanded: "找不到任何结果，正在显示 %{count} 个 AI 结果"
+          toggle: "相关结果"
+          unavailable: "相关结果不可用"
+          zero_results_expanded: "未找到任何结果，显示 %{count} 个相关结果"
         semantic_search_tooltips:
           results_explanation: "启用后，将在下方添加更多 AI 搜索结果。"
-          invalid_sort: "搜索结果必须按相关性排序才能显示 AI 结果"
+          invalid_sort: "搜索结果必须按相关性排序才能显示相关结果"
           not_submitted: "提交搜索以启用 AI 结果"
           no_results: "此搜索未找到 AI 结果"
-        semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示 AI 结果"
+        semantic_search_unavailable_tooltip: "搜索结果必须按相关性排序才能显示相关结果"
         ai_generated_result: "使用 AI 找到的搜索结果"
         ai_results_notice:
           no_results: "没有完全匹配的结果，但有一些相关结果。"
@@ -1301,10 +1423,14 @@ zh_CN:
           title: "查看 AI 互动"
           copy_request: "复制请求"
           copy_response: "复制回答"
+          payload_unavailable: "有效载荷不可用"
           this_turn: "此回合："
           whole_conversation: "对话："
           tokens_summary: "%{request_tokens} 输入 → %{response_tokens} 输出"
           duration_label: "持续时间："
+          duration: "%{duration_seconds} 秒（第一个标记： %{first_token_seconds} 秒）"
+          duration_without_first_token: "%{duration_seconds} 秒（第一个标记：—）"
+          duration_unavailable: "—（第一个标记：—）"
           cache_both: "（缓存读取 %{read} ，%{write} 缓存写入）"
           cache_read_only: "（缓存 %{read} 读取）"
           cache_write_only: "（缓存 %{write} 写入）"
@@ -1415,20 +1541,52 @@ zh_CN:
             expanded: "展开"
             expanded_description: "带 AI 摘要"
       discobot_discoveries:
-        main_title: "Discobot 发现"
-        regular_results: "话题"
-        tell_me_more: "详细说明…"
-        continue_convo: "继续对话…"
+        main_title: "询问 AI"
         loading_convo: "正在加载对话"
-        collapse: "收起"
-        timed_out: "Discobot 找不到任何发现。出错了。"
+        follow_up:
+          label: "询问后续情况"
+          placeholder: "询问后续情况"
+          submit: "提问"
+        timed_out: "“Ask AI”搜索耗时过长。请重试或使用搜索功能。"
+        request_failed: "Ask AI 无法启动此搜索。请重试或使用搜索功能。"
+        no_answer: "AI 找不到明确的答案。向社区提问。"
+        create_topic: "创建话题"
+        answer_ready: "已准备好接收 AI 提问并给出答复。"
         user_setting: "启用 AI 搜索发现"
-        tooltip:
-          header: "AI 支持的搜索"
-          content: "自然语言搜索由 %{model} 提供支持"
-          actions:
-            info: "它是如何运作的？"
-            disable: "禁用"
+        legacy:
+          main_title: "Discobot 发现"
+          regular_results: "话题"
+          tell_me_more: "详细说明…"
+          continue_convo: "继续对话…"
+          loading_convo: "正在加载对话"
+          collapse: "收起"
+          timed_out: "Discobot 找不到任何发现。出错了。"
+          tooltip:
+            header: "AI 支持的搜索"
+            content: "自然语言搜索由 %{model} 提供支持"
+            actions:
+              info: "它是如何运作的？"
+              disable: "禁用"
+        search_placeholder: "搜索或提问 AI"
+        search_type: "AI"
+        ask_button: "提问"
+        tip_ask: "问 AI 而不是搜索"
+        tip_search: "搜索而不是问 AI"
+        make_default: "将 AI 设置为我的默认搜索选项"
+        dismiss_default_preference: "隐藏此设置"
+        default_preference_dismissed: "此设置也可在您的用户偏好设置中找到。"
+        shortcut_hint: "或 %{shortcut}"
+        advanced_with_shortcut: "打开高级搜索（%{shortcut}）"
+        search_all_topics: "所有话题"
+        search_this_topic: "话题"
+        search_in_context: "在 %{name}"
+        search_group_messages: "%{group} 中的消息"
+        search_user_posts: "来自 %{username} 的帖子"
+        search_messages: "消息"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "相关话题"
+          show_all_matching: "显示所有匹配主题"
       user_preferences:
         empty: "目前没有相关设置"
     review:
@@ -1438,6 +1596,8 @@ zh_CN:
         rejected_tool_action:
           title: "已拒绝工具"
       types:
+        discourse_ai_triage:
+          title: "AI 分类"
         reviewable_ai_post:
           title: "AI 标记的帖子"
         reviewable_ai_chat_message:

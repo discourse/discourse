@@ -26,7 +26,7 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
-          events: [:post_moved],
+          event: :post_moved,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             category_ids: {

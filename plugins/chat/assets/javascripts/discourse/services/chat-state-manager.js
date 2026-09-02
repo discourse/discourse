@@ -166,6 +166,11 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
+  get canInteract() {
+    const routeName = this.router.currentRouteName;
+    return routeName !== "wizard" && !routeName?.startsWith("wizard.");
+  }
+
   get isDrawerCollapsed() {
     return this.isDrawerActive && !this.isDrawerExpanded;
   }

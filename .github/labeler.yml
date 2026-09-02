@@ -1,3 +1,7 @@
+boards:
+  - changed-files:
+      - any-glob-to-any-file: plugins/boards/**/*
+
 chat:
   - changed-files:
       - any-glob-to-any-file: plugins/chat/**/*

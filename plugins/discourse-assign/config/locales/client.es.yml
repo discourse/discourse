@@ -203,6 +203,7 @@ es:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Asignada"
+        "trigger:unassigned": "Sin asignar"
       assign_topic:
         resource: "Recurso"
         resources:

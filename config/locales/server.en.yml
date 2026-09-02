@@ -1,4 +1,45 @@
 en:
+  llms_txt:
+    human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."
+    crawler_policy: "Fetch only the pages needed for the user's specific request. Do not systematically crawl or bulk-download this community. Respect `robots.txt`, the site's terms, and its crawler controls. If the server responds with HTTP 429, stop and wait for the `Retry-After` interval before retrying."
+    mcp_guidance: "If you can run a local MCP server, Discourse MCP is the preferred way to access this community. Set its site URL to `%{base_url}`. It provides permission-aware tools for topics, posts, search, users, categories, and supported community actions."
+    account_required: "Community content is available only to authenticated members."
+    sections:
+      preferred_interface: "Preferred agent interface"
+      public_web_access: "Public web access"
+      optional: "Optional"
+    links:
+      mcp:
+        label: "Discourse MCP setup"
+        note: "Install the local server and connect it to an MCP-compatible client"
+      search:
+        label: "Search"
+        note: "Search public discussions for a specific user request; do not crawl result pages"
+      filter:
+        label: "Topic filter"
+        note: "Query public topics with `?q=` using filters such as `category:`, `tag:`, `status:`, and `order:`"
+      latest:
+        label: "Latest discussions"
+        note: "Browse recently active public topics"
+      categories:
+        label: "Categories"
+        note: "Browse public discussion categories"
+      sitemap:
+        label: "Sitemap"
+        note: "Discover public topic URLs subject to `robots.txt` and crawler controls"
+      about:
+        label: "About"
+        note: "Community overview, staff, and statistics"
+      guidelines:
+        label: "Guidelines"
+        note: "Read the community guidelines"
+      tos:
+        label: "Terms of service"
+        note: "Read the terms of service"
+      privacy:
+        label: "Privacy policy"
+        note: "Read the privacy policy"
+
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
@@ -237,6 +278,9 @@ en:
 
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
+
+        humanize_not_valid_icon_value: "The property at JSON Pointer '%{property_json_pointer}' must be an icon name."
+        not_valid_icon_value: "must be an icon name"
 
         humanize_string_value_not_valid_min:
           one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
@@ -1474,6 +1518,11 @@ en:
         new_members: "New members"
         returning: "Returning"
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Posts"
+        share: "Share"
     trust_level_pipeline:
       title: "Trust level pipeline"
       description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups."
@@ -1910,6 +1959,9 @@ en:
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
+  random_username:
+    unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
+
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -2109,7 +2161,7 @@ en:
     crawler_stale_chromium_major_version_cutoff: "Chromium major versions at or below this value in unengaged sessions receive a crawler score. Update it only after reviewing traffic; an outdated cutoff becomes less sensitive, not more aggressive."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
+    llms_txt: "Upload a custom text file to be served unchanged at /llms.txt instead of the generated default configured under Upcoming changes. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for the format. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. It should only be disabled temporarily for debugging/testing purposes."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_report_uri: "Send CSP violation reports to this URL via the CSP <code>report-uri</code> directive. Leave blank to disable reporting."
@@ -2214,6 +2266,9 @@ en:
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
+    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2276,6 +2331,7 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    instrument_image_processing: "Record wall-clock duration and success for image-processing operations. Disabled by default."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -2498,7 +2554,7 @@ en:
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP. Set to 0 to disable the limit."
-    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+    min_ban_entries_for_roll_up: "A new subnet ban entry will be created daily by the <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a> job when there are at least (N) blocked IP addresses within the same subnet."
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
@@ -2918,7 +2974,6 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
-    enable_site_traffic_explorer: "Link the admin dashboard's site traffic details action to the Site Traffic Explorer."
     site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
@@ -3013,6 +3068,7 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3059,6 +3115,7 @@ en:
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       at_least_one_group_required: "You must specify at least one group for this setting."
+      invalid_random_username_word_list: "This list must contain at least one word, and every word must be usable in a username on its own."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -3181,6 +3238,8 @@ en:
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
+      topic: "Show specific topics by ID"
+      topic_any: "Show topics in the specified order (comma-separated IDs)"
       exclude_category: "Exclude topics from a specific category"
       category_without_subcategories: "Show topics only in the parent category, excluding subcategories"
       exclude_category_without_subcategories: "Exclude topics only from the parent category, not subcategories"
@@ -6297,6 +6356,10 @@ en:
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
+      remove_avatar:
+        title: "Remove avatar"
+        description: "Reset this user's profile picture to the system default"
+        complete: "Avatar removed."
       approve_user:
         title: "Yes"
         complete: "User approved."

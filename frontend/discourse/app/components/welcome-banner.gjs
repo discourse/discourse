@@ -7,6 +7,7 @@ import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
+import getURL from "discourse/lib/get-url";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
@@ -138,6 +139,14 @@ export default class WelcomeBanner extends Component {
         homepage: `discovery.${defaultHomepage()}`,
       }
     );
+  }
+
+  // The icon is a shortcut to advanced search; a consumer that has made the
+  // input mean more than searching can drop it.
+  get showAdvancedSearchIcon() {
+    return applyValueTransformer("search-advanced-icon-enabled", true, {
+      location: "welcome-banner",
+    });
   }
 
   #shouldDisplayForRoute(
@@ -273,12 +282,14 @@ export default class WelcomeBanner extends Component {
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
           <div class="search-menu welcome-banner__search-menu">
-            <DButton
-              @icon="magnifying-glass"
-              @title="search.open_advanced"
-              @href="/search?expanded=true"
-              class="search-icon"
-            />
+            {{#if this.showAdvancedSearchIcon}}
+              <DButton
+                @icon="magnifying-glass"
+                @title="search.open_advanced"
+                @href={{getURL "/search?expanded=true"}}
+                class="search-icon"
+              />
+            {{/if}}
             <SearchMenu
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"

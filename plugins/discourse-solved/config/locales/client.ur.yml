@@ -54,7 +54,7 @@ ur:
               leader: "مقتدر"
               regular: "معتبر"
               member: "ممبران"
-              basic: "بنیادی"
+              basic: "آشنا"
             response_time:
               title: "جوابی وقت کی تقسیم"
               buckets:
@@ -143,6 +143,11 @@ ur:
           solved: "حل ہو گئے"
           unsolved: "حل نہیں ہوئے"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "ٹاپک"
+            category: "زُمرَہ"
       web_hooks:
         solved_event:
           group_name: "حل ہونے کا واقعہ"

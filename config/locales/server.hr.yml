@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hr:
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Pretraživanje"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Vodić za uporabu"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, GGGG"
@@ -943,6 +955,11 @@ hr:
         share: "Podijeli"
       types:
         staff: "Osoblje"
+    posters_by_member_type_members:
+      labels:
+        user: "Korisnik"
+        count: "Postovi"
+        share: "Podijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1415,7 +1432,6 @@ hr:
     user_profile_view_duration_hours: "Brojite prikaz profila novog korisnika jednom po IP-u/korisniku svakih N sati"
     levenshtein_distance_spammer_emails: "Prilikom uparivanja neželjene e-pošte, razlika u broju znakova koja će još uvijek omogućiti nejasno podudaranje."
     max_new_accounts_per_registration_ip: "Ako već postoji (n) računa razine povjerenja 0 s ovog IP-a (i nijedan nije član osoblja ili na TL2 ili višem), prestanite prihvaćati nove prijave s tog IP-a. Postavite na 0 da biste onemogućili ograničenje."
-    min_ban_entries_for_roll_up: "Kada se klikne gumb Skupi, stvorit će se novi unos zabrane podmreže ako postoji najmanje (N) unosa."
     max_age_unmatched_emails: "Izbrišite neusklađene pregledane unose e-pošte nakon (N) dana."
     max_age_unmatched_ips: "Izbrišite neusklađene zaštićene IP unose nakon (N) dana."
     num_flaggers_to_close_topic: "Minimalan broj jedinstvenih označavača koji je potreban za automatsko pauziranje teme radi intervencije"
@@ -2806,6 +2822,11 @@ hr:
       low: "Nizak"
       medium: "Srednji"
       high: "Visok"
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundi"
+        other: "%{count} sekundi"
     actions:
       agree:
         title: "Da"

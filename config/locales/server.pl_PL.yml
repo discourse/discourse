@@ -5,6 +5,46 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  llms_txt:
+    human_community_policy: "To społeczność przeznaczona do dyskusji międzyludzkich. Nie podszywaj się pod innych ani nie zakładaj kont autonomicznie. Publikuj, edytuj lub podejmuj inne działania związane z pisaniem tylko wtedy, gdy ktoś wyraźnie Cię o to poprosi."
+    crawler_policy: "Pobieraj tylko strony potrzebne do konkretnego żądania użytkownika. Nie indeksuj systematycznie ani nie pobieraj masowo tej społeczności. Przestrzegaj pliku `robots.txt`, regulaminu witryny i ustawień jej robota indeksującego. Jeśli serwer odpowie kodem HTTP 429, zatrzymaj się i odczekaj interwał `Retry-After` przed ponowieniem próby."
+    mcp_guidance: "Jeśli możesz uruchomić lokalny serwer MCP, Discourse MCP jest preferowanym sposobem dostępu do tej społeczności. Ustaw adres URL witryny na `%{base_url}`. Zapewnia on narzędzia uwzględniające uprawnienia do tematów, postów, wyszukiwania, użytkowników, kategorii i obsługiwanych działań społeczności."
+    account_required: "Treści społecznościowe są dostępne wyłącznie dla uwierzytelnionych członków."
+    sections:
+      preferred_interface: "Preferowany interfejs agenta"
+      public_web_access: "Dostęp publiczny do sieci"
+      optional: "Opcjonalnie"
+    links:
+      mcp:
+        label: "Konfiguracja  MCP Discourse"
+        note: "Zainstaluj serwer lokalny i połącz go z klientem zgodnym z MCP"
+      search:
+        label: "Szukaj"
+        note: "Przeszukaj publiczne dyskusje pod kątem konkretnego żądania użytkownika; nie przeszukuj stron z wynikami"
+      filter:
+        label: "Filtr tematyczny"
+        note: "Zapytaj o tematy publiczne za pomocą `?q=`, korzystając z filtrów takich jak `category:`, `tag:`, `status:` i `order:`"
+      latest:
+        label: "Najnowsze dyskusje"
+        note: "Przeglądaj ostatnio aktywne tematy publiczne"
+      categories:
+        label: "Kategorie"
+        note: "Przeglądaj kategorie dyskusji publicznych"
+      sitemap:
+        label: "Mapa witryny"
+        note: "Odkryj publiczne adresy URL tematów podlegające plikowi `robots.txt` i kontrolom robotów indeksujących"
+      about:
+        label: "O stronie"
+        note: "Przegląd społeczności, personel i statystyki"
+      guidelines:
+        label: "Wytyczne"
+        note: "Przeczytaj zasady społeczności"
+      tos:
+        label: "Warunki korzystania z usługi"
+        note: "Przeczytaj warunki korzystania z usługi"
+      privacy:
+        label: "Polityka prywatności"
+        note: "Przeczytaj politykę prywatności"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM RRRR"
@@ -245,6 +285,8 @@ pl_PL:
           other: "musi mieć co najwyżej %{count} nazw tagów"
         humanize_not_valid_upload_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem przesyłania."
         not_valid_upload_value: "musi być prawidłowym identyfikatorem przesyłania"
+        humanize_not_valid_icon_value: "Właściwość wskaźnika JSON „%{property_json_pointer}” musi być nazwą ikony."
+        not_valid_icon_value: "musi być nazwą ikony"
         humanize_string_value_not_valid_min:
           one: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najmniej %{count} znak."
           few: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć długość co najmniej %{count} znaki."
@@ -1530,6 +1572,11 @@ pl_PL:
         new_members: "Nowi członkowie"
         returning: "Powracający"
         staff: "Zespół"
+    posters_by_member_type_members:
+      labels:
+        user: "Użytkownik"
+        count: "Wpisy"
+        share: "Udział"
     trust_level_pipeline:
       title: "Potok poziomu zaufania"
       description: "Przemieszczanie się członków między poziomami zaufania w wybranym okresie. Podaje liczbę członków znajdujących się obecnie na każdym poziomie zaufania, ich udział w ogólnej liczbie członków, liczbę osób, które w tym okresie awansowały lub spadły na dany poziom zaufania, a także liczbę nowych rejestracji."
@@ -1720,8 +1767,10 @@ pl_PL:
         country_code: "Kod kraju"
         count: "Odwiedziny"
     top_entry_urls:
+      title: "Najpopularniejsze wejściowe adresy URL"
+      description: "Strony, które w wybranym okresie odnotowały najwięcej bezpośrednich i zewnętrznych odwiedzin przeglądarki."
       labels:
-        entry_url: "Wpisowy adres URL"
+        entry_url: "Wejściowy adres URL"
         count: "Odwiedziny"
     top_referrers_by_browser_pageviews:
       title: "Najpopularniejsi polecający"
@@ -1965,6 +2014,8 @@ pl_PL:
       admin_sidebar_deprecation: "Stary układ administracyjny jest przestarzały na rzecz nowego <a href='https://meta.discourse.org/t/-/289281'>układu paska bocznego</a> i zostanie usunięty w następnej wersji. Możesz <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>skonfigurować</a> nowy układ paska bocznego już teraz, aby wcześniej się na niego przełączyć."
       starttls_disabled: "W konfiguracji poczty wychodzącej wyłączono protokół STARTTLS. Jest to prawie nigdy konieczne. Rozważ usunięcie <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> ze swojego środowiska. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/387286'>tym temacie</a> ."
     back_from_logster_text: "Powrót do strony"
+  random_username:
+    unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -2154,7 +2205,7 @@ pl_PL:
     crawler_stale_chromium_major_version_cutoff: "Główne wersje Chromium o wartości równej lub niższej w sesjach bez zaangażowania otrzymują wynik robota indeksującego. Aktualizuj go dopiero po przeanalizowaniu ruchu; nieaktualny próg staje się mniej wrażliwy, a nie bardziej agresywny."
     slow_down_crawler_user_agents: "Agenty użytkownika robotów indeksujących sieć, które powinny mieć ograniczenie przepustowości zgodnie z konfiguracją w ustawieniu {{setting:slow_down_crawler_rate}} . Każda wartość musi mieć co najmniej 3 znaki."
     slow_down_crawler_rate: "Jeżeli określono {{setting:slow_down_crawler_user_agents}} , ta szybkość będzie dotyczyć wszystkich robotów indeksujących (liczba sekund opóźnienia między żądaniami)"
-    llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
+    llms_txt: "Prześlij niestandardowy plik tekstowy, który będzie wyświetlany bez zmian w katalogu /llms.txt zamiast wygenerowanego, domyślnego pliku skonfigurowanego w sekcji „Nadchodzące zmiany”. Zobacz <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> , aby poznać format. Aby dostosować automatyczny dostęp, skonfiguruj {{setting:slow_down_crawler_user_agents}} i {{setting:slow_down_crawler_rate}}."
     content_security_policy: "Włącz Content-Security-Policy (CSP). CSP to dodatkowa warstwa zabezpieczeń, która pomaga zapobiegać niektórym typom ataków, w tym atakom typu Cross Site Scripting (XSS) i wstrzyknięciom danych. Należy ją wyłączać tymczasowo tylko w celach debugowania/testowania."
     content_security_policy_report_only: "Włącz Content-Security-Policy-Report-Only (CSP)."
     content_security_policy_report_uri: "Wysyłaj raporty o naruszeniach CSP na ten adres URL za pomocą dyrektywy CSP <code>report-uri</code> . Pozostaw puste pole, aby wyłączyć raportowanie."
@@ -2247,6 +2298,9 @@ pl_PL:
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     enable_local_logins_via_code: "Umożliwia członkom szybszą rejestrację i logowanie za pomocą jednorazowych kodów e-mail (OTP)."
+    enable_random_usernames: 'Generuje losowe nazwy użytkowników dla kont utworzonych za pomocą jednorazowego kodu e-mail w formacie „przymiotnik + rzeczownik + dwie losowe liczby” (przykład: QuietFalcon34). Nowi użytkownicy mogą zmienić swoją nazwę użytkownika podczas rejestracji.'
+    random_username_adjectives: 'Słowa używane jako pierwsza połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
+    random_username_nouns: 'Słowa używane jako druga połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
     allow_passkeys_for_2fa: "Zezwól użytkownikom na użycie klucza dostępu w celu spełnienia wymogów uwierzytelniania dwuskładnikowego podczas potwierdzania poufnej czynności."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
@@ -2299,6 +2353,7 @@ pl_PL:
     top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego wpisu (n) w tematach formuła: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na wpis w (n) tematach formuła: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
+    instrument_image_processing: "Rejestruje czas trwania i powodzenie operacji przetwarzania obrazu. Domyślnie wyłączone."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu wpisu użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
     rate_limit_new_user_create_post: "Po napisaniu wpisu nowi użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
@@ -2476,7 +2531,7 @@ pl_PL:
     user_profile_view_duration_hours: "Licz nowe wyświetlenia profilu użytkownika na IP/Użytkownika co N godzin"
     levenshtein_distance_spammer_emails: "Przy dopasowywaniu emaili spamowych, różnica liczby znaków, która w dalszym ciągu pozwoli na przybliżone dopasowanie."
     max_new_accounts_per_registration_ip: "Jeśli istnieje już (x) kont o poziomie zaufania 0 z tego adresu IP (i żadne z nich nie jest członkiem personelu ani na poziomie TL2 lub wyższym), przestań akceptować nowe rejestracje z tego adresu IP. Ustaw na 0, aby wyłączyć limit."
-    min_ban_entries_for_roll_up: "Podczas naciskania na przycisk Przewiń do góry, utwórz nowy wpis blokady podsieci jeśli jest co najmniej (N) wpisów."
+    min_ban_entries_for_roll_up: "Nowy wpis zakazu podsieci będzie tworzony codziennie przez zadanie <a href='https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/clean_up_unmatched_ips.rb'>CleanUpUnmatchedIPs</a>, gdy w tej samej podsieci znajduje się co najmniej (N) zablokowanych adresów IP."
     max_age_unmatched_emails: "Usuń niedopasowane wiadomości e-mail po (N) dniach."
     max_age_unmatched_ips: "Usuń niedopasowane adresy IP po (N) dniach."
     num_flaggers_to_close_topic: "Minimalna liczba unikalnych oflagowań, które są potrzebne aby automatycznie zatrzymać temat do czasu interwencji."
@@ -2809,7 +2864,6 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
-    enable_site_traffic_explorer: "Połącz działanie panelu administracyjnego ze szczegółami ruchu w witrynie przeglądarki ruchu."
     site_traffic_explorer_event_limit: "Kontroluje maksymalną liczbę ostatnich odsłon stron przetwarzanych przez Site Traffic Explorer. Wyższe limity obejmują większy ruch, ale mogą wymagać dłuższego ładowania lub przekroczenia limitu czasu na serwerach baz danych o niższych zasobach."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
@@ -2900,6 +2954,7 @@ pl_PL:
     improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
+    enable_generated_llms_txt: "Generuje zwięzły plik /llms.txt, gdy nie przesłano pliku niestandardowego. Dokument opisuje publiczne ścieżki odnajdywania, preferowany interfejs Discourse MCP oraz odpowiedzialny dostęp agenta. Aby dostroić automatyczny dostęp, skonfiguruj {{setting:slow_down_crawler_user_agents}} i {{setting:slow_down_crawler_rate}}."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_date: "Nieprawidłowy format daty. Wpisz poprawną datę."
@@ -2951,6 +3006,7 @@ pl_PL:
       email_polling_disabled: "Przed włączeniem odpowiedzi przez e-mail należy włączyć sprawdzanie poczty ręcznie lub za pośrednictwem protokołu POP3 albo skonfigurować własne sprawdzanie poczty."
       user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia regionalne\" przed włączeniem tych ustawień."
       at_least_one_group_required: "Dla tego ustawienia musisz określić co najmniej jedną grupę."
+      invalid_random_username_word_list: "Lista musi zawierać co najmniej jedno słowo, przy czym każde słowo musi nadawać się do samodzielnego użycia w nazwie użytkownika."
       invalid_regex: "Wyrażenie regularne jest niepoprawne lub niedozwolone."
       invalid_regex_with_message: "Wyrażenie regularne '%{regex}' zawiera błąd: %{message}"
       email_editable_enabled: "Musisz wyłączyć 'możliwość edycji emaili' przed włączeniem tych ustawień."
@@ -3070,6 +3126,8 @@ pl_PL:
       order: "Sortuj tematy według określonego pola"
       category: "Pokaż tematy w określonej kategorii"
       category_any: "Pokaż tematy w dowolnej z określonych kategorii (rozdzielone przecinkami)"
+      topic: "Pokaż konkretne tematy według identyfikatora"
+      topic_any: "Pokaż tematy w określonej kolejności (identyfikatory rozdzielone przecinkami)"
       exclude_category: "Wyklucz tematy z określonej kategorii"
       category_without_subcategories: "Pokaż tematy tylko w kategorii nadrzędnej, z wyłączeniem podkategorii"
       exclude_category_without_subcategories: "Wykluczaj tematy tylko z kategorii nadrzędnej, a nie z podkategorii"
@@ -5946,6 +6004,12 @@ pl_PL:
       group: "Użytkownicy spoza określonych grup muszą mieć odpowiedzi zatwierdzone przez personel. Zobacz %{link}."
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
       fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
+      fast_typer_with_time: "Nowy użytkownik napisał swój pierwszy wpis podejrzanie szybko (%{typing_time}), podejrzewane zachowanie bota lub spamera. Zobacz %{link}."
+      fast_typer_time:
+        one: "%{count} sekunda"
+        few: "%{count} sekundy"
+        many: "%{count} sekund"
+        other: "%{count} sekund"
       auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
       watched_word:
         one: "Ten post zawiera obserwowane słowo, oflagowane słowo to: %{words}. Sprawdź %{link} po więcej."
@@ -6065,6 +6129,10 @@ pl_PL:
       reject_post:
         title: "Odrzuć post"
         complete: "Post odrzucony."
+      remove_avatar:
+        title: "Usuń awatar"
+        description: "Przywróć domyślne zdjęcie profilowe tego użytkownika"
+        complete: "Awatar został usunięty."
       approve_user:
         title: "Tak"
         complete: "Użytkownik zatwierdzony."

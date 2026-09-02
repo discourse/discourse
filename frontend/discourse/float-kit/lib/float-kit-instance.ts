@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import type {
+  FloatCloseOptions,
   FloatKitTrigger,
   TooltipOptions,
 } from "discourse/float-kit/lib/constants";
@@ -119,12 +120,11 @@ export default abstract class FloatKitInstance {
   }
 
   @action
-  // `options` is part of the shared close contract (a menu uses it to decide whether to
-  // refocus its trigger); the base close has no trigger to refocus, so it ignores it.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async close(options?: { focusTrigger?: boolean }) {
+  // `options` is part of the shared close contract: the base relays its data, while a menu
+  // additionally uses it to decide whether to refocus its trigger.
+  async close(options?: FloatCloseOptions) {
     this.resetHoverCloseState();
-    await this.options.onClose?.();
+    await this.options.onClose?.(options?.data);
   }
 
   /** Drops any pending grace-period close, so the float stays open. */

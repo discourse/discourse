@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import bodyClass from "discourse/helpers/body-class";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -22,7 +23,9 @@ import EmbeddableChatChannel from "./embeddable-chat-channel";
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
 export default class LivestreamZoomPage extends Component {
+  @service appEvents;
   @service currentUser;
+  @service discoursePostEventApi;
   @service embeddableChat;
   @service siteSettings;
 
@@ -37,6 +40,30 @@ export default class LivestreamZoomPage extends Component {
 
     return () => window.removeEventListener("message", this.onFrameMessage);
   });
+
+  confirmAttendance = modifier(() => {
+    if (this.#attendanceConfirmed) {
+      return;
+    }
+
+    this.#attendanceConfirmed = true;
+    this.markAsGoing();
+  });
+  #attendanceConfirmed = false;
+
+  // Attendance is what follows a user into the livestream chat channel, so
+  // someone who reaches the meeting without ever answering the RSVP would sit
+  // in front of a read-only chat beside it. Anyone who has already made a
+  // choice, including an explicit "not going", keeps it.
+  //
+  // This page is the only way into the meeting, and it is addressable in its
+  // own right, so it is asked for here rather than beside the button that
+  // usually leads here.
+  //
+  // Asked once per visit: the body reads tracked state, so it would otherwise
+  // run again whenever the post is invalidated, and `event` is rebuilt from the
+  // raw payload on each access, so a later run cannot see the invitee the first
+  // one wrote
 
   get post() {
     return this.args.topic?.postStream?.posts?.[0];
@@ -116,7 +143,38 @@ export default class LivestreamZoomPage extends Component {
       // nowhere to go but back to the topic the webinar belongs to.
       window.location.assign(this.topicUrl);
     } else if (event.data.state === "error") {
-      this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
+      this.errorMessage = i18n("discourse_events.livestream.zoom.load_error");
+    }
+  }
+
+  @bind
+  async markAsGoing() {
+    const event = this.event;
+
+    if (!this.canJoinNow || !event?.canUpdateAttendance) {
+      return;
+    }
+
+    if (event.watchingInvitee?.status) {
+      return;
+    }
+
+    const payload = { status: "going" };
+    const appEventData = { status: payload.status, postId: event.id };
+
+    try {
+      if (event.watchingInvitee) {
+        await this.discoursePostEventApi.updateEventAttendance(event, payload);
+        this.appEvents.trigger("calendar:update-invitee-status", appEventData);
+      } else {
+        await this.discoursePostEventApi.joinEvent(event, payload);
+        this.appEvents.trigger("calendar:create-invitee-status", appEventData);
+      }
+    } catch (e) {
+      // Chat beside the meeting stays read-only without this, and its own RSVP
+      // prompt is the way back from that, so the failure is worth saying out
+      // loud rather than leaving the user to find it there.
+      popupAjaxError(e);
     }
   }
 
@@ -144,6 +202,7 @@ export default class LivestreamZoomPage extends Component {
         (if this.canRenderChat "--with-chat")
       }}
       {{zoomPageViewportFit}}
+      {{this.confirmAttendance}}
     >
       {{#if this.canJoinNow}}
         {{#if this.errorMessage}}
@@ -152,13 +211,13 @@ export default class LivestreamZoomPage extends Component {
 
             <DButton
               @href={{this.zoomUrl}}
-              @label="discourse_calendar.livestream.zoom.open_in_zoom"
+              @label="discourse_events.livestream.zoom.open_in_zoom"
               @icon="up-right-from-square"
             />
 
             <DButton
               @action={{this.retryZoom}}
-              @label="discourse_calendar.livestream.zoom.join"
+              @label="discourse_events.livestream.zoom.join"
               @icon="video"
               class="btn-primary"
             />
@@ -168,20 +227,20 @@ export default class LivestreamZoomPage extends Component {
         <iframe
           class="discourse-calendar-livestream-zoom-page__frame"
           src={{this.frameUrl}}
-          title={{i18n "discourse_calendar.livestream.zoom.frame_title"}}
+          title={{i18n "discourse_events.livestream.zoom.frame_title"}}
           allow="camera; microphone; autoplay; display-capture; fullscreen"
           {{this.listenForFrame}}
         ></iframe>
       {{else}}
         <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
           <p class="discourse-calendar-livestream-zoom-page__waiting">
-            {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+            {{i18n "discourse_events.livestream.zoom.too_early"}}
             <a
               href={{this.topicUrl}}
               class="raw-link"
               {{on "click" this.viewTopic}}
             >
-              {{i18n "discourse_calendar.livestream.zoom.view_topic"}}
+              {{i18n "discourse_events.livestream.zoom.view_topic"}}
             </a>
           </p>
 

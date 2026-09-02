@@ -59,6 +59,13 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      copied: "کاپی کر لیا"
+      view_raw: "خام دیکھیں"
+      ai_decoded_transcript:
+        arguments: "دلائل"
+        type: "قِسم"
+        error: "خرابی"
+        response: "جواب"
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
@@ -163,8 +170,6 @@ ur:
         successful: "کامیابی"
         failed: "ناکامی"
         unknown: "نامعلوم"
-        topic_id: "ٹاپک ID"
-        post_id: "پوسٹ ID"
         time: "وقت"
         when: "کب"
         outcome: "نتیجہ"
@@ -177,8 +182,7 @@ ur:
         post_short: "پوسٹ %{id}"
         duration: "دورانیہ"
         actions: "عمل"
-        filters:
-          period: "دورانیہ"
+        view_details: "تفصیلات"
         periods:
           day: "پچھلے 24 گھنٹے"
           week: "پچھلے 7 دن"
@@ -355,10 +359,17 @@ ur:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
       discobot_discoveries:
-        regular_results: "موضوعات"
-        collapse: "بند کریں"
-        tooltip:
-          header: "AI سے چلنے والی تلاش"
-          content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
-          actions:
-            disable: "غیر فعال کریں"
+        create_topic: "موضوع بنائیں"
+        legacy:
+          regular_results: "موضوعات"
+          continue_convo: "گفتگو جاری رکھیں..."
+          collapse: "بند کریں"
+          tooltip:
+            header: "AI سے چلنے والی تلاش"
+            content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
+            actions:
+              disable: "غیر فعال کریں"
+        search_all_topics: "تمام موضوعات"
+        search_messages: "پیغامات"
+        sources:
+          related_discussions: "متعلقہ موضوعات"

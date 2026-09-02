@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
+module DiscourseEvents::Events
   describe "private event group invitees" do
     fab!(:event_owner, :admin)
     fab!(:invitee_user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -17,7 +17,7 @@ module DiscoursePostEvent
       Fabricate(
         :event,
         post:,
-        status: DiscoursePostEvent::Event.statuses[:private],
+        status: DiscourseEvents::Events::Event.statuses[:private],
         raw_invitees: [invited_group.name],
       )
     end
@@ -31,7 +31,7 @@ module DiscoursePostEvent
 
     def create_invitee
       event.create_invitees(
-        [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+        [{ user_id: invitee_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
       )
       event.invitees.find_by(user_id: invitee_user.id)
     end
@@ -40,7 +40,7 @@ module DiscoursePostEvent
       invitee = create_invitee
 
       expect { invited_group.remove(invitee_user) }.to change {
-        DiscoursePostEvent::Invitee.unscoped.exists?(id: invitee.id)
+        DiscourseEvents::Events::Invitee.unscoped.exists?(id: invitee.id)
       }.from(true).to(false)
     end
 
@@ -48,10 +48,10 @@ module DiscoursePostEvent
       stale_invitee = create_invitee
       invited_group.remove(invitee_user)
       stale_invitee =
-        DiscoursePostEvent::Invitee
+        DiscourseEvents::Events::Invitee
           .unscoped
           .find_or_create_by!(post_id: event.id, user_id: invitee_user.id) do |invitee|
-            invitee.status = DiscoursePostEvent::Invitee.statuses[:going]
+            invitee.status = DiscourseEvents::Events::Invitee.statuses[:going]
           end
 
       sign_in(invitee_user)
@@ -92,7 +92,7 @@ module DiscoursePostEvent
 
       expect(response.status).to eq(403)
       expect(response.parsed_body).not_to have_key("success")
-      expect(stale_invitee.reload.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(stale_invitee.reload.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
     end
   end
 end

@@ -28,6 +28,8 @@ export default class GroupCardContents extends CardContentsBase {
   @service composer;
 
   elementId = "group-card";
+  avatarSelector = "[data-group-card]";
+  avatarDataAttrKey = "groupCard";
   mentionSelector = "a.mention-group";
 
   group = null;

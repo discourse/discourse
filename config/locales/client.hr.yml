@@ -479,6 +479,8 @@ hr:
         theme: "Tema"
         fonts: "Fontovi"
         homepage: "Početna stranica"
+        welcome_banner: "Banner dobrodošlice"
+        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
       colors:
@@ -2128,7 +2130,6 @@ hr:
         watch_topic: "Prati sve objave"
         track_topic: "Prati moje odgovore"
         do_nothing: "Zanemari sve"
-      topics_unread_when_closed: "Označi teme nepročitanima kada su zatvorene"
       invited:
         title: "Pozivnice"
         pending_tab: "Na čekanju"
@@ -2789,6 +2790,9 @@ hr:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Unesi"
+      tab: "Kartica"
+      delete: "Izbriši"
+      home: "Naslovnica"
     conditional_loading_section:
       loading: Učitavanje…
     category_row:
@@ -2955,7 +2959,6 @@ hr:
       create_whisper: "Šapat"
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
-      title: "Ili pritisnite %{modifier}Enter"
       save_and_close: "Spremi i zatvori"
       discard: "Odbaci"
       draft_saved: "Skica spremljena!"
@@ -3293,10 +3296,9 @@ hr:
         search_field: "Polje za pretraživanje u zaglavlju stranice"
         search_icon: "Ikona pretraživanja blizu avatara profila"
       type:
-        default: "Teme/objave"
+        default: "Postovi"
         users: "Korisnici"
         categories: "Kategorije"
-        categories_and_tags: "Kategorije/oznake"
       context:
         user: "Pretražite članke od @%{username}"
         category: "Pretražite kategoriju #%{category}"
@@ -3309,7 +3311,6 @@ hr:
         in: "filteri prema metapodacima (npr. in:title, in:personal, in:pinned)"
         status: "filteri prema statusu teme"
         full_search: "pokreće pretraživanje cijele stranice"
-        full_search_key: "%{modifier} + Enter"
         me: "prikazuje samo vaše postove"
       advanced:
         title: Napredni filtri
@@ -4032,7 +4033,6 @@ hr:
       reply_as_new_private_message: "Odgovorite novom porukom istim primateljima."
       continue_discussion: "Nastavak rasprave iz %{postLink}:"
       follow_quote: "idi na citiranu objavu"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Pogledajte zanemareni sadržaj."
       deleted_by_author_simple: "(post izbrisao autor)"
       collapse: "sakrij"
@@ -4778,12 +4778,8 @@ hr:
     invalid_video_url: Ovaj videozapis ne može se reproducirati jer URL nije valjan ili nije dostupan.
     keyboard_shortcuts_help:
       search_placeholder: "Pretraživanje prečaca prema opisu ili kombinaciji tipki"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Prečaci tipkovnice"
       short_title: "Prečaci"
       search_ctrl_f_tip: "Da biste pretražili cijeli ovaj forum, pritisnite <kbd>/</kbd>"
@@ -5472,6 +5468,11 @@ hr:
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Ostalo"
+        related_items:
+          users:
+            title: "Korisnika"
+          labels:
+            user: "Korisnik"
       config_sections:
         account:
           title: "Račun"
@@ -5683,7 +5684,6 @@ hr:
           title: "Postavke pretraživanja"
         search_everything:
           title: "Pretraživanje"
-          header_description: "Ovdje pronađite bilo što u administratorskom sučelju. Možete filtrirati rezultate u nastavku, a vaše će se postavke pamtiti. Kako biste otvorili ovo pretraživanje bilo gdje u administratorskom sučelju, pritisnite %{shortcutHTML}."
         security:
           title: "Sigurnost"
         spam:
@@ -5830,19 +5830,15 @@ hr:
         title: "Što je novo?"
         check_for_updates: "Provjeri ažuriranja"
       site_traffic_explorer:
-        pageviews: "Pregledi stranica"
+        metric_information: "O %{metric}"
+        clear_all: "Obriši sve"
+        apply: "Primijeni"
         view_more: "Pogledaj više"
         cards:
           pages: "Stranice"
           visitors: "Posjetitelji"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP adrese"
         filters:
           ip: "IP adrese"
-        metrics:
-          pageviews:
-            label: "Pregledi stranica"
         series:
           anonymous_human: "Anonimno"
       dashboard:
@@ -5913,6 +5909,8 @@ hr:
               share: "Podijeli"
             whos_posting:
               staff: "Osoblje"
+              modal:
+                apply: "Spremi"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -5925,6 +5923,11 @@ hr:
             table:
               searches: "Pretraživanja"
               status: "Statust"
+          system:
+            title: "Sistem"
+            status: "Statust"
+            discourse_updated: "Ažuriran Discourse"
+            dashboard_updated: "Nadzorna ploča ažurirana"
         reports_section:
           header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
@@ -5963,6 +5966,15 @@ hr:
           average_for_sample: "Prosjek za uzorak"
           total: "Ukupno vrijeme"
           no_data: "Nema podataka za prikaz."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} objava"
+              few: "%{count} objava"
+              other: "%{count} objava"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnici pretraživanja</a>'
             disabled: 'Izvješće o pretraživanju u trendu je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upita za pretraživanje dnevnika</a> za prikupljanje podataka.'

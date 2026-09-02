@@ -1,34 +1,51 @@
+const ENGINES = ["dot", "neato", "circo", "fdp", "osage", "twopi"];
+
 export function setup(helper) {
   if (!helper.markdownIt) {
     return;
   }
 
-  helper.allowList(["div.graphviz", "div.graphviz.is-loading"]);
+  helper.allowList([
+    "div.graphviz",
+    "div[class=graphviz is-loading]",
+    "div[data-engine]",
+  ]);
 
   helper.registerOptions((opts, siteSettings) => {
     opts.features.graphviz = siteSettings.discourse_graphviz_enabled;
   });
 
   helper.registerPlugin((md) => {
-    if (md.options.discourse.features.graphviz) {
-      md.block.bbcode.ruler.push("graphviz", {
-        tag: "graphviz",
-
-        replace(state, tagInfo, content) {
-          const engines = ["dot", "neato", "circo", "fdp", "osage", "twopi"];
-          const token = state.push("html_raw", "", 0);
-
-          const escaped = state.md.utils.escapeHtml(content);
-          const inputEngine = state.md.utils.escapeHtml(tagInfo.attrs.engine);
-          const engine = engines.includes(inputEngine)
-            ? `data-engine='${inputEngine}'`
-            : "data-engine='dot'";
-
-          token.content = `<div class="graphviz is-loading" ${engine}>\n${escaped}\n</div>\n`;
-
-          return true;
-        },
-      });
+    if (!md.options.discourse.features.graphviz) {
+      return;
     }
+
+    md.block.bbcode.ruler.push("graphviz", {
+      tag: "graphviz",
+
+      replace(state, tagInfo, content) {
+        const token = state.push("graphviz", "div", 0);
+        token.block = true;
+        token.content = content;
+        token.attrs = [
+          [
+            "data-engine",
+            ENGINES.includes(tagInfo.attrs.engine)
+              ? tagInfo.attrs.engine
+              : "dot",
+          ],
+        ];
+
+        return true;
+      },
+    });
+
+    md.renderer.rules.graphviz = (tokens, idx) => {
+      const token = tokens[idx];
+      const source = md.utils.escapeHtml(token.content);
+      const engine = token.attrGet("data-engine");
+
+      return `<div class="graphviz is-loading" data-engine="${engine}">\n${source}\n</div>\n`;
+    };
   });
 }

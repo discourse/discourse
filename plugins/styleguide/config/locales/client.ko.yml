@@ -8,6 +8,9 @@ ko:
   js:
     styleguide:
       title: "스타일 가이드"
+      example:
+        kind:
+          component: "구성 요소"
       categories:
         atoms: Atoms
         molecules: 분자
@@ -68,6 +71,22 @@ ko:
           title: "더 많은 글"
         post_menu:
           title: "글쓰기 메뉴"
+        roving_focus:
+          toolbar:
+            copy: "복사"
+          adjacent:
+            label: "필터"
+            field: "검색"
+            open: "열기"
+            recent: "최근"
+          combobox:
+            daily: "일"
+            weekly: "주"
+            monthly: "월"
+            never: "알림 받지 않기"
+          tree:
+            components: "구성 요소"
+            select: "선택"
         modal:
           title: "모달"
           header: "모달 제목"

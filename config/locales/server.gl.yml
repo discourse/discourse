@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 gl:
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Buscar"
+      categories:
+        label: "Categorías"
+      about:
+        label: "Verbo de"
+      guidelines:
+        label: "Directrices"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -918,6 +930,11 @@ gl:
         share: "Compartir"
       types:
         staff: "Equipo"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuario"
+        count: "Publicacións"
+        share: "Compartir"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1541,7 +1558,6 @@ gl:
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
-    min_ban_entries_for_roll_up: "Ao premer no botón Pregar, crearase unha nova entrada de veto de subrede se hai polo menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que non coincidan despois de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidas que non coincidan despois de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para pausar automaticamente un tema co fin de intervilo"
@@ -3473,6 +3489,9 @@ gl:
     missing_version: "Debe incluír un parámetro de versión"
     conflict: "Hai un conflito de actualización que non lle permitiu realizar esta acción."
     reasons:
+      fast_typer_time:
+        one: "%{count} segundo"
+        other: "%{count} segundos"
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que máis seguro que non sexa de quen semella ser. Comprobe as cabeceiras de correo para máis información."
       queued_by_staff: "Un membro do equipo pensa que esta publicación necesita revisión. Permanecerá agochada ata entón."
     actions:

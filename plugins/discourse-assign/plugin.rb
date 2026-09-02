@@ -38,17 +38,6 @@ after_initialize do
         DiscourseWorkflows::Nodes::CheckAssignment::V1,
       ]
     end
-
-    on(:assigned) do |assignment|
-      DiscourseWorkflows::EventListener.handle(DiscourseWorkflows::Nodes::Assigned::V1, assignment)
-    end
-
-    on(:unassigned) do |assignment|
-      DiscourseWorkflows::EventListener.handle(
-        DiscourseWorkflows::Nodes::Unassigned::V1,
-        assignment,
-      )
-    end
   end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
@@ -881,6 +870,11 @@ after_initialize do
 
     MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, opts)
   end
+
+  add_api_key_scope(
+    :assign,
+    { assign: { actions: %w[discourse_assign/assign#assign discourse_assign/assign#unassign] } },
+  )
 
   # Event listeners
   on(:post_created) { |post| ::Assigner.auto_assign(post, force: true) }

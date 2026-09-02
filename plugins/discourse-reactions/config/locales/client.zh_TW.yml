@@ -13,16 +13,27 @@ zh_TW:
   js:
     discourse_reactions:
       reactions_title: "反應"
+      reaction:
+        forbidden: "您沒有權限對此貼文作出反應或變更反應。"
       picker:
         react_with: "對這篇文章的反應是： %{reaction}"
         cant_remove_reaction: "您無法再移除您的反應"
         remove_reaction: "刪除此 %{reaction} 反應"
       users_popup:
         all: "全部"
+        title:
+          other: "%{count} 個反應"
+      counter:
+        aria_label:
+          other: "%{count} 個反應"
       main_reaction:
         add: "給此貼文按讚"
         remove: "刪除這個喜歡"
+        cant_remove: "您已無法移除您的讚"
+        unauthenticated: "請註冊或登入以對此貼文按讚"
     notifications:
+      reaction_1_user_multiple_posts:
+        other: "對您的 %{count} 篇貼文作出反應"
       reaction_2_users: "%{username}、%{username2}"
       reaction_multiple_users:
         other: "%{username} 和其他 %{count} 人"

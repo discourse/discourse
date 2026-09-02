@@ -280,6 +280,7 @@ id:
       back: "Kembali"
       sections:
         theme: "Tema"
+        search: "Cari"
       theme:
         selected: "Dipilih"
       homepage:
@@ -1633,6 +1634,8 @@ id:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      delete: "Hapus"
+      home: "Beranda"
     category_row:
       subcategory_count:
         other: "+%{count} subkategori"
@@ -1787,6 +1790,7 @@ id:
       categories: "Kategori"
       tags: "Label"
       type:
+        default: "Pos"
         users: "Pengguna"
         categories: "Kategori"
       advanced:
@@ -2428,6 +2432,11 @@ id:
       reports:
         group_members: "Anggota"
         group_other: "Lainnya"
+        related_items:
+          users:
+            title: "Pengguna"
+          labels:
+            user: "Pengguna"
       config_sections:
         account:
           title: "Akun"
@@ -2521,16 +2530,11 @@ id:
       search:
         title: "Cari"
       site_traffic_explorer:
-        pageviews: "Tampilan halaman"
-        columns:
-          browsers: "Peramban"
-          ip_addresses: "Alamat IP"
+        metric_information: "Tentang %{metric}"
+        apply: "menerapkan"
         filters:
           browser: "Peramban"
           ip: "Alamat IP"
-        metrics:
-          pageviews:
-            label: "Tampilan halaman"
         series:
           anonymous_human: "Anonim"
       dashboard:
@@ -2556,6 +2560,8 @@ id:
               posts: "Pos"
             whos_posting:
               staff: "Staf"
+              modal:
+                apply: "Simpan"
             trust_level_pipeline:
               trust_levels:
                 "0": "Baru"
@@ -2565,6 +2571,9 @@ id:
             title: "Cari"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Mengelola"
           modal:
@@ -2585,6 +2594,11 @@ id:
           30_days_ago: "30 Hari Lalu"
           all: "Semua"
           refresh_report: "Segarkan"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} pengguna"
+            posts_count:
+              other: "%{count} post"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
           sort_button: "Urutkan berdasarkan %{column}"

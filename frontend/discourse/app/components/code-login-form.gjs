@@ -38,6 +38,7 @@ const RESEND_COOLDOWN_SECONDS = 30;
 export default class CodeLoginForm extends Component {
   @service login;
   @service site;
+  @service siteSettings;
   @service modal;
 
   @tracked email = this.args.initialEmail ?? "";
@@ -56,6 +57,7 @@ export default class CodeLoginForm extends Component {
   @tracked usernameChecking = false;
   @tracked usernameError;
   @tracked usernameEditable = true;
+  @tracked regenerating = false;
   @tracked avatarTemplate;
   @tracked avatarDetailsLoaded = false;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
@@ -74,6 +76,7 @@ export default class CodeLoginForm extends Component {
     showValidationOnInit: false,
   });
   #cooldownTimer;
+  #postSignupRedirectUrl;
   #usernameCheckSeq = 0;
   @tracked _step = "email";
 
@@ -365,11 +368,48 @@ export default class CodeLoginForm extends Component {
       can_upload_avatar: result.can_upload_avatar,
     });
     this.usernameEditable = result.can_edit_username;
-    // Only prefill an email-derived suggestion; otherwise the user picks one.
     this.username = result.prefill_username ? user.username : "";
     this.avatarTemplate = user.avatar_template;
+    // Set when the server held back a DiscourseConnect provider handoff so this
+    // step could run; continuing resumes it.
+    this.#postSignupRedirectUrl = result.redirect_url;
+
     if (this.usernameEditable && this.username) {
       this.checkUsernameAvailability();
+    }
+  }
+
+  @action
+  async regenerateUsername() {
+    if (this.regenerating) {
+      return;
+    }
+
+    this.regenerating = true;
+    try {
+      const before = this.username;
+      // Hold the rolling state for at least one animation cycle so a fast
+      // response doesn't cut the dice spin (and the text fade) short.
+      const [result] = await Promise.all([
+        ajax("/u/random-username.json"),
+        new Promise((resolve) => discourseLater(resolve, 400)),
+      ]);
+
+      // Don't touch state (or fire the availability check) if the component
+      // was torn down mid-roll, or clobber a name the user typed while the
+      // request was in flight.
+      if (this.isDestroying || this.username !== before) {
+        return;
+      }
+
+      this.username = result.username;
+      this.usernameError = null;
+      this.usernameAvailable = false;
+      await this.checkUsernameAvailability();
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.regenerating = false;
     }
   }
 
@@ -481,7 +521,7 @@ export default class CodeLoginForm extends Component {
 
     // Leave the button disabled and spinning through the redirect so it doesn't
     // flash back to its idle state before the page navigates away.
-    this.redirectAfterLogin();
+    this.redirectAfterLogin(this.#postSignupRedirectUrl);
   }
 
   @action
@@ -527,14 +567,20 @@ export default class CodeLoginForm extends Component {
 
     try {
       const honeypot = await ajax("/session/hp.json");
-      await ajax("/session/login-code", {
+      const result = await ajax("/session/login-code", {
         type: "POST",
         data: {
           email: this.email,
+          signup: this.isSignup,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
       });
+
+      if (result?.error) {
+        this.codeError = result.error;
+        return false;
+      }
 
       this.step = "code";
       this.startResendCooldown();
@@ -639,6 +685,12 @@ export default class CodeLoginForm extends Component {
             <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
 
+          {{#if this.codeError}}
+            <div class="code-login-form__error" aria-live="polite" role="alert">
+              {{this.codeError}}
+            </div>
+          {{/if}}
+
           <div class="code-login-form__email-actions">
             <form.Submit
               @label="code_login.continue_button"
@@ -736,18 +788,32 @@ export default class CodeLoginForm extends Component {
                 <label for="code-login-username">
                   {{i18n "code_login.username_label"}}
                 </label>
-                <input
-                  {{on "input" this.usernameChanged}}
-                  type="text"
-                  value={{this.username}}
-                  id="code-login-username"
-                  name="username"
-                  autocomplete="off"
-                  placeholder={{i18n "code_login.username_placeholder"}}
-                  class="code-login-form__new-account-username"
-                  aria-invalid={{if this.usernameError "true"}}
-                  aria-describedby="code-login-username-error"
-                />
+                <div class="code-login-form__username-input">
+                  <input
+                    {{on "input" this.usernameChanged}}
+                    type="text"
+                    value={{this.username}}
+                    id="code-login-username"
+                    name="username"
+                    autocomplete="off"
+                    placeholder={{i18n "code_login.username_placeholder"}}
+                    class="code-login-form__new-account-username
+                      {{if this.regenerating '--swapping'}}"
+                    aria-invalid={{if this.usernameError "true"}}
+                    aria-describedby="code-login-username-error"
+                  />
+                  {{#if this.siteSettings.enable_random_usernames}}
+                    <DButton
+                      @action={{this.regenerateUsername}}
+                      @icon="dice"
+                      @title="code_login.regenerate_username"
+                      @ariaLabel="code_login.regenerate_username"
+                      aria-busy={{if this.regenerating "true"}}
+                      class="btn-default code-login-form__username-regen
+                        {{if this.regenerating '--rolling'}}"
+                    />
+                  {{/if}}
+                </div>
                 <div
                   id="code-login-username-error"
                   class="code-login-form__error"

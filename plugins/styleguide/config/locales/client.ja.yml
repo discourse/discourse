@@ -13,6 +13,9 @@ ja:
   js:
     styleguide:
       title: "スタイルガイド"
+      example:
+        kind:
+          component: "コンポーネント"
       categories:
         syntax: 構文
         atoms: 原子
@@ -39,6 +42,8 @@ ja:
           title: "色"
         dialog:
           title: "ダイアログ"
+        drag_and_drop:
+          locked: "ロック済み"
         icons:
           title: "アイコン"
           full_list: "Font Awesome Icons の全リストを表示"
@@ -94,6 +99,29 @@ ja:
           title: "その他のトピック"
         post_menu:
           title: "投稿メニュー"
+        roving_focus:
+          toolbar:
+            copy: "コピー"
+          tags:
+            remove: "%{tag} を削除"
+            design: "デザイン"
+            support: "支援する"
+          adjacent:
+            label: "フィルター"
+            field: "検索"
+            placeholder: "トピックを検索"
+            open: "オープン"
+            recent: "最近"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "毎日"
+            weekly: "毎週"
+            monthly: "毎月"
+            never: "なし"
+          tree:
+            components: "コンポーネント"
+            select: "選択"
         modal:
           title: "モーダル"
           header: "モーダルタイトル"

@@ -556,6 +556,8 @@ fr:
         theme: "Thème"
         fonts: "Polices"
         homepage: "Page d'accueil"
+        welcome_banner: "Bannière de bienvenue"
+        search: "Recherche"
       theme:
         selected: "Sélectionné"
       colors:
@@ -2278,7 +2280,6 @@ fr:
         watch_topic: "Surveiller le sujet"
         track_topic: "Suivre le sujet"
         do_nothing: "Ne rien faire"
-      topics_unread_when_closed: "Prenez en compte les sujets non lus lorsqu'ils sont fermés"
       invited:
         title: "Invitations"
         pending_tab: "En attente"
@@ -2981,6 +2982,11 @@ fr:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Entrée"
+      option: "Option"
+      period: "Période"
+      tab: "Tabulation"
+      delete: "Supprimer"
+      home: "Accueil"
     conditional_loading_section:
       loading: Chargement…
     category_row:
@@ -3250,7 +3256,6 @@ fr:
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
-      title: "Ou appuyez sur %{modifier}Entrée"
       save_and_close: "Enregistrer et fermer"
       discard: "Abandonner"
       cancel_edit: "Annuler la modification"
@@ -3630,10 +3635,10 @@ fr:
         search_field: "Champ de recherche dans l'en-tête du site"
         search_icon: "Icône de recherche près de l'avatar du profil"
       type:
-        default: "Sujets/messages"
+        default: "Publications"
         users: "Utilisateurs"
         categories: "Catégories"
-        categories_and_tags: "Catégories/étiquettes"
+        categories_and_tags: "Catégories et étiquettes"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"
@@ -3646,7 +3651,6 @@ fr:
         in: "filtres par métadonnées (p. ex., in:title, in:personal, in:pinned)"
         status: "filtres par statut de sujet"
         full_search: "lance la recherche en pleine page"
-        full_search_key: "%{modifier} + Entrée"
         me: "affiche uniquement vos messages"
       advanced:
         title: Filtres avancés
@@ -3971,7 +3975,6 @@ fr:
           missing_to: "Une étiquette de remplacement est requise"
       delete_topics:
         name: "Supprimer"
-        description: "Supprimer définitivement les sujets sélectionnés. Cette action est irréversible."
       update_category:
         name: "Mettre à jour la catégorie"
         description: "Déplacer tous les sujets sélectionnés vers la catégorie suivante :"
@@ -4554,7 +4557,6 @@ fr:
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
       follow_quote: "accéder au message cité"
-      show_full: "Afficher le message complet"
       show_hidden: "Afficher le contenu ignoré."
       deleted_by_author_simple: "(message supprimé par son auteur)"
       collapse: "réduire"
@@ -5396,12 +5398,8 @@ fr:
     invalid_video_url: Cette vidéo ne peut pas être lue, car l'adresse URL n'est pas valide ou n'est pas disponible.
     keyboard_shortcuts_help:
       search_placeholder: "Rechercher un raccourci par description ou combinaison de touches"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Raccourcis clavier"
       short_title: "Raccourcis"
       search_ctrl_f_tip: "Pour effectuer une recherche dans l'ensemble de ce forum, appuyez sur <kbd>/</kbd>"
@@ -6190,6 +6188,11 @@ fr:
         legacy_warning: "Ce rapport est obsolète et sera bientôt retiré. Si vous avez besoin d'aide pour trouver le rapport de remplacement, veuillez contacter l'assistance."
         chart:
           total: "Total : %{count}"
+        related_items:
+          users:
+            title: "Utilisateurs"
+          labels:
+            user: "Utilisateur"
       config_sections:
         account:
           title: "Compte"
@@ -6523,7 +6526,6 @@ fr:
           header_description: "Configurer les paramètres de recherche, y compris la journalisation et la tokenisation pour les langues chinoise et japonaise"
         search_everything:
           title: "Recherche"
-          header_description: "Cherchez tout ce que vous voulez dans l'interface d'administration ici. Vous pouvez filtrer les résultats ci-dessous et vos préférences seront mémorisées. Pour ouvrir cette recherche n'importe où dans l'interface d'administration, appuyez sur %{shortcutHTML}."
         security:
           title: "Sécurité"
           header_description: "Configurez les paramètres de sécurité, notamment l'authentification à deux facteurs, les privilèges de modérateur et les politiques de sécurité du contenu"
@@ -6767,25 +6769,20 @@ fr:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
       site_traffic_explorer:
-        pageviews: "Pages vues"
+        metric_information: "À propos du site %{metric}"
+        remove_filter_value: "Supprimer %{value}"
+        clear_all: "Tout effacer"
+        apply: "Appliquer"
         view_more: "Voir plus"
         cards:
           pages: "Pages"
           visitors: "Visiteurs"
-        columns:
-          referrers: "Source de trafic"
-          countries: "Pays"
-          top_urls: "URL"
-          browsers: "Navigateur"
-          ip_addresses: "Adresse IP"
         filters:
           referrer: "Source de trafic"
           country: "Pays"
           browser: "Navigateur"
           ip: "Adresse IP"
         metrics:
-          pageviews:
-            label: "Pages vues"
           logged_in_share:
             label: "Part des pages vues par des utilisateurs connectés"
           bounce_rate:
@@ -6898,6 +6895,14 @@ fr:
               staff: "Responsables"
               empty: "Aucune publication pendant la période sélectionnée."
               save_error: "Impossible d'enregistrer votre sélection pour la prochaine fois."
+              add_group: "Ajouter un groupe"
+              modal:
+                apply: "Enregistrer"
+                enable: "Activer %{title}"
+                disable: "Désactiver %{title}"
+                move_up: "Déplacer %{title} vers le haut"
+                move_down: "Déplacer %{title} vers le bas"
+                footer_note: "Ces modifications s'appliqueront à tous les utilisateurs."
             trust_level_pipeline:
               title: "Évolution des niveaux de confiance"
               trust_levels:
@@ -6965,6 +6970,11 @@ fr:
                 no_match_tooltip: "Termes de recherche avec un taux de clic (CTR) de 0 %."
                 poor_match: "Mauvaise correspondance"
                 poor_match_tooltip: "Termes de recherche avec un taux de clic (CTR) compris entre 1 et 20 %."
+          system:
+            title: "Système"
+            status: "Statut"
+            discourse_updated: "Dernière mise à jour de Discourse "
+            dashboard_updated: "Dernière actualisation du tableau de bord "
         reports_section:
           header_action: "Gérer"
           description: "Épinglez des rapports standard ou des requêtes Data Explorer pour suivre ce qui compte pour votre communauté."
@@ -7109,6 +7119,14 @@ fr:
           average_for_sample: "Moyenne pour l'échantillon"
           total: "Total depuis toujours"
           no_data: "Aucune donnée à afficher."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} utilisateur"
+              other: "%{count} utilisateurs"
+            posts_count:
+              one: "%{count} publication"
+              other: "%{count} publications"
+            deselect: "Désélectionner %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'

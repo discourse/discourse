@@ -316,6 +316,7 @@ te:
       next: "తదుపరి"
       sections:
         theme: "థీమ్"
+        search: "వెతుకు"
       theme:
         selected: "ఎంపిక చేయబడినవి"
       colors:
@@ -2147,6 +2148,10 @@ te:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "ఎంపిక"
+      tab: "Tab"
+      delete: "తొలగించు"
+      home: "మొదటి పేజీ"
     conditional_loading_section:
       loading: లోడ్ అవుతోంది…
     category_row:
@@ -2281,7 +2286,6 @@ te:
       create_whisper: "గుసగుసలాట"
       create_shared_draft: "భాగస్వామ్య చిత్తుప్రతిని సృష్టించండి"
       edit_shared_draft: "భాగస్వామ్య చిత్తుప్రతిని సవరించండి"
-      title: "లేదా %{modifier}ఎంటర్ నొక్కండి"
       discard: "విస్మరించండి"
       users_placeholder: "సభ్యులను లేదా సమూహాలను జోడించండి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
@@ -2544,10 +2548,9 @@ te:
       recent: "ఇటీవలి శోధనలు"
       clear_recent: "ఇటీవలి శోధనలను క్లియర్ చేయండి"
       type:
-        default: "విషయాలు/పోస్ట్‌లు"
+        default: "పోస్ట్‌లు"
         users: "సభ్యులు"
         categories: "వర్గాలు"
-        categories_and_tags: "వర్గాలు/ట్యాగ్‌లు"
       context:
         user: "@%{username} ద్వారా పోస్ట్‌లను శోధించండి"
         category: "#%{category} వర్గాన్ని శోధించండి"
@@ -2560,7 +2563,6 @@ te:
         in: "మెటాడేటా ద్వారా ఫిల్టర్‌లు (ఉదా ఇన్:టైటిల్, ఇన్: పర్సనల్, ఇన్:పిన్డ్)"
         status: "విషయం స్థితి ద్వారా ఫిల్టర్‌లు"
         full_search: "పూర్తి పేజీ శోధనను ప్రారంభిస్తుంది"
-        full_search_key: "%{modifier} + Enter"
         me: "మీ పోస్ట్‌లను మాత్రమే చూపుతుంది"
       advanced:
         title: అధునాతన ఫిల్టర్లు
@@ -3205,7 +3207,6 @@ te:
       reply_as_new_private_message: "అదే గ్రహీతలకు కొత్త సందేశం వలె ప్రత్యుత్తరం ఇవ్వండి"
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోట్ చేసిన పోస్ట్‌కి వెళ్లండి"
-      show_full: "పూర్తి పోస్ట్‌ను చూపండి"
       show_hidden: "విస్మరించబడిన కంటెంట్‌ను వీక్షించండి."
       deleted_by_author_simple: "(రచయిత ద్వారా పోస్ట్ తొలగించబడింది)"
       collapse: "కుదించండి"
@@ -3812,11 +3813,8 @@ te:
       image_load_error: '<a href="%url%">చిత్రం</a> లోడ్ చేయబడలేదు.'
     cannot_render_video: మీ బ్రౌజర్ కోడెక్‌కు మద్దతు ఇవ్వనందున ఈ వీడియో రెండర్ చేయబడదు.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} లేదా %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "కీబోర్డు షార్ట్ కట్లు"
       short_title: "షార్ట్కట్లు"
       description_header: "వివరణ"
@@ -4368,6 +4366,11 @@ te:
         group_traffic: "ట్రాఫిక్"
         group_members: "సభ్యులు"
         group_other: "ఇతర"
+        related_items:
+          users:
+            title: "సభ్యులు"
+          labels:
+            user: "సభ్యుడు"
       config_sections:
         account:
           title: "ఖాతా"
@@ -4539,17 +4542,11 @@ te:
       search:
         title: "వెతుకు"
       site_traffic_explorer:
-        pageviews: "పేజీ వీక్షణలు"
-        columns:
-          top_urls: "URL"
-          browsers: "బ్రౌజర్"
-          ip_addresses: "ఐపీ చిరునామా"
+        metric_information: "%{metric} గురించి"
+        apply: "దరఖాస్తు చేసుకోండి"
         filters:
           browser: "బ్రౌజర్"
           ip: "ఐపీ చిరునామా"
-        metrics:
-          pageviews:
-            label: "పేజీ వీక్షణలు"
         series:
           anonymous_human: "అనామక"
       dashboard:
@@ -4617,6 +4614,8 @@ te:
               share: "షేర్ చేయండి"
             whos_posting:
               staff: "సిబ్బంది"
+              modal:
+                apply: "సేవ్ చేయండి"
             trust_level_pipeline:
               trust_levels:
                 "0": "కొత్త"
@@ -4629,6 +4628,9 @@ te:
             table:
               searches: "శోధనలు"
               status: "స్థితి"
+          system:
+            title: "వ్వవస్థ"
+            status: "స్థితి"
         reports_section:
           header_action: "నిర్వహించండి"
           modal:
@@ -4665,6 +4667,13 @@ te:
           average_for_sample: "నమూనా కోసం సగటు"
           total: "మొత్తం సమయం"
           no_data: "ప్రదర్శించడానికి డేటా లేదు."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} సభ్యుడు"
+              other: "%{count} సభ్యులు"
+            posts_count:
+              one: "%{count} పోస్ట్"
+              other: "%{count} పోస్ట్‌లు"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">శోధన లాగ్‌లు</a>'
             disabled: 'ట్రెండింగ్ శోధన నివేదిక నిలిపివేయబడింది. డేటాను సేకరించడానికి <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">శోధన పాదాల లాగ్ ను ప్రారంభించండి</a> .'

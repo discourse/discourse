@@ -68,7 +68,9 @@ export default class PollComponent extends Component {
     }
 
     const userGroups =
-      user && user.groups && user.groups.map((g) => g.name.toLowerCase());
+      user &&
+      user.visibleGroups &&
+      user.visibleGroups.map((g) => g.name.toLowerCase());
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };

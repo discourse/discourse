@@ -320,6 +320,7 @@ sq:
       next: "Vazhdo përpara"
       sections:
         theme: "Tema"
+        search: "Kërko"
       homepage:
         topics: "Topics"
         categories: "Categories"
@@ -1804,7 +1805,6 @@ sq:
         after_10_minutes: "pas 10 minutash"
       notification_level_when_replying:
         track_topic: "Ndiqni temën"
-      topics_unread_when_closed: "Konsideroni temat e palexuara kur ato janë të mbyllura"
       invited:
         title: "Ftesat"
         pending_tab: "Në pritje"
@@ -2394,6 +2394,8 @@ sq:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Hyni"
+      delete: "Fshij"
+      home: "Kryefaqja"
     conditional_loading_section:
       loading: Duke u ngarkuar…
     category_row:
@@ -2533,7 +2535,6 @@ sq:
       create_whisper: "Pëshpëritje"
       create_shared_draft: "Krijo draft të përbashkët"
       edit_shared_draft: "Redakto draftin e përbashkët"
-      title: "Ose shtypni %{modifier}Enter"
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
@@ -2808,10 +2809,9 @@ sq:
       recent: "Kërkimet e fundit"
       clear_recent: "Pastro kërkimet e fundit"
       type:
-        default: "Temat/postimet"
+        default: "Postime"
         users: "Anëtarët"
         categories: "Kategoritë"
-        categories_and_tags: "Kategoritë/etiketat"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
@@ -2824,7 +2824,6 @@ sq:
         in: "filtra sipas meta të dhënave (p.sh. në:titull, në:personal, në:gozhduar)"
         status: "filtron sipas statusit të temës"
         full_search: "nis kërkimin në faqe të plotë"
-        full_search_key: "%{modifier} + Enter"
         me: "tregon vetëm postimet tuaja"
       advanced:
         title: Filtra të avancuar
@@ -3417,7 +3416,6 @@ sq:
       reply_as_new_topic: "Përgjigju në një temë të re të ndërlidhur"
       continue_discussion: "Vazhdim i diskutimit nga tema %{postLink}:"
       follow_quote: "shko tek tema e cituar"
-      show_full: "Shfaq postimin e plotë"
       expand_collapse: "zgjero/shkurto"
       gap:
         one: "shiko %{count} përgjigje të fshehur"
@@ -4020,6 +4018,11 @@ sq:
         group_traffic: "Trafik"
         group_members: "Anëtarë"
         group_other: "Të tjerë"
+        related_items:
+          users:
+            title: "Users"
+          labels:
+            user: "User"
       config_sections:
         account:
           title: "Llogaria"
@@ -4171,12 +4174,11 @@ sq:
       search:
         title: "Kërko"
       site_traffic_explorer:
+        metric_information: "Rreth %{metric}"
+        apply: "Apliko"
         view_more: "Shiko më shumë"
         cards:
           visitors: "Vizitorët"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "Adresa IP"
         filters:
           ip: "Adresa IP"
         series:
@@ -4218,6 +4220,8 @@ sq:
               share: "Shpërndaje"
             whos_posting:
               staff: "Stafi"
+              modal:
+                apply: "Ruani"
             trust_level_pipeline:
               trust_levels:
                 "0": "I Ri"
@@ -4229,6 +4233,9 @@ sq:
             title: "Kërko"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Menaxhoni"
           modal:
@@ -4253,6 +4260,13 @@ sq:
           monthly: Mujore
           weekly: Javore
           groups: "Të gjitha grupet"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} anëtar"
+              other: "%{count} anëtarë"
+            posts_count:
+              one: "%{count} postim"
+              other: "%{count} postime"
           sort_button: "Rendit sipas %{column}"
           filters:
             group:

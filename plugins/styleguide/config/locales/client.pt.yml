@@ -8,6 +8,9 @@ pt:
   js:
     styleguide:
       title: "Styleguide"
+      example:
+        kind:
+          component: "Componente"
       categories:
         atoms: Átomos
         molecules: Moléculas
@@ -68,6 +71,26 @@ pt:
           title: "Mais Tópicos"
         post_menu:
           title: "Menu de Postagem"
+        roving_focus:
+          toolbar:
+            copy: "Copiar"
+          tags:
+            remove: "Remover %{tag}"
+          adjacent:
+            label: "Filtros"
+            field: "Procurar"
+            open: "Abrir"
+            recent: "Recente"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Diariamente"
+            weekly: "Semanalmente"
+            monthly: "Mensalmente"
+            never: "Nunca"
+          tree:
+            components: "Componentes"
+            select: "Selecionar"
         modal:
           title: "Modal"
           header: "Título Modal"

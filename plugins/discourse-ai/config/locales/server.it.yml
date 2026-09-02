@@ -247,7 +247,6 @@ it:
       read_post:
         unknown_post: "messaggio"
       agents:
-        default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:
           name: "Assistente GitHub"
@@ -426,6 +425,7 @@ it:
         random_picker: "Scegli un numero casuale o un elemento casuale di una lista"
         categories: "Elenca tutte le categorie visibili pubblicamente sul forum"
         delete_topic: "Elimina un argomento"
+        create_category: "Crea una nuova categoria"
         search: "Cerca tutti gli argomenti pubblici sul forum"
         tags: "Elenca tutte le etichette sul forum"
         time: "Trova l'ora in diversi fusi orari"
@@ -485,10 +485,6 @@ it:
         search_settings:
           one: "Trovato %{count} risultato per '%{query}'"
           other: "Trovati %{count} risultati per '%{query}'"
-      discoveries:
-        continue_conversation:
-          title: "Conversazioni scoperte: cerca %{query}"
-          raw: "Nella mia ricerca di %{query} mi hai mostrato le seguenti informazioni:\n\n%{context}\n\nProseguiamo la conversazione."
       close_topic:
         errors:
           not_found: "Argomento non trovato."
@@ -498,10 +494,13 @@ it:
       delete_topic:
         errors:
           not_found: "Argomento non trovato."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Argomento non trovato."
       edit_category:
+        errors:
+          not_found: "Categoria non trovata."
+      change_topic_category:
         errors:
           not_found: "Argomento non trovato."
           category_not_found: "Categoria non trovata."

@@ -11,6 +11,16 @@ RSpec.describe ReviewableUserSerializer do
     Jobs::CreateUserReviewable.new.execute(user_id: user.id)
   end
 
+  it "includes the avatar the user was flagged for" do
+    upload = Fabricate(:image_upload, user: user)
+    user.update!(uploaded_avatar_id: upload.id)
+    reviewable.update!(payload: ReviewableUser.payload_for(user.reload))
+
+    json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+
+    expect(json[:payload]["avatar_url"]).to eq(Discourse.store.cdn_url(upload.reload.url))
+  end
+
   it "includes the user fields for review" do
     json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:user_id]).to eq(reviewable.target_id)

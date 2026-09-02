@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 be:
+  llms_txt:
+    links:
+      search:
+        label: "Пошук"
+      categories:
+        label: "катэгорыі"
+      about:
+        label: "Пра тэму"
+      guidelines:
+        label: "Рэкамендацыі"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D МММ, YYYY"
@@ -652,6 +662,11 @@ be:
         share: "Абагуліць"
       types:
         staff: "Персанал"
+    posters_by_member_type_members:
+      labels:
+        user: "Карыстальнік"
+        count: "Допісаў"
+        share: "Абагуліць"
     trust_level_pipeline:
       labels:
         count: "Члены"
@@ -1142,7 +1157,6 @@ be:
     topic_view_duration_hours: "Граф новага віду тэмы адзін раз у IP"
     user_profile_view_duration_hours: "Граф новы від профіляў карыстальнікаў адзін раз у IP"
     levenshtein_distance_spammer_emails: "Пры супастаўленні спамерскіх лістоў, колькасць знакаў розніцы, што будзе па-ранейшаму дазваляе невыразны матч."
-    min_ban_entries_for_roll_up: "Пры націску на кнопку Roll Up, створыць новую запіс аб забароне падсеткі, калі ёсць па меншай меры (N) запісаў."
     max_age_unmatched_emails: "Выдаліць няпарнага Экранаваныя запісу па электроннай пошце пасля (N) дзён."
     max_age_unmatched_ips: "Выдаліць няпарнага Экранаваныя запісу IP пасля (N) дзён."
     num_flaggers_to_close_topic: "Мінімальная колькасць унікальных сігнальшчыкам, што патрабуецца, каб аўтаматычна прыпыніць тэму ўмяшання"
@@ -2326,6 +2340,12 @@ be:
       disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунду"
+        few: "%{count}секунд"
+        many: "%{count}секунды"
+        other: "%{count}секунды"
     actions:
       agree:
         title: "ды"

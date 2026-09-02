@@ -185,6 +185,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
 
     it "is hidden once uncategorized topics are disallowed and the change is off" do
       SiteSetting.allow_uncategorized_topics = false
+      SiteSetting.remove_and_replace_uncategorized = false
       expect(described_class.should_display_upcoming_change?).to eq(false)
     end
 
@@ -201,6 +202,8 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
     let(:legacy_settings) { %i[allow_uncategorized_topics suppress_uncategorized_badge] }
 
     it "hides the legacy uncategorized settings only while the change is enabled" do
+      SiteSetting.remove_and_replace_uncategorized = false
+
       expect(SiteSetting.hidden_settings).not_to include(*legacy_settings)
 
       SiteSetting.remove_and_replace_uncategorized = true

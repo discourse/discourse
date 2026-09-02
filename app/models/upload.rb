@@ -311,6 +311,7 @@ class Upload < ActiveRecord::Base
               "-format",
               "%w %h",
               "MSVG:#{path}",
+              operation: :upload_svg_dimensions,
               read: [path],
               timeout: MAX_IDENTIFY_SECONDS,
             ).split(" ")
@@ -407,6 +408,7 @@ class Upload < ActiveRecord::Base
               "-format",
               "%c",
               "histogram:info:",
+              operation: :upload_dominant_color,
               read: [local_path],
               nice: 10,
               timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
@@ -443,6 +445,7 @@ class Upload < ActiveRecord::Base
           "-format",
           "%Q",
           local_path,
+          operation: :upload_quality_probe,
           read: [local_path],
           timeout: MAX_IDENTIFY_SECONDS,
         ).to_i

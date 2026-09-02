@@ -13,6 +13,9 @@ ru:
   js:
     styleguide:
       title: "Руководство по стилю"
+      example:
+        kind:
+          component: "компонент"
       categories:
         syntax: Синтаксис
         atoms: Атомы
@@ -39,6 +42,8 @@ ru:
           title: "Цвета"
         dialog:
           title: "Диалог"
+        drag_and_drop:
+          locked: "Заблокировано"
         icons:
           title: "Значки"
           full_list: "См. полный список значков Font Awesome"
@@ -92,6 +97,31 @@ ru:
           title: "Другие темы"
         post_menu:
           title: "Меню сообщения"
+        roving_focus:
+          toolbar:
+            bold: "Жирный"
+            italic: "Курсив"
+            copy: "Копировать"
+          tags:
+            remove: "Убрать %{tag}"
+            design: "Дизайн"
+            support: "Поддержать"
+          adjacent:
+            label: "Фильтры"
+            field: "Искать"
+            placeholder: "Поиск по темам"
+            open: "Открытые"
+            recent: "Недавние"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Ежедневно"
+            weekly: "Еженедельно"
+            monthly: "Ежемесячно"
+            never: "Никогда"
+          tree:
+            components: "компонентов"
+            select: "Выбрать"
         modal:
           title: "Модальный"
           header: "Модальный заголовок"

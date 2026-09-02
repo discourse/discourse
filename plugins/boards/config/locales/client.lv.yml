@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    boards:
+      board:
+        remove_card: "Atcelt"
+        title: "Virsraksts"
+        tags: "Birkas"
+        topic_reply_count:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+      manage:
+        name: "Vārds"
+        constraint_categories: "Sadaļas"
+        constraint_tags: "Birkas"
+        columns:
+          remove: "Atcelt"
+          column_title: "Virsraksts"
+          icon: "Ikona"
+          color: "Krāsa"
+          move_to_status_open: "Atvērt"
+          move_to_status_closed: "Slēgts"

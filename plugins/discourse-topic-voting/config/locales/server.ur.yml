@@ -7,13 +7,13 @@
 ur:
   category_types:
     ideas:
-      name: "افکار"
-      title: "افکار"
-      description: "جہاں صارفین افکار پیش کر سکتے ہیں اور ان کو ووٹ دے سکتے ہیں جنہیں وہ سب سے زیادہ پسند کرتے ہیں۔"
+      name: "تجاویز"
+      title: "تجاویز"
+      description: "جہاں صارفین تجاویز پیش کر سکتے ہیں اور ان کو ووٹ دے سکتے ہیں جنہیں وہ سب سے زیادہ پسند کرتے ہیں۔"
   site_settings:
-    enable_ideas_category_type_setup: "زمرہ کی تخلیق کئ سیٹ اپ کے دوران افکاری زمرہ کی قسم کے اختیار کو فعال کرتا ہے۔"
-    enable_topic_voting_badges: "صارفین کو دیے جانے والے عنوان ووٹنگ تمغات کو فعال کرتا ہے جب دوسرے ان کے افکار کو ووٹ دیں۔"
-    topic_voting_enabled: 'صارفین کو ٹاپکس پر ووٹ کرنے کی اجازت دیں؟'
+    enable_ideas_category_type_setup: "زمرہ کی تخلیق کی سیٹ اپ کے دوران تجاویزی زمرہ کی قسم کے اختیار کو فعال کرتا ہے۔"
+    enable_topic_voting_badges: "صارفین کو دیے جانے والے موضوع کی ووٹنگ کے تمغات کو فعال کرتا ہے جب دوسرے ان کی تجاویز کو ووٹ دیں۔"
+    topic_voting_enabled: 'صارفین کو موضوعات پر ووٹ کرنے کی اجازت دیں؟'
     topic_voting_enable_vote_limits: 'فعالیت کے درجہ کی بنیاد پر فی صارف ووٹوں کی تعداد کو محدود کریں'
     topic_voting_tl0_vote_limit: 'TL0 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
     topic_voting_tl1_vote_limit: 'TL1 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
@@ -21,12 +21,12 @@ ur:
     topic_voting_tl3_vote_limit: 'TL3 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
     topic_voting_tl4_vote_limit: 'TL4 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
     topic_voting_show_who_voted: 'صارفین کو، کس نے ووٹ کیا ہے، دیکھنے کی اجازت دیں؟'
-    topic_voting_show_votes_on_profile: 'صارفین کو اُن کی سرگرمی فیڈ میں اُن کے ووٹ دیکھنے کی اجازت دیں؟'
-    topic_voting_alert_votes_left: 'صارف کو انتباہ کردیں جب اتنے ووٹ باقی رہ جائیں'
+    topic_voting_show_votes_on_profile: 'صارفین کو اُن کی سرگرمی کے حلقے میں اُن کے ووٹ دیکھنے کی اجازت دیں؟'
+    topic_voting_alert_votes_left: 'صارف کو انتباہ کریں جب اتنے ووٹ باقی رہ جائیں'
   topic_voting:
     category_type:
       show_who_voted:
-        label: "دکھایں جنہوں نے ووٹ دیا"
+        label: "دکھائیں جنہوں نے ووٹ دیا"
       show_votes_on_profile:
         label: "پروفائل پر ووٹ دکھائیں۔"
       enable_vote_limits:
@@ -57,18 +57,18 @@ ur:
         order_topic_votes_asc: "کم ووٹوں والے موضوعات کو ترتیب دیں"
   badges:
     daydreamer:
-      name: "دن میں خواب دیکھنے والا"
+      name: "حالم"
       description: "اپنے موضوع پر ووٹ وصول کریں"
-      long_description: "یہ بیج صارف کے عنوانات میں سے کسی ایک کو ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: اچھا خیال ہے :+1:"
+      long_description: "یہ تمغہ صارف کے موضوعات میں سے کسی ایک کو ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: اچھی تجویز ہے :+1:"
     brainstormer:
       name: "مفکر"
       description: "اپنے موضوع پر 5 ووٹ حاصل کریں"
-      long_description: "یہ بیج صارف کے عنوانات میں سے ایک پر 5 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: آپ کا موضوع قابل توجہ رہا ہے۔"
+      long_description: "یہ تمغہ صارف کے موضوعات میں سے ایک پر 5 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: آپ کا موضوع قابل توجہ رہا ہے۔"
     innovator:
       name: "جدت پسند"
       description: "اپنے موضوع پر 15 ووٹ حاصل کریں"
-      long_description: "یہ بیج صارف کے عنوانات میں سے ایک پر 15 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: اتنا اچھا ہے کہ یہ موضوع نظر انداز نہیں کیا جا سکتا۔"
+      long_description: "یہ تمغہ صارف کے موضوعات میں سے ایک پر 15 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: اتنا اچھا ہے کہ یہ موضوع نظر انداز نہیں کیا جا سکتا۔"
     visionary:
       name: "صاحب بصارت"
       description: "اپنے موضوع پر 25 ووٹ حاصل کریں"
-      long_description: "یہ بیج صارف کے عنوانات میں کسی ایک پر 25 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: لوگ اچھے لکھے ہوئے کی قدر کرتے ہیں! :clap:"
+      long_description: "یہ تمغہ صارف کے موضوعات میں کسی ایک پر 25 ووٹ حاصل کرنے پر دیا جاتا ہے۔ :white_check_mark: لوگ اچھے لکھے ہوئے کی قدر کرتے ہیں! :clap:"

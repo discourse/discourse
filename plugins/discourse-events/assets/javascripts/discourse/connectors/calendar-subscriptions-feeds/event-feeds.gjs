@@ -4,9 +4,9 @@ import { i18n } from "discourse-i18n";
 export default <template>
   {{#if @outletArgs.urls.all_events}}
     <CalendarSubscriptionUrl
-      @label={{i18n "discourse_calendar.preferences.all_events"}}
+      @label={{i18n "discourse_events.preferences.all_events"}}
       @description={{i18n
-        "discourse_calendar.preferences.all_events_description"
+        "discourse_events.preferences.all_events_description"
       }}
       @url={{@outletArgs.urls.all_events}}
     />
@@ -14,10 +14,8 @@ export default <template>
 
   {{#if @outletArgs.urls.my_events}}
     <CalendarSubscriptionUrl
-      @label={{i18n "discourse_calendar.preferences.my_events"}}
-      @description={{i18n
-        "discourse_calendar.preferences.my_events_description"
-      }}
+      @label={{i18n "discourse_events.preferences.my_events"}}
+      @description={{i18n "discourse_events.preferences.my_events_description"}}
       @url={{@outletArgs.urls.my_events}}
     />
   {{/if}}

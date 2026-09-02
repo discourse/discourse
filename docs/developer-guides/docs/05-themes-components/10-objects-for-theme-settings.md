@@ -85,6 +85,7 @@ The above schema definition states that the `link` object has a `name` property 
 - `categories`: Value of property is an array of valid category ids.
 - `groups`: Value of property is an array of valid group ids.
 - `tags`: Value of property is an array of valid tag names.
+- `icon`: Value of property is the name of a single icon from the Discourse icon set. Selected icons are automatically added to the sprite sheet, so they can be rendered without being registered separately.
 
 With the schema defined, the default value of the setting can now be set by defining a array in yaml like so:
 

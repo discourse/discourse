@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sv:
+  llms_txt:
+    sections:
+      optional: "Valfritt"
+    links:
+      search:
+        label: "Sök"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Riktlinjer"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -1081,6 +1093,11 @@ sv:
         share: "Dela"
       types:
         staff: "Personal"
+    posters_by_member_type_members:
+      labels:
+        user: "Användare"
+        count: "Inlägg"
+        share: "Dela"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1795,7 +1812,6 @@ sv:
     user_profile_view_duration_hours: "Räkna en ny användarprofilgranskning en gång per IP/Användare per N timmar"
     levenshtein_distance_spammer_emails: "Skillnad i antal tecken vid matchning av e-postadresser som används för skräppostutskick som fortfarande tillåter en suddig matchning."
     max_new_accounts_per_registration_ip: "Sluta acceptera nya registreringar från en IP-adress om det redan finns (n) användare med förtroendenivå 0 från den här IP-adressen (och ingen av dem är en medlem i personalen eller en användare med förtroendenivå 2 eller högre). Ange värde 0 för att inaktivera begränsningen."
-    min_ban_entries_for_roll_up: "När upprullningsknappen klickas skapas en ny delnätspost om det finns minst (N) poster."
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
@@ -3852,6 +3868,9 @@ sv:
       group: "Användare som inte ingår i de angivna grupperna måste ha svar godkända av personalen. Se %{link}."
       new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
+      fast_typer_time:
+        one: "%{count} sekund"
+        other: "%{count} sekunder"
       auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
       staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."

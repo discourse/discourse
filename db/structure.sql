@@ -307,7 +307,9 @@ CREATE TABLE public.admin_dashboard_reports (
     source character varying NOT NULL,
     identifier character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    rows integer DEFAULT 1 NOT NULL,
+    cols integer DEFAULT 1 NOT NULL
 );
 
 
@@ -3058,6 +3060,40 @@ ALTER SEQUENCE public.chat_message_custom_prompts_id_seq OWNED BY public.chat_me
 
 
 --
+-- Name: chat_message_hotlinked_media; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chat_message_hotlinked_media (
+    id bigint NOT NULL,
+    chat_message_id bigint NOT NULL,
+    url character varying NOT NULL,
+    status character varying NOT NULL,
+    upload_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chat_message_hotlinked_media_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chat_message_hotlinked_media_id_seq OWNED BY public.chat_message_hotlinked_media.id;
+
+
+--
 -- Name: chat_message_interactions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4192,6 +4228,203 @@ CREATE SEQUENCE public.discourse_calendar_post_event_dates_id_seq
 --
 
 ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public.discourse_calendar_post_event_dates.id;
+
+
+--
+-- Name: discourse_kanban_board_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_board_histories (
+    id bigint NOT NULL,
+    acting_user_id bigint NOT NULL,
+    action integer NOT NULL,
+    board_id bigint NOT NULL,
+    column_id bigint,
+    details jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_kanban_board_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_board_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_board_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_board_histories_id_seq OWNED BY public.discourse_kanban_board_histories.id;
+
+
+--
+-- Name: discourse_kanban_boards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_boards (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    allow_read_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    allow_write_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    require_confirmation boolean DEFAULT true NOT NULL,
+    show_tags boolean DEFAULT false NOT NULL,
+    card_style integer DEFAULT 0 NOT NULL,
+    show_topic_thumbnail boolean DEFAULT false NOT NULL,
+    created_by_id bigint,
+    updated_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    category_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL
+);
+
+
+--
+-- Name: discourse_kanban_boards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_boards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_boards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_boards_id_seq OWNED BY public.discourse_kanban_boards.id;
+
+
+--
+-- Name: discourse_kanban_card_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_card_histories (
+    id bigint NOT NULL,
+    acting_user_id bigint NOT NULL,
+    action integer NOT NULL,
+    board_id bigint NOT NULL,
+    card_id bigint NOT NULL,
+    details jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_kanban_card_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_card_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_card_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_card_histories_id_seq OWNED BY public.discourse_kanban_card_histories.id;
+
+
+--
+-- Name: discourse_kanban_cards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_cards (
+    id bigint NOT NULL,
+    board_id bigint NOT NULL,
+    column_id bigint,
+    topic_id bigint,
+    card_type integer DEFAULT 0 NOT NULL,
+    title character varying,
+    notes text,
+    due_at timestamp(6) without time zone,
+    "position" bigint DEFAULT 0 NOT NULL,
+    created_by_id bigint,
+    updated_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    assigned_to_id bigint,
+    assigned_to_type character varying,
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    column_changed_at timestamp(6) without time zone NOT NULL,
+    inline_onebox_data jsonb
+);
+
+
+--
+-- Name: discourse_kanban_cards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_cards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_cards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_cards_id_seq OWNED BY public.discourse_kanban_cards.id;
+
+
+--
+-- Name: discourse_kanban_columns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_kanban_columns (
+    id bigint NOT NULL,
+    board_id bigint NOT NULL,
+    title character varying NOT NULL,
+    icon character varying,
+    "position" integer DEFAULT 0 NOT NULL,
+    move_to_category_id bigint,
+    move_to_assigned character varying,
+    move_to_status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    tag_id integer,
+    default_sort integer DEFAULT 0 NOT NULL,
+    color character varying
+);
+
+
+--
+-- Name: discourse_kanban_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_kanban_columns_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_kanban_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_kanban_columns_id_seq OWNED BY public.discourse_kanban_columns.id;
 
 
 --
@@ -8370,6 +8603,50 @@ ALTER SEQUENCE public.rag_document_fragments_id_seq OWNED BY public.rag_document
 
 
 --
+-- Name: rag_document_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rag_document_sources (
+    id bigint NOT NULL,
+    target_type character varying(800) NOT NULL,
+    target_id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    url_digest character varying(64) NOT NULL,
+    refresh_interval_hours integer DEFAULT 24 NOT NULL,
+    upload_id integer,
+    etag character varying,
+    last_modified character varying,
+    last_fetched_at timestamp(6) without time zone,
+    next_refresh_at timestamp(6) without time zone,
+    last_error_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    pending_upload_id integer,
+    managed boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rag_document_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rag_document_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rag_document_sources_id_seq OWNED BY public.rag_document_sources.id;
+
+
+--
 -- Name: redelivering_webhook_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10168,7 +10445,8 @@ CREATE TABLE public.topic_embeds (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    embed_content_cache text
+    embed_content_cache text,
+    content_truncated boolean
 );
 
 
@@ -11828,7 +12106,6 @@ CREATE TABLE public.user_options (
     sidebar_show_count_of_new_items boolean DEFAULT false NOT NULL,
     watched_precedence_over_muted boolean DEFAULT false NOT NULL,
     chat_separate_sidebar_mode integer DEFAULT 0 NOT NULL,
-    topics_unread_when_closed boolean DEFAULT true NOT NULL,
     show_thread_title_prompts boolean DEFAULT true NOT NULL,
     auto_image_caption boolean DEFAULT false NOT NULL,
     enable_smart_lists boolean DEFAULT true NOT NULL,
@@ -11855,10 +12132,7 @@ CREATE TABLE public.user_options (
     automatically_translate boolean DEFAULT true NOT NULL,
     understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     send_shortcut integer DEFAULT 0 NOT NULL,
-    ai_search_discoveries_mode integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_show_summary boolean DEFAULT true NOT NULL,
-    ai_search_discoveries_summary_detail integer DEFAULT 1 NOT NULL,
-    ai_search_discoveries_related_count integer DEFAULT 2 NOT NULL
+    ai_ask_ai_default boolean DEFAULT true NOT NULL
 );
 
 
@@ -12326,6 +12600,230 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: voice_co_presences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_co_presences (
+    id bigint NOT NULL,
+    user_id_1 integer NOT NULL,
+    user_id_2 integer NOT NULL,
+    date date NOT NULL,
+    total_seconds integer DEFAULT 0 NOT NULL,
+    session_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT chk_voice_co_presences_user_order CHECK ((user_id_1 < user_id_2))
+);
+
+
+--
+-- Name: voice_co_presences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_co_presences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_co_presences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_co_presences_id_seq OWNED BY public.voice_co_presences.id;
+
+
+--
+-- Name: voice_invites; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_invites (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    invited_by_id bigint NOT NULL,
+    source integer DEFAULT 0 NOT NULL,
+    redeemed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_invites_id_seq OWNED BY public.voice_invites.id;
+
+
+--
+-- Name: voice_recordings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_recordings (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    started_by_id bigint NOT NULL,
+    egress_id character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    filepath character varying NOT NULL,
+    filename character varying,
+    location character varying,
+    duration_ms bigint,
+    size_bytes bigint,
+    started_at timestamp(6) without time zone NOT NULL,
+    ended_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_recordings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_recordings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_recordings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_recordings_id_seq OWNED BY public.voice_recordings.id;
+
+
+--
+-- Name: voice_room_memberships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_room_memberships (
+    id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    role integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_room_memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_room_memberships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_room_memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_room_memberships_id_seq OWNED BY public.voice_room_memberships.id;
+
+
+--
+-- Name: voice_rooms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_rooms (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description text,
+    public boolean DEFAULT false NOT NULL,
+    max_participants integer,
+    creator_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    cooked_description text,
+    room_type integer DEFAULT 0 NOT NULL,
+    video_enabled boolean DEFAULT true NOT NULL,
+    chat_channel_id bigint,
+    chat_idle_minutes integer DEFAULT 15 NOT NULL,
+    livekit_enabled boolean DEFAULT false NOT NULL,
+    max_quality_profile integer,
+    ephemeral boolean DEFAULT false NOT NULL,
+    last_occupied_at timestamp(6) without time zone
+);
+
+
+--
+-- Name: voice_rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_rooms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_rooms_id_seq OWNED BY public.voice_rooms.id;
+
+
+--
+-- Name: voice_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_sessions (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    joined_at timestamp(6) without time zone NOT NULL,
+    left_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_sessions_id_seq OWNED BY public.voice_sessions.id;
 
 
 --
@@ -13056,6 +13554,13 @@ ALTER TABLE ONLY public.chat_message_custom_prompts ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: chat_message_hotlinked_media id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media ALTER COLUMN id SET DEFAULT nextval('public.chat_message_hotlinked_media_id_seq'::regclass);
+
+
+--
 -- Name: chat_message_interactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13284,6 +13789,41 @@ ALTER TABLE ONLY public.discourse_calendar_disabled_holidays ALTER COLUMN id SET
 --
 
 ALTER TABLE ONLY public.discourse_calendar_post_event_dates ALTER COLUMN id SET DEFAULT nextval('public.discourse_calendar_post_event_dates_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_board_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_board_histories ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_board_histories_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_boards id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_boards ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_boards_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_card_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_card_histories ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_card_histories_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_cards id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_cards_id_seq'::regclass);
+
+
+--
+-- Name: discourse_kanban_columns id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns ALTER COLUMN id SET DEFAULT nextval('public.discourse_kanban_columns_id_seq'::regclass);
 
 
 --
@@ -14071,6 +14611,13 @@ ALTER TABLE ONLY public.rag_document_fragments ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: rag_document_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources ALTER COLUMN id SET DEFAULT nextval('public.rag_document_sources_id_seq'::regclass);
+
+
+--
 -- Name: redelivering_webhook_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14792,6 +15339,48 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Name: voice_co_presences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_co_presences ALTER COLUMN id SET DEFAULT nextval('public.voice_co_presences_id_seq'::regclass);
+
+
+--
+-- Name: voice_invites id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_invites ALTER COLUMN id SET DEFAULT nextval('public.voice_invites_id_seq'::regclass);
+
+
+--
+-- Name: voice_recordings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_recordings ALTER COLUMN id SET DEFAULT nextval('public.voice_recordings_id_seq'::regclass);
+
+
+--
+-- Name: voice_room_memberships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships ALTER COLUMN id SET DEFAULT nextval('public.voice_room_memberships_id_seq'::regclass);
+
+
+--
+-- Name: voice_rooms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_rooms ALTER COLUMN id SET DEFAULT nextval('public.voice_rooms_id_seq'::regclass);
+
+
+--
+-- Name: voice_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_sessions ALTER COLUMN id SET DEFAULT nextval('public.voice_sessions_id_seq'::regclass);
+
+
+--
 -- Name: watched_word_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15401,6 +15990,14 @@ ALTER TABLE ONLY public.chat_message_custom_prompts
 
 
 --
+-- Name: chat_message_hotlinked_media chat_message_hotlinked_media_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media
+    ADD CONSTRAINT chat_message_hotlinked_media_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: chat_message_interactions chat_message_interactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15670,6 +16267,46 @@ ALTER TABLE ONLY public.discourse_calendar_disabled_holidays
 
 ALTER TABLE ONLY public.discourse_calendar_post_event_dates
     ADD CONSTRAINT discourse_calendar_post_event_dates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_board_histories discourse_kanban_board_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_board_histories
+    ADD CONSTRAINT discourse_kanban_board_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_boards discourse_kanban_boards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_boards
+    ADD CONSTRAINT discourse_kanban_boards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_card_histories discourse_kanban_card_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_card_histories
+    ADD CONSTRAINT discourse_kanban_card_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_cards discourse_kanban_cards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT discourse_kanban_cards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_kanban_columns discourse_kanban_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT discourse_kanban_columns_pkey PRIMARY KEY (id);
 
 
 --
@@ -16585,6 +17222,14 @@ ALTER TABLE ONLY public.rag_document_fragments
 
 
 --
+-- Name: rag_document_sources rag_document_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rag_document_sources
+    ADD CONSTRAINT rag_document_sources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: redelivering_webhook_events redelivering_webhook_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17449,6 +18094,54 @@ ALTER TABLE ONLY public.user_search_data
 
 
 --
+-- Name: voice_co_presences voice_co_presences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_co_presences
+    ADD CONSTRAINT voice_co_presences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_invites voice_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_invites
+    ADD CONSTRAINT voice_invites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_recordings voice_recordings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_recordings
+    ADD CONSTRAINT voice_recordings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_room_memberships voice_room_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships
+    ADD CONSTRAINT voice_room_memberships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_rooms voice_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_rooms
+    ADD CONSTRAINT voice_rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_sessions voice_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_sessions
+    ADD CONSTRAINT voice_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: watched_word_groups watched_word_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18170,6 +18863,83 @@ CREATE UNIQUE INDEX idx_group_tag_notification_defaults_unique ON public.group_t
 
 
 --
+-- Name: idx_kanban_boards_category_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_boards_category_ids ON public.discourse_kanban_boards USING gin (category_ids);
+
+
+--
+-- Name: idx_kanban_boards_tag_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_boards_tag_ids ON public.discourse_kanban_boards USING gin (tag_ids);
+
+
+--
+-- Name: idx_kanban_cards_assigned_to; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_assigned_to ON public.discourse_kanban_cards USING btree (assigned_to_type, assigned_to_id);
+
+
+--
+-- Name: idx_kanban_cards_board_column_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_board_column_position ON public.discourse_kanban_cards USING btree (board_id, column_id, "position");
+
+
+--
+-- Name: idx_kanban_cards_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_board_id ON public.discourse_kanban_cards USING btree (board_id);
+
+
+--
+-- Name: idx_kanban_cards_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_column_id ON public.discourse_kanban_cards USING btree (column_id);
+
+
+--
+-- Name: idx_kanban_cards_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_cards_topic_id ON public.discourse_kanban_cards USING btree (topic_id);
+
+
+--
+-- Name: idx_kanban_cards_unique_topic_per_column; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_kanban_cards_unique_topic_per_column ON public.discourse_kanban_cards USING btree (board_id, column_id, topic_id) WHERE ((topic_id IS NOT NULL) AND (column_id IS NOT NULL));
+
+
+--
+-- Name: idx_kanban_columns_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_board_id ON public.discourse_kanban_columns USING btree (board_id);
+
+
+--
+-- Name: idx_kanban_columns_board_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_board_position ON public.discourse_kanban_columns USING btree (board_id, "position");
+
+
+--
+-- Name: idx_kanban_columns_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_kanban_columns_tag_id ON public.discourse_kanban_columns USING btree (tag_id);
+
+
+--
 -- Name: idx_leaderboard_scores_lb_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18237,6 +19007,13 @@ CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post
 --
 
 CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_rag_document_sources_target_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_rag_document_sources_target_url ON public.rag_document_sources USING btree (target_type, target_id, url_digest);
 
 
 --
@@ -18475,6 +19252,34 @@ CREATE INDEX idx_users_ip_address ON public.users USING btree (ip_address);
 --
 
 CREATE INDEX idx_users_moderator ON public.users USING btree (id) WHERE moderator;
+
+
+--
+-- Name: idx_voice_co_presences_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_co_presences_unique ON public.voice_co_presences USING btree (user_id_1, user_id_2, date);
+
+
+--
+-- Name: idx_voice_invites_redeemed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_voice_invites_redeemed ON public.voice_invites USING btree (invited_by_id, user_id) WHERE (redeemed_at IS NOT NULL);
+
+
+--
+-- Name: idx_voice_room_memberships_on_room_and_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_room_memberships_on_room_and_user ON public.voice_room_memberships USING btree (room_id, user_id);
+
+
+--
+-- Name: idx_voice_sessions_orphaned; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_voice_sessions_orphaned ON public.voice_sessions USING btree (left_at) WHERE (left_at IS NULL);
 
 
 --
@@ -19297,6 +20102,20 @@ CREATE UNIQUE INDEX index_chat_message_custom_prompts_on_message_id ON public.ch
 
 
 --
+-- Name: index_chat_message_hotlinked_media_on_message_and_url_md5; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_chat_message_hotlinked_media_on_message_and_url_md5 ON public.chat_message_hotlinked_media USING btree (chat_message_id, md5((url)::text));
+
+
+--
+-- Name: index_chat_message_hotlinked_media_on_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_message_hotlinked_media_on_upload_id ON public.chat_message_hotlinked_media USING btree (upload_id);
+
+
+--
 -- Name: index_chat_message_interactions_on_chat_message_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19588,6 +20407,69 @@ CREATE INDEX index_discourse_calendar_post_event_dates_on_event_id_and_dates ON 
 --
 
 CREATE INDEX index_discourse_calendar_post_event_dates_on_finished_at ON public.discourse_calendar_post_event_dates USING btree (finished_at);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_on_acting_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_acting_user_id ON public.discourse_kanban_board_histories USING btree (acting_user_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_on_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_board_id ON public.discourse_kanban_board_histories USING btree (board_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_on_column_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_board_histories_on_column_id ON public.discourse_kanban_board_histories USING btree (column_id);
+
+
+--
+-- Name: index_discourse_kanban_board_histories_one_view_per_user_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_board_histories_one_view_per_user_day ON public.discourse_kanban_board_histories USING btree (board_id, acting_user_id, ((created_at)::date)) WHERE (action = 7);
+
+
+--
+-- Name: index_discourse_kanban_boards_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_boards_on_created_by_id ON public.discourse_kanban_boards USING btree (created_by_id);
+
+
+--
+-- Name: index_discourse_kanban_boards_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_boards_on_slug ON public.discourse_kanban_boards USING btree (slug);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_on_acting_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_card_histories_on_acting_user_id ON public.discourse_kanban_card_histories USING btree (acting_user_id);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_on_board_id_and_card_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_kanban_card_histories_on_board_id_and_card_id ON public.discourse_kanban_card_histories USING btree (board_id, card_id);
+
+
+--
+-- Name: index_discourse_kanban_card_histories_one_view_per_user_day; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_kanban_card_histories_one_view_per_user_day ON public.discourse_kanban_card_histories USING btree (board_id, card_id, acting_user_id, ((created_at)::date)) WHERE (action = 7);
 
 
 --
@@ -21191,6 +22073,20 @@ CREATE UNIQUE INDEX index_quoted_posts_on_quoted_post_id_and_post_id ON public.q
 --
 
 CREATE INDEX index_rag_document_fragments_on_target_type_and_target_id ON public.rag_document_fragments USING btree (target_type, target_id);
+
+
+--
+-- Name: index_rag_document_sources_on_next_refresh_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_next_refresh_at ON public.rag_document_sources USING btree (next_refresh_at);
+
+
+--
+-- Name: index_rag_document_sources_on_target_type_and_target_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rag_document_sources_on_target_type_and_target_id ON public.rag_document_sources USING btree (target_type, target_id);
 
 
 --
@@ -22818,6 +23714,125 @@ CREATE UNIQUE INDEX index_users_on_username_lower ON public.users USING btree (u
 
 
 --
+-- Name: index_voice_co_presences_on_user_id_1_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_co_presences_on_user_id_1_and_date ON public.voice_co_presences USING btree (user_id_1, date);
+
+
+--
+-- Name: index_voice_co_presences_on_user_id_2_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_co_presences_on_user_id_2_and_date ON public.voice_co_presences USING btree (user_id_2, date);
+
+
+--
+-- Name: index_voice_invites_on_room_id_and_user_id_and_invited_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_invites_on_room_id_and_user_id_and_invited_by_id ON public.voice_invites USING btree (room_id, user_id, invited_by_id);
+
+
+--
+-- Name: index_voice_invites_on_user_id_and_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_invites_on_user_id_and_room_id ON public.voice_invites USING btree (user_id, room_id);
+
+
+--
+-- Name: index_voice_recordings_on_egress_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_recordings_on_egress_id ON public.voice_recordings USING btree (egress_id);
+
+
+--
+-- Name: index_voice_recordings_on_room_id_and_started_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_recordings_on_room_id_and_started_at ON public.voice_recordings USING btree (room_id, started_at);
+
+
+--
+-- Name: index_voice_room_memberships_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_room_memberships_on_room_id ON public.voice_room_memberships USING btree (room_id);
+
+
+--
+-- Name: index_voice_room_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_room_memberships_on_user_id ON public.voice_room_memberships USING btree (user_id);
+
+
+--
+-- Name: index_voice_rooms_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_chat_channel_id ON public.voice_rooms USING btree (chat_channel_id);
+
+
+--
+-- Name: index_voice_rooms_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_creator_id ON public.voice_rooms USING btree (creator_id);
+
+
+--
+-- Name: index_voice_rooms_on_ephemeral; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_rooms_on_ephemeral ON public.voice_rooms USING btree (id) WHERE ephemeral;
+
+
+--
+-- Name: index_voice_rooms_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_rooms_on_slug ON public.voice_rooms USING btree (slug);
+
+
+--
+-- Name: index_voice_sessions_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_room_id ON public.voice_sessions USING btree (room_id);
+
+
+--
+-- Name: index_voice_sessions_on_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_room_id_and_joined_at ON public.voice_sessions USING btree (room_id, joined_at);
+
+
+--
+-- Name: index_voice_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id ON public.voice_sessions USING btree (user_id);
+
+
+--
+-- Name: index_voice_sessions_on_user_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id_and_joined_at ON public.voice_sessions USING btree (user_id, joined_at);
+
+
+--
+-- Name: index_voice_sessions_on_user_id_and_room_id_and_joined_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_sessions_on_user_id_and_room_id_and_joined_at ON public.voice_sessions USING btree (user_id, room_id, joined_at);
+
+
+--
 -- Name: index_watched_words_on_action_and_word; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23099,6 +24114,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: discourse_kanban_cards fk_rails_23a074d40f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_23a074d40f FOREIGN KEY (column_id) REFERENCES public.discourse_kanban_columns(id) ON DELETE SET NULL;
+
+
+--
 -- Name: reviewable_notes fk_rails_2fe5fa5cd0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23115,6 +24138,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: discourse_kanban_cards fk_rails_428adf8573; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_428adf8573 FOREIGN KEY (topic_id) REFERENCES public.topics(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_impressions fk_rails_45ce2c4d3c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23128,6 +24159,14 @@ ALTER TABLE ONLY public.ad_plugin_impressions
 
 ALTER TABLE ONLY public.ad_plugin_house_ads_groups
     ADD CONSTRAINT fk_rails_4973d7060d FOREIGN KEY (ad_plugin_house_ad_id) REFERENCES public.ad_plugin_house_ads(id) ON DELETE CASCADE;
+
+
+--
+-- Name: discourse_kanban_cards fk_rails_51c00a5eb2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_cards
+    ADD CONSTRAINT fk_rails_51c00a5eb2 FOREIGN KEY (board_id) REFERENCES public.discourse_kanban_boards(id) ON DELETE CASCADE;
 
 
 --
@@ -23179,6 +24218,14 @@ ALTER TABLE ONLY public.reviewable_notes
 
 
 --
+-- Name: voice_room_memberships fk_rails_a55e8c404b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_room_memberships
+    ADD CONSTRAINT fk_rails_a55e8c404b FOREIGN KEY (room_id) REFERENCES public.voice_rooms(id);
+
+
+--
 -- Name: poll_votes fk_rails_a6e6974b7e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23227,6 +24274,14 @@ ALTER TABLE ONLY public.ai_tool_actions
 
 
 --
+-- Name: discourse_kanban_columns fk_rails_c2f2ed5c5d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT fk_rails_c2f2ed5c5d FOREIGN KEY (move_to_category_id) REFERENCES public.categories(id) ON DELETE SET NULL;
+
+
+--
 -- Name: ad_plugin_house_ads_categories fk_rails_c6e88d8af5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23259,6 +24314,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 
 --
+-- Name: discourse_kanban_columns fk_rails_ef6a319cc1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_kanban_columns
+    ADD CONSTRAINT fk_rails_ef6a319cc1 FOREIGN KEY (board_id) REFERENCES public.discourse_kanban_boards(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_impressions fk_rails_f446846ed4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -23281,6 +24344,23 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260901020329'),
+('20260831162602'),
+('20260828145150'),
+('20260827064809'),
+('20260826124054'),
+('20260826090055'),
+('20260824214608'),
+('20260824214603'),
+('20260824091843'),
+('20260824072257'),
+('20260824051214'),
+('20260821210913'),
+('20260821210543'),
+('20260821164114'),
+('20260820171539'),
+('20260820143851'),
+('20260819131113'),
 ('20260818143417'),
 ('20260818081537'),
 ('20260818045317'),
@@ -23295,8 +24375,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260814060100'),
 ('20260814060000'),
 ('20260813202233'),
+('20260813160047'),
 ('20260813071230'),
 ('20260813071223'),
+('20260813000000'),
 ('20260812094609'),
 ('20260811231259'),
 ('20260810154331'),
@@ -23304,10 +24386,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260807182856'),
 ('20260806074210'),
 ('20260806074204'),
+('20260803163818'),
+('20260803163214'),
+('20260803144425'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),
 ('20260729153343'),
+('20260728201053'),
 ('20260728162521'),
 ('20260728162516'),
 ('20260728150000'),
@@ -23330,6 +24416,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260721080420'),
 ('20260721043536'),
 ('20260721043534'),
+('20260717172530'),
 ('20260715202231'),
 ('20260715183411'),
 ('20260715134306'),
@@ -23339,6 +24426,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260715064155'),
 ('20260714152340'),
 ('20260713180615'),
+('20260709165411'),
 ('20260708095336'),
 ('20260708080308'),
 ('20260708051450'),
@@ -23349,10 +24437,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260706050124'),
 ('20260703164430'),
 ('20260703163425'),
+('20260703134812'),
 ('20260702102111'),
 ('20260701073045'),
 ('20260701013609'),
 ('20260701013606'),
+('20260630183841'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629210246'),
@@ -23363,16 +24453,19 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260623201925'),
 ('20260623090824'),
 ('20260623052745'),
+('20260623042355'),
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),
 ('20260619085855'),
+('20260618203643'),
 ('20260617180115'),
 ('20260617104005'),
 ('20260617053237'),
 ('20260616114637'),
 ('20260615084100'),
 ('20260615082047'),
+('20260612135211'),
 ('20260612092612'),
 ('20260612064730'),
 ('20260611102547'),
@@ -23382,13 +24475,17 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260609050938'),
 ('20260608104742'),
 ('20260607161322'),
+('20260605051007'),
 ('20260604052235'),
 ('20260603115312'),
 ('20260603115200'),
+('20260603055342'),
 ('20260603013342'),
+('20260602233501'),
 ('20260602104726'),
 ('20260601063855'),
 ('20260601043020'),
+('20260529220000'),
 ('20260528074731'),
 ('20260528074719'),
 ('20260525105009'),
@@ -23417,7 +24514,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260430172653'),
 ('20260430142946'),
 ('20260429122035'),
+('20260429052246'),
 ('20260428072232'),
+('20260427025159'),
+('20260424060304'),
 ('20260424004343'),
 ('20260422144944'),
 ('20260422135650'),
@@ -23428,12 +24528,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260421061908'),
 ('20260420014648'),
 ('20260415082426'),
+('20260410040858'),
+('20260410040217'),
 ('20260409225129'),
 ('20260408214007'),
 ('20260408165014'),
 ('20260407093145'),
+('20260407065612'),
 ('20260402141924'),
 ('20260402141912'),
+('20260402064240'),
+('20260402053105'),
+('20260402052139'),
 ('20260402023645'),
 ('20260331024139'),
 ('20260330161714'),
@@ -23470,9 +24576,19 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260306183220'),
 ('20260306000002'),
 ('20260306000001'),
+('20260305165401'),
+('20260305165400'),
+('20260305162426'),
+('20260304212353'),
 ('20260304063335'),
+('20260303033335'),
+('20260227010000'),
+('20260226060000'),
+('20260226020000'),
 ('20260223032030'),
+('20260220154336'),
 ('20260218104617'),
+('20260218044500'),
 ('20260218000000'),
 ('20260217064339'),
 ('20260211051130'),
@@ -23789,6 +24905,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241111022618'),
 ('20241110120303'),
 ('20241108154026'),
+('20241107000000'),
 ('20241105211601'),
 ('20241104132424'),
 ('20241104053309'),

@@ -84,6 +84,20 @@ RSpec.describe Service::ContractBase, type: :model do
       end
     end
 
+    context "when the main contract has options" do
+      subject(:contract) { contract_class.new(params, options: { locale: "fr" }) }
+
+      it "provides them to a nested contract" do
+        contract.valid?
+        expect(contract.record.options).to include(locale: "fr")
+      end
+
+      it "provides them to a contract nested inside a nested one" do
+        contract.valid?
+        expect(contract.records.map(&:options)).to all(include(locale: "fr"))
+      end
+    end
+
     it "casts nested attributes to contract objects" do
       expect(contract).to have_attributes(
         record: a_kind_of(Service::ContractBase),

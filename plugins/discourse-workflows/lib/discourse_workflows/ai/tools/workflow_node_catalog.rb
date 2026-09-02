@@ -184,12 +184,33 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:tag_group" => [
+            {
+              name: "Add tags to a tag group",
+              parameters: {
+                operation: "add",
+                tag_group_id: 123,
+                tag_names: "needs-review, escalated",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:topic_category" => [
             {
               name: "Move the trigger topic to another category",
               parameters: {
                 topic_id: "={{ $json.topic.id }}",
                 category_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:topic_moderation" => [
+            {
+              name: "Unlist the trigger topic",
+              parameters: {
+                operation: "unlist_topic",
+                topic_id: "={{ $json.topic.id }}",
                 actor_username: "system",
               },
             },
@@ -215,6 +236,7 @@ module DiscourseWorkflows
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "action:tag_group" => "tag group tags taxonomy add remove organize",
           "action:flag_user" =>
             "flag user report spammer spam suspect review queue moderation approve reject account signup",
           "trigger:user_added_to_group" => "joined added to group membership member",
@@ -224,11 +246,14 @@ module DiscourseWorkflows
           "trigger:reviewable_created" =>
             "review queue flag flagged spam moderation pending needs approval queued post akismet",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
+          "trigger:tag_created" => "taxonomy label keyword created new",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
           "action:flag_post" =>
             "flag spam moderation review queue reviewable hide delete silence triage report",
           "action:topic_category" => "category recategorize move topic uncategorized",
+          "action:topic_moderation" =>
+            "moderate moderation unlist unlisted topic visibility invisible",
         }.freeze
 
         def self.signature

@@ -36,6 +36,11 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
+        response: "Odgovor"
       discourse_workflows:
         ai_agent:
           mode: "Modus"
@@ -130,8 +135,6 @@ hr:
         successful: "Uspješno"
         failed: "Neuspješno"
         unknown: "Nepoznato"
-        topic_id: "ID teme"
-        post_id: "ID objave"
         time: "Vrijeme"
         when: "Kada"
         request: "Zahtjev"
@@ -143,6 +146,7 @@ hr:
         post_short: "Objava %{id}"
         duration: "Trajanje"
         actions: "Akcije"
+        view_details: "Detalji"
         periods:
           hour: "Posljednji sat"
           day: "Posljednja 24 sata"
@@ -307,8 +311,11 @@ hr:
             few: "Posljednja %{count} sata"
             other: "Posljednjih %{count} sati"
       discobot_discoveries:
-        regular_results: "Tema"
-        collapse: "Sakrij"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Tema"
+          collapse: "Sakrij"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_all_topics: "Sve teme"
+        search_messages: "Poruke"

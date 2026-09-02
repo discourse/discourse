@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 th:
+  llms_txt:
+    sections:
+      optional: "ทางเลือก"
+    links:
+      search:
+        label: "ค้นหา"
+      categories:
+        label: "หมวดหมู่"
+      about:
+        label: "เกี่ยวกับ"
+      guidelines:
+        label: "คู่มือ"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -240,6 +252,11 @@ th:
         share: "แบ่งปัน"
       types:
         staff: "ทีมงาน"
+    posters_by_member_type_members:
+      labels:
+        user: "ผู้ใช้"
+        count: "โพส"
+        share: "แบ่งปัน"
     trust_level_pipeline:
       labels:
         count: "สมาชิก"

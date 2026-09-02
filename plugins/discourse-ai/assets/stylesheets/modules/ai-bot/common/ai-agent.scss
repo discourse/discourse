@@ -75,7 +75,7 @@
       flex: 4 1 auto;
     }
 
-    .d-select {
+    .d-native-select {
       flex: 1 1 auto;
       width: auto;
       height: auto;
@@ -610,6 +610,32 @@
     margin-top: 1em;
     margin-bottom: 1em;
   }
+}
+
+.rag-document-sources {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+
+  &__count,
+  &__remaining,
+  &__empty {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
+  &__list {
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+
+  &__url {
+    overflow-wrap: anywhere;
+  }
+}
+
+.rag-document-sources-modal__urls {
+  width: 100%;
 }
 
 .rag-uploader {

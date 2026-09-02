@@ -116,6 +116,10 @@ module SystemDrivers
       --disable-smooth-scrolling
     ]
 
+    if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
+      base_args << "--auto-open-devtools-for-tabs"
+    end
+
     if !ENV["CI"]
       base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
       base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS

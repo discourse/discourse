@@ -19,12 +19,12 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
 
     job.execute(nil)
 
-    expect(DiscourseCalendar.users_on_holiday).to eq([post.user.username])
+    expect(DiscourseEvents.users_on_holiday).to eq([post.user.username])
 
     freeze_time Time.utc(2018, 6, 7, 18, 40)
     job.execute(nil)
 
-    expect(DiscourseCalendar.users_on_holiday).to eq([])
+    expect(DiscourseEvents.users_on_holiday).to eq([])
   end
 
   it "adds custom field to users on holiday" do
@@ -38,46 +38,28 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
 
     job.execute(nil)
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post1.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post1.user.id),
     ).to be_truthy
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post2.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post2.user.id),
     ).to be_truthy
 
     freeze_time Time.utc(2018, 6, 6, 10, 00)
     job.execute(nil)
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post1.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post1.user.id),
     ).to be_truthy
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post2.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post2.user.id),
     ).to be_falsey
 
     freeze_time Time.utc(2018, 6, 7, 10, 00)
     job.execute(nil)
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post1.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post1.user.id),
     ).to be_falsey
     expect(
-      UserCustomField.exists?(
-        name: DiscourseCalendar::HOLIDAY_CUSTOM_FIELD,
-        user_id: post2.user.id,
-      ),
+      UserCustomField.exists?(name: DiscourseEvents::HOLIDAY_CUSTOM_FIELD, user_id: post2.user.id),
     ).to be_falsey
   end
 
@@ -93,7 +75,7 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
     post.user.reload
     status = post.user.user_status
     expect(status).to be_present
-    expect(status.description).to eq(I18n.t("discourse_calendar.holiday_status.description"))
+    expect(status.description).to eq(I18n.t("discourse_events.holiday_status.description"))
     expect(status.emoji).to eq(SiteSetting.holiday_status_emoji)
     expect(status.ends_at).to eq_time(Time.utc(2018, 6, 6, 10, 20))
   end
@@ -156,7 +138,7 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
     post.user.reload
     status = post.user.user_status
     expect(status).to be_present
-    expect(status.description).to eq(I18n.t("discourse_calendar.holiday_status.description"))
+    expect(status.description).to eq(I18n.t("discourse_events.holiday_status.description"))
     expect(status.emoji).to eq(SiteSetting.holiday_status_emoji)
     expect(status.ends_at).to eq_time(Time.utc(2018, 6, 8, 10, 20))
   end

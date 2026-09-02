@@ -34,6 +34,10 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "Aina"
+        error: "Hitilafu"
+        response: "Mwitikio"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -106,8 +110,6 @@ sw:
         successful: "Fanikiwa"
         failed: "Kushindwa"
         unknown: "Haijulikani"
-        topic_id: "Utambulisho wa Mada"
-        post_id: "Utambulisho wa Ujumbe"
         time: "Muda"
         when: "Lini"
         request: "Ombi"
@@ -117,6 +119,7 @@ sw:
         topic: "Mada"
         post: "Ujumbe"
         actions: "Vitendo"
+        view_details: "Taarifa"
         periods:
           custom: "Binafsi"
         detail:
@@ -237,8 +240,10 @@ sw:
           table:
             total_count: "Jumla"
       discobot_discoveries:
-        regular_results: "Mada"
-        collapse: "Kunja"
-        tooltip:
-          actions:
-            disable: "Sitisha"
+        legacy:
+          regular_results: "Mada"
+          collapse: "Kunja"
+          tooltip:
+            actions:
+              disable: "Sitisha"
+        search_messages: "Ujumbe"

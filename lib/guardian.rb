@@ -103,7 +103,10 @@ class Guardian
 
     def in_any_groups?(group_ids)
       if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
-        return group_ids.include?(Group::AUTO_GROUPS[:everyone])
+        return(
+          group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+            group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+        )
       end
 
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
@@ -255,6 +258,10 @@ class Guardian
       )
   end
   alias can_see_flags? can_moderate?
+
+  def can_delete_all_posts_and_topics?
+    @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
 
   def can_tag?(topic)
     return false if topic.blank?

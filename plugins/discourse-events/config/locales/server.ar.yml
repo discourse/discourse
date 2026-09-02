@@ -24,8 +24,8 @@ ar:
       event_started:
         title: بدأ الحدث
   system_messages:
-    discourse_calendar_holiday_region_invalid: "منطقة العطلة التي أرسلتها غير موجودة."
-    discourse_calendar_enable_holiday_failed: "تعذَّر تفعيل هذه العطلة، إنها مفعَّلة حاليًا أو لم يتم إيقافها."
+    discourse_events_holiday_region_invalid: "منطقة العطلة التي أرسلتها غير موجودة."
+    discourse_events_enable_holiday_failed: "تعذَّر تفعيل هذه العطلة، إنها مفعَّلة حاليًا أو لم يتم إيقافها."
     discourse_post_event_bulk_invite_succeeded:
       title: "الحدث - نجحت الدعوة الجماعية"
       subject_template: "تمت معالجة الدعوة الجماعية للمستخدمين بنجاح"
@@ -44,7 +44,7 @@ ar:
   site_settings:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
-    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى {{setting:calendar_enabled}} لتفعيله."
+    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى {{setting:discourse_events_enabled}} لتفعيله."
     displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
     display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
     use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."
@@ -81,7 +81,7 @@ ar:
     livestream_zoom_sdk_secret: "سر عميل Zoom Meeting SDK"
     livestream_embeddable_chat_allowed_paths: "المسارات المسموح بها لدردشة البث المباشر القابلة للتضمين"
     livestream_enable_modal_chat_on_mobile: "عرض دردشة البث المباشر في نافذة منبثقة على الجوَّال"
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "عرض التقويم الافتراضي"

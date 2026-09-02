@@ -8,6 +8,9 @@ gl:
   js:
     styleguide:
       title: "Guía de estilo"
+      example:
+        kind:
+          component: "Compoñente"
       categories:
         atoms: Átomos
         molecules: Moléculas
@@ -68,6 +71,21 @@ gl:
           title: "Máis temas"
         post_menu:
           title: "Menú de publicación"
+        roving_focus:
+          toolbar:
+            copy: "Copiar"
+          adjacent:
+            label: "Filtros"
+            field: "Buscar"
+            open: "Abrir"
+            recent: "Recentes"
+          combobox:
+            daily: "Diario"
+            weekly: "Semanal"
+            monthly: "Mensual"
+            never: "Nunca"
+          tree:
+            components: "Compoñentes"
         modal:
           title: "Modal"
           header: "Título da modal"

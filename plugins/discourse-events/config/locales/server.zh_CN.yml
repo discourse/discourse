@@ -24,8 +24,8 @@ zh_CN:
       event_started:
         title: 活动已开始
   system_messages:
-    discourse_calendar_holiday_region_invalid: "您提供的假期区域不存在。"
-    discourse_calendar_enable_holiday_failed: "无法启用此假期，它已被启用或未被禁用。"
+    discourse_events_holiday_region_invalid: "您提供的假期区域不存在。"
+    discourse_events_enable_holiday_failed: "无法启用此假期，它已被启用或未被禁用。"
     discourse_post_event_bulk_invite_succeeded:
       title: "活动 - 批量邀请成功"
       subject_template: "批量邀请处理成功"
@@ -44,7 +44,8 @@ zh_CN:
   site_settings:
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
-    discourse_post_event_enabled: "启用活动功能。注意：还需要启用 {{setting:calendar_enabled}}。"
+    discourse_events_enabled: "启用 Discourse Events 插件。这将为主题的首条帖子添加 [calendar][/calendar] 标签支持。"
+    discourse_post_event_enabled: "启用活动功能。注意：还需要启用 {{setting:discourse_events_enabled}}。"
     displayed_invitees_limit: "限制活动中显示的受邀者数量。"
     display_post_event_date_on_topic_title: "在话题标题之后显示活动日期。"
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
@@ -81,7 +82,7 @@ zh_CN:
     livestream_zoom_sdk_secret: "Zoom Meeting SDK 客户端密钥。"
     livestream_embeddable_chat_allowed_paths: "允许嵌入式直播聊天的路径。"
     livestream_enable_modal_chat_on_mobile: "在移动设备上以模态框形式显示直播聊天信息。"
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "默认日历视图"
@@ -110,6 +111,10 @@ zh_CN:
     livestream:
       chat:
         topic_reference_message: "此频道用于活动 [%{title}](%{url}) — 访问话题了解详情并回复参与活动。"
+      zoom:
+        frame_title: "Zoom网络研讨会"
+        frame_join: "加入网络研讨会"
+        frame_joining: "正在连接…"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"
     more_than_two_dates: "日历话题的帖子不能包含两个以上的日期。"
@@ -146,6 +151,7 @@ zh_CN:
           end_must_be_a_valid_date: "结束日期必须是有效日期。"
           invalid_recurrence: "重复必须是以下值之一：every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday。"
           invalid_timezone: "无法识别时区。"
+          invalid_url: "URL 必须是有效的网址。"
           acting_user_not_allowed_to_create_event: "当前用户不能创建活动。"
           acting_user_not_allowed_to_act_on_this_event: "当前用户不能在此活动上执行操作。"
           invalid_allowed_groups: "允许的群组无效。"

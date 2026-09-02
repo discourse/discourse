@@ -38,6 +38,12 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      copied: "Zkopírováno"
+      ai_decoded_transcript:
+        tool: "Nástroj"
+        type: "Typ"
+        error: "Chyba"
+        response: "Odpověď"
       discourse_workflows:
         ai_agent:
           mode: "Režim"
@@ -70,6 +76,7 @@ cs:
           reset: "obnovit výchozí"
         search:
           name: "Vyhledávání"
+          ask_ai: "Zeptejte se AI"
         ai_helper:
           proofread: Korektura textu
           explain: "Vysvětlit"
@@ -151,8 +158,6 @@ cs:
         successful: "Úspěšný"
         failed: "Neúspěšný"
         unknown: "Neznámá"
-        topic_id: "ID tématu"
-        post_id: "ID příspěvku"
         time: "Čas"
         when: "Kdy"
         outcome: "Výsledky"
@@ -166,6 +171,7 @@ cs:
         post_short: "Příspěvek č. %{id}"
         duration: "Doba trvání"
         actions: "Akce"
+        view_details: "Podrobnosti"
         periods:
           hour: "Poslední hodina"
           day: "Posledních 24 hodin"
@@ -359,11 +365,8 @@ cs:
           google: "Google"
           CDCK: "CDCK"
           fake: "Přizpůsobené"
-        semantic_search_results:
-          unavailable: "Výsledky AI nejsou k dispozici"
         semantic_search_tooltips:
           results_explanation: "Pokud je tato funkce povolena, budou níže přidány další výsledky vyhledávání pomocí umělé inteligence."
-        ai_generated_result: "Výsledek hledání nalezen pomocí AI"
         quick_search:
           suffix: "ve všech tématech a příspěvcích s AI"
       ai_artifact:
@@ -466,10 +469,16 @@ cs:
             expanded: "Rozšířený"
             expanded_description: "se souhrny AI"
       discobot_discoveries:
-        regular_results: "Témata"
-        collapse: "Sbalit"
-        tooltip:
-          actions:
-            disable: "Vypnout"
+        main_title: "Zeptejte se AI"
+        legacy:
+          regular_results: "Témata"
+          collapse: "Sbalit"
+          tooltip:
+            actions:
+              disable: "Vypnout"
+        search_all_topics: "Všechna témata"
+        search_messages: "Zprávy"
+        sources:
+          related_discussions: "Související témata"
       user_preferences:
         empty: "Momentálně nejsou k dispozici žádná relevantní nastavení."

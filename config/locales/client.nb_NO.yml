@@ -328,6 +328,7 @@ nb_NO:
       sections:
         theme: "Drakt"
         homepage: "Hjemmeside"
+        search: "Søk"
       colors:
         light: "Lys"
         dark: "Mørk"
@@ -1780,7 +1781,6 @@ nb_NO:
         after_10_minutes: "etter 10 minutt"
       notification_level_when_replying:
         do_nothing: "ikke gjør noe"
-      topics_unread_when_closed: "Betrakt emner som ulest når de er lukket"
       invited:
         title: "invitasjoner"
         pending_tab: "På vent"
@@ -2331,6 +2331,8 @@ nb_NO:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Angi"
+      delete: "Slett"
+      home: "Hjem"
     conditional_loading_section:
       loading: Laster…
     category_row:
@@ -2470,7 +2472,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
-      title: "Eller trykk %{modifier}Enter"
       discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
@@ -2743,10 +2744,9 @@ nb_NO:
       recent: "Nylige søk"
       clear_recent: "Fjern nylige søk"
       type:
-        default: "Emner/innlegg"
+        default: "Innlegg"
         users: "Brukere"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/stikkord"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -2759,7 +2759,6 @@ nb_NO:
         in: "filtrerer etter metadata (f.eks. in:title, in:personal, in:pinned)"
         status: "filtrerer etter emnestatus"
         full_search: "starter helsidesøk"
-        full_search_key: "%{modifier} + Enter"
         me: "viser bare innleggene dine"
       advanced:
         title: Avanserte filtre
@@ -3416,7 +3415,6 @@ nb_NO:
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
       follow_quote: "gå til det siterte innlegget"
-      show_full: "Vis hele innlegget"
       show_hidden: "Vis ignorert innhold."
       deleted_by_author_simple: "(innlegg slettet av forfatter)"
       collapse: "fold sammen"
@@ -4014,11 +4012,8 @@ nb_NO:
       image_load_error: '<a href="%url%">Bildet</a> kunne ikke lastes.'
     cannot_render_video: Denne videoen kan ikke lages fordi nettleseren din ikke støtter koden.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastatursnarveier"
       description_header: "Beskrivelse"
       search_aliases:
@@ -4358,6 +4353,11 @@ nb_NO:
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
         group_other: "Annet"
+        related_items:
+          users:
+            title: "Brukere"
+          labels:
+            user: "Bruker"
       config_sections:
         account:
           title: "Konto"
@@ -4524,16 +4524,11 @@ nb_NO:
       search:
         title: "Søk"
       site_traffic_explorer:
-        pageviews: "Sidevisninger"
+        metric_information: "Om %{metric}"
+        apply: "Bruk"
         view_more: "Vis mer"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP-adresse"
         filters:
           ip: "IP-adresse"
-        metrics:
-          pageviews:
-            label: "Sidevisninger"
         series:
           anonymous_human: "Anonym"
       dashboard:
@@ -4600,6 +4595,8 @@ nb_NO:
               share: "Del"
             whos_posting:
               staff: "Stab"
+              modal:
+                apply: "Lagre"
             trust_level_pipeline:
               trust_levels:
                 "0": "Ny"
@@ -4612,6 +4609,11 @@ nb_NO:
             table:
               searches: "Søk"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Diskurs oppdatert"
+            dashboard_updated: "Dashbord oppdatert"
         reports_section:
           header_action: "Behandle"
           no_data: "Ingen data å vise"
@@ -4649,6 +4651,13 @@ nb_NO:
           average_for_sample: "Gjennomsnitt for eksempel"
           total: "Totalt siden starten"
           no_data: "Ingen data å vise."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} bruker"
+              other: "%{count} brukere"
+            posts_count:
+              one: "%{count} innlegg"
+              other: "%{count} innlegg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'

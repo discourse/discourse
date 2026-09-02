@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 it:
+  llms_txt:
+    sections:
+      optional: "Facoltativo"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categorie"
+      about:
+        label: "Informazioni su"
+      guidelines:
+        label: "Linee guida"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -1253,6 +1265,11 @@ it:
         share: "Condividi"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "Utente"
+        count: "Messaggi"
+        share: "Condividi"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -2063,7 +2080,6 @@ it:
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di attendibilità 0 da questo IP (e nessuno è membro dello staff o a livello 2 o superiore), non accettare nuove iscrizioni da questo IP. Impostare a 0 per disabilitare il limite."
-    min_ban_entries_for_roll_up: "Quando si clicca il pulsante Roll up, verrà creato un nuovo elenco di IP interdetti se sono presenti almeno (N) elementi."
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
@@ -4517,6 +4533,9 @@ it:
       group: "Gli utenti che non appartengono ai gruppi specificati devono avere risposte approvate dallo staff. Vedi %{link}."
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di attendibilità devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo troppo rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
+      fast_typer_time:
+        one: "%{count} secondo"
+        other: "%{count} secondi"
       auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
       watched_word:
         one: "Questo messaggio include una parola osservata, la parola segnalata è: %{words}. Controlla le %{link} per maggiori informazioni."

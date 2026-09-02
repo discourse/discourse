@@ -22,6 +22,13 @@ zh_CN:
         agent_vision_disabled: "该智能体不能包含图片上传"
         llm_missing: "该智能体无法解析为 LLM"
         llm_vision_disabled: "解析的 LLM 不支持图片输入"
+      ai_llm_vision_delegation: "%{model_name} 无法使用其配置的视觉模型： %{reason}。 <a href='%{url}'>请检查 AI 模型</a>。"
+      ai_llm_vision_delegation_reasons:
+        missing: "视觉模型已不复存在"
+        native_and_delegated: "原生图像输入和委托视觉均已配置"
+        self_reference: "模型不能利用自身进行视觉"
+        delegated: "视觉模型委托给另一个模型"
+        not_native: "该视觉模型不支持原生图像输入"
   discourse_automation:
     ai:
       flag_types:
@@ -45,6 +52,8 @@ zh_CN:
           %{score_reason}
           %{response}
         flagged_post_response: "模型回答：%{llm_response}"
+        flagged_post_score_reason: |
+          <b>由 <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -105,6 +114,7 @@ zh_CN:
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天消息串标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据消息串内容自动设置聊天消息串标题。"
+    ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。作曲器中的标题建议通过 AI 助手菜单提供，并且还需要启用上下文菜单功能。"
     ai_image_caption_agent: "用于 AI 图片说明的智能体。自定义智能体必须启用图片上传功能，并使用具备视觉功能的 LLM。"
     ai_post_image_captions_enabled: "为帖子图片启用 AI 说明。生成缺失的说明需要配置 {{setting:ai_image_caption_agent}}。"
     ai_post_image_captions_per_post_limit: "每个帖子可以添加图片说明的数量上限。"
@@ -147,6 +157,13 @@ zh_CN:
     ai_bot_enable_docked_composer: "为 AI 机器人对话启用停靠式聊天风格编辑器，而不是标准的浮动式编辑器。"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_agent: "用于发现搜索功能的智能体"
+    ai_ask_ai_enabled: "在搜索中启用 Ask AI"
+    ai_ask_ai_summary_detail: "选择在“Ask AI”摘要中包含多少细节。"
+    ai_ask_ai_related_count: "设置“Ask AI”为每个答案选择并显示的最大相关讨论数量。"
+    ai_ask_ai_agent: "选择来源并撰写 Ask AI 答案的智能体。"
+    ai_ask_ai_query_rewriter_agent: "该智能体用于为 Ask AI 准备单独的关键词查询和语义查询。如果该智能体或其模型不可用，Ask AI 将使用用户的原始查询进行搜索。"
+    ai_ask_ai_follow_up_agent: "当用户想要跟进“Ask AI”的查询结果时，可以使用此智能体。所选智能体必须已启用、允许发送私人消息，并且对用户可用。"
+    ai_ask_ai_allowed_groups: "允许使用 Ask AI 及其后续交接功能的群组。Ask AI 智能体的权限、后续智能体的权限以及常规的主题和类别可见性仍然有效。私人消息始终不会出现在搜索结果中。来自受限类别的内容（仅限授权用户可见）可以发送到已配置的 LLM 提供商。"
     ai_google_custom_search_api_key: "Google 自定义搜索 API 的 API 密钥，请参阅：https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google 自定义搜索 API 的 CX"
     ai_discord_search_enabled: "启用 Discord 搜索功能"
@@ -164,6 +181,8 @@ zh_CN:
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
     ai_translation_backfill_parallel_jobs: "每个回填周期中并行运行的后置本地化任务数量。数值越高吞吐量越大，但会占用更多资源。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
+    ai_audit_logs_detailed_retention_days: "保留原始 AI 请求和响应有效负载的天数。设置为 0 则有效负载将保留至摘要日志被删除。原始有效负载可能包含私人或敏感内容。即使 AI 插件已禁用，清理工作仍将继续。"
+    ai_audit_logs_purge_after_days: "保留 AI API 审计日志摘要若干天后，将删除整个日志。设置为 0 则永久保留摘要。AI 插件禁用期间，清理工作将继续进行。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -362,6 +381,7 @@ zh_CN:
         unknown_error: "生成缩略图时发生意外错误。请重试。"
       prompts:
         translate: 翻译为%{language}
+        generate_titles: 建议话题标题
         proofread: 审校文本
         markdown_table: 生成 Markdown 表
         custom_prompt: "自定义提示"
@@ -376,6 +396,15 @@ zh_CN:
         agent_vision_disabled: "AI 图片说明智能体必须启用图片上传功能。"
         llm_missing: "AI 图片说明智能体必须使用 LLM。"
         llm_vision_disabled: "AI 图片说明智能体必须使用具备视觉能力的 LLM。"
+    ask_ai:
+      configuration:
+        agent_missing: "选择现有智能体进行“Ask AI”后续跟进。"
+        agent_disabled: "必须启用 Ask AI 后续智能体。"
+        personal_messages_disabled: "Ask AI 后续智能体必须允许发送私人消息。"
+        allowed_groups_missing: "Ask AI 后续智能体必须至少允许一个组。"
+    discover:
+      configuration:
+        cannot_enable: "“发现”功能已弃用，禁用后无法再次启用。请改用“Ask AI”。"
     post_image_captions:
       errors:
         description_blank: "说明不能为空。"
@@ -408,20 +437,51 @@ zh_CN:
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
       tool_pending_approval: "此操作需要版主批准，然后才能执行。"
+      spawn_agent:
+        description: "将一个独立的提示委托给一个允许的代理，并返回其响应。"
+        prompt_description: "发送给选定代理并在思考框中显示的完整独立提示。"
+        summary: "咨询 %{agent}"
+        failed: "委托的任务未能完成。"
+        unknown_agent: "子代理"
       read_post:
         unknown_post: "帖子"
+      tool_errors:
+        invocation_limit_reached: "此工具已达到配置的调用次数上限。请使用已收集的证据。"
+      subagent_errors:
+        invalid_agent: "请求的子代理无效。"
+        invalid_prompt: "必须提供委托提示。"
+        prompt_too_long: "委托的提示过长。"
+        missing_user: "委托操作需要发起用户。"
+        depth_limit: "已达到最大委托深度。"
+        unavailable_parent: "父代理已不再可用。"
+        agent_not_allowed: "请求的子代理不被允许。"
+        unavailable_agent: "请求的子代理不可用或无法访问。"
+        missing_model: "请求的子代理没有可用的语言模型。"
+        call_limit: "已达到委托调用次数上限。"
+        completion_limit: "委托完成次数已达上限。"
+        token_limit: "委托代币预算已用完。"
+        cancelled: "委托的任务已取消。"
+        execution_failed: "委托任务失败。"
+        approval_unavailable: "委托运行中无法使用需要审批的工具。"
       chat_tool_approval:
         approved: "由 @%{username} 批准。"
         rejected: "由 @%{username} 拒绝。"
         failed: "无法完成该操作：%{error}"
         unexpected_error: "发生意外错误"
       agents:
-        default_llm_required: "启用聊天之前需要默认的 LLM 模型"
+        forced_default_llm_required: "在要求此代理始终使用该语言模型之前，请选择一个默认语言模型。"
+        bot_user_unsupported: "此代理仅供内部功能使用，不能由机器人用户使用。"
         cannot_delete_system_agent: "系统智能体无法删除，请改为将其禁用。"
         cannot_edit_system_agent: "系统智能体只能重命名，无法编辑工具或系统提示，只能禁用并复制。"
         cannot_have_duplicate_tools: "不能有重复的工具"
         native_tool_requires_forced_llm: "提供商原生工具需要启用“强制默认 LLM”的默认 LLM。"
         native_tool_unsupported_by_llm: "所选的默认 LLM 不支持已启用的提供商原生工具之一"
+        invalid_subagent_ids: "子代理 ID 必须是一个整数列表。"
+        too_many_subagents: "一个代理最多可以拥有 %{max} 个子代理"
+        too_many_rag_document_sources: "一个代理最多可以拥有 %{max} 个 URL 源"
+        subagent_self: "一个代理不能将自身选为子代理"
+        subagents_not_found: "所选子代理 ID 不存在： %{ids}"
+        subagent_tool_collision: "拥有子代理的代理无法配置名为 spawn_agent 的工具。"
         admin_dashboard_highlights:
           name: "管理员信息中心亮点"
           description: "撰写在管理信息中心顶部显示的简要报告，解释此期间的变化和需要关注的事项"
@@ -530,6 +590,12 @@ zh_CN:
         discover:
           name: "发现"
           description: "发现功能（免费搜索）中使用的默认智能体"
+        ask_ai_synthesis:
+          name: "Ask AI 合成"
+          description: "选择信息来源并准备由 Ask AI 显示的答案"
+        ask_ai_query_rewriter:
+          name: "Ask AI 查询重写器"
+          description: "为 Ask AI 准备关键词和语义搜索查询"
         chat_thread_titler:
           name: "聊天消息串标题工具"
           description: "支持自动生成聊天消息串标题的默认智能体"
@@ -581,6 +647,13 @@ zh_CN:
           read_private:
             name: "阅读不公开话题"
             description: "允许访问用户可以访问的所有话题（默认情况下仅包含公开话题）"
+        read_post:
+          read_private:
+            name: "阅读私信"
+            description: "允许访问请求用户可见的帖子（默认情况下仅包含公开帖子）"
+          max_invocations:
+            name: "最大调用次数"
+            description: "此工具在一次代理回合中可运行的最大次数；留空则无限制。"
         search:
           search_private:
             name: "搜索不公开话题"
@@ -591,6 +664,15 @@ zh_CN:
           base_query:
             name: "基本搜索查询"
             description: "搜索时要使用的基本查询。示例：'#urgent' 会在搜索查询前面加上 '#urgent'，并且仅包含具有紧急类别或标签的话题。"
+          max_invocations:
+            name: "最大调用次数"
+            description: "此工具在一次代理回合中可运行的最大次数；留空则无限制。"
+          ignore_user_filter:
+            name: "忽略用户筛选器"
+            description: "忽略模型提供的用户名，以便搜索结果能够找到错误归属的内容。"
+          absolute_urls:
+            name: "绝对网址"
+            description: "返回完整的源 URL，而不是论坛相对路径。"
         flag_post:
           flag_type:
             name: "标记类型"
@@ -611,6 +693,7 @@ zh_CN:
       tool_summary:
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"
+        view_image: "检查图像"
         update_artifact: "更新 Web 工件"
         create_artifact: "创建 Web 工件"
         web_browser: "浏览网页"
@@ -629,8 +712,12 @@ zh_CN:
         lock_post: "锁定帖子"
         delete_topic: "删除话题"
         edit_post: "编辑帖子"
-        edit_tags: "编辑标签："
+        change_topic_tags: "编辑主题标签"
+        create_tag: "创建标签"
+        edit_tag: "编辑标签"
+        create_category: "创建类别"
         edit_category: "编辑类别"
+        change_topic_category: "更改主题类别"
         set_topic_timer: "设置话题计时器"
         set_slow_mode: "设置慢速模式"
         move_posts: "移动帖子"
@@ -648,6 +735,7 @@ zh_CN:
         image: "生成图片"
         google: "搜索 Google"
         read: "阅读话题"
+        read_post: "阅读帖子"
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "正在搜索站点设置"
@@ -663,6 +751,7 @@ zh_CN:
       tool_help:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
         search_uploaded_documents: "搜索上传至此智能体的文档"
+        view_image: "检查此任务期间可用的图像"
         update_artifact: "使用 AI 机器人更新 Web 工件"
         create_artifact: "使用 AI 机器人创建 Web 工件"
         web_browser: "使用 AI 机器人浏览网页"
@@ -681,8 +770,12 @@ zh_CN:
         lock_post: "锁定或解锁帖子"
         delete_topic: "删除话题"
         edit_post: "编辑帖子的内容"
-        edit_tags: "编辑话题标签"
-        edit_category: "将话题移动到其他类别"
+        change_topic_tags: "编辑话题标签"
+        create_tag: "创建新标签"
+        edit_tag: "重命名标签或更改其描述"
+        create_category: "创建新类别"
+        edit_category: "编辑现有类别的名称、描述或颜色"
+        change_topic_category: "将话题移动到其他类别"
         set_topic_timer: "为某个话题设置关闭、打开、删除或顶帖的定时器"
         set_slow_mode: "启用或禁用话题的慢速模式"
         move_posts: "将帖子移动到新话题或现有话题"
@@ -702,6 +795,7 @@ zh_CN:
         edit_image: "使用 Open AI GPT 图片模型编辑图片"
         google: "在 Google 中搜索查询"
         read: "在论坛上阅读公开话题"
+        read_post: "在论坛上找到一篇帖子，并逐字逐句地阅读。"
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "搜索站点设置"
@@ -713,6 +807,7 @@ zh_CN:
         researcher: "使用 AI 机器人研究论坛信息"
       tool_description:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
+        view_image: "检查了此任务期间可用的图像"
         search_uploaded_documents:
           other: "找到 '%{query}' 的 %{count} 个上传的文档摘录"
         update_artifact: "已使用 AI 机器人更新 Web 工件"
@@ -731,8 +826,12 @@ zh_CN:
         lock_post: "锁定帖子 %{post_id}（已锁定：%{locked}）"
         delete_topic: "删除话题 %{topic_id}（已删除：%{deleted}）"
         edit_post: "编辑帖子 %{post_id}"
-        edit_tags: "编辑话题 %{topic_id} 的标签：%{tags}"
-        edit_category: "将话题 %{topic_id} 移至类别 %{category_id}"
+        change_topic_tags: "编辑话题 %{topic_id} 的标签：%{tags}"
+        create_tag: "创建标签“%{name}”"
+        edit_tag: "编辑标签“%{name}” (%{fields})"
+        create_category: "创建类别“%{name}”"
+        edit_category: "编辑类别 %{category_id} (%{fields})"
+        change_topic_category: "将话题 %{topic_id} 移至类别 %{category_id}"
         set_topic_timer: "在话题 %{topic_id} 上设置%{timer_type}定时器（%{duration_hours} 小时）"
         set_slow_mode: "在话题 %{topic_id} 上设置慢速模式（%{slow_mode_seconds}s）"
         move_posts: "将帖子 %{post_ids} 从话题 %{topic_id} 中移出"
@@ -743,6 +842,7 @@ zh_CN:
         assign: "指定话题 %{topic_id}（已指定：%{assigned}）"
         mark_as_solved: "将帖子 %{post_id} 标记为已解决（已解决：%{solved}）"
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
+        read_post: "阅读帖子： <a href='%{url}'>%{title}</a>"
         time: "%{timezone} 的时间为 %{time}"
         summarize: "已总结 <a href='%{url}'>%{title}</a>"
         set_topic_summary: "设置最终的简短话题摘要"
@@ -773,9 +873,20 @@ zh_CN:
         read_site_setting: "阅读站点设置 %{setting_name}"
         change_site_setting: "将站点设置 %{setting_name} 更改为 '%{value}'"
       discoveries:
+        errors:
+          invalid_query: "输入 1 到 %{max} 个字符之间的搜索查询。"
+          invalid_request_id: "发现请求 ID 无效。"
+          request_conflict: "此发现请求 ID 已被用于另一个查询。"
+          processing_failed: "Ask AI 无法完成此搜索。"
+          temporarily_unavailable: "Ask AI 目前繁忙，请稍后再试。"
+          credits_unavailable: "Ask AI 在 AI 积分重置之前不可用。"
+          follow_up_failed: "后续对话无法创建。"
+          invalid_follow_up: "请输入不超过 %{max} 个字符的后续问题。"
+          result_expired: "此项发现已不再可用。请再次搜索以提出后续问题。"
         continue_conversation:
-          title: "发现对话：搜索 %{query}"
-          raw: "在我搜索“%{query}”时，您向我展示了以下信息：\n\n%{context}\n\n让我们继续对话吧。"
+          title: "Ask AI 对话：搜索 %{query}"
+          sources: "精选讨论：\n%{sources}"
+          source: "- [%{title}](%{url})"
       flag_post:
         errors:
           no_context: "没有可用于标记的帖子上下文。"
@@ -834,14 +945,45 @@ zh_CN:
           no_reason: "需要提供修改理由。"
           revision_failed: "无法修改帖子。"
         success: "帖子成功编辑。"
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "找不到话题。"
           not_allowed: "您无权编辑此话题的标签。"
           no_reason: "编辑标签需要提供理由。"
           tagging_disabled: "此站点未启用标签功能。"
         success: "标签成功更新。"
+      create_tag:
+        errors:
+          tagging_disabled: "此站点未启用标签功能。"
+          no_name: "创建标签需要输入名称。"
+          already_exists: "名为“%{name}”的标签已存在。"
+          not_allowed: "您无权创建标签。"
+          no_reason: "创建标签需要提供理由。"
+        success: "标签“%{name}”创建成功。"
+      edit_tag:
+        errors:
+          tagging_disabled: "此站点未启用标签功能。"
+          not_found: "未找到标签。"
+          not_allowed: "您无权编辑此标签。"
+          nothing_to_edit: "必须提供 new_name 或 description 中的一个。"
+          invalid_new_name: "'%{name}' 不是有效的标签名称。"
+          no_reason: "编辑标签需要提供理由。"
+        success: "标签“%{name}”已成功更新。"
+      create_category:
+        errors:
+          no_name: "创建类别需要输入名称。"
+          not_allowed: "您无权创建分类。"
+          parent_not_found: "未找到父级分类。"
+          no_reason: "创建类别需要提供理由。"
+        success: "类别“%{name}”创建成功。"
       edit_category:
+        errors:
+          not_found: "找不到类别。"
+          not_allowed: "您无权编辑此类别。"
+          nothing_to_edit: "名称、描述、颜色或文本颜色中至少需要提供一项。"
+          no_reason: "编辑分类需要提供理由。"
+        success: "类别“%{name}”已成功更新。"
+      change_topic_category:
         errors:
           not_found: "找不到话题。"
           not_allowed: "您无权移动此话题。"
@@ -1017,6 +1159,12 @@ zh_CN:
       secret_not_found: "所选凭据不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
       bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
+      native_vision_cannot_delegate: "原生图像输入无法使用其他视觉模型"
+      vision_model_required: "必须选择一种视觉模型。"
+      vision_model_not_found: "所选视觉模型不存在"
+      vision_model_cannot_be_self: "模型不能使用自身作为其视觉模型"
+      vision_model_must_be_native: "所选视觉模型必须支持原生图像输入"
+      vision_model_has_dependents: "此模型为以下模型提供视觉： %{models}。请先重新配置这些模型。"
     ai_staff_action_logger:
       updated: "已更新"
       set: "已设置"
@@ -1037,7 +1185,7 @@ zh_CN:
       no_user_specified: username 或 user_unique_id 参数为必选项，请指定。
       user_not_found: 指定的用户不存在。请检查 username 参数。
       agent_disabled: "指定的智能体已被禁用。请检查 agent_name 或 agent_id 参数（旧版：agent_name 或 agent_id）。"
-      no_default_llm: 智能体必须定义 default_llm。
+      no_default_llm: 没有可用的默认语言模型。请为代理或站点配置一个语言模型。
       user_not_allowed: 该用户无权参与该话题。
       invalid_stream_resume_token: resume_token 无效或已过期。
       no_tool_results_specified: 恢复数据流时需要使用 tool_results 参数。
@@ -1064,4 +1212,5 @@ zh_CN:
       custom_tool_exists:
         other: "名称为“%{names}”的自定义工具已存在。"
       mcp_server_missing: "以下 MCP 服务器未在此站点上配置：%{names}。"
+      subagents_missing: "此站点未配置以下子代理： %{names}。"
       mcp_server_tools_not_found: "此站点没有来自 MCP 服务器 %{name} 的匹配工具。"

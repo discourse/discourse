@@ -27,9 +27,11 @@ export default class ReviewableBundledAction extends Component {
   }
 
   @action
-  perform(id) {
-    if (id) {
-      const _action = this.args.bundle.actions.find((a) => a.id === id);
+  perform(actionName) {
+    if (actionName) {
+      const _action = this.args.bundle.actions.find(
+        (a) => a.action_name === actionName
+      );
       this.args.performAction(_action);
     } else {
       this.args.performAction(this.first);
@@ -40,6 +42,7 @@ export default class ReviewableBundledAction extends Component {
     {{#if this.multiple}}
       <DropdownSelectBox
         @nameProperty="label"
+        @valueProperty="action_name"
         @content={{@bundle.actions}}
         @onChange={{this.perform}}
         @options={{hash
@@ -51,7 +54,7 @@ export default class ReviewableBundledAction extends Component {
         class={{dConcatClass
           "reviewable-action-dropdown"
           "btn-icon-text"
-          (dasherize this.first.id)
+          (dasherize this.first.action_name)
           this.first.button_class
         }}
       />
@@ -63,7 +66,7 @@ export default class ReviewableBundledAction extends Component {
         class={{dConcatClass
           "btn-default"
           "reviewable-action"
-          (dasherize this.first.id)
+          (dasherize this.first.action_name)
           this.first.button_class
         }}
       />

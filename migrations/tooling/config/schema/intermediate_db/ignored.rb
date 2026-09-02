@@ -3,6 +3,7 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
   plugin :discourse_ai, "Not migrated yet"
@@ -152,6 +153,7 @@ Migrations::Tooling::Schema.ignored do
   tables :admin_dashboard_reports,
          :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
+         :browser_pageview_entry_url_daily_rollups,
          :browser_pageview_referrer_daily_rollups,
          :category_activity_daily_rollups,
          :user_visit_daily_rollups
@@ -228,6 +230,12 @@ Migrations::Tooling::Schema.ignored do
          :translation_overrides,
          :unsubscribe_keys,
          :upcoming_change_events,
+         :voice_co_presences,
+         :voice_invites,
+         :voice_recordings,
+         :voice_room_memberships,
+         :voice_rooms,
+         :voice_sessions,
          :watched_word_groups,
          :watched_words,
          :web_crawler_requests

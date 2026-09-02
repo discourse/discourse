@@ -249,6 +249,8 @@ module DiscourseAi
         model_params = gateway.prepare_model_params(model_params) if gateway.respond_to?(
           :prepare_model_params,
         )
+        prompt.upload_skips ||= execution_context&.upload_skips
+
         dialect = dialect_klass.new(prompt, llm_model, opts: model_params)
 
         gateway.perform_completion!(

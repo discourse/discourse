@@ -6,7 +6,7 @@ module Jobs
       every 1.minute
 
       def execute(args)
-        DiscoursePostEvent::EventDate.pending.find_each do |event_date|
+        DiscourseEvents::Events::EventDate.pending.find_each do |event_date|
           send_reminder(event_date)
           trigger_events(event_date)
           finish(event_date)
@@ -41,7 +41,9 @@ module Jobs
         return if !event_date.ended?
         event_date.update!(finished_at: Time.current)
 
-        DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event)
+        # The occurrence goes along with the event: `set_next_date` below moves
+        # the event on to the next one, so it can no longer name the one that ended.
+        DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
         MessageBus.publish(
           "/topic/#{event_date.event.post.topic_id}",
           reload_topic: true,

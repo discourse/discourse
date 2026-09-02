@@ -308,6 +308,9 @@ gem "tiktoken_ruby", require: false
 gem "smarter_json", require: false
 gem "json_completer", require: false
 gem "discourse_ai-tokenizers", require: false
+
+# for the voice plugin
+gem "discourse_voice_assets", require: false
 gem "ed25519" # TODO: remove this as existing ssl gem should handle this
 gem "Ascii85", require: false
 gem "ruby-rc4", require: false

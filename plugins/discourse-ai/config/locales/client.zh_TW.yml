@@ -7,292 +7,1564 @@
 zh_TW:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            ai:
+              search: "允許 AI 搜尋"
+              stream_completion: "允許流式 AI 智能體補全"
+              update_agents: "允許更新 AI 智能體"
+              manage_artifacts: "允許管理 AI 工件（列示、查看、創建、更新、刪除）"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
+        emotion:
+          title: "情緒"
+          description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"
         reports:
           filters:
+            group_by:
+              label: "分組依據"
             sort_by:
-              label: "排序"
+              label: "排序依據"
             tag:
-              label: "標記"
+              label: "標簽"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "創建 LLM 模型"
+            update_ai_llm_model: "更新 LLM 模型"
+            delete_ai_llm_model: "刪除 LLM 模型"
+            create_ai_agent: "創建 AI 智能體"
+            update_ai_agent: "更新 AI 智能體"
+            delete_ai_agent: "刪除 AI 智能體"
+            create_ai_tool: "創建 AI 工具"
+            update_ai_tool: "更新 AI 工具"
+            delete_ai_tool: "刪除 AI 工具"
+            create_ai_embedding: "創建 AI 嵌入向量"
+            update_ai_embedding: "更新 AI 嵌入向量"
+            delete_ai_embedding: "刪除 AI 嵌入向量"
+            create_ai_secret: "創建 AI 秘密"
+            update_ai_secret: "更新 AI 秘密"
+            delete_ai_secret: "刪除 AI 秘密"
+            update_ai_spam_settings: "更新 AI 垃圾資訊設置"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "需要啟用 AI 插件"
+      nodes:
+        "action:ai_agent": "AI 智能體"
+      node_descriptions:
+        "action:ai_agent": "運行 AI 智能體來處理資料或生成內容"
     discourse_automation:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "發送人"
+              description: "將發送報告的使用者"
+            receivers:
+              label: "接收人"
+              description: "將收到報告的使用者（電子郵件地址將收到直接電子郵件，使用者名將收到私信）"
             topic_id:
-              label: "話題 ID"
+              label: "主題 ID"
+              description: "要將報告發布到的主題 ID"
             title:
               label: "標題"
+              description: "報告的標題"
+            days:
+              label: "天數"
+              description: "報告的時間范圍"
+            offset:
+              label: "偏移"
+              description: "測試時，您可能希望運行歷史報告，請使用偏移啟動較早日期的報告"
+            instructions:
+              label: "指令"
+              description: "提供給大語言模型的指令"
+            sample_size:
+              label: "樣本大小"
+              description: "要為報告抽樣的貼文數"
+            tokens_per_post:
+              label: "每個貼文的 token 數"
+              description: "每個貼文要使用的 LLM token 數"
+            model:
+              label: "模型"
+              description: "用于生成報告的 LLM"
             categories:
               label: "分類"
+              description: "僅篩選這些分類的主題"
             tags:
-              label: "標記"
+              label: "標簽"
+              description: "僅篩選這些標簽的主題"
+            exclude_tags:
+              label: "排除標簽"
+              description: "排除帶有這些標簽的主題"
+            exclude_categories:
+              label: "排除分類"
+              description: "排除這些分類的主題"
+            allow_secure_categories:
+              label: "允許安全分類"
+              description: "允許為安全分類中的主題生成報告"
+            suppress_notifications:
+              label: "禁止通知"
+              description: "通過轉換為內容來禁止報告可能生成的通知。這將重新映射提及和內部連結。"
+            debug_mode:
+              label: "調試模式"
+              description: "啟用調試模式以查看 LLM 的原始輸入和輸出"
+            priority_group:
+              label: "優先群組"
+              description: "在報告中優先考慮來自此群組的內容"
+            temperature:
+              label: "溫度"
+              description: "用于 LLM 的溫度。增大該值可以提高生成內容的隨機性（留空則使用模型默認值）"
+            top_p:
+              label: "Top P"
+              description: "用于 LLM 的 Top P。增大該值可以提高生成內容的隨機性（留空則使用模型默認值）"
+            agent_id:
+              label: "智能體"
+              description: "用于生成報告的 AI 智能體"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "AI 工具"
+              description: "當自動化觸發時要執行的 AI 工具"
+            llm_model:
+              label: "LLM 模型"
+              description: "使用 llm.generate() 的工具的語言模型（可選）"
+        llm_agent_triage:
+          fields:
+            agent:
+              label: "智能體"
+              description: "用于分類的 AI 智能體（必須設置默認 LLM 和使用者）"
+            whisper:
+              label: "以密語回復"
+              description: "智能體的回答是否應為密語"
+            silent_mode:
+              label: "靜默模式"
+              description: "在靜默模式下，智能體將接收內容但不會在論壇上發布任何內容，這在使用工具進行分類時非常有用"
         llm_triage:
           fields:
+            triage_agent:
+              label: "智能體"
+              description: "用于分類的智能體，請確保它回復一個您可用于觸發操作的字詞"
+            max_post_tokens:
+              label: "貼文最大 token 數"
+              description: "使用 LLM 分類掃描的最大 token 數"
+            stop_sequences:
+              label: "停止序列"
+              description: "指示模型在達到其中一個值時停止生成 token "
+            search_for_text:
+              label: "搜尋文本"
+              description: "如果 LLM 回復中出現以下文本，則應用這些操作"
             category:
               label: "分類"
+              description: "應用于主題的分類"
             tags:
-              label: "標記"
+              label: "標簽"
+              description: "應用于主題的標簽"
             canned_reply:
-              label: "回覆"
+              label: "回復"
+              description: "要為主題發布的預設回復的原始文本"
+            canned_reply_user:
+              label: "回復使用者"
+              description: "發布預設回復的使用者的使用者名"
+            hide_topic:
+              label: "隱藏主題"
+              description: "如果觸發，則將主題設為對公眾不可見"
+            flag_type:
+              label: "標記類型"
+              description: "對貼文應用的標記類型（垃圾資訊或只是提出審核請求）"
+            flag_post:
+              label: "檢舉貼文"
+              description: "標記貼文（垃圾資訊或請求審核）"
+            notify_author_pm:
+              label: "通過 PM 通知作者"
+              description: "當貼文加入隊列和刪除時，向貼文作者發送個人消息"
+            notify_author_pm_user:
+              label: "PM 發送者"
+              description: "發送 PM 的使用者（默認為系統）"
+            notify_author_pm_message:
+              label: "PM 內容"
+              description: "發送給作者的可選自訂消息"
+            include_personal_messages:
+              label: "包括個人消息"
+              description: "同時掃描個人消息并對其進行分類"
+            whisper:
+              label: "以密語回復"
+              description: "AI 的回答是否應為密語"
+            reply_agent:
+              label: "回復智能體"
+              description: "用于回復的 AI 智能體（必須具有默認的 LLM），將優先于預設回復"
+            max_output_tokens:
+              label: "最大輸出 token 數"
+              description: "指定后，設置模型可以生成的 token 數上限。遵守 LLM 的輸出 token 數上限"
+        llm_tagger:
+          tag_mode:
+            manual: "使用特定標簽列表（配置如下）"
+            discover: "讓 AI 發現并使用任何網站標簽"
+          fields:
+            tagger_agent:
+              label: "AI 智能體"
+              description: "用于分析和標記主題的 AI 智能體"
+            tag_mode:
+              label: "標簽選擇模式"
+              description: "選擇 AI 如何選擇標簽"
+            available_tags:
+              label: "可用標簽"
+              description: "AI 可以選擇的標簽（僅在手動模式下使用）"
+            confidence_threshold:
+              label: "置信度閾值"
+              description: "應用建議標簽所需的最低置信度百分比 (0-100)"
+            max_tags_per_post:
+              label: "每個貼文的最大標簽數"
+              description: "單個貼文可以應用的標簽數量上限"
+            max_post_tokens:
+              label: "貼文最大 token 數"
+              description: "要分析的貼文內容中的最大 token 數"
+            allow_restricted_tags:
+              label: "允許限制標簽"
+              description: "允許 AI 建議并應用權限或公開范圍受限的標簽。"
+            max_posts_for_context:
+              label: "用于上下文的最大貼文數量"
+              description: "用于分析上下文時可以包含的主題貼文數量上限（默認：5）"
+            allow_system_posts:
+              label: "允許系統貼文"
+              description: "允許為系統使用者創建的貼文添加標簽。"
     discourse_ai:
+      title: "AI"
+      copied: "已複製"
+      view_raw: "檢視原始內容"
+      view_decoded: "檢視解碼後內容"
+      ai_decoded_transcript:
+        thinking: "正在思考"
+        tool_calls: "工具呼叫"
+        tool_results: "工具結果"
+        tool: "工具"
+        arguments: "參數"
+        tool_result: "工具結果"
+        call_id: "呼叫 ID"
+        type: "類型"
+        error: "錯誤"
+        response: "回應"
+      post_image_captions:
+        edit: "編輯 AI 圖片說明"
+        title: "編輯 AI 圖片說明"
+        description: "說明"
+        save: "保存說明"
+        saved: "AI 圖片說明已保存"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "智能體"
+          forced_llm_notice_description: "此智能體被鎖定為其配置的默認 LLM。該工作流無法覆蓋此設置。"
+          llm_model_id: "LLM 模型"
+          llm_model_default: "使用智能體默認值"
+          llm_model_default_with_name: "使用智能體默認值 (%{value})"
+          mode: "模式"
+          mode_description: "選擇智能體會為每個輸入條目運行一次，還是為所有輸入條目統一運行一次。每一次運行都會向 LLM 發出單獨的請求。"
+          mode_run_once_for_each_item: "為每個條目運行一次"
+          mode_run_once_for_all_items: "為所有條目統一運行一次"
+          prompt: "提示"
+          runner_username: "運行身份："
+          runner_username_tooltip: "其權限用于控制上傳內容可見性和 AI 智能體工具的使用者。使用 system 實現符合工作流的自動化操作。"
+          upload_ids: "上傳 ID"
+          upload_ids_tooltip: "用于附加到提示中的可選上傳 ID。當智能體啟用視覺功能時，將包含圖片上傳；當所選 LLM 支持相應文件類型時，將包含文檔上傳。"
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "選擇智能體…"
+      bot_chats:
+        tab_label: "機器人聊天"
       ai_tool_approval:
-        loading: "載入中..."
-        tool: "動作"
+        loading: "正在加載…"
+        load_error: "無法加載此待處理操作。"
+        agent: "智能體"
+        tool: "操作"
         user: "使用者"
-        approve: "批准"
+        approve: "批準"
         reject: "拒絕"
-        approved: "已同意"
-        rejected: "拒絶"
+        approved: "已批準"
+        rejected: "已拒絕"
+        awaiting_staff: "等待管理人員審批"
+      default_llm:
+        title: "默認 LLM 模型"
+        description: "所有 AI 智能體使用的默認 LLM 模型。如果功能配置或智能體中未指定 LLM，將使用此模型。如果未指定默認 LLM，將使用最后創建的 LLM。"
       llm_selector:
         none: "無"
+        saved: "默認 LLM 模型更新成功"
       features:
-        disabled: "(停用)"
-        groups: "群組:"
-        no_agent: "未設定"
+        short_title: "功能"
+        description: "這些是您網站的訪客可以使用的 AI 功能。可以將這些功能配置為使用特定的智能體和 LLM，并按群組控制訪問權限。"
+        back: "返回 AI 功能"
+        settings_save_error: "某些設置無法保存。"
+        disabled: "（已禁用）"
+        agent:
+          other: "代理程式："
+        groups: "群組："
+        llm:
+          other: "大型語言模型："
+        no_llm: "未選擇 LLM"
+        no_agent: "未設置"
         no_groups: "無"
-        edit: "設定"
+        edit: "設置"
         expand_list:
-          other: "(%{count} 更多)"
-        collapse_list: "(顯示更少)"
+          other: "（另外 %{count} 個）"
+        collapse_list: "（收起）"
+        bot:
+          bot: "聊天機器人"
+          name: "機器人"
+          description: "可以回答問題以及幫助使用者回復個人消息、論壇和聊天的聊天機器人"
+          setting_groups:
+            settings: "基本設置"
+            access_control: "訪問控制"
+            ui_settings: "UI 設置"
+            integrations: "集成"
         nav:
-          enabled: "啟用"
+          enabled: "已啟用"
+          not_enabled: "未啟用"
         filters:
-          all: "全部"
+          all: "所有"
+          text: "搜尋功能、智能體、LLM 或群組…"
+          no_results: "找不到符合您的篩選條件的功能。"
           reset: "重置"
+        no_automations: "尚無自動化"
+        summarization:
+          name: "總結"
+          description: "提供總結按鈕，允許訪客總結主題"
+          topic_summaries: "主題摘要"
+          gists: "主題列表的簡短總結"
+          setting_groups:
+            settings: "基本設置"
+            gists: "要點"
+            backfill: "回填"
         search:
           name: "搜尋"
-        image_caption:
+          description: "通過提供 AI 生成的查詢回答來增強搜尋體驗"
+          ask_ai: "詢問 AI"
           setting_groups:
-            settings: "設定"
+            settings: "基本設置"
+            agents: "智能體"
+            access_control: "訪問控制"
+        embeddings:
+          name: "嵌入向量"
+          description: "通過生成文本的語義表示來支持“相關主題”和“AI 搜尋”等功能"
+          hyde: "HyDE"
+          setting_groups:
+            model_settings: "模型設置"
+            related_topics: "相關主題"
+            semantic_search: "語義搜尋"
+        admin_dashboard:
+          name: "管理員資訊中心"
+          description: "幫助社群管理者發現有意義的變化，并確定下一步的工作方向"
+          highlights: "重點摘要"
+          setting_groups:
+            settings: "基本設置"
+        discord:
+          name: "Discord 集成"
+          description: "增加了搜尋 Discord 頻道的功能"
+          search: "Discord 搜尋"
+          setting_groups:
+            settings: "基本設置"
+            discord_configuration: "Discord 配置"
+        inference:
+          name: "推斷的概念"
+          description: "將主題和貼文分類到感興趣的領域/標簽。"
+          generate_concepts: "概念推理"
+          match_concepts: "概念匹配"
+          deduplicate_concepts: "概念去重"
+          setting_groups:
+            settings: "基本設置"
+            topic_criteria: "主題條件"
+            post_criteria: "貼文條件"
+            agents: "智能體"
+        ai_helper:
+          edit: "編輯 AI 助手設置"
+          name: "AI 助手"
+          description: "協助使用者進行社群互動，例如創建主題、撰寫貼文和閱讀內容"
+          proofread: 審校文本
+          title_suggestions: "建議標題"
+          explain: "解釋"
+          illustrate_post: "為貼文創建插圖"
+          smart_dates: "智能日期"
+          translate: "翻譯"
+          markdown_tables: "生成 Markdown 表"
+          custom_prompt: "自訂提示"
+          translator: "翻譯器"
+          post_illustrator: "貼文插圖創建工具"
+          chat_thread_titles: "聊天消息串標題"
+          setting_groups:
+            access_permissions: "訪問與權限"
+            enabled_features: "啟用的功能"
+            automation: "自動化"
+            agents: "智能體"
+        image_caption:
+          name: "圖片說明"
+          description: "為貼文圖片生成 AI 說明，將其提供給讀者和輔助閱讀技術。"
+          post_image_captions: "貼文圖片說明"
+          setting_groups:
+            settings: "設置"
+        translation:
+          name: "翻譯"
+          description: "將內容翻譯成支持的語言"
+          locale_detector: "語系偵測器"
+          post_raw_translator: "貼文原始翻譯器"
+          topic_title_translator: "主題標題翻譯器"
+          short_text_translator: "短文字翻譯器"
+          schedule_untranslated: "安排翻譯"
+          schedule_topic_only_success: "已排定此主題的翻譯。"
+          schedule_topic_success:
+            other: "已排定 %{count} 篇未翻譯貼文的翻譯。"
+          schedule_topic_error: "無法安排翻譯。請重試。"
+          setting_groups:
+            settings: "基本設置"
+            agents: "智能體"
+            backfill_and_limits: "回填與限制"
         spam:
-          name: "垃圾內容"
+          name: "垃圾資訊"
+          description: "使用所選 LLM 識別潛在垃圾資訊，并進行標記，使其進入審核隊列，以便網站版主可以進行檢查"
+          inspect_posts: "檢查貼文"
+        automation_reports:
+          name: "自動報告"
+          description: "自動創建簡潔的活動概述，突出顯示趨勢、關鍵主題和參與度"
+        automation_triage:
+          name: "貼文分類"
+          description: "使用可配置的自動化規則自動執行貼文的審核與管理"
+      modals:
+        select_option: "選擇一個選項…"
+      layout:
+        table: "表"
+        card: "卡片"
       translations:
         title: "翻譯"
+        description: "自動將論壇上的所有內容翻譯成使用者的首選語言"
+        supported_locales: "支持的語言"
+        max_locales_reached: "最多只能選擇 %{max} 種語言。"
+        locale_count: "已選取 %{count}/%{max}"
         category_scope: "分類"
+        category_scope_description: "選擇自動翻譯應用于所有分類、公開分類還是所選分類中的內容。"
+        cached_results_notice: "正在顯示自 %{relative_time} 起的快取結果。"
         model_progress:
+          loading: "正在加載翻譯進度"
+          overview_label: "按內容類型劃分的翻譯進度"
           detail:
+            loading: "正在加載%{target}詳細資訊…"
+            load_error: "%{target}詳細資訊無法加載。"
             retry: "重試"
+            empty: "沒有可用的語言進度。"
+            progress_label: "已將 %{translated} 個條目（共 %{total} 個）翻譯為%{language}"
             columns:
-              pending: "等待中"
+              locale: "語言區域"
+              translated: "已翻譯"
+              pending: "待處理"
+              eligible: "符合條件"
               total: "總計"
+              progress: "進度"
+            eligible_help: "排除已使用此語言的內容。"
+            pending_help: "包含仍需進行語言檢測的內容。"
           targets:
             post:
-              title: "新發表的貼文"
+              title: "貼文"
+              eligible_total:
+                other: "有 %{count} 篇貼文符合翻譯資格。"
+              translated:
+                other: "%{count} 篇貼文已完整翻譯。"
+              needs_language_detection:
+                other: "仍有 %{count} 篇貼文需要偵測語言。"
+              all_translated:
+                other: "全部 %{count} 篇符合資格的貼文均已完整翻譯。"
             topic:
-              title: "話題"
+              title: "主題"
+              eligible_total:
+                other: "有 %{count} 個主題符合翻譯資格。"
+              translated:
+                other: "%{count} 個主題已完整翻譯。"
+              needs_language_detection:
+                other: "仍有 %{count} 個主題需要偵測語言。"
+              all_translated:
+                other: "全部 %{count} 個符合資格的主題均已完整翻譯。"
             category:
               title: "分類"
+              eligible_total:
+                other: "有 %{count} 個分類符合翻譯資格。"
+              translated:
+                other: "%{count} 個分類已完整翻譯。"
+              needs_language_detection:
+                other: "仍有 %{count} 個分類需要偵測語言。"
+              all_translated:
+                other: "全部 %{count} 個符合資格的分類均已完整翻譯。"
             tag:
-              title: "標記"
+              title: "標簽"
+              total:
+                other: "有 %{count} 個標籤需要翻譯。"
+              translated:
+                other: "%{count} 個標籤已完整翻譯。"
+              needs_language_detection:
+                other: "仍有 %{count} 個標籤需要偵測語言。"
+              all_translated:
+                other: "全部 %{count} 個標籤均已完整翻譯。"
+        admin_actions:
+          translation_settings: "AI 設置"
+          localization_settings: "應用語言設置"
+          enable_translations: "啟用自動翻譯"
+          enable_translations_disabled: "您必須添加受支持的語言才能啟用翻譯功能。"
+          show_language_switcher: "在頁首顯示語言切換器"
+          show_language_switcher_description: "讓所有人選擇語言，並以該語言瀏覽您的網站。"
         stats:
+          title: "翻譯統計"
+          backfill_disabled: "回填功能已禁用，僅翻譯新貼文。"
+          backfill_message: "<a href='%{settingsUrl}'>回填設置</a>配置為翻譯 %{date} 之后的所有貼文。"
           eta_minutes:
-            other: "%{count} 分"
+            other: "%{count} 分鐘"
           eta_hours:
             other: "%{count} 小時"
           eta_days:
             other: "%{count} 天"
         progress_chart:
+          title: "翻譯進度"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} 個非%{language}貼文已翻譯，共 %{total} 個"
           bar_done:
             other: "%{count} 篇貼文"
+        theme_translations:
+          translate:
+            label: "翻譯"
+            title: "使用所選語言作為源語言，翻譯成所有支持的語言"
+            queued: "翻譯已加入隊列"
+            failed: "無法將翻譯加入隊列"
+        translations_menu:
+          translate:
+            label: "翻譯貼文"
+            title: "將此貼文翻譯成所有支持的語言"
+            confirm: "這將更新此貼文的所有現有翻譯。確定嗎？"
+            success: "貼文已發送進行翻譯"
+        credit_limit_warning: "由于點數限制，翻譯已暫停。點數將在 %{reset_time} 重置，屆時將恢復翻譯。"
+        credit_limit_warning_no_time: "由于點數限制，翻譯已暫停。點數重置后將自動恢復。"
       spam:
-        short_title: "垃圾內容"
+        short_title: "垃圾資訊"
+        title: "配置垃圾資訊處理"
+        select_llm: "選擇 LLM"
+        select_agent: "選擇智能體"
+        custom_instructions: "自訂指令"
+        custom_instructions_help: "特定于您的網站的自訂指令，幫助指導 AI 識別垃圾資訊，例如“更積極地掃描非英語貼文”。"
         last_seven_days: "過去 7 天"
+        scanned_count: "已掃描的貼文"
+        false_positives: "錯誤標記"
+        false_negatives: "錯過的垃圾資訊"
+        spam_detected: "檢測到垃圾資訊"
+        custom_instructions_placeholder: "針對特定網站的指令，幫助 AI 更準確地識別垃圾資訊"
         enable: "啟用"
+        enabled_locked_tip: "此網站無法禁用 AI 垃圾內容檢測。"
+        spam_tip: "AI 垃圾資訊檢測功能會掃描所有新使用者在公開主題中發布的前 3 個貼文。如果這些貼文可能是垃圾資訊，它會標記這些貼文以供審核并屏蔽這些使用者。"
+        settings_saved: "設置已保存"
+        spam_description: "使用所選 LLM 識別潛在垃圾資訊，并進行標記，使其進入審核隊列，以便網站版主可以進行檢查"
+        no_llms: "無可用 LLM"
+        test_button: "測試…"
+        save_button: "保存更改"
         test_modal:
-          run: "執行測試"
-          spam: "垃圾內容"
+          title: "測試垃圾資訊檢測"
+          post_url_label: "貼文 URL 或 ID"
+          post_url_placeholder: "https://your-forum.com/t/topic/123/4 或貼文 ID"
+          result: "結果"
+          reason: "推理"
+          llm: "LLM"
+          scan_history: "掃描歷史記錄"
+          sent_message: "發送消息"
+          system_prompt: "系統提示"
+          scan_log: "掃描日志"
+          run: "運行測試"
+          spam: "垃圾資訊"
+          not_spam: "非垃圾資訊"
+        stat_tooltips:
+          incorrectly_flagged: "AI 機器人標記為垃圾資訊但版主不同意的條目"
+          missed_spam: "被社群檢舉為垃圾資訊但未被 AI 機器人檢測到且版主認為是垃圾資訊的條目"
+        errors:
+          scan_not_admin:
+            message: "警告：垃圾資訊掃描無法正常工作，因為垃圾資訊掃描帳號不是管理員帳號"
+            action: "修復"
+          resolved: "錯誤已解決！"
       usage:
-        short_title: "使用方法"
+        short_title: "使用量"
         summary: "摘要"
-        username: "使用者名稱"
+        total_tokens: "token 總數"
+        tokens_over_time: "一段時間內的 token 數"
+        features_breakdown: "按功能的使用量"
+        feature: "功能"
+        usage_count: "使用次數"
+        model: "模型"
+        credits_remaining: "剩余點數"
+        models_breakdown: "按模型的使用量"
+        users_breakdown: "按使用者的使用量"
+        all_features: "所有功能"
+        all_models: "所有模型"
+        username: "使用者名"
         total_requests: "請求總數"
+        request_tokens: "請求 token"
+        response_tokens: "回答 token"
+        net_request_tokens: "網絡請求 token"
+        cache_read_tokens: "快取讀取 token 數"
+        cache_write_tokens: "快取寫入 token 數"
+        cached_tokens: "快取的 token"
+        cached_request_tokens: "快取的請求 token"
+        total_spending: "預估費用"
+        no_users: "找不到使用者使用資料"
+        no_models: "找不到模型使用資料"
+        no_features: "找不到功能使用資料"
         total: "總計"
+        included_in_plan: "包含在方案中"
+        included_models: "包含使用量"
+        billed_models: "計費用量"
+        cost: "成本"
+        subheader_description: "token 是 LLM 用來理解和生成文本的基本單位，使用資料可能會影響成本"
+        stat_tooltips:
+          total_requests: "通過 Discourse 向 LLM 提出的所有請求"
+          total_tokens: "提示 LLM 時使用的所有 token"
+          request_tokens: "LLM 試圖理解您所說的話時使用的 token"
+          response_tokens: "LLM 回答您的提示時使用的 token"
+          cache_read_tokens: "從快取中復用的先前處理過的請求 token，LLM 會重復使用這些 token 優化性能和成本"
+          cache_write_tokens: "寫入快取，以便將來重復使用的請求 token 數"
+          cached_tokens: "先前處理過的請求 token，LLM 會重復使用這些 token 優化性能和成本"
+          total_spending: "根據添加到 LLM 配置設置中的指定成本指標，LLM 使用的所有 token 的累計成本"
         periods:
           last_day: "過去 24 小時"
-          custom: "自訂..."
+          last_week: "過去一周"
+          last_month: "過去一個月"
+          custom: "自訂…"
+        credit_allocations: "點數分配"
       logs:
-        short_title: "紀錄"
-        apply: "套用"
+        short_title: "日志"
+        description: "檢查傳送至 AI 模型的個別要求及其回應"
+        refresh: "重新整理記錄"
+        retry: "重試"
+        apply: "應用"
+        clear_filters: "清除所有篩選條件"
+        all_outcomes: "所有結果"
+        all_models: "所有模型"
+        all_features: "所有功能"
         successful: "成功"
         failed: "失敗"
-        topic_id: "話題 ID"
-        post_id: "貼文 ID"
+        unknown: "未知"
+        has_retries: "有重試"
+        retried: "已重試"
+        unattributed: "未歸屬"
+        search_placeholder: "依 @使用者名稱或 ID 搜尋（例如：@user1 topic:123 log:45）"
+        feature_placeholder: "功能名稱"
         time: "時間"
         when: "時間"
+        outcome: "成果"
+        feature: "功能"
+        model: "模型"
         request: "請求"
+        provider: "提供商"
         user: "使用者"
-        context: "關聯"
-        topic: "話題"
+        tokens: "權杖"
+        tokens_pair: "%{request} → %{response}"
+        tokens_aria: "%{request} 個輸入權杖及 %{response} 個輸出權杖"
+        tokens_unavailable: "無法取得權杖數量"
+        cache_read_tokens: "快取讀取"
+        cache_write_tokens: "快取寫入"
+        context: "上下文"
+        topic: "主題"
+        topic_short: "主題 %{id}"
         post: "貼文"
         post_short: "貼文 %{id}"
         duration: "持續時間"
-        actions: "動作"
+        tokens_direction: "權杖（輸入 → 輸出）"
+        first_token: "首個權杖"
+        cost: "成本"
+        actions: "操作"
+        table_caption: "傳送至語言模型的 AI 要求及其結果"
+        view_details: "詳細資訊"
+        no_results: "沒有符合這些篩選條件的 AI 記錄。"
+        no_logs: "找不到任何保留的 AI 記錄。"
+        new_logs_count:
+          other: "查看 %{count} 筆新記錄"
         periods:
+          hour: "過去一小時"
           day: "過去 24 小時"
           week: "過去 7 天"
-          custom: "客製"
+          custom: "自訂"
         detail:
+          title: "AI 記錄 #%{id}"
           request: "請求"
           response: "回應"
-          context: "關聯"
-          network_error: "網路錯誤"
+          context: "上下文"
+          attempts: "嘗試次數"
+          tabs_label: "AI 記錄酬載區段"
+          copy_request: "復制請求"
+          copy_response: "復制回答"
+          copy_raw_response: "複製原始回應"
+          copy_context: "複製上下文"
+          payload_unavailable: "無法取得酬載"
+          payload_truncated: "此酬載過大，無法完整顯示，已被截斷。"
+          load_error: "找不到此記錄。它可能已依保留政策移除。"
+          generic_load_error: "無法載入此記錄，請再試一次。"
+          network_error: "網絡錯誤"
+          outcome_with_status: "%{outcome}（%{status}）"
+          duration_seconds: "%{seconds} 秒"
+          attempt: "狀態 %{status}，延遲 %{delay} 毫秒"
         retention:
+          configure: "設定保留期限"
+          title: "記錄保留期限"
+          lifecycle_label: "記錄會先保留完整酬載，之後改為摘要，最後刪除。"
+          detailed_stage: "完整酬載"
           summary_stage: "摘要"
-          deleted_stage: "刪除"
-          save: "儲存"
+          deleted_stage: "已刪除"
+          hint: "天數從要求日期開始計算。0 表示不設定個別上限。"
+          detailed_title: "完整酬載（天）"
+          detailed_help: "原始要求與回應。設為 0 會保留至摘要刪除為止。"
+          summary_title: "摘要（天）"
+          summary_help: "稽核中繼資料。設為 0 會永久保留。"
+          invalid_order: "摘要的保留時間不得短於酬載。"
+          valid_range: "請輸入 0 至 %{max} 的整數。"
+          destructive_warning: "縮短保留期限會在下次清理時永久刪除資料，且無法復原。"
+          meta: "使用量 %{size} · 每日執行清理 · 不影響使用量資料"
+          save: "保存"
+          saved: "保留期限已儲存，清理作業將在 24 小時內執行。"
+          lifecycle:
+            complete_forever: "永久保留記錄"
+            detail_until_delete: "完整記錄保留 %{summary} 天後刪除"
+            summary_forever: "酬載保留 %{detailed} 天，摘要永久保留"
+            finite: "酬載保留 %{detailed} 天，摘要保留 %{summary} 天後刪除"
       ai_agent:
+        ai_tools: "工具"
+        native_tools_help: "啟用“始終使用默認語言模型”且所選默認語言模型支持提供商原生工具時，這些工具（例如網絡搜尋或頁面獲取）將顯示。"
+        mcp_servers: "MCP 服務器"
+        subagents: "子代理程式"
+        subagents_help: "允許此代理程式將工作委派給所選的代理程式。只有在至少一個所選代理程式可用時，才會加入產生工具。"
+        subagents_summary:
+          other: "此代理程式可委派給 %{count} 個代理程式。"
+        subagent_disabled: "%{name}（已停用）"
+        subagent_tool_name: "子代理程式委派（上限）"
+        invalid_subagent_ids: "子代理程式 ID 必須是整數清單"
+        too_many_subagents: "一個代理程式最多可有 %{max} 個子代理程式"
+        subagent_self: "代理程式不能選擇自己作為子代理程式"
+        subagents_not_found: "以下所選的子代理程式 ID 不存在：%{ids}"
+        subagent_tool_collision: "具有子代理程式的代理程式不能設定名為 spawn_agent 的工具"
+        mcp_server_tools_help: "所選 MCP 服務器默認會公開所有工具。您可以針對每個智能體篩選工具，以減少 token 使用量并專注于特定工具。"
+        mcp_server_tool_count:
+          other: "%{count} 個工具"
+        mcp_server_enabled_tool_count:
+          other: "已啟用 %{count} 個工具"
+        mcp_server_all_tools_enabled: "所有工具均已啟用"
+        mcp_server_enabled_tools:
+          other: "已啟用 %{total} 個工具中的 %{count} 個"
+        mcp_server_choose_tools: "選擇工具"
+        mcp_server_edit_tools: "編輯工具"
+        tool_strategies:
+          all: "應用于所有回復"
+          replies:
+            other: "僅套用至前 %{count} 則回覆"
+        back: "返回智能體"
         name: "名稱"
         edit: "編輯"
-        export: "匯出"
-        import: "匯入"
+        export: "導出"
+        import: "導入"
+        import_error_conflict: "導入 %{name} 時檢測到沖突，您是否要更新現有智能體？"
+        import_error_missing_subagents: "匯入此代理程式前，必須先建立以下子代理程式：%{names}。"
+        overwrite: "覆蓋"
         description: "描述"
+        no_llm_selected: "未選擇語言模型"
+        use_parent_llm: "使用智能體的語言模型"
+        max_turn_tokens: "最大回合 Token"
+        max_turn_tokens_help: "單次機器人回復期間所有 LLM 調用消耗的最大 token 總量（輸入 + 輸出）。留空則默認為模型上下文窗口的一半。"
+        compression_threshold: "壓縮閾值"
+        compression_threshold_help: "上下文使用百分比（20-99%），超過該百分比時自動壓縮開始生效。數值越低，壓縮觸發越早，從而保留更多空間。"
+        vision_enabled: 包含圖片上傳
+        vision_enabled_help: 啟用後，當所選模型使用原生圖片輸入，或將圖片處理委派給其他模型時，此代理程式可包含貼文及聊天中的圖片。
+        vision_max_pixels: 最大圖片尺寸
+        vision_max_pixel_sizes:
+          low: 低品質 - 最便宜 (256x256)
+          medium: 中等品質 (512x512)
+          high: 高品質 - 最慢 (1024x1024)
+        show_thinking: 顯示思考過程
+        show_thinking_help: 將向終端使用者顯示語言模型的內部思考過程和工具調用。
+        mentionable: 允許提及
+        mentionable_help: 如果啟用，允許群組中的使用者可以在貼文中提及此使用者，AI 將以此智能體的身份進行回復。
         user: 使用者
-        save: "儲存"
-        enabled: "啟用?"
+        create_user: 創建使用者
+        create_user_help: 您可以選擇為此智能體附加一個使用者。如果這樣做，AI 將使用此使用者來回復請求。
+        default_llm: 默認語言模型
+        default_llm_help: 此代理程式預設使用的語言模型。留空時，將使用網站的預設語言模型。
+        system_prompt: 系統提示
+        forced_tool_strategy: 強制工具策略
+        allow_chat_direct_messages: "允許聊天直接消息"
+        allow_chat_direct_messages_help: "如果啟用，允許群組中的使用者可以向此智能體發送直接消息。"
+        allow_chat_channel_mentions: "允許聊天頻道提及"
+        allow_chat_channel_mentions_help: "如果啟用，允許群組中的使用者可以在聊天頻道中提及此智能體。"
+        allow_personal_messages: "允許個人消息"
+        allow_personal_messages_help: "如果啟用，允許群組中的使用者可以向此智能體發送私人消息。"
+        allow_topic_mentions: "允許主題提及"
+        allow_topic_mentions_help: "如果啟用，允許組內的使用者可以在主題中提及此智能體。"
+        require_approval: "審核工具需要審批"
+        require_approval_help: "啟用后，審核操作（關閉、刪除、編輯等）將發送到審核隊列，由版主批準后再執行。"
+        force_default_llm: "始終使用默認語言模型"
+        save: "保存"
+        saved: "智能體已保存"
+        enabled: "已啟用？"
+        tools: "啟用的工具"
+        tokens: "token"
+        context_cost: "上下文成本"
+        token_usage: "Token 使用情況"
+        tool_count: "工具計數"
+        tool_count_value:
+          other: "%{count} 個工具"
+        tool_tokens_total: "~%{tokens} Token"
+        mcp_server_cost_name: "%{name}（MCP 服務器）"
+        mcp_server_cost_value:
+          other: "約 %{tokens} 個權杖，%{count} 個工具"
+        mcp_server_tokens_only: "~%{tokens} token"
         mcp_tools_modal:
-          clear_all: "清除全部"
-        duplicate: "複製"
+          title: "%{name} 個工具"
+          summary: "默認情況下，此智能體可以使用此服務器上的所有工具。選擇較小的工具集可以限制訪問權限并降低請求成本。"
+          filter_placeholder: "篩選工具"
+          select_all: "全選"
+          clear_all: "全部清除"
+          selection_summary:
+            other: "已選取 %{total} 個工具中的 %{count} 個"
+          empty: "沒有工具符合此篩選條件。"
+        tool_severity_medium: "中等容量"
+        tool_severity_high: "高容量"
+        tool_severity_too_many: "工具過多"
+        tool_tokens_warning: "過多的工具會占用寶貴的對話內存，從而降低 AI 的性能。請考慮移除非必要的工具。"
+        tool_count_warning: "每個工具的定義都會在每次請求時發送給模型。工具過多會增加 token 的使用量，并可能使模型感到困惑，從而導致工具選擇質量下降。因此，請僅保留此智能體實際需要的工具。"
+        forced_tools: "強制工具"
+        allowed_groups: "允許的群組"
+        confirm_delete: "確定要刪除此智能體嗎？"
+        new: "新建智能體"
+        new_group: "新建或復制智能體"
+        duplicate: "復制"
+        duplicate_search: "復制智能體"
+        copy_name: "%{name} 的副本"
+        no_agents: "您尚未創建任何智能體。"
+        manage_agents: "管理智能體"
+        title: "智能體"
+        short_title: "智能體"
         delete: "刪除"
+        temperature: "溫度"
+        temperature_help: "用于 LLM 的 Temperature。增大該值可以提升創造力（留空將使用模型默認值，通常為 0.0 到 2.0 之間的值）"
+        top_p: "Top P"
+        top_p_help: "用于 LLM 的 Top P，增大該值可以提升隨機性（留空將使用模型默認值，通常為 0.0 到 1.0 之間的值）"
+        thinking_effort: "思考強度"
+        thinking_effort_help: "推理模型在回答問題前應該思考多少。較高的值可能有助于解決復雜任務，但會增加延遲和成本。不支持的提供商會忽略此設置。"
         thinking_effort_options:
+          default: "模型默認值"
           none: "無"
+          minimal: "最低"
           low: "低"
-          medium: "中間的"
+          medium: "中"
           high: "高"
-          max: "最大"
+          xhigh: "極高"
+          max: "最高"
+        priority: "優先級"
+        priority_help: "優先級較高的智能體會顯示在智能體列表的頂部。如果有多個智能體的優先級相同，則會按字母順序排列。"
+        tool_options: "工具選項"
+        rag_conversation_chunks: "搜尋對話分塊"
+        rag_conversation_chunks_help: "用于 RAG 模型搜尋的分塊數。增加分塊數會增加 AI 可以使用的上下文數量。"
+        agent_description: "智能體是一項強大的功能，可讓您自訂 Discourse 論壇中 AI 引擎的行為。它們充當“系統消息”，指導 AI 的回答和交互，從而幫助創建更加個性化和引人入勝的使用者體驗。"
         response_format:
+          title: "JSON 回答格式"
+          no_format: "未指定 JSON 格式"
           open_modal: "編輯"
           modal:
+            root_title: "回答結構"
             key_title: "金鑰"
+        examples:
+          title: 示例
+          examples_help: 模擬以前與 LLM 的互動，并以此為基礎生成更好的結果。
+          new: 新示例
+          remove: 刪除示例
+          collapsable_title: "示例 #%{number}"
+          user: "使用者消息"
+          model: "模型回答"
+        list:
+          enabled: "AI 機器人？"
+        ai_bot:
+          title: "AI 機器人選項"
+          save_first: "保存智能體后，將解鎖更多 AI 機器人選項。"
         filters:
+          text: "查找智能體"
           reset: "重置"
+          no_results: "找不到符合您的篩選條件的智能體。"
+          all_features: "任何功能"
+        features_list:
+          other: "功能："
+        llms_list: "LLM："
       rag:
+        title: "RAG"
+        sources:
+          title: "網址來源"
+          description: "定期擷取並建立索引，作為代理程式知識的網頁。"
+          urls: "網址"
+          urls_description: "每行輸入一個網址。"
+          refresh_interval_hours: "更新間隔（小時）"
+          add: "加入網址來源"
+          edit: "編輯網址來源"
+          save: "儲存網址來源"
+          modal_title: "設定網址來源"
+          empty: "尚未設定網址來源。"
+          summary:
+            other: "%{count} 個網址來源"
+          more:
+            other: "以及另外 %{count} 個網址"
+          too_many: "輸入的網址不得超過 %{count} 個。"
+          invalid_url: "無效的網址：%{url}"
+        options:
+          rag_chunk_tokens: "上傳分塊 token"
+          rag_chunk_tokens_help: "RAG 模型中為每個分塊使用的 token 數。增大 token 數會增加 AI 可以使用的上下文數量。（更改 token 數將為所有上傳內容重新編制索引）"
+          rag_chunk_overlap_tokens: "上傳分塊重疊 token"
+          rag_chunk_overlap_tokens_help: "RAG 模型中分塊之間重疊的 token 數。（更改 token 數將為所有上傳內容重新編制索引）"
+          rag_llm_model: "建立語言模型索引"
+          rag_llm_model_help: "PDF 和圖片索引期間用于 OCR 的語言模型"
+          show_indexing_options: "顯示上傳選項"
+          hide_indexing_options: "隱藏上傳選項"
         uploads:
-          title: "上傳檔案"
-          uploading: "上傳中..."
+          title: "上傳"
+          description: "PDF (.pdf)、純文本 (.txt) 或 Markdown (.md)"
+          description_with_images: "純文本 (.txt)、Markdown (.md)、PDF (.pdf) 或圖片（.png、.jpeg）"
+          button: "添加文件"
+          filter: "篩選上傳"
+          indexed: "已編制索引"
+          indexing: "正在編制索引"
+          uploaded: "準備好編制索引"
+          uploading: "正在上傳…"
+          remove: "移除上傳"
       tools:
-        export: "匯出"
-        import: "匯入"
+        back: "返回工具"
+        short_title: "工具"
+        keywords: "mcp|mcp 服務器|model context protocol"
+        script_tools: "腳本工具"
+        export: "導出"
+        import: "導入"
+        import_error_conflict: "工具已存在，是否要更新？"
+        overwrite: "覆蓋"
+        no_tools: "您還沒有創建任何工具"
         name: "名稱"
+        name_help: "名稱將顯示在 Discourse UI 中，是您用來在各種設置中查找該工具的簡短標識符，它應當獨一無二（必填項）"
+        new: "新工具"
+        tool_name: "工具名稱"
+        tool_name_help: "工具名稱會呈現給大語言模型。它本身并不唯一，但每個智能體的工具名稱都是唯一的。（智能體會在保存時進行驗證）"
         description: "描述"
+        description_help: "向語言模型介紹工具用途的清晰描述"
+        subheader_description: "工具和 MCP 服務器擴展了 AI 智能體的功能。"
         summary: "摘要"
-        save: "儲存"
+        summary_help: "顯示給最終使用者的工具用途摘要"
+        script: "腳本"
+        parameters: "參數"
+        save: "保存"
+        parameter_type: "參數類型"
+        parameter_item_type: "條目類型"
+        add_parameter: "添加參數"
         remove_parameter: "移除"
-        parameter_required: "必要設定"
-        credential_not_set: "(未設定)"
+        parameter_required: "必選"
+        parameter_enum: "枚舉"
+        parameter_name: "參數名稱"
+        parameter_description: "參數描述"
+        enum_value: "枚舉值"
+        add_enum_value: "添加枚舉值"
+        secret_alias: "憑據別名"
+        secret_alias_help: "通過 secrets.get(\"alias_name\") 從腳本引用的別名。使用字母、數字和下劃線。"
+        secret_credential: "憑據"
+        add_secret_contract: "添加憑據"
+        remove_secret_contract: "移除憑據"
+        credential_not_set: "（未設置）"
         edit: "編輯"
         test: "測試"
         delete: "刪除"
+        saved: "工具已保存"
+        confirm_delete: "確定要刪除此工具嗎？"
         test_modal:
-          run: "執行測試"
+          title: "測試 AI 工具"
+          run: "運行測試"
+          result: "測試結果"
       secrets:
-        short_title: "憑證"
+        short_title: "憑據"
+        description: "管理在 LLM 和嵌入向量之間共享的身份驗證憑據。"
         name: "名稱"
-        secret: "價值"
-        save: "儲存"
+        secret: "值"
+        select_secret: "選擇憑據…"
+        create_new: "新建憑據"
+        add_secret: "添加憑據"
+        saved: "憑據已保存"
+        confirm_delete: "確定要刪除此憑據嗎？"
+        delete_failed_in_use: "此憑據當前正在使用中，無法刪除。"
+        no_secrets: "暫無憑據"
+        new_title: "新建憑據"
+        edit_title: "編輯憑據"
+        back: "返回憑據"
+        save: "保存"
         edit: "編輯"
         delete: "刪除"
+        used_by: "用于"
+        not_used: "未使用"
         embedding: "嵌入"
+        cannot_delete_in_use: "此憑據無法刪除，因為它正被以下使用者使用："
+        tool: "工具"
+        mcp_server: "MCP 服務器"
+        mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
+        modal:
+          title: "創建新憑據"
       mcp_servers:
+        short_title: "MCP 服務器"
+        new: "新 MCP 服務器"
         name: "名稱"
         description: "描述"
-        url: "網址"
-        oauth_connect: "連結"
-        enabled: "啟用"
-        save: "儲存"
+        url: "URL"
+        auth_type: "身份驗證"
+        auth_types:
+          none: "無身份驗證"
+          header_secret: "頭憑據"
+          oauth: "OAuth"
+        secret: "憑據"
+        auth_header: "身份驗證頭"
+        auth_scheme: "身份驗證方案"
+        oauth_client_registration: "OAuth 客戶端注冊"
+        oauth_client_registration_types:
+          client_metadata_document: "客戶端元資料文檔"
+          manual: "手動客戶端憑據"
+        oauth_client_id: "OAuth 客戶端 ID"
+        oauth_client_secret: "OAuth 客戶端密鑰"
+        oauth_scopes: "OAuth 作用域"
+        oauth_authorization_params: "OAuth 授權參數"
+        oauth_authorization_params_help: "可選 JSON 對象，已合并到授權請求中。使用 null 可以移除默認參數。"
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth 令牌參數"
+        oauth_token_params_help: "可選 JSON 對象，會合并到令牌請求中。使用 null 可以移除默認參數。"
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "需要刷新令牌"
+        oauth_require_refresh_token_help: "如果提供商未返回刷新令牌，則 OAuth 連接將失敗。"
+        oauth_json_object_required: "“%{field}”必須是一個 JSON 對象。"
+        oauth_show_advanced_options: "顯示高級選項"
+        oauth_hide_advanced_options: "隱藏高級選項"
+        oauth_connection: "OAuth 連接"
+        oauth_status: "OAuth 狀態"
+        oauth_statuses:
+          disconnected: "已斷開連接"
+          connected: "已連接"
+          refresh_failed: "刷新失敗"
+          error: "需要關注"
+        oauth_connect: "連接"
+        oauth_reconnect: "重新連接"
+        oauth_disconnect: "斷開連接"
+        oauth_connect_help: "使用“連接”保存服務器并為其授權。"
+        oauth_client_metadata_url: "客戶端元資料 URL"
+        oauth_granted_scopes: "授予的作用域"
+        oauth_access_token_expires_at: "訪問令牌的到期時間為"
+        oauth_authorization_endpoint: "授權端點"
+        oauth_token_endpoint: "令牌端點"
+        oauth_revocation_endpoint: "撤銷端點"
+        oauth_issuer: "頒發者"
+        oauth_last_error: "最后一次 OAuth 錯誤"
+        oauth_show_details: "顯示詳細資訊"
+        oauth_hide_details: "隱藏詳細資訊"
+        timeout_seconds: "請求超時（秒）"
+        timeout_seconds_tooltip: "Discourse 在請求失敗前會等待 MCP 服務器多長時間。除非服務器持續運行緩慢，否則請保持此值為 30 秒。"
+        enabled: "已啟用"
+        save: "保存"
         edit: "編輯"
         delete: "刪除"
+        test: "測試連接"
+        saved: "MCP 服務器已保存"
+        confirm_delete: "確定要刪除此 MCP 服務器嗎？"
+        back: "返回工具"
+        health: "運行狀況"
+        healthy: "健康"
+        unhealthy: "需要關注"
+        tool_count:
+          other: "%{count} 個工具"
         tools_modal:
-          required: "必要設定"
+          title: "%{name} 個工具"
+          summary:
+            other: "此伺服器目前提供 %{count} 個工具。"
+          parameters: "參數"
+          required: "必選"
+          no_parameters: "此工具不需要任何參數。"
+        test_result: "連接結果"
+        test_summary:
+          other: "使用 %{version} 通訊協定探索到 %{count} 個工具。"
       llms:
+        short_title: "LLM"
+        no_llms: "暫無 LLM"
+        new: "新建模型"
         display_name: "名稱"
+        name: "模型 ID"
+        provider: "提供商"
+        tokenizer: "分詞器"
+        max_prompt_tokens: "上下文窗口"
+        max_output_tokens: "最大輸出 token 數"
+        url: "托管模型的服務的 URL"
+        api_key: "托管模型的服務的 API 密鑰"
+        vision_enabled: "支持圖片輸入"
+        vision_mode: "圖片處理"
+        vision_mode_help: "「已停用」會阻止圖片處理。「使用其他模型」會加入由原生視覺模型支援的圖片檢視工具。「原生圖片輸入」會將圖片直接傳送至此模型。"
         vision_modes:
           disabled:
-            title: "停用"
-        save: "儲存"
+            title: "已禁用"
+          delegated:
+            title: "使用其他模型"
+          native:
+            title: "原生圖片輸入"
+        vision_model: "視覺模型"
+        vision_model_help: "委派會增加模型要求、延遲與成本。只有具備原生圖片輸入的模型可供使用。"
+        no_native_vision_models: "使用其他模型處理視覺內容前，請先設定具備原生圖片輸入的模型。"
+        allowed_attachment_types: "允許的文檔附件"
+        attachment_types_placeholder: "選擇或輸入擴展名（例如，pdf、txt、csv、docx、xlsx）"
+        ai_bot_user: "AI 機器人使用者"
+        cost_input: "輸入成本"
+        cost_cached_input: "快取輸入成本"
+        cost_cache_write: "快取寫入成本"
+        cost_output: "輸出成本"
+        save: "保存"
         edit: "編輯"
+        saved: "LLM 模型已保存"
+        back: "返回 LLM"
+        confirm_delete: 確定要刪除此模型嗎？
         delete: 刪除
         quotas:
+          title: "使用配額"
+          add_title: "創建新配額"
           group: "群組"
+          max_tokens: "最大 token 數"
           max_usages: "最大使用次數"
+          max_cost: "最大成本"
           duration: "持續時間"
+          confirm_delete: "確定要刪除此配額嗎？"
+          add: "添加配額"
           durations:
             hour: "1 小時"
             six_hours: "6 小時"
             day: "24 小時"
             week: "7 天"
-            custom: "自訂..."
+            custom: "自訂…"
           hours: "小時"
+          max_tokens_help: "此群組中每個使用者在指定時長內可以使用的最大 token（單詞和字符）數。token 是 AI 模型處理文本時使用的單位，1 個 token 約等于 4 個字符或 3/4 個單詞。"
+          max_tokens_required: "如果未設置最大使用次數和最大成本，則必須設置"
+          max_usages_help: "此群組中每個使用者在指定時長內可以使用 AI 模型的最大次數。此配額按個別使用者進行跟蹤，不在整個群組中共享。"
+          max_usages_required: "如果未設置最大 token 數和最大成本，則必須設置"
+          max_cost_help: "此群組中每個使用者在指定期間內使用此 AI 模型可能產生的最高預計費用。該費用基于為模型配置的輸入、輸出、快取輸入及快取寫入價格計算得出。"
+          max_cost_required: "如果未設置最大 token 數和最大使用次數，則必須設置"
+        credit_allocation:
+          credits_remaining: "剩余 %{remaining}/%{total} 點數 (%{percentage}%)"
+          soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 點數"
+          hard_limit_warning: "您已用完此模型的 AI 點數。使用此模型的 AI 功能將暫停使用，直至 %{reset_date}。"
+          next_reset: "點數將于 %{time} 重置"
         usage:
+          ai_bot: "AI 機器人"
+          ai_helper: "助手 (%{agent})"
+          ai_image_caption: "圖片說明"
+          ai_agent: "智能體（%{agent}）"
           ai_summarization: "總結"
-          ai_spam: "垃圾內容"
+          ai_embeddings_semantic_search: "AI 搜尋"
+          ai_spam: "垃圾資訊"
+          automation: "自動化 (%{agent})"
+          vision_delegate: "模型的視覺處理（%{agent}）"
+        in_use_warning:
+          other: "此模型目前由以下項目使用：%{settings}。若設定不正確，相關功能將無法如預期運作。"
+        model_description:
+          none: "適用于大多數語言模型的常規設置"
+          anthropic-claude-opus-4-7: "Anthropic 最智能的模型"
+          anthropic-claude-sonnet-4-6: "速度與成本的最佳平衡"
+          anthropic-claude-haiku-4-5: "快速、經濟高效"
+          google-gemini-3-1-pro-preview: "Google 最智能的模型"
+          google-gemini-3-6-flash: "面向智能體，快速、前沿模型"
+          open_ai-gpt-5-6-sol: "OpenAI 用于處理復雜專業工作的前沿模型"
+          open_ai-gpt-5-6-terra: "在滿足高需求場景的同時，兼顧智能性和成本。"
+          open_ai-gpt-5-6-luna: "為注重成本、工作負載量大的場景而優化"
+          open_router-moonshotai-kimi-k2-6: "Moonshot 具有視覺能力的多模態模型"
+          open_router-deepseek-deepseek-v4-flash: "DeepSeek 的最新高性能模型，具備 100 萬上下文資訊"
+          open_router-minimax-minimax-m2-7: "MiniMax 的大上下文模型"
+          open_router-x-ai-grok-4-1-fast: "xAI 的快速多模態模型，具有非常大的上下文資訊"
+          open_router-z-ai-glm-5-1: "Z-AI 側重于推理的模型"
+          open_router-qwen-qwen3-6-plus: "Qwen 的多模態模型，具備 100 萬上下文資訊"
+        preseeded_model_description: "利用 %{model} 的預配置開源模型"
+        configured:
+          title: "配置的 LLM"
+        preconfigured_llms: "選擇您的 LLM"
+        preconfigured:
+          title_no_llms: "選擇一個模板以開始"
+          title: "未配置的 LLM 模板"
+          description: "LLM（大語言模型）是經過優化的 AI 工具，可用于執行總結內容、生成報告、自動執行客戶互動以及促進論壇審核和見解等任務"
+          fake: "手動配置"
+          button: "設置"
         next:
           title: "下一步"
         tests:
-          title: "執行測試"
-          success: "成功!"
+          title: "運行測試"
+          running: "正在運行測試…"
+          success: "成功！"
+          invalid_config: "首先修復配置中的以下錯誤："
+          failure: "嘗試聯系模型時返回此錯誤：%{error}"
+          failure_non_streaming: "非流式傳輸請求失敗：%{error}"
+          failure_streaming: "流式傳輸請求失敗：%{error}"
+        hints:
+          max_prompt_tokens: "模型在單個請求中可以處理的最大 token 數"
+          max_output_tokens: "模型在單個請求中可以生成的最大 token 數"
+          display_name: "用于在您的網站界面上引用此模型的名稱。"
+          name: "我們將其包含在 API 調用中以指定我們將使用哪個模型"
+          vision_enabled: "此模型/提供商是否能夠接收和理解圖片。"
+          allowed_attachment_types: "選擇可以轉換或轉發的文檔附件類型。留空則禁止文檔附件。圖片單獨控制。"
+          cost_input: "此模型每 100 萬個 token 的輸入成本"
+          cost_cached_input: "此模型每 100 萬個 token 的快取輸入成本（從提示快取讀取時）"
+          cost_cache_write: "此模型每 100 萬個 token 的快取寫入成本（從提示快取寫入時）"
+          cost_output: "此模型每 100 萬個 token 的輸出成本"
+          cost_measure: "$/100 萬個 token"
         providers:
-          fake: "客製"
+          aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock（Converse API）"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google Gemini（舊版 API）"
+          gemini_interactions: "Google Gemini"
+          google_vertex_ai: "Google Vertex AI"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          groq: "Groq"
+          fake: "自訂"
+        provider_fields:
+          access_key_id: "AWS Bedrock 訪問密鑰 ID"
+          role_arn: "AWS Bedrock 角色 ARN"
+          inference_profile_arn: "AWS Bedrock 應用程式推理配置文件 ARN"
+          region: "區域"
+          project_id: "GCP 項目 ID"
+          organization: "可選 OpenAI 組織 ID"
+          disable_system_prompt: "在提示中禁用系統消息"
+          enable_native_tool: "啟用原生工具支持"
+          disable_native_tools: "禁用原生工具支持（使用基于 XML 的工具）"
+          disable_native_structured_output: "禁用原生結構化輸出（改用助手消息預填充，Claude 3.x 及更早版本需要此功能）"
+          provider_order: "提供商順序（逗號分隔列表）"
+          provider_quantizations: "提供商量化順序（逗號分隔列表，例如：fp16,fp8）"
+          disable_streaming: "禁用流式補全（將流式請求轉換為非流式請求）"
+          reasoning_effort: "推理工作（僅適用于推理模型）"
+          reasoning_mode: "推理模式"
+          service_tier: "服務層級（靈活層級 = 成本更低/延遲更高，優先層級 = 處理速度更快）"
+          reasoning_parser: "vLLM 推理解析器"
+          thinking_override: "思考覆蓋"
+          thinking_token_budget: "思考 token 預算"
+          enable_reasoning: "啟用推理（僅適用于推理模型）"
+          adaptive_thinking: "啟用自適應思考（推薦用于 Claude 4.6 模型）"
+          enable_thinking: "啟用思考（Gemini 2.5模型 - 使用 token 預算）"
+          thinking_level: "思考級別（Gemini 3 模型 - 控制推理深度）"
+          gemini_interactions_thinking_level: "思維水平"
+          thinking_tokens: "用于思考的 token 數量"
+          reasoning_tokens: "用于推理的 token 數量"
+          disable_temperature: "禁用溫度（某些思考模型不支持溫度）"
+          disable_top_p: "禁用 Top P（某些思考模型不支持 Top P）"
+          prompt_caching: "提示快取模式"
+          prompt_caching_never: "從不 - 不使用提示快取"
+          prompt_caching_tool_results: "工具結果 - 存在工具結果時進行快取（推薦）"
+          prompt_caching_always: "始終 - 始終使用提示快取"
+          effort: "作用等級"
+        provider_field_hints:
+          reasoning_mode: "標準模式使用提供商的默認設置。專業模式需要 Responses API 以及所選模型的支持，且會增加延遲和 token 用量。"
+          azure_reasoning_effort: "可用的思考強度取決于 Azure 中部署的模型。Azure 會拒絕不支持的值。"
+          reasoning_parser: "必須與 vLLM 服務器的 --reasoning-parser 設置相匹配。Discourse 無法針對每個請求切換解析器，它會利用此設置來構建請求選項。"
+          thinking_override: "可以選擇強制支持的 vLLM 聊天模板為每個請求啟用或禁用“思考”功能。對于不受支持的解析器，則保持服務器默認值。"
+          reasoning_effort: "向支持 vLLM 的 reasoning_effort 請求選項的解析器發送該選項。"
+          thinking_token_budget: "可選的推理 token 數量上限。需要一個 vLLM 推理解析器，當推理工作量為“無”時，將忽略該值。"
+      related_topics:
+        title: "相關主題"
+        pill: "相關"
       ai_helper:
+        title: "使用 AI 提出更改建議"
+        description: "選擇以下選項之一，AI 將向您推薦新版本的文本。"
+        selection_hint: "提示：您也可以在打開助手之前選擇文本的一部分來僅重寫該文本。"
+        suggest: "顯示 AI 建議"
+        choose: "幫我選一個"
+        suggestions: "建議"
+        suggest_errors:
+          no_suggestions: "沒有可用建議"
+        missing_content: "請輸入一些內容以生成建議。"
         context_menu:
+          trigger: "詢問 AI"
+          loading: "AI 正在生成"
           cancel: "取消"
+          regen: "重試"
           confirm: "確認"
-          discard: "捨棄"
+          discard: "舍棄"
+          changes: "建議的編輯"
+          custom_prompt:
+            title: "自訂提示"
+            placeholder: "輸入自訂提示…"
+            submit: "發送提示"
+          translate_prompt: "翻譯為%{language}"
         post_options_menu:
+          trigger: "詢問 AI"
+          title: "詢問 AI"
+          loading: "AI 正在生成"
           close: "關閉"
-          copy: "複製"
-          copied: "已複製!"
+          copy: "復制"
+          copied: "已復制！"
           cancel: "取消"
+          insert_footnote: "添加腳注"
+          footnote_disabled: "自動插入功能已禁用，請點擊“復制”按鈕并手動編輯"
+          footnote_credits: "AI 的解釋"
+        fast_edit:
+          suggest_button: "建議編輯"
         thumbnail_suggestions:
+          title: "建議的縮略圖"
           select: "選擇"
-          selected: "已選"
-          try_again: "請再試一次"
+          selected: "已選取"
+          try_again: "重試"
+        no_content_error: "先添加內容，然后對其執行 AI 操作"
+      errors:
+        credit_limit_dialog:
+          title: "已達到 AI 點數上限"
+          message_user: "此社群今天已達到其 AI 點數上限。請在 %{reset_time} 后重試或聯系您的網站管理員獲取更多資訊。"
+          message_without_time_user: "此社群今天已達到其 AI 點數上限。在您的點數重置之前，模型將無法提供回答。請聯系您的網站管理員獲取更多資訊。"
+          message_admin: "您已達到方案的 AI 點數上限。在點數于 %{reset_time} 重置之前，模型將無法提供回答。"
+          message_without_time_admin: "您已達到方案的 AI 點數上限。在點數重置之前，模型將無法提供回答。"
+      reviewables:
+        model_used: "使用的模型："
+        accuracy: "準確性："
+        ai_tool_action:
+          agent: "智能體"
+          tool: "工具"
+          parameters: "參數"
+          post: "觸發貼文"
       embeddings:
-        save: "儲存"
+        short_title: "嵌入向量"
+        description: "嵌入向量是捕捉意義和關系的資料的數值表示，使 Discourse AI 功能（如相關主題和 AI 搜尋）能夠理解和連接內容。"
+        new: "新建嵌入向量"
+        back: "返回嵌入向量"
+        save: "保存"
+        saved: "嵌入向量配置已保存"
         delete: "刪除"
+        confirm_delete: 確定要移除此嵌入向量配置嗎？
+        empty: "您尚未設置嵌入向量"
+        presets: "選擇一個預設…"
+        configure_manually: "手動配置"
         edit: "編輯"
+        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         tests:
-          title: "執行測試"
-          success: "成功!"
+          title: "運行測試"
+          running: "正在運行測試…"
+          success: "成功！"
+          failure: "嘗試生成嵌入向量導致以下錯誤：%{error}"
+        hints:
+          dimensions_warning: "保存后，此值將無法更改。"
+          matryoshka_dimensions: "定義用于分層或多層資料表示的嵌套嵌入向量的大小，類似于套娃相互嵌套的方式。"
+          embed_prompt: "生成論壇內容嵌入向量時的任務指令前綴。僅適用于需要前綴的嵌入向量模型，例如 nomic-embed 或 stella。大多數模型不需要。"
+          search_prompt: "生成搜尋查詢嵌入向量時的任務指令前綴。僅適用于需要前綴的嵌入向量模型，例如 nomic-embed 或 stella。大多數模型不需要。"
+          sequence_length: "創建嵌入向量或處理查詢時一次可以處理的最大 token 數。"
+          distance_function: "確定如何計算嵌入向量之間的相似度，可以使用余弦距離（測量向量的夾角）或負內積（測量向量值的重疊）。"
         display_name: "名稱"
+        provider: "提供商"
+        url: "嵌入向量服務 URL"
+        api_key: "嵌入向量服務 API 密鑰"
+        tokenizer: "分詞器"
+        dimensions: "嵌入向量尺寸"
+        max_sequence_length: "序列長度"
+        embed_prompt: "嵌入提示"
+        search_prompt: "搜尋提示"
+        matryoshka_dimensions: "套娃尺寸"
+        distance_function: "距離函數"
+        distance_functions:
+          "<#>": "負內積"
+          <=>: "余弦距離"
         providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
           google: "Google"
-          fake: "客製"
+          cloudflare: "Cloudflare"
+          CDCK: "CDCK"
+          fake: "自訂"
+        provider_fields:
+          model_name: "模型名稱"
+        semantic_search: "主題（語義）"
+        semantic_search_tooltips:
+          results_explanation: "啟用后，將在下方添加更多 AI 搜尋結果。"
+          not_submitted: "提交搜尋以啟用 AI 結果"
+          no_results: "此搜尋未找到 AI 結果"
+        ai_results_notice:
+          no_results: "沒有完全匹配的結果，但有一些相關結果。"
+          few_results:
+            other: "找到 %{count} 筆相符項目，正在顯示相關結果。"
+        quick_search:
+          suffix: "在所有主題和貼文中使用 AI 搜尋"
+      ai_artifact:
+        expand_view_label: "展開視圖"
+        collapse_view_label: "退出全屏（按 ESC 或“返回”按鈕）"
+        click_to_run_label: "運行工件"
       ai_bot:
+        title: "AI 機器人"
+        agent: "智能體："
+        llm: "模型："
+        pm_warning: "版主會定期監控 AI 聊天機器人消息。"
+        cancel_streaming: "停止回復"
+        try_again: "重試"
+        default_pm_prefix: "[無標題 AI 機器人私信]"
+        shortcut_title: "使用 AI 機器人啟動私信"
+        shortcut_link: "AI 機器人"
+        exit: "退出 AI 機器人"
+        share: "復制 AI 對話"
+        conversation_shared: "對話已復制"
+        embed_copied: "嵌入已復制到剪貼板"
+        debug_ai: "查看原始 AI 請求和回答"
+        sidebar_empty: "機器人對話記錄將顯示在這裡。"
         debug_ai_modal:
+          title: "查看 AI 互動"
+          copy_request: "復制請求"
+          copy_response: "復制回答"
+          payload_unavailable: "無法取得酬載"
+          this_turn: "此回合："
+          whole_conversation: "對話："
+          tokens_summary: "%{request_tokens} 輸入 → %{response_tokens} 輸出"
           duration_label: "持續時間："
+          duration: "%{duration_seconds} 秒（首個權杖：%{first_token_seconds} 秒）"
+          duration_without_first_token: "%{duration_seconds} 秒（首個權杖：—）"
+          duration_unavailable: "—（首個權杖：—）"
+          cache_both: "（快取讀取 %{read} ，%{write} 快取寫入）"
+          cache_read_only: "（快取 %{read} 讀取）"
+          cache_write_only: "（快取 %{write} 寫入）"
           request: "請求"
           response: "回應"
           next_log: "下一步"
-          previous_log: "舊"
+          previous_log: "上一個"
+        share_full_topic_modal:
+          title: "公開分享對話"
+          share: "分享并復制連結"
+          update: "更新并復制連結"
+          delete: "刪除分享"
+        share_ai_conversation:
+          name: "分享 AI 對話"
+          title: "公開分享此 AI 對話"
         invite_ai_conversation:
           button: "邀請"
+          title: "邀請參與 AI 對話"
+        ai_label: "AI"
+        ai_title: "與 AI 的對話"
         share_modal:
-          copy: "複製"
+          title: "復制 AI 對話"
+          copy: "復制"
+          context: "要分享的互動："
+          share_tip: "或者，您可以分享整個對話"
+        bot_names:
+          fake: "假測試機器人"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonnet"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
         conversations:
+          header: "我能幫上什么忙？"
+          submit: "提交問題"
+          disclaimer: "生成式 AI 可能會犯錯。請驗證重要資訊。"
+          placeholder: "提問…"
+          new: "新問題"
+          min_input_length_message:
+            other: "訊息必須至少有 %{count} 個字元"
+          messages_sidebar_title: "對話"
+          starred: "已加星號"
+          star_conversation: "為對話加星標"
+          unstar_conversation: "為對話移除星標"
+          open_conversation_menu: "打開對話菜單"
           today: "今天"
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"
-          scroll_to_bottom: "捲動到底部"
+          upload_files: "上傳文件"
+          uploads_in_progress: "上傳過程中無法提交"
+          show_toolbar: "顯示格式工具欄"
+          hide_toolbar: "隱藏格式工具欄"
+          scroll_to_bottom: "滾動到底部"
+          streaming_below: "下方新增內容"
+          editing_post: "正在編輯貼文"
       sentiments:
+        dashboard:
+          title: "情緒"
+        sidebar:
+          overview: "情緒概述"
+          analysis: "情緒分析"
         sentiment_analysis:
+          share_chart: "復制圖表連結"
           filter_types:
-            all: "全部"
+            all: "所有"
+            positive: "積極"
             neutral: "中性"
+            negative: "消極"
           group_types:
             category: "分類"
-            tag: "標記"
+            tag: "標簽"
           table:
+            sentiment: "情緒"
             total_count: "總計"
       summarization:
         chat:
-          title: "摘要訊息"
+          title: "總結消息"
+          description: "選擇以下選項，以總結在所需時間范圍內發送的對話。"
           summarize: "總結"
           since:
-            other: "前 %{count} 小時"
+            other: "過去 %{count} 小時"
+        topic:
+          title: "主題摘要"
+          close: "關閉摘要面板"
+          regenerate_ai_summaries: "重新生成 AI 摘要"
+          regen_modal_description: "選擇要為此主題重新生成的 AI 摘要類型。"
+          bulk_regen_description: "選擇要為所選主題重新生成的 AI 摘要類型。"
+          regenerate_gists_option: "簡短摘要（要點）"
+          regenerate_summaries_option: "主題摘要"
+          regenerate_gists_started: "正在重新生成簡短摘要…"
+          regenerate_gists_error:
+            other: "無法重新產生 %{count} 則簡短摘要"
+          regenerate_topic_summaries_started: "正在重新生成主題摘要…"
+          regenerate_topic_summary_error:
+            other: "無法重新產生 %{count} 則主題摘要"
+        topic_list_layout:
+          button:
+            compact: "緊湊"
+            expanded: "展開"
+            expanded_description: "帶 AI 摘要"
       discobot_discoveries:
-        regular_results: "話題"
-        collapse: "收起"
-        tooltip:
-          actions:
-            disable: "禁用"
+        main_title: "詢問 AI"
+        loading_convo: "正在加載對話"
+        create_topic: "建立主題"
+        user_setting: "啟用 AI 搜尋發現"
+        legacy:
+          main_title: "Discobot 發現"
+          regular_results: "主題"
+          tell_me_more: "詳細說明…"
+          continue_convo: "繼續對話…"
+          loading_convo: "正在加載對話"
+          collapse: "收起"
+          timed_out: "Discobot 找不到任何發現。出錯了。"
+          tooltip:
+            header: "AI 支持的搜尋"
+            content: "自然語言搜尋由 %{model} 提供支持"
+            actions:
+              info: "它是如何運作的？"
+              disable: "禁用"
+        search_type: "AI"
+        search_all_topics: "所有話題"
+        search_messages: "訊息"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "相關主題"
+      user_preferences:
+        empty: "目前沒有相關設置"
+    review:
+      statuses:
+        approved_tool_action:
+          title: "已批準工具"
+        rejected_tool_action:
+          title: "已拒絕工具"
+      types:
+        discourse_ai_triage:
+          title: "AI 分流"
+        reviewable_ai_post:
+          title: "AI 標記的貼文"
+        reviewable_ai_chat_message:
+          title: "AI 標記的聊天消息"
+        reviewable_ai_tool_action:
+          title: "AI 工具操作"
