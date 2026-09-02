@@ -87,8 +87,15 @@ function sourceModePins(state) {
   return sourceModeKey.getState(state) ?? DecorationSet.empty;
 }
 
-function pinDecoration(pos, node) {
-  return Decoration.node(pos, pos + node.nodeSize, { class: "--source" });
+function pinDecoration(pos, node, previewHeight) {
+  return Decoration.node(pos, pos + node.nodeSize, {
+    class: "--source",
+    // the code face keeps (a bounded part of) the footprint of the preview it
+    // replaced, so flipping does not reflow the document below the block
+    ...(previewHeight && {
+      style: `--composer-preview-node-height: ${Math.round(previewHeight)}px`,
+    }),
+  });
 }
 
 // a neighboring pin ends where this block starts, so match on `from`
@@ -118,7 +125,14 @@ export function toggleCodeBlockSource(view, pos) {
   }
 
   const showingSource = isSourceMode(view.state, pos);
-  const tr = view.state.tr.setMeta(sourceModeKey, pos);
+
+  // measured before the preview face is destroyed, so the code face can hold
+  // its footprint
+  const dom = showingSource ? null : view.nodeDOM(pos);
+  const tr = view.state.tr.setMeta(sourceModeKey, {
+    toggle: pos,
+    previewHeight: dom instanceof HTMLElement ? dom.offsetHeight : undefined,
+  });
 
   tr.setSelection(
     showingSource
@@ -561,16 +575,18 @@ function sourceModePlugin() {
 
         const meta = tr.getMeta(sourceModeKey);
 
-        if (typeof meta === "number") {
+        if (meta?.toggle !== undefined) {
           // dispatchers resolve the position before adding their own steps
-          const pos = tr.mapping.map(meta);
+          const pos = tr.mapping.map(meta.toggle);
           const node = newState.doc.nodeAt(pos);
           const existing = findPin(pins, pos);
 
           if (existing.length) {
             pins = pins.remove(existing);
           } else if (node) {
-            pins = pins.add(newState.doc, [pinDecoration(pos, node)]);
+            pins = pins.add(newState.doc, [
+              pinDecoration(pos, node, meta.previewHeight),
+            ]);
           }
         } else if (meta?.pins) {
           pins = pins.add(

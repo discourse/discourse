@@ -20,7 +20,11 @@ class PreviewStub extends Component {
   }
 
   <template>
-    <span class="cb-preview-stub">{{@source}}</span>
+    {{! taller than the code face, like a rendered diagram }}
+    <span
+      class="cb-preview-stub"
+      style="display: block; height: 150px"
+    >{{@source}}</span>
   </template>
 }
 
@@ -386,6 +390,43 @@ module(
         "inside the block"
       );
       assert.strictEqual(node.attrs.params, "mermaid height=500");
+    });
+
+    test("the code face keeps the preview's footprint", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+
+      const face = document.querySelector(".composer-preview-node__preview");
+      assert.strictEqual(
+        getComputedStyle(face).overflowY,
+        "auto",
+        "the rendered face scrolls overflow within the shared bound"
+      );
+
+      const previewHeight = view.nodeDOM(pos).offsetHeight;
+      assert.true(previewHeight >= 150, "the preview face is tall");
+
+      await toggleSource(view);
+
+      const pre = document.querySelector("pre.--source");
+      assert.strictEqual(
+        getComputedStyle(pre)
+          .getPropertyValue("--composer-preview-node-height")
+          .trim(),
+        `${Math.round(previewHeight)}px`,
+        "the pin carries the measured height"
+      );
+      assert.true(
+        pre.offsetHeight >= Math.round(previewHeight) - 1,
+        "a few lines of code hold the diagram's footprint"
+      );
+
+      await toggleSource(view);
+
+      assert
+        .dom("pre.--source")
+        .doesNotExist("flipping back settles to the preview's own height");
     });
 
     test("foreign DOM mounted into the code face is left alone", async function (assert) {
