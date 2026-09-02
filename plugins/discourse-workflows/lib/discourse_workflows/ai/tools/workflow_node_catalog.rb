@@ -234,6 +234,7 @@ module DiscourseWorkflows
           "trigger:reviewable_created" =>
             "review queue flag flagged spam moderation pending needs approval queued post akismet",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
+          "trigger:tag_created" => "taxonomy label keyword created new",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
           "action:flag_post" =>

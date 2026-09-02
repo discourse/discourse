@@ -130,6 +130,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.closed" => "boolean",
       "topic.archived" => "boolean",
     )
+    expect(output_fields_by_type.fetch("trigger:tag_created")).to include(
+      "tag.id" => "integer",
+      "tag.name" => "string",
+      "tag.slug" => "string",
+      "tag.topic_count" => "integer",
+      "tag.staff" => "boolean",
+      "tag.description" => "string|null",
+      "tag.description_cooked" => "string|null",
+    )
     {
       "trigger:user_added_to_group" => "\"added\"",
       "trigger:user_removed_from_group" => "\"removed\"",
@@ -241,6 +250,12 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "user.staff",
     )
     expect(output_fields_by_type.fetch("action:ai_agent")).to include("result" => "string")
+  end
+
+  it "finds the tag created trigger by taxonomy keywords" do
+    result = invoke_tool(query: "taxonomy keyword")
+
+    expect(result[:nodes].map { |node| node[:type] }).to include("trigger:tag_created")
   end
 
   it "matches broad multi-term catalog queries", :aggregate_failures do
