@@ -36,6 +36,7 @@
 !/plugins/discourse-lazy-videos
 !/plugins/automation
 /plugins/automation/gems
+!/plugins/boards
 !/plugins/chat
 !/plugins/poll
 !/plugins/styleguide
