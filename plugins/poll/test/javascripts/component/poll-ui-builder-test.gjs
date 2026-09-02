@@ -70,19 +70,6 @@ module("Component | PollUiBuilder", function (hooks) {
     );
   });
 
-  test("editing stays saveable when the document holds more options than allowed", async function (assert) {
-    const results = await setupBuilder({
-      type: "regular",
-      optionCount: 999,
-    });
-
-    assert
-      .dom(".insert-poll")
-      .isNotDisabled("the option count is not this dialog's to fix");
-    await click(".insert-poll");
-    assert.strictEqual(results.length, 1, "saves the settings anyway");
-  });
-
   test("Can switch poll type", async function (assert) {
     await setupBuilder();
 

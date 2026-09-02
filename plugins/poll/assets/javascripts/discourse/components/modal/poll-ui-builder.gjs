@@ -315,12 +315,7 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get disableInsert() {
-    // the document owns the options when editing, so their count is not
-    // something this dialog can act on
-    return (
-      !this.minMaxValueValidation.ok ||
-      (!this.isEditing && !this.minNumOfOptionsValidation.ok)
-    );
+    return !this.minMaxValueValidation.ok || !this.minNumOfOptionsValidation.ok;
   }
 
   _comboboxOptions(startIndex, endIndex) {
