@@ -78,6 +78,7 @@ class PreviewToolbar extends ToolbarBase {
 }
 
 class PreviewToolbarPluginView {
+  #destroyed = false;
   #menuInstance;
   #menuTrigger;
   #replacedToolbar;
@@ -230,6 +231,13 @@ class PreviewToolbarPluginView {
       },
     });
 
+    // destroyed while the instance was being created
+    if (this.#destroyed) {
+      this.#menuInstance?.destroy();
+      this.#menuInstance = null;
+      return;
+    }
+
     await this.#menuInstance.show();
   }
 
@@ -248,6 +256,7 @@ class PreviewToolbarPluginView {
   }
 
   destroy() {
+    this.#destroyed = true;
     this.#resetToolbar();
     this.#toolbars.clear();
     this.#toolbar = null;

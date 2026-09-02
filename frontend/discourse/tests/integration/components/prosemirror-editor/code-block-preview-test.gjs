@@ -25,7 +25,7 @@ class PreviewStub extends Component {
 }
 
 const extension = {
-  codeBlockPreviews: { mermaid: PreviewStub },
+  codeBlockPreviews: { mermaid: PreviewStub, chart: PreviewStub },
 };
 
 const MARKDOWN = "before\n\n```mermaid height=500\nflowchart\n```\n\nafter";
@@ -259,6 +259,30 @@ module(
       assert.strictEqual(editorClass.value, MARKDOWN);
     });
 
+    test("undoing a deleted source-pinned block restores it on the preview face", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+
+      await toggleSource(view);
+      assert.dom("pre.--source").exists();
+
+      view.dispatch(
+        view.state.tr.setSelection(new AllSelection(view.state.doc))
+      );
+      view.dispatch(view.state.tr.deleteSelection());
+      await settled();
+
+      undo(view.state, view.dispatch);
+      await settled();
+
+      // intentional: the pin is UI state keyed by position, deleted with the
+      // block; undo restores the document, and the block comes back on its
+      // default rendered face
+      assert.dom(".cb-preview-stub").hasText("flowchart");
+      assert.dom("pre.--source").doesNotExist();
+      assert.strictEqual(editorClass.value, MARKDOWN);
+    });
+
     test("switching the language away drops the preview, and back picks it up", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, MARKDOWN);
       const { view } = editorClass;
@@ -285,6 +309,32 @@ module(
       assert.strictEqual(
         editorClass.value,
         "before\n\n```mermaid\nflowchart\n```\n\nafter"
+      );
+    });
+
+    test("the selector keeps the info-string tail between previewable languages", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+
+      await toggleSource(view);
+
+      const select = document.querySelector(".code-language-select");
+      select.value = "chart";
+      await triggerEvent(select, "change");
+
+      assert.strictEqual(
+        editorClass.value,
+        "before\n\n```chart height=500\nflowchart\n```\n\nafter",
+        "the tail belongs to the preview feature and survives"
+      );
+
+      select.value = "ruby";
+      await triggerEvent(select, "change");
+
+      assert.strictEqual(
+        editorClass.value,
+        "before\n\n```ruby\nflowchart\n```\n\nafter",
+        "a plain language has no use for the tail, so it drops"
       );
     });
 

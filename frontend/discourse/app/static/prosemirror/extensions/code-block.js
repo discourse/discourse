@@ -80,12 +80,24 @@ export function codeBlockPreviewComponent(node) {
   return previewComponentForParams(node.attrs.params);
 }
 
-function sourceModePositions(state) {
-  return sourceModeKey.getState(state) ?? [];
+// the pins are the decorations: the set maps through document changes on its
+// own, and returning it directly from the decorations prop avoids rebuilding
+// one per editor update
+function sourceModePins(state) {
+  return sourceModeKey.getState(state) ?? DecorationSet.empty;
+}
+
+function pinDecoration(pos, node) {
+  return Decoration.node(pos, pos + node.nodeSize, { class: "--source" });
+}
+
+// a neighboring pin ends where this block starts, so match on `from`
+function findPin(pins, pos) {
+  return pins.find(pos, pos).filter((decoration) => decoration.from === pos);
 }
 
 function isSourceMode(state, pos) {
-  return sourceModePositions(state).includes(pos);
+  return findPin(sourceModePins(state), pos).length > 0;
 }
 
 function showsPreview(node, state, pos) {
@@ -216,17 +228,35 @@ class CodeBlockWithLangSelectorNodeView {
 
   changeListener(e) {
     const pos = this.getPos();
+
+    // the view may already have been destroyed and replaced
+    if (pos === undefined) {
+      return;
+    }
+
+    const language = e.target.value;
+    const rest = (this.node.attrs.params ?? "").trim().split(/\s+/).slice(1);
+
+    // an info-string tail (```mermaid height=500) belongs to the preview
+    // feature, so it survives switching between two previewable languages;
+    // plain languages have no use for it, so it drops otherwise
+    const tail =
+      rest.length &&
+      previewComponentForParams(this.node.attrs.params) &&
+      previewComponentForParams(language)
+        ? ` ${rest.join(" ")}`
+        : "";
+
     const tr = this.view.state.tr.setNodeMarkup(pos, null, {
-      params: e.target.value,
+      params: language + tail,
     });
 
     // switching to a language that previews keeps the code face (and the
-    // caret) in place rather than flipping under the user
-    if (
-      previewComponentForParams(e.target.value) &&
-      !isSourceMode(this.view.state, pos)
-    ) {
-      tr.setMeta(sourceModeKey, pos);
+    // caret) in place rather than flipping under the user; pinning (not
+    // toggling) because setNodeMarkup replaces the node, which drops a node
+    // decoration already pinning it
+    if (previewComponentForParams(language)) {
+      tr.setMeta(sourceModeKey, { pins: [pos] });
     }
 
     this.view.dispatch(tr);
@@ -304,6 +334,16 @@ class CodeBlockWithLangSelectorNodeView {
   }
 }
 
+// A previewing block reimplements atom semantics for a non-atom node: this
+// view exposes no contentDOM, so prosemirror-view renders none of the block's
+// content and treats it as opaque. Everything an atom would get from its
+// schema spec is reproduced around that fact — clicks (the plugin's
+// handleClickOn), Backspace/Delete and arrows at the boundaries (the
+// extension keymap), and text-selection containment (the plugin's
+// appendTransaction). A prosemirror-view upgrade must re-verify that
+// contentDOM-less views stay opaque to the DOM observer and to selection,
+// that handleClickOn still fires for non-atom nodes, and that
+// view.endOfTextblock still resolves from neighboring textblocks.
 class CodeBlockPreviewNodeView extends GlimmerNodeView {
   constructor(node, view, getPos, pluginParams, preview) {
     super({
@@ -318,6 +358,8 @@ class CodeBlockPreviewNodeView extends GlimmerNodeView {
   }
 
   update(node) {
+    // during a redraw this.view.state is already the state being drawn:
+    // prosemirror-view assigns it before syncing node views
     if (
       node.type !== this.node.type ||
       codeBlockPreviewComponent(node) !== this.options.preview ||
@@ -506,32 +548,52 @@ function sourceModePlugin() {
     key: sourceModeKey,
 
     state: {
-      init: (_, state) => emptyPreviewablePins(state),
+      init: (_, state) =>
+        DecorationSet.create(
+          state.doc,
+          emptyPreviewablePins(state).map((pos) =>
+            pinDecoration(pos, state.doc.nodeAt(pos))
+          )
+        ),
 
-      apply(tr, positions, _oldState, newState) {
-        let next = positions;
-
-        if (tr.docChanged) {
-          next = next
-            .map((pos) => tr.mapping.mapResult(pos))
-            .filter((result) => !result.deleted)
-            .map((result) => result.pos);
-        }
+      apply(tr, pins, _oldState, newState) {
+        pins = pins.map(tr.mapping, tr.doc);
 
         const meta = tr.getMeta(sourceModeKey);
 
         if (typeof meta === "number") {
-          next = next.includes(meta)
-            ? next.filter((pos) => pos !== meta)
-            : [...next, meta];
+          // dispatchers resolve the position before adding their own steps
+          const pos = tr.mapping.map(meta);
+          const node = newState.doc.nodeAt(pos);
+          const existing = findPin(pins, pos);
+
+          if (existing.length) {
+            pins = pins.remove(existing);
+          } else if (node) {
+            pins = pins.add(newState.doc, [pinDecoration(pos, node)]);
+          }
         } else if (meta?.pins) {
-          next = [...new Set([...next, ...meta.pins])];
+          pins = pins.add(
+            newState.doc,
+            meta.pins
+              .map((pos) => tr.mapping.map(pos))
+              .filter((pos) => !findPin(pins, pos).length)
+              .map((pos) => pinDecoration(pos, newState.doc.nodeAt(pos)))
+          );
         }
 
-        // a pin is meaningless once its block is gone or stops previewing
-        return next.filter((pos) =>
-          codeBlockPreviewComponent(newState.doc.nodeAt(pos))
-        );
+        // a pin is meaningless once its block is gone, stops previewing, or
+        // no longer lines up with a block after mapping
+        const stale = pins.find().filter((decoration) => {
+          const node = newState.doc.nodeAt(decoration.from);
+
+          return (
+            !codeBlockPreviewComponent(node) ||
+            decoration.to !== decoration.from + node.nodeSize
+          );
+        });
+
+        return stale.length ? pins.remove(stale) : pins;
       },
     },
 
@@ -552,22 +614,10 @@ function sourceModePlugin() {
         return true;
       },
 
-      // the deco both marks the face for CSS and dirties the node so its view
+      // the pins double as the decorations: the `--source` class marks the
+      // face for CSS, and the node decoration dirties the block so its view
       // is recreated on toggle, without touching the document
-      decorations(state) {
-        const decorations = sourceModePositions(state)
-          .map((pos) => {
-            const node = state.doc.nodeAt(pos);
-
-            return (
-              node &&
-              Decoration.node(pos, pos + node.nodeSize, { class: "--source" })
-            );
-          })
-          .filter(Boolean);
-
-        return DecorationSet.create(state.doc, decorations);
-      },
+      decorations: sourceModePins,
     },
 
     appendTransaction(transactions, _oldState, state) {
