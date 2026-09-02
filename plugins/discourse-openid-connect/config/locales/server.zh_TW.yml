@@ -5,3 +5,30 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    openid_connect_enabled: 啟用 OpenID Connect 驗證。可在<a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>這裡</a>自訂使用者介面文字
+    openid_connect_discovery_document: "OpenID Connect 探索文件 URL。通常位於 'https://your.domain/.well-known/openid-configuration'"
+    openid_connect_client_id: "OpenID Connect 用戶端 ID"
+    openid_connect_client_secret: "OpenID Connect 用戶端密鑰"
+    openid_connect_authorize_scope: "傳送至授權端點的 scope。必須包含 'openid'。"
+    openid_connect_rp_initiated_logout: "使用者登出後，將其重新導向至 end_session_endpoint。您的身分提供者必須支援此功能，且須將其包含在 discovery document 中。"
+    openid_connect_rp_initiated_logout_redirect: "（選填）將傳送至登出端點的 post_logout_redirect_uri。若有提供，必須先向身分提供者註冊。"
+    openid_connect_rp_initiated_logout_include_client_id: "（選填）將 client_id（openid_connect_client_id 設定）作為查詢參數附加至登出端點"
+    openid_connect_token_scope: "向 token endpoint 提出要求時所傳送的 scope。正式規範並未要求此項目。"
+    openid_connect_error_redirects: "若回呼的 error_reason 包含第一個參數，系統會將使用者重新導向至第二個參數中的 URL"
+    openid_connect_allow_association_change: "允許使用者中斷 Discourse 帳號與 OpenID Connect 提供者的連結，並重新連結"
+    openid_connect_verbose_logging: "將詳細的 openid-connect 驗證資訊記錄至 `/logs`。一般使用期間請保持停用。"
+    openid_connect_authorize_parameters: "從 /auth/oidc 重新導向至 IDP 的 authorize endpoint 時要包含的 URL 參數"
+    openid_connect_overrides_email: "每次登入時，使用 openid-connect 值覆寫使用者的電子郵件。其運作方式與 {{setting:auth_overrides_email}} 設定相同，但僅適用於 OpenID Connect 登入。"
+    openid_connect_claims: "明確定義 claim，供不會依 scope 傳回資料的提供者使用。（JSON）"
+    openid_connect_groups_claim: "OIDC token 中包含使用者群組字串陣列的 claim 名稱。留空即可停用群組同步。"
+    openid_connect_user_field_mappings: "將 OIDC claim 對應至 Discourse 使用者欄位。每個項目會將一個 OIDC claim 名稱與 Discourse 使用者欄位的數字 ID 配對。"
+    openid_connect_match_by_email: "使用電子郵件地址，將 OpenID Connect 驗證與現有的 Discourse 使用者帳號配對。"
+    openid_connect_use_pkce: "為 OpenID Connect 驗證啟用代碼交換證明金鑰（Proof Key for Code Exchange，PKCE）。"
+    openid_connect_mtls_client_cert: "用於向 OIDC 提供者進行 mTLS 用戶端驗證的 X.509 用戶端憑證。若要啟用 mTLS，也必須設定 {{setting:openid_connect_mtls_client_key}}。"
+    openid_connect_mtls_client_key: "mTLS 用戶端憑證的 X.509 私密金鑰。若要啟用 mTLS，也必須設定 {{setting:openid_connect_mtls_client_cert}}。"
+    openid_connect_mtls_client_key_passcode: "mTLS 私密金鑰的密碼（選填）"
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: 無法從身分提供者擷取設定。請再試一次。
+      openid_connect_mtls_error: mTLS 用戶端憑證設定有問題。請聯絡管理員。

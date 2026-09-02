@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 sk:
+  llms_txt:
+    sections:
+      optional: "Voliteľné"
+    links:
+      search:
+        label: "Hľadať"
+      categories:
+        label: "Kategórie"
+      about:
+        label: "O stránke"
+      guidelines:
+        label: "Pokyny"
   dates:
     short_date_no_year: "MMM D"
     short_date: "YYYY MMM D"
@@ -1406,6 +1418,11 @@ sk:
         share: "Zdieľať"
       types:
         staff: "Personál"
+    posters_by_member_type_members:
+      labels:
+        user: "Používateľ"
+        count: "Príspevky"
+        share: "Zdieľať"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

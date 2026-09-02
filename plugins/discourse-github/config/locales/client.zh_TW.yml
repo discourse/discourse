@@ -11,4 +11,12 @@ zh_TW:
         draft: "草稿"
         open: "開啟"
         approved: "已同意"
+        merged: "已合併"
         closed: "已關閉"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_github: "Discourse GitHub"
+  replace_github_link:
+    edit_reason: "GitHub 連結已替換為永久連結"

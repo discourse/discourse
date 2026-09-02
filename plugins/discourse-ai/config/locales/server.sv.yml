@@ -26,6 +26,7 @@ sv:
         summarize: "Sammanfatta"
       tool_help:
         delete_topic: "Ta bort ett ämne"
+        create_category: "Skapa en ny kategori"
       close_topic:
         errors:
           not_found: "Ämnet hittades inte."
@@ -35,10 +36,13 @@ sv:
       delete_topic:
         errors:
           not_found: "Ämnet hittades inte."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Ämnet hittades inte."
       edit_category:
+        errors:
+          not_found: "Kategorin hittades inte."
+      change_topic_category:
         errors:
           not_found: "Ämnet hittades inte."
           category_not_found: "Kategorin hittades inte."

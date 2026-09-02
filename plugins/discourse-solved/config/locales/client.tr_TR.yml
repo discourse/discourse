@@ -97,6 +97,11 @@ tr_TR:
           solved: "çözüldü"
           unsolved: "çözülmedi"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Konu"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Çözülmüş Olay"

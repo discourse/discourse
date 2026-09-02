@@ -147,8 +147,6 @@ ug:
         successful: "مۇۋەپپەقىيەتلىك"
         failed: "مەغلۇب بولدى"
         unknown: "يوچۇن"
-        topic_id: "تېما كىملىكى"
-        post_id: "يازما كىملىكى"
         time: "ۋاقىت"
         when: "قاچان"
         outcome: "نەتىجە"
@@ -161,6 +159,7 @@ ug:
         post_short: "%{id} يازما"
         duration: "داۋاملىشىش ۋاقتى"
         actions: "مەشغۇلات"
+        view_details: "تەپسىلاتى"
         periods:
           hour: "ئاخىرقى %{count} سائەت"
           week: "ئۆتكەن 7 كۈن"
@@ -331,8 +330,11 @@ ug:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
       discobot_discoveries:
-        regular_results: "تېما"
-        collapse: "يىغ"
-        tooltip:
-          actions:
-            disable: "چەكلە"
+        legacy:
+          regular_results: "تېما"
+          collapse: "يىغ"
+          tooltip:
+            actions:
+              disable: "چەكلە"
+        search_all_topics: "بارلىق تېما"
+        search_messages: "ئۇچۇر"

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    boards:
+      board:
+        remove_card: "چىقىرىۋەت"
+        new_topic: "يېڭى تېما..."
+        title: "ئاتاق"
+        tags: "بەلگە"
+        assigned_to: "تەقسىم قىلىندى"
+        view_topic: "تېما كۆرسەت"
+        topic_reply_count:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        created_by: "قۇرغۇچى"
+      manage:
+        name: "ئىسمى"
+        slug: "قىسقارتما"
+        constraint_categories: "سەھىپە"
+        constraint_tags: "بەلگە"
+        columns:
+          remove: "چىقىرىۋەت"
+          column_title: "ئاتاق"
+          icon: "سىنبەلگە"
+          color: "رەڭ"
+          tag: "بەلگە"
+          move_to_status_open: "ئاچ"
+          move_to_status_closed: "تاقالدى"

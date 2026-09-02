@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 en_GB:
+  llms_txt:
+    links:
+      categories:
+        label: "Categories"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"

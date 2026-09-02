@@ -307,6 +307,7 @@ bg:
       sections:
         theme: "Тема"
         homepage: "Начална страница"
+        search: "Търсене"
       homepage:
         topics: "Теми"
         categories: "Категории"
@@ -2033,6 +2034,9 @@ bg:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Въведете"
+      option: "Опция"
+      delete: "Изтрий"
+      home: "Начало"
     conditional_loading_section:
       loading: Зареждане…
     category_row:
@@ -2141,7 +2145,6 @@ bg:
       create_whisper: "Шепот"
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
-      title: "Или натиснете %{modifier}Enter"
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_placeholder_redesign: "Заглавие"
@@ -2344,10 +2347,9 @@ bg:
       enter_hint: "или натиснете Enter"
       in_posts_by: "в публикации от %{username}"
       type:
-        default: "Теми/публикации"
+        default: "Публикации"
         users: "Потребители"
         categories: "Категории"
-        categories_and_tags: "Категории/тагове"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
@@ -2360,7 +2362,6 @@ bg:
         in: "филтри по метаданни (напр. in:title, in:personal, in:pinned)"
         status: "филтри по статус на темата"
         full_search: "стартира търсене в цялата страница"
-        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Разширени филтри
         posted_by:
@@ -2804,7 +2805,6 @@ bg:
       reply_as_new_private_message: "Отговорете като ново съобщение до същите получатели"
       continue_discussion: "Продължаване на дискусията от %{postLink}: "
       follow_quote: "отиди на цитираната публикация "
-      show_full: "Покажи цялата публикация"
       show_hidden: "Преглед на игнорираното съдържание."
       deleted_by_author_simple: "(публикацията е изтрита от автора)"
       collapse: "намали"
@@ -3501,6 +3501,11 @@ bg:
         group_traffic: "Трафик"
         group_members: "Членове"
         group_other: "Други"
+        related_items:
+          users:
+            title: "Потребители"
+          labels:
+            user: "Потребител"
       config_sections:
         account:
           title: "Профил"
@@ -3689,6 +3694,8 @@ bg:
               share: "Споделяне"
             whos_posting:
               staff: "Персонал"
+              modal:
+                apply: "Запази"
             trust_level_pipeline:
               trust_levels:
                 "0": "Нов"
@@ -3701,6 +3708,9 @@ bg:
             table:
               searches: "Търсения"
               status: "Статус"
+          system:
+            title: "Система"
+            status: "Статус"
         reports_section:
           header_action: "Управление"
           modal:
@@ -3728,6 +3738,13 @@ bg:
           monthly: Месечно
           weekly: Седмично
           groups: "Всички групи"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} потребител"
+              other: "%{count} потребители"
+            posts_count:
+              one: "%{count} публикация"
+              other: "%{count} публикации"
           sort_button: "Сортиране по %{column}"
           sort_ascending: "в възходящ ред"
           sort_descending: "в низходящ ред"

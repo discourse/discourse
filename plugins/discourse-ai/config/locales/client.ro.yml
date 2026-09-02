@@ -53,6 +53,7 @@ ro:
     discourse_ai:
       copied: "Copiat"
       ai_decoded_transcript:
+        arguments: "Argumente"
         type: "Tip"
         error: "Eroare"
         response: "Răspuns"
@@ -169,8 +170,6 @@ ro:
         successful: "Cu succes"
         failed: "Eșuată"
         unknown: "Necunoscută"
-        topic_id: "ID subiect"
-        post_id: "ID postare"
         time: "Oră"
         when: "Când"
         request: "Cere"
@@ -182,8 +181,7 @@ ro:
         post_short: "Postarea %{id}"
         duration: "Durată"
         actions: "Acțiuni"
-        filters:
-          title: "Filtre"
+        view_details: "Detalii"
         periods:
           day: "Ultimele 24 de ore"
           week: "Ultimele 7 zile"
@@ -351,9 +349,11 @@ ro:
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
       discobot_discoveries:
-        regular_results: "Discuții"
-        collapse: "Colaps"
         user_setting: "Activează descoperirile de căutare IA"
-        tooltip:
-          actions:
-            disable: "Dezactivează"
+        legacy:
+          regular_results: "Discuții"
+          collapse: "Colaps"
+          tooltip:
+            actions:
+              disable: "Dezactivează"
+        search_messages: "Mesaje"

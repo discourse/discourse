@@ -23,8 +23,8 @@ tr_TR:
       event_started:
         title: Etkinlik başladı
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Belirttiğiniz tatil bölgesi mevcut değil."
-    discourse_calendar_enable_holiday_failed: "Bu tatil etkinleştirilemedi, zaten etkinleştirilmiş veya devre dışı bırakılmamış."
+    discourse_events_holiday_region_invalid: "Belirttiğiniz tatil bölgesi mevcut değil."
+    discourse_events_enable_holiday_failed: "Bu tatil etkinleştirilemedi, zaten etkinleştirilmiş veya devre dışı bırakılmamış."
     discourse_post_event_bulk_invite_succeeded:
       title: "Etkinlik - Toplu Davet Başarılı Oldu"
       subject_template: "Toplu davet başarıyla işlendi"
@@ -68,7 +68,7 @@ tr_TR:
     event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Gün"

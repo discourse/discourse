@@ -19,8 +19,8 @@ sk:
       event_started:
         title: Udalosť sa začala
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Vami zadaný dovolenkový región neexistuje."
-    discourse_calendar_enable_holiday_failed: "Tento sviatok sa nepodarilo povoliť, je už povolený alebo nie je zakázaný."
+    discourse_events_holiday_region_invalid: "Vami zadaný dovolenkový región neexistuje."
+    discourse_events_enable_holiday_failed: "Tento sviatok sa nepodarilo povoliť, je už povolený alebo nie je zakázaný."
     discourse_post_event_bulk_invite_succeeded:
       title: "Udalosť – hromadné pozvanie úspešné"
       subject_template: "Hromadná pozvánka bola úspešne spracovaná"
@@ -62,7 +62,7 @@ sk:
     calendar_automatic_holidays_enabled: "Automatické nastavenie stavu dovolenky na základe regiónu používateľa (poznámka: v nastaveniach pluginu môžete vypnúť konkrétne automatické dovolenky)"
     event_participation_buttons: "Zoznam tlačidiel účasti na udalosti, ktoré môžu používatelia používať."
     sidebar_show_upcoming_events: "Zobrazenie odkazu na nadchádzajúce udalosti v bočnom paneli v časti \"Viac\"."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Deň"
