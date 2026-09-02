@@ -135,7 +135,7 @@ class DragHandleView {
       return;
     }
 
-    this.handle.tabIndex = 0;
+    this.handle.tabIndex = this.#touchFirst ? 0 : -1;
     this.handle.setAttribute("aria-hidden", "false");
     this.#place(target);
   };

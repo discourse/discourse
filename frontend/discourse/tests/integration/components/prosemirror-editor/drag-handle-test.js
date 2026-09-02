@@ -82,7 +82,14 @@ module(
         .doesNotHaveClass("--visible", "and stays out of the way until wanted");
 
       await hoverBlock(view, 0);
-      assert.dom(".composer-drag-handle").hasClass("--visible");
+      assert
+        .dom(".composer-drag-handle")
+        .hasClass("--visible")
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "a pointer-revealed handle does not interrupt keyboard focus order"
+        );
       assert.strictEqual(
         parseFloat(handle().style.left),
         view.dom.getBoundingClientRect().left -
