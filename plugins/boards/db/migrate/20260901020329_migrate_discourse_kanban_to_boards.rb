@@ -51,9 +51,16 @@ class MigrateDiscourseKanbanToBoards < ActiveRecord::Migration[8.0]
         allowed_group_ids,
         created_at,
         updated_at
-      FROM access_control_lists
-      WHERE target_type = 'DiscourseKanban::Board'
-      ON CONFLICT (target_type, target_id, permission) DO NOTHING
+      FROM access_control_lists AS legacy_acl
+      WHERE legacy_acl.target_type = 'DiscourseKanban::Board'
+        AND NOT EXISTS (
+          SELECT 1
+          FROM access_control_lists AS boards_acl
+          WHERE boards_acl.target_type = 'Boards::Board'
+            AND boards_acl.target_id = legacy_acl.target_id
+            AND boards_acl.permission = legacy_acl.permission
+        )
+      ON CONFLICT DO NOTHING
     SQL
   end
 end

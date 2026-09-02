@@ -112,6 +112,21 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
     )
   end
 
+  it "copies legacy ACLs idempotently when the expected unique index is absent" do
+    insert_acl(target_type: "DiscourseKanban::Board", permission: "view", owner: "discourse-kanban")
+    DB.exec("DROP INDEX idx_on_target_type_target_id_permission_f472902150")
+
+    2.times { migrate }
+
+    expect(
+      AccessControlList.where(
+        target_id: board.id,
+        target_type: "Boards::Board",
+        permission: "view",
+      ).pluck(:owner, :allowed_group_ids),
+    ).to eq([["boards", [group.id]]])
+  end
+
   it "does not overwrite an existing Boards ACL when copying a legacy row" do
     legacy =
       insert_acl(
