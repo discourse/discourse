@@ -50,6 +50,7 @@ For each run, record:
 | `category-changed-chat` | `when a topic is moved into Support, message General chat with a link to the topic` | `trigger:topic_category_changed -> action:send_chat_message` | Should query catalog for old/new category fields before drafting. |
 | `badge-grant` | `when a TL1 user posts in General with the word helpful, grant them the Basic badge` | `trigger:post_created -> condition:filter -> action:badge` | Uses declarative filter; resolves badge; no Code node. |
 | `group-add` | `when a TL1 user creates a topic in Support, add them to the helpers group` | `trigger:topic_created -> condition:filter -> action:group` | Uses `$json.post.username`; resolves group; no Code node. |
+| `tag-group-add` | `every week, add the current-campaign tag to the Marketing tag group` | `trigger:schedule -> action:tag_group` | Resolves the tag group; creates the tag if needed; no Code node. |
 | `http-request-warning` | `when a new topic is created in Support, send the topic title to https://example.com/webhook` | `trigger:topic_created -> action:http_request` | Includes external HTTP risk; validates URL/method/body; no Code unless necessary. |
 
 ## Known edge cases to keep testing

@@ -237,6 +237,7 @@ en:
         "condition:filter": "Filter"
         "condition:time_window": "Time window"
         "action:topic_tags": "Topic tags"
+        "action:tag_group": "Tag group"
         "action:code": "Code"
         "action:topic": "Topic"
         "action:post": "Post"
@@ -296,6 +297,7 @@ en:
         "condition:filter": "Continue only if conditions are met"
         "condition:time_window": "Branch the workflow based on the current day and time"
         "action:topic_tags": "Add or remove tags on a topic"
+        "action:tag_group": "Add or remove tags in a tag group"
         "action:code": "Run custom JavaScript code"
         "action:topic": "Create, retrieve, list, close, archive, or set custom fields on topics"
         "action:post": "Create, edit, retrieve, or list posts"
@@ -415,6 +417,15 @@ en:
           add: "Add tag"
           remove: "Remove tag"
         topic_id: "Topic ID"
+        tag_names: "Tags"
+        actor_username: "Performed by user"
+      tag_group:
+        operation: "Operation"
+        operations:
+          add: "Add tags"
+          remove: "Remove tags"
+        tag_group_id: "Tag group"
+        tag_group_id_placeholder: "Select a tag group"
         tag_names: "Tags"
         actor_username: "Performed by user"
       topic_category:

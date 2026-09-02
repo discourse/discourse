@@ -26,6 +26,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
 
       expect(identifiers).to include("trigger:topic_closed")
       expect(identifiers).to include("action:topic_tags")
+      expect(identifiers).to include("action:tag_group")
       expect(identifiers).to include("action:post")
       expect(identifiers).to include("action:topic")
       expect(identifiers).to include("action:group")
@@ -94,6 +95,44 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       )
       expect(personal_message_node.dig("metadata", "groups")).to include(
         include("id" => Group::AUTO_GROUPS[:everyone], "name" => "everyone"),
+      )
+    end
+
+    it "returns Tag group action metadata" do
+      tag_group = Fabricate(:tag_group, name: "Workflow tags")
+
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      tag_group_node =
+        response.parsed_body["node_types"].find do |node_type|
+          node_type["identifier"] == "action:tag_group"
+        end
+      properties = tag_group_node["properties"]
+
+      expect(properties["operation"]).to include(
+        "type" => "options",
+        "default" => "add",
+        "options" => %w[add remove],
+      )
+      expect(properties["tag_group_id"]).to include(
+        "type" => "integer",
+        "required" => true,
+        "type_options" => include("load_options_method" => "tag_groups"),
+        "ui" => include("control" => "combo_box", "dynamic_value" => "tag_group_id"),
+      )
+      expect(properties["tag_names"]).to include(
+        "type" => "string",
+        "required" => true,
+        "ui" => include("control" => "tags"),
+      )
+      expect(tag_group_node.dig("metadata", "tag_groups")).to include(
+        "id" => tag_group.id,
+        "name" => tag_group.name,
+      )
+      expect(tag_group_node.dig("output_contracts", 0, "schema", "properties")).to include(
+        "tag_group_id" => include("type" => "integer"),
+        "tag_group_name" => include("type" => "string"),
+        "tag_names" => include("type" => "array"),
       )
     end
 
