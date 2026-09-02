@@ -41,7 +41,8 @@ class InviteMailer < ActionMailer::Base
         template: sanitized_message ? "custom_invite_mailer" : "invite_mailer",
         inviter_name: inviter_name,
         site_domain_name: Discourse.current_hostname,
-        invite_link: invite.link(with_email_token: true),
+        invite_link:
+          invite.link(with_email_token: !UpcomingChanges.enabled?(:enable_local_logins_via_code)),
         topic_title: topic_title,
         topic_excerpt: topic_excerpt,
         site_description: SiteSetting.site_description,
@@ -60,7 +61,8 @@ class InviteMailer < ActionMailer::Base
         template: sanitized_message ? "custom_invite_forum_mailer" : template,
         inviter_name: inviter_name,
         site_domain_name: Discourse.current_hostname,
-        invite_link: invite.link(with_email_token: true),
+        invite_link:
+          invite.link(with_email_token: !UpcomingChanges.enabled?(:enable_local_logins_via_code)),
         site_description: SiteSetting.site_description,
         site_title: SiteSetting.title,
         user_custom_message: sanitized_message,

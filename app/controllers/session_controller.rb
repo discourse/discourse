@@ -502,6 +502,8 @@ class SessionController < ApplicationController
     # the behavior for emails we refuse to deliver to.
     return render json: success_json if login_code_honeypot_fails?
 
+    return request_invite_login_code if params[:invite_key].present?
+
     EmailLoginCode::Request.call(
       service_params.deep_merge(ip_address: request.remote_ip),
     ) do |result|
@@ -518,7 +520,7 @@ class SessionController < ApplicationController
   def verify_login_code
     expires_now
 
-    EmailLoginCode::Verify.call(service_params) do |result|
+    EmailLoginCode::Verify.call(login_code_verification_params) do |result|
       on_success { |user:| process_verified_login_code(user) }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
@@ -870,7 +872,8 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    email = params[:email].to_s.strip.downcase
+    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    email = (invite&.email.presence || params[:email]).to_s.strip.downcase
     if email.present?
       RateLimiter.new(
         nil,
@@ -904,6 +907,8 @@ class SessionController < ApplicationController
         return render json: @second_factor_failure_payload
       end
     end
+
+    return process_verified_invite_login_code(matched_user) if params[:invite_key].present?
 
     if matched_user.nil? && registration_via_login_code_open?
       user_fields_required = signup_user_fields_missing?
@@ -976,7 +981,7 @@ class SessionController < ApplicationController
     params[:second_factor_token].blank?
   end
 
-  def login_with_login_code(user, created_account: false)
+  def login_with_login_code(user, created_account: false, redirect_url: nil)
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
     if login_not_approved_for?(user)
@@ -1010,11 +1015,85 @@ class SessionController < ApplicationController
                  can_upload_avatar:
                    user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
                  # Only set when a DiscourseConnect provider handoff is pending.
-                 redirect_url: deferred_sso_provider_url,
+                 redirect_url: redirect_url || deferred_sso_provider_url,
                )
+    elsif redirect_url
+      session.delete(ACTIVATE_USER_KEY)
+      user.update_timezone_if_missing(params[:timezone])
+      log_on_user(user, replay_anonymous_action: true)
+      render json: success_json.merge(redirect_url:)
     else
       login(user)
     end
+  end
+
+  def request_invite_login_code
+    Invite::RequestEmailCode.call(
+      service_params.deep_merge(ip_address: request.remote_ip),
+    ) do |result|
+      on_success { render json: success_json }
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: success_json }
+    end
+  end
+
+  def login_code_verification_params
+    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    email = invite&.email.presence || params[:email]
+
+    service_params.deep_merge(params: params.to_unsafe_h.merge(email:))
+  end
+
+  def process_verified_invite_login_code(matched_user)
+    if matched_user
+      return render json: login_not_approved if login_not_approved_for?(matched_user)
+      return render json: login_error if (login_error = login_error_check(matched_user))
+    end
+
+    if matched_user.nil? && (signup_user_fields_missing? || signup_full_name_missing?)
+      return(
+        render json: {
+                 user_fields_required: signup_user_fields_missing?,
+                 name_required: signup_full_name_missing?,
+               }
+      )
+    end
+
+    Invite::RedeemWithEmailCode.call(
+      login_code_verification_params.deep_merge(ip_address: request.remote_ip),
+    ) do |result|
+      on_success do |invite:, user:, existing_user:|
+        login_with_login_code(
+          user,
+          created_account: existing_user.nil?,
+          redirect_url: invite_login_code_redirect(invite, user),
+        )
+      end
+      on_failed_policy(:can_register_new_account) do
+        render json: { error: I18n.t("login.new_registrations_disabled") }
+      end
+      on_failed_policy(:required_fields_provided) do
+        render json: { error: I18n.t("login.missing_user_field") }
+      end
+      on_failed_policy(:required_full_name_provided) do
+        render json: { error: I18n.t("login.missing_full_name") }
+      end
+      on_model_errors(:user) { |user| render json: login_code_account_error(user) }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: invalid_login_code }
+    end
+  end
+
+  def invite_login_code_redirect(invite, user)
+    topic = invite.topics.first
+    topic && user.guardian.can_see?(topic) ? path(topic.relative_url) : path("/")
   end
 
   # A pending provider handoff would redirect as soon as the session exists,

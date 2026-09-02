@@ -46,6 +46,26 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "does not treat a legacy email token as verification when invite codes are enabled" do
+      SiteSetting.enable_local_logins_via_code = true
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "private value")
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
+        expect(invite_info["email_verified_by_link"]).to eq(false)
+        expect(invite_info["username"]).not_to eq(staged_user.username)
+        expect(invite_info["user_fields"]).to be_nil
+      end
+    end
+
     context "when email data is present in authentication data" do
       before { server_session[:authentication] = { email: invite.email } }
 
@@ -1314,6 +1334,24 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    context "when anonymous invite acceptance uses email codes" do
+      fab!(:invite)
+
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "does not allow the legacy password acceptance endpoint" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(404)
+        expect(invite.reload).not_to be_redeemed
+        expect(User.find_by_email(invite.email)).to be_nil
+      end
+    end
+
     context "with an invalid invite" do
       it "redirects to the root" do
         put "/invites/show/doesntexist.json"

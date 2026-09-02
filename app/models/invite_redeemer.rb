@@ -23,6 +23,7 @@ class InviteRedeemer
               :ip_address,
               :session,
               :email_token,
+              :email_verified,
               :redeeming_user
 
   def initialize(
@@ -35,6 +36,7 @@ class InviteRedeemer
     ip_address: nil,
     session: nil,
     email_token: nil,
+    email_verified: false,
     redeeming_user: nil
   )
     @invite = invite
@@ -45,6 +47,7 @@ class InviteRedeemer
     @ip_address = ip_address
     @session = session
     @email_token = email_token
+    @email_verified = email_verified
     @redeeming_user = redeeming_user
 
     ensure_email_is_present!(email)
@@ -91,11 +94,16 @@ class InviteRedeemer
     user_custom_fields: nil,
     ip_address: nil,
     session: nil,
-    email_token: nil
+    email_token: nil,
+    email_verified: false
   )
     if username && UsernameValidator.new(username).valid_format? &&
          User.username_available?(username, email)
       available_username = username
+    elsif email_verified
+      available_username =
+        UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
+          RandomUsernameGenerator.generate || UserNameSuggester.suggest(email)
     else
       available_username = UserNameSuggester.suggest(email)
     end
@@ -107,7 +115,7 @@ class InviteRedeemer
     user.attributes = {
       email: email,
       username: available_username,
-      name: name || available_username,
+      name: name.presence || (email_verified ? user.name : available_username),
       active: false,
       trust_level: SiteSetting.default_invitee_trust_level,
       ip_address: ip_address,
@@ -159,8 +167,12 @@ class InviteRedeemer
     user.save!
     authenticator.finish
 
-    if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
-         email == invite.email && invite.email_token.present? && email_token == invite.email_token
+    if email_verified ||
+         (
+           invite.emailed_status != Invite.emailed_status_types[:not_required] &&
+             email == invite.email && invite.email_token.present? &&
+             email_token == invite.email_token
+         )
       user.activate
     end
 
@@ -235,6 +247,7 @@ class InviteRedeemer
         ip_address: ip_address,
         session: session,
         email_token: email_token,
+        email_verified: email_verified,
       )
     invited_user.send_welcome_message = false
     @invited_user = invited_user

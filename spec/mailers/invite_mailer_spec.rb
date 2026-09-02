@@ -32,6 +32,21 @@ RSpec.describe InviteMailer do
             "#{Discourse.base_url}/invites/#{invite.invite_key}",
           )
         end
+
+        it "omits the email token when invite acceptance uses a code" do
+          SiteSetting.enable_local_logins_via_code = true
+
+          expect(invite_mail.body.encoded).to include(
+            "#{Discourse.base_url}/invites/#{invite.invite_key}",
+          )
+          expect(invite_mail.body.encoded).not_to include(invite.email_token)
+        end
+
+        it "includes the email token when invite acceptance uses a password" do
+          SiteSetting.enable_local_logins_via_code = false
+
+          expect(invite_mail.body.encoded).to include(invite.email_token)
+        end
       end
 
       context "with custom invite message" do
