@@ -21,10 +21,12 @@ import menus from "../components/sections/molecules/menus";
 import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
+import overflowControls from "../components/sections/molecules/overflow-controls";
 import postMenu from "../components/sections/molecules/post-menu";
 import rovingFocus from "../components/sections/molecules/roving-focus";
 import segmentedControl from "../components/sections/molecules/segmented-control";
 import signupCta from "../components/sections/molecules/signup-cta";
+import tabs from "../components/sections/molecules/tabs";
 import toasts from "../components/sections/molecules/toasts";
 import tooltips from "../components/sections/molecules/tooltips";
 import topicListItem from "../components/sections/molecules/topic-list-item";
@@ -103,6 +105,12 @@ const SECTIONS = [
   },
   { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
   { component: virtualList, category: "molecules", id: "virtual-list" },
+  { component: tabs, category: "molecules", id: "tabs" },
+  {
+    component: overflowControls,
+    category: "molecules",
+    id: "overflow-controls",
+  },
   { component: post, category: "organisms", id: "post", priority: 0 },
   { component: postList, category: "organisms", id: "post-list", priority: 1 },
   {
