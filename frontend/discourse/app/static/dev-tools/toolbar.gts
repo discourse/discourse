@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
+import DevToolsDockHost from "discourse/static/dev-tools/dock-host";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
@@ -93,6 +94,7 @@ export default class Toolbar extends Component {
       >
         {{dIcon "xmark"}}
       </button>
+      <DevToolsDockHost />
     </div>
   </template>
 }

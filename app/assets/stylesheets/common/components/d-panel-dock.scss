@@ -1,0 +1,174 @@
+// The layer spans the viewport so the panel can be positioned against its
+// edges, but must not intercept clicks meant for the page underneath.
+// Deliberately has no z-index: the caller decides where this sits in the
+// stacking order.
+.d-panel-dock-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.d-panel-dock {
+  // Bounds are enforced in JS so that the reported size matches the rendered
+  // one; these only consume the result.
+  --d-panel-dock-width: 320px;
+  --d-panel-dock-height: 320px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary);
+  box-shadow: var(--shadow-dropdown);
+  pointer-events: auto;
+
+  &.--dock-start {
+    top: var(--header-offset, 0);
+    bottom: var(--composer-height, 0);
+    inset-inline-start: 0;
+    width: var(--d-panel-dock-width);
+    border-inline-end: 1px solid var(--content-border-color);
+
+    .d-panel-dock__resizer {
+      inset-block: 0;
+
+      // Half outside the panel, so the whole grab area is reachable. Offsetting
+      // the logical inset rather than translating keeps it outside the panel
+      // under both writing directions; a physical translate would push it
+      // inward once the panel is docked to the right.
+      inset-inline-end: calc(var(--space-2) / -2);
+      width: var(--space-2);
+    }
+  }
+
+  &.--dock-end {
+    top: var(--header-offset, 0);
+    bottom: var(--composer-height, 0);
+    inset-inline-end: 0;
+    width: var(--d-panel-dock-width);
+    border-inline-start: 1px solid var(--content-border-color);
+
+    .d-panel-dock__resizer {
+      inset-block: 0;
+      inset-inline-start: calc(var(--space-2) / -2);
+      width: var(--space-2);
+    }
+  }
+
+  &.--dock-bottom {
+    inset-inline: 0;
+    bottom: var(--composer-height, 0);
+    top: auto;
+    height: var(--d-panel-dock-height);
+    width: auto;
+    border-block-start: 1px solid var(--content-border-color);
+
+    .d-panel-dock__resizer {
+      inset-inline: 0;
+      inset-block-start: calc(var(--space-2) / -2);
+      height: var(--space-2);
+      width: auto;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--content-border-color);
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline-start: auto;
+  }
+
+  &__tabs {
+    display: flex;
+    align-self: stretch;
+    gap: var(--space-1);
+  }
+
+  &__tab {
+    padding: var(--space-1) var(--space-2);
+    color: var(--primary-medium);
+    background: none;
+    border: 0;
+    border-block-end: 2px solid transparent;
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      color: var(--primary);
+      border-block-end-color: var(--tertiary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  &__dock-picker {
+    display: flex;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+  }
+
+  &__dock-button {
+    background: none;
+    border: none;
+    padding: 2px var(--space-1);
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: flex;
+    align-items: center;
+
+    &[aria-pressed="true"] {
+      background: var(--primary-low);
+      color: var(--tertiary);
+    }
+
+    + .d-panel-dock__dock-button {
+      border-inline-start: 1px solid var(--content-border-color);
+    }
+
+    [dir="rtl"] & {
+      &.--start svg {
+        transform: scaleX(-1);
+      }
+
+      &.--end svg {
+        transform: scaleX(-1);
+      }
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: var(--space-3);
+  }
+
+  &__tabpanel {
+    min-width: 0;
+  }
+
+  // Geometry lives with each dock modifier; only what every side shares is here.
+  &__resizer {
+    position: absolute;
+
+    // Above the panel's own content: hosts may render sticky rows with a
+    // z-index and an opaque background, which would otherwise cover the
+    // half of the grab strip that sits inside the panel.
+    z-index: 2;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--tertiary);
+    }
+  }
+}
