@@ -264,7 +264,10 @@ const extension = {
       math_block(state, node) {
         state.write("$$\n");
         state.text(escapeDelimiter(node.textContent, "$"), false);
-        state.write("\n$$");
+        // the closing fence needs its own write to pick up the block prefix,
+        // or the block loses it inside a blockquote
+        state.ensureNewLine();
+        state.write("$$");
         state.closeBlock(node);
       },
     };

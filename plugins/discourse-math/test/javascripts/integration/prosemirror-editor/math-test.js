@@ -59,6 +59,23 @@ module(
       );
     });
 
+    test("preserves block math nested in a blockquote", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      // the closing fence has to keep the "> " prefix, or the reparse swallows
+      // it into the math and leaves a stray empty block behind
+      const markdown = "> $$\n> E=mc^2\n> $$";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.dom("blockquote .composer-preview-node").exists();
+        },
+        markdown
+      );
+    });
+
     test("toggles block math between preview and source", async function (assert) {
       this.siteSettings.discourse_math_enabled = true;
 
