@@ -151,6 +151,7 @@ RSpec.describe Admin::ImpersonateController do
 
     context "when enforce_second_factor is enabled and impersonated user has no 2FA" do
       before do
+        SiteSetting.experimental_impersonation = true
         SiteSetting.enforce_second_factor = "all"
         Fabricate(:user_second_factor_totp, user: admin)
       end
