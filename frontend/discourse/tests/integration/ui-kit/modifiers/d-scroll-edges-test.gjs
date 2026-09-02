@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { find, render, settled, triggerEvent } from "@ember/test-helpers";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
@@ -144,7 +144,7 @@ module("Integration | ui-kit | Modifier | dScrollEdges", function (hooks) {
     assert.dom(".strip").doesNotHaveAttribute("data-d-scroll-at-start");
   });
 
-  test("overflow strip (review): follows an axis change", async function (assert) {
+  test("overflow strip: follows an axis change", async function (assert) {
     class AxisState {
       @tracked axis = "horizontal";
     }
@@ -193,7 +193,6 @@ module("Integration | ui-kit | Modifier | dScrollEdges", function (hooks) {
 
     const strip = find(".axis-changing-strip");
     strip.scrollTop = strip.scrollHeight - strip.clientHeight;
-    await triggerEvent(strip, "scroll");
     await nextFrame();
 
     assert

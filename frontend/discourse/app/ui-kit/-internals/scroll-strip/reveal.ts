@@ -9,11 +9,11 @@ export interface RevealOptions {
 }
 
 /**
- * An element's layout position, summed up its offsetParent chain. Layout
- * offsets ignore CSS transforms, which bounding rects do not, and a scroll
- * position is a layout quantity.
+ * An element's layout position, summed up its offsetParent chain. Bounding
+ * rects include CSS transforms. Scroll positions are layout quantities, so
+ * layout offsets are used instead.
  */
-export function layoutOffset(element: HTMLElement) {
+function layoutOffset(element: HTMLElement) {
   let x = 0;
   let y = 0;
   let node: HTMLElement | null = element;
@@ -27,7 +27,8 @@ export function layoutOffset(element: HTMLElement) {
 
 /**
  * A computed scroll-padding side in pixels. A percentage stays a percentage
- * in the computed style, so it is resolved here against the scrollport.
+ * in the computed style, so it is resolved here against the scrollport. A
+ * `calc()` that mixes units cannot be parsed and counts as zero.
  */
 function padding(value: string, scrollport: number) {
   const parsed = Number.parseFloat(value);
@@ -54,11 +55,18 @@ function nearest(
   return offset;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
 /**
- * Scrolls `scroller`, never the page, until `target` lies inside it. Scroll
- * padding is honoured by hand since it ignores programmatic scrolls. The
- * write is left unclamped: the browser clamps it, RTL's negative range
- * included.
+ * Scrolls `scroller`, never the page, until `target` lies inside it. A
+ * `scrollTo` with explicit offsets is what keeps ancestors still, and it
+ * bypasses `scroll-padding`, so the padding is applied by hand.
+ *
+ * The write is not clamped; the browser clamps it, RTL's negative range
+ * included. The no-op check compares the clamped target, so an item already
+ * in place issues no scroll at all.
  */
 export function revealInScroller(
   scroller: HTMLElement,
@@ -72,6 +80,7 @@ export function revealInScroller(
     x: start.x + target.offsetWidth,
     y: start.y + target.offsetHeight,
   };
+  const style = getComputedStyle(scroller);
 
   let left: number;
   let top: number;
@@ -79,7 +88,6 @@ export function revealInScroller(
     left = start.x + target.offsetWidth / 2 - scroller.clientWidth / 2;
     top = start.y + target.offsetHeight / 2 - scroller.clientHeight / 2;
   } else {
-    const style = getComputedStyle(scroller);
     left = nearest(
       start.x,
       end.x,
@@ -98,7 +106,13 @@ export function revealInScroller(
     );
   }
 
-  if (left === scroller.scrollLeft && top === scroller.scrollTop) {
+  const maxX = scroller.scrollWidth - scroller.clientWidth;
+  const maxY = scroller.scrollHeight - scroller.clientHeight;
+  const rtl = style.direction === "rtl";
+  if (
+    clamp(left, rtl ? -maxX : 0, rtl ? 0 : maxX) === scroller.scrollLeft &&
+    clamp(top, 0, maxY) === scroller.scrollTop
+  ) {
     return;
   }
 

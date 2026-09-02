@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .d-tabs {
   display: flex;
   flex-direction: column;
@@ -22,8 +24,15 @@
     &[aria-orientation="vertical"] {
       flex-direction: column;
       align-items: stretch;
-      overflow-x: visible;
-      overflow-y: auto;
+
+      // The strip watches only the vertical axis, so a long label wraps
+      // instead of scrolling sideways with no affordance.
+      overflow: hidden auto;
+
+      .d-tabs__tab {
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
     }
   }
 
@@ -31,6 +40,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    min-height: 30px;
     padding: 0.65em 0.75em;
     color: var(--d-nav-color);
     background: var(--d-nav-bg-color);
@@ -40,6 +50,11 @@
     white-space: nowrap;
     cursor: pointer;
     transition: var(--d-button-transition);
+
+    @include viewport.between(sm, lg) {
+      font-size: var(--font-0);
+      padding: var(--space-2) var(--space-3);
+    }
 
     .d-icon {
       margin-right: 5px;
@@ -63,10 +78,15 @@
       .d-icon {
         color: var(--primary-low-mid);
       }
+
+      // aria-disabled gets no system colour of its own.
+      @media (forced-colors: active) {
+        color: GrayText;
+      }
     }
 
     &:focus-visible {
-      outline: 2px solid var(--tertiary);
+      @include default-focus;
       outline-offset: -2px;
     }
   }

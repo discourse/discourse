@@ -12,7 +12,7 @@ export default class TabsVerticalExample extends Component {
   }
 
   <template>
-    <div class="styleguide-tabs styleguide-tabs--vertical">
+    <div class="styleguide-tabs --vertical">
       <DTabs
         @active={{this.active}}
         @label="Preference sections"

@@ -20,25 +20,31 @@ import type {
 } from "discourse/ui-kit/d-tabs/types";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
+export type {
+  DTabsBag,
+  DTabsHeaderBag,
+  DTabsOrientation,
+  DTabsSignature,
+} from "discourse/ui-kit/d-tabs/types";
+
 const NEVER_RENDERED = Symbol("never rendered");
 
 /**
- * An in-place ARIA tabs widget that owns the whole interaction: the tab
- * strip, the roving keyboard cursor, the persistent tabpanel, and every id
- * that pairs them. A consumer declares its tabs — label and panel content
- * together — and supplies the selection.
+ * An ARIA tabs widget that owns the tab strip, the roving keyboard cursor,
+ * the persistent tabpanel, and the ids that pair them. A consumer declares
+ * each tab with its label and panel content and supplies the selection.
  *
  * Selection is controlled: `@active` in, `@onActivate` out, and nothing
  * moves until the owner feeds the id back. The component never invents a
  * fallback, because which tab deserves one is the owner's policy.
+ * Activation is manual: arrow keys move focus only, and a tab is selected
+ * by click, Enter, or Space.
  *
  * The declaration block renders inside the tablist element, wherever that
- * element is: the default strip row, or a spot the consumer chose by
- * placing the yielded `Tablist` from a `<:header>` block. That is what
- * lets a host place its own controls in the strip row without the tabs
- * ever leaving their container.
+ * element sits. A `<:header>` block can place the yielded `Tablist` among
+ * its own controls; the tabs still land in it.
  *
- * This is the tabs *widget* — content panels switched in place. Tab-shaped
+ * This is the tabs widget: content panels switched in place. Tab-shaped
  * route navigation stays on `DNavItem`, `DHorizontalOverflowNav`, and
  * `DPageHeader`, which render links, not `role="tab"`.
  *
@@ -56,7 +62,6 @@ const NEVER_RENDERED = Symbol("never rendered");
 export default class DTabs extends Component<DTabsSignature> {
   @tracked tablistElement: HTMLElement | null = null;
 
-  /** Captures the persistent tabpanel element for the tabs' content portal. */
   registerPanel = modifier((element: HTMLElement) => {
     this.#panelActual = element;
     this.#deferTrackedWrite(() => {
@@ -76,15 +81,17 @@ export default class DTabs extends Component<DTabsSignature> {
   });
 
   /**
-   * Joins a tab button to the registry. The cleanup is identity-guarded:
-   * destructors are deferred, so a replaced button's teardown can run after
-   * its successor registered, and must not evict it. Both directions bump
-   * the version so the keyboard engine reconciles its cursor.
+   * Joins a tab button to the registry and bumps the version on both ends
+   * so the keyboard engine reconciles its cursor.
+   *
+   * The cleanup checks identity. Destructors run deferred, so a replaced
+   * button's teardown can land after its successor registered and must not
+   * evict it.
    */
   registerTab = modifier((element: Element, [id]: [string]) => {
     if (DEBUG) {
-      // A duplicate and a not-yet-torn-down branch replacement look alike
-      // here; the post-render scan decides.
+      // A duplicate and a branch replacement not yet torn down look alike
+      // here. The post-render scan decides.
       const existing = this.#tabs.get(id);
       if (existing !== undefined && existing !== element) {
         this.#pendingDuplicateChecks.push({
@@ -107,17 +114,16 @@ export default class DTabs extends Component<DTabsSignature> {
     return () => {
       if (this.#tabs.get(id) === element) {
         this.#tabs.delete(id);
-        this._tabsVersion++;
+        // A live @id change tears down and reinstalls inside the tracked
+        // update frame, so the bump is deferred like the install's.
+        this.#deferTrackedWrite(() => this._tabsVersion++);
       }
     };
   });
 
-  /**
-   * Captures the tablist element the declaration block portals into. The
-   * same identity guard as the tabs: an old element's deferred cleanup must
-   * never clear a newer registration.
-   */
+  /** Captures the tablist element the declaration block portals into. */
   registerTablist = modifier((element: HTMLElement) => {
+    let strayContentObserver: MutationObserver | undefined;
     if (DEBUG) {
       assert(
         "d-tabs: a group renders one Tablist — the <:header> block must place it exactly once",
@@ -125,6 +131,13 @@ export default class DTabs extends Component<DTabsSignature> {
           this.#tablistActual === element ||
           !this.#tablistActual.isConnected
       );
+      // Content can enter the tablist without a tab registering. A group
+      // whose guard already fired is reported once, not on every mutation
+      // of its broken tree.
+      strayContentObserver = new MutationObserver(() =>
+        this.#queueStrayContentScan()
+      );
+      strayContentObserver.observe(element, { childList: true });
     }
 
     this.#tablistActual = element;
@@ -135,6 +148,7 @@ export default class DTabs extends Component<DTabsSignature> {
     });
 
     return () => {
+      strayContentObserver?.disconnect();
       if (this.#tablistActual === element) {
         this.#tablistActual = null;
       }
@@ -145,10 +159,11 @@ export default class DTabs extends Component<DTabsSignature> {
   });
 
   /**
-   * The panel's swap effects, keyed on `@active`: reset the shared scroll
-   * surface, and rescue focus when the outgoing content held it. Focus
-   * whereabouts are tracked with listeners rather than read at swap time,
-   * because by then the outgoing content is already gone.
+   * Swap effects keyed on `@active`: reset the panel's scroll and rescue
+   * focus when the outgoing content held it.
+   *
+   * Focus is tracked with listeners, not read at swap time. By then the
+   * outgoing content is already gone.
    */
   panelEffects = modifier((element: HTMLElement, [active]: [unknown]) => {
     const onFocusIn = () => (this.#focusWasInPanel = true);
@@ -164,11 +179,18 @@ export default class DTabs extends Component<DTabsSignature> {
       // focused element. One hop later only the blurred one is still connected.
       const previousTarget = event.target;
       schedule("afterRender", () => {
-        if (
-          previousTarget instanceof Node &&
-          previousTarget.isConnected &&
-          !element.contains(document.activeElement)
-        ) {
+        if (!(previousTarget instanceof Node)) {
+          return;
+        }
+        if (!previousTarget.isConnected) {
+          // Removed by the consumer. A pending swap still rescues, so the
+          // flag survives until its destroy effect reads it.
+          if (!this.#swapPending) {
+            this.#focusWasInPanel = false;
+          }
+          return;
+        }
+        if (!element.contains(document.activeElement)) {
           this.#focusWasInPanel = false;
         }
       });
@@ -180,19 +202,23 @@ export default class DTabs extends Component<DTabsSignature> {
       this.#lastSwapActive !== NEVER_RENDERED &&
       this.#lastSwapActive !== active
     ) {
-      // The destroy queue runs after afterRender and is where the outgoing
-      // content detaches. Earlier, focus still looks held inside the panel.
+      // The outgoing content detaches in the `actions` queue, which the
+      // runloop rewinds to after this render. `destroy` is the last queue,
+      // so by then focus has already left. Earlier, it still looks held.
+      this.#swapPending = true;
       schedule("destroy", () => {
+        this.#swapPending = false;
         if (isDestroying(this) || !element.isConnected) {
           return;
         }
 
         element.scrollTop = 0;
+        element.scrollLeft = 0;
 
-        // Focus on body is the removal signature; any real control means the
-        // user moved on. Recomputing afterwards heals a stale flag.
+        // Focus resting on body means the removal dropped it. On a real
+        // control, the user moved on.
         if (this.#focusWasInPanel && document.activeElement === document.body) {
-          element.focus();
+          element.focus({ preventScroll: true });
         }
         this.#focusWasInPanel = element.contains(document.activeElement);
       });
@@ -210,8 +236,8 @@ export default class DTabs extends Component<DTabsSignature> {
 
   /**
    * Opaque DOM-id suffixes per tab id. Consumer ids cannot go into DOM ids:
-   * `aria-labelledby` splits on whitespace, so an id like "account settings"
-   * would reference two missing elements.
+   * `aria-labelledby` splits on whitespace, so "account settings" would
+   * point at two missing elements.
    */
   #domIdSuffixes = new Map<string, number>();
   #nextDomIdSuffix = 0;
@@ -226,12 +252,20 @@ export default class DTabs extends Component<DTabsSignature> {
   #tablistActual: HTMLElement | null = null;
   #panelActual: HTMLElement | null = null;
 
-  /** Whether focus currently sits inside the tabpanel; survives re-renders. */
+  /**
+   * Whether focus sits inside the tabpanel. Held on the class because the
+   * `panelEffects` install closure is torn down and re-run on every
+   * `@active` swap, which is exactly when the swap logic needs the value.
+   */
   #focusWasInPanel = false;
+
+  /** Whether a swap is between its render and its `destroy` effect. */
+  #swapPending = false;
 
   /** The `@active` the panel effects last saw, to tell swaps from setup. */
   #lastSwapActive: unknown = NEVER_RENDERED;
   #strayScanQueued = false;
+  #guardTripped = false;
   #revealQueued = false;
 
   /** Same-id registrations awaiting the post-render duplicate verdict. */
@@ -241,7 +275,6 @@ export default class DTabs extends Component<DTabsSignature> {
     second: Element;
   }> = [];
 
-  /** The stable state-and-controls bag the curried parts read live. */
   #engine: DTabsEngine = (() => {
     /* eslint-disable-next-line @typescript-eslint/no-this-alias */
     const self = this;
@@ -283,10 +316,11 @@ export default class DTabs extends Component<DTabsSignature> {
         label: string | undefined,
         hasBlock: boolean
       ) => {
-        if (DEBUG) {
+        if (DEBUG && (label !== undefined) === hasBlock) {
+          this.#guardTripped = true;
           assert(
             `d-tabs: tab "${id}" needs either @label or a <:label> block, and not both`,
-            (label !== undefined) !== hasBlock
+            false
           );
         }
       },
@@ -335,9 +369,8 @@ export default class DTabs extends Component<DTabsSignature> {
   }
 
   /**
-   * The DOM id of the active tab's button, or `undefined` while `@active`
-   * names no registered tab, so the panel's labelling can fall back rather
-   * than reference a ghost.
+   * The active tab button's DOM id. `undefined` while `@active` names no
+   * registered tab, so the panel never labels itself by a missing element.
    */
   get activeTabDomId() {
     void this._tabsVersion;
@@ -360,10 +393,9 @@ export default class DTabs extends Component<DTabsSignature> {
   }
 
   /**
-   * The yielded parts, curried once. The engine bag reads no tracked state,
-   * so the cache never invalidates and part identity survives every
-   * re-render. That is what keeps a tab's label subtree alive across
-   * activations.
+   * The yielded parts, curried once. Nothing here reads tracked state, so
+   * the cache never invalidates and part identity survives re-renders. A
+   * new identity would remount every tab's label subtree.
    */
   @cached
   get parts(): { bag: DTabsBag; headerBag: DTabsHeaderBag } {
@@ -407,11 +439,7 @@ export default class DTabs extends Component<DTabsSignature> {
     });
   }
 
-  /**
-   * Queues one post-render reveal of the selected tab. Registration and
-   * selection both queue it, since either can put the selected button
-   * outside the strip's scroll window.
-   */
+  /** Queues one post-render reveal of the selected tab. */
   #queueReveal() {
     if (this.#revealQueued) {
       return;
@@ -429,9 +457,8 @@ export default class DTabs extends Component<DTabsSignature> {
   }
 
   /**
-   * Scrolls the strip, and only the strip, until the selected tab sits
-   * fully inside it. The page is never scrolled: a tab change is not a
-   * reason to move the reader.
+   * Scrolls the strip, never the page, until the selected tab is fully
+   * inside it.
    */
   #revealActiveTab() {
     const tablist = this.#tablistActual;
@@ -451,44 +478,53 @@ export default class DTabs extends Component<DTabsSignature> {
    * after the declaration block has actually landed in the tablist.
    */
   #queueStrayContentScan() {
-    if (this.#strayScanQueued) {
+    if (this.#strayScanQueued || this.#guardTripped) {
       return;
     }
     this.#strayScanQueued = true;
 
     schedule("afterRender", () => {
       this.#strayScanQueued = false;
-      if (isDestroying(this) || !this.#tablistActual) {
+      if (isDestroying(this) || this.#guardTripped || !this.#tablistActual) {
         return;
       }
 
-      // Duplicates first: a branch replacement's predecessor has detached
-      // by now, while a genuine duplicate has both claimants attached.
-      const pending = this.#pendingDuplicateChecks.splice(0);
-      for (const { id, first, second } of pending) {
-        assert(
-          `d-tabs: duplicate tab id "${id}" — tab ids must be unique within a group`,
-          !(first.isConnected && second.isConnected)
-        );
-      }
-
-      for (const node of this.#tablistActual.childNodes) {
-        // A role="tab" impostor that never registered is as stray as a div:
-        // it would join the keyboard cursor without joining the group.
-        const isStrayElement =
-          node instanceof Element &&
-          (node.getAttribute("role") !== "tab" ||
-            this.#tabs.get(node.getAttribute("data-d-tab") ?? "") !== node);
-        const isStrayText =
-          node.nodeType === Node.TEXT_NODE &&
-          (node.textContent ?? "").trim() !== "";
-
-        assert(
-          "d-tabs: the declaration block may contain only tab declarations — found unexpected content in the tablist",
-          !isStrayElement && !isStrayText
-        );
+      try {
+        this.#scanDeclaration(this.#tablistActual);
+      } catch (error) {
+        this.#guardTripped = true;
+        throw error;
       }
     });
+  }
+
+  #scanDeclaration(tablist: HTMLElement) {
+    // By now a branch replacement's predecessor has detached, while a
+    // genuine duplicate keeps both claimants attached.
+    const pending = this.#pendingDuplicateChecks.splice(0);
+    for (const { id, first, second } of pending) {
+      assert(
+        `d-tabs: duplicate tab id "${id}" — tab ids must be unique within a group`,
+        !(first.isConnected && second.isConnected)
+      );
+    }
+
+    for (const node of tablist.childNodes) {
+      // An unregistered role="tab" element is as stray as a div. It would
+      // join the keyboard cursor without joining the group.
+      const isStrayElement =
+        node instanceof Element &&
+        (node.getAttribute("role") !== "tab" ||
+          this.#tabs.get(node.getAttribute("data-d-tab") ?? "") !== node);
+      const isStrayText =
+        node.nodeType === Node.TEXT_NODE &&
+        (node.textContent ?? "").trim() !== "";
+
+      assert(
+        "d-tabs: the declaration block may contain only tab declarations — found unexpected content in the tablist",
+        !isStrayElement && !isStrayText
+      );
+    }
   }
 
   <template>

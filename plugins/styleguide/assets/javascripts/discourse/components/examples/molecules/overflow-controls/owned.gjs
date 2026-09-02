@@ -14,9 +14,7 @@ const SECTIONS = [
 ];
 
 export default <template>
-  <div
-    class="styleguide-overflow-controls styleguide-overflow-controls--narrow"
-  >
+  <div class="styleguide-overflow-controls --narrow">
     <DOverflowControls @axis="horizontal" @ownedScroller={{true}} as |strip|>
       <ul
         class="styleguide-overflow-controls__list"

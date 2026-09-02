@@ -54,6 +54,24 @@ function requirePanel(assert) {
   return panel;
 }
 
+function nextFrame() {
+  return new Promise((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(resolve))
+  );
+}
+
+function layoutOffset(element) {
+  let x = 0;
+  let node = element;
+
+  while (node) {
+    x += node.offsetLeft;
+    node = node.offsetParent instanceof HTMLElement ? node.offsetParent : null;
+  }
+
+  return x;
+}
+
 function guardMessageMatches(error, patterns) {
   return patterns.every((pattern) => pattern.test(error.message));
 }
@@ -529,6 +547,51 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     );
   });
 
+  test("re-keys a live tab when its id changes", async function (assert) {
+    class IdState {
+      @tracked id = "original";
+    }
+
+    const state = new IdState();
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{state.id}}
+          @label="Mutable tab id"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          <tabs.Tab @id={{state.id}} @label="Mutable">Panel</tabs.Tab>
+        </DTabs>
+      </template>
+    );
+
+    const originalTab = find('[role="tab"]');
+    const originalDomId = originalTab.id;
+
+    state.id = "replacement";
+    await settled();
+
+    const tab = find('[role="tab"]');
+    const panel = requirePanel(assert);
+    assert.dom('[role="tablist"]').exists("the tablist remains exposed");
+    assert
+      .dom(tab)
+      .hasAttribute("data-d-tab", state.id, "the registry uses the new id");
+    assert.notStrictEqual(
+      tab.id,
+      originalDomId,
+      "the new id receives a new DOM id"
+    );
+    assert.strictEqual(
+      panel.getAttribute("aria-labelledby"),
+      tab.id,
+      "the panel is labelled by the re-keyed tab"
+    );
+  });
+
   test("renders an empty labelled panel for undefined and unknown active ids", async function (assert) {
     const ids = ["known-a", "known-b"];
     const label = "Possibly inactive tabs";
@@ -715,8 +778,20 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       .dom("[data-panel-input]")
       .isFocused("focus starts inside outgoing panel content");
 
-    state.active = ids[1];
-    await settled();
+    const focusSpy = sinon.spy(HTMLElement.prototype, "focus");
+    focusSpy.resetHistory();
+
+    try {
+      state.active = ids[1];
+      await settled();
+
+      assert.true(
+        focusSpy.calledWith({ preventScroll: true }),
+        "focus rescue prevents the panel from scrolling its ancestors"
+      );
+    } finally {
+      focusSpy.restore();
+    }
 
     assert.strictEqual(
       find('[role="tabpanel"]'),
@@ -730,6 +805,54 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       document.activeElement,
       document.body,
       "focus is not stranded on body"
+    );
+  });
+
+  test("does not rescue focus after focused panel content was already removed", async function (assert) {
+    class FocusState extends TabsState {
+      @tracked showInput = true;
+    }
+
+    const ids = ["editable", "replacement"];
+    const state = new FocusState(ids[0]);
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{state.active}}
+          @label="Removed focus target"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          <tabs.Tab @id={{get ids "0"}} @label="Editable">
+            {{#if state.showInput}}<input data-panel-input />{{/if}}
+          </tabs.Tab>
+          <tabs.Tab
+            @id={{get ids "1"}}
+            @label="Replacement"
+          >Replacement</tabs.Tab>
+        </DTabs>
+      </template>
+    );
+
+    await focus("[data-panel-input]");
+    state.showInput = false;
+    await settled();
+    await nextFrame();
+    assert.strictEqual(
+      document.activeElement,
+      document.body,
+      "removing the focused control releases focus to body"
+    );
+
+    state.active = ids[1];
+    await settled();
+
+    assert.notStrictEqual(
+      document.activeElement,
+      find('[role="tabpanel"]'),
+      "a later swap does not act on the stale focus flag"
     );
   });
 
@@ -779,6 +902,48 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     );
   });
 
+  test("resets horizontal panel scroll position when active content changes", async function (assert) {
+    const ids = ["wide-a", "wide-b"];
+    const state = new TabsState(ids[0]);
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{state.active}}
+          @label="Horizontally scrollable tabs"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          <tabs.Tab @id={{get ids "0"}} @label="Wide A"><div
+              style="width: 500px"
+            >Wide A panel</div></tabs.Tab>
+          <tabs.Tab @id={{get ids "1"}} @label="Wide B"><div
+              style="width: 500px"
+            >Wide B panel</div></tabs.Tab>
+        </DTabs>
+      </template>
+    );
+
+    const panel = requirePanel(assert);
+    panel.style.width = "100px";
+    panel.style.overflowX = "auto";
+    panel.scrollLeft = panel.scrollWidth;
+    assert.true(
+      panel.scrollLeft > 0,
+      "the fixture has a horizontal scroll offset"
+    );
+
+    state.active = ids[1];
+    await settled();
+
+    assert.strictEqual(
+      panel.scrollLeft,
+      0,
+      "the persistent panel returns to its horizontal start after the swap"
+    );
+  });
+
   test("uses vertical orientation and Up Down focus movement", async function (assert) {
     const ids = ["north", "middle", "south"];
     const onActivate = sinon.spy();
@@ -820,6 +985,83 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     assert.true(
       onActivate.notCalled,
       "vertical arrow movement does not activate"
+    );
+  });
+
+  test("contains wrapping labels in a narrow vertical tablist", async function (assert) {
+    const ids = ["short", "long"];
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{get ids "0"}}
+          @label="Narrow vertical tabs"
+          @onActivate={{onActivate}}
+          @orientation="vertical"
+        >
+          <:header as |header|><header.Tablist style="width: 120px" /></:header>
+          <:default as |tabs|>
+            <tabs.Tab @id={{get ids "0"}} @label="Short">Short</tabs.Tab>
+            <tabs.Tab
+              @id={{get ids "1"}}
+              @label="A deliberately long tab label that must wrap"
+            >Long panel</tabs.Tab>
+          </:default>
+        </DTabs>
+      </template>
+    );
+
+    const tablist = find('[role="tablist"]');
+    const tabs = requireTabs(assert, ids.length);
+    assert.true(
+      tablist.scrollWidth <= tablist.clientWidth,
+      "the vertical tablist contains its labels horizontally"
+    );
+    assert.true(
+      tabs[1].getBoundingClientRect().height >
+        tabs[0].getBoundingClientRect().height,
+      "the long label wraps onto additional lines"
+    );
+  });
+
+  test("wraps unbroken labels inside a narrow vertical tablist", async function (assert) {
+    const ids = ["short", "unbroken"];
+    const onActivate = sinon.spy();
+
+    await render(
+      <template>
+        <DTabs
+          @active={{get ids "0"}}
+          @label="Narrow vertical tabs"
+          @onActivate={{onActivate}}
+          @orientation="vertical"
+        >
+          <:header as |header|><header.Tablist style="width: 120px" /></:header>
+          <:default as |tabs|>
+            <tabs.Tab @id={{get ids "0"}} @label="Short">Short</tabs.Tab>
+            <tabs.Tab
+              @id={{get ids "1"}}
+              @label="unbrokenidentifierthatiswiderthanthestrip_2026"
+            >Unbroken panel</tabs.Tab>
+          </:default>
+        </DTabs>
+      </template>
+    );
+
+    const tablist = find('[role="tablist"]');
+    const tabs = requireTabs(assert, ids.length);
+    if (!tabs) {
+      return;
+    }
+
+    assert.true(
+      tablist.scrollWidth <= tablist.clientWidth,
+      "the vertical tablist hides no horizontal overflow"
+    );
+    assert.true(
+      tabs[1].scrollWidth <= tabs[1].clientWidth,
+      "the unbroken label fits within its tab button after wrapping mid-token"
     );
   });
 
@@ -947,7 +1189,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       );
   });
 
-  test("removing active and focused looped tabs preserves selection and focus", async function (assert) {
+  test("consumer selection and tab focus survive looped tab removal", async function (assert) {
     const initialItems = [
       { id: "removable-active", label: "Removable active" },
       { id: "fallback", label: "Fallback" },
@@ -996,11 +1238,11 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       .hasAttribute(
         "aria-selected",
         "true",
-        "the consumer fallback becomes active"
+        "the consumer-selected replacement becomes active"
       );
     assert
       .dom(`[data-panel-id="${state.active}"]`)
-      .exists("the fallback panel renders after active removal");
+      .exists("the consumer-selected panel renders after active removal");
 
     const focusedId = initialItems[2].id;
     await focus(`[data-tab-id="${focusedId}"]`);
@@ -1328,7 +1570,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     setupOnerror((error) => {
       errors++;
       assert.true(
-        guardMessageMatches(error, [/label/i, /required|exactly|either/i]),
+        error.message.endsWith(
+          'd-tabs: tab "unlabelled" needs either @label or a <:label> block, and not both'
+        ),
         "the assertion identifies the missing tab label"
       );
     });
@@ -1413,10 +1657,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     setupOnerror((error) => {
       errors++;
       assert.true(
-        guardMessageMatches(error, [
-          /header|Tablist|tablist/i,
-          /required|place|render|missing/i,
-        ]),
+        error.message.endsWith(
+          "d-tabs: no tablist rendered — a <:header> block must place the yielded Tablist"
+        ),
         "the assertion identifies the missing header Tablist"
       );
     });
@@ -1476,6 +1719,50 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       1,
       "non-tab declaration content raises exactly one assertion"
     );
+    resetOnerror();
+  });
+
+  test("rejects a role tab impostor inserted after mount", async function (assert) {
+    class ImpostorState {
+      @tracked show = false;
+    }
+
+    const expectedMessage =
+      "the declaration block may contain only tab declarations — found unexpected content in the tablist";
+    const state = new ImpostorState();
+    const onActivate = sinon.spy();
+    let errors = 0;
+    setupOnerror((error) => {
+      errors++;
+      assert.true(
+        error.message.endsWith(expectedMessage),
+        "the assertion identifies the inserted tab impostor"
+      );
+    });
+
+    await render(
+      <template>
+        <DTabs
+          @active="valid"
+          @label="Late impostor"
+          @onActivate={{onActivate}}
+          as |tabs|
+        >
+          <tabs.Tab @id="valid" @label="Valid">Panel</tabs.Tab>
+          {{! eslint-disable ember/template-require-context-role }}
+          {{#if state.show}}<button
+              role="tab"
+              type="button"
+            >Impostor</button>{{/if}}
+          {{! eslint-enable ember/template-require-context-role }}
+        </DTabs>
+      </template>
+    );
+
+    state.show = true;
+    await settled();
+
+    assert.strictEqual(errors, 1, "a late tab impostor raises one assertion");
     resetOnerror();
   });
 
@@ -1618,7 +1905,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     resetOnerror();
   });
 
-  test("keeps the active tab inside an overflowing strip", async function (assert) {
+  test("overflow strip: keeps the active tab inside the viewport", async function (assert) {
     const ids = ["one", "two", "three", "four", "five", "six"];
     const state = new TabsState("six");
     const onActivate = (id) => (state.active = id);
@@ -1676,14 +1963,60 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     );
   });
 
-  test("exposes the strip's overflow state for the edge fades", async function (assert) {
+  test("overflow strip: reveals a tab partially hidden at the start edge", async function (assert) {
+    const ids = Array.from({ length: 8 }, (_, index) => `tab-${index + 1}`);
+    const state = new TabsState(ids[ids.length - 1]);
+    const onActivate = (id) => (state.active = id);
+
+    await render(
+      <template>
+        <div style="width: 200px">
+          <DTabs
+            @active={{state.active}}
+            @label="Start-edge reveal"
+            @onActivate={{onActivate}}
+            as |tabs|
+          >
+            {{#each ids as |id|}}
+              <tabs.Tab
+                style="flex: 0 0 80px"
+                @id={{id}}
+                @label={{id}}
+              >Panel</tabs.Tab>
+            {{/each}}
+          </DTabs>
+        </div>
+      </template>
+    );
+    await nextFrame();
+
+    const tablist = find('[role="tablist"]');
+    const tabs = requireTabs(assert, ids.length);
+    const target = tabs[3];
+    const targetStart = layoutOffset(target) - layoutOffset(tablist);
+    const paddingStart =
+      Number.parseFloat(getComputedStyle(tablist).scrollPaddingLeft) || 0;
+    tablist.scrollLeft = targetStart + target.offsetWidth / 2;
+    assert.true(
+      target.getBoundingClientRect().left <
+        tablist.getBoundingClientRect().left,
+      "the target starts partially hidden at the physical start edge"
+    );
+
+    state.active = ids[3];
+    await settled();
+
+    assert.strictEqual(
+      tablist.scrollLeft,
+      targetStart - paddingStart,
+      "reveal aligns the measured tab start clear of measured scroll padding"
+    );
+  });
+
+  test("overflow strip: exposes overflow state for the edge fades", async function (assert) {
     const ids = ["one", "two", "three", "four", "five", "six"];
     const state = new TabsState("one");
     const onActivate = (id) => (state.active = id);
-    const nextFrame = () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      );
 
     await render(
       <template>
@@ -1732,10 +2065,6 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     const ids = Array.from({ length: 10 }, (_, index) => `tab-${index + 1}`);
     const state = new TabsState(ids[0]);
     const onActivate = (id) => (state.active = id);
-    const nextFrame = () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      );
 
     await render(
       <template>
@@ -1788,10 +2117,6 @@ module("Integration | ui-kit | DTabs", function (hooks) {
   test("overflow strip: a fitting tablist renders no buttons", async function (assert) {
     const ids = ["one", "two"];
     const onActivate = sinon.spy();
-    const nextFrame = () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      );
 
     await render(
       <template>
@@ -1828,10 +2153,6 @@ module("Integration | ui-kit | DTabs", function (hooks) {
   test("overflow strip: a bounded vertical tablist renders a down button", async function (assert) {
     const ids = Array.from({ length: 6 }, (_, index) => `tab-${index + 1}`);
     const onActivate = sinon.spy();
-    const nextFrame = () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      );
 
     await render(
       <template>
@@ -1869,10 +2190,6 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     const ids = Array.from({ length: 10 }, (_, index) => `tab-${index + 1}`);
     const state = new TabsState(ids[ids.length - 1]);
     const onActivate = (id) => (state.active = id);
-    const nextFrame = () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve))
-      );
     const pageScroll = window.scrollY;
 
     document.documentElement.classList.add("rtl");

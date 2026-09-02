@@ -20,13 +20,19 @@ export interface ScrollEdgeState {
  * behind `overflow: hidden` never counts as scrollable.
  */
 export interface ScrollEdgesSnapshot {
+  /** The horizontal axis, or `null` when the container cannot scroll on it. */
   horizontal: ScrollEdgeState | null;
+  /** The vertical axis, or `null` when the container cannot scroll on it. */
   vertical: ScrollEdgeState | null;
   /** The axis whose state is stamped on the element, if any axis can scroll. */
   primary: ScrollAxis | null;
 }
 
-/** A scroll offset this close to an edge counts as resting on it. */
+/**
+ * Slack in pixels: an offset this close to an edge counts as resting on it,
+ * and content that outgrows the viewport by no more than this does not
+ * count as overflowing.
+ */
 const EDGE_TOLERANCE = 2;
 
 function isScrollable(overflow: string) {
@@ -34,7 +40,7 @@ function isScrollable(overflow: string) {
 }
 
 /** Reads which axes the container's computed overflow lets it scroll on. */
-export function scrollableAxes(element: HTMLElement): ScrollableAxes {
+function scrollableAxes(element: HTMLElement): ScrollableAxes {
   const { overflowX, overflowY } = getComputedStyle(element);
   return {
     horizontal: isScrollable(overflowX),
@@ -46,7 +52,7 @@ export function scrollableAxes(element: HTMLElement): ScrollableAxes {
  * Measures one axis. Offsets are read as magnitudes, so a right-to-left
  * container reports the same logical edges as a left-to-right one.
  */
-export function measureScrollEdges(
+function measureScrollEdges(
   element: HTMLElement,
   axis: ScrollAxis
 ): ScrollEdgeState {
@@ -69,10 +75,7 @@ export function measureScrollEdges(
  * `data-d-scroll-overflow`, `data-d-scroll-at-start`, `data-d-scroll-at-end`
  * are present while true.
  */
-export function stampScrollEdges(
-  element: HTMLElement,
-  snapshot: ScrollEdgesSnapshot
-) {
+function stampScrollEdges(element: HTMLElement, snapshot: ScrollEdgesSnapshot) {
   const { primary } = snapshot;
   const state = primary ? snapshot[primary] : null;
 
@@ -87,11 +90,11 @@ export function stampScrollEdges(
 }
 
 /**
- * Measures every scrollable axis. An explicit axis reports only itself;
- * otherwise the primary axis is the first scrollable one that overflows,
- * horizontal first, falling back to the first scrollable one.
+ * Measures every scrollable axis. An explicit axis reports only itself. In
+ * `"auto"`, the primary axis is the first scrollable axis that overflows,
+ * horizontal before vertical, else the first scrollable axis.
  */
-export function snapshotScrollEdges(
+function snapshotScrollEdges(
   element: HTMLElement,
   axis: ScrollAxis | "auto",
   scrollable: ScrollableAxes = scrollableAxes(element)
@@ -168,7 +171,6 @@ export class ScrollEdgesWatcher {
 
   #measure = () => {
     const scrollable = this.#scrollable ?? scrollableAxes(this.#element);
-    this.#scrollable = scrollable;
     const snapshot = snapshotScrollEdges(this.#element, this.#axis, scrollable);
     if (this.#last && sameSnapshot(this.#last, snapshot)) {
       return;

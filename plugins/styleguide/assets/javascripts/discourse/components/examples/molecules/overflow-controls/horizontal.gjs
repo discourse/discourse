@@ -16,9 +16,7 @@ const SECTIONS = [
 ];
 
 export default <template>
-  <div
-    class="styleguide-overflow-controls styleguide-overflow-controls--narrow"
-  >
+  <div class="styleguide-overflow-controls --narrow">
     <DOverflowControls @class="styleguide-overflow-controls__strip">
       {{#each SECTIONS as |section|}}
         <span class="styleguide-overflow-controls__chip">{{section}}</span>

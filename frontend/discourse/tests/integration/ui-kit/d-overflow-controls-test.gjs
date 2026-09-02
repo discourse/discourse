@@ -25,6 +25,8 @@ const EDGE_BUTTON_CLASSES = {
 
 class ConditionalScrollerState {
   @tracked show = false;
+
+  scrollToEnd = (element) => (element.scrollLeft = element.scrollWidth);
 }
 
 class RevealState {
@@ -55,6 +57,10 @@ function layoutOffset(element) {
   }
 
   return { x, y };
+}
+
+function stubReducedMotion(matches) {
+  return sinon.stub(window, "matchMedia").returns({ matches });
 }
 
 async function scrollTo(selector, props) {
@@ -150,6 +156,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
   });
 
   test("clamps button scroll targets to the content edges", async function (assert) {
+    const matchMediaStub = stubReducedMotion(false);
     await render(
       <template>
         <DOverflowControls style="width: 100px; overflow-x: auto">
@@ -177,9 +184,11 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       { left: 0, behavior: "smooth" },
       "backward tap targets the start instead of overshooting"
     );
+    matchMediaStub.restore();
   });
 
   test("targets only the tapped axis when both axes overflow", async function (assert) {
+    const matchMediaStub = stubReducedMotion(false);
     await render(
       <template>
         {{! scrollbar-width: none keeps offset sizes exact across platforms }}
@@ -213,6 +222,32 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       { top: 150, behavior: "smooth" },
       "vertical tap targets the vertical axis only"
     );
+    matchMediaStub.restore();
+  });
+
+  test("uses instant scrolling when reduced motion is preferred", async function (assert) {
+    const matchMediaStub = stubReducedMotion(true);
+
+    await render(
+      <template>
+        <DOverflowControls style="width: 100px; overflow-x: auto">
+          <div style="width: 500px; height: 20px"></div>
+        </DOverflowControls>
+      </template>
+    );
+
+    const content = find(".d-overflow-controls__content");
+    let target;
+    content.scrollTo = (options) => (target = options);
+
+    await click(".d-overflow-controls__btn.--right");
+
+    assert.deepEqual(
+      target,
+      { left: content.clientWidth, behavior: "instant" },
+      "a click respects the reduced-motion preference"
+    );
+    matchMediaStub.restore();
   });
 
   test("applies consumer classes and attributes", async function (assert) {
@@ -418,9 +453,23 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     assert
       .dom(".d-overflow-controls__btn.--right.consumer-right")
       .exists("the right edge receives only its class");
+    for (const className of ["consumer-left", "consumer-up", "consumer-down"]) {
+      assert
+        .dom(".d-overflow-controls__btn.--right")
+        .doesNotHaveClass(className, `the right edge excludes ${className}`);
+    }
     assert
       .dom(".d-overflow-controls__btn.--down.consumer-down")
       .exists("the bottom edge receives only its class");
+    for (const className of [
+      "consumer-left",
+      "consumer-right",
+      "consumer-up",
+    ]) {
+      assert
+        .dom(".d-overflow-controls__btn.--down")
+        .doesNotHaveClass(className, `the bottom edge excludes ${className}`);
+    }
 
     const content = find(".d-overflow-controls__content");
     await scrollTo(".d-overflow-controls__content", {
@@ -432,9 +481,27 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     assert
       .dom(".d-overflow-controls__btn.--left.consumer-left")
       .exists("the left edge receives only its class");
+    for (const className of [
+      "consumer-right",
+      "consumer-up",
+      "consumer-down",
+    ]) {
+      assert
+        .dom(".d-overflow-controls__btn.--left")
+        .doesNotHaveClass(className, `the left edge excludes ${className}`);
+    }
     assert
       .dom(".d-overflow-controls__btn.--up.consumer-up")
       .exists("the top edge receives only its class");
+    for (const className of [
+      "consumer-left",
+      "consumer-right",
+      "consumer-down",
+    ]) {
+      assert
+        .dom(".d-overflow-controls__btn.--up")
+        .doesNotHaveClass(className, `the top edge excludes ${className}`);
+    }
   });
 
   test("overflow strip: touch skips hold while mouse hold scrolls continuously", async function (assert) {
@@ -457,8 +524,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "touch",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
     await nextFrame();
     await nextFrame();
 
@@ -488,9 +553,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "mouse",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
-
     await nextFrame();
 
     assert.true(content.scrollLeft > 0, "the hold advances the content");
@@ -591,6 +653,53 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     assert.strictEqual(window.scrollY, pageScroll, "the page does not move");
   });
 
+  test("overflow strip: reveal leaves a fully visible horizontal item in place", async function (assert) {
+    const state = new RevealState();
+
+    await render(
+      <template>
+        <DOverflowControls
+          style="width: 160px; overflow-x: auto; white-space: nowrap"
+          @axis="horizontal"
+          as |strip|
+        >
+          <button
+            class="visible-reveal-target"
+            style="display: inline-block; width: 80px"
+            type="button"
+            {{didInsert (fn state.capture strip)}}
+          >Visible target</button>
+          <span
+            style="display: inline-block; width: 320px; height: 20px"
+          ></span>
+        </DOverflowControls>
+      </template>
+    );
+    await nextFrame();
+
+    const content = find(".d-overflow-controls__content");
+    const target = find(".visible-reveal-target");
+    const contentRect = content.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    assert.true(
+      targetRect.left >= contentRect.left,
+      "the measured target starts after the viewport's leading edge"
+    );
+    assert.true(
+      targetRect.right <= contentRect.right,
+      "the measured target ends before the viewport's trailing edge"
+    );
+
+    const scrollToSpy = sinon.spy();
+    content.scrollTo = scrollToSpy;
+    state.strip.reveal(target);
+
+    assert.true(
+      scrollToSpy.notCalled,
+      "revealing an already visible item does not request any scroll"
+    );
+  });
+
   test("overflow strip: a scroller mounted later inside a conditional is observed", async function (assert) {
     const state = new ConditionalScrollerState();
 
@@ -634,7 +743,105 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       .exists("the late scroller receives a trailing button");
   });
 
-  test("overflow strip (review): hold stops when the window loses focus", async function (assert) {
+  test("overflow strip: removes buttons when an owned scroller unmounts", async function (assert) {
+    const state = new ConditionalScrollerState();
+    state.show = true;
+
+    await render(
+      <template>
+        <DOverflowControls
+          @axis="horizontal"
+          @ownedScroller={{true}}
+          as |strip|
+        >
+          {{#if state.show}}
+            <div
+              class="conditional-scroller"
+              style="width: 100px; overflow-x: auto"
+              {{strip.scroller}}
+            >
+              <div style="width: 500px; height: 20px"></div>
+            </div>
+          {{/if}}
+        </DOverflowControls>
+      </template>
+    );
+    await nextFrame();
+    assert
+      .dom(".d-overflow-controls__btn.--right")
+      .exists("the overflowing owned scroller initially has a button");
+
+    state.show = false;
+    await settled();
+    await nextFrame();
+
+    assert
+      .dom(".d-overflow-controls__btn")
+      .doesNotExist("unmounting the owned scroller removes its buttons");
+  });
+
+  test("overflow strip: replaces edge state when owned scrollers swap", async function (assert) {
+    const state = new ConditionalScrollerState();
+    state.show = true;
+
+    await render(
+      <template>
+        <DOverflowControls
+          @axis="horizontal"
+          @ownedScroller={{true}}
+          as |strip|
+        >
+          {{#if state.show}}
+            <div
+              class="first-conditional-scroller"
+              style="width: 100px; overflow-x: auto"
+              {{strip.scroller}}
+            >
+              <div style="width: 500px; height: 20px"></div>
+            </div>
+          {{else}}
+            <div
+              class="second-conditional-scroller"
+              style="width: 100px; overflow-x: auto"
+              {{didInsert state.scrollToEnd}}
+              {{strip.scroller}}
+            >
+              <div style="width: 500px; height: 20px"></div>
+            </div>
+          {{/if}}
+        </DOverflowControls>
+      </template>
+    );
+    await nextFrame();
+
+    assert
+      .dom(".d-overflow-controls__btn.--right")
+      .exists("the first scroller starts with only the trailing button");
+    assert
+      .dom(".d-overflow-controls__btn.--left")
+      .doesNotExist("the first scroller has no leading button");
+
+    state.show = false;
+    await settled();
+    await nextFrame();
+
+    assert
+      .dom(".first-conditional-scroller")
+      .doesNotExist("the first owned scroller unmounts during the swap");
+    assert
+      .dom(".second-conditional-scroller")
+      .exists("the second owned scroller mounts during the same render");
+    assert
+      .dom(".d-overflow-controls__btn.--left")
+      .exists("the second scroller at its end has a leading button");
+    assert
+      .dom(".d-overflow-controls__btn.--right")
+      .doesNotExist(
+        "the first scroller's stale trailing flag does not survive"
+      );
+  });
+
+  test("overflow strip: hold stops when the window loses focus", async function (assert) {
     await render(
       <template>
         <DOverflowControls style="width: 100px; overflow-x: auto">
@@ -654,8 +861,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "mouse",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
     await nextFrame();
     await nextFrame();
 
@@ -678,7 +883,96 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     );
   });
 
-  test("overflow strip (review): scrolling does not reread computed styles", async function (assert) {
+  test("overflow strip: a touch click is not swallowed after blur ends a mouse hold", async function (assert) {
+    await render(
+      <template>
+        <DOverflowControls style="width: 100px; overflow-x: auto">
+          <div style="width: 500px; height: 20px"></div>
+        </DOverflowControls>
+      </template>
+    );
+    await nextFrame();
+
+    const content = find(".d-overflow-controls__content");
+    const button = find(".d-overflow-controls__btn.--right");
+    stubPointerCapture(button);
+
+    await triggerEvent(button, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      isPrimary: true,
+      pointerType: "mouse",
+    });
+
+    await nextFrame();
+    await nextFrame();
+    await triggerEvent(window, "blur");
+
+    await triggerEvent(button, "pointerdown", {
+      button: 0,
+      pointerId: 2,
+      isPrimary: true,
+      pointerType: "touch",
+    });
+    await triggerEvent(button, "pointerup", {
+      button: 0,
+      pointerId: 2,
+      isPrimary: true,
+      pointerType: "touch",
+    });
+
+    const scrollToSpy = sinon.spy();
+    content.scrollTo = scrollToSpy;
+    await click(button);
+
+    assert.strictEqual(
+      scrollToSpy.callCount,
+      1,
+      "the touch click scrolls once after blur cancels the mouse hold"
+    );
+  });
+
+  test("overflow strip: a click is not swallowed after pointercancel ends a mouse hold", async function (assert) {
+    await render(
+      <template>
+        <DOverflowControls style="width: 100px; overflow-x: auto">
+          <div style="width: 500px; height: 20px"></div>
+        </DOverflowControls>
+      </template>
+    );
+    await nextFrame();
+
+    const content = find(".d-overflow-controls__content");
+    const button = find(".d-overflow-controls__btn.--right");
+    stubPointerCapture(button);
+
+    await triggerEvent(button, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      isPrimary: true,
+      pointerType: "mouse",
+    });
+    await nextFrame();
+    await nextFrame();
+    await triggerEvent(button, "pointercancel", {
+      button: 0,
+      pointerId: 1,
+      isPrimary: true,
+      pointerType: "mouse",
+    });
+
+    const scrollToSpy = sinon.spy();
+    content.scrollTo = scrollToSpy;
+    await click(button);
+
+    assert.strictEqual(
+      scrollToSpy.callCount,
+      1,
+      "the click scrolls once after pointercancel ends the mouse hold"
+    );
+  });
+
+  test("overflow strip: scrolling does not reread computed styles", async function (assert) {
     await render(
       <template>
         <DOverflowControls style="width: 100px; overflow-x: auto">
@@ -689,6 +983,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     await nextFrame();
 
     const getComputedStyleSpy = sinon.spy(window, "getComputedStyle");
+    const content = find(".d-overflow-controls__content");
 
     try {
       for (const scrollLeft of [50, 100, 150]) {
@@ -697,7 +992,9 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       }
 
       assert.strictEqual(
-        getComputedStyleSpy.callCount,
+        getComputedStyleSpy
+          .getCalls()
+          .filter((call) => call.args[0] === content).length,
         0,
         "scrolling remeasures geometry without rereading scrollability"
       );
@@ -706,7 +1003,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     }
   });
 
-  test("overflow strip (review): rejects a second concurrent owned scroller", async function (assert) {
+  test("overflow strip: rejects a second concurrent owned scroller", async function (assert) {
     const expectedMessage =
       "d-overflow-controls: strip.scroller was applied to a second element while another scroller is still mounted";
     let errors = 0;
@@ -735,7 +1032,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     resetOnerror();
   });
 
-  test("overflow strip (review): percentage scroll padding uses the scrollport", async function (assert) {
+  test("overflow strip: percentage scroll padding uses the scrollport", async function (assert) {
     const state = new RevealState();
 
     await render(
@@ -789,7 +1086,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     );
   });
 
-  test("overflow strip (review): a second pointer's release does not end another pointer's hold", async function (assert) {
+  test("overflow strip: a second pointer's release does not end another pointer's hold", async function (assert) {
     await render(
       <template>
         <DOverflowControls style="width: 100px; overflow-x: auto">
@@ -809,8 +1106,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "mouse",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
     await nextFrame();
     await nextFrame();
 
@@ -863,7 +1158,7 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     );
   });
 
-  test("overflow strip (review): a second pointer's press does not replace an active hold", async function (assert) {
+  test("overflow strip: a second pointer's press does not replace an active hold", async function (assert) {
     await render(
       <template>
         <DOverflowControls style="width: 100px; overflow-x: auto">
@@ -884,8 +1179,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "mouse",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
     await nextFrame();
     await nextFrame();
 
@@ -900,8 +1193,6 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
       isPrimary: true,
       pointerType: "pen",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
     const offsetAfterPenPress = content.scrollLeft;
     await nextFrame();
     await nextFrame();

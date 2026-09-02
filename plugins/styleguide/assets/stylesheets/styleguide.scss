@@ -1043,11 +1043,11 @@
     padding: var(--space-3);
   }
 
-  &--narrow {
+  &.--narrow {
     max-width: 360px;
   }
 
-  &--vertical {
+  &.--vertical {
     .d-tabs {
       flex-direction: row;
       gap: var(--space-3);
@@ -1066,7 +1066,7 @@
 }
 
 .styleguide-overflow-controls {
-  &--narrow {
+  &.--narrow {
     max-width: 360px;
   }
 

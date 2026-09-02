@@ -1,6 +1,6 @@
 import type { ComponentLike, ModifierLike } from "@glint/template";
 
-/** Navigation axis of the tab strip. A tablist is one-dimensional. */
+/** The arrow-key axis of the tab strip. */
 export type DTabsOrientation = "horizontal" | "vertical";
 
 /**
@@ -10,10 +10,10 @@ export type DTabsOrientation = "horizontal" | "vertical";
  * never see it because the curried parts erase the `tabs` argument.
  */
 export interface DTabsEngine {
-  /** The controlled active tab id, read live from the core's args. */
+  /** The controlled active tab id. */
   readonly active: string | undefined;
 
-  /** The tablist's accessible name, read live from the core's args. */
+  /** The tablist's accessible name. */
   readonly label: string;
 
   /** The resolved orientation, defaulted to `"horizontal"`. */
@@ -59,16 +59,16 @@ export interface DTabsEngine {
 /**
  * What the default block receives: the tab declaration part.
  *
- * Typed as the CONSUMER surface — the curried engine argument is omitted
- * outright rather than merely optional, so a consumer cannot cross-wire a
- * tab into another group's registry through the type system.
+ * Typed as the consumer surface. The curried engine argument is omitted,
+ * not optional, so a consumer cannot wire a tab into another group's
+ * registry.
  */
 export interface DTabsBag {
   /** Declares one tab: its strip button and its panel content together. */
   Tab: ComponentLike<{
-    Element: HTMLButtonElement;
-    Args: { id: string; label?: string; disabled?: boolean };
-    Blocks: { default: []; label: [] };
+    Element: DTabsTabSignature["Element"];
+    Args: Omit<DTabsTabSignature["Args"], "tabs">;
+    Blocks: DTabsTabSignature["Blocks"];
   }>;
 }
 
@@ -76,9 +76,10 @@ export interface DTabsBag {
 export interface DTabsHeaderBag {
   /**
    * The real tablist element, pre-wired with the keyboard engine. A header
-   * block must place it exactly once; the tab buttons render inside it.
+   * block must place it exactly once and keep it in that place: moving it
+   * between branches remounts every tab and the active panel content.
    */
-  Tablist: ComponentLike<{ Element: HTMLDivElement }>;
+  Tablist: ComponentLike<{ Element: DTabsTablistSignature["Element"] }>;
 }
 
 export interface DTabsSignature {
@@ -88,14 +89,16 @@ export interface DTabsSignature {
     /**
      * The id of the selected tab. Controlled only: the component holds no
      * selection state and never picks a fallback. `undefined`, or an id no
-     * declared tab carries, selects nothing and leaves the panel empty.
+     * declared tab carries, selects nothing and leaves the panel empty. The
+     * argument is required, so a typed consumer with nothing selected
+     * passes `undefined` explicitly.
      */
     active: string | undefined;
 
     /**
-     * Called with the id of the tab the user activates, through click,
-     * Enter, or Space. Nothing changes until the owner feeds the id back
-     * through `@active`.
+     * Called with the id of the tab the user activates. Activation is
+     * manual: arrow keys only move focus, and a tab is selected by click,
+     * Enter, or Space.
      */
     onActivate: (id: string) => void;
 
@@ -120,15 +123,15 @@ export interface DTabsSignature {
     default: [tabs: DTabsBag];
 
     /**
-     * Replaces the default strip row. The block lays out its own row and
-     * must place the yielded `Tablist` part, which carries the tabs, the
-     * keyboard surface, and the ARIA container all at once. With this
-     * block present, the tabs move to an explicit `<:default>` block.
+     * Replaces the default strip row. The block must place the yielded
+     * `Tablist` exactly once; the tabs render inside it. With this block
+     * present, the tabs go in an explicit `<:default>` block.
      */
     header: [header: DTabsHeaderBag];
   };
 }
 
+/** The signature of the curried `Tab` part. */
 export interface DTabsTabSignature {
   /** The real tab button; splattributes and modifiers land on it. */
   Element: HTMLButtonElement;
@@ -136,7 +139,7 @@ export interface DTabsTabSignature {
     /** The engine of the owning group, curried by the core. */
     tabs: DTabsEngine;
 
-    /** Stable identity for selection and DOM id derivation. Unique. */
+    /** Stable identity for selection and DOM ids. Unique within the group. */
     id: string;
 
     /**
@@ -146,8 +149,8 @@ export interface DTabsTabSignature {
     label?: string;
 
     /**
-     * Announces the tab as unavailable while keeping it focusable, so it
-     * stays discoverable; it is never activated.
+     * Announces the tab as unavailable. It stays focusable so it stays
+     * discoverable, but it never activates.
      */
     disabled?: boolean;
   };
@@ -160,6 +163,7 @@ export interface DTabsTabSignature {
   };
 }
 
+/** The signature of the curried `Tablist` part. */
 export interface DTabsTablistSignature {
   /** The tablist element itself; splattributes land on it. */
   Element: HTMLDivElement;

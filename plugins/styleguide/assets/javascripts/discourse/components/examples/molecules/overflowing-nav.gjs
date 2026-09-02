@@ -15,9 +15,7 @@ const SECTIONS = [
 ];
 
 export default <template>
-  <div
-    class="styleguide-overflow-controls styleguide-overflow-controls--narrow"
-  >
+  <div class="styleguide-overflow-controls --narrow">
     <DHorizontalOverflowNav @ariaLabel="Overflowing sections">
       {{#each SECTIONS as |section index|}}
         <li>

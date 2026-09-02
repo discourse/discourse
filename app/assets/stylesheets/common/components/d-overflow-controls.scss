@@ -1,7 +1,10 @@
 .d-overflow-controls {
   --fade-width: 2rem;
   --fade-color: var(--secondary);
-  --d-overflow-controls-btn-size: 1.5em;
+
+  // rem, because the button and the scroller resolve the value separately
+  // and their font sizes can differ.
+  --d-overflow-controls-btn-size: 1.5rem;
   position: relative;
   min-width: 0;
   min-height: 0;

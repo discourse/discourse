@@ -21,7 +21,7 @@ interface DHorizontalOverflowNavSignature {
     className?: string;
   };
 
-  /** The list element; consumers yield its `li` children. */
+  /** The list element. Consumers yield its `li` children. */
   Element: HTMLUListElement;
 
   Blocks: {
@@ -32,16 +32,17 @@ interface DHorizontalOverflowNavSignature {
 
 /**
  * A navigation bar whose pills scroll sideways when they outgrow it, built
- * on `DOverflowControls`: edge fades, chevrons that scroll a viewport per
- * click or continuously while held, and the active item brought into view
- * on mount. Consumers yield bare `li` elements; the list keeps the
- * `nav-pills` styling contract and receives every attribute.
+ * on `DOverflowControls`: edge fades, chevrons, press-and-hold, and the
+ * active item revealed on mount.
+ *
+ * Consumers yield bare `li` elements. The list keeps the `nav-pills`
+ * styling contract and receives every attribute.
  */
 export default class DHorizontalOverflowNav extends Component<DHorizontalOverflowNavSignature> {
   /**
-   * Reveals the active item once, centred in the strip. When the list is
-   * still empty on mount, which a portal-filled list is, it waits for the
-   * first children and reveals then.
+   * Reveals the active item once, centered in the strip. When no active
+   * item exists on mount, as in a portal-filled list, it watches the list
+   * and reveals the first one that appears.
    */
   revealActive = modifier(
     (list: HTMLElement, [strip]: [strip: DOverflowControlsBag]) => {

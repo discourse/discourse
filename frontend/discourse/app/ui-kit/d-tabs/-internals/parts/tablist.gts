@@ -8,10 +8,11 @@ import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
  * The tablist element: the keyboard surface and ARIA container the group's
  * tab buttons render into.
  *
- * It renders empty; the core portals the declaration block inside it, which
- * is what lets a `<:header>` block place this element anywhere while the
- * tabs still land in it. The tabs pattern's roles are withheld while no tab
- * is registered, because an empty tablist violates its required contents.
+ * It renders empty. The core portals the declaration block into it, so a
+ * `<:header>` block can place it anywhere.
+ *
+ * The tablist role is withheld while no tab is registered, because an
+ * empty tablist violates its required contents.
  */
 export default class Tablist extends Component<DTabsTablistSignature> {
   get isVertical() {

@@ -9,9 +9,8 @@ import type { DTabsTabSignature } from "discourse/ui-kit/d-tabs/types";
  * One declared tab: the strip button and the panel content, together.
  *
  * The button renders in place. The group portals the declaration block into
- * the tablist, so declaration order is strip order. The panel content takes
- * the opposite trip: while the tab is active its block renders into the
- * group's persistent tabpanel, and unmounts when another tab takes over.
+ * the tablist, so declaration order is strip order. While the tab is active,
+ * its panel content portals into the group's tabpanel.
  */
 export default class Tab extends Component<DTabsTabSignature> {
   get domId() {
@@ -23,9 +22,9 @@ export default class Tab extends Component<DTabsTabSignature> {
   }
 
   /**
-   * The only guard against pointer activation of a disabled tab: the
-   * keyboard engine refuses Enter and Space on its own, but it leaves the
-   * events un-prevented, so the browser still synthesizes a click.
+   * The only guard for a disabled tab. The keyboard engine refuses Enter
+   * and Space but does not prevent them, so the browser still synthesizes
+   * a click here.
    */
   @action
   click() {
@@ -37,8 +36,8 @@ export default class Tab extends Component<DTabsTabSignature> {
   }
 
   /**
-   * Invoked as a helper so the template can hand over what the class cannot
-   * see: whether a label block was given.
+   * Called from the template as a helper, because only the template knows
+   * whether a label block was given.
    */
   @action
   checkLabel(hasLabelBlock: boolean) {
@@ -46,9 +45,8 @@ export default class Tab extends Component<DTabsTabSignature> {
   }
 
   <template>
-    {{! Splattributes come first so the structural attributes below them
-        always win: a consumer id or role would otherwise sever the ARIA
-        pairing the group derives from these. }}
+    {{! Splattributes come first so the attributes below win. A consumer id
+        or role would sever the ARIA pairing. }}
     <button
       class="d-tabs__tab"
       ...attributes

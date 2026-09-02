@@ -91,20 +91,20 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 
 ## Page chrome and layout
 
-| Primitive                                               | Use it for                                                                                                                                  | Styleguide                                                                             |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `DPageHeader`, `DPageSubheader`                         | Titles, breadcrumbs, tabs, and actions of an admin or settings page.                                                                        |                                                                                        |
-| `DBreadcrumbsContainer`, `DBreadcrumbsItem`             | Breadcrumb trails registered from routes.                                                                                                   | [Breadcrumbs](https://meta.discourse.org/styleguide/molecules/bread-crumbs)            |
-| `DNavItem`, `DNavigationItem`, `DHorizontalOverflowNav` | Navigation bars; the overflow nav is built on `DOverflowControls`.                                                                          | [Navigation bar](https://meta.discourse.org/styleguide/molecules/navigation-bar)       |
-| `DOverflowControls`                                     | A strip that scrolls on one axis with edge fades, chevrons, press-and-hold, and a reveal of one item; the nav and the tab strip consume it. | [Overflow controls](https://meta.discourse.org/styleguide/molecules/overflow-controls) |
-| `DTabs`                                                 | Tab panels switched in place, with the strip, keyboard cursor, and ARIA pairing built in.                                                   | [Tabs](https://meta.discourse.org/styleguide/molecules/tabs)                           |
-| `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.                                                                  |                                                                                        |
-| `DVirtualList`                                          | Long lists that render only the rows in view.                                                                                               | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)           |
-| `DStatTiles`                                            | Rows of headline numbers.                                                                                                                   |                                                                                        |
-| `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                                                                                  |                                                                                        |
-| `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                                       |                                                                                        |
-| `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                                     | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
-| `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                                    |                                                                                        |
+| Primitive                                               | Use it for                                                                                                                     | Styleguide                                                                             |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `DPageHeader`, `DPageSubheader`                         | Titles, breadcrumbs, tabs, and actions of an admin or settings page.                                                           |                                                                                        |
+| `DBreadcrumbsContainer`, `DBreadcrumbsItem`             | Breadcrumb trails registered from routes.                                                                                      | [Breadcrumbs](https://meta.discourse.org/styleguide/molecules/bread-crumbs)            |
+| `DNavItem`, `DNavigationItem`, `DHorizontalOverflowNav` | Navigation bars; the overflow nav is built on `DOverflowControls`.                                                             | [Navigation bar](https://meta.discourse.org/styleguide/molecules/navigation-bar)       |
+| `DOverflowControls`                                     | Scrollable strips with edge fades, chevrons on whichever edges can still scroll, press-and-hold, and a way to reveal one item. | [Overflow controls](https://meta.discourse.org/styleguide/molecules/overflow-controls) |
+| `DTabs`                                                 | Tab panels switched in place, with the strip, keyboard cursor, and ARIA pairing built in.                                      | [Tabs](https://meta.discourse.org/styleguide/molecules/tabs)                           |
+| `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.                                                     |                                                                                        |
+| `DVirtualList`                                          | Long lists that render only the rows in view.                                                                                  | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)           |
+| `DStatTiles`                                            | Rows of headline numbers.                                                                                                      |                                                                                        |
+| `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                                                                     |                                                                                        |
+| `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                          |                                                                                        |
+| `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                        | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
+| `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                       |                                                                                        |
 
 ## Loading, empty, and feedback states
 
@@ -151,6 +151,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `d-roving-focus`                                                                  | Arrow-key navigation over a group of items (a toolbar, listbox, menu, or tree) with a single tab stop, via roving tabindex or `aria-activedescendant`. See [Roving focus](https://meta.discourse.org/styleguide/molecules/roving-focus). |
 | `d-close-on-click-outside`                                                        | Dismiss an overlay when the user clicks elsewhere.                                                                                                                                                                                       |
 | `d-on-resize`, `d-observe-intersection`, `d-scroll-into-view`                     | React to layout and visibility.                                                                                                                                                                                                          |
+| `d-scroll-edges`                                                                  | Stamp a scroll container's overflow and edge state as data attributes, for a strip that brings its own chrome. Pair it with the `scroll-strip` stylesheet mixin, which paints the edge fades from those attributes.                      |
 | `d-autocomplete`                                                                  | Attach an autocomplete popup to a text input.                                                                                                                                                                                            |
 | `d-swipe`, `d-pointer-drag`, `d-resize-edge`, `d-drag-dwell`, `d-drag-and-drop-*` | Gestures. See [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md).                                                                                                                                                 |
 
@@ -183,7 +184,7 @@ ui-kit/
       constants.ts                 # values shared by more than one collaborator
       engine/                      # the headless logic: state, algebra, resolution
       coordinators/                # non-rendering classes the component constructs once
-      parts/                       # rendering subcomponents that add no wrapper DOM
+      parts/                       # rendering subcomponents that own part of the public DOM
       modifiers/                   # element-attached behaviour private to this primitive
   modifiers/
     d-gesture.ts                   # a modifier entry follows the same shape
@@ -197,11 +198,11 @@ Use the buckets that apply; a two-file split needs only `types.ts`. What goes wh
 - **`types.ts`** holds every interface, including the ones the entry re-exports as public API. It is the documentation home for the argument reference, so the entry's `Args` block can point at it.
 - **`-internals/engine/`** is the headless layer: state, filtering, the move or selection algebra, value resolution. It has no DOM and no component reference, which is what makes it unit-testable on its own.
 - **`-internals/coordinators/`** are plain classes the component constructs once and configures downward with thunks (`() => this.args.x`); they never hold a reference back to the component. Announcers, menu coordinators, and load-feedback timers live here.
-- **`-internals/parts/`** are the rendering subcomponents. They receive the stable helper objects (the engine, a presenter) plus per-slot inputs, and add no wrapper DOM of their own.
+- **`-internals/parts/`** are the rendering subcomponents. They receive the stable helper objects (the engine, a presenter) plus per-slot inputs, and render the elements of the primitive's public DOM, the ones its stylesheet and tests target. They add no wrapper beyond that contract.
 - **`-internals/constants.ts`** exists so two collaborators that must agree on a value (a menu identifier, a selector) import it rather than restating it.
 - **`README.md`** explains the split: what each collaborator owns, the invariants that cross files, and the design decisions a future reader would otherwise undo.
 
-Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (cursor navigation, for example), still off-limits to consumers.
+Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers.
 
 # Blast radius and backward compatibility
 

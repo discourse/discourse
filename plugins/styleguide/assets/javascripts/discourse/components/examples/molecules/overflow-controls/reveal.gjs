@@ -7,13 +7,17 @@ import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 const SECTIONS = Array.from({ length: 12 }, (_, index) => `Item ${index + 1}`);
 
 export default class OverflowControlsRevealExample extends Component {
-  /** Keeps the yielded strip so the buttons above it can call reveal. */
-  registerStrip = modifier((_element, [strip]) => {
+  /** Keeps each chip and the strip so the buttons above can call reveal. */
+  registerChip = modifier((element, [index, strip]) => {
+    this.#chips.set(index, element);
     this.#strip = strip;
+
+    return () => this.#chips.delete(index);
   });
 
   sections = SECTIONS;
 
+  #chips = new Map();
   #strip = null;
 
   @action
@@ -27,9 +31,7 @@ export default class OverflowControlsRevealExample extends Component {
   }
 
   #reveal(index, align) {
-    const item = document.querySelector(
-      `.styleguide-overflow-controls__reveal [data-index="${index}"]`
-    );
+    const item = this.#chips.get(index);
     if (item && this.#strip) {
       this.#strip.reveal(item, { align });
     }
@@ -47,18 +49,15 @@ export default class OverflowControlsRevealExample extends Component {
       />
     </div>
 
-    <div
-      class="styleguide-overflow-controls styleguide-overflow-controls--narrow styleguide-overflow-controls__reveal"
-    >
+    <div class="styleguide-overflow-controls --narrow">
       <DOverflowControls
         @class="styleguide-overflow-controls__strip"
         as |strip|
       >
-        <span {{this.registerStrip strip}}></span>
         {{#each this.sections as |section index|}}
           <span
             class="styleguide-overflow-controls__chip"
-            data-index={{index}}
+            {{this.registerChip index strip}}
           >{{section}}</span>
         {{/each}}
       </DOverflowControls>

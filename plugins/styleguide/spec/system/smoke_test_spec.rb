@@ -193,8 +193,8 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(styleguide).to have_heading("Tabs")
     expect(page).to have_css(".d-tabs [role='tablist']", count: 4)
     expect(page).to have_css(".d-tabs [role='tab'][aria-selected='true']", count: 4)
-    expect(page).to have_css(".styleguide-tabs--vertical [aria-orientation='vertical']")
-    expect(page).to have_css(".styleguide-tabs--narrow .d-overflow-controls__btn.--right")
+    expect(page).to have_css(".styleguide-tabs.--vertical [aria-orientation='vertical']")
+    expect(page).to have_css(".styleguide-tabs.--narrow .d-overflow-controls__btn.--right")
     screenshot_marker(label: "styleguide-tabs")
   end
 

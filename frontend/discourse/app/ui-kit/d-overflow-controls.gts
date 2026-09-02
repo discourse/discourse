@@ -27,6 +27,9 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 /** The axis a strip scrolls on. */
 export type DOverflowControlsAxis = ScrollAxis;
 
+/** The options `reveal` accepts. */
+export type DOverflowControlsRevealOptions = RevealOptions;
+
 /** The physical edges a chevron can sit on. */
 export type DOverflowControlsEdge = "left" | "right" | "up" | "down";
 
@@ -39,8 +42,10 @@ export interface DOverflowControlsBag {
   scroller: ModifierLike<{ Element: HTMLElement; Args: { Positional: [] } }>;
 
   /**
-   * Scrolls the strip, and only the strip, until `element` lies fully inside
-   * it, clear of the fade band. Instant. The page never moves.
+   * Scrolls the strip, never the page, until `element` is fully inside it.
+   * `"nearest"` also clears the fade band. Instant. Needs a mounted
+   * scroller: in owned mode, apply `scroller` before any modifier that
+   * reveals on install.
    */
   reveal: (element: HTMLElement, options?: RevealOptions) => void;
 }
@@ -65,16 +70,20 @@ interface DOverflowControlsSignature {
     /**
      * The consumer renders the scrolling element itself and applies the
      * yielded `scroller` modifier to it. No content element is generated,
-     * and `...attributes` land on the wrapper instead.
+     * and `...attributes` land on the wrapper instead. The element must be
+     * a direct child of the wrapper and its stylesheet must include the
+     * `scroll-strip` mixin: the mixin paints the fade, hides the scrollbar,
+     * and sets the `scroll-padding` that `reveal` keeps items clear of.
      */
     ownedScroller?: boolean;
 
     /**
-     * The axis the chevrons and the fade follow. When omitted it is detected
-     * from the scroller's computed overflow on both axes, re-read on resize,
-     * and both axes may show chevrons at once while the fade follows the
-     * one that overflows. Either way, an axis whose computed overflow is
-     * not scrollable never shows a chevron.
+     * The axis the chevrons and the fade follow.
+     *
+     * When omitted, both axes are measured from the scroller's computed
+     * overflow and may show chevrons at once; the fade follows the first
+     * one that overflows. An axis whose computed overflow is not scrollable
+     * never shows a chevron.
      */
     axis?: DOverflowControlsAxis;
   };
@@ -96,6 +105,12 @@ const HOLD_DELAY_MS = 300;
 
 /** Viewports scrolled per second while a chevron stays pressed. */
 const HOLD_VELOCITY = 3;
+
+const NO_EDGES: ScrollEdgesSnapshot = {
+  horizontal: null,
+  vertical: null,
+  primary: null,
+};
 
 const EDGE_ICONS: Record<DOverflowControlsEdge, string> = {
   left: "chevron-left",
@@ -128,10 +143,9 @@ interface EdgeButtonSignature {
 }
 
 /**
- * One chevron. Hidden from assistive technology and out of the tab order:
- * a keyboard user already reaches every item with Tab or the arrow keys, so
- * the button is a pointer shortcut only. The mousedown handler keeps a
- * click from moving focus off whatever the user was working in.
+ * One chevron, hidden from assistive technology and out of the tab order.
+ * Keyboard users already reach every item, so the button is a pointer
+ * shortcut only. The mousedown handler keeps a click from stealing focus.
  */
 const EdgeButton: TOC<EdgeButtonSignature> = <template>
   {{! eslint-disable ember/template-no-pointer-down-event-binding }}
@@ -153,11 +167,9 @@ function concat(prefix: string, edge: string) {
 }
 
 /**
- * Wraps scrollable content and shows chevron buttons on whichever edges can
- * still be scrolled, over an edge fade painted by the scroller's stylesheet.
- * Works on both axes: a horizontally-overflowing scroller gets left and
- * right buttons, a vertically-overflowing one gets up and down. A click
- * scrolls one viewport; holding a chevron scrolls continuously.
+ * Wraps scrollable content and shows a chevron on each edge that can still
+ * scroll, over an edge fade painted by the scroller's stylesheet. A click
+ * scrolls one viewport; holding scrolls continuously.
  *
  * In the default mode the component renders the scroller itself and any
  * `...attributes` land on it. With `@ownedScroller` the consumer's own
@@ -165,9 +177,12 @@ function concat(prefix: string, edge: string) {
  * modifier to it) and `...attributes` land on the wrapper.
  *
  * The scroller carries `data-d-scroll-*` attributes describing its edge
- * state; the `scroll-strip` stylesheet mixin reads them for the fade. Themes
- * can colour the buttons with the `--fade-color` custom property and size
- * the fade with `--fade-width`.
+ * state; the `scroll-strip` stylesheet mixin reads them for the fade. The
+ * fade is a mask, so it shows whatever background lies behind the scroller
+ * and the scroller itself must not paint one. `--fade-width` sizes the
+ * fade and `--fade-color` colors the chevron buttons only. The chevrons
+ * and their scrolling follow the document's direction; `reveal` follows
+ * the scroller's.
  */
 export default class DOverflowControls extends Component<DOverflowControlsSignature> {
   @tracked hasTopScroll = false;
@@ -192,13 +207,14 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
     this.#scroller = element;
     const watcher = new ScrollEdgesWatcher(element, {
       axis: this.args.axis ?? "auto",
-      onChange: (snapshot) => this.#applyEdges(snapshot),
+      onChange: (snapshot) => this.#applyEdges(element, snapshot),
     });
 
     return () => {
       watcher.disconnect();
       if (this.#scroller === element) {
         this.#scroller = null;
+        this.#applyEdges(null, NO_EDGES);
       }
     };
   });
@@ -248,13 +264,20 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
         cancelAnimationFrame(frame);
         frame = null;
       }
-      window.removeEventListener("blur", stop);
+      window.removeEventListener("blur", abort);
       if (pointerId !== null) {
         if (button.hasPointerCapture(pointerId)) {
           button.releasePointerCapture(pointerId);
         }
         pointerId = null;
       }
+    };
+
+    // An end without a click must not leave the swallow armed for the next
+    // press.
+    const abort = () => {
+      held = false;
+      stop();
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -271,7 +294,7 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       pointerId = event.pointerId;
       button.setPointerCapture(event.pointerId);
       // Losing window focus ends a press without a pointerup.
-      window.addEventListener("blur", stop);
+      window.addEventListener("blur", abort);
       timer = discourseLater(() => {
         timer = null;
         lastFrameAt = performance.now();
@@ -288,17 +311,23 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       event.stopImmediatePropagation();
     };
 
-    // Only the pointer that started the hold may end it: a second pointer
-    // resting on the same button must not cut a mouse hold short.
+    // Only the pointer that started the hold may end it. A second pointer
+    // on the same button must not cut it short.
     const onPointerEnd = (event: PointerEvent) => {
       if (event.pointerId === pointerId) {
         stop();
       }
     };
 
+    const onPointerCancel = (event: PointerEvent) => {
+      if (event.pointerId === pointerId) {
+        abort();
+      }
+    };
+
     button.addEventListener("pointerdown", onPointerDown);
     button.addEventListener("pointerup", onPointerEnd);
-    button.addEventListener("pointercancel", onPointerEnd);
+    button.addEventListener("pointercancel", onPointerCancel);
     button.addEventListener("lostpointercapture", onPointerEnd);
     button.addEventListener("click", onClick, { capture: true });
 
@@ -306,7 +335,7 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       stop();
       button.removeEventListener("pointerdown", onPointerDown);
       button.removeEventListener("pointerup", onPointerEnd);
-      button.removeEventListener("pointercancel", onPointerEnd);
+      button.removeEventListener("pointercancel", onPointerCancel);
       button.removeEventListener("lostpointercapture", onPointerEnd);
       button.removeEventListener("click", onClick, { capture: true });
     };
@@ -347,12 +376,14 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
   }
 
   /**
-   * Tracked writes are deferred one hop: the first measurement runs inside
+   * Tracked writes are deferred one hop. The first measurement runs inside
    * the scroller's modifier install, still within the render transaction.
+   * A snapshot only lands while its scroller is still the current one, so
+   * a replaced or unmounted scroller cannot restore stale flags.
    */
-  #applyEdges(snapshot: ScrollEdgesSnapshot) {
+  #applyEdges(scroller: HTMLElement | null, snapshot: ScrollEdgesSnapshot) {
     schedule("afterRender", () => {
-      if (isDestroying(this)) {
+      if (isDestroying(this) || this.#scroller !== scroller) {
         return;
       }
 

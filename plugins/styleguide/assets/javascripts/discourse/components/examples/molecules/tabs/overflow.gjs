@@ -48,7 +48,7 @@ export default class TabsOverflowExample extends Component {
       <span class="styleguide-tabs__status">Active tab: {{this.active}}</span>
     </div>
 
-    <div class="styleguide-tabs styleguide-tabs--narrow">
+    <div class="styleguide-tabs --narrow">
       <DTabs
         @active={{this.active}}
         @label="Account sections"

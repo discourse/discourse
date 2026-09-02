@@ -7,13 +7,12 @@ import {
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { resetSiteDirForTesting } from "discourse/lib/text-direction";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { eq } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
-
-/* eslint-disable qunit/no-early-return */
 
 const ITEMS = Array.from({ length: 10 }, (_, index) => `Item ${index + 1}`);
 
@@ -41,6 +40,22 @@ function nextFrame() {
   return new Promise((resolve) =>
     requestAnimationFrame(() => requestAnimationFrame(resolve))
   );
+}
+
+function requireList(assert, selector = "ul.nav-pills") {
+  assert.dom(selector).exists({ count: 1 }, "the navigation list renders");
+  return find(selector);
+}
+
+function requireActive(assert, selector = "a.active") {
+  assert
+    .dom(selector)
+    .exists({ count: 1 }, "the active navigation item renders");
+  return find(selector);
+}
+
+function stubReducedMotion(matches) {
+  return sinon.stub(window, "matchMedia").returns({ matches });
 }
 
 async function scrollTo(selector, props) {
@@ -80,7 +95,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     const controls = find(
       ".d-overflow-controls.--owned-scroller.horizontal-overflow-nav__controls"
     );
-    const list = find("ul.nav-pills.action-list");
+    const list = requireList(assert, "ul.nav-pills.action-list");
 
     assert
       .dom("nav.horizontal-overflow-nav")
@@ -90,9 +105,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
         ".d-overflow-controls.--owned-scroller.horizontal-overflow-nav__controls"
       )
       .exists("the nav uses owned overflow controls");
-    if (!nav || !controls || !list) {
-      return;
-    }
+    assert.dom(nav).exists("the navigation landmark renders");
     assert.strictEqual(
       controls.parentElement,
       nav,
@@ -120,6 +133,77 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     assert
       .dom(".d-overflow-controls__content")
       .doesNotExist("owned mode renders no generated content scroller");
+  });
+
+  test("overflow strip: resolves the wrapper fade width to the nav scale", async function (assert) {
+    await render(
+      <template>
+        <DHorizontalOverflowNav @ariaLabel="Fade width navigation">
+          <li><a href="#one">One</a></li>
+        </DHorizontalOverflowNav>
+      </template>
+    );
+
+    const controls = find(".horizontal-overflow-nav__controls");
+    assert.strictEqual(
+      getComputedStyle(controls).getPropertyValue("--fade-width").trim(),
+      "1.5em",
+      "the wrapper exposes the nav-specific fade width"
+    );
+  });
+
+  test("overflow strip: fades the physical trailing edge at logical start", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 200px">
+          <DHorizontalOverflowNav @ariaLabel="LTR fade navigation">
+            {{#each ITEMS as |item|}}
+              <li style="flex: 0 0 80px"><a href="#{{item}}">{{item}}</a></li>
+            {{/each}}
+          </DHorizontalOverflowNav>
+        </div>
+      </template>
+    );
+    await nextFrame();
+
+    let list = requireList(assert);
+    let styles = getComputedStyle(list);
+    let maskImage = styles.maskImage || styles.webkitMaskImage;
+    assert.true(
+      maskImage.startsWith("linear-gradient(to right"),
+      "LTR logical start fades the physical right edge"
+    );
+
+    document.documentElement.classList.add("rtl");
+    resetSiteDirForTesting();
+    rtlEnabled = true;
+    await render(
+      <template>
+        <div dir="rtl" style="width: 200px">
+          <DHorizontalOverflowNav @ariaLabel="RTL fade navigation">
+            {{#each ITEMS as |item|}}
+              <li style="flex: 0 0 80px"><a
+                  href="#rtl-{{item}}"
+                >{{item}}</a></li>
+            {{/each}}
+          </DHorizontalOverflowNav>
+        </div>
+      </template>
+    );
+    await nextFrame();
+
+    list = requireList(assert);
+    styles = getComputedStyle(list);
+    maskImage = styles.maskImage || styles.webkitMaskImage;
+    assert.strictEqual(
+      getComputedStyle(list).direction,
+      "rtl",
+      "the list is RTL"
+    );
+    assert.true(
+      maskImage.startsWith("linear-gradient(to left"),
+      "RTL logical start fades the physical left edge"
+    );
   });
 
   test("overflow strip: buttons follow the horizontal scroll edges", async function (assert) {
@@ -178,6 +262,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
   });
 
   test("overflow strip: a plain click scrolls one viewport", async function (assert) {
+    const matchMediaStub = stubReducedMotion(false);
     await render(
       <template>
         <div style="width: 200px">
@@ -191,12 +276,9 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     );
     await nextFrame();
 
-    const list = find("ul.nav-pills");
+    const list = requireList(assert);
     const button = find(".d-overflow-controls__btn.--right");
     assert.dom(button).exists("the trailing shared button is available");
-    if (!list || !button) {
-      return;
-    }
     let target;
     list.scrollTo = (options) => (target = options);
 
@@ -207,6 +289,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       { left: list.clientWidth, behavior: "smooth" },
       "one click requests exactly one measured viewport"
     );
+    matchMediaStub.restore();
   });
 
   test("overflow strip: mouse hold scrolls continuously and swallows its click once", async function (assert) {
@@ -223,12 +306,9 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     );
     await nextFrame();
 
-    const list = find("ul.nav-pills");
+    const list = requireList(assert);
     const button = find(".d-overflow-controls__btn.--right");
     assert.dom(button).exists("the trailing shared button is available");
-    if (!list || !button) {
-      return;
-    }
     stubPointerCapture(button);
 
     await triggerEvent(button, "pointerdown", {
@@ -237,9 +317,6 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       isPrimary: true,
       pointerType: "mouse",
     });
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
-
     await nextFrame();
 
     assert.true(list.scrollLeft > 0, "the hold advances the strip");
@@ -306,7 +383,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       1,
       "the first late active item is revealed exactly once"
     );
-    const active = find("#late-nav a.active");
+    const active = requireActive(assert, "#late-nav a.active");
     const listRect = list.getBoundingClientRect();
     const activeRect = active.getBoundingClientRect();
     assert.true(list.scrollLeft > 0, "the late active item moves the strip");
@@ -317,6 +394,13 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     assert.true(
       activeRect.right <= listRect.right + 1,
       "the late active item's trailing edge is inside the strip"
+    );
+    assert.true(
+      Math.abs(
+        (activeRect.left + activeRect.right) / 2 -
+          (listRect.left + listRect.right) / 2
+      ) <= 1,
+      "the late active item is centered in the strip"
     );
   });
 
@@ -342,14 +426,11 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
 
     await nextFrame();
 
-    const list = find("ul.nav-pills");
-    const active = find("a.active");
+    const list = requireList(assert);
+    const active = requireActive(assert);
     assert
       .dom(".d-overflow-controls.--owned-scroller")
       .exists("the active list owns the shared scroller");
-    if (!list || !active) {
-      return;
-    }
     const listRect = list.getBoundingClientRect();
     const activeRect = active.getBoundingClientRect();
 
@@ -362,17 +443,25 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       activeRect.right <= listRect.right + 1,
       "the active item's trailing edge lies inside the strip"
     );
+    assert.true(
+      Math.abs(
+        (activeRect.left + activeRect.right) / 2 -
+          (listRect.left + listRect.right) / 2
+      ) <= 1,
+      "the active item is centered in the strip"
+    );
     assert.strictEqual(window.scrollY, pageScroll, "the page does not move");
   });
 
   test("overflow strip: RTL maps logical start to the physical left button", async function (assert) {
+    const matchMediaStub = stubReducedMotion(false);
     document.documentElement.classList.add("rtl");
     resetSiteDirForTesting();
     rtlEnabled = true;
 
     await render(
       <template>
-        <div style="width: 200px">
+        <div dir="rtl" style="width: 200px">
           <DHorizontalOverflowNav @ariaLabel="RTL navigation">
             {{#each ITEMS as |item|}}
               <li style="flex: 0 0 80px"><a href="#{{item}}">{{item}}</a></li>
@@ -390,11 +479,14 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       .dom(".d-overflow-controls__btn.--right")
       .doesNotExist("the physical right button is absent at logical start");
 
-    const list = find("ul.nav-pills");
+    const list = requireList(assert);
     const button = find(".d-overflow-controls__btn.--left");
-    if (!list || !button) {
-      return;
-    }
+    assert.dom(button).exists("the logical trailing button renders");
+    assert.strictEqual(
+      getComputedStyle(list).direction,
+      "rtl",
+      "the fixture list resolves to RTL"
+    );
     let target;
     list.scrollTo = (options) => (target = options);
     await click(button);
@@ -404,6 +496,7 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       { left: -list.clientWidth, behavior: "smooth" },
       "the physical left button requests one negative viewport"
     );
+    matchMediaStub.restore();
   });
 
   test("overflow strip: RTL mount reveal keeps the active item inside the list", async function (assert) {
@@ -431,14 +524,11 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
 
     await nextFrame();
 
-    const list = find("ul.nav-pills");
-    const active = find("a.active");
+    const list = requireList(assert);
+    const active = requireActive(assert);
     assert
       .dom(".d-overflow-controls.--owned-scroller")
       .exists("the RTL list owns the shared scroller");
-    if (!list || !active) {
-      return;
-    }
     assert.deepEqual(
       {
         direction: getComputedStyle(list).direction,
@@ -458,6 +548,13 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
     assert.true(
       activeRect.right <= listRect.right + 1,
       "the active item's trailing edge lies inside the RTL strip"
+    );
+    assert.true(
+      Math.abs(
+        (activeRect.left + activeRect.right) / 2 -
+          (listRect.left + listRect.right) / 2
+      ) <= 1,
+      "the active item is centered in the RTL strip"
     );
     assert.strictEqual(window.scrollY, pageScroll, "the page does not move");
   });

@@ -10,7 +10,8 @@
   }
 }
 
-.horizontal-overflow-nav__controls {
+// Chained to outrank the primitive's own declaration on the same element.
+.d-overflow-controls.horizontal-overflow-nav__controls {
   --fade-width: 1.5em;
   height: 100%;
 
