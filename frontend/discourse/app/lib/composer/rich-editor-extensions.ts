@@ -309,6 +309,12 @@ export interface RichEditorExtension {
    * word of the block's info string). A `code_block` whose language has a
    * component renders it in place of the code, with a toggle back to the
    * source; the document node stays a plain `code_block`.
+   *
+   * Which preview mechanism to use: content written as a fenced code block
+   * registers here — one entry and a component. Content with its own markup
+   * (a wrapping tag, custom delimiters) defines its own node with a
+   * `preview_source` child and renders through `composer/preview-node-view`
+   * instead, since it also needs to parse and serialize that markup.
    */
   codeBlockPreviews?: Record<string, unknown>;
   /** Custom toolbar state contributed by the extension. */
