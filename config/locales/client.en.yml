@@ -8644,6 +8644,12 @@ en:
         location:
           local: "Local storage"
           s3: "S3"
+        resume_window:
+          disabled: "Disabled"
+          one_hour: "1 hour"
+          six_hours: "6 hours (recommended)"
+          twelve_hours: "12 hours"
+          until_email_token_expires: "Until the original email token expires"
         backup_storage_error: "Failed to access backup storage: %{error_message}"
 
       export_csv:
