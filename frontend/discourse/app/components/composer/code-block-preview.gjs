@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import {
-  registerPreviewNodeView,
-  TOOLBAR_IDENTIFIER,
-} from "discourse/components/composer/preview-node-view";
+import { registerPreviewNodeView } from "discourse/components/composer/preview-node-view";
 
 /**
  * Renders a registered preview component in place of a `code_block`'s code.
@@ -42,14 +39,6 @@ export default class CodeBlockPreview extends Component {
 
   deselectNode() {
     this.args.dom.classList.remove("ProseMirror-selectednode");
-  }
-
-  // the toolbar is portaled into this node view, so its clicks are not document clicks
-  stopEvent(event) {
-    return (
-      event.target instanceof Node &&
-      !!event.target.closest?.(`[data-identifier="${TOOLBAR_IDENTIFIER}"]`)
-    );
   }
 
   <template>

@@ -340,18 +340,6 @@
     }
   }
 
-  // the preview toolbar mounts here, out of flow and collapsing the portal's
-  // whitespace, so showing it never resizes the block (a pre would otherwise
-  // paint the portaled text nodes as blank lines)
-  .composer-preview-toolbar__outlet {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    white-space: normal;
-  }
-
   // both faces share one grid cell, so swapping them does not move the document
   .composer-preview-node {
     position: relative;

@@ -106,14 +106,6 @@ export default class PreviewNodeView extends Component {
     this.args.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  // the toolbar is portaled into this node view, so its clicks are not document clicks
-  stopEvent(event) {
-    return (
-      event.target instanceof Node &&
-      !!event.target.closest?.(`[data-identifier="${TOOLBAR_IDENTIFIER}"]`)
-    );
-  }
-
   #syncMode() {
     this.args.dom.classList.toggle("--source", this.showingSource);
   }

@@ -9,10 +9,7 @@ import {
 } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import CodeBlockPreview from "discourse/components/composer/code-block-preview";
-import {
-  registerPreviewNodeView,
-  TOOLBAR_IDENTIFIER,
-} from "discourse/components/composer/preview-node-view";
+import { registerPreviewNodeView } from "discourse/components/composer/preview-node-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 import GlimmerNodeView from "../lib/glimmer-node-view";
@@ -263,16 +260,9 @@ class CodeBlockWithLangSelectorNodeView {
     return true;
   }
 
-  stopEvent(event) {
-    return (
-      event.target instanceof Node &&
-      !!event.target.closest?.(`[data-identifier="${TOOLBAR_IDENTIFIER}"]`)
-    );
-  }
-
-  // the preview toolbar portals into this dom: reading its mount/unmount back
-  // into the document would loop redraw against re-portal until the editor
-  // hangs
+  // anything mounted into this dom from outside (the language select today;
+  // any portaled UI tomorrow) must not be read back into the document — the
+  // editor would loop redraw against remount until it hangs
   ignoreMutation(mutation) {
     if (mutation.type === "selection") {
       return false;

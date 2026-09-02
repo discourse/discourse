@@ -185,25 +185,6 @@ class PreviewToolbarPluginView {
     }
   }
 
-  // the portaled template renders whitespace text nodes next to the menu, and
-  // a code block's `pre` would paint them as blank lines, growing the block
-  // whenever the toolbar mounts; a zero-sized out-of-flow outlet keeps the
-  // mount from ever affecting the block's layout
-  #portalOutlet(trigger) {
-    let outlet = trigger.querySelector(
-      ":scope > .composer-preview-toolbar__outlet"
-    );
-
-    if (!outlet) {
-      outlet = document.createElement("div");
-      outlet.className = "composer-preview-toolbar__outlet";
-      outlet.contentEditable = "false";
-      trigger.appendChild(outlet);
-    }
-
-    return outlet;
-  }
-
   async #showFloatingToolbar() {
     const trigger = this.#view.nodeDOM(this.#pos);
 
@@ -226,7 +207,9 @@ class PreviewToolbarPluginView {
       fallbackPlacements: ["top-end"],
       padding: MENU_PADDING,
       data: this.#toolbar,
-      portalOutletElement: this.#portalOutlet(trigger),
+      // outside the editor DOM, so mounting it can never affect the block's
+      // layout or be read back by the editor as a document change
+      portalOutletElement: this.#view.dom.parentElement,
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
