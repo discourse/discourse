@@ -128,7 +128,6 @@ module DiscourseWorkflows
             if desired_tags.map(&:name).sort != before_tag_names
               tag_group.tag_ids = desired_tags.map(&:id)
               tag_group.save!
-              tag_group.reload
 
               after_data = serialized_tag_group(tag_group)
               StaffActionLogger.new(actor).log_tag_group_change(
