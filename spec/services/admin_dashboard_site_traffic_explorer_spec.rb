@@ -91,6 +91,14 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query succeeds" do
       it { is_expected.to run_successfully }
 
+      it "returns a fractional average session duration" do
+        Fabricate(:browser_pageview_session_engagement, session_id: "browser-0", engaged_seconds: 1)
+
+        average_session_duration = result.traffic.dig(:summary, "average_session_duration_seconds")
+
+        expect(average_session_duration).to be_within(0.0001).of(1.0 / browsers.size)
+      end
+
       it "orders browser dimensions by pageviews" do
         browser_dimensions = result.traffic.dig(:dimensions, "browsers")
 
