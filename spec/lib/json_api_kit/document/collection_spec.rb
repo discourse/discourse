@@ -116,8 +116,8 @@ RSpec.describe JsonApiKit::Document::Collection do
       it "renders a link to the page at each end" do
         expect(document.to_h[:links]).to eq(
           self: self_link,
-          prev: "https://example.com/api/topics?page%5Bbefore%5D=#{page_cursor}",
-          next: "https://example.com/api/topics?page%5Bafter%5D=#{page_cursor}",
+          prev: "https://example.com/api/topics?page[before]=#{page_cursor}",
+          next: "https://example.com/api/topics?page[after]=#{page_cursor}",
         )
       end
     end

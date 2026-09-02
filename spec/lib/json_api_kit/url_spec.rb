@@ -8,7 +8,7 @@ RSpec.describe JsonApiKit::Url do
 
   describe "#to_s" do
     it "returns the address with the parameters it carries" do
-      expect(url.to_s).to eq("https://example.com/api/topics?page%5Bsize%5D=2&sort=createdAt")
+      expect(url.to_s).to eq("https://example.com/api/topics?page[size]=2&sort=createdAt")
     end
 
     context "when it carries no parameter" do
@@ -26,14 +26,14 @@ RSpec.describe JsonApiKit::Url do
 
       it "writes it in camel case" do
         expect(url.at(before_size: 2).to_s).to eq(
-          "https://example.com/api/topics?page%5BbeforeSize%5D=2",
+          "https://example.com/api/topics?page[beforeSize]=2",
         )
       end
     end
 
     it "adds the cursor to the parameters it carries" do
       expect(url.at(after: "a-cursor").to_s).to eq(
-        "https://example.com/api/topics?page%5Bafter%5D=a-cursor&page%5Bsize%5D=2&sort=createdAt",
+        "https://example.com/api/topics?page[size]=2&page[after]=a-cursor&sort=createdAt",
       )
     end
 
@@ -46,7 +46,7 @@ RSpec.describe JsonApiKit::Url do
 
       it "drops the other end" do
         expect(url.at(before: "a-cursor").to_s).to eq(
-          "https://example.com/api/topics?page%5Bbefore%5D=a-cursor&page%5Bsize%5D=2",
+          "https://example.com/api/topics?page[size]=2&page[before]=a-cursor",
         )
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe JsonApiKit::Url do
 
       it "drops the anchor and the window, and keeps the page size" do
         expect(url.at(after: "a-cursor").to_s).to eq(
-          "https://example.com/api/topics?page%5Bafter%5D=a-cursor&page%5Bsize%5D=2",
+          "https://example.com/api/topics?page[size]=2&page[after]=a-cursor",
         )
       end
     end
@@ -78,7 +78,7 @@ RSpec.describe JsonApiKit::Url do
 
       it "carries only that cursor" do
         expect(url.at(after: "a-cursor").to_s).to eq(
-          "https://example.com/api/topics?page%5Bafter%5D=a-cursor",
+          "https://example.com/api/topics?page[after]=a-cursor",
         )
       end
     end

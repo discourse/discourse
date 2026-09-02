@@ -9,9 +9,7 @@ RSpec.describe JsonApiKit::Urls do
 
   describe "#current" do
     it "returns the URL a caller read with the parameters they sent" do
-      expect(urls.current.to_s).to eq(
-        "https://example.com/api/topics?page%5Bsize%5D=2&sort=createdAt",
-      )
+      expect(urls.current.to_s).to eq("https://example.com/api/topics?page[size]=2&sort=createdAt")
     end
   end
 

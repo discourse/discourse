@@ -14,7 +14,7 @@ RSpec.describe "a page of a listing" do
       included: [],
       links:
         links_of(
-          next: page_url(after: cursor_of_record(middle, sort: { created_at: :asc }), size: 2),
+          next: page_url(size: 2, after: cursor_of_record(middle, sort: { created_at: :asc })),
         ),
     )
   end
@@ -60,8 +60,8 @@ RSpec.describe "a page of a listing" do
         included: [],
         links:
           links_of(
-            prev: page_url(before: cursor_of_record(middle, sort: { created_at: :asc }), size: 1),
-            next: page_url(after: cursor_of_record(middle, sort: { created_at: :asc }), size: 1),
+            prev: page_url(size: 1, before: cursor_of_record(middle, sort: { created_at: :asc })),
+            next: page_url(size: 1, after: cursor_of_record(middle, sort: { created_at: :asc })),
           ),
       )
     end

@@ -13,7 +13,7 @@ RSpec.describe "a rendered document" do
       expect(document).to eq(
         data: [topic_object(oldest)],
         included: [],
-        links: links_of(next: page_url(after: cursor_of_record(oldest), size: 1)),
+        links: links_of(next: page_url(size: 1, after: cursor_of_record(oldest))),
       )
     end
 
@@ -49,7 +49,7 @@ RSpec.describe "a rendered document" do
             ),
           ],
           included: [user_object(oldest.user)],
-          links: links_of(next: page_url(after: cursor_of_record(oldest), size: 1)),
+          links: links_of(next: page_url(size: 1, after: cursor_of_record(oldest))),
         )
       end
     end
@@ -79,8 +79,8 @@ RSpec.describe "a rendered document" do
           included: [],
           links:
             links_of(
-              prev: page_url(before: cursor_of_record(middle), size: 1),
-              next: page_url(after: cursor_of_record(middle), size: 1),
+              prev: page_url(size: 1, before: cursor_of_record(middle)),
+              next: page_url(size: 1, after: cursor_of_record(middle)),
             ),
         )
       end
