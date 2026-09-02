@@ -16,22 +16,25 @@ const DEBOUNCE_MS = 500;
   "maxLength",
   "dir",
   "aria-label",
-  "aria-controls"
+  "aria-controls",
+  "resolvedPlaceholder:placeholder"
 )
 export default class DTextField extends TextField {
   _prevValue = null;
   _timer = null;
 
-  @computed("placeholderKey", "_placeholder")
-  get placeholder() {
-    if (this._placeholder) {
-      return this._placeholder;
+  /**
+   * The bound `placeholder` attribute, derived from both arguments. This is
+   * a separate computed rather than a setter on `placeholder`: Ember caches
+   * what a computed setter returns at assignment time, so the result would
+   * depend on which argument the caller passes first.
+   */
+  @computed("placeholder", "placeholderKey")
+  get resolvedPlaceholder() {
+    if (this.placeholder) {
+      return this.placeholder;
     }
     return this.placeholderKey ? i18n(this.placeholderKey) : "";
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
   }
 
   @computed("siteSettings.support_mixed_text_direction", "value")
