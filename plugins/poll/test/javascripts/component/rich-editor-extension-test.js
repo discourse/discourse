@@ -123,6 +123,32 @@ module(
       );
     });
 
+    test("the poll summary reflects the settings, not any votes", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll type=multiple min=1 max=2 results=on_vote close=2050-01-01 dynamic=true]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__info .poll-info_counts")
+        .hasText("0 voters", "shows no votes, because there are none yet");
+      assert
+        .dom(".composer-poll-node__info .multiple-help-text")
+        .exists("explains how many options can be picked");
+      assert
+        .dom(".composer-poll-node__info .is-dynamic")
+        .exists("mentions that options can change after posting");
+      assert
+        .dom(".composer-poll-node__info li[title]")
+        .exists("says when the poll closes");
+      assert
+        .dom(".composer-poll-node__info .poll-info_instructions li")
+        .exists(
+          { count: 3 },
+          "and leaves out what depends on who is reading the post"
+        );
+    });
+
     test("an untitled poll carries an empty title to type into", async function (assert) {
       const markdown = "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n";
       const [editor] = await setupRichEditor(assert, markdown);

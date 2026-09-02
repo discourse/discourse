@@ -24,6 +24,27 @@ export default class PollNodeView extends Component {
     this.update(this.args.node);
   }
 
+  // the chrome mirrors what the post will show, from the settings alone:
+  // nothing here can know about votes
+  get pollInfo() {
+    const { attrs } = this.args.node;
+
+    return {
+      isMultiple: attrs.type === "multiple",
+      isPublic: attrs.public === "true",
+      isDynamic: attrs.dynamic === "true",
+      closed: attrs.status === "closed",
+      results: attrs.results,
+      min: Number(attrs.min),
+      max: Number(attrs.max),
+      closesAt: attrs.close ? moment(attrs.close) : null,
+      // read for its length only, to phrase the multiple choice hint
+      options: new Array(
+        this.#optionList(this.args.node)?.node.childCount ?? 0
+      ),
+    };
+  }
+
   deselectNode() {
     this.args.dom.classList.remove("ProseMirror-selectednode");
   }
@@ -126,7 +147,18 @@ export default class PollNodeView extends Component {
 
   <template>
     <div class="composer-poll-node__info" contenteditable="false">
-      <PollInfo @voters={{0}} />
+      <PollInfo
+        @voters={{0}}
+        @isMultiple={{this.pollInfo.isMultiple}}
+        @isPublic={{this.pollInfo.isPublic}}
+        @isDynamic={{this.pollInfo.isDynamic}}
+        @closed={{this.pollInfo.closed}}
+        @results={{this.pollInfo.results}}
+        @min={{this.pollInfo.min}}
+        @max={{this.pollInfo.max}}
+        @closesAt={{this.pollInfo.closesAt}}
+        @options={{this.pollInfo.options}}
+      />
     </div>
     <div
       class="poll-buttons composer-poll-node__actions"
