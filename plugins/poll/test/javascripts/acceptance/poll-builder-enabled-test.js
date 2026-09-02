@@ -60,7 +60,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     assert
       .dom(poll)
       .hasAttribute("data-poll-type", "regular", "applies the edited setting");
-    assert.dom(`${poll} h1`).hasText("Question", "leaves the title untouched");
+    assert
+      .dom(`${poll} .poll-title`)
+      .hasText("Question", "leaves the title untouched");
     assert
       .dom(`${poll} .composer-poll-node__content li`)
       .exists({ count: 2 }, "leaves the options untouched");
@@ -156,7 +158,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await click(".insert-poll");
 
     assert
-      .dom(".ProseMirror .poll h1")
+      .dom(".ProseMirror .poll .poll-title")
       .hasText("Question", "preserves the poll title");
     assert
       .dom(".composer-poll-node__content li:first-child p")

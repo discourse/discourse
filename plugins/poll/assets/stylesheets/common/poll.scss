@@ -597,15 +597,6 @@ body.crawler {
   &__content {
     min-width: 0;
 
-    > :is(h1, h2, h3, h4, h5, h6) {
-      font-size: inherit;
-      font-weight: normal;
-      line-height: inherit;
-      margin: 0 0 0.5em;
-      padding-bottom: 0.5em;
-      border-bottom: 1px solid var(--content-border-color);
-    }
-
     > ul {
       margin: 0;
 
@@ -643,7 +634,7 @@ body.crawler {
     cursor: text;
   }
 
-  &.--untitled &__content > :is(h1, h2, h3, h4, h5, h6)::before {
+  &.--untitled &__content > .poll-title::before {
     content: var(--poll-title-placeholder, "");
     color: var(--primary-medium);
     position: absolute;

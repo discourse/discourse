@@ -93,7 +93,7 @@ export default class PollNodeView extends Component {
     // :empty misses it: ProseMirror keeps a trailing break in an empty block
     this.args.dom.classList.toggle(
       "--untitled",
-      node.firstChild?.type.name === "heading" &&
+      node.firstChild?.type.name === "poll_title" &&
         node.firstChild.content.size === 0
     );
   }

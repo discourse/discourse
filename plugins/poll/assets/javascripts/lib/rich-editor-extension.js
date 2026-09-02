@@ -23,7 +23,7 @@ const extension = {
         order: { default: null },
         step: { default: null },
       },
-      content: "heading bullet_list poll_info?",
+      content: "poll_title bullet_list poll_info?",
       group: "block",
       selectable: true,
       isolating: true,
@@ -75,6 +75,11 @@ const extension = {
         0,
       ],
     },
+    poll_title: {
+      content: "inline*",
+      parseDOM: [{ tag: "div.poll-title" }],
+      toDOM: () => ["div", { class: "poll-title" }, 0],
+    },
     poll_info: {
       content: "inline*",
       selectable: false,
@@ -94,7 +99,7 @@ const extension = {
       }),
     },
     poll_container: { ignore: true },
-    poll_title: { block: "heading" },
+    poll_title: { block: "poll_title" },
     poll_info: { block: "poll_info" },
     poll_info_counts: { ignore: true },
     poll_info_counts_count: { ignore: true },
@@ -111,7 +116,7 @@ const extension = {
 
       node.forEach((child, offset, index) => {
         // the title node is always present, an untitled poll leaves it empty
-        if (child.type.name === "heading" && child.content.size === 0) {
+        if (child.type.name === "poll_title" && child.content.size === 0) {
           return;
         }
 
@@ -124,6 +129,11 @@ const extension = {
       });
 
       state.write("[/poll]\n\n");
+    },
+    poll_title(state, node) {
+      state.write("# ");
+      state.renderInline(node);
+      state.closeBlock(node);
     },
     poll_info() {},
   },

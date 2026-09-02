@@ -111,7 +111,7 @@ module(
       const [editor] = await setupRichEditor(assert, markdown);
 
       assert
-        .dom(".composer-poll-node__content h1")
+        .dom(".composer-poll-node__content .poll-title")
         .hasText("How many?", "renders the title");
       assert
         .dom(".composer-poll-node__content li")
@@ -154,7 +154,7 @@ module(
       const [editor] = await setupRichEditor(assert, markdown);
 
       assert
-        .dom(".composer-poll-node__content > h1")
+        .dom(".composer-poll-node__content > .poll-title")
         .exists("the title node is always present")
         .hasText("", "and is empty when the poll has no title");
       assert.strictEqual(
