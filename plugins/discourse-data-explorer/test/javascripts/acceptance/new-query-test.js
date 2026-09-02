@@ -45,6 +45,8 @@ acceptance("New Query", function (needs) {
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([
         { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
         { id: 41, name: "support" },
       ]);
     });
@@ -155,7 +157,7 @@ acceptance("New Query", function (needs) {
     assert.deepEqual(
       groups.displayedContent().map((row) => row.name),
       ["support"],
-      "the everyone group is not offered"
+      "groups that cannot be granted access are not offered"
     );
 
     await groups.selectRowByValue(41);
@@ -243,6 +245,8 @@ acceptance("New Query - AI", function (needs) {
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () =>
       helper.response([
         { id: 0, name: "everyone" },
+        { id: 4, name: "anonymous_users" },
+        { id: 5, name: "logged_in_users" },
         { id: 41, name: "support" },
       ])
     );
@@ -386,6 +390,13 @@ acceptance("New Query - AI", function (needs) {
 
     const groups = selectKit(".query-new__fields .query-group-select");
     await groups.expand();
+
+    assert.deepEqual(
+      groups.displayedContent().map((row) => row.name),
+      ["support"],
+      "groups that cannot be granted access are not offered"
+    );
+
     await groups.selectRowByValue(41);
     await click(".query-new__save-btn");
 

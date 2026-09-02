@@ -52,7 +52,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   get groupOptions() {
-    return (this.groups ?? []).filter((g) => g.id !== AUTO_GROUPS.everyone.id);
+    return (this.groups ?? []).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.everyone.id &&
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        group.id !== AUTO_GROUPS.logged_in_users.id
+    );
   }
 
   get viewItems() {
