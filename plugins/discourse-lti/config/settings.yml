@@ -1,6 +1,7 @@
 plugins:
   lti_enabled:
     default: false
+    validator: "AuthProviderCredentialsValidator"
   lti_authorization_endpoint:
     default: ""
   lti_client_ids: 

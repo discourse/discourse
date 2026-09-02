@@ -9,9 +9,9 @@ describe "Microsoft OAuth2" do
   fab!(:user1, :user)
 
   before do
-    SiteSetting.microsoft_auth_enabled = true
     SiteSetting.microsoft_auth_client_id = client_id
     SiteSetting.microsoft_auth_client_secret = client_secret
+    SiteSetting.microsoft_auth_enabled = true
 
     stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token").with(
       body:

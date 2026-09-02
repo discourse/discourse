@@ -7,9 +7,9 @@ RSpec.describe "OmniAuth Confirm Page" do
 
   context "with Google OAuth" do
     before do
-      SiteSetting.enable_google_oauth2_logins = true
       SiteSetting.google_oauth2_client_id = "fake_client_id"
       SiteSetting.google_oauth2_client_secret = "fake_secret"
+      SiteSetting.enable_google_oauth2_logins = true
     end
 
     it "displays the styled confirmation page with correct content" do

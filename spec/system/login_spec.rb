@@ -282,7 +282,7 @@ shared_examples "login scenarios" do
       before do
         OmniAuth.config.test_mode = true
         SiteSetting.auth_skip_create_confirm = true
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
         SiteSetting.enable_local_logins = false
       end
 

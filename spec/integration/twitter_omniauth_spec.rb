@@ -64,9 +64,9 @@ describe "Twitter OAuth 1.0a" do
   end
 
   before do
-    SiteSetting.enable_twitter_logins = true
     SiteSetting.twitter_consumer_key = consumer_key
     SiteSetting.twitter_consumer_secret = consumer_secret
+    SiteSetting.enable_twitter_logins = true
 
     stub_request(:post, "https://api.twitter.com/oauth/request_token").to_return(
       status: 200,

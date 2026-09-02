@@ -13,18 +13,19 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
     "https://x.com"
   end
 
-  def enabled?
-    SiteSetting.enable_twitter_logins
+  def enable_setting
+    :enable_twitter_logins
+  end
+
+  def required_settings
+    %i[twitter_consumer_key twitter_consumer_secret]
   end
 
   def healthy?
-    consumer_key = SiteSetting.twitter_consumer_key
-    consumer_secret = SiteSetting.twitter_consumer_secret
-
-    return false if consumer_key.blank? || consumer_secret.blank?
+    return false if !configured?
 
     OmniAuth::Strategies::Twitter
-      .new(nil, consumer_key, consumer_secret)
+      .new(nil, SiteSetting.twitter_consumer_key, SiteSetting.twitter_consumer_secret)
       .consumer
       .get_request_token(oauth_callback: "oob")
 

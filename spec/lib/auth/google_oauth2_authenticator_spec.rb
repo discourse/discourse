@@ -29,6 +29,39 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
     expect(result.user).to eq(nil)
   end
 
+  describe "#enabled?" do
+    let(:authenticator) { described_class.new }
+
+    before do
+      SiteSetting.google_oauth2_client_id = "client_id"
+      SiteSetting.google_oauth2_client_secret = "client_secret"
+    end
+
+    it "is disabled when the site setting is off" do
+      expect(authenticator.enabled?).to eq(false)
+    end
+
+    context "when the site setting is on" do
+      before { SiteSetting.enable_google_oauth2_logins = true }
+
+      it "is enabled when both credentials are present" do
+        expect(authenticator.enabled?).to eq(true)
+      end
+
+      it "is disabled when the client id is blank" do
+        SiteSetting.google_oauth2_client_id = ""
+
+        expect(authenticator.enabled?).to eq(false)
+      end
+
+      it "is disabled when the client secret is blank" do
+        SiteSetting.google_oauth2_client_secret = ""
+
+        expect(authenticator.enabled?).to eq(false)
+      end
+    end
+  end
+
   describe "after_authenticate" do
     it "can authenticate and create a user record for already existing users" do
       authenticator = Auth::GoogleOAuth2Authenticator.new
