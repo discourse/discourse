@@ -16,7 +16,7 @@ module("Integration | Component | DashboardSiteAdvice", function (hooks) {
     updateCurrentUser({ admin: true });
   });
 
-  test("rewrites setting links in problem messages via the modifier", async function (assert) {
+  test("links settings in problem messages to their config pages", async function (assert) {
     const rewrittenURL =
       "/admin/config/onebox?filter=github_onebox_access_tokens";
     const dataSource = this.owner.lookup("service:admin-search-data-source");

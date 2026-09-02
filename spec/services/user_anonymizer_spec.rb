@@ -410,7 +410,7 @@ RSpec.describe UserAnonymizer do
       expect(user.ip_address).to eq(old_ip)
     end
 
-    it "is called if you pass an option" do
+    it "anonymizes IP addresses when anonymize_ip is provided" do
       UserAnonymizer.make_anonymous(user, admin, anonymize_ip: anon_ip)
       user.reload
       expect(user.ip_address).to eq(anon_ip)
