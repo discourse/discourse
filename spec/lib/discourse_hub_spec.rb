@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseHub do
   describe ".discourse_version_check" do
-    it "should return just return the json that the hub returns" do
+    it "returns just return the json that the hub returns" do
       hub_response = { "success" => "OK", "latest_version" => "0.8.1" }
 
       stub_request(
@@ -18,7 +18,7 @@ RSpec.describe DiscourseHub do
   end
 
   describe ".discover_enrollment" do
-    it "should trigger a POST request to hub" do
+    it "triggers a POST request to hub" do
       stub_request(
         :post,
         (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/discover/enroll",
@@ -34,7 +34,7 @@ RSpec.describe DiscourseHub do
   end
 
   describe ".discover_enrollment_payload" do
-    it "should return the correct payload" do
+    it "returns the correct payload" do
       payload = DiscourseHub.discover_enrollment_payload
       expect(payload[:forum_url]).to eq(Discourse.base_url)
       expect(payload[:forum_title]).to eq(SiteSetting.title)
@@ -44,7 +44,7 @@ RSpec.describe DiscourseHub do
 
   describe ".version_check_payload" do
     describe "when Discourse Hub has not fetched stats since past 7 days" do
-      it "should include stats" do
+      it "includes stats" do
         DiscourseHub.stats_fetched_at = 8.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
@@ -70,7 +70,7 @@ RSpec.describe DiscourseHub do
     end
 
     describe "when Discourse Hub has fetched stats in past 7 days" do
-      it "should not include stats" do
+      it "does not include stats" do
         DiscourseHub.stats_fetched_at = 2.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
@@ -87,7 +87,7 @@ RSpec.describe DiscourseHub do
 
     describe "when send_anonymize_stats is disabled" do
       describe "when Discourse Hub has not fetched stats for the past year" do
-        it "should not include stats" do
+        it "does not include stats" do
           DiscourseHub.stats_fetched_at = 1.year.ago
           SiteSetting.share_anonymized_statistics = false
           json = JSON.parse(DiscourseHub.version_check_payload.to_json)
@@ -112,7 +112,7 @@ RSpec.describe DiscourseHub do
 
     after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-    it "should log correctly on error" do
+    it "logs correctly on error" do
       stub_request(:get, (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/test").to_return(
         status: 500,
         body: "",

@@ -436,6 +436,10 @@ RSpec.describe WebhooksController do
   end
 
   describe "#mandrill" do
+    let(:payload) do
+      "mandrill_events=%5B%7B%22event%22%3A%22hard_bounce%22%2C%22msg%22%3A%7B%22email%22%3A%22em%40il.com%22%2C%22diag%22%3A%225.1.1%22%2C%22bounce_description%22%3A%22smtp%3B+550-5.1.1+The+email+account+that+you+tried+to+reach+does+not+exist.%22%2C%22metadata%22%3A%7B%22message_id%22%3A%2212345%40il.com%22%7D%7D%7D%5D"
+    end
+
     it "returns an error when no authentication key is configured" do
       SiteSetting.mandrill_authentication_key = ""
       user = Fabricate(:user, email: email)
@@ -459,10 +463,6 @@ RSpec.describe WebhooksController do
 
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
-    end
-
-    let(:payload) do
-      "mandrill_events=%5B%7B%22event%22%3A%22hard_bounce%22%2C%22msg%22%3A%7B%22email%22%3A%22em%40il.com%22%2C%22diag%22%3A%225.1.1%22%2C%22bounce_description%22%3A%22smtp%3B+550-5.1.1+The+email+account+that+you+tried+to+reach+does+not+exist.%22%2C%22metadata%22%3A%7B%22message_id%22%3A%2212345%40il.com%22%7D%7D%7D%5D"
     end
 
     it "hard bounces" do
@@ -539,7 +539,7 @@ RSpec.describe WebhooksController do
   end
 
   describe "#mandrill_head" do
-    it "works" do
+    it "accepts Mandrill verification requests" do
       head "/webhooks/mandrill.json"
 
       expect(response.status).to eq(200)

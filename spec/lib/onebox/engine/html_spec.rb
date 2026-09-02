@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::HTML do
-  before do
-    @link = "http://amazon.com"
+  let(:link) { "http://amazon.com" }
 
-    stub_request(:get, @link).to_return(status: 200, body: onebox_response("amazon"))
+  before do
+    stub_request(:get, link).to_return(status: 200, body: onebox_response("amazon"))
     stub_request(
       :get,
       "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",

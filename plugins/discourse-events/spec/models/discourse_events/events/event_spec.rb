@@ -8,13 +8,13 @@ describe DiscourseEvents::Events::Event do
     SiteSetting.discourse_post_event_enabled = true
   end
 
-  it do
+  it "limits the description length" do
     is_expected.to validate_length_of(:description).is_at_most(
       DiscourseEvents::Events::Event::MAX_DESCRIPTION_LENGTH,
     )
   end
 
-  it do
+  it "limits the name length" do
     is_expected.to validate_length_of(:name).is_at_least(
       DiscourseEvents::Events::Event::MIN_NAME_LENGTH,
     ).is_at_most(DiscourseEvents::Events::Event::MAX_NAME_LENGTH)
@@ -401,245 +401,238 @@ describe DiscourseEvents::Events::Event do
       )
     end
 
-    describe "#after_commit[:create, :update]" do
-      context "when a post event has been created" do
-        context "when the associated post is the OP" do
-          it "sets the topic custom field and creates event date" do
-            expect(first_post.is_first_post?).to be(true)
-            expect(first_post.topic.custom_fields).to be_blank
+    context "when a post event has been created" do
+      context "when the associated post is the OP" do
+        it "sets the topic custom field and creates event date" do
+          expect(first_post.is_first_post?).to be(true)
+          expect(first_post.topic.custom_fields).to be_blank
 
-            expect {
-              DiscourseEvents::Events::Event.create!(
-                id: first_post.id,
-                original_starts_at: starts_at,
-                original_ends_at: ends_at,
-              )
-            }.to change { DiscourseEvents::Events::EventDate.count }
-            first_post.topic.reload
-
-            expect(first_post_starts_at).to eq_time(starts_at)
-            expect(first_post_ends_at).to eq_time(ends_at)
-            expect(DiscourseEvents::Events::EventDate.last.starts_at).to eq_time(starts_at)
-            expect(DiscourseEvents::Events::EventDate.last.ends_at).to eq_time(ends_at)
-          end
-        end
-
-        context "when the associated post is not the OP" do
-          it "doesn’t set the topic custom field but still creates event date" do
-            expect(second_post.is_first_post?).to be(false)
-            expect(second_post.topic.custom_fields).to be_blank
-
-            expect {
-              DiscourseEvents::Events::Event.create!(
-                id: second_post.id,
-                original_starts_at: starts_at,
-              )
-            }.to change { DiscourseEvents::Events::EventDate.count }
-            second_post.topic.reload
-
-            expect(second_post.topic.custom_fields).to be_blank
-          end
-        end
-        describe "notify an user" do
-          describe "before the event starts" do
-            it "does notify the user" do
-              expect { event.create_notification!(notified_user, first_post) }.to change {
-                Notification.count
-              }.by(1)
-            end
-          end
-          describe "after the event starts" do
-            it "doesn't notify the user" do
-              expect { late_event.create_notification!(notified_user, first_post) }.not_to change {
-                Notification.count
-              }
-            end
-          end
-
-          describe "with private message topics" do
-            let(:pm_owner) { Fabricate(:user) }
-            let(:allowed_user) { Fabricate(:user) }
-            let(:disallowed_user) { Fabricate(:user) }
-            let(:pm_topic) do
-              Fabricate(:private_message_topic, user: pm_owner, recipient: allowed_user)
-            end
-            let(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_owner) }
-            let(:pm_event) { Fabricate(:event, post: pm_post) }
-
-            it "does not send notifications to users without access to the PM" do
-              expect(Guardian.new(disallowed_user).can_see?(pm_topic)).to be(false)
-              expect { pm_event.create_notification!(disallowed_user, pm_post) }.not_to change {
-                Notification.count
-              }
-            end
-
-            it "does send notifications to users with access to the PM" do
-              expect(Guardian.new(allowed_user).can_see?(pm_topic)).to be(true)
-              expect { pm_event.create_notification!(allowed_user, pm_post) }.to change {
-                Notification.count
-              }.by(1)
-            end
-          end
-        end
-      end
-
-      context "when a post event has been updated" do
-        context "when the associated post is the OP" do
-          let!(:post_event) do
-            Fabricate(
-              :event,
-              post: first_post,
+          expect {
+            DiscourseEvents::Events::Event.create!(
+              id: first_post.id,
               original_starts_at: starts_at,
               original_ends_at: ends_at,
             )
-          end
+          }.to change { DiscourseEvents::Events::EventDate.count }
+          first_post.topic.reload
 
-          it "sets the topic custom field" do
-            first_post.topic.reload
+          expect(first_post_starts_at).to eq_time(starts_at)
+          expect(first_post_ends_at).to eq_time(ends_at)
+          expect(DiscourseEvents::Events::EventDate.last.starts_at).to eq_time(starts_at)
+          expect(DiscourseEvents::Events::EventDate.last.ends_at).to eq_time(ends_at)
+        end
+      end
 
-            expect(first_post.is_first_post?).to be(true)
-            expect(first_post_starts_at).to eq_time(starts_at)
-            expect(first_post_ends_at).to eq_time(ends_at)
+      context "when the associated post is not the OP" do
+        it "doesn’t set the topic custom field but still creates event date" do
+          expect(second_post.is_first_post?).to be(false)
+          expect(second_post.topic.custom_fields).to be_blank
 
-            first_event_date = post_event.event_dates.last
-            expect(first_event_date.starts_at).to eq_time(starts_at)
-            expect(first_event_date.finished_at).to be nil
-
-            post_event.update_with_params!(
-              original_starts_at: alt_starts_at,
-              original_ends_at: alt_ends_at,
+          expect {
+            DiscourseEvents::Events::Event.create!(
+              id: second_post.id,
+              original_starts_at: starts_at,
             )
-            first_post.topic.reload
-            first_event_date.reload
+          }.to change { DiscourseEvents::Events::EventDate.count }
+          second_post.topic.reload
 
-            second_event_date = post_event.event_dates.last
+          expect(second_post.topic.custom_fields).to be_blank
+        end
+      end
 
-            expect(
-              Time.zone.parse(
-                first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
-              ),
-            ).to eq(alt_starts_at)
-            expect(
-              Time.zone.parse(
-                first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
-              ),
-            ).to eq(alt_ends_at)
+      describe "before the event starts" do
+        it "does notify the user" do
+          expect { event.create_notification!(notified_user, first_post) }.to change {
+            Notification.count
+          }.by(1)
+        end
+      end
 
-            expect(first_event_date.finished_at).not_to be nil
-            expect(second_event_date.starts_at).to eq_time(alt_starts_at)
+      describe "after the event starts" do
+        it "doesn't notify the user" do
+          expect { late_event.create_notification!(notified_user, first_post) }.not_to change {
+            Notification.count
+          }
+        end
+      end
 
-            second_event_date.update_columns(finished_at: Time.current)
-            expect(post_event.starts_at).to eq_time(alt_starts_at)
-            expect(post_event.ends_at).to eq_time(alt_ends_at)
-          end
+      describe "with private message topics" do
+        let(:pm_owner) { Fabricate(:user) }
+        let(:allowed_user) { Fabricate(:user) }
+        let(:disallowed_user) { Fabricate(:user) }
+        let(:pm_topic) do
+          Fabricate(:private_message_topic, user: pm_owner, recipient: allowed_user)
+        end
+        let(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_owner) }
+        let(:pm_event) { Fabricate(:event, post: pm_post) }
+
+        it "does not send notifications to users without access to the PM" do
+          expect(Guardian.new(disallowed_user).can_see?(pm_topic)).to be(false)
+          expect { pm_event.create_notification!(disallowed_user, pm_post) }.not_to change {
+            Notification.count
+          }
         end
 
-        context "when the associated post is not the OP" do
-          let(:post_event) { Fabricate(:event, post: second_post, original_starts_at: starts_at) }
-
-          it "doesn’t set the topic custom field" do
-            expect(second_post.is_first_post?).to be(false)
-            expect(
-              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
-            ).to be_blank
-
-            post_event.update_with_params!(original_starts_at: alt_starts_at)
-            second_post.topic.reload
-
-            expect(
-              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
-            ).to be_blank
-
-            second_event_date = post_event.event_dates.last
-            expect(second_event_date.starts_at).to eq_time(alt_starts_at)
-          end
+        it "does send notifications to users with access to the PM" do
+          expect(Guardian.new(allowed_user).can_see?(pm_topic)).to be(true)
+          expect { pm_event.create_notification!(allowed_user, pm_post) }.to change {
+            Notification.count
+          }.by(1)
         end
       end
     end
 
-    describe "#after_commit[:destroy]" do
-      context "when a post event has been destroyed" do
-        context "when the associated post is the OP" do
-          let!(:post_event) do
-            Fabricate(
-              :event,
-              post: first_post,
-              original_starts_at: starts_at,
-              original_ends_at: ends_at,
-            )
-          end
-
-          it "sets the topic custom field" do
-            first_post.topic.reload
-
-            expect(first_post.is_first_post?).to be(true)
-            expect(first_post_starts_at).to eq_time(starts_at)
-            expect(first_post_ends_at).to eq_time(ends_at)
-
-            post_event.destroy!
-            first_post.topic.reload
-
-            expect(
-              first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
-            ).to be_blank
-            expect(
-              first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
-            ).to be_blank
-          end
+    context "when a post event has been updated" do
+      context "when the associated post is the OP" do
+        let!(:post_event) do
+          Fabricate(
+            :event,
+            post: first_post,
+            original_starts_at: starts_at,
+            original_ends_at: ends_at,
+          )
         end
 
-        context "when the associated post is not the OP" do
-          let!(:first_post_event) do
-            Fabricate(
-              :event,
-              post: first_post,
-              original_starts_at: starts_at,
-              original_ends_at: ends_at,
-            )
-          end
-          let!(:second_post_event) do
-            Fabricate(
-              :event,
-              post: second_post,
-              original_starts_at: starts_at,
-              original_ends_at: ends_at,
-            )
-          end
+        it "sets the topic custom field" do
+          first_post.topic.reload
 
-          it "doesn’t change the topic custom field" do
-            second_post.topic.reload
+          expect(first_post.is_first_post?).to be(true)
+          expect(first_post_starts_at).to eq_time(starts_at)
+          expect(first_post_ends_at).to eq_time(ends_at)
 
-            expect(first_post.is_first_post?).to be(true)
-            expect(
-              Time.zone.parse(
-                second_post.topic.custom_fields[
-                  DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
-                ],
-              ),
-            ).to eq(starts_at)
-            expect(
-              Time.zone.parse(
-                second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
-              ),
-            ).to eq(ends_at)
-            expect(second_post.is_first_post?).to be(false)
+          first_event_date = post_event.event_dates.last
+          expect(first_event_date.starts_at).to eq_time(starts_at)
+          expect(first_event_date.finished_at).to be nil
 
-            second_post_event.destroy!
-            second_post.topic.reload
+          post_event.update_with_params!(
+            original_starts_at: alt_starts_at,
+            original_ends_at: alt_ends_at,
+          )
+          first_post.topic.reload
+          first_event_date.reload
 
-            expect(
-              Time.zone.parse(
-                second_post.topic.custom_fields[
-                  DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
-                ],
-              ),
-            ).to eq(starts_at)
-            expect(
-              Time.zone.parse(
-                second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
-              ),
-            ).to eq(ends_at)
-          end
+          second_event_date = post_event.event_dates.last
+
+          expect(
+            Time.zone.parse(
+              first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+            ),
+          ).to eq(alt_starts_at)
+          expect(
+            Time.zone.parse(
+              first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
+            ),
+          ).to eq(alt_ends_at)
+
+          expect(first_event_date.finished_at).not_to be nil
+          expect(second_event_date.starts_at).to eq_time(alt_starts_at)
+
+          second_event_date.update_columns(finished_at: Time.current)
+          expect(post_event.starts_at).to eq_time(alt_starts_at)
+          expect(post_event.ends_at).to eq_time(alt_ends_at)
+        end
+      end
+
+      context "when the associated post is not the OP" do
+        let(:post_event) { Fabricate(:event, post: second_post, original_starts_at: starts_at) }
+
+        it "doesn’t set the topic custom field" do
+          expect(second_post.is_first_post?).to be(false)
+          expect(
+            second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+          ).to be_blank
+
+          post_event.update_with_params!(original_starts_at: alt_starts_at)
+          second_post.topic.reload
+
+          expect(
+            second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+          ).to be_blank
+
+          second_event_date = post_event.event_dates.last
+          expect(second_event_date.starts_at).to eq_time(alt_starts_at)
+        end
+      end
+    end
+
+    context "when a post event has been destroyed" do
+      context "when the associated post is the OP" do
+        let!(:post_event) do
+          Fabricate(
+            :event,
+            post: first_post,
+            original_starts_at: starts_at,
+            original_ends_at: ends_at,
+          )
+        end
+
+        it "sets the topic custom field" do
+          first_post.topic.reload
+
+          expect(first_post.is_first_post?).to be(true)
+          expect(first_post_starts_at).to eq_time(starts_at)
+          expect(first_post_ends_at).to eq_time(ends_at)
+
+          post_event.destroy!
+          first_post.topic.reload
+
+          expect(
+            first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+          ).to be_blank
+          expect(
+            first_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
+          ).to be_blank
+        end
+      end
+
+      context "when the associated post is not the OP" do
+        before do
+          Fabricate(
+            :event,
+            post: first_post,
+            original_starts_at: starts_at,
+            original_ends_at: ends_at,
+          )
+        end
+
+        let!(:second_post_event) do
+          Fabricate(
+            :event,
+            post: second_post,
+            original_starts_at: starts_at,
+            original_ends_at: ends_at,
+          )
+        end
+
+        it "doesn’t change the topic custom field" do
+          second_post.topic.reload
+
+          expect(first_post.is_first_post?).to be(true)
+          expect(
+            Time.zone.parse(
+              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+            ),
+          ).to eq(starts_at)
+          expect(
+            Time.zone.parse(
+              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
+            ),
+          ).to eq(ends_at)
+          expect(second_post.is_first_post?).to be(false)
+
+          second_post_event.destroy!
+          second_post.topic.reload
+
+          expect(
+            Time.zone.parse(
+              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT],
+            ),
+          ).to eq(starts_at)
+          expect(
+            Time.zone.parse(
+              second_post.topic.custom_fields[DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT],
+            ),
+          ).to eq(ends_at)
         end
       end
     end
@@ -650,47 +643,45 @@ describe DiscourseEvents::Events::Event do
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
-    context "with ends_at" do
-      context "with starts_at < current date" do
-        context "with ends_at < current date" do
-          it "is ongoing" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: 2.hours.ago,
-                original_ends_at: 1.hour.ago,
-                post: first_post,
-              )
+    context "with starts_at before the current date and an end date" do
+      context "with ends_at < current date" do
+        it "is ongoing" do
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: 2.hours.ago,
+              original_ends_at: 1.hour.ago,
+              post: first_post,
+            )
 
-            expect(post_event.ongoing?).to be(false)
-          end
-        end
-
-        context "with ends_at > current date" do
-          it "is not ongoing" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: 2.hours.ago,
-                original_ends_at: 3.hours.from_now,
-                post: first_post,
-              )
-
-            expect(post_event.ongoing?).to be(true)
-          end
+          expect(post_event.ongoing?).to be(false)
         end
       end
 
-      context "when starts_at > current date" do
-        context "when ends_at > current date" do
-          it "is not ongoing" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: 1.hour.from_now,
-                original_ends_at: 2.hours.from_now,
-                post: first_post,
-              )
+      context "with ends_at > current date" do
+        it "is not ongoing" do
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: 2.hours.ago,
+              original_ends_at: 3.hours.from_now,
+              post: first_post,
+            )
 
-            expect(post_event.ongoing?).to be(false)
-          end
+          expect(post_event.ongoing?).to be(true)
+        end
+      end
+    end
+
+    context "when starts_at > current date" do
+      context "when ends_at > current date" do
+        it "is not ongoing" do
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: 1.hour.from_now,
+              original_ends_at: 2.hours.from_now,
+              post: first_post,
+            )
+
+          expect(post_event.ongoing?).to be(false)
         end
       end
     end
@@ -825,46 +816,44 @@ describe DiscourseEvents::Events::Event do
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
-    context "with ends_at" do
-      context "when starts_at < current date" do
-        context "when ends_at < current date" do
-          it "is expired" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: DateTime.parse("2020-04-22 14:05"),
-                original_ends_at: DateTime.parse("2020-04-23 14:05"),
-                post: first_post,
-              )
+    context "when starts_at is before the current date and an end date is present" do
+      context "when ends_at < current date" do
+        it "is expired" do
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: DateTime.parse("2020-04-22 14:05"),
+              original_ends_at: DateTime.parse("2020-04-23 14:05"),
+              post: first_post,
+            )
 
-            expect(post_event.expired?).to be(true)
-          end
-        end
-
-        context "when ends_at > current date" do
-          it "is not expired" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: DateTime.parse("2020-04-24 14:15"),
-                original_ends_at: DateTime.parse("2020-04-25 11:05"),
-                post: first_post,
-              )
-
-            expect(post_event.expired?).to be(false)
-          end
+          expect(post_event.expired?).to be(true)
         end
       end
 
-      context "when starts_at > current date" do
+      context "when ends_at > current date" do
         it "is not expired" do
           post_event =
             DiscourseEvents::Events::Event.create!(
-              original_starts_at: DateTime.parse("2020-04-25 14:05"),
-              original_ends_at: DateTime.parse("2020-04-26 14:05"),
+              original_starts_at: DateTime.parse("2020-04-24 14:15"),
+              original_ends_at: DateTime.parse("2020-04-25 11:05"),
               post: first_post,
             )
 
           expect(post_event.expired?).to be(false)
         end
+      end
+    end
+
+    context "when starts_at > current date" do
+      it "is not expired" do
+        post_event =
+          DiscourseEvents::Events::Event.create!(
+            original_starts_at: DateTime.parse("2020-04-25 14:05"),
+            original_ends_at: DateTime.parse("2020-04-26 14:05"),
+            post: first_post,
+          )
+
+        expect(post_event.expired?).to be(false)
       end
     end
 
@@ -906,68 +895,66 @@ describe DiscourseEvents::Events::Event do
       end
     end
 
-    context "with recurring events" do
-      context "with recurrence_until set" do
-        context "when current date is before recurrence_until" do
-          it "is not expired" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: DateTime.parse("2020-04-22 14:05"),
-                original_ends_at: DateTime.parse("2020-04-22 15:05"),
-                recurrence: "FREQ=WEEKLY",
-                recurrence_until: DateTime.parse("2020-05-01 00:00"),
-                post: first_post,
-              )
-
-            expect(post_event.expired?).to be(false)
-          end
-        end
-
-        context "when current date is after recurrence_until" do
-          it "is expired" do
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: DateTime.parse("2020-04-22 14:05"),
-                original_ends_at: DateTime.parse("2020-04-22 15:05"),
-                recurrence: "FREQ=WEEKLY",
-                recurrence_until: DateTime.parse("2020-04-23 00:00"),
-                post: first_post,
-              )
-
-            expect(post_event.expired?).to be(true)
-          end
-        end
-
-        context "when current date equals recurrence_until" do
-          it "is not expired" do
-            current_time = DateTime.parse("2020-04-24 14:10")
-            post_event =
-              DiscourseEvents::Events::Event.create!(
-                original_starts_at: DateTime.parse("2020-04-22 14:05"),
-                original_ends_at: DateTime.parse("2020-04-22 15:05"),
-                recurrence: "FREQ=WEEKLY",
-                recurrence_until: current_time,
-                post: first_post,
-              )
-
-            expect(post_event.expired?).to be(false)
-          end
-        end
-      end
-
-      context "without recurrence_until set" do
-        it "never expires" do
+    context "with recurring events and recurrence_until set" do
+      context "when current date is before recurrence_until" do
+        it "is not expired" do
           post_event =
             DiscourseEvents::Events::Event.create!(
               original_starts_at: DateTime.parse("2020-04-22 14:05"),
               original_ends_at: DateTime.parse("2020-04-22 15:05"),
               recurrence: "FREQ=WEEKLY",
-              recurrence_until: nil,
+              recurrence_until: DateTime.parse("2020-05-01 00:00"),
               post: first_post,
             )
 
           expect(post_event.expired?).to be(false)
         end
+      end
+
+      context "when current date is after recurrence_until" do
+        it "is expired" do
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: DateTime.parse("2020-04-22 14:05"),
+              original_ends_at: DateTime.parse("2020-04-22 15:05"),
+              recurrence: "FREQ=WEEKLY",
+              recurrence_until: DateTime.parse("2020-04-23 00:00"),
+              post: first_post,
+            )
+
+          expect(post_event.expired?).to be(true)
+        end
+      end
+
+      context "when current date equals recurrence_until" do
+        it "is not expired" do
+          current_time = DateTime.parse("2020-04-24 14:10")
+          post_event =
+            DiscourseEvents::Events::Event.create!(
+              original_starts_at: DateTime.parse("2020-04-22 14:05"),
+              original_ends_at: DateTime.parse("2020-04-22 15:05"),
+              recurrence: "FREQ=WEEKLY",
+              recurrence_until: current_time,
+              post: first_post,
+            )
+
+          expect(post_event.expired?).to be(false)
+        end
+      end
+    end
+
+    context "without recurrence_until set" do
+      it "never expires" do
+        post_event =
+          DiscourseEvents::Events::Event.create!(
+            original_starts_at: DateTime.parse("2020-04-22 14:05"),
+            original_ends_at: DateTime.parse("2020-04-22 15:05"),
+            recurrence: "FREQ=WEEKLY",
+            recurrence_until: nil,
+            post: first_post,
+          )
+
+        expect(post_event.expired?).to be(false)
       end
     end
   end
@@ -1257,7 +1244,7 @@ describe DiscourseEvents::Events::Event do
       end
 
       it "still returns ends_at from event_dates" do
-        expect(endless_recurring_event.starts_at).not_to be_nil
+        expect(endless_recurring_event.ends_at).not_to be_nil
       end
     end
 
@@ -1479,109 +1466,109 @@ describe DiscourseEvents::Events::Event do
       expect(post.image_upload_id).to eq(other_upload.id)
     end
   end
-end
 
-describe DiscourseEvents::Events::Event, "#most_likely_going" do
-  before do
-    Jobs.run_immediately!
-    SiteSetting.discourse_events_enabled = true
-    SiteSetting.discourse_post_event_enabled = true
+  describe "#most_likely_going" do
+    before do
+      Jobs.run_immediately!
+      SiteSetting.discourse_events_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:event)
+
+    it "orders going invitees by RSVP time (created_at), not by user id" do
+      early_rsvp = Fabricate(:user)
+      late_rsvp = Fabricate(:user)
+      # later-created user (higher id) RSVP'd first, so should come first
+      expect(late_rsvp.id).to be > early_rsvp.id
+
+      Fabricate(
+        :post_event_invitee,
+        event:,
+        user: late_rsvp,
+        status: DiscourseEvents::Events::Invitee.statuses[:going],
+        created_at: 2.hours.ago,
+      )
+      Fabricate(
+        :post_event_invitee,
+        event:,
+        user: early_rsvp,
+        status: DiscourseEvents::Events::Invitee.statuses[:going],
+        created_at: 1.hour.ago,
+      )
+
+      expect(event.most_likely_going.map(&:user)).to eq([late_rsvp, early_rsvp])
+    end
+
+    it "groups going invitees ahead of interested ones regardless of RSVP time" do
+      interested = Fabricate(:user)
+      going = Fabricate(:user)
+
+      Fabricate(
+        :post_event_invitee,
+        event:,
+        user: interested,
+        status: DiscourseEvents::Events::Invitee.statuses[:interested],
+        created_at: 2.hours.ago,
+      )
+      Fabricate(
+        :post_event_invitee,
+        event:,
+        user: going,
+        status: DiscourseEvents::Events::Invitee.statuses[:going],
+        created_at: 1.hour.ago,
+      )
+
+      expect(event.most_likely_going.map(&:user)).to eq([going, interested])
+    end
   end
 
-  fab!(:event)
+  describe "#capacity" do
+    before do
+      Jobs.run_immediately!
+      SiteSetting.discourse_events_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
 
-  it "orders going invitees by RSVP time (created_at), not by user id" do
-    early_rsvp = Fabricate(:user)
-    late_rsvp = Fabricate(:user)
-    # later-created user (higher id) RSVP'd first, so should come first
-    expect(late_rsvp.id).to be > early_rsvp.id
-
-    Fabricate(
-      :post_event_invitee,
-      event:,
-      user: late_rsvp,
-      status: DiscourseEvents::Events::Invitee.statuses[:going],
-      created_at: 2.hours.ago,
-    )
-    Fabricate(
-      :post_event_invitee,
-      event:,
-      user: early_rsvp,
-      status: DiscourseEvents::Events::Invitee.statuses[:going],
-      created_at: 1.hour.ago,
-    )
-
-    expect(event.most_likely_going.map(&:user)).to eq([late_rsvp, early_rsvp])
+    it "detects capacity when max_attendees set" do
+      creator = Fabricate(:user)
+      topic = Fabricate(:topic, user: creator)
+      post = Fabricate(:post, user: creator, topic: topic)
+      event = Fabricate(:event, post: post, max_attendees: 1)
+      event.create_invitees(
+        [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+      )
+      expect(event.at_capacity?).to eq(true)
+    end
   end
 
-  it "groups going invitees ahead of interested ones regardless of RSVP time" do
-    interested = Fabricate(:user)
-    going = Fabricate(:user)
+  describe "#url" do
+    fab!(:post)
 
-    Fabricate(
-      :post_event_invitee,
-      event:,
-      user: interested,
-      status: DiscourseEvents::Events::Invitee.statuses[:interested],
-      created_at: 2.hours.ago,
-    )
-    Fabricate(
-      :post_event_invitee,
-      event:,
-      user: going,
-      status: DiscourseEvents::Events::Invitee.statuses[:going],
-      created_at: 1.hour.ago,
-    )
+    before { SiteSetting.discourse_post_event_enabled = true }
 
-    expect(event.most_likely_going.map(&:user)).to eq([going, interested])
-  end
-end
+    it "accepts a URI, with or without a scheme" do
+      event = Fabricate.build(:event, post: post, url: "meet.google.com/phv-rbyy-gsh")
 
-describe DiscourseEvents::Events::Event, "#capacity" do
-  before do
-    Jobs.run_immediately!
-    SiteSetting.discourse_events_enabled = true
-    SiteSetting.discourse_post_event_enabled = true
-  end
+      expect(event).to be_valid
+    end
 
-  it "detects capacity when max_attendees set" do
-    creator = Fabricate(:user)
-    topic = Fabricate(:topic, user: creator)
-    post = Fabricate(:post, user: creator, topic: topic)
-    event = Fabricate(:event, post: post, max_attendees: 1)
-    event.create_invitees(
-      [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
-    )
-    expect(event.at_capacity?).to eq(true)
-  end
-end
+    it "rejects a value that would resolve nowhere" do
+      event = Fabricate.build(:event, post: post, url: "Room 5")
 
-describe DiscourseEvents::Events::Event, "#url" do
-  fab!(:post)
+      expect(event).not_to be_valid
+      expect(event.errors.full_messages.join).to include("valid web address")
+    end
 
-  before { SiteSetting.discourse_post_event_enabled = true }
+    it "leaves an existing bad url editable" do
+      event = Fabricate(:event, post: post)
+      event.update_column(:url, "Room 5")
 
-  it "accepts a URI, with or without a scheme" do
-    event = Fabricate.build(:event, post: post, url: "meet.google.com/phv-rbyy-gsh")
+      event.reload.name = "Renamed"
+      expect(event).to be_valid
 
-    expect(event).to be_valid
-  end
-
-  it "rejects a value that would resolve nowhere" do
-    event = Fabricate.build(:event, post: post, url: "Room 5")
-
-    expect(event).not_to be_valid
-    expect(event.errors.full_messages.join).to include("valid web address")
-  end
-
-  it "leaves an existing bad url editable" do
-    event = Fabricate(:event, post: post)
-    event.update_column(:url, "Room 5")
-
-    event.reload.name = "Renamed"
-    expect(event).to be_valid
-
-    event.url = nil
-    expect(event).to be_valid
+      event.url = nil
+      expect(event).to be_valid
+    end
   end
 end

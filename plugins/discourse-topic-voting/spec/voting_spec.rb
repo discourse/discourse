@@ -2,18 +2,17 @@
 
 describe DiscourseTopicVoting do
   let!(:user0) { Fabricate(:user) }
-  let!(:user1) { Fabricate(:user) }
+  before do
+    Fabricate(:user)
+    SiteSetting.topic_voting_enabled = true
+    SiteSetting.topic_voting_show_who_voted = true
+  end
 
   let(:category1) { Fabricate(:category) }
   let(:category2) { Fabricate(:category) }
 
   let!(:topic0) { Fabricate(:topic, category: category1) }
   let!(:topic1) { Fabricate(:topic, category: category2) }
-
-  before do
-    SiteSetting.topic_voting_enabled = true
-    SiteSetting.topic_voting_show_who_voted = true
-  end
 
   it "doesn't allow users to vote more than they are allowed" do
     SiteSetting.topic_voting_tl1_vote_limit = 1

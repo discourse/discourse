@@ -234,7 +234,7 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work" do
+      it "removes the group owner" do
         group.add_owner(user)
 
         delete "/admin/groups/#{group.id}/owners.json", params: { user_id: user.id }
@@ -243,7 +243,7 @@ RSpec.describe Admin::GroupsController do
         expect(group.group_users.where(owner: true)).to eq([])
       end
 
-      it "should work with multiple users" do
+      it "works with multiple users" do
         group.add_owner(user)
         group.add_owner(user3)
 
@@ -429,7 +429,7 @@ RSpec.describe Admin::GroupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response for an invalid group_id" do
+      it "returns the right response for an invalid group_id" do
         max_id = Group.maximum(:id).to_i
         delete "/admin/groups/#{max_id + 1}.json"
         expect(response.status).to eq(404)

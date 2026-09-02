@@ -244,7 +244,7 @@ RSpec.describe Invite do
       context "when adding to another topic" do
         fab!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
-        it "should be the same invite" do
+        it "is the same invite" do
           new_invite = Invite.generate(topic.user, email: "test@example.com", topic: another_topic)
           expect(invite).to eq(new_invite)
           expect(invite.topics).to contain_exactly(topic, another_topic)
@@ -390,7 +390,7 @@ RSpec.describe Invite do
   describe "#redeem" do
     fab!(:invite)
 
-    it "works" do
+    it "creates the invited user and records the redemption" do
       user = invite.redeem
       expect(invite.invited_users.map(&:user)).to contain_exactly(user)
       expect(user.is_a?(User)).to eq(true)
@@ -443,14 +443,14 @@ RSpec.describe Invite do
     end
 
     context "as a moderator" do
-      it "will give the user a moderator flag" do
+      it "gives the user a moderator flag" do
         invite.update!(moderator: true, invited_by: Fabricate(:admin))
 
         user = invite.redeem
         expect(user).to be_moderator
       end
 
-      it "will not give the user a moderator flag if the inviter is not staff" do
+      it "does not give the user a moderator flag if the inviter is not staff" do
         # update_columns skips the ensure_valid_moderator_invite validation so we
         # can exercise the redeemer's own inviter check in isolation
         invite.update_columns(moderator: true)
@@ -472,7 +472,8 @@ RSpec.describe Invite do
         user = invite.redeem
         expect(user.groups).to contain_exactly(group)
       end
-      it "should not raise error when both group & site tag preferences same" do
+
+      it "does not raise error when both group & site tag preferences same" do
         tag = Fabricate(:tag)
         group.tracking_tags = [tag.name]
         group.save!

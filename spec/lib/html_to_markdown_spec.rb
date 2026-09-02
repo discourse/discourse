@@ -465,7 +465,7 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("> ```\n> var foo = 'bar';\n> ```")
   end
 
-  it "works" do
+  it "converts a blockquote nested in a list" do
     expect(
       html_to_markdown(
         "<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>",
@@ -550,7 +550,7 @@ RSpec.describe HtmlToMarkdown do
       )
     end
 
-    it "works" do
+    it "preserves nested emphasis across line breaks" do
       expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq(
         "A __B *C*__\n__*D* E__\n**F** G",
       )

@@ -2,6 +2,16 @@
 include ActionView::Helpers::NumberHelper
 
 RSpec.describe Onebox::Engine::TwitterStatusOnebox do
+  shared_context "with twitter engine" do
+    let(:onebox) { described_class.new(link) }
+    let(:html) { onebox.to_html }
+    let(:data) { onebox.send(:data).deep_symbolize_keys }
+
+    before do
+      stub_request(:get, link).to_return(status: 200, body: onebox_response(onebox_fixture))
+    end
+  end
+
   shared_examples_for "#to_html" do
     it "includes tweet" do
       expect(html).to include(tweet_content)
@@ -42,54 +52,37 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   shared_context "with standard tweet info" do
-    before do
-      @link = "https://twitter.com/MKBHD/status/1625192182859632661"
-      @onebox_fixture = "twitterstatus"
-    end
-
+    let(:link) { "https://twitter.com/MKBHD/status/1625192182859632661" }
+    let(:onebox_fixture) { "twitterstatus" }
     let(:full_name) { "Marques Brownlee" }
     let(:screen_name) { "MKBHD" }
     let(:avatar) { "https://pbs.twimg.com/profile_images/1468001914302390278/B_Xv_8gu_normal.jpg" }
     let(:timestamp) { "5:56 PM - 13 Feb 2023" }
-    let(:link) { @link }
     let(:favorite_count) { "47K" }
     let(:retweets_count) { "1.5K" }
   end
 
   shared_context "with quoted tweet info" do
-    before do
-      @link = "https://twitter.com/Metallica/status/1128068672289890305"
-      @onebox_fixture = "twitterstatus_quoted"
+    let(:link) { "https://twitter.com/Metallica/status/1128068672289890305" }
+    let(:onebox_fixture) { "twitterstatus_quoted" }
 
-      stub_request(:head, @link)
-      stub_request(:get, @link).to_return(status: 200, body: onebox_response(@onebox_fixture))
-    end
+    before { stub_request(:head, link) }
 
     let(:full_name) { "Metallica" }
     let(:screen_name) { "Metallica" }
     let(:avatar) { "https://pbs.twimg.com/profile_images/1597280886809952256/gsJvGiqU_normal.jpg" }
     let(:timestamp) { "10:45 PM - 13 May 2019" }
-    let(:link) { @link }
     let(:favorite_count) { "1.4K" }
     let(:retweets_count) { "170" }
   end
 
   shared_context "with featured image info" do
-    before do
-      @link = "https://twitter.com/codinghorror/status/1409351083177046020"
-      @onebox_fixture = "twitterstatus_featured_image"
-
-      stub_request(:get, @link.downcase).to_return(
-        status: 200,
-        body: onebox_response(@onebox_fixture),
-      )
-    end
-
+    let(:link) { "https://twitter.com/codinghorror/status/1409351083177046020" }
+    let(:onebox_fixture) { "twitterstatus_featured_image" }
     let(:full_name) { "Jeff Atwood" }
     let(:screen_name) { "codinghorror" }
     let(:avatar) { "https://pbs.twimg.com/profile_images/1517287320235298816/Qx-O6UCY_normal.jpg" }
     let(:timestamp) { "3:02 PM - 27 Jun 2021" }
-    let(:link) { @link }
     let(:favorite_count) { "90" }
     let(:retweets_count) { "5" }
   end
@@ -148,8 +141,9 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       context "with a standard tweet" do
         let(:tweet_content) { "I've never played Minecraft" }
         include_context "with standard tweet info"
-        before { @onebox_fixture = "twitterstatus_noclient" }
-        include_context "with engines"
+        let(:onebox_fixture) { "twitterstatus_noclient" }
+
+        include_context "with twitter engine"
 
         let(:avatar) do
           "https://pbs.twimg.com/profile_images/1468001914302390278/B_Xv_8gu_200x200.jpg"
@@ -165,34 +159,35 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
   end
 
   describe "when the domain is x.com" do
-    before do
-      @link = "https://x.com/MKBHD/status/1625192182859632661"
-      @onebox_fixture = "xstatus_noclient"
-    end
-    include_context "with engines"
+    let(:link) { "https://x.com/MKBHD/status/1625192182859632661" }
+    let(:onebox_fixture) { "xstatus_noclient" }
+
+    include_context "with twitter engine"
 
     it_behaves_like "an engine"
 
     it "returns empty html when tweet data is missing" do
-      expect(described_class.new(@link).to_html).to eq("")
+      expect(described_class.new(link).to_html).to eq("")
     end
   end
 
   context "with twitter client" do
-    before do
-      @twitter_client =
-        stub(
-          "TwitterClient",
-          status: api_response,
-          prettify_tweet: tweet_content,
-          twitter_credentials_missing?: false,
-        )
+    let(:twitter_client) do
+      stub(
+        "TwitterClient",
+        status: api_response,
+        prettify_tweet: tweet_content,
+        twitter_credentials_missing?: false,
+      )
+    end
+    let(:previous_options) { Onebox.options.to_h }
 
-      @previous_options = Onebox.options.to_h
-      Onebox.options = { twitter_client: @twitter_client }
+    before do
+      previous_options
+      Onebox.options = { twitter_client: twitter_client }
     end
 
-    after { Onebox.options = @previous_options }
+    after { Onebox.options = previous_options }
 
     context "with a standard tweet" do
       let(:tweet_content) { "I've never played Minecraft" }
@@ -240,7 +235,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       end
 
       include_context "with standard tweet info"
-      include_context "with engines"
+      include_context "with twitter engine"
 
       it_behaves_like "an engine"
       it_behaves_like "#to_html"
@@ -418,7 +413,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
       end
 
       include_context "with quoted tweet info"
-      include_context "with engines"
+      include_context "with twitter engine"
 
       it_behaves_like "an engine"
       it_behaves_like "#to_html"

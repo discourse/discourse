@@ -4,7 +4,7 @@ require_relative "../spec_helper"
 
 RSpec.describe Patreon::Campaign do
   shared_examples "campaign sync" do
-    it "should update campaigns and group users data" do
+    it "updates campaigns and group users data" do
       expect { described_class.update! }.to change { Group.count }.by(1)
 
       expect(Group.find_by(name: "patrons")).to be_present

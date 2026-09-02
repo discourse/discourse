@@ -184,7 +184,7 @@ RSpec.describe Admin::ApiController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "works" do
+      it "deletes the API key and records the action" do
         expect(ApiKey.exists?(key1.id)).to eq(true)
 
         delete "/admin/api/keys/#{key1.id}.json"

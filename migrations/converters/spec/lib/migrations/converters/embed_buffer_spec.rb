@@ -222,6 +222,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   end
 
   describe "#write_for" do
+    let(:database_context) { {} }
+
     around do |example|
       Dir.mktmpdir do |dir|
         db_path = File.join(dir, "intermediate.db")
@@ -229,8 +231,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           db_path,
           migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
         )
-        @db = Migrations::Database.connect(db_path)
-        Migrations::Database::IntermediateDB.setup(@db)
+        database_context[:connection] = Migrations::Database.connect(db_path)
+        Migrations::Database::IntermediateDB.setup(database_context[:connection])
         example.run
       ensure
         Migrations::Database::IntermediateDB.setup(nil)
@@ -238,7 +240,9 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     def rows(table)
-      [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
+      [].tap do |out|
+        database_context.fetch(:connection).query("SELECT * FROM #{table}") { |row| out << row }
+      end
     end
 
     it "inserts each recorded embed into its linkage table under the owner" do

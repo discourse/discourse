@@ -99,7 +99,7 @@ RSpec.describe InviteRedeemer do
   end
 
   describe ".create_user_from_invite" do
-    it "should be created correctly" do
+    it "is created correctly" do
       invite = Fabricate(:invite, email: "walter.white@email.com")
       user =
         InviteRedeemer.create_user_from_invite(
@@ -153,7 +153,7 @@ RSpec.describe InviteRedeemer do
       expect(error.record.errors.errors[0].attribute).to eq :"user_password.password"
     end
 
-    it "should unstage user" do
+    it "unstages user" do
       staged_user =
         Fabricate(
           :staged,
@@ -305,7 +305,7 @@ RSpec.describe InviteRedeemer do
       context "when must_approve_users setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
-        it "should redeem an invite but not approve the user when invite is created by a staff user" do
+        it "redeems an invite but not approve the user when invite is created by a staff user" do
           inviter = invite.invited_by
           inviter.update!(admin: true)
           user = invite_redeemer.redeem
@@ -318,7 +318,7 @@ RSpec.describe InviteRedeemer do
           expect(inviter.notifications.count).to eq(1)
         end
 
-        it "should redeem the invite but not approve the user when invite is created by a regular user" do
+        it "redeems the invite but not approve the user when invite is created by a regular user" do
           inviter = invite.invited_by
           user = invite_redeemer.redeem
 
@@ -330,7 +330,7 @@ RSpec.describe InviteRedeemer do
           expect(inviter.notifications.count).to eq(1)
         end
 
-        it "should redeem the invite and approve the user when user email is in auto_approve_email_domains setting" do
+        it "redeems the invite and approve the user when user email is in auto_approve_email_domains setting" do
           SiteSetting.auto_approve_email_domains = "example.com"
           user = invite_redeemer.redeem
 
@@ -341,7 +341,7 @@ RSpec.describe InviteRedeemer do
         end
       end
 
-      it "should redeem the invite if invited by non staff and approve if staff not required to approve" do
+      it "redeems the invite if invited by non staff and approve if staff not required to approve" do
         inviter = invite.invited_by
         user = invite_redeemer.redeem
 
@@ -352,7 +352,7 @@ RSpec.describe InviteRedeemer do
         expect(user.approved).to eq(false)
       end
 
-      it "should delete invite if invited_by user has been removed" do
+      it "deletes invite if invited_by user has been removed" do
         invite.invited_by.destroy!
         expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -491,7 +491,7 @@ RSpec.describe InviteRedeemer do
         expect(another_user).to eq(nil)
       end
 
-      it "should correctly update the invite redeemed_at date" do
+      it "correctlies update the invite redeemed_at date" do
         SiteSetting.invite_expiry_days = 2
         invite.update!(created_at: 10.days.ago)
 
@@ -626,7 +626,7 @@ RSpec.describe InviteRedeemer do
         )
       end
 
-      it "should redeem the invite if InvitedUser record does not exists for email" do
+      it "redeems the invite if InvitedUser record does not exists for email" do
         invite_redeemer.redeem
         invite_link.reload
 

@@ -5,14 +5,16 @@ RSpec.describe "backups" do
   let(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2021-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2021-02-11-065935.tar.gz" }
+  let(:backup_paths) { [] }
 
   def create_backup_files(*filenames)
-    @paths =
+    backup_paths.concat(
       filenames.map do |filename|
         path = backup_path(filename)
         File.open(path, "w") { |f| f.write("test backup") }
         path
-      end
+      end,
+    )
   end
 
   def backup_path(filename)
@@ -24,13 +26,13 @@ RSpec.describe "backups" do
     sign_in(admin)
     SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
     create_backup_files(backup_filename)
+    BackupRestore.stubs(:backup!)
   end
 
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exist?(path) }
-    @paths = nil
+    backup_paths.each { |path| File.delete(path) if File.exist?(path) }
   end
 
   path "/admin/backups.json" do
@@ -63,8 +65,6 @@ RSpec.describe "backups" do
       response "200", "success response" do
         expected_response_schema = load_spec_schema("success_ok_response")
         schema expected_response_schema
-
-        before { BackupRestore.stubs(:backup!) }
 
         let(:params) { { "with_uploads" => false } }
 

@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSubscriptions::Admin::SubscriptionsController do
-  before { SiteSetting.discourse_subscriptions_enabled = true }
+  before do
+    SiteSetting.discourse_subscriptions_enabled = true
+    Fabricate(:subscription, external_id: "sub_12345", customer_id: customer.id)
+    Fabricate(:subscription, external_id: "sub_77777", customer_id: customer.id)
+  end
+
+  let(:customer) do
+    Fabricate(:customer, user_id: user.id, customer_id: "c_123", product_id: "pr_34578")
+  end
+  let(:user) { Fabricate(:user) }
 
   it "is a subclass of AdminController" do
     expect(DiscourseSubscriptions::Admin::SubscriptionsController < ::Admin::AdminController).to eq(
       true,
     )
-  end
-
-  let(:user) { Fabricate(:user) }
-  let(:customer) do
-    Fabricate(:customer, user_id: user.id, customer_id: "c_123", product_id: "pr_34578")
-  end
-
-  before do
-    Fabricate(:subscription, external_id: "sub_12345", customer_id: customer.id)
-    Fabricate(:subscription, external_id: "sub_77777", customer_id: customer.id)
   end
 
   context "when unauthenticated" do

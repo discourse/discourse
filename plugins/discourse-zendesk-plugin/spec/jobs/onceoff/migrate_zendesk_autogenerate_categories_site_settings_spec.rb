@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::MigrateZendeskAutogenerateCategoriesSiteSettings do
-  it "should migrate the site settings correctly" do
+  it "migrates the site settings correctly" do
     category = Fabricate(:category)
     category_2 = Fabricate(:category)
 

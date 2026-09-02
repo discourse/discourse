@@ -96,7 +96,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(parent.reload.subagent_ids).to eq([])
   end
 
-  it "will not allow deletion or editing of system agents" do
+  it "does not allow deletion or editing of system agents" do
     visit "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}/edit"
     expect(page).not_to have_selector(".ai-agent-editor__delete")
     expect(form.field("system_prompt")).to be_disabled
@@ -215,7 +215,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(agent_editor_page).to have_floating_actions
   end
 
-  it "will enable agent right away when you click on enable but does not save side effects" do
+  it "enables agent right away when you click on enable but does not save side effects" do
     agent = Fabricate(:ai_agent, enabled: false)
 
     visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"

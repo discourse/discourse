@@ -19,7 +19,7 @@ RSpec.describe "Reply to message - smoke" do
   end
 
   context "when two users create a thread on the same message" do
-    it "works" do
+    it "creates both replies in the same thread" do
       sign_in(user_1)
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(original_message)

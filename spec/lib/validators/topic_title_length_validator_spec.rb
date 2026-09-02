@@ -4,9 +4,10 @@
 RSpec.describe TopicTitleLengthValidator do
   # simulate Rails behavior (singleton)
   def validate
-    @validator ||= TopicTitleLengthValidator.new(attributes: :title)
-    @validator.validate_each(record, :title, record.title)
+    validator.validate_each(record, :title, record.title)
   end
+
+  let(:validator) { TopicTitleLengthValidator.new(attributes: :title) }
 
   shared_examples "validating any topic title" do
     it "adds an error when topic title is greater than SiteSetting.max_topic_title_length" do

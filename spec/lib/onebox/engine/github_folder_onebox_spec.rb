@@ -2,17 +2,17 @@
 
 RSpec.describe Onebox::Engine::GithubFolderOnebox do
   context "without fragments" do
-    before do
-      @link = "https://github.com/discourse/discourse/tree/main/spec/fixtures"
-      @uri = "https://github.com/discourse/discourse/tree/main/spec/fixtures"
+    include_context "with engines" do
+      let(:link) { "https://github.com/discourse/discourse/tree/main/spec/fixtures" }
+    end
 
-      stub_request(:get, @uri).to_return(
+    before do
+      stub_request(:get, link).to_return(
         status: 200,
         body: onebox_response(described_class.onebox_name),
       )
     end
 
-    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do
@@ -33,52 +33,54 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
   end
 
   context "with fragments" do
+    let(:link) { "https://github.com/discourse/discourse#setting-up-discourse" }
+    let(:uri) { "https://github.com/discourse/discourse" }
+    let(:onebox) { described_class.new(link) }
+
     before do
-      @link = "https://github.com/discourse/discourse#setting-up-discourse"
-      @uri = "https://github.com/discourse/discourse"
-      stub_request(:get, @uri).to_return(
+      stub_request(:get, uri).to_return(
         status: 200,
         body: onebox_response("githubfolder-discourse-root"),
       )
-      @onebox = described_class.new(@link)
     end
 
     it "extracts subtitles when linking to docs" do
-      expect(@onebox.to_html).to include(
+      expect(onebox.to_html).to include(
         "<a href=\"https://github.com/discourse/discourse#setting-up-discourse\" target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>",
       )
     end
   end
 
   context "with rdoc fragments" do
+    let(:link) { "https://github.com/ruby/rdoc#description-" }
+    let(:uri) { "https://github.com/ruby/rdoc" }
+    let(:onebox) { described_class.new(link) }
+
     before do
-      @link = "https://github.com/ruby/rdoc#description-"
-      @uri = "https://github.com/ruby/rdoc"
-      stub_request(:get, @uri).to_return(
+      stub_request(:get, uri).to_return(
         status: 200,
         body: onebox_response("githubfolder-rdoc-root"),
       )
-      @onebox = described_class.new(@link)
     end
 
     it "extracts subtitles when linking to docs" do
-      expect(@onebox.to_html).to include(
+      expect(onebox.to_html).to include(
         "<a href=\"https://github.com/ruby/rdoc#description-\" target=\"_blank\" rel=\"noopener\">GitHub - ruby/rdoc: RDoc produces HTML and online documentation for Ruby... - Description¶ ↑</a>",
       )
     end
   end
 
   context "without opengraph tags" do
-    before do
-      @link = "https://github.com/organization/repo-foobar/tree/main/models"
-      @uri = "https://github.com/organization/repo-foobar/tree/main/models"
+    let(:link) { "https://github.com/organization/repo-foobar/tree/main/models" }
+    let(:uri) { link }
+    let(:onebox) { described_class.new(link) }
 
-      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubfolder-no-og"))
-      @onebox = described_class.new(@link)
+    before do
+      stub_request(:get, uri).to_return(status: 200, body: onebox_response("githubfolder-no-og"))
     end
 
     it "falls back to URL-derived title and path" do
-      html = @onebox.to_html
+      html = onebox.to_html
       expect(html).to include("organization/repo-foobar")
       expect(html).to include("main/models")
     end

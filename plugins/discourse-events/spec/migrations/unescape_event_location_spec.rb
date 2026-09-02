@@ -7,12 +7,13 @@ require Rails.root.join(
 RSpec.describe UnescapeEventLocation do
   subject(:migrate) { described_class.new.up }
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
-
-  after { ActiveRecord::Migration.verbose = @original_verbose }
 
   it "unescapes stored locations exactly two levels, matching re-derivation from raw" do
     escaped = Fabricate(:event, location: "Joe &amp; Sons (downtown)")

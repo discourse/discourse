@@ -25,6 +25,7 @@ RSpec.describe Email::Renderer do
 
   context "with email_renderer_html modifier" do
     after { DiscoursePluginRegistry.reset! }
+
     it "can modify the html" do
       Plugin::Instance
         .new

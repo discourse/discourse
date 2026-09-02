@@ -94,7 +94,7 @@ RSpec.describe "Quoting chat message transcripts" do
         message_1.rebake!
       end
 
-      it "works" do
+      it "copies the oneboxed link into the composer" do
         chat_page.visit_channel(chat_channel_1)
 
         clip_text = copy_messages_to_clipboard(message_1)

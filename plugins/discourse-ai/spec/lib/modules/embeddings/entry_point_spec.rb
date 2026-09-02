@@ -28,12 +28,6 @@ describe DiscourseAi::Embeddings::EntryPoint do
         expect { creator.create }.to change(Jobs::GenerateEmbeddings.jobs, :size).by(1) # topic_created
       end
 
-      it "queues two jobs on create if embeddings is enabled" do
-        SiteSetting.ai_embeddings_enabled = true
-
-        expect { creator.create }.to change(Jobs::GenerateEmbeddings.jobs, :size).by(1) # topic_created AND post_created
-      end
-
       it "does not queue work while the selected provider is paused" do
         SiteSetting.ai_embeddings_enabled = true
         error =

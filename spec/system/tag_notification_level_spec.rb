@@ -12,7 +12,7 @@ describe "Tag notification level" do
   before { sign_in(current_user) }
 
   describe "when changing a tag's notification level" do
-    it "should change instantly" do
+    it "changes instantly" do
       tags_page.visit_tag(tag_1)
 
       expect(notifications_tracking).to have_selected_level_name("regular")

@@ -2,6 +2,7 @@
 
 RSpec.describe TopicLink do
   let(:test_uri) { URI.parse(Discourse.base_url) }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user, title: "unique topic name") }
   fab!(:post)
@@ -128,7 +129,7 @@ RSpec.describe TopicLink do
 
       let(:post) { Fabricate(:post, topic: other_topic, user: user, raw: "some content") }
 
-      it "works" do
+      it "retains links when extracting from the same topic twice" do
         # ensure other_topic has a post
         post
 
@@ -412,7 +413,7 @@ RSpec.describe TopicLink do
   end
 
   describe "internal link from pm" do
-    it "works" do
+    it "keeps the private message link private" do
       pm = Fabricate(:topic, user: user, category_id: nil, archetype: "private_message")
       Fabricate(:post, topic: pm, user: user, raw: "some content")
 
@@ -429,7 +430,7 @@ RSpec.describe TopicLink do
   end
 
   describe "internal link from unlisted topic" do
-    it "works" do
+    it "keeps the unlisted topic link private" do
       unlisted_topic = Fabricate(:topic, user: user, visible: false)
       url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
 
@@ -581,7 +582,7 @@ RSpec.describe TopicLink do
         expect(array[1].clicks).to eq(1)
       end
 
-      it "secures internal links correctly" do
+      it "secures internal links by category permission" do
         category = Fabricate(:category)
         secret_topic = Fabricate(:topic, category: category)
 
@@ -613,7 +614,7 @@ RSpec.describe TopicLink do
         expect(TopicLink.topic_map(Guardian.new, post.topic_id).count).to eq(0)
       end
 
-      it "secures internal links correctly" do
+      it "secures internal links by target-topic access" do
         other_topic = Fabricate(:topic)
         other_user = Fabricate(:user)
 
@@ -641,7 +642,7 @@ RSpec.describe TopicLink do
         Fabricate(:post, user: user, raw: "Check out this topic #{post.topic.url}/122131")
       end
 
-      it "should return the right response" do
+      it "returns the right response" do
         TopicLink.extract_from(post_with_internal_link)
 
         result = TopicLink.duplicate_lookup(post_with_internal_link.topic)

@@ -10,7 +10,7 @@ RSpec.describe SystemMessage do
 
     before { SiteSetting.site_contact_username = admin.username }
 
-    it "should create a post correctly" do
+    it "creates a post correctly" do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)
       topic = post.topic
@@ -62,7 +62,7 @@ RSpec.describe SystemMessage do
       expect(post.raw).to eq("override body")
     end
 
-    it "should allow site_contact_group_name" do
+    it "allows site_contact_group_name" do
       group = Fabricate(:group)
       SiteSetting.site_contact_group_name = group.name
 

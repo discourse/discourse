@@ -16,6 +16,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     )
   end
   let(:upload_path) { Discourse.store.upload_path }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do
@@ -539,26 +540,26 @@ RSpec.describe Jobs::PullHotlinkedImages do
     subject(:job) { described_class.new }
 
     describe "when url is invalid" do
-      it "should return false" do
+      it "returns false" do
         expect(job.should_download_image?("null")).to eq(false)
         expect(job.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe "when url is valid" do
-      it "should return true" do
+      it "returns true" do
         expect(job.should_download_image?("http://meta.discourse.org")).to eq(true)
         expect(job.should_download_image?("//meta.discourse.org")).to eq(true)
       end
     end
 
     describe "when url is an upload" do
-      it "should return false for original" do
+      it "returns false for original" do
         expect(job.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
       context "when secure uploads enabled" do
-        it "should return false for secure-upload url" do
+        it "returns false for secure-upload url" do
           setup_s3
           SiteSetting.secure_uploads = true
 
@@ -569,7 +570,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         end
       end
 
-      it "should return true for optimized" do
+      it "returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
         expect(job.should_download_image?(src)).to eq(true)
       end

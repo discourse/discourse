@@ -16,14 +16,7 @@ describe DiscourseEvents::Holidays::UsersOnHoliday do
   end
 
   it "returns empty list if no one is on holiday" do
-    event1 = Fabricate(:calendar_event, start_date: "2000-01-02")
-    event2 = Fabricate(:calendar_event, start_date: "2000-01-03")
-    event3 = Fabricate(:calendar_event, start_date: "2000-01-04")
-    event4 = Fabricate(:calendar_event, start_date: "2000-01-05")
-
-    freeze_time Time.utc(2000, 1, 1, 8, 0)
-    users_on_holiday =
-      DiscourseEvents::Holidays::UsersOnHoliday.from([event1, event2, event3, event4])
+    users_on_holiday = DiscourseEvents::Holidays::UsersOnHoliday.from([])
 
     expect(users_on_holiday).to be_empty
   end

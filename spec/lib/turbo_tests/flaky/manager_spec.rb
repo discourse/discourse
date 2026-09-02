@@ -54,7 +54,7 @@ RSpec.describe TurboTests::Flaky::Manager do
   end
 
   describe ".potential_flaky_tests" do
-    it "should return the failed examples' `location_rerun_argument`" do
+    it "returns the failed examples' `location_rerun_argument`" do
       with_fake_path do
         TurboTests::Flaky::Manager.log_potential_flaky_tests([fake_example_1, fake_example_2])
 
@@ -69,7 +69,7 @@ RSpec.describe TurboTests::Flaky::Manager do
   end
 
   describe ".log_potential_flaky_tests" do
-    it "should log the failed examples correctly" do
+    it "logs the failed examples correctly" do
       with_fake_path do
         TurboTests::Flaky::Manager.log_potential_flaky_tests([fake_example_1, fake_example_2])
 
@@ -105,7 +105,7 @@ RSpec.describe TurboTests::Flaky::Manager do
   end
 
   describe ".remove_example" do
-    it "should remove the from the log file" do
+    it "removes the from the log file" do
       with_fake_path do
         TurboTests::Flaky::Manager.log_potential_flaky_tests([fake_example_1, fake_example_2])
         TurboTests::Flaky::Manager.remove_example([rspec_example_1])
@@ -117,7 +117,7 @@ RSpec.describe TurboTests::Flaky::Manager do
       end
     end
 
-    it "should delete the log file if there are no more examples" do
+    it "deletes the log file if there are no more examples" do
       with_fake_path do
         TurboTests::Flaky::Manager.log_potential_flaky_tests([fake_example_1, fake_example_2])
         TurboTests::Flaky::Manager.remove_example([rspec_example_1, rspec_example_2])

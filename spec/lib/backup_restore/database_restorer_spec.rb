@@ -160,7 +160,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     end
 
     describe "database connection" do
-      it "it is not erroring for non-multisite" do
+      it "is not erroring for non-multisite" do
         expect { execute_stubbed_restore }.not_to raise_error
       end
     end

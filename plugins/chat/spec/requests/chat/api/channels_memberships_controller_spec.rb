@@ -42,7 +42,7 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
 
   describe "#create" do
     describe "success" do
-      it "works" do
+      it "creates the channel membership" do
         add_users_to_channel(current_user, channel_1)
         post "/chat/api/channels/#{channel_1.id}/memberships",
              params: {
@@ -88,7 +88,7 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
       let(:current_user) { Fabricate(:admin) }
 
       describe "success" do
-        it "works" do
+        it "deletes the channel membership" do
           delete "/chat/api/channels/#{channel_1.id}/memberships/#{other_user.id}"
 
           expect(response.status).to eq(200)

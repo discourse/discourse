@@ -64,7 +64,7 @@ RSpec.describe PostAnalyzer do
       expect(cooked).to eq("<p><em>this is italic</em></p>")
     end
 
-    it "should respect SiteSetting.max_oneboxes_per_post" do
+    it "respects SiteSetting.max_oneboxes_per_post" do
       SiteSetting.max_oneboxes_per_post = 2
       Oneboxer.expects(:cached_onebox).with(url).returns("something").twice
 
@@ -146,7 +146,7 @@ RSpec.describe PostAnalyzer do
         expect(post_analyzer.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
-      it "it counts properly with more than one link on the same host" do
+      it "counts properly with more than one link on the same host" do
         post_analyzer = PostAnalyzer.new(raw_three_links, default_topic_id)
         expect(post_analyzer.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
@@ -232,7 +232,7 @@ RSpec.describe PostAnalyzer do
       expect(post_analyzer.link_count).to eq(0)
     end
 
-    it "returns 0 links for a post with mentions" do
+    it "returns 0 links for a post with hashtags" do
       post_analyzer = PostAnalyzer.new(raw_post_with_mentions, default_topic_id)
       expect(post_analyzer.link_count).to eq(0)
     end

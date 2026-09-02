@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe About do
+  after { DiscoursePluginRegistry.reset! }
+
   describe "stats cache" do
     include_examples "stats cacheable"
   end
@@ -11,8 +13,6 @@ RSpec.describe About do
       stub(enabled?: true),
     )
   end
-
-  after { DiscoursePluginRegistry.reset! }
 
   describe "#stats" do
     it "adds plugin stats to the output" do

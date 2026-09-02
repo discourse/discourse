@@ -138,7 +138,7 @@ RSpec.describe DiscourseDataExplorer::Parameter do
   end
 
   describe ".create_from_sql" do
-    it "should not validate default value" do
+    it "does not validate default value" do
       TEST_SQL = <<~SQL
         -- [params]
         -- user_id      :user_id = user_not_exists

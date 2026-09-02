@@ -86,9 +86,15 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   end
 
   context "when the public key algorithm is not supported by the server" do
+    let(:original_supported_algorithms) { DiscourseWebauthn::SUPPORTED_ALGORITHMS }
+
     before do
-      @original_supported_alg_value = DiscourseWebauthn::SUPPORTED_ALGORITHMS
+      original_supported_algorithms
       silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = [-999] }
+    end
+
+    after do
+      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = original_supported_algorithms }
     end
 
     it "raises a UnsupportedPublicKeyAlgorithmError" do
@@ -97,16 +103,20 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
         I18n.t("webauthn.validation.unsupported_public_key_algorithm_error"),
       )
     end
-
-    after do
-      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = @original_supported_alg_value }
-    end
   end
 
   context "when the attestation format is not supported" do
+    let(:original_attestation_formats) { DiscourseWebauthn::VALID_ATTESTATION_FORMATS }
+
     before do
-      @original_supported_alg_value = DiscourseWebauthn::VALID_ATTESTATION_FORMATS
+      original_attestation_formats
       silence_warnings { DiscourseWebauthn::VALID_ATTESTATION_FORMATS = ["err"] }
+    end
+
+    after do
+      silence_warnings do
+        DiscourseWebauthn::VALID_ATTESTATION_FORMATS = original_attestation_formats
+      end
     end
 
     it "raises a UnsupportedAttestationFormatError" do
@@ -114,12 +124,6 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
         DiscourseWebauthn::UnsupportedAttestationFormatError,
         I18n.t("webauthn.validation.unsupported_attestation_format_error"),
       )
-    end
-
-    after do
-      silence_warnings do
-        DiscourseWebauthn::VALID_ATTESTATION_FORMATS = @original_supported_alg_value
-      end
     end
   end
 

@@ -14,11 +14,11 @@ RSpec.describe Patreon do
   context "with donation prompt enabled" do
     before { SiteSetting.patreon_donation_prompt_enabled = true }
 
-    it "should not show donation prompt to patrons" do
+    it "does not show donation prompt to patrons" do
       expect(described_class.show_donation_prompt_to_user?(user1)).to eq(false)
     end
 
-    it "should show donation prompt to non-patrons" do
+    it "shows donation prompt to non-patrons" do
       expect(described_class.show_donation_prompt_to_user?(user2)).to eq(true)
     end
   end
@@ -26,7 +26,7 @@ RSpec.describe Patreon do
   context "with donation prompt disabled" do
     before { SiteSetting.patreon_donation_prompt_enabled = false }
 
-    it "should show donation prompt to non-patrons" do
+    it "shows donation prompt to non-patrons" do
       expect(described_class.show_donation_prompt_to_user?(user2)).to eq(false)
     end
   end

@@ -4,7 +4,7 @@ require "spam_handler"
 
 RSpec.describe SpamHandler do
   describe "#should_prevent_registration_from_ip?" do
-    it "works" do
+    it "handles a spam post" do
       # max_new_accounts_per_registration_ip = 0 disables the check
       SiteSetting.max_new_accounts_per_registration_ip = 0
 

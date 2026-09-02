@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe OptimizedVideo do
-  before(:each) do
+  before do
     # Add video extensions to authorized extensions
     extensions = SiteSetting.authorized_extensions.split("|")
     SiteSetting.authorized_extensions = (extensions | %w[mp4 mov avi mkv]).join("|")
@@ -95,7 +95,7 @@ RSpec.describe OptimizedVideo do
   end
 
   describe "#destroy" do
-    it "should destroy the optimized video and its associated upload" do
+    it "destroys the optimized video and its associated upload" do
       optimized_video = Fabricate(:optimized_video)
       expect { optimized_video.destroy }.to change(OptimizedVideo, :count).by(-1)
       expect(Upload.exists?(optimized_video.optimized_upload_id)).to be(false)

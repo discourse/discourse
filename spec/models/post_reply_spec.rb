@@ -6,7 +6,7 @@ RSpec.describe PostReply do
   fab!(:other_post) { Fabricate(:post, topic: topic) }
 
   describe "Validations" do
-    it "should ensure that the posts belong in the same topic" do
+    it "ensures that the posts belong in the same topic" do
       expect(PostReply.new(post: post, reply: other_post)).to be_valid
 
       other_topic = Fabricate(:topic)

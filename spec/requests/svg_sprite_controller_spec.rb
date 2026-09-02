@@ -6,7 +6,7 @@ RSpec.describe SvgSpriteController do
   describe "#show" do
     before { SvgSprite.expire_cache }
 
-    it "should return bundle when version is current" do
+    it "returns bundle when version is current" do
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
       expect(response.status).to eq(200)
 
@@ -17,7 +17,7 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
     end
 
-    it "should redirect to current version" do
+    it "redirects to current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
@@ -34,12 +34,12 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#search" do
-    it "should not work for anons" do
+    it "does not work for anons" do
       get "/svg-sprite/search/bolt"
       expect(response.status).to eq(404)
     end
 
-    it "should return symbol for FA icon search" do
+    it "returns symbol for FA icon search" do
       sign_in(user)
 
       get "/svg-sprite/search/bolt"
@@ -47,14 +47,14 @@ RSpec.describe SvgSpriteController do
       expect(response.body).to include("bolt")
     end
 
-    it "should return 404 when looking for non-existent FA icon" do
+    it "returns 404 when looking for non-existent FA icon" do
       sign_in(user)
 
       get "/svg-sprite/search/not-a-valid-icon"
       expect(response.status).to eq(404)
     end
 
-    it "should find a custom icon in default theme" do
+    it "finds a custom icon in default theme" do
       theme = Fabricate(:theme)
       fname = "custom-theme-icon-sprite.svg"
 
@@ -79,13 +79,13 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#icon_picker_search" do
-    it "should return 403 for anonymous users" do
+    it "returns 403 for anonymous users" do
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(403)
     end
 
-    it "should work with no filter and return one page of results" do
+    it "works with no filter and return one page of results" do
       sign_in(user)
       get "/svg-sprite/picker-search"
 
@@ -96,7 +96,7 @@ RSpec.describe SvgSpriteController do
       expect(data[0]["id"]).to be_in(SvgSprite.all_icons)
     end
 
-    it "should filter" do
+    it "filters" do
       sign_in(user)
 
       get "/svg-sprite/picker-search", params: { filter: "500px", only_available: "false" }
@@ -191,7 +191,7 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
     end
 
-    it "should display only available" do
+    it "displays only available" do
       sign_in(user)
 
       get "/svg-sprite/picker-search", params: { only_available: "true", filter: "beer" }

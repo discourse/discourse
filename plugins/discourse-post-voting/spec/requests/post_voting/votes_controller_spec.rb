@@ -25,7 +25,7 @@ RSpec.describe PostVoting::VotesController do
       expect(response.status).to eq(403)
     end
 
-    it "should be successful if post has never been voted" do
+    it "is successful if post has never been voted" do
       post "/post_voting/vote.json", params: { post_id: answer.id }
 
       expect(response.status).to eq(200)
@@ -37,7 +37,7 @@ RSpec.describe PostVoting::VotesController do
       expect(vote.user_id).to eq(user.id)
     end
 
-    it "should error if already voted" do
+    it "errors if already voted" do
       post "/post_voting/vote.json", params: { post_id: answer.id }
 
       expect(response.status).to eq(200)
@@ -71,13 +71,13 @@ RSpec.describe PostVoting::VotesController do
       end
     end
 
-    it "should return 403 if user votes on a post by self" do
+    it "returns 403 if user votes on a post by self" do
       post "/post_voting/vote.json", params: { post_id: answer_3.id }
 
       expect(response.status).to eq(403)
     end
 
-    it "should return 403 after post_voting_undo_vote_action_window" do
+    it "returns 403 after post_voting_undo_vote_action_window" do
       SiteSetting.post_voting_undo_vote_action_window = 1
 
       post "/post_voting/vote.json", params: { post_id: answer.id }
@@ -102,7 +102,7 @@ RSpec.describe PostVoting::VotesController do
   describe "#destroy" do
     before { sign_in(user) }
 
-    it "should success if has voted" do
+    it "successes if has voted" do
       post "/post_voting/vote.json", params: { post_id: answer.id }
 
       expect(response.status).to eq(200)
@@ -118,13 +118,13 @@ RSpec.describe PostVoting::VotesController do
       expect(PostVotingVote.exists?(id: vote.id)).to eq(false)
     end
 
-    it "should return the right response if user has never voted on post" do
+    it "returns the right response if user has never voted on post" do
       delete "/post_voting/vote.json", params: { post_id: answer.id }
 
       expect(response.status).to eq(403)
     end
 
-    it "should cant undo vote" do
+    it "cants undo vote" do
       SiteSetting.post_voting_undo_vote_action_window = 1
 
       post "/post_voting/vote.json", params: { post_id: answer.id }
@@ -145,13 +145,13 @@ RSpec.describe PostVoting::VotesController do
   describe "#voters" do
     fab!(:user)
 
-    it "should return the right response for an anon user" do
+    it "returns the right response for an anon user" do
       get "/post_voting/voters.json", params: { post_id: answer.id }
 
       expect(response.status).to eq(403)
     end
 
-    it "should return the right response if post does not exist" do
+    it "returns the right response if post does not exist" do
       sign_in(user)
 
       get "/post_voting/voters.json", params: { post_id: -1 }
@@ -184,7 +184,7 @@ RSpec.describe PostVoting::VotesController do
       expect(voter_payload["direction"]).to eq(PostVotingVote.directions[:up])
     end
 
-    it "should return correct users respecting limits" do
+    it "returns correct users respecting limits" do
       sign_in(user)
 
       user_2 = Fabricate(:user)
@@ -220,7 +220,7 @@ RSpec.describe PostVoting::VotesController do
       expect(parsed["total_voters_count"]).to eq(2)
     end
 
-    it "should return total_voters_count so the client can compute remaining voters correctly" do
+    it "returns total_voters_count so the client can compute remaining voters correctly" do
       sign_in(user)
 
       user_2 = Fabricate(:user)
@@ -258,13 +258,13 @@ RSpec.describe PostVoting::VotesController do
     let(:comment) { Fabricate(:post_voting_comment, post: answer) }
     let(:comment_2) { Fabricate(:post_voting_comment, post: answer, user: user) }
 
-    it "should return 403 for an anon user" do
+    it "returns 403 for an anon user" do
       post "/post_voting/vote/comment.json", params: { comment_id: comment.id }
 
       expect(response.status).to eq(403)
     end
 
-    it "should return 404 if comment_id param is not valid" do
+    it "returns 404 if comment_id param is not valid" do
       sign_in(user)
 
       post "/post_voting/vote/comment.json", params: { comment_id: -999 }
@@ -272,7 +272,7 @@ RSpec.describe PostVoting::VotesController do
       expect(response.status).to eq(404)
     end
 
-    it "should return 403 if user is not allowed to see comment" do
+    it "returns 403 if user is not allowed to see comment" do
       sign_in(user)
 
       topic.update!(category: category)
@@ -283,7 +283,7 @@ RSpec.describe PostVoting::VotesController do
       expect(response.status).to eq(403)
     end
 
-    it "should return 403 if user votes on a comment by self" do
+    it "returns 403 if user votes on a comment by self" do
       sign_in(user)
 
       post "/post_voting/vote/comment.json", params: { comment_id: comment_2.id }
@@ -307,13 +307,13 @@ RSpec.describe PostVoting::VotesController do
   describe "#destroy_comment_vote" do
     let(:comment) { Fabricate(:post_voting_comment, post: answer) }
 
-    it "should return 403 for an anon user" do
+    it "returns 403 for an anon user" do
       delete "/post_voting/vote/comment.json", params: { comment_id: comment.id }
 
       expect(response.status).to eq(403)
     end
 
-    it "should return 404 if comment_id param is not valid" do
+    it "returns 404 if comment_id param is not valid" do
       sign_in(user)
 
       delete "/post_voting/vote/comment.json", params: { comment_id: -999 }
@@ -321,7 +321,7 @@ RSpec.describe PostVoting::VotesController do
       expect(response.status).to eq(404)
     end
 
-    it "should return 403 if user has not voted on comment" do
+    it "returns 403 if user has not voted on comment" do
       sign_in(user)
 
       delete "/post_voting/vote/comment.json", params: { comment_id: comment.id }
@@ -329,7 +329,7 @@ RSpec.describe PostVoting::VotesController do
       expect(response.status).to eq(403)
     end
 
-    it "should be able to remove a user's vote from a comment" do
+    it "is able to remove a user's vote from a comment" do
       PostVoting::VoteManager.vote(comment, user, direction: PostVotingVote.directions[:up])
 
       sign_in(user)

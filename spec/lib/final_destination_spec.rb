@@ -356,7 +356,7 @@ RSpec.describe FinalDestination do
     end
 
     context "when forcing GET" do
-      it "will do a GET when forced" do
+      it "does a GET when forced" do
         url = "https://force.get.com/posts?page=4"
         get_stub = fd_stub_request(:get, url)
         head_stub = fd_stub_request(:head, url)
@@ -368,7 +368,7 @@ RSpec.describe FinalDestination do
         expect(head_stub).to_not have_been_requested
       end
 
-      it "will do a HEAD if not forced" do
+      it "does a HEAD if not forced" do
         url = "https://eviltrout.com/posts?page=2"
         get_stub = fd_stub_request(:get, url)
         head_stub = fd_stub_request(:head, url)
@@ -380,7 +380,7 @@ RSpec.describe FinalDestination do
         expect(head_stub).to have_been_requested
       end
 
-      it "will do a GET when forced on a wildcard subdomain" do
+      it "does a GET when forced on a wildcard subdomain" do
         url = "https://any-subdomain.ihaveawildcard.com/some/other/content"
         get_stub = fd_stub_request(:get, url)
         head_stub = fd_stub_request(:head, url)
@@ -392,7 +392,7 @@ RSpec.describe FinalDestination do
         expect(head_stub).to_not have_been_requested
       end
 
-      it "will do a HEAD if on a subdomain of a forced get domain without a wildcard" do
+      it "does a HEAD if on a subdomain of a forced get domain without a wildcard" do
         url = "https://particularly.eviltrout.com/has/a/secret/plan"
         get_stub = fd_stub_request(:get, url)
         head_stub = fd_stub_request(:head, url)
@@ -420,7 +420,7 @@ RSpec.describe FinalDestination do
       context "when the status code is 405" do
         before { fd_stub_request(:head, "https://eviltrout.com").to_return(status: 405) }
 
-        it "will try a GET" do
+        it "tries a GET" do
           final = FinalDestination.new("https://eviltrout.com", opts)
           expect(final.resolve.to_s).to eq("https://discourse.org")
           expect(final.status).to eq(:resolved)
@@ -431,7 +431,7 @@ RSpec.describe FinalDestination do
       context "when the status code is 501" do
         before { fd_stub_request(:head, "https://eviltrout.com").to_return(status: 501) }
 
-        it "will try a GET" do
+        it "tries a GET" do
           final = FinalDestination.new("https://eviltrout.com", opts)
           expect(final.resolve.to_s).to eq("https://discourse.org")
           expect(final.status).to eq(:resolved)
@@ -468,7 +468,7 @@ RSpec.describe FinalDestination do
       end
     end
 
-    it "should use the correct format for cookies when there is only one cookie" do
+    it "uses the correct format for cookies when there is only one cookie" do
       fd_stub_request(:head, "https://eviltrout.com").to_return(
         status: 302,
         headers: {
@@ -490,7 +490,7 @@ RSpec.describe FinalDestination do
       expect(final.cookie).to eq("foo=219ffwef9w0f")
     end
 
-    it "should use the correct format for cookies when there are multiple cookies" do
+    it "uses the correct format for cookies when there are multiple cookies" do
       fd_stub_request(:head, "https://eviltrout.com").to_return(
         status: 302,
         headers: {
@@ -728,7 +728,7 @@ RSpec.describe FinalDestination do
   end
 
   describe "https cache" do
-    it "will cache https lookups" do
+    it "caches https lookups" do
       FinalDestination.clear_https_cache!("wikipedia.com")
 
       fd_stub_request(:head, "http://wikipedia.com/image.png").to_return(

@@ -836,7 +836,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
           compliance.streaming_mode_simple_prompt(open_ai_mock)
         end
 
-        it "will automatically recover from a bad payload" do
+        it "automaticallies recover from a bad payload" do
           called = false
 
           # this should not happen, but lets ensure nothing bad happens

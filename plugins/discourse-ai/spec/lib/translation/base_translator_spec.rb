@@ -15,6 +15,7 @@ describe DiscourseAi::Translation::BaseTranslator do
     let(:text) { "cats are great" }
     let(:target_locale) { "de" }
     let(:llm_response) { "hur dur hur dur!" }
+
     fab!(:post)
     fab!(:topic) { post.topic }
 

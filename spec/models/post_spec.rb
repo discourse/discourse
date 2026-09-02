@@ -7,6 +7,9 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  let(:post_args) { { user: topic.user, topic: topic } }
+  let(:topic) { Fabricate(:topic, user: user) }
+
   it_behaves_like "it has custom fields"
 
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
@@ -75,8 +78,6 @@ RSpec.describe Post do
   it { is_expected.to rate_limit }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  let(:topic) { Fabricate(:topic, user: user) }
-  let(:post_args) { { user: topic.user, topic: topic } }
 
   describe "scopes" do
     describe "#by_newest" do
@@ -121,6 +122,7 @@ RSpec.describe Post do
 
     context "with a post with links" do
       let(:post) { Fabricate(:post_with_external_links) }
+
       before do
         post.trash!
         post.reload
@@ -147,7 +149,7 @@ RSpec.describe Post do
       post
     end
 
-    it "will have its notice cleared when post is trashed" do
+    it "has its notice cleared when post is trashed" do
       expect { post.trash! }.to change { post.custom_fields }.to({})
     end
   end
@@ -160,78 +162,87 @@ RSpec.describe Post do
       expect(post.should_secure_uploads?).to eq(false)
     end
 
-    context "when secure uploads is enabled" do
+    context "if login_required with secure uploads enabled" do
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_uploads = true
+        SiteSetting.login_required = true
+      end
+
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "returns false" do
+          expect(post.should_secure_uploads?).to eq(false)
+        end
+      end
+    end
+
+    context "if the topic category is read_restricted" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_uploads = true
+        topic.change_category_to_id(category.id)
+      end
+
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "when the topic is deleted" do
+        before do
+          topic.trash!
+          post.reload
+        end
+
+        it "returns true" do
+          expect(post.should_secure_uploads?).to eq(true)
+        end
+      end
+
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "returns false" do
+          expect(post.should_secure_uploads?).to eq(false)
+        end
+      end
+    end
+
+    context "if the post is in a PM topic" do
+      let(:topic) { Fabricate(:private_message_topic) }
+
       before do
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
         SiteSetting.secure_uploads = true
       end
 
-      context "if login_required" do
-        before { SiteSetting.login_required = true }
+      it "returns true" do
+        expect(post.should_secure_uploads?).to eq(true)
+      end
+
+      context "when the topic is deleted" do
+        before { topic.trash! }
 
         it "returns true" do
           expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns false" do
-            expect(post.should_secure_uploads?).to eq(false)
-          end
         end
       end
 
-      context "if the topic category is read_restricted" do
-        let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
-        before { topic.change_category_to_id(category.id) }
+      context "if secure_uploads_pm_only" do
+        before { SiteSetting.secure_uploads_pm_only = true }
 
         it "returns true" do
           expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "when the topic is deleted" do
-          before do
-            topic.trash!
-            post.reload
-          end
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns false" do
-            expect(post.should_secure_uploads?).to eq(false)
-          end
-        end
-      end
-
-      context "if the post is in a PM topic" do
-        let(:topic) { Fabricate(:private_message_topic) }
-
-        it "returns true" do
-          expect(post.should_secure_uploads?).to eq(true)
-        end
-
-        context "when the topic is deleted" do
-          before { topic.trash! }
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
-        end
-
-        context "if secure_uploads_pm_only" do
-          before { SiteSetting.secure_uploads_pm_only = true }
-
-          it "returns true" do
-            expect(post.should_secure_uploads?).to eq(true)
-          end
         end
       end
     end
@@ -530,7 +541,7 @@ RSpec.describe Post do
         expect(two_links.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
-      it "it counts properly with more than one link on the same host" do
+      it "counts properly with more than one link on the same host" do
         expect(three_links.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
@@ -633,7 +644,7 @@ RSpec.describe Post do
           expect(post_one_link).not_to be_valid
         end
 
-        it "will skip the check for allowlisted domains" do
+        it "skips the check for allowlisted domains" do
           SiteSetting.allowed_link_domains = "www.bbc.co.uk"
           SiteSetting.post_links_allowed_groups = "12"
           post_two_links.user.change_trust_level!(TrustLevel[1])
@@ -791,7 +802,7 @@ RSpec.describe Post do
     context "with grace period editing & edit windows" do
       before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
-      it "works" do
+      it "tracks revisions outside the editing grace period" do
         revised_at = post.updated_at + 2.minutes
         new_revised_at = revised_at + 2.minutes
 
@@ -892,7 +903,7 @@ RSpec.describe Post do
       )
     end
 
-    it "should not cook the post if raw has not been changed" do
+    it "does not cook the post if raw has not been changed" do
       post.save!
       expect(post.cooked).to eq(cooked)
     end
@@ -1009,7 +1020,9 @@ RSpec.describe Post do
   describe "summary" do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
-    let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+
+    before { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+
     fab!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
@@ -1129,7 +1142,7 @@ RSpec.describe Post do
       )
     end
 
-    it "should unconditionally follow links for staff" do
+    it "unconditionallies follow links for staff" do
       SiteSetting.tl3_links_no_follow = true
       post.user.trust_level = 1
       post.user.moderator = true
@@ -1138,7 +1151,7 @@ RSpec.describe Post do
       expect(post.cooked).not_to match(/nofollow/)
     end
 
-    it "should add nofollow to links in the post for trust levels below 3" do
+    it "adds nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
       expect(post.cooked).to match(/noopener nofollow ugc/)
@@ -1197,7 +1210,7 @@ RSpec.describe Post do
       before { Jobs.run_immediately! }
 
       describe "when user can not mention a group" do
-        it "should not create the mention with the notify class" do
+        it "does not create the mention with the notify class" do
           post = Fabricate(:post, raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
@@ -1211,7 +1224,7 @@ RSpec.describe Post do
       describe "when user can mention a group" do
         before { group.add(post.user) }
 
-        it "should create the mention" do
+        it "creates the mention" do
           post.update!(raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
@@ -1228,7 +1241,7 @@ RSpec.describe Post do
           group.add_owner(post.user)
         end
 
-        it "should create the mention" do
+        it "creates the mention" do
           post.update!(raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
@@ -1340,7 +1353,7 @@ RSpec.describe Post do
   end
 
   describe "#rebake!" do
-    it "will rebake a post correctly" do
+    it "rebakes a post correctly" do
       post = create_post
       expect(post.baked_at).not_to eq(nil)
       first_baked = post.baked_at
@@ -1501,7 +1514,7 @@ RSpec.describe Post do
     fab!(:admin)
     fab!(:new_user, :user)
 
-    it "will change owner of a post correctly" do
+    it "changes owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
       post.reload
 
@@ -1560,7 +1573,7 @@ RSpec.describe Post do
   end
 
   describe ".rebake_old" do
-    it "will catch posts it needs to rebake" do
+    it "catches posts it needs to rebake" do
       post = create_post
       post.update_columns(baked_at: Time.new(2000, 1, 1), baked_version: -1)
       Post.rebake_old(100)
@@ -1574,7 +1587,7 @@ RSpec.describe Post do
       expect(post.baked_at).to eq_time(baked)
     end
 
-    it "will rate limit globally" do
+    it "rates limit globally" do
       post1 = create_post
       post2 = create_post
       post3 = create_post
@@ -1599,7 +1612,7 @@ RSpec.describe Post do
 
     after { Discourse.redis.flushdb }
 
-    it "should not run post validations" do
+    it "does not run post validations" do
       PostValidator.any_instance.expects(:validate).never
 
       expect { post.hide!(PostActionType.types[:off_topic]) }.to change { post.reload.hidden }.from(
@@ -1607,7 +1620,7 @@ RSpec.describe Post do
       ).to(true)
     end
 
-    it "should inform the user when custom flag" do
+    it "informs the user when custom flag" do
       custom_flag = Fabricate(:flag, name: "custom flag")
       post.hide!(PostActionType.types[:custom_custom_flag])
 
@@ -1620,13 +1633,13 @@ RSpec.describe Post do
       custom_flag.destroy!
     end
 
-    it "should decrease user_stat topic_count for first post" do
+    it "decreases user_stat topic_count for first post" do
       expect do post.hide!(PostActionType.types[:off_topic]) end.to change {
         post.user.user_stat.reload.topic_count
       }.from(1).to(0)
     end
 
-    it "should decrease user_stat post_count" do
+    it "decreases user_stat post_count" do
       post_2 = Fabricate(:post, topic: post.topic, user: post.user)
 
       expect do post_2.hide!(PostActionType.types[:off_topic]) end.to change {
@@ -1686,7 +1699,7 @@ RSpec.describe Post do
 
     before { SiteSetting.unique_posts_mins = 5 }
 
-    it "will unhide the first post & make the topic visible" do
+    it "unhides the first post & make the topic visible" do
       hidden_topic = Fabricate(:topic, visible: false)
 
       post = create_post(topic: hidden_topic)
@@ -1707,7 +1720,7 @@ RSpec.describe Post do
       expect(hidden_topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
     end
 
-    it "will not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
+    it "does not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
       hidden_topic =
         Fabricate(
           :topic,
@@ -1725,13 +1738,13 @@ RSpec.describe Post do
       expect(hidden_topic.visible).to eq(false)
     end
 
-    it "should increase user_stat topic_count for first post" do
+    it "increases user_stat topic_count for first post" do
       post.hide!(PostActionType.types[:off_topic])
 
       expect do post.unhide! end.to change { post.user.user_stat.reload.topic_count }.from(0).to(1)
     end
 
-    it "should decrease user_stat post_count" do
+    it "decreases user_stat post_count" do
       post_2 = Fabricate(:post, topic: post.topic, user: post.user)
       post_2.hide!(PostActionType.types[:off_topic])
 
@@ -1823,7 +1836,7 @@ RSpec.describe Post do
     end
   end
 
-  it "will unhide the post but will keep the topic invisible/unlisted" do
+  it "unhides the post but will keep the topic invisible/unlisted" do
     hidden_topic = Fabricate(:topic, visible: false)
     create_post(topic: hidden_topic)
     second_post = create_post(topic: hidden_topic)
@@ -2017,12 +2030,10 @@ RSpec.describe Post do
           expect(video_upload.access_control_post_id).not_to eq(post.id)
         end
 
-        context "for custom emoji" do
-          before { CustomEmoji.create(name: "meme", upload: image_upload) }
-          it "never sets an access control post because they should not be secure" do
-            post.link_post_uploads
-            expect(image_upload.reload.access_control_post_id).to eq(nil)
-          end
+        it "never sets an access control post for custom emoji because they should not be secure" do
+          CustomEmoji.create(name: "meme", upload: image_upload)
+          post.link_post_uploads
+          expect(image_upload.reload.access_control_post_id).to eq(nil)
         end
       end
     end
@@ -2137,7 +2148,7 @@ RSpec.describe Post do
       result
     end
 
-    it "will update topic updated_at for all topic related events" do
+    it "updates topic updated_at for all topic related events" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
       post =
@@ -2156,7 +2167,7 @@ RSpec.describe Post do
   end
 
   describe "have_uploads" do
-    it "should find all posts with the upload" do
+    it "finds all posts with the upload" do
       ids = []
       ids << Fabricate(
         :post,
@@ -2322,7 +2333,7 @@ RSpec.describe Post do
       expect(sha1s).to contain_exactly(sha1)
     end
 
-    it "should skip external urls with upload url in query string" do
+    it "skips external urls with upload url in query string" do
       setup_s3
 
       urls = []
@@ -2337,7 +2348,7 @@ RSpec.describe Post do
       expect(urls).to be_empty
     end
 
-    it "should skip external URLs following the `/uploads/short-url` pattern if a host is present and the host is not the configured host" do
+    it "skips external URLs following the `/uploads/short-url` pattern if a host is present and the host is not the configured host" do
       upload = Fabricate(:upload)
 
       raw = <<~RAW

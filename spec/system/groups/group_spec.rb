@@ -5,6 +5,7 @@ describe "Group" do
   let(:group_index_page) { PageObjects::Pages::GroupIndex.new }
   let(:group_form_page) { PageObjects::Pages::GroupForm.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+
   fab!(:admin)
   fab!(:group)
 
@@ -93,6 +94,7 @@ describe "Group" do
 
   describe "update default notification level" do
     let(:default_notifications_modal) { PageObjects::Modals::GroupDefaultNotifications.new }
+
     fab!(:user1, :user)
     fab!(:user2, :user)
 

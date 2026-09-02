@@ -18,7 +18,7 @@ describe PostMover do
 
   before { enable_current_plugin }
 
-  it "should create new post when topic's first post has no reactions" do
+  it "creates new post when topic's first post has no reactions" do
     old_topic = Fabricate(:topic)
     new_topic = Fabricate(:topic)
     post = Fabricate(:post, topic: old_topic)
@@ -27,7 +27,7 @@ describe PostMover do
     expect { post_mover.to_topic(new_topic) }.to change { new_topic.posts.count }.by(1)
   end
 
-  it "should create new post when first post has likes but no emoji reaction user" do
+  it "creates new post when first post has likes but no emoji reaction user" do
     old_topic = Fabricate(:topic)
     new_topic = Fabricate(:topic)
     post = Fabricate(:post, topic: old_topic)
@@ -46,7 +46,7 @@ describe PostMover do
     expect(new_post.reactions_user.count).to eq(0)
   end
 
-  it "should add old post's reactions to new post when a topic's first post is moved" do
+  it "adds old post's reactions to new post when a topic's first post is moved" do
     expect(post_1.reactions).to contain_exactly(reaction_1, reaction_2)
     expect(topic_2.posts.count).to eq(0)
 
@@ -66,7 +66,7 @@ describe PostMover do
     expect(reaction_user_ids).to match_array([user_reaction_1.user_id, user_reaction_2.user_id])
   end
 
-  it "should retain existing reactions after moving a post" do
+  it "retains existing reactions after moving a post" do
     expect(post_2.reactions).to contain_exactly(reaction_3, reaction_4)
     expect(topic_3.posts.count).to eq(0)
 

@@ -165,7 +165,7 @@ RSpec.describe PresenceChannel do
     expect(data[0]["leaving_user_ids"]).to contain_exactly(user.id)
   end
 
-  it "will return the messagebus last_id in the state payload" do
+  it "returns the messagebus last_id in the state payload" do
     channel = PresenceChannel.new("/test/public1")
 
     channel.present(user_id: user.id, client_id: "a")

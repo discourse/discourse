@@ -43,10 +43,65 @@ Lint/Debugger:
     SystemHelpers:
       - pause_test
 
+RSpec/EmptyLineAfterExample:
+  Enabled: true
+
+RSpec/EmptyLineAfterExampleGroup:
+  Enabled: true
+
+RSpec/EmptyLineAfterFinalLet:
+  Enabled: true
+
+RSpec/EmptyLineAfterHook:
+  Enabled: true
+
+RSpec/ExampleWording:
+  Enabled: true
+  DisallowedExamples:
+    - works
+    - succeeds
+    - fails
+    - does something
+    - behaves correctly
+    - handles it
+    - handles errors
+    - returns the expected result
+
+RSpec/HookArgument:
+  Enabled: true
+  EnforcedStyle: implicit
+
+RSpec/HooksBeforeExamples:
+  Enabled: true
+
 RSpec/InstanceVariable:
   Enabled: true
-  Include:
-    - spec/models/**/*
+  AssignmentOnly: true
+
+RSpec/LetBeforeExamples:
+  Enabled: true
+
+RSpec/MultipleDescribes:
+  Enabled: true
+
+RSpec/NestedGroups:
+  Enabled: true
+  Max: 4
+
+RSpec/RepeatedDescription:
+  Enabled: true
+
+RSpec/RepeatedExample:
+  Enabled: true
+
+RSpec/RepeatedExampleGroupBody:
+  Enabled: true
+
+RSpec/RepeatedExampleGroupDescription:
+  Enabled: true
+
+RSpec/ScatteredSetup:
+  Enabled: true
 
 Style/RedundantFreeze:
   Enabled: true

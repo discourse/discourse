@@ -16,7 +16,7 @@ describe GithubLinkbackAccessTokenSettingValidator do
         )
       end
 
-      it "should fail" do
+      it "rejects the token" do
         expect(validator.valid_value?(value)).to eq(false)
       end
     end
@@ -29,13 +29,13 @@ describe GithubLinkbackAccessTokenSettingValidator do
         )
       end
 
-      it "should fail" do
+      it "rejects the token" do
         expect(validator.valid_value?(value)).to eq(false)
       end
     end
 
     context "when the token is accepted" do
-      it "should pass, without repos defined" do
+      it "pass,s without repos defined" do
         expect(validator.valid_value?(value)).to eq(true)
       end
 
@@ -48,7 +48,7 @@ describe GithubLinkbackAccessTokenSettingValidator do
           )
         end
 
-        it "should pass if all the repos are accessible" do
+        it "passes if all the repos are accessible" do
           expect(validator.valid_value?(value)).to eq(true)
         end
       end

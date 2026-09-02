@@ -4,16 +4,17 @@ RSpec.describe Onebox::Engine::AnimatedImageOnebox do
   let(:giphy) { "http://gph.is/15bRbWf" }
   let(:direct_gif) { "https://media4.giphy.com/media/Zatyu5LBO2zCyhiAAs/giphy.gif" }
   let(:tenor) { "https://tenor.com/bb3fQ.gif" }
+  let(:previous_options) { Onebox.options.to_h }
 
   before do
-    @previous_options = Onebox.options.to_h
+    previous_options
     Onebox.options = { redirect_limit: 0 }
     stub_request(:get, giphy).to_return(status: 200, body: onebox_response("giphy"))
     stub_request(:get, direct_gif).to_return(status: 200, body: file_from_fixtures("animated.webp"))
     stub_request(:get, tenor).to_return(status: 200, body: onebox_response("tenor"))
   end
 
-  after { Onebox.options = @previous_options }
+  after { Onebox.options = previous_options }
 
   it "works for giphy short URLs" do
     html = described_class.new(giphy).to_html

@@ -5,14 +5,13 @@ require "backup_restore/s3_backup_store"
 require_relative "shared_examples_for_backup_store"
 
 RSpec.describe BackupRestore::S3BackupStore do
-  subject(:store) { BackupRestore::BackupStore.create(s3_options: @s3_options) }
+  subject(:store) { BackupRestore::BackupStore.create(s3_options:) }
+
+  let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
+  let(:s3_options) { { client: s3_client } }
+  let(:objects) { [] }
 
   before do
-    @s3_client = Aws::S3::Client.new(stub_responses: true)
-    @s3_options = { client: @s3_client }
-
-    @objects = []
-
     def expected_prefix
       "#{RailsMultisite::ConnectionManagement.current_db}/"
     end
@@ -23,7 +22,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       expect(context.params[:prefix]).to eq(expected_prefix) if context.params.key?(:prefix)
     end
 
-    @s3_client.stub_responses(
+    s3_client.stub_responses(
       :list_objects_v2,
       ->(context) do
         check_context(context)
@@ -32,25 +31,25 @@ RSpec.describe BackupRestore::S3BackupStore do
       end,
     )
 
-    @s3_client.stub_responses(
+    s3_client.stub_responses(
       :delete_object,
       ->(context) do
         check_context(context)
 
-        expect do @objects.delete_if { |obj| obj[:key] == context.params[:key] } end.to change {
-          @objects
+        expect do objects.delete_if { |obj| obj[:key] == context.params[:key] } end.to change {
+          objects
         }
 
         { delete_marker: true }
       end,
     )
 
-    @s3_client.stub_responses(
+    s3_client.stub_responses(
       :head_object,
       ->(context) do
         check_context(context)
 
-        if object = @objects.find { |obj| obj[:key] == context.params[:key] }
+        if object = objects.find { |obj| obj[:key] == context.params[:key] }
           { content_length: object[:size], last_modified: object[:last_modified] }
         else
           { status_code: 404, headers: {}, body: "" }
@@ -58,12 +57,12 @@ RSpec.describe BackupRestore::S3BackupStore do
       end,
     )
 
-    @s3_client.stub_responses(
+    s3_client.stub_responses(
       :get_object,
       ->(context) do
         check_context(context)
 
-        if object = @objects.find { |obj| obj[:key] == context.params[:key] }
+        if object = objects.find { |obj| obj[:key] == context.params[:key] }
           { content_length: object[:size], body: "A" * object[:size] }
         else
           { status_code: 404, headers: {}, body: "" }
@@ -71,12 +70,12 @@ RSpec.describe BackupRestore::S3BackupStore do
       end,
     )
 
-    @s3_client.stub_responses(
+    s3_client.stub_responses(
       :put_object,
       ->(context) do
         check_context(context)
 
-        @objects << {
+        objects << {
           key: context.params[:key],
           size: context.params[:body].size,
           last_modified: Time.zone.now,
@@ -118,49 +117,45 @@ RSpec.describe BackupRestore::S3BackupStore do
 
   def objects_with_prefix(context)
     prefix = context.params[:prefix]
-    @objects.select { |obj| obj[:key].start_with?(prefix) }
+    objects.select { |obj| obj[:key].start_with?(prefix) }
   end
 
   def create_backups
-    @objects.clear
+    objects.clear
 
-    @objects << {
+    objects << {
       key: "default/b.tar.gz",
       size: 17,
       last_modified: Time.parse("2018-09-13T15:10:00Z"),
     }
-    @objects << {
-      key: "default/a.tgz",
-      size: 29,
-      last_modified: Time.parse("2018-02-11T09:27:00Z"),
-    }
-    @objects << {
+    objects << { key: "default/a.tgz", size: 29, last_modified: Time.parse("2018-02-11T09:27:00Z") }
+    objects << {
       key: "default/r.sql.gz",
       size: 11,
       last_modified: Time.parse("2017-12-20T03:48:00Z"),
     }
-    @objects << {
+    objects << {
       key: "default/no-backup.txt",
       size: 12,
       last_modified: Time.parse("2018-09-05T14:27:00Z"),
     }
-    @objects << {
+    objects << {
       key: "default/subfolder/c.tar.gz",
       size: 23,
       last_modified: Time.parse("2019-01-24T18:44:00Z"),
     }
 
-    @objects << {
+    objects << {
       key: "second/multi-2.tar.gz",
       size: 19,
       last_modified: Time.parse("2018-11-27T03:16:54Z"),
     }
-    @objects << {
+    objects << {
       key: "second/multi-1.tar.gz",
       size: 22,
       last_modified: Time.parse("2018-11-26T03:17:09Z"),
     }
-    @objects << {
+    objects << {
       key: "second/subfolder/multi-3.tar.gz",
       size: 23,
       last_modified: Time.parse("2019-01-24T18:44:00Z"),
@@ -168,7 +163,7 @@ RSpec.describe BackupRestore::S3BackupStore do
   end
 
   def remove_backups
-    @objects.clear
+    objects.clear
   end
 
   def source_regex(db_name, filename, multisite:)
@@ -194,12 +189,12 @@ RSpec.describe BackupRestore::S3BackupStore do
   end
 
   describe "#create_multipart" do
-    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+    it "sets the ACL context when `s3_use_acls` site setting is enabled" do
       SiteSetting.s3_use_acls = true
       response = store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_upload_request =
-        @s3_client.api_requests.find do |api_request|
+        s3_client.api_requests.find do |api_request|
           api_request[:operation_name] == :create_multipart_upload
         end
 
@@ -208,24 +203,24 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
     end
 
-    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+    it "does not set the ACL context when `s3_use_acls` site setting is disabled" do
       SiteSetting.s3_use_acls = false
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_upload_request =
-        @s3_client.api_requests.find do |api_request|
+        s3_client.api_requests.find do |api_request|
           api_request[:operation_name] == :create_multipart_upload
         end
 
       expect(create_multipart_upload_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+    it "sets the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
       SiteSetting.s3_enable_access_control_tags = true
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_upload_request =
-        @s3_client.api_requests.find do |api_request|
+        s3_client.api_requests.find do |api_request|
           api_request[:operation_name] == :create_multipart_upload
         end
 
@@ -241,7 +236,7 @@ RSpec.describe BackupRestore::S3BackupStore do
     before { create_backups }
     after { remove_backups }
 
-    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+    it "sets the ACL context when `s3_use_acls` site setting is enabled" do
       store.move_existing_stored_upload(
         existing_external_upload_key: "default/b.tar.gz",
         original_filename: "b.tar.gz",
@@ -249,14 +244,14 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
 
       copy_object_request =
-        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+        s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
 
       expect(copy_object_request[:context].params[:acl]).to eq(
         FileStore::S3Store::CANNED_ACL_PRIVATE,
       )
     end
 
-    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+    it "does not set the ACL context when `s3_use_acls` site setting is disabled" do
       SiteSetting.s3_use_acls = false
 
       store.move_existing_stored_upload(
@@ -266,12 +261,12 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
 
       copy_object_request =
-        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+        s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
 
       expect(copy_object_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+    it "sets the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
       SiteSetting.s3_enable_access_control_tags = true
 
       store.move_existing_stored_upload(
@@ -281,7 +276,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       )
 
       copy_object_request =
-        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+        s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
 
       expect(URI.decode_www_form_component(copy_object_request[:context].params[:tagging])).to eq(
         "#{SiteSetting.s3_access_control_tag_key}=#{SiteSetting.s3_access_control_tag_private_value}",

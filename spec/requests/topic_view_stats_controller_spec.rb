@@ -3,31 +3,31 @@
 describe TopicViewStatsController do
   fab!(:topic)
 
-  it "will error if accessed on require login sites" do
+  it "errors if accessed on require login sites" do
     SiteSetting.login_required = true
     get "/t/#{topic.id}/view-stats.json"
     expect(response.status).to eq(403)
   end
 
-  it "will not allow access to private topics" do
+  it "does not allow access to private topics" do
     topic.category.update!(read_restricted: true)
 
     get "/t/#{topic.id}/view-stats.json"
     expect(response.status).to eq(403)
   end
 
-  it "will raise correct errors if any param is invalid" do
+  it "raises correct errors if any param is invalid" do
     get "/t/999999999999999999999999999999990000009/view-stats.json"
     expect(response.status).to eq(404)
   end
 
-  it "will return an error if from and to are not valid dates" do
+  it "returns an error if from and to are not valid dates" do
     get "/t/#{topic.id}/view-stats.json?from=abc&to=xxx"
 
     expect(response.status).to eq(422)
   end
 
-  it "will return view stats for public topics" do
+  it "returns view stats for public topics" do
     freeze_time "2021-01-01 12:00"
 
     TopicViewStat.create!(

@@ -18,56 +18,60 @@ RSpec.describe Chat::Channel::Policy::MessageExistence do
       it { is_expected.to be true }
     end
 
-    context "when 'target_message_id' is provided" do
-      context "when target message does not exist" do
-        let(:target_message_id) { -1 }
+    context "when target message does not exist" do
+      let(:target_message_id) { -1 }
 
-        it { is_expected.to be false }
+      it { is_expected.to be false }
+    end
+
+    context "when target message exists" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user:) }
+
+      let(:target_message_id) { message.id }
+
+      context "when target message is not trashed" do
+        it { is_expected.to be true }
       end
 
-      context "when target message exists" do
-        fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user:) }
+      context "when target message is trashed and belongs to the guardian" do
+        before { message.trash! }
 
-        let(:target_message_id) { message.id }
+        it { is_expected.to be true }
 
-        context "when target message is not trashed" do
-          it { is_expected.to be true }
+        it "does not set 'target_message_id' to nil" do
+          expect { result }.not_to change { context.target_message_id }
+        end
+      end
+
+      context "when target message is trashed, belongs to another user, and guardian is staff" do
+        fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+        let(:guardian) { Discourse.system_user.guardian }
+
+        before do
+          message.trash!
+          message.update!(user: other_user)
         end
 
-        context "when target message is trashed" do
-          before { message.trash! }
+        it { is_expected.to be true }
 
-          context "when target message’s user is the same as the guardian" do
-            it { is_expected.to be true }
+        it "does not set 'target_message_id' to nil" do
+          expect { result }.not_to change { context.target_message_id }
+        end
+      end
 
-            it "does not set 'target_message_id' to nil" do
-              expect { result }.not_to change { context.target_message_id }
-            end
-          end
+      context "when target message is trashed, belongs to another user, and guardian is not staff" do
+        fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
 
-          context "when target message’s user is different than the guardian" do
-            fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
+        before do
+          message.trash!
+          message.update!(user: other_user)
+        end
 
-            before { message.update!(user: other_user) }
+        it { is_expected.to be true }
 
-            context "when guardian is staff" do
-              let(:guardian) { Discourse.system_user.guardian }
-
-              it { is_expected.to be true }
-
-              it "does not set 'target_message_id' to nil" do
-                expect { result }.not_to change { context.target_message_id }
-              end
-            end
-
-            context "when guardian is not staff" do
-              it { is_expected.to be true }
-
-              it "sets 'target_message_id' to nil" do
-                expect { result }.to change { context.target_message_id }.to(nil)
-              end
-            end
-          end
+        it "sets 'target_message_id' to nil" do
+          expect { result }.to change { context.target_message_id }.to(nil)
         end
       end
     end

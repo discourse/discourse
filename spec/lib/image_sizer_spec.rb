@@ -25,35 +25,35 @@ RSpec.describe ImageSizer do
   end
 
   describe "when larger than the maximum width" do
-    before { @w, @h = ImageSizer.resize(600, 123) }
+    subject(:dimensions) { ImageSizer.resize(600, 123) }
 
     it "returns the maximum width if larger than the maximum" do
-      expect(@w).to eq(500)
+      expect(dimensions.first).to eq(500)
     end
 
     it "resizes the height retaining the aspect ratio" do
-      expect(@h).to eq(102)
+      expect(dimensions.second).to eq(102)
     end
   end
 
   describe "when larger than the maximum height" do
-    before { @w, @h = ImageSizer.resize(123, 600) }
+    subject(:dimensions) { ImageSizer.resize(123, 600) }
 
     it "returns the maximum height if larger than the maximum" do
-      expect(@h).to eq(500)
+      expect(dimensions.second).to eq(500)
     end
 
     it "resizes the width retaining the aspect ratio" do
-      expect(@w).to eq(102)
+      expect(dimensions.first).to eq(102)
     end
   end
 
   describe "when larger than the maximums" do
-    before { @w, @h = ImageSizer.resize(533, 800) }
+    subject(:dimensions) { ImageSizer.resize(533, 800) }
 
     it "resizes both dimensions retaining the aspect ratio" do
-      expect(@h).to eq(500)
-      expect(@w).to eq(333)
+      expect(dimensions.second).to eq(500)
+      expect(dimensions.first).to eq(333)
     end
   end
 end

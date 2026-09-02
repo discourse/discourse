@@ -19,13 +19,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::JsTaskRunnerSandbox do
     [ctx, resolver, sandbox]
   end
 
-  before { @exec_ctx, @resolver, @sandbox = build_exec_ctx }
-  after do
-    @resolver&.dispose
-    @sandbox&.dispose
-  end
+  let(:execution_context) { build_exec_ctx }
+  let(:exec_ctx) { execution_context.first }
 
-  let(:exec_ctx) { @exec_ctx }
+  after { execution_context.drop(1).each(&:dispose) }
 
   describe "#run_code_all_items" do
     it "normalizes all-items JavaScript results" do

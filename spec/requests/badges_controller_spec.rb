@@ -7,7 +7,7 @@ RSpec.describe BadgesController do
   before { SiteSetting.enable_badges = true }
 
   describe "#index" do
-    it "should return a list of all badges" do
+    it "returns a list of all badges" do
       get "/badges.json"
 
       expect(response.status).to eq(200)
@@ -125,14 +125,14 @@ RSpec.describe BadgesController do
   end
 
   describe "#show" do
-    it "should return a badge" do
+    it "returns a badge" do
       get "/badges/#{badge.id}.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["badge"]).to be_present
     end
 
-    it "should mark the notification as viewed" do
+    it "marks the notification as viewed" do
       sign_in(user)
       user_badge = BadgeGranter.grant(badge, user)
       expect(user_badge.notification.read).to eq(false)

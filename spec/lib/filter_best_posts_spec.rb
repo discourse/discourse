@@ -27,42 +27,42 @@ RSpec.describe FilterBestPosts do
   end
 
   describe "processing options" do
-    before { @filtered_posts = TopicView.new(topic.id, nil, best: 99).filtered_posts }
+    let(:filtered_posts) { TopicView.new(topic.id, nil, best: 99).filtered_posts }
 
-    it "should not get the status post" do
-      best = FilterBestPosts.new(topic, @filtered_posts, 99)
+    it "does not get the status post" do
+      best = FilterBestPosts.new(topic, filtered_posts, 99)
       expect(best.filtered_posts.size).to eq(3)
       expect(best.posts.map(&:id)).to match_array([p2.id, p3.id])
     end
 
-    it "should get no results for trust level too low" do
+    it "gets no results for trust level too low" do
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           min_trust_level: coding_horror.trust_level + 1,
         )
       expect(best.posts.count).to eq(0)
     end
 
-    it "should filter out the posts with a score that is too low" do
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, min_score: 99)
+    it "filters out the posts with a score that is too low" do
+      best = FilterBestPosts.new(topic, filtered_posts, 99, min_score: 99)
       expect(best.posts.count).to eq(0)
     end
 
-    it "should filter out everything if min replies not met" do
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, min_replies: 99)
+    it "filters out everything if min replies not met" do
+      best = FilterBestPosts.new(topic, filtered_posts, 99, min_replies: 99)
       expect(best.posts.count).to eq(0)
     end
 
-    it "should punch through posts if the score is high enough" do
+    it "punches through posts if the score is high enough" do
       p2.update_column(:score, 100)
 
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           bypass_trust_level_score: 100,
           min_trust_level: coding_horror.trust_level + 1,
@@ -70,11 +70,11 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(1)
     end
 
-    it "should bypass trust level score" do
+    it "bypasses trust level score" do
       best =
         FilterBestPosts.new(
           topic,
-          @filtered_posts,
+          filtered_posts,
           99,
           bypass_trust_level_score: 0,
           min_trust_level: coding_horror.trust_level + 1,
@@ -82,20 +82,20 @@ RSpec.describe FilterBestPosts do
       expect(best.posts.count).to eq(0)
     end
 
-    it "should return none if restricted to posts a moderator liked" do
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
+    it "returns none if restricted to posts a moderator liked" do
+      best = FilterBestPosts.new(topic, filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(0)
     end
 
     it "doesn't count likes from admins" do
       PostActionCreator.like(admin, p3)
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
+      best = FilterBestPosts.new(topic, filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(0)
     end
 
-    it "should find the post liked by the moderator" do
+    it "finds the post liked by the moderator" do
       PostActionCreator.like(moderator, p2)
-      best = FilterBestPosts.new(topic, @filtered_posts, 99, only_moderator_liked: true)
+      best = FilterBestPosts.new(topic, filtered_posts, 99, only_moderator_liked: true)
       expect(best.posts.count).to eq(1)
     end
   end

@@ -28,7 +28,7 @@ RSpec.describe Migration::ColumnDropper do
     end
   end
 
-  describe ".mark_readonly" do
+  describe ".mark_readonly schema selection" do
     it "only checks the public schema for default values" do
       DB.exec <<~SQL
         CREATE TABLE test_public_schema (id INTEGER, col TEXT);
@@ -55,7 +55,7 @@ RSpec.describe Migration::ColumnDropper do
     end
   end
 
-  describe ".mark_readonly" do
+  describe ".mark_readonly behavior" do
     let(:table_name) { "table_with_readonly_column" }
 
     before do
@@ -78,7 +78,7 @@ RSpec.describe Migration::ColumnDropper do
       SQL
     end
 
-    it "should be droppable" do
+    it "is droppable" do
       Migration::ColumnDropper.execute_drop(table_name, ["email"])
 
       expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(table_name, "email"))).to eq(
@@ -88,7 +88,7 @@ RSpec.describe Migration::ColumnDropper do
       expect(has_column?(table_name, "email")).to eq(false)
     end
 
-    it "should prevent updates to the readonly column" do
+    it "prevents updates to the readonly column" do
       DB.exec <<~SQL
         UPDATE #{table_name}
         SET email = 'testing@email.com'
@@ -101,7 +101,7 @@ RSpec.describe Migration::ColumnDropper do
       ].each { |message| expect(e.message).to include(message) }
     end
 
-    it "should allow updates to the other columns" do
+    it "allows updates to the other columns" do
       DB.exec <<~SQL
       UPDATE #{table_name}
       SET topic_id = 2
@@ -112,7 +112,7 @@ RSpec.describe Migration::ColumnDropper do
               "something@email.com"
     end
 
-    it "should prevent insertions to the readonly column" do
+    it "prevents insertions to the readonly column" do
       expect do ActiveRecord::Base.connection.raw_connection.exec <<~SQL end.to raise_error(
         INSERT INTO #{table_name} (topic_id, email)
         VALUES (2, 'something@email.com');
@@ -122,7 +122,7 @@ RSpec.describe Migration::ColumnDropper do
       )
     end
 
-    it "should allow insertions to the other columns" do
+    it "allows insertions to the other columns" do
       DB.exec <<~SQL
       INSERT INTO #{table_name} (topic_id)
       VALUES (2);

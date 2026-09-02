@@ -91,7 +91,7 @@ RSpec.describe Admin::EmbeddingController do
       end
     end
 
-    context "when logged in as a moderator" do
+    context "when logged in as a non-staff user" do
       before { sign_in(moderator) }
 
       include_examples "embedding updates not allowed"

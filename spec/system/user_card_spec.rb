@@ -56,7 +56,8 @@ describe "User Card" do
     let!(:first_post_by_another_user) do
       PostCreator.create!(another_user, topic_id: topic.id, raw: "First post by another user")
     end
-    let!(:second_post_by_another_user) do
+
+    before do
       PostCreator.create!(another_user, topic_id: topic.id, raw: "Second post by another user")
     end
 

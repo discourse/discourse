@@ -162,7 +162,7 @@ RSpec.describe SearchIndexer do
     let(:topic) { Fabricate(:topic, title: "this is a title that I am testing") }
     let(:post) { Fabricate(:post, topic: topic) }
 
-    it "should index posts correctly" do
+    it "indexes posts correctly" do
       expect { post }.to change { PostSearchData.count }.by(1)
 
       expect { post.update!(raw: "this is new content") }.to change {
@@ -174,7 +174,7 @@ RSpec.describe SearchIndexer do
       }
     end
 
-    it "should work with edge case domain names" do
+    it "works with edge case domain names" do
       # 00E5A4 stems to 00e5 and a4, which is odd, but by-design
       # this may cause internal indexing to fail due to indexes not aligning
       # when stuffing terms for domains
@@ -192,7 +192,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should work with invalid HTML" do
+    it "works with invalid HTML" do
       post.update!(cooked: "<FD>" * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH)
 
       SearchIndexer.update_posts_index(
@@ -205,14 +205,14 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not index posts with empty raw" do
+    it "does not index posts with empty raw" do
       expect do
         post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
         post.save!(validate: false)
       end.to_not change { PostSearchData.count }
     end
 
-    it "should not tokenize urls and duplicate title and href in <a>" do
+    it "does not tokenize urls and duplicate title and href in <a>" do
       post.update!(raw: <<~RAW)
       https://meta.discourse.org/some.png
       RAW
@@ -227,7 +227,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not tokenize versions" do
+    it "does not tokenize versions" do
       post.update!(raw: "123.223")
 
       expect(post.post_search_data.search_data).to eq(
@@ -242,7 +242,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should tokenize host of a URL and removes query string" do
+    it "tokenizes host of a URL and removes query string" do
       category = Fabricate(:category, name: "awesome category")
       topic = Fabricate(:topic, category: category, title: "this is a test topic")
 
@@ -269,7 +269,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not include lightbox in search" do
+    it "does not include lightbox in search" do
       Jobs.run_immediately!
       SiteSetting.max_image_width = 1
 
@@ -292,7 +292,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should strips audio and videos URLs from raw data" do
+    it "stripses audio and videos URLs from raw data" do
       SiteSetting.authorized_extensions = "mp4"
       Fabricate(:video_upload)
 
@@ -315,7 +315,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should unaccent indexed content" do
+    it "unaccents indexed content" do
       SiteSetting.search_ignore_accents = true
       post.update!(raw: "Cette oeuvre d'art n'est pas une œuvre")
       post.post_search_data.reload
@@ -379,7 +379,7 @@ RSpec.describe SearchIndexer do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
-    it "should reset the version of search data for all posts in the topic" do
+    it "resets the version of search data for all posts in the topic" do
       post2 = Fabricate(:post)
 
       SearchIndexer.queue_post_reindex(topic.id)
@@ -394,7 +394,7 @@ RSpec.describe SearchIndexer do
     let!(:user) { Fabricate(:user) }
     let!(:user2) { Fabricate(:user) }
 
-    it "should reset the version of search data for all users" do
+    it "resets the version of search data for all users" do
       SearchIndexer.index(user, force: true)
       SearchIndexer.index(user2, force: true)
       SearchIndexer.queue_users_reindex([user.id])

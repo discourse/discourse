@@ -315,62 +315,60 @@ describe Chat::ChannelArchiveService do
         end
       end
 
-      describe "chat_archive_destination_topic_status setting" do
-        context "when set to archived" do
-          before { SiteSetting.chat_archive_destination_topic_status = "archived" }
+      context "when set to archived" do
+        before { SiteSetting.chat_archive_destination_topic_status = "archived" }
 
-          it "archives the topic" do
-            create_messages(3)
-            channel_archive
-            described_class.new(channel_archive).execute
-            topic = channel_archive.destination_topic
-            topic.reload
-            expect(topic.archived).to eq(true)
-          end
+        it "archives the topic" do
+          create_messages(3)
+          channel_archive
+          described_class.new(channel_archive).execute
+          topic = channel_archive.destination_topic
+          topic.reload
+          expect(topic.archived).to eq(true)
         end
+      end
 
-        context "when set to open" do
-          before { SiteSetting.chat_archive_destination_topic_status = "open" }
+      context "when set to open" do
+        before { SiteSetting.chat_archive_destination_topic_status = "open" }
 
-          it "leaves the topic open" do
-            create_messages(3)
-            channel_archive
-            described_class.new(channel_archive).execute
-            topic = channel_archive.destination_topic
-            topic.reload
-            expect(topic.archived).to eq(false)
-            expect(topic.open?).to eq(true)
-          end
+        it "leaves the topic open" do
+          create_messages(3)
+          channel_archive
+          described_class.new(channel_archive).execute
+          topic = channel_archive.destination_topic
+          topic.reload
+          expect(topic.archived).to eq(false)
+          expect(topic.open?).to eq(true)
         end
+      end
 
-        context "when set to closed" do
-          before { SiteSetting.chat_archive_destination_topic_status = "closed" }
+      context "when set to closed" do
+        before { SiteSetting.chat_archive_destination_topic_status = "closed" }
 
-          it "closes the topic" do
-            create_messages(3)
-            channel_archive
-            described_class.new(channel_archive).execute
-            topic = channel_archive.destination_topic
-            topic.reload
-            expect(topic.archived).to eq(false)
-            expect(topic.closed?).to eq(true)
-          end
+        it "closes the topic" do
+          create_messages(3)
+          channel_archive
+          described_class.new(channel_archive).execute
+          topic = channel_archive.destination_topic
+          topic.reload
+          expect(topic.archived).to eq(false)
+          expect(topic.closed?).to eq(true)
         end
+      end
 
-        context "when archiving to an existing topic" do
-          it "does not change the status of the topic" do
-            create_messages(3)
-            channel_archive
-            channel_archive.update(
-              destination_topic_title: nil,
-              destination_topic_id: Fabricate(:topic).id,
-            )
-            described_class.new(channel_archive).execute
-            topic = channel_archive.destination_topic
-            topic.reload
-            expect(topic.archived).to eq(false)
-            expect(topic.closed?).to eq(false)
-          end
+      context "when archiving to an existing topic" do
+        it "does not change the status of the topic" do
+          create_messages(3)
+          channel_archive
+          channel_archive.update(
+            destination_topic_title: nil,
+            destination_topic_id: Fabricate(:topic).id,
+          )
+          described_class.new(channel_archive).execute
+          topic = channel_archive.destination_topic
+          topic.reload
+          expect(topic.archived).to eq(false)
+          expect(topic.closed?).to eq(false)
         end
       end
     end

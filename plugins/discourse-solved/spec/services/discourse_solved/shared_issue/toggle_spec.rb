@@ -38,69 +38,67 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
-    context "when user cannot create a shared issue for the topic" do
-      context "when the feature flag is disabled" do
-        before { SiteSetting.enable_solved_shared_issues = false }
+    context "when the feature flag is disabled" do
+      before { SiteSetting.enable_solved_shared_issues = false }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+    end
+
+    context "when the topic is already solved" do
+      fab!(:answer_post) { Fabricate(:post, topic:) }
+
+      before do
+        solved_topic = Fabricate(:solved_topic, topic:)
+        Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
       end
 
-      context "when the topic is already solved" do
-        fab!(:answer_post) { Fabricate(:post, topic:) }
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
 
-        before do
-          solved_topic = Fabricate(:solved_topic, topic:)
-          Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
-        end
+      context "when allow_multiple_solutions is enabled" do
+        before { SiteSetting.solved_allow_multiple_solutions = true }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+        it { is_expected.to run_successfully }
 
-        context "when allow_multiple_solutions is enabled" do
-          before { SiteSetting.solved_allow_multiple_solutions = true }
-
-          it { is_expected.to run_successfully }
-
-          it "creates a shared issue record" do
-            expect { result }.to change {
-              DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
-            }.by(1)
-          end
+        it "creates a shared issue record" do
+          expect { result }.to change {
+            DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
+          }.by(1)
         end
       end
+    end
 
-      context "when the acting user is the topic author" do
-        fab!(:acting_user) { author }
+    context "when the acting user is the topic author" do
+      fab!(:acting_user) { author }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+    end
 
-      context "when the topic is a private message" do
-        fab!(:topic) { Fabricate(:private_message_topic, user: author) }
+    context "when the topic is a private message" do
+      fab!(:topic) { Fabricate(:private_message_topic, user: author) }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+    end
 
-      context "when the topic is not in a support category" do
-        fab!(:other_category, :category)
-        fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
+    context "when the topic is not in a support category" do
+      fab!(:other_category, :category)
+      fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+    end
 
-      context "when allow_solved_on_all_topics is enabled but the category is not a support category" do
-        fab!(:other_category, :category)
-        fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
+    context "when allow_solved_on_all_topics is enabled but the category is not a support category" do
+      fab!(:other_category, :category)
+      fab!(:topic) { Fabricate(:topic_with_op, category: other_category, user: author) }
 
-        before { SiteSetting.allow_solved_on_all_topics = true }
+      before { SiteSetting.allow_solved_on_all_topics = true }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+    end
 
-      context "when the guardian is anonymous" do
-        let(:dependencies) { { guardian: Guardian.new } }
+    context "when the guardian is anonymous" do
+      let(:dependencies) { { guardian: Guardian.new } }
 
-        it { is_expected.to fail_a_policy(:can_create_shared_issue) }
-      end
+      it { is_expected.to fail_a_policy(:can_create_shared_issue) }
     end
 
     context "when no shared issue has been recorded yet" do

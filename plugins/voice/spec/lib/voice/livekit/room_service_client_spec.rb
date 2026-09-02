@@ -17,18 +17,15 @@ RSpec.describe Voice::Livekit::RoomServiceClient do
       end
     end
     Voice::Room.reset_column_information
-  end
-
-  fab!(:user)
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_livekit_url = "wss://livekit.example.com"
     SiteSetting.voice_livekit_api_key = "lk_api_key"
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"
     Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
   end
+
+  fab!(:user)
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   after { Voice::ParticipantTracker.clear(room.id) }
 

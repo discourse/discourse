@@ -3,6 +3,7 @@
 RSpec.describe Onebox::Helpers do
   describe ".truncate" do
     let(:test_string) { "Chops off on spaces" }
+
     it { expect(described_class.truncate(test_string)).to eq(test_string) }
     it { expect(described_class.truncate(test_string, 5)).to eq("Chops...") }
     it { expect(described_class.truncate(test_string, 7)).to eq("Chops...") }
@@ -248,38 +249,45 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".normalize_url_for_output" do
-    it do
+    it "encodes spaces" do
       expect(described_class.normalize_url_for_output("http://example.com/fo o")).to eq(
         "http://example.com/fo%20o",
       )
     end
-    it do
+
+    it "escapes apostrophes" do
       expect(described_class.normalize_url_for_output("http://example.com/fo'o")).to eq(
         "http://example.com/fo&apos;o",
       )
     end
-    it do
+
+    it "escapes quotation marks" do
       expect(described_class.normalize_url_for_output('http://example.com/fo"o')).to eq(
         "http://example.com/fo&quot;o",
       )
     end
-    it do
+
+    it "removes angle brackets" do
       expect(described_class.normalize_url_for_output("http://example.com/fo<o>")).to eq(
         "http://example.com/foo",
       )
     end
-    it do
+
+    it "preserves Unicode characters" do
       expect(described_class.normalize_url_for_output("http://example.com/d’écran-à")).to eq(
         "http://example.com/d’écran-à",
       )
     end
-    it do
+
+    it "preserves protocol-relative URLs" do
       expect(described_class.normalize_url_for_output("//example.com/hello")).to eq(
         "//example.com/hello",
       )
     end
+
     it { expect(described_class.normalize_url_for_output("example.com/hello")).to eq("") }
-    it do
+
+    it "rejects CSS gradients" do
       expect(
         described_class.normalize_url_for_output(
           "linear-gradient(310.77deg, #29AA9F 0%, #098EA6 100%)",
@@ -289,7 +297,7 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".get_absolute_image_url" do
-    it do
+    it "adds the HTTPS scheme to protocol-relative images" do
       expect(
         described_class.get_absolute_image_url(
           "//meta.discourse.org/favicon.ico",
@@ -297,7 +305,8 @@ RSpec.describe Onebox::Helpers do
         ),
       ).to eq("https://meta.discourse.org/favicon.ico")
     end
-    it do
+
+    it "preserves HTTP image URLs" do
       expect(
         described_class.get_absolute_image_url(
           "http://meta.discourse.org/favicon.ico",
@@ -305,7 +314,8 @@ RSpec.describe Onebox::Helpers do
         ),
       ).to eq("http://meta.discourse.org/favicon.ico")
     end
-    it do
+
+    it "preserves HTTPS image URLs" do
       expect(
         described_class.get_absolute_image_url(
           "https://meta.discourse.org/favicon.ico",
@@ -313,12 +323,14 @@ RSpec.describe Onebox::Helpers do
         ),
       ).to eq("https://meta.discourse.org/favicon.ico")
     end
-    it do
+
+    it "resolves root-relative image URLs" do
       expect(
         described_class.get_absolute_image_url("/favicon.ico", "https://meta.discourse.org"),
       ).to eq("https://meta.discourse.org/favicon.ico")
     end
-    it do
+
+    it "resolves root-relative images from subdirectories" do
       expect(
         described_class.get_absolute_image_url(
           "/favicon.ico",
@@ -326,7 +338,8 @@ RSpec.describe Onebox::Helpers do
         ),
       ).to eq("https://meta.discourse.org/favicon.ico")
     end
-    it do
+
+    it "resolves parent-relative image URLs" do
       expect(
         described_class.get_absolute_image_url(
           "../favicon.ico",
@@ -337,37 +350,43 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe ".uri_encode" do
-    it do
+    it "encodes unsafe characters in paths and query keys" do
       expect(described_class.uri_encode('http://example.com/f"o&o?[b"ar]')).to eq(
         "http://example.com/f%22o&o?%5Bb%22ar%5D",
       )
     end
-    it do
+
+    it "preserves safe path punctuation" do
       expect(described_class.uri_encode("http://example.com/f.o~o;?<ba'r>")).to eq(
         "http://example.com/f.o~o;?%3Cba%27r%3E",
       )
     end
-    it do
+
+    it "preserves allowed path punctuation" do
       expect(described_class.uri_encode("http://example.com/<+pa'th>(foo)?b+a+r")).to eq(
         "http://example.com/%3C+pa'th%3E(foo)?b+a+r",
       )
     end
-    it do
+
+    it "encodes unsafe query punctuation" do
       expect(described_class.uri_encode("http://example.com/p,a:t!h-f$o@o*?b!a#r@")).to eq(
         "http://example.com/p,a:t!h-f$o@o*?b%21a#r%40",
       )
     end
-    it do
+
+    it "encodes unsafe query values" do
       expect(described_class.uri_encode("http://example.com/path&foo?b'a<r>&qu(er)y=1")).to eq(
         "http://example.com/path&foo?b%27a%3Cr%3E&qu%28er%29y=1",
       )
     end
-    it do
+
+    it "encodes markup in a path" do
       expect(
         described_class.uri_encode("http://example.com/index&<script>alert('XSS');</script>"),
       ).to eq("http://example.com/index&%3Cscript%3Ealert('XSS');%3C/script%3E")
     end
-    it do
+
+    it "encodes markup in a query value" do
       expect(
         described_class.uri_encode(
           "http://example.com/index.html?message=<script>alert('XSS');</script>",
@@ -376,7 +395,8 @@ RSpec.describe Onebox::Helpers do
         "http://example.com/index.html?message=%3Cscript%3Ealert%28%27XSS%27%29%3B%3C%2Fscript%3E",
       )
     end
-    it do
+
+    it "encodes iframe markup in a path" do
       expect(
         described_class.uri_encode(
           "http://example.com/index.php/<IFRAME SRC=source.com onload='alert(document.cookie)'></IFRAME>",
@@ -385,23 +405,26 @@ RSpec.describe Onebox::Helpers do
         "http://example.com/index.php/%3CIFRAME%20SRC=source.com%20onload='alert(document.cookie)'%3E%3C/IFRAME%3E",
       )
     end
-    it do
+
+    it "preserves existing percent encoding" do
       expect(
         described_class.uri_encode("https://en.wiktionary.org/wiki/greengrocer%27s_apostrophe"),
       ).to eq("https://en.wiktionary.org/wiki/greengrocer%27s_apostrophe")
     end
 
-    it do
+    it "does not double-encode paths and queries" do
       expect(
         described_class.uri_encode("https://example.com/random%2Bpath?q=random%2Bquery"),
       ).to eq("https://example.com/random%2Bpath?q=random%2Bquery")
     end
-    it do
+
+    it "preserves hashbang fragments" do
       expect(described_class.uri_encode("https://glitch.com/edit/#!/equinox-watch")).to eq(
         "https://glitch.com/edit/#!/equinox-watch",
       )
     end
-    it do
+
+    it "preserves URL fragments containing URLs" do
       expect(
         described_class.uri_encode("https://gitpod.io/#https://github.com/eclipse-theia/theia"),
       ).to eq("https://gitpod.io/#https://github.com/eclipse-theia/theia")

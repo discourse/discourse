@@ -26,7 +26,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
       SiteSetting.create!(value: User.last.username, data_type: 1, name: "slack_discourse_username")
     end
 
-    it "should migrate the site settings correctly" do
+    it "migrates the site settings correctly" do
       described_class.new.execute_onceoff({})
 
       expect(SiteSetting.find_by(name: "slack_enabled").value).to eq("f")
@@ -49,7 +49,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
     describe "when slack_discourse_username is not valid" do
       before { SiteSetting.find_by(name: "slack_discourse_username").update!(value: "someguy") }
 
-      it "should default to the system user" do
+      it "defaults to the system user" do
         described_class.new.execute_onceoff({})
 
         expect(SiteSetting.chat_integration_discourse_username).to eq(
@@ -70,7 +70,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
       )
     end
 
-    it "should create the right channels and rules" do
+    it "creates the right channels and rules" do
       described_class.new.execute_onceoff({})
 
       expect(DiscourseChatIntegration::Channel.count).to eq(2)
@@ -113,7 +113,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
       )
     end
 
-    it "should discard invalid tags" do
+    it "discards invalid tags" do
       described_class.new.execute_onceoff({})
 
       rule = DiscourseChatIntegration::Rule.first
@@ -132,7 +132,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
       )
     end
 
-    it "should migrate the settings correctly" do
+    it "migrates the settings correctly" do
       described_class.new.execute_onceoff({})
 
       channel = DiscourseChatIntegration::Channel.first
@@ -158,7 +158,7 @@ RSpec.describe Jobs::DiscourseChatMigrateFromSlackOfficial do
       )
     end
 
-    it "should not migrate the settings" do
+    it "does not migrate the settings" do
       described_class.new.execute_onceoff({})
 
       expect(DiscourseChatIntegration::Channel.count).to eq(0)

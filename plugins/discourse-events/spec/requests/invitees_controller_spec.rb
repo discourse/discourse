@@ -2,11 +2,13 @@
 
 module DiscourseEvents::Events
   describe DiscourseEvents::InviteesController do
-    before do
-      Jobs.run_immediately!
+    before do |example|
       SiteSetting.discourse_events_enabled = true
       SiteSetting.discourse_post_event_enabled = true
-      sign_in(user)
+      unless example.metadata[:anonymous]
+        Jobs.run_immediately!
+        sign_in(user)
+      end
     end
 
     let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
@@ -83,7 +85,8 @@ module DiscourseEvents::Events
         let(:invitee2) { Fabricate(:user, username: "Francisco", name: "Francisco") }
         let(:invitee3) { Fabricate(:user, username: "Frank", name: "Frank") }
         let(:invitee4) { Fabricate(:user, username: "Franchesca", name: "Franchesca") }
-        let!(:random_user) { Fabricate(:user, username: "Franny") }
+        before { Fabricate(:user, username: "Franny") }
+
         let(:post_event_1) do
           pe = Fabricate(:event, post: post_1)
           pe.create_invitees(
@@ -403,81 +406,86 @@ module DiscourseEvents::Events
         expect(response.status).to eq(404)
       end
     end
-  end
 
-  describe "anonymous access to InviteesController" do
-    before do
-      SiteSetting.discourse_events_enabled = true
-      SiteSetting.discourse_post_event_enabled = true
-    end
-
-    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    fab!(:topic) { Fabricate(:topic, user: admin_user) }
-    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
-    fab!(:event) { Fabricate(:event, post: post_1) }
-    fab!(:invitee_user, :user)
-    fab!(:invitee) do
-      DiscourseEvents::Events::Invitee.create!(
-        post_id: post_1.id,
-        user_id: invitee_user.id,
-        status: DiscourseEvents::Events::Invitee.statuses[:going],
-      )
-    end
-
-    it "requires login for create" do
-      post "/discourse-post-event/events/#{event.id}/invitees.json",
-           params: {
-             invitee: {
-               status: "going",
-             },
-           }
-      expect(response.status).to eq(403)
-    end
-
-    it "requires login for update" do
-      put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
-          params: {
-            invitee: {
-              status: "interested",
-            },
-          }
-      expect(response.status).to eq(403)
-    end
-
-    it "requires login for destroy" do
-      delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    context "for a private event in a public topic" do
-      fab!(:private_event_post) { Fabricate(:post, user: admin_user, topic: topic) }
-      fab!(:restricted_group) do
-        Fabricate(
-          :group,
-          visibility_level: Group.visibility_levels[:owners],
-          members_visibility_level: Group.visibility_levels[:owners],
-        ).tap { |group| group.add(invitee_user) }
-      end
-      fab!(:private_event) do
-        Fabricate(
-          :event,
-          post: private_event_post,
-          status: DiscourseEvents::Events::Event.statuses[:private],
-          raw_invitees: [restricted_group.name],
-        )
-      end
-
+    describe "anonymous access to InviteesController", anonymous: true do
       before do
-        private_event.create_invitees(
-          [{ user_id: invitee_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+        SiteSetting.discourse_events_enabled = true
+        SiteSetting.discourse_post_event_enabled = true
+      end
+
+      fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+      fab!(:topic) { Fabricate(:topic, user: admin_user) }
+      fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+      fab!(:event) { Fabricate(:event, post: post_1) }
+      fab!(:invitee_user, :user)
+      fab!(:invitee) do
+        DiscourseEvents::Events::Invitee.create!(
+          post_id: post_1.id,
+          user_id: invitee_user.id,
+          status: DiscourseEvents::Events::Invitee.statuses[:going],
         )
       end
 
-      it "does not disclose private event invitees to anonymous viewers" do
-        get "/discourse-post-event/events/#{private_event.id}/invitees.json"
-
-        expect(response.body).not_to include(invitee_user.username)
+      it "requires login for create" do
+        post "/discourse-post-event/events/#{event.id}/invitees.json",
+             params: {
+               invitee: {
+                 status: "going",
+               },
+             }
         expect(response.status).to eq(403)
+      end
+
+      it "requires login for update" do
+        put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+            params: {
+              invitee: {
+                status: "interested",
+              },
+            }
+        expect(response.status).to eq(403)
+      end
+
+      it "requires login for destroy" do
+        delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+        expect(response.status).to eq(403)
+      end
+
+      context "for a private event in a public topic" do
+        fab!(:private_event_post) { Fabricate(:post, user: admin_user, topic: topic) }
+        fab!(:restricted_group) do
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          ).tap { |group| group.add(invitee_user) }
+        end
+        fab!(:private_event) do
+          Fabricate(
+            :event,
+            post: private_event_post,
+            status: DiscourseEvents::Events::Event.statuses[:private],
+            raw_invitees: [restricted_group.name],
+          )
+        end
+
+        before do
+          private_event.create_invitees(
+            [
+              {
+                user_id: invitee_user.id,
+                status: DiscourseEvents::Events::Invitee.statuses[:going],
+              },
+            ],
+          )
+        end
+
+        it "does not disclose private event invitees to anonymous viewers" do
+          get "/discourse-post-event/events/#{private_event.id}/invitees.json"
+
+          expect(response.body).not_to include(invitee_user.username)
+          expect(response.status).to eq(403)
+        end
       end
     end
   end

@@ -24,24 +24,20 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
   let!(:post) { Fabricate(:post, topic: topic, raw: raw) }
   let!(:deleted_post) { Fabricate(:post, topic: topic, raw: raw, deleted_at: 1.month.ago) }
 
-  let!(:nameless_upload_reference) do
+  before do
     Fabricate(:upload_reference, upload: nameless_upload, target: post)
-  end
-  let!(:deleted_nameless_upload_reference) do
     Fabricate(:upload_reference, upload: nameless_upload, target: deleted_post)
+
+    Fabricate(:upload_reference, upload: upload, target: deleted_post)
+
+    Fabricate(:upload_reference, upload: file_upload, target: deleted_post)
+
+    SiteSetting.discourse_automation_enabled = true
   end
 
   let!(:upload_reference) { Fabricate(:upload_reference, upload: upload, target: post) }
-  let!(:deleted_upload_reference) do
-    Fabricate(:upload_reference, upload: upload, target: deleted_post)
-  end
 
   let!(:file_upload_reference) { Fabricate(:upload_reference, upload: file_upload, target: post) }
-  let!(:deleted_file_upload_reference) do
-    Fabricate(:upload_reference, upload: file_upload, target: deleted_post)
-  end
-
-  before { SiteSetting.discourse_automation_enabled = true }
 
   context "when using recurring trigger" do
     fab!(:automation) do

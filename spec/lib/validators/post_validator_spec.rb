@@ -6,7 +6,7 @@ RSpec.describe PostValidator do
   let(:validator) { PostValidator.new({}) }
 
   describe "post_body_validator" do
-    it "should not allow a post with an empty raw" do
+    it "does not allow a post with an empty raw" do
       post.raw = ""
       validator.post_body_validator(post)
       expect(post.errors).to_not be_empty
@@ -15,7 +15,7 @@ RSpec.describe PostValidator do
     context "when empty raw can bypass validation" do
       let(:validator) { PostValidator.new(skip_post_body: true) }
 
-      it "should be allowed for empty raw based on site setting" do
+      it "is allowed for empty raw based on site setting" do
         post.raw = ""
         validator.post_body_validator(post)
         expect(post.errors).to be_empty
@@ -36,7 +36,7 @@ RSpec.describe PostValidator do
         )
       end
 
-      it "should allow a post with an empty raw" do
+      it "allows a post with an empty raw" do
         post = Fabricate.build(:post, topic: topic)
         post.raw = ""
         validator.post_body_validator(post)
@@ -138,20 +138,20 @@ RSpec.describe PostValidator do
   end
 
   describe "max_posts_validator" do
-    it "should be invalid when the user has posted too much" do
+    it "is invalid when the user has posted too much" do
       post.user.expects(:posted_too_much_in_topic?).returns(true)
       validator.max_posts_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be allowed to edit when the user has posted too much" do
+    it "is allowed to edit when the user has posted too much" do
       post.user.stubs(:posted_too_much_in_topic?).returns(true)
       post.expects(:new_record?).returns(false)
       validator.max_posts_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid when the user hasn't posted too much" do
+    it "is valid when the user hasn't posted too much" do
       post.user.expects(:posted_too_much_in_topic?).returns(false)
       validator.max_posts_validator(post)
       expect(post.errors.count).to be(0)
@@ -164,6 +164,7 @@ RSpec.describe PostValidator do
     fab!(:pm_post) do
       Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic))
     end
+    let(:unique_key_state) { {} }
 
     before do
       SiteSetting.unique_posts_mins = 5
@@ -171,24 +172,24 @@ RSpec.describe PostValidator do
       post.store_unique_post_key
       pm_post.store_unique_post_key
 
-      @key = post.unique_post_key
-      @pm_key = pm_post.unique_post_key
+      unique_key_state[:post] = post.unique_post_key
+      unique_key_state[:pm] = pm_post.unique_post_key
     end
 
     after do
-      Discourse.redis.del(@key)
-      Discourse.redis.del(@pm_key)
+      Discourse.redis.del(unique_key_state[:post])
+      Discourse.redis.del(unique_key_state[:pm])
     end
 
     context "when post is unique" do
       let(:new_post) { Fabricate.build(:post, user: user, raw: "unique content", topic: topic) }
 
-      it "should not add an error" do
+      it "does not add an error" do
         validator.unique_post_validator(new_post)
         expect(new_post.errors.count).to eq(0)
       end
 
-      it "should not add an error when changing an existing post" do
+      it "does not add an error when changing an existing post" do
         post.raw = "changing raw"
 
         validator.unique_post_validator(post)
@@ -206,21 +207,21 @@ RSpec.describe PostValidator do
         )
       end
 
-      it "should add an error for post dupes" do
+      it "adds an error for post dupes" do
         new_post = build_post(is_pm: false, raw: post.raw)
 
         validator.unique_post_validator(new_post)
         expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
-      it "should add an error for pm dupes" do
+      it "adds an error for pm dupes" do
         new_post = build_post(is_pm: true, raw: pm_post.raw)
 
         validator.unique_post_validator(new_post)
         expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
-      it "should not add an error for cross PM / topic dupes" do
+      it "does not add an error for cross PM / topic dupes" do
         new_post = build_post(is_pm: true, raw: post.raw)
 
         validator.unique_post_validator(new_post)
@@ -232,7 +233,7 @@ RSpec.describe PostValidator do
         expect(new_post.errors.count).to eq(0)
       end
 
-      it "should not add an error if post.skip_unique_check is true" do
+      it "does not add an error if post.skip_unique_check is true" do
         new_post = build_post(is_pm: false, raw: post.raw)
 
         new_post.skip_unique_check = true
@@ -248,28 +249,28 @@ RSpec.describe PostValidator do
       SiteSetting.max_mentions_per_post = 3
     end
 
-    it "should be invalid when new user exceeds max mentions limit" do
+    it "is invalid when new user exceeds max mentions limit" do
       post.acting_user = build(:newuser)
       post.expects(:raw_mentions).returns(%w[jake finn jake_old])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be invalid when leader user exceeds max mentions limit" do
+    it "is invalid when leader user exceeds max mentions limit" do
       post.acting_user = build(:trust_level_4)
       post.expects(:raw_mentions).returns(%w[jake finn jake_old jake_new])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be valid when new user does not exceed max mentions limit" do
+    it "is valid when new user does not exceed max mentions limit" do
       post.acting_user = build(:newuser)
       post.expects(:raw_mentions).returns(%w[jake finn])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid when new user exceeds max mentions limit in PM" do
+    it "is valid when new user exceeds max mentions limit in PM" do
       post.acting_user = build(:newuser)
       post.topic.expects(:private_message?).returns(true)
       post.expects(:raw_mentions).returns(%w[jake finn jake_old])
@@ -277,21 +278,21 @@ RSpec.describe PostValidator do
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid when leader user does not exceed max mentions limit" do
+    it "is valid when leader user does not exceed max mentions limit" do
       post.acting_user = build(:trust_level_4)
       post.expects(:raw_mentions).returns(%w[jake finn jake_old])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid for moderator in all cases" do
+    it "is valid for moderator in all cases" do
       post.acting_user = build(:moderator)
       post.expects(:raw_mentions).never
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid for admin in all cases" do
+    it "is valid for admin in all cases" do
       post.acting_user = build(:admin)
       post.expects(:raw_mentions).never
       validator.max_mention_validator(post)
@@ -348,21 +349,21 @@ RSpec.describe PostValidator do
       SiteSetting.newuser_max_embedded_media = 2
     end
 
-    it "should be invalid when new user exceeds max mentions limit" do
+    it "is invalid when new user exceeds max mentions limit" do
       post.acting_user = new_user
       post.expects(:embedded_media_count).returns(3)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be valid when new user does not exceed max mentions limit" do
+    it "is valid when new user does not exceed max mentions limit" do
       post.acting_user = new_user
       post.expects(:embedded_media_count).returns(2)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be invalid when user trust level is not sufficient" do
+    it "is invalid when user trust level is not sufficient" do
       SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       post.acting_user = Fabricate(:leader, groups: [])
       post.expects(:embedded_media_count).returns(2)
@@ -370,14 +371,14 @@ RSpec.describe PostValidator do
       expect(post.errors.count).to be > 0
     end
 
-    it "should be valid for moderator in all cases" do
+    it "is valid for moderator in all cases" do
       post.acting_user = Fabricate(:moderator)
       post.expects(:embedded_media_count).never
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid for admin in all cases" do
+    it "is valid for admin in all cases" do
       post.acting_user = Fabricate(:admin)
       post.expects(:embedded_media_count).never
       validator.max_embedded_media_validator(post)
@@ -390,28 +391,28 @@ RSpec.describe PostValidator do
 
     before { SiteSetting.newuser_max_attachments = 2 }
 
-    it "should be invalid when new user exceeds max attachments limit" do
+    it "is invalid when new user exceeds max attachments limit" do
       post.acting_user = new_user
       post.expects(:attachment_count).returns(3)
       validator.max_attachments_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be valid when new user does not exceed max attachments limit" do
+    it "is valid when new user does not exceed max attachments limit" do
       post.acting_user = new_user
       post.expects(:attachment_count).returns(2)
       validator.max_attachments_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid for moderator in all cases" do
+    it "is valid for moderator in all cases" do
       post.acting_user = Fabricate(:moderator)
       post.expects(:attachment_count).never
       validator.max_attachments_validator(post)
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid for admin in all cases" do
+    it "is valid for admin in all cases" do
       post.acting_user = Fabricate(:admin)
       post.expects(:attachment_count).never
       validator.max_attachments_validator(post)
@@ -424,14 +425,14 @@ RSpec.describe PostValidator do
 
     before { SiteSetting.newuser_max_links = 2 }
 
-    it "should be invalid when new user exceeds max links limit" do
+    it "is invalid when new user exceeds max links limit" do
       post.acting_user = new_user
       post.stubs(:link_count).returns(3)
       validator.max_links_validator(post)
       expect(post.errors.count).to be > 0
     end
 
-    it "should be valid when new user does not exceed max links limit" do
+    it "is valid when new user does not exceed max links limit" do
       post.acting_user = new_user
       post.stubs(:link_count).returns(2)
       validator.max_links_validator(post)
@@ -446,7 +447,7 @@ RSpec.describe PostValidator do
 
     before { SiteSetting.max_consecutive_replies = 2 }
 
-    it "should always allow original poster to post" do
+    it "alwayses allow original poster to post" do
       [user, user, user, other_user, user, user, user].each_with_index do |u, i|
         post = Post.new(user: u, topic: topic, raw: "post number #{i}")
         validator.force_edit_last_validator(post)
@@ -455,7 +456,7 @@ RSpec.describe PostValidator do
       end
     end
 
-    it "should allow category moderators to post more than 2 consecutive replies" do
+    it "allows category moderators to post more than 2 consecutive replies" do
       SiteSetting.enable_category_group_moderation = true
       group = Fabricate(:group)
       GroupUser.create(group: group, user: user)
@@ -472,7 +473,7 @@ RSpec.describe PostValidator do
       expect(post.errors.count).to eq(0)
     end
 
-    it "should not allow posting more than 2 consecutive replies" do
+    it "does not allow posting more than 2 consecutive replies" do
       Post.create!(user: user, topic: topic, raw: "post number 2", post_number: 2)
       Post.create!(user: user, topic: topic, raw: "post number 3", post_number: 3)
       Post.create!(user: other_user, topic: topic, raw: "post number 1", post_number: 1)
@@ -482,7 +483,7 @@ RSpec.describe PostValidator do
       expect(post.errors.count).to eq(1)
     end
 
-    it "should always allow editing" do
+    it "alwayses allow editing" do
       post = Fabricate(:post, user: user, topic: topic)
       post = Fabricate(:post, user: user, topic: topic)
 
@@ -490,7 +491,7 @@ RSpec.describe PostValidator do
       revisor.revise!(post.user, raw: "hello world123456789")
     end
 
-    it "should allow posting more than 2 replies" do
+    it "allows posting more than 2 replies" do
       3.times do
         post = Fabricate(:post, user: user, topic: topic)
         Fabricate(:post, user: other_user, topic: topic)
@@ -525,6 +526,7 @@ RSpec.describe PostValidator do
 
   describe "staged user" do
     before { post.acting_user = build(:user, staged: true) }
+
     include_examples "almost no validations"
   end
 end

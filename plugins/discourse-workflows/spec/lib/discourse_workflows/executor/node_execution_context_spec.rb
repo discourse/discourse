@@ -495,7 +495,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#helpers" do
+  context "when helpers access data tables" do
     fab!(:admin)
     fab!(:data_table, :discourse_workflows_data_table)
 
@@ -1021,7 +1021,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#create_post" do
+  context "when creating a post with permission checks bypassed" do
     it "records bypass provenance custom fields on the created post" do
       author = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       workflow = Fabricate(:discourse_workflows_workflow, published: true)

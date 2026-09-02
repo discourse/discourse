@@ -62,7 +62,7 @@ RSpec.describe "AI Post helper" do
       expect(post_ai_helper).to have_post_ai_helper_options
     end
 
-    it "should not have the mobile post AI helper" do
+    it "does not have the mobile post AI helper" do
       select_post_text(post)
       post_ai_helper.click_ai_button
       expect(post_ai_helper).to have_no_mobile_post_ai_helper
@@ -181,7 +181,7 @@ RSpec.describe "AI Post helper" do
   end
 
   context "when triggering post AI helper on mobile", mobile: true do
-    it "should use the bottom modal instead of the popup menu" do
+    it "uses the bottom modal instead of the popup menu" do
       select_post_text(post)
       post_ai_helper.click_ai_button
       expect(post_ai_helper).to have_mobile_post_ai_helper

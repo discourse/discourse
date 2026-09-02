@@ -4,7 +4,8 @@ RSpec.describe TopicViewPostsSerializer do
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
-  let!(:reviewable) do
+
+  before do
     Fabricate(
       :reviewable_flagged_post,
       created_by: user,
@@ -25,7 +26,7 @@ RSpec.describe TopicViewPostsSerializer do
     )
   end
 
-  it "should return the right attributes" do
+  it "returns the right attributes" do
     topic_view = TopicView.new(topic, user, post_ids: [post.id])
 
     serializer =

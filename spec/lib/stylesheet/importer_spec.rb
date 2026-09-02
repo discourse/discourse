@@ -68,12 +68,12 @@ RSpec.describe Stylesheet::Importer do
       end
     end
 
-    it "should include color definitions in the theme" do
+    it "includes color definitions in the theme" do
       styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
       expect(styles).to include(output_scss)
     end
 
-    it "should include color definitions from components" do
+    it "includes color definitions from components" do
       theme.add_relative_theme!(:child, child)
       theme.save!
 
@@ -83,7 +83,7 @@ RSpec.describe Stylesheet::Importer do
       expect(styles).to include("--custom-color-rgb: 0, 0, 128")
     end
 
-    it "should include default theme color definitions" do
+    it "includes default theme color definitions" do
       SiteSetting.default_theme_id = theme.id
       styles = Stylesheet::Importer.new({}).import_color_definitions
       expect(styles).to include(output_scss)
@@ -91,14 +91,14 @@ RSpec.describe Stylesheet::Importer do
   end
 
   describe "#import_wcag_overrides" do
-    it "should do nothing on a regular scheme" do
+    it "does nothing on a regular scheme" do
       scheme = ColorScheme.create_from_base(name: "Regular")
       expect(Stylesheet::Importer.new({ color_scheme_id: scheme.id }).import_wcag_overrides).to eq(
         "",
       )
     end
 
-    it "should include WCAG overrides for WCAG based scheme" do
+    it "includes WCAG overrides for WCAG based scheme" do
       scheme =
         ColorScheme.create_from_base(
           name: "WCAG New",

@@ -170,7 +170,7 @@ RSpec.describe UserAction do
         private_post.save!
       end
 
-      it "should include the right attributes in the stream" do
+      it "includes the right attributes in the stream" do
         expect(stream.count).to eq(1)
 
         user_action_row = stream.first
@@ -247,7 +247,7 @@ RSpec.describe UserAction do
 
       before { PostActionCreator.like(liker, post) }
 
-      it "should result in correct data assignment" do
+      it "results in correct data assignment" do
         expect(liker_action).not_to eq(nil)
         expect(likee_action).not_to eq(nil)
         expect(likee.user_stat.reload.likes_received).to eq(1)
@@ -263,7 +263,7 @@ RSpec.describe UserAction do
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
-        it "should not increase user stats" do
+        it "does not increase user stats" do
           expect(liker_action).not_to eq(nil)
           expect(liker.user_stat.reload.likes_given).to eq(0)
           expect(likee_action).not_to eq(nil)
@@ -328,13 +328,13 @@ RSpec.describe UserAction do
     describe "topic action" do
       let(:action) { post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC) }
 
-      it "should exist" do
+      it "exists" do
         expect(action).not_to eq(nil)
         expect(action.created_at).to eq_time(post.topic.created_at)
       end
     end
 
-    it "should not log a post user action" do
+    it "does not log a post user action" do
       expect(post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
@@ -353,7 +353,7 @@ RSpec.describe UserAction do
 
       before { PostAlerter.post_created(response) }
 
-      it "should log user actions correctly" do
+      it "logs user actions correctly" do
         expect(response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
         expect(post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
         expect(mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
@@ -362,7 +362,7 @@ RSpec.describe UserAction do
         ).to eq(1)
       end
 
-      it "should not log a double notification for a post edit" do
+      it "does not log a double notification for a post edit" do
         response.raw = "here it goes again"
         response.save!
         expect(response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)

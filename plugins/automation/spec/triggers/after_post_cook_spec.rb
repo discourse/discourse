@@ -25,13 +25,13 @@ describe DiscourseAutomation::Triggers::AFTER_POST_COOK do
       automation.reload
     end
 
-    it "should not fire when tag is missing" do
+    it "does not fire when tag is missing" do
       captured = capture_contexts { post.rebake! }
 
       expect(captured).to be_blank
     end
 
-    it "should fire when tag is present" do
+    it "fires when tag is present" do
       topic.tags << filtered_tag
       topic.save!
 

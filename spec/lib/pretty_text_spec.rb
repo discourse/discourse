@@ -327,6 +327,7 @@ RSpec.describe PrettyText do
       let(:default_avatar) do
         "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png"
       end
+
       fab!(:group)
       fab!(:user) { Fabricate(:user, primary_group: group) }
 
@@ -397,7 +398,7 @@ RSpec.describe PrettyText do
 
     context "with letter avatar" do
       context "with subfolder" do
-        it "should have correct avatar url" do
+        it "has correct avatar url" do
           set_subfolder "/forum"
           md = <<~MD
             [quote="#{user.username}, post:123, topic:456, full:true"]
@@ -417,7 +418,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should handle 3 mentions in a row" do
+    it "handles 3 mentions in a row" do
       expect(
         PrettyText.cook("@hello @hello @hello"),
       ).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
@@ -507,16 +508,16 @@ RSpec.describe PrettyText do
     context "when mentions are disabled" do
       before { SiteSetting.enable_mentions = false }
 
-      it "should not convert mentions to links" do
+      it "does not convert mentions to links" do
         expect(PrettyText.cook("hi @user")).to eq("<p>hi @user</p>")
       end
     end
 
-    it "can handle mentions inside a hyperlink" do
+    it "preserves mentions inside an HTML hyperlink" do
       expect(PrettyText.cook("<a> @inner</a> ")).to match_html "<p><a> @inner</a></p>"
     end
 
-    it "can handle mentions inside a hyperlink" do
+    it "preserves mentions inside a Markdown hyperlink" do
       expect(
         PrettyText.cook("[link @inner](http://site.com)"),
       ).to match_html '<p><a href="http://site.com" rel="noopener nofollow ugc">link @inner</a></p>'
@@ -528,19 +529,19 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should handle group mentions with a hyphen and without" do
+    it "handles group mentions with a hyphen and without" do
       expect(
         PrettyText.cook("@hello @hello-hello"),
       ).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
     end
 
-    it "should allow for @mentions to have punctuation" do
+    it "allows for @mentions to have punctuation" do
       expect(PrettyText.cook("hello @bob's @bob,@bob; @bob\"")).to match_html(
         "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>",
       )
     end
 
-    it "should not treat a medium link as a mention" do
+    it "does not treat a medium link as a mention" do
       expect(PrettyText.cook(". http://test/@sam")).not_to include("mention")
     end
 
@@ -611,7 +612,7 @@ RSpec.describe PrettyText do
   end
 
   describe "code fences" do
-    it "indents code correctly" do
+    it "preserves indentation in fenced code" do
       code = <<~MD
          X
          ```
@@ -695,7 +696,7 @@ RSpec.describe PrettyText do
       ).to match_html("<pre data-code-foo='1'></pre>")
     end
 
-    it "indents code correctly" do
+    it "preserves a leading blank line in fenced code" do
       code = "X\n```\n\n    #\n    x\n```"
       cooked = PrettyText.cook(code)
       expect(cooked).to match_html(
@@ -712,7 +713,7 @@ RSpec.describe PrettyText do
       Discourse.redis.flushdb
     end
 
-    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
+    it "highlights bidirectional override characters while cooking" do
       code = <<~MD
          X
          ```auto
@@ -737,7 +738,7 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
-    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
+    it "highlights bidirectional override characters while cleaning" do
       cooked = <<~HTML
         <p>X</p>
         <pre><code class="lang-auto">var isAdmin = false;
@@ -828,17 +829,17 @@ RSpec.describe PrettyText do
       SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
-    it "should inject nofollow in all user provided links" do
+    it "injects nofollow in all user provided links" do
       expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/noopener nofollow ugc/)
     end
 
-    it "should not inject nofollow in all local links" do
+    it "does not inject nofollow in all local links" do
       expect(
         PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "should not inject nofollow in all subdomain links" do
+    it "does not inject nofollow in all subdomain links" do
       expect(
         PrettyText.cook(
           "<a href='#{Discourse.base_url.sub("http://", "http://bla.")}/test.html'>cnn</a>",
@@ -846,7 +847,7 @@ RSpec.describe PrettyText do
       ).to eq(true)
     end
 
-    it "should inject nofollow in all non subdomain links" do
+    it "injects nofollow in all non subdomain links" do
       expect(
         PrettyText.cook(
           "<a href='#{Discourse.base_url.sub("http://", "http://bla")}/test.html'>cnn</a>",
@@ -854,36 +855,36 @@ RSpec.describe PrettyText do
       ).to match(/nofollow ugc/)
     end
 
-    it "should not inject nofollow for foo.com" do
+    it "does not inject nofollow for foo.com" do
       expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(
         true,
       )
     end
 
-    it "should inject nofollow for afoo.com" do
+    it "injects nofollow for afoo.com" do
       expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(
         /nofollow ugc/,
       )
     end
 
-    it "should not inject nofollow for bar.foo.com" do
+    it "does not inject nofollow for bar.foo.com" do
       expect(
         PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "should not inject nofollow if omit_nofollow option is given" do
+    it "does not inject nofollow if omit_nofollow option is given" do
       expect(
         PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/,
       ).to eq(true)
     end
 
-    it "adds the noopener attribute even if omit_nofollow option is given" do
+    it "adds noopener when nofollow is omitted" do
       raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
       expect(PrettyText.cook(raw_html, omit_nofollow: true)).to match(/noopener/)
     end
 
-    it "adds the noopener attribute even if omit_nofollow option is given" do
+    it "adds noopener and nofollow when nofollow is retained" do
       raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
       expect(PrettyText.cook(raw_html, omit_nofollow: false)).to match(/noopener nofollow ugc/)
     end
@@ -900,12 +901,12 @@ RSpec.describe PrettyText do
     end
 
     context "with images" do
-      it "should dump images" do
+      it "dumps images" do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100)).to eq("[image]")
       end
 
       context "with alt tags" do
-        it "should keep alt tags" do
+        it "keeps alt tags" do
           expect(
             PrettyText.excerpt(
               "<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",
@@ -914,32 +915,28 @@ RSpec.describe PrettyText do
           ).to eq("[car]")
         end
 
-        describe "when alt tag is empty" do
-          it "should not keep alt tags" do
-            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq(
-              "[#{I18n.t("excerpt_image")}]",
-            )
-          end
+        it "does not keep empty alt tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt>", 100)).to eq(
+            "[#{I18n.t("excerpt_image")}]",
+          )
         end
       end
 
       context "with title tags" do
-        it "should keep title tags" do
+        it "keeps title tags" do
           expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq(
             "[car]",
           )
         end
 
-        describe "when title tag is empty" do
-          it "should not keep title tags" do
-            expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq(
-              "[#{I18n.t("excerpt_image")}]",
-            )
-          end
+        it "does not keep empty title tags" do
+          expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title>", 100)).to eq(
+            "[#{I18n.t("excerpt_image")}]",
+          )
         end
       end
 
-      it "should convert images to markdown if the option is set" do
+      it "converts images to markdown if the option is set" do
         expect(
           PrettyText.excerpt(
             "<img src='http://cnn.com/a.gif' title='car'>",
@@ -955,13 +952,13 @@ RSpec.describe PrettyText do
         ).to match_html "▶ expand"
       end
 
-      it "should remove meta information" do
+      it "removes meta information" do
         expect(
           PrettyText.excerpt(wrapped_image, 100),
         ).to match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
 
-      it "should strip images when option is set" do
+      it "strips images when option is set" do
         expect(
           PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100, strip_images: true),
         ).to be_blank
@@ -974,7 +971,7 @@ RSpec.describe PrettyText do
         ).to eq("Hello world!")
       end
 
-      it "should strip images, but keep emojis when option is set" do
+      it "strips images, but keep emojis when option is set" do
         emoji_image =
           "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
         html = "<img src='http://cnn.com/a.gif'> Hello world #{emoji_image}"
@@ -987,7 +984,7 @@ RSpec.describe PrettyText do
     end
 
     context "with emojis" do
-      it "should remove broken emoji" do
+      it "removes broken emoji" do
         html = <<~HTML
           <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\" loading=\"lazy\" width=\"20\" height=\"20\">
         HTML
@@ -1002,38 +999,38 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should have an option to strip links" do
+    it "has an option to strip links" do
       expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq(
         "cnn",
       )
     end
 
-    it "should preserve links" do
+    it "preserves links" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100),
       ).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
-    it "should deal with special keys properly" do
+    it "deals with special keys properly" do
       expect(PrettyText.excerpt("<pre><b></pre>", 100)).to eq("")
     end
 
-    it "should truncate stuff properly" do
+    it "truncates stuff properly" do
       expect(PrettyText.excerpt("hello world", 5)).to eq("hello&hellip;")
       expect(PrettyText.excerpt("<p>hello</p><p>world</p>", 6)).to eq("hello w&hellip;")
     end
 
-    it "should insert a space between to Ps" do
+    it "inserts a space between to Ps" do
       expect(PrettyText.excerpt("<p>a</p><p>b</p>", 5)).to eq("a b")
     end
 
-    it "should strip quotes" do
+    it "strips quotes" do
       expect(PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom", 5)).to eq(
         "boom",
       )
     end
 
-    it "should not count the surrounds of a link" do
+    it "does not count the surrounds of a link" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 3),
       ).to match_html "<a href='http://cnn.com'>cnn</a>"
@@ -1045,7 +1042,7 @@ RSpec.describe PrettyText do
       ).to match_html "<a href='http://cnn.com'>cn...</a>"
     end
 
-    it "should truncate links" do
+    it "truncates links" do
       expect(
         PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2),
       ).to match_html "<a href='http://cnn.com'>cn&hellip;</a>"
@@ -1069,11 +1066,11 @@ RSpec.describe PrettyText do
       PrettyText.extract_links(text).map(&:url).to_a
     end
 
-    it "should be able to extract links" do
+    it "is able to extract links" do
       expect(extract_urls("<a href='http://cnn.com'>http://bla.com</a>")).to eq(["http://cnn.com"])
     end
 
-    it "should extract links to topics" do
+    it "extracts links to topics" do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(
         ["/t/321"],
       )
@@ -1110,7 +1107,7 @@ RSpec.describe PrettyText do
     end
 
     context "when lazy-videos" do
-      it "should extract youtube url" do
+      it "extracts youtube url" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"yXEuEUQIP3Q\" data-video-title=\"Mister Rogers defending PBS to the US Senate\" data-provider-name=\"youtube\"></div>",
@@ -1118,7 +1115,7 @@ RSpec.describe PrettyText do
         ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
       end
 
-      it "should extract vimeo url" do
+      it "extracts vimeo url" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"786646692\" data-video-title=\"Dear Rich\" data-provider-name=\"vimeo\"></div>",
@@ -1126,7 +1123,7 @@ RSpec.describe PrettyText do
         ).to eq(["https://vimeo.com/786646692"])
       end
 
-      it "should extract tiktok url" do
+      it "extracts tiktok url" do
         expect(
           extract_urls(
             "<div class=\"lazy-video-container\" data-video-id=\"6718335390845095173\" data-video-title=\"Scramble up ur name &amp;amp; I’ll try to guess it😍❤️ #foryoupage #petsoftiktok...\" data-provider-name=\"tiktok\"></div>",
@@ -1135,17 +1132,17 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should extract links to posts" do
+    it "extracts links to posts" do
       expect(
         extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>"),
       ).to eq(["/t/1234/4567"])
     end
 
-    it "should not extract links to anchors" do
+    it "does not extract links to anchors" do
       expect(extract_urls("<a href='#tos'>TOS</a>")).to eq([])
     end
 
-    it "should not extract links inside quotes" do
+    it "does not extract links inside quotes" do
       links =
         PrettyText.extract_links(
           "
@@ -1167,7 +1164,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should not extract links inside oneboxes" do
+    it "does not extract links inside oneboxes" do
       onebox = <<~HTML
         <aside class="onebox twitterstatus" data-onebox-src="https://twitter.com/EDBPostgres/status/1402528437441634306">
           <header class="source">
@@ -1185,7 +1182,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should not preserve tags in code blocks" do
+    it "does not preserve tags in code blocks" do
       expect(
         PrettyText.excerpt(
           "<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",
@@ -1194,7 +1191,7 @@ RSpec.describe PrettyText do
       ).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end
 
-    it "should handle nil" do
+    it "handles nil" do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
@@ -1251,7 +1248,7 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
-    it "should have an option to preserve emoji images" do
+    it "has an option to preserve emoji images" do
       emoji_image =
         "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
       expect(PrettyText.excerpt(emoji_image, 100, keep_emoji_images: true)).to match_html(
@@ -1259,7 +1256,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should have an option to remap emoji to code points" do
+    it "has an option to remap emoji to code points" do
       emoji_image =
         "I <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'> you <img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':unknown:' class='emoji' alt=':unknown:' loading='lazy' width='20' height='20'> "
       expect(PrettyText.excerpt(emoji_image, 100, remap_emoji: true)).to match_html(
@@ -1267,14 +1264,14 @@ RSpec.describe PrettyText do
       )
     end
 
-    it "should have an option to preserve emoji codes" do
+    it "has an option to preserve emoji codes" do
       emoji_code =
         "<img src='/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}' title=':heart:' class='emoji' alt=':heart:' loading='lazy' width='20' height='20'>"
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
     context "with option to preserve onebox source" do
-      it "should return the right excerpt" do
+      it "returns the right excerpt" do
         onebox =
           "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected =
@@ -1287,7 +1284,7 @@ RSpec.describe PrettyText do
         ).to eq("#{expected}\n\n#{expected}")
       end
 
-      it "should continue to strip quotes" do
+      it "continues to strip quotes" do
         expect(
           PrettyText.excerpt(
             "<aside class='quote'><p>a</p><p>b</p></aside>boom",
@@ -1298,7 +1295,7 @@ RSpec.describe PrettyText do
       end
     end
 
-    it "should strip audio/video" do
+    it "strips audio/video" do
       html = <<~HTML
         <audio controls>
           <source src="https://awebsite.com/audio.mp3"><a href="https://awebsite.com/audio.mp3">https://awebsite.com/audio.mp3</a></source>
@@ -1903,7 +1900,7 @@ RSpec.describe PrettyText do
     )
   end
 
-  it "should not treat a non emoji as an emoji" do
+  it "does not treat a non emoji as an emoji" do
     expect(PrettyText.cook(":email,class_name:")).not_to include("emoji")
   end
 
@@ -2125,7 +2122,7 @@ HTML
     expect(PrettyText.cook(":smile::sunny:")).to eq(expected.strip)
   end
 
-  it "handles emoji boundaries correctly" do
+  it "handles skin-tone emoji boundaries" do
     cooked = PrettyText.cook("a,:man:t2:,b")
     expected =
       "<p>a,<img src=\"/images/emoji/twitter/man/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man:t2:\" class=\"emoji\" alt=\":man:t2:\" loading=\"lazy\" width=\"20\" height=\"20\">,b</p>"
@@ -2143,7 +2140,7 @@ HTML
     expect(cooked.split("img").length - 1).to eq(3)
   end
 
-  it "handles emoji boundaries correctly" do
+  it "handles emoticon boundaries" do
     expect(PrettyText.cook(",:)")).to include("emoji")
     expect(PrettyText.cook(":-)\n")).to include("emoji")
     expect(PrettyText.cook("a :)")).to include("emoji")
@@ -2183,7 +2180,7 @@ HTML
         )
       end
 
-      it "won't break links by censoring them." do
+      it "does not break links by censoring them." do
         expect_cooked_match(
           "The link still works. [whiz](http://www.whiz.com)",
           '<p>The link still works. <a href="http://www.whiz.com" rel="noopener nofollow ugc">■■■■</a></p>',
@@ -2216,6 +2213,7 @@ HTML
 
     context "with watched words as regular expressions" do
       before { SiteSetting.watched_words_regular_expressions = true }
+
       it "supports words as regular expressions" do
         %w[xyz* plee+ase].each do |word|
           Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: word)
@@ -2596,7 +2594,7 @@ HTML
     expect(cooked).to eq(html)
   end
 
-  it "should sanitize the html" do
+  it "removes unsupported HTML elements" do
     expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
   end
 
@@ -2611,15 +2609,15 @@ HTML
     )
   end
 
-  it "should not onebox magically linked urls" do
+  it "does not onebox magically linked urls" do
     expect(PrettyText.cook("[url]site.com[/url]")).not_to include("onebox")
   end
 
-  it "should sanitize the html" do
+  it "removes unsupported HTML attributes" do
     expect(PrettyText.cook("<p class='hi'>hi</p>")).to eq "<p>hi</p>"
   end
 
-  it "should strip SCRIPT" do
+  it "strips SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
     expect(PrettyText.cook("<div><script>alert(42)</script></div>")).to eq "<div></div>"
 
@@ -2633,7 +2631,7 @@ HTML
     ).to eq "<div></div>"
   end
 
-  it "should allow sanitize bypass" do
+  it "allows sanitize bypass" do
     expect(
       PrettyText.cook("<test>alert(42)</test>", sanitize: false),
     ).to eq "<p><test>alert(42)</test></p>"
@@ -3144,12 +3142,14 @@ HTML
   end
 
   describe "video thumbnails" do
+    let(:video_upload) { Fabricate(:upload, original_filename: "video.mp4", extension: "mp4") }
+
     before do
       SiteSetting.authorized_extensions = "mp4|png"
-      @video_upload = Fabricate(:upload, original_filename: "video.mp4", extension: "mp4")
+      video_upload
     end
 
-    after { Upload.where(original_filename: ["404.png", "#{@video_upload.sha1}.png"]).destroy_all }
+    after { Upload.where(original_filename: ["404.png", "#{video_upload.sha1}.png"]).destroy_all }
 
     it "does not link to a thumbnail image if the video source is missing" do
       Fabricate(:upload, original_filename: "404.png", extension: "png")
@@ -3177,18 +3177,18 @@ HTML
 
     it "links to a thumbnail image if the video source is valid" do
       thumbnail =
-        Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
+        Fabricate(:upload, original_filename: "#{video_upload.sha1}.png", extension: "png")
 
       html = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}"></div><p></p>
       HTML
       doc = Nokogiri::HTML5.fragment(html)
       described_class.add_video_placeholder_image(doc)
 
-      video_base62_sha1 = "#{Upload.base62_sha1(@video_upload.sha1)}.#{@video_upload.extension}"
+      video_base62_sha1 = "#{Upload.base62_sha1(video_upload.sha1)}.#{video_upload.extension}"
 
       html_with_thumbnail = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}" data-video-base62-sha1="#{video_base62_sha1}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}" data-video-base62-sha1="#{video_base62_sha1}"></div><p></p>
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)

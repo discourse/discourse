@@ -8,7 +8,7 @@ RSpec.describe EmbedController do
 
   describe "#info" do
     context "without api key" do
-      it "fails" do
+      it "returns an error response" do
         get "/embed/info.json"
 
         expect(response.body).to match(I18n.t("embed.error"))

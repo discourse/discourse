@@ -4,6 +4,7 @@ RSpec.describe Checklist::ToggleCheckbox do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:post_id) }
     it { is_expected.to validate_presence_of(:toggles) }
+
     it "limits the batch size" do
       toggles =
         Array.new(Checklist::ToggleCheckbox::MAX_BATCH_SIZE + 1) do |index|
@@ -21,6 +22,7 @@ RSpec.describe Checklist::ToggleCheckbox do
       expect(contract).not_to be_valid
       expect(contract.errors[:toggles]).to be_present
     end
+
     it { is_expected.to validate_presence_of(:expected_raw) }
     it { is_expected.to validate_length_of(:expected_raw).is_at_most(SiteSetting.max_post_length) }
     it { is_expected.to validate_presence_of(:expected_updated_at) }

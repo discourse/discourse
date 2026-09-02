@@ -39,12 +39,12 @@ RSpec.describe UserGuardian do
     context "with anon user" do
       let(:guardian) { Guardian.new }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the right value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the right value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
       end
     end
@@ -52,12 +52,12 @@ RSpec.describe UserGuardian do
     context "with current user" do
       let(:guardian) { Guardian.new(user) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the right value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the right value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
       end
     end
@@ -65,12 +65,12 @@ RSpec.describe UserGuardian do
     context "with moderator" do
       let(:guardian) { Guardian.new(moderator) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the right value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the right value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
@@ -78,12 +78,12 @@ RSpec.describe UserGuardian do
     context "with admin" do
       let(:guardian) { Guardian.new(admin) }
 
-      it "should return the right value for non-automatic requests" do
+      it "returns the right value for non-automatic requests" do
         SiteSetting.reviewable_claiming = "optional"
         expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
       end
 
-      it "should return the right value for automatic requests" do
+      it "returns the right value for automatic requests" do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
@@ -145,7 +145,7 @@ RSpec.describe UserGuardian do
     context "with anon user" do
       let(:guardian) { Guardian.new }
 
-      it "should return the right value" do
+      it "returns the right value" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(false)
       end
     end
@@ -673,12 +673,14 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
     end
@@ -694,6 +696,7 @@ RSpec.describe UserGuardian do
 
     context "for moderators" do
       let(:guardian) { Guardian.new(moderator) }
+
       include_examples "can_merge_user examples"
 
       it "isn't allowed if current_user is not an admin" do
@@ -703,6 +706,7 @@ RSpec.describe UserGuardian do
 
     context "for admins" do
       let(:guardian) { Guardian.new(admin) }
+
       include_examples "can_merge_user examples"
     end
   end

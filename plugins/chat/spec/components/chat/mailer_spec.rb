@@ -52,7 +52,7 @@ describe Chat::Mailer do
     before { followed_channel.add(user) }
 
     describe "there is a new message" do
-      let!(:chat_message) { create_message(followed_channel, "hello y'all :wave:") }
+      before { create_message(followed_channel, "hello y'all :wave:") }
 
       it "does not queue a chat summary" do
         expect_not_enqueued
@@ -205,7 +205,8 @@ describe Chat::Mailer do
       let!(:thread) do
         Fabricate(:chat_thread, channel: followed_channel, original_message: chat_message)
       end
-      let!(:thread_membership) do
+
+      before do
         Fabricate(
           :user_chat_thread_membership,
           user: user,
@@ -234,7 +235,7 @@ describe Chat::Mailer do
     before { non_followed_channel.add(user).update!(following: false) }
 
     describe "there is a new message" do
-      let!(:chat_message) { create_message(non_followed_channel, "hello y'all :wave:") }
+      before { create_message(non_followed_channel, "hello y'all :wave:") }
 
       it "does not queue a chat summary" do
         expect_not_enqueued
@@ -270,7 +271,7 @@ describe Chat::Mailer do
     before { muted_channel.add(user).update!(muted: true) }
 
     describe "there is a new message" do
-      let!(:chat_message) { create_message(muted_channel, "hello y'all :wave:") }
+      before { create_message(muted_channel, "hello y'all :wave:") }
 
       it "does not queue a chat summary" do
         expect_not_enqueued
@@ -304,7 +305,7 @@ describe Chat::Mailer do
 
   describe "in an unseen channel" do
     describe "there is a new message" do
-      let!(:chat_message) { create_message(unseen_channel, "hello y'all :wave:") }
+      before { create_message(unseen_channel, "hello y'all :wave:") }
 
       it "does not queue a chat summary" do
         expect_not_enqueued

@@ -44,7 +44,7 @@ RSpec.describe WatchedWord do
       expect(result.errors[:base]&.first).to eq(I18n.t("contains_blocked_word", word: "&lt;a&gt;"))
     end
 
-    it "should prevent the post from being created" do
+    it "prevents the post from being created" do
       manager =
         NewPostManager.new(
           tl2_user,
@@ -65,7 +65,7 @@ RSpec.describe WatchedWord do
       should_block_post(manager)
     end
 
-    it "should handle UTF-8 characters" do
+    it "handles UTF-8 characters" do
       block_word = Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "abc")
       manager =
         NewPostManager.new(tl2_user, title: "Hello world", raw: "abcódef", topic_id: topic.id)
@@ -73,7 +73,7 @@ RSpec.describe WatchedWord do
       expect(manager.perform).to be_success
     end
 
-    it "should block the post from admin" do
+    it "blocks the post from admin" do
       manager =
         NewPostManager.new(
           admin,
@@ -83,7 +83,7 @@ RSpec.describe WatchedWord do
       should_block_post(manager)
     end
 
-    it "should block the post from moderator" do
+    it "blocks the post from moderator" do
       manager =
         NewPostManager.new(
           moderator,
@@ -93,7 +93,7 @@ RSpec.describe WatchedWord do
       should_block_post(manager)
     end
 
-    it "should block the post if it contains multiple blocked words" do
+    it "blocks the post if it contains multiple blocked words" do
       manager =
         NewPostManager.new(
           moderator,
@@ -112,7 +112,7 @@ RSpec.describe WatchedWord do
       }.to_not change { Post.count }
     end
 
-    it "should block in a private message too" do
+    it "blocks in a private message too" do
       manager =
         NewPostManager.new(
           tl2_user,
@@ -139,7 +139,7 @@ RSpec.describe WatchedWord do
   end
 
   context "with require_approval" do
-    it "should queue the post for approval" do
+    it "queues the post for approval" do
       manager =
         NewPostManager.new(
           tl2_user,
@@ -163,7 +163,7 @@ RSpec.describe WatchedWord do
       expect(result.action).to eq(:enqueued)
     end
 
-    it "should not queue posts from admin" do
+    it "does not queue posts from admin" do
       manager =
         NewPostManager.new(
           admin,
@@ -175,7 +175,7 @@ RSpec.describe WatchedWord do
       expect(result.action).to eq(:create_post)
     end
 
-    it "should not queue posts from moderator" do
+    it "does not queue posts from moderator" do
       manager =
         NewPostManager.new(
           moderator,
@@ -221,7 +221,7 @@ RSpec.describe WatchedWord do
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to_not change { PostAction.count }
     end
 
-    it "should flag the post as inappropriate" do
+    it "flags the post as inappropriate" do
       topic = Fabricate(:topic, user: tl2_user)
       post = Fabricate(:post, raw: "I said.... #{flag_word.word}", topic: topic, user: tl2_user)
       Jobs::ProcessPost.new.execute(post_id: post.id)
@@ -242,7 +242,7 @@ RSpec.describe WatchedWord do
       ).to be_present
     end
 
-    it "should flag the post if it contains multiple flagged words" do
+    it "flags the post if it contains multiple flagged words" do
       topic = Fabricate(:topic, user: tl2_user)
       post =
         Fabricate(
@@ -272,7 +272,7 @@ RSpec.describe WatchedWord do
       ).to be_present
     end
 
-    it "should look at the title too" do
+    it "looks at the title too" do
       should_flag_post(
         tl2_user,
         "I thought the movie was not bad actually.",
@@ -280,7 +280,7 @@ RSpec.describe WatchedWord do
       )
     end
 
-    it "shouldn't flag posts by admin" do
+    it "does not flag posts by admin" do
       should_not_flag_post(
         admin,
         "I thought the #{flag_word.word} was bad.",
@@ -288,7 +288,7 @@ RSpec.describe WatchedWord do
       )
     end
 
-    it "shouldn't flag posts by moderator" do
+    it "does not flag posts by moderator" do
       should_not_flag_post(
         moderator,
         "I thought the #{flag_word.word} was bad.",
@@ -348,7 +348,7 @@ RSpec.describe WatchedWord do
       ).to eq(true)
     end
 
-    it "should not flag on rebake" do
+    it "does not flag on rebake" do
       post =
         Fabricate(
           :post,

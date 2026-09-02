@@ -1101,16 +1101,22 @@ RSpec.describe UpcomingChanges do
         it "returns false" do
           expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
         end
+      end
 
-        context "when the user is in that group" do
-          before do
-            trust_level_4_group = Group.find_by(id: Group::AUTO_GROUPS[:trust_level_4])
-            trust_level_4_group.add(user)
-          end
+      context "when the upcoming change is enabled for one of the user's groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: setting_name,
+            group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
+          )
+          trust_level_4_group = Group.find_by(id: Group::AUTO_GROUPS[:trust_level_4])
+          trust_level_4_group.add(user)
+        end
 
-          it "returns true" do
-            expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
-          end
+        it "returns true" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
         end
       end
     end

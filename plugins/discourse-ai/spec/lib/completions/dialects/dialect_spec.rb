@@ -87,7 +87,7 @@ RSpec.describe DiscourseAi::Completions::Dialects::Dialect do
   describe "#trim_messages" do
     let(:five_token_msg) { "This represents five tokens." }
 
-    it "should trim tool messages if tool_calls are trimmed" do
+    it "trims tool messages if tool_calls are trimmed" do
       prompt = DiscourseAi::Completions::Prompt.new(five_token_msg)
       prompt.push(type: :user, content: five_token_msg)
       prompt.push(type: :tool_call, content: five_token_msg, id: 1)

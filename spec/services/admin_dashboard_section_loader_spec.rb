@@ -122,40 +122,32 @@ describe AdminDashboardSectionLoader do
       expect(described_class.pool_size).to eq(1)
     end
   end
-end
 
-describe AdminDashboardSectionLoader do
-  self.use_transactional_tests = false
+  describe ".build without transactional tests" do
+    self.use_transactional_tests = false
 
-  after do
-    if thread_pool = described_class.instance_variable_get(:@thread_pool)
-      thread_pool.shutdown
-      thread_pool.wait_for_termination(timeout: 1)
-      described_class.remove_instance_variable(:@thread_pool)
-    end
-  end
+    it "returns database connections to the pool once a section finishes building" do
+      worker_thread = nil
+      loader = ->(start_date:, end_date:, current_user:) do
+        worker_thread = Thread.current
+        ActiveRecord::Base.connection.execute("SELECT 1")
+        { value: "leaky" }
+      end
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
+        [{ id: "leaky", enabled: -> { true }, loader: loader }],
+      )
 
-  it "returns database connections to the pool once a section finishes building" do
-    worker_thread = nil
-    loader = ->(start_date:, end_date:, current_user:) do
-      worker_thread = Thread.current
-      ActiveRecord::Base.connection.execute("SELECT 1")
-      { value: "leaky" }
-    end
-    DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-      [{ id: "leaky", enabled: -> { true }, loader: loader }],
-    )
+      described_class.build(
+        section_ids: ["leaky"],
+        current_user: Discourse.system_user,
+        start_date: "2026-05-01",
+        end_date: "2026-05-07",
+      )
 
-    described_class.build(
-      section_ids: ["leaky"],
-      current_user: Discourse.system_user,
-      start_date: "2026-05-01",
-      end_date: "2026-05-07",
-    )
-
-    expect(worker_thread).not_to eq(Thread.current)
-    wait_for do
-      ActiveRecord::Base.connection_pool.connections.none? { |c| c.owner == worker_thread }
+      expect(worker_thread).not_to eq(Thread.current)
+      wait_for do
+        ActiveRecord::Base.connection_pool.connections.none? { |c| c.owner == worker_thread }
+      end
     end
   end
 end

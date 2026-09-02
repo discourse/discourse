@@ -3,7 +3,8 @@
 RSpec.describe(DiscourseEvents::Events::CreateInvitee) do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:event_id) }
-    it do
+
+    it "requires a recognized status" do
       is_expected.to validate_inclusion_of(:status).in_array(
         DiscourseEvents::Events::Invitee.statuses.keys.map(&:to_s),
       )

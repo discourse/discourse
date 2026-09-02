@@ -8,7 +8,7 @@ RSpec.describe "Discobot Certificate" do
 
   describe "when viewing the certificate" do
     describe "when no logged in" do
-      it "should return the right response" do
+      it "returns the right response" do
         get "/discobot/certificate.svg", params: params
 
         expect(response.status).to eq(404)
@@ -18,7 +18,7 @@ RSpec.describe "Discobot Certificate" do
     describe "when logged in" do
       before { sign_in(user) }
 
-      it "should return the right text" do
+      it "returns the right text" do
         stub_request(:get, /letter_avatar_proxy/).to_return(
           status: 200,
           body: "http://test.localhost/cdn/avatar.png",
@@ -36,7 +36,7 @@ RSpec.describe "Discobot Certificate" do
       end
 
       describe "when params are missing" do
-        it "should raise the right errors" do
+        it "raises the right errors" do
           params.each do |key, _|
             get "/discobot/certificate.svg", params: params.except(key)
             expect(response.status).to eq(400)

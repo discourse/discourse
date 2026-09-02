@@ -16,7 +16,7 @@ RSpec.describe Onebox do
       templates.each { |template| expect(File.read(template)).not_to match(text) }
     end
 
-    it "should not contain any script tags" do
+    it "does not contain any script tags" do
       expect_templates_to_not_match(/<script/)
     end
   end

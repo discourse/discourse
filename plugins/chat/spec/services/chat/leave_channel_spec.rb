@@ -18,101 +18,99 @@ RSpec.describe Chat::LeaveChannel do
 
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
-    context "when all steps pass" do
-      context "when category channel" do
-        context "with existing membership" do
-          before do
-            channel_1.add(current_user)
-            Chat::Channel.ensure_consistency!
-          end
-
-          it { is_expected.to run_successfully }
-
-          it "unfollows the channel" do
-            membership = channel_1.membership_for(current_user)
-
-            expect { result }.to change { membership.reload.following }.from(true).to(false)
-          end
-
-          it "recomputes user count" do
-            expect { result }.to change { channel_1.reload.user_count }.from(1).to(0)
-          end
+    context "when category channel" do
+      context "with existing membership" do
+        before do
+          channel_1.add(current_user)
+          Chat::Channel.ensure_consistency!
         end
 
-        context "with no existing membership" do
-          it { is_expected.to run_successfully }
+        it { is_expected.to run_successfully }
 
-          it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership }
-          end
+        it "unfollows the channel" do
+          membership = channel_1.membership_for(current_user)
+
+          expect { result }.to change { membership.reload.following }.from(true).to(false)
+        end
+
+        it "recomputes user count" do
+          expect { result }.to change { channel_1.reload.user_count }.from(1).to(0)
         end
       end
 
-      context "when group channel" do
-        context "with existing membership" do
-          fab!(:channel_1) do
-            Fabricate(:direct_message_channel, group: true, users: [current_user, Fabricate(:user)])
-          end
+      context "with no existing membership" do
+        it { is_expected.to run_successfully }
 
-          before { Chat::Channel.ensure_consistency! }
+        it "does nothing" do
+          expect { result }.to_not change { Chat::UserChatChannelMembership }
+        end
+      end
+    end
 
-          it { is_expected.to run_successfully }
-
-          it "leaves the channel" do
-            membership = channel_1.membership_for(current_user)
-
-            result
-
-            expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
-            expect(
-              channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
-            ).to eq(false)
-          end
-
-          it "recomputes user count" do
-            expect { result }.to change { channel_1.reload.user_count }.from(2).to(1)
-          end
+    context "when group channel" do
+      context "with existing membership" do
+        fab!(:channel_1) do
+          Fabricate(:direct_message_channel, group: true, users: [current_user, Fabricate(:user)])
         end
 
-        context "with no existing membership" do
-          it { is_expected.to run_successfully }
+        before { Chat::Channel.ensure_consistency! }
 
-          it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership }
-          end
+        it { is_expected.to run_successfully }
+
+        it "leaves the channel" do
+          membership = channel_1.membership_for(current_user)
+
+          result
+
+          expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
+          expect(
+            channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
+          ).to eq(false)
+        end
+
+        it "recomputes user count" do
+          expect { result }.to change { channel_1.reload.user_count }.from(2).to(1)
         end
       end
 
-      context "when direct channel" do
-        context "with existing membership" do
-          fab!(:channel_1) do
-            Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
-          end
+      context "with no existing membership" do
+        it { is_expected.to run_successfully }
 
-          before { Chat::Channel.ensure_consistency! }
+        it "does nothing" do
+          expect { result }.to_not change { Chat::UserChatChannelMembership }
+        end
+      end
+    end
 
-          it { is_expected.to run_successfully }
-
-          it "unfollows the channel" do
-            membership = channel_1.membership_for(current_user)
-
-            expect { result }.to change { membership.reload.following }.from(true).to(false)
-            expect(
-              channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
-            ).to eq(true)
-          end
-
-          it "recomputes user count" do
-            expect { result }.to_not change { channel_1.reload.user_count }
-          end
+    context "when direct channel" do
+      context "with existing membership" do
+        fab!(:channel_1) do
+          Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
         end
 
-        context "with no existing membership" do
-          it { is_expected.to run_successfully }
+        before { Chat::Channel.ensure_consistency! }
 
-          it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership }
-          end
+        it { is_expected.to run_successfully }
+
+        it "unfollows the channel" do
+          membership = channel_1.membership_for(current_user)
+
+          expect { result }.to change { membership.reload.following }.from(true).to(false)
+          expect(
+            channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
+          ).to eq(true)
+        end
+
+        it "recomputes user count" do
+          expect { result }.to_not change { channel_1.reload.user_count }
+        end
+      end
+
+      context "with no existing membership" do
+        it { is_expected.to run_successfully }
+
+        it "does nothing" do
+          expect { result }.to_not change { Chat::UserChatChannelMembership }
         end
       end
     end

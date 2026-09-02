@@ -14,7 +14,7 @@ describe Chat do
     fab!(:upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
-    let!(:chat_message) do
+    before do
       Fabricate(
         :chat_message,
         chat_channel: chat_channel,
@@ -48,7 +48,8 @@ describe Chat do
         message: "Hello world! #{message_upload.sha1}",
       )
     end
-    let!(:draft_message) do
+
+    before do
       Chat::Draft.create!(
         user: user,
         chat_channel: chat_channel,
@@ -85,8 +86,9 @@ describe Chat do
   describe "user card serializer extension #can_chat_user" do
     fab!(:target_user, :user)
     let!(:user) { Fabricate(:user) }
-    let!(:guardian) { Guardian.new(user) }
+    let(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
+
     fab!(:group)
 
     context "when chat enabled" do
@@ -113,7 +115,7 @@ describe Chat do
       end
 
       context "when guardian user is same as target user" do
-        let!(:guardian) { Guardian.new(target_user) }
+        let(:guardian) { Guardian.new(target_user) }
 
         it "returns false" do
           expect(serializer.can_chat_user).to eq(false)
@@ -121,7 +123,7 @@ describe Chat do
       end
 
       context "when guardian user is anon" do
-        let!(:guardian) { Guardian.new }
+        let(:guardian) { Guardian.new }
 
         it "returns false" do
           expect(serializer.can_chat_user).to eq(false)
@@ -190,7 +192,7 @@ describe Chat do
     end
 
     describe "when a user is added to a group with access to a channel through a category" do
-      let!(:category) { Fabricate(:private_category, group: chatters_group) }
+      let(:category) { Fabricate(:private_category, group: chatters_group) }
 
       it "joins the user to the channel if auto-join is enabled" do
         chatters_group.add(user)

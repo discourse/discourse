@@ -2,7 +2,7 @@
 
 RSpec.describe AboutController do
   describe "#index" do
-    it "should display the about page for anonymous user when login_required is false" do
+    it "displays the about page for anonymous user when login_required is false" do
       SiteSetting.login_required = false
       get "/about"
 
@@ -10,14 +10,14 @@ RSpec.describe AboutController do
       expect(response.body).to include("<title>About - Discourse</title>")
     end
 
-    it "should redirect to login page for anonymous user when login_required is true" do
+    it "redirects to login page for anonymous user when login_required is true" do
       SiteSetting.login_required = true
       get "/about"
 
       expect(response).to redirect_to "/login"
     end
 
-    it "should display the about page for logged in user when login_required is true" do
+    it "displays the about page for logged in user when login_required is true" do
       SiteSetting.login_required = true
       sign_in(Fabricate(:user))
       get "/about"
@@ -26,13 +26,13 @@ RSpec.describe AboutController do
     end
 
     context "with crawler view" do
-      it "should include correct title" do
+      it "includes correct title" do
         get "/about", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
         expect(response.body).to include("<title>About - Discourse</title>")
       end
 
-      it "should include correct user URLs" do
+      it "includes correct user URLs" do
         Fabricate(:admin, username: "anAdminUser")
         get "/about", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)

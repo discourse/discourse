@@ -39,16 +39,18 @@ RSpec.describe Promotion do
     end
 
     context "when user has done the requisite things" do
+      let(:review_result) { promotion.review }
+
       before do
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
-        @result = promotion.review
+        review_result
       end
 
       it "returns true" do
-        expect(@result).to eq(true)
+        expect(review_result).to eq(true)
       end
 
       it "has upgraded the user to basic" do
@@ -90,8 +92,8 @@ RSpec.describe Promotion do
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
-        @result = promotion.review
-        expect(@result).to eq(false)
+        result = promotion.review
+        expect(result).to eq(false)
         expect(user.trust_level).to eq(TrustLevel[0])
       end
     end
@@ -120,9 +122,10 @@ RSpec.describe Promotion do
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
       end
+
       it "sends promotion message by default" do
         SiteSetting.send_tl1_welcome_message = true
-        @result = promotion.review
+        promotion.review
         expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
         job = Jobs::SendSystemMessage.jobs[0]
         expect(job["args"][0]["user_id"]).to eq(user.id)
@@ -162,7 +165,7 @@ RSpec.describe Promotion do
 
       it "can be turned off" do
         SiteSetting.send_tl1_welcome_message = false
-        @result = promotion.review
+        promotion.review
         expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
       end
     end
@@ -195,12 +198,12 @@ RSpec.describe Promotion do
             user_id: user.id,
             message_type: "tl2_promotion_message",
           },
-        ) { @result = promotion.review }
+        ) { promotion.review }
       end
 
       it "can be turned off" do
         SiteSetting.send_tl2_promotion_message = false
-        expect_not_enqueued_with(job: :send_system_message) { @result = promotion.review }
+        expect_not_enqueued_with(job: :send_system_message) { promotion.review }
       end
     end
   end
@@ -222,6 +225,8 @@ RSpec.describe Promotion do
     end
 
     context "when has done the requisite things" do
+      let(:review_result) { promotion.review }
+
       before do
         SiteSetting.tl2_requires_topic_reply_count = 3
 
@@ -237,11 +242,11 @@ RSpec.describe Promotion do
           reply = Fabricate(:post, topic: topic, user: user, post_number: 2)
         end
 
-        @result = promotion.review
+        review_result
       end
 
       it "returns true" do
-        expect(@result).to eq(true)
+        expect(review_result).to eq(true)
       end
 
       it "has upgraded the user to regular" do

@@ -130,7 +130,7 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
-  describe ".configure_site_settings" do
+  describe ".configure_site_settings defaults" do
     it "applies site settings from configuration_schema defaults" do
       test_type =
         build_test_type(
@@ -544,7 +544,7 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
-  describe ".configure_site_settings" do
+  describe ".configure_site_settings hash values" do
     it "extracts default from hash config values" do
       test_type =
         build_test_type(

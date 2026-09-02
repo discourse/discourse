@@ -6,9 +6,32 @@ describe DiscourseAutomation::AdminAutomationsController do
   describe "#trigger" do
     fab!(:automation)
 
-    describe "access" do
-      context "when user is not logged in" do
-        before { sign_out }
+    context "when user is not logged in" do
+      before { sign_out }
+
+      it "raises a 404" do
+        post "/automations/#{automation.id}/trigger.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when user is logged in" do
+      context "when user is admin" do
+        before do
+          Jobs.run_immediately!
+          sign_in(Fabricate(:admin))
+        end
+
+        it "triggers the automation" do
+          list = capture_contexts { post "/automations/#{automation.id}/trigger.json" }
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("api_call")
+        end
+      end
+
+      context "when user is moderator" do
+        before { sign_in(Fabricate(:moderator)) }
 
         it "raises a 404" do
           post "/automations/#{automation.id}/trigger.json"
@@ -16,60 +39,35 @@ describe DiscourseAutomation::AdminAutomationsController do
         end
       end
 
-      context "when user is logged in" do
-        context "when user is admin" do
-          before do
-            Jobs.run_immediately!
-            sign_in(Fabricate(:admin))
-          end
+      context "when user is regular" do
+        before { sign_in(Fabricate(:user)) }
 
-          it "triggers the automation" do
-            list = capture_contexts { post "/automations/#{automation.id}/trigger.json" }
-
-            expect(list.length).to eq(1)
-            expect(list[0]["kind"]).to eq("api_call")
-          end
-        end
-
-        context "when user is moderator" do
-          before { sign_in(Fabricate(:moderator)) }
-
-          it "raises a 404" do
-            post "/automations/#{automation.id}/trigger.json"
-            expect(response.status).to eq(404)
-          end
-        end
-
-        context "when user is regular" do
-          before { sign_in(Fabricate(:user)) }
-
-          it "raises a 404" do
-            post "/automations/#{automation.id}/trigger.json"
-            expect(response.status).to eq(404)
-          end
+        it "raises a 404" do
+          post "/automations/#{automation.id}/trigger.json"
+          expect(response.status).to eq(404)
         end
       end
+    end
 
-      context "when using a user api key" do
-        before { sign_out }
+    context "when using a user api key" do
+      before { sign_out }
 
-        let(:admin) { Fabricate(:admin) }
-        let(:api_key) { Fabricate(:api_key, user: admin) }
+      let(:admin) { Fabricate(:admin) }
+      let(:api_key) { Fabricate(:api_key, user: admin) }
 
-        it "works" do
-          post "/automations/#{automation.id}/trigger.json",
-               params: {
-                 context: {
-                   foo: :bar,
-                 },
+      it "queues the automation trigger" do
+        post "/automations/#{automation.id}/trigger.json",
+             params: {
+               context: {
+                 foo: :bar,
                },
-               headers: {
-                 HTTP_API_KEY: api_key.key,
-               }
+             },
+             headers: {
+               HTTP_API_KEY: api_key.key,
+             }
 
-          expect(response.status).to eq(200)
-          expect(Jobs::DiscourseAutomation::Trigger.jobs.size).to eq(1)
-        end
+        expect(response.status).to eq(200)
+        expect(Jobs::DiscourseAutomation::Trigger.jobs.size).to eq(1)
       end
     end
 

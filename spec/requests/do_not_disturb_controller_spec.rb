@@ -16,7 +16,7 @@ RSpec.describe DoNotDisturbController do
       expect(response.status).to eq(400)
     end
 
-    it "works properly with integer minute durations" do
+    it "sets do-not-disturb for a positive minute duration" do
       freeze_time
       post "/do-not-disturb.json", params: { duration: 30 }
 
@@ -24,7 +24,7 @@ RSpec.describe DoNotDisturbController do
       expect(user.do_not_disturb_timings.last.ends_at).to eq_time(30.minutes.from_now)
     end
 
-    it "works properly with integer minute durations" do
+    it "rejects a negative minute duration" do
       post "/do-not-disturb.json", params: { duration: -30 }
       expect(response.status).to eq(422)
       expect(response.parsed_body).to eq({ "errors" => ["Ends at is invalid"] })

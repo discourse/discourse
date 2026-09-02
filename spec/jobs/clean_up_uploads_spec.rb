@@ -91,7 +91,7 @@ RSpec.describe Jobs::CleanUpUploads do
   describe "when clean_up_uploads is disabled" do
     before { SiteSetting.clean_up_uploads = false }
 
-    it "should still delete invalid upload records" do
+    it "stills delete invalid upload records" do
       upload2 = Fabricate(:upload, created_at: 2.hours.ago, url: "", retain_hours: nil)
 
       expect do Jobs::CleanUpUploads.new.execute(nil) end.to change { Upload.count }.by(-1)

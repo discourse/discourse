@@ -105,7 +105,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_new" do
-    it "should publish the right message_bus message" do
+    it "publishes the right message_bus message" do
       messages = MessageBus.track_publish { described_class.publish_new(private_message) }
 
       expect(messages.map(&:channel)).to contain_exactly(described_class.user_channel(user_2.id))
@@ -120,7 +120,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(data["payload"]["created_by_user_id"]).to eq(private_message.user_id)
     end
 
-    it "should publish the right message_bus message for a group message" do
+    it "publishes the right message_bus message for a group message" do
       messages = MessageBus.track_publish { described_class.publish_new(group_message) }
 
       expect(messages.map(&:channel)).to contain_exactly(described_class.group_channel(group.id))
@@ -137,7 +137,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_unread" do
-    it "should publish the right message_bus message" do
+    it "publishes the right message_bus message" do
       messages =
         MessageBus.track_publish { described_class.publish_unread(private_message.first_post) }
 
@@ -181,7 +181,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_group_archived" do
-    it "should publish the right message_bus message" do
+    it "publishes the right message_bus message" do
       user_3 = Fabricate(:user)
       group.add(user_3)
 
@@ -207,7 +207,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_read" do
-    it "should publish the right message_bus message" do
+    it "publishes the right message_bus message" do
       message =
         MessageBus
           .track_publish(described_class.user_channel(user.id)) do

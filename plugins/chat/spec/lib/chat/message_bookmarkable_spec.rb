@@ -18,6 +18,7 @@ describe Chat::MessageBookmarkable do
     register_test_bookmarkable(described_class)
     Chat::UserChatChannelMembership.create(chat_channel: channel, user: user, following: true)
     SiteSetting.chat_allowed_groups = chatters
+    Fabricate(:bookmark)
   end
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
@@ -28,7 +29,6 @@ describe Chat::MessageBookmarkable do
     Fabricate(:bookmark, user: user, bookmarkable: message1, name: "something i gotta do")
   end
   let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: message2) }
-  let!(:bookmark3) { Fabricate(:bookmark) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

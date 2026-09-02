@@ -23,12 +23,13 @@ RSpec.describe BackfillLivestreamFromTag do
     Fabricate(:event, post: Fabricate(:post, topic: reply_event_topic)) # event on a reply
   end
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
-
-  after { ActiveRecord::Migration.verbose = @original_verbose }
 
   context "when livestream_enabled is true" do
     before do

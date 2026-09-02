@@ -165,16 +165,14 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::HunkDiff do
         end
       end
 
-      context "with malformed diffs" do
-        context "when empty" do
-          let(:diff) { "" }
+      context "when empty" do
+        let(:diff) { "" }
 
-          it "raises a MalformedDiffError" do
-            expect { apply_hunk }.to raise_error(
-              DiscourseAi::Utils::DiffUtils::HunkDiff::MalformedDiffError,
-            ) do |error|
-              expect(error.context["Issue"]).to eq("Diff is empty")
-            end
+        it "raises a MalformedDiffError" do
+          expect { apply_hunk }.to raise_error(
+            DiscourseAi::Utils::DiffUtils::HunkDiff::MalformedDiffError,
+          ) do |error|
+            expect(error.context["Issue"]).to eq("Diff is empty")
           end
         end
       end
@@ -183,7 +181,8 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::HunkDiff do
     context "without markers" do
       let(:original_text) { "hello" }
       let(:diff) { "world" }
-      it "will append to the end" do
+
+      it "appends to the end" do
         expect(apply_hunk).to eq("hello\nworld")
       end
     end

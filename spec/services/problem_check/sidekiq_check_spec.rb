@@ -37,7 +37,7 @@ RSpec.describe ProblemCheck::SidekiqCheck do
         Jobs.stubs(:queued).returns(1)
       end
 
-      it do
+      it "reports the Sidekiq error" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.',
         )
@@ -50,7 +50,7 @@ RSpec.describe ProblemCheck::SidekiqCheck do
         Jobs.stubs(:queued).returns(1)
       end
 
-      it do
+      it "reports the stale Sidekiq process" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.',
         )
@@ -63,7 +63,7 @@ RSpec.describe ProblemCheck::SidekiqCheck do
         Jobs.stubs(:queued).returns(100_000)
       end
 
-      it do
+      it "reports the missing Sidekiq process" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "The number of queued jobs is 100000, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.",
         )

@@ -15,7 +15,7 @@ RSpec.describe Admin::EmailLogsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response" do
+      it "returns the right response" do
         get "/admin/email-logs/sent.json"
 
         expect(response.status).to eq(200)
@@ -35,7 +35,7 @@ RSpec.describe Admin::EmailLogsController do
         expect(log["post_url"]).to eq(post.url)
       end
 
-      it "should be able to filter by reply key" do
+      it "is able to filter by reply key" do
         email_log_2 = Fabricate(:email_log, post: post)
 
         post_reply_key_2 =
@@ -58,7 +58,7 @@ RSpec.describe Admin::EmailLogsController do
         end
       end
 
-      it "should be able to filter by smtp_transaction_response" do
+      it "is able to filter by smtp_transaction_response" do
         email_log_2 = Fabricate(:email_log, smtp_transaction_response: <<~RESPONSE)
           250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
         RESPONSE
@@ -77,7 +77,7 @@ RSpec.describe Admin::EmailLogsController do
         let(:email_type) { "group_smtp" }
         let(:target_email) { user.email }
 
-        it "should be able to filter across both to address and cc addresses" do
+        it "is able to filter across both to address and cc addresses" do
           other_email = "foo@bar.com"
           another_email = "forty@two.com"
           email_log_matching_to_address =
@@ -150,7 +150,7 @@ RSpec.describe Admin::EmailLogsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "succeeds" do
+      it "returns the email logs" do
         get "/admin/email-logs/skipped.json"
 
         expect(response.status).to eq(200)
@@ -162,7 +162,7 @@ RSpec.describe Admin::EmailLogsController do
       end
 
       context "when filtered by username" do
-        it "should return the right response" do
+        it "returns the right response" do
           get "/admin/email-logs/skipped.json", params: { user: user.username }
 
           expect(response.status).to eq(200)
@@ -175,7 +175,7 @@ RSpec.describe Admin::EmailLogsController do
       end
 
       context "when filtered by address" do
-        it "should return the right response" do
+        it "returns the right response" do
           get "/admin/email-logs/skipped.json", params: { address: "test@example" }
           expect(response.status).to eq(200)
           logs = response.parsed_body
@@ -212,7 +212,7 @@ RSpec.describe Admin::EmailLogsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should provide a string for a blank error" do
+      it "provides a string for a blank error" do
         Fabricate(:incoming_email, error: "")
         get "/admin/email-logs/rejected.json"
         expect(response.status).to eq(200)
@@ -247,7 +247,7 @@ RSpec.describe Admin::EmailLogsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should provide a string for a blank error" do
+      it "provides a string for a blank error" do
         incoming_email = Fabricate(:incoming_email, error: "")
         get "/admin/email-logs/incoming/#{incoming_email.id}.json"
         expect(response.status).to eq(200)
@@ -321,7 +321,7 @@ RSpec.describe Admin::EmailLogsController do
           expect(json["error"]).to eq(error_message)
         end
 
-        it "returns an incoming email sent to the notification_email address" do
+        it "returns an incoming email sent to the VERP notification address" do
           Fabricate(
             :incoming_email,
             is_bounce: true,
@@ -336,7 +336,7 @@ RSpec.describe Admin::EmailLogsController do
           expect(json["error"]).to eq(error_message)
         end
 
-        it "returns an incoming email sent to the notification_email address" do
+        it "returns an incoming email sent through the reply subdomain" do
           SiteSetting.reply_by_email_address = "replies+%{reply_key}@subdomain.example.com"
           Fabricate(
             :incoming_email,

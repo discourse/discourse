@@ -222,6 +222,7 @@ RSpec.describe Chat::Workflows::Approval::ResumeInteraction do
           "channel_id" => channel.id.to_s,
         }
       end
+
       it { is_expected.to fail_to_find_a_model(:resolved_interaction) }
     end
 

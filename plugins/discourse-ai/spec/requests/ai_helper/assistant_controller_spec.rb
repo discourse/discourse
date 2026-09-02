@@ -638,6 +638,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
             "I love apples",
           ]
         end
+
         it "returns title suggestions based on the input text" do
           DiscourseAi::Completions::Llm.with_prepared_responses([title_suggestions]) do
             post "/discourse-ai/ai-helper/suggest_title", params: { text: post_1.raw }

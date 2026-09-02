@@ -19,13 +19,13 @@ describe "Edit Category Form Templates" do
   describe "when editing a category with no form templates set" do
     before { category.update(form_template_ids: []) }
 
-    it "should have form templates disabled and topic template enabled" do
+    it "has form templates disabled and topic template enabled" do
       category_page.visit_edit_template(category)
       expect(category_page).not_to have_form_template_enabled
       expect(category_page).to have_d_editor
     end
 
-    it "should allow you to select and save a form template" do
+    it "allows you to select and save a form template" do
       category_page.visit_edit_template(category)
       category_page.toggle_form_templates
       expect(category_page).to have_no_d_editor
@@ -36,7 +36,7 @@ describe "Edit Category Form Templates" do
       expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
     end
 
-    it "should allow you to select and save multiple form templates" do
+    it "allows you to select and save multiple form templates" do
       category_page.visit_edit_template(category)
       category_page.toggle_form_templates
       category_page.select_form_template(form_template.name)
@@ -52,7 +52,7 @@ describe "Edit Category Form Templates" do
   describe "when editing a category with form templates set" do
     before { category.update(form_template_ids: [form_template.id, form_template_2.id]) }
 
-    it "should have form templates enabled and showing the selected templates" do
+    it "has form templates enabled and showing the selected templates" do
       category_page.visit_edit_template(category)
       expect(category_page).to have_form_template_enabled
       expect(category_page).to have_no_d_editor

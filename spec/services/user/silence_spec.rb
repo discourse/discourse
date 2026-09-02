@@ -6,12 +6,14 @@ RSpec.describe User::Silence do
     it { is_expected.to validate_presence_of(:reason) }
     it { is_expected.to validate_presence_of(:silenced_till) }
     it { is_expected.to validate_length_of(:reason).is_at_most(300) }
-    it do
+
+    it "limits the number of similar users" do
       is_expected.to validate_length_of(:other_user_ids).as_array.is_at_most(
         User::MAX_SIMILAR_USERS,
       )
     end
-    it do
+
+    it "validates the post action" do
       is_expected.to validate_inclusion_of(:post_action).in_array(
         %w[delete delete_replies edit none],
       ).allow_blank

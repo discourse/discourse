@@ -135,13 +135,15 @@ RSpec.describe "users" do
 
         fab!(:featured_topic, :topic)
         fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
-        let(:external_id) { "1" }
-
-        before do
+        let(:discourse_connect_setup) do
           SiteSetting.discourse_connect_url = "http://someurl.com"
           SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
           user.create_single_sign_on_record(external_id: "1", last_payload: "")
+        end
+        let(:external_id) do
+          discourse_connect_setup
+          "1"
         end
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -175,16 +177,18 @@ RSpec.describe "users" do
 
         fab!(:featured_topic, :topic)
         fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
-        let(:provider) { "google_oauth2" }
-        let(:external_id) { "myuid" }
-
-        before do
+        let(:google_oauth2_setup) do
           SiteSetting.enable_google_oauth2_logins = true
           UserAssociatedAccount.create!(
             user: user,
             provider_uid: "myuid",
             provider_name: "google_oauth2",
           )
+        end
+        let(:provider) { "google_oauth2" }
+        let(:external_id) do
+          google_oauth2_setup
+          "myuid"
         end
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -528,7 +532,7 @@ RSpec.describe "users" do
   end
 
   path "/user_avatar/{username}/refresh_gravatar.json" do
-    before do
+    let(:gravatar_request_setup) do
       stub_request(
         :get,
         %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
@@ -552,7 +556,10 @@ RSpec.describe "users" do
       produces "application/json"
       response "200", "response" do
         let(:user) { Fabricate(:user) }
-        let(:username) { user.username }
+        let(:username) do
+          gravatar_request_setup
+          user.username
+        end
 
         expected_response_schema = load_spec_schema("user_refresh_gravatar_response")
         schema(expected_response_schema)

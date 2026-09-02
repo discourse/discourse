@@ -308,7 +308,7 @@ RSpec.describe PostOwnerChanger do
         let(:pm) { create_post(archetype: "private_message", target_usernames: [p2user.username]) }
         let(:pm_poster) { pm.user }
 
-        it "should update users' counts" do
+        it "updates users' counts" do
           PostActionCreator.like(p2user, pm)
 
           expect {

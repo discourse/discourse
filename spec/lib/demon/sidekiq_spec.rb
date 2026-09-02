@@ -2,7 +2,7 @@
 
 RSpec.describe Demon::Sidekiq do
   describe ".heartbeat_check" do
-    it "should restart sidekiq daemons when daemon cannot be match to an entry in Sidekiq::ProcessSet or when heartbeat check has been missed" do
+    it "restarts sidekiq daemons when daemon cannot be match to an entry in Sidekiq::ProcessSet or when heartbeat check has been missed" do
       running_sidekiq_daemon = described_class.new(1)
       running_sidekiq_daemon.set_pid(1)
       missing_sidekiq_daemon = described_class.new(2)
@@ -45,7 +45,7 @@ RSpec.describe Demon::Sidekiq do
   end
 
   describe ".rss_memory_check" do
-    it "should restart sidekiq daemons when daemon's RSS memory exceeds the maximum allowed RSS memory" do
+    it "restarts sidekiq daemons when daemon's RSS memory exceeds the maximum allowed RSS memory" do
       stub_const(described_class, "SIDEKIQ_RSS_MEMORY_CHECK_INTERVAL_SECONDS", 0) do
         # Set to a negative value to fake that the process has exceeded the maximum allowed RSS memory
         stub_const(described_class, "DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES", -1) do

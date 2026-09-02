@@ -6,7 +6,7 @@ RSpec.describe DiscourseChatIntegration::Channel do
   include_context "with dummy provider"
   include_context "with validated dummy provider"
 
-  it "should save and load successfully" do
+  it "saves and load successfully" do
     expect(DiscourseChatIntegration::Channel.all.length).to eq(0)
 
     chan = DiscourseChatIntegration::Channel.create(provider: "dummy")
@@ -18,7 +18,7 @@ RSpec.describe DiscourseChatIntegration::Channel do
     expect(loadedChan.provider).to eq("dummy")
   end
 
-  it "should edit successfully" do
+  it "edits successfully" do
     channel = DiscourseChatIntegration::Channel.create!(provider: "dummy2", data: { val: "hello" })
     expect(channel.valid?).to eq(true)
     channel.save!

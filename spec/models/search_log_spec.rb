@@ -3,7 +3,7 @@
 RSpec.describe SearchLog, type: :model do
   after { SearchLog.clear_debounce_cache! }
 
-  describe ".log" do
+  describe ".log validation and modifiers" do
     context "with invalid arguments" do
       it "no search type returns error" do
         status, _ =
@@ -187,7 +187,7 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
-  describe ".log" do
+  describe ".log crawler detection" do
     it "flags an anonymous search from a known crawler user agent" do
       _status, id =
         SearchLog.log(
@@ -364,7 +364,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe ".term_details" do
-    it "should only use the date for the period" do
+    it "onlies use the date for the period" do
       time = Time.utc(2019, 5, 23, 18, 15, 30)
       freeze_time(time)
 
@@ -511,7 +511,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe "clean_up" do
-    it "will remove old logs" do
+    it "removes old logs" do
       SearchLog.log(term: "jawa", search_type: :header, ip_address: "127.0.0.1")
       SearchLog.log(term: "jedi", search_type: :header, ip_address: "127.0.0.1")
       SearchLog.log(term: "rey", search_type: :header, ip_address: "127.0.0.1")

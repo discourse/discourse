@@ -83,16 +83,13 @@ RSpec.describe Boards::CreateBoard do
           }
         end
 
-        context "when the user can create tags" do
-          let(:dependencies) { { guardian: admin.guardian } }
-
-          it "resolves existing tags and creates new ones" do
-            board = result[:board]
-            expect(board.tag_ids).to contain_exactly(
-              existing_tag.id,
-              Tag.find_by(name: "brand-new").id,
-            )
-          end
+        it "resolves existing tags and creates new ones when the user can create tags" do
+          board =
+            described_class.call(params:, raw_board_params: raw, guardian: admin.guardian)[:board]
+          expect(board.tag_ids).to contain_exactly(
+            existing_tag.id,
+            Tag.find_by(name: "brand-new").id,
+          )
         end
 
         it "fails when the user cannot create tags and a tag is missing" do
@@ -100,19 +97,15 @@ RSpec.describe Boards::CreateBoard do
           expect(result["result.model.board"].exception).to be_a(Discourse::InvalidParameters)
         end
 
-        context "when an existing tag is not visible to the user" do
-          fab!(:restricted_tag, :tag)
+        it "does not resolve a tag that is not visible to the user" do
+          restricted_tag = Fabricate(:tag)
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [restricted_tag])
+          raw = { "name" => "Tagged", "slug" => "tagged", "tag_names" => [restricted_tag.name] }
 
-          let(:raw) do
-            { "name" => "Tagged", "slug" => "tagged", "tag_names" => [restricted_tag.name] }
-          end
+          result = described_class.call(params: raw, raw_board_params: raw, **dependencies)
 
-          before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [restricted_tag]) }
-
-          it "does not resolve the hidden tag" do
-            expect(result).to be_failure
-            expect(result["result.model.board"].exception).to be_a(Discourse::InvalidParameters)
-          end
+          expect(result).to be_failure
+          expect(result["result.model.board"].exception).to be_a(Discourse::InvalidParameters)
         end
       end
 
@@ -131,24 +124,20 @@ RSpec.describe Boards::CreateBoard do
           expect(board.columns.order(:position).pluck(:title)).to eq(%w[Backlog Done])
         end
 
-        context "when a column tag is not visible to the user" do
-          fab!(:restricted_tag, :tag)
+        it "does not resolve a column tag that is not visible to the user" do
+          restricted_tag = Fabricate(:tag)
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [restricted_tag])
+          raw = {
+            "name" => "With Columns",
+            "columns" => [{ "title" => "Restricted", "tag_name" => restricted_tag.name }],
+          }
 
-          let(:raw) do
-            {
-              "name" => "With Columns",
-              "columns" => [{ "title" => "Restricted", "tag_name" => restricted_tag.name }],
-            }
-          end
-
-          before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [restricted_tag]) }
-
-          it "does not resolve the hidden tag" do
-            expect { result }.to raise_error(
-              Discourse::InvalidParameters,
-              I18n.t("boards.errors.unknown_tag_name", tag_name: restricted_tag.name),
-            )
-          end
+          expect {
+            described_class.call(params: raw, raw_board_params: raw, **dependencies)
+          }.to raise_error(
+            Discourse::InvalidParameters,
+            I18n.t("boards.errors.unknown_tag_name", tag_name: restricted_tag.name),
+          )
         end
       end
     end

@@ -7,13 +7,13 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     describe "when post contains emoijs" do
       before { post.update!(raw: ":slight_smile: This is a test") }
 
-      it "should return the right excerpt" do
+      it "returns the right excerpt" do
         expect(described_class.excerpt(post)).to eq("🙂 This is a test")
       end
     end
 
     describe "when post contains onebox" do
-      it "should return the right excerpt" do
+      it "returns the right excerpt" do
         post.update!(cooked: <<~COOKED)
         <aside class=\"onebox whitelistedgeneric\">
           <header class=\"source\">
@@ -47,7 +47,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     end
 
     describe "when post contains an email" do
-      it "should return the right excerpt" do
+      it "returns the right excerpt" do
         post.update!(cooked: <<~COOKED)
             The address is <a href=\"mailto:someone@domain.com\">my email</a>
         COOKED
@@ -137,54 +137,63 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     end
 
     describe "with api token" do
+      let(:ts) { "#{Time.now.to_i}.012345" }
+      let(:ts2) { "#{Time.now.to_i}.012346" }
+      let(:ts3) { "#{Time.now.to_i}.0123467" }
+      let(:webhook_stub) do
+        stub_request(:post, SiteSetting.chat_integration_slack_outbound_webhook_url).to_return(
+          body: "success",
+        )
+      end
+      let(:api_stub) do
+        stub_request(:post, %r{https://slack.com/api/chat.postMessage}).to_return(
+          body:
+            "{\"ok\":true, \"ts\": \"#{ts}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\"} }",
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+      end
+      let(:thread_stub) do
+        stub_request(:post, %r{https://slack.com/api/chat.postMessage}).with(
+          body: hash_including("thread_ts" => ts),
+        ).to_return(
+          body:
+            "{\"ok\":true, \"ts\": \"#{ts}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\", \"thread_ts\":\"#{ts}\"} }",
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+      end
+      let(:thread_stub2) do
+        stub_request(:post, %r{https://slack.com/api/chat.postMessage}).with(
+          body: hash_including("thread_ts" => ts),
+        ).to_return(
+          body:
+            "{\"ok\":true, \"ts\": \"#{ts3}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\", \"thread_ts\":\"#{ts}\"} }",
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+      end
+
       before do
         SiteSetting.chat_integration_slack_access_token = "magic"
-        @ts = "#{Time.now.to_i}.012345"
-        @ts2 = "#{Time.now.to_i}.012346"
-        @ts3 = "#{Time.now.to_i}.0123467"
-        @stub1 =
-          stub_request(:post, SiteSetting.chat_integration_slack_outbound_webhook_url).to_return(
-            body: "success",
-          )
-        @stub2 =
-          stub_request(:post, %r{https://slack.com/api/chat.postMessage}).to_return(
-            body:
-              "{\"ok\":true, \"ts\": \"#{@ts}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\"} }",
-            headers: {
-              "Content-Type" => "application/json",
-            },
-          )
-        @thread_stub =
-          stub_request(:post, %r{https://slack.com/api/chat.postMessage}).with(
-            body: hash_including("thread_ts" => @ts),
-          ).to_return(
-            body:
-              "{\"ok\":true, \"ts\": \"#{@ts}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\", \"thread_ts\":\"#{@ts}\"} }",
-            headers: {
-              "Content-Type" => "application/json",
-            },
-          )
-        @thread_stub2 =
-          stub_request(:post, %r{https://slack.com/api/chat.postMessage}).with(
-            body: hash_including("thread_ts" => @ts),
-          ).to_return(
-            body:
-              "{\"ok\":true, \"ts\": \"#{@ts3}\", \"message\": {\"attachments\": [], \"username\":\"blah\", \"text\":\"blah2\", \"thread_ts\":\"#{@ts}\"} }",
-            headers: {
-              "Content-Type" => "application/json",
-            },
-          )
+        webhook_stub
+        api_stub
+        thread_stub
+        thread_stub2
       end
 
       it "sends an api request" do
-        expect(@stub2).to have_been_requested.times(0)
-        expect(@thread_stub).to have_been_requested.times(0)
+        expect(api_stub).to have_been_requested.times(0)
+        expect(thread_stub).to have_been_requested.times(0)
 
         described_class.trigger_notification(post, chan1, nil)
-        expect(@stub1).to have_been_requested.times(0)
-        expect(@stub2).to have_been_requested.once
-        expect(described_class.get_slack_thread_ts(post.topic, chan1.data["identifier"])).to eq(@ts)
-        expect(@thread_stub).to have_been_requested.times(0)
+        expect(webhook_stub).to have_been_requested.times(0)
+        expect(api_stub).to have_been_requested.once
+        expect(described_class.get_slack_thread_ts(post.topic, chan1.data["identifier"])).to eq(ts)
+        expect(thread_stub).to have_been_requested.times(0)
       end
 
       it "sends a standalone message without storing topic thread metadata" do
@@ -199,7 +208,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
           TopicCustomField,
           :count,
         )
-        expect(@stub2).to have_been_requested.once
+        expect(api_stub).to have_been_requested.once
       end
 
       it "reports when the bot cannot post to the channel" do
@@ -217,17 +226,17 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       end
 
       it "sends thread id for thread" do
-        expect(@thread_stub).to have_been_requested.times(0)
+        expect(thread_stub).to have_been_requested.times(0)
 
         rule = DiscourseChatIntegration::Rule.create(channel: chan1, filter: "thread")
-        described_class.set_slack_thread_ts(post.topic, chan1.data["identifier"], @ts)
+        described_class.set_slack_thread_ts(post.topic, chan1.data["identifier"], ts)
 
         described_class.trigger_notification(post, chan1, rule)
-        expect(@thread_stub).to have_been_requested.once
+        expect(thread_stub).to have_been_requested.once
       end
 
       it "tracks threading in different channels separately" do
-        expect(@thread_stub).to have_been_requested.times(0)
+        expect(thread_stub).to have_been_requested.times(0)
         chan2 =
           DiscourseChatIntegration::Channel.create(
             provider: "dummy2",
@@ -238,35 +247,35 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
 
         rule = DiscourseChatIntegration::Rule.create(channel: chan1, filter: "thread")
         rule2 = DiscourseChatIntegration::Rule.create(channel: chan2, filter: "thread")
-        described_class.set_slack_thread_ts(post.topic, chan1.data["identifier"], @ts)
-        described_class.set_slack_thread_ts(post.topic, chan2.data["identifier"], @ts2)
+        described_class.set_slack_thread_ts(post.topic, chan1.data["identifier"], ts)
+        described_class.set_slack_thread_ts(post.topic, chan2.data["identifier"], ts2)
 
         described_class.trigger_notification(post, chan1, rule)
         described_class.trigger_notification(post, chan2, rule2)
-        expect(@thread_stub).to have_been_requested.once
-        expect(@thread_stub2).to have_been_requested.once
+        expect(thread_stub).to have_been_requested.once
+        expect(thread_stub2).to have_been_requested.once
 
         post.topic.reload
-        expect(described_class.get_slack_thread_ts(post.topic, "#general")).to eq(@ts)
-        expect(described_class.get_slack_thread_ts(post.topic, "#random")).to eq(@ts)
+        expect(described_class.get_slack_thread_ts(post.topic, "#general")).to eq(ts)
+        expect(described_class.get_slack_thread_ts(post.topic, "#random")).to eq(ts)
       end
 
       it "recognizes slack thread ts in comment" do
         post.update!(cooked: "cooked", raw: <<~RAW)
              My fingers are typing words that improve `raw_quality`
-             <!--SLACK_CHANNEL_ID=#general;SLACK_TS=#{@ts}-->
+             <!--SLACK_CHANNEL_ID=#general;SLACK_TS=#{ts}-->
         RAW
 
         rule = DiscourseChatIntegration::Rule.create(channel: chan1, filter: "thread")
 
         described_class.trigger_notification(post, chan1, rule)
-        expect(described_class.get_slack_thread_ts(post.topic, chan1.data["identifier"])).to eq(@ts)
+        expect(described_class.get_slack_thread_ts(post.topic, chan1.data["identifier"])).to eq(ts)
 
-        expect(@thread_stub).to have_been_requested.times(1)
+        expect(thread_stub).to have_been_requested.times(1)
       end
 
       it "handles errors correctly" do
-        @stub2 =
+        failing_api_stub =
           stub_request(:post, %r{https://slack.com/api/chat.postMessage}).to_return(
             body: "{\"ok\":false }",
             headers: {
@@ -276,13 +285,13 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
         expect { described_class.trigger_notification(post, chan1, nil) }.to raise_exception(
           DiscourseChatIntegration::ProviderError,
         )
-        expect(@stub2).to have_been_requested.once
+        expect(failing_api_stub).to have_been_requested.once
       end
     end
   end
 
   describe ".create_slack_message" do
-    it "should work with a simple message" do
+    it "works with a simple message" do
       content = "Simple message"
       url = "http://example.com"
       message = { channel: "#general", username: "Discourse", content: "#{content} - #{url}" }
@@ -303,7 +312,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       ).to eq(message)
     end
 
-    it "should do the replacements" do
+    it "does the replacements" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       tag1, tag2, tag3, tag4 = [Fabricate(:tag), Fabricate(:tag), Fabricate(:tag), Fabricate(:tag)]
@@ -330,7 +339,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       expect(text).to include("<#{tag3.full_url}|#{tag3.name}>, <#{tag4.full_url}|#{tag4.name}>")
     end
 
-    it "should do the replacements for ${ADDED_AND_REMOVED}" do
+    it "does the replacements for ${ADDED_AND_REMOVED}" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       tag1, tag2 = [Fabricate(:tag), Fabricate(:tag)]
@@ -397,7 +406,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       )
     end
 
-    it "should raise errors if tags are not present but uses in content" do
+    it "raises errors if tags are not present but uses in content" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       content = "This should not work ${ADDED_TAGS}"

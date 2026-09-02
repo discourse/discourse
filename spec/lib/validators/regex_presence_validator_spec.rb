@@ -19,7 +19,7 @@ RSpec.describe RegexPresenceValidator do
     end
 
     describe "when value is empty" do
-      it "should not be valid" do
+      it "is not valid" do
         expect(validator.valid_value?("")).to eq(false)
 
         expect(validator.error_message).to eq(I18n.t("site_settings.errors.must_include_latest"))

@@ -2,8 +2,15 @@
 RSpec.describe ThemeJavascriptsController do
   include ActiveSupport::Testing::TimeHelpers
 
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
+  before do
+    ThemeJavascriptCompiler.disable_terser!
+    clear_disk_cache
+  end
+
+  after do
+    ThemeJavascriptCompiler.enable_terser!
+    clear_disk_cache
+  end
 
   def clear_disk_cache
     if Dir.exist?(ThemeJavascriptsController::DISK_CACHE_PATH)
@@ -18,8 +25,6 @@ RSpec.describe ThemeJavascriptsController do
   let(:javascript_cache) do
     JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
   end
-  before { clear_disk_cache }
-  after { clear_disk_cache }
 
   describe "#show" do
     def update_digest_and_get(digest)

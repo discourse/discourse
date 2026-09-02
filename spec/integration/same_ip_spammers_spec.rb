@@ -11,7 +11,7 @@ RSpec.describe "spammers on same IP" do
     let!(:first_post) { create_post(user: spammer1) }
     let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-    it "should not increase spam count" do
+    it "does not increase spam count" do
       expect(first_post.reload.spam_count).to eq(0)
       expect(second_post.reload.spam_count).to eq(0)
     end
@@ -22,25 +22,22 @@ RSpec.describe "spammers on same IP" do
 
     after { SiteSetting.flag_sockpuppets = false }
 
-    context "when first spammer starts a topic" do
+    context "when a second spammer replies to the first spammer's topic" do
       let!(:first_post) { create_post(user: spammer1) }
+      let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-      context "when second spammer replies" do
-        let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
+      it "increases spam count" do
+        expect(first_post.reload.spam_count).to eq(1)
+        expect(second_post.reload.spam_count).to eq(1)
+      end
 
-        it "should increase spam count" do
+      context "with third spam post" do
+        let!(:third_post) { create_post(user: spammer3, topic: first_post.topic) }
+
+        it "increases spam count" do
           expect(first_post.reload.spam_count).to eq(1)
           expect(second_post.reload.spam_count).to eq(1)
-        end
-
-        context "with third spam post" do
-          let!(:third_post) { create_post(user: spammer3, topic: first_post.topic) }
-
-          it "should increase spam count" do
-            expect(first_post.reload.spam_count).to eq(1)
-            expect(second_post.reload.spam_count).to eq(1)
-            expect(third_post.reload.spam_count).to eq(1)
-          end
+          expect(third_post.reload.spam_count).to eq(1)
         end
       end
     end
@@ -50,16 +47,13 @@ RSpec.describe "spammers on same IP" do
         Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago, trust_level: TrustLevel[1])
       end
 
-      context "when first user starts a topic" do
+      context "with a reply to the established user's topic from a new user at the same IP" do
         let!(:first_post) { create_post(user: old_user) }
+        let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-        context "with a reply by a new user at the same IP address" do
-          let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
-
-          it "should increase the spam count correctly" do
-            expect(first_post.reload.spam_count).to eq(0)
-            expect(second_post.reload.spam_count).to eq(1)
-          end
+        it "increases the spam count correctly" do
+          expect(first_post.reload.spam_count).to eq(0)
+          expect(second_post.reload.spam_count).to eq(1)
         end
       end
     end

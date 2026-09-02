@@ -98,7 +98,9 @@ RSpec.describe "tasks/release" do
 
     context "when tag does not exist" do
       let(:version) { "2025.3.0" }
-      let!(:commit_hash) { Dir.chdir(local_path) { commit_version(version) } }
+      let(:commit_hash) { Dir.chdir(local_path) { commit_version(version) } }
+
+      before { commit_hash }
 
       it "creates the tag" do
         Dir.chdir(local_path) do
@@ -134,7 +136,9 @@ RSpec.describe "tasks/release" do
 
     context "when tag already exists" do
       let(:version) { "2025.5.0" }
-      let!(:commit_hash) { Dir.chdir(local_path) { commit_version(version) } }
+      let(:commit_hash) { Dir.chdir(local_path) { commit_version(version) } }
+
+      before { commit_hash }
 
       it "skips tagging" do
         Dir.chdir(local_path) do
@@ -233,8 +237,14 @@ RSpec.describe "tasks/release" do
     end
 
     context "when development cycle changes" do
-      let!(:previous_hash) { Dir.chdir(local_path) { commit_version(previous_version) } }
-      let!(:latest_hash) { Dir.chdir(local_path) { commit_version(current_version) } }
+      let(:previous_hash) { Dir.chdir(local_path) { commit_version(previous_version) } }
+      let(:latest_hash) { Dir.chdir(local_path) { commit_version(current_version) } }
+
+      before do
+        previous_hash
+        latest_hash
+      end
+
       let(:release_branch) { "release/#{previous_version.split(".").first(2).join(".")}" }
       let(:parent_of_tip) do
         Dir.chdir(origin_path) do
@@ -281,7 +291,9 @@ RSpec.describe "tasks/release" do
       end
 
       context "when bumping from latest to latest.1" do
-        let!(:latest_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.1") } }
+        let(:latest_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.1") } }
+
+        before { latest_hash }
 
         it "does not create a branch" do
           Dir.chdir(local_path) { expect { run_task }.not_to change { origin_branches } }
@@ -289,8 +301,13 @@ RSpec.describe "tasks/release" do
       end
 
       context "when bumping from latest.1 to latest.2" do
-        let!(:intermediate_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.1") } }
-        let!(:latest_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.2") } }
+        let(:intermediate_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.1") } }
+        let(:latest_hash) { Dir.chdir(local_path) { commit_version("2025.12.0-latest.2") } }
+
+        before do
+          intermediate_hash
+          latest_hash
+        end
 
         it "does not create a branch" do
           Dir.chdir(local_path) { expect { run_task }.not_to change { origin_branches } }

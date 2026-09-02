@@ -6,7 +6,7 @@ describe Jobs::DeleteHiddenQueries do
     SiteSetting.data_explorer_enabled = true
   end
 
-  it "will correctly destroy old hidden queries" do
+  it "correctlies destroy old hidden queries" do
     DiscourseDataExplorer::Query.create!(
       id: 1,
       name: "A",

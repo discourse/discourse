@@ -160,7 +160,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post contains two keywords" do
+    context "when post contains two case-insensitive keywords" do
       it "creates an answer with both answers" do
         post = create_post(topic: topic, raw: "this is a post with FOO and bar")
         automation.trigger!("post" => post)
@@ -169,7 +169,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post doesn’t contain a keyword" do
+    context "when post contains no keywords" do
       it "doesn’t create an answer" do
         post = create_post(topic: topic, raw: "this is a post with no keyword")
 
@@ -177,7 +177,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post contains two keywords" do
+    context "when post contains two whole-word keywords" do
       it "creates an answer with both answers" do
         post = create_post(topic: topic, raw: "this is a post with foo and bar")
         automation.trigger!("post" => post)
@@ -186,7 +186,7 @@ describe "AutoResponder" do
       end
     end
 
-    context "when post doesn’t contain a keyword" do
+    context "when keywords occur only inside other words" do
       it "doesn’t create an answer" do
         post = create_post(topic: topic, raw: "this is a post bfoo with no keyword fooa")
 

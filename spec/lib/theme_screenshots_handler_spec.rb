@@ -8,7 +8,7 @@ RSpec.describe ThemeScreenshotsHandler do
 
   let(:importer) { ThemeStore::GitImporter.new("https://github.com/org/remote-theme1") }
 
-  after(:each) { FileUtils.rm_rf(importer.temp_folder) }
+  after { FileUtils.rm_rf(importer.temp_folder) }
 
   def write_temp_screenshots_for_importer(screenshots)
     FileUtils.mkdir_p("#{importer.temp_folder}/screenshots")

@@ -117,7 +117,7 @@ RSpec.describe PostSerializer do
       expect(notify_user_action).to be_blank
     end
 
-    it "should not allow user to flag post and notify non human user" do
+    it "does not allow user to flag post and notify non human user" do
       post.update!(user: Discourse.system_user)
 
       serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
@@ -304,12 +304,12 @@ RSpec.describe PostSerializer do
         revisor.revise!(post.user, raw: "Hello, everyone!")
       end
 
-      it "will not leak version to users" do
+      it "does not leak version to users" do
         json = PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
         expect(json[:version]).to eq(1)
       end
 
-      it "will show real version to staff" do
+      it "shows real version to staff" do
         json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
         expect(json[:version]).to eq(2)
       end

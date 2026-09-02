@@ -2,7 +2,8 @@
 
 RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
   let(:post) { Fabricate(:post) }
-  let!(:webhook_stub) do
+
+  before do
     stub_request(:post, "https://api.telegram.org/botTOKEN/setWebhook").to_return(
       body: "{\"ok\":true}",
     )

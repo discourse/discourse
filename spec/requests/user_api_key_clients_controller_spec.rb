@@ -25,7 +25,7 @@ RSpec.describe UserApiKeyClientsController do
     context "with a registered client" do
       before { Fabricate(:user_api_key_client, **args) }
 
-      it "succeeds" do
+      it "returns the registered client" do
         head "/user-api-key-client.json", params: { client_id: args[:client_id] }
         expect(response.status).to eq(200)
       end
@@ -40,6 +40,8 @@ RSpec.describe UserApiKeyClientsController do
   end
 
   describe "#create" do
+    let(:args_with_scopes) { args.merge(scopes: "user_status") }
+
     context "without scopes" do
       it "returns a 400" do
         post "/user-api-key-client.json", params: args
@@ -61,11 +63,34 @@ RSpec.describe UserApiKeyClientsController do
       end
     end
 
-    context "with scopes" do
-      let!(:args_with_scopes) { args.merge(scopes: "user_status") }
+    context "when scopes are not allowed" do
+      before { SiteSetting.allow_user_api_key_client_scopes = "" }
 
-      context "when scopes are not allowed" do
-        before { SiteSetting.allow_user_api_key_client_scopes = "" }
+      it "returns a 403" do
+        post "/user-api-key-client.json", params: args_with_scopes
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when scopes are allowed" do
+      before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
+
+      it "registers a client" do
+        post "/user-api-key-client.json", params: args_with_scopes
+        expect(response.status).to eq(200)
+        client =
+          UserApiKeyClient.find_by(
+            client_id: args_with_scopes[:client_id],
+            application_name: args_with_scopes[:application_name],
+            auth_redirect: args_with_scopes[:auth_redirect],
+            public_key: args_with_scopes[:public_key],
+          )
+        expect(client.present?).to eq(true)
+        expect(client.scopes.map(&:name)).to match_array(["user_status"])
+      end
+
+      context "if the client is already registered" do
+        before { Fabricate(:user_api_key_client, **args) }
 
         it "returns a 403" do
           post "/user-api-key-client.json", params: args_with_scopes
@@ -73,69 +98,42 @@ RSpec.describe UserApiKeyClientsController do
         end
       end
 
-      context "when scopes are allowed" do
-        before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
+      context "with rate limiting" do
+        before { RateLimiter.enable }
 
-        it "registers a client" do
+        it "limits client creation requests" do
+          SiteSetting.user_api_key_clients_create_per_day = 1
           post "/user-api-key-client.json", params: args_with_scopes
           expect(response.status).to eq(200)
-          client =
-            UserApiKeyClient.find_by(
-              client_id: args_with_scopes[:client_id],
-              application_name: args_with_scopes[:application_name],
-              auth_redirect: args_with_scopes[:auth_redirect],
-              public_key: args_with_scopes[:public_key],
-            )
-          expect(client.present?).to eq(true)
-          expect(client.scopes.map(&:name)).to match_array(["user_status"])
+          post "/user-api-key-client.json",
+               params: args_with_scopes.merge(client_id: "another_client1")
+          expect(response.status).to eq(429)
         end
 
-        context "if the client is already registered" do
-          before { Fabricate(:user_api_key_client, **args) }
-
-          it "returns a 403" do
-            post "/user-api-key-client.json", params: args_with_scopes
-            expect(response.status).to eq(403)
-          end
+        it "can be changed via site setting" do
+          SiteSetting.user_api_key_clients_create_per_day = 2
+          post "/user-api-key-client.json", params: args_with_scopes
+          expect(response.status).to eq(200)
+          post "/user-api-key-client.json",
+               params: args_with_scopes.merge(client_id: "another_client1")
+          expect(response.status).to eq(200)
+          post "/user-api-key-client.json",
+               params: args_with_scopes.merge(client_id: "another_client2")
+          expect(response.status).to eq(429)
         end
 
-        context "with rate limiting" do
-          before { RateLimiter.enable }
+        it "can be overriden by ip address set in a site setting" do
+          SiteSetting.user_api_key_clients_create_per_day = 1
+          SiteSetting.create_user_api_key_client_ip_rate_limit_override_ips = "1.2.3.4"
 
-          it "works" do
-            SiteSetting.user_api_key_clients_create_per_day = 1
-            post "/user-api-key-client.json", params: args_with_scopes
-            expect(response.status).to eq(200)
-            post "/user-api-key-client.json",
-                 params: args_with_scopes.merge(client_id: "another_client1")
-            expect(response.status).to eq(429)
-          end
-
-          it "can be changed via site setting" do
-            SiteSetting.user_api_key_clients_create_per_day = 2
-            post "/user-api-key-client.json", params: args_with_scopes
-            expect(response.status).to eq(200)
-            post "/user-api-key-client.json",
-                 params: args_with_scopes.merge(client_id: "another_client1")
-            expect(response.status).to eq(200)
-            post "/user-api-key-client.json",
-                 params: args_with_scopes.merge(client_id: "another_client2")
-            expect(response.status).to eq(429)
-          end
-
-          it "can be overriden by ip address set in a site setting" do
-            SiteSetting.user_api_key_clients_create_per_day = 1
-            SiteSetting.create_user_api_key_client_ip_rate_limit_override_ips = "1.2.3.4"
-
-            post "/user-api-key-client.json", params: args_with_scopes
-            expect(response.status).to eq(200)
-            post "/user-api-key-client.json",
-                 params: args_with_scopes.merge(client_id: "another_client1"),
-                 env: {
-                   REMOTE_ADDR: "1.2.3.4",
-                 }
-            expect(response.status).to eq(200)
-          end
+          post "/user-api-key-client.json", params: args_with_scopes
+          expect(response.status).to eq(200)
+          post "/user-api-key-client.json",
+               params: args_with_scopes.merge(client_id: "another_client1"),
+               env: {
+                 REMOTE_ADDR: "1.2.3.4",
+               }
+          expect(response.status).to eq(200)
         end
       end
     end

@@ -22,6 +22,7 @@ RSpec.describe Voice::AdminRecordingsController do
     end
     Voice::Room.reset_column_information
     Voice::Recording.reset_column_information
+    SiteSetting.voice_enabled = true
   end
 
   fab!(:admin)
@@ -41,8 +42,6 @@ RSpec.describe Voice::AdminRecordingsController do
       ended_at: 59.minutes.ago,
     )
   end
-
-  before { SiteSetting.voice_enabled = true }
 
   describe "#index" do
     it "lists recordings newest-first with room, requester, and file details for admins" do

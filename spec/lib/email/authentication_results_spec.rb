@@ -210,30 +210,31 @@ RSpec.describe Email::AuthenticationResults do
     context "with a single authentication-results header" do
       context "with a valid fail" do
         let(:headers) { "valid.com; dmarc=fail" }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid pass" do
         let(:headers) { "valid.com; dmarc=pass" }
+
         include_examples "is verdict", :pass
       end
 
       context "with a valid error" do
         let(:headers) { "valid.com; dmarc=error" }
+
         include_examples "is verdict", :gray
       end
 
       context "with no email_in_authserv_id set" do
         before { SiteSetting.email_in_authserv_id = "" }
 
-        context "with a fail" do
-          let(:headers) { "foobar.com; dmarc=fail" }
-          include_examples "is verdict", :gray
+        it "returns gray for a fail" do
+          expect(described_class.new("foobar.com; dmarc=fail").verdict).to eq(:gray)
         end
 
-        context "with a pass" do
-          let(:headers) { "foobar.com; dmarc=pass" }
-          include_examples "is verdict", :gray
+        it "returns gray for a pass" do
+          expect(described_class.new("foobar.com; dmarc=pass").verdict).to eq(:gray)
         end
       end
     end
@@ -241,25 +242,28 @@ RSpec.describe Email::AuthenticationResults do
     context "with multiple authentication-results headers" do
       context "with a valid fail, and an invalid pass" do
         let(:headers) { ["valid.com; dmarc=fail", "invalid.com; dmarc=pass"] }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid fail, and a valid pass" do
         let(:headers) { ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid error, and a valid pass" do
         let(:headers) { ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"] }
+
         include_examples "is verdict", :pass
       end
 
       context "with no email_in_authserv_id set" do
         before { SiteSetting.email_in_authserv_id = "" }
 
-        context "with an error, and a pass" do
-          let(:headers) { ["foobar.com; dmarc=foobar", "foobar.com; dmarc=pass"] }
-          include_examples "is verdict", :gray
+        it "returns gray for an error and a pass" do
+          headers = ["foobar.com; dmarc=foobar", "foobar.com; dmarc=pass"]
+          expect(described_class.new(headers).verdict).to eq(:gray)
         end
       end
     end

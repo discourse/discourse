@@ -5,12 +5,14 @@ require Rails.root.join("db/post_migrate/20260624140945_ensure_unique_flag_name_
 RSpec.describe EnsureUniqueFlagNameKeys do
   subject(:migrate) { described_class.new.up }
 
+  let(:verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @verbose = ActiveRecord::Migration.verbose
+    verbose
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @verbose }
+  after { ActiveRecord::Migration.verbose = verbose }
 
   it "disambiguates duplicate name_keys and enforces uniqueness" do
     flag1 = Fabricate(:flag, name: "alpha")

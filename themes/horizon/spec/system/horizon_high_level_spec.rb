@@ -20,6 +20,7 @@ describe "Horizon theme | High level" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
+
   fab!(:incorrect_scheme) do
     Fabricate(:color_scheme, name: "Incorrect Scheme", user_selectable: true)
   end
@@ -70,7 +71,7 @@ describe "Horizon theme | High level" do
     expect(topic_page).to have_topic_title(topic_1.title)
   end
 
-  it "works for anon" do
+  it "passes all high-level checks for anonymous users" do
     visit "/"
     run_all_high_level_tests
   end
@@ -78,7 +79,7 @@ describe "Horizon theme | High level" do
   context "for signed in users" do
     before { sign_in(current_user) }
 
-    it "works" do
+    it "passes all high-level checks" do
       visit "/"
       run_all_high_level_tests
     end

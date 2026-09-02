@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::HostNames do
     context "when host name is set to localhost" do
       let(:hostname) { "localhost" }
 
-      it do
+      it "reports the invalid host name" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname.",
         )
@@ -25,7 +25,7 @@ RSpec.describe ProblemCheck::HostNames do
     context "when host name is set to production.localhost" do
       let(:hostname) { "production.localhost" }
 
-      it do
+      it "reports the invalid host name" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname.",
         )

@@ -7,14 +7,16 @@ RSpec.describe Admin::BackupsController do
 
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
+  let(:backup_paths) { [] }
 
   def create_backup_files(*filenames)
-    @paths =
+    backup_paths.concat(
       filenames.map do |filename|
         path = backup_path(filename)
         File.open(path, "w") { |f| f.write("test backup") }
         path
-      end
+      end,
+    )
   end
 
   def backup_path(filename)
@@ -33,8 +35,7 @@ RSpec.describe Admin::BackupsController do
   after do
     Discourse.redis.flushdb
 
-    @paths&.each { |path| File.delete(path) if File.exist?(path) }
-    @paths = nil
+    backup_paths.each { |path| File.delete(path) if File.exist?(path) }
   end
 
   describe "#index" do
@@ -494,219 +495,52 @@ RSpec.describe Admin::BackupsController do
     end
   end
 
-  describe "#upload_backup_chunk" do
-    context "when logged in as an admin" do
-      before { sign_in(admin) }
+  context "when logged in as an admin" do
+    before { sign_in(admin) }
 
-      describe "when filename contains invalid characters" do
-        it "should raise an error" do
-          ["灰色.tar.gz", '; echo \'haha\'.tar.gz'].each do |invalid_filename|
-            described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
-
-            post "/admin/backups/upload",
-                 params: {
-                   resumableFilename: invalid_filename,
-                   resumableTotalSize: 1,
-                   resumableIdentifier: "test",
-                 }
-
-            expect(response.status).to eq(415)
-            expect(response.body).to eq(I18n.t("backup.invalid_filename"))
-          end
-        end
-      end
-
-      describe "when resumableIdentifier is invalid" do
-        it "should raise an error" do
-          filename = "test_site-0123456789.tar.gz"
-          @paths = [backup_path(File.join("tmp", "test", "#{filename}.part1"))]
-
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: 1,
-                 resumableIdentifier: "../test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "1",
-                 resumableCurrentChunkSize: "1",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-
-          expect(response.status).to eq(400)
-        end
-      end
-
-      describe "when filename is valid" do
-        it "should upload the file successfully" do
-          freeze_time
+    describe "when filename contains invalid characters" do
+      it "raises an error" do
+        ["灰色.tar.gz", '; echo \'haha\'.tar.gz'].each do |invalid_filename|
           described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
-          filename = "test_Site-0123456789.tar.gz"
-
-          post "/admin/backups/upload.json",
+          post "/admin/backups/upload",
                params: {
-                 resumableFilename: filename,
+                 resumableFilename: invalid_filename,
                  resumableTotalSize: 1,
                  resumableIdentifier: "test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "1",
-                 resumableCurrentChunkSize: "1",
-                 file: fixture_file_upload(Tempfile.new),
                }
-          expect_job_enqueued(
-            job: :backup_chunks_merger,
-            args: {
-              filename: filename,
-              identifier: "test",
-              chunks: 1,
-            },
-            at: 5.seconds.from_now,
-          )
 
-          expect(response.status).to eq(200)
-          expect(response.body).to eq("")
-        end
-
-        context "when readonly mode is enabled" do
-          before { Discourse.enable_readonly_mode }
-
-          it "uploads the file successfully" do
-            described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
-
-            post "/admin/backups/upload.json",
-                 params: {
-                   resumableFilename: "foo-1234.tar.gz",
-                   resumableTotalSize: 1,
-                   resumableIdentifier: "test",
-                   resumableChunkNumber: "1",
-                   resumableChunkSize: "1",
-                   resumableCurrentChunkSize: "1",
-                   file: fixture_file_upload(Tempfile.new),
-                 }
-
-            expect_job_enqueued(job: :backup_chunks_merger)
-
-            expect(response.status).to eq(200)
-          end
-        end
-      end
-
-      describe "completing an upload by enqueuing backup_chunks_merger" do
-        let(:filename) { "test_Site-0123456789.tar.gz" }
-
-        it "works with a single chunk" do
-          freeze_time
-          described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
-
-          # 2MB file, 2MB chunks = 1x 2MB chunk
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "2097152",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "2097152",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          expect_job_enqueued(
-            job: :backup_chunks_merger,
-            args: {
-              filename: filename,
-              identifier: "test",
-              chunks: 1,
-            },
-            at: 5.seconds.from_now,
-          )
-        end
-
-        it "works with multiple chunks when the final chunk is chunk_size + remainder" do
-          freeze_time
-          described_class.any_instance.expects(:has_enough_space_on_disk?).twice.returns(true)
-
-          # 5MB file, 2MB chunks = 1x 2MB chunk + 1x 3MB chunk with resumable.js
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "5242880",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "2097152",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "5242880",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "2",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "3145728",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          expect_job_enqueued(
-            job: :backup_chunks_merger,
-            args: {
-              filename: filename,
-              identifier: "test",
-              chunks: 2,
-            },
-            at: 5.seconds.from_now,
-          )
-        end
-
-        it "works with multiple chunks when the final chunk is just the remainder" do
-          freeze_time
-          described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
-
-          # 5MB file, 2MB chunks = 2x 2MB chunk + 1x 1MB chunk with uppy.js
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "5242880",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "2097152",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "5242880",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "2",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "2097152",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: "5242880",
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "3",
-                 resumableChunkSize: "2097152",
-                 resumableCurrentChunkSize: "1048576",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          expect_job_enqueued(
-            job: :backup_chunks_merger,
-            args: {
-              filename: filename,
-              identifier: "test",
-              chunks: 3,
-            },
-            at: 5.seconds.from_now,
-          )
+          expect(response.status).to eq(415)
+          expect(response.body).to eq(I18n.t("backup.invalid_filename"))
         end
       end
     end
 
-    shared_examples "uploading backup chunk not allowed" do
-      it "prevents uploading of backup chunk with a 404 response" do
+    describe "when resumableIdentifier is invalid" do
+      it "raises an error" do
+        filename = "test_site-0123456789.tar.gz"
+        backup_paths.replace([backup_path(File.join("tmp", "test", "#{filename}.part1"))])
+
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: 1,
+               resumableIdentifier: "../test",
+               resumableChunkNumber: "1",
+               resumableChunkSize: "1",
+               resumableCurrentChunkSize: "1",
+               file: fixture_file_upload(Tempfile.new),
+             }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    describe "when filename is valid" do
+      it "uploads the file successfully" do
         freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+
         filename = "test_Site-0123456789.tar.gz"
 
         post "/admin/backups/upload.json",
@@ -719,8 +553,7 @@ RSpec.describe Admin::BackupsController do
                resumableCurrentChunkSize: "1",
                file: fixture_file_upload(Tempfile.new),
              }
-
-        expect_not_enqueued_with(
+        expect_job_enqueued(
           job: :backup_chunks_merger,
           args: {
             filename: filename,
@@ -730,22 +563,188 @@ RSpec.describe Admin::BackupsController do
           at: 5.seconds.from_now,
         )
 
-        expect(response.status).to eq(404)
-        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("")
+      end
+
+      context "when readonly mode is enabled" do
+        before { Discourse.enable_readonly_mode }
+
+        it "uploads the file successfully" do
+          described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+
+          post "/admin/backups/upload.json",
+               params: {
+                 resumableFilename: "foo-1234.tar.gz",
+                 resumableTotalSize: 1,
+                 resumableIdentifier: "test",
+                 resumableChunkNumber: "1",
+                 resumableChunkSize: "1",
+                 resumableCurrentChunkSize: "1",
+                 file: fixture_file_upload(Tempfile.new),
+               }
+
+          expect_job_enqueued(job: :backup_chunks_merger)
+
+          expect(response.status).to eq(200)
+        end
       end
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    describe "completing an upload by enqueuing backup_chunks_merger" do
+      let(:filename) { "test_Site-0123456789.tar.gz" }
 
-      include_examples "uploading backup chunk not allowed"
+      it "works with a single chunk" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+
+        # 2MB file, 2MB chunks = 1x 2MB chunk
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "2097152",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "1",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "2097152",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        expect_job_enqueued(
+          job: :backup_chunks_merger,
+          args: {
+            filename: filename,
+            identifier: "test",
+            chunks: 1,
+          },
+          at: 5.seconds.from_now,
+        )
+      end
+
+      it "works with multiple chunks when the final chunk is chunk_size + remainder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).twice.returns(true)
+
+        # 5MB file, 2MB chunks = 1x 2MB chunk + 1x 3MB chunk with resumable.js
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "5242880",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "1",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "2097152",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "5242880",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "2",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "3145728",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        expect_job_enqueued(
+          job: :backup_chunks_merger,
+          args: {
+            filename: filename,
+            identifier: "test",
+            chunks: 2,
+          },
+          at: 5.seconds.from_now,
+        )
+      end
+
+      it "works with multiple chunks when the final chunk is just the remainder" do
+        freeze_time
+        described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
+
+        # 5MB file, 2MB chunks = 2x 2MB chunk + 1x 1MB chunk with uppy.js
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "5242880",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "1",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "2097152",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "5242880",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "2",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "2097152",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        post "/admin/backups/upload.json",
+             params: {
+               resumableFilename: filename,
+               resumableTotalSize: "5242880",
+               resumableIdentifier: "test",
+               resumableChunkNumber: "3",
+               resumableChunkSize: "2097152",
+               resumableCurrentChunkSize: "1048576",
+               file: fixture_file_upload(Tempfile.new),
+             }
+        expect_job_enqueued(
+          job: :backup_chunks_merger,
+          args: {
+            filename: filename,
+            identifier: "test",
+            chunks: 3,
+          },
+          at: 5.seconds.from_now,
+        )
+      end
     end
+  end
 
-    context "when logged in as a non-staff user" do
-      before { sign_in(user) }
+  shared_examples "uploading backup chunk not allowed" do
+    it "prevents uploading of backup chunk with a 404 response" do
+      freeze_time
+      filename = "test_Site-0123456789.tar.gz"
 
-      include_examples "uploading backup chunk not allowed"
+      post "/admin/backups/upload.json",
+           params: {
+             resumableFilename: filename,
+             resumableTotalSize: 1,
+             resumableIdentifier: "test",
+             resumableChunkNumber: "1",
+             resumableChunkSize: "1",
+             resumableCurrentChunkSize: "1",
+             file: fixture_file_upload(Tempfile.new),
+           }
+
+      expect_not_enqueued_with(
+        job: :backup_chunks_merger,
+        args: {
+          filename: filename,
+          identifier: "test",
+          chunks: 1,
+        },
+        at: 5.seconds.from_now,
+      )
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
     end
+  end
+
+  context "when logged in as a moderator" do
+    before { sign_in(moderator) }
+
+    include_examples "uploading backup chunk not allowed"
+  end
+
+  context "when logged in as a non-staff user" do
+    before { sign_in(user) }
+
+    include_examples "uploading backup chunk not allowed"
   end
 
   describe "#check_backup_chunk" do
@@ -753,7 +752,7 @@ RSpec.describe Admin::BackupsController do
       before { sign_in(admin) }
 
       describe "when resumableIdentifier is invalid" do
-        it "should raise an error" do
+        it "raises an error" do
           get "/admin/backups/upload",
               params: {
                 resumableidentifier: "../some_file",
@@ -770,7 +769,7 @@ RSpec.describe Admin::BackupsController do
         it "does not reveal the status of a chunk outside its upload directory" do
           traversed_chunk = backup_path("traversed-backup.tar.gz.part1")
           File.write(traversed_chunk, "secret")
-          @paths = [traversed_chunk]
+          backup_paths.replace([traversed_chunk])
           chunk_directory = backup_path(File.join("tmp", "upload"))
           FileUtils.mkdir_p(chunk_directory)
 
@@ -836,7 +835,7 @@ RSpec.describe Admin::BackupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should rollback the restore" do
+      it "rollbacks the restore" do
         BackupRestore.expects(:rollback!)
 
         post "/admin/backups/rollback.json"
@@ -844,7 +843,7 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(200)
       end
 
-      it "should not allow rollback via a GET request" do
+      it "does not allow rollback via a GET request" do
         get "/admin/backups/rollback.json"
         expect(response.status).to eq(404)
       end
@@ -852,7 +851,7 @@ RSpec.describe Admin::BackupsController do
       context "when readonly mode is enabled" do
         before { Discourse.enable_readonly_mode }
 
-        it "should rollback the restore" do
+        it "rollbacks the restore" do
           BackupRestore.expects(:rollback!)
           post "/admin/backups/rollback.json"
           expect(response.status).to eq(200)
@@ -886,7 +885,7 @@ RSpec.describe Admin::BackupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should cancel an backup" do
+      it "cancels an backup" do
         BackupRestore.expects(:cancel!)
 
         delete "/admin/backups/cancel.json"
@@ -894,7 +893,7 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(200)
       end
 
-      it "should not allow cancel via a GET request" do
+      it "does not allow cancel via a GET request" do
         get "/admin/backups/cancel.json"
         expect(response.status).to eq(404)
       end
@@ -902,7 +901,7 @@ RSpec.describe Admin::BackupsController do
       context "when readonly mode is enabled" do
         before { Discourse.enable_readonly_mode }
 
-        it "should cancel an backup" do
+        it "cancels an backup" do
           BackupRestore.expects(:cancel!)
 
           delete "/admin/backups/cancel.json"

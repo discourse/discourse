@@ -7,6 +7,15 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:bot_user, :user)
   fab!(:other_user, :user)
 
+  let(:document_upload) do
+    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
+  end
+
+  before do
+    enable_current_plugin
+    SiteSetting.authorized_extensions = "*"
+  end
+
   describe ".filtered_upload_ids_for_prompt" do
     def filter(upload_ids, guardian)
       described_class.filtered_upload_ids_for_prompt(
@@ -43,14 +52,6 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:image_upload2) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
   end
-  let(:document_upload) do
-    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
-  end
-
-  before do
-    enable_current_plugin
-    SiteSetting.authorized_extensions = "*"
-  end
 
   it "correctly merges user messages with uploads" do
     builder.push(type: :user, content: "Hello", id: "Alice", upload_ids: [1])
@@ -71,14 +72,14 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(content[3]).to eq({ upload_id: 2 })
   end
 
-  it "should allow merging user messages" do
+  it "allows merging user messages" do
     builder.push(type: :user, content: "Hello", id: "Alice")
     builder.push(type: :user, content: "World", id: "Bob")
 
     expect(builder.to_a).to eq([{ type: :user, content: "Alice: Hello\nBob: World" }])
   end
 
-  it "should allow adding uploads" do
+  it "allows adding uploads" do
     builder.push(type: :user, content: "Hello", name: "Alice", upload_ids: [1, 2])
 
     expect(builder.to_a).to eq(
@@ -86,7 +87,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     )
   end
 
-  it "should support function calls" do
+  it "supports function calls" do
     builder.push(type: :user, content: "Echo 123 please", name: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :tool, content: "123", name: "echo", id: 1)
@@ -100,7 +101,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should drop a tool call if it is not followed by tool" do
+  it "drops a tool call if it is not followed by tool" do
     builder.push(type: :user, content: "Echo 123 please", id: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :user, content: "OK", id: "James")
@@ -109,7 +110,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should format messages for topic style" do
+  it "formats messages for topic style" do
     # Create a topic with tags
     topic = Fabricate(:topic, title: "This is an Example Topic")
 
@@ -752,7 +753,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
-    it "handles uploads correctly in topic style messages (and times)" do
+    it "orders topic-style uploads by their post times" do
       freeze_time 32.days.ago
 
       # Use Discourse's upload format in the post raw content
@@ -825,6 +826,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           *[{ type: :user, id: user.username, content: third_post.raw }],
         )
       end
+
       it "starts from the last compressed checkpoint" do
         builder.push(type: :user, content: "Old request")
         builder.push(type: :model, content: "Old response")
@@ -961,7 +963,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
-    it "handles uploads correctly in topic style messages (and times)" do
+    it "handles long upload labels in topic-style messages" do
       freeze_time 32.days.ago
 
       # Use Discourse's upload format in the post raw content
@@ -1109,6 +1111,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           ],
         )
       end
+
       it "normalizes saved thinking provider info" do
         custom_prompt = [
           [

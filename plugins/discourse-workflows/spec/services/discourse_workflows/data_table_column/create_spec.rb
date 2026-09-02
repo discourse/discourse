@@ -4,23 +4,29 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:data_table_id) }
     it { is_expected.to validate_presence_of(:name) }
-    it do
+
+    it "limits the name length" do
       is_expected.to validate_length_of(:name).is_at_most(
         DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH,
       )
     end
+
     it { is_expected.to allow_values("valid_col", "column_1", "_col").for(:name) }
-    it do
+
+    it "rejects invalid and reserved names" do
       is_expected.not_to allow_values("123col", "col space", "col!@#", "id", "created_at").for(
         :name,
       )
     end
+
     it { is_expected.to validate_presence_of(:column_type) }
-    it do
+
+    it "accepts recognized column types" do
       is_expected.to allow_values(*DiscourseWorkflows::DataTable::VALID_COLUMN_TYPES).for(
         :column_type,
       )
     end
+
     it { is_expected.not_to allow_values("text", "unknown_type").for(:column_type) }
   end
 

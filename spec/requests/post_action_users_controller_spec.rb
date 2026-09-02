@@ -116,7 +116,7 @@ RSpec.describe PostActionUsersController do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns the users for the post action" do
     get "/post_action_users.json",
         params: {
           id: post.id,
@@ -126,7 +126,7 @@ RSpec.describe PostActionUsersController do
     expect(response.status).to eq(200)
   end
 
-  it "will return an unknown attribute for muted users" do
+  it "returns an unknown attribute for muted users" do
     muted_user = Fabricate(:user)
     PostActionCreator.like(muted_user, post)
     regular_user = Fabricate(:user)
@@ -260,15 +260,13 @@ RSpec.describe PostActionUsersController do
   end
 
   describe "when a plugin registers the :post_action_users_list modifier" do
-    before do
-      @post_action_1 = PostActionCreator.like(Fabricate(:user), post).post_action
-      @post_action_2 = PostActionCreator.like(Fabricate(:user), post).post_action
-    end
+    let(:post_action_1) { PostActionCreator.like(Fabricate(:user), post).post_action }
 
     after { DiscoursePluginRegistry.clear_modifiers! }
 
     it "allows the plugin to modify the post action query" do
-      excluded_post_action_ids = [@post_action_1.id]
+      excluded_post_action_ids = [post_action_1.id]
+      PostActionCreator.like(Fabricate(:user), post)
       Plugin::Instance
         .new
         .register_modifier(:post_action_users_list) do |query, modifier_post|

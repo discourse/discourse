@@ -16,7 +16,7 @@ RSpec.describe Middleware::DiscoursePublicExceptions do
     }.merge(opts)
   end
 
-  it "should not log for invalid mime type requests" do
+  it "does not log for invalid mime type requests" do
     ex = Middleware::DiscoursePublicExceptions.new("/test")
 
     ex.call(

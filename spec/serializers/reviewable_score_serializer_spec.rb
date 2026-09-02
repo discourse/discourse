@@ -124,6 +124,7 @@ RSpec.describe ReviewableScoreSerializer do
       let(:link) do
         "<a href=\"#{Discourse.base_url}/admin/customize/watched_words\">#{I18n.t("reviewables.reasons.links.watched_word")}</a>"
       end
+
       it "tries to guess the watched words if they weren't recorded at the time of flagging" do
         raw = "I'm a post with some bad words like 'bad' and 'words'."
         reviewable.target = Fabricate(:post, raw:)

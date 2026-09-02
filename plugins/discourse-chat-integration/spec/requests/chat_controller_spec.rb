@@ -20,14 +20,14 @@ RSpec.describe "Chat Controller", type: :request do
 
   shared_examples "admin constraints" do |action, route|
     context "when user is not signed in" do
-      it "should raise the right error" do
+      it "raises the right error" do
         public_send(action, route)
         expect(response.status).to eq(404)
       end
     end
 
     context "when user is not an admin" do
-      it "should raise the right error" do
+      it "raises the right error" do
         sign_in(Fabricate(:user))
         public_send(action, route)
         expect(response.status).to eq(404)
@@ -43,7 +43,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response" do
+      it "returns the right response" do
         get "/admin/plugins/discourse-chat-integration/providers.json"
 
         expect(response.status).to eq(200)
@@ -300,7 +300,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response" do
+      it "returns the right response" do
         post "/admin/plugins/discourse-chat-integration/test.json",
              params: {
                channel_id: channel.id,
@@ -310,7 +310,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(response.status).to eq(200)
       end
 
-      it "should fail for invalid channel" do
+      it "fails for invalid channel" do
         post "/admin/plugins/discourse-chat-integration/test.json",
              params: {
                channel_id: 999,
@@ -330,7 +330,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
-      it "should return the right response" do
+      it "returns the right response" do
         rule =
           DiscourseChatIntegration::Rule.create(
             channel: channel,
@@ -369,7 +369,7 @@ RSpec.describe "Chat Controller", type: :request do
         )
       end
 
-      it "should fail for invalid provider" do
+      it "fails for invalid provider" do
         get "/admin/plugins/discourse-chat-integration/channels.json",
             params: {
               provider: "someprovider",
@@ -387,7 +387,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able to add a new channel" do
+      it "is able to add a new channel" do
         post "/admin/plugins/discourse-chat-integration/channels.json",
              params: {
                channel: {
@@ -404,7 +404,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(channel.provider).to eq("dummy")
       end
 
-      it "should fail for invalid params" do
+      it "fails for invalid params" do
         post "/admin/plugins/discourse-chat-integration/channels.json",
              params: {
                channel: {
@@ -432,7 +432,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able update a channel" do
+      it "is able update a channel" do
         put "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json",
             params: {
               channel: {
@@ -448,7 +448,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(channel.data).to eq("val" => "something-else")
       end
 
-      it "should fail for invalid params" do
+      it "fails for invalid params" do
         put "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json",
             params: {
               channel: {
@@ -473,7 +473,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able delete a channel" do
+      it "is able delete a channel" do
         delete "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json"
 
         expect(response.status).to eq(200)
@@ -490,7 +490,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able to add a new rule" do
+      it "is able to add a new rule" do
         post "/admin/plugins/discourse-chat-integration/rules.json",
              params: {
                rule: {
@@ -511,7 +511,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(rule.tags).to eq([tag.name])
       end
 
-      it "should fail for invalid params" do
+      it "fails for invalid params" do
         post "/admin/plugins/discourse-chat-integration/rules.json",
              params: {
                rule: {
@@ -544,7 +544,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able update a rule" do
+      it "is able update a rule" do
         put "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json",
             params: {
               rule: {
@@ -561,7 +561,7 @@ RSpec.describe "Chat Controller", type: :request do
         expect(rule.category_id).to eq(category2.id)
       end
 
-      it "should fail for invalid params" do
+      it "fails for invalid params" do
         put "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json",
             params: {
               rule: {
@@ -594,7 +594,7 @@ RSpec.describe "Chat Controller", type: :request do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "should be able delete a rule" do
+      it "is able delete a rule" do
         delete "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json"
 
         expect(response.status).to eq(200)

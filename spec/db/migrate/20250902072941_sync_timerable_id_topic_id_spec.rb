@@ -3,14 +3,15 @@
 require Rails.root.join("db/migrate/20250902072941_sync_timerable_id_topic_id.rb")
 
 RSpec.describe SyncTimerableIdTopicId do
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
-
-  it "works" do
+  it "copies topic IDs into timerable IDs" do
     DB.exec("DROP TRIGGER IF EXISTS topic_timers_topic_id_trigger ON topic_timers")
     Migration::ColumnDropper.drop_readonly(:topic_timers, :topic_id)
     DB.exec("ALTER TABLE topic_timers ALTER COLUMN timerable_id DROP NOT NULL")

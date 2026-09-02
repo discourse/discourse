@@ -31,7 +31,7 @@ RSpec.describe ProblemCheck::FacebookConfig do
         SiteSetting.stubs(facebook_app_secret: "bar")
       end
 
-      it do
+      it "reports the missing Facebook app ID" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
         )
@@ -46,7 +46,7 @@ RSpec.describe ProblemCheck::FacebookConfig do
         SiteSetting.stubs(facebook_app_secret: nil)
       end
 
-      it do
+      it "reports the missing Facebook app secret" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
         )

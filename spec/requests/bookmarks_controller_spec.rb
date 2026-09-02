@@ -218,9 +218,6 @@ RSpec.describe BookmarksController do
       let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
       let!(:bookmark_2) { Fabricate(:bookmark, bookmarkable: bookmark_post_2, user: bookmark_user) }
 
-      let!(:operation) { { type: "clear_reminder" } }
-      let!(:bookmark_ids) { [bookmark.id, bookmark_2.id] }
-
       it "CAN'T clear reminder if the bookmark does not belong to the user" do
         expect do
           put "/bookmarks/bulk.json",

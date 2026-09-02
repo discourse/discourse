@@ -59,7 +59,7 @@ describe "Data Explorer rake tasks" do
     end
 
     context "when query does not exist in PluginStore" do
-      it "should not hide the query" do
+      it "does not hide the query" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", id: 1, name: "A")
         make_query("SELECT 1 as value", id: 2, name: "B")
@@ -108,7 +108,7 @@ describe "Data Explorer rake tasks" do
     end
 
     context "when query does not exist in PluginStore" do
-      it "should not unhide the query" do
+      it "does not unhide the query" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", id: 1, name: "A", hidden: true)
         make_query("SELECT 1 as value", id: 2, name: "B", hidden: true)
@@ -157,7 +157,7 @@ describe "Data Explorer rake tasks" do
     end
 
     context "when query does not exist in PluginStore" do
-      it "should not hard delete the query" do
+      it "does not hard delete the query" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", id: 1, name: "A", hidden: true)
         make_query("SELECT 1 as value", id: 2, name: "B", hidden: true)
@@ -172,7 +172,7 @@ describe "Data Explorer rake tasks" do
     end
 
     context "when query is not hidden" do
-      it "should not hard delete the query" do
+      it "does not hard delete the query" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", id: 1, name: "A")
         # rake data_explorer:hard_delete[1] => try to hard delete query with ID 1

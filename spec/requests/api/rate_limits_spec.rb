@@ -34,12 +34,10 @@ class MockRateLimiter
 end
 
 RSpec.describe "rate limits" do
-  before_all { @key = Fabricate(:api_key).key }
-
-  let(:api_key) { @key }
+  let(:api_key) { Fabricate(:api_key).key }
   let!(:api_username) { "system" }
 
-  around(:each) { |example| stub_const(Object, :RateLimiter, MockRateLimiter) { example.run } }
+  around { |example| stub_const(Object, :RateLimiter, MockRateLimiter) { example.run } }
 
   it "doesn't rate limit authenticated admin api requests" do
     MockRateLimiter

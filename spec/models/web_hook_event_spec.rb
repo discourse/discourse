@@ -7,7 +7,7 @@ RSpec.describe WebHookEvent do
   describe ".purge_old" do
     before { SiteSetting.retain_web_hook_events_period_days = 1 }
 
-    it "should be able to purge old web hook events" do
+    it "is able to purge old web hook events" do
       web_hook = Fabricate(:web_hook)
       web_hook_event = WebHookEvent.create!(status: 200, web_hook: web_hook)
       WebHookEvent.create!(status: 200, web_hook: web_hook, created_at: 2.days.ago)

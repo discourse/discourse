@@ -30,12 +30,6 @@ RSpec.describe Voice::LivekitWebhooksController do
     end
     Voice::Room.reset_column_information
     Voice::Recording.reset_column_information
-  end
-
-  fab!(:user)
-  fab!(:room) { Fabricate(:voice_room, public: true) }
-
-  before do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_allowed_groups =
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
@@ -44,6 +38,9 @@ RSpec.describe Voice::LivekitWebhooksController do
     SiteSetting.voice_livekit_api_secret = "lk_api_secret"
     SiteSetting.voice_livekit_room_policy = "all_rooms"
   end
+
+  fab!(:user)
+  fab!(:room) { Fabricate(:voice_room, public: true) }
 
   after do
     Voice::ParticipantTracker.clear(room.id)

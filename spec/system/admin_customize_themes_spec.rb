@@ -15,12 +15,12 @@ describe "Admin Customize Themes" do
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
-    it "should keep sidebar navigation link active" do
+    it "keeps sidebar navigation link active" do
       theme_page.visit(theme)
       expect(sidebar).to have_active_link("admin_themes_and_components")
     end
 
-    it "should allow admin to update the light color scheme of the theme" do
+    it "allows admin to update the light color scheme of the theme" do
       theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__light-color-scheme")
@@ -42,7 +42,7 @@ describe "Admin Customize Themes" do
       )
     end
 
-    it "should allow admin to update the dark color scheme of the theme" do
+    it "allows admin to update the dark color scheme of the theme" do
       theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__dark-color-scheme")
@@ -182,7 +182,7 @@ describe "Admin Customize Themes" do
   end
 
   describe "when editing theme translations" do
-    it "should allow admin to edit and save the theme translations" do
+    it "allows admin to edit and save the theme translations" do
       theme.set_field(
         target: :translations,
         name: "en",
@@ -204,7 +204,7 @@ describe "Admin Customize Themes" do
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
     end
 
-    it "should allow admin to edit and save the theme translations from other languages" do
+    it "allows admin to edit and save the theme translations from other languages" do
       theme.set_field(
         target: :translations,
         name: "en",
@@ -234,7 +234,7 @@ describe "Admin Customize Themes" do
       theme_translations_settings_editor.save
     end
 
-    it "should match the current user locale translation" do
+    it "matches the current user locale translation" do
       SiteSetting.allow_user_locale = true
       SiteSetting.set_locale_from_accept_language_header = true
       SiteSetting.default_locale = "fr"

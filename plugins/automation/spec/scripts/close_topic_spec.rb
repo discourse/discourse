@@ -9,7 +9,7 @@ describe "CloseTopic" do
   before { automation.upsert_field!("topic", "text", { value: topic.id }, target: "script") }
 
   context "with default params" do
-    it "works" do
+    it "closes the topic with an empty system message" do
       expect(topic.closed).to be_falsey
 
       automation.trigger!
@@ -32,7 +32,7 @@ describe "CloseTopic" do
       )
     end
 
-    it "works" do
+    it "closes the topic with the configured message" do
       expect(topic.closed).to be_falsey
 
       automation.trigger!

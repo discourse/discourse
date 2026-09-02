@@ -16,7 +16,7 @@ RSpec.describe DiscourseRedis do
     describe "pipelined / multi" do
       let(:redis) { DiscourseRedis.new }
 
-      it "should support multi commands" do
+      it "supports multi commands" do
         val =
           redis.multi do |transaction|
             transaction.set "foo", "bar"
@@ -32,7 +32,7 @@ RSpec.describe DiscourseRedis do
         expect(val).to eq(%w[OK OK foo])
       end
 
-      it "should support pipelined commands" do
+      it "supports pipelined commands" do
         set, incr = nil
         val =
           redis.pipelined do |pipeline|
@@ -52,7 +52,7 @@ RSpec.describe DiscourseRedis do
         expect(redis.get("baz")).to eq("1")
       end
 
-      it "should noop pipelined commands against a readonly redis" do
+      it "noops pipelined commands against a readonly redis" do
         redis.without_namespace.expects(:pipelined).raises(Redis::ReadOnlyError)
 
         set, incr = nil
@@ -68,7 +68,7 @@ RSpec.describe DiscourseRedis do
         expect(redis.get("baz")).to eq(nil)
       end
 
-      it "should noop multi commands against a readonly redis" do
+      it "noops multi commands against a readonly redis" do
         redis.without_namespace.expects(:multi).raises(Redis::ReadOnlyError)
 
         val =
@@ -87,7 +87,7 @@ RSpec.describe DiscourseRedis do
     describe "when namespace is enabled" do
       let(:redis) { DiscourseRedis.new }
 
-      it "should append namespace to the keys" do
+      it "appends namespace to the keys" do
         raw_redis.set("default:key", 1)
         raw_redis.set("test:key2", 1)
         raw_redis.set("default:key3", 1)
@@ -112,7 +112,7 @@ RSpec.describe DiscourseRedis do
     end
 
     describe "#sadd?" do
-      it "should send the right command with the right key prefix to redis" do
+      it "sends the right command with the right key prefix to redis" do
         redis = DiscourseRedis.new
 
         redis.without_namespace.expects(:sadd?).with("default:testset", "1", anything)
@@ -122,7 +122,7 @@ RSpec.describe DiscourseRedis do
     end
 
     describe "#srem?" do
-      it "should send the right command with the right key prefix to redis" do
+      it "sends the right command with the right key prefix to redis" do
         redis = DiscourseRedis.new
 
         redis.without_namespace.expects(:srem?).with("default:testset", "1", anything)
@@ -134,7 +134,7 @@ RSpec.describe DiscourseRedis do
     describe "when namespace is disabled" do
       let(:redis) { DiscourseRedis.new(nil, namespace: false) }
 
-      it "should not append any namespace to the keys" do
+      it "does not append any namespace to the keys" do
         raw_redis.set("default:key", 1)
         raw_redis.set("test:key2", 1)
 
@@ -150,7 +150,7 @@ RSpec.describe DiscourseRedis do
         expect(redis.mget("key1", "key2")).to eq([nil, nil])
       end
 
-      it "should noop a readonly redis" do
+      it "noops a readonly redis" do
         expect(Discourse.recently_readonly?).to eq(false)
 
         redis.without_namespace.expects(:set).raises(Redis::ReadOnlyError)
@@ -194,7 +194,7 @@ RSpec.describe DiscourseRedis do
   end
 
   describe DiscourseRedis::EvalHelper do
-    it "works" do
+    it "evaluates Lua without arguments" do
       helper = DiscourseRedis::EvalHelper.new <<~LUA
         return 'hello world'
       LUA

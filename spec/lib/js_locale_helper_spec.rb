@@ -8,14 +8,16 @@ RSpec.describe JsLocaleHelper do
   end
 
   module StubLoadTranslations
+    attr_accessor :loaded_merges, :loaded_translations
+
     def set_translations(locale, translations)
-      @loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
-      @loaded_translations[locale] = translations
+      self.loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
+      loaded_translations[locale] = translations
     end
 
     def clear_cache!
-      @loaded_translations = nil
-      @loaded_merges = nil
+      self.loaded_translations = nil
+      self.loaded_merges = nil
     end
   end
 

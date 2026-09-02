@@ -43,7 +43,7 @@ describe TopicView do
     expect(topic_view.posts_user_voted).to eq(nil)
   end
 
-  it "should preload comments, comments count, user voted status for a given topic" do
+  it "preloads comments, comments count, user voted status for a given topic" do
     PostVoting::VoteManager.vote(comment, user)
     PostVoting::VoteManager.vote(comment_2, comment_3.user)
 
@@ -65,7 +65,7 @@ describe TopicView do
     expect(topic_view.comments_user_voted).to eq({ comment.id => true })
   end
 
-  it "should respect Topic::PRELOAD_COMMENTS_COUNT when loading initial comments" do
+  it "respects Topic::PRELOAD_COMMENTS_COUNT when loading initial comments" do
     stub_const(TopicView, "PRELOAD_COMMENTS_COUNT", 1) do
       topic_view = TopicView.new(topic, user)
 
@@ -74,7 +74,7 @@ describe TopicView do
     end
   end
 
-  it "should preload the right comments even if comments have been deleted" do
+  it "preloads the right comments even if comments have been deleted" do
     comment_4 = Fabricate(:post_voting_comment, post: answer)
     comment.trash!
 
@@ -207,6 +207,7 @@ describe TopicView do
         [answer_minus_2_votes.id, answer_minus_1_vote.id, answer_0_votes.id],
       )
     end
+
     describe "#next_page" do
       it "returns the next page properly when the highest id post is not the last" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(2)

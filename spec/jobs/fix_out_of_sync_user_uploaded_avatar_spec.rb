@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::FixOutOfSyncUserUploadedAvatar do
-  it "should fix out of sync user uploaded avatars" do
+  it "fixes out of sync user uploaded avatars" do
     user_with_custom_upload = Fabricate(:user)
     custom_upload1 = Fabricate(:upload, user: user_with_custom_upload)
     gravatar_upload1 = Fabricate(:upload, user: user_with_custom_upload)

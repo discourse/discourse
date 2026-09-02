@@ -280,6 +280,7 @@ describe OpenIDConnectAuthenticator do
         userinfo_endpoint: "https://id.example.com/userinfo",
       }.to_json
     end
+
     after { Discourse.cache.delete("openid-connect-discovery-#{document_url}") }
 
     it "loads the document correctly" do

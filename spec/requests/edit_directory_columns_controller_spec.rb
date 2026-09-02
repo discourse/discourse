@@ -27,35 +27,35 @@ RSpec.describe EditDirectoryColumnsController do
       }
     end
 
-    describe "#update" do
-      describe "when user is an admin or moderator" do
-        before { sign_in(admin) }
-        describe "user saves a new configuration" do
-          it "logs the new information using StaffActionLogger" do
-            expect { put edit_directory_columns_path(params: payload) }.to change {
-              DirectoryColumn.find(first_directory_column_id).enabled
-            }.from(true).to(false)
+    describe "when user is an admin or moderator" do
+      before { sign_in(admin) }
 
-            staff_log = UserHistory.last
+      describe "user saves a new configuration" do
+        it "logs the new information using StaffActionLogger" do
+          expect { put edit_directory_columns_path(params: payload) }.to change {
+            DirectoryColumn.find(first_directory_column_id).enabled
+          }.from(true).to(false)
 
-            expect(staff_log.custom_type).to eq("update_directory_columns")
-          end
+          staff_log = UserHistory.last
 
-          it "does not let all columns be disabled" do
-            sign_in(admin)
-            bad_params = payload
-            bad_params[:directory_columns][:"1"][:enabled] = "false"
+          expect(staff_log.custom_type).to eq("update_directory_columns")
+        end
 
-            put edit_directory_columns_path(params: bad_params)
+        it "does not let all columns be disabled" do
+          sign_in(admin)
+          bad_params = payload
+          bad_params[:directory_columns][:"1"][:enabled] = "false"
 
-            expect(response.status).to eq(400)
-          end
+          put edit_directory_columns_path(params: bad_params)
+
+          expect(response.status).to eq(400)
         end
       end
     end
 
     describe "when user is not an admin or moderator" do
       before { sign_in(user) }
+
       describe "user saves a new configuration" do
         it "does not allow saving" do
           put edit_directory_columns_path(params: payload)

@@ -46,7 +46,7 @@ module DiscourseAi
         before { enable_current_plugin }
 
         if defined?(DiscourseSolved)
-          it "will correctly denote solved topics" do
+          it "correctlies denote solved topics" do
             Fabricate(:solved_topic, topic: topic_with_likes, answer_post: post_with_likes2)
 
             context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
@@ -56,7 +56,7 @@ module DiscourseAi
           end
         end
 
-        it "will exclude non visible topics" do
+        it "excludes non visible topics" do
           post_with_likes3.topic.update(visible: false)
 
           context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)

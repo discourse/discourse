@@ -359,7 +359,8 @@ RSpec.describe UserApiKeysController do
 
     context "with a registered client" do
       let!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
-      let!(:client) do
+
+      before do
         Fabricate(
           :user_api_key_client,
           client_id: args[:client_id],
@@ -368,9 +369,6 @@ RSpec.describe UserApiKeysController do
           auth_redirect: args[:auth_redirect],
           scopes: "read",
         )
-      end
-
-      before do
         sign_in(user)
         SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       end

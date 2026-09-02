@@ -38,7 +38,7 @@ RSpec.describe Jobs::UnassignNotification do
         }.to change { user2.notifications.count }.by(-1)
       end
 
-      it "should publish the right message when private message" do
+      it "publishes the right message when private message" do
         user = pm.allowed_users.first
         assign_allowed_group.add(user)
 

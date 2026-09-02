@@ -10,7 +10,7 @@ RSpec.describe PostMerger do
   let(:topic) { post.topic }
 
   describe ".merge" do
-    it "should merge posts into the latest post correctly" do
+    it "merges posts into the latest post correctly" do
       reply1 = create_post(topic: topic, raw: "The first reply", post_number: 2, user: user)
       reply2 =
         create_post(topic: topic, raw: "The second reply\nSecond line", post_number: 3, user: user)
@@ -36,7 +36,7 @@ RSpec.describe PostMerger do
       )
     end
 
-    it "should not allow the first post in a topic to be merged" do
+    it "does not allow the first post in a topic to be merged" do
       post.update!(user: user)
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
@@ -46,7 +46,7 @@ RSpec.describe PostMerger do
       )
     end
 
-    it "should only allow staff to merge posts" do
+    it "onlies allow staff to merge posts" do
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 
@@ -78,7 +78,7 @@ RSpec.describe PostMerger do
       expect(reply2.raw).to eq(merged_raw)
     end
 
-    it "should not allow posts from different topics to be merged" do
+    it "does not allow posts from different topics to be merged" do
       another_post = create_post(user: post.user)
 
       expect { PostMerger.new(user, [another_post, post]).merge }.to raise_error(
@@ -87,7 +87,7 @@ RSpec.describe PostMerger do
       )
     end
 
-    it "should not allow posts from different users to be merged" do
+    it "does not allow posts from different users to be merged" do
       another_post = create_post(user: user, topic_id: topic.id)
 
       expect { PostMerger.new(user, [another_post, post]).merge }.to raise_error(
@@ -96,7 +96,7 @@ RSpec.describe PostMerger do
       )
     end
 
-    it "should not allow posts with length greater than max_post_length" do
+    it "does not allow posts with length greater than max_post_length" do
       SiteSetting.max_post_length = 60
 
       reply1 = create_post(topic: topic, raw: "The first reply", post_number: 2, user: user)

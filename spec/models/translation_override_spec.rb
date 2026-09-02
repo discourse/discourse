@@ -18,79 +18,76 @@ RSpec.describe TranslationOverride do
         )
       end
 
-      describe "when interpolation keys are missing" do
-        it "should not be valid" do
-          translation_override =
-            TranslationOverride.upsert!(
-              I18n.locale,
-              "user_notifications.user_did_something",
-              "%{key} %{omg}",
-            )
-
-          expect(translation_override.errors.full_messages).to include(
-            I18n.t(
-              "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-              keys: "key, omg",
-              count: 2,
-            ),
+      it "is not valid when interpolation keys are missing" do
+        translation_override =
+          TranslationOverride.upsert!(
+            I18n.locale,
+            "user_notifications.user_did_something",
+            "%{key} %{omg}",
           )
-        end
 
-        context "when custom interpolation keys are included" do
-          %w[
-            user_notifications.user_did_something
-            user_notifications.only_reply_by_email
-            user_notifications.only_reply_by_email_pm
-            user_notifications.reply_by_email
-            user_notifications.reply_by_email_pm
-            user_notifications.visit_link_to_respond
-            user_notifications.visit_link_to_respond_pm
-          ].each do |i18n_key|
-            it "should validate keys for #{i18n_key}" do
-              interpolation_key_names =
-                described_class.custom_interpolation_keys("user_notifications.user_")
+        expect(translation_override.errors.full_messages).to include(
+          I18n.t(
+            "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+            keys: "key, omg",
+            count: 2,
+          ),
+        )
+      end
 
-              string_with_interpolation_keys =
-                interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
+      context "when custom interpolation keys are included" do
+        %w[
+          user_notifications.user_did_something
+          user_notifications.only_reply_by_email
+          user_notifications.only_reply_by_email_pm
+          user_notifications.reply_by_email
+          user_notifications.reply_by_email_pm
+          user_notifications.visit_link_to_respond
+          user_notifications.visit_link_to_respond_pm
+        ].each do |i18n_key|
+          it "validates keys for #{i18n_key}" do
+            interpolation_key_names =
+              described_class.custom_interpolation_keys("user_notifications.user_")
 
-              translation_override =
-                TranslationOverride.upsert!(
-                  I18n.locale,
-                  i18n_key,
-                  "#{string_with_interpolation_keys} %{something}",
-                )
+            string_with_interpolation_keys = interpolation_key_names.map { |x| "%{#{x}}" }.join(" ")
 
-              expect(translation_override.errors.full_messages).to include(
-                I18n.t(
-                  "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-                  keys: "something",
-                  count: 1,
-                ),
-              )
-            end
-          end
-
-          it "should validate keys that shouldn't be used outside of user_notifications" do
-            I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")
             translation_override =
               TranslationOverride.upsert!(
                 I18n.locale,
-                "not_a_notification",
-                "Overridden %{key1} %{topic_title_url_encoded}",
+                i18n_key,
+                "#{string_with_interpolation_keys} %{something}",
               )
+
             expect(translation_override.errors.full_messages).to include(
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-                keys: "topic_title_url_encoded",
+                keys: "something",
                 count: 1,
               ),
             )
           end
         end
+
+        it "validates keys that shouldn't be used outside of user_notifications" do
+          I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")
+          translation_override =
+            TranslationOverride.upsert!(
+              I18n.locale,
+              "not_a_notification",
+              "Overridden %{key1} %{topic_title_url_encoded}",
+            )
+          expect(translation_override.errors.full_messages).to include(
+            I18n.t(
+              "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+              keys: "topic_title_url_encoded",
+              count: 1,
+            ),
+          )
+        end
       end
 
       describe "with valid custom interpolation keys" do
-        it "works" do
+        it "accepts the translation override" do
           translation_override =
             TranslationOverride.upsert!(
               I18n.locale,
@@ -102,46 +99,44 @@ RSpec.describe TranslationOverride do
         end
       end
 
-      describe "pluralized keys" do
-        describe "valid keys" do
-          it "converts zero to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.zero", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts two to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.two", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts few to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.few", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
-
-          it "converts many to other" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.many", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to eq([])
-          end
+      describe "valid pluralized keys" do
+        it "converts zero to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.zero", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
         end
 
-        describe "invalid keys" do
-          it "does not transform 'tonz'" do
-            allow_missing_translations do
-              translation_override =
-                TranslationOverride.upsert!(I18n.locale, "something.tonz", "%{key3} %{key4} hello")
-              expect(translation_override.errors.full_messages).to include(
-                I18n.t(
-                  "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-                  keys: "key3, key4",
-                  count: 2,
-                ),
-              )
-            end
+        it "converts two to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.two", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+
+        it "converts few to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.few", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+
+        it "converts many to other" do
+          translation_override =
+            TranslationOverride.upsert!(I18n.locale, "something.many", "%{key3} %{key4} hello")
+          expect(translation_override.errors.full_messages).to eq([])
+        end
+      end
+
+      describe "invalid keys" do
+        it "does not transform 'tonz'" do
+          allow_missing_translations do
+            translation_override =
+              TranslationOverride.upsert!(I18n.locale, "something.tonz", "%{key3} %{key4} hello")
+            expect(translation_override.errors.full_messages).to include(
+              I18n.t(
+                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                keys: "key3, key4",
+                count: 2,
+              ),
+            )
           end
         end
       end
@@ -155,17 +150,19 @@ RSpec.describe TranslationOverride do
         )
       end
 
-      it do
+      it "accepts valid plural syntax" do
         is_expected.to allow_value(
           "This has {COUNT, plural, one{one member} other{# members}}.",
         ).for(:value).against(:base)
       end
-      it do
+
+      it "rejects unsupported plural cases" do
         is_expected.not_to allow_value(
           "This has {COUNT, plural, one{one member} many{# members} other{# members}}.",
         ).for(:value).with_message(/plural case many is not valid/, against: :base)
       end
-      it do
+
+      it "rejects malformed plural syntax" do
         is_expected.not_to allow_value("This has {COUNT, ").for(:value).with_message(
           /invalid syntax/,
           against: :base,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InlineOneboxer do
-  it "should return nothing with empty input" do
+  it "returns nothing with empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
   end
 
@@ -146,7 +146,7 @@ RSpec.describe InlineOneboxer do
       expect(InlineOneboxer.lookup("/test")).to be_nil
     end
 
-    it "will return the fancy title" do
+    it "returns the fancy title" do
       topic = Fabricate(:topic, title: "Hello :pizza: with an emoji")
       onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)
       expect(onebox).to be_present
@@ -154,7 +154,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will append the post number post author's username to the title" do
+    it "appends the post number post author's username to the title" do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
@@ -182,13 +182,13 @@ RSpec.describe InlineOneboxer do
       expect(lookup.call(99)).to eq("Inline oneboxer - #4 by #{posts[3].user.username}")
     end
 
-    it "will not crawl domains that aren't allowlisted" do
+    it "does not crawl domains that aren't allowlisted" do
       SiteSetting.enable_inline_onebox_on_all_domains = false
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
 
-    it "will crawl anything if allowed to" do
+    it "crawls anything if allowed to" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -203,7 +203,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("a blog")
     end
 
-    it "will not return a onebox if it does not meet minimal length" do
+    it "does not return a onebox if it does not meet minimal length" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -218,7 +218,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq(nil)
     end
 
-    it "will lookup allowlisted domains" do
+    it "lookups allowlisted domains" do
       SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 

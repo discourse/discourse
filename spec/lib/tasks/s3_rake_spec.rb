@@ -8,11 +8,6 @@ RSpec.describe "s3:upload_assets rake task" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks
-  end
-
-  let(:task) { Rake::Task["s3:upload_assets"] }
-  let(:logger) { instance_double(Logger) }
-  before do
     allow(Logger).to receive(:new).and_return(logger)
     allow(logger).to receive(:<<)
     allow(logger).to receive(:error)
@@ -30,6 +25,9 @@ RSpec.describe "s3:upload_assets rake task" do
     # Skip CORS rules task completely to avoid S3 calls
     allow(S3CorsRulesets).to receive(:sync).and_return(nil)
   end
+
+  let(:task) { Rake::Task["s3:upload_assets"] }
+  let(:logger) { instance_double(Logger) }
 
   describe "error handling" do
     let(:test_assets) do

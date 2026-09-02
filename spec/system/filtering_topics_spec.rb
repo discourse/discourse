@@ -47,7 +47,7 @@ describe "Filtering topics" do
       topic
     end
 
-    it "should display the right topics when the status filter is used in the query string" do
+    it "displays the right topics when the status filter is used in the query string" do
       sign_in(user)
 
       visit("/filter")
@@ -82,7 +82,7 @@ describe "Filtering topics" do
     fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
     fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
 
-    it "should display the right topics when tags filter is used in the query string" do
+    it "displays the right topics when tags filter is used in the query string" do
       sign_in(user)
 
       visit("/filter")

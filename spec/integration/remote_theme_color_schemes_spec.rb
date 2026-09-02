@@ -32,7 +32,7 @@ RSpec.describe "Remote theme update" do
 
   after { `rm -fr #{initial_repo}` }
 
-  around(:each) { |group| MockGitImporter.with_mock { group.run } }
+  around { |group| MockGitImporter.with_mock { group.run } }
 
   it "updates the base schemes for schemes that have diverged colors" do
     add_to_git_repo(

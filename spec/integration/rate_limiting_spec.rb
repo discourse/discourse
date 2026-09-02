@@ -4,7 +4,7 @@
 RSpec.describe "rate limiter integration" do
   before { RateLimiter.enable }
 
-  it "will rate limit message bus requests once queueing" do
+  it "rates limit message bus requests once queueing" do
     freeze_time
 
     global_setting :reject_message_bus_queue_seconds, 0.1
@@ -18,7 +18,7 @@ RSpec.describe "rate limiter integration" do
     expect(response.headers["Retry-After"].to_i).to be > 29
   end
 
-  it "will not rate limit when all is good" do
+  it "does not rate limit when all is good" do
     freeze_time
 
     global_setting :reject_message_bus_queue_seconds, 0.1
@@ -31,7 +31,7 @@ RSpec.describe "rate limiter integration" do
     expect(response.status).to eq(200)
   end
 
-  it "will clear the token cookie if invalid" do
+  it "clears the token cookie if invalid" do
     name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
 
     # we try 11 times because the rate limit is 10

@@ -14,7 +14,7 @@ describe "Mattermost Command Controller", type: :request do
   end
 
   describe "with plugin disabled" do
-    it "should return a 404" do
+    it "returns a 404" do
       post "/chat-integration/mattermost/command.json"
       expect(response.status).to eq(404)
     end
@@ -26,7 +26,7 @@ describe "Mattermost Command Controller", type: :request do
       SiteSetting.chat_integration_mattermost_enabled = false
     end
 
-    it "should return a 404" do
+    it "returns a 404" do
       post "/chat-integration/mattermost/command.json"
       expect(response.status).to eq(404)
     end
@@ -41,7 +41,7 @@ describe "Mattermost Command Controller", type: :request do
     end
 
     describe "when forum is private" do
-      it "should not redirect to login page" do
+      it "does not redirect to login page" do
         SiteSetting.login_required = true
         token = "sometoken"
         SiteSetting.chat_integration_mattermost_incoming_webhook_token = token
@@ -53,14 +53,14 @@ describe "Mattermost Command Controller", type: :request do
     end
 
     describe "when the token is invalid" do
-      it "should raise the right error" do
+      it "raises the right error" do
         post "/chat-integration/mattermost/command.json", params: { text: "help" }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when incoming webhook token has not been set" do
-      it "should raise the right error" do
+      it "raises the right error" do
         post "/chat-integration/mattermost/command.json",
              params: {
                text: "help",
@@ -79,12 +79,31 @@ describe "Mattermost Command Controller", type: :request do
 
       before { SiteSetting.chat_integration_mattermost_incoming_webhook_token = token }
 
-      describe "add new rule" do
-        it "should add a new rule correctly" do
+      it "adds a new rule correctly" do
+        post "/chat-integration/mattermost/command.json",
+             params: {
+               text: "watch #{category.slug}",
+               channel_name: "welcome",
+               token: token,
+             }
+
+        json = response.parsed_body
+
+        expect(json["text"]).to eq(I18n.t("chat_integration.provider.mattermost.create.created"))
+
+        rule = DiscourseChatIntegration::Rule.all.first
+        expect(rule.channel).to eq(chan1)
+        expect(rule.filter).to eq("watch")
+        expect(rule.category_id).to eq(category.id)
+        expect(rule.tags).to eq(nil)
+      end
+
+      describe "from an unknown channel" do
+        it "creates the channel" do
           post "/chat-integration/mattermost/command.json",
                params: {
                  text: "watch #{category.slug}",
-                 channel_name: "welcome",
+                 channel_name: "general",
                  token: token,
                }
 
@@ -92,40 +111,17 @@ describe "Mattermost Command Controller", type: :request do
 
           expect(json["text"]).to eq(I18n.t("chat_integration.provider.mattermost.create.created"))
 
-          rule = DiscourseChatIntegration::Rule.all.first
-          expect(rule.channel).to eq(chan1)
+          chan =
+            DiscourseChatIntegration::Channel
+              .with_provider("mattermost")
+              .with_data_value("identifier", "#general")
+              .first
+          expect(chan.provider).to eq("mattermost")
+
+          rule = chan.rules.first
           expect(rule.filter).to eq("watch")
           expect(rule.category_id).to eq(category.id)
           expect(rule.tags).to eq(nil)
-        end
-
-        describe "from an unknown channel" do
-          it "creates the channel" do
-            post "/chat-integration/mattermost/command.json",
-                 params: {
-                   text: "watch #{category.slug}",
-                   channel_name: "general",
-                   token: token,
-                 }
-
-            json = response.parsed_body
-
-            expect(json["text"]).to eq(
-              I18n.t("chat_integration.provider.mattermost.create.created"),
-            )
-
-            chan =
-              DiscourseChatIntegration::Channel
-                .with_provider("mattermost")
-                .with_data_value("identifier", "#general")
-                .first
-            expect(chan.provider).to eq("mattermost")
-
-            rule = chan.rules.first
-            expect(rule.filter).to eq("watch")
-            expect(rule.category_id).to eq(category.id)
-            expect(rule.tags).to eq(nil)
-          end
         end
       end
     end

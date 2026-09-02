@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Translation::LanguageDetector do
-  let!(:agent) do
-    AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
-  end
-
   before do
+    AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_translation_enabled = true

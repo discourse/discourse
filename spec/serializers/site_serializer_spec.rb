@@ -474,7 +474,7 @@ RSpec.describe SiteSerializer do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
-    it "should return the site's top tags as the default tags for sidebar" do
+    it "returns the site's top tags as the default tags for sidebar" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
       expect(serialized[:navigation_menu_site_top_tags]).to eq(
@@ -504,7 +504,7 @@ RSpec.describe SiteSerializer do
       )
     end
 
-    it "should not be serialized if `tagging_enabled` site setting is set to false" do
+    it "is not serialized if `tagging_enabled` site setting is set to false" do
       SiteSetting.set(:tagging_enabled, false)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
@@ -512,7 +512,7 @@ RSpec.describe SiteSerializer do
       expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
     end
 
-    it "should use slug_for_url for tags with empty slugs" do
+    it "uses slug_for_url for tags with empty slugs" do
       numeric_tag =
         Fabricate(:tag, name: "1").tap { |tag| Fabricate.times(10, :topic, tags: [tag]) }
 
@@ -525,7 +525,7 @@ RSpec.describe SiteSerializer do
       expect(numeric_entry[:slug]).to eq("#{numeric_tag.id}-tag")
     end
 
-    it "should return an empty array if site has no top tags" do
+    it "returns an empty array if site has no top tags" do
       Tag.delete_all
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
@@ -634,6 +634,7 @@ RSpec.describe SiteSerializer do
 
     it "is false when enable_names setting is true and full_name_requirement is hidden_at_signup" do
       SiteSetting.full_name_requirement = "hidden_at_signup"
+      SiteSetting.enable_names = true
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end

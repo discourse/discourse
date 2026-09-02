@@ -3,13 +3,15 @@
 require Rails.root.join("db/migrate/20260513101242_mark_existing_sites_directory_columns_seeded.rb")
 
 RSpec.describe MarkExistingSitesDirectoryColumnsSeeded do
+  let(:original_verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @original_verbose = ActiveRecord::Migration.verbose
+    original_verbose
     ActiveRecord::Migration.verbose = false
   end
 
   after do
-    ActiveRecord::Migration.verbose = @original_verbose
+    ActiveRecord::Migration.verbose = original_verbose
     Discourse.clear_site_creation_date_cache
   end
 

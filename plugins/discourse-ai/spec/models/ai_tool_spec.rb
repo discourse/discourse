@@ -3,6 +3,7 @@
 RSpec.describe AiTool do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:bot_user) { Discourse.system_user }
 
   def create_tool(
@@ -29,7 +30,7 @@ RSpec.describe AiTool do
 
   before { enable_current_plugin }
 
-  it "it can run a basic tool" do
+  it "can run a basic tool" do
     tool = create_tool
 
     expect(tool.signature).to eq(

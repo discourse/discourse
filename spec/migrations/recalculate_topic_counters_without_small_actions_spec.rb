@@ -7,12 +7,14 @@ require Rails.root.join(
 RSpec.describe RecalculateTopicCountersWithoutSmallActions do
   subject(:migrate) { described_class.new.up }
 
+  let(:verbose) { ActiveRecord::Migration.verbose }
+
   before do
-    @verbose = ActiveRecord::Migration.verbose
+    verbose
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @verbose }
+  after { ActiveRecord::Migration.verbose = verbose }
 
   fab!(:author, :user)
   fab!(:reader, :user)

@@ -17,7 +17,7 @@ RSpec.describe WizardSerializer do
       expect(json["wizard"]["current_color_scheme"][0]["hex"]).to eq("222")
     end
 
-    it "should provide custom colors correctly" do
+    it "provides custom colors correctly" do
       colors =
         ColorScheme.create_from_base(
           name: "Customized",

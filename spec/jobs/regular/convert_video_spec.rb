@@ -3,7 +3,7 @@
 RSpec.describe Jobs::ConvertVideo do
   subject(:job) { described_class.new }
 
-  before(:each) do
+  before do
     extensions = SiteSetting.authorized_extensions.split("|")
     SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
   end

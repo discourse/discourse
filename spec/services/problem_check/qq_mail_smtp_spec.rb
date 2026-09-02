@@ -15,7 +15,7 @@ RSpec.describe ProblemCheck::QqMailSmtp do
     context "when using QQ Mail" do
       let(:smtp_address) { "smtp.qq.com" }
 
-      it do
+      it "reports the unsupported QQ Mail port" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your SMTP server (smtp.qq.com) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>.",
         )
@@ -25,7 +25,7 @@ RSpec.describe ProblemCheck::QqMailSmtp do
     context "when using QQ Enterprise Mail (Exmail)" do
       let(:smtp_address) { "smtp.exmail.qq.com" }
 
-      it do
+      it "reports the unsupported QQ Mail authentication mode" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "Your SMTP server (smtp.exmail.qq.com) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>.",
         )

@@ -10,13 +10,13 @@ describe UserWarning do
     context "when staff notes plugin is enabled" do
       before { SiteSetting.user_notes_enabled = true }
 
-      it "should create staff note for warning" do
+      it "creates staff note for warning" do
         UserWarning.create(topic_id: topic.id, user_id: user.id, created_by_id: admin.id)
 
         expect(PluginStore.get("user_notes", "notes:#{user.id}")).to be_present
       end
 
-      it "should use system language" do
+      it "uses system language" do
         freeze_time
 
         warning = UserWarning.create!(topic_id: topic.id, user_id: user.id, created_by_id: admin.id)
@@ -30,7 +30,7 @@ describe UserWarning do
         expect(notes[0]["raw"]).to eq(notes[1]["raw"])
       end
 
-      it "should trigger user_warning_created event" do
+      it "triggers user_warning_created event" do
         callback_called = false
 
         event_handler = Proc.new { |warning| callback_called = true }

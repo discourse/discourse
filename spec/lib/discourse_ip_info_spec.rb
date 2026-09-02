@@ -44,7 +44,7 @@ RSpec.describe DiscourseIpInfo do
   describe ".mmdb_download" do
     before { Discourse::Utils.stubs(:execute_command) }
 
-    it "should download the MaxMind databases from MaxMind's download permalinks when `maxmind_license_key` and `maxmind_account_id` global setting has been set" do
+    it "downloads the MaxMind databases from MaxMind's download permalinks when `maxmind_license_key` and `maxmind_account_id` global setting has been set" do
       global_setting :maxmind_license_key, "license_key"
       global_setting :maxmind_account_id, "account_id"
 
@@ -68,7 +68,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from MaxMind's undocumented download URL when `maxmind_license_key` global setting has been set but not `maxmind_account_id` for backwards compatibility reasons" do
+    it "downloads the MaxMind databases from MaxMind's undocumented download URL when `maxmind_license_key` global setting has been set but not `maxmind_account_id` for backwards compatibility reasons" do
       global_setting :maxmind_license_key, "license_key"
 
       stub_request(
@@ -79,7 +79,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured" do
+    it "downloads the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured" do
       global_setting :maxmind_mirror_url, "https://b.www.example.com/mirror"
 
       stub_request(:get, "https://b.www.example.com/mirror/GeoLite2-City.tar.gz").to_return(
@@ -90,7 +90,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured and has a trailing slash" do
+    it "downloads the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured and has a trailing slash" do
       global_setting :maxmind_mirror_url, "https://b.www.example.com/mirror/"
 
       stub_request(:get, "https://b.www.example.com/mirror/GeoLite2-City.tar.gz").to_return(
@@ -101,7 +101,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should not throw an error and instead log the exception when database file fails to download" do
+    it "does not throw an error and instead log the exception when database file fails to download" do
       fake_logger = FakeLogger.new
       Rails.logger.broadcast_to(fake_logger)
 

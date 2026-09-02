@@ -279,35 +279,33 @@ RSpec.describe WordWatcher do
         expect(matches("123abc")).to be_falsey
       end
 
-      context "when there are multiple matches" do
-        context "with non regexp words" do
-          it "lists all matching words" do
-            %w[bananas hate hates].each do |word|
-              Fabricate(:watched_word, word: word, action: WatchedWord.actions[:block])
-            end
-
-            expect(matches_all("I hate bananas")).to contain_exactly("hate", "bananas")
-            expect(matches_all("She hates bananas too")).to contain_exactly("hates", "bananas")
+      context "with non regexp words" do
+        it "lists all matching words" do
+          %w[bananas hate hates].each do |word|
+            Fabricate(:watched_word, word: word, action: WatchedWord.actions[:block])
           end
+
+          expect(matches_all("I hate bananas")).to contain_exactly("hate", "bananas")
+          expect(matches_all("She hates bananas too")).to contain_exactly("hates", "bananas")
         end
+      end
 
-        context "with regexp words" do
-          before { SiteSetting.watched_words_regular_expressions = true }
+      context "with regexp words" do
+        before { SiteSetting.watched_words_regular_expressions = true }
 
-          it "lists all matching patterns" do
-            Fabricate(:watched_word, word: "(pine)?apples", action: WatchedWord.actions[:block])
-            Fabricate(
-              :watched_word,
-              word: "((move|store)(d)?)|((watch|listen)(ed|ing)?)",
-              action: WatchedWord.actions[:block],
-            )
+        it "lists all matching patterns" do
+          Fabricate(:watched_word, word: "(pine)?apples", action: WatchedWord.actions[:block])
+          Fabricate(
+            :watched_word,
+            word: "((move|store)(d)?)|((watch|listen)(ed|ing)?)",
+            action: WatchedWord.actions[:block],
+          )
 
-            expect(matches_all("pine pineapples apples")).to contain_exactly("pineapples", "apples")
+          expect(matches_all("pine pineapples apples")).to contain_exactly("pineapples", "apples")
 
-            expect(
-              matches_all("go watched watch ed ing move d moveed moved moving"),
-            ).to contain_exactly(*%w[watched watch move moved])
-          end
+          expect(
+            matches_all("go watched watch ed ing move d moveed moved moving"),
+          ).to contain_exactly(*%w[watched watch move moved])
         end
       end
 
@@ -361,36 +359,39 @@ RSpec.describe WordWatcher do
         end
       end
 
-      context "when case sensitive words are present" do
-        before do
+      context "with case-sensitive words and regular expressions enabled" do
+        it "respects case sensitivity flag in matching words" do
           Fabricate(
             :watched_word,
             word: "Discourse",
             action: WatchedWord.actions[:block],
             case_sensitive: true,
           )
+          SiteSetting.watched_words_regular_expressions = true
+          Fabricate(:watched_word, word: "p(rivate|ublic)", action: WatchedWord.actions[:block])
+
+          expect(matches_all("PUBLIC: Discourse is great for public discourse")).to contain_exactly(
+            "PUBLIC",
+            "Discourse",
+            "public",
+          )
         end
+      end
 
-        context "when watched_words_regular_expressions = true" do
-          it "respects case sensitivity flag in matching words" do
-            SiteSetting.watched_words_regular_expressions = true
-            Fabricate(:watched_word, word: "p(rivate|ublic)", action: WatchedWord.actions[:block])
+      context "with case-sensitive words and regular expressions disabled" do
+        it "repects case sensitivity flag in matching" do
+          Fabricate(
+            :watched_word,
+            word: "Discourse",
+            action: WatchedWord.actions[:block],
+            case_sensitive: true,
+          )
+          SiteSetting.watched_words_regular_expressions = false
+          Fabricate(:watched_word, word: "private", action: WatchedWord.actions[:block])
 
-            expect(
-              matches_all("PUBLIC: Discourse is great for public discourse"),
-            ).to contain_exactly("PUBLIC", "Discourse", "public")
-          end
-        end
-
-        context "when watched_words_regular_expressions = false" do
-          it "repects case sensitivity flag in matching" do
-            SiteSetting.watched_words_regular_expressions = false
-            Fabricate(:watched_word, word: "private", action: WatchedWord.actions[:block])
-
-            expect(
-              matches_all("PRIVATE: Discourse is also great private discourse"),
-            ).to contain_exactly("PRIVATE", "Discourse", "private")
-          end
+          expect(
+            matches_all("PRIVATE: Discourse is also great private discourse"),
+          ).to contain_exactly("PRIVATE", "Discourse", "private")
         end
       end
     end

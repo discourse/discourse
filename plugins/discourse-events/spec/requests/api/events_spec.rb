@@ -2,10 +2,11 @@
 require "swagger_helper"
 
 RSpec.describe "events" do
-  before do
+  before do |example|
     Jobs.run_immediately!
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    submit_request(example.metadata) if example.metadata[:submit_request]
   end
 
   path "/discourse-post-event/events.json" do
@@ -202,9 +203,7 @@ RSpec.describe "events" do
 
         fab!(:event) { Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event") }
 
-        before { |example| submit_request(example.metadata) }
-
-        it "returns iCalendar format" do
+        it "returns iCalendar format", :submit_request do
           expect(response.status).to eq(200)
           expect(response.content_type).to include("text/calendar")
           expect(response.body).to include("BEGIN:VCALENDAR")

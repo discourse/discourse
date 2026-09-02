@@ -10,6 +10,19 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
 
   let(:guardian) { Guardian.new }
 
+  let(:requested) { JsonApiKit::Page::Requested.for }
+  let(:users_resource) do
+    related = groups_resource
+
+    Class.new(JsonApiKit::Resource) do
+      model User
+      type :users
+      attribute :username
+      has_many :groups, resource: related
+    end
+  end
+  let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
+
   describe ".new" do
     context "when the readable block declares both a guardian and a record" do
       subject(:relationship) do
@@ -25,18 +38,6 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
       end
     end
   end
-  let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
-  let(:users_resource) do
-    related = groups_resource
-
-    Class.new(JsonApiKit::Resource) do
-      model User
-      type :users
-      attribute :username
-      has_many :groups, resource: related
-    end
-  end
-  let(:requested) { JsonApiKit::Page::Requested.for }
 
   describe "#listing" do
     subject(:related_listing) { relationship.listing(params, guardian:, scoped_to:) }

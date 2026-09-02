@@ -13,13 +13,13 @@ RSpec.describe SsoOverridesEmailValidator do
       end
 
       describe "when val is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should not be valid" do
+        it "is not valid" do
           expect(validator.valid_value?("t")).to eq(false)
 
           expect(validator.error_message).to eq(
@@ -38,13 +38,13 @@ RSpec.describe SsoOverridesEmailValidator do
       end
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("t")).to eq(true)
         end
       end

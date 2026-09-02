@@ -30,7 +30,7 @@ describe "Post translations" do
   end
 
   context "when a post does not have translations" do
-    it "should only show the languages listed in the site setting" do
+    it "onlies show the languages listed in the site setting" do
       post.update!(locale: "en")
 
       topic_page.visit_topic(topic)
@@ -218,7 +218,7 @@ describe "Post translations" do
   end
 
   context "when creating a new post in a different locale" do
-    it "should only show the languages listed in the site setting and default locale and a none value" do
+    it "onlies show the languages listed in the site setting and default locale and a none value" do
       visit("/latest")
       page.find("#create-topic").click
       post_language_selector.expand
@@ -231,7 +231,7 @@ describe "Post translations" do
       )
     end
 
-    it "should allow a user to create a post in a different locale" do
+    it "allows a user to create a post in a different locale" do
       visit("/latest")
       page.find("#create-topic").click
       post_language_selector.expand
@@ -244,7 +244,7 @@ describe "Post translations" do
       expect(updated_post.locale).to eq("fr")
     end
 
-    it "should not have a locale set by default" do
+    it "does not have a locale set by default" do
       visit("/latest")
       page.find("#create-topic").click
       expect(

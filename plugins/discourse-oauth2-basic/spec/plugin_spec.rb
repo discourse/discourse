@@ -2,7 +2,10 @@
 
 describe OAuth2BasicAuthenticator do
   describe "after_authenticate" do
-    before { SiteSetting.oauth2_user_json_url = "https://provider.com/user" }
+    before do
+      SiteSetting.oauth2_user_json_url = "https://provider.com/user"
+      SiteSetting.oauth2_email_verified = true
+    end
 
     let(:user) { Fabricate(:user) }
     let(:authenticator) { OAuth2BasicAuthenticator.new }
@@ -21,8 +24,6 @@ describe OAuth2BasicAuthenticator do
         },
       )
     end
-
-    before(:each) { SiteSetting.oauth2_email_verified = true }
 
     it "finds user by email" do
       authenticator.expects(:fetch_user_details).returns(email: user.email)
@@ -79,7 +80,7 @@ describe OAuth2BasicAuthenticator do
     end
 
     describe "fetch_user_details" do
-      before(:each) do
+      before do
         SiteSetting.oauth2_fetch_user_details = true
         SiteSetting.oauth2_user_json_url = "https://provider.com/user"
         SiteSetting.oauth2_user_json_url_method = "GET"
@@ -92,7 +93,7 @@ describe OAuth2BasicAuthenticator do
 
       let(:fail_response) { { status: 403 } }
 
-      it "works" do
+      it "loads the email with GET and POST requests" do
         stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")
@@ -288,11 +289,6 @@ describe OAuth2BasicAuthenticator do
         Jobs.run_later!
         SiteSetting.oauth2_fetch_user_details = true
         SiteSetting.oauth2_email_verified = true
-      end
-
-      let(:job_klass) { Jobs::DownloadAvatarFromUrl }
-
-      before do
         png =
           Base64.decode64(
             "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
@@ -304,6 +300,8 @@ describe OAuth2BasicAuthenticator do
           },
         )
       end
+
+      let(:job_klass) { Jobs::DownloadAvatarFromUrl }
 
       it "enqueues a download_avatar_from_url job for existing user" do
         authenticator.expects(:fetch_user_details).returns(
@@ -469,7 +467,7 @@ describe OAuth2BasicAuthenticator do
       }
     end
 
-    before(:each) do
+    before do
       SiteSetting.oauth2_callback_user_id_path = "params.info.uuid"
       SiteSetting.oauth2_callback_user_info_paths = "name:params.info.name|email:params.info.email"
     end

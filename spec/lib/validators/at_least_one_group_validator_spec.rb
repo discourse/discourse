@@ -21,7 +21,7 @@ RSpec.describe AtLeastOneGroupValidator do
     context "when using a blank value" do
       before { validator.valid_value?(nil) }
 
-      it do
+      it "explains that a group is required" do
         expect(validator.error_message).to eq(
           "You must specify at least one group for this setting.",
         )

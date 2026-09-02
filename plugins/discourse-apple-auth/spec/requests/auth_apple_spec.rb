@@ -111,7 +111,7 @@ describe "sign in with apple" do
       end
     end
 
-    it "works" do
+    it "authenticates the user with the verified email" do
       # Like an OAuth2 callback, but with some apple-specific stuff per
       # https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
       get "/auth/apple/callback",

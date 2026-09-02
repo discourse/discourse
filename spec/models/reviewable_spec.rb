@@ -42,7 +42,7 @@ RSpec.describe Reviewable, type: :model do
     fab!(:admin)
     fab!(:user)
 
-    it "will return a new reviewable the first them, and re-use the second time" do
+    it "returns a new reviewable the first them, and re-use the second time" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
       expect(r0).to be_present
 
@@ -53,14 +53,14 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
-    it "will add a topic and category from a post" do
+    it "adds a topic and category from a post" do
       post = Fabricate(:post)
       reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: Fabricate(:user))
       expect(reviewable.topic).to eq(post.topic)
       expect(reviewable.category).to eq(post.topic.category)
     end
 
-    it "will update the category if the topic category changes" do
+    it "updates the category if the topic category changes" do
       post = Fabricate(:post)
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
       reviewable = PostActionCreator.spam(moderator, post).reviewable
@@ -96,7 +96,7 @@ RSpec.describe Reviewable, type: :model do
       expect(r0.pending?).to eq(false)
     end
 
-    it "will create a new reviewable when an existing reviewable exists the same target with different type" do
+    it "creates a new reviewable when an existing reviewable exists the same target with different type" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
 
@@ -104,7 +104,7 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
-    it "will not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
+    it "does not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
       expect(r0.reload.status).to eq("approved")
@@ -217,6 +217,11 @@ RSpec.describe Reviewable, type: :model do
       context "as an admin" do
         before { user.update_columns(moderator: false, admin: true) }
 
+        let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+        let(:queued_post) do
+          Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
+        end
+
         it "can filter by the target_created_by_id attribute" do
           different_reviewable = Fabricate(:reviewable)
           reviewables =
@@ -279,28 +284,25 @@ RSpec.describe Reviewable, type: :model do
           expect(list[1].id).to eq(r1.id)
         end
 
-        describe "Including pending queued posts even if they don't pass the minimum priority threshold" do
-          let(:queued_post) do
-            Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
-          end
-          let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+        it "includes low-priority queued posts when searching for pending reviewables" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
 
-          before do
-            SiteSetting.reviewable_default_visibility = :high
-            Reviewable.set_priorities(high: 10)
-          end
+          expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
+        end
 
-          it "includes queued posts when searching for pending reviewables" do
-            expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
-          end
+        it "excludes low-priority queued posts when applying a different status filter" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
 
-          it "excludes pending queued posts when applying a different status filter" do
-            expect(Reviewable.list_for(user, status: :deleted)).to be_empty
-          end
+          expect(Reviewable.list_for(user, status: :deleted)).to be_empty
+        end
 
-          it "excludes pending queued posts when applying a different type filter" do
-            expect(Reviewable.list_for(user, type: ReviewableFlaggedPost.name)).to be_empty
-          end
+        it "excludes low-priority queued posts when applying a different type filter" do
+          SiteSetting.reviewable_default_visibility = :high
+          Reviewable.set_priorities(high: 10)
+
+          expect(Reviewable.list_for(user, type: ReviewableFlaggedPost.name)).to be_empty
         end
       end
     end
@@ -309,6 +311,7 @@ RSpec.describe Reviewable, type: :model do
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
+
       fab!(:moderator)
       fab!(:admin)
 
@@ -680,7 +683,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".score_required_to_hide_post" do
-    it "will return the default visibility if it's higher" do
+    it "returns the default visibility if it's higher" do
       described_class.set_priorities(low: 40.0, high: 100.0)
       SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
       expect(described_class.score_required_to_hide_post).to eq(40.0)
@@ -798,7 +801,7 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.min_score_for_priority(:high)).to eq(123.45)
     end
 
-    it "will return the default priority if none supplied" do
+    it "returns the default priority if none supplied" do
       Reviewable.set_priorities(medium: 12.3, high: 45.6)
       expect(Reviewable.min_score_for_priority).to eq(0.0)
       SiteSetting.reviewable_default_visibility = "medium"
@@ -892,7 +895,7 @@ RSpec.describe Reviewable, type: :model do
     end
 
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do
-      it "should not error" do
+      it "does not error" do
         first_reviewable = Fabricate(:reviewable)
         second_reviewable = Fabricate(:reviewable)
         custom_filter = [

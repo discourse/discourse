@@ -225,11 +225,11 @@ RSpec.describe "tasks/themes" do
 
     let!(:theme) { RemoteTheme.import_theme(initial_repo_url) }
 
-    around(:each) { |group| MockGitImporter.with_mock { group.run } }
+    around { |group| MockGitImporter.with_mock { group.run } }
 
     after { `rm -fr #{initial_repo}` }
 
-    it "should retain a theme's settings and not update the theme when a theme's setting fails to save" do
+    it "retains a theme's settings and not update the theme when a theme's setting fails to save" do
       theme.update_setting(:some_setting, "some setting value")
 
       migration_content = <<~JS
@@ -280,7 +280,7 @@ RSpec.describe "tasks/themes" do
       expect(theme.settings[:string_setting].value).to eq("default value")
     end
 
-    it "should not update the theme if a theme setting migration fails during the update" do
+    it "does not update the theme if a theme setting migration fails during the update" do
       migration_content = <<~JS
       export default function migrate(settings) {
         throw "error";

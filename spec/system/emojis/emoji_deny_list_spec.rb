@@ -4,12 +4,14 @@ describe "Emoji deny list" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
+
   fab!(:admin)
 
   before { sign_in(admin) }
 
   describe "when editing admin settings" do
     before { SiteSetting.emoji_deny_list = "" }
+
     let(:site_settings_page) { PageObjects::Pages::AdminSiteSettings.new }
 
     it "allows admin to update emoji deny list" do
@@ -29,7 +31,7 @@ describe "Emoji deny list" do
     fab!(:topic) { Fabricate(:topic, title: "Time for :monkey: business") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "We have no time to :monkey: around!") }
 
-    it "should remove denied emojis from page title, heading and body" do
+    it "removes denied emojis from page title, heading and body" do
       topic_page.visit_topic(topic)
       expect(page.title).to eq("Time for business - Discourse")
       expect(topic_page).to have_topic_title("Time for business")
@@ -57,7 +59,7 @@ describe "Emoji deny list" do
       expect(emoji_picker).to have_no_emoji(":poop:")
     end
 
-    it "should not show denied emojis and aliases in emoji autocomplete" do
+    it "does not show denied emojis and aliases in emoji autocomplete" do
       topic_page.visit_topic_and_open_composer(topic)
 
       composer.type_content(":poop") # shows no results
@@ -70,7 +72,7 @@ describe "Emoji deny list" do
       expect(composer).to have_no_emoji_suggestion("fu")
     end
 
-    it "should not show denied emoji in preview" do
+    it "does not show denied emoji in preview" do
       topic_page.visit_topic_and_open_composer(topic)
 
       composer.fill_content(":wave:")
@@ -94,7 +96,7 @@ describe "Emoji deny list" do
     end
     fab!(:post) { Fabricate(:post, topic: topic, raw: "Can we use the :monkey: emoji here?") }
 
-    it "should remove denied emojis from message title and body" do
+    it "removes denied emojis from message title and body" do
       topic_page.visit_topic(topic)
       expect(topic_page).to have_topic_title("Want to catch up for today?")
       expect(post).not_to have_css(".emoji[title=':monkey:']")

@@ -126,7 +126,7 @@ RSpec.describe UserNotificationsHelper do
 
       before { SiteSetting.logo = upload }
 
-      it "should return the right URL" do
+      it "returns the right URL" do
         expect(helper.logo_url).to eq(
           "http://test.localhost/#{upload_path}/original/1X/somesha1.png",
         )
@@ -137,7 +137,7 @@ RSpec.describe UserNotificationsHelper do
           GlobalSetting.expects(:cdn_url).returns("https://some.localcdn.com").at_least_once
         end
 
-        it "should return the right URL" do
+        it "returns the right URL" do
           expect(helper.logo_url).to eq(
             "https://some.localcdn.com/#{upload_path}/original/1X/somesha1.png",
           )
@@ -147,7 +147,7 @@ RSpec.describe UserNotificationsHelper do
       describe "when logo is an SVG" do
         let(:upload) { Fabricate(:upload, extension: "svg") }
 
-        it "should return nil" do
+        it "returns nil" do
           expect(helper.logo_url).to eq(nil)
         end
       end
@@ -161,14 +161,14 @@ RSpec.describe UserNotificationsHelper do
         SiteSetting.logo = upload
       end
 
-      it "should return the right URL" do
+      it "returns the right URL" do
         expect(helper.logo_url).to eq(
           "http://s3-upload-bucket.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/original/1X/somesha1.png",
         )
       end
 
       describe "when global cdn path is configured" do
-        it "should return the right url" do
+        it "returns the right url" do
           GlobalSetting.stubs(:cdn_url).returns("https://some.cdn.com/cluster")
 
           expect(helper.logo_url).to eq(
@@ -180,7 +180,7 @@ RSpec.describe UserNotificationsHelper do
       describe "when cdn path is configured" do
         before { SiteSetting.s3_cdn_url = "https://some.cdn.com" }
 
-        it "should return the right url" do
+        it "returns the right url" do
           expect(helper.logo_url).to eq("https://some.cdn.com/original/1X/somesha1.png")
         end
       end

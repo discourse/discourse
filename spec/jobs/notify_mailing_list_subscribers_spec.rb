@@ -5,8 +5,8 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
   before do
     mailing_list_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+    SiteSetting.tagging_enabled = true
   end
-  before { SiteSetting.tagging_enabled = true }
 
   fab!(:tag)
   fab!(:topic) { Fabricate(:topic, tags: [tag]) }
@@ -40,6 +40,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
   context "when mailing list mode is globally disabled" do
     before { SiteSetting.disable_mailing_list_mode = true }
+
     include_examples "no emails"
   end
 
@@ -53,31 +54,37 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
         User.update_all(approved: false)
       end
+
       include_examples "no emails"
     end
 
     context "with an invalid post_id" do
       before { post.destroy! }
+
       include_examples "no emails"
     end
 
     context "with a deleted post" do
       before { post.trash! }
+
       include_examples "no emails"
     end
 
     context "with a empty post" do
       before { post.update_columns(raw: "") }
+
       include_examples "no emails"
     end
 
     context "with a user_deleted post" do
       before { post.update(user_deleted: true) }
+
       include_examples "no emails"
     end
 
     context "with a deleted topic" do
       before { post.topic.update(deleted_at: Time.now) }
+
       include_examples "no emails"
     end
 
@@ -87,22 +94,26 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
         TopicAllowedUser.create(topic: post.topic, user: mailing_list_user)
         post.topic.reload
       end
+
       include_examples "no emails"
     end
 
     context "with a valid post from another user" do
       context "when to an inactive user" do
         before { mailing_list_user.update(active: false) }
+
         include_examples "no emails"
       end
 
       context "when to a silenced user" do
         before { mailing_list_user.update(silenced_till: 1.year.from_now) }
+
         include_examples "no emails"
       end
 
       context "when to a suspended user" do
         before { mailing_list_user.update(suspended_till: 1.day.from_now) }
+
         include_examples "no emails"
       end
 
@@ -113,26 +124,31 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
       context "when to an user who has disabled mailing list mode" do
         before { mailing_list_user.user_option.update(mailing_list_mode: false) }
+
         include_examples "no emails"
       end
 
       context "when to an user who has frequency set to 'always'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 1) }
+
         include_examples "one email"
       end
 
       context "when to an user who has frequency set to 'no echo'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 2) }
+
         include_examples "one email"
       end
 
       context "when from a muted user" do
         before { MutedUser.create(user: mailing_list_user, muted_user: user) }
+
         include_examples "no emails"
       end
 
       context "when from an ignored user" do
         before { Fabricate(:ignored_user, user: mailing_list_user, ignored_user: user) }
+
         include_examples "no emails"
       end
 
@@ -144,6 +160,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: TopicUser.notification_levels[:muted],
           )
         end
+
         include_examples "no emails"
       end
 
@@ -155,11 +172,13 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: CategoryUser.notification_levels[:muted],
           )
         end
+
         include_examples "no emails"
       end
 
       context "with mute all categories by default setting" do
         before { SiteSetting.mute_all_categories_by_default = true }
+
         include_examples "no emails"
       end
 
@@ -172,6 +191,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: CategoryUser.notification_levels[:watching],
           )
         end
+
         include_examples "one email"
       end
 
@@ -184,6 +204,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: TagUser.notification_levels[:watching],
           )
         end
+
         include_examples "one email"
       end
 
@@ -196,6 +217,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: TopicUser.notification_levels[:watching],
           )
         end
+
         include_examples "one email"
       end
 
@@ -207,6 +229,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
             notification_level: TagUser.notification_levels[:muted],
           )
         end
+
         include_examples "no emails"
       end
 
@@ -276,16 +299,19 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
 
       context "when to an user who has frequency set to 'daily'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 0) }
+
         include_examples "no emails"
       end
 
       context "when to an user who has frequency set to 'always'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 1) }
+
         include_examples "one email"
       end
 
       context "when to an user who has frequency set to 'no echo'" do
         before { mailing_list_user.user_option.update(mailing_list_mode_frequency: 2) }
+
         include_examples "no emails"
       end
     end

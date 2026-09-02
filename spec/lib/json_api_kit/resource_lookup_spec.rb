@@ -52,7 +52,7 @@ RSpec.describe JsonApiKit::ResourceLookup do
   context "when the resource doesn’t exist" do
     let(:declaration) { :author }
 
-    it do
+    it "raises a missing-resource error with the attempted names" do
       expect { found }.to raise_error(
         described_class::MissingResource,
         "SpecLookup::QueryResource: no resource is named author, " \
@@ -70,7 +70,7 @@ RSpec.describe JsonApiKit::ResourceLookup do
   context "with another kind of class" do
     let(:declaration) { Topic }
 
-    it do
+    it "rejects non-resource classes" do
       expect { found }.to raise_error(
         described_class::UnsupportedResource,
         "SpecLookup::QueryResource: Topic is not a JSON:API resource",
@@ -81,7 +81,7 @@ RSpec.describe JsonApiKit::ResourceLookup do
   context "with a name matching another kind of class" do
     let(:declaration) { :spec_impostor }
 
-    it do
+    it "rejects names resolving to non-resource classes" do
       expect { found }.to raise_error(
         described_class::UnsupportedResource,
         "SpecLookup::QueryResource: SpecImpostorResource is not a JSON:API resource",

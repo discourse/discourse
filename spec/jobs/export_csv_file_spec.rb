@@ -1,6 +1,46 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ExportCsvFile do
+  let(:user_list_export) do
+    exported_data = []
+    Jobs::ExportCsvFile.new.user_list_export { |entry| exported_data << entry }
+    exported_data
+  end
+  let(:user_list_header) do
+    %w[
+      id
+      name
+      username
+      email
+      title
+      created_at
+      last_seen_at
+      last_posted_at
+      last_emailed_at
+      trust_level
+      approved
+      suspended_at
+      suspended_till
+      blocked
+      active
+      admin
+      moderator
+      ip_address
+      staged
+      secondary_emails
+      topics_entered
+      posts_read_count
+      time_read
+      topic_count
+      post_count
+      likes_given
+      likes_received
+      location
+      website
+      views
+    ]
+  end
+
   describe "#execute" do
     let(:other_user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
@@ -49,7 +89,7 @@ RSpec.describe Jobs::ExportCsvFile do
       end
     end
 
-    it "works" do
+    it "exports staff actions and sends a download message" do
       action_log
 
       begin
@@ -463,47 +503,6 @@ RSpec.describe Jobs::ExportCsvFile do
       exporter.report_export { |entry| report << entry }
       report
     end
-  end
-
-  let(:user_list_header) do
-    %w[
-      id
-      name
-      username
-      email
-      title
-      created_at
-      last_seen_at
-      last_posted_at
-      last_emailed_at
-      trust_level
-      approved
-      suspended_at
-      suspended_till
-      blocked
-      active
-      admin
-      moderator
-      ip_address
-      staged
-      secondary_emails
-      topics_entered
-      posts_read_count
-      time_read
-      topic_count
-      post_count
-      likes_given
-      likes_received
-      location
-      website
-      views
-    ]
-  end
-
-  let(:user_list_export) do
-    exported_data = []
-    Jobs::ExportCsvFile.new.user_list_export { |entry| exported_data << entry }
-    exported_data
   end
 
   def to_hash(row)

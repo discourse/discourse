@@ -30,7 +30,7 @@ RSpec.describe Users::AssociateAccountsController do
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
 
-    it "should work correctly" do
+    it "works correctly" do
       sign_in(user)
 
       # Reconnect flow:
@@ -70,7 +70,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(404)
     end
 
-    it "should only work within the current session" do
+    it "onlies work within the current session" do
       sign_in(user)
 
       post "/auth/google_oauth2?reconnect=true"

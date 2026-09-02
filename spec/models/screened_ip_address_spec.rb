@@ -116,7 +116,7 @@ RSpec.describe ScreenedIpAddress do
 
   describe "#watch" do
     context "when ip_address is not being watched" do
-      it "should create a new record" do
+      it "creates a new record" do
         record = described_class.watch(ip_address)
         expect(record).not_to be_new_record
         expect(record.action_type).to eq(described_class.actions[:block])
@@ -142,7 +142,7 @@ RSpec.describe ScreenedIpAddress do
 
     context "when ip_address is already being watched" do
       shared_examples "exact match of ip address" do
-        it "should not create a new record" do
+        it "does not create a new record" do
           expect { described_class.watch(ip_address_arg) }.to_not change { described_class.count }
         end
 
@@ -154,21 +154,22 @@ RSpec.describe ScreenedIpAddress do
       context "when using exact match" do
         fab!(:existing, :screened_ip_address)
         let(:ip_address_arg) { existing.ip_address }
+
         include_examples "exact match of ip address"
       end
 
-      context "when using subnet mask 255.255.255.0" do
+      context "when using an exact address with subnet mask 255.255.255.0" do
         fab!(:existing) { Fabricate(:screened_ip_address, ip_address: "99.232.23.124/24") }
+        let(:ip_address_arg) { "99.232.23.124" }
 
-        context "with exact address" do
-          let(:ip_address_arg) { "99.232.23.124" }
-          include_examples "exact match of ip address"
-        end
+        include_examples "exact match of ip address"
+      end
 
-        context "with address in same subnet" do
-          let(:ip_address_arg) { "99.232.23.135" }
-          include_examples "exact match of ip address"
-        end
+      context "with an address in the same subnet" do
+        fab!(:existing) { Fabricate(:screened_ip_address, ip_address: "99.232.23.124/24") }
+        let(:ip_address_arg) { "99.232.23.135" }
+
+        include_examples "exact match of ip address"
       end
     end
 

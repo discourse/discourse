@@ -21,7 +21,7 @@ RSpec.describe Discourse do
   describe "running_in_rack" do
     after { ENV.delete("DISCOURSE_RUNNING_IN_RACK") }
 
-    it "should not be running in rack" do
+    it "is not running in rack" do
       expect(Discourse.running_in_rack?).to eq(false)
       ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
       expect(Discourse.running_in_rack?).to eq(true)
@@ -174,17 +174,16 @@ RSpec.describe Discourse do
       end
     end
 
-    before { Discourse.plugins.append(plugin1, plugin2) }
+    before do
+      Discourse.plugins.append(plugin1, plugin2)
+      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
+      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
+    end
 
     after do
       Discourse.plugins.delete plugin1
       Discourse.plugins.delete plugin2
       DiscoursePluginRegistry.reset!
-    end
-
-    before do
-      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
-      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
     end
 
     it "can find plugins correctly" do
@@ -447,13 +446,13 @@ RSpec.describe Discourse do
 
       after { Discourse.reset_job_exception_stats! }
 
-      it "should not fail on incorrectly shaped hash" do
+      it "does not fail on incorrectly shaped hash" do
         expect do
           Discourse.handle_job_exception(FakeTestError.new, { job: "test" })
         end.to raise_error(FakeTestError)
       end
 
-      it "should collect job exception stats" do
+      it "collects job exception stats" do
         # see MiniScheduler Manager which reports it like this
         # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
         exception_context = {
@@ -487,7 +486,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "should not fail when called" do
+    it "does not fail when called" do
       exception = StandardError.new
 
       expect do Discourse.handle_job_exception(exception, nil, nil) end.to raise_error(
@@ -682,11 +681,6 @@ RSpec.describe Discourse do
       setup_s3
       SiteSetting.s3_cdn_url = "https://s3.cdn.com/gg"
       stub_s3_store
-    end
-
-    let!(:theme) { Fabricate(:theme) }
-    let!(:upload) { Fabricate(:s3_image_upload) }
-    let!(:upload_theme_field) do
       Fabricate(
         :theme_field,
         theme: theme,
@@ -696,8 +690,7 @@ RSpec.describe Discourse do
         name: "imajee",
         value: "",
       )
-    end
-    let!(:basic_html_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -710,8 +703,7 @@ RSpec.describe Discourse do
           </script>
         HTML
       )
-    end
-    let!(:js_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -722,8 +714,7 @@ RSpec.describe Discourse do
           console.log(settings.uploads.imajee);
         JS
       )
-    end
-    let!(:scss_field) do
+
       Fabricate(
         :theme_field,
         theme: theme,
@@ -735,6 +726,9 @@ RSpec.describe Discourse do
         SCSS
       )
     end
+
+    let!(:theme) { Fabricate(:theme) }
+    let!(:upload) { Fabricate(:s3_image_upload) }
 
     it "invalidates all theme settings and CSS caches" do
       Stylesheet::Manager.clear_theme_cache!

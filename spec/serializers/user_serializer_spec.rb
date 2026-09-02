@@ -81,6 +81,7 @@ RSpec.describe UserSerializer do
     fab!(:user)
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 
@@ -321,6 +322,7 @@ RSpec.describe UserSerializer do
 
     describe "second_factor_enabled" do
       let(:scope) { Guardian.new(user) }
+
       it "is false by default" do
         expect(json[:second_factor_enabled]).to eq(false)
       end

@@ -48,38 +48,36 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
       it { is_expected.to fail_a_policy(:invalid_access) }
     end
 
-    context "when params are valid" do
-      it { is_expected.to run_successfully }
+    it { is_expected.to run_successfully }
 
-      it "publishes new last read to clients" do
-        messages = MessageBus.track_publish { result }
-        expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+    it "publishes new last read to clients" do
+      messages = MessageBus.track_publish { result }
+      expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+    end
+
+    context "when the user is a member of the thread" do
+      fab!(:membership) do
+        Fabricate(:user_chat_thread_membership, user: current_user, thread: thread)
       end
 
-      context "when the user is a member of the thread" do
-        fab!(:membership) do
-          Fabricate(:user_chat_thread_membership, user: current_user, thread: thread)
-        end
+      it "updates the last_read_message_id of the thread" do
+        expect { result }.to change { membership.reload.last_read_message_id }.from(nil).to(
+          reply_1.id,
+        )
+      end
 
-        it "updates the last_read_message_id of the thread" do
-          expect { result }.to change { membership.reload.last_read_message_id }.from(nil).to(
-            reply_1.id,
-          )
-        end
+      context "when the provided last read id is before the existing one" do
+        fab!(:reply_2) { Fabricate(:chat_message, thread: thread) }
 
-        context "when the provided last read id is before the existing one" do
-          fab!(:reply_2) { Fabricate(:chat_message, thread: thread) }
+        before { thread.membership_for(current_user).update!(last_read_message_id: reply_2.id) }
 
-          before { thread.membership_for(current_user).update!(last_read_message_id: reply_2.id) }
+        it { is_expected.to fail_a_policy(:ensure_valid_message) }
+      end
 
-          it { is_expected.to fail_a_policy(:ensure_valid_message) }
-        end
-
-        context "when the message doesn’t exist" do
-          it "fails" do
-            params[:message_id] = 999
-            is_expected.to fail_to_find_a_model(:message)
-          end
+      context "when the message doesn’t exist" do
+        it "fails to find the message" do
+          params[:message_id] = 999
+          is_expected.to fail_to_find_a_model(:message)
         end
       end
     end

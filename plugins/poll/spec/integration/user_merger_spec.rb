@@ -24,7 +24,7 @@ RSpec.describe UserMerger do
     Fabricate(:poll_option, poll: poll_ranked_choice, html: "Option C")
   end
 
-  it "will end up with no votes from source user" do
+  it "ends up with no votes from source user" do
     Fabricate(:poll_vote, poll: poll_regular, user: source_user, poll_option: poll_regular_option2)
     Fabricate(
       :poll_vote,
@@ -38,7 +38,7 @@ RSpec.describe UserMerger do
     expect(PollVote.where(user: source_user).count).to eq(0)
   end
 
-  it "will not use source user's vote if target_user already voted in the same poll" do
+  it "does not use source user's vote if target_user already voted in the same poll" do
     Fabricate(:poll_vote, poll: poll_regular, user: target_user, poll_option: poll_regular_option1)
     Fabricate(:poll_vote, poll: poll_regular, user: source_user, poll_option: poll_regular_option2)
 
@@ -69,7 +69,7 @@ RSpec.describe UserMerger do
     )
   end
 
-  it "will use source user's vote if poll was the ranked choice type" do
+  it "uses source user's vote if poll was the ranked choice type" do
     Fabricate(
       :poll_vote,
       poll: poll_ranked_choice,

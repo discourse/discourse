@@ -94,7 +94,7 @@ RSpec.describe ReviewableScore, type: :model do
       expect(ReviewableScore.user_accuracy_bonus(user)).to eq(0.0)
     end
 
-    it "returns 0 for a user with no flags" do
+    it "returns 0 for a system user" do
       system_user = Discourse.system_user
       stats = system_user.user_stat
 

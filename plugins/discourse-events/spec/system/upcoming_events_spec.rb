@@ -234,7 +234,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events with localized times" do
       describe "with local time enabled" do
         it "displays multiple occurrences with correct local time",
            timezone: "Australia/Brisbane",
@@ -367,7 +367,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring event end dates" do
       it "displays recurring events until the specified end date",
          time: Time.utc(2025, 6, 2, 19, 00) do
         post =
@@ -437,35 +437,53 @@ describe "Upcoming Events" do
   end
 
   describe "calendar navigation and views" do
-    describe "navigation buttons" do
-      describe "today button" do
-        it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
-          visit("/upcoming-events/month/2025/8/1")
+    describe "today button" do
+      it "navigates to current date", time: Time.utc(2025, 6, 2, 19, 00) do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.today
+
+        upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
+      end
+
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
+          visit("/upcoming-events/day/2025/8/1")
 
           upcoming_events.today
 
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/6/1")
-        end
-
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
-            visit("/upcoming-events/day/2025/8/1")
-
-            upcoming_events.today
-
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/6/2")
-          end
+          upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/6/2")
         end
       end
+    end
 
-      describe "next button" do
-        it "navigates to next month" do
-          visit("/upcoming-events/month/2025/8/1")
+    describe "next button" do
+      it "navigates to next month" do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.next
+
+        expect(page).to have_content("September 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/9/1")
+      end
+
+      it "navigates to next week" do
+        visit("/upcoming-events/week/2025/8/4")
+
+        upcoming_events.next
+
+        expect(page).to have_content("Aug 11 – 17, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
+      end
+
+      context "in different timezone", timezone: "Europe/London" do
+        it "navigates to next day" do
+          visit("/upcoming-events/day/2025/8/4")
 
           upcoming_events.next
 
-          expect(page).to have_content("September 2025")
-          upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/9/1")
+          expect(page).to have_content("August 5, 2025")
+          upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/8/5")
         end
 
         it "navigates to next week" do
@@ -476,29 +494,38 @@ describe "Upcoming Events" do
           expect(page).to have_content("Aug 11 – 17, 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
         end
+      end
+    end
 
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to next day" do
-            visit("/upcoming-events/day/2025/8/4")
+    describe "prev button" do
+      it "navigates to previous day" do
+        visit("/upcoming-events/day/2025/8/1")
 
-            upcoming_events.next
+        upcoming_events.prev
 
-            expect(page).to have_content("August 5, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/8/5")
-          end
-
-          it "navigates to next week" do
-            visit("/upcoming-events/week/2025/8/4")
-
-            upcoming_events.next
-
-            expect(page).to have_content("Aug 11 – 17, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/8/11")
-          end
-        end
+        expect(page).to have_content("July 31, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
       end
 
-      describe "prev button" do
+      it "navigates to previous month" do
+        visit("/upcoming-events/month/2025/8/1")
+
+        upcoming_events.prev
+
+        expect(page).to have_content("July 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
+      end
+
+      it "navigates to previous week" do
+        visit("/upcoming-events/week/2025/8/4")
+
+        upcoming_events.prev
+
+        expect(page).to have_content("Jul 28 – Aug 3, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
+      end
+
+      context "in different timezone", timezone: "Europe/London" do
         it "navigates to previous day" do
           visit("/upcoming-events/day/2025/8/1")
 
@@ -525,88 +552,59 @@ describe "Upcoming Events" do
           expect(page).to have_content("Jul 28 – Aug 3, 2025")
           upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
         end
+      end
+    end
 
-        context "in different timezone", timezone: "Europe/London" do
-          it "navigates to previous day" do
-            visit("/upcoming-events/day/2025/8/1")
+    describe "event duration display" do
+      context "with recurring event" do
+        it "displays longer events with appropriate visual height in time grid view",
+           time: Time.utc(2025, 6, 2, 19, 00) do
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
+            title: "This is a short meeting",
+            raw:
+              "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+          )
 
-            upcoming_events.prev
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
+            title: "This is a long workshop",
+            raw:
+              "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+          )
 
-            expect(page).to have_content("July 31, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/7/31")
-          end
+          upcoming_events.visit
+          visit("/upcoming-events/week/2025/6/2")
 
-          it "navigates to previous month" do
-            visit("/upcoming-events/month/2025/8/1")
-
-            upcoming_events.prev
-
-            expect(page).to have_content("July 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/month/2025/7/1")
-          end
-
-          it "navigates to previous week" do
-            visit("/upcoming-events/week/2025/8/4")
-
-            upcoming_events.prev
-
-            expect(page).to have_content("Jul 28 – Aug 3, 2025")
-            upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/7/28")
-          end
+          expect(upcoming_events).to have_event_height("This is a short meeting", 47)
+          expect(upcoming_events).to have_event_height("This is a long workshop", 143)
         end
       end
 
-      describe "event duration display" do
-        context "with recurring event" do
-          it "displays longer events with appropriate visual height in time grid view",
-             time: Time.utc(2025, 6, 2, 19, 00) do
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a short meeting",
-              raw:
-                "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-            )
+      context "with non recurring event" do
+        it "displays longer events with appropriate visual height in time grid view",
+           time: Time.utc(2025, 6, 2, 19, 00) do
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
+            title: "This is a short meeting",
+            raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+          )
 
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a long workshop",
-              raw:
-                "[event recurrence=\"every_week\" start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-            )
+          create_post(
+            user: admin,
+            category: Fabricate(:category),
+            title: "This is a long workshop",
+            raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
+          )
 
-            upcoming_events.visit
-            visit("/upcoming-events/week/2025/6/2")
+          upcoming_events.visit
+          visit("/upcoming-events/week/2025/6/2")
 
-            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
-            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
-          end
-        end
-
-        context "with non recurring event" do
-          it "displays longer events with appropriate visual height in time grid view",
-             time: Time.utc(2025, 6, 2, 19, 00) do
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a short meeting",
-              raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
-            )
-
-            create_post(
-              user: admin,
-              category: Fabricate(:category),
-              title: "This is a long workshop",
-              raw: "[event start=\"2025-06-03 14:00\" end=\"2025-06-03 17:00\"]\n[/event]",
-            )
-
-            upcoming_events.visit
-            visit("/upcoming-events/week/2025/6/2")
-
-            expect(upcoming_events).to have_event_height("This is a short meeting", 47)
-            expect(upcoming_events).to have_event_height("This is a long workshop", 143)
-          end
+          expect(upcoming_events).to have_event_height("This is a short meeting", 47)
+          expect(upcoming_events).to have_event_height("This is a long workshop", 143)
         end
       end
     end

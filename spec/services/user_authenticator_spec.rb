@@ -21,7 +21,7 @@ RSpec.describe UserAuthenticator do
 
   describe "#start" do
     describe "without authentication session" do
-      it "should apply the right user attributes" do
+      it "applies the right user attributes" do
         user = User.new
         UserAuthenticator.new(user, {}).start
 

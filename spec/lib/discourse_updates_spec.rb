@@ -46,6 +46,7 @@ RSpec.describe DiscourseUpdates do
     context "when a good version check request happened recently" do
       context "when server is up-to-date" do
         let(:time) { 12.hours.ago }
+
         before { stub_data(Discourse::VERSION::STRING, 0, time) }
 
         it "returns all the version fields" do
@@ -62,6 +63,7 @@ RSpec.describe DiscourseUpdates do
 
       context "when server is not up-to-date" do
         let(:time) { 12.hours.ago }
+
         before { stub_data("0.9.0", 2, time) }
 
         it "returns all the version fields" do
@@ -117,11 +119,13 @@ RSpec.describe DiscourseUpdates do
 
       context "when installed is latest" do
         before { stub_data(Discourse::VERSION::STRING, 1, 8.hours.ago) }
+
         include_examples "queue version check and report that version is ok"
       end
 
       context "when installed does not match latest version, but missing_versions_count is 0" do
         before { stub_data("0.10.10.123", 0, 8.hours.ago) }
+
         include_examples "queue version check and report that version is ok"
       end
     end
@@ -146,11 +150,13 @@ RSpec.describe DiscourseUpdates do
 
     context "when missing_versions_count is 0" do
       before { stub_data("0.9.7", 0, 8.hours.ago) }
+
       include_examples "when last_installed_version is old"
     end
 
     context "when missing_versions_count is not 0" do
       before { stub_data("0.9.7", 1, 8.hours.ago) }
+
       include_examples "when last_installed_version is old"
     end
   end
@@ -182,7 +188,7 @@ RSpec.describe DiscourseUpdates do
       ]
     end
 
-    before(:each) do
+    before do
       stub_permanent_upcoming_changes!([])
 
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"

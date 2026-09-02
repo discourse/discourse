@@ -24,9 +24,9 @@ describe Post do
     end
   end
 
-  it("should ignore vote_count") { expect(Post.ignored_columns.include?("vote_count")).to eq(true) }
+  it("ignores vote_count") { expect(Post.ignored_columns.include?("vote_count")).to eq(true) }
 
-  it "should return last voted correctly" do
+  it "returns last voted correctly" do
     freeze_time do
       expect(post.post_voting_last_voted(user1.id)).to eq(nil)
 
@@ -36,7 +36,7 @@ describe Post do
     end
   end
 
-  it "should return post_voting_can_vote correctly" do
+  it "returns post_voting_can_vote correctly" do
     expect(post.post_voting_can_vote(user1.id, PostVotingVote.directions[:up])).to eq(true)
 
     PostVoting::VoteManager.vote(post, user1)

@@ -4,7 +4,7 @@ RSpec.describe UserExport do
   fab!(:user)
 
   describe ".remove_old_exports" do
-    it "should remove the right records" do
+    it "removes the right records" do
       csv_file_1 = Fabricate(:upload, created_at: 3.days.ago)
       topic_1 = Fabricate(:topic, created_at: 3.days.ago)
       post_1 = Fabricate(:post, topic: topic_1)
@@ -41,7 +41,7 @@ RSpec.describe UserExport do
   end
 
   describe "#retain_hours" do
-    it "should return the correct number of hours" do
+    it "returns the correct number of hours" do
       csv_file_1 = Fabricate(:upload, created_at: 1.day.ago)
       topic_1 = Fabricate(:topic, created_at: 1.day.ago)
       Fabricate(:post, topic: topic_1)

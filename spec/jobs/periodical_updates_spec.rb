@@ -8,7 +8,7 @@ RSpec.describe Jobs::PeriodicalUpdates do
     )
   end
 
-  it "works" do
+  it "runs all periodic updates without errors" do
     # does not blow up, no mocks, everything is called
     Jobs::PeriodicalUpdates.new.execute(nil)
   end

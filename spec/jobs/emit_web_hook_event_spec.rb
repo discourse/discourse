@@ -26,7 +26,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     )
   end
 
-  it "should not destroy webhook event in case of error" do
+  it "does not destroy webhook event in case of error" do
     stub_request(:post, post_hook.payload_url).to_return(status: 500)
 
     job.execute(
@@ -351,6 +351,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
           headers
         end
       end
+
       it "Allows for header modifications" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)

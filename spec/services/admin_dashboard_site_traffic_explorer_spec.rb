@@ -35,7 +35,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       ]
     end
 
-    let!(:pageviews) do
+    before do
       browsers.each_with_index do |browser, index|
         Fabricate(
           :browser_pageview_event,
@@ -49,9 +49,6 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
           created_at: Time.zone.local(2026, 5, 10, 10, index),
         )
       end
-    end
-
-    before do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       SiteSetting.improved_crawler_detection = true
       SiteSetting.persist_browser_pageview_events = true

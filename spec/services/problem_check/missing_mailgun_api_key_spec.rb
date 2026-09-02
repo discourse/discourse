@@ -31,7 +31,7 @@ RSpec.describe ProblemCheck::MissingMailgunApiKey do
       let(:mailgun_address) { "smtp.mailgun.org" }
       let(:api_key) { nil }
 
-      it do
+      it "reports the missing Mailgun API key" do
         expect(check).to have_a_problem.with_priority("low").with_message(
           "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages.",
         )

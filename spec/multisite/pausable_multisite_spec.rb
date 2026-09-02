@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
+  after { Sidekiq.unpause_all! }
+
   describe "#pause!, #unpause! and #paused?" do
     it "can pause and unpause" do
       Sidekiq.pause!
@@ -24,10 +26,6 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
       RailsMultisite::ConnectionManagement.each_connection { expect(Sidekiq.paused?).to eq(false) }
     end
   end
-end
-
-RSpec.describe Sidekiq::Pausable, type: :multisite do
-  after { Sidekiq.unpause_all! }
 
   describe "when sidekiq is paused" do
     let(:middleware) { Sidekiq::Pausable.new }
@@ -40,7 +38,7 @@ RSpec.describe Sidekiq::Pausable, type: :multisite do
       ) { yield }
     end
 
-    it "should delay the job" do
+    it "delays the job" do
       Sidekiq.pause!
 
       called = false

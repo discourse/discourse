@@ -7,14 +7,15 @@ RSpec.describe BackfillThemeableSiteSettings do
   fab!(:theme_2, :theme)
   fab!(:theme_3) { Fabricate(:theme, component: true) }
 
-  before do
-    @original_verbose = ActiveRecord::Migration.verbose
+  around do |example|
+    original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    example.run
+  ensure
+    ActiveRecord::Migration.verbose = original_verbose
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
-
-  it "works" do
+  it "backfills themeable site settings for each theme" do
     DB.exec(
       "INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
       VALUES ('enable_welcome_banner', :data_type, :value, NOW(), NOW())",

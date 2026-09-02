@@ -15,6 +15,7 @@ RSpec.describe ExternalUploadManager do
   let(:external_upload_stub_metadata) { {} }
   let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
   let(:s3_bucket_name) { SiteSetting.s3_upload_bucket }
+  let(:fake_s3) { FakeS3.create }
 
   before do
     SiteSetting.authorized_extensions += "|pdf"
@@ -73,8 +74,8 @@ RSpec.describe ExternalUploadManager do
         it "copies the stubbed upload on S3 to its new destination and deletes it" do
           upload = manager.transform!
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-          expect(@fake_s3.operation_called?(:copy_object)).to eq(true)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(fake_s3.operation_called?(:copy_object)).to eq(true)
           expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
@@ -119,40 +120,33 @@ RSpec.describe ExternalUploadManager do
         it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
           upload = manager.transform!
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(fake_s3.operation_called?(:copy_object)).to eq(false)
           expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
       end
 
-      context "when the sha has been set on the s3 object metadata by the clientside JS" do
+      context "when the downloaded file SHA does not match the client SHA in S3 metadata" do
         let(:external_upload_stub_metadata) { { "sha1-checksum" => client_sha1 } }
+        let(:client_sha1) { "blahblah" }
 
-        context "when the downloaded file sha1 does not match the client sha1" do
-          let(:client_sha1) { "blahblah" }
+        it "raises an error, deletes the stub" do
+          expect { manager.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+          expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
 
-          it "raises an error, deletes the stub" do
-            expect { manager.transform! }.to raise_error(
-              ExternalUploadManager::ChecksumMismatchError,
-            )
-            expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(bucket.find_object(external_upload_stub.key)).to be_nil
+        end
 
-            bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-            expect(bucket.find_object(external_upload_stub.key)).to be_nil
-          end
+        it "does not delete the stub if enable_upload_debug_mode" do
+          SiteSetting.enable_upload_debug_mode = true
+          expect { manager.transform! }.to raise_error(ExternalUploadManager::ChecksumMismatchError)
+          external_stub = ExternalUploadStub.find(external_upload_stub.id)
+          expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
 
-          it "does not delete the stub if enable_upload_debug_mode" do
-            SiteSetting.enable_upload_debug_mode = true
-            expect { manager.transform! }.to raise_error(
-              ExternalUploadManager::ChecksumMismatchError,
-            )
-            external_stub = ExternalUploadStub.find(external_upload_stub.id)
-            expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
-
-            bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-            expect(bucket.find_object(external_upload_stub.key)).to be_present
-          end
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(bucket.find_object(external_upload_stub.key)).to be_present
         end
       end
 
@@ -170,7 +164,7 @@ RSpec.describe ExternalUploadManager do
             ),
           ).to eq("1")
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
 
@@ -180,7 +174,7 @@ RSpec.describe ExternalUploadManager do
           external_stub = ExternalUploadStub.find(external_upload_stub.id)
           expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
           expect(bucket.find_object(external_upload_stub.key)).to be_present
         end
       end
@@ -220,7 +214,7 @@ RSpec.describe ExternalUploadManager do
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
         upload = manager.transform!
 
-        bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+        bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
         expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
         expect(bucket.find_object(external_upload_stub.key)).to be_nil
       end
@@ -265,7 +259,7 @@ RSpec.describe ExternalUploadManager do
       end
 
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
-        bucket = @fake_s3.bucket(SiteSetting.s3_backup_bucket)
+        bucket = fake_s3.bucket(SiteSetting.s3_backup_bucket)
         expect(bucket.find_object(external_upload_stub.key)).to be_present
 
         manager.transform!
@@ -295,9 +289,7 @@ RSpec.describe ExternalUploadManager do
   end
 
   def prepare_fake_s3
-    @fake_s3 = FakeS3.create
-
-    @fake_s3.bucket(s3_bucket_name).put_object(
+    fake_s3.bucket(s3_bucket_name).put_object(
       key: external_upload_stub.key,
       size: object_size,
       last_modified: Time.zone.now,

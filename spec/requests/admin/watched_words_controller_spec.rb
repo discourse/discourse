@@ -73,13 +73,13 @@ RSpec.describe Admin::WatchedWordsController do
     context "when logged in as staff user" do
       before { sign_in(admin) }
 
-      it "should return the right response when given an invalid id param" do
+      it "returns the right response when given an invalid id param" do
         delete "/admin/customize/watched_words/9999.json"
 
         expect(response.status).to eq(400)
       end
 
-      it "should be able to delete a watched word" do
+      it "is able to delete a watched word" do
         delete "/admin/customize/watched_words/#{watched_word.id}.json"
 
         expect(response.status).to eq(200)
@@ -87,7 +87,7 @@ RSpec.describe Admin::WatchedWordsController do
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
       end
 
-      it "should delete watched word group if it's the last word" do
+      it "deletes watched word group if it's the last word" do
         watched_word_group = Fabricate(:watched_word_group)
         watched_word = watched_word_group.watched_words.first
 
@@ -228,7 +228,7 @@ RSpec.describe Admin::WatchedWordsController do
         Fabricate(:tag, name: "tag3")
       end
 
-      it "creates the words from the file" do
+      it "creates flagging words from the file" do
         post "/admin/customize/watched_words/upload.json",
              params: {
                action_key: "flag",
@@ -251,7 +251,7 @@ RSpec.describe Admin::WatchedWordsController do
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(6)
       end
 
-      it "creates the words from the file" do
+      it "creates tag-replacement words from the file" do
         post "/admin/customize/watched_words/upload.json",
              params: {
                action_key: "tag",

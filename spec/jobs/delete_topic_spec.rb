@@ -18,7 +18,7 @@ RSpec.describe Jobs::DeleteTopic do
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
 
-  it "should do nothing if topic is already deleted" do
+  it "does nothing if topic is already deleted" do
     first_post
     topic.trash!
 
@@ -28,7 +28,7 @@ RSpec.describe Jobs::DeleteTopic do
     described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
   end
 
-  it "should do nothing if it's too early" do
+  it "does nothing if it's too early" do
     t = Fabricate(:topic_timer, user: admin, execute_at: 5.hours.from_now).topic
     create_post(topic: t)
 
@@ -41,7 +41,7 @@ RSpec.describe Jobs::DeleteTopic do
   describe "user isn't authorized to delete topics" do
     let(:topic) { Fabricate(:topic_timer, user: Fabricate(:user)).topic }
 
-    it "shouldn't delete the topic" do
+    it "does not delete the topic" do
       create_post(topic: topic)
 
       freeze_time 2.hours.from_now

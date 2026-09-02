@@ -11,32 +11,33 @@ RSpec.describe Scheduler::Defer do
     sleep 0.001 while Time.now < till && !blk.call
   end
 
+  let(:defer_instance) { DeferInstance.new }
+
   before do
     Discourse.catch_job_exceptions!
-    @defer = DeferInstance.new
-    @defer.async = true
+    defer_instance.async = true
   end
 
   after do
-    @defer.stop!
+    defer_instance.stop!
     Discourse.reset_catch_job_exceptions!
   end
 
   it "can finish work properly without crashing" do
-    @defer.later {}
+    defer_instance.later {}
     sleep 0.005
-    @defer.stop!(finish_work: true)
+    defer_instance.stop!(finish_work: true)
   end
 
   it "supports basic instrumentation" do
-    @defer.later("first") {}
-    @defer.later("first") {}
-    @defer.later("second") {}
-    @defer.later("bad") { raise "boom" }
+    defer_instance.later("first") {}
+    defer_instance.later("first") {}
+    defer_instance.later("second") {}
+    defer_instance.later("bad") { raise "boom" }
 
-    @defer.stop!(finish_work: true)
+    defer_instance.stop!(finish_work: true)
 
-    stats = Hash[@defer.stats]
+    stats = Hash[defer_instance.stats]
 
     expect(stats["first"][:queued]).to eq(2)
     expect(stats["first"][:finished]).to eq(2)
@@ -55,13 +56,13 @@ RSpec.describe Scheduler::Defer do
   end
 
   it "supports timeout reporting" do
-    @defer.timeout = 0.05
+    defer_instance.timeout = 0.05
 
     logger =
       track_log_messages do |l|
-        10.times { @defer.later("fast job") {} }
+        10.times { defer_instance.later("fast job") {} }
 
-        @defer.later "weird slow job" do
+        defer_instance.later "weird slow job" do
           sleep
         end
 
@@ -76,19 +77,19 @@ RSpec.describe Scheduler::Defer do
 
   it "can pause and resume" do
     x = 1
-    @defer.pause
+    defer_instance.pause
 
-    @defer.later { x = 2 }
+    defer_instance.later { x = 2 }
 
-    expect(@defer.length).to eq(1)
+    expect(defer_instance.length).to eq(1)
 
-    @defer.do_all_work
+    defer_instance.do_all_work
 
     expect(x).to eq(2)
 
-    @defer.resume
+    defer_instance.resume
 
-    @defer.later { x = 3 }
+    defer_instance.later { x = 3 }
 
     wait_for(2000) { x == 3 }
 
@@ -97,12 +98,12 @@ RSpec.describe Scheduler::Defer do
 
   it "recovers from a crash / fork" do
     s = nil
-    @defer.stop!
-    wait_for(1000) { @defer.stopped? }
+    defer_instance.stop!
+    wait_for(1000) { defer_instance.stopped? }
     # hack allow thread to die
     sleep 0.005
 
-    @defer.later { s = "good" }
+    defer_instance.later { s = "good" }
 
     wait_for(1000) { s == "good" }
 
@@ -111,8 +112,8 @@ RSpec.describe Scheduler::Defer do
 
   it "can queue jobs properly" do
     s = nil
-    @defer.later { s = "good" }
-    @defer.stop!(finish_work: true)
+    defer_instance.later { s = "good" }
+    defer_instance.stop!(finish_work: true)
     expect(s).to eq("good")
   end
 
@@ -121,7 +122,7 @@ RSpec.describe Scheduler::Defer do
     let!(:responses) { Thread::Queue.new }
 
     def later(db, current_user, request)
-      @defer.later(nil, db, current_user: current_user) do
+      defer_instance.later(nil, db, current_user: current_user) do
         ivar.value
         responses.push([db, current_user, request])
       end

@@ -70,7 +70,7 @@ RSpec.describe Jobs do
         Jobs.enqueue(:process_post, post_id: 1)
       end
 
-      it "should enqueue with the correct database id when the current_site_id option is given" do
+      it "enqueues with the correct database id when the current_site_id option is given" do
         Sidekiq::Testing.fake! do
           jobs = Jobs::ProcessPost.jobs
 
@@ -113,7 +113,7 @@ RSpec.describe Jobs do
           Jobs::ProcessPost.any_instance.stubs(:execute).returns(true)
         end
 
-        it "should raise an exception" do
+        it "raises an exception" do
           Jobs::ProcessPost.any_instance.expects(:execute).never
           RailsMultisite::ConnectionManagement.expects(:establish_connection).never
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailAddressValidator do
-  it "should match valid emails" do
+  it "matches valid emails" do
     [
       "test@discourse.org",
       "good_user@discourse.org",
@@ -10,7 +10,7 @@ RSpec.describe EmailAddressValidator do
     ].each { |email| expect(EmailAddressValidator.valid_value?(email)).to eq(true) }
   end
 
-  it "should not match invalid emails" do
+  it "does not match invalid emails" do
     [
       "testdiscourse.org",
       "frank@invalid_host.contoso.com",

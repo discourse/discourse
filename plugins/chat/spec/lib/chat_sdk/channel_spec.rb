@@ -23,7 +23,7 @@ describe ChatSDK::Channel do
     context "when guardian can't see the channel" do
       fab!(:channel_1, :private_category_channel)
 
-      it "fails" do
+      it "raises an error" do
         params[:guardian] = Fabricate(:user).guardian
 
         expect { described_class.messages(**params) }.to raise_error("Guardian can't view channel")
@@ -31,7 +31,7 @@ describe ChatSDK::Channel do
     end
 
     context "when target_message doesn't exist" do
-      it "fails" do
+      it "raises an error" do
         expect { described_class.messages(**params, target_message_id: -999) }.to raise_error(
           "Target message doesn't exist",
         )
@@ -39,7 +39,7 @@ describe ChatSDK::Channel do
     end
 
     context "when direction is invalid" do
-      it "fails" do
+      it "raises an error" do
         expect { described_class.messages(**params, direction: "invalid") }.to raise_error(
           "Direction is not included in the list",
         )
@@ -65,7 +65,7 @@ describe ChatSDK::Channel do
     end
 
     context "when the channel doesn't exist" do
-      it "fails" do
+      it "raises an error" do
         params[:channel_id] = -999
 
         expect { described_class.start_reply(**params) }.to raise_error(
@@ -75,7 +75,7 @@ describe ChatSDK::Channel do
     end
 
     context "when the thread doesn't exist" do
-      it "fails" do
+      it "raises an error" do
         params[:thread_id] = -999
 
         expect { described_class.start_reply(**params) }.to raise_error(
@@ -113,7 +113,7 @@ describe ChatSDK::Channel do
     end
 
     context "when the channel doesn't exist" do
-      it "fails" do
+      it "raises an error" do
         params[:channel_id] = -999
 
         expect { described_class.stop_reply(**params) }.to raise_error(
@@ -123,7 +123,7 @@ describe ChatSDK::Channel do
     end
 
     context "when the thread doesn't exist" do
-      it "fails" do
+      it "raises an error" do
         params[:thread_id] = -999
 
         expect { described_class.stop_reply(**params) }.to raise_error(

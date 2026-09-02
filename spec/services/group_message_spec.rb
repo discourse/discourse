@@ -15,7 +15,7 @@ RSpec.describe GroupMessage do
   describe "not sent recently" do
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(false) }
 
-    it "should send a private message to the given group" do
+    it "sends a private message to the given group" do
       PostCreator
         .expects(:create)
         .with do |from_user, opts|
@@ -50,7 +50,7 @@ RSpec.describe GroupMessage do
 
     it { is_expected.to eq(false) }
 
-    it "should not send the same notification again" do
+    it "does not send the same notification again" do
       PostCreator.expects(:create).never
       group_message
     end

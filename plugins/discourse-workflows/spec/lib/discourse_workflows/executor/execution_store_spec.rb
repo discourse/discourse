@@ -59,6 +59,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       )
       expect(messages.first.data.to_json).not_to include("not published")
     end
+
     it "publishes terminal state after persistence" do
       execution = store.start!
 

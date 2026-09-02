@@ -63,7 +63,7 @@ RSpec.describe SchemaSettingsObjectValidator do
   end
 
   describe ".validate_objects" do
-    it "should return the right array of humanized error messages for objects that are invalid" do
+    it "returns the right array of humanized error messages for objects that are invalid" do
       schema = {
         name: "section",
         properties: {
@@ -133,7 +133,7 @@ RSpec.describe SchemaSettingsObjectValidator do
   end
 
   describe "#validate" do
-    it "should return the right hash of error messages when properties are required but missing" do
+    it "returns the right hash of error messages when properties are required but missing" do
       schema = {
         name: "section",
         properties: {
@@ -231,13 +231,13 @@ RSpec.describe SchemaSettingsObjectValidator do
         property
       end
 
-      it "should not return any error messages when the value of the property is in the enum" do
+      it "does not return any error messages when the value of the property is in the enum" do
         expect(
           described_class.new(schema: schema, object: { enum_property: "choice 1" }).validate,
         ).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not in the enum" do
+      it "returns the right hash of error messages when value of property is not in the enum" do
         errors =
           described_class.new(schema: schema, object: { enum_property: "random_value" }).validate
 
@@ -248,11 +248,11 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should not return any error messages when enum property is not present but is not required" do
+      it "does not return any error messages when enum property is not present but is not required" do
         expect(described_class.new(schema: schema(required: false), object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when enum property is not present and is required" do
+      it "returns the right hash of error messages when enum property is not present and is required" do
         errors = described_class.new(schema: schema(required: true), object: {}).validate
 
         expect(errors.keys).to eq(["/enum_property"])
@@ -264,7 +264,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for boolean properties" do
       let(:schema) { { name: "section", properties: { boolean_property: { type: "boolean" } } } }
 
-      it "should not return any error messages when the value of the property is of type boolean" do
+      it "does not return any error messages when the value of the property is of type boolean" do
         expect(
           described_class.new(schema: schema, object: { boolean_property: true }).validate,
         ).to eq({})
@@ -274,7 +274,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not of type boolean" do
+      it "returns the right hash of error messages when value of property is not of type boolean" do
         errors =
           described_class.new(schema: schema, object: { boolean_property: "string" }).validate
 
@@ -286,7 +286,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for float properties" do
       let(:schema) { { name: "section", properties: { float_property: { type: "float" } } } }
 
-      it "should not return any error messages when the value of the property is of type integer or float" do
+      it "does not return any error messages when the value of the property is of type integer or float" do
         expect(described_class.new(schema: schema, object: { float_property: 1.5 }).validate).to eq(
           {},
         )
@@ -296,11 +296,11 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -316,14 +316,14 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/float_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not of type float" do
+      it "returns the right hash of error messages when value of property is not of type float" do
         errors = described_class.new(schema: schema, object: { float_property: "string" }).validate
 
         expect(errors.keys).to eq(["/float_property"])
         expect(errors["/float_property"].full_messages).to contain_exactly("must be a float")
       end
 
-      it "should return the right hash of error messages when integer property does not satisfy min or max validations" do
+      it "returns the right hash of error messages when integer property does not satisfy min or max validations" do
         schema = {
           name: "section",
           properties: {
@@ -358,17 +358,17 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for integer properties" do
       let(:schema) { { name: "section", properties: { integer_property: { type: "integer" } } } }
 
-      it "should not return any error messages when the value of the property is of type integer" do
+      it "does not return any error messages when the value of the property is of type integer" do
         expect(described_class.new(schema: schema, object: { integer_property: 1 }).validate).to eq(
           {},
         )
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -384,7 +384,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/integer_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not of type integer" do
+      it "returns the right hash of error messages when value of property is not of type integer" do
         errors =
           described_class.new(schema: schema, object: { integer_property: "string" }).validate
 
@@ -397,7 +397,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/integer_property"].full_messages).to contain_exactly("must be an integer")
       end
 
-      it "should not return any error messages when the value of the integer property satisfies min and max validations" do
+      it "does not return any error messages when the value of the integer property satisfies min and max validations" do
         schema = {
           name: "section",
           properties: {
@@ -416,7 +416,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when integer property does not satisfy min or max validations" do
+      it "returns the right hash of error messages when integer property does not satisfy min or max validations" do
         schema = {
           name: "section",
           properties: {
@@ -451,17 +451,17 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for string properties" do
       let(:schema) { { name: "section", properties: { string_property: { type: "string" } } } }
 
-      it "should not return any error messages when the value of the property is of type string" do
+      it "does not return any error messages when the value of the property is of type string" do
         expect(
           described_class.new(schema: schema, object: { string_property: "string" }).validate,
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -477,7 +477,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not of type string" do
+      it "returns the right hash of error messages when value of property is not of type string" do
         schema = { name: "section", properties: { string_property: { type: "string" } } }
         errors = described_class.new(schema: schema, object: { string_property: 1 }).validate
 
@@ -485,7 +485,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
       end
 
-      it "should not return an empty hash when string property satisfy url validation" do
+      it "does not return an empty hash when string property satisfy url validation" do
         schema = {
           name: "section",
           properties: {
@@ -517,7 +517,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should return the right hash of error messages when string property does not statisfy url validation" do
+      it "returns the right hash of error messages when string property does not statisfy url validation" do
         schema = {
           name: "section",
           properties: {
@@ -537,7 +537,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be a valid URL")
       end
 
-      it "should not return any error messages when the value of the string property satisfies min_length and max_length validations" do
+      it "does not return any error messages when the value of the string property satisfies min_length and max_length validations" do
         schema = {
           name: "section",
           properties: {
@@ -556,7 +556,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should return the right hash of error messages when string property does not satisfy min_length or max_length validations" do
+      it "returns the right hash of error messages when string property does not satisfy min_length or max_length validations" do
         schema = {
           name: "section",
           properties: {
@@ -590,7 +590,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     end
 
     context "for topic properties" do
-      it "should not return any error message when the value of the property is a valid id of a topic record" do
+      it "does not return any error message when the value of the property is a valid id of a topic record" do
         topic = Fabricate(:topic)
 
         schema = { name: "section", properties: { topic_property: { type: "topic" } } }
@@ -600,12 +600,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { topic_property: { type: "topic" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -621,7 +621,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/topic_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
+      it "returns the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { topic_property: { type: "topic" } } }
 
         errors = described_class.new(schema: schema, object: { topic_property: "string" }).validate
@@ -633,7 +633,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a topic record" do
+      it "returns the right hash of error messages when value of property is not a valid id of a topic record" do
         schema = {
           name: "section",
           properties: {
@@ -682,7 +682,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     end
 
     context "for upload properties" do
-      it "should not return any error message when the value of the property is a valid id of a upload record" do
+      it "does not return any error message when the value of the property is a valid id of a upload record" do
         upload = Fabricate(:upload)
 
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
@@ -692,12 +692,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -713,7 +713,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/upload_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
+      it "returns the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
 
         errors = described_class.new(schema: schema, object: { upload_property: "string" }).validate
@@ -725,7 +725,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value is an invalid URL string" do
+      it "returns the right hash of error messages when value is an invalid URL string" do
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
 
         errors =
@@ -743,7 +743,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a upload record" do
+      it "returns the right hash of error messages when value of property is not a valid id of a upload record" do
         schema = {
           name: "section",
           properties: {
@@ -796,7 +796,7 @@ RSpec.describe SchemaSettingsObjectValidator do
       fab!(:tag_2, :tag)
       fab!(:tag_3, :tag)
 
-      it "should not return any error message when the value of the property is an array of valid tag names" do
+      it "does not return any error message when the value of the property is an array of valid tag names" do
         schema = { name: "section", properties: { tags_property: { type: "tags" } } }
 
         expect(
@@ -809,12 +809,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { tags_property: { type: "tags" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -830,7 +830,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/tags_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an array of tag names" do
+      it "returns the right hash of error messages when value of property is not an array of tag names" do
         schema = { name: "section", properties: { tags_property: { type: "tags" } } }
 
         errors = described_class.new(schema: schema, object: { tags_property: "string" }).validate
@@ -842,7 +842,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when number of tag names does not satisfy min or max validations" do
+      it "returns the right hash of error messages when number of tag names does not satisfy min or max validations" do
         schema = {
           name: "section",
           properties: {
@@ -879,7 +879,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property contain tag names which are invalid" do
+      it "returns the right hash of error messages when value of property contain tag names which are invalid" do
         schema = {
           name: "section",
           properties: {
@@ -930,7 +930,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     end
 
     context "for groups properties" do
-      it "should not return any error message when the value of the property is an array of valid group record ids" do
+      it "does not return any error message when the value of the property is an array of valid group record ids" do
         group = Fabricate(:group)
 
         schema = { name: "section", properties: { groups_property: { type: "groups" } } }
@@ -940,12 +940,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { groups_property: { type: "groups" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -961,7 +961,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/groups_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an array of valid group ids" do
+      it "returns the right hash of error messages when value of property is not an array of valid group ids" do
         schema = { name: "section", properties: { groups_property: { type: "groups" } } }
 
         errors = described_class.new(schema: schema, object: { groups_property: "string" }).validate
@@ -973,7 +973,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when number of groups ids does not satisfy min or max validations" do
+      it "returns the right hash of error messages when number of groups ids does not satisfy min or max validations" do
         group_1 = Fabricate(:group)
         group_2 = Fabricate(:group)
         group_3 = Fabricate(:group)
@@ -1014,7 +1014,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property is an array containing invalid group ids" do
+      it "returns the right hash of error messages when value of property is an array containing invalid group ids" do
         schema = {
           name: "section",
           properties: {
@@ -1063,7 +1063,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     end
 
     context "for post properties" do
-      it "should not return any error message when the value of the property is a valid id of a post record" do
+      it "does not return any error message when the value of the property is a valid id of a post record" do
         post = Fabricate(:post)
 
         schema = { name: "section", properties: { post_property: { type: "post" } } }
@@ -1073,12 +1073,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { post_property: { type: "post" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -1094,7 +1094,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/post_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
+      it "returns the right hash of error messages when value of property is not an integer" do
         schema = { name: "section", properties: { post_property: { type: "post" } } }
 
         errors = described_class.new(schema: schema, object: { post_property: "string" }).validate
@@ -1104,7 +1104,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/post_property"].full_messages).to contain_exactly("must be a valid post id")
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a post record" do
+      it "returns the right hash of error messages when value of property is not a valid id of a post record" do
         schema = {
           name: "section",
           properties: {
@@ -1156,7 +1156,7 @@ RSpec.describe SchemaSettingsObjectValidator do
       fab!(:category_1, :category)
       fab!(:category_2, :category)
 
-      it "should not return any error message when the value of the property is an array of valid category ids" do
+      it "does not return any error message when the value of the property is an array of valid category ids" do
         schema = { name: "section", properties: { category_property: { type: "categories" } } }
 
         expect(
@@ -1169,12 +1169,12 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         schema = { name: "section", properties: { category_property: { type: "categories" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is present but empty and it's required" do
+      it "returns the right hash of error messages when value of property is present but empty and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -1190,7 +1190,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -1206,7 +1206,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property contains an array where not all values are integers" do
+      it "returns the right hash of error messages when value of property contains an array where not all values are integers" do
         schema = { name: "section", properties: { category_property: { type: "categories" } } }
 
         errors =
@@ -1219,7 +1219,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when number of category ids does not satisfy min or max validations" do
+      it "returns the right hash of error messages when number of category ids does not satisfy min or max validations" do
         schema = {
           name: "section",
           properties: {
@@ -1242,7 +1242,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property is not an array of valid category ids" do
+      it "returns the right hash of error messages when value of property is not an array of valid category ids" do
         schema = {
           name: "section",
           properties: {
@@ -1304,7 +1304,7 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for datetime properties" do
       let(:schema) { { name: "section", properties: { datetime_property: { type: "datetime" } } } }
 
-      it "should not return any error messages when the value of the property is a valid UTC datetime" do
+      it "does not return any error messages when the value of the property is a valid UTC datetime" do
         expect(
           described_class.new(
             schema: schema,
@@ -1324,7 +1324,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is an ISO 8601 datetime with timezone offset" do
+      it "does not return any error messages when the value is an ISO 8601 datetime with timezone offset" do
         expect(
           described_class.new(
             schema: schema,
@@ -1335,17 +1335,17 @@ RSpec.describe SchemaSettingsObjectValidator do
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should not return any error messages when the value is an empty string and it's not required" do
+      it "does not return any error messages when the value is an empty string and it's not required" do
         expect(
           described_class.new(schema: schema, object: { datetime_property: "" }).validate,
         ).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -1361,7 +1361,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/datetime_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not a valid datetime" do
+      it "returns the right hash of error messages when value of property is not a valid datetime" do
         errors =
           described_class.new(
             schema: schema,
@@ -1376,7 +1376,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value is a date-only string" do
+      it "returns the right hash of error messages when value is a date-only string" do
         errors =
           described_class.new(schema: schema, object: { datetime_property: "2024-12-29" }).validate
 
@@ -1386,7 +1386,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value is datetime without timezone" do
+      it "returns the right hash of error messages when value is datetime without timezone" do
         errors =
           described_class.new(
             schema: schema,
@@ -1401,7 +1401,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when value of property is not a string" do
+      it "returns the right hash of error messages when value of property is not a string" do
         errors = described_class.new(schema: schema, object: { datetime_property: 123 }).validate
 
         expect(errors.keys).to eq(["/datetime_property"])
@@ -1414,17 +1414,17 @@ RSpec.describe SchemaSettingsObjectValidator do
     context "for icon properties" do
       let(:schema) { { name: "section", properties: { icon_property: { type: "icon" } } } }
 
-      it "should not return any error messages when the value of the property is of type string" do
+      it "does not return any error messages when the value of the property is of type string" do
         expect(
           described_class.new(schema: schema, object: { icon_property: "heart" }).validate,
         ).to eq({})
       end
 
-      it "should not return any error messages when the value is not present and it's not required in the schema" do
+      it "does not return any error messages when the value is not present and it's not required in the schema" do
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
-      it "should return the right hash of error messages when value of property is not present and it's required" do
+      it "returns the right hash of error messages when value of property is not present and it's required" do
         schema = {
           name: "section",
           properties: {
@@ -1440,7 +1440,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(errors["/icon_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not of type icon" do
+      it "returns the right hash of error messages when value of property is not of type icon" do
         errors = described_class.new(schema: schema, object: { icon_property: 1 }).validate
 
         expect(errors.keys).to eq(["/icon_property"])

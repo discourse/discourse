@@ -5,6 +5,7 @@ describe "Assign | Bulk Assign" do
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   let(:topic_list_header) { PageObjects::Components::TopicListHeader.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
+
   fab!(:staff_user) { Fabricate(:user, groups: [Group[:staff]]) }
   fab!(:admin)
   fab!(:assignable_group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }

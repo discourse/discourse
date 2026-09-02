@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe "translate accelerator" do
+  let(:original_i18n_load_path) { I18n.load_path.dup }
+
   before do
-    @original_i18n_load_path = I18n.load_path.dup
+    original_i18n_load_path
     I18n.load_path += Dir["#{Rails.root.join("spec/fixtures/i18n/translate_accelerator.*.yml")}"]
     I18n.reload!
   end
 
   after do
-    I18n.load_path = @original_i18n_load_path
+    I18n.load_path = original_i18n_load_path
     I18n.reload!
   end
 
@@ -68,7 +70,7 @@ RSpec.describe "translate accelerator" do
   end
 
   describe ".overrides_by_locale" do
-    it "should cache overrides for each locale" do
+    it "caches overrides for each locale" do
       override_translation("en", "got", "summer")
       override_translation("zh_TW", "got", "冬季")
 
@@ -269,7 +271,7 @@ RSpec.describe "translate accelerator" do
 
     context "with existing translations in current locale and fallback locale" do
       context "with overrides in both locales" do
-        it "should return the override from the current locale" do
+        it "returns the override from the current locale" do
           override_translation("de", "foo", "Override of foo in :de")
           override_translation("en", "foo", "Override of foo in :en")
           translation_should_equal("foo", "Override of foo in :de")
@@ -277,21 +279,21 @@ RSpec.describe "translate accelerator" do
       end
 
       context "with override only in current locale" do
-        it "should return the override from the current locale" do
+        it "returns the override from the current locale" do
           override_translation("de", "foo", "Override of foo in :de")
           translation_should_equal("foo", "Override of foo in :de")
         end
       end
 
       context "with override only in fallback locale" do
-        it "should return the translation from the current locale" do
+        it "returns the translation from the current locale" do
           override_translation("en", "foo", "Override of foo in :en")
           translation_should_equal("foo", "Foo in :de")
         end
       end
 
       context "with no overrides" do
-        it "should return the translation from the current locale" do
+        it "returns the translation from the current locale" do
           translation_should_equal("foo", "Foo in :de")
         end
       end
@@ -299,7 +301,7 @@ RSpec.describe "translate accelerator" do
 
     context "with existing translation in fallback locale" do
       context "with overrides in both locales" do
-        it "should return the override from the current locale" do
+        it "returns the override from the current locale" do
           override_translation("de", "fish", "Override of fish in :de")
           override_translation("en", "fish", "Override of fish in :en")
           translation_should_equal("fish", "Override of fish in :de")
@@ -307,21 +309,21 @@ RSpec.describe "translate accelerator" do
       end
 
       context "with override only in current locale" do
-        it "should return the override from the current locale" do
+        it "returns the override from the current locale" do
           override_translation("de", "fish", "Override of fish in :de")
           translation_should_equal("fish", "Override of fish in :de")
         end
       end
 
       context "with override only in fallback locale" do
-        it "should return the translation from the current locale" do
+        it "returns the translation from the current locale" do
           override_translation("en", "fish", "Override of fish in :en")
           translation_should_equal("fish", "Override of fish in :en")
         end
       end
 
       context "with no overrides" do
-        it "should return the translation from the fallback locale" do
+        it "returns the translation from the fallback locale" do
           translation_should_equal("fish", "original fish")
         end
       end

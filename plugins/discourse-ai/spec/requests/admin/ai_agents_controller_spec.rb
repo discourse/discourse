@@ -276,12 +276,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response.parsed_body["ai_agent"]["name"]).to eq(ai_agent.name)
     end
 
-    it "supports ai-agents edit endpoint and payload root" do
-      get "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}/edit.json"
-      expect(response).to be_successful
-      expect(response.parsed_body["ai_agent"]["name"]).to eq(ai_agent.name)
-    end
-
     it "includes rag uploads for each agent" do
       upload = Fabricate(:upload)
       RagDocumentFragment.link_target_and_uploads(ai_agent, [upload.id])
@@ -935,7 +929,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
     end
   end
 
-  describe "DELETE #destroy" do
+  context "when deleting a child agent" do
     it "removes the deleted agent from parent subagent IDs" do
       child = Fabricate(:ai_agent)
       parent = Fabricate(:ai_agent, subagent_ids: [child.id])

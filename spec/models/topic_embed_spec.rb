@@ -14,6 +14,7 @@ RSpec.describe TopicEmbed do
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)
@@ -159,13 +160,13 @@ RSpec.describe TopicEmbed do
         expect(post.reload.cook_method).to eq(Post.cook_methods[:regular])
       end
 
-      it "Should leave uppercase Feed Entry URL untouched in content" do
+      it "leaves uppercase Feed Entry URL untouched in content" do
         cased_url = "http://eviltrout.com/ABCD"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "Should leave lowercase Feed Entry URL untouched in content" do
+      it "leaves lowercase Feed Entry URL untouched in content" do
         cased_url = "http://eviltrout.com/abcd"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
@@ -208,33 +209,38 @@ RSpec.describe TopicEmbed do
         before { SiteSetting.import_embed_unlisted = true }
 
         include_examples "topic is unlisted"
+      end
 
-        context "when embed unlisted is false" do
-          before { SiteSetting.embed_unlisted = false }
+      context "when import embed unlisted is true and embed unlisted is false" do
+        before do
+          SiteSetting.import_embed_unlisted = true
+          SiteSetting.embed_unlisted = false
+        end
 
-          include_examples "topic is unlisted"
+        include_examples "topic is unlisted"
+      end
+
+      context "when import embed unlisted and embed unlisted are false" do
+        before do
+          SiteSetting.import_embed_unlisted = false
+          SiteSetting.embed_unlisted = false
+        end
+
+        it "lists the topic" do
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+          expect(imported_post.topic).to be_visible
         end
       end
 
-      context "when import embed unlisted is false" do
-        before { SiteSetting.import_embed_unlisted = false }
-
-        context "when embed unlisted is false" do
-          before { SiteSetting.embed_unlisted = false }
-
-          it "lists the topic" do
-            Jobs.run_immediately!
-            imported_post =
-              TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-            expect(imported_post.topic).to be_visible
-          end
+      context "when import embed unlisted is false and embed unlisted is true" do
+        before do
+          SiteSetting.import_embed_unlisted = false
+          SiteSetting.embed_unlisted = true
         end
 
-        context "when embed unlisted is true" do
-          before { SiteSetting.embed_unlisted = true }
-
-          include_examples "topic is unlisted"
-        end
+        include_examples "topic is unlisted"
       end
 
       it "creates the topic in the category passed as a parameter" do
@@ -330,7 +336,7 @@ RSpec.describe TopicEmbed do
           expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
         end
 
-        it "will revert to defaults if the modifier returns nil" do
+        it "reverts to defaults if the modifier returns nil" do
           plugin = Plugin::Instance.new
           plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
 
@@ -664,7 +670,7 @@ RSpec.describe TopicEmbed do
         '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>'
       end
 
-      before(:each) { stub_request(:get, url).to_return(status: 200, body: contents) }
+      before { stub_request(:get, url).to_return(status: 200, body: contents) }
 
       it "has no author tag" do
         response = TopicEmbed.find_remote(url)
@@ -681,7 +687,7 @@ RSpec.describe TopicEmbed do
       end
       let(:response) { TopicEmbed.find_remote(url) }
 
-      before(:each) do
+      before do
         SiteSetting.allowed_embed_classnames = ""
         stub_request(:get, url).to_return(status: 200, body: contents)
       end
@@ -913,6 +919,7 @@ RSpec.describe TopicEmbed do
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) { "<p>hello world new post :D</p>" }
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)

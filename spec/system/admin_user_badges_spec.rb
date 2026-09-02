@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 describe "Admin User Badges Page" do
-  before { SiteSetting.enable_badges = true }
+  before do
+    SiteSetting.enable_badges = true
+    sign_in(granter)
+  end
 
   fab!(:granter, :admin)
   fab!(:user)
   fab!(:badge, :manually_grantable_badge)
   let(:user_badges_page) { PageObjects::Pages::AdminUserBadges.new }
-
-  before { sign_in(granter) }
 
   it "displays badge granter and links to their profile" do
     BadgeGranter.grant(badge, user, granted_by: granter)

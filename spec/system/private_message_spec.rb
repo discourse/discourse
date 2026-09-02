@@ -25,7 +25,7 @@ describe "Private Message" do
   context "for 'new personal message' action option in composer" do
     before { sign_in(sender) }
 
-    it "should be available in new topic" do
+    it "is available in new topic" do
       visit "/new-topic"
       expect(composer).to be_opened
 
@@ -35,7 +35,7 @@ describe "Private Message" do
       expect(composer.button_label).to have_text(I18n.t("js.composer.create_pm"))
     end
 
-    it "should not be available in private conversation reply" do
+    it "is not available in private conversation reply" do
       visit(pm_post.full_url)
 
       pm_post_obj.reply

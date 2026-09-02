@@ -185,37 +185,23 @@ RSpec.describe Email::MessageBuilder do
           )
         end
 
-        context "for private_reply to regular users" do
-          let(:other_opts) do
-            { private_reply: true, username: "someguy", only_reply_by_email: true }
-          end
-
-          it "includes the correct instructions" do
-            expect(builder.template_args[:respond_instructions]).to eq(
-              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t("user_notifications.only_reply_by_email_pm", builder.template_args),
-            )
-          end
+        it "includes private-reply instructions for regular users" do
+          other_opts.merge!(private_reply: true, username: "someguy")
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t("user_notifications.only_reply_by_email_pm", builder.template_args),
+          )
         end
 
-        context "for private_reply to system users" do
-          let(:other_opts) do
-            {
-              private_reply: true,
-              username: Discourse.system_user.username,
-              only_reply_by_email: true,
-            }
-          end
-
-          it "only includes a button for respond_instructions" do
-            expect(builder.template_args[:respond_instructions]).to eq(
-              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t(
-                  "user_notifications.only_reply_by_email_pm_button_only",
-                  builder.template_args,
-                ),
-            )
-          end
+        it "only includes a private-reply button for system users" do
+          other_opts.merge!(private_reply: true, username: Discourse.system_user.username)
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t(
+                "user_notifications.only_reply_by_email_pm_button_only",
+                builder.template_args,
+              ),
+          )
         end
       end
 
@@ -238,29 +224,23 @@ RSpec.describe Email::MessageBuilder do
           )
         end
 
-        context "for private_reply to regular users" do
-          let(:other_opts) { { private_reply: true, username: "someguy" } }
-
-          it "includes the correct instructions" do
-            expect(builder.template_args[:respond_instructions]).to eq(
-              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t("user_notifications.visit_link_to_respond_pm", builder.template_args),
-            )
-          end
+        it "includes private-reply link instructions for regular users" do
+          other_opts.merge!(private_reply: true, username: "someguy")
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t("user_notifications.visit_link_to_respond_pm", builder.template_args),
+          )
         end
 
-        context "for private_reply to system users" do
-          let(:other_opts) { { private_reply: true, username: Discourse.system_user.username } }
-
-          it "only includes a button for respond_instructions" do
-            expect(builder.template_args[:respond_instructions]).to eq(
-              Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t(
-                  "user_notifications.visit_link_to_respond_pm_button_only",
-                  builder.template_args,
-                ),
-            )
-          end
+        it "only includes a private-reply link button for system users" do
+          other_opts.merge!(private_reply: true, username: Discourse.system_user.username)
+          expect(builder.template_args[:respond_instructions]).to eq(
+            Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
+              I18n.t(
+                "user_notifications.visit_link_to_respond_pm_button_only",
+                builder.template_args,
+              ),
+          )
         end
       end
     end
@@ -650,6 +630,13 @@ RSpec.describe Email::MessageBuilder do
   end
 
   describe "from field" do
+    let(:custom_aliased_from) do
+      Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog", from: finn_email)
+    end
+    let(:aliased_from) { Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog") }
+    let(:custom_from) { Email::MessageBuilder.new(to_address, from: finn_email).build_args }
+    let(:finn_email) { "finn@adventuretime.ooo" }
+
     it "has the default from" do
       SiteSetting.title = ""
       expect(build_args[:from]).to eq(SiteSetting.notification_email)
@@ -660,23 +647,14 @@ RSpec.describe Email::MessageBuilder do
       expect(build_args[:from]).to eq("\"Dog Talk\" <#{SiteSetting.notification_email}>")
     end
 
-    let(:finn_email) { "finn@adventuretime.ooo" }
-    let(:custom_from) { Email::MessageBuilder.new(to_address, from: finn_email).build_args }
-
     it "allows us to override from" do
       expect(custom_from[:from]).to eq(finn_email)
     end
-
-    let(:aliased_from) { Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog") }
 
     it "allows us to alias the from address" do
       expect(aliased_from.build_args[:from]).to eq(
         "\"Finn the Dog\" <#{SiteSetting.notification_email}>",
       )
-    end
-
-    let(:custom_aliased_from) do
-      Email::MessageBuilder.new(to_address, from_alias: "Finn the Dog", from: finn_email)
     end
 
     it "allows us to alias a custom from address" do

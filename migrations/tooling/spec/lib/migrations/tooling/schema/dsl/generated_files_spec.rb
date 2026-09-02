@@ -48,9 +48,11 @@ RSpec.describe Migrations::Tooling::Schema::DSL::GeneratedFiles do
   end
 
   describe ".stale_paths" do
+    let(:generated_files_context) { {} }
+
     around do |example|
       Dir.mktmpdir do |dir|
-        @root = dir
+        generated_files_context[:root] = dir
         FileUtils.mkdir_p(File.join(dir, "lib/models"))
         FileUtils.mkdir_p(File.join(dir, "lib/enums"))
         example.run
@@ -58,13 +60,14 @@ RSpec.describe Migrations::Tooling::Schema::DSL::GeneratedFiles do
     end
 
     def write(relative, contents)
-      File.write(File.join(@root, relative), contents)
+      File.write(File.join(generated_files_context.fetch(:root), relative), contents)
     end
 
     def stale
       config = output_config
-      expected = described_class.expected_paths(definition, config, @root)
-      described_class.stale_paths(config, @root, expected)
+      root = generated_files_context.fetch(:root)
+      expected = described_class.expected_paths(definition, config, root)
+      described_class.stale_paths(config, root, expected)
     end
 
     it "returns generated files that are no longer expected" do
@@ -73,8 +76,8 @@ RSpec.describe Migrations::Tooling::Schema::DSL::GeneratedFiles do
       write("lib/enums/gone.rb", "# #{described_class::MARKER} ...\n")
 
       expect(stale).to contain_exactly(
-        File.join(@root, "lib/models/old.rb"),
-        File.join(@root, "lib/enums/gone.rb"),
+        File.join(generated_files_context.fetch(:root), "lib/models/old.rb"),
+        File.join(generated_files_context.fetch(:root), "lib/enums/gone.rb"),
       )
     end
 

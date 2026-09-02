@@ -4,6 +4,7 @@ RSpec.describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   fab!(:user)
 
   before do
@@ -12,7 +13,7 @@ RSpec.describe Tag do
   end
 
   describe "Associations" do
-    it "should delete associated sidebar_section_links when tag is destroyed" do
+    it "deletes associated sidebar_section_links when tag is destroyed" do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
       tag_sidebar_section_link_2 =
         Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
@@ -76,7 +77,7 @@ RSpec.describe Tag do
 
   describe "#top_tags" do
     context "when nothing has been tagged" do
-      let!(:tags) { Fabricate.times(3, :tag) }
+      before { Fabricate.times(3, :tag) }
 
       it "returns nothing" do
         expect(Tag.top_tags.sort).to be_empty
@@ -98,15 +99,13 @@ RSpec.describe Tag do
       let(:tags) { Fabricate.times(4, :tag) }
       let(:category1) { Fabricate(:category) }
       let(:private_category) { Fabricate(:category) }
-      let!(:topics) do
+
+      before do
         [
           Fabricate(:topic, category: category1, tags: [tags[0]]),
           Fabricate(:topic, tags: [tags[1]]),
           Fabricate(:topic, category: private_category, tags: [tags[2]]),
         ]
-      end
-
-      before do
         private_category.set_permissions(admins: :full)
         private_category.save!
       end
@@ -143,7 +142,8 @@ RSpec.describe Tag do
       let(:tags) { Fabricate.times(3, :tag) }
       let(:category1) { Fabricate(:category, tags: [tags[0]]) } # only one tag allowed in this category
       let(:category2) { Fabricate(:category) }
-      let!(:topics) do
+
+      before do
         [
           Fabricate(:topic, category: category1, tags: [tags[0]]),
           Fabricate(:topic, category: category2, tags: [tags[1], tags[2]]),
@@ -176,10 +176,11 @@ RSpec.describe Tag do
     context "with hidden tags" do
       fab!(:moderator)
       let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-      let!(:staff_tag_group) do
+
+      before do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+        Fabricate(:topic, tags: [tag, hidden_tag])
       end
-      let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
 
       it "returns all tags to staff" do
         expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(
@@ -235,10 +236,11 @@ RSpec.describe Tag do
 
     context "with localization" do
       let(:localized_tag) { Fabricate(:tag, name: "cats", locale: "en") }
-      let!(:localization) do
+
+      before do
         Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "猫")
+        Fabricate(:topic, tags: [localized_tag])
       end
-      let!(:tagged_topic) { Fabricate(:topic, tags: [localized_tag]) }
 
       it "returns original names when localization disabled" do
         SiteSetting.content_localization_enabled = false
@@ -294,9 +296,7 @@ RSpec.describe Tag do
       )
     end
 
-    let!(:personal_message_tags) do
-      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
-    end
+    before { 2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") } }
 
     it "returns nothing if user is not a staff" do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
@@ -361,7 +361,7 @@ RSpec.describe Tag do
   end
 
   describe ".ensure_consistency!" do
-    it "should exclude private message topics" do
+    it "excludes private message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
       Tag.ensure_consistency!
@@ -370,7 +370,7 @@ RSpec.describe Tag do
       expect(tag.public_topic_count).to eq(1)
     end
 
-    it "should update Tag#topic_count and Tag#public_topic_count correctly" do
+    it "updates Tag#topic_count and Tag#public_topic_count correctly" do
       tag = Fabricate(:tag, name: "tag1")
       tag2 = Fabricate(:tag, name: "tag2")
       tag3 = Fabricate(:tag, name: "tag3")
@@ -491,8 +491,11 @@ RSpec.describe Tag do
         pm_topic_count: 0,
       )
     end
-    let!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
-    let!(:synonym_tag) { Fabricate(:tag, target_tag: tags.first) }
+
+    before do
+      Fabricate(:tag_group, tag_names: [tag_in_group.name])
+      Fabricate(:tag, target_tag: tags.first)
+    end
 
     it "returns the correct tags" do
       expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")

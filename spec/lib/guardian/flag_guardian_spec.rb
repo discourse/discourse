@@ -5,7 +5,8 @@ RSpec.describe FlagGuardian do
   fab!(:admin)
   fab!(:moderator)
 
-  after(:each) { Flag.reset_flag_settings! }
+  after { Flag.reset_flag_settings! }
+
   describe "#can_create_flag?" do
     it "returns true for admin and when custom flags limit is not reached" do
       SiteSetting.custom_flags_limit = 1

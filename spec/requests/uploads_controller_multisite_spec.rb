@@ -59,6 +59,8 @@ RSpec.describe UploadsController, type: %i[multisite request] do
     end
 
     context "when requesting an upload from a different site (logged in on request site, anon on target site)" do
+      let(:second_upload) { {} }
+
       before do
         sign_in(user)
         RailsMultisite::ConnectionManagement.with_connection("second") do
@@ -70,14 +72,14 @@ RSpec.describe UploadsController, type: %i[multisite request] do
             )
           upload =
             UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(second_user.id)
-          @upload_on_second_sha1 = upload.sha1
-          @upload_on_second_extension = upload.extension
+          second_upload[:sha1] = upload.sha1
+          second_upload[:extension] = upload.extension
         end
         RailsMultisite::ConnectionManagement.establish_connection(db: "default")
       end
 
       it "returns 200 when prevent_anons_from_downloading_files is false" do
-        get("/uploads/second/#{@upload_on_second_sha1}.#{@upload_on_second_extension}")
+        get("/uploads/second/#{second_upload[:sha1]}.#{second_upload[:extension]}")
         expect(response).to have_http_status(:ok)
       end
 
@@ -85,13 +87,15 @@ RSpec.describe UploadsController, type: %i[multisite request] do
         before { SiteSetting.prevent_anons_from_downloading_files = true }
 
         it "returns 404 because current_user is evaluated for target site (anon on target)" do
-          get("/uploads/second/#{@upload_on_second_sha1}.#{@upload_on_second_extension}")
+          get("/uploads/second/#{second_upload[:sha1]}.#{second_upload[:extension]}")
           expect(response).to have_http_status(:not_found)
         end
       end
     end
 
     context "when requesting an upload from a different site as anonymous (anon on target site)" do
+      let(:second_upload) { {} }
+
       before do
         RailsMultisite::ConnectionManagement.with_connection("second") do
           second_user =
@@ -102,8 +106,8 @@ RSpec.describe UploadsController, type: %i[multisite request] do
             )
           upload =
             UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(second_user.id)
-          @upload_on_second_sha1 = upload.sha1
-          @upload_on_second_extension = upload.extension
+          second_upload[:sha1] = upload.sha1
+          second_upload[:extension] = upload.extension
         end
         RailsMultisite::ConnectionManagement.establish_connection(db: "default")
       end
@@ -112,7 +116,7 @@ RSpec.describe UploadsController, type: %i[multisite request] do
         before { SiteSetting.prevent_anons_from_downloading_files = true }
 
         it "returns 404 because current_user is nil on target site" do
-          get("/uploads/second/#{@upload_on_second_sha1}.#{@upload_on_second_extension}")
+          get("/uploads/second/#{second_upload[:sha1]}.#{second_upload[:extension]}")
           expect(response).to have_http_status(:not_found)
         end
       end

@@ -62,6 +62,9 @@ RSpec.describe DiscourseConnect do
     expect(parsed.location).to eq sso.location
   end
 
+  let(:server_session) { ServerSession.new("abc") }
+  let(:ip_address) { "127.0.0.1" }
+
   it "can do round trip parsing correctly" do
     sso = DiscourseConnectBase.new
     sso.sso_secret = "test"
@@ -75,9 +78,6 @@ RSpec.describe DiscourseConnect do
     expect(sso.username).to eq "sam"
     expect(sso.email).to eq "sam@sam.com"
   end
-
-  let(:ip_address) { "127.0.0.1" }
-  let(:server_session) { ServerSession.new("abc") }
 
   it "bans bad external id" do
     sso = new_discourse_sso
@@ -497,7 +497,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "testuser"
   end
 
-  it "should preserve username when several users login with the same username" do
+  it "preserves username when several users login with the same username" do
     SiteSetting.auth_overrides_username = true
 
     # if several users have username "bill" on the external site,

@@ -63,45 +63,43 @@ RSpec.describe Chat::StopMessageStreaming do
       it { is_expected.to fail_to_find_a_model(:message) }
     end
 
-    context "when the message is a reply" do
-      context "when the OM is from current user" do
-        fab!(:original_message) do
-          Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
-        end
-        fab!(:reply) do
-          Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
-        end
+    context "when the OM is from current user" do
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
+      end
+      fab!(:reply) do
+        Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
+      end
 
-        before { params[:message_id] = reply.id }
+      before { params[:message_id] = reply.id }
+
+      it { is_expected.to run_successfully }
+    end
+
+    context "when the OM is not from current user" do
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
+      end
+      fab!(:reply) do
+        Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
+      end
+
+      before { params[:message_id] = reply.id }
+
+      context "when current user is a regular user" do
+        it { is_expected.to fail_a_policy(:can_stop_streaming) }
+      end
+
+      context "when current user is a bot" do
+        fab!(:current_user) { Discourse.system_user }
 
         it { is_expected.to run_successfully }
       end
 
-      context "when the OM is not from current user" do
-        fab!(:original_message) do
-          Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
-        end
-        fab!(:reply) do
-          Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
-        end
+      context "when current user is an admin" do
+        fab!(:current_user, :admin)
 
-        before { params[:message_id] = reply.id }
-
-        context "when current user is a regular user" do
-          it { is_expected.to fail_a_policy(:can_stop_streaming) }
-        end
-
-        context "when current user is a bot" do
-          fab!(:current_user) { Discourse.system_user }
-
-          it { is_expected.to run_successfully }
-        end
-
-        context "when current user is an admin" do
-          fab!(:current_user, :admin)
-
-          it { is_expected.to run_successfully }
-        end
+        it { is_expected.to run_successfully }
       end
     end
 

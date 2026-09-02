@@ -208,7 +208,7 @@ describe Chat::ThreadUnreadsQuery do
       end
 
       context "with mentions" do
-        let!(:message) { create_mention(message_1, channel_1, thread_1) }
+        before { create_mention(message_1, channel_1, thread_1) }
 
         it "counts both unread messages and mentions separately" do
           expect(query.map(&:to_h)).to match_array(
@@ -386,47 +386,55 @@ describe Chat::ThreadUnreadsQuery do
           )
         end
 
-        context "when include_missing_memberships is true" do
-          let(:include_missing_memberships) { true }
-
-          it "includes the thread that the user is not a member of with zeroed out counts" do
-            expect(query.map(&:to_h)).to match_array(
-              [
-                {
-                  channel_id: channel_1.id,
-                  mention_count: 0,
-                  thread_id: thread_1.id,
-                  unread_count: 0,
-                  watched_threads_unread_count: 0,
-                },
-                {
-                  channel_id: channel_2.id,
-                  mention_count: 0,
-                  thread_id: thread_3.id,
-                  unread_count: 1,
-                  watched_threads_unread_count: 0,
-                },
-              ],
+        it "includes zeroed thread counts when missing memberships are included" do
+          result =
+            described_class.call(
+              channel_ids: channel_ids,
+              thread_ids: thread_ids,
+              user_id: current_user.id,
+              include_missing_memberships: true,
+              include_read: true,
             )
-          end
+          expect(result.map(&:to_h)).to match_array(
+            [
+              {
+                channel_id: channel_1.id,
+                mention_count: 0,
+                thread_id: thread_1.id,
+                unread_count: 0,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_2.id,
+                mention_count: 0,
+                thread_id: thread_3.id,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+            ],
+          )
+        end
 
-          context "when include_read is false" do
-            let(:include_read) { false }
-
-            it "does not include the thread that the user is not a member of with zeroed out counts" do
-              expect(query.map(&:to_h)).to match_array(
-                [
-                  {
-                    channel_id: channel_2.id,
-                    mention_count: 0,
-                    thread_id: thread_3.id,
-                    unread_count: 1,
-                    watched_threads_unread_count: 0,
-                  },
-                ],
-              )
-            end
-          end
+        it "omits zeroed thread counts when read threads are excluded" do
+          result =
+            described_class.call(
+              channel_ids: channel_ids,
+              thread_ids: thread_ids,
+              user_id: current_user.id,
+              include_missing_memberships: true,
+              include_read: false,
+            )
+          expect(result.map(&:to_h)).to match_array(
+            [
+              {
+                channel_id: channel_2.id,
+                mention_count: 0,
+                thread_id: thread_3.id,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+            ],
+          )
         end
       end
     end

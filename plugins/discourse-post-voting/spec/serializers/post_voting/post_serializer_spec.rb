@@ -19,7 +19,7 @@ describe PostVoting::PostSerializerExtension do
   context "with qa enabled" do
     before { SiteSetting.post_voting_enabled = true }
 
-    it "should return the right attributes" do
+    it "returns the right attributes" do
       PostVoting::VoteManager.vote(answer, user, direction: up)
 
       expect(serialized[:post_voting_vote_count]).to eq(1)
@@ -32,7 +32,7 @@ describe PostVoting::PostSerializerExtension do
   context "with qa disabled" do
     before { SiteSetting.post_voting_enabled = false }
 
-    it "should not include dependent_keys" do
+    it "does not include dependent_keys" do
       expect(serialized[:qa_vote_count]).to eq(nil)
       expect(serialized[:qa_user_voted_direction]).to eq(nil)
       expect(serialized[:comments_count]).to eq(nil)

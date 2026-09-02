@@ -36,19 +36,18 @@ RSpec.describe "JSON:API queries", type: :request do
 
   fab!(:analysts) { Fabricate(:group, name: "analysts") }
 
-  before { [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) } }
+  before do
+    [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) }
+    SiteSetting.data_explorer_enabled = true
+    sign_in(user)
+    get path, params: query_parameters
+  end
 
   let(:base) { "http://test.localhost/api/data-explorer" }
   let(:root) { "http://test.localhost/api" }
   let(:query_parameters) { {} }
   let(:user) { admin }
   let(:parsed_body) { JSON.parse(response.body) }
-
-  before do
-    SiteSetting.data_explorer_enabled = true
-    sign_in(user)
-    get path, params: query_parameters
-  end
 
   shared_examples "a request only for admins" do
     context "when the user is not an admin" do
@@ -135,6 +134,7 @@ RSpec.describe "JSON:API queries", type: :request do
 
     context "when the request includes the author and the groups" do
       let(:query_parameters) { { include: "user,groups" } }
+
       it "sends every related record under its own namespace" do
         expect(parsed_body["included"]).to contain_exactly(
           {

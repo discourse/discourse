@@ -48,26 +48,26 @@ RSpec.describe MicrosoftAuthRevoker do
     fab!(:api_key_for_user_2) { Fabricate(:api_key, created_by_id: user_2.id) }
     fab!(:api_key_for_user_3) { Fabricate(:api_key, created_by_id: user_3.id) }
 
-    it "should delete all microsoft provider `UserAssociatedAccount` records" do
+    it "deletes all microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change { UserAssociatedAccount.count }.by(-2)
       expect(UserAssociatedAccount.where(provider_name: "microsoft_office365").count).to eq(0)
     end
 
-    it "should deactivate all users with microsoft provider `UserAssociatedAccount` records" do
+    it "deactivates all users with microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change { User.where(active: true).count }.by(-2)
       expect(user_1.reload.active).to eq(false)
       expect(user_2.reload.active).to eq(false)
       expect(user_3.reload.active).to eq(true)
     end
 
-    it "should delete all `UserAuthToken` records for users with microsoft provider `UserAssociatedAccount` records" do
+    it "deletes all `UserAuthToken` records for users with microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change { UserAuthToken.count }.by(-2)
       expect(UserAuthToken.where(user_id: user_1.id).count).to eq(0)
       expect(UserAuthToken.where(user_id: user_2.id).count).to eq(0)
       expect(UserAuthToken.where(user_id: user_3.id).count).to eq(1)
     end
 
-    it "should revoke all `UserApiKey` records for users with microsoft provider `UserAssociatedAccount` records" do
+    it "revokes all `UserApiKey` records for users with microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change {
         UserApiKey.where(revoked_at: nil).count
       }.by(-2)
@@ -77,7 +77,7 @@ RSpec.describe MicrosoftAuthRevoker do
       expect(user_api_key_for_user_3.reload.revoked_at).to be_nil
     end
 
-    it "should revoke all `ApiKey` records created by users with microsoft provider `UserAssociatedAccount` records" do
+    it "revokes all `ApiKey` records created by users with microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change {
         ApiKey.where(revoked_at: nil).count
       }.by(-2)

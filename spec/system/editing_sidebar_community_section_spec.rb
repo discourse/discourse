@@ -7,7 +7,7 @@ RSpec.describe "Editing Sidebar Community Section" do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_header_dropdown) { PageObjects::Components::NavigationMenu::HeaderDropdown.new }
 
-  it "should not display the edit section button to non admins" do
+  it "does not display the edit section button to non admins" do
     sign_in(user)
 
     visit("/latest")
@@ -102,7 +102,7 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(modal).to be_visible
   end
 
-  it "should allow admins to open modal to edit the section when `navigation_menu` site setting is `header dropdown`" do
+  it "allows admins to open modal to edit the section when `navigation_menu` site setting is `header dropdown`" do
     SiteSetting.navigation_menu = "header dropdown"
 
     sign_in(admin)

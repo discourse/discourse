@@ -7,11 +7,9 @@ RSpec.describe Users::DiscourseIdController do
   let(:provider_name) { "discourse_id" }
 
   let!(:user) { Fabricate(:user) }
-  let!(:user_associated_account) do
-    Fabricate(:user_associated_account, user:, provider_name:, provider_uid: identifier)
-  end
 
   before do
+    Fabricate(:user_associated_account, user:, provider_name:, provider_uid: identifier)
     SiteSetting.discourse_id_client_id = SecureRandom.hex
     SiteSetting.discourse_id_client_secret = SecureRandom.hex
     SiteSetting.enable_discourse_id = true

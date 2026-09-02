@@ -23,7 +23,7 @@ RSpec.describe Unread do
   end
 
   describe "staff counts" do
-    it "should correctly return based on staff post number" do
+    it "correctlies return based on staff post number" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       user.grant_admin!
 
@@ -34,7 +34,7 @@ RSpec.describe Unread do
   end
 
   describe "unread_posts" do
-    it "should have 0 unread posts if the user has read all posts" do
+    it "has 0 unread posts if the user has read all posts" do
       topic_user.last_read_post_number = 13
       expect(unread.unread_posts).to eq(0)
     end
@@ -57,7 +57,7 @@ RSpec.describe Unread do
       expect(unread.unread_posts).to eq(5)
     end
 
-    it "should have 0 unread posts if the user has read more posts than exist (deleted)" do
+    it "has 0 unread posts if the user has read more posts than exist (deleted)" do
       topic_user.last_read_post_number = 14
       expect(unread.unread_posts).to eq(0)
     end

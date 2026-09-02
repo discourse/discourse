@@ -11,7 +11,7 @@ RSpec.shared_examples "finding and showing post" do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns the post" do
     get url
     expect(response.status).to eq(200)
   end
@@ -681,8 +681,6 @@ RSpec.describe PostsController do
   end
 
   describe "#update" do
-    include_examples "action requires login", :put, "/posts/2.json"
-
     let!(:post) { post_by_user }
     let(:update_params) do
       {
@@ -698,6 +696,8 @@ RSpec.describe PostsController do
         },
       }
     end
+
+    include_examples "action requires login", :put, "/posts/2.json"
 
     context "when a trust level 1 user edits a public wiki post" do
       it "does not publish a hidden new user profile onebox" do
@@ -965,7 +965,7 @@ RSpec.describe PostsController do
         expect(response.parsed_body["current_revision"]).to eq(2)
       end
 
-      it "won't update bump date if post is a whisper" do
+      it "does not update bump date if post is a whisper" do
         created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
 
@@ -1029,46 +1029,35 @@ RSpec.describe PostsController do
           expect(response.status).to eq(200)
         end
 
-        context "as TL4 user" do
-          fab!(:tl4_user, :trust_level_4)
-          before { sign_in(tl4_user) }
-
-          it "prevents bumping when bypass_bump=true" do
-            expect {
-              put "/posts/#{wiki_post.id}.json",
-                  params: {
-                    bypass_bump: true,
-                    post: {
-                      raw: "updated content",
-                    },
-                  }
-            }.not_to change { wiki_post.topic.reload.bumped_at }
-            expect(response.status).to eq(200)
-          end
+        it "lets a TL4 user prevent bumping with bypass_bump=true" do
+          sign_in(Fabricate(:trust_level_4))
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: true,
+                  post: {
+                    raw: "updated content",
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
         end
 
-        context "as regular user" do
-          fab!(:old_wiki_post) do
-            Fabricate(:post, user:, wiki: true, last_version_at: 10.minutes.ago)
-          end
+        it "ignores bypass_bump for a regular user and still bumps the topic" do
+          old_wiki_post = Fabricate(:post, user:, wiki: true, last_version_at: 10.minutes.ago)
+          sign_in(user)
+          old_wiki_post.topic.update!(bumped_at: 1.day.ago)
 
-          before do
-            sign_in(user)
-            old_wiki_post.topic.update!(bumped_at: 1.day.ago)
-          end
-
-          it "ignores bypass_bump (topic still bumps)" do
-            expect {
-              put "/posts/#{old_wiki_post.id}.json",
-                  params: {
-                    bypass_bump: true,
-                    post: {
-                      raw: "updated content",
-                    },
-                  }
-            }.to change { old_wiki_post.topic.reload.bumped_at }
-            expect(response.status).to eq(200)
-          end
+          expect {
+            put "/posts/#{old_wiki_post.id}.json",
+                params: {
+                  bypass_bump: true,
+                  post: {
+                    raw: "updated content",
+                  },
+                }
+          }.to change { old_wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -1312,6 +1301,7 @@ RSpec.describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic)) }
+
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body["topic_bookmarked"]).to eq(true)
@@ -1474,7 +1464,7 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
-      it "will invalidate broken images cache" do
+      it "invalidates broken images cache" do
         sign_in(moderator)
         PostHotlinkedMedia.create!(
           url: "https://example.com/image.jpg",
@@ -1489,12 +1479,12 @@ RSpec.describe PostsController do
   end
 
   describe "#create" do
-    include_examples "action requires login", :post, "/posts.json"
-
     before do
       SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
+
+    include_examples "action requires login", :post, "/posts.json"
 
     it "prevents regular users from publishing a global banner while creating a topic" do
       ApplicationLayoutPreloader.banner_json_cache.clear
@@ -1760,7 +1750,7 @@ RSpec.describe PostsController do
         expect(Draft.get(user, Draft::NEW_TOPIC, 0)).to eq("test")
       end
 
-      it "will raise an error if specified category cannot be found" do
+      it "raises an error if specified category cannot be found" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -1782,7 +1772,7 @@ RSpec.describe PostsController do
         )
       end
 
-      it "will raise an error if specified embed_url is invalid" do
+      it "raises an error if specified embed_url is invalid" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -2426,9 +2416,85 @@ RSpec.describe PostsController do
         end
       end
 
-      context "when adding custom fields to topic via the `topic_custom_fields` param" do
-        it "should return a 400 response code when no custom fields has been permitted" do
+      it "returns a 400 response code when no custom fields has been permitted" do
+        sign_in(user)
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is the test title for the topic",
+               category: category.id,
+               topic_custom_fields: {
+                 xyz: "abc",
+                 abc: "xyz",
+               },
+             }
+
+        expect(response.status).to eq(400)
+        expect(Topic.last.custom_fields).to eq({})
+      end
+
+      context "when custom fields has been permitted" do
+        fab!(:plugin) do
+          plugin = Plugin::Instance.new
+          plugin.register_editable_topic_custom_field(:xyz)
+          plugin.register_editable_topic_custom_field(:abc, staff_only: true)
+          plugin
+        end
+
+        it "returns a 400 response when trying to add a staff ony custom field for a non-staff user" do
           sign_in(user)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+                 topic_custom_fields: {
+                   abc: "xyz",
+                 },
+               }
+
+          expect(response.status).to eq(400)
+          expect(Topic.last.custom_fields).to eq({})
+        end
+
+        it "adds custom fields to topic that is permitted for a non-staff user" do
+          sign_in(user)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+                 topic_custom_fields: {
+                   xyz: "abc",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
+        end
+
+        it "adds custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+          sign_in(user)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+                 meta_data: {
+                   xyz: "abc",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
+        end
+
+        it "adds custom fields to topic that is permitted for a staff user and public user" do
+          sign_in(Fabricate(:admin))
 
           post "/posts.json",
                params: {
@@ -2441,86 +2507,8 @@ RSpec.describe PostsController do
                  },
                }
 
-          expect(response.status).to eq(400)
-          expect(Topic.last.custom_fields).to eq({})
-        end
-
-        context "when custom fields has been permitted" do
-          fab!(:plugin) do
-            plugin = Plugin::Instance.new
-            plugin.register_editable_topic_custom_field(:xyz)
-            plugin.register_editable_topic_custom_field(:abc, staff_only: true)
-            plugin
-          end
-
-          it "should return a 400 response when trying to add a staff ony custom field for a non-staff user" do
-            sign_in(user)
-
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   title: "this is the test title for the topic",
-                   category: category.id,
-                   topic_custom_fields: {
-                     abc: "xyz",
-                   },
-                 }
-
-            expect(response.status).to eq(400)
-            expect(Topic.last.custom_fields).to eq({})
-          end
-
-          it "should add custom fields to topic that is permitted for a non-staff user" do
-            sign_in(user)
-
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   title: "this is the test title for the topic",
-                   category: category.id,
-                   topic_custom_fields: {
-                     xyz: "abc",
-                   },
-                 }
-
-            expect(response.status).to eq(200)
-            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
-          end
-
-          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
-            sign_in(user)
-
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   title: "this is the test title for the topic",
-                   category: category.id,
-                   meta_data: {
-                     xyz: "abc",
-                   },
-                 }
-
-            expect(response.status).to eq(200)
-            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
-          end
-
-          it "should add custom fields to topic that is permitted for a staff user and public user" do
-            sign_in(Fabricate(:admin))
-
-            post "/posts.json",
-                 params: {
-                   raw: "this is the test content",
-                   title: "this is the test title for the topic",
-                   category: category.id,
-                   topic_custom_fields: {
-                     xyz: "abc",
-                     abc: "xyz",
-                   },
-                 }
-
-            expect(response.status).to eq(200)
-            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc", "abc" => "xyz" })
-          end
+          expect(response.status).to eq(200)
+          expect(Topic.last.custom_fields).to eq({ "xyz" => "abc", "abc" => "xyz" })
         end
       end
 
@@ -2638,51 +2626,46 @@ RSpec.describe PostsController do
         end
       end
 
-      context "with errors" do
-        it "does not succeed" do
-          post "/posts.json", params: { raw: "test" }
-          expect(response).not_to be_successful
-          expect(response.status).to eq(422)
-        end
+      it "does not succeed" do
+        post "/posts.json", params: { raw: "test" }
+        expect(response).not_to be_successful
+        expect(response.status).to eq(422)
+      end
 
-        it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
-          SiteSetting.newuser_spam_host_threshold = 1
-          sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+      it "triggers flag_linked_posts_as_spam when the post creator returns spam" do
+        SiteSetting.newuser_spam_host_threshold = 1
+        sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
+        post "/posts.json",
+             params: {
+               raw:
+                 "this is the test content http://fakespamwebsite.com http://fakespamwebsite.com/spam http://fakespamwebsite.com/spammy",
+               title: "this is the test title for the topic",
+             }
+
+        expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
+      end
+
+      context "when allow_uncategorized_topics is false" do
+        before { SiteSetting.allow_uncategorized_topics = false }
+
+        it "cant create an uncategorized post" do
           post "/posts.json",
                params: {
-                 raw:
-                   "this is the test content http://fakespamwebsite.com http://fakespamwebsite.com/spam http://fakespamwebsite.com/spammy",
-                 title: "this is the test title for the topic",
+                 raw: "a new post with no category",
+                 title: "a new post with no category",
                }
-
-          expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
+          expect(response).not_to be_successful
         end
 
-        context "when allow_uncategorized_topics is false" do
-          before { SiteSetting.allow_uncategorized_topics = false }
-
-          it "cant create an uncategorized post" do
-            post "/posts.json",
-                 params: {
-                   raw: "a new post with no category",
-                   title: "a new post with no category",
-                 }
-            expect(response).not_to be_successful
-          end
-
-          context "as staff" do
-            before { sign_in(admin) }
-
-            it "cant create an uncategorized post" do
-              post "/posts.json",
-                   params: {
-                     raw: "a new post with no category",
-                     title: "a new post with no category",
-                   }
-              expect(response).not_to be_successful
-            end
-          end
+        it "does not let staff create an uncategorized post" do
+          sign_in(admin)
+          post "/posts.json",
+               params: {
+                 raw: "a new post with no category",
+                 title: "a new post with no category",
+               }
+          expect(response).not_to be_successful
         end
       end
 
@@ -2822,17 +2805,15 @@ RSpec.describe PostsController do
           )
         end
 
-        context "with apply_modifier" do
-          it "can modify groups" do
-            plugin = Plugin::Instance.new
-            modifier = :mentionable_groups
-            proc = Proc.new { Group.all }
-            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+        it "can modify groups with apply_modifier" do
+          plugin = Plugin::Instance.new
+          modifier = :mentionable_groups
+          proc = Proc.new { Group.all }
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
 
-            expect(Group.mentionable(user)).to eq(Group.all)
-          ensure
-            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
-          end
+          expect(Group.mentionable(user)).to eq(Group.all)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
         end
       end
     end
@@ -2840,7 +2821,7 @@ RSpec.describe PostsController do
     describe "shared draft" do
       fab!(:destination_category, :category)
 
-      it "will raise an error for regular users" do
+      it "raises an error for regular users" do
         post "/posts.json",
              params: {
                raw: "this is the shared draft content",
@@ -2851,10 +2832,26 @@ RSpec.describe PostsController do
         expect(response).not_to be_successful
       end
 
-      describe "as a staff user" do
-        before { sign_in(moderator) }
+      it "raises an error if there is no shared draft category" do
+        sign_in(moderator)
+        post "/posts.json",
+             params: {
+               raw: "this is the shared draft content",
+               title: "this is the shared draft title",
+               category: destination_category.id,
+               shared_draft: "true",
+             }
+        expect(response).not_to be_successful
+      end
 
-        it "will raise an error if there is no shared draft category" do
+      context "with a shared category" do
+        fab!(:shared_category, :category)
+        before do
+          sign_in(moderator)
+          SiteSetting.shared_drafts_category = shared_category.id
+        end
+
+        it "works if the shared draft category is present" do
           post "/posts.json",
                params: {
                  raw: "this is the shared draft content",
@@ -2862,45 +2859,29 @@ RSpec.describe PostsController do
                  category: destination_category.id,
                  shared_draft: "true",
                }
-          expect(response).not_to be_successful
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          topic = Topic.find(result["topic_id"])
+          expect(topic.category_id).to eq(shared_category.id)
+          expect(topic.shared_draft.category_id).to eq(destination_category.id)
         end
 
-        context "with a shared category" do
-          fab!(:shared_category, :category)
-          before { SiteSetting.shared_drafts_category = shared_category.id }
-
-          it "will work if the shared draft category is present" do
-            post "/posts.json",
-                 params: {
-                   raw: "this is the shared draft content",
-                   title: "this is the shared draft title",
-                   category: destination_category.id,
-                   shared_draft: "true",
-                 }
-            expect(response.status).to eq(200)
-            result = response.parsed_body
-            topic = Topic.find(result["topic_id"])
-            expect(topic.category_id).to eq(shared_category.id)
-            expect(topic.shared_draft.category_id).to eq(destination_category.id)
-          end
-
-          it "accepts boolean true for shared_draft parameter" do
-            post "/posts.json",
-                 params: {
-                   raw: "this is the shared draft content",
-                   title: "this is the shared draft title with boolean",
-                   category: destination_category.id,
-                   shared_draft: true,
-                 }.to_json,
-                 headers: {
-                   "CONTENT_TYPE" => "application/json",
-                 }
-            expect(response.status).to eq(200)
-            result = response.parsed_body
-            topic = Topic.find(result["topic_id"])
-            expect(topic.category_id).to eq(shared_category.id)
-            expect(topic.shared_draft.category_id).to eq(destination_category.id)
-          end
+        it "accepts boolean true for shared_draft parameter" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the shared draft content",
+                 title: "this is the shared draft title with boolean",
+                 category: destination_category.id,
+                 shared_draft: true,
+               }.to_json,
+               headers: {
+                 "CONTENT_TYPE" => "application/json",
+               }
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          topic = Topic.find(result["topic_id"])
+          expect(topic.category_id).to eq(shared_category.id)
+          expect(topic.shared_draft.category_id).to eq(destination_category.id)
         end
       end
     end
@@ -2911,7 +2892,7 @@ RSpec.describe PostsController do
       context "as a staff user" do
         before { sign_in(admin) }
 
-        it "should be able to mark a topic as warning" do
+        it "is able to mark a topic as warning" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2943,7 +2924,7 @@ RSpec.describe PostsController do
           expect(Topic.last.is_official_warning?).to eq(true)
         end
 
-        it "should be able to mark a topic as not a warning" do
+        it "is able to mark a topic as not a warning" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2963,7 +2944,7 @@ RSpec.describe PostsController do
       end
 
       context "as a normal user" do
-        it "should not be able to mark a topic as warning" do
+        it "is not able to mark a topic as warning" do
           sign_in(user)
           post "/posts.json",
                params: {
@@ -2986,7 +2967,7 @@ RSpec.describe PostsController do
 
     context "with topic bump" do
       shared_examples "it works" do
-        it "should be able to skip topic bumping" do
+        it "is able to skip topic bumping" do
           original_bumped_at = 1.day.ago
           topic = Fabricate(:topic, bumped_at: original_bumped_at)
 
@@ -3016,7 +2997,7 @@ RSpec.describe PostsController do
           expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
         end
 
-        it "should be able to post with topic bumping" do
+        it "is able to post with topic bumping" do
           post "/posts.json", params: { raw: "this is the test content", topic_id: topic.id }
 
           expect(response.status).to eq(200)
@@ -3048,7 +3029,7 @@ RSpec.describe PostsController do
         fab!(:topic)
 
         [:user].each do |user|
-          it "will raise an error for #{user}" do
+          it "raises an error for #{user}" do
             sign_in(Fabricate(user))
             post "/posts.json",
                  params: {
@@ -3548,7 +3529,8 @@ RSpec.describe PostsController do
 
     context "with a tagged topic" do
       let(:tag) { Fabricate(:tag) }
-      it "works" do
+
+      it "returns revisions regardless of the tagging setting" do
         SiteSetting.tagging_enabled = true
 
         post_revision.post.topic.update(tags: [tag])
@@ -3699,8 +3681,6 @@ RSpec.describe PostsController do
   end
 
   describe "#revert" do
-    include_examples "action requires login", :put, "/posts/123/revisions/2/revert.json"
-
     fab!(:post) do
       Fabricate(
         :post,
@@ -3768,6 +3748,8 @@ RSpec.describe PostsController do
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
+
+    include_examples "action requires login", :put, "/posts/123/revisions/2/revert.json"
 
     describe "when logged in as a regular user" do
       it "does not work" do
@@ -4083,79 +4065,75 @@ RSpec.describe PostsController do
 
       before { SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
-      context "when fetching a single hidden post" do
-        context "when logged out" do
-          it "returns not found" do
-            get "/raw/#{topic.id}/#{hidden_post.post_number}"
-            expect(response).to have_http_status(:not_found)
-          end
-        end
-
-        context "when logged in as a regular user" do
-          before { sign_in(user) }
-
-          it "returns not found" do
-            get "/raw/#{topic.id}/#{hidden_post.post_number}"
-            expect(response).to have_http_status(:not_found)
-          end
-        end
-
-        context "when logged in as the post author" do
-          before { sign_in(post_author) }
-
-          it "returns the hidden post content" do
-            get "/raw/#{topic.id}/#{hidden_post.post_number}"
-            expect(response.body).to eq("hidden post content")
-          end
-        end
-
-        context "when logged in as a moderator" do
-          before { sign_in(moderator) }
-
-          it "returns the hidden post content" do
-            get "/raw/#{topic.id}/#{hidden_post.post_number}"
-            expect(response.body).to eq("hidden post content")
-          end
+      context "when fetching a single hidden post while logged out" do
+        it "returns not found" do
+          get "/raw/#{topic.id}/#{hidden_post.post_number}"
+          expect(response).to have_http_status(:not_found)
         end
       end
 
-      context "when fetching the whole topic" do
-        context "when logged out" do
-          it "excludes hidden post content" do
-            get "/raw/#{topic.id}"
-            expect(response.body).to include("visible post content").and exclude(
-                    "hidden post content",
-                  )
-          end
+      context "when a regular user fetches a single hidden post" do
+        before { sign_in(user) }
+
+        it "returns not found" do
+          get "/raw/#{topic.id}/#{hidden_post.post_number}"
+          expect(response).to have_http_status(:not_found)
         end
+      end
 
-        context "when logged in as a regular user" do
-          before { sign_in(user) }
+      context "when the author fetches a single hidden post" do
+        before { sign_in(post_author) }
 
-          it "excludes hidden post content" do
-            get "/raw/#{topic.id}"
-            expect(response.body).to include("visible post content").and exclude(
-                    "hidden post content",
-                  )
-          end
+        it "returns the hidden post content" do
+          get "/raw/#{topic.id}/#{hidden_post.post_number}"
+          expect(response.body).to eq("hidden post content")
         end
+      end
 
-        context "when logged in as the post author" do
-          before { sign_in(post_author) }
+      context "when a moderator fetches a single hidden post" do
+        before { sign_in(moderator) }
 
-          it "includes hidden post content" do
-            get "/raw/#{topic.id}"
-            expect(response.body).to include("visible post content", "hidden post content")
-          end
+        it "returns the hidden post content" do
+          get "/raw/#{topic.id}/#{hidden_post.post_number}"
+          expect(response.body).to eq("hidden post content")
         end
+      end
 
-        context "when logged in as a moderator" do
-          before { sign_in(moderator) }
+      context "when fetching the whole topic while logged out" do
+        it "excludes hidden post content" do
+          get "/raw/#{topic.id}"
+          expect(response.body).to include("visible post content").and exclude(
+                  "hidden post content",
+                )
+        end
+      end
 
-          it "includes hidden post content" do
-            get "/raw/#{topic.id}"
-            expect(response.body).to include("visible post content", "hidden post content")
-          end
+      context "when a regular user fetches the whole topic" do
+        before { sign_in(user) }
+
+        it "excludes hidden post content" do
+          get "/raw/#{topic.id}"
+          expect(response.body).to include("visible post content").and exclude(
+                  "hidden post content",
+                )
+        end
+      end
+
+      context "when the author fetches the whole topic" do
+        before { sign_in(post_author) }
+
+        it "includes hidden post content" do
+          get "/raw/#{topic.id}"
+          expect(response.body).to include("visible post content", "hidden post content")
+        end
+      end
+
+      context "when a moderator fetches the whole topic" do
+        before { sign_in(moderator) }
+
+        it "includes hidden post content" do
+          get "/raw/#{topic.id}"
+          expect(response.body).to include("visible post content", "hidden post content")
         end
       end
     end
@@ -4298,7 +4276,7 @@ RSpec.describe PostsController do
   describe "#latest" do
     context "with private posts" do
       describe "when not logged in" do
-        it "should return the right response" do
+        it "returns the right response" do
           Fabricate(:post)
 
           get "/private-posts.rss"
@@ -4674,94 +4652,98 @@ RSpec.describe PostsController do
       it_behaves_like "action requires login", :get, "/posts/system/pending.json"
     end
 
-    context "when user is logged in" do
+    shared_context "when requesting pending posts while logged in" do
       let(:pending_posts) { response.parsed_body["pending_posts"] }
 
       before { sign_in(current_user) }
+    end
 
-      context "when current user is the same as user" do
-        let(:current_user) { user }
+    context "when current user is the same as user" do
+      include_context "when requesting pending posts while logged in"
 
-        context "when there are existing pending posts" do
-          let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
-          end
-          let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
-          let(:expected_keys) do
-            %w[
-              avatar_template
-              category_id
-              created_at
-              created_by_id
-              name
-              raw_text
-              title
-              topic_id
-              topic_url
-              username
-            ]
-          end
+      let(:current_user) { user }
 
-          it "returns user's pending posts" do
-            request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
-            expect(pending_posts).to all include(*expected_keys)
-          end
+      context "when there are existing pending posts" do
+        let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
+        before { Fabricate(:reviewable_queued_post) }
+
+        let(:expected_keys) do
+          %w[
+            avatar_template
+            category_id
+            created_at
+            created_by_id
+            name
+            raw_text
+            title
+            topic_id
+            topic_url
+            username
+          ]
         end
 
-        context "when there aren't any pending posts" do
-          it "returns an empty array" do
-            request
-            expect(pending_posts).to be_empty
-          end
-        end
-      end
-
-      context "when current user is a staff member" do
-        let(:current_user) { moderator }
-
-        context "when there are existing pending posts" do
-          let!(:owner_pending_posts) do
-            Fabricate.times(2, :reviewable_queued_post, created_by: user)
-          end
-          let!(:other_pending_post) { Fabricate(:reviewable_queued_post) }
-          let(:expected_keys) do
-            %w[
-              avatar_template
-              category_id
-              created_at
-              created_by_id
-              name
-              raw_text
-              title
-              topic_id
-              topic_url
-              username
-            ]
-          end
-
-          it "returns user's pending posts" do
-            request
-            expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
-            expect(pending_posts).to all include(*expected_keys)
-          end
-        end
-
-        context "when there aren't any pending posts" do
-          it "returns an empty array" do
-            request
-            expect(pending_posts).to be_empty
-          end
-        end
-      end
-
-      context "when current user is another user" do
-        let(:current_user) { Fabricate(:user) }
-
-        it "does not allow access" do
+        it "returns user's pending posts" do
           request
-          expect(response).to have_http_status :not_found
+          expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+          expect(pending_posts).to all include(*expected_keys)
         end
+      end
+
+      context "when there aren't any pending posts" do
+        it "returns an empty array" do
+          request
+          expect(pending_posts).to be_empty
+        end
+      end
+    end
+
+    context "when current user is a staff member" do
+      include_context "when requesting pending posts while logged in"
+
+      let(:current_user) { moderator }
+
+      context "when there are existing pending posts" do
+        let!(:owner_pending_posts) { Fabricate.times(2, :reviewable_queued_post, created_by: user) }
+        before { Fabricate(:reviewable_queued_post) }
+
+        let(:expected_keys) do
+          %w[
+            avatar_template
+            category_id
+            created_at
+            created_by_id
+            name
+            raw_text
+            title
+            topic_id
+            topic_url
+            username
+          ]
+        end
+
+        it "returns user's pending posts" do
+          request
+          expect(pending_posts).to all include "id" => be_in(owner_pending_posts.map(&:id))
+          expect(pending_posts).to all include(*expected_keys)
+        end
+      end
+
+      context "when there aren't any pending posts" do
+        it "returns an empty array" do
+          request
+          expect(pending_posts).to be_empty
+        end
+      end
+    end
+
+    context "when current user is another user" do
+      include_context "when requesting pending posts while logged in"
+
+      let(:current_user) { Fabricate(:user) }
+
+      it "does not allow access" do
+        request
+        expect(response).to have_http_status :not_found
       end
     end
   end
@@ -4793,7 +4775,7 @@ RSpec.describe PostsController do
         SiteSetting.fast_typing_threshold = "disabled"
       end
 
-      it "allows strings to be added" do
+      it "allows string parameters to be added" do
         request.call
         expect(@controller.send(:create_params)).not_to include(string_arg: "123")
 
@@ -4812,7 +4794,7 @@ RSpec.describe PostsController do
         expect(@controller.send(:create_params)).to include(hash_arg: { key1: "val" })
       end
 
-      it "allows strings to be added" do
+      it "allows array parameters to be added" do
         instance.add_permitted_post_create_param(:array_arg)
         request.call
         expect(@controller.send(:create_params)).not_to include(array_arg: %w[1 2 3])

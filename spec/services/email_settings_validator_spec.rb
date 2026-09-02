@@ -237,6 +237,7 @@ RSpec.describe EmailSettingsValidator do
 
     context "when the domain is not provided" do
       let(:domain) { nil }
+
       it "gets the domain from the host" do
         net_smtp_stub.expects(:start).with("gmail.com", username, password, :plain)
         described_class.validate_smtp(

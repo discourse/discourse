@@ -19,13 +19,13 @@ RSpec.describe S3Inventory do
     inventory.stubs(:cleanup!)
   end
 
-  it "should raise error if an inventory file is not found" do
+  it "raises error if an inventory file is not found" do
     inventory.s3_client.stub_responses(:list_objects, contents: [])
     output = capture_stdout { inventory.backfill_etags_and_list_missing }
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
-  it "should forward custom s3 options to the S3Helper when initializing" do
+  it "forwards custom s3 options to the S3Helper when initializing" do
     inventory =
       S3Inventory.new(
         :upload,
@@ -41,6 +41,18 @@ RSpec.describe S3Inventory do
   end
 
   describe "verifying uploads" do
+    let(:upload_1) { Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago) }
+    let(:upload_2) { Fabricate(:upload, etag: "ETag2", updated_at: Time.now) }
+    let(:no_etag) { Fabricate(:upload, updated_at: 2.days.ago) }
+    let(:confirmed_missing_upload) do
+      Fabricate(
+        :upload,
+        etag: "ETag3",
+        updated_at: 2.days.ago,
+        verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
+      )
+    end
+
     before do
       freeze_time
 
@@ -59,32 +71,25 @@ RSpec.describe S3Inventory do
         )
       end
 
-      @upload_1 = Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago)
-      @upload_2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
-      @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
-
-      @upload_3 =
-        Fabricate(
-          :upload,
-          etag: "ETag3",
-          updated_at: 2.days.ago,
-          verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
-        )
+      upload_1
+      upload_2
+      no_etag
+      confirmed_missing_upload
 
       inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
       inventory.expects(:inventory_date).times(2).returns(Time.now)
     end
 
-    it "should display missing uploads correctly" do
+    it "displays missing uploads correctly" do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(
-        "#{system_themes_screenshots}\n#{@upload_1.url}\n#{@no_etag.url}\n6 of 10 uploads are missing\n",
+        "#{system_themes_screenshots}\n#{upload_1.url}\n#{no_etag.url}\n6 of 10 uploads are missing\n",
       )
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(6)
     end
 
-    it "should detect when a url match exists with a different etag" do
+    it "detects when a url match exists with a different etag" do
       upload_with_differing_tag_1 = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
       upload_with_differing_tag_1.update_columns(etag: "somethingelse")
 
@@ -97,8 +102,8 @@ RSpec.describe S3Inventory do
         #{system_themes_screenshots}
         #{upload_with_differing_tag_1.url} has different etag
         #{upload_with_differing_tag_2.url} has different etag
-        #{@upload_1.url}
-        #{@no_etag.url}
+        #{upload_1.url}
+        #{no_etag.url}
         8 of 10 uploads are missing
         2 of these are caused by differing etags
         Null the etag column and re-run for automatic backfill
@@ -128,19 +133,19 @@ RSpec.describe S3Inventory do
     end
 
     it "does not affect the updated_at date of uploads" do
-      upload_1_updated = @upload_1.updated_at
-      upload_2_updated = @upload_2.updated_at
-      no_etag_updated = @no_etag.updated_at
+      upload_1_updated = upload_1.updated_at
+      upload_2_updated = upload_2.updated_at
+      no_etag_updated = no_etag.updated_at
 
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(@upload_1.reload.updated_at).to eq_time(upload_1_updated)
-      expect(@upload_2.reload.updated_at).to eq_time(upload_2_updated)
-      expect(@no_etag.reload.updated_at).to eq_time(no_etag_updated)
+      expect(upload_1.reload.updated_at).to eq_time(upload_1_updated)
+      expect(upload_2.reload.updated_at).to eq_time(upload_2_updated)
+      expect(no_etag.reload.updated_at).to eq_time(no_etag_updated)
     end
   end
 
-  it "should backfill etags to uploads table correctly" do
+  it "backfills etags to uploads table correctly" do
     files = [
       [
         "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg",
@@ -176,7 +181,7 @@ RSpec.describe S3Inventory do
       BackupMetadata.update_last_restore_date(Time.now)
     end
 
-    it "should run if inventory files are at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+    it "runs if inventory files are at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
       inventory.s3_client.stub_responses(
         :list_objects_v2,
         {
@@ -196,7 +201,7 @@ RSpec.describe S3Inventory do
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
 
-    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date and reset stats count" do
+    it "does not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date and reset stats count" do
       Discourse.stats.set("missing_s3_uploads", 2)
 
       inventory.s3_client.stub_responses(
@@ -220,7 +225,7 @@ RSpec.describe S3Inventory do
     end
   end
 
-  it "should work when passed preloaded data" do
+  it "works when passed preloaded data" do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|

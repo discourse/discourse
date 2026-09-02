@@ -5,7 +5,7 @@ describe CurrentUserSerializer, type: :serializer do
 
   describe "CurrentUserSerializer extension" do
     let!(:user) { Fabricate(:user) }
-    let!(:guardian) { Guardian.new(user) }
+    let(:guardian) { Guardian.new(user) }
 
     it "includes can_use_templates in serialization" do
       json = serializer.as_json

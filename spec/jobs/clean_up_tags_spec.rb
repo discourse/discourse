@@ -3,7 +3,7 @@
 describe Jobs::CleanUpTags do
   subject(:job) { described_class.new }
 
-  let!(:tags) do
+  before do
     [
       Fabricate(
         :tag,
@@ -31,6 +31,7 @@ describe Jobs::CleanUpTags do
       ),
     ]
   end
+
   fab!(:unused_tag) do
     Fabricate(
       :tag,

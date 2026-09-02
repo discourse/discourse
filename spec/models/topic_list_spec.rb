@@ -15,7 +15,7 @@ RSpec.describe TopicList do
   after { TopicList.preloaded_custom_fields.clear }
 
   describe ".preloaded_custom_fields" do
-    it "should return a unique set of values" do
+    it "returns a unique set of values" do
       TopicList.preloaded_custom_fields << "test"
       TopicList.preloaded_custom_fields << "test"
       TopicList.preloaded_custom_fields << "apple"
@@ -69,7 +69,7 @@ RSpec.describe TopicList do
   end
 
   describe "#top_tags" do
-    it "should return the right tags" do
+    it "returns the right tags" do
       tag = Fabricate(:tag, topics: [topic])
       other_tag = Fabricate(:tag, topics: [topic], name: "use-anywhere")
       expect(topic_list.top_tags).to eq(
@@ -96,7 +96,7 @@ RSpec.describe TopicList do
         )
       end
 
-      it "should return tags used in the category" do
+      it "returns tags used in the category" do
         expect(topic_list.top_tags).to eq(
           [
             { id: tag.id, name: tag.name, slug: tag.slug },

@@ -6,7 +6,7 @@ describe "New Category" do
 
   before { sign_in(admin) }
 
-  it "should create category with 0 in minimum_required_tags column when not defined" do
+  it "creates category with 0 in minimum_required_tags column when not defined" do
     category_page.visit_new_category
 
     category_page.find(".edit-category-tab-general input.category-name").fill_in(

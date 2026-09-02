@@ -18,7 +18,7 @@ RSpec.describe SiteController do
     )
   end
 
-  let!(:logged_in_ad) do
+  before do
     AdPlugin::HouseAd.create(
       name: "logged-in-ad",
       html: "<div>LOGGED IN</div>",
@@ -27,9 +27,6 @@ RSpec.describe SiteController do
       group_ids: [],
       category_ids: [],
     )
-  end
-
-  let!(:logged_in_ad_with_category) do
     AdPlugin::HouseAd.create(
       name: "logged-in-ad-with-category",
       html: "<div>LOGGED IN WITH CATEGORY</div>",
@@ -38,9 +35,7 @@ RSpec.describe SiteController do
       group_ids: [group.id],
       category_ids: [private_category.id],
     )
-  end
 
-  let!(:logged_in_ad_with_group_2) do
     AdPlugin::HouseAd.create(
       name: "logged-in-ad-with-group",
       html: "<div>LOGGED IN WITH GROUP</div>",
@@ -49,9 +44,7 @@ RSpec.describe SiteController do
       group_ids: [group_2.id],
       category_ids: [],
     )
-  end
 
-  let!(:everyone_ad) do
     AdPlugin::HouseAd.create(
       name: "everyone-ad",
       html: "<div>EVERYONE</div>",
@@ -60,9 +53,7 @@ RSpec.describe SiteController do
       group_ids: [],
       category_ids: [],
     )
-  end
 
-  let!(:everyone_group_ad) do
     AdPlugin::HouseAd.create(
       name: "everyone-group-ad",
       html: "<div>EVERYONE</div>",
@@ -71,9 +62,7 @@ RSpec.describe SiteController do
       group_ids: [Group::AUTO_GROUPS[:everyone]],
       category_ids: [],
     )
-  end
 
-  before do
     enable_current_plugin
     AdPlugin::HouseAdSetting.update(
       "topic_list_top",

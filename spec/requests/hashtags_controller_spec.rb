@@ -300,7 +300,7 @@ RSpec.describe HashtagsController do
           sign_in(Fabricate(:user))
         end
 
-        it "works" do
+        it "returns categories matching the full nested path" do
           foo = Fabricate(:category_with_definition, slug: "foo")
           foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
           foobarbaz =

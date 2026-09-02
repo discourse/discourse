@@ -8,7 +8,7 @@ RSpec.describe "Post rake tasks" do
   before { STDOUT.stubs(:write) }
 
   describe "topics:apply_autoclose" do
-    it "should close topics silently" do
+    it "closes topics silently" do
       category.auto_close_hours = 1
       category.save!
 

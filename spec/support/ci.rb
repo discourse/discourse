@@ -102,7 +102,7 @@ RSpec.configure do |config|
   end
 
   if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
-    config.around :each do |example|
+    config.around do |example|
       measurement = Benchmark.measure { example.run }
       RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
     end

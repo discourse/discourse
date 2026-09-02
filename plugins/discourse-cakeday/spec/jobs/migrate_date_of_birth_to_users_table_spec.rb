@@ -37,7 +37,7 @@ RSpec.describe Jobs::MigrateDateOfBirthToUsersTable do
   end
 
   context "when custom field date is invalid" do
-    it "should ignore the error" do
+    it "ignores the error" do
       user.custom_fields["date_of_birth"] = "02/13/1904"
       user.save!
 
@@ -48,7 +48,7 @@ RSpec.describe Jobs::MigrateDateOfBirthToUsersTable do
   end
 
   context "when custom field date is blank" do
-    it "should remove the custom field" do
+    it "removes the custom field" do
       user.custom_fields["date_of_birth"] = ""
       user.save!
 

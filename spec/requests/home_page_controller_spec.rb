@@ -8,7 +8,7 @@ RSpec.describe HomePageController do
         SiteSetting.has_login_hint = false
       end
 
-      it "should display the menu by default" do
+      it "displays the menu by default" do
         get "/custom", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
         expect(response.status).to eq(200)
@@ -26,7 +26,7 @@ RSpec.describe HomePageController do
           end
         end
 
-        it "should allow plugin to override output" do
+        it "allows plugin to override output" do
           plugin =
             plugin_class.new(
               nil,
@@ -52,7 +52,7 @@ RSpec.describe HomePageController do
         end
       end
 
-      it "should display the site description on the homepage" do
+      it "displays the site description on the homepage" do
         get "/", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
         expect(response.status).to eq(200)
@@ -74,7 +74,7 @@ RSpec.describe HomePageController do
         expect(response.body).not_to include("crawler-view-anon-menu")
       end
 
-      it "should not display the site description on another route" do
+      it "does not display the site description on another route" do
         get "/top", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
         expect(response.status).to eq(200)

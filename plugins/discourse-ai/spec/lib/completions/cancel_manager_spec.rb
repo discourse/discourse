@@ -60,7 +60,7 @@ describe DiscourseAi::Completions::CancelManager do
     waiter&.kill
   end
 
-  it "should do nothing when cancel manager is already cancelled" do
+  it "does nothing when cancel manager is already cancelled" do
     cancel_manager = DiscourseAi::Completions::CancelManager.new
     cancel_manager.cancel!
 
@@ -75,7 +75,7 @@ describe DiscourseAi::Completions::CancelManager do
     expect(result).to be_nil
   end
 
-  it "should be able to cancel a completion" do
+  it "is able to cancel a completion" do
     # Start an HTTP server that hangs indefinitely
     server = TCPServer.new("127.0.0.1", 0)
     port = server.addr[1]

@@ -6,12 +6,11 @@ describe DiscourseAi::Translation::SidebarSectionLocalizer do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
   end
 
   fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "Participate") }
   fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Welcome", value: "/welcome") }
-
-  before { Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url) }
 
   def short_text_translator_stub(text:, target_locale:, translated:)
     translator = instance_double(DiscourseAi::Translation::ShortTextTranslator)

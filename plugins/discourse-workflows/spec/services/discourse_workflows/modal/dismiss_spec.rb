@@ -4,7 +4,7 @@ RSpec.describe DiscourseWorkflows::Modal::Dismiss do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:modal_id) }
 
-    it do
+    it "limits the modal identifier length" do
       is_expected.to validate_length_of(:modal_id).is_at_most(
         DiscourseWorkflows::Nodes::Modal::V1::MODAL_ID_MAX_LENGTH,
       )

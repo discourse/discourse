@@ -9,31 +9,9 @@ FakeContext = Struct.new(:request_id)
 RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   fab!(:user)
 
-  before(:each) do
+  before do
     extensions = SiteSetting.authorized_extensions.split("|")
     SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
-  end
-
-  let!(:upload) { Fabricate(:video_upload, user: user) }
-  fab!(:post) { Fabricate(:post, user: user) }
-  let(:options) { { quality: "high" } }
-  let(:adapter) { described_class.new(upload, options) }
-  let(:mediaconvert_client) { instance_double(Aws::MediaConvert::Client) }
-  let(:s3_store) { instance_double(FileStore::S3Store) }
-  let(:s3_object) { instance_double(Aws::S3::Object) }
-  let(:s3_bucket) { "test-bucket" }
-  let(:s3_region) { "us-east-1" }
-  let(:new_sha1) { "a" * 40 } # A valid SHA1 is 40 characters
-  let(:mediaconvert_job) { instance_double(Aws::MediaConvert::Types::Job) }
-  let(:mediaconvert_job_response) do
-    instance_double(Aws::MediaConvert::Types::CreateJobResponse, job: mediaconvert_job)
-  end
-  let(:mediaconvert_context) { instance_double(FakeContext, request_id: "test-request-id") }
-  let(:post_relation) { instance_double(ActiveRecord::Relation) }
-  # The ACL resource class is Aws::S3::ObjectAcl in aws-sdk-s3 v3
-  let(:acl_object) { instance_double(Aws::S3::ObjectAcl) }
-
-  before do
     upload.update!(sha1: new_sha1)
 
     allow(SecureRandom).to receive(:hex).with(20).and_return(new_sha1)
@@ -105,6 +83,25 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(Jobs).to receive(:enqueue_in)
     allow(OptimizedVideo).to receive(:create_for)
   end
+
+  let!(:upload) { Fabricate(:video_upload, user: user) }
+  fab!(:post) { Fabricate(:post, user: user) }
+  let(:options) { { quality: "high" } }
+  let(:adapter) { described_class.new(upload, options) }
+  let(:mediaconvert_client) { instance_double(Aws::MediaConvert::Client) }
+  let(:s3_store) { instance_double(FileStore::S3Store) }
+  let(:s3_object) { instance_double(Aws::S3::Object) }
+  let(:s3_bucket) { "test-bucket" }
+  let(:s3_region) { "us-east-1" }
+  let(:new_sha1) { "a" * 40 } # A valid SHA1 is 40 characters
+  let(:mediaconvert_job) { instance_double(Aws::MediaConvert::Types::Job) }
+  let(:mediaconvert_job_response) do
+    instance_double(Aws::MediaConvert::Types::CreateJobResponse, job: mediaconvert_job)
+  end
+  let(:mediaconvert_context) { instance_double(FakeContext, request_id: "test-request-id") }
+  let(:post_relation) { instance_double(ActiveRecord::Relation) }
+  # The ACL resource class is Aws::S3::ObjectAcl in aws-sdk-s3 v3
+  let(:acl_object) { instance_double(Aws::S3::ObjectAcl) }
 
   describe ".build_conversion_settings" do
     it "honors rotation metadata from uploaded videos" do

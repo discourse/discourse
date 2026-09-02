@@ -36,19 +36,19 @@ RSpec.describe "Updating tag counts" do
     expect(tag2.pm_topic_count).to eq(1)
   end
 
-  it "should decrease Tag#public_topic_count for all tags when topic's category is changed from a public category to a read restricted category" do
+  it "decreases Tag#public_topic_count for all tags when topic's category is changed from a public category to a read restricted category" do
     expect { topic_in_public_category.change_category_to_id(private_category.id) }.to change {
       tag1.reload.public_topic_count
     }.by(-1).and change { tag2.reload.public_topic_count }.by(-1)
   end
 
-  it "should increase Tag#public_topic_count for all tags when topic's category is changed from a read restricted category to a public category" do
+  it "increases Tag#public_topic_count for all tags when topic's category is changed from a read restricted category to a public category" do
     expect { topic_in_private_category.change_category_to_id(public_category.id) }.to change {
       tag1.reload.public_topic_count
     }.by(1).and change { tag2.reload.public_topic_count }.by(1)
   end
 
-  it "should not change Tag#public_topic_count for all tags when topic's category is changed from a public category to another public category" do
+  it "does not change Tag#public_topic_count for all tags when topic's category is changed from a public category to another public category" do
     expect do
       topic_in_public_category.change_category_to_id(public_category2.id)
     end.to not_change { tag1.reload.public_topic_count }.and not_change {
@@ -56,7 +56,7 @@ RSpec.describe "Updating tag counts" do
           }
   end
 
-  it "should not change Tag#public_topic_count for all tags when topic's category is changed from a read restricted category to another read restricted category" do
+  it "does not change Tag#public_topic_count for all tags when topic's category is changed from a read restricted category to another read restricted category" do
     expect do
       topic_in_private_category.change_category_to_id(private_category2.id)
     end.to not_change { tag1.reload.public_topic_count }.and not_change {
@@ -75,7 +75,7 @@ RSpec.describe "Updating tag counts" do
           }.by(1)
   end
 
-  it "should not change Tag#public_topic_count for all tags when topic is converted from private message to a regular topic in a read restricted category" do
+  it "does not change Tag#public_topic_count for all tags when topic is converted from private message to a regular topic in a read restricted category" do
     expect do
       private_message.convert_to_public_topic(
         Discourse.system_user,
@@ -86,7 +86,7 @@ RSpec.describe "Updating tag counts" do
           }
   end
 
-  it "should decrease Tag#public_topic_count for all tags when regular topic in public category is converted to a private message" do
+  it "decreases Tag#public_topic_count for all tags when regular topic in public category is converted to a private message" do
     expect do
       topic_in_public_category.convert_to_private_message(Discourse.system_user)
     end.to change { tag1.reload.public_topic_count }.by(-1).and change {
@@ -94,7 +94,7 @@ RSpec.describe "Updating tag counts" do
           }.by(-1)
   end
 
-  it "should not change Tag#public_topic_count for all tags when regular topic in read restricted category is converted to a private message" do
+  it "does not change Tag#public_topic_count for all tags when regular topic in read restricted category is converted to a private message" do
     expect do
       topic_in_private_category.convert_to_private_message(Discourse.system_user)
     end.to not_change { tag1.reload.public_topic_count }.and not_change {

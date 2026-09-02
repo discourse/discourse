@@ -20,6 +20,10 @@ RSpec.describe Voice::RoomsController do
       end
     end
     Voice::Room.reset_column_information
+    SiteSetting.voice_enabled = true
+    SiteSetting.voice_allowed_groups =
+      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
+    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
   fab!(:staff, :admin)
@@ -30,18 +34,13 @@ RSpec.describe Voice::RoomsController do
   fab!(:private_room_member) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:private_room) { Fabricate(:voice_room, creator: room_owner, public: false) }
 
+  let(:participant_session_id) { establish_presence!(room, user) }
+
   fab!(:private_room_membership) do
     private_room.room_memberships.create!(
       user: private_room_member,
       role: Voice::RoomMembership::ROLE_PARTICIPANT,
     )
-  end
-
-  before do
-    SiteSetting.voice_enabled = true
-    SiteSetting.voice_allowed_groups =
-      "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
-    SiteSetting.voice_create_room_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_2]}"
   end
 
   # Presence plus the server-attested participant session that signal,
@@ -690,7 +689,7 @@ RSpec.describe Voice::RoomsController do
         SiteSetting.enable_user_status = true
         SiteSetting.voice_auto_status_enabled = true
         sign_in(user)
-        @participant_session_id = establish_presence!(room, user)
+        participant_session_id
         Voice::ParticipantTracker.update_metadata(room.id, user.id, { role: "participant" })
         Voice::UserStatusManager.set_voice_status(user, room)
       end
@@ -698,7 +697,7 @@ RSpec.describe Voice::RoomsController do
       it "keeps the status without an expiry across heartbeats" do
         post "/voice/rooms/#{room.id}/heartbeat.json",
              params: {
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              }
 
         user.reload
@@ -711,7 +710,7 @@ RSpec.describe Voice::RoomsController do
           MessageBus.track_publish do
             post "/voice/rooms/#{room.id}/heartbeat.json",
                  params: {
-                   participant_session_id: @participant_session_id,
+                   participant_session_id: participant_session_id,
                  }
           end
 
@@ -722,7 +721,7 @@ RSpec.describe Voice::RoomsController do
         post "/voice/rooms/#{room.id}/heartbeat.json",
              params: {
                idle_state: "afk",
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              }
 
         user.reload
@@ -736,7 +735,7 @@ RSpec.describe Voice::RoomsController do
         post "/voice/rooms/#{room.id}/heartbeat.json",
              params: {
                idle_state: "active",
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              }
 
         user.reload
@@ -754,7 +753,7 @@ RSpec.describe Voice::RoomsController do
 
         post "/voice/rooms/#{room.id}/heartbeat.json",
              params: {
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              }
 
         user.reload
@@ -837,7 +836,7 @@ RSpec.describe Voice::RoomsController do
   end
 
   describe "#toggle_mute" do
-    before { @participant_session_id = establish_presence!(room, user) }
+    before { participant_session_id }
 
     it "sets muted metadata and broadcasts participants" do
       sign_in(user)
@@ -850,7 +849,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/toggle_mute.json",
            params: {
              muted: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -871,7 +870,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/toggle_mute.json",
            params: {
              muted: false,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -887,7 +886,7 @@ RSpec.describe Voice::RoomsController do
            params: {
              muted: true,
              deafened: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -907,7 +906,7 @@ RSpec.describe Voice::RoomsController do
   describe "#state" do
     before do
       SiteSetting.voice_video_enabled = true
-      @participant_session_id = establish_presence!(room, user)
+      participant_session_id
       sign_in(user)
     end
 
@@ -927,7 +926,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -946,7 +945,7 @@ RSpec.describe Voice::RoomsController do
            params: {
              screen: true,
              watching: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -960,7 +959,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              transcribing: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -970,7 +969,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              transcribing: false,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       metadata = Voice::ParticipantTracker.get_metadata(room.id, user.id)
@@ -983,7 +982,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(403)
@@ -995,7 +994,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(403)
@@ -1007,7 +1006,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(403)
@@ -1019,7 +1018,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              screen: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(403)
@@ -1032,7 +1031,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -1047,7 +1046,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              screen: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -1065,7 +1064,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(400)
@@ -1082,7 +1081,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -1095,7 +1094,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              video: false,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -1106,7 +1105,7 @@ RSpec.describe Voice::RoomsController do
     it "rejects a request with no supported state field" do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
              something_else: true,
            }
 
@@ -1117,7 +1116,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/state.json",
            params: {
              muted: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       messages =
@@ -1125,7 +1124,7 @@ RSpec.describe Voice::RoomsController do
           post "/voice/rooms/#{room.id}/state.json",
                params: {
                  muted: true,
-                 participant_session_id: @participant_session_id,
+                 participant_session_id: participant_session_id,
                }
         end
 
@@ -1137,7 +1136,7 @@ RSpec.describe Voice::RoomsController do
       post "/voice/rooms/#{room.id}/toggle_mute.json",
            params: {
              muted: true,
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(204)
@@ -1352,7 +1351,7 @@ RSpec.describe Voice::RoomsController do
   describe "#signal" do
     before do
       sign_in(user)
-      @participant_session_id = establish_presence!(room, user)
+      participant_session_id
       establish_presence!(room, staff)
       establish_presence!(room, other_participant)
     end
@@ -1362,7 +1361,7 @@ RSpec.describe Voice::RoomsController do
            params: {
              payload: {
              },
-             participant_session_id: @participant_session_id,
+             participant_session_id: participant_session_id,
            }
 
       expect(response.status).to eq(400)
@@ -1385,7 +1384,7 @@ RSpec.describe Voice::RoomsController do
                    candidate: candidate_payload,
                    recipient_id: staff.id,
                  },
-                 participant_session_id: @participant_session_id,
+                 participant_session_id: participant_session_id,
                }
         end
 
@@ -1422,7 +1421,7 @@ RSpec.describe Voice::RoomsController do
                      },
                    ],
                  },
-                 participant_session_id: @participant_session_id,
+                 participant_session_id: participant_session_id,
                }
         end
 
@@ -1462,7 +1461,7 @@ RSpec.describe Voice::RoomsController do
                      },
                    ],
                  },
-                 participant_session_id: @participant_session_id,
+                 participant_session_id: participant_session_id,
                }
         end
 
@@ -1485,7 +1484,7 @@ RSpec.describe Voice::RoomsController do
   describe "#signal validation" do
     before do
       sign_in(user)
-      @participant_session_id = establish_presence!(room, user)
+      participant_session_id
       establish_presence!(room, staff)
       establish_presence!(room, other_participant)
     end
@@ -1495,7 +1494,7 @@ RSpec.describe Voice::RoomsController do
         post "/voice/rooms/#{room.id}/signal.json",
              params: {
                payload: payload,
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              },
              as: :json
       end
@@ -1661,7 +1660,7 @@ RSpec.describe Voice::RoomsController do
     before do
       RateLimiter.enable
       sign_in(user)
-      @participant_session_id = establish_presence!(room, user)
+      participant_session_id
     end
 
     def candidate_event(seq = 1)
@@ -1693,7 +1692,7 @@ RSpec.describe Voice::RoomsController do
                      { recipient_id: recipient_id, events: events_per_recipient }
                    end,
                },
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              },
              as: :json
       end
@@ -1741,7 +1740,7 @@ RSpec.describe Voice::RoomsController do
                  recipient_id: 100_001,
                  events: 25.times.map { |seq| candidate_event(seq) },
                },
-               participant_session_id: @participant_session_id,
+               participant_session_id: participant_session_id,
              },
              as: :json
         expect(response.status).to eq(204)

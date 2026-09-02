@@ -16,28 +16,28 @@ describe "Admin Customize Form Templates" do
   describe "when visiting the page to customize form templates" do
     before { category.update!(form_template_ids: [form_template.id]) }
 
-    it "should show the existing form templates in a table" do
+    it "shows the existing form templates in a table" do
       form_template_page.visit
 
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_form_template(form_template.name)
     end
 
-    it "should show the categories the form template is used in" do
+    it "shows the categories the form template is used in" do
       form_template_page.visit
 
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_category_in_template_row(category.name)
     end
 
-    it "should show the form template structure in a modal" do
+    it "shows the form template structure in a modal" do
       form_template_page.visit
 
       form_template_page.click_view_form_template
       expect(form_template_page).to have_template_structure("- type: input")
     end
 
-    it "should show a preview of the template in a modal when toggling the preview" do
+    it "shows a preview of the template in a modal when toggling the preview" do
       form_template_page.visit
 
       form_template_page.click_view_form_template
@@ -46,14 +46,14 @@ describe "Admin Customize Form Templates" do
     end
 
     context "when using the view template modal" do
-      it "should navigate to the edit page when clicking the edit button" do
+      it "navigates to the edit page when clicking the edit button" do
         form_template_page.visit
         form_template_page.click_view_form_template
         form_template_page.find(".d-modal__footer .btn-primary").click
         expect(page).to have_current_path("/admin/customize/form-templates/#{form_template.id}")
       end
 
-      it "should delete the form template when clicking the delete button" do
+      it "deletes the form template when clicking the delete button" do
         form_template_page.visit
         original_template_name = form_template.name
         form_template_page.click_view_form_template
@@ -66,7 +66,7 @@ describe "Admin Customize Form Templates" do
   end
 
   describe "when visiting the page to edit a form template" do
-    it "should prefill form data" do
+    it "prefills form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)
       expect(ace_editor).to have_content(form_template.template)
@@ -81,7 +81,7 @@ describe "Admin Customize Form Templates" do
   end
 
   describe "when visiting the page to create a new form template" do
-    it "should allow admin to create a new form template" do
+    it "allows admin to create a new form template" do
       form_template_page.visit_new
 
       sample_name = "My First Template"
@@ -93,7 +93,7 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_form_template(sample_name)
     end
 
-    it "should disable the save button until form is filled out" do
+    it "disables the save button until form is filled out" do
       form_template_page.visit_new
       expect(form_template_page).to have_save_button_with_state(disabled: true)
       form_template_page.type_in_template_name("New Template")
@@ -102,7 +102,7 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_save_button_with_state(disabled: false)
     end
 
-    it "should disable the preview button until form is filled out" do
+    it "disables the preview button until form is filled out" do
       form_template_page.visit_new
       expect(form_template_page).to have_preview_button_with_state(disabled: true)
       form_template_page.type_in_template_name("New Template")
@@ -111,7 +111,7 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_preview_button_with_state(disabled: false)
     end
 
-    it "should show validation options in a modal when clicking the validations button" do
+    it "shows validation options in a modal when clicking the validations button" do
       form_template_page.visit_new
       form_template_page.click_validations_button
       expect(form_template_page).to have_validations_modal
@@ -136,7 +136,7 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_form_template(sample_name)
     end
 
-    it "should show a preview of the template in a modal when clicking the preview button" do
+    it "shows a preview of the template in a modal when clicking the preview button" do
       form_template_page.visit_new
       form_template_page.type_in_template_name("New Template")
       ace_editor.type_input("- type: input\n  id: name")
@@ -146,7 +146,7 @@ describe "Admin Customize Form Templates" do
       expect(form_template_page).to have_input_field("input")
     end
 
-    it "should render all the input field types in the preview" do
+    it "renders all the input field types in the preview" do
       tag1 = Fabricate(:tag)
       tag2 = Fabricate(:tag)
       tag3 = Fabricate(:tag)
@@ -183,7 +183,7 @@ describe "Admin Customize Form Templates" do
       tag_group.tags.each { |tag| expect(form_template_page).to have_tag_chooser_tag(tag) }
     end
 
-    it "should allow quick insertion of checkbox field" do
+    it "allows quick insertion of checkbox field" do
       quick_insertion_test(
         "checkbox",
         '- type: checkbox
@@ -195,7 +195,7 @@ describe "Admin Customize Form Templates" do
       )
     end
 
-    it "should allow quick insertion of short answer field" do
+    it "allows quick insertion of short answer field" do
       quick_insertion_test(
         "input",
         '- type: input
@@ -208,7 +208,7 @@ describe "Admin Customize Form Templates" do
       )
     end
 
-    it "should allow quick insertion of long answer field" do
+    it "allows quick insertion of long answer field" do
       quick_insertion_test(
         "textarea",
         '- type: textarea
@@ -221,7 +221,7 @@ describe "Admin Customize Form Templates" do
       )
     end
 
-    it "should allow quick insertion of dropdown field" do
+    it "allows quick insertion of dropdown field" do
       quick_insertion_test(
         "dropdown",
         '- type: dropdown
@@ -238,7 +238,7 @@ describe "Admin Customize Form Templates" do
       )
     end
 
-    it "should allow quick insertion of upload field" do
+    it "allows quick insertion of upload field" do
       quick_insertion_test(
         "upload",
         '- type: upload
@@ -252,7 +252,7 @@ describe "Admin Customize Form Templates" do
       )
     end
 
-    it "should allow quick insertion of multiple choice field" do
+    it "allows quick insertion of multiple choice field" do
       quick_insertion_test(
         "multiselect",
         '- type: multi-select

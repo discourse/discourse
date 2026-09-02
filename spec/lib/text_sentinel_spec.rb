@@ -96,11 +96,11 @@ RSpec.describe TextSentinel do
       expect(TextSentinel.new(valid_string.upcase)).to be_valid
     end
 
-    it "enforces the minimum entropy" do
+    it "accepts content meeting the minimum entropy" do
       expect(TextSentinel.new(valid_string, min_entropy: 16)).to be_valid
     end
 
-    it "enforces the minimum entropy" do
+    it "rejects content below the minimum entropy" do
       expect(TextSentinel.new(valid_string, min_entropy: 17)).not_to be_valid
     end
 

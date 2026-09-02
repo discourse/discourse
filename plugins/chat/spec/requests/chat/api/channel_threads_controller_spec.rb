@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the requested thread" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
@@ -90,13 +90,10 @@ RSpec.describe Chat::Api::ChannelThreadsController do
           expect(response.status).to eq(404)
         end
 
-        context "when the current user is a moderator" do
-          before { current_user.update!(moderator: true) }
-
-          it "returns 200" do
-            get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
-            expect(response.status).to eq(200)
-          end
+        it "returns 200 when the current user is a moderator" do
+          current_user.update!(moderator: true)
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+          expect(response.status).to eq(200)
         end
       end
 
@@ -316,6 +313,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   describe "update" do
     let(:title) { "New title" }
     let(:params) { { title: title } }
+
     fab!(:thread) do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end

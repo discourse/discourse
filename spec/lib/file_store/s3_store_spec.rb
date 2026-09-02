@@ -11,10 +11,12 @@ RSpec.describe FileStore::S3Store do
   let(:s3_bucket) { resource.bucket("s3-upload-bucket") }
   let(:s3_object) { stub }
   let(:upload_path) { Discourse.store.upload_path }
+  let(:fake_s3_bucket) { FakeS3.create.bucket(SiteSetting.s3_upload_bucket) }
 
   fab!(:optimized_image)
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
+
   fab!(:upload) { Fabricate(:upload, sha1: Digest::SHA1.hexdigest("secret image string")) }
 
   before do
@@ -295,103 +297,100 @@ RSpec.describe FileStore::S3Store do
           )
         end
 
-        context "when testing content-disposition security" do
-          it "sets inline disposition for safe images (PNG)" do
-            upload = Fabricate(:upload, original_filename: "safe.png", extension: "png")
-            uploaded_file = file_from_fixtures("logo.png")
+        it "sets inline disposition for safe images (PNG)" do
+          upload = Fabricate(:upload, original_filename: "safe.png", extension: "png")
+          uploaded_file = file_from_fixtures("logo.png")
 
-            s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            s3_bucket.expects(:object).returns(s3_object)
-            s3_object
-              .expects(:put)
-              .with(
-                has_entries(
-                  content_disposition: "inline; filename=\"safe.png\"; filename*=UTF-8''safe.png",
-                ),
-              )
-              .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).returns(s3_object)
+          s3_object
+            .expects(:put)
+            .with(
+              has_entries(
+                content_disposition: "inline; filename=\"safe.png\"; filename*=UTF-8''safe.png",
+              ),
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-            store.store_upload(uploaded_file, upload)
-          end
+          store.store_upload(uploaded_file, upload)
+        end
 
-          it "sets inline disposition for PDFs" do
-            SiteSetting.authorized_extensions = "pdf|png"
-            upload = Fabricate(:upload, original_filename: "document.pdf", extension: "pdf")
+        it "sets inline disposition for PDFs" do
+          SiteSetting.authorized_extensions = "pdf|png"
+          upload = Fabricate(:upload, original_filename: "document.pdf", extension: "pdf")
 
-            s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            s3_bucket.expects(:object).returns(s3_object)
-            s3_object
-              .expects(:put)
-              .with(
-                has_entries(
-                  content_disposition:
-                    "inline; filename=\"document.pdf\"; filename*=UTF-8''document.pdf",
-                ),
-              )
-              .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).returns(s3_object)
+          s3_object
+            .expects(:put)
+            .with(
+              has_entries(
+                content_disposition:
+                  "inline; filename=\"document.pdf\"; filename*=UTF-8''document.pdf",
+              ),
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-            store.store_upload(uploaded_file, upload)
-          end
+          store.store_upload(uploaded_file, upload)
+        end
 
-          it "sets attachment disposition for HTML files" do
-            SiteSetting.authorized_extensions = "html|png"
-            upload = Fabricate(:upload, original_filename: "evil.html", extension: "html")
-            uploaded_file = file_from_fixtures("logo.png")
+        it "sets attachment disposition for HTML files" do
+          SiteSetting.authorized_extensions = "html|png"
+          upload = Fabricate(:upload, original_filename: "evil.html", extension: "html")
+          uploaded_file = file_from_fixtures("logo.png")
 
-            s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            s3_bucket.expects(:object).returns(s3_object)
-            s3_object
-              .expects(:put)
-              .with(
-                has_entries(
-                  content_disposition:
-                    "attachment; filename=\"evil.html\"; filename*=UTF-8''evil.html",
-                ),
-              )
-              .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).returns(s3_object)
+          s3_object
+            .expects(:put)
+            .with(
+              has_entries(
+                content_disposition:
+                  "attachment; filename=\"evil.html\"; filename*=UTF-8''evil.html",
+              ),
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-            store.store_upload(uploaded_file, upload)
-          end
+          store.store_upload(uploaded_file, upload)
+        end
 
-          it "sets attachment disposition for XML files" do
-            SiteSetting.authorized_extensions = "xml|png"
-            upload = Fabricate(:upload, original_filename: "data.xml", extension: "xml")
-            uploaded_file = file_from_fixtures("logo.png")
+        it "sets attachment disposition for XML files" do
+          SiteSetting.authorized_extensions = "xml|png"
+          upload = Fabricate(:upload, original_filename: "data.xml", extension: "xml")
+          uploaded_file = file_from_fixtures("logo.png")
 
-            s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            s3_bucket.expects(:object).returns(s3_object)
-            s3_object
-              .expects(:put)
-              .with(
-                has_entries(
-                  content_disposition:
-                    "attachment; filename=\"data.xml\"; filename*=UTF-8''data.xml",
-                ),
-              )
-              .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).returns(s3_object)
+          s3_object
+            .expects(:put)
+            .with(
+              has_entries(
+                content_disposition: "attachment; filename=\"data.xml\"; filename*=UTF-8''data.xml",
+              ),
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-            store.store_upload(uploaded_file, upload)
-          end
+          store.store_upload(uploaded_file, upload)
+        end
 
-          it "sets attachment disposition for SVG files" do
-            SiteSetting.authorized_extensions = "svg|png"
-            upload = Fabricate(:upload, original_filename: "image.svg", extension: "svg")
-            uploaded_file = file_from_fixtures("logo.png")
+        it "sets attachment disposition for SVG files" do
+          SiteSetting.authorized_extensions = "svg|png"
+          upload = Fabricate(:upload, original_filename: "image.svg", extension: "svg")
+          uploaded_file = file_from_fixtures("logo.png")
 
-            s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            s3_bucket.expects(:object).returns(s3_object)
-            s3_object
-              .expects(:put)
-              .with(
-                has_entries(
-                  content_disposition:
-                    "attachment; filename=\"image.svg\"; filename*=UTF-8''image.svg",
-                ),
-              )
-              .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+          s3_bucket.expects(:object).returns(s3_object)
+          s3_object
+            .expects(:put)
+            .with(
+              has_entries(
+                content_disposition:
+                  "attachment; filename=\"image.svg\"; filename*=UTF-8''image.svg",
+              ),
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
-            store.store_upload(uploaded_file, upload)
-          end
+          store.store_upload(uploaded_file, upload)
         end
       end
     end
@@ -1068,7 +1067,7 @@ RSpec.describe FileStore::S3Store do
   describe "#create_multipart" do
     before { store.s3_helper.stub_client_responses! }
 
-    it "should create a multipart upload with the ACL parameter set to private canned ACL when `s3_use_acls` site setting is enabled" do
+    it "creates a multipart upload with the ACL parameter set to private canned ACL when `s3_use_acls` site setting is enabled" do
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
       create_multipart_request =
@@ -1081,7 +1080,7 @@ RSpec.describe FileStore::S3Store do
       )
     end
 
-    it "should create a multipart upload with the ACL parameter set to nil when `s3_use_acls` site setting is disabled" do
+    it "creates a multipart upload with the ACL parameter set to nil when `s3_use_acls` site setting is disabled" do
       SiteSetting.s3_use_acls = false
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -1093,7 +1092,7 @@ RSpec.describe FileStore::S3Store do
       expect(create_multipart_request[:context].params[:acl]).to eq(nil)
     end
 
-    it "should create a multipart upload with the tagging parameter set to visibility tags when `s3_enable_access_control_tags` site setting is enabled" do
+    it "creates a multipart upload with the tagging parameter set to visibility tags when `s3_enable_access_control_tags` site setting is enabled" do
       SiteSetting.s3_enable_access_control_tags = true
       store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
 
@@ -1145,14 +1144,12 @@ RSpec.describe FileStore::S3Store do
   end
 
   def prepare_fake_s3(upload_key, upload)
-    @fake_s3 = FakeS3.create
-    @fake_s3_bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
     store_fake_s3_object(upload_key, upload)
-    @fake_s3_bucket
+    fake_s3_bucket
   end
 
   def store_fake_s3_object(upload_key, upload)
-    @fake_s3_bucket.put_object(
+    fake_s3_bucket.put_object(
       key: upload_key,
       size: upload.filesize,
       last_modified: upload.created_at,

@@ -9,7 +9,7 @@ RSpec.describe "Discobot welcome post" do
   end
 
   context "when discourse_narrative_bot_welcome_post_delay is 0" do
-    it "should not delay the welcome post" do
+    it "does not delay the welcome post" do
       user
       expect { sign_in(user) }.to_not change { Jobs::NarrativeInit.jobs.count }
     end
@@ -19,7 +19,7 @@ RSpec.describe "Discobot welcome post" do
     before { SiteSetting.discourse_narrative_bot_welcome_post_delay = 5 }
 
     context "when user logs in normally" do
-      it "should delay the welcome post until user logs in" do
+      it "delays the welcome post until user logs in" do
         expect { sign_in(user) }.to change { Jobs::NarrativeInit.jobs.count }.by(1)
         expect(Jobs::NarrativeInit.jobs.first["args"].first["user_id"]).to eq(user.id)
       end
@@ -30,7 +30,7 @@ RSpec.describe "Discobot welcome post" do
         Fabricate(:invite, invited_by: Fabricate(:admin), email: "testing@gmail.com")
       end
 
-      it "should delay the welcome post until the user logs in" do
+      it "delays the welcome post until the user logs in" do
         expect do
           put "/invites/show/#{invite.invite_key}.json",
               params: {
@@ -51,7 +51,7 @@ RSpec.describe "Discobot welcome post" do
 
     before { SiteSetting.discourse_narrative_bot_welcome_post_type = "welcome_message" }
 
-    it "should not send welcome message" do
+    it "does not send welcome message" do
       expect { staged_user }.to_not change { Jobs::SendDefaultWelcomeMessage.jobs.count }
     end
   end

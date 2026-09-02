@@ -4,10 +4,11 @@ require "chunky_png"
 
 RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
+
   before { upload.id = 42 }
 
   describe ".crop" do
-    it "should produce cropped images (requires ImageMagick 7)" do
+    it "produces cropped images (requires ImageMagick 7)" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
       desired_height = 5
@@ -53,7 +54,7 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "should correctly crop images horizontally" do
+    it "correctlies crop images horizontally" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 244
       desired_height = 500
@@ -90,7 +91,7 @@ RSpec.describe OptimizedImage do
     end
 
     describe ".resize" do
-      it "should work correctly when extension is bad" do
+      it "works correctly when extension is bad" do
         original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
 
         begin
@@ -111,7 +112,7 @@ RSpec.describe OptimizedImage do
         end
       end
 
-      it "should work correctly" do
+      it "works correctly" do
         file = File.open("#{Rails.root.join("spec/fixtures/images/resized.png")}")
         upload = UploadCreator.new(file, "test.bin").create_for(-1)
 
@@ -143,7 +144,7 @@ RSpec.describe OptimizedImage do
       end
 
       describe "when an svg with a href is masked as a png" do
-        it "should not trigger the external request" do
+        it "does not trigger the external request" do
           tmp_path = "/tmp/resized.png"
 
           begin
@@ -164,7 +165,7 @@ RSpec.describe OptimizedImage do
     end
 
     describe ".downsize" do
-      it "should downsize logo (requires ImageMagick 7)" do
+      it "downsizes logo (requires ImageMagick 7)" do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -303,6 +304,7 @@ RSpec.describe OptimizedImage do
 
     context "when using an internal store" do
       let(:store) { FakeInternalStore.new }
+
       before { Discourse.stubs(:store).returns(store) }
 
       context "when an error happened while generating the thumbnail" do
@@ -325,7 +327,7 @@ RSpec.describe OptimizedImage do
           OptimizedImage.create_for(upload, 100, 200)
         end
 
-        it "works" do
+        it "stores the optimized image metadata" do
           oi = OptimizedImage.create_for(upload, 100, 200)
           expect(oi.sha1).to eq("da39a3ee5e6b4b0d3255bfef95601890afd80709")
           expect(oi.extension).to eq(".png")
@@ -354,44 +356,42 @@ RSpec.describe OptimizedImage do
         end
       end
 
-      context "when the thumbnail is properly generated" do
-        context "with secure uploads disabled" do
-          let(:s3_upload) { Fabricate(:upload_s3) }
-          let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
+      context "when the thumbnail is properly generated with secure uploads disabled" do
+        let(:s3_upload) { Fabricate(:upload_s3) }
+        let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
 
-          before do
-            stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
-            stub_request(:get, "http://#{s3_upload.url}").to_return(
-              status: 200,
-              body: file_from_fixtures("logo.png"),
-            )
-            stub_request(
-              :put,
-              %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
-            ).to_return(status: 200, headers: { "ETag" => "someetag" })
-          end
+        before do
+          stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
+          stub_request(:get, "http://#{s3_upload.url}").to_return(
+            status: 200,
+            body: file_from_fixtures("logo.png"),
+          )
+          stub_request(
+            :put,
+            %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
+          ).to_return(status: 200, headers: { "ETag" => "someetag" })
+        end
 
-          it "downloads a copy of the original image" do
-            oi = OptimizedImage.create_for(s3_upload, 100, 200)
+        it "downloads a copy of the original image" do
+          oi = OptimizedImage.create_for(s3_upload, 100, 200)
 
-            expect(oi.sha1).to_not be_nil
-            expect(oi.extension).to eq(".png")
-            expect(oi.width).to eq(100)
-            expect(oi.height).to eq(200)
-            expect(oi.url).to match(
-              %r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
-            )
-            expect(oi.filesize).to be > 0
+          expect(oi.sha1).to_not be_nil
+          expect(oi.extension).to eq(".png")
+          expect(oi.width).to eq(100)
+          expect(oi.height).to eq(200)
+          expect(oi.url).to match(
+            %r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
+          )
+          expect(oi.filesize).to be > 0
 
-            oi.filesize = nil
+          oi.filesize = nil
 
-            stub_request(
-              :get,
-              %r{http://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
-            ).to_return(status: 200, body: file_from_fixtures("resized.png"))
+          stub_request(
+            :get,
+            %r{http://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
+          ).to_return(status: 200, body: file_from_fixtures("resized.png"))
 
-            expect(oi.filesize).to be > 0
-          end
+          expect(oi.filesize).to be > 0
         end
       end
     end
@@ -399,7 +399,7 @@ RSpec.describe OptimizedImage do
 
   describe "#destroy" do
     describe "when upload_id is no longer valid" do
-      it "should still destroy the record" do
+      it "stills destroy the record" do
         image = Fabricate(:optimized_image)
         image.upload.delete
         image.reload.destroy

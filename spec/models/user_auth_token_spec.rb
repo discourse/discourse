@@ -378,7 +378,7 @@ RSpec.describe UserAuthToken do
     expect(user.user_auth_token_logs.last.client_ip).to eq("1.1.2.3")
   end
 
-  it "will not mark token unseen when prev and current are the same" do
+  it "does not mark token unseen when prev and current are the same" do
     token =
       UserAuthToken.generate!(user_id: user.id, user_agent: "some user agent", client_ip: "1.1.2.3")
 

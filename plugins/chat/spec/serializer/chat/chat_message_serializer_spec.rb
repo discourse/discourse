@@ -284,7 +284,7 @@ describe Chat::MessageSerializer do
     end
   end
 
-  describe "#mentioned_users" do
+  context "when a mentioned user was deleted" do
     it "doesn't fail if mentioned user was deleted" do
       mentioned_user = Fabricate(:user)
       message =

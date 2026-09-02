@@ -35,7 +35,7 @@ RSpec.describe Wizard::Builder do
   describe "setup step" do
     let(:setup_step) { wizard.steps.find { |s| s.id == "setup" } }
 
-    it "should not prefill default site setting values" do
+    it "does not prefill default site setting values" do
       fields = setup_step.fields
       title_field = fields.first
 
@@ -43,7 +43,7 @@ RSpec.describe Wizard::Builder do
       expect(title_field.value).to eq("")
     end
 
-    it "should prefill overridden site setting values" do
+    it "prefills overridden site setting values" do
       SiteSetting.title = "foobar"
 
       fields = setup_step.fields
@@ -53,7 +53,7 @@ RSpec.describe Wizard::Builder do
       expect(title_field.value).to eq("foobar")
     end
 
-    it "should set the right default value for privacy fields" do
+    it "sets the right default value for privacy fields" do
       SiteSetting.login_required = true
       SiteSetting.invite_only = false
       SiteSetting.must_approve_users = true

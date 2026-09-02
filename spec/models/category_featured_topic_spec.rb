@@ -35,7 +35,7 @@ RSpec.describe CategoryFeaturedTopic do
       expect(CategoryFeaturedTopic.where(topic_id: post2.topic_id).count).to eq(1)
     end
 
-    it "should feature topics for a secure category" do
+    it "features topics for a secure category" do
       # so much dancing, I am thinking fixures make sense here.
       user.change_trust_level!(TrustLevel[1])
 
@@ -49,7 +49,7 @@ RSpec.describe CategoryFeaturedTopic do
       expect(CategoryFeaturedTopic.count).to be(1)
     end
 
-    it "should not include invisible topics" do
+    it "does not include invisible topics" do
       invisible_post =
         PostCreator.create(
           user,
@@ -62,7 +62,7 @@ RSpec.describe CategoryFeaturedTopic do
       expect(CategoryFeaturedTopic.count).to be(1)
     end
 
-    it "should feature stuff in the correct order" do
+    it "features stuff in the correct order" do
       category = Fabricate(:category, num_featured_topics: 2)
       _t5 = Fabricate(:topic, category_id: category.id, bumped_at: 12.minutes.ago)
       t4 = Fabricate(:topic, category_id: category.id, bumped_at: 10.minutes.ago)

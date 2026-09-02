@@ -26,7 +26,7 @@ RSpec.describe TopTopic do
     context "after calculating" do
       before { TopTopic.refresh! }
 
-      it "should have top topics" do
+      it "has top topics" do
         expect(TopTopic.pluck(:topic_id)).to match_array([t1.id, t2.id])
       end
     end
@@ -34,19 +34,19 @@ RSpec.describe TopTopic do
 
   describe ".validate_period" do
     context "when passing a valid period" do
-      it do
+      it "accepts the period" do
         expect { described_class.validate_period(described_class.periods.first) }.not_to raise_error
       end
     end
 
     context "when passing a blank value" do
-      it do
+      it "rejects the blank period" do
         expect { described_class.validate_period(nil) }.to raise_error(Discourse::InvalidParameters)
       end
     end
 
     context "when passing an invalid period" do
-      it do
+      it "rejects the unsupported period" do
         expect { described_class.validate_period("bi-weekly") }.to raise_error(
           Discourse::InvalidParameters,
         )
@@ -54,7 +54,7 @@ RSpec.describe TopTopic do
     end
 
     context "when passing a non-string value" do
-      it do
+      it "rejects the non-string period" do
         expect { described_class.validate_period(ActionController::Parameters) }.to raise_error(
           Discourse::InvalidParameters,
         )
@@ -75,12 +75,14 @@ RSpec.describe TopTopic do
 
     fab!(:topic_3) { Fabricate(:topic, posts_count: 10) }
     fab!(:t3_post_1) { Fabricate(:post, topic_id: topic_3.id) }
-    let!(:t3_view_1) { TopicViewItem.add(topic_3.id, "127.0.0.1", user) }
-    let!(:t3_view_2) { TopicViewItem.add(topic_3.id, "127.0.0.2", coding_horror) }
+    before do
+      TopicViewItem.add(topic_3.id, "127.0.0.1", user)
+      TopicViewItem.add(topic_3.id, "127.0.0.2", coding_horror)
+    end
 
     # Note: all topics has 10 posts so we can skip "0 - ((10 - topics.posts_count) / 20) * #{period}_op_likes_count" calculation
 
-    it "should compute top score" do
+    it "computes top score" do
       # Default Formula: log(views_count) * {2} + op_likes_count * {0.5} + LEAST(likes_count / posts_count, {3}) + 10 + log(posts_count)
       #
       # topic_1 => 0 + 14 + 3 + 10 + 0 => 27

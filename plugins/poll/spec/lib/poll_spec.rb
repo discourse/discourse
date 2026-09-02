@@ -54,7 +54,7 @@ RSpec.describe DiscoursePoll::Poll do
       end
     end
 
-    it "should only allow one vote per user for a regular poll" do
+    it "onlies allow one vote per user for a regular poll" do
       poll = post_with_regular_poll.polls.first
 
       expect do
@@ -67,7 +67,7 @@ RSpec.describe DiscoursePoll::Poll do
       end.to raise_error(DiscoursePoll::Error, I18n.t("poll.one_vote_per_user"))
     end
 
-    it "should not allow a ranked vote with all abstentions" do
+    it "does not allow a ranked vote with all abstentions" do
       poll = post_with_ranked_choice_poll.polls.first
       poll_options = poll.poll_options
 
@@ -97,7 +97,7 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
-    it "should clean up bad votes for a regular poll" do
+    it "cleans up bad votes for a regular poll" do
       poll = post_with_regular_poll.polls.first
 
       PollVote.create!(poll: poll, poll_option: poll.poll_options.first, user: user)
@@ -149,7 +149,7 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
-    it "should respect the min/max votes per user for a multiple poll" do
+    it "respects the min/max votes per user for a multiple poll" do
       poll = post_with_multiple_poll.polls.first
 
       expect do
@@ -171,7 +171,7 @@ RSpec.describe DiscoursePoll::Poll do
       end.to raise_error(DiscoursePoll::Error, I18n.t("poll.min_vote_per_user", count: poll.min))
     end
 
-    it "should allow user to vote on a multiple poll even if min option is not configured" do
+    it "allows user to vote on a multiple poll even if min option is not configured" do
       post_with_multiple_poll = Fabricate(:post, raw: <<~RAW)
       [poll type=multiple max=3]
       * 1
@@ -196,7 +196,7 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
-    it "should allow user to vote on a multiple poll even if max option is not configured" do
+    it "allows user to vote on a multiple poll even if max option is not configured" do
       post_with_multiple_poll = Fabricate(:post, raw: <<~RAW)
       [poll type=multiple min=1]
       * 1

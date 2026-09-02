@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::JSON do
+  let(:link) { "http://stackoverflow.com" }
+
   before do
-    @link = "http://stackoverflow.com"
-    stub_request(:get, @link).to_return(
-      status: 200,
-      body: onebox_response("stackexchange-question"),
-    )
+    stub_request(:get, link).to_return(status: 200, body: onebox_response("stackexchange-question"))
   end
 
   describe "#raw" do
@@ -21,7 +19,7 @@ RSpec.describe Onebox::Engine::JSON do
     end
 
     it "returns a hash" do
-      object = OneboxEngineJSON.new(@link).send(:raw)
+      object = OneboxEngineJSON.new(link).send(:raw)
       expect(object).to be_a(Hash)
     end
   end

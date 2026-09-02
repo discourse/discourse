@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe "multisite", type: %i[multisite request] do
-  it "should always allow /srv/status through" do
+  it "alwayses allow /srv/status through" do
     get "http://unknown.com/srv/status"
     expect(response.status).to eq(200)
     expect(request.env["HTTP_HOST"]).to eq("test.localhost") # Rewritten by EnforceHostname middleware
   end
 
-  it "should 404 for unknown domains" do
+  it "404S for unknown domains" do
     get "http://unknown.com/about.json"
     expect(response.status).to eq(404)
   end
 
-  it "should hit correct site otherwise" do
+  it "hits correct site otherwise" do
     site_1_url =
       Fabricate(:topic, title: "Site 1 Topic Title", user: Discourse.system_user).relative_url
 

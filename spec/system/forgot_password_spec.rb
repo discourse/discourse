@@ -21,7 +21,7 @@ shared_examples "forgot password scenarios" do
   end
 
   context "when user does not have any multi-factor authentication configured" do
-    it "should allow a user to reset their password" do
+    it "allows a user to reset their password" do
       visit_reset_password_link
 
       user_reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
@@ -34,7 +34,7 @@ shared_examples "forgot password scenarios" do
     context "when user only has TOTP configured" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
-      it "should allow a user to reset password with TOTP" do
+      it "allows a user to reset password with TOTP" do
         visit_reset_password_link
 
         expect(user_reset_password_page).to have_no_toggle_button_to_second_factor_form
@@ -50,7 +50,7 @@ shared_examples "forgot password scenarios" do
     end
 
     context "when user only has security key configured" do
-      it "should allow a user to reset password with a security key" do
+      it "allows a user to reset password with a security key" do
         with_security_key(user) do
           visit_reset_password_link
 
@@ -69,7 +69,7 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
-      it "should allow a user to reset password with backup code" do
+      it "allows a user to reset password with backup code" do
         visit_reset_password_link
 
         user_reset_password_page
@@ -86,7 +86,7 @@ shared_examples "forgot password scenarios" do
     context "when user has security key and backup codes configured" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
-      it "should allow a user to reset password with backup code instead of security key" do
+      it "allows a user to reset password with backup code instead of security key" do
         with_security_key(user) do
           visit_reset_password_link
 
@@ -109,7 +109,7 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
-      it "should allow a user to toggle from security key to TOTP and between TOTP and backup codes" do
+      it "allows a user to toggle from security key to TOTP and between TOTP and backup codes" do
         with_security_key(user) do
           visit_reset_password_link
 
@@ -131,7 +131,7 @@ shared_examples "forgot password scenarios" do
     context "when user has TOTP and security key configured but no backup codes" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
-      it "should allow a user to reset password with TOTP instead of security key" do
+      it "allows a user to reset password with TOTP instead of security key" do
         with_security_key(user) do
           visit_reset_password_link
 
