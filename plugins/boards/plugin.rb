@@ -51,10 +51,9 @@ after_initialize do
         .pluck(:icon)
         .each { |icon| DiscoursePluginRegistry.register_svg_icon(icon) }
     end
-  rescue ActiveRecord::NoDatabaseError,
-         ActiveRecord::StatementInvalid,
-         ActiveRecord::DatabaseConnectionError
-    # Database may not exist/may have pending migrations yet during db:create / db:migrate bootstrap.
+  rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
+    # Database may be unreachable (asset precompile) or may have pending migrations
+    # during db:create / db:migrate bootstrap.
   end
 
   # When a column's icon changes, register it and expire the sprite cache
