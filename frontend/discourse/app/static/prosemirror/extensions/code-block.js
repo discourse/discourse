@@ -10,7 +10,10 @@ import {
 import { Decoration, DecorationSet } from "prosemirror-view";
 import CodeBlockPreview from "discourse/components/composer/code-block-preview";
 import { registerPreviewNodeView } from "discourse/components/composer/preview-node-view";
-import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  getExtensions,
+  getRichEditorExtensionsVersion,
+} from "discourse/lib/composer/rich-editor-extensions";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 import GlimmerNodeView from "../lib/glimmer-node-view";
 
@@ -22,14 +25,39 @@ let hljs;
 // positions of previewable blocks pinned to their code face
 const sourceModeKey = new PluginKey("code-block-source-mode");
 
-function registeredPreviews() {
-  const previews = {};
+let previewsCache;
+let previewsCacheVersion = -1;
 
-  for (const { codeBlockPreviews } of getExtensions()) {
-    Object.assign(previews, codeBlockPreviews);
+// consulted from per-keystroke paths, so memoized against the registration
+// version rather than rescanning the extension list
+function registeredPreviews() {
+  const version = getRichEditorExtensionsVersion();
+
+  if (previewsCacheVersion !== version) {
+    previewsCacheVersion = version;
+    previewsCache = {};
+
+    for (const { codeBlockPreviews } of getExtensions()) {
+      for (const [language, component] of Object.entries(
+        codeBlockPreviews ?? {}
+      )) {
+        if (previewsCache[language] && previewsCache[language] !== component) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Multiple code block previews registered for "${language}"; the last registration wins`
+          );
+        }
+
+        previewsCache[language] = component;
+      }
+    }
   }
 
-  return previews;
+  return previewsCache;
+}
+
+function hasRegisteredPreviews() {
+  return Object.keys(registeredPreviews()).length > 0;
 }
 
 function previewComponentForParams(params) {
@@ -445,6 +473,11 @@ function verticalArrowSelectsPreview(dir) {
 // a block with nothing to preview belongs on its code face, so the author can
 // write the source in the first place
 function emptyPreviewablePins(state) {
+  // don't walk the document on every change when no preview is registered
+  if (!hasRegisteredPreviews()) {
+    return [];
+  }
+
   const pins = [];
 
   state.doc.descendants((node, pos) => {

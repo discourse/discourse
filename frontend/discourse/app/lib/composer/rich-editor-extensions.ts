@@ -317,6 +317,15 @@ export interface RichEditorExtension {
 
 const registeredExtensions: RichEditorExtension[] = [];
 let defaultExtensionsRegistered = false;
+let registrationVersion = 0;
+
+/**
+ * Increments whenever the registered extension list changes, so derived
+ * lookups can be memoized against it.
+ */
+export function getRichEditorExtensionsVersion(): number {
+  return registrationVersion;
+}
 
 export function markDefaultExtensionsRegistered() {
   defaultExtensionsRegistered = true;
@@ -333,6 +342,7 @@ export function areDefaultExtensionsRegistered() {
  */
 export function registerRichEditorExtension(extension: RichEditorExtension) {
   registeredExtensions.push(extension);
+  registrationVersion++;
 }
 
 export async function clearRichEditorExtensions() {
@@ -344,6 +354,7 @@ export async function clearRichEditorExtensions() {
   );
   registeredExtensions.length = 0;
   defaultExtensionsRegistered = false;
+  registrationVersion++;
   return module;
 }
 
