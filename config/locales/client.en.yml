@@ -6737,6 +6737,24 @@ en:
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
         chart:
           total: "Total: %{count}"
+        related_items:
+          showing: "Showing the newest %{shown} of %{total}."
+          users:
+            title: "Users"
+            signups:
+              description: "New accounts created between %{startDate} and %{endDate}, newest first."
+            new_contributors:
+              description: "Users who made their first post between %{startDate} and %{endDate}, newest first."
+          labels:
+            user: "User"
+            created_at: "Created at"
+            first_post: "First post created at"
+          table_summary:
+            trigger: "%{count}, show summary for %{date}"
+            users_title: "Users on %{date}"
+            loading: "Loading summary…"
+            empty: "No details are available."
+            error: "Couldn't load the summary."
 
       config_sections:
         account:

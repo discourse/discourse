@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "voice:bots": "node scripts/voice-fake-participants.mjs"
+  },
+  "dependencies": {
+    "discourse": "npm:@discourse/types@*"
+  }
+}

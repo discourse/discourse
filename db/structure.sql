@@ -307,7 +307,9 @@ CREATE TABLE public.admin_dashboard_reports (
     source character varying NOT NULL,
     identifier character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    rows integer DEFAULT 1 NOT NULL,
+    cols integer DEFAULT 1 NOT NULL
 );
 
 
@@ -3055,6 +3057,40 @@ CREATE SEQUENCE public.chat_message_custom_prompts_id_seq
 --
 
 ALTER SEQUENCE public.chat_message_custom_prompts_id_seq OWNED BY public.chat_message_custom_prompts.id;
+
+
+--
+-- Name: chat_message_hotlinked_media; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chat_message_hotlinked_media (
+    id bigint NOT NULL,
+    chat_message_id bigint NOT NULL,
+    url character varying NOT NULL,
+    status character varying NOT NULL,
+    upload_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chat_message_hotlinked_media_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chat_message_hotlinked_media_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chat_message_hotlinked_media_id_seq OWNED BY public.chat_message_hotlinked_media.id;
 
 
 --
@@ -13294,6 +13330,13 @@ ALTER TABLE ONLY public.chat_message_custom_prompts ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: chat_message_hotlinked_media id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media ALTER COLUMN id SET DEFAULT nextval('public.chat_message_hotlinked_media_id_seq'::regclass);
+
+
+--
 -- Name: chat_message_interactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15678,6 +15721,14 @@ ALTER TABLE ONLY public.chat_message_custom_fields
 
 ALTER TABLE ONLY public.chat_message_custom_prompts
     ADD CONSTRAINT chat_message_custom_prompts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chat_message_hotlinked_media chat_message_hotlinked_media_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_message_hotlinked_media
+    ADD CONSTRAINT chat_message_hotlinked_media_pkey PRIMARY KEY (id);
 
 
 --
@@ -19706,6 +19757,20 @@ CREATE UNIQUE INDEX index_chat_message_custom_fields_on_message_id_and_name ON p
 --
 
 CREATE UNIQUE INDEX index_chat_message_custom_prompts_on_message_id ON public.chat_message_custom_prompts USING btree (message_id);
+
+
+--
+-- Name: index_chat_message_hotlinked_media_on_message_and_url_md5; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_chat_message_hotlinked_media_on_message_and_url_md5 ON public.chat_message_hotlinked_media USING btree (chat_message_id, md5((url)::text));
+
+
+--
+-- Name: index_chat_message_hotlinked_media_on_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_message_hotlinked_media_on_upload_id ON public.chat_message_hotlinked_media USING btree (upload_id);
 
 
 --
@@ -23812,7 +23877,9 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260901020329'),
 ('20260828145150'),
+('20260827064809'),
 ('20260826124054'),
+('20260826090055'),
 ('20260824091843'),
 ('20260824072257'),
 ('20260824051214'),
@@ -23936,6 +24003,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260602104726'),
 ('20260601063855'),
 ('20260601043020'),
+('20260529220000'),
 ('20260528074731'),
 ('20260528074719'),
 ('20260525105009'),

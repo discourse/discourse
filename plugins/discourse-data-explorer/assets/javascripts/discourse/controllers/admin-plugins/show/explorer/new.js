@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
@@ -32,6 +33,8 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+  @tracked groups = null;
+  @tracked aiGroupIds = [];
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
@@ -39,13 +42,17 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked showPreview = false;
   @tracked view = "sql";
 
-  manualFormData = { name: "", description: "" };
+  manualFormData = { name: "", description: "", groupIds: [] };
   _teardownAiGeneration = null;
 
   get previewDisabled() {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
     );
+  }
+
+  get groupOptions() {
+    return (this.groups ?? []).filter((g) => g.id !== AUTO_GROUPS.everyone.id);
   }
 
   get viewItems() {
@@ -115,7 +122,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async create({ name, description }) {
+  updateAiGroupIds(value) {
+    this.aiGroupIds = value;
+  }
+
+  @action
+  async create({ name, description, groupIds }) {
     try {
       this.loading = true;
       const result = await this.store
@@ -123,6 +135,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: name.trim(),
           description: description?.trim(),
           sql: this.manualSql,
+          group_ids: groupIds,
         })
         .save();
       this.toasts.success({
@@ -242,6 +255,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: this.generatedName,
           description: this.generatedDescription,
           sql: this.generatedSql,
+          group_ids: this.aiGroupIds,
         })
         .save();
       this.toasts.success({
@@ -293,10 +307,12 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = rememberedMode() ?? "ai";
     this.schema = null;
+    this.groups = null;
+    this.aiGroupIds = [];
     this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
-    this.manualFormData = { name: "", description: "" };
+    this.manualFormData = { name: "", description: "", groupIds: [] };
     this.previewLoading = false;
     this.previewResults = null;
     this.showPreview = false;

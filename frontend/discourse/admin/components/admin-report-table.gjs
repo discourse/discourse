@@ -227,8 +227,11 @@ export default class AdminReportTable extends Component {
           {{#each this.paginatedData as |data|}}
             <AdminReportTableRow
               @data={{data}}
+              @hasRelatedItems={{@hasRelatedItems}}
               @labels={{this.model.computedLabels}}
               @options={{this.options}}
+              @reportType={{@reportType}}
+              @reportFilters={{@reportFilters}}
             />
           {{/each}}
 

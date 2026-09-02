@@ -287,4 +287,18 @@
   &.--hovering .sidebar-section-hover-button {
     opacity: 1;
   }
+
+  // the tracked hovering state is not set on touch-capable devices
+  @media (hover: hover) {
+    &:hover .sidebar-section-hover-button {
+      opacity: 1;
+    }
+  }
+
+  // devices without hover can't reveal the button, so it stays visible
+  @media (hover: none) {
+    .sidebar-section-hover-button {
+      opacity: 1;
+    }
+  }
 }

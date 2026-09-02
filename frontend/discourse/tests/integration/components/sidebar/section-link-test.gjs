@@ -87,7 +87,29 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     assert.dom(".sidebar-section-link-wrapper").hasClass("--hovering");
   });
 
-  test("hover action is not rendered on touch devices", async function (assert) {
+  test("hover action is not rendered on touch devices with a narrow viewport", async function (assert) {
+    setTouch(this.owner, true);
+    sinon
+      .stub(this.owner.lookup("service:capabilities"), "viewport")
+      .value({ sm: false });
+
+    const template = <template>
+      <SectionLink
+        @linkName="test"
+        @route="discovery.latest"
+        @hoverType="icon"
+        @hoverValue="ellipsis-vertical"
+      />
+    </template>;
+
+    await render(template);
+
+    assert
+      .dom(".sidebar-section-hover-button")
+      .doesNotExist("does not clutter the narrow layout with a button");
+  });
+
+  test("hover action is rendered on touch devices with a wide viewport, without the hovering state", async function (assert) {
     setTouch(this.owner, true);
 
     const template = <template>
@@ -101,11 +123,15 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
     await render(template);
 
-    assert.dom(".sidebar-section-hover-button").doesNotExist();
+    assert
+      .dom(".sidebar-section-hover-button")
+      .exists("the button is rendered without needing hover");
 
     await triggerEvent(".sidebar-section-link-wrapper", "mouseenter");
 
-    assert.dom(".sidebar-section-link-wrapper").doesNotHaveClass("--hovering");
+    assert
+      .dom(".sidebar-section-link-wrapper")
+      .doesNotHaveClass("--hovering", "emulated hover does not set the state");
   });
 
   test("scrollIntoView measures against the scrolling ancestor, not the window", async function (assert) {

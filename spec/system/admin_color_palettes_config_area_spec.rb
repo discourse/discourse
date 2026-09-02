@@ -116,7 +116,7 @@ describe "Admin Color Palettes Config Area Page" do
     it "can filter by type" do
       config_area.visit
 
-      select_kit = PageObjects::Components::DSelect.new(".d-select")
+      select_kit = PageObjects::Components::DNativeSelect.new(".d-native-select")
       select_kit.select("user_selectable")
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
