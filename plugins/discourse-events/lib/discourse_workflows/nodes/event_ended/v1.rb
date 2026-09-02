@@ -22,6 +22,7 @@ if defined?(DiscourseWorkflows)
               { schema: DiscourseEvents::Events::Workflows::Schema::EVENT_ENDED_OUTPUT_SCHEMA },
             ],
             properties: PostEventScoping::SCOPE_PROPERTIES,
+            i18n_scope: PostEventScoping::I18N_SCOPE,
           )
 
           def initialize(event, event_date = nil, *)

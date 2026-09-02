@@ -4,6 +4,10 @@ if defined?(DiscourseWorkflows)
   module DiscourseWorkflows
     module Nodes
       module PostEventScoping
+        # Shared locale scope so every node using these properties resolves
+        # `topic_id`/`topic_id_description` from one translated pair.
+        I18N_SCOPE = "post_event"
+
         SCOPE_PROPERTIES = {
           topic_id: {
             type: :string,

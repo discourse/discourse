@@ -25,6 +25,7 @@ if defined?(DiscourseWorkflows)
               },
             ],
             properties: PostEventScoping::SCOPE_PROPERTIES,
+            i18n_scope: PostEventScoping::I18N_SCOPE,
           )
 
           def initialize(invitee, *)
