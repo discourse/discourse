@@ -214,15 +214,18 @@ export function formatMinutesSeconds(seconds, { subsecondPrecision = 0 } = {}) {
   if (seconds > 0 && seconds < 1 && subsecondPrecision > 0) {
     const minimumSeconds = 10 ** -subsecondPrecision;
     const lessThanMinimum = seconds < minimumSeconds;
-    const formattedSeconds = I18n.toNumber(
-      lessThanMinimum ? minimumSeconds : seconds,
-      { precision: subsecondPrecision, strip_insignificant_zeros: true }
-    );
+    const displayedSeconds = lessThanMinimum ? minimumSeconds : seconds;
+    const formattedSeconds = I18n.toNumber(displayedSeconds, {
+      precision: subsecondPrecision,
+      strip_insignificant_zeros: true,
+    });
     const translationKey = lessThanMinimum
       ? "dates.tiny.less_than_x_seconds.other"
       : "dates.tiny.x_seconds.other";
 
-    return i18n(translationKey, { count: formattedSeconds });
+    return i18n(translationKey, {
+      count: formattedSeconds,
+    });
   }
 
   const totalSeconds = Math.floor(seconds);
