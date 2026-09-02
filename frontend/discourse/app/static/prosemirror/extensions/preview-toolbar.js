@@ -6,7 +6,6 @@ import {
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
-import { codeBlockPreviewComponent } from "./code-block";
 
 const MENU_PADDING = 8;
 
@@ -15,7 +14,7 @@ function isPreviewBlock(node, schema) {
 
   return (
     (!!previewSource && node.firstChild?.type === previewSource) ||
-    !!codeBlockPreviewComponent(node)
+    !!node.type.spec.isPreviewBlock?.(node)
   );
 }
 

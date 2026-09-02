@@ -720,6 +720,9 @@ const extension = {
   nodeSpec: {
     code_block: {
       createGapCursor: true,
+      // the preview toolbar targets blocks that declare themselves preview
+      // blocks, so the generic primitive needs no knowledge of this feature
+      isPreviewBlock: (node) => !!codeBlockPreviewComponent(node),
       ...markdownSchema.nodes.code_block.spec,
     },
   },
