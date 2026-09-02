@@ -6,8 +6,18 @@ import {
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
+import { codeBlockPreviewComponent } from "./code-block";
 
 const MENU_PADDING = 8;
+
+function isPreviewBlock(node, schema) {
+  const previewSource = schema.nodes.preview_source;
+
+  return (
+    (!!previewSource && node.firstChild?.type === previewSource) ||
+    !!codeBlockPreviewComponent(node)
+  );
+}
 
 /**
  * Finds the preview block a selection acts on: one selected as a node, or the
@@ -16,15 +26,9 @@ const MENU_PADDING = 8;
  * @returns {{ node: import("prosemirror-model").Node, pos: number }|null}
  */
 export function activePreviewBlock({ selection, schema }) {
-  const previewSource = schema.nodes.preview_source;
-
-  if (!previewSource) {
-    return null;
-  }
-
   if (
     selection instanceof NodeSelection &&
-    selection.node.firstChild?.type === previewSource
+    isPreviewBlock(selection.node, schema)
   ) {
     return { node: selection.node, pos: selection.from };
   }
@@ -34,7 +38,7 @@ export function activePreviewBlock({ selection, schema }) {
   for (let depth = $head.depth; depth > 0; depth--) {
     const node = $head.node(depth);
 
-    if (node.firstChild?.type === previewSource) {
+    if (isPreviewBlock(node, schema)) {
       return { node, pos: $head.before(depth) };
     }
   }
@@ -265,13 +269,11 @@ const extension = {
           }
 
           const { selection, schema } = view.state;
-          const previewSource = schema.nodes.preview_source;
 
           // only from the selected block: inside the source, Tab is typing
           if (
-            !previewSource ||
             !(selection instanceof NodeSelection) ||
-            selection.node.firstChild?.type !== previewSource
+            !isPreviewBlock(selection.node, schema)
           ) {
             return false;
           }

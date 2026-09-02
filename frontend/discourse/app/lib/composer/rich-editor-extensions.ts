@@ -304,6 +304,13 @@ export interface RichEditorExtension {
   keymap?: RichKeymap;
   /** Commands exposed on the editor view state. */
   commands?: (params: PluginParams) => Record<string, RichCommand>;
+  /**
+   * Preview components for fenced code blocks, keyed by language (the first
+   * word of the block's info string). A `code_block` whose language has a
+   * component renders it in place of the code, with a toggle back to the
+   * source; the document node stays a plain `code_block`.
+   */
+  codeBlockPreviews?: Record<string, unknown>;
   /** Custom toolbar state contributed by the extension. */
   state?: StateFunction;
 }

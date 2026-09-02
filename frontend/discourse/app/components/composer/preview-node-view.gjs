@@ -13,6 +13,14 @@ export function previewNodeViewFor(dom) {
 }
 
 /**
+ * Registers a view under its block's `dom`, so the preview toolbar can reach
+ * its `toggleSource()`/`showingSource` seam.
+ */
+export function registerPreviewNodeView(dom, nodeView) {
+  nodeViews.set(dom, nodeView);
+}
+
+/**
  * Renders a block's `preview_source` child in place of the source itself.
  *
  * The wrapper must be `atom` and `isolating`, or the editor will step into
@@ -48,7 +56,7 @@ export default class PreviewNodeView extends Component {
     this.args.contentDOM?.classList.add("composer-preview-node__source");
     this.#syncMode();
 
-    nodeViews.set(this.args.dom, this);
+    registerPreviewNodeView(this.args.dom, this);
     this.args.onSetup?.(this);
   }
 
