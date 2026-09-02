@@ -124,7 +124,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
         {
           data: [topic_object(newest, fields:), topic_object(middle, fields:)],
           included: [],
-          links: links_of(next: page_url(after: cursor_of_record(middle), size: 2)),
+          links: links_of(next: page_url(size: 2, after: cursor_of_record(middle))),
         }.deep_stringify_keys,
       )
     end
