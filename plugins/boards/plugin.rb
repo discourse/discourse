@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # name: boards
-# about: Boards with optional topic backing and board-level ACLs.
-# meta_topic_id: 118164
+# about: Organize topics, and lightweight standalone "floater" cards, into configurable, drag-and-drop kanban-style boards, all with a purpose-built management UI and per-board access control
+# meta_topic_id: 411414
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse/tree/main/plugins/boards
