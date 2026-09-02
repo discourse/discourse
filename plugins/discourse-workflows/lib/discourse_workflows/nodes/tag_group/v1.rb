@@ -193,10 +193,7 @@ module DiscourseWorkflows
         def desired_tags_for(tag_group, requested_tag_names, operation)
           if OPERATIONS.exclude?(operation)
             raise_node_error!(
-              I18n.t(
-                "discourse_workflows.errors.tag_group.unknown_operation",
-                operation: operation,
-              ),
+              I18n.t("discourse_workflows.errors.unknown_operation", operation: operation),
             )
           end
 

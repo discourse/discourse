@@ -129,7 +129,6 @@ en:
         no_tag_names: "No tag names provided."
         no_valid_tag_names: "No valid tag names provided."
         operation_failed: "Tag group operation failed: %{errors}"
-        unknown_operation: "Unknown tag group operation: %{operation}."
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
