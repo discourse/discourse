@@ -105,8 +105,8 @@ ru:
         x_seconds:
           one: "%{count} с"
           few: "%{count} с"
-          many: "%{count} с"
-          other: "%{count} с"
+          many: "< %{count} с"
+          other: "< %{count} с"
         less_than_x_minutes:
           one: "< %{count} мин"
           few: "< %{count} мин"
