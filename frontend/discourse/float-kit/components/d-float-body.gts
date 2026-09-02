@@ -211,6 +211,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
+      {{~! strip whitespace ~}}
       <div
         class={{dConcatClass
           @mainClass
@@ -253,6 +254,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
           {{yield}}
         </div>
       </div>
+      {{~! strip whitespace ~}}
     </DFloatPortal>{{~! strip whitespace ~}}
   </template>
 }

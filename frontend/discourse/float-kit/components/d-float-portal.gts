@@ -32,7 +32,9 @@ export default class DFloatPortal extends Component<DFloatPortalSignature> {
       {{yield}}
     {{else}}
       {{#in-element @portalOutletElement insertBefore=null}}
+        {{~! strip whitespace: outlets like `pre` render stray text nodes ~}}
         {{yield}}
+        {{~! strip whitespace ~}}
       {{/in-element}}
     {{/if~}}
   </template>
