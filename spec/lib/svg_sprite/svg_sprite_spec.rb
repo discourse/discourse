@@ -295,6 +295,55 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).to include("fab fa-bandcamp")
   end
 
+  describe "icon sources registered by plugins" do
+    let(:plugin) do
+      Class
+        .new(Plugin::Instance) do
+          attr_accessor :enabled
+          attr_accessor :name
+
+          def enabled?
+            @enabled
+          end
+        end
+        .new
+    end
+
+    after { DiscoursePluginRegistry._raw_svg_icon_sources.clear }
+
+    it "includes the icons the source returns" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_icon_source(-> { %w[blender guitar] }, plugin)
+
+      expect(SvgSprite.all_icons).to include("blender", "guitar")
+    end
+
+    it "ignores sources belonging to disabled plugins" do
+      plugin.enabled = false
+      DiscoursePluginRegistry.register_svg_icon_source(-> { ["blender"] }, plugin)
+
+      expect(SvgSprite.all_icons).not_to include("blender")
+    end
+
+    it "does not call the source until the sprite is built" do
+      plugin.enabled = true
+      called = false
+      DiscoursePluginRegistry.register_svg_icon_source(
+        -> do
+          called = true
+          ["blender"]
+        end,
+        plugin,
+      )
+
+      expect(called).to eq(false)
+
+      SvgSprite.all_icons
+
+      expect(called).to eq(true)
+    end
+  end
+
   it "includes Font Awesome icon from groups" do
     _group = Fabricate(:group, flair_icon: "far-building")
     expect(SvgSprite.bundle).to match(/far-building/)
