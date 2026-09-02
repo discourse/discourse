@@ -5,6 +5,7 @@ import {
   NodeSelection,
   Plugin,
   PluginKey,
+  Selection,
   TextSelection,
 } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
@@ -38,9 +39,11 @@ function registeredPreviews() {
     previewsCache = {};
 
     for (const { codeBlockPreviews } of getExtensions()) {
-      for (const [language, component] of Object.entries(
-        codeBlockPreviews ?? {}
-      )) {
+      for (const [name, component] of Object.entries(codeBlockPreviews ?? {})) {
+        // hljs treats language names case-insensitively, so ```Mermaid must
+        // find the same preview as ```mermaid
+        const language = name.toLowerCase();
+
         if (previewsCache[language] && previewsCache[language] !== component) {
           // eslint-disable-next-line no-console
           console.warn(
@@ -60,8 +63,13 @@ function hasRegisteredPreviews() {
   return Object.keys(registeredPreviews()).length > 0;
 }
 
+// the language a block's info string declares: its first word, lowercased
+function paramsLanguage(params) {
+  return params?.trim().split(/\s+/)[0]?.toLowerCase();
+}
+
 function previewComponentForParams(params) {
-  const language = params?.trim().split(/\s+/)[0];
+  const language = paramsLanguage(params);
 
   return language ? registeredPreviews()[language] : undefined;
 }
@@ -88,14 +96,20 @@ function sourceModePins(state) {
 }
 
 function pinDecoration(pos, node, previewHeight) {
-  return Decoration.node(pos, pos + node.nodeSize, {
-    class: "--source",
-    // the code face keeps (a bounded part of) the footprint of the preview it
-    // replaced, so flipping does not reflow the document below the block
-    ...(previewHeight && {
-      style: `--composer-preview-node-height: ${Math.round(previewHeight)}px`,
-    }),
-  });
+  return Decoration.node(
+    pos,
+    pos + node.nodeSize,
+    {
+      class: "--source",
+      // the code face keeps (a bounded part of) the footprint of the preview
+      // it replaced, so flipping does not reflow the document below the block
+      ...(previewHeight && {
+        style: `--composer-preview-node-height: ${Math.round(previewHeight)}px`,
+      }),
+    },
+    // readable back off a pin that is about to be replaced
+    { previewHeight }
+  );
 }
 
 // a neighboring pin ends where this block starts, so match on `from`
@@ -237,7 +251,14 @@ class CodeBlockWithLangSelectorNodeView {
   }
 
   toggleSource() {
-    toggleCodeBlockSource(this.view, this.getPos());
+    const pos = this.getPos();
+
+    // the view may already have been destroyed and replaced
+    if (pos === undefined) {
+      return;
+    }
+
+    toggleCodeBlockSource(this.view, pos);
   }
 
   changeListener(e) {
@@ -299,8 +320,11 @@ class CodeBlockWithLangSelectorNodeView {
       ]),
     ].sort((a, b) => a.localeCompare(b));
 
+    // an info-string tail (```mermaid height=500) is not part of the language
+    const language = paramsLanguage(this.node.attrs.params);
+
     const empty = document.createElement("option");
-    empty.textContent = languages.includes(this.node.attrs.params)
+    empty.textContent = languages.includes(language)
       ? ""
       : this.node.attrs.params;
     select.appendChild(empty);
@@ -308,7 +332,7 @@ class CodeBlockWithLangSelectorNodeView {
     languages.forEach((lang) => {
       const option = document.createElement("option");
       option.textContent = lang;
-      option.selected = lang === this.node.attrs.params;
+      option.selected = lang === language;
       select.appendChild(option);
     });
 
@@ -342,22 +366,12 @@ class CodeBlockWithLangSelectorNodeView {
 
     return !this.contentDOM.contains(mutation.target);
   }
-
-  destroy() {
-    this.dom.removeEventListener("change", (e) => this.changeListener(e));
-  }
 }
 
 // A previewing block reimplements atom semantics for a non-atom node: this
 // view exposes no contentDOM, so prosemirror-view renders none of the block's
-// content and treats it as opaque. Everything an atom would get from its
-// schema spec is reproduced around that fact — clicks (the plugin's
-// handleClickOn), Backspace/Delete and arrows at the boundaries (the
-// extension keymap), and text-selection containment (the plugin's
-// appendTransaction). A prosemirror-view upgrade must re-verify that
-// contentDOM-less views stay opaque to the DOM observer and to selection,
-// that handleClickOn still fires for non-atom nodes, and that
-// view.endOfTextblock still resolves from neighboring textblocks.
+// content and treats it as opaque. Clicks, the Backspace/Delete and arrow
+// boundaries, and text-selection containment are all rebuilt around that.
 class CodeBlockPreviewNodeView extends GlimmerNodeView {
   constructor(node, view, getPos, pluginParams, preview) {
     super({
@@ -367,7 +381,11 @@ class CodeBlockPreviewNodeView extends GlimmerNodeView {
       pluginParams,
       component: CodeBlockPreview,
       name: "code-block-preview",
-      options: { preview, onToggle: toggleCodeBlockSource },
+      options: {
+        preview,
+        language: paramsLanguage(node.attrs.params),
+        onToggle: toggleCodeBlockSource,
+      },
     });
   }
 
@@ -377,6 +395,7 @@ class CodeBlockPreviewNodeView extends GlimmerNodeView {
     if (
       node.type !== this.node.type ||
       codeBlockPreviewComponent(node) !== this.options.preview ||
+      paramsLanguage(node.attrs.params) !== this.options.language ||
       isSourceMode(this.view.state, this.getPos())
     ) {
       return false;
@@ -445,27 +464,65 @@ function containedSelection(state, pins) {
     return NodeSelection.create(state.doc, head.pos);
   }
 
-  // an endpoint that fell inside moves just past the block instead
-  const anchorPos = anchor
-    ? selection.anchor <= selection.head
-      ? anchor.pos
-      : anchor.pos + anchor.node.nodeSize
-    : selection.anchor;
-  const headPos = head
-    ? selection.head < selection.anchor
-      ? head.pos
-      : head.pos + head.node.nodeSize
-    : selection.head;
+  // an endpoint that fell inside moves out to the neighboring textblock. A
+  // boundary position resolves to the document, and TextSelection.between
+  // would send such an endpoint back into the block it just left, so each one
+  // is stepped away from the block explicitly.
+  const $anchor = anchor
+    ? outsideBlock(state, anchor, selection.anchor <= selection.head ? -1 : 1)
+    : state.doc.resolve(selection.anchor);
+  const $head = head
+    ? outsideBlock(state, head, selection.head < selection.anchor ? -1 : 1)
+    : state.doc.resolve(selection.head);
 
-  return TextSelection.between(
-    state.doc.resolve(anchorPos),
-    state.doc.resolve(headPos)
-  );
+  if (!$anchor || !$head) {
+    return NodeSelection.create(state.doc, (head ?? anchor).pos);
+  }
+
+  return TextSelection.between($anchor, $head);
+}
+
+// the nearest position outside `block` in `dir`, or null when the block has no
+// textblock on that side to hold a selection endpoint
+function outsideBlock(state, block, dir) {
+  const boundary = dir === -1 ? block.pos : block.pos + block.node.nodeSize;
+
+  return Selection.findFrom(state.doc.resolve(boundary), dir, true)?.$head;
+}
+
+// the boundary a join would actually cut at, mirroring prosemirror-commands:
+// walk out of every wrapper the caret sits at the edge of, so a neighbor
+// nested in a list item or blockquote is still seen
+function cutBoundary($pos, dir) {
+  if ($pos.parent.type.spec.isolating) {
+    return null;
+  }
+
+  for (let depth = $pos.depth - 1; depth >= 0; depth--) {
+    if (dir === -1) {
+      if ($pos.index(depth) > 0) {
+        return $pos.before(depth + 1);
+      }
+    } else if ($pos.index(depth) + 1 < $pos.node(depth).childCount) {
+      return $pos.after(depth + 1);
+    }
+
+    if ($pos.node(depth).type.spec.isolating) {
+      break;
+    }
+  }
+
+  return null;
 }
 
 function selectNeighborPreview(state, dispatch, dir) {
   const { $cursor } = state.selection;
-  const boundary = dir === -1 ? $cursor.before() : $cursor.after();
+  const boundary = cutBoundary($cursor, dir);
+
+  if (boundary === null) {
+    return false;
+  }
+
   const $boundary = state.doc.resolve(boundary);
   const neighbor = dir === -1 ? $boundary.nodeBefore : $boundary.nodeAfter;
 
@@ -571,6 +628,7 @@ function sourceModePlugin() {
         ),
 
       apply(tr, pins, _oldState, newState) {
+        const before = pins;
         pins = pins.map(tr.mapping, tr.doc);
 
         const meta = tr.getMeta(sourceModeKey);
@@ -592,9 +650,18 @@ function sourceModePlugin() {
           pins = pins.add(
             newState.doc,
             meta.pins
-              .map((pos) => tr.mapping.map(pos))
-              .filter((pos) => !findPin(pins, pos).length)
-              .map((pos) => pinDecoration(pos, newState.doc.nodeAt(pos)))
+              .map((pos) => ({
+                pos: tr.mapping.map(pos),
+                // setNodeMarkup replaces the node, which kills its node
+                // decoration, so a re-pin has to carry the footprint the
+                // dying pin was holding
+                previewHeight: findPin(before, pos)[0]?.spec.previewHeight,
+                node: newState.doc.nodeAt(tr.mapping.map(pos)),
+              }))
+              .filter(({ pos, node }) => node && !findPin(pins, pos).length)
+              .map(({ pos, node, previewHeight }) =>
+                pinDecoration(pos, node, previewHeight)
+              )
           );
         }
 

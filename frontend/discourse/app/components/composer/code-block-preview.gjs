@@ -17,6 +17,9 @@ export default class CodeBlockPreview extends Component {
     super(...arguments);
 
     this.args.dom.classList.add("composer-preview-node");
+    // every language shares this node view, so its class cannot tell them
+    // apart; features style their own preview through this
+    this.args.dom.dataset.language = this.args.options.language;
     // without a contentDOM the browser must never place a caret inside
     this.args.dom.contentEditable = "false";
 

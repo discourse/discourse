@@ -306,9 +306,16 @@ export interface RichEditorExtension {
   commands?: (params: PluginParams) => Record<string, RichCommand>;
   /**
    * Preview components for fenced code blocks, keyed by language (the first
-   * word of the block's info string). A `code_block` whose language has a
-   * component renders it in place of the code, with a toggle back to the
-   * source; the document node stays a plain `code_block`.
+   * word of the block's info string, case-insensitive). A `code_block` whose
+   * language has a component renders it in place of the code, with a toggle
+   * back to the source; the document node stays a plain `code_block`.
+   *
+   * The block carries `data-language` while previewing, which is the hook for
+   * styling one language's preview — the node view's own class is shared by
+   * all of them. Toggling destroys and rebuilds the component, so a preview
+   * holding its own state (zoom, scroll) starts over on each flip.
+   *
+   * An older core ignores this field, so a consumer needs no version check.
    *
    * Which preview mechanism to use: content written as a fenced code block
    * registers here — one entry and a component. Content with its own markup

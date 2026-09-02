@@ -243,6 +243,78 @@ module(
       assert.strictEqual(editorClass.value, MARKDOWN, "nothing merged");
     });
 
+    test("backspace from a nested neighbor selects the block instead of merging", async function (assert) {
+      const markdown = "```mermaid\nflowchart\n```\n\n* item";
+      const [editorClass] = await setupRichEditor(assert, markdown);
+      const { view } = editorClass;
+      const { node, pos } = findCodeBlock(view);
+
+      // start of the list item's paragraph: the boundary at the caret's own
+      // depth has no node before it, so the guard has to look further out
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, pos + node.nodeSize + 3)
+        )
+      );
+      await settled();
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Backspace");
+
+      assert.true(view.state.selection instanceof NodeSelection);
+      assert.strictEqual(view.state.selection.from, pos);
+      assert.strictEqual(editorClass.value, markdown, "nothing merged");
+    });
+
+    test("delete from a nested neighbor selects the block instead of merging", async function (assert) {
+      const markdown = "> quote\n\n```mermaid\nflowchart\n```";
+      const [editorClass] = await setupRichEditor(assert, markdown);
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+
+      // end of the blockquote's paragraph
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, pos - 2)
+        )
+      );
+      await settled();
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Delete");
+
+      assert.true(view.state.selection instanceof NodeSelection);
+      assert.strictEqual(view.state.selection.from, pos);
+      assert.strictEqual(editorClass.value, markdown, "nothing merged");
+    });
+
+    test("a selection sweeping backwards out of the block keeps its head outside", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+      const { node, pos } = findCodeBlock(view);
+
+      // a drag starting in "after" and moving up into the diagram
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, pos + node.nodeSize + 3, pos + 2)
+        )
+      );
+      await settled();
+
+      assert.notStrictEqual(
+        view.state.selection.$head.parent.type.name,
+        "code_block",
+        "the head is not left inside the hidden source"
+      );
+
+      view.dispatch(view.state.tr.insertText("X"));
+      await settled();
+
+      assert.strictEqual(
+        findCodeBlock(view),
+        undefined,
+        "typing replaced the whole block rather than editing hidden source"
+      );
+    });
+
     test("select-all removes the block, and undo brings the preview back", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, MARKDOWN);
       const { view } = editorClass;
@@ -444,8 +516,10 @@ module(
       portal.textContent = "portaled toolbar";
       pre.appendChild(portal);
 
-      await settled();
+      // the DOM observer flushes on its own timeout, which settled() does not
+      // wait for, so a redraw has to be given a real chance to happen
       await new Promise((resolve) => setTimeout(resolve, 50));
+      await settled();
 
       assert
         .dom("pre.--source .fake-toolbar")

@@ -7,7 +7,10 @@ export const TOOLBAR_IDENTIFIER = "composer-preview-toolbar";
 
 const nodeViews = new WeakMap();
 
-/** @returns {PreviewNodeView|undefined} the view rendering the block at `dom` */
+/**
+ * The view rendering the block at `dom`, whatever its class: the toolbar uses
+ * it only through the `toggleSource()`/`showingSource` seam.
+ */
 export function previewNodeViewFor(dom) {
   return nodeViews.get(dom);
 }
