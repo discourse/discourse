@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require "base64"
 require "fastimage"
 
 class UploadCreator
+  AUDIO_WAVEFORM_BASE64_LENGTH = ((Upload::AUDIO_WAVEFORM_SAMPLES + 2) / 3) * 4
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
   ADMIN_ASSET_TYPES = %w[
@@ -147,7 +149,7 @@ class UploadCreator
 
         # return the previous upload if any
         if @upload
-          add_metadata!
+          add_metadata!(include_audio: false)
           UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
           return @upload
         end
@@ -669,7 +671,7 @@ class UploadCreator
       "//*[#{ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ")}]"
   end
 
-  def add_metadata!
+  def add_metadata!(include_audio: true)
     @upload.for_private_message = true if @opts[:for_private_message]
     @upload.for_group_message = true if @opts[:for_group_message]
     @upload.for_theme = true if @opts[:for_theme]
@@ -677,6 +679,39 @@ class UploadCreator
     @upload.for_site_setting = true if @opts[:for_site_setting]
     @upload.site_setting_name = @opts[:site_setting_name] if @opts[:site_setting_name]
     @upload.for_gravatar = true if @opts[:for_gravatar]
+    add_audio_metadata! if include_audio
+  end
+
+  def add_audio_metadata!
+    return if @upload.audio_waveform.present?
+    return if @opts[:audio_waveform].blank?
+    return if !FileHelper.is_supported_audio?(@upload.original_filename)
+
+    encoded_waveform = @opts[:audio_waveform]
+    if !encoded_waveform.is_a?(String) || encoded_waveform.bytesize != AUDIO_WAVEFORM_BASE64_LENGTH
+      @upload.errors.add(:audio_waveform, :invalid)
+      return
+    end
+
+    waveform = Base64.strict_decode64(encoded_waveform)
+    if waveform.bytesize != Upload::AUDIO_WAVEFORM_SAMPLES
+      @upload.errors.add(:audio_waveform, :invalid)
+      return
+    end
+
+    duration = @opts[:audio_duration_ms].to_s
+    version = @opts[:audio_waveform_version].to_s
+    if !duration.match?(/\A[1-9]\d{0,9}\z/) || duration.to_i > 2_147_483_647 ||
+         version != Upload::AUDIO_WAVEFORM_VERSION.to_s
+      @upload.errors.add(:audio_waveform, :invalid)
+      return
+    end
+
+    @upload.audio_duration_ms = duration.to_i
+    @upload.audio_waveform = waveform
+    @upload.audio_waveform_version = version.to_i
+  rescue ArgumentError
+    @upload.errors.add(:audio_waveform, :invalid)
   end
 
   private

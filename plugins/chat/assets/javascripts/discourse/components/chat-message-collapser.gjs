@@ -8,9 +8,11 @@ import applyLightbox from "discourse/lib/lightbox";
 import { escapeExpression } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
+import { getVoiceMessageUpload } from "discourse/plugins/chat/discourse/lib/audio-waveform";
 import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video" with {
   discourseImport: "optional",
 };
@@ -66,6 +68,10 @@ export default class ChatMessageCollapser extends Component {
         uploads: this.args.uploads,
       },
     ];
+  }
+
+  get waveformAudioUpload() {
+    return getVoiceMessageUpload(this.args.uploads);
   }
 
   get cookedBodies() {
@@ -180,7 +186,12 @@ export default class ChatMessageCollapser extends Component {
   }
 
   <template>
-    <div class="chat-message-collapser">
+    <div
+      class={{dConcatClass
+        "chat-message-collapser"
+        (if this.waveformAudioUpload "--voice-message")
+      }}
+    >
       {{#if this.hasUploads}}
         <DDecoratedHtml
           @html={{trustHTML @cooked}}
@@ -188,18 +199,27 @@ export default class ChatMessageCollapser extends Component {
           @className="chat-cooked"
         />
 
-        <Collapser
-          @header={{this.uploadsHeader}}
-          @onToggle={{@onToggleCollapse}}
-        >
-          {{#each this.uploadsRenderContext key="signature" as |uploadContext|}}
-            <div class="chat-uploads" {{this.lightbox}}>
-              {{#each uploadContext.uploads key="@index" as |upload|}}
-                <ChatUpload @upload={{upload}} />
-              {{/each}}
-            </div>
-          {{/each}}
-        </Collapser>
+        {{#if this.waveformAudioUpload}}
+          <div class="chat-uploads --voice-message">
+            <ChatUpload @upload={{this.waveformAudioUpload}} />
+          </div>
+        {{else}}
+          <Collapser
+            @header={{this.uploadsHeader}}
+            @onToggle={{@onToggleCollapse}}
+          >
+            {{#each
+              this.uploadsRenderContext key="signature"
+              as |uploadContext|
+            }}
+              <div class="chat-uploads" {{this.lightbox}}>
+                {{#each uploadContext.uploads key="@index" as |upload|}}
+                  <ChatUpload @upload={{upload}} />
+                {{/each}}
+              </div>
+            {{/each}}
+          </Collapser>
+        {{/if}}
       {{else}}
         {{#each this.cookedBodies as |cooked|}}
           {{#if cooked.needsCollapser}}

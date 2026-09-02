@@ -500,6 +500,9 @@ export default class UppyUpload {
     files = Array.isArray(files) ? files : [files];
 
     try {
+      const existingFileIds = new Set(
+        this.uppyWrapper.uppyInstance.getFiles().map((file) => file.id)
+      );
       this.uppyWrapper.uppyInstance.addFiles(
         files.map((file) => {
           return {
@@ -507,14 +510,19 @@ export default class UppyUpload {
             name: file.name,
             type: file.type,
             data: file,
-            meta: { pasted: opts.pasted },
+            meta: deepMerge({ pasted: opts.pasted }, opts.meta),
           };
         })
       );
+      return this.uppyWrapper.uppyInstance
+        .getFiles()
+        .filter((file) => !existingFileIds.has(file.id))
+        .map((file) => file.id);
     } catch (err) {
       warn(`error adding files to uppy: ${err}`, {
         id: "discourse.upload.uppy-add-files-error",
       });
+      return [];
     }
   }
 
@@ -523,7 +531,12 @@ export default class UppyUpload {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },
-        this.#resolvedAdditionalParams
+        this.#resolvedAdditionalParams,
+        {
+          audio_duration_ms: file.meta.audio_duration_ms,
+          audio_waveform: file.meta.audio_waveform,
+          audio_waveform_version: file.meta.audio_waveform_version,
+        }
       ),
     });
   }

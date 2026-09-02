@@ -7,6 +7,7 @@ import { trustHTML } from "@ember/template";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import { eq } from "discourse/truth-helpers";
+import ChatAudioPlayer from "discourse/plugins/chat/discourse/components/chat-audio-player";
 
 export default class ChatUpload extends Component {
   @service siteSettings;
@@ -117,9 +118,12 @@ export default class ChatUpload extends Component {
         <source src={{this.videoSourceUrl}} />
       </video>
     {{else if (eq this.type this.AUDIO_TYPE)}}
-      <audio class="chat-audio-upload" preload="metadata" controls>
-        <source src={{this.audioSourceUrl}} />
-      </audio>
+      <ChatAudioPlayer
+        @durationMs={{@upload.audio_duration_ms}}
+        @src={{this.audioSourceUrl}}
+        @waveform={{@upload.audio_waveform}}
+        @waveformVersion={{@upload.audio_waveform_version}}
+      />
     {{else}}
       <a
         class="chat-other-upload"

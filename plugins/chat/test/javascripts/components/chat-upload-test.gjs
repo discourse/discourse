@@ -53,6 +53,9 @@ const AUDIO_FIXTURE = {
   short_path: "/uploads/short-url/mnCnqY5tunCFw2qMgtPnu1mu1C9.mp3",
   retain_hours: null,
   human_filesize: "168 KB",
+  audio_duration_ms: 2000,
+  audio_waveform: Array.from({ length: 40 }, (_, index) => index * 6),
+  audio_waveform_version: 1,
 };
 
 const TXT_FIXTURE = {
@@ -118,20 +121,25 @@ module("Component | ChatUpload", function (hooks) {
       );
   });
 
-  test("with a audio", async function (assert) {
+  test("with audio", async function (assert) {
     this.set("upload", AUDIO_FIXTURE);
 
     await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
-    assert.dom("audio.chat-audio-upload").exists("displays as an audio");
-    assert.dom("audio.chat-audio-upload").hasAttribute("controls");
+    assert.dom(".chat-audio-player").exists("displays the custom audio player");
     assert
-      .dom("audio.chat-audio-upload")
-      .hasAttribute(
-        "preload",
-        "metadata",
-        "audio has correct preload settings"
-      );
+      .dom(".chat-audio-player__media")
+      .hasAttribute("preload", "none", "stored metadata avoids a media fetch");
+    assert
+      .dom(
+        ".chat-audio-player__waveform-bars:not(.--progress) .chat-audio-player__bar"
+      )
+      .exists({ count: 40 }, "displays the stored waveform");
+    assert
+      .dom(
+        ".chat-audio-player__waveform-bars.--progress .chat-audio-player__bar"
+      )
+      .exists({ count: 40 }, "displays the waveform progress layer");
   });
 
   test("non image upload", async function (assert) {
@@ -209,7 +217,7 @@ module("Component | ChatUpload", function (hooks) {
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
       assert
-        .dom("audio.chat-audio-upload source")
+        .dom(".chat-audio-player__media")
         .hasAttribute(
           "src",
           "https://awesome.cdn/site/song.mp3",

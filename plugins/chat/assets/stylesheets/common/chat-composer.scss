@@ -41,6 +41,7 @@
   &__outer-container {
     display: flex;
     align-items: center;
+    position: relative;
     box-sizing: border-box;
     width: 100%;
     padding-inline: 1rem;

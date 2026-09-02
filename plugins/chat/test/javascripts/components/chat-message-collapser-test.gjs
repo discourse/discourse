@@ -1,4 +1,11 @@
-import { click, findAll, render, settled, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  findAll,
+  render,
+  settled,
+  waitFor,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessageCollapser from "discourse/plugins/chat/discourse/components/chat-message-collapser";
@@ -61,6 +68,68 @@ module("Component | chat message collapser", function (hooks) {
     assert
       .dom(".chat-message-collapser-link-small")
       .includesHtml(evilStringEscaped);
+  });
+
+  test("renders waveform audio as a full-width voice note", async function (assert) {
+    this.set("uploads", [
+      {
+        original_filename: "voice-message.m4a",
+        url: "/uploads/voice-message.m4a",
+        audio_duration_ms: 2000,
+        audio_waveform: Array.from({ length: 40 }, (_, index) => index * 6),
+        audio_waveform_version: 1,
+      },
+    ]);
+
+    await render(
+      <template>
+        <div class="voice-note-test-container" style="inline-size: 20rem">
+          <ChatMessageCollapser @cooked="" @uploads={{this.uploads}} />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-collapser")
+      .hasClass("--voice-message", "the message uses the voice-note layout");
+    assert
+      .dom(".chat-message-collapser-header")
+      .doesNotExist("the generated filename and collapse control are omitted");
+
+    const voiceNoteWidth = find(
+      ".chat-uploads.--voice-message"
+    ).getBoundingClientRect().width;
+    const playerWidth =
+      find(".chat-audio-player").getBoundingClientRect().width;
+
+    assert.closeTo(
+      playerWidth,
+      voiceNoteWidth,
+      1,
+      "the player fills the voice-note layout"
+    );
+  });
+
+  test("keeps ordinary audio in the attachment collapser", async function (assert) {
+    this.set("uploads", [
+      {
+        original_filename: "song.mp3",
+        url: "/uploads/song.mp3",
+      },
+    ]);
+
+    await render(
+      <template>
+        <ChatMessageCollapser @cooked="" @uploads={{this.uploads}} />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-collapser-link-small")
+      .hasText("song.mp3", "the audio filename remains visible");
+    assert
+      .dom(".chat-message-collapser-button")
+      .exists("ordinary audio remains collapsible");
   });
 });
 

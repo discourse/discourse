@@ -243,7 +243,7 @@ export function isVideo(path) {
 }
 
 export function isAudio(path) {
-  return /\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i.test(path);
+  return /\.(mp3|og[ga]|opus|wav|weba|m4[abpr]|aac|flac)$/i.test(path);
 }
 
 export function isBackup(path) {

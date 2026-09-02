@@ -1095,6 +1095,42 @@ RSpec.describe Upload do
     end
   end
 
+  describe "audio metadata" do
+    it "stores a complete, bounded waveform" do
+      waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES) { |index| index }
+      upload.assign_attributes(
+        audio_duration_ms: 2_000,
+        audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+      )
+      upload.audio_waveform_values = waveform
+
+      expect(upload).to be_valid
+      expect(upload.audio_waveform_values).to eq(waveform)
+    end
+
+    it "rejects incomplete or incorrectly sized metadata" do
+      upload.assign_attributes(
+        audio_duration_ms: 2_000,
+        audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+      )
+      upload.audio_waveform_values = [1, 2, 3]
+
+      expect(upload).not_to be_valid
+      expect(upload.errors[:audio_waveform]).to be_present
+    end
+
+    it "keeps supported metadata valid when the writer version advances" do
+      waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES) { |index| index }
+      upload.assign_attributes(
+        audio_duration_ms: 2_000,
+        audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+      )
+      upload.audio_waveform_values = waveform
+
+      stub_const(Upload, :AUDIO_WAVEFORM_VERSION, 2) { expect(upload).to be_valid }
+    end
+  end
+
   describe ".mark_invalid_s3_uploads_as_missing" do
     it "should update all upload records with a `verification_status` of `invalid_etag` to `s3_file_missing`" do
       upload_1 =

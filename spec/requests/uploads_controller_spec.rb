@@ -119,6 +119,32 @@ RSpec.describe UploadsController do
         expect(id).to be
       end
 
+      it "stores and returns bounded audio metadata" do
+        SiteSetting.authorized_extensions = "weba"
+        waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES) { |index| index }
+        audio =
+          Rack::Test::UploadedFile.new(
+            file_from_contents("recorded voice", "voice-message.weba"),
+            "audio/webm",
+          )
+
+        post "/uploads.json",
+             params: {
+               file: audio,
+               upload_type: "composer",
+               audio_duration_ms: 2_000,
+               audio_waveform: Base64.strict_encode64(waveform.pack("C*")),
+               audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "audio_duration_ms" => 2_000,
+          "audio_waveform" => waveform,
+          "audio_waveform_version" => Upload::AUDIO_WAVEFORM_VERSION,
+        )
+      end
+
       it "is successful with api" do
         SiteSetting.authorized_extensions = "*"
         api_key = Fabricate(:api_key, user: user).key

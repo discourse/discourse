@@ -1,0 +1,69 @@
+.chat-voice-recorder {
+  display: flex;
+  flex: 0 0 auto;
+
+  &.is-active {
+    position: absolute;
+    inset-inline: 1rem;
+    z-index: z("composer", "content");
+    align-items: center;
+    gap: 0.5rem;
+    min-inline-size: 0;
+    padding: 0.25rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    background: var(--secondary);
+  }
+
+  &__status {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.5rem;
+    min-inline-size: 0;
+  }
+
+  &__indicator {
+    flex: 0 0 auto;
+    inline-size: 0.65rem;
+    block-size: 0.65rem;
+    border-radius: 50%;
+    background: var(--danger);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: chat-voice-recorder-pulse 1.2s ease-in-out infinite;
+    }
+  }
+
+  &__duration {
+    color: var(--primary-high);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__cancel,
+  &__finish,
+  &__start {
+    min-block-size: 2.75rem;
+    min-inline-size: 2.75rem;
+  }
+
+  &__cancel {
+    color: var(--danger);
+  }
+
+  &__finish {
+    border-radius: 50%;
+    background: var(--tertiary);
+
+    .d-icon {
+      color: var(--tertiary-fg);
+    }
+  }
+}
+
+@keyframes chat-voice-recorder-pulse {
+  50% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}

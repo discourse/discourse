@@ -287,6 +287,9 @@ module ExternalUploadHelpers
       for_site_setting:,
       site_setting_name: for_site_setting ? params[:site_setting_name] : nil,
       pasted: params[:pasted]&.to_s == "true",
+      audio_duration_ms: params[:audio_duration_ms],
+      audio_waveform: params[:audio_waveform],
+      audio_waveform_version: params[:audio_waveform_version],
     }
 
     external_upload_manager = ExternalUploadManager.new(external_upload_stub, opts)

@@ -16,6 +16,7 @@ en:
     chat_duplicate_message_sensitivity: "The likelihood that a duplicate message by the same sender will be blocked in a short period. Decimal number between 0 and 1.0, with 1.0 being the highest setting (blocks messages more frequently in a shorter amount of time). Set to `0` to allow duplicate messages."
     chat_minimum_message_length: "Minimum number of characters for a chat message."
     chat_allow_uploads: "Allow uploads in public chat channels and direct message channels."
+    chat_voice_recording_enabled: "Show controls for recording and attaching voice messages in chat. Requires at least one browser-supported audio format (`weba`, `m4a`, or `ogg`) in {{setting:authorized_extensions}}; add all three for broad browser support."
     chat_show_copy_button_on_codeblocks: "Show copy button on codeblocks in chat messages."
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."

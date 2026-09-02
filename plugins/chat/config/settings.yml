@@ -107,6 +107,13 @@ chat:
     default: true
     client: true
     validator: "Chat::AllowUploadsValidator"
+  chat_voice_recording_enabled:
+    default: false
+    client: true
+    depends_on:
+      - chat_allow_uploads
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   chat_show_copy_button_on_codeblocks:
     client: true
     default: true

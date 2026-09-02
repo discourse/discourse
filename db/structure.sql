@@ -11177,7 +11177,10 @@ CREATE TABLE public.uploads (
     verification_status integer DEFAULT 1 NOT NULL,
     security_last_changed_at timestamp without time zone,
     security_last_changed_reason character varying,
-    dominant_color text
+    dominant_color text,
+    audio_duration_ms integer,
+    audio_waveform bytea,
+    audio_waveform_version integer
 );
 
 
@@ -24344,6 +24347,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260901214813'),
 ('20260901020329'),
 ('20260831162602'),
 ('20260828145150'),
@@ -26840,4 +26844,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-

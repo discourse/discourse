@@ -14,6 +14,26 @@ RSpec.describe UploadSerializer do
     expect(json_data["thumbnail_width"]).to eql upload.thumbnail_width
     expect(json_data["thumbnail_height"]).to eql upload.thumbnail_height
     expect(json_data["short_path"]).to eql upload.short_path
+    expect(json_data).not_to include(
+      "audio_duration_ms",
+      "audio_waveform",
+      "audio_waveform_version",
+    )
+  end
+
+  it "includes stored audio metadata" do
+    waveform = Array.new(Upload::AUDIO_WAVEFORM_SAMPLES) { |index| index }
+    upload.update!(
+      audio_duration_ms: 2_000,
+      audio_waveform: waveform.pack("C*"),
+      audio_waveform_version: Upload::AUDIO_WAVEFORM_VERSION,
+    )
+
+    json_data = JSON.parse(serializer.to_json)
+
+    expect(json_data["audio_duration_ms"]).to eq(2_000)
+    expect(json_data["audio_waveform"]).to eq(waveform)
+    expect(json_data["audio_waveform_version"]).to eq(Upload::AUDIO_WAVEFORM_VERSION)
   end
 
   context "when the upload is secure" do
