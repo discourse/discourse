@@ -50,6 +50,21 @@ async function toggleSource(view) {
   await settled();
 }
 
+// PM resolves clicks through posAtCoords, so the synthetic events must carry
+// the element's real coordinates
+async function clickAt(element) {
+  const rect = element.getBoundingClientRect();
+  const coords = {
+    button: 0,
+    clientX: rect.left + rect.width / 2,
+    clientY: rect.top + rect.height / 2,
+  };
+
+  await triggerEvent(element, "mousedown", coords);
+  await triggerEvent(element, "mouseup", coords);
+  await triggerEvent(element, "click", coords);
+}
+
 module(
   "Integration | Component | prosemirror-editor - code block preview",
   function (hooks) {
@@ -293,6 +308,34 @@ module(
       await toggleSource(view);
 
       assert.dom(".cb-preview-stub").hasText("flowchart");
+    });
+
+    test("clicking the preview face selects the block, clicking the code face places the caret", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+      const { node, pos } = findCodeBlock(view);
+
+      await clickAt(document.querySelector(".composer-preview-node__preview"));
+
+      assert.true(
+        view.state.selection instanceof NodeSelection,
+        "the block is node-selected, so its toolbar can show"
+      );
+      assert.strictEqual(view.state.selection.from, pos);
+
+      await toggleSource(view);
+      await clickAt(document.querySelector("pre.--source code"));
+
+      assert.true(
+        view.state.selection instanceof TextSelection,
+        "the code face takes a caret"
+      );
+      assert.strictEqual(
+        view.state.selection.$head.parent,
+        view.state.doc.nodeAt(pos),
+        "inside the block"
+      );
+      assert.strictEqual(node.attrs.params, "mermaid height=500");
     });
 
     test("foreign DOM mounted into the code face is left alone", async function (assert) {

@@ -513,6 +513,22 @@ function sourceModePlugin() {
     },
 
     props: {
+      // the preview face is not an atom PM would select natively, and it has
+      // no contentDOM a click could place a caret in
+      handleClickOn(view, _pos, node, nodePos, _event, direct) {
+        if (!direct || !showsPreview(node, view.state, nodePos)) {
+          return false;
+        }
+
+        view.dispatch(
+          view.state.tr.setSelection(
+            NodeSelection.create(view.state.doc, nodePos)
+          )
+        );
+
+        return true;
+      },
+
       // the deco both marks the face for CSS and dirties the node so its view
       // is recreated on toggle, without touching the document
       decorations(state) {
