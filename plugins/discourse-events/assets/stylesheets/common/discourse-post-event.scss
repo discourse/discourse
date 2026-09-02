@@ -146,8 +146,11 @@ $show-interested: inherit;
         margin: 0 0.25em;
       }
 
-      .created-by {
+      .created-by,
+      .hosted-by,
+      .organized-by {
         margin-right: 0.25em;
+        white-space: nowrap;
 
         @media screen and (width <= 450px) {
           display: none;
@@ -164,8 +167,10 @@ $show-interested: inherit;
       .creators {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
-        .event-creator {
+        .event-creator,
+        .event-host {
           @include ellipsis;
 
           .topic-invitee-avatar {
@@ -174,6 +179,21 @@ $show-interested: inherit;
 
             @include ellipsis;
           }
+        }
+
+        .event-hosts,
+        .event-organizer-group {
+          display: flex;
+          align-items: center;
+          min-width: 0;
+        }
+
+        .event-host + .event-host {
+          margin-left: 0.25em;
+        }
+
+        .event-organizer-group__link {
+          @include ellipsis;
         }
       }
 

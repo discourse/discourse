@@ -51,6 +51,8 @@ export default class CompactEventEditor extends Component {
   @tracked url;
   @tracked image;
   @tracked allowedGroups;
+  @tracked hosts;
+  @tracked organizerGroup;
   @tracked closed;
   @tracked customFields;
   @tracked linkify;
@@ -96,6 +98,8 @@ export default class CompactEventEditor extends Component {
     this.#startedWithUrl ||= !!s.url;
     this.image = s.image;
     this.allowedGroups = s.allowedGroups;
+    this.hosts = s.hosts;
+    this.organizerGroup = s.organizerGroup;
     this.closed = s.closed;
     this.customFields = { ...s.customFields };
 
@@ -126,6 +130,8 @@ export default class CompactEventEditor extends Component {
       url: this.url,
       image: this.image,
       allowedGroups: this.allowedGroups,
+      hosts: this.hosts,
+      organizerGroup: this.organizerGroup,
       closed: this.closed,
       customFields: this.customFields,
     };
@@ -613,6 +619,10 @@ export default class CompactEventEditor extends Component {
       all_day: this.allDay,
       reminders: this.reminders,
       raw_invitees: this.allowedGroups?.split(",") || [],
+      hosts: this.hosts?.split(",").map((username) => ({ username })) || [],
+      organizer_group: this.organizerGroup
+        ? { name: this.organizerGroup }
+        : null,
       custom_fields: { ...this.customFields },
       starts_at: this.startsAt,
       ends_at: this.endsAt,
@@ -651,6 +661,10 @@ export default class CompactEventEditor extends Component {
           this.#startedWithUrl ||= !!this.url;
           this.allowedGroups =
             (updatedEvent.rawInvitees || []).join(",") || null;
+          this.hosts =
+            (updatedEvent.hosts || []).map((host) => host.username).join(",") ||
+            null;
+          this.organizerGroup = updatedEvent.organizerGroup?.name || null;
           this.image = updatedEvent.imageUpload?.short_url
             ? updatedEvent.imageUpload.short_url
             : updatedEvent.imageUpload?.url || null;

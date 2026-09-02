@@ -1,5 +1,8 @@
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
+// Keep in sync with `Event::MAX_HOSTS`, which enforces the same cap on save.
+export const MAX_HOSTS = 10;
+
 let lastSetting;
 let lastHosts;
 
@@ -256,6 +259,21 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
+  const hosts = (event.hosts || [])
+    .map((host) => (typeof host === "string" ? host : host?.username))
+    .filter(Boolean);
+  if (hosts.length) {
+    params.hosts = hosts.join(",");
+  }
+
+  const organizerGroup =
+    typeof event.organizerGroup === "string"
+      ? event.organizerGroup
+      : event.organizerGroup?.name;
+  if (organizerGroup) {
+    params.organizerGroup = organizerGroup;
+  }
+
   if (event.reminders && event.reminders.length) {
     params.reminders = event.reminders
       .map((r) => {
@@ -386,6 +404,8 @@ export function defaultEventState() {
     allowedGroups: null,
     closed: false,
     customFields: {},
+    hosts: null,
+    organizerGroup: null,
   };
 }
 
@@ -424,6 +444,8 @@ export function parseEventAttrs(
     allowedGroups: attrs.allowedGroups || null,
     closed: attrs.closed === "true",
     customFields,
+    hosts: attrs.hosts || null,
+    organizerGroup: attrs.organizerGroup || null,
   };
 }
 
@@ -447,6 +469,8 @@ export function stateToEventInput(state) {
     reminders: state.reminders,
     imageUpload: state.image ? { url: state.image } : null,
     customFields: state.customFields,
+    hosts: state.hosts ? state.hosts.split(",") : [],
+    organizerGroup: state.organizerGroup || null,
   };
 }
 

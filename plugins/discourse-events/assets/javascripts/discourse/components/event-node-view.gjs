@@ -30,6 +30,8 @@ const CLEARABLE_ATTRS = [
   "reminders",
   "image",
   "closed",
+  "hosts",
+  "organizerGroup",
 ];
 
 export default class EventNodeView extends Component {

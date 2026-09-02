@@ -31,6 +31,8 @@ export const EVENT_ATTRIBUTES = {
   livestream: { default: null },
   allDay: { default: null },
   image: { default: null },
+  hosts: { default: null },
+  organizerGroup: { default: null },
 };
 
 /** @returns {RichEditorExtension} */

@@ -66,6 +66,32 @@ module PageObjects
           has_css?(".event-invitees-avatars [data-user-card='#{username}']")
         end
 
+        def has_hosts_and_organizer_group?(hosts:, organizer_group:, cohosted: false)
+          host_label = cohosted ? "co_hosted_by" : "hosted_by"
+
+          has_css?(".event-hosts", text: I18n.t("js.discourse_post_event.#{host_label}")) &&
+            hosts.all? do |host|
+              has_css?(
+                ".event-host [data-user-card='#{host.username}']",
+                text: host.name.presence || host.username,
+              )
+            end &&
+            has_css?(
+              ".event-organizer-group__link[href='/g/#{organizer_group.name}']",
+              text: organizer_group.full_name || organizer_group.name,
+            )
+        end
+
+        def has_creator_host?(user)
+          has_css?(".created-by", text: I18n.t("js.discourse_post_event.created_and_hosted_by")) &&
+            has_css?(".event-creator [data-user-card='#{user.username}']") &&
+            has_no_css?(".event-hosts")
+        end
+
+        def visit_organizer_group
+          locator(".event-organizer-group__link").click
+        end
+
         def has_no_invitee_avatar?(username)
           has_no_css?(".event-invitees-avatars [data-user-card='#{username}']")
         end

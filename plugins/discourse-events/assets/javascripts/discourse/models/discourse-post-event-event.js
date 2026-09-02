@@ -106,11 +106,13 @@ export default class DiscoursePostEventEvent {
   @tracked customFields;
   @tracked channel;
   @tracked imageUpload;
+  @tracked organizerGroup;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
   @tracked _stats;
   @tracked _creator;
+  @tracked _hosts;
   @tracked _reminders;
 
   constructor(args = {}) {
@@ -134,6 +136,8 @@ export default class DiscoursePostEventEvent {
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
     this.creator = args.creator;
+    this.hosts = args.hosts || [];
+    this.organizerGroup = args.organizer_group;
     this.post = args.post;
     this.isClosed = args.is_closed;
     this.isExpired = args.is_expired;
@@ -206,6 +210,16 @@ export default class DiscoursePostEventEvent {
     this._creator = this.#initUserModel(user);
   }
 
+  get hosts() {
+    return this._hosts;
+  }
+
+  set hosts(users = []) {
+    this._hosts = trackedArray(
+      (users ?? []).map((user) => this.#initUserModel(user))
+    );
+  }
+
   get isPublic() {
     return this.status === "public";
   }
@@ -238,6 +252,8 @@ export default class DiscoursePostEventEvent {
     this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
+    this.hosts = event.hosts || [];
+    this.organizerGroup = event.organizerGroup;
     this.isClosed = event.isClosed;
     this.isExpired = event.isExpired;
     this.isStandalone = event.isStandalone;

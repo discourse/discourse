@@ -311,13 +311,22 @@ export default class DiscoursePostEvent extends Component {
                       event=event
                       Separator=StatusSeparator
                       Status=(component EventStatus event=event)
-                      Creator=(component Creator user=event.creator)
+                      Creator=(component
+                        Creator
+                        hosts=event.hosts
+                        organizerGroup=event.organizerGroup
+                        user=event.creator
+                      )
                     }}
                   >
                     {{#if event.creator}}
                       <EventStatus @event={{event}} />
                       <StatusSeparator />
-                      <Creator @user={{event.creator}} />
+                      <Creator
+                        @hosts={{event.hosts}}
+                        @organizerGroup={{event.organizerGroup}}
+                        @user={{event.creator}}
+                      />
                     {{else if this.loadingDetails}}
                       <CreatorPlaceholder />
                     {{/if}}
