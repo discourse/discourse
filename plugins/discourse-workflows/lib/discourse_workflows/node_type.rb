@@ -16,7 +16,7 @@ module DiscourseWorkflows
       },
       credentials: [],
       webhooks: [],
-      events: [],
+      event: nil,
       max_nodes: nil,
       capabilities: {
       },
@@ -202,7 +202,7 @@ module DiscourseWorkflows
     private_class_method :unknown_contract?
 
     def self.event_name
-      Array(description[:events]).first
+      description[:event]&.to_sym
     end
 
     def self.manually_triggerable?
