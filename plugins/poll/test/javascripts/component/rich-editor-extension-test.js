@@ -123,6 +123,21 @@ module(
       );
     });
 
+    test("an untitled poll carries an empty title to type into", async function (assert) {
+      const markdown = "[poll]\n* Option 1\n* Option 2\n\n[/poll]\n\n";
+      const [editor] = await setupRichEditor(assert, markdown);
+
+      assert
+        .dom(".composer-poll-node__content > h1")
+        .exists("the title node is always present")
+        .hasText("", "and is empty when the poll has no title");
+      assert.strictEqual(
+        editor.value,
+        markdown,
+        "an empty title is left out of the markdown"
+      );
+    });
+
     test("closed polls preserve status and option order", async function (assert) {
       const markdown =
         "[poll status=closed order=asc]\n* Option 1\n* Option 2\n\n[/poll]\n\n";

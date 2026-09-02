@@ -41,10 +41,12 @@ module("Component | PollUiBuilder", function (hooks) {
       .dom(".poll-options")
       .doesNotExist("options are edited in the document, not in the builder");
     assert.dom(".poll-title").doesNotExist("neither is the title");
-    await click(".advanced-mode-btn");
     assert
-      .dom(".poll-title")
-      .doesNotExist("not even behind the advanced toggle");
+      .dom(".advanced-mode-btn")
+      .doesNotExist(
+        "every remaining setting is shown, so there is no advanced mode"
+      );
+    assert.dom(".poll-date").exists("the close date is one of them");
     await click(".insert-poll");
 
     assert.deepEqual(

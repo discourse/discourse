@@ -190,6 +190,7 @@ en:
           label: Allow options to be added or removed after posting
         poll_title:
           label: Title (optional)
+          placeholder: Poll title
         poll_options:
           label: Options (one per line)
           add: Add option

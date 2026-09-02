@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
+import { i18n } from "discourse-i18n";
 import PollUiBuilder from "./modal/poll-ui-builder";
 import PollInfo from "./poll-info";
 
@@ -66,6 +67,16 @@ export default class PollNodeView extends Component {
     }
     this.args.contentDOM.contentEditable =
       node.attrs.type === "number" ? "false" : "true";
+    this.args.dom.style.setProperty(
+      "--poll-title-placeholder",
+      JSON.stringify(i18n("poll.ui_builder.poll_title.placeholder"))
+    );
+    // :empty misses it: ProseMirror keeps a trailing break in an empty block
+    this.args.dom.classList.toggle(
+      "--untitled",
+      node.firstChild?.type.name === "heading" &&
+        node.firstChild.content.size === 0
+    );
   }
 
   #optionList(node) {
@@ -98,9 +109,10 @@ export default class PollNodeView extends Component {
     if (attrs.type === "number") {
       // a number poll's options come from its range, so let the markdown
       // pipeline generate them instead of repeating the rules here
-      const generated = pluginParams.utils.convertFromMarkdown(
+      const generatedPoll = pluginParams.utils.convertFromMarkdown(
         `[poll ${buildBBCodeAttrs(attrs)}]\n[/poll]`
-      ).firstChild?.firstChild;
+      ).firstChild;
+      const generated = generatedPoll && this.#optionList(generatedPoll)?.node;
       const list = this.#optionList(node);
 
       if (list && generated?.type === list.node.type) {

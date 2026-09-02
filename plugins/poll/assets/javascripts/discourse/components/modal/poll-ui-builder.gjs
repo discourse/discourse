@@ -14,7 +14,7 @@ import { buildBBCodeAttrs } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, not, or } from "discourse/truth-helpers";
+import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DInputTip from "discourse/ui-kit/d-input-tip";
@@ -82,11 +82,20 @@ export default class PollUiBuilderModal extends Component {
       this.pollStep = Number(poll.step ?? 1);
       this.pollResult = poll.results || ALWAYS_POLL_RESULT;
       this.publicPoll = poll.public === "true";
+      this.showAdvanced = true;
     }
   }
 
   get isEditing() {
     return !!this.args.model.poll;
+  }
+
+  get showTitle() {
+    return this.showAdvanced && !this.isEditing;
+  }
+
+  get showOptions() {
+    return !this.isNumber && !this.isEditing;
   }
 
   get showNumber() {
@@ -513,7 +522,7 @@ export default class PollUiBuilderModal extends Component {
           {{/if}}
         </ul>
 
-        {{#if (and this.showAdvanced (not this.isEditing))}}
+        {{#if this.showTitle}}
           <div class="input-group poll-title">
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.poll_title.label"
@@ -526,7 +535,7 @@ export default class PollUiBuilderModal extends Component {
           </div>
         {{/if}}
 
-        {{#unless (or this.isNumber this.isEditing)}}
+        {{#if this.showOptions}}
           <div class="poll-options">
             {{#if this.showAdvanced}}
               <label class="input-group-label">{{i18n
@@ -578,7 +587,7 @@ export default class PollUiBuilderModal extends Component {
               </div>
             {{/if}}
           </div>
-        {{/unless}}
+        {{/if}}
 
         {{#unless this.rankedChoiceOrRegular}}
           <div class="options">
@@ -727,10 +736,12 @@ export default class PollUiBuilderModal extends Component {
 
         <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
 
-        <AdvancedModeToggle
-          @active={{this.showAdvanced}}
-          @onToggle={{this.toggleAdvanced}}
-        />
+        {{#unless this.isEditing}}
+          <AdvancedModeToggle
+            @active={{this.showAdvanced}}
+            @onToggle={{this.toggleAdvanced}}
+          />
+        {{/unless}}
 
       </:footer>
     </DModal>

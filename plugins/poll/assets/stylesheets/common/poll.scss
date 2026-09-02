@@ -639,6 +639,13 @@ body.crawler {
     display: contents;
   }
 
+  &.--untitled &__content > :is(h1, h2, h3, h4, h5, h6)::before {
+    content: var(--poll-title-placeholder, "");
+    color: var(--primary-medium);
+    position: absolute;
+    pointer-events: none;
+  }
+
   // outranks the cooked poll styles, which also apply inside the editor:
   // the parsed info node is replaced by the one rendered below it
   &.poll &__content > .poll-info {
