@@ -83,6 +83,29 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
   end
 
+  it "finds the Tag group action with its example and output fields", :aggregate_failures do
+    result = invoke_tool(query: "organize tag group", include_examples: true)
+    node = result[:nodes].find { |candidate| candidate[:type] == "action:tag_group" }
+
+    expect(node[:examples]).to contain_exactly(
+      include(
+        name: "Add tags to a tag group",
+        parameters:
+          include(
+            operation: "add",
+            tag_group_id: 123,
+            tag_names: "needs-review, escalated",
+            actor_username: "system",
+          ),
+      ),
+    )
+    expect(node.dig(:output_contracts, 0, :fields)).to include(
+      "tag_group_id" => "integer",
+      "tag_group_name" => "string",
+      "tag_names" => "array<string>",
+    )
+  end
+
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     expect(result[:status]).to eq("success")
     expect(output_fields_by_type.fetch("trigger:topic_created")).to include(
@@ -167,6 +190,11 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(output_fields_by_type.fetch("action:topic_tags")).to include(
       "topic_id" => "integer",
+      "tag_names" => "array<string>",
+    )
+    expect(output_fields_by_type.fetch("action:tag_group")).to include(
+      "tag_group_id" => "integer",
+      "tag_group_name" => "string",
       "tag_names" => "array<string>",
     )
     expect(output_fields_by_type.fetch("action:post")).to include(
