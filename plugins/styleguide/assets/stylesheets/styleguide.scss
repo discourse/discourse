@@ -1111,3 +1111,33 @@
     border-bottom: 1px solid var(--primary-very-low);
   }
 }
+
+.styleguide-panel-dock {
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__heading {
+    margin: 0 0 0.5em;
+    font-size: var(--font-up-1);
+  }
+
+  &__list {
+    margin: 0 0 1em 1.25em;
+    list-style: decimal;
+  }
+
+  // The dock sets no z-index of its own, on purpose: a host picks the layer it
+  // belongs in. These demos need to clear the styleguide's own chrome.
+  .d-panel-dock {
+    z-index: z("header");
+  }
+}

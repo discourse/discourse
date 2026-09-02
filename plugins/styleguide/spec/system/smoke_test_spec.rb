@@ -61,6 +61,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/organisms/chat", title: "Chat" },
       { href: "/organisms/docked-composer", title: "Docked Composer" },
       { href: "/organisms/modal", title: "Modal" },
+      { href: "/organisms/panel-dock", title: "Panel dock" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
       { href: "/organisms/more-topics", title: "More Topics" },
@@ -207,6 +208,29 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(page).to have_css(".d-overflow-controls__btn.--down")
     expect(page).to have_css(".d-overflow-controls.--owned-scroller ul[data-d-scroll-overflow]")
     screenshot_marker(label: "styleguide-overflow-controls")
+  end
+
+  it "renders the panel dock examples" do
+    visit "/styleguide/organisms/panel-dock"
+
+    expect(styleguide).to have_heading("Panel dock")
+
+    find(".styleguide-panel-dock--tabbed .styleguide-panel-dock__open").click
+
+    tabbed = ".d-panel-dock.--context-styleguide-tabbed-dock"
+    expect(page).to have_css("#{tabbed}.--dock-end")
+    expect(page).to have_css("#{tabbed} [role='tab']", count: 3)
+    expect(page).to have_css("#{tabbed} .d-panel-dock__dock-picker")
+
+    find(".styleguide-panel-dock--single .styleguide-panel-dock__open").click
+
+    single = ".d-panel-dock.--context-styleguide-single-panel"
+    expect(page).to have_css("#{single}.--dock-start")
+    expect(page).to have_no_css("#{single} [role='tablist']")
+    expect(page).to have_css("#{single} .d-panel-dock__close")
+    expect(page).to have_css(".d-panel-dock", count: 2)
+
+    screenshot_marker(label: "styleguide-panel-dock")
   end
 
   it "renders the overflowing navigation bar example" do

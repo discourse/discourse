@@ -45,6 +45,7 @@ import dockedComposer from "../components/sections/organisms/docked-composer";
 import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
+import panelDock from "../components/sections/organisms/panel-dock";
 import siteHeader from "../components/sections/organisms/site-header";
 import bem from "../components/sections/syntax/00-bem";
 
@@ -136,6 +137,7 @@ const SECTIONS = [
   { component: categoriesList, category: "organisms", id: "categories-list" },
   { component: dockedComposer, category: "organisms", id: "docked-composer" },
   { component: modal, category: "organisms", id: "modal" },
+  { component: panelDock, category: "organisms", id: "panel-dock" },
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
   { component: moreTopics, category: "organisms", id: "more-topics" },

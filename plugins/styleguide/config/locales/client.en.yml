@@ -379,6 +379,8 @@ en:
           header: "Modal Title"
           footer: "Modal Footer"
           open: "Open modal"
+        panel_dock:
+          title: "Panel dock"
         user_about:
           title: "User About Box"
         header_icons:
