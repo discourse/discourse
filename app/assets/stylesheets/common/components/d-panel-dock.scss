@@ -86,29 +86,22 @@
     margin-inline-start: auto;
   }
 
-  &__tabs {
-    display: flex;
-    align-self: stretch;
-    gap: var(--space-1);
+  // The strip and the panel come from the tabs widget; the dock only sizes
+  // them into its own column and tightens the buttons for a header row.
+  &__tabs-host {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    .d-tabs__panel {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: auto;
+      padding: var(--space-3);
+    }
   }
 
   &__tab {
     padding: var(--space-1) var(--space-2);
-    color: var(--primary-medium);
-    background: none;
-    border: 0;
-    border-block-end: 2px solid transparent;
-    cursor: pointer;
-
-    &[aria-selected="true"] {
-      color: var(--primary);
-      border-block-end-color: var(--tertiary);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -2px;
-    }
   }
 
   &__dock-picker {
@@ -151,10 +144,6 @@
     flex: 1 1 auto;
     overflow: auto;
     padding: var(--space-3);
-  }
-
-  &__tabpanel {
-    min-width: 0;
   }
 
   // Geometry lives with each dock modifier; only what every side shares is here.

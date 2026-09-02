@@ -1,16 +1,21 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { cached, tracked } from "@glimmer/tracking";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import type Owner from "@ember/owner";
+import Owner, { getOwner } from "@ember/owner";
 import { trustHTML } from "@ember/template";
-import booleanString from "discourse/helpers/boolean-string";
+import type { ComponentLike } from "@glint/template";
+import curryComponent from "ember-curry-component";
 import type { Side } from "discourse/lib/geometry";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { eq, or } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DockPicker from "discourse/ui-kit/panel-dock/-internals/parts/dock-picker";
+import {
+  type DockSide,
+  SIDES,
+} from "discourse/ui-kit/panel-dock/-internals/sides";
 import { i18n } from "discourse-i18n";
 
 const STORE_NAMESPACE = "d_panel_dock_";
@@ -20,11 +25,6 @@ const MAX_WIDTH = 720;
 const DEFAULT_HEIGHT = 320;
 const MIN_HEIGHT = 160;
 const MAX_HEIGHT = 600;
-
-const SIDES = ["start", "end", "bottom"] as const;
-
-/** A viewport edge the panel can dock against. */
-export type DockSide = (typeof SIDES)[number];
 
 /** The panel's placement and sizes, as persisted between visits. */
 interface DockLayout {
@@ -38,6 +38,12 @@ interface DockLayout {
     left: number;
     top: number;
   };
+}
+
+/** The panel's own controls, for a `main` block to place. */
+interface PanelDockControls {
+  /** The control that moves the panel between viewport edges. */
+  DockPicker: ComponentLike<{ Element: HTMLDivElement }>;
 }
 
 interface PanelDockChassisSignature {
@@ -54,7 +60,11 @@ interface PanelDockChassisSignature {
      */
     storageKey?: string;
 
-    /** Whether the header offers a dock side picker. Defaults to false. */
+    /**
+     * Whether the header offers a dock side picker. Defaults to false. A
+     * `main` block owns the interior instead, so it places the yielded
+     * `DockPicker` itself and this argument no longer renders anything.
+     */
     dockable?: boolean;
 
     /** The side used before the user picks one. Defaults to `"start"`. */
@@ -87,6 +97,14 @@ interface PanelDockChassisSignature {
 
     /** The panel's content. */
     body: [];
+
+    /**
+     * The panel's whole interior, replacing the header row and the body.
+     * For content that spans both — a tabs widget owning its strip row and
+     * its panel as one tree — which the three-block split would cut in two.
+     * The panel's own controls are yielded so they can be placed inside.
+     */
+    main: [controls: PanelDockControls];
   };
 }
 
@@ -110,6 +128,10 @@ interface PanelDockChassisSignature {
  *   <:body>Content</:body>
  * </PanelDockChassis>
  * ```
+ *
+ * Content that cannot be cut along the header/body seam takes the `main`
+ * block instead, which replaces both and yields the panel's own controls to
+ * place.
  */
 export default class PanelDockChassis extends Component<PanelDockChassisSignature> {
   #store = new KeyValueStore(STORE_NAMESPACE);
@@ -202,6 +224,21 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   get style() {
     return trustHTML(
       `--d-panel-dock-width: ${this.width}px; --d-panel-dock-height: ${this.height}px;`
+    );
+  }
+
+  /**
+   * The dock picker, pre-wired to this panel, for a `main` block to place.
+   *
+   * Curried rather than yielded raw so the caller cannot cross-wire it to
+   * another panel's side, and so placing it stays a single empty tag.
+   */
+  @cached
+  get dockPicker() {
+    return curryComponent(
+      DockPicker,
+      { isSide: this.isSide, onSelect: this.setSide },
+      getOwner(this)!
     );
   }
 
@@ -324,94 +361,34 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
           style={{this.style}}
           ...attributes
         >
-          {{! The header row also hosts the dock picker and the caller's
-              actions, so it must render whenever any of the three exist —
-              otherwise a headerless dockable panel would silently lose its
-              controls. }}
-          {{#if (or (has-block "header") @dockable (has-block "actions"))}}
-            <div class="d-panel-dock__header">
-              {{yield to="header"}}
+          {{#if (has-block "main")}}
+            {{yield (hash DockPicker=this.dockPicker) to="main"}}
+          {{else}}
+            {{! The header row also hosts the dock picker and the caller's
+                actions, so it must render whenever any of the three exist —
+                otherwise a headerless dockable panel would silently lose its
+                controls. }}
+            {{#if (or (has-block "header") @dockable (has-block "actions"))}}
+              <div class="d-panel-dock__header">
+                {{yield to="header"}}
 
-              <div class="d-panel-dock__actions">
-                {{#if @dockable}}
-                  <div
-                    class="d-panel-dock__dock-picker"
-                    role="group"
-                    aria-label={{i18n "panel_dock.dock"}}
-                  >
-                    {{#each SIDES as |side|}}
-                      <button
-                        type="button"
-                        class={{dConcatClass
-                          "d-panel-dock__dock-button"
-                          (concat "--" side)
-                        }}
-                        aria-pressed={{booleanString
-                          (this.isSide side)
-                          omitFalse=false
-                        }}
-                        aria-label={{i18n (concat "panel_dock.dock_" side)}}
-                        title={{i18n (concat "panel_dock.dock_" side)}}
-                        {{on "click" (fn this.setSide side)}}
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          aria-hidden="true"
-                        >
-                          <rect
-                            x="1.5"
-                            y="2.5"
-                            width="13"
-                            height="11"
-                            rx="1.5"
-                            stroke="currentColor"
-                            fill="none"
-                            stroke-width="1.5"
-                          />
-                          {{#if (eq side "start")}}
-                            <rect
-                              x="3"
-                              y="4"
-                              width="4"
-                              height="8"
-                              rx="0.5"
-                              fill="currentColor"
-                            />
-                          {{else if (eq side "end")}}
-                            <rect
-                              x="9"
-                              y="4"
-                              width="4"
-                              height="8"
-                              rx="0.5"
-                              fill="currentColor"
-                            />
-                          {{else}}
-                            <rect
-                              x="3"
-                              y="8"
-                              width="10"
-                              height="4"
-                              rx="0.5"
-                              fill="currentColor"
-                            />
-                          {{/if}}
-                        </svg>
-                      </button>
-                    {{/each}}
-                  </div>
-                {{/if}}
+                <div class="d-panel-dock__actions">
+                  {{#if @dockable}}
+                    <DockPicker
+                      @isSide={{this.isSide}}
+                      @onSelect={{this.setSide}}
+                    />
+                  {{/if}}
 
-                {{yield to="actions"}}
+                  {{yield to="actions"}}
+                </div>
               </div>
+            {{/if}}
+
+            <div class="d-panel-dock__body">
+              {{yield to="body"}}
             </div>
           {{/if}}
-
-          <div class="d-panel-dock__body">
-            {{yield to="body"}}
-          </div>
 
           <DResizeSeparator
             class="d-panel-dock__resizer"

@@ -572,3 +572,81 @@ module(
     });
   }
 );
+
+module(
+  "Integration | Component | PanelDockChassis main block",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.store = new KeyValueStore(STORE_NAMESPACE);
+      this.store.abandonLocal();
+    });
+
+    hooks.afterEach(function () {
+      this.store.abandonLocal();
+    });
+
+    test("the main block takes over the whole interior", async function (assert) {
+      await render(
+        <template>
+          <PanelDockChassis @isOpen={{true}} @dockable={{true}}>
+            <:main>
+              <div class="own-interior">Interior</div>
+            </:main>
+          </PanelDockChassis>
+        </template>
+      );
+
+      assert.dom(".own-interior").exists("the block renders inside the panel");
+      assert
+        .dom(".d-panel-dock__header")
+        .doesNotExist("the chassis header row stands down");
+      assert
+        .dom(".d-panel-dock__body")
+        .doesNotExist("so does the body, so nothing is rendered twice");
+      assert
+        .dom(".d-panel-dock__dock-picker")
+        .doesNotExist(
+          "dockable no longer places the picker; the block does that"
+        );
+      assert
+        .dom(".d-panel-dock__resizer")
+        .exists("the panel is still resizable");
+    });
+
+    test("the main block places a working dock picker", async function (assert) {
+      const docked = [];
+      const record = (side) => docked.push(side);
+
+      await render(
+        <template>
+          <PanelDockChassis
+            @isOpen={{true}}
+            @storageKey="main-block-tools"
+            @onDock={{record}}
+          >
+            <:main as |controls|>
+              <controls.DockPicker />
+            </:main>
+          </PanelDockChassis>
+        </template>
+      );
+
+      assert.dom(".d-panel-dock__dock-button").exists({ count: 3 });
+      assert
+        .dom(".d-panel-dock__dock-button.--start")
+        .hasAria("pressed", "true", "the picker reflects the current side");
+
+      await click(".d-panel-dock__dock-button.--bottom");
+
+      assert.deepEqual(docked, ["bottom"], "the picker reports the new side");
+      assert.dom(".d-panel-dock").hasClass("--dock-bottom");
+      assert.strictEqual(
+        new KeyValueStore(STORE_NAMESPACE).getObject("main-block-tools").side,
+        "bottom",
+        "the choice persists like any other"
+      );
+    });
+  }
+);

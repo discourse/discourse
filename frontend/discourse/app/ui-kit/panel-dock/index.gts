@@ -1,16 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import type { ComponentLike } from "@glint/template";
-import booleanString from "discourse/helpers/boolean-string";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
-import PanelDockChassis, {
-  type DockSide,
-} from "discourse/ui-kit/panel-dock/-internals/panel";
+import DTabs from "discourse/ui-kit/d-tabs";
+import PanelDockChassis from "discourse/ui-kit/panel-dock/-internals/panel";
+import type { DockSide } from "discourse/ui-kit/panel-dock/-internals/sides";
 import { i18n } from "discourse-i18n";
 
 /** A tab displayed by {@link DPanelDock}. */
@@ -58,61 +54,45 @@ interface DPanelDockSignature {
   };
 }
 
-type RenderedTab = DPanelDockTab & {
-  panelId: string;
-  tabId: string;
-};
-
 /**
  * A context-identified, tabbed panel docked to a viewport edge.
  *
- * Tab selection is internal unless `@activeTab` is supplied. Keyboard focus
- * follows the manual-activation tabs pattern: the roving-focus modifier moves
- * focus with the arrow keys and activation stays explicit, on Enter, Space or
- * a click.
+ * Tab selection is internal unless `@activeTab` is supplied, which is the one
+ * thing this adds over `DTabs` alone: the dock always has something open, so
+ * it falls back to the first tab rather than showing an empty panel.
+ *
+ * A lone tab is shown without a strip. Tabs that are not a choice are not a
+ * tabs widget, so that case is a plain panel body rather than a one-item
+ * tablist announcing a selection nobody can change.
  */
 export default class DPanelDock extends Component<DPanelDockSignature> {
-  // Deliberately not seeded from args: reading them during construction
-  // consumes upstream tracked state, and the getter already falls back to
-  // the first tab while this holds no live id.
+  /**
+   * Deliberately not seeded from args: reading them during construction
+   * consumes upstream tracked state, and the getter already falls back to
+   * the first tab while this holds no live id.
+   */
   @tracked _activeTab: string | undefined;
-
-  get tabs(): RenderedTab[] {
-    return this.args.tabs.map((tab) => ({
-      ...tab,
-      panelId: `d-panel-dock-${this.args.context}-panel-${tab.id}`,
-      tabId: `d-panel-dock-${this.args.context}-tab-${tab.id}`,
-    }));
-  }
 
   get activeTabId() {
     if (this.args.activeTab !== undefined) {
       return this.args.activeTab;
     }
 
-    return this.tabs.some((tab) => tab.id === this._activeTab)
+    return this.args.tabs.some((tab) => tab.id === this._activeTab)
       ? this._activeTab
-      : this.tabs[0]?.id;
+      : this.args.tabs[0]?.id;
   }
 
   get activeTab() {
-    return this.tabs.find((tab) => tab.id === this.activeTabId);
+    return this.args.tabs.find((tab) => tab.id === this.activeTabId);
   }
 
   get activeComponent() {
     return this.activeTab?.component;
   }
 
-  get activePanelId() {
-    return this.activeTab?.panelId;
-  }
-
-  get activeTabElementId() {
-    return this.activeTab?.tabId;
-  }
-
   get hasMultipleTabs() {
-    return this.tabs.length > 1;
+    return this.args.tabs.length > 1;
   }
 
   @action
@@ -124,86 +104,91 @@ export default class DPanelDock extends Component<DPanelDockSignature> {
     this.args.onActivateTab?.(id);
   }
 
-  @action
-  activateFromElement(item: HTMLElement) {
-    const tab = this.tabs.find((candidate) => candidate.tabId === item.id);
-    if (tab) {
-      this.activateTab(tab.id);
-    }
-  }
-
   <template>
-    <PanelDockChassis
-      @isOpen={{@isOpen}}
-      @storageKey={{@context}}
-      @dockable={{@dockable}}
-      @defaultSide={{@defaultSide}}
-      @defaultWidth={{@defaultWidth}}
-      class={{concat "--context-" @context}}
-      ...attributes
-    >
-      <:header>
-        {{#if this.hasMultipleTabs}}
-          <div
-            class="d-panel-dock__tabs"
-            role="tablist"
-            aria-label={{i18n "panel_dock.tabs"}}
-            {{dRovingFocus
-              orientation="horizontal"
-              itemSelector="[role='tab']"
-              wrap=true
-              itemsKey=@tabs
-              onActivate=this.activateFromElement
-            }}
+    {{#if this.hasMultipleTabs}}
+      <PanelDockChassis
+        class={{concat "--context-" @context}}
+        ...attributes
+        @isOpen={{@isOpen}}
+        @storageKey={{@context}}
+        @dockable={{@dockable}}
+        @defaultSide={{@defaultSide}}
+        @defaultWidth={{@defaultWidth}}
+      >
+        {{! The tab strip and the panel it drives are one widget, so they
+            take the whole interior and rebuild the header row around the
+            tablist rather than being split across the chassis blocks. }}
+        <:main as |controls|>
+          <DTabs
+            class="d-panel-dock__tabs-host"
+            @active={{this.activeTabId}}
+            @onActivate={{this.activateTab}}
+            @label={{i18n "panel_dock.tabs"}}
           >
-            {{#each this.tabs key="id" as |tab|}}
-              <button
-                id={{tab.tabId}}
-                type="button"
-                class="d-panel-dock__tab"
-                role="tab"
-                aria-controls={{tab.panelId}}
-                aria-selected={{booleanString
-                  (eq tab.id this.activeTabId)
-                  omitFalse=false
-                }}
-                {{on "click" (fn this.activateTab tab.id)}}
-              >
-                {{tab.label}}
-              </button>
-            {{/each}}
-          </div>
-        {{/if}}
-      </:header>
+            <:header as |header|>
+              <div class="d-panel-dock__header">
+                <header.Tablist />
 
-      <:actions>
-        {{#if @onClose}}
-          <DButton
-            @icon="xmark"
-            @action={{@onClose}}
-            @title="panel_dock.close"
-            @ariaLabel="panel_dock.close"
-            class="btn-transparent d-panel-dock__close"
-          />
-        {{/if}}
-      </:actions>
+                <div class="d-panel-dock__actions">
+                  {{#if @dockable}}
+                    <controls.DockPicker />
+                  {{/if}}
 
-      <:body>
-        {{#if this.activeComponent}}
-          {{#if this.hasMultipleTabs}}
-            <div
-              id={{this.activePanelId}}
-              class="d-panel-dock__tabpanel"
-              role="tabpanel"
-              aria-labelledby={{this.activeTabElementId}}
-            >
-              {{component this.activeComponent}}
-            </div>
-          {{else}}
+                  {{#if @onClose}}
+                    <DButton
+                      class="btn-transparent d-panel-dock__close"
+                      @icon="xmark"
+                      @action={{@onClose}}
+                      @title="panel_dock.close"
+                      @ariaLabel="panel_dock.close"
+                    />
+                  {{/if}}
+                </div>
+              </div>
+            </:header>
+
+            <:default as |tabs|>
+              {{#each @tabs key="id" as |tab|}}
+                <tabs.Tab
+                  class="d-panel-dock__tab"
+                  @id={{tab.id}}
+                  @label={{tab.label}}
+                >
+                  {{component tab.component}}
+                </tabs.Tab>
+              {{/each}}
+            </:default>
+          </DTabs>
+        </:main>
+      </PanelDockChassis>
+    {{else}}
+      <PanelDockChassis
+        class={{concat "--context-" @context}}
+        ...attributes
+        @isOpen={{@isOpen}}
+        @storageKey={{@context}}
+        @dockable={{@dockable}}
+        @defaultSide={{@defaultSide}}
+        @defaultWidth={{@defaultWidth}}
+      >
+        <:actions>
+          {{#if @onClose}}
+            <DButton
+              class="btn-transparent d-panel-dock__close"
+              @icon="xmark"
+              @action={{@onClose}}
+              @title="panel_dock.close"
+              @ariaLabel="panel_dock.close"
+            />
+          {{/if}}
+        </:actions>
+
+        <:body>
+          {{#if this.activeComponent}}
             {{component this.activeComponent}}
           {{/if}}
-        {{/if}}
-      </:body>
-    </PanelDockChassis>
+        </:body>
+      </PanelDockChassis>
+    {{/if}}
   </template>
 }
