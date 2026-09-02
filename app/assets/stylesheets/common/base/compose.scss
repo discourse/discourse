@@ -3,13 +3,20 @@
 html.composer-open:not(.has-full-page-chat) {
   #main-outlet {
     padding-bottom: var(--composer-height);
-    transition: padding-bottom 250ms ease;
+    transition: padding-bottom var(--composer-transition-duration)
+      var(--composer-transition-easing);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 }
 
 :root {
   --composer-max-width--hide-preview: 740px;
   --composer-popup-background: var(--secondary);
+  --composer-transition-duration: 250ms;
+  --composer-transition-easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
 .grippie {
@@ -55,13 +62,14 @@ html.composer-open:not(.has-full-page-chat) {
   height: 0;
   min-height: 0;
   z-index: z("composer", "content");
-  transition:
-    height 0.2s,
-    max-width 0.2s,
-    padding-bottom 0.2s,
-    top 0.2s,
-    transform 0.2s,
-    min-height 0.2s;
+  transition-property:
+    height, max-width, margin, left, padding-bottom, top, transform, min-height;
+  transition-duration: var(--composer-transition-duration);
+  transition-timing-function: var(--composer-transition-easing);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
   border-top-left-radius: var(--d-border-radius-large);
@@ -711,7 +719,12 @@ html.composer-open:not(.has-full-page-chat) {
 
 .toggle-preview {
   margin-left: auto;
-  transition: all 0.33s ease-out;
+  transition: transform var(--composer-transition-duration)
+    var(--composer-transition-easing);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   &.active {
     transform: rotate(180deg);
@@ -1122,6 +1135,48 @@ html.composer-open:not(.has-full-page-chat) {
 
   kbd {
     background: none;
+  }
+}
+
+// interpolable auto-margin centering, so the position animates on toggle
+#reply-control:not(.fullscreen).show-preview {
+  margin-inline-start: max(0px, calc((100% - #{$reply-area-max-width}) / 2));
+}
+
+// visibility (not display) so the toggle animates but first render doesn't;
+// markdown-editor-scoped so the rich editor keeps its instant display: none,
+// desktop-only — a collapsing in-flow wrapper would squeeze the mobile textarea
+@include viewport.from(sm) {
+  #reply-control
+    .d-editor-container.--markdown-editor-enabled
+    .d-editor-preview-wrapper {
+    transition:
+      opacity var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      flex-grow var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      margin var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      padding var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      visibility var(--composer-transition-duration);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  #reply-control.hide-preview
+    .d-editor-container.--markdown-editor-enabled
+    .d-editor-preview-wrapper {
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    margin-left: 0;
+
+    // themes may pad the wrapper; a padded box can't flex below its padding
+    padding: 0;
+    border: 0;
   }
 }
 

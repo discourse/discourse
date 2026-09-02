@@ -102,6 +102,7 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+  @service site;
   @service siteSettings;
   @service currentUser;
 
@@ -266,6 +267,7 @@ export default class ComposerEditor extends Component {
       ? elem
       : elem.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
+    preview.addEventListener("transitionend", this._handlePreviewTransitionEnd);
     this._editorInitPreview = true;
   }
 
@@ -286,6 +288,10 @@ export default class ComposerEditor extends Component {
       preview.removeEventListener("click", this._handleImageGridButtonClick);
       preview.removeEventListener("click", this._handleImageScaleButtonClick);
       preview.removeEventListener("keypress", this._handleAltTextInputKeypress);
+      preview.removeEventListener(
+        "transitionend",
+        this._handlePreviewTransitionEnd
+      );
 
       apiImageWrapperBtnEvents.forEach((fn) =>
         preview.removeEventListener("click", fn)
@@ -408,8 +414,49 @@ export default class ComposerEditor extends Component {
 
   @bind
   _throttledSyncEditorAndPreviewScroll(event) {
+    if (!this.composer.isPreviewVisible) {
+      return;
+    }
+
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
     throttle(this, this._syncEditorAndPreviewScroll, event.target, preview, 20);
+  }
+
+  // scroll sync is skipped while the preview is hidden, so catch up when it
+  // is shown again: right away when the toggle isn't animated (e.g. reduced
+  // motion), or at transitionend when it is, once the layout is final
+  @observes("composer.showPreview", "composer.allowPreview")
+  _syncScrollOnPreviewShown() {
+    if (!this.composer.isPreviewVisible || this.site.mobileView) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const preview = this.element.querySelector(".d-editor-preview-wrapper");
+      if (!preview || preview.getAnimations().length > 0) {
+        return;
+      }
+
+      const input = this.element.querySelector(".d-editor-input");
+      this._syncEditorAndPreviewScroll(input, preview);
+    });
+  }
+
+  @bind
+  _handlePreviewTransitionEnd(event) {
+    if (
+      event.propertyName !== "visibility" ||
+      !this.composer.isPreviewVisible
+    ) {
+      return;
+    }
+
+    const input = this.element.querySelector(".d-editor-input");
+    this._syncEditorAndPreviewScroll(input, event.currentTarget);
   }
 
   _syncEditorAndPreviewScroll(input, preview) {
