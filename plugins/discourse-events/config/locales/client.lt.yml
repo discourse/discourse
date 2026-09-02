@@ -13,7 +13,7 @@ lt:
           fields:
             topic_id:
               label: Temos ID
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Išjungti"
       enable_holiday: "Įgalinti"
       date: "Data"

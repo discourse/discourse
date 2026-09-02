@@ -29,6 +29,21 @@ ca:
           title: "Publicació"
         more_topics:
           title: "Més temes"
+        roving_focus:
+          toolbar:
+            copy: "Còpia"
+          adjacent:
+            label: "Filtres"
+            field: "Cerca"
+            open: "Obre"
+            recent: "Recents"
+          combobox:
+            daily: "Diàriament"
+            weekly: "Setmanalment"
+            monthly: "Mensualment"
+            never: "Mai"
+          tree:
+            components: "Components"
         tooltips:
           description: "Descripció"
           header: "Capçalera"

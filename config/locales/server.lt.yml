@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 lt:
+  llms_txt:
+    sections:
+      optional: "Pasirinktinai"
+    links:
+      search:
+        label: "Paieška"
+      categories:
+        label: "Kategorijos"
+      about:
+        label: "Apie"
+      guidelines:
+        label: "Instrukcijos"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -926,6 +938,11 @@ lt:
         share: "Dalintis"
       types:
         staff: "Personalas"
+    posters_by_member_type_members:
+      labels:
+        user: "Narys"
+        count: "Pranešimai"
+        share: "Dalintis"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

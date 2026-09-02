@@ -76,6 +76,11 @@ sk:
           solved: "sú vyriešené"
           unsolved: "sú nevyriešené"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Téma"
+            category: "Kategória"
       web_hooks:
         solved_event:
           group_name: "Vyriešená udalosť"

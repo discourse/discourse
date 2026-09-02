@@ -14,9 +14,11 @@ lt:
         countdown:
           passed: data praėjo
       title: Įveskite datą / laiką
+      edit_date: Redaguoti %{date}
       create:
         form:
           insert: Įterpti
+          save: Saugoti
           format_description: "Formatas, naudojamas rodyti datą vartotojui. Naudokite Z, kad parodytumėte poslinkį, o zz - laiko juostos pavadinimą."
           timezones_title: Rodyti laiko zonas
           timezones_description: Laiko juostos bus naudojamos datoms rodyti peržiūroje ir atsarginiame lange.

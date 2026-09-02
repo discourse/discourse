@@ -7,11 +7,10 @@
 pl_PL:
   admin_js:
     admin:
-      calendar: "Wydarzenia"
       site_settings:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
-          discourse_calendar: "Wydarzenia"
+          discourse_events: "Wydarzenia"
       web_hooks:
         calendar_event:
           group_name: "Wydarzenie w kalendarzu"
@@ -32,7 +31,8 @@ pl_PL:
           fields:
             topic_id:
               label: ID tematu
-    discourse_calendar:
+    discourse_events:
+      title: "Wydarzenia"
       livestream:
         zoom:
           join: "Dołącz do spotkania na Zoomie"
@@ -45,7 +45,6 @@ pl_PL:
           rsvp_to_event: "Potwierdź obecność na wydarzeniu, aby rozpocząć czat"
           rsvp_to_event_with_link: "Potwierdź obecność na <a href='%{url}'>wydarzeniu</a> , aby rozpocząć czat"
           rsvp_body: "Nawiąż kontakt z innymi uczestnikami przed, w trakcie i po wydarzeniu."
-      invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
         all_events: "Wydarzenia Discourse – wszystkie wydarzenia"
         all_events_description: "Wszystkie wydarzenia na forum"
@@ -341,6 +340,8 @@ pl_PL:
         week: "Tydzień"
         day: "Dzień"
         year: "Rok"
+    discourse_calendar:
+      invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     group_timezones:
       search: "Wyszukiwanie..."
       group_availability: "Dostępność %{group}"

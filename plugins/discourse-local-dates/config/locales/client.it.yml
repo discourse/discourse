@@ -19,9 +19,11 @@ it:
         countdown:
           passed: la data è passata
       title: Inserisci data / ora
+      edit_date: Modifica %{date}
       create:
         form:
           insert: Inserisci
+          save: Salva
           format_description: "Formato utilizzato per visualizzare la data per l'utente. Usa Z per mostrare la differenza di orario e zz per il nome del fuso orario."
           timezones_title: Fusi orari da visualizzare
           timezones_description: I fusi orari verranno utilizzati per visualizzare le date nell'anteprima e nel fallback.

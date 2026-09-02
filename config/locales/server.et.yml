@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 et:
+  llms_txt:
+    sections:
+      optional: "Valikuline"
+    links:
+      search:
+        label: "Otsi"
+      categories:
+        label: "Liigid"
+      about:
+        label: "Teave"
+      guidelines:
+        label: "Juhised"
   dates:
     short_date_no_year: "D. MMMM"
     short_date: "D. MMMM, YYYY"
@@ -585,6 +597,11 @@ et:
         share: "Jaga"
       types:
         staff: "Meeskond"
+    posters_by_member_type_members:
+      labels:
+        user: "Kasutaja"
+        count: "Postitust"
+        share: "Jaga"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:

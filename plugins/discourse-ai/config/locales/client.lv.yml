@@ -120,8 +120,6 @@ lv:
         successful: "Veiksmīgs"
         failed: "Neizdevies"
         unknown: "Nezināms"
-        topic_id: "Tēmas ID"
-        post_id: "Ieraksta ID"
         time: "Laiks"
         when: "Kad"
         request: "Pieprasījums"
@@ -132,6 +130,7 @@ lv:
         post_short: "Ieraksts %{id}"
         duration: "Ilgums"
         actions: "Darbības"
+        view_details: "Detaļas"
         periods:
           day: "Pēdējās 24 stundas"
           week: "Pēdējās 7 dienas"
@@ -258,8 +257,10 @@ lv:
           table:
             total_count: "Kopā"
       discobot_discoveries:
-        regular_results: "Tēmas"
-        collapse: "Sakļaut"
-        tooltip:
-          actions:
-            disable: "Atslēgt"
+        legacy:
+          regular_results: "Tēmas"
+          collapse: "Sakļaut"
+          tooltip:
+            actions:
+              disable: "Atslēgt"
+        search_messages: "Ziņās"

@@ -23,8 +23,7 @@ sv:
           fields:
             topic_id:
               label: Ämnes-ID
-    discourse_calendar:
-      invite_user_notification: "%{username} har bjudit in dig till: %{description}"
+    discourse_events:
       on_holiday: "På semester"
       disable_holiday: "Inaktivera"
       enable_holiday: "Aktivera"
@@ -303,6 +302,8 @@ sv:
         week: "Vecka"
         day: "Dag"
         year: "År"
+    discourse_calendar:
+      invite_user_notification: "%{username} har bjudit in dig till: %{description}"
     group_timezones:
       search: "Sök..."
       group_availability: "%{group}-tillgänglighet"

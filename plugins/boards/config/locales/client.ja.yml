@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    boards:
+      board:
+        remove_card: "削除"
+        new_topic: "新規トピック..."
+        title: "タイトル"
+        tags: "タグ"
+        assigned_to: "割り当て先"
+        view_topic: "トピックを見る"
+        topic_reply_count:
+          other: "返信: %{count} 件"
+        assign: "割り当てる"
+        reassign: "再割り当てする"
+        unassign: "割り当て解除"
+        unassign_from_topic: "トピックから @%{username} の割り当てを解除"
+        unassign_from_post: "#%{post_number} から @%{username} の割り当てを解除"
+        edit_assignments: "割り当てを編集..."
+        created_by: "作成者"
+      manage:
+        name: "名前"
+        slug: "スラッグ"
+        constraint_categories: "カテゴリ"
+        constraint_tags: "タグ"
+        advanced_settings: "高度な設定"
+        columns:
+          remove: "削除"
+          column_title: "タイトル"
+          icon: "アイコン"
+          color: "色"
+          default_sort_priority: "優先度"
+          tag: "タグ"
+          move_to_assigned_unassign: "割り当て解除"
+          move_to_status_open: "オープン"
+          move_to_status_closed: "終了"

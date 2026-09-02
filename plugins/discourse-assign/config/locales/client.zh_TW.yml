@@ -5,88 +5,241 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "指派／取消指派主題或貼文。"
+      site_settings:
+        categories:
+          discourse_assign: "Discourse 指派"
   js:
+    filters:
+      unassigned:
+        title: "未指派"
+        help: "尚未指派的主題"
     action_codes:
       assigned: "已指派 %{who} %{when}"
       assigned_group: "已指派 %{who} %{when}"
-      unassigned: "取消指派 %{who} %{when}"
-      unassigned_group: "取消指派 %{who} %{when}"
+      assigned_to_post: "已將 %{who} 指派給<a href='%{path}'>貼文</a> %{when}"
+      assigned_group_to_post: "已將 %{who} 指派給<a href='%{path}'>貼文</a> %{when}"
+      unassigned: "已取消指派 %{who} %{when}"
+      unassigned_group: "已取消指派 %{who} %{when}"
+      unassigned_from_post: "已取消 %{who} 對<a href='%{path}'>貼文</a>的指派 %{when}"
+      unassigned_group_from_post: "已取消 %{who} 對<a href='%{path}'>貼文</a>的指派 %{when}"
+      reassigned: "已重新指派 %{who} %{when}"
+      reassigned_group: "已重新指派 %{who} %{when}"
+      details_change: "已變更 %{who} 的指派詳細資料 %{when}"
+      note_change: "已變更 %{who} 的指派備註 %{when}"
+      status_change: "已變更 %{who} 的指派狀態 %{when}"
     discourse_assign:
-      cant_act: "您不能對已經指派給其他使用者的旗標做操作"
+      add_unassigned_filter: "將「未指派」篩選條件新增至分類"
+      additional_assign_allowed_groups: "擁有指派權限的其他群組"
+      additional_assign_allowed_groups_description: "這些群組的成員可以指派此分類中的主題。已獲得全域權限的群組會顯示在這裡，且無法移除。父分類的設定不會套用至子分類。"
+      cant_act: "你無法處理已指派給其他使用者的標記"
+      cant_act_unclaimed: "你必須先認領此主題，才能處理標記。"
+      topic_search_placeholder: "依標題或貼文內容搜尋主題"
+      sidebar_name_filter_placeholder: "姓名／使用者名稱"
       assigned: "已指派"
-      group_everyone: "所有使用者"
-      assigned_to: "已指派給"
+      group_no_assignments_title: "沒有指派"
+      group_no_assignments_body: "此群組目前沒有進行中的指派。"
+      group_everyone: "所有人"
+      assigned_to: "指派給"
+      assigned_topic_to: "已將主題指派給 <a href='%{path}'>%{username}</a>"
+      assign_post_to: "已將 #%{post_number} 指派給 %{username}"
+      assign_post_to_multiple: "#%{post_number} 指派給 %{username}"
       unassign:
         title: "取消指派"
-        title_w_ellipsis: "取消指派..."
+        title_w_ellipsis: "取消指派…"
+        help: "取消 %{username} 的主題指派"
       assign:
         title: "指派"
-        help: "指派主題給使用者"
+        help: "將主題指派給使用者"
+      assign_post:
+        title: "指派貼文"
+      unassign_post:
+        title: "取消貼文指派"
+        help: "取消 %{username} 的貼文指派"
       reassign:
         title: "編輯"
+        title_w_ellipsis: "編輯指派…"
+        to_self: "重新指派給我"
+        to_self_help: "將主題重新指派給我"
+        help: "編輯指派詳細資料"
+      reassign_modal:
+        title: "重新指派主題"
       topic_level_menu:
-        unassign_with_ellipsis: "取消指派..."
+        edit_assignments: "編輯指派…"
+        reassign_topic_to_me: "將主題重新指派給我"
+        unassign_with_ellipsis: "取消指派…"
+        unassign_from_post: "取消 @%{assignee} 對 #%{post_number} 的指派"
+        unassign_from_post_help: "取消 @%{assignee} 對貼文 #%{post_number} 的指派"
+        unassign_from_topic: "取消 @%{username} 的主題指派"
       assign_modal:
         title: "指派主題"
+        reassign_title: "重新指派主題"
         assign: "指派"
-        note_label: ' 分類已經沒有其它話題了。'
-        optional_label: "(選擇性)"
+        assignee_label: 受指派者
+        assignment_label: 指派
+        choose_assignee: 選擇要指派的使用者。
+        edit_assignments_title: "編輯指派"
+        note_label: 備註
+        optional_label: "（選填）"
         status_label: 狀態
+        suggestions: 建議
+      assign_post_modal:
+        title: "指派貼文"
       claim:
         title: "認領"
-        help: "指派主題給您自己"
+        help: "將主題指派給自己"
       assign_mailer:
         never: "永不"
-        always: "總是"
+        different_users: "僅限指派者與受指派者為不同使用者時"
+        always: "一律"
       reminders_frequency:
+        description: "接收已指派主題提醒的頻率"
         never: "永不"
-        daily: "日"
-        weekly: "周"
-        monthly: "月"
-        quarterly: "季度"
+        daily: "每天"
+        weekly: "每週"
+        monthly: "每月"
+        quarterly: "每季"
       admin:
         groups:
           manage:
             interaction:
               assign: "指派"
+              assignable_levels:
+                title: "誰可以指派此群組"
     user:
       notification_level_when_assigned:
+        label: "指派時"
         watch_topic: "關注主題"
         track_topic: "追蹤主題"
-        do_nothing: "不做任何動作"
+        do_nothing: "不執行任何動作"
       messages:
+        assigned_title: "已指派（%{count}）"
         assigned: "已指派"
+      no_assignments_title: "你還沒有任何指派"
+      no_assignments_body: >
+        指派給你的主題與訊息會列在這裡。你也會定期收到指派提醒通知，可在<a href='%{preferencesUrl}'>使用者偏好設定</a>中調整。<br><br>若要將主題或訊息指派給自己或其他人，請在底部尋找 %{icon} 指派按鈕。
+      dismiss_assigned_tooltip: "將所有未讀的指派通知標記為已讀"
+      assigned_to_group:
+        post: "貼文已指派給 %{group_name}"
+        topic: "主題已指派給 %{group_name}"
       assigned_to_you:
-        post: "分配給您的帖子"
+        post: "貼文已指派給你"
+        topic: "主題已指派給你"
       assignment_description:
+        post: "%{topic_title}（#%{post_number}）"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "指派事件"
+          assigned: "使用者指派主題時"
+          unassigned: "使用者取消指派主題時"
     search:
       advanced:
+        in:
+          assigned: "已指派"
+          unassigned: "已取消指派"
         assigned:
-          label: "已指派給"
+          label: "指派給"
+    topics:
+      bulk:
+        unassign: "取消指派主題"
+        assign: "指派主題"
+        assign_description: "將所選主題指派給下列使用者："
+        unassign_description: "要取消指派所選的主題嗎？"
+        confirm_assign_topics:
+          other: "指派 %{count} 個主題"
+        confirm_unassign_topics:
+          other: "取消指派 %{count} 個主題"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: 貼文範本
+              description: 填寫後，系統會使用此範本建立貼文並將使用者指派給該貼文，而不是指派主題。
+            assignees_group:
+              label: 受指派者群組
+            minimum_time_between_assignments:
+              label: 兩次指派之間的最少時數
+            min_recently_assigned_days:
+              label: 近期獲指派的最少天數
+              description: 預設為 14 天。
+            skip_new_users_for_days:
+              label: 略過新使用者的天數
+              description: 預設為 0 天（使用者註冊後可立即獲得指派）。
+            max_recently_assigned_days:
+              label: 近期獲指派的最多天數
+              description: 先嘗試排除最近 n 天內獲得指派的使用者。若沒有使用者可選，則改用 min_recently_assigned_days。預設為 180 天。
+            assigned_topic:
+              label: 已指派主題 ID
+            in_working_hours:
+              label: 處於工作時間的使用者
+    notification_reason:
+      user: "由於此主題已指派給你，你會看到新回覆的數量。"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} 指派給你"
       titles:
         assigned: "已指派"
+      dismiss_confirmation:
+        body:
+          assigns:
+            other: "確定嗎？你有 %{count} 則未讀的指派通知。"
+    user_menu:
+      view_all_assigned: "查看所有已指派項目"
+      tabs:
+        assign_list: "指派清單"
+        assign_list_with_unread:
+          other: "指派清單－%{count} 個未讀指派"
     edit_assignments_modal:
-      topic: "話題"
+      title: "編輯指派"
+      topic: "主題"
       post: "貼文"
     discourse_workflows:
+      node_unavailable:
+        requires_assign: "必須啟用 Assign 外掛"
       nodes:
+        "action:assign_topic": "指派主題或貼文"
+        "action:check_assignment": "檢查指派"
         "trigger:assigned": "已指派"
+        "trigger:unassigned": "未指派"
+      node_descriptions:
+        "action:assign_topic": "指派或取消指派主題或貼文"
+        "action:check_assignment": "檢查是否已將使用者或群組指派給主題或貼文"
+        "trigger:assigned": "指派主題或貼文時觸發"
+        "trigger:unassigned": "取消指派主題或貼文時觸發"
       assign_topic:
         resource: "資源"
         resources:
-          topic: "話題"
+          topic: "主題"
           post: "貼文"
+        operation: "操作"
         operations:
           assign: "指派"
           unassign: "取消指派"
-        topic_id: "話題 ID"
+        topic_id: "主題 ID"
         post_id: "貼文 ID"
+        assignee: "受指派者"
+        replace_existing: "取代現有指派"
       check_assignment:
+        target_type: "目標類型"
         target_types:
-          topic: "話題"
+          topic: "主題"
           post: "貼文"
-        topic_id: "話題 ID"
+        topic_id: "主題 ID"
         post_id: "貼文 ID"
+        assignee: "受指派者"
+      assigned:
+        topic_assignments_only: "僅在指派目標為主題而非個別貼文時觸發"
+        topic_assignments_only_description: "僅限主題指派"
+      unassigned:
+        topic_assignments_only: "僅在指派目標為主題而非個別貼文時觸發"
+        topic_assignments_only_description: "僅限主題指派"

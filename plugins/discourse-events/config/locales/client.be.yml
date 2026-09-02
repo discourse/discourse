@@ -12,15 +12,17 @@ be:
           fields:
             topic_id:
               label: Номер тэмы
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Адключыць"
       enable_holiday: "Уключыць"
+      region:
+        none: "Няма"
       toolbar_button:
-        today: "Today"
-        month: "месяц"
-        week: "тыдзень"
+        today: "Сёння"
+        month: "Месяц"
+        week: "Тыдзень"
         day: "дзень"
-        year: "год"
+        year: "Год"
     discourse_post_event:
       event_description:
         show_more: "Паказаць больш"

@@ -24,8 +24,8 @@ de:
       event_started:
         title: Ereignis hat begonnen
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Die von dir angegebene Feiertagsregion existiert nicht."
-    discourse_calendar_enable_holiday_failed: "Dieser Feiertag konnte nicht aktiviert werden. Er ist bereits aktiviert oder er ist nicht deaktiviert."
+    discourse_events_holiday_region_invalid: "Die von dir angegebene Feiertagsregion existiert nicht."
+    discourse_events_enable_holiday_failed: "Dieser Feiertag konnte nicht aktiviert werden. Er ist bereits aktiviert oder er ist nicht deaktiviert."
     discourse_post_event_bulk_invite_succeeded:
       title: "Ereignis – Masseneinladung erfolgreich"
       subject_template: "Masseneinladung wurde erfolgreich verarbeitet"
@@ -81,7 +81,7 @@ de:
     livestream_zoom_sdk_secret: "Client-Secret des Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Erlaubte Pfade für den einbettbaren Livestream-Chat."
     livestream_enable_modal_chat_on_mobile: "Zeige den Livestream-Chat auf Mobilgeräten in einer Dialogbox an."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Standardansicht des Kalenders"

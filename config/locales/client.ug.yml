@@ -490,7 +490,6 @@ ug:
       collapse: "تەڭشەش قەدىمىنى يىغ"
       dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
-        description: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
         action: "تاللانما كۆرسەت"
         completed: "تاللانما ئۆزگەرت"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
@@ -507,7 +506,6 @@ ug:
         back: "كەينى"
     design_wizard:
       title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
-      subtitle: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
       step_label: "%{index}-قەدەمگە يۆتكەل"
       save: "ساقلا ۋە تاماملا"
       back: "كەينى"
@@ -517,6 +515,7 @@ ug:
         colors: "كۆڭۈلدىكى رەڭ"
         fonts: "خەت نۇسخا"
         homepage: "باش بەت"
+        search: "ئىزدە"
       theme:
         selected: "تاللاندى"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
@@ -2190,7 +2189,6 @@ ug:
         watch_topic: "كۆزەتتىكى تېما"
         track_topic: "تېما ئىزلا"
         do_nothing: "ھېچ ئىش قىلما"
-      topics_unread_when_closed: "تېما تاقالغاندا ئوقۇلمىغان دەپ قارايدۇ"
       invited:
         title: "تەكلىپ"
         pending_tab: "كۈتۈۋاتىدۇ"
@@ -2853,6 +2851,9 @@ ug:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      tab: "Tab"
+      delete: "ئۆچۈر"
+      home: "باش بەت"
     conditional_loading_section:
       loading: يۈكلەۋاتىدۇ…
     category_row:
@@ -3028,7 +3029,6 @@ ug:
       create_whisper: "پىچىر"
       create_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا قۇر"
       edit_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا تەھرىر"
-      title: "ياكى %{modifier}Enter بېسىلىدۇ"
       save_and_close: "ساقلا ۋە ياپ"
       discard: "تاشلىۋەت"
       draft_saved: "دەسلەپكى نۇسخا ساقلاندى"
@@ -3053,6 +3053,8 @@ ug:
       hide_preview: "ئالدىن كۆزىتىشنى يوشۇر"
       switch_to_markdown: "ئۆلچەملىك Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ (%{keyboardShortcut})"
       switch_to_rich_text: "يېڭى مول تېكىست تەھرىرلىگۈچكە ئالماشتۇرىدۇ (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "ئۆلچەملىك Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
+      switch_to_rich_text_no_shortcut: "يېڭى مول تېكىست تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
       quote_post_title: "پۈتكۈل يازمىنى نەقىل ئال"
       bold_label: "B"
       bold_title: "توم"
@@ -3380,10 +3382,10 @@ ug:
         search_field: "بېكەت بەت قاشتىكى ئىزدەش بۆلىكى"
         search_icon: "تەرجىمىھال سىماسىغا يېقىن ئىزدەش سىنبەلگىسى"
       type:
-        default: "تېما / يازما"
+        default: "يازما"
         users: "ئىشلەتكۈچى"
         categories: "سەھىپە"
-        categories_and_tags: "سەھىپە / بەلگە"
+        categories_and_tags: "سەھىپە ۋە بەلگە"
       context:
         user: "@%{username} نىڭ يازمىسىنى ئىزدە"
         category: "#%{category} سەھىپىنى ئىزدە"
@@ -3396,7 +3398,6 @@ ug:
         in: "مېتا سانلىق مەلۇماتى بويىچە سۈزىدۇ (مەسىلەن، in:title، in:personal,، in:pinned)"
         status: "تېما ھالىتى بويىچە سۈزىدۇ"
         full_search: "تولۇق بەت ئىزدەشنى قوزغىتىدۇ"
-        full_search_key: "%{modifier} + Enter"
         me: "يازمىڭىزنىلا كۆرسىتىدۇ"
       advanced:
         title: ئالىي سۈزگۈچ
@@ -4100,7 +4101,6 @@ ug:
       reply_as_new_private_message: "ئوخشاش تاپشۇرۇۋالغۇچىغا يېڭى ئۇچۇر سۈپىتىدە جاۋاب قايتۇرىدۇ"
       continue_discussion: "%{postLink} دىن سۆھبەتنى داۋاملاشتۇرىدۇ:"
       follow_quote: "نەقىل يازمىغا يۆتكەل"
-      show_full: "ھەممە يازمىنى كۆرسەت"
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
@@ -4864,12 +4864,8 @@ ug:
     keyboard_shortcuts_help:
       search_label: "ئىزدەش تېزلەتمىسى"
       search_placeholder: "چۈشەندۈرۈش ياكى كۇنۇپكا بىرىكمىسى ئارقىلىق تېزلەتمە ئىزدەيدۇ"
-      shortcut_key_delimiter_comma: "، "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ياكى %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ھەرپتاختا تېزلەتمىسى"
       short_title: "تېزلەتمە"
       search_ctrl_f_tip: "پۈتكۈل مۇنبەردىن ئىزدەشتە، <kbd>/</kbd> بېسىلىدۇ"
@@ -5561,6 +5557,11 @@ ug:
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
         group_other: "باشقا"
+        related_items:
+          users:
+            title: "ئىشلەتكۈچى"
+          labels:
+            user: "ئىشلەتكۈچى"
       config_sections:
         account:
           title: "ھېسابات"
@@ -5821,7 +5822,7 @@ ug:
           header_description: "خەنزۇچە ۋە ياپونچە تىزىمغا كىرىش ۋە سۆزلۈكلەشتۈرۈشكە ئوخشاش ئىزدەش تەڭشىكىنى سەپلەيدۇ"
         search_everything:
           title: "ئىزدە"
-          header_description: "باشقۇرۇش ئارايۈزىدە ھەر قانداق نەرسىنى تاپالايسىز. تۆۋەندىكى نەتىجىنى سۈزەلەيسىز، مايىللىقىڭىزنى ئەستە تۇتىدۇ. بۇ ئىزدەشنى باشقۇرۇش ئارا يۈزىنىڭ خالىغان جايىدىن ئاچالايسىز، %{shortcutHTML} نى بېسىڭ."
+          header_description: "بۇ جايدىكى باشقۇرۇش ئارايۈزىدە ھەر قانداق نەرسىنى ئىزدىگىلى بولىدۇ. تۆۋەندە ئىزدەش نەتىجىسىنى سۈزەلەيسىز ۋە مايىللىق تەڭشىكىڭىز ئەستە تۇتىدۇ."
         security:
           title: "بىخەتەرلىك"
           header_description: "ئىككى ئامىللىق دەلىلەش، رىياسەتچى ئىمتىيازى ۋە مەزمۇن بىخەتەرلىك تۈزۈمىنى ئۆز ئىچىگە ئالغان بىخەتەرلىك تەڭشەكلىرىنى سەپلەيدۇ"
@@ -6121,6 +6122,8 @@ ug:
               share: "ھەمبەھىر"
             whos_posting:
               staff: "باشقۇرغۇچى خادىم"
+              modal:
+                apply: "ساقلا"
             trust_level_pipeline:
               trust_levels:
                 "0": "يېڭى"
@@ -6133,6 +6136,11 @@ ug:
             table:
               searches: "ئىزدەش نەتىجىسى"
               status: "ھالەت"
+          system:
+            title: "سىستېما"
+            status: "ھالەت"
+            discourse_updated: "Discourse يېڭىلاندى"
+            dashboard_updated: "باشقۇرۇش تاختا يېڭىلاندى"
         reports_section:
           header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
@@ -6183,6 +6191,14 @@ ug:
           average_for_sample: "ئەۋرىشكە ئوتتۇرىچە قىممىتى"
           total: "جەمئىي ۋاقىت"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} ئىشلەتكۈچى"
+              other: "%{count} ئىشلەتكۈچى"
+            posts_count:
+              one: "%{count} يازما"
+              other: "%{count} يازما"
+            deselect: "%{name} نى تاللىما"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">ئىزدەش خاتىرىسى</a>'
             disabled: 'ۋەزىيەت ئىزدەش دوكلاتى چەكلەنگەن. سانلىق مەلۇمات توپلاشتا <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">خاتىرە ئىزدەش سۈرۈشتۈرۈشى</a> قوزغىتىلىدۇ.'

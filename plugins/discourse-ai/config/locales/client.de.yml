@@ -332,9 +332,11 @@ de:
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
-          discoveries: "Entdeckungen"
+          ask_ai: "KI fragen"
           setting_groups:
             settings: "Grundlegende Einstellungen"
+            agents: "Agenten"
+            access_control: "Zugriffskontrolle"
         embeddings:
           name: "Einbettungen"
           description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
@@ -644,8 +646,6 @@ de:
         successful: "Erfolgreich"
         failed: "Fehlgeschlagen"
         unknown: "Unbekannt"
-        topic_id: "Themen-ID"
-        post_id: "Beitrags-ID"
         time: "Zeit"
         when: "Wann"
         outcome: "Ergebnis"
@@ -661,9 +661,7 @@ de:
         duration: "Dauer"
         cost: "Kosten"
         actions: "Aktionen"
-        filters:
-          title: "Filter"
-          period: "Zeitraum"
+        view_details: "Details"
         periods:
           hour: "Letzte Stunde"
           day: "Letzte 24 Stunden"
@@ -730,7 +728,6 @@ de:
         create_user: Benutzer erstellen
         create_user_help: Du kannst diesem Agenten optional einen Benutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
-        default_llm_help: Das Standard-Sprachmodell, das für diesen Agenten verwendet werden soll. Erforderlich, wenn du den Agenten in öffentlichen Beiträgen erwähnen möchtest.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
@@ -1298,17 +1295,10 @@ de:
         provider_fields:
           model_name: "Modellname"
         semantic_search: "Themen (semantisch)"
-        semantic_search_results:
-          toggle: "KI-Ergebnisse"
-          unavailable: "KI-Ergebnisse nicht verfügbar"
-          zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
-          invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
           not_submitted: "Führe eine Suche aus, um KI-Ergebnisse zu sehen."
           no_results: "Für diese Suche wurden keine KI-Ergebnisse gefunden."
-        semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
-        ai_generated_result: "Suchergebnis mit KI gefunden"
         ai_results_notice:
           no_results: "Keine exakten Treffer, aber hier sind einige verwandte Ergebnisse."
           few_results:
@@ -1458,20 +1448,30 @@ de:
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
       discobot_discoveries:
-        main_title: "Discobot Entdeckungen"
-        regular_results: "Themen"
-        tell_me_more: "Erzähl mir mehr..."
-        continue_convo: "Unterhaltung fortsetzen..."
+        main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"
-        collapse: "Zuklappen"
-        timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        create_topic: "Thema erstellen"
         user_setting: "KI-Suchentdeckungen aktivieren"
-        tooltip:
-          header: "KI-gestützte Suche"
-          content: "Natürliche Sprachsuche unterstützt von %{model}"
-          actions:
-            info: "Wie funktioniert es?"
-            disable: "Deaktivieren"
+        legacy:
+          main_title: "Discobot Entdeckungen"
+          regular_results: "Themen"
+          tell_me_more: "Erzähl mir mehr..."
+          continue_convo: "Unterhaltung fortsetzen..."
+          loading_convo: "Unterhaltung wird geladen"
+          collapse: "Zuklappen"
+          timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+          tooltip:
+            header: "KI-gestützte Suche"
+            content: "Natürliche Sprachsuche unterstützt von %{model}"
+            actions:
+              info: "Wie funktioniert es?"
+              disable: "Deaktivieren"
+        search_type: "KI"
+        search_all_topics: "Alle Themen"
+        search_messages: "Nachrichten"
+        ask_ai: "KI"
+        sources:
+          related_discussions: "Verwandte Themen"
       user_preferences:
         empty: "Zurzeit sind keine relevanten Einstellungen verfügbar"
     review:

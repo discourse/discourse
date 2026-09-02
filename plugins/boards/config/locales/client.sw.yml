@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    boards:
+      board:
+        remove_card: "Ondoa"
+        title: "Kichwa cha Habari"
+        tags: "Lebo"
+        assigned_to: "Imekabidhiwa kwa"
+        topic_reply_count:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        assign: "Kabidhi"
+        unassign: "Haijakabithiwa"
+        created_by: "Imetengenezwa na"
+      manage:
+        name: "Jina"
+        constraint_categories: "Kategoria"
+        constraint_tags: "Lebo"
+        columns:
+          remove: "Ondoa"
+          column_title: "Kichwa cha Habari"
+          icon: "ikoni"
+          color: "Rangi"
+          move_to_assigned_unassign: "Haijakabithiwa"
+          move_to_status_open: "Fungua"
+          move_to_status_closed: "Imefungwa"

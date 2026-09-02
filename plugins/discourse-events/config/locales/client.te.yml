@@ -12,7 +12,7 @@ te:
           fields:
             topic_id:
               label: విషయపు ఐడీ
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "నిలిపివేయండి"
       enable_holiday: "ప్రారంభించండి"
       date: "తేదీ"

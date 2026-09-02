@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  llms_txt:
+    sections:
+      optional: "İsteğe bağlı"
+    links:
+      search:
+        label: "Ara"
+      categories:
+        label: "Kategoriler"
+      about:
+        label: "Hakkında"
+      guidelines:
+        label: "Kılavuz"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -1290,6 +1302,11 @@ tr_TR:
         share: "Paylaş"
       types:
         staff: "Personel"
+    posters_by_member_type_members:
+      labels:
+        user: "Kullanıcı"
+        count: "Gönderi"
+        share: "Paylaş"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1850,7 +1867,6 @@ tr_TR:
     allowed_iframes: "Discourse'un gönderilerde güvenli bir şekilde izin verebileceği iframe src URL ön eklerinin bir listesi. * herhangi bir sayıda / olmayan karakterle eşleştirmek için kullanılabilir."
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken web veri gezginlerinin kullanıcı aracıları. UYARI! BUNU AYARLAMAK BURADA LİSTELENMEYEN HİÇBİR VERİ GEZGİNİNE İZİN VERMEZ!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web veri gezginlerini tanımlayan kullanıcı aracısı dizesinde büyük/küçük harfe duyarlı olmayan benzersiz kelime. İzin verilenler listesi tanımlanmışsa geçerli değildir."
-    llms_txt: "LLM tarayıcıları için /llms.txt adresinde sunulacak bir metin dosyası yükleyin. Daha fazla bilgi için <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> adresini ziyaret edin."
     content_security_policy_report_only: "Sadece-Raporla-İçerik-Güvenlik-Politikasını (CSP) Etkinleştir"
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
     content_security_policy_script_src: "İzin verilen ek komut dosyası kaynakları. Geçerli sunucu ve İTA varsayılan olarak dâhil edilir. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği İlkesi ile XSS Saldırılarını Azaltma.</a> (CSP). Diğer sunucu kaynakları, strict-dynamic etkinleştirildiği için yok sayılır."
