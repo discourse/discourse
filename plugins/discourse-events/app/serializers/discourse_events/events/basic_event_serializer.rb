@@ -17,10 +17,21 @@ module DiscourseEvents
                  :duration,
                  :occurrences,
                  :all_day,
-                 :custom_fields
+                 :custom_fields,
+                 :organizer_group
 
       def category_id
         object.post&.topic&.category_id
+      end
+
+      def include_organizer_group?
+        object.organizer_group.present? && scope.can_see_group?(object.organizer_group)
+      end
+
+      def organizer_group
+        group = object.organizer_group
+
+        { id: group.id, name: group.name, full_name: group.full_name }
       end
 
       def post

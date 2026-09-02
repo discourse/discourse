@@ -29,10 +29,37 @@ module DiscourseEvents
           max_attendees: raw_event[:"max-attendees"]&.to_i,
           all_day: all_day?,
           custom_fields: custom_fields,
+          host_user_ids: host_user_ids,
+          organizer_group_id: organizer_group_id,
         }
       end
 
       private
+
+      # Unknown usernames are dropped rather than rejected here; the validator
+      # is what refuses the post. An absent attribute clears the hosts, so that
+      # removing it from the raw removes them too.
+      def host_user_ids
+        usernames = raw_event[:hosts].to_s.split(",").map { |name| name.strip.downcase }
+        usernames.reject!(&:blank?)
+        usernames.uniq!
+        return [] if usernames.empty?
+
+        by_username =
+          User.human_users.where(username_lower: usernames).pluck(:username_lower, :id).to_h
+        usernames.filter_map { |username| by_username[username] }
+      end
+
+      def organizer_group_id
+        name = raw_event[:"organizer-group"]
+        return nil if name.blank?
+
+        begin
+          Group.lookup_group(name.to_sym)&.id
+        rescue ArgumentError
+          nil
+        end
+      end
 
       def all_day?
         raw_event[:"all-day"] == "true"

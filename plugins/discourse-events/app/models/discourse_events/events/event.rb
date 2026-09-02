@@ -11,6 +11,7 @@ module DiscourseEvents
       MIN_NAME_LENGTH = 5
       MAX_NAME_LENGTH = 255
       MAX_DESCRIPTION_LENGTH = 1000
+      MAX_HOSTS = 10
       DEFAULT_TIMEZONE = "UTC"
 
       self.table_name = "discourse_post_event_events"
@@ -20,8 +21,11 @@ module DiscourseEvents
       # this is a cross plugin dependency, only called if chat is enabled
       belongs_to :chat_channel, class_name: "Chat::Channel"
       has_many :invitees, foreign_key: :post_id, dependent: :delete_all
+      has_many :event_hosts, -> { order(:position) }, foreign_key: :post_id, dependent: :delete_all
+      has_many :hosts, through: :event_hosts, source: :user
       belongs_to :post, foreign_key: :id
       belongs_to :image_upload, class_name: "Upload", optional: true
+      belongs_to :organizer_group, class_name: "Group", optional: true
       has_many :upload_references, as: :target, dependent: :destroy
 
       scope :visible, -> { where(deleted_at: nil) }
@@ -31,6 +35,7 @@ module DiscourseEvents
       before_save :chat_channel_sync
       # prepend so it runs before `dependent: :delete_all` wipes the invitees
       before_destroy :reset_invitees_topic_tracking, prepend: true
+      after_save :sync_hosts
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
       after_commit :destroy_topic_custom_field, on: %i[destroy]
@@ -60,9 +65,21 @@ module DiscourseEvents
       validate :ends_before_start
       validate :allowed_custom_fields
       validate :url_is_a_uri, if: :url_changed?
+      validate :hosts_are_valid
+      validate :organizer_group_exists
 
       def self.attributes_protected_by_default
         super - %w[id]
+      end
+
+      # Hosts are set as a list of user ids so that `update_with_params!` can
+      # carry them alongside the column attributes. `sync_hosts` applies them.
+      def host_user_ids
+        defined?(@host_user_ids) ? @host_user_ids : event_hosts.map(&:user_id)
+      end
+
+      def host_user_ids=(ids)
+        @host_user_ids = Array(ids).map(&:to_i).uniq
       end
 
       def reset_invalid_livestream
@@ -248,6 +265,34 @@ module DiscourseEvents
             I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
           )
         end
+      end
+
+      def hosts_are_valid
+        ids = host_user_ids
+        return if ids.blank?
+
+        if ids.length > MAX_HOSTS
+          errors.add(
+            :base,
+            I18n.t("discourse_post_event.errors.models.event.too_many_hosts", count: MAX_HOSTS),
+          )
+          return
+        end
+
+        known_ids = User.human_users.not_staged.where(id: ids).pluck(:id)
+        return if (ids - known_ids).empty?
+
+        errors.add(:base, I18n.t("discourse_post_event.errors.models.event.invalid_hosts"))
+      end
+
+      def organizer_group_exists
+        return if organizer_group_id.blank?
+        return if Group.exists?(id: organizer_group_id)
+
+        errors.add(
+          :base,
+          I18n.t("discourse_post_event.errors.models.event.invalid_organizer_group"),
+        )
       end
 
       def ends_before_start
@@ -615,6 +660,40 @@ module DiscourseEvents
 
       private
 
+      # Diff-replaces the host rows so `position` mirrors the order the ids
+      # arrived in, leaving rows that already match untouched.
+      def sync_hosts
+        return unless defined?(@host_user_ids)
+
+        desired = @host_user_ids
+        remove_instance_variable(:@host_user_ids)
+
+        existing = EventHost.where(post_id: id).index_by(&:user_id)
+        stale_ids = existing.keys - desired
+        EventHost.where(post_id: id, user_id: stale_ids).delete_all if stale_ids.present?
+
+        timestamp = Time.zone.now
+        inserts = []
+        desired.each_with_index do |user_id, position|
+          host = existing[user_id]
+
+          if host.nil?
+            inserts << {
+              post_id: id,
+              user_id:,
+              position:,
+              created_at: timestamp,
+              updated_at: timestamp,
+            }
+          elsif host.position != position
+            host.update_columns(position:, updated_at: timestamp)
+          end
+        end
+        EventHost.insert_all!(inserts) if inserts.present?
+
+        association(:event_hosts).reset
+      end
+
       def reset_invitees_topic_tracking
         topic_id = post&.topic_id
         return if topic_id.nil?
@@ -728,8 +807,10 @@ end
 #  url                :string(1000)
 #  chat_channel_id    :bigint
 #  image_upload_id    :bigint
+#  organizer_group_id :bigint
 #
 # Indexes
 #
-#  index_discourse_post_event_events_on_image_upload_id  (image_upload_id)
+#  index_discourse_post_event_events_on_image_upload_id     (image_upload_id)
+#  index_discourse_post_event_events_on_organizer_group_id  (organizer_group_id)
 #

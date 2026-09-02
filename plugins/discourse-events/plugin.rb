@@ -368,8 +368,30 @@ after_initialize do
 
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_post_event_enabled
-      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(event: :image_upload))
+      topic_view.instance_variable_set(
+        :@posts,
+        topic_view.posts.includes(event: [:image_upload, :organizer_group, { event_hosts: :user }]),
+      )
     end
+  end
+
+  add_to_serializer(
+    :topic_view,
+    :discourse_post_event_first_post_event,
+    include_condition: -> do
+      Array(object.posts).none? { |post| post.post_number == 1 } &&
+        object.topic.first_post&.event.present?
+    end,
+  ) do
+    first_post = object.topic.first_post
+    event =
+      DiscourseEvents::Events::Event.includes(
+        :image_upload,
+        :organizer_group,
+        { event_hosts: :user },
+      ).find_by(id: first_post.id)
+
+    DiscourseEvents::Events::EventSerializer.new(event, scope: scope, root: false).as_json
   end
 
   add_to_serializer(
@@ -800,6 +822,13 @@ after_initialize do
 
   on(:user_destroyed) do |user|
     DiscourseEvents::Events::Invitee.where(user_id: user.id).destroy_all
+    DiscourseEvents::Events::EventHost.where(user_id: user.id).delete_all
+  end
+
+  on(:group_destroyed) do |group|
+    DiscourseEvents::Events::Event.where(organizer_group_id: group.id).update_all(
+      organizer_group_id: nil,
+    )
   end
 
   on(:user_removed_from_group) do |user, group|

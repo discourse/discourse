@@ -50,6 +50,26 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
+  context "when the first post is omitted from the stream" do
+    it "includes the first post event" do
+      event =
+        Fabricate(
+          :event,
+          post: first_post,
+          original_starts_at: 1.hour.from_now,
+          description: "Community meetup",
+        )
+      topic_view = TopicView.new(topic)
+      topic_view.instance_variable_set(:@posts, [Fabricate(:post, topic:)])
+      json = JSON.parse(described_class.new(topic_view, scope: Guardian.new, root: false).to_json)
+
+      expect(json.dig("discourse_post_event_first_post_event", "id")).to eq(event.id)
+      expect(json.dig("discourse_post_event_first_post_event", "description")).to eq(
+        "Community meetup",
+      )
+    end
+  end
+
   context "with timezone and show_local_time true" do
     before do
       DiscourseEvents::Events::Event.create!(
