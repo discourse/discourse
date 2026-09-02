@@ -96,7 +96,7 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
 
         average_session_duration = result.traffic.dig(:summary, "average_session_duration_seconds")
 
-        expect(average_session_duration).to be_within(0.0001).of(1.0 / browsers.size)
+        expect(average_session_duration).to eq(1.0 / browsers.size)
       end
 
       it "orders browser dimensions by pageviews" do
