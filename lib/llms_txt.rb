@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module LlmsTxt
-  MCP_SETUP_URL =
-    "https://github.com/discourse/discourse-mcp#quick-start-release"
+  MCP_SETUP_URL = "https://github.com/discourse/discourse-mcp#quick-start-release"
 
   def self.generate
     I18n.with_locale(SiteSetting.default_locale) do
@@ -16,12 +15,10 @@ module LlmsTxt
       parts << translated_text("human_community_policy")
       parts << translated_text("account_required") if SiteSetting.login_required
       parts << translated_text("crawler_policy")
-      parts << one_line(
-        I18n.t("llms_txt.mcp_guidance", base_url: Discourse.base_url)
-      )
+      parts << one_line(I18n.t("llms_txt.mcp_guidance", base_url: Discourse.base_url))
       parts << section(
         translated_text("sections.preferred_interface"),
-        [translated_link(:mcp, MCP_SETUP_URL)]
+        [translated_link(:mcp, MCP_SETUP_URL)],
       )
 
       if !SiteSetting.login_required
@@ -29,15 +26,12 @@ module LlmsTxt
           translated_local_link(:search, "/search"),
           translated_local_link(:filter, "/filter"),
           translated_local_link(:latest, "/latest"),
-          translated_local_link(:categories, "/categories")
+          translated_local_link(:categories, "/categories"),
         ]
         if SiteSetting.enable_sitemap
           public_links << translated_local_link(:sitemap, "/sitemap.xml")
         end
-        parts << section(
-          translated_text("sections.public_web_access"),
-          public_links
-        )
+        parts << section(translated_text("sections.public_web_access"), public_links)
       end
 
       optional_links = []
