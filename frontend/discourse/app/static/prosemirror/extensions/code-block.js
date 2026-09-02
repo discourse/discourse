@@ -101,6 +101,11 @@ function pinDecoration(pos, node, previewHeight) {
     pos + node.nodeSize,
     {
       class: "--source",
+      // the preview face carries this too, so a feature can style both faces
+      // of its own language
+      ...(paramsLanguage(node.attrs.params) && {
+        "data-language": paramsLanguage(node.attrs.params),
+      }),
       // the code face keeps (a bounded part of) the footprint of the preview
       // it replaced, so flipping does not reflow the document below the block
       ...(previewHeight && {
@@ -482,12 +487,30 @@ function containedSelection(state, pins) {
   return TextSelection.between($anchor, $head);
 }
 
-// the nearest position outside `block` in `dir`, or null when the block has no
-// textblock on that side to hold a selection endpoint
+// the nearest position outside `block` in `dir` that can hold a selection
+// endpoint, or undefined when there is none. findFrom ignores `isolating` and
+// knows nothing about previews, so it will happily land inside a table cell or
+// in another block's hidden source; neither is somewhere a selection may end.
 function outsideBlock(state, block, dir) {
   const boundary = dir === -1 ? block.pos : block.pos + block.node.nodeSize;
+  const $boundary = state.doc.resolve(boundary);
+  const $found = Selection.findFrom($boundary, dir, true)?.$head;
 
-  return Selection.findFrom(state.doc.resolve(boundary), dir, true)?.$head;
+  if (!$found || previewingAncestor($found, state)) {
+    return undefined;
+  }
+
+  for (
+    let depth = $found.depth;
+    depth > $boundary.sharedDepth($found.pos);
+    depth--
+  ) {
+    if ($found.node(depth).type.spec.isolating) {
+      return undefined;
+    }
+  }
+
+  return $found;
 }
 
 // the boundary a join would actually cut at, mirroring prosemirror-commands:
@@ -515,6 +538,32 @@ function cutBoundary($pos, dir) {
   return null;
 }
 
+// the textblock a join across `boundary` would actually reach: it descends the
+// neighbor the same way joinTextblocksAround does, so a block nested in a list
+// item or blockquote is found rather than the wrapper around it
+function joinTarget(state, boundary, dir) {
+  const $boundary = state.doc.resolve(boundary);
+  let node = dir === -1 ? $boundary.nodeBefore : $boundary.nodeAfter;
+  let pos = dir === -1 ? boundary - (node?.nodeSize ?? 0) : boundary;
+
+  while (node && !node.isTextblock) {
+    if (node.type.spec.isolating) {
+      return null;
+    }
+
+    const child = dir === -1 ? node.lastChild : node.firstChild;
+
+    if (!child) {
+      return null;
+    }
+
+    pos = dir === -1 ? pos + node.nodeSize - 1 - child.nodeSize : pos + 1;
+    node = child;
+  }
+
+  return node ? { node, pos } : null;
+}
+
 function selectNeighborPreview(state, dispatch, dir) {
   const { $cursor } = state.selection;
   const boundary = cutBoundary($cursor, dir);
@@ -523,14 +572,13 @@ function selectNeighborPreview(state, dispatch, dir) {
     return false;
   }
 
-  const $boundary = state.doc.resolve(boundary);
-  const neighbor = dir === -1 ? $boundary.nodeBefore : $boundary.nodeAfter;
+  const target = joinTarget(state, boundary, dir);
 
-  if (!neighbor) {
+  if (!target) {
     return false;
   }
 
-  const pos = dir === -1 ? boundary - neighbor.nodeSize : boundary;
+  const { node: neighbor, pos } = target;
 
   if (!showsPreview(neighbor, state, pos)) {
     return false;

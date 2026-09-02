@@ -286,6 +286,35 @@ module(
       assert.strictEqual(editorClass.value, markdown, "nothing merged");
     });
 
+    test("backspace into a nested previewing block selects it instead of merging", async function (assert) {
+      const markdown = "> ```mermaid\n> flowchart\n> ```\n\nafter";
+      const [editorClass] = await setupRichEditor(assert, markdown);
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+
+      // the block is nested, so the boundary's own neighbour is the
+      // blockquote, not the textblock a join would descend into
+      let afterPos;
+      view.state.doc.descendants((node, at) => {
+        if (node.type.name === "paragraph" && node.textContent === "after") {
+          afterPos = at + 1;
+        }
+      });
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, afterPos)
+        )
+      );
+      await settled();
+
+      await triggerKeyEvent(".ProseMirror", "keydown", "Backspace");
+
+      assert.true(view.state.selection instanceof NodeSelection);
+      assert.strictEqual(view.state.selection.from, pos);
+      assert.strictEqual(editorClass.value, markdown, "nothing merged");
+    });
+
     test("a selection sweeping backwards out of the block keeps its head outside", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, MARKDOWN);
       const { view } = editorClass;
@@ -499,6 +528,30 @@ module(
       assert
         .dom("pre.--source")
         .doesNotExist("flipping back settles to the preview's own height");
+    });
+
+    test("the selector shows the language, not the info-string tail", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+
+      await toggleSource(view);
+
+      const select = document.querySelector(".code-language-select");
+
+      assert.strictEqual(select.value, "mermaid", "the language is selected");
+      assert.strictEqual(
+        select.options[0].textContent,
+        "",
+        "a known language needs no placeholder option"
+      );
+    });
+
+    test("the code face exposes its language to CSS too", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+
+      await toggleSource(editorClass.view);
+
+      assert.dom("pre.--source").hasAttribute("data-language", "mermaid");
     });
 
     test("a language change carries the pinned footprint", async function (assert) {
