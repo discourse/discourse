@@ -169,10 +169,10 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       {{#if this.hasTopScroll}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <button
-          type="button"
           aria-hidden="true"
           class={{dConcatClass "d-overflow-controls__btn --up" @buttonClass}}
           tabindex="-1"
+          type="button"
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollUp}}
         >
@@ -183,10 +183,10 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       {{#if this.hasLeftScroll}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <button
-          type="button"
           aria-hidden="true"
           class={{dConcatClass "d-overflow-controls__btn --left" @buttonClass}}
           tabindex="-1"
+          type="button"
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollLeft}}
         >
@@ -196,10 +196,10 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
 
       <div
         class={{dConcatClass "d-overflow-controls__content" @class}}
+        ...attributes
         {{didInsert this.setup}}
         {{dOnResize this.onResize}}
         {{on "scroll" this.onScroll}}
-        ...attributes
       >
         {{yield}}
       </div>
@@ -207,10 +207,10 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       {{#if this.hasRightScroll}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <button
-          type="button"
           aria-hidden="true"
           class={{dConcatClass "d-overflow-controls__btn --right" @buttonClass}}
           tabindex="-1"
+          type="button"
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollRight}}
         >
@@ -221,10 +221,10 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       {{#if this.hasBottomScroll}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <button
-          type="button"
           aria-hidden="true"
           class={{dConcatClass "d-overflow-controls__btn --down" @buttonClass}}
           tabindex="-1"
+          type="button"
           {{on "mousedown" this.preventFocusGrab}}
           {{on "click" this.scrollDown}}
         >

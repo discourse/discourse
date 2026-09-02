@@ -66,20 +66,6 @@ export default class ComposerBody extends Component {
     }, 1000);
   }
 
-  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
-  _triggerComposerResized() {
-    schedule("afterRender", () => {
-      discourseDebounce(this, this.composerResized, 300);
-    });
-  }
-
-  @observes("composeState")
-  _onComposerOpen() {
-    if (this.composeState === Composer.OPEN) {
-      this.appEvents.trigger("composer:opened");
-    }
-  }
-
   composerResized() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -127,6 +113,20 @@ export default class ComposerBody extends Component {
       // so use Alt+Enter
       e.preventDefault();
       this.save(undefined, e);
+    }
+  }
+
+  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
+  _triggerComposerResized() {
+    schedule("afterRender", () => {
+      discourseDebounce(this, this.composerResized, 300);
+    });
+  }
+
+  @observes("composeState")
+  _onComposerOpen() {
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
     }
   }
 }

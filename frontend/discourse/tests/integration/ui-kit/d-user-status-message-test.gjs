@@ -29,7 +29,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
   test("it renders status description if enabled", async function (assert) {
     await render(
       <template>
-        <DUserStatusMessage @status={{this.status}} @showDescription={{true}} />
+        <DUserStatusMessage @showDescription={{true}} @status={{this.status}} />
       </template>
     );
 
@@ -130,7 +130,7 @@ module("Integration | ui-kit | DUserStatusMessage", function (hooks) {
     const status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      <template><DUserStatusMessage @status={{status}} class="foo" /></template>
+      <template><DUserStatusMessage class="foo" @status={{status}} /></template>
     );
 
     assert

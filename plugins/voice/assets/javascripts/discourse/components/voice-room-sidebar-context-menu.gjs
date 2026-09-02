@@ -75,56 +75,57 @@ export default class VoiceRoomSidebarContextMenu extends Component {
     <DDropdownMenu class="voice-room-sidebar-context-menu" as |dropdown|>
       <dropdown.item>
         <DButton
+          class="voice-room-sidebar-context-menu__open-page"
           @action={{this.openRoomPage}}
           @icon="expand"
           @label="voice.room.open_page"
           @title="voice.room.open_page"
-          class="voice-room-sidebar-context-menu__open-page"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="voice-room-sidebar-context-menu__room-info"
           @action={{this.openRoomInfo}}
           @icon="circle-info"
           @label="voice.room.info"
           @title="voice.room.info"
-          class="voice-room-sidebar-context-menu__room-info"
         />
       </dropdown.item>
       {{#if this.room.can_invite}}
         <dropdown.item>
           <DButton
+            class="voice-room-sidebar-context-menu__invite"
             @action={{this.openInviteModal}}
             @icon="user-plus"
             @label="voice.invite.menu"
             @title="voice.invite.menu"
-            class="voice-room-sidebar-context-menu__invite"
           />
         </dropdown.item>
       {{/if}}
       <dropdown.item>
         <DButton
+          class="voice-room-sidebar-context-menu__copy-link"
           @action={{this.copyRoomLink}}
           @icon="link"
           @label="voice.room.copy_link"
           @title="voice.room.copy_link"
-          class="voice-room-sidebar-context-menu__copy-link"
         />
       </dropdown.item>
       {{#if this.room.can_manage}}
         <dropdown.item>
           <DButton
+            class="voice-room-sidebar-context-menu__edit-room"
             @action={{this.editRoom}}
             @icon="pencil"
             @label="voice.room.edit"
             @title="voice.room.edit"
-            class="voice-room-sidebar-context-menu__edit-room"
           />
         </dropdown.item>
       {{/if}}
       {{#if this.isConnected}}
         <dropdown.item>
           <DButton
+            class="voice-room-sidebar-context-menu__toggle-widget"
             @action={{this.toggleCallWidget}}
             @icon={{if this.voiceWebrtc.callWidgetHidden "eye" "eye-slash"}}
             @label={{if
@@ -137,16 +138,15 @@ export default class VoiceRoomSidebarContextMenu extends Component {
               "voice.widget.show"
               "voice.widget.hide"
             }}
-            class="voice-room-sidebar-context-menu__toggle-widget"
           />
         </dropdown.item>
         <dropdown.item>
           <DButton
+            class="voice-room-sidebar-context-menu__leave-room --danger"
             @action={{this.leaveRoom}}
             @icon="phone-slash"
             @label="voice.room.leave"
             @title="voice.room.leave"
-            class="voice-room-sidebar-context-menu__leave-room --danger"
           />
         </dropdown.item>
       {{/if}}

@@ -26,28 +26,6 @@ export default class VoiceLivekitStatus extends Component {
     this.load();
   }
 
-  @action
-  async load({ refreshProbe = false } = {}) {
-    this.loading = true;
-    this.loadFailed = false;
-
-    try {
-      this.status = await ajax(
-        `/admin/plugins/voice/livekit/${refreshProbe ? "probe" : "status"}.json`,
-        refreshProbe ? { type: "POST" } : {}
-      );
-    } catch {
-      this.loadFailed = true;
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  @action
-  async refresh() {
-    await this.load({ refreshProbe: true });
-  }
-
   // Pure-mesh installs (no LiveKit setting touched) never see the card.
   get visible() {
     if (this.loading && !this.status) {
@@ -198,6 +176,28 @@ export default class VoiceLivekitStatus extends Component {
     });
   }
 
+  @action
+  async load({ refreshProbe = false } = {}) {
+    this.loading = true;
+    this.loadFailed = false;
+
+    try {
+      this.status = await ajax(
+        `/admin/plugins/voice/livekit/${refreshProbe ? "probe" : "status"}.json`,
+        refreshProbe ? { type: "POST" } : {}
+      );
+    } catch {
+      this.loadFailed = true;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  async refresh() {
+    await this.load({ refreshProbe: true });
+  }
+
   #usernames(userIds) {
     if (!userIds?.length) {
       return null;
@@ -214,10 +214,10 @@ export default class VoiceLivekitStatus extends Component {
           <h3>{{i18n "voice.admin.dashboard.livekit.title"}}</h3>
           <DButton
             class="btn-default btn-small voice-livekit-status__refresh"
-            @icon="arrows-rotate"
-            @label="voice.admin.dashboard.livekit.refresh"
             @action={{this.refresh}}
             @disabled={{this.loading}}
+            @icon="arrows-rotate"
+            @label="voice.admin.dashboard.livekit.refresh"
           />
         </div>
 

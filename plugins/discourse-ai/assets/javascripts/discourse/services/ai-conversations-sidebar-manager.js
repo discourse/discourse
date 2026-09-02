@@ -137,32 +137,6 @@ export default class AiConversationsSidebarManager extends Service {
     return true;
   }
 
-  _attachScrollListener() {
-    const sections = document.querySelector(
-      ".sidebar-sections.ai-conversations-panel"
-    );
-    this._scrollElement = sections;
-
-    if (this._hasScrollListener || !this._scrollElement) {
-      return;
-    }
-
-    sections.addEventListener("scroll", this._debouncedScrollHandler);
-
-    this._hasScrollListener = true;
-  }
-
-  _removeScrollListener() {
-    if (this._hasScrollListener) {
-      this._scrollElement.removeEventListener(
-        "scroll",
-        this._debouncedScrollHandler
-      );
-      this._hasScrollListener = false;
-      this._scrollElement = null;
-    }
-  }
-
   stopForcingCustomSidebar() {
     document.body.classList.remove("has-ai-conversations-sidebar");
     document.body.classList.remove("has-empty-ai-conversations-sidebar");
@@ -186,15 +160,6 @@ export default class AiConversationsSidebarManager extends Service {
     }
 
     this._removeScrollListener();
-  }
-
-  _captureLastKnownAppURL() {
-    const lastForumUrl = this.routeHistory.history.find((url) => {
-      return !url.startsWith("/discourse-ai");
-    });
-
-    this.lastKnownAppURL =
-      lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   async fetchMessages() {
@@ -235,14 +200,6 @@ export default class AiConversationsSidebarManager extends Service {
     }
   }
 
-  _handleNewBotPM(topic) {
-    this.topics = this._dedupeTopics([
-      { ai_conversation_starred: false, ...topic },
-      ...this.topics,
-    ]);
-    this._rebuildSections();
-  }
-
   async updateConversationStarred(topic, starred) {
     if (!topic) {
       return;
@@ -278,6 +235,49 @@ export default class AiConversationsSidebarManager extends Service {
       popupAjaxError(error);
       throw error;
     }
+  }
+
+  _attachScrollListener() {
+    const sections = document.querySelector(
+      ".sidebar-sections.ai-conversations-panel"
+    );
+    this._scrollElement = sections;
+
+    if (this._hasScrollListener || !this._scrollElement) {
+      return;
+    }
+
+    sections.addEventListener("scroll", this._debouncedScrollHandler);
+
+    this._hasScrollListener = true;
+  }
+
+  _removeScrollListener() {
+    if (this._hasScrollListener) {
+      this._scrollElement.removeEventListener(
+        "scroll",
+        this._debouncedScrollHandler
+      );
+      this._hasScrollListener = false;
+      this._scrollElement = null;
+    }
+  }
+
+  _captureLastKnownAppURL() {
+    const lastForumUrl = this.routeHistory.history.find((url) => {
+      return !url.startsWith("/discourse-ai");
+    });
+
+    this.lastKnownAppURL =
+      lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
+  }
+
+  _handleNewBotPM(topic) {
+    this.topics = this._dedupeTopics([
+      { ai_conversation_starred: false, ...topic },
+      ...this.topics,
+    ]);
+    this._rebuildSections();
   }
 
   _dedupeTopics(topics) {
@@ -418,10 +418,6 @@ export default class AiConversationsSidebarManager extends Service {
             scheduleOnce("afterRender", this, this.triggerEvent);
           }
 
-          triggerEvent() {
-            this.events.trigger("discourse-ai:conversations-sidebar-updated");
-          }
-
           get name() {
             return sec.name;
           }
@@ -461,6 +457,10 @@ export default class AiConversationsSidebarManager extends Service {
             if (!this.manager.isLoading && this.links.length === 0) {
               return AiBotSidebarEmptyState;
             }
+          }
+
+          triggerEvent() {
+            this.events.trigger("discourse-ai:conversations-sidebar-updated");
           }
         };
       }, AI_CONVERSATIONS_PANEL);

@@ -508,10 +508,10 @@ module("Integration | Component | PluginOutlet", function (hooks) {
           await render(
             <template>
               <PluginOutlet
-                @name="test-name"
                 @deprecatedArgs={{lazyHash
                   shouldDisplay=(deprecatedOutletArgument value=true)
                 }}
+                @name="test-name"
               />
             </template>
           );
@@ -541,7 +541,6 @@ module("Integration | Component | PluginOutlet", function (hooks) {
           await render(
             <template>
               <PluginOutlet
-                @name="test-name"
                 @deprecatedArgs={{lazyHash
                   shouldDisplay=(deprecatedOutletArgument
                     value=true
@@ -550,6 +549,7 @@ module("Integration | Component | PluginOutlet", function (hooks) {
                     since="3.3.0.beta4-dev"
                   )
                 }}
+                @name="test-name"
               />
             </template>
           );
@@ -602,13 +602,13 @@ module("Integration | Component | PluginOutlet", function (hooks) {
           await render(
             <template>
               <PluginOutlet
-                @name="test-name"
                 @deprecatedArgs={{lazyHash
                   shouldDisplay=(deprecatedOutletArgument
                     value=deprecatedData.display
                     silence="discourse.deprecation-that-should-not-be-logged"
                   )
                 }}
+                @name="test-name"
               />
             </template>
           );
@@ -648,11 +648,11 @@ module("Integration | Component | PluginOutlet", function (hooks) {
           await render(
             <template>
               <PluginOutlet
-                @name="test-name"
-                @outletArgs={{lazyHash shouldDisplay=true}}
                 @deprecatedArgs={{lazyHash
                   argNotUsed=(deprecatedOutletArgument value=true)
                 }}
+                @name="test-name"
+                @outletArgs={{lazyHash shouldDisplay=true}}
               />
             </template>
           );
@@ -767,9 +767,9 @@ module(
           await render(
             <template>
               <PluginOutlet
+                @defaultGlimmer={{true}}
                 @name="test-name"
                 @outletArgs={{lazyHash hello="world"}}
-                @defaultGlimmer={{true}}
               />
             </template>
           );
@@ -1333,8 +1333,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-outlet-name"
             @aliases={{array "old-outlet-name"}}
+            @name="new-outlet-name"
           />
         </template>
       );
@@ -1359,8 +1359,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="canonical-outlet"
             @aliases={{array "alias-outlet"}}
+            @name="canonical-outlet"
           />
         </template>
       );
@@ -1380,10 +1380,10 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-name"
             @aliases={{array
               (hash name="old-name" deprecated=true since="4.0")
             }}
+            @name="new-name"
           />
         </template>
       );
@@ -1400,10 +1400,10 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-name"
             @aliases={{array
               (hash name="old-name" deprecated=true since="4.0")
             }}
+            @name="new-name"
           />
         </template>
       );
@@ -1425,7 +1425,6 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="modern-name"
             @aliases={{array
               (hash
                 name="legacy-name"
@@ -1434,6 +1433,7 @@ module(
                 message="Use modern-name instead of legacy-name"
               )
             }}
+            @name="modern-name"
           />
         </template>
       );
@@ -1457,8 +1457,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="primary-name"
             @aliases={{array "alternate-name"}}
+            @name="primary-name"
           />
         </template>
       );
@@ -1487,7 +1487,7 @@ module(
 
       await render(
         <template>
-          <PluginOutlet @name="new-wrapper" @aliases={{array "old-wrapper"}}>
+          <PluginOutlet @aliases={{array "old-wrapper"}} @name="new-wrapper">
             <span class="wrapped">Wrapped content</span>
           </PluginOutlet>
         </template>
@@ -1509,8 +1509,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="doomed-outlet"
             @deprecated={{hash since="4.0"}}
+            @name="doomed-outlet"
           />
         </template>
       );
@@ -1527,8 +1527,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="doomed-outlet"
             @deprecated={{hash since="4.0"}}
+            @name="doomed-outlet"
           />
         </template>
       );
@@ -1550,11 +1550,11 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="old-outlet"
             @deprecated={{hash
               since="4.0"
               message="This outlet will be removed. Use the Block API."
             }}
+            @name="old-outlet"
           />
         </template>
       );
@@ -1584,8 +1584,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="target-outlet"
             @aliases={{array "alias-one" "alias-two"}}
+            @name="target-outlet"
           />
         </template>
       );
@@ -1603,8 +1603,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-file-outlet"
             @aliases={{array "old-file-outlet"}}
+            @name="new-file-outlet"
           />
         </template>
       );
@@ -1623,8 +1623,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="empty-canonical"
             @aliases={{array "only-alias-outlet"}}
+            @name="empty-canonical"
           >
             <span class="default">Default content</span>
           </PluginOutlet>
@@ -1652,11 +1652,11 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="main-outlet"
             @aliases={{array
               (hash name="deprecated-alias" deprecated=true since="4.0")
               "active-alias"
             }}
+            @name="main-outlet"
           />
         </template>
       );
@@ -1704,7 +1704,6 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-wrapper-outlet"
             @aliases={{array
               (hash
                 name="old-standalone-outlet"
@@ -1713,6 +1712,7 @@ module(
                 since="4.0"
               )
             }}
+            @name="new-wrapper-outlet"
           >
             <span class="wrapped">Wrapped content</span>
           </PluginOutlet>
@@ -1734,8 +1734,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-wrapper-outlet"
             @aliases={{array (hash name="old-above-outlet" position="before")}}
+            @name="new-wrapper-outlet"
           >
             <span class="wrapped">Wrapped content</span>
           </PluginOutlet>
@@ -1757,8 +1757,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="standalone-outlet"
             @aliases={{array (hash name="targeted-alias" position="after")}}
+            @name="standalone-outlet"
           />
         </template>
       );
@@ -1775,7 +1775,6 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-wrapper-with-tag"
             @aliases={{array
               (hash
                 name="old-tagged-outlet"
@@ -1783,6 +1782,7 @@ module(
                 connectorTagName="span"
               )
             }}
+            @name="new-wrapper-with-tag"
           >
             <span class="wrapped">Wrapped</span>
           </PluginOutlet>
@@ -1808,8 +1808,8 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="new-wrapper-tagless"
             @aliases={{array (hash name="old-tagless-outlet" position="after")}}
+            @name="new-wrapper-tagless"
           >
             <span class="wrapped">Wrapped</span>
           </PluginOutlet>
@@ -1831,7 +1831,6 @@ module(
       await render(
         <template>
           <PluginOutlet
-            @name="wrapper-outlet"
             @aliases={{array
               (hash
                 name="old-below-outlet"
@@ -1840,6 +1839,7 @@ module(
                 since="4.0"
               )
             }}
+            @name="wrapper-outlet"
           >
             <span class="wrapped">Content</span>
           </PluginOutlet>

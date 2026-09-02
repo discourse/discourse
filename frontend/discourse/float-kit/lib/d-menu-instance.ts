@@ -70,13 +70,6 @@ export default class DMenuInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get portalOutletElement() {
-    return (
-      this.portalOutletOverrideElement ||
-      document.getElementById("d-menu-portals")
-    );
-  }
-
   get trigger() {
     return this._trigger;
   }
@@ -86,6 +79,13 @@ export default class DMenuInstance extends FloatKitInstance {
     this.id =
       (element instanceof HTMLElement && element.id) || guidFor(element);
     this.setupListeners();
+  }
+
+  get portalOutletElement() {
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-menu-portals")
+    );
   }
 
   get shouldTrapPointerDown() {
@@ -99,6 +99,11 @@ export default class DMenuInstance extends FloatKitInstance {
    */
   get #ownsFocus(): boolean {
     return !!this.content?.contains(document.activeElement);
+  }
+
+  get #focusIsUnowned(): boolean {
+    const { activeElement } = document;
+    return !activeElement || activeElement === document.body;
   }
 
   @action
@@ -128,11 +133,6 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await super.close(options);
-  }
-
-  get #focusIsUnowned(): boolean {
-    const { activeElement } = document;
-    return !activeElement || activeElement === document.body;
   }
 
   @action

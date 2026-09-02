@@ -268,34 +268,34 @@ export default class AdminConfigAreasColorPalette extends Component {
       <Form
         data-palette-id={{@colorPalette.id}}
         @data={{this.data}}
-        @onSubmit={{this.handleSubmit}}
         @onRegisterApi={{this.onRegisterApi}}
+        @onSubmit={{this.handleSubmit}}
         as |form transientData|
       >
         <div class="admin-config-color-palettes__header">
           <div class="admin-config-color-palettes__top-controls">
             {{#if this.editingName}}
               <form.Field
+                @format="full"
                 @name="name"
+                @onSet={{this.handleNameChange}}
                 @showTitle={{false}}
                 @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
-                @validation="required"
-                @format="full"
-                @onSet={{this.handleNameChange}}
                 @type="input"
+                @validation="required"
                 as |field|
               >
                 <div class="admin-config-color-palettes__name-control">
                   <field.Control />
                   <DButton
                     class="btn-primary admin-config-color-palettes__save-name"
-                    @icon="check"
                     @action={{this.triggerNameSave}}
+                    @icon="check"
                   />
                   <DButton
                     class="btn-flat admin-config-color-palettes__cancel-edit-name"
-                    @icon="xmark"
                     @action={{this.toggleEditingName}}
+                    @icon="xmark"
                   />
                 </div>
               </form.Field>
@@ -307,8 +307,8 @@ export default class AdminConfigAreasColorPalette extends Component {
                 {{#unless this.installedWithTheme}}
                   <DButton
                     class="btn-flat admin-config-color-palettes__edit-name"
-                    @icon="pencil"
                     @action={{this.toggleEditingName}}
+                    @icon="pencil"
                   />
                 {{/unless}}
               </div>
@@ -316,14 +316,14 @@ export default class AdminConfigAreasColorPalette extends Component {
             <div class="admin-config-color-palettes__top-actions">
               <DButton
                 class="btn-default duplicate-palette"
-                @label="admin.config_areas.color_palettes.duplicate"
                 @action={{this.duplicate}}
+                @label="admin.config_areas.color_palettes.duplicate"
               />
               {{#unless this.installedWithTheme}}
                 <DButton
                   class="btn-danger delete-palette"
-                  @label="admin.config_areas.color_palettes.delete"
                   @action={{this.delete}}
+                  @label="admin.config_areas.color_palettes.delete"
                 />
               {{/unless}}
             </div>
@@ -333,8 +333,8 @@ export default class AdminConfigAreasColorPalette extends Component {
               {{dIcon "circle-info"}}
               <span>{{i18n "admin.customize.theme_owner"}}
                 <LinkTo
-                  @route="adminCustomizeThemes.show"
                   @models={{array "themes" @colorPalette.theme_id}}
+                  @route="adminCustomizeThemes.show"
                 >
                   {{@colorPalette.theme_name}}
                 </LinkTo>
@@ -349,17 +349,17 @@ export default class AdminConfigAreasColorPalette extends Component {
             <:content>
               <form.Row>
                 <form.Field
-                  @name="default_light_on_theme"
-                  @title={{i18n
-                    "admin.config_areas.color_palettes.color_options.toggle"
-                  }}
-                  @showTitle={{false}}
                   @description={{i18n
                     "admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme"
                     themeName=this.defaultTheme.name
                   }}
                   @format="full"
+                  @name="default_light_on_theme"
                   @onSet={{this.handleDefaultLightOnThemeChange}}
+                  @showTitle={{false}}
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
                   @type="toggle"
                   as |field|
                 >
@@ -368,17 +368,17 @@ export default class AdminConfigAreasColorPalette extends Component {
               </form.Row>
               <form.Row>
                 <form.Field
-                  @name="default_dark_on_theme"
-                  @title={{i18n
-                    "admin.config_areas.color_palettes.color_options.toggle"
-                  }}
-                  @showTitle={{false}}
                   @description={{i18n
                     "admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme"
                     themeName=this.defaultTheme.name
                   }}
                   @format="full"
+                  @name="default_dark_on_theme"
                   @onSet={{this.handleDefaultDarkOnThemeChange}}
+                  @showTitle={{false}}
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
                   @type="toggle"
                   as |field|
                 >
@@ -387,16 +387,16 @@ export default class AdminConfigAreasColorPalette extends Component {
               </form.Row>
               <form.Row>
                 <form.Field
-                  @name="user_selectable"
-                  @title={{i18n
-                    "admin.config_areas.color_palettes.color_options.toggle"
-                  }}
-                  @showTitle={{false}}
                   @description={{i18n
                     "admin.config_areas.color_palettes.color_options.toggle_description"
                   }}
                   @format="full"
+                  @name="user_selectable"
                   @onSet={{this.handleUserSelectableChange}}
+                  @showTitle={{false}}
+                  @title={{i18n
+                    "admin.config_areas.color_palettes.color_options.toggle"
+                  }}
                   @type="toggle"
                   as |field|
                 >
@@ -410,10 +410,10 @@ export default class AdminConfigAreasColorPalette extends Component {
           >
             <:content>
               <form.Field
-                @name="colors"
-                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
-                @showTitle={{false}}
                 @format="full"
+                @name="colors"
+                @showTitle={{false}}
+                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
                 @type="custom"
                 as |field|
               >
@@ -436,8 +436,8 @@ export default class AdminConfigAreasColorPalette extends Component {
                 {{/if}}
                 <DButton
                   class="btn-default copy-to-clipboard"
-                  @label="admin.config_areas.color_palettes.copy_to_clipboard"
                   @action={{this.copyToClipboard}}
+                  @label="admin.config_areas.color_palettes.copy_to_clipboard"
                 />
                 <form.Submit
                   @isLoading={{this.saving}}

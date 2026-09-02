@@ -149,32 +149,6 @@ export default class WelcomeBanner extends Component {
     });
   }
 
-  #shouldDisplayForRoute(
-    welcome_banner_page_visibility,
-    top_menu,
-    currentRouteName
-  ) {
-    switch (welcome_banner_page_visibility) {
-      case "top_menu_pages":
-        return top_menu
-          .split("|")
-          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
-      case "homepage":
-        return currentRouteName === `discovery.${defaultHomepage()}`;
-      case "discovery":
-        return currentRouteName.startsWith("discovery.");
-      case "all_pages":
-        return (
-          !currentRouteName.startsWith("admin") &&
-          !ALL_PAGES_EXCLUDED_ROUTES.some(
-            (routeName) => routeName === currentRouteName
-          )
-        );
-      default:
-        return false;
-    }
-  }
-
   get headerText() {
     const site_name = this.siteSettings.title || "";
 
@@ -252,6 +226,32 @@ export default class WelcomeBanner extends Component {
     }
   }
 
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
+    switch (welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return top_menu
+          .split("|")
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
+      case "homepage":
+        return currentRouteName === `discovery.${defaultHomepage()}`;
+      case "discovery":
+        return currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return (
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
+      default:
+        return false;
+    }
+  }
+
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
@@ -284,17 +284,17 @@ export default class WelcomeBanner extends Component {
           <div class="search-menu welcome-banner__search-menu">
             {{#if this.showAdvancedSearchIcon}}
               <DButton
+                class="search-icon"
+                @href={{getURL "/search?expanded=true"}}
                 @icon="magnifying-glass"
                 @title="search.open_advanced"
-                @href={{getURL "/search?expanded=true"}}
-                class="search-icon"
               />
             {{/if}}
             <SearchMenu
+              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
               @searchInputPlaceholder="welcome_banner.search_placeholder"
-              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
             />
           </div>
           <PluginOutlet @name="welcome-banner-below-input" />

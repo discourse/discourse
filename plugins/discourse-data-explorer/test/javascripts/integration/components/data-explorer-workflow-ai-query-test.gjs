@@ -63,9 +63,9 @@ module(
           <DataExplorerWorkflowAiQuery
             @field={{context.queryState}}
             @fieldName={{context.fieldName}}
-            @schema={{context.schema}}
             @node={{context.node}}
             @nodeParameters={{context.nodeParameters}}
+            @schema={{context.schema}}
           />
         </template>
       );

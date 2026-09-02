@@ -13,19 +13,6 @@ export default class PollOptionsComponent extends Component {
     return this.args.votes.includes(option.id);
   };
 
-  @action
-  sendClick(option, event) {
-    if (event.target.closest(".discourse-local-date")) {
-      return;
-    }
-    this.args.sendOptionSelect(option);
-  }
-
-  @action
-  sendRank(option, rank = 0) {
-    this.args.sendOptionSelect(option, rank);
-  }
-
   get rankedChoiceDropdownContent() {
     let rankedChoiceDropdownContent = [];
 
@@ -53,6 +40,19 @@ export default class PollOptionsComponent extends Component {
     });
 
     return rankedChoiceDropdownContent;
+  }
+
+  @action
+  sendClick(option, event) {
+    if (event.target.closest(".discourse-local-date")) {
+      return;
+    }
+    this.args.sendOptionSelect(option);
+  }
+
+  @action
+  sendRank(option, rank = 0) {
+    this.args.sendOptionSelect(option, rank);
   }
 
   <template>

@@ -106,10 +106,6 @@ export default class UpsertCategorySecurity extends Component {
     return (this.permissions?.length ?? 0) >= 3;
   }
 
-  #setFormPermissions(permissions) {
-    this.args.form.set("permissions", permissions);
-  }
-
   @action
   onSelectGroup(groupId) {
     const newPermissions = [
@@ -170,6 +166,10 @@ export default class UpsertCategorySecurity extends Component {
     this.#setFormPermissions(newPermissions);
   }
 
+  #setFormPermissions(permissions) {
+    this.args.form.set("permissions", permissions);
+  }
+
   <template>
     {{#if @category.is_special}}
       {{#if @category.isUncategorizedCategory}}
@@ -216,13 +216,13 @@ export default class UpsertCategorySecurity extends Component {
           </div>
           {{#each this.permissions as |p|}}
             <UpsertCategoryPermissionRow
+              @everyonePermission={{this.everyonePermission}}
               @groupId={{p.group_id}}
               @groupName={{p.group_name}}
-              @type={{p.permission_type}}
-              @everyonePermission={{this.everyonePermission}}
               @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
               @onRemovePermission={{this.onRemovePermission}}
               @onUpdatePermission={{this.onUpdatePermission}}
+              @type={{p.permission_type}}
             />
           {{/each}}
 
@@ -233,6 +233,7 @@ export default class UpsertCategorySecurity extends Component {
           {{/unless}}
           {{#if (or this.hasAvailableGroups this.canRemoveAllPermissions)}}
             <PluginOutlet
+              @defaultGlimmer={{true}}
               @name="category-security-permissions-add-group"
               @outletArgs={{lazyHash
                 category=@category
@@ -241,18 +242,17 @@ export default class UpsertCategorySecurity extends Component {
                 canRemoveAllPermissions=this.canRemoveAllPermissions
                 onRemoveAllPermissions=this.onRemoveAllPermissions
               }}
-              @defaultGlimmer={{true}}
             >
               <div class="add-group">
                 {{#if this.hasAvailableGroups}}
                   <span class="group-name">
                     <@form.Field
-                      @name="security_add_group_id"
-                      @title={{i18n "category.security_add_group"}}
-                      @showTitle={{false}}
                       @format="max"
-                      @type="select"
+                      @name="security_add_group_id"
                       @onSet={{this.onSecurityAddGroupSet}}
+                      @showTitle={{false}}
+                      @title={{i18n "category.security_add_group"}}
+                      @type="select"
                       as |field|
                     >
                       <field.Control
@@ -272,8 +272,8 @@ export default class UpsertCategorySecurity extends Component {
                 {{#if this.canRemoveAllPermissions}}
                   <DButton
                     class="btn-default remove-all-permissions"
-                    @label="category.permissions.remove_all"
                     @action={{this.onRemoveAllPermissions}}
+                    @label="category.permissions.remove_all"
                   />
                 {{/if}}
               </div>

@@ -77,7 +77,7 @@ export default class AiAgentResponseFormatEditor extends Component {
   }
 
   <template>
-    <@form.Container @title={{this.editorTitle}} @format="large">
+    <@form.Container @format="large" @title={{this.editorTitle}}>
       <div class="ai-agent-editor__response-format">
         {{#if (gt @data.response_format.length 0)}}
           <pre class="ai-agent-editor__response-format-pre">
@@ -90,23 +90,23 @@ export default class AiAgentResponseFormatEditor extends Component {
         {{/if}}
 
         <@form.Button
-          @action={{this.openModal}}
-          @label="discourse_ai.ai_agent.response_format.open_modal"
-          @disabled={{@data.system}}
           class="btn-default"
+          @action={{this.openModal}}
+          @disabled={{@data.system}}
+          @label="discourse_ai.ai_agent.response_format.open_modal"
         />
       </div>
     </@form.Container>
 
     {{#if this.showJsonEditorModal}}
       <ModalJsonSchemaEditor
+        @closeModal={{this.closeModal}}
         @model={{hash
           value=this.responseFormatAsJSON
           updateValue=(fn this.updateResponseFormat @form)
           settingName=this.editorTitle
           jsonSchema=this.jsonSchema
         }}
-        @closeModal={{this.closeModal}}
       />
     {{/if}}
   </template>

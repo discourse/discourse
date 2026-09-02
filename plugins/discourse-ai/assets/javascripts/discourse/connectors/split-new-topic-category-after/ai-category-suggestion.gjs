@@ -13,8 +13,8 @@ export default class AiCategorySuggestion extends Component {
   <template>
     {{#if this.siteSettings.ai_embeddings_enabled}}
       <AiSplitTopicSuggester
-        @selectedPosts={{@outletArgs.selectedPosts}}
         @mode="suggest_category"
+        @selectedPosts={{@outletArgs.selectedPosts}}
         @updateAction={{@outletArgs.updateCategoryId}}
       />
     {{/if}}

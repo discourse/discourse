@@ -78,6 +78,18 @@ export default class UserTopicsListController extends Controller {
     return this.filter === UNREAD_FILTER && this.model?.topics?.length;
   }
 
+  get resolvedAscending() {
+    if (isNone(this.ascending)) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return this.ascending.toString() === "true";
+    }
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.get("params.order") ?? "activity";
+  }
+
   subscribe() {
     this.pmTopicTrackingState.trackIncoming(this.inbox, this.filter);
   }
@@ -94,18 +106,6 @@ export default class UserTopicsListController extends Controller {
       this.ascending = false;
     }
     this.order = sortBy;
-  }
-
-  get resolvedAscending() {
-    if (isNone(this.ascending)) {
-      return this.model.get("params.ascending") === "true";
-    } else {
-      return this.ascending.toString() === "true";
-    }
-  }
-
-  get resolvedOrder() {
-    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   @action

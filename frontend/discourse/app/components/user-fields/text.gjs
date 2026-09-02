@@ -10,8 +10,8 @@ export default class UserFieldText extends UserFieldBase {
     <div class="controls">
       <Input
         id={{concat "user-" this.elementId}}
-        @value={{this.value}}
         maxlength={{this.site.user_field_max_length}}
+        @value={{this.value}}
       />
       <label
         class="control-label alt-placeholder"

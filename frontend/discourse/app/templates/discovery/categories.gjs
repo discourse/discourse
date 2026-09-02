@@ -10,14 +10,14 @@ import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default <template>
-  <Layout @model={{@controller.model}} @listClass="--categories">
+  <Layout @listClass="--categories" @model={{@controller.model}}>
     <:navigation>
       <Navigation
-        @category={{@controller.model.parentCategory}}
-        @showCategoryAdmin={{@controller.model.can_create_category}}
         @canCreateTopic={{@controller.model.can_create_topic}}
+        @category={{@controller.model.parentCategory}}
         @createTopic={{@controller.createTopic}}
         @filterType="categories"
+        @showCategoryAdmin={{@controller.model.can_create_category}}
       />
     </:navigation>
     <:list>
@@ -38,14 +38,14 @@ export default <template>
             }}
           >
             <div
-              role="button"
               class="alert alert-info clickable"
+              role="button"
               {{on "click" @controller.showInserted}}
             >
               <DCountI18n
+                @count={{@controller.topicTrackingState.incomingCount}}
                 @key="topic_count_"
                 @suffix={{@controller.topicTrackingState.filter}}
-                @count={{@controller.topicTrackingState.incomingCount}}
               />
             </div>
           </div>
@@ -53,16 +53,16 @@ export default <template>
 
         <CategoriesDisplay
           @categories={{@controller.model.content}}
-          @topics={{@controller.model.topics}}
-          @parentCategory={{@controller.model.parentCategory}}
-          @loadMore={{@controller.model.loadMore}}
           @loadingMore={{@controller.model.isLoading}}
+          @loadMore={{@controller.model.loadMore}}
+          @parentCategory={{@controller.model.parentCategory}}
+          @topics={{@controller.model.topics}}
         />
       </div>
 
       <PluginOutlet
-        @name="below-discovery-categories"
         @connectorTagName="div"
+        @name="below-discovery-categories"
         @outletArgs={{lazyHash
           categories=@controller.model.content
           topics=@controller.model.topics

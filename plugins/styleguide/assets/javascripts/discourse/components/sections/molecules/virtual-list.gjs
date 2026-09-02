@@ -6,9 +6,9 @@ import virtualListVariableSource from "../../examples/molecules/virtual-list-var
 
 export default <template>
   <StyleguideExample
-    @title="<DVirtualList> — pinned rows and an initial selection"
     @code={{virtualListSource}}
     @description="Thousands of rows, of which only the visible window plus overscan is in the DOM. The list opens already scrolled to the selected row."
+    @title="<DVirtualList> — pinned rows and an initial selection"
   >
     <:tryThis>
       Scroll far away from the selection and inspect the DOM: the selected row
@@ -24,9 +24,9 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<DVirtualList> — variable-height rows"
     @code={{virtualListVariableSource}}
     @description="Rows whose real heights differ against a single estimate, so each re-measures as it enters the window and the total settles as you scroll. Rows are placed individually rather than laid out in flow, so a correction moves one row instead of reflowing the rest."
+    @title="<DVirtualList> — variable-height rows"
   >
     <div class="styleguide-virtual-list styleguide-virtual-list--tall">
       <VirtualListVariableExample />

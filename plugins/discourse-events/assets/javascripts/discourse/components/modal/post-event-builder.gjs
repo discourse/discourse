@@ -59,30 +59,6 @@ export default class PostEventBuilder extends Component {
   // the advanced screen.
   @tracked formData = this.#snapshotFormData();
 
-  #initAttendanceMode() {
-    if (this.event.status === "standalone") {
-      return "none";
-    }
-    return this.event.maxAttendees ? "upTo" : "unlimited";
-  }
-
-  #initStartsAt() {
-    if (this.event.allDay) {
-      return moment(this.event.startsAt, "YYYY-MM-DD");
-    }
-    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
-  }
-
-  #initEndsAt() {
-    if (!this.event.endsAt) {
-      return null;
-    }
-    if (this.event.allDay) {
-      return moment(this.event.endsAt, "YYYY-MM-DD");
-    }
-    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
-  }
-
   get showTime() {
     return !this.allDay;
   }
@@ -100,194 +76,6 @@ export default class PostEventBuilder extends Component {
 
   get event() {
     return this.args.model.event;
-  }
-
-  #snapshotFormData() {
-    return {
-      name: this.event.name ?? "",
-      location: this.event.location ?? "",
-      url: this.event.url ?? "",
-      description: this.event.description ?? "",
-      startsAt: this.startsAt ?? null,
-      endsAt: this.endsAt ?? null,
-      allDay: !!this.event.allDay,
-      showLocalTime: !!this.event.showLocalTime,
-      chatEnabled: !!this.event.chatEnabled,
-      livestream: !!this.event.livestream,
-      attendanceMode: this.attendanceMode,
-      maxAttendees: this.event.maxAttendees ?? null,
-      eventType:
-        this.event.status === "standalone"
-          ? this.previousRsvpStatus || "public"
-          : this.event.status || "public",
-      rawInvitees: this.event.rawInvitees ?? [],
-      recurrence: this.event.recurrence ?? null,
-      imageUpload: this.event.imageUpload?.url ?? null,
-      timezone: this.event.timezone ?? null,
-      reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
-      customFields: this.#formCustomFields(),
-    };
-  }
-
-  #formCustomFields() {
-    const fields = {};
-    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
-      fields[customFieldFormName(key)] = value;
-    }
-    return fields;
-  }
-
-  @action
-  registerForm(api) {
-    this.formApi = api;
-  }
-
-  // mirror and change back to event model to keep compact view synced
-  @action
-  syncFieldToEvent(field, value, { set }) {
-    set(field, value);
-    this.event[field] = value;
-  }
-
-  @action
-  syncLinkToEvent(field, value, { set }) {
-    set(field, value);
-    this.event[field] = value;
-    this.#resetInvalidLivestream(set);
-  }
-
-  #livestreamSource() {
-    return livestreamSource(this.event.location, this.event.url);
-  }
-
-  #resetInvalidLivestream(set) {
-    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
-      set("livestream", false);
-      this.event.livestream = false;
-    }
-  }
-
-  @action
-  handleAllDayChange(value, { set }) {
-    set("allDay", value);
-    this.updateAllDay(value);
-  }
-
-  @action
-  handleAttendanceModeChange(value, { set }) {
-    set("attendanceMode", value);
-    // setAttendanceMode mirrors the resulting state back to the form
-    this.setAttendanceMode(value);
-  }
-
-  @action
-  handleMaxAttendeesChange(value, { set }) {
-    set("maxAttendees", value);
-    if (value === 0) {
-      this.setAttendanceMode("none");
-      return;
-    }
-    if (value > 0) {
-      this.#applyUpToValue(value);
-      return;
-    }
-    // just clear the data
-    this.event.maxAttendees = null;
-  }
-
-  #applyUpToValue(value) {
-    if (this.event.status === "standalone") {
-      this.event.status = this.previousRsvpStatus || "public";
-      this.event.reminders = (this.event.reminders || []).map((r) =>
-        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-      );
-      this.#syncRemindersToForm();
-    }
-    this.attendanceMode = "upTo";
-    this.event.maxAttendees = value;
-    this.previousMaxAttendees = value;
-    this.formApi?.setProperties({
-      attendanceMode: "upTo",
-      maxAttendees: value,
-      eventType: this.event.status,
-    });
-  }
-
-  @action
-  handleEventTypeChange(value, { set }) {
-    set("eventType", value);
-    this.onChangeStatus(value);
-  }
-
-  // GroupSelector uses (_, newGroups). Adapt to the form's field setter and
-  // mirror onto event so the BBCode build picks it up.
-  @action
-  handleInviteesChange(_, newInvitees) {
-    this.formApi?.set("rawInvitees", newInvitees);
-    this.event.rawInvitees = newInvitees;
-  }
-
-  @action
-  handleRecurrenceChange(value, { set }) {
-    set("recurrence", value);
-    this.setRecurrence(value);
-  }
-
-  @action
-  handleImageChange(value, { set }) {
-    set("imageUpload", value?.url ?? null);
-    this.event.imageUpload = value ?? null;
-  }
-
-  @action
-  handleTimezoneChange(value, { set }) {
-    set("timezone", value);
-    // setNewTimezone re-anchors startsAt/endsAt in the new zone.
-    this.setNewTimezone(value);
-  }
-
-  @action
-  handleReminderFieldChange(field, index, value, { set }) {
-    set(field, value);
-    if (!this.event.reminders?.[index]) {
-      return;
-    }
-    this.event.reminders = this.event.reminders.map((r, i) =>
-      i === index ? { ...r, [field]: value } : r
-    );
-  }
-
-  @action
-  handleAddReminder(addItemToCollection) {
-    const def = defaultReminderFor({
-      startsAt: this.startsAt,
-      endsAt: this.endsAt,
-      allDay: this.allDay,
-    });
-    const reminder = {
-      type: this.allowsRsvps ? def.type : "bumpTopic",
-      value: def.value,
-      unit: def.unit,
-      period: def.period,
-    };
-    this.event.addReminder(reminder);
-    addItemToCollection("reminders", { ...reminder });
-  }
-
-  @action
-  handleRemoveReminder(index, collectionRemove) {
-    this.event.reminders.splice(index, 1);
-    collectionRemove(index);
-  }
-
-  #syncRemindersToForm() {
-    if (!this.formApi) {
-      return;
-    }
-    this.formApi.set(
-      "reminders",
-      (this.event.reminders ?? []).map((r) => ({ ...r }))
-    );
   }
 
   get reminderTypes() {
@@ -331,11 +119,6 @@ export default class PostEventBuilder extends Component {
         name: i18n("discourse_post_event.builder_modal.reminders.units.weeks"),
       },
     ];
-  }
-
-  @action
-  revealUrl() {
-    this.urlRevealed = true;
   }
 
   get locationLabel() {
@@ -457,6 +240,129 @@ export default class PostEventBuilder extends Component {
     };
   }
 
+  get allowsRsvps() {
+    return this.event.status !== "standalone";
+  }
+
+  @action
+  registerForm(api) {
+    this.formApi = api;
+  }
+
+  // mirror and change back to event model to keep compact view synced
+  @action
+  syncFieldToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+  }
+
+  @action
+  syncLinkToEvent(field, value, { set }) {
+    set(field, value);
+    this.event[field] = value;
+    this.#resetInvalidLivestream(set);
+  }
+
+  @action
+  handleAllDayChange(value, { set }) {
+    set("allDay", value);
+    this.updateAllDay(value);
+  }
+
+  @action
+  handleAttendanceModeChange(value, { set }) {
+    set("attendanceMode", value);
+    // setAttendanceMode mirrors the resulting state back to the form
+    this.setAttendanceMode(value);
+  }
+
+  @action
+  handleMaxAttendeesChange(value, { set }) {
+    set("maxAttendees", value);
+    if (value === 0) {
+      this.setAttendanceMode("none");
+      return;
+    }
+    if (value > 0) {
+      this.#applyUpToValue(value);
+      return;
+    }
+    // just clear the data
+    this.event.maxAttendees = null;
+  }
+
+  @action
+  handleEventTypeChange(value, { set }) {
+    set("eventType", value);
+    this.onChangeStatus(value);
+  }
+
+  // GroupSelector uses (_, newGroups). Adapt to the form's field setter and
+  // mirror onto event so the BBCode build picks it up.
+  @action
+  handleInviteesChange(_, newInvitees) {
+    this.formApi?.set("rawInvitees", newInvitees);
+    this.event.rawInvitees = newInvitees;
+  }
+
+  @action
+  handleRecurrenceChange(value, { set }) {
+    set("recurrence", value);
+    this.setRecurrence(value);
+  }
+
+  @action
+  handleImageChange(value, { set }) {
+    set("imageUpload", value?.url ?? null);
+    this.event.imageUpload = value ?? null;
+  }
+
+  @action
+  handleTimezoneChange(value, { set }) {
+    set("timezone", value);
+    // setNewTimezone re-anchors startsAt/endsAt in the new zone.
+    this.setNewTimezone(value);
+  }
+
+  @action
+  handleReminderFieldChange(field, index, value, { set }) {
+    set(field, value);
+    if (!this.event.reminders?.[index]) {
+      return;
+    }
+    this.event.reminders = this.event.reminders.map((r, i) =>
+      i === index ? { ...r, [field]: value } : r
+    );
+  }
+
+  @action
+  handleAddReminder(addItemToCollection) {
+    const def = defaultReminderFor({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    });
+    const reminder = {
+      type: this.allowsRsvps ? def.type : "bumpTopic",
+      value: def.value,
+      unit: def.unit,
+      period: def.period,
+    };
+    this.event.addReminder(reminder);
+    addItemToCollection("reminders", { ...reminder });
+  }
+
+  @action
+  handleRemoveReminder(index, collectionRemove) {
+    this.event.reminders.splice(index, 1);
+    collectionRemove(index);
+  }
+
+  @action
+  revealUrl() {
+    this.urlRevealed = true;
+  }
+
   @action
   onCompactChange(state) {
     this.event.name = state.name;
@@ -513,25 +419,6 @@ export default class PostEventBuilder extends Component {
       this.formData = this.#snapshotFormData();
       this.urlRevealed ||= !!this.event.url;
       this.screen = "advanced";
-    }
-  }
-
-  #captureConfig() {
-    return {
-      startsAt: this.startsAt,
-      endsAt: this.endsAt,
-      allDay: this.allDay,
-    };
-  }
-
-  #reconcileReminder(prevConfig) {
-    const next = reconcileDefaultReminder(
-      this.event.reminders,
-      prevConfig,
-      this.#captureConfig()
-    );
-    if (next !== this.event.reminders) {
-      this.event.reminders = next;
     }
   }
 
@@ -618,10 +505,6 @@ export default class PostEventBuilder extends Component {
         : value;
     this.onChangeDates({ from: this.startsAt, to });
     set(to);
-  }
-
-  get allowsRsvps() {
-    return this.event.status !== "standalone";
   }
 
   @action
@@ -754,8 +637,130 @@ export default class PostEventBuilder extends Component {
     }
   }
 
+  #initAttendanceMode() {
+    if (this.event.status === "standalone") {
+      return "none";
+    }
+    return this.event.maxAttendees ? "upTo" : "unlimited";
+  }
+
+  #initStartsAt() {
+    if (this.event.allDay) {
+      return moment(this.event.startsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #initEndsAt() {
+    if (!this.event.endsAt) {
+      return null;
+    }
+    if (this.event.allDay) {
+      return moment(this.event.endsAt, "YYYY-MM-DD");
+    }
+    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+  }
+
+  #snapshotFormData() {
+    return {
+      name: this.event.name ?? "",
+      location: this.event.location ?? "",
+      url: this.event.url ?? "",
+      description: this.event.description ?? "",
+      startsAt: this.startsAt ?? null,
+      endsAt: this.endsAt ?? null,
+      allDay: !!this.event.allDay,
+      showLocalTime: !!this.event.showLocalTime,
+      chatEnabled: !!this.event.chatEnabled,
+      livestream: !!this.event.livestream,
+      attendanceMode: this.attendanceMode,
+      maxAttendees: this.event.maxAttendees ?? null,
+      eventType:
+        this.event.status === "standalone"
+          ? this.previousRsvpStatus || "public"
+          : this.event.status || "public",
+      rawInvitees: this.event.rawInvitees ?? [],
+      recurrence: this.event.recurrence ?? null,
+      imageUpload: this.event.imageUpload?.url ?? null,
+      timezone: this.event.timezone ?? null,
+      reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+      customFields: this.#formCustomFields(),
+    };
+  }
+
+  #formCustomFields() {
+    const fields = {};
+    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
+      fields[customFieldFormName(key)] = value;
+    }
+    return fields;
+  }
+
+  #livestreamSource() {
+    return livestreamSource(this.event.location, this.event.url);
+  }
+
+  #resetInvalidLivestream(set) {
+    if (!isLivestreamUrl(this.#livestreamSource(), this.siteSettings)) {
+      set("livestream", false);
+      this.event.livestream = false;
+    }
+  }
+
+  #applyUpToValue(value) {
+    if (this.event.status === "standalone") {
+      this.event.status = this.previousRsvpStatus || "public";
+      this.event.reminders = (this.event.reminders || []).map((r) =>
+        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+      );
+      this.#syncRemindersToForm();
+    }
+    this.attendanceMode = "upTo";
+    this.event.maxAttendees = value;
+    this.previousMaxAttendees = value;
+    this.formApi?.setProperties({
+      attendanceMode: "upTo",
+      maxAttendees: value,
+      eventType: this.event.status,
+    });
+  }
+
+  #syncRemindersToForm() {
+    if (!this.formApi) {
+      return;
+    }
+    this.formApi.set(
+      "reminders",
+      (this.event.reminders ?? []).map((r) => ({ ...r }))
+    );
+  }
+
+  #captureConfig() {
+    return {
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      allDay: this.allDay,
+    };
+  }
+
+  #reconcileReminder(prevConfig) {
+    const next = reconcileDefaultReminder(
+      this.event.reminders,
+      prevConfig,
+      this.#captureConfig()
+    );
+    if (next !== this.event.reminders) {
+      this.event.reminders = next;
+    }
+  }
+
   <template>
     <DModal
+      class="post-event-builder-modal
+        {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @inline={{@inline}}
       @title={{i18n
         (concat
           "discourse_post_event.builder_modal."
@@ -766,11 +771,6 @@ export default class PostEventBuilder extends Component {
           )
         )
       }}
-      @closeModal={{@closeModal}}
-      @flash={{this.flash}}
-      @inline={{@inline}}
-      class="post-event-builder-modal
-        {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
     >
       <:body>
         <DConditionalLoadingSection @isLoading={{this.isSaving}}>
@@ -781,63 +781,63 @@ export default class PostEventBuilder extends Component {
               as |form|
             >
               <PluginOutlet
+                @connectorTagName="div"
                 @name="post-event-builder-form"
                 @outletArgs={{lazyHash event=@model.event form=form}}
-                @connectorTagName="div"
               >
                 <form.Field
-                  @name="startsAt"
-                  @type="custom"
                   @format="full"
+                  @name="startsAt"
                   @title={{i18n
                     "discourse_post_event.builder_modal.starts_at.label"
                   }}
+                  @type="custom"
                   @validation="required"
                   as |field|
                 >
                   <field.Control>
                     <DDateTimeInput
+                      class="from"
                       @date={{this.startsAt}}
                       @onChange={{fn this.onChangeStartsAt field.set}}
+                      @placeholder={{i18n "dates.from_placeholder"}}
                       @showTime={{this.showTime}}
                       @timezone={{@model.event.timezone}}
-                      @placeholder={{i18n "dates.from_placeholder"}}
-                      class="from"
                     />
                   </field.Control>
                 </form.Field>
 
                 <form.Field
-                  @name="endsAt"
-                  @type="custom"
                   @format="full"
+                  @name="endsAt"
                   @title={{i18n
                     "discourse_post_event.builder_modal.ends_at.label"
                   }}
+                  @type="custom"
                   @validation="required"
                   as |field|
                 >
                   <field.Control>
                     <DDateTimeInput
+                      class="to"
                       @date={{this.endsAt}}
-                      @relativeDate={{this.startsAt}}
                       @onChange={{fn this.onChangeEndsAt field.set}}
+                      @placeholder={{i18n "dates.to_placeholder"}}
+                      @relativeDate={{this.startsAt}}
                       @showTime={{this.showTime}}
                       @timezone={{@model.event.timezone}}
-                      @placeholder={{i18n "dates.to_placeholder"}}
-                      class="to"
                     />
                   </field.Control>
                 </form.Field>
 
                 <form.Field
+                  @format="full"
                   @name="allDay"
+                  @onSet={{this.handleAllDayChange}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.all_day.label"
                   }}
                   @type="checkbox"
-                  @format="full"
-                  @onSet={{this.handleAllDayChange}}
                   as |field|
                 >
                   <field.Control>
@@ -848,13 +848,13 @@ export default class PostEventBuilder extends Component {
                 </form.Field>
 
                 <form.Field
+                  @format="full"
                   @name="name"
+                  @onSet={{fn this.syncFieldToEvent "name"}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.name.label"
                   }}
                   @type="input"
-                  @format="full"
-                  @onSet={{fn this.syncFieldToEvent "name"}}
                   as |field|
                 >
                   <field.Control
@@ -865,11 +865,11 @@ export default class PostEventBuilder extends Component {
                 </form.Field>
 
                 <form.Field
+                  @format="full"
                   @name="location"
+                  @onSet={{fn this.syncLinkToEvent "location"}}
                   @title={{i18n this.locationLabel}}
                   @type="input"
-                  @format="full"
-                  @onSet={{fn this.syncLinkToEvent "location"}}
                   as |field|
                 >
                   <field.Control
@@ -881,13 +881,13 @@ export default class PostEventBuilder extends Component {
 
                 {{#if this.urlRevealed}}
                   <form.Field
+                    @format="full"
                     @name="url"
+                    @onSet={{fn this.syncLinkToEvent "url"}}
                     @title={{i18n
                       "discourse_post_event.builder_modal.url.label"
                     }}
                     @type="input"
-                    @format="full"
-                    @onSet={{fn this.syncLinkToEvent "url"}}
                     as |field|
                   >
                     <field.Control
@@ -899,23 +899,23 @@ export default class PostEventBuilder extends Component {
                 {{else}}
                   <form.Container @format="full">
                     <DButton
+                      class="btn-default add-event-url"
                       @action={{this.revealUrl}}
                       @icon="plus"
                       @label="discourse_post_event.builder_modal.url.add"
-                      class="btn-default add-event-url"
                     />
                   </form.Container>
                 {{/if}}
 
                 {{#if this.showLivestream}}
                   <form.Field
+                    @format="full"
                     @name="livestream"
+                    @onSet={{fn this.syncFieldToEvent "livestream"}}
                     @title={{i18n
                       "discourse_post_event.builder_modal.livestream.label"
                     }}
                     @type="checkbox"
-                    @format="full"
-                    @onSet={{fn this.syncFieldToEvent "livestream"}}
                     as |field|
                   >
                     <field.Control>
@@ -927,32 +927,32 @@ export default class PostEventBuilder extends Component {
                 {{/if}}
 
                 <form.Field
+                  @format="full"
                   @name="description"
+                  @onSet={{fn this.syncFieldToEvent "description"}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.description.label"
                   }}
                   @type="textarea"
-                  @format="full"
-                  @onSet={{fn this.syncFieldToEvent "description"}}
                   as |field|
                 >
                   <field.Control
-                    @autoResize={{true}}
                     placeholder={{i18n
                       "discourse_post_event.builder_modal.description.placeholder"
                     }}
+                    @autoResize={{true}}
                   />
                 </form.Field>
 
                 <form.Field
+                  @format="full"
                   @name="attendanceMode"
+                  @onSet={{this.handleAttendanceModeChange}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.attendance.label"
                   }}
                   @type="radio-group"
-                  @format="full"
                   @validation="required"
-                  @onSet={{this.handleAttendanceModeChange}}
                   as |field|
                 >
                   <field.Control as |radioGroup|>
@@ -971,14 +971,14 @@ export default class PostEventBuilder extends Component {
                       </radio.Title>
                       <radio.Description>
                         <form.Field
+                          @disabled={{not (eq field.value "upTo")}}
                           @name="maxAttendees"
+                          @onSet={{this.handleMaxAttendeesChange}}
+                          @showTitle={{false}}
                           @title={{i18n
                             "discourse_post_event.builder_modal.max_attendees.label"
                           }}
-                          @showTitle={{false}}
                           @type="input-number"
-                          @disabled={{not (eq field.value "upTo")}}
-                          @onSet={{this.handleMaxAttendeesChange}}
                           as |maxField|
                         >
                           <maxField.Control min="0" />
@@ -997,14 +997,14 @@ export default class PostEventBuilder extends Component {
 
                 {{#if this.allowsRsvps}}
                   <form.Field
+                    @format="full"
                     @name="eventType"
+                    @onSet={{this.handleEventTypeChange}}
                     @title={{i18n
                       "discourse_post_event.builder_modal.event_type.label"
                     }}
                     @type="radio-group"
-                    @format="full"
                     @validation="required"
-                    @onSet={{this.handleEventTypeChange}}
                     as |field|
                   >
                     <field.Control as |radioGroup|>
@@ -1037,12 +1037,12 @@ export default class PostEventBuilder extends Component {
 
                   {{#if (eq @model.event.status "private")}}
                     <form.Field
+                      @format="full"
                       @name="rawInvitees"
                       @title={{i18n
                         "discourse_post_event.builder_modal.invitees.label"
                       }}
                       @type="custom"
-                      @format="full"
                       as |field|
                     >
                       <field.Control>
@@ -1058,33 +1058,33 @@ export default class PostEventBuilder extends Component {
                 {{/if}}
 
                 <form.Field
+                  @format="full"
                   @name="timezone"
+                  @onSet={{this.handleTimezoneChange}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.timezone.label"
                   }}
                   @type="custom"
-                  @format="full"
                   @validation="required"
-                  @onSet={{this.handleTimezoneChange}}
                   as |field|
                 >
                   <field.Control>
                     <TimezoneInput
-                      @value={{field.value}}
-                      @onChange={{field.set}}
                       @none="discourse_post_event.builder_modal.timezone.remove_timezone"
+                      @onChange={{field.set}}
+                      @value={{field.value}}
                     />
                   </field.Control>
                 </form.Field>
 
                 <form.Field
+                  @format="full"
                   @name="showLocalTime"
+                  @onSet={{fn this.syncFieldToEvent "showLocalTime"}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.show_local_time.label"
                   }}
                   @type="checkbox"
-                  @format="full"
-                  @onSet={{fn this.syncFieldToEvent "showLocalTime"}}
                   as |field|
                 >
                   <field.Control>
@@ -1097,32 +1097,32 @@ export default class PostEventBuilder extends Component {
 
                 <form.Container
                   class="reminders"
+                  @format="full"
+                  @optional={{true}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.reminders.label"
                   }}
-                  @format="full"
-                  @optional={{true}}
                 >
                   <form.Collection
-                    @name="reminders"
                     class="reminders-list"
+                    @name="reminders"
                     as |collection index|
                   >
                     <div class="reminder-item">
                       <collection.Field
+                        class="reminder-type"
                         @name="type"
-                        @title={{i18n
-                          "discourse_post_event.builder_modal.reminders.types.notification"
-                        }}
-                        @showTitle={{false}}
-                        @type="select"
-                        @validation="required"
                         @onSet={{fn
                           this.handleReminderFieldChange
                           "type"
                           index
                         }}
-                        class="reminder-type"
+                        @showTitle={{false}}
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.types.notification"
+                        }}
+                        @type="select"
+                        @validation="required"
                         as |field|
                       >
                         <field.Control as |select|>
@@ -1135,37 +1135,37 @@ export default class PostEventBuilder extends Component {
                       </collection.Field>
 
                       <collection.Field
+                        class="reminder-value"
                         @name="value"
-                        @title={{i18n
-                          "discourse_post_event.builder_modal.reminders.label"
-                        }}
-                        @showTitle={{false}}
-                        @type="input-number"
                         @onSet={{fn
                           this.handleReminderFieldChange
                           "value"
                           index
                         }}
-                        class="reminder-value"
+                        @showTitle={{false}}
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.label"
+                        }}
+                        @type="input-number"
                         as |field|
                       >
                         <field.Control min="0" />
                       </collection.Field>
 
                       <collection.Field
+                        class="reminder-unit"
                         @name="unit"
-                        @title={{i18n
-                          "discourse_post_event.builder_modal.reminders.units.minutes"
-                        }}
-                        @showTitle={{false}}
-                        @type="select"
-                        @validation="required"
                         @onSet={{fn
                           this.handleReminderFieldChange
                           "unit"
                           index
                         }}
-                        class="reminder-unit"
+                        @showTitle={{false}}
+                        @title={{i18n
+                          "discourse_post_event.builder_modal.reminders.units.minutes"
+                        }}
+                        @type="select"
+                        @validation="required"
                         as |field|
                       >
                         <field.Control as |select|>
@@ -1183,38 +1183,38 @@ export default class PostEventBuilder extends Component {
                         }}
 
                         <DButton
+                          class="btn-default remove-reminder"
                           @action={{fn
                             this.handleRemoveReminder
                             index
                             collection.remove
                           }}
                           @icon="xmark"
-                          class="btn-default remove-reminder"
                         />
                       </div>
                     </div>
                   </form.Collection>
 
                   <DButton
-                    @disabled={{this.addReminderDisabled}}
-                    @icon="plus"
-                    @label="discourse_post_event.builder_modal.add_reminder"
+                    class="btn-default add-reminder"
                     @action={{fn
                       this.handleAddReminder
                       form.addItemToCollection
                     }}
-                    class="btn-default add-reminder"
+                    @disabled={{this.addReminderDisabled}}
+                    @icon="plus"
+                    @label="discourse_post_event.builder_modal.add_reminder"
                   />
                 </form.Container>
 
                 <form.Field
+                  @format="full"
                   @name="recurrence"
+                  @onSet={{this.handleRecurrenceChange}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.recurrence.label"
                   }}
                   @type="select"
-                  @format="full"
-                  @onSet={{this.handleRecurrenceChange}}
                   as |field|
                 >
                   <field.Control as |select|>
@@ -1228,11 +1228,11 @@ export default class PostEventBuilder extends Component {
 
                 {{#if @model.event.recurrence}}
                   <form.Container
+                    class="recurrence-until"
+                    @format="full"
                     @title={{i18n
                       "discourse_post_event.builder_modal.recurrence_until.label"
                     }}
-                    @format="full"
-                    class="recurrence-until"
                   >
                     <DDateInput
                       @date={{this.recurrenceUntil}}
@@ -1244,13 +1244,13 @@ export default class PostEventBuilder extends Component {
 
                 {{#if this.showChat}}
                   <form.Field
+                    @format="full"
                     @name="chatEnabled"
+                    @onSet={{fn this.syncFieldToEvent "chatEnabled"}}
                     @title={{i18n
                       "discourse_post_event.builder_modal.allow_chat.label"
                     }}
                     @type="checkbox"
-                    @format="full"
-                    @onSet={{fn this.syncFieldToEvent "chatEnabled"}}
                     as |field|
                   >
                     <field.Control>
@@ -1263,28 +1263,28 @@ export default class PostEventBuilder extends Component {
 
                 {{#if this.allowedCustomFields.length}}
                   <PluginOutlet
+                    @connectorTagName="div"
                     @name="discourse-post-event-builder-custom-fields"
                     @outletArgs={{lazyHash event=@model.event form=form}}
-                    @connectorTagName="div"
                   >
                     <form.Container
-                      @title={{i18n
-                        "discourse_post_event.builder_modal.custom_fields.label"
-                      }}
+                      class="form-kit__container-custom-fields"
+                      @format="full"
                       @subtitle={{i18n
                         "discourse_post_event.builder_modal.custom_fields.description"
                       }}
-                      @format="full"
-                      class="form-kit__container-custom-fields"
+                      @title={{i18n
+                        "discourse_post_event.builder_modal.custom_fields.label"
+                      }}
                     >
                       <form.Object @name="customFields" as |customFields|>
                         {{#each this.allowedCustomFields as |customField|}}
                           <customFields.Field
+                            @format="full"
                             @name={{customField.name}}
+                            @onSet={{fn this.setCustomField customField.field}}
                             @title={{customField.field}}
                             @type="input"
-                            @format="full"
-                            @onSet={{fn this.setCustomField customField.field}}
                             as |field|
                           >
                             <field.Control
@@ -1300,13 +1300,13 @@ export default class PostEventBuilder extends Component {
                 {{/if}}
 
                 <form.Field
+                  @format="full"
                   @name="imageUpload"
+                  @onSet={{this.handleImageChange}}
                   @title={{i18n
                     "discourse_post_event.builder_modal.image.label"
                   }}
                   @type="image"
-                  @format="full"
-                  @onSet={{this.handleImageChange}}
                   as |field|
                 >
                   <field.Control @type="event_image" />
@@ -1316,10 +1316,10 @@ export default class PostEventBuilder extends Component {
           {{else}}
             <div class="composer-event-node">
               <CompactEventEditor
-                @initialState={{this.compactInitialState}}
-                @onChange={{this.onCompactChange}}
-                @namePlaceholder={{this.namePlaceholder}}
                 @hideAdvanced={{true}}
+                @initialState={{this.compactInitialState}}
+                @namePlaceholder={{this.namePlaceholder}}
+                @onChange={{this.onCompactChange}}
               />
             </div>
           {{/if}}
@@ -1329,22 +1329,22 @@ export default class PostEventBuilder extends Component {
         {{#if @model.onUpdate}}
           <DButton
             class="btn-primary"
-            @label="discourse_post_event.builder_modal.update"
-            @icon="calendar-day"
             @action={{this.updateEvent}}
+            @icon="calendar-day"
+            @label="discourse_post_event.builder_modal.update"
           />
 
           <DButton
-            @icon="trash-can"
             class="btn-danger"
             @action={{this.destroyPostEvent}}
+            @icon="trash-can"
           />
         {{else}}
           <DButton
             class="btn-primary"
-            @label="discourse_post_event.builder_modal.create"
-            @icon="calendar-day"
             @action={{this.createEvent}}
+            @icon="calendar-day"
+            @label="discourse_post_event.builder_modal.create"
           />
         {{/if}}
 

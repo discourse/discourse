@@ -9,24 +9,6 @@ export default class LoginService extends Service {
   @service site;
   @service siteSettings;
 
-  @action
-  async externalLogin(
-    loginMethod,
-    { signup = false, setLoggingIn = null } = {}
-  ) {
-    try {
-      setLoggingIn?.(true);
-      await loginMethod.doLogin({ signup });
-    } catch {
-      setLoggingIn?.(false);
-    }
-  }
-
-  @action
-  async singleExternalLogin(opts) {
-    await this.externalLogin(this.externalLoginMethods[0], opts);
-  }
-
   get isOnlyOneExternalLoginMethod() {
     return (
       !this.siteSettings.enable_local_logins &&
@@ -52,5 +34,23 @@ export default class LoginService extends Service {
         ? "staff_writes_only_mode.signup_disabled"
         : "read_only_mode.signup_disabled"
     );
+  }
+
+  @action
+  async externalLogin(
+    loginMethod,
+    { signup = false, setLoggingIn = null } = {}
+  ) {
+    try {
+      setLoggingIn?.(true);
+      await loginMethod.doLogin({ signup });
+    } catch {
+      setLoggingIn?.(false);
+    }
+  }
+
+  @action
+  async singleExternalLogin(opts) {
+    await this.externalLogin(this.externalLoginMethods[0], opts);
   }
 }

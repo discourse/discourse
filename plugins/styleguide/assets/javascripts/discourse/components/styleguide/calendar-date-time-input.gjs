@@ -27,16 +27,16 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
   <template>
     <StyleguideExample
-      @title="CalendarDateTimeInput"
       @code={{calendarDateTimeInputSource}}
+      @title="CalendarDateTimeInput"
     >
       <StyleguideComponent>
         <CalendarDateTimeInputExample
           @date={{this.date}}
-          @time={{this.time}}
           @minDate={{this.minDate}}
           @onChangeDate={{this.changeDate}}
           @onChangeTime={{this.changeTime}}
+          @time={{this.time}}
         />
       </StyleguideComponent>
 
@@ -51,11 +51,11 @@ export default class StyleguideCalendarDateTimeInput extends Component {
 
         <Row @name="Time">
           <Input
+            class="time-picker"
             maxlength={{5}}
             placeholder="hh:mm"
             @type="time"
             @value={{this.time}}
-            class="time-picker"
           />
         </Row>
       </Controls>

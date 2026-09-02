@@ -2,13 +2,13 @@ import SortableColumn from "./sortable-column";
 
 const LikesCell = <template>
   <SortableColumn
-    @sortable={{@sortable}}
+    @activeOrder={{@activeOrder}}
+    @ascending={{@ascending}}
+    @changeSort={{@changeSort}}
+    @name="likes"
     @number="true"
     @order="likes"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="likes"
+    @sortable={{@sortable}}
   />
 </template>;
 

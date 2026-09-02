@@ -14,13 +14,13 @@ export default class SiteHeaderStyleguideExample extends Component {
   }
 
   <template>
-    <StyleguideExample @title="site header" @code={{siteHeaderSource}}>
+    <StyleguideExample @code={{siteHeaderSource}} @title="site header">
       <SiteHeaderExample @sidebarEnabled={{this.sidebarEnabled}} />
     </StyleguideExample>
 
     <StyleguideExample
-      @title="site header - in topic - scrolled"
       @code={{siteHeaderInTopicSource}}
+      @title="site header - in topic - scrolled"
     >
       <SiteHeaderInTopicExample
         @sidebarEnabled={{this.sidebarEnabled}}

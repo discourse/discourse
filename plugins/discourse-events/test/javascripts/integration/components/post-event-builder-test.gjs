@@ -31,9 +31,9 @@ async function renderAdvanced(event) {
   await render(
     <template>
       <PostEventBuilder
+        @closeModal={{closeModal}}
         @inline={{true}}
         @model={{model}}
-        @closeModal={{closeModal}}
       />
     </template>
   );
@@ -143,9 +143,9 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     await render(
       <template>
         <PostEventBuilder
+          @closeModal={{closeModal}}
           @inline={{true}}
           @model={{model}}
-          @closeModal={{closeModal}}
         />
       </template>
     );
@@ -193,9 +193,9 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     await render(
       <template>
         <PostEventBuilder
+          @closeModal={{closeModal}}
           @inline={{true}}
           @model={{model}}
-          @closeModal={{closeModal}}
         />
       </template>
     );

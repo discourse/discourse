@@ -77,15 +77,15 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
 const PmUserSelector = <template>
   <div class="user-selector">
     <ComposerUserSelector
-      @topicId={{@topicId}}
-      @recipients={{@model.targetRecipients}}
-      @hasGroups={{@model.hasTargetGroups}}
-      @focusTarget={{@focusTarget}}
       class={{dConcatClass "users-input" (if @showWarning "can-warn")}}
+      @focusTarget={{@focusTarget}}
+      @hasGroups={{@model.hasTargetGroups}}
+      @recipients={{@model.targetRecipients}}
+      @topicId={{@topicId}}
     />
     {{#if @showWarning}}
       <label class="add-warning">
-        <Input @type="checkbox" @checked={{@model.isWarning}} />
+        <Input @checked={{@model.isWarning}} @type="checkbox" />
         <span>{{i18n "composer.add_warning"}}</span>
       </label>
     {{/if}}
@@ -112,6 +112,17 @@ export default class ComposerContainer extends Component {
 
   get composerRedesign() {
     return this.siteSettings.enable_composer_redesign;
+  }
+
+  get availableContentLocalizationLocales() {
+    const originalPostLocale = this.composer.model?.post?.locale;
+
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      }));
   }
 
   @action
@@ -184,17 +195,6 @@ export default class ComposerContainer extends Component {
   @action
   setToolbarPortalTarget(element) {
     this.toolbarPortalTarget = element;
-  }
-
-  get availableContentLocalizationLocales() {
-    const originalPostLocale = this.composer.model?.post?.locale;
-
-    return this.siteSettings.available_content_localization_locales
-      .filter(({ value }) => value !== originalPostLocale)
-      .map(({ value }) => ({
-        name: this.languageNameLookup.getLanguageName(value),
-        value,
-      }));
   }
 
   @action
@@ -282,6 +282,10 @@ export default class ComposerContainer extends Component {
     this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
   }
 
+  composerResized() {
+    this.appEvents.trigger("composer:resized");
+  }
+
   _triggerComposerResized() {
     this.composerResizeDebounceHandler = discourseDebounce(
       this,
@@ -290,37 +294,33 @@ export default class ComposerContainer extends Component {
     );
   }
 
-  composerResized() {
-    this.appEvents.trigger("composer:resized");
-  }
-
   <template>
     <ComposerBody
-      @composer={{this.composer.model}}
-      @showPreview={{this.composer.isPreviewVisible}}
-      @openIfDraft={{this.composer.openIfDraft}}
-      @typed={{this.composer.typed}}
       @cancelled={{this.composer.cancelled}}
+      @composer={{this.composer.model}}
+      @openIfDraft={{this.composer.openIfDraft}}
       @save={{this.composer.saveAction}}
+      @showPreview={{this.composer.isPreviewVisible}}
+      @typed={{this.composer.typed}}
     >
       <DResizeSeparator
         class="grippie"
         @axis="vertical"
-        @side="end"
-        @measure={{this.replyControl}}
         @label={{i18n "composer.resize"}}
-        @onResizeStart={{this.onResizeStart}}
+        @measure={{this.replyControl}}
         @onResize={{this.onResizeDrag}}
         @onResizeEnd={{this.onResizeEnd}}
+        @onResizeStart={{this.onResizeStart}}
+        @side="end"
       />
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 
         {{#unless this.site.mobileView}}
           <ComposerMessages
+            @addLinkLookup={{this.composer.addLinkLookup}}
             @composer={{this.composer.model}}
             @messageCount={{this.composer.messageCount}}
-            @addLinkLookup={{this.composer.addLinkLookup}}
           />
         {{/unless}}
 
@@ -332,7 +332,6 @@ export default class ComposerContainer extends Component {
 
         {{#if this.composer.model.viewOpenOrFullscreen}}
           <div
-            role="dialog"
             aria-label={{this.composer.ariaLabel}}
             class="reply-area
               {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
@@ -346,6 +345,7 @@ export default class ComposerContainer extends Component {
                 'with-category'
                 'without-category'
               }}"
+            role="dialog"
             {{dSwipe
               onDidStartSwipe=this.onSwipeStart
               onDidSwipe=this.onSwipe
@@ -357,8 +357,8 @@ export default class ComposerContainer extends Component {
           >
             <span class="composer-open-plugin-outlet-container">
               <PluginOutlet
-                @name="composer-open"
                 @connectorTagName="div"
+                @name="composer-open"
                 @outletArgs={{lazyHash model=this.composer.model}}
               />
             </span>
@@ -369,10 +369,9 @@ export default class ComposerContainer extends Component {
 
                 {{#if this.composer.showTranslationSelector}}
                   <DropdownSelectBox
-                    @nameProperty="name"
-                    @valueProperty="value"
-                    @value={{this.composer.selectedTranslationLocale}}
+                    class="translation-selector-dropdown btn-small"
                     @content={{this.availableContentLocalizationLocales}}
+                    @nameProperty="name"
                     @onChange={{this.updateSelectedTranslationLocale}}
                     @options={{hash
                       icon="language"
@@ -382,7 +381,8 @@ export default class ComposerContainer extends Component {
                       placement="bottom-start"
                       translatedNone=(i18n "composer.translations.select")
                     }}
-                    class="translation-selector-dropdown btn-small"
+                    @value={{this.composer.selectedTranslationLocale}}
+                    @valueProperty="value"
                   />
                 {{/if}}
 
@@ -399,12 +399,12 @@ export default class ComposerContainer extends Component {
 
               <ComposerToggles
                 @composeState={{this.composer.model.composeState}}
-                @showToolbar={{this.composer.showToolbar}}
-                @toggleComposer={{this.composer.toggle}}
-                @toggleToolbar={{this.composer.toggleToolbar}}
-                @toggleFullscreen={{this.composer.fullscreenComposer}}
                 @disableTextarea={{this.composer.disableTextarea}}
                 @saveAndClose={{this.composer.saveAndClose}}
+                @showToolbar={{this.composer.showToolbar}}
+                @toggleComposer={{this.composer.toggle}}
+                @toggleFullscreen={{this.composer.fullscreenComposer}}
+                @toggleToolbar={{this.composer.toggleToolbar}}
               />
             </div>
 
@@ -422,10 +422,10 @@ export default class ComposerContainer extends Component {
                     {{#unless this.composerRedesign}}
                       {{#if this.composer.model.creatingPrivateMessage}}
                         <PmUserSelector
-                          @topicId={{this.composer.topicModel.id}}
-                          @model={{this.composer.model}}
                           @focusTarget={{this.composer.focusTarget}}
+                          @model={{this.composer.model}}
                           @showWarning={{this.composer.showWarning}}
+                          @topicId={{this.composer.topicModel.id}}
                         />
                       {{/if}}
                     {{/unless}}
@@ -437,10 +437,10 @@ export default class ComposerContainer extends Component {
                       {{#if this.composerRedesign}}
                         {{#if this.composer.model.creatingPrivateMessage}}
                           <PmUserSelector
-                            @topicId={{this.composer.topicModel.id}}
-                            @model={{this.composer.model}}
                             @focusTarget={{this.composer.focusTarget}}
+                            @model={{this.composer.model}}
                             @showWarning={{this.composer.showWarning}}
+                            @topicId={{this.composer.topicModel.id}}
                           />
                         {{/if}}
                       {{/if}}
@@ -448,15 +448,14 @@ export default class ComposerContainer extends Component {
                       {{#unless this.composerRedesign}}
                         <ComposerTitle
                           @composer={{this.composer.model}}
-                          @lastValidatedAt={{this.composer.lastValidatedAt}}
                           @focusTarget={{this.composer.focusTarget}}
+                          @lastValidatedAt={{this.composer.lastValidatedAt}}
                         />
                       {{/unless}}
 
                       {{#if this.composer.model.showCategoryChooser}}
                         <div class="category-input">
                           <CategoryChooser
-                            @value={{this.composer.model.categoryId}}
                             @onChange={{this.composer.updateCategory}}
                             @options={{hash
                               disabled=this.composer.disableCategoryChooser
@@ -464,6 +463,7 @@ export default class ComposerContainer extends Component {
                               prioritizedCategoryId=this.composer.prioritizedCategoryId
                               readOnlyCategoryId=this.composer.readOnlyCategoryId
                             }}
+                            @value={{this.composer.model.categoryId}}
                           />
                           <PluginOutlet
                             @name="after-composer-category-input"
@@ -480,7 +480,6 @@ export default class ComposerContainer extends Component {
                       {{#if this.composer.canEditTags}}
                         <div class="tags-input">
                           <MiniTagChooser
-                            @value={{this.composer.model.tags}}
                             @onChange={{fn (mut this.composer.model.tags)}}
                             @options={{hash
                               disabled=this.composer.disableTagsChooser
@@ -492,6 +491,7 @@ export default class ComposerContainer extends Component {
                                 this.composerRedesign true
                               )
                             }}
+                            @value={{this.composer.model.tags}}
                           />
                           <PluginOutlet
                             @name="after-composer-tag-input"
@@ -519,8 +519,8 @@ export default class ComposerContainer extends Component {
 
                   <span>
                     <PluginOutlet
-                      @name="composer-fields"
                       @connectorTagName="div"
+                      @name="composer-fields"
                       @outletArgs={{lazyHash
                         model=this.composer.model
                         showPreview=this.composer.isPreviewVisible
@@ -532,8 +532,8 @@ export default class ComposerContainer extends Component {
                     {{#if this.composer.model.canEditTitle}}
                       <ComposerTitle
                         @composer={{this.composer.model}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
                         @focusTarget={{this.composer.focusTarget}}
+                        @lastValidatedAt={{this.composer.lastValidatedAt}}
                       />
                     {{/if}}
                   {{/if}}
@@ -558,8 +558,8 @@ export default class ComposerContainer extends Component {
                 <div class="submit-panel">
                   <span>
                     <PluginOutlet
-                      @name="composer-fields-below"
                       @connectorTagName="div"
+                      @name="composer-fields-below"
                       @outletArgs={{lazyHash model=this.composer.model}}
                     />
                   </span>
@@ -625,17 +625,17 @@ export default class ComposerContainer extends Component {
                   <div class="save-or-cancel">
 
                     <DButton
-                      @action={{this.composer.cancel}}
                       class="discard-button btn-transparent"
-                      @title={{this.composer.cancelLabel}}
+                      @action={{this.composer.cancel}}
                       @label={{this.composer.cancelLabel}}
+                      @title={{this.composer.cancelLabel}}
                     />
 
                     <ComposerSaveButton
                       @action={{this.composer.saveAction}}
-                      @label={{this.composer.saveLabel}}
-                      @forwardEvent={{true}}
                       @disableSubmit={{this.composer.disableSubmit}}
+                      @forwardEvent={{true}}
+                      @label={{this.composer.saveLabel}}
                     />
 
                     <PluginOutlet
@@ -659,8 +659,8 @@ export default class ComposerContainer extends Component {
               <div class="submit-panel">
                 <span>
                   <PluginOutlet
-                    @name="composer-fields-below"
                     @connectorTagName="div"
+                    @name="composer-fields-below"
                     @outletArgs={{lazyHash model=this.composer.model}}
                   />
                 </span>
@@ -668,26 +668,26 @@ export default class ComposerContainer extends Component {
                 <div class="save-or-cancel">
                   <ComposerSaveButton
                     @action={{this.composer.saveAction}}
+                    @disableSubmit={{this.composer.disableSubmit}}
+                    @forwardEvent={{true}}
                     @icon={{this.composer.saveIcon}}
                     @label={{this.composer.saveLabel}}
-                    @forwardEvent={{true}}
-                    @disableSubmit={{this.composer.disableSubmit}}
                   />
 
                   {{#unless this.site.mobileView}}
                     <DButton
-                      @action={{this.composer.cancel}}
                       class="discard-button btn-transparent"
-                      @title={{this.composer.cancelLabel}}
+                      @action={{this.composer.cancel}}
                       @label={{this.composer.cancelLabel}}
+                      @title={{this.composer.cancelLabel}}
                     />
                   {{/unless}}
 
                   {{#if this.site.mobileView}}
                     <DButton
+                      class="discard-button btn-transparent"
                       @action={{this.composer.cancel}}
                       @icon={{this.composer.cancelIcon}}
-                      class="discard-button btn-transparent"
                       @title={{this.composer.cancelLabel}}
                     />
                   {{/if}}
@@ -710,10 +710,10 @@ export default class ComposerContainer extends Component {
 
                   {{#if this.composer.allowUpload}}
                     <a
-                      id="mobile-file-upload"
+                      aria-label={{i18n "composer.upload_title"}}
                       class="btn btn-default no-text mobile-file-upload
                         {{if this.composer.isUploading 'hidden'}}"
-                      aria-label={{i18n "composer.upload_title"}}
+                      id="mobile-file-upload"
                     >
                       {{dIcon this.composer.uploadIcon}}
                     </a>
@@ -779,9 +779,9 @@ export default class ComposerContainer extends Component {
             {{#if this.composer.model.createdPost}}
               {{i18n "composer.saved"}}
               <a
+                class="permalink"
                 href={{this.composer.createdPost.url}}
                 {{on "click" this.composer.viewNewReply}}
-                class="permalink"
               >{{i18n "composer.view_new_post"}}</a>
             {{else}}
               {{i18n "composer.saving"}}
@@ -800,10 +800,10 @@ export default class ComposerContainer extends Component {
 
           <ComposerToggles
             @composeState={{this.composer.model.composeState}}
-            @toggleFullscreen={{this.composer.openIfDraft}}
-            @toggleComposer={{this.composer.toggle}}
-            @toggleToolbar={{this.composer.toggleToolbar}}
             @saveAndClose={{this.composer.saveAndClose}}
+            @toggleComposer={{this.composer.toggle}}
+            @toggleFullscreen={{this.composer.openIfDraft}}
+            @toggleToolbar={{this.composer.toggleToolbar}}
           />
         {{/if}}
       {{/if}}

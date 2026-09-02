@@ -64,6 +64,34 @@ export default class VoiceInviteUsersModal extends Component {
     }
   }
 
+  @action
+  setSelectedUsernames(usernames) {
+    this.selectedUsernames = usernames;
+  }
+
+  @action
+  async inviteSelected() {
+    if (!this.selectedUsernames.length) {
+      return;
+    }
+    await this.#invite(this.selectedUsernames);
+    this.selectedUsernames = [];
+  }
+
+  @action
+  async inviteSuggestion(suggestion) {
+    await this.#invite([suggestion.username]);
+  }
+
+  @action
+  copyLink() {
+    clipboardCopy(this.inviteUrl);
+    this.toasts.success({
+      duration: "short",
+      data: { message: i18n("voice.room.link_copied") },
+    });
+  }
+
   async #invite(usernames) {
     this.inviting = true;
     try {
@@ -103,39 +131,11 @@ export default class VoiceInviteUsersModal extends Component {
     }
   }
 
-  @action
-  setSelectedUsernames(usernames) {
-    this.selectedUsernames = usernames;
-  }
-
-  @action
-  async inviteSelected() {
-    if (!this.selectedUsernames.length) {
-      return;
-    }
-    await this.#invite(this.selectedUsernames);
-    this.selectedUsernames = [];
-  }
-
-  @action
-  async inviteSuggestion(suggestion) {
-    await this.#invite([suggestion.username]);
-  }
-
-  @action
-  copyLink() {
-    clipboardCopy(this.inviteUrl);
-    this.toasts.success({
-      duration: "short",
-      data: { message: i18n("voice.room.link_copied") },
-    });
-  }
-
   <template>
     <DModal
+      class="voice-invite-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "voice.invite.title" room_name=this.room.name}}
-      class="voice-invite-modal"
     >
       <:body>
         <div class="voice-invite-modal__search">
@@ -144,20 +144,20 @@ export default class VoiceInviteUsersModal extends Component {
           </span>
           <div class="voice-invite-modal__search-row">
             <UserChooser
-              @value={{this.selectedUsernames}}
+              class="voice-invite-modal__user-chooser"
               @onChange={{this.setSelectedUsernames}}
               @options={{hash
                 excludeCurrentUser=true
                 filterPlaceholder="voice.invite.search_placeholder"
               }}
-              class="voice-invite-modal__user-chooser"
+              @value={{this.selectedUsernames}}
             />
             <DButton
+              class="btn-primary voice-invite-modal__send"
               @action={{this.inviteSelected}}
+              @disabled={{this.inviting}}
               @icon="paper-plane"
               @label="voice.invite.send"
-              @disabled={{this.inviting}}
-              class="btn-primary voice-invite-modal__send"
             />
           </div>
         </div>
@@ -196,11 +196,11 @@ export default class VoiceInviteUsersModal extends Component {
                     </span>
                   {{else}}
                     <DButton
+                      class="btn-small voice-invite-modal__suggestion-invite"
                       @action={{fn this.inviteSuggestion suggestion}}
+                      @disabled={{this.inviting}}
                       @icon="user-plus"
                       @label="voice.invite.invite"
-                      @disabled={{this.inviting}}
-                      class="btn-small voice-invite-modal__suggestion-invite"
                     />
                   {{/if}}
                 </div>
@@ -215,17 +215,17 @@ export default class VoiceInviteUsersModal extends Component {
           </label>
           <div class="voice-invite-modal__link-row">
             <input
-              id="voice-invite-link"
-              type="text"
-              readonly
-              value={{this.inviteUrl}}
               class="voice-invite-modal__link-input"
+              id="voice-invite-link"
+              readonly
+              type="text"
+              value={{this.inviteUrl}}
             />
             <DButton
+              class="voice-invite-modal__copy"
               @action={{this.copyLink}}
               @icon="copy"
               @label="voice.invite.copy"
-              class="voice-invite-modal__copy"
             />
           </div>
         </div>

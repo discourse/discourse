@@ -58,84 +58,6 @@ export default class NestedPostChildren extends Component {
     ].join(":");
   }
 
-  @action
-  hydrateFromArgs() {
-    this._hydrateFromArgs();
-  }
-
-  _cacheKeyFor(
-    parentPostNumber = this.args.parentPostNumber,
-    topicId = this.args.topic?.id
-  ) {
-    return `${topicId}:${parentPostNumber}`;
-  }
-
-  _hydrateFromArgs() {
-    if (this._identityKey === this.identityKey) {
-      return;
-    }
-
-    this._identityKey = this.identityKey;
-    this._activeCacheKey = this._cacheKeyFor();
-    this.childNodes = [];
-    this.loading = false;
-    this.page = 0;
-    this.hasMore = false;
-    this.loadingMore = false;
-    this.loaded = false;
-    this._fetchedFromServer = false;
-
-    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
-    if (cached) {
-      this.childNodes = cached.childNodes;
-      this.page = cached.page;
-      this.hasMore = this.usesFlatDescendantPagination
-        ? this.expectedCount > this.childNodes.length
-        : cached.hasMore;
-      this.loaded = true;
-      this._fetchedFromServer = cached.fetchedFromServer;
-      return;
-    }
-
-    if (this.args.preloadedChildren?.length > 0) {
-      this.childNodes = this.args.preloadedChildren;
-      this.loaded = true;
-      this.hasMore = this.expectedCount > this.childNodes.length;
-    } else if (this.args.directReplyCount > 0) {
-      this.loadChildren();
-    }
-  }
-
-  _reportToCache(cacheKey = this._activeCacheKey) {
-    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
-      return;
-    }
-    this.args.fetchedChildrenCache.set(cacheKey, {
-      childNodes: this.childNodes,
-      page: this.page,
-      hasMore: this.hasMore,
-      fetchedFromServer: this._fetchedFromServer,
-    });
-  }
-
-  _onChildCreated({ topicId, post, parentPostNumber }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.parentPostNumber
-    ) {
-      return;
-    }
-
-    const alreadyExists = this._includesPost(this.childNodes, post);
-    if (alreadyExists) {
-      return;
-    }
-
-    this.childNodes = [{ post, children: [] }, ...this.childNodes];
-    this.loaded = true;
-    this._reportToCache();
-  }
-
   get childDepth() {
     return this.args.depth + 1;
   }
@@ -163,6 +85,11 @@ export default class NestedPostChildren extends Component {
       return i18n("nested_replies.load_more_children", { count });
     }
     return i18n("nested_replies.load_more_children_generic");
+  }
+
+  @action
+  hydrateFromArgs() {
+    this._hydrateFromArgs();
   }
 
   async loadChildren() {
@@ -270,6 +197,79 @@ export default class NestedPostChildren extends Component {
     }
   }
 
+  _cacheKeyFor(
+    parentPostNumber = this.args.parentPostNumber,
+    topicId = this.args.topic?.id
+  ) {
+    return `${topicId}:${parentPostNumber}`;
+  }
+
+  _hydrateFromArgs() {
+    if (this._identityKey === this.identityKey) {
+      return;
+    }
+
+    this._identityKey = this.identityKey;
+    this._activeCacheKey = this._cacheKeyFor();
+    this.childNodes = [];
+    this.loading = false;
+    this.page = 0;
+    this.hasMore = false;
+    this.loadingMore = false;
+    this.loaded = false;
+    this._fetchedFromServer = false;
+
+    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
+    if (cached) {
+      this.childNodes = cached.childNodes;
+      this.page = cached.page;
+      this.hasMore = this.usesFlatDescendantPagination
+        ? this.expectedCount > this.childNodes.length
+        : cached.hasMore;
+      this.loaded = true;
+      this._fetchedFromServer = cached.fetchedFromServer;
+      return;
+    }
+
+    if (this.args.preloadedChildren?.length > 0) {
+      this.childNodes = this.args.preloadedChildren;
+      this.loaded = true;
+      this.hasMore = this.expectedCount > this.childNodes.length;
+    } else if (this.args.directReplyCount > 0) {
+      this.loadChildren();
+    }
+  }
+
+  _reportToCache(cacheKey = this._activeCacheKey) {
+    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
+      return;
+    }
+    this.args.fetchedChildrenCache.set(cacheKey, {
+      childNodes: this.childNodes,
+      page: this.page,
+      hasMore: this.hasMore,
+      fetchedFromServer: this._fetchedFromServer,
+    });
+  }
+
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
+      return;
+    }
+
+    const alreadyExists = this._includesPost(this.childNodes, post);
+    if (alreadyExists) {
+      return;
+    }
+
+    this.childNodes = [{ post, children: [] }, ...this.childNodes];
+    this.loaded = true;
+    this._reportToCache();
+  }
+
   _childrenForTopic(children, topicId) {
     return (children || []).filter(
       (child) =>
@@ -296,45 +296,45 @@ export default class NestedPostChildren extends Component {
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.childNodes key="post.id" as |node|}}
           <NestedPost
-            @post={{node.post}}
-            @children={{node.children}}
-            @topic={{@topic}}
-            @depth={{this.childDepth}}
-            @path={{@path}}
-            @sort={{@sort}}
-            @replyToPost={{@replyToPost}}
-            @editPost={{@editPost}}
-            @deletePost={{@deletePost}}
-            @recoverPost={{@recoverPost}}
-            @showFlags={{@showFlags}}
-            @showHistory={{@showHistory}}
+            @captureScrollAnchor={{@captureScrollAnchor}}
             @changeNotice={{@changeNotice}}
             @changePostOwner={{@changePostOwner}}
-            @grantBadge={{@grantBadge}}
-            @lockPost={{@lockPost}}
-            @unlockPost={{@unlockPost}}
-            @permanentlyDeletePost={{@permanentlyDeletePost}}
-            @rebakePost={{@rebakePost}}
-            @showPagePublish={{@showPagePublish}}
-            @togglePostType={{@togglePostType}}
-            @toggleWiki={{@toggleWiki}}
-            @unhidePost={{@unhidePost}}
+            @children={{node.children}}
+            @collapseFromDepth={{@collapseFromDepth}}
             @collapseParent={{@collapseParent}}
-            @highlightParentLine={{@highlightParentLine}}
-            @unhighlightParentLine={{@unhighlightParentLine}}
-            @parentLineHighlighted={{@parentLineHighlighted}}
+            @deletePost={{@deletePost}}
+            @depth={{this.childDepth}}
+            @editPost={{@editPost}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
-            @scrollAnchor={{@scrollAnchor}}
-            @registerPost={{@registerPost}}
-            @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
-            @captureScrollAnchor={{@captureScrollAnchor}}
+            @grantBadge={{@grantBadge}}
+            @highlightParentLine={{@highlightParentLine}}
+            @lockPost={{@lockPost}}
             @multiSelect={{@multiSelect}}
-            @togglePostSelection={{@togglePostSelection}}
-            @selectReplies={{@selectReplies}}
-            @selectBelow={{@selectBelow}}
+            @parentLineHighlighted={{@parentLineHighlighted}}
+            @path={{@path}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @post={{node.post}}
             @postSelected={{@postSelected}}
+            @rebakePost={{@rebakePost}}
+            @recoverPost={{@recoverPost}}
+            @registerPost={{@registerPost}}
+            @replyToPost={{@replyToPost}}
+            @scrollAnchor={{@scrollAnchor}}
+            @selectBelow={{@selectBelow}}
+            @selectReplies={{@selectReplies}}
+            @showFlags={{@showFlags}}
+            @showHistory={{@showHistory}}
+            @showPagePublish={{@showPagePublish}}
+            @sort={{@sort}}
+            @togglePostSelection={{@togglePostSelection}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @topic={{@topic}}
+            @unhidePost={{@unhidePost}}
+            @unhighlightParentLine={{@unhighlightParentLine}}
+            @unlockPost={{@unlockPost}}
           />
         {{/each}}
 

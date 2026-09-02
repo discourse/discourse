@@ -88,10 +88,6 @@ export default class CategoryControl extends Component {
       this.updateSelectedCategories(previousRequest);
   }
 
-  #sameIds(a, b) {
-    return a.length === b.length && a.every((id, index) => id === b[index]);
-  }
-
   @action
   handleChange(categoryId) {
     this.args.field.set(categoryId == null ? "" : String(categoryId));
@@ -104,27 +100,31 @@ export default class CategoryControl extends Component {
     this.args.field.set(categories.map((category) => category.id));
   }
 
+  #sameIds(a, b) {
+    return a.length === b.length && a.every((id, index) => id === b[index]);
+  }
+
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.multiple}}
         <CategorySelector
-          {{didUpdate this.hydrateSelectedCategories @field.value}}
           @categories={{this.selectedCategories}}
           @onChange={{this.handleMultiChange}}
           @options={{hash translatedNone=@placeholder}}
+          {{didUpdate this.hydrateSelectedCategories @field.value}}
         />
       {{else}}
         <CategoryChooser
-          @value={{if @field.value @field.value null}}
           @onChange={{this.handleChange}}
           @options={{hash clearable=this.clearable}}
+          @value={{if @field.value @field.value null}}
         />
       {{/if}}
     </ExpressionWrapper>

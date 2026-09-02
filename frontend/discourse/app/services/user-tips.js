@@ -14,30 +14,6 @@ export default class UserTips extends Service {
   #renderedId;
   #shouldRenderSet = trackedSet();
 
-  #updateRenderedId() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const tipsArray = [...this.#availableTips];
-    if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
-      return;
-    }
-
-    const newId = tipsArray
-      .sort((a, b) => compare(a?.priority, b?.priority))
-      // Reversing the array is necessary because when priorities are not set,
-      // we want to show the most recently added tip first
-      .reverse()
-      .find((tip) => this.canSeeUserTip(tip.id))?.id;
-
-    if (this.#renderedId !== newId) {
-      this.#shouldRenderSet.delete(this.#renderedId);
-      this.#shouldRenderSet.add(newId);
-      this.#renderedId = newId;
-    }
-  }
-
   shouldRender(id) {
     return this.#shouldRenderSet.has(id);
   }
@@ -141,6 +117,30 @@ export default class UserTips extends Service {
 
     this.currentUser.set("user_option.skip_new_user_tips", true);
     await this.currentUser.save(["skip_new_user_tips"]);
+  }
+
+  #updateRenderedId() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    const tipsArray = [...this.#availableTips];
+    if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
+      return;
+    }
+
+    const newId = tipsArray
+      .sort((a, b) => compare(a?.priority, b?.priority))
+      // Reversing the array is necessary because when priorities are not set,
+      // we want to show the most recently added tip first
+      .reverse()
+      .find((tip) => this.canSeeUserTip(tip.id))?.id;
+
+    if (this.#renderedId !== newId) {
+      this.#shouldRenderSet.delete(this.#renderedId);
+      this.#shouldRenderSet.add(newId);
+      this.#renderedId = newId;
+    }
   }
 
   _findAvailableTipById(id) {

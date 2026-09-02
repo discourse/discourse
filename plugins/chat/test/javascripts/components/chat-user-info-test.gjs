@@ -27,9 +27,9 @@ module("Component | ChatUserInfo", function (hooks) {
     await render(
       <template>
         <ChatUserInfo
-          @user={{this.user}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
+          @user={{this.user}}
         />
       </template>
     );

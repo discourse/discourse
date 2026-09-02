@@ -51,18 +51,18 @@ export default class ExplainReviewable extends Component {
                 <tr>
                   <td>
                     <ScoreValue @value="1.0" />
-                    <ScoreValue @value={{s.type_bonus}} @label="type_bonus" />
+                    <ScoreValue @label="type_bonus" @value={{s.type_bonus}} />
                     <ScoreValue
-                      @value={{s.take_action_bonus}}
                       @label="take_action_bonus"
+                      @value={{s.take_action_bonus}}
                     />
                     <ScoreValue
-                      @value={{s.trust_level_bonus}}
                       @label="trust_level_bonus"
+                      @value={{s.trust_level_bonus}}
                     />
                     <ScoreValue
-                      @value={{s.user_accuracy_bonus}}
                       @label="user_accuracy_bonus"
+                      @value={{s.user_accuracy_bonus}}
                     />
                   </td>
                   <td class="sum">{{float s.score}}</td>

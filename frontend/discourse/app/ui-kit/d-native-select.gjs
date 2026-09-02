@@ -35,10 +35,10 @@ export class DNativeSelectOption extends Component {
         "d-native-select__option --selected"
         "d-native-select__option"
       }}
-      value={{this.value}}
       selected={{this.isSelected}}
-      {{claimSelectedAfterRender this.isSelected}}
+      value={{this.value}}
       ...attributes
+      {{claimSelectedAfterRender this.isSelected}}
     >
       {{yield}}
     </option>
@@ -57,6 +57,14 @@ export default class DNativeSelect extends Component {
     return value;
   }
 
+  get hasSelectedValue() {
+    return this.htmlSelectValue !== NO_VALUE_OPTION;
+  }
+
+  get includeNone() {
+    return this.args.includeNone ?? true;
+  }
+
   @action
   handleInput(event) {
     // if an option has no value, event.target.value will be the content of the option
@@ -64,14 +72,6 @@ export default class DNativeSelect extends Component {
     this.args.onChange(
       event.target.value === NO_VALUE_OPTION ? null : event.target.value
     );
-  }
-
-  get hasSelectedValue() {
-    return this.htmlSelectValue !== NO_VALUE_OPTION;
-  }
-
-  get includeNone() {
-    return this.args.includeNone ?? true;
   }
 
   <template>
@@ -83,8 +83,8 @@ export default class DNativeSelect extends Component {
     >
       {{#if this.includeNone}}
         <DNativeSelectOption
-          @value={{NO_VALUE_OPTION}}
           @selected={{this.htmlSelectValue}}
+          @value={{NO_VALUE_OPTION}}
         >
           {{#if @nonePlaceholder}}
             {{@nonePlaceholder}}

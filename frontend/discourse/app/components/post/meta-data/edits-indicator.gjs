@@ -57,11 +57,11 @@ export default class PostMetaDataEditsIndicator extends Component {
           (historyHeat this.siteSettings this.updatedAt)
           (if @post.wiki "wiki")
         }}
+        @action={{this.onPostEditsIndicatorClick}}
         @icon={{this.icon}}
+        @translatedAriaLabel={{i18n "post.edit_history"}}
         @translatedLabel={{this.label}}
         @translatedTitle={{this.title}}
-        @translatedAriaLabel={{i18n "post.edit_history"}}
-        @action={{this.onPostEditsIndicatorClick}}
       />
     </div>
   </template>

@@ -57,23 +57,6 @@ export default class DiscourseTopic extends Component {
     set(this, "topic.postStream", value);
   }
 
-  @observes("enteredAt")
-  _enteredTopic() {
-    // Ember is supposed to only call observers when values change but something
-    // in our view set up is firing this observer with the same value. This check
-    // prevents scrolled from being called twice
-    if (this.enteredAt && this.lastEnteredAt !== this.enteredAt) {
-      schedule("afterRender", this.scrolled);
-      this.set("lastEnteredAt", this.enteredAt);
-    }
-  }
-
-  _highlightPost(postNumber, options = {}) {
-    if (isBlank(options.jump) || options.jump !== false) {
-      scheduleOnce("afterRender", null, highlightPost, postNumber);
-    }
-  }
-
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -90,13 +73,6 @@ export default class DiscourseTopic extends Component {
 
     // Unbind link tracking
     this.element.removeEventListener("click", this._trackLinkClick);
-  }
-
-  @bind
-  _trackLinkClick(event) {
-    if (event.target.closest(".cooked a, a.track-link")) {
-      ClickTrack.trackClick(event, getOwner(this));
-    }
   }
 
   gotFocus(hasFocus) {
@@ -117,5 +93,29 @@ export default class DiscourseTopic extends Component {
 
     // Trigger a scrolled event
     this.appEvents.trigger("topic:scrolled", offset);
+  }
+
+  @observes("enteredAt")
+  _enteredTopic() {
+    // Ember is supposed to only call observers when values change but something
+    // in our view set up is firing this observer with the same value. This check
+    // prevents scrolled from being called twice
+    if (this.enteredAt && this.lastEnteredAt !== this.enteredAt) {
+      schedule("afterRender", this.scrolled);
+      this.set("lastEnteredAt", this.enteredAt);
+    }
+  }
+
+  _highlightPost(postNumber, options = {}) {
+    if (isBlank(options.jump) || options.jump !== false) {
+      scheduleOnce("afterRender", null, highlightPost, postNumber);
+    }
+  }
+
+  @bind
+  _trackLinkClick(event) {
+    if (event.target.closest(".cooked a, a.track-link")) {
+      ClickTrack.trackClick(event, getOwner(this));
+    }
   }
 }

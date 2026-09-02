@@ -4,9 +4,9 @@ import { i18n } from "discourse-i18n";
 
 const StaffActionLogDetails = <template>
   <DModal
-    @title={{i18n "admin.logs.staff_actions.modal_title"}}
-    @closeModal={{@closeModal}}
     class="log-details-modal"
+    @closeModal={{@closeModal}}
+    @title={{i18n "admin.logs.staff_actions.modal_title"}}
   >
     <:body>
       <pre>{{@model.staffActionLog.details}}</pre>

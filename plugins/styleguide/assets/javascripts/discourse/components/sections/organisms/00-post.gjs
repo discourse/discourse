@@ -3,7 +3,7 @@ import PostExample from "../../examples/organisms/post";
 import postSource from "../../examples/organisms/post?source=file";
 
 export default <template>
-  <StyleguideExample @title="<Post>" @code={{postSource}}>
+  <StyleguideExample @code={{postSource}} @title="<Post>">
     <PostExample @post={{@dummy.postModel.transformedPost}} />
   </StyleguideExample>
 </template>

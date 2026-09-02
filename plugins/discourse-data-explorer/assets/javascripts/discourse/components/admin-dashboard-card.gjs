@@ -55,9 +55,9 @@ export default class DataExplorerAdminDashboardCard extends Component {
       {{#if this.rows.length}}
         {{#if this.isChartable}}
           <DataExplorerChart
-            @labels={{this.chartLabels}}
-            @datasets={{this.chartDatasets}}
             @chartType={{this.chartType}}
+            @datasets={{this.chartDatasets}}
+            @labels={{this.chartLabels}}
             @stacked={{this.isStacked}}
           />
         {{else}}

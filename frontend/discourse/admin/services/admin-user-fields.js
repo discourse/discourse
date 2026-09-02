@@ -23,6 +23,14 @@ export default class AdminUserFields extends Service {
     return arraySortedByProperties(this.userFields, this.fieldSortOrder);
   }
 
+  get firstField() {
+    return this.sortedUserFields[0];
+  }
+
+  get lastField() {
+    return this.sortedUserFields[this.sortedUserFields.length - 1];
+  }
+
   async #fetchUserFields() {
     try {
       const userFields = await this.store.findAll("user-field");
@@ -30,13 +38,5 @@ export default class AdminUserFields extends Service {
     } catch (err) {
       popupAjaxError(err);
     }
-  }
-
-  get firstField() {
-    return this.sortedUserFields[0];
-  }
-
-  get lastField() {
-    return this.sortedUserFields[this.sortedUserFields.length - 1];
   }
 }

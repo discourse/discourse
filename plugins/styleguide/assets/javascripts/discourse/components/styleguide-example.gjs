@@ -109,15 +109,15 @@ export default class StyleguideExample extends Component {
           builds its aria-label from the ariaLabel argument alone and never from the title
           argument, and a name coming only from a title attribute is a weak one. }}
           <DButton
-            @icon="code"
-            @title="styleguide.example.toggle_code"
-            @ariaLabel="styleguide.example.toggle_code"
-            @action={{this.toggleCode}}
-            class="btn-flat btn-transparent styleguide-example__code-toggle"
-            aria-expanded={{if this.showCode "true" "false"}}
             {{! Only while the region exists — the panel is unmounted when collapsed, and a
             reference to an absent id is an ARIA validity error. }}
             aria-controls={{if this.showCode this.codeId}}
+            aria-expanded={{if this.showCode "true" "false"}}
+            class="btn-flat btn-transparent styleguide-example__code-toggle"
+            @action={{this.toggleCode}}
+            @ariaLabel="styleguide.example.toggle_code"
+            @icon="code"
+            @title="styleguide.example.toggle_code"
           />
         {{/if}}
       </div>
@@ -169,12 +169,12 @@ export default class StyleguideExample extends Component {
 
       {{#if this.showCode}}
         <div
-          class="styleguide-example__code"
-          id={{this.codeId}}
-          role="region"
           {{! Named after its own example: several panels can be open at once, and landmarks
           sharing one name are indistinguishable in a screen reader's landmark list. }}
           aria-label={{i18n "styleguide.example.code_region" title=@title}}
+          class="styleguide-example__code"
+          id={{this.codeId}}
+          role="region"
         >
           <DHighlightedCode @code={{@code}} @lang="javascript" />
         </div>

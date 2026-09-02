@@ -129,20 +129,6 @@ export default class A11y extends Service {
     }
 
     /**
-     * Writes the message into the live region and arms its clear timer
-     * @param {'polite'|'assertive'} type - Type of announcement
-     * @param {string} message - Message to announce
-     * @param {number} clearDelay - Delay in ms before clearing
-     */
-    #write(type, message, clearDelay) {
-      this.#messages.set(type, message);
-
-      if (clearAnnouncements) {
-        this.#scheduleClear(type, clearDelay);
-      }
-    }
-
-    /**
      * Gets the current announcement message of specified type
      * @param {'polite'|'assertive'} type - Type of announcement to get
      * @returns {string|undefined} The announcement message if exists
@@ -175,6 +161,20 @@ export default class A11y extends Service {
       if (pendingRestore) {
         cancel(pendingRestore);
         this.#restores.delete(type);
+      }
+    }
+
+    /**
+     * Writes the message into the live region and arms its clear timer
+     * @param {'polite'|'assertive'} type - Type of announcement
+     * @param {string} message - Message to announce
+     * @param {number} clearDelay - Delay in ms before clearing
+     */
+    #write(type, message, clearDelay) {
+      this.#messages.set(type, message);
+
+      if (clearAnnouncements) {
+        this.#scheduleClear(type, clearDelay);
       }
     }
 

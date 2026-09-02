@@ -15,8 +15,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="composer" @name="foo" @title="Foo" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="composer" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -40,10 +40,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="composer"
+              @disabled={{true}}
               @name="foo"
               @title="Foo"
-              @disabled={{true}}
+              @type="composer"
               as |field|
             >
               <field.Control />
@@ -59,7 +59,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="composer" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="composer" as |field|>
               <field.Control @height={{42}} />
             </form.Field>
           </Form>
@@ -75,7 +75,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="composer" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="composer" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -87,7 +87,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="composer" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="composer" as |field|>
               <field.Control @preview={{true}} />
             </form.Field>
           </Form>

@@ -16,7 +16,7 @@ module("Integration | Component | AiHelperCustomPrompt", function (hooks) {
     state.value = initialValue;
     await render(
       <template>
-        <AiHelperCustomPrompt @value={{state.value}} @submit={{submit}} />
+        <AiHelperCustomPrompt @submit={{submit}} @value={{state.value}} />
       </template>
     );
   }

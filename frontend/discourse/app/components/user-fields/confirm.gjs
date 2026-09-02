@@ -35,8 +35,8 @@ export default class UserFieldConfirm extends UserFieldBase {
         </span>
       </label>
       <DInputTip
-        @validation={{@validation}}
         class={{unless @validation.reason "hidden"}}
+        @validation={{@validation}}
       />
     </div>
   </template>

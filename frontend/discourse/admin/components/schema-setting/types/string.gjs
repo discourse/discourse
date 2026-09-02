@@ -15,14 +15,6 @@ export default class SchemaSettingTypeString extends Component {
   maxLength = this.args.spec.validations?.max_length;
   required = this.args.spec.required;
 
-  @action
-  onInput(event) {
-    this.touched = true;
-    const newValue = event.currentTarget.value;
-    this.args.onChange(newValue);
-    this.value = newValue;
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -45,14 +37,22 @@ export default class SchemaSettingTypeString extends Component {
     }
   }
 
+  @action
+  onInput(event) {
+    this.touched = true;
+    const newValue = event.currentTarget.value;
+    this.args.onChange(newValue);
+    this.value = newValue;
+  }
+
   <template>
     <Input
       class="--string"
+      maxLength={{this.maxLength}}
+      minLength={{this.minLength}}
+      required={{this.required}}
       @value={{this.value}}
       {{on "input" this.onInput}}
-      required={{this.required}}
-      minLength={{this.minLength}}
-      maxLength={{this.maxLength}}
     />
 
     <div class="schema-field__input-supporting-text">

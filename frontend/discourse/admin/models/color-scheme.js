@@ -74,6 +74,35 @@ export default class ColorScheme extends EmberObject {
     return "" + this.name;
   }
 
+  @computed("name", "user_selectable", "colors.@each.changed", "saving")
+  get changed() {
+    if (!this.originals) {
+      return false;
+    }
+    if (this.originals.name !== this.name) {
+      return true;
+    }
+    if (this.originals.user_selectable !== this.user_selectable) {
+      return true;
+    }
+    if (this.colors.some((c) => c.get("changed"))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  @computed("changed")
+  get disableSave() {
+    if (this.theme_id) {
+      return false;
+    }
+
+    return (
+      !this.changed || this.saving || this.colors.some((c) => !c.get("valid"))
+    );
+  }
+
   startTrackingChanges() {
     this.set("originals", {
       name: this.name,
@@ -119,35 +148,6 @@ export default class ColorScheme extends EmberObject {
       );
     });
     return newScheme;
-  }
-
-  @computed("name", "user_selectable", "colors.@each.changed", "saving")
-  get changed() {
-    if (!this.originals) {
-      return false;
-    }
-    if (this.originals.name !== this.name) {
-      return true;
-    }
-    if (this.originals.user_selectable !== this.user_selectable) {
-      return true;
-    }
-    if (this.colors.some((c) => c.get("changed"))) {
-      return true;
-    }
-
-    return false;
-  }
-
-  @computed("changed")
-  get disableSave() {
-    if (this.theme_id) {
-      return false;
-    }
-
-    return (
-      !this.changed || this.saving || this.colors.some((c) => !c.get("valid"))
-    );
   }
 
   save(opts) {

@@ -3,7 +3,7 @@ import { userPath } from "discourse/lib/url";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const User = <template>
-  <a href={{userPath @user.username}} data-user-card={{@user.username}}>
+  <a data-user-card={{@user.username}} href={{userPath @user.username}}>
     <span class="user">
       {{dAvatar @user imageSize="medium"}}
       <span class="username">

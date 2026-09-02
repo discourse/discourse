@@ -34,12 +34,12 @@ export default class Search extends Service {
     return this.siteSettings.search_experience;
   }
 
-  focusSearchInput() {
-    document.getElementById(this.currentSearchInputId)?.focus();
-  }
-
   get contextType() {
     return this.searchContext?.type || null;
+  }
+
+  focusSearchInput() {
+    document.getElementById(this.currentSearchInputId)?.focus();
   }
 
   // The need to navigate with the keyboard creates a lot shared logic

@@ -38,9 +38,9 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
-            <button class="item c" role="option" aria-label="Cherry">3</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
+            <button aria-label="Cherry" class="item c" role="option">3</button>
           </div>
         </template>
       );
@@ -68,8 +68,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Éclair">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Éclair" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -97,8 +97,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Bar">1</button>
-            <button class="item b" role="option" aria-label="Baz">2</button>
+            <button aria-label="Bar" class="item a" role="option">1</button>
+            <button aria-label="Baz" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -128,8 +128,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -157,8 +157,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -184,8 +184,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -214,8 +214,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Łódź">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Łódź" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -250,20 +250,20 @@ module(
               onActiveChange=onActiveChange
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
             <button
-              class="item b"
-              role="option"
               aria-label="Ap pie"
+              class="item b"
               data-name="Ap pie"
+              role="option"
             >
               2
             </button>
             <button
-              class="item pear"
-              role="option"
               aria-label="Pear"
+              class="item pear"
               data-name="Pear"
+              role="option"
             >3</button>
           </div>
         </template>
@@ -311,8 +311,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <div class="item b" role="option" aria-label="Banana">
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <div aria-label="Banana" class="item b" role="option">
               {{! eslint-disable-next-line ember/template-no-nested-interactive }}
               <input class="inner" type="text" />
             </div>
@@ -341,9 +341,9 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
-            <button class="item c" role="option" aria-label="Ab">3</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
+            <button aria-label="Ab" class="item c" role="option">3</button>
           </div>
         </template>
       );
@@ -388,9 +388,9 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Apricot">2</button>
-            <button class="item c" role="option" aria-label="Banana">3</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Apricot" class="item b" role="option">2</button>
+            <button aria-label="Banana" class="item c" role="option">3</button>
           </div>
         </template>
       );
@@ -429,8 +429,8 @@ module(
               logicalCount=2
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -462,8 +462,8 @@ module(
               logicalCount=500
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -498,14 +498,14 @@ module(
               logicalCount=3
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
             <button
+              aria-disabled="true"
+              aria-label="Banana"
               class="item b"
               role="option"
-              aria-label="Banana"
-              aria-disabled="true"
             >2</button>
-            <button class="item c" role="option" aria-label="Cherry">3</button>
+            <button aria-label="Cherry" class="item c" role="option">3</button>
           </div>
         </template>
       );
@@ -530,10 +530,10 @@ module(
       await render(
         <template>
           <div
+            aria-controls="ta-lb"
             class="tri"
             role="combobox"
             tabindex="0"
-            aria-controls="ta-lb"
           ></div>
           <div
             id="ta-lb"
@@ -547,9 +547,9 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Apricot">2</button>
-            <button class="item c" role="option" aria-label="Banana">3</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Apricot" class="item b" role="option">2</button>
+            <button aria-label="Banana" class="item c" role="option">3</button>
           </div>
         </template>
       );
@@ -579,10 +579,10 @@ module(
       await render(
         <template>
           <div
+            aria-controls="ta-lb"
             class="controller"
             role="combobox"
             tabindex="0"
-            aria-controls="ta-lb"
           ></div>
           <div
             id="ta-lb"
@@ -596,8 +596,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );
@@ -629,7 +629,7 @@ module(
     test("an editable active-mode controller keeps printable characters", async function (assert) {
       await render(
         <template>
-          <input class="controller" role="combobox" aria-controls="ta-lb" />
+          <input aria-controls="ta-lb" class="controller" role="combobox" />
           <div
             id="ta-lb"
             role="listbox"
@@ -642,8 +642,8 @@ module(
               typeAhead=true
             }}
           >
-            <button class="item a" role="option" aria-label="Apple">1</button>
-            <button class="item b" role="option" aria-label="Banana">2</button>
+            <button aria-label="Apple" class="item a" role="option">1</button>
+            <button aria-label="Banana" class="item b" role="option">2</button>
           </div>
         </template>
       );

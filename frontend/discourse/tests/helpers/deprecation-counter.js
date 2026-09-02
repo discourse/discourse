@@ -57,6 +57,10 @@ export default class DeprecationCounter {
   counts = new Map();
   #origin = null;
 
+  get hasDeprecations() {
+    return this.counts.size > 0;
+  }
+
   start(origin) {
     this.#origin = origin;
 
@@ -103,10 +107,6 @@ export default class DeprecationCounter {
       // eslint-disable-next-line no-console
       console.count(`deprecation_id:${id}`); // origin will be identified using the spec metadata
     }
-  }
-
-  get hasDeprecations() {
-    return this.counts.size > 0;
   }
 
   generateTable() {

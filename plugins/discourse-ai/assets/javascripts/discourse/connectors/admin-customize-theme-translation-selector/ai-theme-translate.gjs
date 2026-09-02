@@ -49,10 +49,10 @@ export default class AiThemeTranslate extends Component {
   <template>
     <DButton
       class="btn-default ai-theme-translate"
+      @action={{this.translate}}
       @icon="discourse-sparkles"
       @label="discourse_ai.translations.theme_translations.translate.label"
       @title="discourse_ai.translations.theme_translations.translate.title"
-      @action={{this.translate}}
     />
   </template>
 }

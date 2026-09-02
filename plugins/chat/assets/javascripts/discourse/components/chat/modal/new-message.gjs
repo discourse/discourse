@@ -16,13 +16,13 @@ export default class ChatModalNewMessage extends Component {
   <template>
     {{#if this.shouldRender}}
       <DModal
-        @closeModal={{@closeModal}}
         class="chat-modal-new-message --quick-palette"
-        @title="chat.new_message_modal.title"
-        @inline={{@inline}}
+        @closeModal={{@closeModal}}
         @hideHeader={{true}}
+        @inline={{@inline}}
+        @title="chat.new_message_modal.title"
       >
-        <MessageCreator @onClose={{@closeModal}} @channel={{@model}} />
+        <MessageCreator @channel={{@model}} @onClose={{@closeModal}} />
       </DModal>
     {{/if}}
   </template>

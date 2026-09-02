@@ -361,19 +361,19 @@ export default class AiDiscoveriesSearchOptions extends Component {
           <DButton
             class="btn-default btn-small ai-discoveries-search-options__option --{{option.kind}}
               {{if option.active 'is-active'}}"
+            @action={{option.action}}
             @icon={{option.icon}}
             @label={{option.label}}
             @translatedLabel={{option.translatedLabel}}
             @translatedTitle={{option.title}}
-            @action={{option.action}}
           />
         {{/each}}
         <DButton
           class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+          @action={{@openAdvancedSearch}}
+          @ariaLabel="search.open_advanced"
           @icon="sliders"
           @translatedTitle={{this.advancedTitle}}
-          @ariaLabel="search.open_advanced"
-          @action={{@openAdvancedSearch}}
         />
       </div>
     {{/if}}

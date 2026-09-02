@@ -52,6 +52,14 @@ export default class RagUploader extends Component {
     );
   }
 
+  get acceptedFileTypes() {
+    if (this.args?.allowImages) {
+      return ".txt,.md,.png,.jpg,.jpeg";
+    } else {
+      return ".txt,.md,.pdf";
+    }
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
 
@@ -76,18 +84,6 @@ export default class RagUploader extends Component {
       this,
       "_updateTargetWithUploads"
     );
-  }
-
-  _updateTargetWithUploads() {
-    this.updateUploads(this.ragUploads);
-  }
-
-  get acceptedFileTypes() {
-    if (this.args?.allowImages) {
-      return ".txt,.md,.png,.jpg,.jpeg";
-    } else {
-      return ".txt,.md,.pdf";
-    }
   }
 
   @action
@@ -129,6 +125,10 @@ export default class RagUploader extends Component {
     this.debouncedSearch();
   }
 
+  _updateTargetWithUploads() {
+    this.updateUploads(this.ragUploads);
+  }
+
   <template>
     <div class="rag-uploader" ...attributes>
       {{#if @allowImages}}
@@ -165,15 +165,15 @@ export default class RagUploader extends Component {
                 {{upload.original_filename}}
               </td>
               <RagUploadProgress
-                @upload={{upload}}
                 @ragIndexingStatuses={{this.ragIndexingStatuses}}
+                @upload={{upload}}
               />
               <td class="rag-uploader__remove-file">
                 <DButton
+                  class="btn-flat"
+                  @action={{fn this.removeUpload upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
-                  @action={{fn this.removeUpload upload}}
-                  class="btn-flat"
                 />
               </td>
             </tr>
@@ -191,10 +191,10 @@ export default class RagUploader extends Component {
               </td>
               <td class="rag-uploader__remove-file">
                 <DButton
+                  class="btn-flat"
+                  @action={{fn this.cancelUploading upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
-                  @action={{fn this.cancelUploading upload}}
-                  class="btn-flat"
                 />
               </td>
             </tr>
@@ -203,19 +203,19 @@ export default class RagUploader extends Component {
       </table>
 
       <input
-        {{didInsert this.uppyUpload.setup}}
+        accept={{this.acceptedFileTypes}}
         class="hidden-upload-field"
         disabled={{this.uploading}}
-        type="file"
         multiple="multiple"
-        accept={{this.acceptedFileTypes}}
+        type="file"
+        {{didInsert this.uppyUpload.setup}}
       />
       <DButton
-        @label="discourse_ai.rag.uploads.button"
-        @icon="plus"
-        @title="discourse_ai.rag.uploads.button"
-        @action={{this.submitFiles}}
         class="btn-default"
+        @action={{this.submitFiles}}
+        @icon="plus"
+        @label="discourse_ai.rag.uploads.button"
+        @title="discourse_ai.rag.uploads.button"
       />
     </div>
   </template>

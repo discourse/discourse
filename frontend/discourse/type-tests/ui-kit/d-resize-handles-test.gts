@@ -61,8 +61,8 @@ const Positives = <template>
     @onResize={{onCompassResize}}
   />
   <DResizeHandles
-    @handleClass="my-block__handle"
     @directions={{array "n" "s"}}
+    @handleClass="my-block__handle"
     @stopPropagation={{true}}
   />
 
@@ -71,20 +71,20 @@ const Positives = <template>
 
   {{! The whole report shape, and the terminal and veto callbacks }}
   <DResizeHandles
-    @handleClass="my-block__handle"
     @directions={{BOX_DIRECTIONS}}
-    @onResizeStart={{veto}}
-    @onResize={{onReport}}
-    @onResizeEnd={{onReport}}
-    @onResizeCancel={{onReport}}
     @draggingClass="is-dragging"
+    @handleClass="my-block__handle"
+    @onResize={{onReport}}
+    @onResizeCancel={{onReport}}
+    @onResizeEnd={{onReport}}
+    @onResizeStart={{veto}}
   />
 
   {{! cancelCommits belongs with a consumer that handles only the one terminal }}
   <DResizeHandles
+    @cancelCommits={{true}}
     @handleClass="my-block__handle"
     @onResizeEnd={{onReport}}
-    @cancelCommits={{true}}
   />
 
   {{! Both forms of the measure target }}

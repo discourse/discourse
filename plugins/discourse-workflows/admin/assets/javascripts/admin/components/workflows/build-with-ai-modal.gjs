@@ -187,6 +187,49 @@ export default class BuildWithAiModal extends Component {
     );
   }
 
+  get aiCodePreviews() {
+    return (this.aiProposal?.operations || [])
+      .map((operation, index) =>
+        this.#codePreviewForOperation(operation, index)
+      )
+      .filter(Boolean);
+  }
+
+  get aiCreatedAgentResources() {
+    const resources = this.aiProposal?.created_resources || [];
+    const resourcesByClientId = new Map(
+      resources
+        .filter(
+          (resource) => resource?.type === "ai_agent" && resource.client_id
+        )
+        .map((resource) => [resource.client_id, resource])
+    );
+
+    return (this.aiProposal?.operations || [])
+      .filter((operation) => operation?.op === "create_ai_agent")
+      .map((operation, index) => {
+        const agent = operation.agent || operation.ai_agent || {};
+        const resource = resourcesByClientId.get(operation.client_id) || {};
+        const name = resource.name || agent.name;
+
+        if (!name) {
+          return null;
+        }
+
+        return {
+          key: `${operation.client_id || index}-${name}`,
+          name,
+          description: resource.description || agent.description,
+          systemPrompt: resource.system_prompt || agent.system_prompt,
+        };
+      })
+      .filter(Boolean);
+  }
+
+  get aiShowingProgress() {
+    return this.aiGenerating && this.aiProgressEvents.length > 0;
+  }
+
   @action
   aiQuestionText(question) {
     if (typeof question === "string") {
@@ -244,53 +287,145 @@ export default class BuildWithAiModal extends Component {
     return this.#aiClarificationAnswer(question, index).custom;
   }
 
-  get aiCodePreviews() {
-    return (this.aiProposal?.operations || [])
-      .map((operation, index) =>
-        this.#codePreviewForOperation(operation, index)
-      )
-      .filter(Boolean);
-  }
-
-  get aiCreatedAgentResources() {
-    const resources = this.aiProposal?.created_resources || [];
-    const resourcesByClientId = new Map(
-      resources
-        .filter(
-          (resource) => resource?.type === "ai_agent" && resource.client_id
-        )
-        .map((resource) => [resource.client_id, resource])
-    );
-
-    return (this.aiProposal?.operations || [])
-      .filter((operation) => operation?.op === "create_ai_agent")
-      .map((operation, index) => {
-        const agent = operation.agent || operation.ai_agent || {};
-        const resource = resourcesByClientId.get(operation.client_id) || {};
-        const name = resource.name || agent.name;
-
-        if (!name) {
-          return null;
-        }
-
-        return {
-          key: `${operation.client_id || index}-${name}`,
-          name,
-          description: resource.description || agent.description,
-          systemPrompt: resource.system_prompt || agent.system_prompt,
-        };
-      })
-      .filter(Boolean);
-  }
-
-  get aiShowingProgress() {
-    return this.aiGenerating && this.aiProgressEvents.length > 0;
-  }
-
   aiProgressMessage(event) {
     return (
       event.message || i18n(`discourse_workflows.ai.progress.${event.stage}`)
     );
+  }
+
+  @action
+  updateAiPrompt(event) {
+    this.aiPrompt = event.target.value;
+  }
+
+  @action
+  returnToAiPrompt() {
+    this.unsubscribeFromAiAuthoring();
+    this.aiGenerating = false;
+    this.aiProgressEvents = [];
+    this.aiResponse = null;
+    this.aiSessionId = null;
+    this.aiGenerationId = null;
+    this.aiClarificationAnswers = {};
+    this.aiClarificationQuestionIndex = 0;
+    this.aiError = null;
+  }
+
+  @action
+  async submitAiPrompt() {
+    if (this.aiSubmitDisabled) {
+      return;
+    }
+
+    await this.#submitAiMessage(this.aiPrompt.trim());
+  }
+
+  @action
+  selectAiClarificationOption(question, index, option) {
+    const label = this.aiClarificationOptionLabel(option);
+    if (!label) {
+      return;
+    }
+
+    const answer = this.#aiClarificationAnswer(question, index);
+    let selected;
+
+    if (this.aiQuestionMultiSelect(question)) {
+      selected = answer.selected.includes(label)
+        ? answer.selected.filter((value) => value !== label)
+        : [...answer.selected, label];
+    } else {
+      selected = [label];
+    }
+
+    this.#setAiClarificationAnswer(question, index, {
+      ...answer,
+      selected,
+    });
+  }
+
+  @action
+  updateAiClarificationCustom(question, index, event) {
+    const answer = this.#aiClarificationAnswer(question, index);
+
+    this.#setAiClarificationAnswer(question, index, {
+      ...answer,
+      custom: event.target.value,
+    });
+  }
+
+  @action
+  previousAiClarificationQuestion() {
+    if (this.aiGenerating) {
+      return;
+    }
+
+    this.aiClarificationQuestionIndex = Math.max(
+      this.aiCurrentQuestionIndex - 1,
+      0
+    );
+  }
+
+  @action
+  async continueAiClarificationQuestion() {
+    if (this.aiClarificationCurrentQuestionDisabled) {
+      return;
+    }
+
+    if (this.aiLastClarificationQuestion) {
+      await this.submitAiClarification();
+      return;
+    }
+
+    this.aiClarificationQuestionIndex = this.aiCurrentQuestionIndex + 1;
+  }
+
+  @action
+  async submitAiClarification() {
+    if (this.aiClarificationSubmitDisabled) {
+      return;
+    }
+
+    await this.#submitAiMessage(this.#aiClarificationMessage());
+  }
+
+  @action
+  async applyAiProposal() {
+    if (!this.aiSessionId || !this.aiProposal) {
+      return;
+    }
+
+    try {
+      const response = await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/ai/apply.json`,
+        {
+          type: "POST",
+          data: {
+            session_id: this.aiSessionId,
+          },
+        }
+      );
+      this.args.onApply?.(response.workflow);
+      this.returnToAiPrompt();
+      this.aiPrompt = "";
+      this.args.onClose?.();
+      this.toasts.success({
+        data: { message: i18n("discourse_workflows.ai.applied") },
+      });
+    } catch (error) {
+      this.aiError = this.#ajaxErrorMessage(error);
+    }
+  }
+
+  unsubscribeFromAiAuthoring() {
+    if (this.aiAuthoringChannel && this.aiAuthoringHandler) {
+      this.messageBus.unsubscribe(
+        this.aiAuthoringChannel,
+        this.aiAuthoringHandler
+      );
+    }
+    this.aiAuthoringChannel = null;
+    this.aiAuthoringHandler = null;
   }
 
   #codePreviewForOperation(operation, index) {
@@ -439,130 +574,6 @@ export default class BuildWithAiModal extends Component {
     }
   }
 
-  @action
-  updateAiPrompt(event) {
-    this.aiPrompt = event.target.value;
-  }
-
-  @action
-  returnToAiPrompt() {
-    this.unsubscribeFromAiAuthoring();
-    this.aiGenerating = false;
-    this.aiProgressEvents = [];
-    this.aiResponse = null;
-    this.aiSessionId = null;
-    this.aiGenerationId = null;
-    this.aiClarificationAnswers = {};
-    this.aiClarificationQuestionIndex = 0;
-    this.aiError = null;
-  }
-
-  @action
-  async submitAiPrompt() {
-    if (this.aiSubmitDisabled) {
-      return;
-    }
-
-    await this.#submitAiMessage(this.aiPrompt.trim());
-  }
-
-  @action
-  selectAiClarificationOption(question, index, option) {
-    const label = this.aiClarificationOptionLabel(option);
-    if (!label) {
-      return;
-    }
-
-    const answer = this.#aiClarificationAnswer(question, index);
-    let selected;
-
-    if (this.aiQuestionMultiSelect(question)) {
-      selected = answer.selected.includes(label)
-        ? answer.selected.filter((value) => value !== label)
-        : [...answer.selected, label];
-    } else {
-      selected = [label];
-    }
-
-    this.#setAiClarificationAnswer(question, index, {
-      ...answer,
-      selected,
-    });
-  }
-
-  @action
-  updateAiClarificationCustom(question, index, event) {
-    const answer = this.#aiClarificationAnswer(question, index);
-
-    this.#setAiClarificationAnswer(question, index, {
-      ...answer,
-      custom: event.target.value,
-    });
-  }
-
-  @action
-  previousAiClarificationQuestion() {
-    if (this.aiGenerating) {
-      return;
-    }
-
-    this.aiClarificationQuestionIndex = Math.max(
-      this.aiCurrentQuestionIndex - 1,
-      0
-    );
-  }
-
-  @action
-  async continueAiClarificationQuestion() {
-    if (this.aiClarificationCurrentQuestionDisabled) {
-      return;
-    }
-
-    if (this.aiLastClarificationQuestion) {
-      await this.submitAiClarification();
-      return;
-    }
-
-    this.aiClarificationQuestionIndex = this.aiCurrentQuestionIndex + 1;
-  }
-
-  @action
-  async submitAiClarification() {
-    if (this.aiClarificationSubmitDisabled) {
-      return;
-    }
-
-    await this.#submitAiMessage(this.#aiClarificationMessage());
-  }
-
-  @action
-  async applyAiProposal() {
-    if (!this.aiSessionId || !this.aiProposal) {
-      return;
-    }
-
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/ai/apply.json`,
-        {
-          type: "POST",
-          data: {
-            session_id: this.aiSessionId,
-          },
-        }
-      );
-      this.args.onApply?.(response.workflow);
-      this.returnToAiPrompt();
-      this.aiPrompt = "";
-      this.args.onClose?.();
-      this.toasts.success({
-        data: { message: i18n("discourse_workflows.ai.applied") },
-      });
-    } catch (error) {
-      this.aiError = this.#ajaxErrorMessage(error);
-    }
-  }
-
   #subscribeToAiAuthoring(generationId) {
     const channel = `/discourse-workflows/ai-authoring/${generationId}`;
     const handler = (message) => {
@@ -591,24 +602,13 @@ export default class BuildWithAiModal extends Component {
     this.messageBus.subscribe(channel, handler, -1);
   }
 
-  unsubscribeFromAiAuthoring() {
-    if (this.aiAuthoringChannel && this.aiAuthoringHandler) {
-      this.messageBus.unsubscribe(
-        this.aiAuthoringChannel,
-        this.aiAuthoringHandler
-      );
-    }
-    this.aiAuthoringChannel = null;
-    this.aiAuthoringHandler = null;
-  }
-
   <template>
     {{#if @open}}
       <div class="workflows-canvas__ai-panel-shell">
         {{#if this.aiShowingProgress}}
           <aside
-            class="workflows-canvas__ai-progress-panel"
             aria-label={{i18n "discourse_workflows.ai.progress_title"}}
+            class="workflows-canvas__ai-progress-panel"
           >
             <h4 class="workflows-canvas__ai-progress-title">
               {{i18n "discourse_workflows.ai.progress_title"}}
@@ -630,12 +630,12 @@ export default class BuildWithAiModal extends Component {
         {{/if}}
 
         <aside
+          aria-labelledby="workflow-ai-panel-title"
           class={{dConcatClass
             "workflows-canvas__ai-panel"
             (if this.aiShowingProposalReview "is-reviewing")
           }}
           role="dialog"
-          aria-labelledby="workflow-ai-panel-title"
         >
           <div class="workflows-canvas__ai-panel-header">
             <div class="workflows-canvas__ai-title-row">
@@ -656,10 +656,10 @@ export default class BuildWithAiModal extends Component {
               <p>{{i18n "discourse_workflows.ai.subtitle"}}</p>
             </div>
             <DButton
+              class="btn-transparent workflows-canvas__ai-close"
               @action={{@onClose}}
               @icon="xmark"
               @title="discourse_workflows.ai.close"
-              class="btn-transparent workflows-canvas__ai-close"
             />
           </div>
 
@@ -678,8 +678,8 @@ export default class BuildWithAiModal extends Component {
                   </span>
                   <progress
                     class="workflows-canvas__ai-question-progress-bar"
-                    value={{this.aiCurrentQuestionNumber}}
                     max={{this.aiQuestions.length}}
+                    value={{this.aiCurrentQuestionNumber}}
                   ></progress>
                 </div>
               </div>
@@ -695,7 +695,6 @@ export default class BuildWithAiModal extends Component {
                     <div class="workflows-canvas__ai-question-options">
                       {{#each (this.aiQuestionOptions question) as |option|}}
                         <button
-                          type="button"
                           aria-pressed={{this.aiClarificationOptionSelected
                             question
                             index
@@ -710,6 +709,7 @@ export default class BuildWithAiModal extends Component {
                               "is-selected"
                             )
                           }}
+                          type="button"
                           {{on
                             "click"
                             (fn
@@ -739,6 +739,11 @@ export default class BuildWithAiModal extends Component {
                           "discourse_workflows.ai.custom_answer"
                         }}</span>
                       <DTextarea
+                        class="workflows-canvas__ai-custom-answer-input"
+                        disabled={{this.aiGenerating}}
+                        placeholder={{i18n
+                          "discourse_workflows.ai.custom_answer_placeholder"
+                        }}
                         @value={{this.aiClarificationCustomValue
                           question
                           index
@@ -747,11 +752,6 @@ export default class BuildWithAiModal extends Component {
                           "input"
                           (fn this.updateAiClarificationCustom question index)
                         }}
-                        placeholder={{i18n
-                          "discourse_workflows.ai.custom_answer_placeholder"
-                        }}
-                        disabled={{this.aiGenerating}}
-                        class="workflows-canvas__ai-custom-answer-input"
                       />
                     </label>
                   {{/if}}
@@ -760,30 +760,30 @@ export default class BuildWithAiModal extends Component {
 
               <div class="workflows-canvas__ai-panel-actions">
                 <DButton
-                  @action={{this.returnToAiPrompt}}
-                  @translatedLabel={{i18n "discourse_workflows.ai.start_over"}}
-                  @disabled={{this.aiGenerating}}
                   class="btn-default workflows-canvas__ai-start-over-btn"
+                  @action={{this.returnToAiPrompt}}
+                  @disabled={{this.aiGenerating}}
+                  @translatedLabel={{i18n "discourse_workflows.ai.start_over"}}
                 />
 
                 {{#unless this.aiFirstClarificationQuestion}}
                   <DButton
+                    class="btn-default"
                     @action={{this.previousAiClarificationQuestion}}
+                    @disabled={{this.aiGenerating}}
                     @icon="arrow-left"
                     @translatedLabel={{i18n
                       "discourse_workflows.ai.previous_question"
                     }}
-                    @disabled={{this.aiGenerating}}
-                    class="btn-default"
                   />
                 {{/unless}}
 
                 <DButton
-                  @action={{this.continueAiClarificationQuestion}}
-                  @translatedLabel={{this.aiClarificationContinueLabel}}
-                  @isLoading={{this.aiGenerating}}
-                  @disabled={{this.aiClarificationCurrentQuestionDisabled}}
                   class="btn-primary"
+                  @action={{this.continueAiClarificationQuestion}}
+                  @disabled={{this.aiClarificationCurrentQuestionDisabled}}
+                  @isLoading={{this.aiGenerating}}
+                  @translatedLabel={{this.aiClarificationContinueLabel}}
                 />
               </div>
             </div>
@@ -791,12 +791,12 @@ export default class BuildWithAiModal extends Component {
             <div class="workflows-canvas__ai-review-step">
               <div class="workflows-canvas__ai-review-actions">
                 <DButton
+                  class="btn-transparent"
                   @action={{this.returnToAiPrompt}}
                   @icon="arrow-left"
                   @translatedLabel={{i18n
                     "discourse_workflows.ai.back_to_prompt"
                   }}
-                  class="btn-transparent"
                 />
               </div>
 
@@ -882,9 +882,9 @@ export default class BuildWithAiModal extends Component {
 
               <div class="workflows-canvas__ai-review-footer">
                 <DButton
+                  class="btn-primary"
                   @action={{this.applyAiProposal}}
                   @translatedLabel={{i18n "discourse_workflows.ai.apply"}}
-                  class="btn-primary"
                 />
               </div>
             </div>
@@ -894,31 +894,31 @@ export default class BuildWithAiModal extends Component {
                 {{i18n "discourse_workflows.ai.prompt_label"}}
               </label>
               <DTextarea
+                class="workflows-canvas__ai-prompt"
+                disabled={{this.aiGenerating}}
                 id="workflow-ai-prompt"
+                placeholder={{i18n "discourse_workflows.ai.prompt_placeholder"}}
                 @value={{this.aiPrompt}}
                 {{on "input" this.updateAiPrompt}}
-                placeholder={{i18n "discourse_workflows.ai.prompt_placeholder"}}
-                disabled={{this.aiGenerating}}
-                class="workflows-canvas__ai-prompt"
               />
             </div>
 
             <div class="workflows-canvas__ai-panel-actions">
               {{#if this.aiCanReturnToPrompt}}
                 <DButton
-                  @action={{this.returnToAiPrompt}}
-                  @translatedLabel={{i18n "discourse_workflows.ai.start_over"}}
-                  @disabled={{this.aiGenerating}}
                   class="btn-default workflows-canvas__ai-start-over-btn"
+                  @action={{this.returnToAiPrompt}}
+                  @disabled={{this.aiGenerating}}
+                  @translatedLabel={{i18n "discourse_workflows.ai.start_over"}}
                 />
               {{/if}}
 
               <DButton
-                @action={{this.submitAiPrompt}}
-                @translatedLabel={{i18n "discourse_workflows.ai.generate"}}
-                @isLoading={{this.aiGenerating}}
-                @disabled={{this.aiSubmitDisabled}}
                 class="btn-primary"
+                @action={{this.submitAiPrompt}}
+                @disabled={{this.aiSubmitDisabled}}
+                @isLoading={{this.aiGenerating}}
+                @translatedLabel={{i18n "discourse_workflows.ai.generate"}}
               />
             </div>
           {{/if}}

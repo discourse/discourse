@@ -649,14 +649,14 @@ export default class CodeLoginForm extends Component {
         password managers lose track of which account is authenticating once
         the email input unmounts. }}
         <input
-          type="email"
-          value={{this.email}}
-          name="email"
+          aria-hidden="true"
           autocomplete="username"
+          class="code-login-form__hidden-email sr-only"
+          name="email"
           readonly={{true}}
           tabindex="-1"
-          aria-hidden="true"
-          class="code-login-form__hidden-email sr-only"
+          type="email"
+          value={{this.email}}
         />
       {{/unless}}
 
@@ -668,40 +668,40 @@ export default class CodeLoginForm extends Component {
         {{/if}}
 
         <Form
+          class="code-login-form__email-step"
           @data={{hash email=this.email}}
           @onSubmit={{this.submitEmail}}
-          class="code-login-form__email-step"
           as |form|
         >
           <form.Field
+            @format="full"
             @name="email"
             @title={{i18n "code_login.email_label"}}
             @type="input-email"
-            @validation="required"
             @validate={{this.validateEmail}}
-            @format="full"
+            @validation="required"
             as |field|
           >
-            <field.Control autofocus="autofocus" autocomplete="username" />
+            <field.Control autocomplete="username" autofocus="autofocus" />
           </form.Field>
 
           {{#if this.codeError}}
-            <div class="code-login-form__error" aria-live="polite" role="alert">
+            <div aria-live="polite" class="code-login-form__error" role="alert">
               {{this.codeError}}
             </div>
           {{/if}}
 
           <div class="code-login-form__email-actions">
             <form.Submit
-              @label="code_login.continue_button"
               class="btn-primary code-login-form__continue"
+              @label="code_login.continue_button"
             />
 
             {{#if @onUsePassword}}
               <DButton
+                class="btn-flat code-login-form__password-toggle"
                 @action={{@onUsePassword}}
                 @label="code_login.use_password_instead"
-                class="btn-flat code-login-form__password-toggle"
               />
             {{/if}}
           </div>
@@ -719,41 +719,41 @@ export default class CodeLoginForm extends Component {
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
+              id="code-login-otp-{{generation}}"
               @onChange={{this.codeChanged}}
               @onFill={{this.verifyCode}}
-              id="code-login-otp-{{generation}}"
             />
           {{/each}}
 
-          <div class="code-login-form__error" aria-live="polite" role="alert">
+          <div aria-live="polite" class="code-login-form__error" role="alert">
             {{this.codeError}}
           </div>
 
           {{#if this.notice}}
-            <p class="code-login-form__notice" aria-live="polite">
+            <p aria-live="polite" class="code-login-form__notice">
               {{this.notice}}
             </p>
           {{/if}}
 
           <DButton
-            @action={{this.verifyCode}}
-            @label="code_login.verify_button"
-            @isLoading={{this.verifying}}
-            type="submit"
             class="btn-primary code-login-form__verify"
+            type="submit"
+            @action={{this.verifyCode}}
+            @isLoading={{this.verifying}}
+            @label="code_login.verify_button"
           />
 
           <div class="code-login-form__actions">
             <DButton
-              @action={{this.resendCode}}
-              @translatedLabel={{this.resendLabel}}
-              @disabled={{this.resendDisabled}}
               class="btn-flat code-login-form__resend"
+              @action={{this.resendCode}}
+              @disabled={{this.resendDisabled}}
+              @translatedLabel={{this.resendLabel}}
             />
             <DButton
+              class="btn-flat code-login-form__change-email"
               @action={{this.changeEmail}}
               @label="code_login.use_different_email"
-              class="btn-flat code-login-form__change-email"
             />
           </div>
         </div>
@@ -772,9 +772,9 @@ export default class CodeLoginForm extends Component {
 
           <div class="code-login-form__new-account">
             <button
-              type="button"
               class="code-login-form__avatar"
               title={{i18n "code_login.change_avatar"}}
+              type="button"
               {{on "click" this.changeAvatar}}
             >
               {{dBoundAvatarTemplate this.avatarTemplate "huge"}}
@@ -790,34 +790,34 @@ export default class CodeLoginForm extends Component {
                 </label>
                 <div class="code-login-form__username-input">
                   <input
-                    {{on "input" this.usernameChanged}}
-                    type="text"
-                    value={{this.username}}
-                    id="code-login-username"
-                    name="username"
+                    aria-describedby="code-login-username-error"
+                    aria-invalid={{if this.usernameError "true"}}
                     autocomplete="off"
-                    placeholder={{i18n "code_login.username_placeholder"}}
                     class="code-login-form__new-account-username
                       {{if this.regenerating '--swapping'}}"
-                    aria-invalid={{if this.usernameError "true"}}
-                    aria-describedby="code-login-username-error"
+                    id="code-login-username"
+                    name="username"
+                    placeholder={{i18n "code_login.username_placeholder"}}
+                    type="text"
+                    value={{this.username}}
+                    {{on "input" this.usernameChanged}}
                   />
                   {{#if this.siteSettings.enable_random_usernames}}
                     <DButton
-                      @action={{this.regenerateUsername}}
-                      @icon="dice"
-                      @title="code_login.regenerate_username"
-                      @ariaLabel="code_login.regenerate_username"
                       aria-busy={{if this.regenerating "true"}}
                       class="btn-default code-login-form__username-regen
                         {{if this.regenerating '--rolling'}}"
+                      @action={{this.regenerateUsername}}
+                      @ariaLabel="code_login.regenerate_username"
+                      @icon="dice"
+                      @title="code_login.regenerate_username"
                     />
                   {{/if}}
                 </div>
                 <div
-                  id="code-login-username-error"
-                  class="code-login-form__error"
                   aria-live="polite"
+                  class="code-login-form__error"
+                  id="code-login-username-error"
                   role="alert"
                 >
                   {{this.usernameError}}
@@ -831,11 +831,11 @@ export default class CodeLoginForm extends Component {
           </div>
 
           <DButton
+            class="btn-large btn-primary code-login-form__continue-to-site"
             @action={{this.continueAfterSignup}}
-            @label="code_login.account_ready_continue"
             @disabled={{this.continueDisabled}}
             @isLoading={{this.verifying}}
-            class="btn-large btn-primary code-login-form__continue-to-site"
+            @label="code_login.account_ready_continue"
           />
         </div>
       {{else if this.isUserFieldsStep}}
@@ -855,21 +855,21 @@ export default class CodeLoginForm extends Component {
                 {{i18n "user.name.title"}}
               </label>
               <input
-                {{on "input" this.nameChanged}}
+                aria-describedby="code-login-name-error"
+                aria-invalid={{if this.nameError "true"}}
+                autocomplete="name"
+                class="code-login-form__name"
+                id="code-login-name"
+                maxlength="255"
+                name="name"
                 type="text"
                 value={{this.name}}
-                id="code-login-name"
-                name="name"
-                autocomplete="name"
-                maxlength="255"
-                class="code-login-form__name"
-                aria-invalid={{if this.nameError "true"}}
-                aria-describedby="code-login-name-error"
+                {{on "input" this.nameChanged}}
               />
               <div
-                id="code-login-name-error"
-                class="code-login-form__error"
                 aria-live="polite"
+                class="code-login-form__error"
+                id="code-login-name-error"
                 role="alert"
               >
                 {{this.nameError}}
@@ -881,25 +881,25 @@ export default class CodeLoginForm extends Component {
             {{#each this.userFields as |f|}}
               <div class="input-group">
                 <UserField
-                  @field={{f.field}}
-                  @value={{f.value}}
-                  @validation={{f.validation}}
                   class={{valueEntered f.value}}
+                  @field={{f.field}}
+                  @validation={{f.validation}}
+                  @value={{f.value}}
                 />
               </div>
             {{/each}}
           </div>
 
-          <div class="code-login-form__error" aria-live="polite" role="alert">
+          <div aria-live="polite" class="code-login-form__error" role="alert">
             {{this.codeError}}
           </div>
 
           <DButton
-            @action={{this.submitUserFields}}
-            @label="code_login.continue_button"
-            @isLoading={{this.verifying}}
-            type="submit"
             class="btn-primary code-login-form__verify"
+            type="submit"
+            @action={{this.submitUserFields}}
+            @isLoading={{this.verifying}}
+            @label="code_login.continue_button"
           />
         </div>
       {{else}}
@@ -912,34 +912,34 @@ export default class CodeLoginForm extends Component {
 
           {{#if this.securityKeyRequired}}
             <SecurityKeyForm
-              @setShowSecurityKey={{this.setShowSecurityKey}}
-              @setSecondFactorMethod={{this.setSecondFactorMethod}}
-              @backupEnabled={{this.backupCodesEnabled}}
-              @totpEnabled={{this.totpEnabled}}
-              @otherMethodAllowed={{this.otherSecondFactorAllowed}}
               @action={{this.authenticateSecurityKey}}
+              @backupEnabled={{this.backupCodesEnabled}}
+              @otherMethodAllowed={{this.otherSecondFactorAllowed}}
+              @setSecondFactorMethod={{this.setSecondFactorMethod}}
+              @setShowSecurityKey={{this.setShowSecurityKey}}
+              @totpEnabled={{this.totpEnabled}}
             />
           {{else}}
             <SecondFactorForm
+              @backupEnabled={{this.backupCodesEnabled}}
+              @isLogin={{true}}
               @secondFactorMethod={{this.secondFactorMethod}}
               @secondFactorToken={{this.secondFactorToken}}
-              @backupEnabled={{this.backupCodesEnabled}}
               @totpEnabled={{this.totpEnabled}}
-              @isLogin={{true}}
             >
               <DSecondFactorInput
+                value={{this.secondFactorToken}}
                 @onChange={{this.secondFactorTokenChanged}}
                 @secondFactorMethod={{this.secondFactorMethod}}
-                value={{this.secondFactorToken}}
               />
             </SecondFactorForm>
 
             <DButton
-              @action={{this.submitSecondFactor}}
-              @label="email_login.confirm_button"
-              @isLoading={{this.verifying}}
-              type="submit"
               class="btn-primary code-login-form__verify"
+              type="submit"
+              @action={{this.submitSecondFactor}}
+              @isLoading={{this.verifying}}
+              @label="email_login.confirm_button"
             />
           {{/if}}
         </div>

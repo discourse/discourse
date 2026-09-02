@@ -75,15 +75,15 @@ export default class WordCard extends Component {
 
   <template>
     <div
-      {{on "click" this.handleClick}}
-      {{on "mouseleave" this.handleLeave}}
       class={{dConcatClass
         "rewind-card__wrapper"
         (if this.longWord "--long-word")
       }}
-      style={{this.cardStyle}}
-      {{didInsert this.registerCardContainer}}
       role="button"
+      style={{this.cardStyle}}
+      {{on "click" this.handleClick}}
+      {{on "mouseleave" this.handleLeave}}
+      {{didInsert this.registerCardContainer}}
     >
       <div class="rewind-card__inner">
         <div class="rewind-card --front">

@@ -473,32 +473,12 @@ export default class VoiceWebrtcService extends Service {
     return this.#localAudio.autoGainControl;
   }
 
-  setNoiseSuppressionMode(mode) {
-    return this.#localAudio.setNoiseSuppressionMode(mode);
-  }
-
-  setEchoCancellation(enabled) {
-    return this.#localAudio.setEchoCancellation(enabled);
-  }
-
-  setAutoGainControl(enabled) {
-    return this.#localAudio.setAutoGainControl(enabled);
-  }
-
   get gateThreshold() {
     return this.#localAudio.gateThreshold;
   }
 
   get inputDeviceId() {
     return this.#localAudio.inputDeviceId;
-  }
-
-  setInputDevice(deviceId) {
-    return this.#localAudio.setInputDevice(deviceId);
-  }
-
-  setGateThreshold(value) {
-    return this.#localAudio.setGateThreshold(value);
   }
 
   // --- Subtitles & transcript delegates ---
@@ -523,10 +503,6 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.captions;
   }
 
-  toggleSubtitles() {
-    this.#transcription.toggle();
-  }
-
   get transcriptRecording() {
     return this.#transcription.recording;
   }
@@ -547,6 +523,94 @@ export default class VoiceWebrtcService extends Service {
     return this.#transcription.startedAt;
   }
 
+  get remoteStreams() {
+    this.remoteStreamsRevision;
+    return this.#remoteStreamRegistry.allStreams();
+  }
+
+  get remoteScreenAudioStreams() {
+    this.remoteStreamsRevision;
+    return this.#remoteStreamRegistry.allScreenAudioStreams();
+  }
+
+  get hasActiveRoom() {
+    return !!this.activeRoomId;
+  }
+
+  get activeRoom() {
+    return this.activeRoomId
+      ? this.voiceRooms?.roomById(this.activeRoomId)
+      : null;
+  }
+
+  // --- Video & screen sharing ---
+
+  get screenShareSupported() {
+    return !!navigator.mediaDevices?.getDisplayMedia;
+  }
+
+  get localVideoStream() {
+    return this.#localVideo.stream;
+  }
+
+  get localVideoKind() {
+    return this.#localVideo.kind;
+  }
+
+  get videoBlurEnabled() {
+    return this.#localVideo.blurEnabled;
+  }
+
+  get videoBlurAmount() {
+    return this.#localVideo.blurAmount;
+  }
+
+  get videoInputDeviceId() {
+    return this.#localVideo.inputDeviceId;
+  }
+
+  // Whether the site allows background blur; distinct from browser support
+  // so the UI can tell "turned off by admin" apart from "can't run here".
+  get videoBlurAvailable() {
+    return !!this.siteSettings.voice_video_background_blur_enabled;
+  }
+
+  get videoBlurSupported() {
+    return this.#localVideo.blurSupported;
+  }
+
+  get localVideoTrack() {
+    return this.#localVideo.track;
+  }
+
+  get localScreenAudioTrack() {
+    return this.#localVideo.screenAudioTrack;
+  }
+
+  setNoiseSuppressionMode(mode) {
+    return this.#localAudio.setNoiseSuppressionMode(mode);
+  }
+
+  setEchoCancellation(enabled) {
+    return this.#localAudio.setEchoCancellation(enabled);
+  }
+
+  setAutoGainControl(enabled) {
+    return this.#localAudio.setAutoGainControl(enabled);
+  }
+
+  setInputDevice(deviceId) {
+    return this.#localAudio.setInputDevice(deviceId);
+  }
+
+  setGateThreshold(value) {
+    return this.#localAudio.setGateThreshold(value);
+  }
+
+  toggleSubtitles() {
+    this.#transcription.toggle();
+  }
+
   isTranscribingRoom(roomId) {
     return this.#transcription.isTranscribingRoom(roomId);
   }
@@ -561,16 +625,6 @@ export default class VoiceWebrtcService extends Service {
 
   captionsFor(roomId) {
     return this.#transcription.captionsFor(roomId);
-  }
-
-  get remoteStreams() {
-    this.remoteStreamsRevision;
-    return this.#remoteStreamRegistry.allStreams();
-  }
-
-  get remoteScreenAudioStreams() {
-    this.remoteStreamsRevision;
-    return this.#remoteStreamRegistry.allScreenAudioStreams();
   }
 
   remoteStreamsFor(roomId) {
@@ -600,53 +654,12 @@ export default class VoiceWebrtcService extends Service {
     return "idle";
   }
 
-  get hasActiveRoom() {
-    return !!this.activeRoomId;
-  }
-
-  get activeRoom() {
-    return this.activeRoomId
-      ? this.voiceRooms?.roomById(this.activeRoomId)
-      : null;
-  }
-
   isActiveRoom(roomId) {
     return Number(this.activeRoomId) === Number(roomId);
   }
 
-  #setActiveRoomId(roomId) {
-    this.activeRoomId = roomId ?? null;
-  }
-
-  #clearActiveRoomId(roomId) {
-    if (Number(this.activeRoomId) !== Number(roomId)) {
-      return;
-    }
-
-    this.activeRoomId = this.#activeRoomIds.values().next().value ?? null;
-  }
-
-  #canSpeakInRoom(room) {
-    return participantCanSpeak(room, this.currentUser?.id);
-  }
-
-  #isMeshRoom(roomId) {
-    return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
-  }
-
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
-  }
-
-  async #acquireMicrophoneWithFeedback() {
-    const acquired = await this.#localAudio.acquireMicrophone();
-    if (!acquired) {
-      reportMicAcquisitionFailure(this.#localAudio.lastAcquisitionError, {
-        modal: this.modal,
-        toasts: this.toasts,
-      });
-    }
-    return acquired;
   }
 
   async join(room) {
@@ -1017,13 +1030,6 @@ export default class VoiceWebrtcService extends Service {
     return this.#participantAudio.isMuted(roomId, userId);
   }
 
-  #setMicEnabled(enabled) {
-    this.audioEnabled = enabled;
-    for (const track of this.localStream?.getAudioTracks() || []) {
-      track.enabled = enabled;
-    }
-  }
-
   toggleMute() {
     if (this.pttEnabled) {
       return;
@@ -1095,10 +1101,6 @@ export default class VoiceWebrtcService extends Service {
     );
   }
 
-  #roomQualityCap(roomId) {
-    return this.voiceRooms?.roomById(roomId)?.max_quality_profile;
-  }
-
   allowedVoiceQualityTiers(roomId = this.activeRoomId) {
     return allowedQualityTiers(
       this.#roomQualityCap(roomId),
@@ -1148,27 +1150,12 @@ export default class VoiceWebrtcService extends Service {
     this.#localVideo.refreshQuality({ contentHintChanged: true });
   }
 
-  async #applyVoiceQualityToPeers() {
-    for (const [roomId] of this.#peerManager.allPeerConnections()) {
-      await applyVoiceQuality(
-        this.#peerManager.micSendersFor(roomId),
-        this.effectiveVoiceQuality(roomId)
-      );
-    }
-  }
-
   // --- Device selection & input sensitivity ---
 
   setOutputDevice(deviceId) {
     this.outputDeviceId = deviceId;
     setPreferredOutputDeviceId(deviceId);
     this.#participantAudio.setOutputDevice(deviceId);
-  }
-
-  // --- Video & screen sharing ---
-
-  get screenShareSupported() {
-    return !!navigator.mediaDevices?.getDisplayMedia;
   }
 
   videoAllowedIn(room) {
@@ -1204,26 +1191,6 @@ export default class VoiceWebrtcService extends Service {
     );
   }
 
-  get localVideoStream() {
-    return this.#localVideo.stream;
-  }
-
-  get localVideoKind() {
-    return this.#localVideo.kind;
-  }
-
-  get videoBlurEnabled() {
-    return this.#localVideo.blurEnabled;
-  }
-
-  get videoBlurAmount() {
-    return this.#localVideo.blurAmount;
-  }
-
-  get videoInputDeviceId() {
-    return this.#localVideo.inputDeviceId;
-  }
-
   toggleCamera() {
     return this.#localVideo.toggleCamera();
   }
@@ -1242,16 +1209,6 @@ export default class VoiceWebrtcService extends Service {
 
   setVideoInputDevice(deviceId) {
     return this.#localVideo.setInputDevice(deviceId);
-  }
-
-  // Whether the site allows background blur; distinct from browser support
-  // so the UI can tell "turned off by admin" apart from "can't run here".
-  get videoBlurAvailable() {
-    return !!this.siteSettings.voice_video_background_blur_enabled;
-  }
-
-  get videoBlurSupported() {
-    return this.#localVideo.blurSupported;
   }
 
   setWatching(roomId, watching, options = {}) {
@@ -1329,61 +1286,6 @@ export default class VoiceWebrtcService extends Service {
     }
   }
 
-  #firstActiveRoomId() {
-    for (const roomId of this.#activeRoomIds) {
-      return roomId;
-    }
-    return null;
-  }
-
-  get localVideoTrack() {
-    return this.#localVideo.track;
-  }
-
-  get localScreenAudioTrack() {
-    return this.#localVideo.screenAudioTrack;
-  }
-
-  // Room state updates in voiceRooms; this only surfaces the change to
-  // people in the call. The moderator who pressed the button gets no toast —
-  // their button state already changed under their pointer.
-  #handleRecordingChanged(payload) {
-    const startedBySelf =
-      payload.recording?.started_by?.id === this.currentUser?.id;
-
-    if (payload.recording) {
-      if (!startedBySelf) {
-        this.toasts.default({
-          duration: 8000,
-          data: {
-            icon: "record-vinyl",
-            message: i18n("voice.room.recording_started_toast"),
-          },
-        });
-      }
-    } else {
-      this.toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.room.recording_stopped_toast") },
-      });
-    }
-  }
-
-  #handleRoomUpdated(roomId) {
-    if (!this.localVideoKind) {
-      return;
-    }
-
-    const room = this.voiceRooms?.roomById(roomId);
-    if (room && !this.videoAllowedIn(room)) {
-      this.#localVideo.stop().catch(() => {});
-      this.toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.video.room_disabled") },
-      });
-    }
-  }
-
   enablePtt() {
     this.#pttManager.enable();
     this.pttEnabled = true;
@@ -1443,6 +1345,104 @@ export default class VoiceWebrtcService extends Service {
       );
     } catch {
       // ignore storage errors
+    }
+  }
+
+  #setActiveRoomId(roomId) {
+    this.activeRoomId = roomId ?? null;
+  }
+
+  #clearActiveRoomId(roomId) {
+    if (Number(this.activeRoomId) !== Number(roomId)) {
+      return;
+    }
+
+    this.activeRoomId = this.#activeRoomIds.values().next().value ?? null;
+  }
+
+  #canSpeakInRoom(room) {
+    return participantCanSpeak(room, this.currentUser?.id);
+  }
+
+  #isMeshRoom(roomId) {
+    return (this.#roomTransports.get(roomId) ?? "mesh") === "mesh";
+  }
+
+  async #acquireMicrophoneWithFeedback() {
+    const acquired = await this.#localAudio.acquireMicrophone();
+    if (!acquired) {
+      reportMicAcquisitionFailure(this.#localAudio.lastAcquisitionError, {
+        modal: this.modal,
+        toasts: this.toasts,
+      });
+    }
+    return acquired;
+  }
+
+  #setMicEnabled(enabled) {
+    this.audioEnabled = enabled;
+    for (const track of this.localStream?.getAudioTracks() || []) {
+      track.enabled = enabled;
+    }
+  }
+
+  #roomQualityCap(roomId) {
+    return this.voiceRooms?.roomById(roomId)?.max_quality_profile;
+  }
+
+  async #applyVoiceQualityToPeers() {
+    for (const [roomId] of this.#peerManager.allPeerConnections()) {
+      await applyVoiceQuality(
+        this.#peerManager.micSendersFor(roomId),
+        this.effectiveVoiceQuality(roomId)
+      );
+    }
+  }
+
+  #firstActiveRoomId() {
+    for (const roomId of this.#activeRoomIds) {
+      return roomId;
+    }
+    return null;
+  }
+
+  // Room state updates in voiceRooms; this only surfaces the change to
+  // people in the call. The moderator who pressed the button gets no toast —
+  // their button state already changed under their pointer.
+  #handleRecordingChanged(payload) {
+    const startedBySelf =
+      payload.recording?.started_by?.id === this.currentUser?.id;
+
+    if (payload.recording) {
+      if (!startedBySelf) {
+        this.toasts.default({
+          duration: 8000,
+          data: {
+            icon: "record-vinyl",
+            message: i18n("voice.room.recording_started_toast"),
+          },
+        });
+      }
+    } else {
+      this.toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.room.recording_stopped_toast") },
+      });
+    }
+  }
+
+  #handleRoomUpdated(roomId) {
+    if (!this.localVideoKind) {
+      return;
+    }
+
+    const room = this.voiceRooms?.roomById(roomId);
+    if (room && !this.videoAllowedIn(room)) {
+      this.#localVideo.stop().catch(() => {});
+      this.toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.video.room_disabled") },
+      });
     }
   }
 

@@ -42,8 +42,8 @@ module("Integration | Component | EmojiUploader", function (hooks) {
     await render(
       <template>
         <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
           @done={{this.doneUpload}}
+          @emojiGroups={{this.emojiGroups}}
         />
       </template>
     );
@@ -67,8 +67,8 @@ module("Integration | Component | EmojiUploader", function (hooks) {
     await render(
       <template>
         <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
           @done={{this.doneUpload}}
+          @emojiGroups={{this.emojiGroups}}
         />
       </template>
     );
@@ -99,8 +99,8 @@ module("Integration | Component | EmojiUploader", function (hooks) {
     await render(
       <template>
         <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
           @done={{this.doneUpload}}
+          @emojiGroups={{this.emojiGroups}}
         />
       </template>
     );
@@ -135,9 +135,9 @@ module("Integration | Component | EmojiUploader", function (hooks) {
     await render(
       <template>
         <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
           @createdBy={{this.createdBy}}
           @done={{this.doneUpload}}
+          @emojiGroups={{this.emojiGroups}}
         />
       </template>
     );

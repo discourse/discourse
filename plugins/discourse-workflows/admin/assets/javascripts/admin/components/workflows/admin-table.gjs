@@ -113,13 +113,13 @@ export default class AdminTable extends Component {
                       class="d-table__header-cell workflows-admin-table__checkbox-cell"
                     >
                       <input
-                        type="checkbox"
                         checked={{this.allSelected}}
+                        class="workflows-admin-table__checkbox"
+                        type="checkbox"
                         {{indeterminate
                           (eq this.headerCheckboxState "indeterminate")
                         }}
                         {{on "change" this.toggleAllSelection}}
-                        class="workflows-admin-table__checkbox"
                       />
                     </th>
                   {{/if}}
@@ -137,10 +137,10 @@ export default class AdminTable extends Component {
                         class="d-table__cell workflows-admin-table__checkbox-cell"
                       >
                         <input
-                          type="checkbox"
                           checked={{this.isRowSelected item}}
-                          {{on "click" (fn this.toggleRowSelection item)}}
                           class="workflows-admin-table__checkbox"
+                          type="checkbox"
+                          {{on "click" (fn this.toggleRowSelection item)}}
                         />
                       </td>
                     {{/if}}

@@ -7,36 +7,36 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <DPageSubheader @titleLabel={{i18n "admin.embedding.posts_and_topics"}} />
 
-  <Form @onSubmit={{@controller.save}} @data={{@controller.formData}} as |form|>
+  <Form @data={{@controller.formData}} @onSubmit={{@controller.save}} as |form|>
     <form.Field
       @name="embed_by_username"
       @title={{i18n "admin.embedding.embed_by_username"}}
-      @validation="required"
       @type="custom"
+      @validation="required"
       as |field|
     >
       <field.Control>
         <UserChooser
-          @value={{field.value}}
+          class="admin-embedding-posts-and-topics-form__embed_by_username"
           @onChange={{field.set}}
           @options={{hash maximum=1 excludeCurrentUser=false}}
-          class="admin-embedding-posts-and-topics-form__embed_by_username"
+          @value={{field.value}}
         />
       </field.Control>
     </form.Field>
     <form.Field
+      @format="large"
       @name="embed_post_limit"
       @title={{i18n "admin.embedding.embed_post_limit"}}
-      @format="large"
       @type="input"
       as |field|
     >
       <field.Control />
     </form.Field>
     <form.Field
+      @format="large"
       @name="embed_title_scrubber"
       @title={{i18n "admin.embedding.embed_title_scrubber"}}
-      @format="large"
       @type="input"
       as |field|
     >

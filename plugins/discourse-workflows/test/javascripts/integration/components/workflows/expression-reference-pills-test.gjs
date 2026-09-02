@@ -40,7 +40,7 @@ module(
 
       await render(
         <template>
-          <VariableInput @value={{value}} @extensions={{pillExtensions}} />
+          <VariableInput @extensions={{pillExtensions}} @value={{value}} />
         </template>
       );
       await waitFor(".cm-wf-reference-pill");
@@ -82,7 +82,7 @@ module(
 
       await render(
         <template>
-          <VariableInput @value={{value}} @extensions={{pillExtensions}} />
+          <VariableInput @extensions={{pillExtensions}} @value={{value}} />
         </template>
       );
       await waitFor(".cm-editor");
@@ -106,9 +106,9 @@ module(
       await render(
         <template>
           <VariableInput
-            @value={{value}}
             @extensions={{pillExtensions}}
             @onSetup={{onSetup}}
+            @value={{value}}
           />
         </template>
       );
@@ -134,9 +134,9 @@ module(
       await render(
         <template>
           <VariableInput
-            @value={{value}}
             @extensions={{focusExtensions}}
             @onSetup={{onSetup}}
+            @value={{value}}
           />
         </template>
       );

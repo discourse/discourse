@@ -153,6 +153,11 @@ export default class MultiComboBox extends Component {
     );
   }
 
+  get value() {
+    const val = this.args.field.value;
+    return Array.isArray(val) ? val : [];
+  }
+
   formatOptions(options) {
     return options.map((option) => ({
       id: optionValue(option, this.valueProperty),
@@ -192,11 +197,6 @@ export default class MultiComboBox extends Component {
     return this.formatOptions(options);
   }
 
-  get value() {
-    const val = this.args.field.value;
-    return Array.isArray(val) ? val : [];
-  }
-
   @action
   handleChange(value, selectedOptions) {
     this.selectedOptions = makeArray(selectedOptions);
@@ -205,21 +205,21 @@ export default class MultiComboBox extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <DynamicOptionsMultiSelect
         @content={{this.contentOptions}}
         @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
-        @value={{this.value}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.handleChange}}
         @options={{hash filterable=this.filterable none=this.none}}
+        @value={{this.value}}
+        @valueProperty="id"
       />
     </ExpressionWrapper>
   </template>

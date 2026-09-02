@@ -65,9 +65,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{state.items}}
             @key="id"
-            @estimateSize={{estimate}}
             @onReachEnd={{onReachEnd}}
             @onReachStart={{onReachStart}}
             as |item|
@@ -115,9 +115,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{state.items}}
             @key="id"
-            @estimateSize={{estimate}}
             @onReachEnd={{onReachEnd}}
             as |item|
           >

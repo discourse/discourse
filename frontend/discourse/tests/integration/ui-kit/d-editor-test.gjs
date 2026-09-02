@@ -108,7 +108,7 @@ module("Integration | ui-kit | DEditor", function (hooks) {
 
       await render(
         <template>
-          <DEditor @value={{this.value}} @composerEvents={{true}} />
+          <DEditor @composerEvents={{true}} @value={{this.value}} />
         </template>
       );
 
@@ -504,7 +504,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -527,7 +527,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -1172,7 +1172,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -1189,7 +1189,7 @@ third line`
 
     await render(
       <template>
-        <DEditor @value={{this.value}} @composerEvents={{true}} />
+        <DEditor @composerEvents={{true}} @value={{this.value}} />
       </template>
     );
 
@@ -1621,7 +1621,7 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
 
     await render(
       <template>
-        <DEditor @value={{context.value}} @onSetup={{context.onSetup}} />
+        <DEditor @onSetup={{context.onSetup}} @value={{context.value}} />
       </template>
     );
     await click(".composer-toggle-switch");

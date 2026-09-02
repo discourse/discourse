@@ -7,7 +7,7 @@ export default class FKErrors extends Component {
   }
 
   <template>
-    <p class="form-kit__errors" id={{@id}} aria-live="assertive" ...attributes>
+    <p aria-live="assertive" class="form-kit__errors" id={{@id}} ...attributes>
       <span>
         {{dIcon "triangle-exclamation"}}
         {{this.concatErrors @error.messages}}

@@ -3,13 +3,13 @@ import { i18n } from "discourse-i18n";
 
 const CategoryNotificationsTracking = <template>
   <NotificationsTracking
-    @onChange={{@onChange}}
+    class="category-notifications-tracking"
     @levelId={{@levelId}}
+    @onChange={{@onChange}}
+    @prefix="category.notifications"
     @showCaret={{@showCaret}}
     @showFullTitle={{@showFullTitle}}
-    @prefix="category.notifications"
     @title={{i18n "category.notifications.title"}}
-    class="category-notifications-tracking"
   />
 </template>;
 

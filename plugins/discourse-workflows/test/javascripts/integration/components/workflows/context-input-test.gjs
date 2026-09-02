@@ -84,9 +84,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -124,9 +124,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{actionNode}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -163,9 +163,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -208,9 +208,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{actionNode}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -275,9 +275,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -367,9 +367,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -491,9 +491,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -544,9 +544,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -577,9 +577,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -661,9 +661,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -755,9 +755,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -829,9 +829,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{logNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -867,9 +867,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -954,9 +954,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -1001,9 +1001,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />

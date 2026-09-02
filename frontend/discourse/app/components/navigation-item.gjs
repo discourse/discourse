@@ -87,7 +87,6 @@ export default class NavigationItem extends Component {
 
   <template>
     <li
-      title={{this.content.title}}
       class={{dConcatClass
         (if this.active "active")
         (if this.content.hasIcon "has-icon")
@@ -95,12 +94,13 @@ export default class NavigationItem extends Component {
         (if this.isHidden "hidden")
         this.content.name
       }}
+      title={{this.content.title}}
       ...attributes
     >
       <a
-        href={{this.hrefLink}}
-        class={{this.activeClass}}
         aria-current={{if this.activeClass "page"}}
+        class={{this.activeClass}}
+        href={{this.hrefLink}}
       >
         {{#if this.hasIcon}}
           <span class={{this.content.name}}></span>

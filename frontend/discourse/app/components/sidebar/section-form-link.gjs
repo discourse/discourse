@@ -81,25 +81,25 @@ export default class SectionFormLink extends Component {
   <template>
     <div class="sidebar-section-form-link-wrapper" role="rowgroup">
       <div
-        {{on "dragover" this.dragOver}}
-        {{on "dragenter" this.dragEnter}}
-        {{on "dragleave" this.dragLeave}}
-        {{on "dragend" this.dragEnd}}
-        {{on "drop" this.dropItem}}
-        role="row"
-        data-row-id={{@link.objectId}}
         class={{dConcatClass
           "sidebar-section-form-link"
           "row-wrapper"
           this.dragCssClass
         }}
+        data-row-id={{@link.objectId}}
+        role="row"
+        {{on "dragover" this.dragOver}}
+        {{on "dragenter" this.dragEnter}}
+        {{on "dragleave" this.dragLeave}}
+        {{on "dragend" this.dragEnd}}
+        {{on "drop" this.dropItem}}
       >
         {{#if this.site.desktopView}}
           <div
-            {{on "dragstart" this.dragHasStarted}}
             class="draggable"
             data-link-name={{@link.name}}
             draggable="true"
+            {{on "dragstart" this.dragHasStarted}}
           >
             {{dIcon "grip-lines"}}
           </div>
@@ -107,15 +107,15 @@ export default class SectionFormLink extends Component {
 
         <div class="input-group" role="cell">
           <DIconGridPicker
-            @value={{@link.icon}}
+            aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+            @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
             @onChange={{fn (mut @link.icon)}}
             @showCaret={{true}}
-            @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
-            aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+            @value={{@link.icon}}
           />
 
           {{#if @link.invalidIconMessage}}
-            <div class="icon warning" role="alert" aria-live="assertive">
+            <div aria-live="assertive" class="icon warning" role="alert">
               {{@link.invalidIconMessage}}
             </div>
           {{/if}}
@@ -124,18 +124,18 @@ export default class SectionFormLink extends Component {
         <div class="input-group" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
-            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
-            {{on "input" (withEventValue (fn (mut @link.name)))}}
-            @type="text"
-            @value={{@link.name}}
-            name="link-name"
             aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
             class={{@link.nameCssClass}}
             data-1p-ignore
+            name="link-name"
+            @type="text"
+            @value={{@link.name}}
+            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
+            {{on "input" (withEventValue (fn (mut @link.name)))}}
           />
 
           {{#if @link.invalidNameMessage}}
-            <div role="alert" aria-live="assertive" class="name warning">
+            <div aria-live="assertive" class="name warning" role="alert">
               {{@link.invalidNameMessage}}
             </div>
           {{/if}}
@@ -144,16 +144,16 @@ export default class SectionFormLink extends Component {
         <div class="input-group" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
-            {{on "input" (withEventValue (fn (mut @link.value)))}}
-            @type="text"
-            @value={{@link.value}}
-            name="link-url"
             aria-label={{i18n "sidebar.sections.custom.links.value.label"}}
             class={{@link.valueCssClass}}
+            name="link-url"
+            @type="text"
+            @value={{@link.value}}
+            {{on "input" (withEventValue (fn (mut @link.value)))}}
           />
 
           {{#if @link.invalidValueMessage}}
-            <div role="alert" aria-live="assertive" class="value warning">
+            <div aria-live="assertive" class="value warning" role="alert">
               {{@link.invalidValueMessage}}
             </div>
           {{else if @duplicateValue}}
@@ -166,11 +166,11 @@ export default class SectionFormLink extends Component {
         </div>
 
         <DButton
-          @icon="trash-can"
-          @action={{fn @deleteLink @link}}
-          @title="sidebar.sections.custom.links.delete"
-          role="cell"
           class="btn-flat delete-link"
+          role="cell"
+          @action={{fn @deleteLink @link}}
+          @icon="trash-can"
+          @title="sidebar.sections.custom.links.delete"
         />
       </div>
     </div>

@@ -27,22 +27,6 @@ export default class AiArtifactComponent extends Component {
     window.removeEventListener("popstate", this.popStateHandler);
   }
 
-  @action
-  handleKeydown(event) {
-    if (event.key === "Escape" || event.key === "Esc") {
-      history.back();
-    }
-  }
-
-  @action
-  handlePopState(event) {
-    const state = event.state;
-    this.expanded = state?.artifactId === this.args.artifactId;
-    if (!this.expanded) {
-      window.removeEventListener("keydown", this.keydownHandler);
-    }
-  }
-
   get requireClickToRun() {
     if (this.showingArtifact) {
       return false;
@@ -73,39 +57,10 @@ export default class AiArtifactComponent extends Component {
     return url;
   }
 
-  @action
-  showArtifact() {
-    this.showingArtifact = true;
-  }
-
-  @action
-  toggleView() {
-    if (!this.expanded) {
-      window.history.pushState(
-        { artifactId: this.args.artifactId },
-        "",
-        window.location.href + "#artifact-fullscreen"
-      );
-      window.addEventListener("keydown", this.keydownHandler);
-    } else {
-      history.back();
-    }
-    this.expanded = !this.expanded;
-  }
-
   get wrapperClasses() {
     return `ai-artifact__wrapper ${
       this.expanded ? "ai-artifact__expanded" : ""
     } ${this.seamless ? "ai-artifact__seamless" : ""}`;
-  }
-
-  @action
-  setDataAttributes(element) {
-    if (this.args.dataAttributes) {
-      Object.entries(this.args.dataAttributes).forEach(([key, value]) => {
-        element.setAttribute(key, value);
-      });
-    }
   }
 
   get heightStyle() {
@@ -135,6 +90,51 @@ export default class AiArtifactComponent extends Component {
     return !this.seamless && !this.requireClickToRun;
   }
 
+  @action
+  handleKeydown(event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+      history.back();
+    }
+  }
+
+  @action
+  handlePopState(event) {
+    const state = event.state;
+    this.expanded = state?.artifactId === this.args.artifactId;
+    if (!this.expanded) {
+      window.removeEventListener("keydown", this.keydownHandler);
+    }
+  }
+
+  @action
+  showArtifact() {
+    this.showingArtifact = true;
+  }
+
+  @action
+  toggleView() {
+    if (!this.expanded) {
+      window.history.pushState(
+        { artifactId: this.args.artifactId },
+        "",
+        window.location.href + "#artifact-fullscreen"
+      );
+      window.addEventListener("keydown", this.keydownHandler);
+    } else {
+      history.back();
+    }
+    this.expanded = !this.expanded;
+  }
+
+  @action
+  setDataAttributes(element) {
+    if (this.args.dataAttributes) {
+      Object.entries(this.args.dataAttributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+      });
+    }
+  }
+
   <template>
     {{#if this.expanded}}
       {{htmlClass "ai-artifact-expanded"}}
@@ -144,9 +144,9 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__panel">
           <DButton
             class="btn-flat btn-icon-text"
+            @action={{this.toggleView}}
             @icon="discourse-compress"
             @label="discourse_ai.ai_artifact.collapse_view_label"
-            @action={{this.toggleView}}
           />
         </div>
       </div>
@@ -154,17 +154,17 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__click-to-run">
           <DButton
             class="btn btn-primary"
+            @action={{this.showArtifact}}
             @icon="play"
             @label="discourse_ai.ai_artifact.click_to_run_label"
-            @action={{this.showArtifact}}
           />
         </div>
       {{else}}
         <iframe
-          title="AI Artifact"
-          src={{this.artifactUrl}}
-          width="100%"
           frameborder="0"
+          src={{this.artifactUrl}}
+          title="AI Artifact"
+          width="100%"
           {{didInsert this.setDataAttributes}}
         ></iframe>
       {{/if}}
@@ -172,9 +172,9 @@ export default class AiArtifactComponent extends Component {
         <div class="ai-artifact__footer">
           <DButton
             class="btn-transparent btn-icon-text ai-artifact__expand-button"
+            @action={{this.toggleView}}
             @icon="discourse-expand"
             @label="discourse_ai.ai_artifact.expand_view_label"
-            @action={{this.toggleView}}
           />
         </div>
       {{/if}}

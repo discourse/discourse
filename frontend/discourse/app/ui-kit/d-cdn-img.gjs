@@ -19,11 +19,11 @@ export default class DCdnImg extends Component {
     {{#if @src}}
       <img
         ...attributes
-        src={{this.cdnSrc}}
-        width={{@width}}
-        height={{@height}}
-        style={{this.style}}
         alt=""
+        height={{@height}}
+        src={{this.cdnSrc}}
+        style={{this.style}}
+        width={{@width}}
       />
     {{/if}}
   </template>

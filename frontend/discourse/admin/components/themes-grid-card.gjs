@@ -206,10 +206,10 @@ export default class ThemeCard extends Component {
               <div class="theme-card__badges">
                 {{#if @theme.isPendingUpdates}}
                   <span
+                    class="theme-card__badge"
                     title={{i18n
                       "admin.customize.theme.updates_available_tooltip"
                     }}
-                    class="theme-card__badge"
                   >{{dIcon "arrows-rotate"}}
                     {{i18n "admin.customize.theme.update_available"}}</span>
                 {{/if}}
@@ -224,8 +224,8 @@ export default class ThemeCard extends Component {
 
                 {{#if @theme.user_selectable}}
                   <span
-                    title={{i18n "admin.customize.theme.user_selectable"}}
                     class="theme-card__badge --selectable"
+                    title={{i18n "admin.customize.theme.user_selectable"}}
                   >{{dIcon "user-check"}}
                     {{i18n
                       "admin.customize.theme.user_selectable_badge_label"
@@ -237,31 +237,32 @@ export default class ThemeCard extends Component {
                 <div class="theme-card__controls">
                   {{#if this.showFullControls}}
                     <DButton
-                      @translatedLabel={{i18n "admin.customize.theme.edit"}}
-                      @route="adminCustomizeThemes.show"
-                      @routeModels={{this.themeRouteModels}}
                       class="btn-default theme-card__button edit"
                       @preventFocus={{true}}
+                      @route="adminCustomizeThemes.show"
+                      @routeModels={{this.themeRouteModels}}
+                      @translatedLabel={{i18n "admin.customize.theme.edit"}}
                     />
                   {{/if}}
 
                   <div class="theme-card__footer-actions">
                     <DMenu
-                      @identifier="theme-card__footer-menu"
-                      @triggerClass="theme-card__footer-menu btn-flat"
-                      @onRegisterApi={{this.onRegisterApi}}
-                      @modalForMobile={{true}}
                       @icon="ellipsis"
+                      @identifier="theme-card__footer-menu"
+                      @modalForMobile={{true}}
+                      @onRegisterApi={{this.onRegisterApi}}
+                      @triggerClass="theme-card__footer-menu btn-flat"
                     >
                       <:content>
                         <DDropdownMenu as |dropdown|>
                           {{! TODO: Jordan solutions for broken, disabled states }}
                           <dropdown.item>
                             <DButton
-                              @action={{this.setDefault}}
-                              @preventFocus={{true}}
-                              @icon={{if @theme.default "star" "far-star"}}
                               class="theme-card__button set-default"
+                              @action={{this.setDefault}}
+                              @disabled={{@theme.default}}
+                              @icon={{if @theme.default "star" "far-star"}}
+                              @preventFocus={{true}}
                               @translatedLabel={{i18n
                                 (if
                                   @theme.default
@@ -269,16 +270,15 @@ export default class ThemeCard extends Component {
                                   "admin.customize.theme.set_default_theme"
                                 )
                               }}
-                              @disabled={{@theme.default}}
                             />
                           </dropdown.item>
                           {{#if this.showFullControls}}
                             {{#if @theme.isPendingUpdates}}
                               <dropdown.item>
                                 <DButton
+                                  class="theme-card__button update"
                                   @action={{this.updateTheme}}
                                   @icon="cloud-arrow-down"
-                                  class="theme-card__button update"
                                   @preventFocus={{true}}
                                   @translatedLabel={{i18n
                                     "admin.customize.theme.update_to_latest"
@@ -288,14 +288,14 @@ export default class ThemeCard extends Component {
                             {{/if}}
                             <dropdown.item>
                               <DButton
+                                class="theme-card__button set-selectable"
                                 @action={{this.toggleUserSelectable}}
-                                @preventFocus={{true}}
                                 @icon={{if
                                   @theme.user_selectable
                                   "user-xmark"
                                   "user-check"
                                 }}
-                                class="theme-card__button set-selectable"
+                                @preventFocus={{true}}
                                 @translatedLabel={{i18n
                                   (if
                                     @theme.user_selectable
@@ -307,21 +307,21 @@ export default class ThemeCard extends Component {
                             </dropdown.item>
                             <dropdown.item>
                               <a
+                                class="btn btn-transparent theme-card__button preview"
                                 href={{this.themePreviewUrl}}
-                                title={{i18n "admin.customize.explain_preview"}}
                                 rel="noopener noreferrer"
                                 target="_blank"
-                                class="btn btn-transparent theme-card__button preview"
+                                title={{i18n "admin.customize.explain_preview"}}
                               >{{dIcon "eye"}}
                                 {{i18n "admin.customize.theme.preview"}}</a>
                             </dropdown.item>
                             <dropdown.item>
                               <DButton
-                                @action={{this.destroyTheme}}
-                                @label="admin.customize.delete"
-                                @icon="trash-can"
-                                @disabled={{this.destroyDisabled}}
                                 class="theme-card__button btn-transparent --danger delete"
+                                @action={{this.destroyTheme}}
+                                @disabled={{this.destroyDisabled}}
+                                @icon="trash-can"
+                                @label="admin.customize.delete"
                               />
                             </dropdown.item>
                           {{/if}}

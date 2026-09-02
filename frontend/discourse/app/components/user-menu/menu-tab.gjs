@@ -29,16 +29,16 @@ export default class UserMenuTab extends Component {
 
   <template>
     <a
-      role="tab"
-      class={{this.classNames}}
-      id={{this.id}}
-      tabindex={{this.tabIndex}}
-      title={{@tab.title}}
+      aria-controls={{this.ariaControls}}
       aria-label={{@tab.title}}
       aria-selected={{if this.isActive "true" "false"}}
-      aria-controls={{this.ariaControls}}
+      class={{this.classNames}}
       data-tab-number={{@tab.position}}
       href={{@tab.linkWhenActive}}
+      id={{this.id}}
+      role="tab"
+      tabindex={{this.tabIndex}}
+      title={{@tab.title}}
       {{on "click" @onTabClick}}
       {{on "keydown" @onTabClick}}
     >

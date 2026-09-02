@@ -11,15 +11,15 @@ import HouseAdsSettingsPanel from "../../../../../admin/components/house-ads-set
 const HouseAdsIndex = <template>
   <div class="discourse-adplugin__house-ads admin-detail">
     <DPageSubheader
-      @titleLabel={{i18n "admin.adplugin.house_ads.title"}}
       @descriptionLabel={{i18n "admin.adplugin.house_ads.description"}}
+      @titleLabel={{i18n "admin.adplugin.house_ads.title"}}
     >
       <:actions as |actions|>
         <actions.Primary
+          @icon="plus"
           @label="admin.adplugin.house_ads.new"
           @route="adminPlugins.show.houseAds.show"
           @routeModels="new"
-          @icon="plus"
         />
       </:actions>
     </DPageSubheader>
@@ -28,15 +28,15 @@ const HouseAdsIndex = <template>
       <DHorizontalOverflowNav>
         <li>
           <a
-            href="#"
             class={{if (eq @controller.currentTab "ads") "active"}}
+            href="#"
             {{on "click" (fn @controller.onTabChange "ads")}}
           >{{i18n "admin.adplugin.house_ads.tabs.ads"}}</a>
         </li>
         <li>
           <a
-            href="#"
             class={{if (eq @controller.currentTab "settings") "active"}}
+            href="#"
             {{on "click" (fn @controller.onTabChange "settings")}}
           >{{i18n "admin.adplugin.house_ads.tabs.settings"}}</a>
         </li>
@@ -53,10 +53,10 @@ const HouseAdsIndex = <template>
       {{/if}}
     {{else}}
       <AdminConfigAreaEmptyList
-        @emptyLabel="admin.adplugin.house_ads.get_started"
         @ctaLabel="admin.adplugin.house_ads.new"
         @ctaRoute="adminPlugins.show.houseAds.show"
         @ctaRouteModels="new"
+        @emptyLabel="admin.adplugin.house_ads.get_started"
       />
     {{/if}}
   </div>

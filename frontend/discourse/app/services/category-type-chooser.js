@@ -7,16 +7,16 @@ export default class CategoryTypeChooser extends Service {
   _setupComplete = false;
   _allTypes = null;
 
-  get hasCompletedSetup() {
-    return this._selection !== null || this._setupComplete;
-  }
-
   get allTypes() {
     return this._allTypes;
   }
 
   set allTypes(types) {
     this._allTypes = types;
+  }
+
+  get hasCompletedSetup() {
+    return this._selection !== null || this._setupComplete;
   }
 
   get currentSelection() {

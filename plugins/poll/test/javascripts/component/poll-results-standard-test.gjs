@@ -52,15 +52,15 @@ module("Component | PollResultsStandard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
+          @fetchVoters={{this.fetchVoters}}
+          @isPublic={{this.isPublic}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
-          @isPublic={{this.isPublic}}
           @postId={{this.postId}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -86,15 +86,15 @@ module("Component | PollResultsStandard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
+          @fetchVoters={{this.fetchVoters}}
+          @isPublic={{this.isPublic}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
-          @isPublic={{this.isPublic}}
           @postId={{this.postId}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -117,6 +117,7 @@ module("Component | PollResultsStandard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
+          @fetchVoters={{this.fetchVoters}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
@@ -124,7 +125,6 @@ module("Component | PollResultsStandard", function (hooks) {
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -148,6 +148,7 @@ module("Component | PollResultsStandard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
+          @fetchVoters={{this.fetchVoters}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
@@ -155,7 +156,6 @@ module("Component | PollResultsStandard", function (hooks) {
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -187,15 +187,15 @@ module("Component | PollResultsStandard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
+          @fetchVoters={{this.fetchVoters}}
           @options={{this.options}}
           @pollName={{this.pollName}}
           @pollType={{this.pollType}}
           @postId={{this.postId}}
+          @showTally={{this.showTally}}
           @vote={{this.vote}}
           @voters={{this.voters}}
           @votersCount={{this.votersCount}}
-          @fetchVoters={{this.fetchVoters}}
-          @showTally={{this.showTally}}
         />
       </template>
     );

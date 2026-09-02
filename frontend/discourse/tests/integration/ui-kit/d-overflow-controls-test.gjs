@@ -165,11 +165,11 @@ module("Integration | ui-kit | DOverflowControls", function (hooks) {
     await render(
       <template>
         <DOverflowControls
-          @wrapperClass="my-wrap"
-          @class="my-content"
-          @buttonClass="my-btn"
-          style="width: 100px; overflow-x: auto"
           data-test="yes"
+          style="width: 100px; overflow-x: auto"
+          @buttonClass="my-btn"
+          @class="my-content"
+          @wrapperClass="my-wrap"
         >
           <div style="width: 500px; height: 20px"></div>
         </DOverflowControls>

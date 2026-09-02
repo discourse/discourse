@@ -3,7 +3,7 @@ import BasicTopicListExample from "../../examples/organisms/basic-topic-list";
 import basicTopicListSource from "../../examples/organisms/basic-topic-list?source=file";
 
 export default <template>
-  <StyleguideExample @title="<BasicTopicList>" @code={{basicTopicListSource}}>
+  <StyleguideExample @code={{basicTopicListSource}} @title="<BasicTopicList>">
     <BasicTopicListExample @topics={{@dummy.topics}} />
   </StyleguideExample>
 </template>

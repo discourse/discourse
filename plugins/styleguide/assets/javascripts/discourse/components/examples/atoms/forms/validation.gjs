@@ -3,21 +3,21 @@ import Form from "discourse/components/form";
 export default <template>
   <Form @validateOn="change" as |form|>
     <form.Field
-      @title="Username"
       @name="username"
-      @validation="required"
+      @title="Username"
       @type="input"
+      @validation="required"
       as |field|
     >
       <field.Control />
     </form.Field>
 
     <form.Field
+      @format="large"
       @name="accept_terms"
       @title="Accept terms"
-      @validation="required"
-      @format="large"
       @type="checkbox"
+      @validation="required"
       as |field|
     >
       <field.Control />

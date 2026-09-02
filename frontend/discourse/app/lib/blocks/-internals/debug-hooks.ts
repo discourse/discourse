@@ -77,34 +77,6 @@ class DebugHooks {
   >(Object.values(DEBUG_CALLBACK).map((key): [string, null] => [key, null]));
 
   /**
-   * Gets a debug callback from the registry.
-   *
-   * @param key - The callback key (use DEBUG_CALLBACK constants).
-   * @returns The callback function, or null/undefined if not set.
-   */
-  getCallback(key: string): DebugCallback | null | undefined {
-    return this.#callbacks.get(key);
-  }
-
-  /**
-   * Sets a debug callback in the registry.
-   * Used by dev-tools to register debug hooks.
-   *
-   * @param key - The callback key (use DEBUG_CALLBACK constants).
-   * @param value - The callback function, or null to clear.
-   * @throws If the key is not a valid callback key.
-   */
-  setCallback(key: string, value: DebugCallback | null): void {
-    if (!this.#callbacks.has(key)) {
-      const validKeys = Object.values(DEBUG_CALLBACK).join(", ");
-      throw new Error(
-        `[Blocks] Unknown debug callback key: "${key}". Valid keys are: ${validKeys}.`
-      );
-    }
-    this.#callbacks.set(key, value);
-  }
-
-  /**
    * Returns whether console logging is enabled.
    * Convenience getter that invokes the blockLogging callback.
    *
@@ -184,6 +156,34 @@ class DebugHooks {
         | null
         | undefined) ?? null
     );
+  }
+
+  /**
+   * Gets a debug callback from the registry.
+   *
+   * @param key - The callback key (use DEBUG_CALLBACK constants).
+   * @returns The callback function, or null/undefined if not set.
+   */
+  getCallback(key: string): DebugCallback | null | undefined {
+    return this.#callbacks.get(key);
+  }
+
+  /**
+   * Sets a debug callback in the registry.
+   * Used by dev-tools to register debug hooks.
+   *
+   * @param key - The callback key (use DEBUG_CALLBACK constants).
+   * @param value - The callback function, or null to clear.
+   * @throws If the key is not a valid callback key.
+   */
+  setCallback(key: string, value: DebugCallback | null): void {
+    if (!this.#callbacks.has(key)) {
+      const validKeys = Object.values(DEBUG_CALLBACK).join(", ");
+      throw new Error(
+        `[Blocks] Unknown debug callback key: "${key}". Valid keys are: ${validKeys}.`
+      );
+    }
+    this.#callbacks.set(key, value);
   }
 }
 

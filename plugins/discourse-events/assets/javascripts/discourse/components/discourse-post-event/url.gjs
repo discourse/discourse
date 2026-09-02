@@ -19,8 +19,8 @@ export default class DiscoursePostEventUrl extends Component {
         <a
           class="url"
           href={{this.url}}
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           {{this.label}}
         </a>

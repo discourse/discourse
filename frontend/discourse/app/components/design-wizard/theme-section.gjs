@@ -55,12 +55,12 @@ class ThemeCard extends Component {
         data-theme-id={{@theme.id}}
       >
         <input
-          type="radio"
-          name="design-wizard-theme"
-          value={{@theme.id}}
           checked={{this.selected}}
-          disabled={{@applying}}
           class="sr-only"
+          disabled={{@applying}}
+          name="design-wizard-theme"
+          type="radio"
+          value={{@theme.id}}
           {{on "change" (fn @onSelect @theme.id)}}
         />
         {{#if (and this.selected @applying)}}
@@ -80,13 +80,13 @@ class ThemeCard extends Component {
         >
           {{#if this.currentScreenshotUrl}}
             <img
+              alt=""
               class="design-wizard__theme-screenshot-image"
-              src={{this.currentScreenshotUrl}}
-              width={{SCREENSHOT_WIDTH}}
-              height={{SCREENSHOT_HEIGHT}}
               decoding="async"
               fetchpriority="high"
-              alt=""
+              height={{SCREENSHOT_HEIGHT}}
+              src={{this.currentScreenshotUrl}}
+              width={{SCREENSHOT_WIDTH}}
               {{on "load" this.screenshotSettled}}
               {{on "error" this.screenshotSettled}}
             />
@@ -108,18 +108,18 @@ const DesignWizardThemeSection = <template>
     </p>
   {{/if}}
   <fieldset
-    class="design-wizard__theme-cards"
     aria-busy={{if @applying "true"}}
+    class="design-wizard__theme-cards"
   >
     <legend class="sr-only">
       {{i18n "design_wizard.sections.theme"}}
     </legend>
     {{#each @themes as |theme|}}
       <ThemeCard
-        @theme={{theme}}
-        @selectedThemeId={{@selectedThemeId}}
         @applying={{@applying}}
         @onSelect={{@onSelect}}
+        @selectedThemeId={{@selectedThemeId}}
+        @theme={{theme}}
       />
     {{/each}}
   </fieldset>

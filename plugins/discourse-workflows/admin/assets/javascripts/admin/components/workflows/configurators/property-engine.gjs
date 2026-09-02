@@ -83,31 +83,31 @@ export default class PropertyEngineConfigurator extends Component {
         {{#let (this.controlEntry field) as |entry|}}
           {{#if (eq entry.kind "structural")}}
             <entry.renderer
-              @form={{@form}}
-              @formApi={{@formApi}}
               @configuration={{@configuration}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName={{field.name}}
+              @form={{@form}}
+              @formApi={{@formApi}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{this.nodeParameters}}
-              @nodeType={{this.nodeType}}
               @nodes={{@nodes}}
+              @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @onChange={{@onChange}}
               @schema={{field}}
               @session={{@session}}
-              @onChange={{@onChange}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           {{else}}
             <Field
-              @form={{@form}}
-              @formApi={{@formApi}}
               @configuration={{@configuration}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName={{field.name}}
+              @form={{@form}}
+              @formApi={{@formApi}}
               @metadata={{this.metadata}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
@@ -115,9 +115,9 @@ export default class PropertyEngineConfigurator extends Component {
               @nodes={{@nodes}}
               @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
               @schema={{field}}
               @session={{@session}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           {{/if}}
         {{/let}}

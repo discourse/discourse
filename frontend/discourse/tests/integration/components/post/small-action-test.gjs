@@ -256,7 +256,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   test("a11y heading is rendered even when small action is cloaked", async function (assert) {
     await render(
       <template>
-        <PostSmallAction @post={{this.post}} @cloaked={{true}} />
+        <PostSmallAction @cloaked={{true}} @post={{this.post}} />
       </template>
     );
 
@@ -376,10 +376,10 @@ module(
           <ul>
             <NestedActivityLogItem
               @action={{this.post}}
-              @topicId={{1}}
-              @editPost={{editPost}}
               @deletePost={{deletePost}}
+              @editPost={{editPost}}
               @recoverPost={{recoverPost}}
+              @topicId={{1}}
             />
           </ul>
         </template>
@@ -487,9 +487,9 @@ module("Integration | Component | Modal | NestedActivityLog", function (hooks) {
     await render(
       <template>
         <NestedActivityLog
-          @model={{model}}
           @closeModal={{closeModal}}
           @inline={{true}}
+          @model={{model}}
         />
       </template>
     );

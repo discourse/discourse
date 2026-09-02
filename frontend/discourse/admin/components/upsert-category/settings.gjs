@@ -35,9 +35,9 @@ export default class UpsertCategorySettings extends Component {
 
   <template>
     <@form.Field
+      @format="max"
       @name="slug"
       @title={{i18n "category.slug"}}
-      @format="max"
       @type="input"
       as |field|
     >
@@ -49,9 +49,9 @@ export default class UpsertCategorySettings extends Component {
 
     {{#if this.showPositionInput}}
       <@form.Field
+        @format="max"
         @name="position"
         @title={{i18n "category.position"}}
-        @format="max"
         @type="input-number"
         as |field|
       >
@@ -73,9 +73,9 @@ export default class UpsertCategorySettings extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="search_priority"
       @title={{i18n "category.search_priority.label"}}
-      @format="max"
       @type="select"
       @validation="required"
       as |field|
@@ -91,9 +91,9 @@ export default class UpsertCategorySettings extends Component {
 
     {{#if this.siteSettings.enable_badges}}
       <@form.Field
+        @format="max"
         @name="allow_badges"
         @title={{i18n "category.allow_badges_label"}}
-        @format="max"
         @type="checkbox"
         as |field|
       >
@@ -103,9 +103,9 @@ export default class UpsertCategorySettings extends Component {
 
     {{#if this.siteSettings.topic_featured_link_enabled}}
       <@form.Field
+        @format="max"
         @name="topic_featured_link_allowed"
         @title={{i18n "category.topic_featured_link_allowed"}}
-        @format="max"
         @type="checkbox"
         as |field|
       >
@@ -114,9 +114,9 @@ export default class UpsertCategorySettings extends Component {
     {{/if}}
 
     <@form.Field
+      @format="max"
       @name="navigate_to_first_post_after_read"
       @title={{i18n "category.navigate_to_first_post_after_read"}}
-      @format="max"
       @type="checkbox"
       as |field|
     >
@@ -124,9 +124,9 @@ export default class UpsertCategorySettings extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="all_topics_wiki"
       @title={{i18n "category.all_topics_wiki"}}
-      @format="max"
       @type="checkbox"
       as |field|
     >
@@ -134,9 +134,9 @@ export default class UpsertCategorySettings extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="allow_unlimited_owner_edits_on_first_post"
       @title={{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
-      @format="max"
       @type="checkbox"
       as |field|
     >
@@ -146,9 +146,9 @@ export default class UpsertCategorySettings extends Component {
     <@form.Section @title={{i18n "category.settings_sections.email"}}>
       {{#if this.emailInEnabled}}
         <@form.Field
+          @format="max"
           @name="email_in"
           @title={{i18n "category.email_in"}}
-          @format="max"
           @type="input"
           as |field|
         >
@@ -156,9 +156,9 @@ export default class UpsertCategorySettings extends Component {
         </@form.Field>
 
         <@form.Field
+          @format="max"
           @name="email_in_allow_strangers"
           @title={{i18n "category.email_in_allow_strangers"}}
-          @format="max"
           @type="checkbox"
           as |field|
         >
@@ -166,9 +166,9 @@ export default class UpsertCategorySettings extends Component {
         </@form.Field>
 
         <@form.Field
+          @format="max"
           @name="mailinglist_mirror"
           @title={{i18n "category.mailinglist_mirror"}}
-          @format="max"
           @type="checkbox"
           as |field|
         >
@@ -176,8 +176,8 @@ export default class UpsertCategorySettings extends Component {
         </@form.Field>
 
         <PluginOutlet
-          @name="category-email-in"
           @connectorTagName="div"
+          @name="category-email-in"
           @outletArgs={{lazyHash category=@category form=@form}}
         />
       {{else}}

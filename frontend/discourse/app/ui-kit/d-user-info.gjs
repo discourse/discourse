@@ -28,16 +28,6 @@ export default class DUserInfo extends Component {
     set(this, "user.username", value);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.user?.statusManager?.trackStatus();
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.user?.statusManager?.stopTrackingStatus();
-  }
-
   @computed("user.username")
   get userPath() {
     return userPath(this.user?.username);
@@ -48,19 +38,29 @@ export default class DUserInfo extends Component {
     return prioritizeNameInUx(this.user?.name);
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.user?.statusManager?.trackStatus();
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.user?.statusManager?.stopTrackingStatus();
+  }
+
   <template>
     <div
-      data-username={{this.dataUsername}}
       class={{dConcatClass "user-info" this.size}}
+      data-username={{this.dataUsername}}
       ...attributes
     >
       {{#if this.includeAvatar}}
         <div class="user-image">
           <div class="user-image-inner">
             <a
-              href={{this.userPath}}
-              data-user-card={{@user.username}}
               aria-hidden="true"
+              data-user-card={{@user.username}}
+              href={{this.userPath}}
             >{{dAvatar @user imageSize="large"}}</a>
             <DUserAvatarFlair @user={{@user}} />
           </div>
@@ -78,10 +78,10 @@ export default class DUserInfo extends Component {
             {{#if this.includeLink}}
               {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
               <a
-                href={{this.userPath}}
-                data-user-card={{@user.username}}
-                role={{if @headingLevel "heading"}}
                 aria-level={{@headingLevel}}
+                data-user-card={{@user.username}}
+                href={{this.userPath}}
+                role={{if @headingLevel "heading"}}
               >
                 <span class="username">{{formatUsername @user.username}}</span>
               </a>
@@ -90,15 +90,15 @@ export default class DUserInfo extends Component {
             {{/if}}
             {{#if (and @showStatus @user.status)}}
               <DUserStatusMessage
-                @status={{@user.status}}
                 @showDescription={{@showStatusDescription}}
+                @status={{@user.status}}
               />
             {{/if}}
           </span>
           {{#if @user.name}}
             <span class="name-wrapper">
               {{#if this.includeLink}}
-                <a href={{this.userPath}} data-user-card={{@user.username}}>
+                <a data-user-card={{@user.username}} href={{this.userPath}}>
                   <span class="name">{{@user.name}}</span>
                 </a>
               {{else}}
@@ -107,8 +107,8 @@ export default class DUserInfo extends Component {
             </span>
           {{/if}}
           <PluginOutlet
-            @name="after-user-name"
             @connectorTagName="span"
+            @name="after-user-name"
             @outletArgs={{lazyHash user=this.user}}
           />
         </div>
@@ -121,8 +121,8 @@ export default class DUserInfo extends Component {
       </div>
 
       <PluginOutlet
-        @name="after-user-info"
         @connectorTagName="div"
+        @name="after-user-info"
         @outletArgs={{lazyHash user=this.user}}
       />
     </div>

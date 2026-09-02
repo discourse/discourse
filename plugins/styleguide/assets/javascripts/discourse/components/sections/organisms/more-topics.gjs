@@ -26,7 +26,7 @@ class OtherTopics extends Component {
     <div class="more-topics__list">
       <h3 class="more-topics__list-title">Other topics</h3>
       <div class="topics">
-        <BasicTopicList @topics={{this.topics}} @listContext="other" />
+        <BasicTopicList @listContext="other" @topics={{this.topics}} />
       </div>
     </div>
   </template>
@@ -73,9 +73,9 @@ export default class MoreTopicsOrganism extends Component {
         {{! eslint-disable ember/template-no-potential-path-strings }}
         <Row @name="@topic type">
           <ComboBox
-            @value={{this.variant}}
             @content={{VARIANTS}}
             @onChange={{this.selectVariant}}
+            @value={{this.variant}}
           />
         </Row>
       </Controls>

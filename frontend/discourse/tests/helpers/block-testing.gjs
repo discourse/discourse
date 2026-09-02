@@ -313,8 +313,8 @@ export function setupGhostCapture({ enabled = true } = {}) {
           <div
             class="ghost-block"
             data-name={{blockData.name}}
-            data-type={{blockData.failureType}}
             data-reason={{blockData.failureReason}}
+            data-type={{blockData.failureType}}
           >Ghost: {{blockData.name}}</div>
         </template>,
         isGhost: true,

@@ -7,8 +7,8 @@ import ChatUserAvatar from "./chat-user-avatar";
 const ChatComposerMessageDetails = <template>
   <div
     class="chat-composer-message-details"
-    data-id={{@message.id}}
     data-action={{if @message.editing "edit" "reply"}}
+    data-id={{@message.id}}
   >
     <div class="chat-reply">
       {{dIcon (if @message.editing "pencil" "reply")}}
@@ -20,10 +20,10 @@ const ChatComposerMessageDetails = <template>
     </div>
 
     <DButton
+      class="btn-flat cancel-message-action"
       @action={{@cancelAction}}
       @icon="circle-xmark"
       @title="cancel"
-      class="btn-flat cancel-message-action"
     />
   </div>
 </template>;

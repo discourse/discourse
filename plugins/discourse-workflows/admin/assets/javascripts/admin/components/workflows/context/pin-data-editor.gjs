@@ -278,17 +278,17 @@ export default class PinDataEditor extends Component {
         {{#if this.isDirty}}
           <div class="workflows-context-panel__editor-toolbar">
             <button
-              type="button"
               class="btn btn-primary btn-small workflows-context-panel__editor-save"
               disabled={{this.saveDisabled}}
+              type="button"
               {{on "click" this.save}}
             >
               {{dIcon "check"}}
               {{i18n "discourse_workflows.pin_data.save"}}
             </button>
             <button
-              type="button"
               class="btn btn-default btn-small workflows-context-panel__editor-cancel"
+              type="button"
               {{on "click" this.cancel}}
             >
               {{i18n "discourse_workflows.pin_data.cancel"}}
@@ -311,10 +311,10 @@ export default class PinDataEditor extends Component {
 
         {{#if this.Editor}}
           <this.Editor
-            @value={{this.buffer}}
-            @extensions={{this.buildEditExtensions}}
             @class="workflows-context-panel__editor-codemirror"
+            @extensions={{this.buildEditExtensions}}
             @lineWrapping={{true}}
+            @value={{this.buffer}}
           />
         {{else}}
           <div class="workflows-context-panel__editor-loading">
@@ -356,8 +356,8 @@ export default class PinDataEditor extends Component {
           {{i18n "discourse_workflows.pin_data.empty_title"}}
         </h4>
         <button
-          type="button"
           class="btn btn-primary workflows-context-panel__empty-state-btn"
+          type="button"
           {{on "click" this.startFromEmpty}}
         >
           {{i18n "discourse_workflows.pin_data.add_sample_data"}}

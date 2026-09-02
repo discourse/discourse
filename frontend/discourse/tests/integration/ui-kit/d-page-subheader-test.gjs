@@ -67,27 +67,27 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
         <DPageSubheader>
           <:actions as |actions|>
             <actions.Primary
-              @route="adminBadges.show"
-              @routeModels="new"
+              class="new-badge"
               @icon="plus"
               @label="admin.badges.new"
-              class="new-badge"
+              @route="adminBadges.show"
+              @routeModels="new"
             />
 
             <actions.Default
-              @route="adminBadges.award"
-              @routeModels="new"
+              class="award-badge"
               @icon="upload"
               @label="admin.badges.mass_award.title"
-              class="award-badge"
+              @route="adminBadges.award"
+              @routeModels="new"
             />
 
             <actions.Danger
-              @action={{someAction}}
-              @title="admin.badges.group_settings"
-              @label="admin.badges.group_settings"
-              @icon="gear"
               class="edit-groupings-btn"
+              @action={{someAction}}
+              @icon="gear"
+              @label="admin.badges.group_settings"
+              @title="admin.badges.group_settings"
             />
           </:actions>
         </DPageSubheader>
@@ -128,19 +128,19 @@ module("Integration | ui-kit | DPageSubheader | Mobile", function (hooks) {
         <DPageSubheader>
           <:actions as |actions|>
             <actions.Primary
-              @route="adminBadges.show"
-              @routeModels="new"
+              class="new-badge"
               @icon="plus"
               @label="admin.badges.new"
-              class="new-badge"
+              @route="adminBadges.show"
+              @routeModels="new"
             />
 
             <actions.Default
-              @route="adminBadges.award"
-              @routeModels="new"
+              class="award-badge"
               @icon="upload"
               @label="admin.badges.mass_award.title"
-              class="award-badge"
+              @route="adminBadges.award"
+              @routeModels="new"
             />
           </:actions>
         </DPageSubheader>

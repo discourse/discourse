@@ -93,10 +93,10 @@ export default class Results extends Component {
         {{#unless this.inTopicContext}}
           {{#if @suggestionKeyword}}
             <Assistant
-              @suggestionKeyword={{@suggestionKeyword}}
-              @results={{@suggestionResults}}
               @closeSearchMenu={{@closeSearchMenu}}
+              @results={{@suggestionResults}}
               @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
             />
           {{else if this.termTooShort}}
             <div class="no-results">{{i18n "search.too_short"}}</div>
@@ -104,9 +104,9 @@ export default class Results extends Component {
             <div class="no-results">{{i18n "search.no_results"}}</div>
           {{else if this.renderInitialOptions}}
             <InitialOptions
+              @closeSearchMenu={{@closeSearchMenu}}
               @location={{@location}}
               @searchInputId={{@searchInputId}}
-              @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
@@ -119,9 +119,9 @@ export default class Results extends Component {
             }}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
+                @closeSearchMenu={{@closeSearchMenu}}
                 @location={{@location}}
                 @searchInputId={{@searchInputId}}
-                @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
@@ -135,18 +135,18 @@ export default class Results extends Component {
             }}
               {{! render results after a search has been performed }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
-                @topicResultsOnly={{true}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @topicResultsOnly={{true}}
               />
               <MoreLink
-                @updateTypeFilter={{@updateTypeFilter}}
-                @triggerSearch={{@triggerSearch}}
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @resultTypes={{this.resultTypesWithComponent}}
                 @searchTermChanged={{@searchTermChanged}}
+                @triggerSearch={{@triggerSearch}}
+                @updateTypeFilter={{@updateTypeFilter}}
               />
             {{else if
               (and
@@ -157,12 +157,12 @@ export default class Results extends Component {
               )
             }}
               <Types
-                @resultTypes={{this.resultTypesWithComponent}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchTermChanged={{@searchTermChanged}}
                 @displayNameWithUser={{true}}
-                @searchLogId={{this.searchLogId}}
                 @isPMOnly={{@isPMOnly}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @searchLogId={{this.searchLogId}}
+                @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
             <PluginOutlet

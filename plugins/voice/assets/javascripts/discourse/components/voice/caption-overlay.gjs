@@ -45,7 +45,7 @@ export default class VoiceCaptionOverlay extends Component {
 
   <template>
     {{#if this.voiceWebrtc.subtitlesEnabled}}
-      <div class="voice-captions" aria-live="polite">
+      <div aria-live="polite" class="voice-captions">
         {{#if this.showLoading}}
           <p class="voice-captions__line --loading">
             {{this.loadingLabel}}

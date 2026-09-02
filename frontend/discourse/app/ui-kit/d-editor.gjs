@@ -76,6 +76,7 @@ export default class DEditor extends Component {
   @service menu;
 
   @tracked editorComponent;
+
   /** @type {TextManipulation} */
   @tracked textManipulation;
   @tracked replacedToolbarInstance;
@@ -103,52 +104,9 @@ export default class DEditor extends Component {
     this.setupEditorMode();
   }
 
-  setupToolbar() {
-    this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities", "site")
-    );
-    this.toolbar.context = this;
-
-    _createCallbacks.forEach((cb) => cb(this.toolbar));
-
-    if (this.extraButtons) {
-      this.extraButtons(this.toolbar);
-    }
-  }
-
-  async setupEditorMode() {
-    if (isPresent(this.forceEditorMode)) {
-      if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
-        this.editorComponent = await loadRichEditor();
-      } else {
-        this.editorComponent = TextareaEditor;
-      }
-      return;
-    }
-
-    if (this.currentUser.useRichEditor) {
-      this.editorComponent = await loadRichEditor();
-    }
-
-    this.editorComponent ??= TextareaEditor;
-  }
-
   @computed("forceEditorMode")
   get showEditorModeToggle() {
     return isNone(this.forceEditorMode);
-  }
-
-  _readyNow() {
-    this.set("ready", true);
-
-    if (this.autofocus) {
-      this.textManipulation.focus();
-    }
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this._previewMutationObserver = this._disablePreviewTabIndex();
   }
 
   get editorContainerModeClass() {
@@ -219,17 +177,318 @@ export default class DEditor extends Component {
     return keymap;
   }
 
+  get isRichEditorEnabled() {
+    return this.editorComponent !== TextareaEditor;
+  }
+
+  setupToolbar() {
+    this.toolbar = new Toolbar(
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
+    );
+    this.toolbar.context = this;
+
+    _createCallbacks.forEach((cb) => cb(this.toolbar));
+
+    if (this.extraButtons) {
+      this.extraButtons(this.toolbar);
+    }
+  }
+
+  async setupEditorMode() {
+    if (isPresent(this.forceEditorMode)) {
+      if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
+        this.editorComponent = await loadRichEditor();
+      } else {
+        this.editorComponent = TextareaEditor;
+      }
+      return;
+    }
+
+    if (this.currentUser.useRichEditor) {
+      this.editorComponent = await loadRichEditor();
+    }
+
+    this.editorComponent ??= TextareaEditor;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this._previewMutationObserver = this._disablePreviewTabIndex();
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
+  }
+
+  @action
+  rovingButtonBar(event) {
+    return rovingButtonBar(event, "d-editor-button-bar");
+  }
+
+  /**
+   * Represents a toolbar event object passed to toolbar buttons.
+   *
+   * @typedef {Object} ToolbarEvent
+   * @property {function} applySurround - Applies surrounding text
+   * @property {function} formatCode - Formats as code
+   * @property {function} replaceText - Replaces text
+   * @property {function} selectText - Selects a range of text
+   * @property {function} toggleDirection - Toggles text direction
+   * @property {function} getText - Gets the text
+   * @property {function} addText - Adds text
+   * @property {function} applyList - Applies a list format
+   * @property {*} selected - The current selection
+   * @property {Object} commands - Available commands
+   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
+   */
+
+  /**
+   * Creates a new toolbar event object
+   *
+   * @param {boolean} trimLeading - Whether to trim leading whitespace
+   * @returns {ToolbarEvent} An object with toolbar event actions
+   */
+  newToolbarEvent(trimLeading) {
+    const selected = this.textManipulation.getSelected(trimLeading, {
+      lineVal: true,
+    });
+    return {
+      commands: this.textManipulation.commands,
+      state: this.textManipulation.state,
+      selected,
+      selectText: (from, length) =>
+        this.textManipulation.selectText(from, length, { scroll: false }),
+      applySurround: (head, tail, exampleKey, opts) =>
+        this.textManipulation.applySurround(
+          selected,
+          head,
+          tail,
+          exampleKey,
+          opts
+        ),
+      applyList: (head, exampleKey, opts) =>
+        this.textManipulation.applyList(selected, head, exampleKey, opts),
+      applyHeading: (level, exampleKey) =>
+        this.textManipulation.applyHeading(selected, level, exampleKey),
+      formatCode: () => this.textManipulation.formatCode(),
+      addText: (text) => this.textManipulation.addText(selected, text),
+      applyLink: (url) => this.textManipulation.applyLink(url),
+      getText: () => this.value,
+      toggleDirection: () => this.textManipulation.toggleDirection(),
+      replaceText: (oldVal, newVal, opts) =>
+        this.textManipulation.replaceText(oldVal, newVal, opts),
+    };
+  }
+
+  @action
+  showLinkModal(toolbarEvent) {
+    if (this.disabled) {
+      return;
+    }
+
+    this._lastSel = toolbarEvent.selected;
+    const hasSelection =
+      !!this._lastSel && this._lastSel.start !== this._lastSel.end;
+
+    this.modal.show(UpsertHyperlink, {
+      model: {
+        hasSelection,
+        toolbarEvent,
+      },
+    });
+  }
+
+  @action
+  handleFocusIn() {
+    this.set("isEditorFocused", true);
+  }
+
+  @action
+  handleFocusOut() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.set("isEditorFocused", false);
+  }
+
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
+  @action
+  setupEditor(textManipulation) {
+    this.textManipulation = textManipulation;
+
+    const destroyEvents = this.setupEvents();
+
+    this.element.addEventListener("paste", textManipulation.paste);
+
+    this._applyEmojiAutocomplete();
+    this._applyHashtagAutocomplete();
+    this._applyMentionAutocomplete();
+
+    const destroyEditor = this.onSetup?.(textManipulation);
+
+    scheduleOnce("afterRender", this, this._readyNow);
+
+    return () => {
+      destroyEvents?.();
+
+      this.element?.removeEventListener("paste", textManipulation.paste);
+
+      textManipulation.autocomplete("destroy");
+
+      destroyEditor?.();
+    };
+  }
+
+  @action
+  async toggleRichEditor() {
+    if (isPresent(this.forceEditorMode)) {
+      return;
+    }
+
+    // The ProsemirrorEditor component is loaded here, adding this comment because
+    // otherwise it's hard to find where the component is rendered by name.
+    this.editorComponent = this.isRichEditorEnabled
+      ? TextareaEditor
+      : await loadRichEditor();
+
+    const preference = this.isRichEditorEnabled
+      ? USER_OPTION_COMPOSITION_MODES.rich
+      : USER_OPTION_COMPOSITION_MODES.markdown;
+
+    // optimistically set the preference
+    this.currentUser.set("user_option.composition_mode", preference);
+
+    this.#debounceSaveRichEditorPreference(preference);
+  }
+
+  @action
+  replaceToolbar(toolbarInstance, owner) {
+    if (
+      toolbarInstance === null &&
+      owner &&
+      this.replacedToolbarInstance !== owner
+    ) {
+      return;
+    }
+    this.replacedToolbarInstance = toolbarInstance;
+  }
+
+  @action
+  resetToolbar() {
+    this.replacedToolbarInstance = null;
+  }
+
+  @action
+  onChange(event) {
+    this.set("value", event?.target?.value);
+    this.change?.(event);
+  }
+
+  setupEvents() {
+    const textManipulation = this.textManipulation;
+
+    if (this.composerEvents) {
+      this.appEvents.on(
+        "composer:insert-block",
+        textManipulation,
+        "insertBlock"
+      );
+      this.appEvents.on("composer:insert-text", textManipulation, "insertText");
+      this.appEvents.on(
+        "composer:replace-text",
+        textManipulation,
+        "replaceText"
+      );
+      this.appEvents.on(
+        "composer:apply-surround",
+        textManipulation,
+        "applySurroundSelection"
+      );
+      this.appEvents.on(
+        "composer:indent-selected-text",
+        textManipulation,
+        "indentSelection"
+      );
+
+      const replaceToolbar = ({ component, data }) => {
+        this.replacedToolbarComponent = curryComponent(
+          component,
+          { data },
+          getOwner(this)
+        );
+      };
+
+      this.appEvents.on("composer:replace-toolbar", replaceToolbar);
+      this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+
+      return () => {
+        this.appEvents.off("composer:replace-toolbar", replaceToolbar);
+        this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+
+        this.appEvents.off(
+          "composer:insert-block",
+          textManipulation,
+          "insertBlock"
+        );
+        this.appEvents.off(
+          "composer:insert-text",
+          textManipulation,
+          "insertText"
+        );
+        this.appEvents.off(
+          "composer:replace-text",
+          textManipulation,
+          "replaceText"
+        );
+        this.appEvents.off(
+          "composer:apply-surround",
+          textManipulation,
+          "applySurroundSelection"
+        );
+        this.appEvents.off(
+          "composer:indent-selected-text",
+          textManipulation,
+          "indentSelection"
+        );
+      };
+    }
+  }
+
+  #debounceSaveRichEditorPreference(preference) {
+    this._debounceSaveRichEditorPreference = discourseDebounce(
+      this,
+      this.#saveRichEditorPreference,
+      preference,
+      1000
+    );
+  }
+
+  #saveRichEditorPreference(preference) {
+    this.currentUser.set("user_option.composition_mode", preference);
+    return this.currentUser.save(["composition_mode"]);
+  }
+
+  _readyNow() {
+    this.set("ready", true);
+
+    if (this.autofocus) {
+      this.textManipulation.focus();
+    }
+  }
+
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
     cancel(this._debounceSaveRichEditorPreference);
 
     this._cachedCookFunction = null;
-  }
-
-  async cachedCookAsync(text, options) {
-    this._cachedCookFunction ||= await generateCookFunction(options || {});
-    return await this._cachedCookFunction(text);
   }
 
   async _updatePreview() {
@@ -479,264 +738,6 @@ export default class DEditor extends Component {
     });
   }
 
-  @action
-  rovingButtonBar(event) {
-    return rovingButtonBar(event, "d-editor-button-bar");
-  }
-
-  /**
-   * Represents a toolbar event object passed to toolbar buttons.
-   *
-   * @typedef {Object} ToolbarEvent
-   * @property {function} applySurround - Applies surrounding text
-   * @property {function} formatCode - Formats as code
-   * @property {function} replaceText - Replaces text
-   * @property {function} selectText - Selects a range of text
-   * @property {function} toggleDirection - Toggles text direction
-   * @property {function} getText - Gets the text
-   * @property {function} addText - Adds text
-   * @property {function} applyList - Applies a list format
-   * @property {*} selected - The current selection
-   * @property {Object} commands - Available commands
-   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
-   */
-
-  /**
-   * Creates a new toolbar event object
-   *
-   * @param {boolean} trimLeading - Whether to trim leading whitespace
-   * @returns {ToolbarEvent} An object with toolbar event actions
-   */
-  newToolbarEvent(trimLeading) {
-    const selected = this.textManipulation.getSelected(trimLeading, {
-      lineVal: true,
-    });
-    return {
-      commands: this.textManipulation.commands,
-      state: this.textManipulation.state,
-      selected,
-      selectText: (from, length) =>
-        this.textManipulation.selectText(from, length, { scroll: false }),
-      applySurround: (head, tail, exampleKey, opts) =>
-        this.textManipulation.applySurround(
-          selected,
-          head,
-          tail,
-          exampleKey,
-          opts
-        ),
-      applyList: (head, exampleKey, opts) =>
-        this.textManipulation.applyList(selected, head, exampleKey, opts),
-      applyHeading: (level, exampleKey) =>
-        this.textManipulation.applyHeading(selected, level, exampleKey),
-      formatCode: () => this.textManipulation.formatCode(),
-      addText: (text) => this.textManipulation.addText(selected, text),
-      applyLink: (url) => this.textManipulation.applyLink(url),
-      getText: () => this.value,
-      toggleDirection: () => this.textManipulation.toggleDirection(),
-      replaceText: (oldVal, newVal, opts) =>
-        this.textManipulation.replaceText(oldVal, newVal, opts),
-    };
-  }
-
-  @action
-  showLinkModal(toolbarEvent) {
-    if (this.disabled) {
-      return;
-    }
-
-    this._lastSel = toolbarEvent.selected;
-    const hasSelection =
-      !!this._lastSel && this._lastSel.start !== this._lastSel.end;
-
-    this.modal.show(UpsertHyperlink, {
-      model: {
-        hasSelection,
-        toolbarEvent,
-      },
-    });
-  }
-
-  @action
-  handleFocusIn() {
-    this.set("isEditorFocused", true);
-  }
-
-  @action
-  handleFocusOut() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.set("isEditorFocused", false);
-  }
-
-  /**
-   * Sets up the editor with the given text manipulation instance
-   *
-   * @param {TextManipulation} textManipulation The text manipulation instance
-   * @returns {(() => void)} destructor function
-   */
-  @action
-  setupEditor(textManipulation) {
-    this.textManipulation = textManipulation;
-
-    const destroyEvents = this.setupEvents();
-
-    this.element.addEventListener("paste", textManipulation.paste);
-
-    this._applyEmojiAutocomplete();
-    this._applyHashtagAutocomplete();
-    this._applyMentionAutocomplete();
-
-    const destroyEditor = this.onSetup?.(textManipulation);
-
-    scheduleOnce("afterRender", this, this._readyNow);
-
-    return () => {
-      destroyEvents?.();
-
-      this.element?.removeEventListener("paste", textManipulation.paste);
-
-      textManipulation.autocomplete("destroy");
-
-      destroyEditor?.();
-    };
-  }
-
-  @action
-  async toggleRichEditor() {
-    if (isPresent(this.forceEditorMode)) {
-      return;
-    }
-
-    // The ProsemirrorEditor component is loaded here, adding this comment because
-    // otherwise it's hard to find where the component is rendered by name.
-    this.editorComponent = this.isRichEditorEnabled
-      ? TextareaEditor
-      : await loadRichEditor();
-
-    const preference = this.isRichEditorEnabled
-      ? USER_OPTION_COMPOSITION_MODES.rich
-      : USER_OPTION_COMPOSITION_MODES.markdown;
-
-    // optimistically set the preference
-    this.currentUser.set("user_option.composition_mode", preference);
-
-    this.#debounceSaveRichEditorPreference(preference);
-  }
-
-  #debounceSaveRichEditorPreference(preference) {
-    this._debounceSaveRichEditorPreference = discourseDebounce(
-      this,
-      this.#saveRichEditorPreference,
-      preference,
-      1000
-    );
-  }
-
-  #saveRichEditorPreference(preference) {
-    this.currentUser.set("user_option.composition_mode", preference);
-    return this.currentUser.save(["composition_mode"]);
-  }
-
-  @action
-  replaceToolbar(toolbarInstance, owner) {
-    if (
-      toolbarInstance === null &&
-      owner &&
-      this.replacedToolbarInstance !== owner
-    ) {
-      return;
-    }
-    this.replacedToolbarInstance = toolbarInstance;
-  }
-
-  @action
-  resetToolbar() {
-    this.replacedToolbarInstance = null;
-  }
-
-  @action
-  onChange(event) {
-    this.set("value", event?.target?.value);
-    this.change?.(event);
-  }
-
-  get isRichEditorEnabled() {
-    return this.editorComponent !== TextareaEditor;
-  }
-
-  setupEvents() {
-    const textManipulation = this.textManipulation;
-
-    if (this.composerEvents) {
-      this.appEvents.on(
-        "composer:insert-block",
-        textManipulation,
-        "insertBlock"
-      );
-      this.appEvents.on("composer:insert-text", textManipulation, "insertText");
-      this.appEvents.on(
-        "composer:replace-text",
-        textManipulation,
-        "replaceText"
-      );
-      this.appEvents.on(
-        "composer:apply-surround",
-        textManipulation,
-        "applySurroundSelection"
-      );
-      this.appEvents.on(
-        "composer:indent-selected-text",
-        textManipulation,
-        "indentSelection"
-      );
-
-      const replaceToolbar = ({ component, data }) => {
-        this.replacedToolbarComponent = curryComponent(
-          component,
-          { data },
-          getOwner(this)
-        );
-      };
-
-      this.appEvents.on("composer:replace-toolbar", replaceToolbar);
-      this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
-
-      return () => {
-        this.appEvents.off("composer:replace-toolbar", replaceToolbar);
-        this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
-
-        this.appEvents.off(
-          "composer:insert-block",
-          textManipulation,
-          "insertBlock"
-        );
-        this.appEvents.off(
-          "composer:insert-text",
-          textManipulation,
-          "insertText"
-        );
-        this.appEvents.off(
-          "composer:replace-text",
-          textManipulation,
-          "replaceText"
-        );
-        this.appEvents.off(
-          "composer:apply-surround",
-          textManipulation,
-          "applySurroundSelection"
-        );
-        this.appEvents.off(
-          "composer:indent-selected-text",
-          textManipulation,
-          "indentSelection"
-        );
-      };
-    }
-  }
-
   _disablePreviewTabIndex() {
     const observer = new MutationObserver(function () {
       document.querySelectorAll(".d-editor-preview a").forEach((anchor) => {
@@ -773,48 +774,48 @@ export default class DEditor extends Component {
             {{if this.isEditorFocused 'in-focus'}}"
         >
           <DConditionalInElement
-            @inline={{not @toolbarPortalTarget}}
-            @element={{@toolbarPortalTarget}}
             @append={{true}}
+            @element={{@toolbarPortalTarget}}
+            @inline={{not @toolbarPortalTarget}}
           >
             {{#if this.replacedToolbarInstance}}
               <DOverflowControls
-                @wrapperClass="d-editor-button-bar__wrap"
+                role="toolbar"
+                @buttonClass="d-editor-button-bar__scroll-btn"
                 @class={{dConcatClass
                   "d-editor-button-bar"
                   "--replaced-toolbar"
                   (if this.disabled "--disabled")
                 }}
-                @buttonClass="d-editor-button-bar__scroll-btn"
-                role="toolbar"
+                @wrapperClass="d-editor-button-bar__wrap"
               >
                 <DButton
+                  class="d-editor-button-bar__back"
                   @action={{this.resetToolbar}}
                   @icon="angle-left"
-                  @preventFocus={{true}}
                   @onKeyDown={{this.rovingButtonBar}}
-                  class="d-editor-button-bar__back"
+                  @preventFocus={{true}}
                 />
                 <ToolbarButtons
                   @data={{this.replacedToolbarInstance}}
-                  @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{false}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
                 />
               </DOverflowControls>
             {{else}}
               <DOverflowControls
-                @wrapperClass="d-editor-button-bar__wrap"
+                role="toolbar"
+                @buttonClass="d-editor-button-bar__scroll-btn"
                 @class={{dConcatClass
                   "d-editor-button-bar"
                   (if this.disabled "--disabled")
                 }}
-                @buttonClass="d-editor-button-bar__scroll-btn"
-                role="toolbar"
+                @wrapperClass="d-editor-button-bar__wrap"
               >
                 {{#if this.showEditorModeToggle}}
                   <ToggleSwitch
-                    @preventFocus={{true}}
                     @disabled={{@disableSubmit}}
+                    @preventFocus={{true}}
                     @state={{this.isRichEditorEnabled}}
                     {{on "click" this.toggleRichEditor}}
                     {{on "keydown" this.rovingButtonBar}}
@@ -822,8 +823,8 @@ export default class DEditor extends Component {
                 {{/if}}
                 <ToolbarButtons
                   @data={{this.toolbar}}
-                  @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{not this.showEditorModeToggle}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
                 />
               </DOverflowControls>
             {{/if}}
@@ -831,26 +832,26 @@ export default class DEditor extends Component {
 
           <DConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
-            @class="d-editor-input"
-            @onSetup={{this.setupEditor}}
-            @markdownOptions={{this.markdownOptions}}
-            @keymap={{this.keymap}}
-            @value={{this.value}}
-            @placeholder={{@placeholder}}
-            @disabled={{this.disabled}}
+            @categoryId={{@categoryId}}
             @change={{this.onChange}}
+            @class="d-editor-input"
+            @disabled={{this.disabled}}
             @focusIn={{this.handleFocusIn}}
             @focusOut={{this.handleFocusOut}}
-            @categoryId={{@categoryId}}
-            @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @keymap={{this.keymap}}
+            @markdownOptions={{this.markdownOptions}}
+            @onSetup={{this.setupEditor}}
+            @placeholder={{@placeholder}}
             @replaceToolbar={{this.replaceToolbar}}
             @toggleRichEditor={{this.toggleRichEditor}}
+            @topicId={{@topicId}}
+            @value={{this.value}}
           />
           <DPopupInputTip @validation={{this.validation}} />
           <PluginOutlet
-            @name="after-d-editor"
             @connectorTagName="div"
+            @name="after-d-editor"
             @outletArgs={{this.outletArgs}}
           />
         </div>
@@ -862,10 +863,10 @@ export default class DEditor extends Component {
         </div>
       {{else}}
         <DEditorPreview
-          @preview={{this.preview}}
           @forcePreview={{this.forcePreview}}
           @onPreviewUpdated={{this.previewUpdated}}
           @outletArgs={{this.outletArgs}}
+          @preview={{this.preview}}
         />
       {{/if}}
     </div>

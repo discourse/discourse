@@ -63,10 +63,10 @@ export default class VoiceRoomList extends Component {
       <DPageSubheader @titleLabel={{i18n "voice.admin.rooms_title"}}>
         <:actions as |actions|>
           <actions.Primary
+            class="voice-admin__create-btn"
+            @icon="plus"
             @label="voice.admin.create_room"
             @route="adminPlugins.show.voice-rooms.new"
-            @icon="plus"
-            class="voice-admin__create-btn"
           />
         </:actions>
       </DPageSubheader>
@@ -122,8 +122,8 @@ export default class VoiceRoomList extends Component {
                   </div>
                   {{#if room.creator}}
                     <a
-                      href={{room.creator.userPath}}
                       data-user-card={{room.creator.username}}
+                      href={{room.creator.userPath}}
                     >
                       {{dAvatar room.creator imageSize="small"}}
                     </a>
@@ -138,26 +138,26 @@ export default class VoiceRoomList extends Component {
                 <td class="d-admin-row__controls voice-rooms__controls">
                   {{#if room.live_participant_count}}
                     <DButton
+                      class="btn-small btn-danger voice-rooms__end-call"
                       @icon="phone-slash"
                       @title="voice.admin.end_call.title"
                       {{on "click" (fn this.endCall room)}}
-                      class="btn-small btn-danger voice-rooms__end-call"
                     />
                   {{/if}}
 
                   <LinkTo
-                    @route="adminPlugins.show.voice-rooms.edit"
-                    @model={{room.id}}
                     class="btn btn-default btn-text btn-small"
+                    @model={{room.id}}
+                    @route="adminPlugins.show.voice-rooms.edit"
                   >
                     {{i18n "voice.admin.edit"}}
                   </LinkTo>
 
                   <DButton
-                    @icon="trash-can"
-                    @disabled={{room.isDeleting}}
-                    {{on "click" (fn this.destroyRoom room)}}
                     class="btn-small btn-danger voice-rooms__delete"
+                    @disabled={{room.isDeleting}}
+                    @icon="trash-can"
+                    {{on "click" (fn this.destroyRoom room)}}
                   />
                 </td>
               </tr>
@@ -166,9 +166,9 @@ export default class VoiceRoomList extends Component {
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="voice-admin__create-btn"
           @ctaLabel="voice.admin.create_room"
           @ctaRoute="adminPlugins.show.voice-rooms.new"
-          @ctaClass="voice-admin__create-btn"
           @emptyLabel="voice.admin.no_rooms_yet"
         />
       {{/if}}

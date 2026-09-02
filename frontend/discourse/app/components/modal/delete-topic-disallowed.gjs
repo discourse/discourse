@@ -9,7 +9,7 @@ const DeleteTopicDisallowed = <template>
       <p>{{trustHTML (i18n "post.controls.delete_topic_disallowed_modal")}}</p>
     </:body>
     <:footer>
-      <DButton @action={{@closeModal}} class="btn-primary" @label="close" />
+      <DButton class="btn-primary" @action={{@closeModal}} @label="close" />
     </:footer>
   </DModal>
 </template>;

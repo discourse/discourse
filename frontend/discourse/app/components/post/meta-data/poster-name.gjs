@@ -102,17 +102,6 @@ export default class PostMetaDataPosterName extends Component {
     return !this.shouldDisplayIconsBefore;
   }
 
-  @bind
-  withBadgeDescription(badge) {
-    // Alter the badge description to show that the badge was granted for this post.
-    badge.description = i18n("post.badge_granted_tooltip", {
-      username: this.args.post.username,
-      badge_name: badge.name,
-    });
-
-    return badge;
-  }
-
   get #suppressSimilarName() {
     const sanitizedName = this.#sanitizeName(this.user.name);
     const sanitizedUsername = this.#sanitizeName(this.user.username);
@@ -129,6 +118,17 @@ export default class PostMetaDataPosterName extends Component {
         username: this.user.username,
       }
     );
+  }
+
+  @bind
+  withBadgeDescription(badge) {
+    // Alter the badge description to show that the badge was granted for this post.
+    badge.description = i18n("post.badge_granted_tooltip", {
+      username: this.args.post.username,
+      badge_name: badge.name,
+    });
+
+    return badge;
   }
 
   #sanitizeName(name) {
@@ -222,8 +222,8 @@ export default class PostMetaDataPosterName extends Component {
               <span class={{dConcatClass "user-title" this.titleClassNames}}>
                 {{#if (and this.user.primary_group_name @post.title_is_group)}}
                   <GroupLink
-                    @name={{this.user.primary_group_name}}
                     @href={{this.primaryGroupHref}}
+                    @name={{this.user.primary_group_name}}
                   >
                     {{this.userTitle}}
                   </GroupLink>
@@ -245,8 +245,8 @@ export default class PostMetaDataPosterName extends Component {
                   <span class={{concat "user-badge-button-" badge.slug}}>
                     <UserBadge
                       @badge={{this.withBadgeDescription badge}}
-                      @user={{this.user}}
                       @showName={{false}}
+                      @user={{this.user}}
                     />
                   </span>
                 {{/each}}

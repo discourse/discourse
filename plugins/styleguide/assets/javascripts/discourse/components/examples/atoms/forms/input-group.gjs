@@ -4,14 +4,14 @@ export default <template>
   <Form as |form|>
     <form.InputGroup as |inputGroup|>
       <inputGroup.Field
-        @title="Username"
         @name="username"
+        @title="Username"
         @type="input"
         as |field|
       >
         <field.Control />
       </inputGroup.Field>
-      <inputGroup.Field @title="Email" @name="email" @type="input" as |field|>
+      <inputGroup.Field @name="email" @title="Email" @type="input" as |field|>
         <field.Control />
       </inputGroup.Field>
     </form.InputGroup>

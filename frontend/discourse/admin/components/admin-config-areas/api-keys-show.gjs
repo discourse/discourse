@@ -80,7 +80,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
   }
 
   <template>
-    <BackButton @route="adminApiKeys.index" @label="admin.api_keys.back" />
+    <BackButton @label="admin.api_keys.back" @route="adminApiKeys.index" />
 
     <div class="api-key api-key-show">
       <AdminFormRow @label="admin.api.key">
@@ -90,11 +90,11 @@ export default class AdminConfigAreasApiKeysShow extends Component {
       <AdminFormRow @label="admin.api.description">
         {{#if this.editingDescription}}
           <Input
+            maxlength="255"
+            name="description"
+            placeholder={{i18n "admin.api.description_placeholder"}}
             @value={{@apiKey.description}}
             {{on "input" this.setNewDescription}}
-            name="description"
-            maxlength="255"
-            placeholder={{i18n "admin.api.description_placeholder"}}
           />
         {{else}}
           <span>
@@ -109,20 +109,20 @@ export default class AdminConfigAreasApiKeysShow extends Component {
         <div class="controls">
           {{#if this.editingDescription}}
             <DButton
+              class="btn-default"
               @action={{this.saveDescription}}
               @label="admin.api_keys.save"
-              class="btn-default"
             />
             <DButton
+              class="btn-default"
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.cancel"
-              class="btn-default"
             />
           {{else}}
             <DButton
+              class="btn-default"
               @action={{this.toggleEditDescription}}
               @label="admin.api_keys.edit"
-              class="btn-default"
             />
           {{/if}}
         </div>
@@ -130,7 +130,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
       <AdminFormRow @label="admin.api.user">
         {{#if @apiKey.user}}
-          <LinkTo @route="adminUser" @model={{@apiKey.user}}>
+          <LinkTo @model={{@apiKey.user}} @route="adminUser">
             {{dAvatar @apiKey.user imageSize="small"}}
             {{@apiKey.user.username}}
           </LinkTo>
@@ -164,20 +164,20 @@ export default class AdminConfigAreasApiKeysShow extends Component {
         <div class="controls">
           {{#if @apiKey.revoked_at}}
             <DButton
+              class="btn-default"
               @action={{fn this.undoRevokeKey @apiKey}}
               @label="admin.api.undo_revoke"
-              class="btn-default"
             />
             <DButton
+              class="btn-danger"
               @action={{fn this.deleteKey @apiKey}}
               @label="admin.api.delete"
-              class="btn-danger"
             />
           {{else}}
             <DButton
+              class="btn-danger"
               @action={{fn this.revokeKey @apiKey}}
               @label="admin.api.revoke"
-              class="btn-danger"
             />
           {{/if}}
         </div>
@@ -202,7 +202,7 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                 <td>
                   {{scope.action}}
                   <DTooltip
-                    @icon="circle-question"
+                    class="scope-tooltip"
                     @content={{i18n
                       (concat
                         "admin.api.scopes.descriptions."
@@ -211,14 +211,14 @@ export default class AdminConfigAreasApiKeysShow extends Component {
                         scope.key
                       )
                     }}
-                    class="scope-tooltip"
+                    @icon="circle-question"
                   />
                 </td>
                 <td>
                   <DButton
-                    @icon="link"
-                    @action={{fn this.showURLs scope.urls}}
                     class="btn-info"
+                    @action={{fn this.showURLs scope.urls}}
+                    @icon="link"
                   />
                 </td>
                 <td>

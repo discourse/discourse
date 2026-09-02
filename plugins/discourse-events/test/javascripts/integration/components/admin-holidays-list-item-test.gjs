@@ -18,8 +18,8 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
       <template>
         <AdminHolidaysListItem
           @holiday={{this.holiday}}
-          @region_code={{this.region_code}}
           @isHolidayDisabled={{this.holiday.disabled}}
+          @region_code={{this.region_code}}
         />
       </template>
     );
@@ -40,8 +40,8 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
       <template>
         <AdminHolidaysListItem
           @holiday={{this.holiday}}
-          @region_code={{this.region_code}}
           @isHolidayDisabled={{this.holiday.disabled}}
+          @region_code={{this.region_code}}
         />
       </template>
     );

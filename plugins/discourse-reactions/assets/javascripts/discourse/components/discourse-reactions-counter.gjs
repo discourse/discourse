@@ -22,6 +22,30 @@ export default class DiscourseReactionsCounter extends Component {
     return this.menu.getByIdentifier(MENU_IDENTIFIER)?.id === this.elementId;
   }
 
+  get classes() {
+    const classes = ["discourse-reactions-counter"];
+    const mainReaction =
+      this.siteSettings.discourse_reactions_reaction_for_like;
+
+    const { reactions } = this.args.post;
+
+    if (
+      reactions &&
+      reactions.length === 1 &&
+      reactions[0].id === mainReaction
+    ) {
+      classes.push("only-like");
+    }
+
+    return classes.join(" ");
+  }
+
+  get counterAriaLabel() {
+    return i18n("discourse_reactions.counter.aria_label", {
+      count: this.args.post.reaction_users_count,
+    });
+  }
+
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
@@ -47,30 +71,6 @@ export default class DiscourseReactionsCounter extends Component {
     this.#toggleMenu(event.currentTarget);
   }
 
-  get classes() {
-    const classes = ["discourse-reactions-counter"];
-    const mainReaction =
-      this.siteSettings.discourse_reactions_reaction_for_like;
-
-    const { reactions } = this.args.post;
-
-    if (
-      reactions &&
-      reactions.length === 1 &&
-      reactions[0].id === mainReaction
-    ) {
-      classes.push("only-like");
-    }
-
-    return classes.join(" ");
-  }
-
-  get counterAriaLabel() {
-    return i18n("discourse_reactions.counter.aria_label", {
-      count: this.args.post.reaction_users_count,
-    });
-  }
-
   #toggleMenu(trigger) {
     this.menu.show(trigger, {
       identifier: MENU_IDENTIFIER,
@@ -88,19 +88,19 @@ export default class DiscourseReactionsCounter extends Component {
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     {{#if @post.reaction_users_count}}
       <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        aria-haspopup="dialog"
+        aria-label={{this.counterAriaLabel}}
+        class={{this.classes}}
         id={{this.elementId}}
         type="button"
-        class={{this.classes}}
-        aria-label={{this.counterAriaLabel}}
-        aria-haspopup="dialog"
-        aria-expanded={{if this.expanded "true" "false"}}
         {{on "mousedown" this.mouseDown}}
         {{on "mouseup" this.mouseUp}}
         {{on "click" this.click}}
       >
         <DiscourseReactionsList @post={{@post}} />
 
-        <span class="reactions-counter" aria-hidden="true">
+        <span aria-hidden="true" class="reactions-counter">
           {{@post.reaction_users_count}}
         </span>
       </button>

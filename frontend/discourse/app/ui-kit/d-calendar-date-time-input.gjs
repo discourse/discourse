@@ -134,11 +134,11 @@ export default class DCalendarDateTimeInput extends Component {
       <div class="time-pickers">
         {{dIcon "far-clock"}}
         <Input
+          class="time-picker"
           maxlength={{5}}
           placeholder="hh:mm"
           @type="time"
           @value={{this._time}}
-          class="time-picker"
           {{on "input" this.onChangeTime}}
         />
       </div>

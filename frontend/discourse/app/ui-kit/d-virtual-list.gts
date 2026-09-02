@@ -456,6 +456,7 @@ export default class DVirtualList<T> extends Component<
     }
     element.style.position = "relative";
   });
+
   /**
    * Registers a row for height measurement. Runs on insert and re-runs only when
    * the api handle arrives — NOT per-render, so it does not re-measure on every
@@ -467,6 +468,7 @@ export default class DVirtualList<T> extends Component<
   measureRow = modifier((element: HTMLElement) => {
     this._api?.measureElement(element);
   });
+
   /**
    * Positions one row: stamps `data-index` (the engine reads it to identify the
    * row) and, while windowing, positions the row absolutely at its virtual
@@ -537,27 +539,6 @@ export default class DVirtualList<T> extends Component<
           vi.size
         )
       );
-  }
-
-  #rowContext(
-    item: T,
-    index: number,
-    key: number | string | bigint,
-    start: number,
-    size: number
-  ): RowContext<T> {
-    return {
-      item,
-      index,
-      key,
-      start,
-      size,
-      // Absolute position in the full backing array, never the window offset.
-      posinset: this.positionAwareItems ? index + 1 : undefined,
-      setSize: this.setSize,
-      place: this.placeRow,
-      measure: this.measureRow,
-    };
   }
 
   /** Whether `@itemRole` is one of the roles that defines position attributes. */
@@ -643,16 +624,37 @@ export default class DVirtualList<T> extends Component<
     this.args.onRegisterApi?.(api);
   }
 
+  #rowContext(
+    item: T,
+    index: number,
+    key: number | string | bigint,
+    start: number,
+    size: number
+  ): RowContext<T> {
+    return {
+      item,
+      index,
+      key,
+      start,
+      size,
+      // Absolute position in the full backing array, never the window offset.
+      posinset: this.positionAwareItems ? index + 1 : undefined,
+      setSize: this.setSize,
+      place: this.placeRow,
+      measure: this.measureRow,
+    };
+  }
+
   <template>
     {{! The outer viewport is the scroll element; the modifier drives it. The
         consumer's role and splattributes go on the inner container, so the
         semantic element owns them. This element takes a role only to carry its own
         name. Size this viewport from CSS. }}
     <div
-      class={{dConcatClass "d-virtual-list" @viewportClass}}
-      role={{this.viewportRole}}
       aria-label={{if @viewportLabel @viewportLabel}}
       aria-labelledby={{if @viewportLabelledBy @viewportLabelledBy}}
+      class={{dConcatClass "d-virtual-list" @viewportClass}}
+      role={{this.viewportRole}}
       tabindex={{this.viewportTabIndex}}
       {{dVirtualizer
         items=@items
@@ -693,10 +695,10 @@ export default class DVirtualList<T> extends Component<
                     runtime on the roles that define them, and omitted otherwise. }}
                 {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
                 <div
+                  aria-posinset={{row.posinset}}
+                  aria-setsize={{row.setSize}}
                   class="d-virtual-list__item"
                   role={{@itemRole}}
-                  aria-setsize={{row.setSize}}
-                  aria-posinset={{row.posinset}}
                   {{row.place row.start row.index}}
                   {{row.measure}}
                 >

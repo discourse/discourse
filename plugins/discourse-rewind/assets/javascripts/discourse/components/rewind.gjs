@@ -298,11 +298,11 @@ export default class Rewind extends Component {
         "rewind-container"
         (if this.fullScreen "--fullscreen")
       }}
+      tabindex="0"
       {{didInsert this.loadRewind}}
       {{on "keydown" this.handleEscape}}
       {{on "click" this.handleBackdropClick}}
       {{didInsert this.registerRewindContainer}}
-      tabindex="0"
     >
       <div class="rewind">
         <RewindHeader />
@@ -320,8 +320,8 @@ export default class Rewind extends Component {
                 {{i18n "discourse_rewind.share.toggle_label.private"}}
 
                 <DToggleSwitch
-                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
                   class="rewind__share-toggle"
+                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
                   {{on "click" this.toggleShareRewind}}
                 />
                 {{i18n "discourse_rewind.share.toggle_label.public"}}
@@ -332,20 +332,20 @@ export default class Rewind extends Component {
               }}
                 <DButton
                   class="btn-default rewind__copy-link-btn --special-kbd"
-                  @title="composer.link_toolbar.copy"
-                  @icon="link"
                   @action={{this.copyRewindLink}}
+                  @icon="link"
+                  @title="composer.link_toolbar.copy"
                 />
               {{/if}}
             {{/if}}
             <DButton
               class="btn-default rewind__exit-fullscreen-btn --special-kbd"
+              @action={{this.toggleFullScreen}}
               @icon={{if
                 this.fullScreen
                 "discourse-compress"
                 "discourse-expand"
               }}
-              @action={{this.toggleFullScreen}}
             />
 
           </div>
@@ -392,9 +392,9 @@ export default class Rewind extends Component {
                 {{#if ReportComponent}}
                   <div class={{dConcatClass "rewind-report" report.identifier}}>
                     <ReportComponent
+                      @isOwnRewind={{this.isOwnRewind}}
                       @report={{report}}
                       @user={{@user}}
-                      @isOwnRewind={{this.isOwnRewind}}
                     />
                   </div>
                 {{/if}}
@@ -411,16 +411,16 @@ export default class Rewind extends Component {
           {{#if this.showPrev}}
             <DButton
               class="rewind__prev-btn"
-              @icon="chevron-left"
               @action={{this.prev}}
+              @icon="chevron-left"
             />
           {{/if}}
 
           {{#if this.showNext}}
             <DButton
               class="rewind__next-btn"
-              @icon="chevron-right"
               @action={{this.next}}
+              @icon="chevron-right"
             />
           {{/if}}
         {{/if}}

@@ -52,10 +52,10 @@ export default class AiBotSidebarNewConversation extends Component {
       {{/if}}
       <div class="ai-new-question-button__wrapper">
         <DButton
-          @label="discourse_ai.ai_bot.conversations.new"
-          @icon="plus"
-          @action={{this.routeTo}}
           class="ai-new-question-button btn-default"
+          @action={{this.routeTo}}
+          @icon="plus"
+          @label="discourse_ai.ai_bot.conversations.new"
         />
       </div>
     {{/if}}

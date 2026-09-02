@@ -25,6 +25,13 @@ export default class GroupsFormProfileFields extends Component {
     return !this.model?.automatic;
   }
 
+  @computed("basicNameValidation", "uniqueNameValidation")
+  get nameValidation() {
+    return this.uniqueNameValidation
+      ? this.uniqueNameValidation
+      : this.basicNameValidation;
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     const name = this.get("model.name");
@@ -36,11 +43,8 @@ export default class GroupsFormProfileFields extends Component {
     }
   }
 
-  @computed("basicNameValidation", "uniqueNameValidation")
-  get nameValidation() {
-    return this.uniqueNameValidation
-      ? this.uniqueNameValidation
-      : this.basicNameValidation;
+  checkGroupNameDebounced() {
+    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   @observes("nameInput")
@@ -73,10 +77,6 @@ export default class GroupsFormProfileFields extends Component {
     this.checkGroupNameDebounced();
 
     return this._failedInputValidation(i18n("admin.groups.new.name.checking"));
-  }
-
-  checkGroupNameDebounced() {
-    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   _checkGroupName() {
@@ -134,10 +134,10 @@ export default class GroupsFormProfileFields extends Component {
               }}</label>
 
             <DTextField
-              @name="name"
-              @value={{this.nameInput}}
-              @placeholderKey="admin.groups.name_placeholder"
               class="input-xxlarge group-form-name"
+              @name="name"
+              @placeholderKey="admin.groups.name_placeholder"
+              @value={{this.nameInput}}
             />
 
             <DInputTip @validation={{this.nameValidation}} />
@@ -150,9 +150,9 @@ export default class GroupsFormProfileFields extends Component {
             }}</label>
 
           <DTextField
+            class="input-xxlarge group-form-full-name"
             @name="full_name"
             @value={{this.model.full_name}}
-            class="input-xxlarge group-form-full-name"
           />
         </div>
       {{/if}}
@@ -160,8 +160,8 @@ export default class GroupsFormProfileFields extends Component {
       <div class="control-group">
         <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
         <DEditor
-          @value={{this.model.bio_raw}}
           class="group-form-bio input-xxlarge"
+          @value={{this.model.bio_raw}}
         />
       </div>
 
@@ -176,8 +176,8 @@ export default class GroupsFormProfileFields extends Component {
 
         <span>
           <PluginOutlet
-            @name="group-edit"
             @connectorTagName="div"
+            @name="group-edit"
             @outletArgs={{lazyHash group=this.model}}
           />
         </span>

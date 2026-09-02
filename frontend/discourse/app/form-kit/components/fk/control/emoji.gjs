@@ -12,11 +12,11 @@ export default class FKControlEmoji extends FKBaseControl {
 
   <template>
     <EmojiPicker
-      @emoji={{@field.value}}
+      @btnClass="btn-emoji btn-default"
       @context={{@context}}
       @didSelectEmoji={{this.updateField}}
+      @emoji={{@field.value}}
       @modalForMobile={{false}}
-      @btnClass="btn-emoji btn-default"
       @showCaret={{true}}
     />
   </template>

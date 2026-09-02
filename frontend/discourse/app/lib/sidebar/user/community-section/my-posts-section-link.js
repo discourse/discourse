@@ -19,20 +19,6 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     }
   }
 
-  teardown() {
-    if (this.shouldDisplay) {
-      this.appEvents.off(
-        USER_DRAFTS_CHANGED_EVENT,
-        this,
-        this._updateDraftCount
-      );
-    }
-  }
-
-  _updateDraftCount() {
-    this.draftCount = this.currentUser.draft_count;
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
   }
@@ -121,5 +107,19 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get shouldDisplay() {
     return this.currentUser;
+  }
+
+  teardown() {
+    if (this.shouldDisplay) {
+      this.appEvents.off(
+        USER_DRAFTS_CHANGED_EVENT,
+        this,
+        this._updateDraftCount
+      );
+    }
+  }
+
+  _updateDraftCount() {
+    this.draftCount = this.currentUser.draft_count;
   }
 }

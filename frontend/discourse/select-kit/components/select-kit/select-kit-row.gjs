@@ -45,15 +45,6 @@ export default class SelectKitRow extends Component {
 
   @tracked _langOverride;
 
-  get isActionRow() {
-    return typeof this.item?.onSelect === "function";
-  }
-
-  @computed("item.onSelect")
-  get role() {
-    return this.isActionRow ? "menuitem" : "menuitemradio";
-  }
-
   @computed("item.lang")
   get lang() {
     if (this._langOverride !== undefined) {
@@ -66,22 +57,13 @@ export default class SelectKitRow extends Component {
     this._langOverride = value;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    if (this.site.desktopView) {
-      this.element.addEventListener("mouseenter", this.handleMouseEnter);
-      this.element.addEventListener("focus", this.handleMouseEnter);
-    }
+  get isActionRow() {
+    return typeof this.item?.onSelect === "function";
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    if (this.site.desktopView) {
-      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
-      this.element.removeEventListener("focus", this.handleMouseEnter);
-    }
+  @computed("item.onSelect")
+  get role() {
+    return this.isActionRow ? "menuitem" : "menuitemradio";
   }
 
   @computed("rowValue")
@@ -132,19 +114,6 @@ export default class SelectKitRow extends Component {
     return label;
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    this.setProperties({
-      rowName: this.getName(this.item),
-      rowValue: this.getValue(this.item),
-      rowLabel: this.getProperty(this.item, "labelProperty"),
-      rowTitle: this.getProperty(this.item, "titleProperty"),
-      rowLang: this.getProperty(this.item, "langProperty"),
-      rowDisabled: this.getProperty(this.item, "disabled"),
-    });
-  }
-
   @computed("item.{icon,icons}")
   get icons() {
     const _icon = makeArray(this.getProperty(this.item, "icon"));
@@ -165,6 +134,37 @@ export default class SelectKitRow extends Component {
   @computed("rowValue", "value")
   get isSelected() {
     return this.rowValue === this.value;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    if (this.site.desktopView) {
+      this.element.addEventListener("mouseenter", this.handleMouseEnter);
+      this.element.addEventListener("focus", this.handleMouseEnter);
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    if (this.site.desktopView) {
+      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+      this.element.removeEventListener("focus", this.handleMouseEnter);
+    }
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    this.setProperties({
+      rowName: this.getName(this.item),
+      rowValue: this.getValue(this.item),
+      rowLabel: this.getProperty(this.item, "labelProperty"),
+      rowTitle: this.getProperty(this.item, "titleProperty"),
+      rowLang: this.getProperty(this.item, "langProperty"),
+      rowDisabled: this.getProperty(this.item, "disabled"),
+    });
   }
 
   @action

@@ -68,10 +68,10 @@ export default class ImpersonationNotice extends Component {
         </span>
       </div>
       <DButton
+        class="btn-danger"
         @action={{this.stopImpersonating}}
         @isLoading={{this.stopping}}
         @label="impersonation.stop"
-        class="btn-danger"
       />
     </div>
   </template>

@@ -15,39 +15,39 @@ function renderComponent(context) {
   return render(
     <template>
       <NestedPost
-        @post={{context.post}}
-        @children={{context.children}}
-        @topic={{context.topic}}
-        @depth={{context.depth}}
-        @path={{context.path}}
-        @sort="top"
-        @replyToPost={{noop}}
-        @editPost={{noop}}
-        @deletePost={{noop}}
-        @recoverPost={{noop}}
-        @showFlags={{noop}}
-        @showHistory={{noop}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
-        @grantBadge={{noop}}
-        @lockPost={{noop}}
-        @unlockPost={{noop}}
-        @permanentlyDeletePost={{noop}}
-        @rebakePost={{noop}}
-        @showPagePublish={{noop}}
-        @togglePostType={{noop}}
-        @toggleWiki={{noop}}
-        @unhidePost={{noop}}
+        @children={{context.children}}
+        @collapseFromDepth={{context.collapseFromDepth}}
+        @deletePost={{noop}}
+        @depth={{context.depth}}
+        @editPost={{noop}}
         @expansionState={{context.expansionState}}
         @fetchedChildrenCache={{context.fetchedChildrenCache}}
         @focusPost={{context.focusPost}}
-        @registerPost={{registerPost}}
-        @collapseFromDepth={{context.collapseFromDepth}}
+        @grantBadge={{noop}}
+        @lockPost={{noop}}
         @multiSelect={{context.multiSelect}}
-        @togglePostSelection={{context.togglePostSelection}}
-        @selectReplies={{context.selectReplies}}
-        @selectBelow={{context.selectBelow}}
+        @path={{context.path}}
+        @permanentlyDeletePost={{noop}}
+        @post={{context.post}}
         @postSelected={{context.postSelected}}
+        @rebakePost={{noop}}
+        @recoverPost={{noop}}
+        @registerPost={{registerPost}}
+        @replyToPost={{noop}}
+        @selectBelow={{context.selectBelow}}
+        @selectReplies={{context.selectReplies}}
+        @showFlags={{noop}}
+        @showHistory={{noop}}
+        @showPagePublish={{noop}}
+        @sort="top"
+        @togglePostSelection={{context.togglePostSelection}}
+        @togglePostType={{noop}}
+        @toggleWiki={{noop}}
+        @topic={{context.topic}}
+        @unhidePost={{noop}}
+        @unlockPost={{noop}}
       />
     </template>
   );

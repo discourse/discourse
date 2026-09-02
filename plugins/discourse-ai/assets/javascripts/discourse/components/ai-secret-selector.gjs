@@ -50,27 +50,27 @@ export default class AiSecretSelector extends Component {
     <div class="ai-secret-selector">
       {{#if this.hasSecrets}}
         <ComboBox
-          @value={{@value}}
+          class="ai-secret-selector__dropdown"
           @content={{this.secretOptions}}
           @onChange={{this.onSelectSecret}}
           @options={{hash
             filterable=true
             none="discourse_ai.secrets.select_secret"
           }}
-          class="ai-secret-selector__dropdown"
+          @value={{@value}}
         />
         <DButton
+          class="btn-default ai-secret-selector__add-btn"
           @action={{this.openCreateModal}}
           @icon="plus"
           @title="discourse_ai.secrets.create_new"
-          class="btn-default ai-secret-selector__add-btn"
         />
       {{else}}
         <DButton
+          class="btn-default ai-secret-selector__add-btn"
           @action={{this.openCreateModal}}
           @icon="plus"
           @label="discourse_ai.secrets.add_secret"
-          class="btn-default ai-secret-selector__add-btn"
         />
       {{/if}}
     </div>

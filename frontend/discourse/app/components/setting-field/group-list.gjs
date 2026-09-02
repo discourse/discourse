@@ -78,13 +78,13 @@ export default class SettingFieldGroupList extends Component {
   <template>
     <@field.Control>
       <ListSetting
-        @value={{this.selectedIds}}
         @choices={{this.groupChoices}}
-        @settingName={{@definition.key}}
         @mandatoryValues={{@definition.mandatory_values}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.onChange}}
+        @settingName={{@definition.key}}
+        @value={{this.selectedIds}}
+        @valueProperty="id"
       />
     </@field.Control>
   </template>

@@ -121,39 +121,6 @@ export default class CampaignBanner extends Component {
     return this.siteSettings.discourse_subscriptions_campaign_show_contributors;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
-      document.body.classList.add(SIDEBAR_BODY_CLASS);
-    } else {
-      document.body.classList.remove(SIDEBAR_BODY_CLASS);
-    }
-
-    // makes sure to only play animation once, & not repeat on reload
-    if (this.isGoalMet) {
-      const successAnimationKey = this.keyValueStore.get(
-        "campaign_success_animation"
-      );
-
-      if (!successAnimationKey) {
-        later(() => {
-          this.keyValueStore.set({
-            key: "campaign_success_animation",
-            value: Date.now(),
-          });
-          document.body.classList.add("success-animation-off");
-        }, 7000);
-      } else {
-        document.body.classList.add("success-animation-off");
-      }
-    }
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    document.body.classList.remove(SIDEBAR_BODY_CLASS);
-  }
-
   @computed("backgroundImageUrl")
   get bannerInfoStyle() {
     if (!this.backgroundImageUrl) {
@@ -206,13 +173,6 @@ export default class CampaignBanner extends Component {
     );
   }
 
-  @observes("dismissed")
-  _updateBodyClasses() {
-    if (this.dismissed) {
-      document.body.classList.remove(SIDEBAR_BODY_CLASS);
-    }
-  }
-
   @computed("dismissed")
   get visible() {
     const dismissedBannerKey = this.keyValueStore.get(
@@ -245,6 +205,39 @@ export default class CampaignBanner extends Component {
     return currentVolume >= this.goalTarget;
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    if (this.isSidebar && this.shouldShow && this.site.desktopView) {
+      document.body.classList.add(SIDEBAR_BODY_CLASS);
+    } else {
+      document.body.classList.remove(SIDEBAR_BODY_CLASS);
+    }
+
+    // makes sure to only play animation once, & not repeat on reload
+    if (this.isGoalMet) {
+      const successAnimationKey = this.keyValueStore.get(
+        "campaign_success_animation"
+      );
+
+      if (!successAnimationKey) {
+        later(() => {
+          this.keyValueStore.set({
+            key: "campaign_success_animation",
+            value: Date.now(),
+          });
+          document.body.classList.add("success-animation-off");
+        }, 7000);
+      } else {
+        document.body.classList.add("success-animation-off");
+      }
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    document.body.classList.remove(SIDEBAR_BODY_CLASS);
+  }
+
   @action
   dismissBanner() {
     this.set("dismissed", true);
@@ -252,6 +245,13 @@ export default class CampaignBanner extends Component {
       key: "dismissed_campaign_banner",
       value: Date.now(),
     });
+  }
+
+  @observes("dismissed")
+  _updateBodyClasses() {
+    if (this.dismissed) {
+      document.body.classList.remove(SIDEBAR_BODY_CLASS);
+    }
   }
 
   <template>
@@ -263,7 +263,7 @@ export default class CampaignBanner extends Component {
             (concat "box-shadow: 5px 5px #" this.dropShadowColor)
           }}
         >
-          <DButton @icon="xmark" @action={{this.dismissBanner}} class="close" />
+          <DButton class="close" @action={{this.dismissBanner}} @icon="xmark" />
 
           <div
             class="campaign-banner-info"
@@ -288,10 +288,10 @@ export default class CampaignBanner extends Component {
 
               {{#if this.product}}
                 <LinkTo
-                  @route="subscribe.show"
-                  @model={{this.product}}
-                  @disabled={{this.product.subscribed}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @disabled={{this.product.subscribed}}
+                  @model={{this.product}}
+                  @route="subscribe.show"
                 >
                   {{dIcon "far-heart"}}
                   {{dIcon "heart" class="hover-heart"}}
@@ -299,8 +299,8 @@ export default class CampaignBanner extends Component {
                 </LinkTo>
               {{else}}
                 <LinkTo
-                  @route={{this.subscribeRoute}}
                   class="btn btn-primary campaign-banner-info-button"
+                  @route={{this.subscribeRoute}}
                 >
                   {{dIcon "far-heart"}}
                   {{dIcon "heart" class="hover-heart"}}
@@ -375,8 +375,8 @@ export default class CampaignBanner extends Component {
               {{#if this.subscriberGoal}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.subscribers}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.subscribers}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
@@ -392,8 +392,8 @@ export default class CampaignBanner extends Component {
               {{else}}
                 <progress
                   class="campaign-banner-progress-bar"
-                  value={{this.amountRaised}}
                   max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                  value={{this.amountRaised}}
                 ></progress>
 
                 <p class="campaign-banner-progress-description">

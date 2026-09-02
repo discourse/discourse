@@ -126,41 +126,41 @@ export default class ChatChannelSidebarContextMenu extends Component {
     <DDropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__open-notification-settings"
           @action={{this.openNotificationSettings}}
           @forwardEvent={{true}}
           @icon="bell"
-          @suffixIcon="angle-right"
           @label="chat.channel_settings.notification_settings_context"
+          @suffixIcon="angle-right"
           @title="chat.channel_settings.notification_settings_context"
-          class="chat-channel-sidebar-link-menu__open-notification-settings"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__channel-settings"
           @action={{this.navigateToSettings}}
           @icon="gear"
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
-          class="chat-channel-sidebar-link-menu__channel-settings"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__star-channel"
           @action={{this.toggleStarred}}
           @disabled={{this.isTogglingStarred}}
           @icon={{this.starIcon}}
           @label={{this.starLabel}}
           @title={{this.starLabel}}
-          class="chat-channel-sidebar-link-menu__star-channel"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__leave-channel --danger"
           @action={{this.leaveChannel}}
           @icon="xmark"
           @label={{this.leaveLabel}}
           @title={{this.leaveLabel}}
-          class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>
     </DDropdownMenu>

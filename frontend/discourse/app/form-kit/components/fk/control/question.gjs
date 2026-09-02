@@ -17,15 +17,15 @@ export default class FKControlQuestion extends FKBaseControl {
   <template>
     <div class="form-kit__inline-radio">
       {{#let (dUniqueId) as |uuid|}}
-        <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label --yes">
+        <FKLabel class="form-kit__control-radio-label --yes" @fieldId={{uuid}}>
           <input
-            name={{@field.name}}
-            type="radio"
-            value="true"
+            aria-describedby={{@field.describedBy}}
             checked={{eq @field.value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
-            aria-describedby={{@field.describedBy}}
+            name={{@field.name}}
+            type="radio"
+            value="true"
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -40,15 +40,15 @@ export default class FKControlQuestion extends FKBaseControl {
       {{/let}}
 
       {{#let (dUniqueId) as |uuid|}}
-        <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label --no">
+        <FKLabel class="form-kit__control-radio-label --no" @fieldId={{uuid}}>
           <input
-            name={{@field.name}}
-            type="radio"
-            value="false"
+            aria-describedby={{@field.describedBy}}
             checked={{eq @field.value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
-            aria-describedby={{@field.describedBy}}
+            name={{@field.name}}
+            type="radio"
+            value="false"
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}

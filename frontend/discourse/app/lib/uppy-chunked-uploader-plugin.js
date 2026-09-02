@@ -30,6 +30,14 @@ export default class UppyChunkedUploader extends UploaderPlugin {
     this.uploaderEvents = Object.create(null);
   }
 
+  install() {
+    this._install(this._upload.bind(this));
+  }
+
+  uninstall() {
+    this._uninstall(this._upload.bind(this));
+  }
+
   _resetUploaderReferences(fileID, opts = {}) {
     if (this.uploaders[fileID]) {
       this.uploaders[fileID].abort({ really: opts.abort || false });
@@ -199,13 +207,5 @@ export default class UppyChunkedUploader extends UploaderPlugin {
     });
 
     return Promise.all(promises);
-  }
-
-  install() {
-    this._install(this._upload.bind(this));
-  }
-
-  uninstall() {
-    this._uninstall(this._upload.bind(this));
   }
 }

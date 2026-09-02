@@ -5,26 +5,26 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
+    @descriptionLabel={{i18n "admin.config.onebox.header_description"}}
     @hideTabs={{true}}
     @titleLabel={{i18n "admin.config.onebox.title"}}
-    @descriptionLabel={{i18n "admin.config.onebox.header_description"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/onebox"
         @label={{i18n "admin.config.onebox.title"}}
+        @path="/admin/config/onebox"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @categories="onebox"
-      @path="/admin/config/onebox"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @categories="onebox"
+      @filter={{@controller.filter}}
+      @path="/admin/config/onebox"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

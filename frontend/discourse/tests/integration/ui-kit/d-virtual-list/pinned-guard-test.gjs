@@ -104,10 +104,10 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{items}}
             @estimateSize={{estimate}}
-            @pinnedIndices={{garbagePins}}
+            @items={{items}}
             @overscan={{0}}
+            @pinnedIndices={{garbagePins}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -149,9 +149,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{h.items}}
             @key="id"
-            @estimateSize={{estimate}}
             @pinnedIndices={{pinFirst}}
             as |item|
           >
@@ -193,11 +193,11 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{h.items}}
             @key="id"
-            @estimateSize={{estimate}}
-            @pinnedIndices={{pinPair}}
             @overscan={{0}}
+            @pinnedIndices={{pinPair}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>

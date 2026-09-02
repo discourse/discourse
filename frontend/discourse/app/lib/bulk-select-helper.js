@@ -29,19 +29,6 @@ export default class BulkSelectHelper {
     setOwner(this, getOwner(context));
   }
 
-  clear() {
-    this.selected.length = 0;
-    this.lastCheckedElementId = null;
-  }
-
-  addTopics(topics) {
-    this.selected = this.selected.concat(topics);
-  }
-
-  setTopics(topics) {
-    this.selected = topics;
-  }
-
   get onBulkSelectToggle() {
     return this._onBulkSelectToggle;
   }
@@ -60,6 +47,19 @@ export default class BulkSelectHelper {
 
   get selectedCategoryIds() {
     return uniqueItemsFromArray(this.selected.map((item) => item.category_id));
+  }
+
+  clear() {
+    this.selected.length = 0;
+    this.lastCheckedElementId = null;
+  }
+
+  addTopics(topics) {
+    this.selected = this.selected.concat(topics);
+  }
+
+  setTopics(topics) {
+    this.selected = topics;
   }
 
   @action

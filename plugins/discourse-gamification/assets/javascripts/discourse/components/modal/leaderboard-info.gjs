@@ -5,9 +5,9 @@ import { i18n } from "discourse-i18n";
 
 const LeaderboardInfo = <template>
   <DModal
-    @title={{i18n "gamification.leaderboard.modal.title"}}
-    @closeModal={{@closeModal}}
     class="leaderboard-info-modal"
+    @closeModal={{@closeModal}}
+    @title={{i18n "gamification.leaderboard.modal.title"}}
   >
     <:body>
       {{dIcon "award"}}

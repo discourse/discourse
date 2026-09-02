@@ -21,12 +21,12 @@ export default class AdminConfigAreaEmptyList extends Component {
 
       {{#if @ctaLabel}}
         <DButton
-          @label={{@ctaLabel}}
           class={{dConcatClass
             "btn-default btn-small admin-config-area-empty-list__cta-button"
             @ctaClass
           }}
           @action={{@ctaAction}}
+          @label={{@ctaLabel}}
           @route={{@ctaRoute}}
           @routeModels={{@ctaRouteModels}}
         />

@@ -42,15 +42,15 @@ export default <template>
                   />
                 {{else}}
                   <DButton
+                    class="btn no-text btn-icon"
                     @action={{routeAction "updateCard" subscription.id}}
                     @icon="far-pen-to-square"
-                    class="btn no-text btn-icon"
                   />
                   <DButton
                     class="btn-danger btn no-text btn-icon"
-                    @icon="trash-can"
-                    @disabled={{subscription.canceled_at}}
                     @action={{routeAction "cancelSubscription" subscription}}
+                    @disabled={{subscription.canceled_at}}
+                    @icon="trash-can"
                   />
                 {{/if}}
               {{/if}}

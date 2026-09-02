@@ -2,8 +2,8 @@ import AdSlot from "./ad-slot";
 
 const PostBottomAd = <template>
   <AdSlot
-    @placement="post-bottom"
     @category={{@model.topic.category.slug}}
+    @placement="post-bottom"
     @postNumber={{@model.post_number}}
   />
 </template>;

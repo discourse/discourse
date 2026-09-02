@@ -4,11 +4,6 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 
 export default class ApiKey extends RestModel {
-  @computed("truncated_key")
-  get truncatedKey() {
-    return `${this.truncated_key} ...`;
-  }
-
   @computed("_user")
   get user() {
     return this._user;
@@ -22,17 +17,14 @@ export default class ApiKey extends RestModel {
     }
   }
 
+  @computed("truncated_key")
+  get truncatedKey() {
+    return `${this.truncated_key} ...`;
+  }
+
   @computed("_created_by")
   get createdBy() {
     return this._created_by;
-  }
-
-  set created_by(value) {
-    if (value && !(value instanceof AdminUser)) {
-      this.set("_created_by", AdminUser.create(value));
-    } else {
-      this.set("_created_by", value);
-    }
   }
 
   @computed("description")
@@ -41,6 +33,21 @@ export default class ApiKey extends RestModel {
       return this.description;
     }
     return `${this.description.substring(0, 40)}...`;
+  }
+
+  @computed()
+  get basePath() {
+    return this.store
+      .adapterFor("api-key")
+      .pathFor(this.store, "api-key", this.id);
+  }
+
+  set created_by(value) {
+    if (value && !(value instanceof AdminUser)) {
+      this.set("_created_by", AdminUser.create(value));
+    } else {
+      this.set("_created_by", value);
+    }
   }
 
   revoke() {
@@ -62,12 +69,5 @@ export default class ApiKey extends RestModel {
       "scopes",
       "scope_mode"
     );
-  }
-
-  @computed()
-  get basePath() {
-    return this.store
-      .adapterFor("api-key")
-      .pathFor(this.store, "api-key", this.id);
   }
 }

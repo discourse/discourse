@@ -37,9 +37,9 @@ export default class PaymentOptions extends Component {
       <div class="subscribe-buttons">
         {{#each this.orderedPlans as |plan|}}
           <PaymentPlan
+            @clickPlan={{this.clickPlan}}
             @plan={{plan}}
             @selectedPlan={{this.selectedPlan}}
-            @clickPlan={{this.clickPlan}}
           />
         {{/each}}
       </div>

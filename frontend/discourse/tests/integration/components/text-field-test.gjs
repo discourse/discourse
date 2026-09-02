@@ -43,6 +43,49 @@ module("Integration | Component | TextField", function (hooks) {
       .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
   });
 
+  test("falls back to the placeholder key when the placeholder argument is empty", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholder={{null}}
+          @placeholderKey="placeholder.i18n.key"
+        />
+      </template>
+    );
+
+    assert
+      .dom("input[type=text]")
+      .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
+  });
+
+  test("falls back to the placeholder key regardless of argument order", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholderKey="placeholder.i18n.key"
+          @placeholder={{null}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("input[type=text]")
+      .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
+  });
+
+  test("prefers an explicit placeholder over the placeholder key", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholder="Explicit"
+          @placeholderKey="placeholder.i18n.key"
+        />
+      </template>
+    );
+
+    assert.dom("input[type=text]").hasAttribute("placeholder", "Explicit");
+  });
+
   test("sets the dir attribute to auto when mixed text direction enabled", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
 
@@ -86,8 +129,8 @@ module("Integration | Component | TextField", function (hooks) {
       <template>
         <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChange={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -113,8 +156,8 @@ module("Integration | Component | TextField", function (hooks) {
       <template>
         <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChangeImmediate={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );

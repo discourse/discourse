@@ -71,9 +71,9 @@ export default class AdminConfigAreaCard extends Component {
 
           {{#if @collapsable}}
             <DButton
-              @title="sidebar.toggle_section"
-              @action={{this.toggleCardDisplay}}
               class="admin-config-area-card__toggle-button btn-transparent"
+              @action={{this.toggleCardDisplay}}
+              @title="sidebar.toggle_section"
             >
               {{dIcon this.headerCaretIcon}}
             </DButton>

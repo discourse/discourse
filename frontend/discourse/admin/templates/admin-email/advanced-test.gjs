@@ -14,11 +14,11 @@ export default <template>
 
   <div class="email-advanced-test">
     <label for="email">{{i18n "admin.email.advanced_test.email"}}</label>
-    <Textarea name="email" @value={{@controller.email}} class="email-body" />
+    <Textarea class="email-body" name="email" @value={{@controller.email}} />
     <DButton
+      class="btn-default"
       @action={{@controller.run}}
       @label="admin.email.advanced_test.run"
-      class="btn-default"
     />
   </div>
 

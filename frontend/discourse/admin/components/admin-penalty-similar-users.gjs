@@ -86,8 +86,8 @@ export default class AdminPenaltySimilarUsers extends Component {
               <tr>
                 <td>
                   <Input
-                    @type="checkbox"
                     disabled={{not (get user this.penaltyField)}}
+                    @type="checkbox"
                     {{on "click" (fn this.selectUserId user.id)}}
                   />
                 </td>

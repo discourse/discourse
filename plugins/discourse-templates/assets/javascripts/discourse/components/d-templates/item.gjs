@@ -23,9 +23,9 @@ export default class DTemplatesItem extends Component {
 
         <div class="actions">
           <DButton
+            class="templates-apply"
             @action={{this.apply}}
             @icon="far-clipboard"
-            class="templates-apply"
           />
         </div>
       </summary>

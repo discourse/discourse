@@ -13,11 +13,11 @@ export default <template>
   <section id="patreon">
     {{#if @controller.unconfigured}}
       <AdminConfigAreaEmptyList
-        @emptyLabelTranslated={{i18n "patreon.unconfigured" url=META_URL}}
+        class="patreon-unconfigured"
         @ctaLabel="patreon.configure_tokens"
         @ctaRoute="adminPlugins.show.settings"
         @ctaRouteModels="discourse-patreon"
-        class="patreon-unconfigured"
+        @emptyLabelTranslated={{i18n "patreon.unconfigured" url=META_URL}}
       />
     {{else}}
       <table>
@@ -37,11 +37,11 @@ export default <template>
               <td>
                 <div class="pull-right">
                   <DButton
+                    class="delete btn-danger"
                     @action={{@controller.delete}}
                     @actionParam={{rule}}
                     @icon="far-trash-can"
                     @title="patreon.delete"
-                    class="delete btn-danger"
                   />
                 </div>
               </td>
@@ -52,24 +52,24 @@ export default <template>
         <tfoot>
           <tr class="new-filter">
             <td><ComboBox
-                @value={{@controller.editing.group_id}}
                 @content={{@controller.groups}}
                 @nameProperty="name"
-                @valueProperty="id"
                 @none="patreon.select_group"
+                @value={{@controller.editing.group_id}}
+                @valueProperty="id"
               /></td>
             <td><ListSetting
-                @value={{@controller.editing.reward_list}}
-                @choices={{@controller.rewardsNames}}
                 class="rewards"
+                @choices={{@controller.rewardsNames}}
+                @value={{@controller.editing.reward_list}}
               /></td>
             <td>
               <div class="pull-right">
                 <DButton
+                  class="save btn-primary"
                   @action={{@controller.save}}
                   @icon="check"
                   @title="patreon.save"
-                  class="save btn-primary"
                 />
               </div>
             </td>
@@ -81,10 +81,10 @@ export default <template>
 
       <DButton
         @action={{@controller.updateData}}
-        @icon="refresh"
         @disabled={{@controller.updatingData}}
-        @title="patreon.update_data"
+        @icon="refresh"
         @label="patreon.update_data"
+        @title="patreon.update_data"
       />
 
       {{#if @controller.last_sync_at}}

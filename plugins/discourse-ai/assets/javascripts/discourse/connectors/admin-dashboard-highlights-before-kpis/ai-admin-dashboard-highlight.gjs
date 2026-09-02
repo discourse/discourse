@@ -67,15 +67,15 @@ export default class AiAdminDashboardHighlight extends Component {
   <template>
     {{#unless this.failed}}
       <div
-        class="ai-admin-dashboard-highlight"
         aria-live="polite"
+        class="ai-admin-dashboard-highlight"
         {{didInsert this.loadHighlight}}
         {{didUpdate this.loadHighlight this.queryKey}}
       >
         {{#if this.loading}}
           <div
-            class="ai-admin-dashboard-highlight__loading"
             aria-hidden="true"
+            class="ai-admin-dashboard-highlight__loading"
           ></div>
         {{else if this.highlight}}
           <p class="ai-admin-dashboard-highlight__text">{{this.highlight}}</p>

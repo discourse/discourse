@@ -6,7 +6,6 @@ import { i18n } from "discourse-i18n";
 
 const NotificationsListEmptyState = <template>
   <DEmptyState
-    @title={{i18n "user.no_notifications_title"}}
     @body={{trustHTML
       (i18n
         "user.no_notifications_body"
@@ -14,6 +13,7 @@ const NotificationsListEmptyState = <template>
         preferencesUrl=(getUrl "/my/preferences/notifications")
       )
     }}
+    @title={{i18n "user.no_notifications_title"}}
   />
 </template>;
 

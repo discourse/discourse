@@ -67,9 +67,9 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{items}}
-            @estimateSize={{estimate}}
             @edgeThreshold={{config.threshold}}
+            @estimateSize={{estimate}}
+            @items={{items}}
             @onReachEnd={{onReachEnd}}
             as |item|
           >
@@ -121,9 +121,9 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{items}}
-            @estimateSize={{estimate}}
             @edgeThreshold={{config.threshold}}
+            @estimateSize={{estimate}}
+            @items={{items}}
             @onReachEnd={{onReachEnd}}
             as |item|
           >
@@ -163,9 +163,9 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{items}}
-            @estimateSize={{estimate}}
             @edgeThreshold={{config.threshold}}
+            @estimateSize={{estimate}}
+            @items={{items}}
             @onReachEnd={{onReachEnd}}
             as |item|
           >

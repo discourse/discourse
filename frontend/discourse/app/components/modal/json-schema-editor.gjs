@@ -68,15 +68,15 @@ export default class JsonSchemaEditorModal extends Component {
 
   <template>
     <DModal
+      class="json-schema-editor-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
-      @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n
         "admin.site_settings.json_schema.modal_title"
         name=@model.settingName
       }}
-      @inline={{@inline}}
-      class="json-schema-editor-modal"
     >
       <:body>
         <div
@@ -88,9 +88,9 @@ export default class JsonSchemaEditorModal extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.saveChanges}}
           @label="save"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

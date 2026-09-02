@@ -13,9 +13,9 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
     await render(
       <template>
         <DataExplorerChart
-          @labels={{labels}}
-          @datasets={{datasets}}
           @chartType="bar"
+          @datasets={{datasets}}
+          @labels={{labels}}
           @stacked={{false}}
         />
       </template>
@@ -31,9 +31,9 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
     await render(
       <template>
         <DataExplorerChart
-          @labels={{labels}}
-          @datasets={{datasets}}
           @chartType="line"
+          @datasets={{datasets}}
+          @labels={{labels}}
           @stacked={{false}}
         />
       </template>
@@ -52,9 +52,9 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
     await render(
       <template>
         <DataExplorerChart
-          @labels={{labels}}
-          @datasets={{datasets}}
           @chartType="bar"
+          @datasets={{datasets}}
+          @labels={{labels}}
           @stacked={{false}}
         />
       </template>
@@ -73,9 +73,9 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
     await render(
       <template>
         <DataExplorerChart
-          @labels={{labels}}
-          @datasets={{datasets}}
           @chartType="bar"
+          @datasets={{datasets}}
+          @labels={{labels}}
           @stacked={{true}}
         />
       </template>
@@ -94,11 +94,11 @@ module("Integration | Component | DataExplorerChart", function (hooks) {
     await render(
       <template>
         <DataExplorerChart
-          @labels={{labels}}
-          @datasets={{datasets}}
           @chartType="line"
-          @stacked={{false}}
+          @datasets={{datasets}}
           @dualAxis={{true}}
+          @labels={{labels}}
+          @stacked={{false}}
         />
       </template>
     );

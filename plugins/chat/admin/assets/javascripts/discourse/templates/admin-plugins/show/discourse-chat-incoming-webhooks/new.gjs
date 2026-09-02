@@ -4,9 +4,9 @@ import ChatIncomingWebhookEditForm from "discourse/plugins/chat/admin/components
 export default <template>
   <div class="admin-detail discourse-chat-incoming-webhooks">
     <BackButton
+      class="incoming-chat-webhooks-back"
       @label="chat.incoming_webhooks.back"
       @route="adminPlugins.show.discourse-chat-incoming-webhooks.index"
-      class="incoming-chat-webhooks-back"
     />
 
     <ChatIncomingWebhookEditForm

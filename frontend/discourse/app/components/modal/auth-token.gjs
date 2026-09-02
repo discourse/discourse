@@ -43,8 +43,8 @@ export default class AuthTokenComponent extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.auth_tokens.was_this_you"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "user.auth_tokens.was_this_you"}}
     >
       <:body>
         <div>

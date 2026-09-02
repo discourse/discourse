@@ -85,6 +85,14 @@ export default class ExecutionsManager extends Component {
     return this.#progress.currentTime;
   }
 
+  get canLoadMore() {
+    return !!this.loadMoreUrl;
+  }
+
+  get isLoading() {
+    return this.executions === null;
+  }
+
   async loadExecutions() {
     if (this.#loading) {
       return;
@@ -116,6 +124,87 @@ export default class ExecutionsManager extends Component {
     } finally {
       this.#loading = false;
     }
+  }
+
+  @action
+  async loadMore() {
+    if (!this.loadMoreUrl || !this.canLoadMore || this.loadingMore) {
+      return;
+    }
+
+    this.loadingMore = true;
+    const loadMoreToken = ++this.#loadMoreToken;
+    try {
+      const result = await ajax(this.loadMoreUrl);
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        loadMoreToken !== this.#loadMoreToken
+      ) {
+        return;
+      }
+
+      const existingIds = new Set(
+        this.executions.map((execution) => execution.id)
+      );
+      this.executions = [
+        ...this.executions,
+        ...result.executions.filter(
+          (execution) => !existingIds.has(execution.id)
+        ),
+      ];
+      this.loadMoreUrl = result.meta?.load_more_executions;
+      this.#syncTimer();
+    } catch (e) {
+      if (!this.isDestroying && !this.isDestroyed) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.loadingMore = false;
+      }
+    }
+  }
+
+  @action
+  enableBulkMode() {
+    this.bulkMode = true;
+  }
+
+  @action
+  cancelBulkMode(clearSelection) {
+    clearSelection();
+    this.bulkMode = false;
+  }
+
+  @action
+  showExecution(execution) {
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-workflows.show.executions.show",
+      execution.workflow_id,
+      execution.id
+    );
+  }
+
+  @action
+  async deleteSelected(selectedIds, clearSelection) {
+    const count = selectedIds.size;
+    this.dialog.yesNoConfirm({
+      message: i18n("discourse_workflows.executions.delete_confirm", { count }),
+      didConfirm: async () => {
+        try {
+          await ajax("/admin/plugins/discourse-workflows/executions.json", {
+            type: "DELETE",
+            data: { ids: [...selectedIds] },
+          });
+          clearSelection();
+          this.bulkMode = false;
+          await this.loadExecutions();
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   #applyProgress(message) {
@@ -162,113 +251,24 @@ export default class ExecutionsManager extends Component {
     }
   }
 
-  get canLoadMore() {
-    return !!this.loadMoreUrl;
-  }
-
-  @action
-  async loadMore() {
-    if (!this.loadMoreUrl || !this.canLoadMore || this.loadingMore) {
-      return;
-    }
-
-    this.loadingMore = true;
-    const loadMoreToken = ++this.#loadMoreToken;
-    try {
-      const result = await ajax(this.loadMoreUrl);
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        loadMoreToken !== this.#loadMoreToken
-      ) {
-        return;
-      }
-
-      const existingIds = new Set(
-        this.executions.map((execution) => execution.id)
-      );
-      this.executions = [
-        ...this.executions,
-        ...result.executions.filter(
-          (execution) => !existingIds.has(execution.id)
-        ),
-      ];
-      this.loadMoreUrl = result.meta?.load_more_executions;
-      this.#syncTimer();
-    } catch (e) {
-      if (!this.isDestroying && !this.isDestroyed) {
-        popupAjaxError(e);
-      }
-    } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.loadingMore = false;
-      }
-    }
-  }
-
-  get isLoading() {
-    return this.executions === null;
-  }
-
-  @action
-  enableBulkMode() {
-    this.bulkMode = true;
-  }
-
-  @action
-  cancelBulkMode(clearSelection) {
-    clearSelection();
-    this.bulkMode = false;
-  }
-
-  @action
-  showExecution(execution) {
-    this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows.show.executions.show",
-      execution.workflow_id,
-      execution.id
-    );
-  }
-
-  @action
-  async deleteSelected(selectedIds, clearSelection) {
-    const count = selectedIds.size;
-    this.dialog.yesNoConfirm({
-      message: i18n("discourse_workflows.executions.delete_confirm", { count }),
-      didConfirm: async () => {
-        try {
-          await ajax("/admin/plugins/discourse-workflows/executions.json", {
-            type: "DELETE",
-            data: { ids: [...selectedIds] },
-          });
-          clearSelection();
-          this.bulkMode = false;
-          await this.loadExecutions();
-        } catch (e) {
-          popupAjaxError(e);
-        }
-      },
-    });
-  }
-
   <template>
     <AdminTable
-      @items={{this.executions}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.executions}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
       @selectable={{this.bulkMode}}
     >
       <:empty>
         <EmptyState
+          @description={{i18n
+            "discourse_workflows.executions.empty_description"
+          }}
           @emoji="wave"
           @title={{i18n
             "discourse_workflows.executions.empty_title"
             username=this.currentUser.displayName
-          }}
-          @description={{i18n
-            "discourse_workflows.executions.empty_description"
           }}
         />
       </:empty>
@@ -276,27 +276,27 @@ export default class ExecutionsManager extends Component {
         {{#if this.bulkMode}}
           {{#if toolbar.hasSelection}}
             <DButton
+              class="btn-danger btn-small"
               @action={{fn
                 this.deleteSelected
                 toolbar.selectedIds
                 toolbar.clearSelection
               }}
-              @label="discourse_workflows.executions.delete_selected"
               @icon="trash-can"
-              class="btn-danger btn-small"
+              @label="discourse_workflows.executions.delete_selected"
             />
           {{/if}}
           <DButton
+            class="btn-default btn-small"
             @action={{fn this.cancelBulkMode toolbar.clearSelection}}
             @label="discourse_workflows.executions.cancel_select"
-            class="btn-default btn-small"
           />
         {{else}}
           <DButton
-            @action={{this.enableBulkMode}}
-            @label="discourse_workflows.executions.select"
-            @icon="list-check"
             class="btn-default btn-small"
+            @action={{this.enableBulkMode}}
+            @icon="list-check"
+            @label="discourse_workflows.executions.select"
           />
         {{/if}}
       </:toolbar>
@@ -391,9 +391,9 @@ export default class ExecutionsManager extends Component {
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.showExecution execution}}
               @label="discourse_workflows.executions.show"
-              class="btn-default btn-small"
             />
           </div>
         </td>

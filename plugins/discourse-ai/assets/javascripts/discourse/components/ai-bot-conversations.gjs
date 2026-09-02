@@ -177,6 +177,12 @@ export default class AiBotConversations extends Component {
     return this.creditStatus?.hard_limit_reached === true;
   }
 
+  get sendOnMetaEnter() {
+    return (
+      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
+    );
+  }
+
   @action
   async setAgentId(id) {
     this.aiBotConversationsHiddenSubmit.agentId = id;
@@ -191,25 +197,6 @@ export default class AiBotConversations extends Component {
   async setLlmId(llmModelId) {
     this.selectedLlmId = llmModelId;
     await this.#checkCreditStatus(llmModelId, "llm");
-  }
-
-  async #checkCreditStatus(id, type) {
-    // Clear status immediately to prevent stale data
-    this.creditStatus = null;
-
-    if (!id) {
-      return;
-    }
-
-    try {
-      this.creditStatus =
-        type === "agent"
-          ? await this.aiCredits.getAgentCreditStatus(id)
-          : await this.aiCredits.getLlmModelCreditStatus(id);
-    } catch {
-      // Fail open - allow usage if credit check fails
-      this.creditStatus = null;
-    }
   }
 
   @action
@@ -232,12 +219,6 @@ export default class AiBotConversations extends Component {
     this._autoExpandTextarea();
     this.aiBotConversationsHiddenSubmit.inputValue =
       value.target?.value || value;
-  }
-
-  get sendOnMetaEnter() {
-    return (
-      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
-    );
   }
 
   @action
@@ -406,6 +387,25 @@ export default class AiBotConversations extends Component {
     }
   }
 
+  async #checkCreditStatus(id, type) {
+    // Clear status immediately to prevent stale data
+    this.creditStatus = null;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      this.creditStatus =
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
+          : await this.aiCredits.getLlmModelCreditStatus(id);
+    } catch {
+      // Fail open - allow usage if credit check fails
+      this.creditStatus = null;
+    }
+  }
+
   _autoExpandTextarea() {
     this.textarea.style.height = "auto";
     this.textarea.style.height = this.textarea.scrollHeight + "px";
@@ -439,61 +439,61 @@ export default class AiBotConversations extends Component {
         />
         <div class="ai-bot-conversations__input-container">
           <div
-            {{this.creditLimitTooltipModifier}}
             class={{dConcatClass
               "ai-bot-conversations__input-wrapper"
               (if this.isSubmitDisabled "--disabled")
             }}
+            {{this.creditLimitTooltipModifier}}
           >
             <DButton
-              @icon="upload"
+              class="btn btn-transparent ai-bot-upload-btn"
               @action={{unless this.isSubmitDisabled this.openFileUpload}}
               @disabled={{this.isSubmitDisabled}}
+              @icon="upload"
               @title="discourse_ai.ai_bot.conversations.upload_files"
-              class="btn btn-transparent ai-bot-upload-btn"
             />
             <textarea
+              autofocus={{unless this.isSubmitDisabled "true"}}
+              disabled={{if this.isSubmitDisabled true this.loading}}
+              id="ai-bot-conversations-input"
+              minlength="10"
+              placeholder={{i18n
+                "discourse_ai.ai_bot.conversations.placeholder"
+              }}
+              rows="1"
               {{didInsert this.setTextArea}}
               {{on "input" this.updateInputValue}}
               {{on "keydown" this.handleKeyDown}}
               {{on "beforeinput" this.handleBeforeInput}}
-              id="ai-bot-conversations-input"
-              autofocus={{unless this.isSubmitDisabled "true"}}
-              placeholder={{i18n
-                "discourse_ai.ai_bot.conversations.placeholder"
-              }}
-              minlength="10"
-              disabled={{if this.isSubmitDisabled true this.loading}}
-              rows="1"
             />
             <DButton
+              class="ai-bot-button btn-transparent ai-conversation-submit"
               @action={{unless
                 this.isSubmitDisabled
                 this.prepareAndSubmitToBot
               }}
-              @icon="paper-plane"
               @disabled={{this.isSubmitDisabled}}
+              @icon="paper-plane"
               @isLoading={{unless this.isSubmitDisabled this.loading}}
               @title="discourse_ai.ai_bot.conversations.header"
-              class="ai-bot-button btn-transparent ai-conversation-submit"
             />
             <input
-              type="file"
-              id="ai-bot-file-uploader"
               class="hidden-upload-field"
+              id="ai-bot-file-uploader"
               multiple="multiple"
+              type="file"
               {{didInsert this.registerFileInput}}
             />
           </div>
 
           <AiAgentLlmSelector
-            @showLabels={{true}}
-            @setAgentId={{this.setAgentId}}
-            @setLlmId={{this.setLlmId}}
-            @setTargetRecipient={{this.setTargetRecipient}}
             @agentName={{@controller.agent}}
             @llmName={{@controller.llm}}
             @onSelectionChanged={{this.onSelectionChanged}}
+            @setAgentId={{this.setAgentId}}
+            @setLlmId={{this.setLlmId}}
+            @setTargetRecipient={{this.setTargetRecipient}}
+            @showLabels={{true}}
           />
         </div>
 
@@ -509,9 +509,9 @@ export default class AiBotConversations extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent ai-bot-upload__remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -523,9 +523,9 @@ export default class AiBotConversations extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat ai-bot-upload__cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}

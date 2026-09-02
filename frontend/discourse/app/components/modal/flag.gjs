@@ -224,38 +224,38 @@ export default class Flag extends Component {
     <DModal
       class="flag-modal"
       @bodyClass="flag-modal-body"
-      @title={{i18n this.title}}
-      @submitOnEnter={{false}}
       @closeModal={{@closeModal}}
+      @submitOnEnter={{false}}
+      @title={{i18n this.title}}
       {{on "keydown" this.onKeydown}}
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
         <PluginOutlet
-          @name="after-flag-modal-review-process-description"
           @connectorTagName="div"
+          @name="after-flag-modal-review-process-description"
           @outletArgs={{lazyHash post=@model.flagModel}}
         />
         <form>
           <FlagSelection
-            @nameKey={{this.selected.name_key}}
             @flags={{this.flagsAvailable}}
+            @nameKey={{this.selected.name_key}}
             as |f|
           >
             <FlagActionType
-              @flag={{f}}
-              @message={{this.message}}
-              @isConfirmed={{this.isConfirmed}}
-              @selectedFlag={{this.selected}}
-              @username={{@model.flagModel.username}}
-              @staffFlagsAvailable={{this.staffFlagsAvailable}}
               @changePostActionType={{this.changePostActionType}}
+              @flag={{f}}
+              @isConfirmed={{this.isConfirmed}}
+              @message={{this.message}}
+              @selectedFlag={{this.selected}}
+              @staffFlagsAvailable={{this.staffFlagsAvailable}}
+              @username={{@model.flagModel.username}}
             />
           </FlagSelection>
         </form>
         <PluginOutlet
-          @name="flag-modal-bottom"
           @connectorTagName="div"
+          @name="flag-modal-bottom"
           @outletArgs={{lazyHash post=@model.flagModel}}
         />
       </:body>
@@ -264,9 +264,9 @@ export default class Flag extends Component {
           class="btn-primary flag-modal__create-flag"
           @action={{this.createFlag}}
           @disabled={{not this.submitEnabled}}
-          @title="flagging.submit_tooltip"
           @icon={{if this.selected.require_message "envelope" "flag"}}
           @label={{this.submitLabel}}
+          @title="flagging.submit_tooltip"
         />
 
         {{#if this.canSendWarning}}

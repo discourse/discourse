@@ -7,9 +7,9 @@ import DNativeSelect, {
 
 const SelectOption = <template>
   <DNativeSelectOption
-    @value={{@value}}
-    @selected={{@selected}}
     class="form-kit__control-option"
+    @selected={{@selected}}
+    @value={{@value}}
   >
     {{yield}}
   </DNativeSelectOption>
@@ -30,17 +30,17 @@ export default class FKControlSelect extends FKBaseControl {
 
   <template>
     <DNativeSelect
+      aria-describedby={{@field.describedBy}}
+      aria-invalid={{if @field.error "true"}}
       class="form-kit__control-select"
       disabled={{@field.disabled}}
-      @value={{@field.value}}
-      @onChange={{@field.set}}
-      @includeNone={{this.includeNone}}
-      @nonePlaceholder={{@nonePlaceholder}}
       id={{@field.id}}
       name={{@field.name}}
-      aria-invalid={{if @field.error "true"}}
-      aria-describedby={{@field.describedBy}}
       ...attributes
+      @includeNone={{this.includeNone}}
+      @nonePlaceholder={{@nonePlaceholder}}
+      @onChange={{@field.set}}
+      @value={{@field.value}}
     >
       {{yield (hash Option=(component SelectOption selected=@field.value))}}
     </DNativeSelect>

@@ -111,28 +111,6 @@ export default class ChatMessage {
     this.isAction = args.isAction ?? args.is_action ?? false;
   }
 
-  get url() {
-    if (this.threadId) {
-      return getURL(
-        `/chat/c/-/${this.channel.id}/t/${this.threadId}/${this.id}`
-      );
-    }
-
-    return getURL(`/chat/c/-/${this.channel.id}/${this.id}`);
-  }
-
-  get persisted() {
-    return !!this.id && !this.staged;
-  }
-
-  get replyable() {
-    return !this.staged && !this.error;
-  }
-
-  get editable() {
-    return !this.staged && !this.error;
-  }
-
   get thread() {
     return this._thread;
   }
@@ -170,12 +148,26 @@ export default class ChatMessage {
     }
   }
 
-  async cook() {
-    if (this.isDestroyed || this.isDestroying) {
-      return;
+  get url() {
+    if (this.threadId) {
+      return getURL(
+        `/chat/c/-/${this.channel.id}/t/${this.threadId}/${this.id}`
+      );
     }
-    await this.#ensureCookFunctionInitialized();
-    this.cooked = ChatMessage.cookFunction(this.message);
+
+    return getURL(`/chat/c/-/${this.channel.id}/${this.id}`);
+  }
+
+  get persisted() {
+    return !!this.id && !this.staged;
+  }
+
+  get replyable() {
+    return !this.staged && !this.error;
+  }
+
+  get editable() {
+    return !this.staged && !this.error;
   }
 
   get read() {
@@ -199,6 +191,28 @@ export default class ChatMessage {
   @cached
   get nextMessage() {
     return this.manager?.messages?.[this.index + 1];
+  }
+
+  get #markdownOptions() {
+    const site = getOwnerWithFallback(this).lookup("service:site");
+    return {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
+  }
+
+  async cook() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+    await this.#ensureCookFunctionInitialized();
+    this.cooked = ChatMessage.cookFunction(this.message);
   }
 
   highlight() {
@@ -327,20 +341,6 @@ export default class ChatMessage {
     const cookFunction = await generateCookFunction(this.#markdownOptions);
     ChatMessage.cookFunction = (raw) => {
       return transformAutolinks(cookFunction(raw));
-    };
-  }
-
-  get #markdownOptions() {
-    const site = getOwnerWithFallback(this).lookup("service:site");
-    return {
-      featuresOverride:
-        site.markdown_additional_options?.chat?.limited_pretty_text_features,
-      markdownItRules:
-        site.markdown_additional_options?.chat
-          ?.limited_pretty_text_markdown_rules,
-      hashtagTypesInPriorityOrder:
-        site.hashtag_configurations?.["chat-composer"],
-      hashtagIcons: site.hashtag_icons,
     };
   }
 

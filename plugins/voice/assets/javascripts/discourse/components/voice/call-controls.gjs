@@ -193,6 +193,24 @@ export default class VoiceCallControls extends Component {
       : i18n("voice.room.recording_start");
   }
 
+  get currentInputDeviceName() {
+    return this.audioInputDevices.find(
+      (device) => device.id === this.voiceWebrtc.inputDeviceId
+    )?.name;
+  }
+
+  get currentOutputDeviceName() {
+    return this.audioOutputDevices.find(
+      (device) => device.id === this.voiceWebrtc.outputDeviceId
+    )?.name;
+  }
+
+  get currentVideoDeviceName() {
+    return this.videoInputDevices.find(
+      (device) => device.id === this.voiceWebrtc.videoInputDeviceId
+    )?.name;
+  }
+
   @action
   toggleMute() {
     this.voiceWebrtc.toggleMute();
@@ -266,31 +284,6 @@ export default class VoiceCallControls extends Component {
     this.modal.show(VoiceVideoSettingsModal);
   }
 
-  #systemDefaultDevice() {
-    return {
-      id: SYSTEM_DEFAULT_DEVICE_ID,
-      name: i18n("voice.devices.system_default"),
-    };
-  }
-
-  get currentInputDeviceName() {
-    return this.audioInputDevices.find(
-      (device) => device.id === this.voiceWebrtc.inputDeviceId
-    )?.name;
-  }
-
-  get currentOutputDeviceName() {
-    return this.audioOutputDevices.find(
-      (device) => device.id === this.voiceWebrtc.outputDeviceId
-    )?.name;
-  }
-
-  get currentVideoDeviceName() {
-    return this.videoInputDevices.find(
-      (device) => device.id === this.voiceWebrtc.videoInputDeviceId
-    )?.name;
-  }
-
   @action
   openNoiseSuppressionMenu(_actionArg, event) {
     this.#openSubmenu(
@@ -331,37 +324,6 @@ export default class VoiceCallControls extends Component {
     this.videoInputDevices = [this.#systemDefaultDevice(), ...inputs];
   }
 
-  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
-  // normal full-width menu item, matching core's channel context menu.
-  #openSubmenu(event, parentMenu, items, onSelect) {
-    // Anchor to the row button, not the clicked icon/label, so the submenu
-    // opens flush to the row's right edge.
-    const anchor = event.target.closest(".btn") ?? event.target;
-    this.menu.show(anchor, {
-      identifier: SUBMENU,
-      groupIdentifier: SUBMENU,
-      component: VoiceCallSubmenu,
-      placement: "right-start",
-      offset: { mainAxis: 8, crossAxis: -5 },
-      modalForMobile: true,
-      data: {
-        items,
-        onSelect: (id) => {
-          onSelect(id);
-          this.menu.close(parentMenu);
-        },
-      },
-    });
-  }
-
-  #deviceItems(devices, currentId) {
-    return devices.map((device) => ({
-      id: device.id,
-      label: device.name,
-      selected: device.id === currentId,
-    }));
-  }
-
   @action
   openInputDeviceMenu(_actionArg, event) {
     this.#openSubmenu(
@@ -398,53 +360,91 @@ export default class VoiceCallControls extends Component {
     );
   }
 
+  #systemDefaultDevice() {
+    return {
+      id: SYSTEM_DEFAULT_DEVICE_ID,
+      name: i18n("voice.devices.system_default"),
+    };
+  }
+
+  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
+  // normal full-width menu item, matching core's channel context menu.
+  #openSubmenu(event, parentMenu, items, onSelect) {
+    // Anchor to the row button, not the clicked icon/label, so the submenu
+    // opens flush to the row's right edge.
+    const anchor = event.target.closest(".btn") ?? event.target;
+    this.menu.show(anchor, {
+      identifier: SUBMENU,
+      groupIdentifier: SUBMENU,
+      component: VoiceCallSubmenu,
+      placement: "right-start",
+      offset: { mainAxis: 8, crossAxis: -5 },
+      modalForMobile: true,
+      data: {
+        items,
+        onSelect: (id) => {
+          onSelect(id);
+          this.menu.close(parentMenu);
+        },
+      },
+    });
+  }
+
+  #deviceItems(devices, currentId) {
+    return devices.map((device) => ({
+      id: device.id,
+      label: device.name,
+      selected: device.id === currentId,
+    }));
+  }
+
   <template>
     <div class="voice-call-controls__combo">
       <DButton
+        class={{dConcatClass
+          "btn-default voice-call-controls__combo-main"
+          (if this.voiceWebrtc.audioEnabled "" "--off")
+        }}
         @action={{this.toggleMute}}
+        @disabled={{this.voiceWebrtc.pttEnabled}}
         @icon={{if
           this.voiceWebrtc.audioEnabled
           "microphone"
           "microphone-slash"
         }}
         @translatedTitle={{this.micTitle}}
-        @disabled={{this.voiceWebrtc.pttEnabled}}
-        class={{dConcatClass
-          "btn-default voice-call-controls__combo-main"
-          (if this.voiceWebrtc.audioEnabled "" "--off")
-        }}
       >
         {{#if this.showNoiseSuppressionBadge}}
           <span
+            aria-hidden="true"
             class={{dConcatClass
               "voice-call-controls__ns-badge"
               (if this.noiseSuppressionStarting "--starting")
             }}
-            aria-hidden="true"
           >
             {{dIcon "discourse-sparkles"}}
           </span>
         {{/if}}
       </DButton>
       <DMenu
-        @identifier="voice-audio-menu"
-        @icon="angle-down"
-        @title={{i18n "voice.room.audio_options"}}
         @ariaLabel={{i18n "voice.room.audio_options"}}
-        @placement="top-end"
+        @icon="angle-down"
+        @identifier="voice-audio-menu"
         @onShow={{this.loadAudioDevices}}
+        @placement="top-end"
+        @title={{i18n "voice.room.audio_options"}}
         @triggerClass="btn-default voice-call-controls__combo-caret"
       >
         <:content as |audioMenu|>
           <DDropdownMenu as |dropdown|>
             <dropdown.item>
               <DButton
+                class="btn-transparent voice-call-menu__device-row"
                 @action={{this.openInputDeviceMenu}}
                 @forwardEvent={{true}}
                 @icon="microphone"
                 @label="voice.voice_settings.input_audio"
                 @suffixIcon="angle-right"
-                class="btn-transparent voice-call-menu__device-row"
               >
                 {{#if this.currentInputDeviceName}}
                   <span class="voice-call-menu__current-device">
@@ -456,12 +456,12 @@ export default class VoiceCallControls extends Component {
             {{#if this.audioOutputSupported}}
               <dropdown.item>
                 <DButton
+                  class="btn-transparent voice-call-menu__device-row"
                   @action={{this.openOutputDeviceMenu}}
                   @forwardEvent={{true}}
                   @icon="volume-high"
                   @label="voice.voice_settings.output_audio"
                   @suffixIcon="angle-right"
-                  class="btn-transparent voice-call-menu__device-row"
                 >
                   {{#if this.currentOutputDeviceName}}
                     <span class="voice-call-menu__current-device">
@@ -474,13 +474,13 @@ export default class VoiceCallControls extends Component {
             <dropdown.divider />
             <dropdown.item>
               <DButton
+                class="btn-transparent voice-call-menu__device-row voice-call-menu__noise-suppression"
                 @action={{this.openNoiseSuppressionMenu}}
+                @disabled={{this.noiseSuppressionStarting}}
                 @forwardEvent={{true}}
                 @icon="discourse-sparkles"
                 @label="voice.voice_settings.noise_suppression"
                 @suffixIcon="angle-right"
-                @disabled={{this.noiseSuppressionStarting}}
-                class="btn-transparent voice-call-menu__device-row voice-call-menu__noise-suppression"
               >
                 <span class="voice-call-menu__current-device">
                   {{this.currentNoiseSuppressionModeName}}
@@ -489,10 +489,10 @@ export default class VoiceCallControls extends Component {
             </dropdown.item>
             <dropdown.item>
               <DButton
+                class="btn-transparent"
                 @action={{fn this.openVoiceSettings audioMenu.close}}
                 @icon="sliders"
                 @label="voice.voice_settings.audio_settings"
-                class="btn-transparent"
               />
             </dropdown.item>
           </DDropdownMenu>
@@ -501,13 +501,13 @@ export default class VoiceCallControls extends Component {
     </div>
     {{#if this.isStageListener}}
       <DButton
-        @action={{this.toggleRaiseHand}}
-        @icon="hand"
-        @translatedTitle={{this.raiseHandTitle}}
         class={{dConcatClass
           "btn-default voice-call-controls__raise-hand"
           (if this.handRaisedAt "--active")
         }}
+        @action={{this.toggleRaiseHand}}
+        @icon="hand"
+        @translatedTitle={{this.raiseHandTitle}}
       />
     {{/if}}
     {{! Capture buttons are plain <button>s on purpose: DButton defers its
@@ -517,14 +517,14 @@ export default class VoiceCallControls extends Component {
     {{#if this.videoAllowed}}
       <div class="voice-call-controls__combo">
         <button
-          type="button"
+          aria-label={{this.cameraTitle}}
           class={{dConcatClass
             "btn btn-icon no-text btn-default voice-call-controls__combo-main"
             (if this.cameraActive "--active")
           }}
-          title={{this.cameraTitle}}
-          aria-label={{this.cameraTitle}}
           disabled={{this.cameraDisabled}}
+          title={{this.cameraTitle}}
+          type="button"
           {{on "click" this.toggleCamera}}
         >
           {{dIcon (if this.cameraActive "video" "video-slash")}}
@@ -533,24 +533,24 @@ export default class VoiceCallControls extends Component {
           <span aria-hidden="true">&#8203;</span>
         </button>
         <DMenu
-          @identifier="voice-video-menu"
-          @icon="angle-down"
-          @title={{i18n "voice.room.video_options"}}
           @ariaLabel={{i18n "voice.room.video_options"}}
-          @placement="top-end"
+          @icon="angle-down"
+          @identifier="voice-video-menu"
           @onShow={{this.loadVideoDevices}}
+          @placement="top-end"
+          @title={{i18n "voice.room.video_options"}}
           @triggerClass="btn-default voice-call-controls__combo-caret"
         >
           <:content as |videoMenu|>
             <DDropdownMenu as |dropdown|>
               <dropdown.item>
                 <DButton
+                  class="btn-transparent voice-call-menu__device-row"
                   @action={{this.openCameraMenu}}
                   @forwardEvent={{true}}
                   @icon="video"
                   @label="voice.video_settings.camera"
                   @suffixIcon="angle-right"
-                  class="btn-transparent voice-call-menu__device-row"
                 >
                   {{#if this.currentVideoDeviceName}}
                     <span class="voice-call-menu__current-device">
@@ -562,10 +562,10 @@ export default class VoiceCallControls extends Component {
               <dropdown.divider />
               <dropdown.item>
                 <DButton
+                  class="btn-transparent"
                   @action={{fn this.openVideoSettings videoMenu.close}}
                   @icon="sliders"
                   @label="voice.video_settings.title"
-                  class="btn-transparent"
                 />
               </dropdown.item>
             </DDropdownMenu>
@@ -574,36 +574,36 @@ export default class VoiceCallControls extends Component {
       </div>
     {{/if}}
     <DButton
-      @action={{this.toggleDeafen}}
-      @icon={{if this.voiceWebrtc.deafened "volume-xmark" "ear-listen"}}
-      @translatedTitle={{this.deafenTitle}}
       class={{dConcatClass
         "btn-default"
         (if this.voiceWebrtc.deafened "--off" "")
       }}
+      @action={{this.toggleDeafen}}
+      @icon={{if this.voiceWebrtc.deafened "volume-xmark" "ear-listen"}}
+      @translatedTitle={{this.deafenTitle}}
     />
     {{#if this.canRecord}}
       <DButton
-        @action={{this.toggleRecording}}
-        @icon="record-vinyl"
-        @translatedTitle={{this.recordTitle}}
-        @disabled={{this.recordingPending}}
         class={{dConcatClass
           "btn-default voice-call-controls__record"
           (if this.recordingActive "--recording")
         }}
+        @action={{this.toggleRecording}}
+        @disabled={{this.recordingPending}}
+        @icon="record-vinyl"
+        @translatedTitle={{this.recordTitle}}
       />
     {{/if}}
     {{#if this.showScreenShare}}
       <button
-        type="button"
+        aria-label={{this.screenShareTitle}}
         class={{dConcatClass
           "btn btn-icon no-text btn-default"
           (if this.screenShareActive "--active")
         }}
-        title={{this.screenShareTitle}}
-        aria-label={{this.screenShareTitle}}
         disabled={{this.screenShareDisabled}}
+        title={{this.screenShareTitle}}
+        type="button"
         {{on "click" this.toggleScreenShare}}
       >
         {{dIcon "display"}}

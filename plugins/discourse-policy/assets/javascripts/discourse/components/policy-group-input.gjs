@@ -35,10 +35,10 @@ export default class PolicyGroupInput extends Component {
   <template>
     <GroupChooser
       @content={{this.availableGroups}}
-      @valueProperty={{null}}
       @nameProperty={{null}}
-      @value={{this.selectedGroups}}
       @onChange={{this.onChange}}
+      @value={{this.selectedGroups}}
+      @valueProperty={{null}}
     />
   </template>
 }

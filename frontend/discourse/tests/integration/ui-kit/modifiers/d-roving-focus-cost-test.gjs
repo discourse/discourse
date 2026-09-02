@@ -286,8 +286,8 @@ module(
             {{#each state.items key="id" as |item|}}
               <button
                 class="author-item"
-                role="option"
                 data-id={{item.id}}
+                role="option"
                 tabindex={{item.tabindex}}
               >{{item.label}}</button>
             {{/each}}
@@ -320,8 +320,8 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button role="option" aria-current="page">Current</button>
-            <button role="option" aria-selected="true">Selected</button>
+            <button aria-current="page" role="option">Current</button>
+            <button aria-selected="true" role="option">Selected</button>
             <button class="established" role="option" tabindex="0">
               Established
             </button>
@@ -332,8 +332,8 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button role="option" aria-current="page">Current</button>
-            <button class="selected" role="option" aria-selected="true">
+            <button aria-current="page" role="option">Current</button>
+            <button aria-selected="true" class="selected" role="option">
               Selected
             </button>
           </div>
@@ -343,7 +343,7 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button class="current" role="option" aria-current="page">
+            <button aria-current="page" class="current" role="option">
               Current
             </button>
           </div>
@@ -549,8 +549,8 @@ module(
             {{#each state.items key="id" as |item|}}
               <button
                 class="replacement-item"
-                role="option"
                 data-id={{item.id}}
+                role="option"
                 tabindex={{item.tabindex}}
               >{{item.label}}</button>
             {{/each}}
@@ -593,10 +593,10 @@ module(
             {{#each NON_BLOCKING_INPUT_TYPES as |type|}}
               <div class="item">
                 <input
-                  data-input-type={{type}}
-                  type={{type}}
                   alt={{type}}
+                  data-input-type={{type}}
                   src="data:image/gif;base64,R0lGODlhAQABAAAAACw="
+                  type={{type}}
                 />
               </div>
               <button class="item" data-target-type={{type}}>

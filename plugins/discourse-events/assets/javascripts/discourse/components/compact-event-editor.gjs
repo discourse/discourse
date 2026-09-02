@@ -67,44 +67,6 @@ export default class CompactEventEditor extends Component {
     );
   }
 
-  @action
-  syncIfStateChanged() {
-    if (this.args.initialState !== this.#lastInitialStateRef) {
-      this.#syncFromInitialState();
-    }
-  }
-
-  #syncFromInitialState() {
-    const s = { ...defaultEventState(), ...(this.args.initialState || {}) };
-    this.name = s.name;
-    this.location = s.location;
-    this.description = s.description;
-    this.startsAt = s.startsAt;
-    this.endsAt = s.endsAt;
-    this.allDay = s.allDay;
-    this.maxAttendees = s.maxAttendees;
-    this.status = s.status;
-    this.timezone = s.timezone;
-    this.reminders = s.reminders;
-    this.recurrence = s.recurrence;
-    this.recurrenceUntil = s.recurrenceUntil;
-    this.showLocalTime = s.showLocalTime;
-    this.chatEnabled = s.chatEnabled;
-    this.livestream = s.livestream;
-    this.minimal = s.minimal;
-    this.url = s.url;
-    this.#startedWithUrl ||= !!s.url;
-    this.image = s.image;
-    this.allowedGroups = s.allowedGroups;
-    this.closed = s.closed;
-    this.customFields = { ...s.customFields };
-
-    if (this.status && this.status !== "standalone") {
-      this.#previousRsvpStatus = this.status;
-    }
-    this.#lastInitialStateRef = this.args.initialState;
-  }
-
   get currentState() {
     return {
       name: this.name,
@@ -128,18 +90,6 @@ export default class CompactEventEditor extends Component {
       allowedGroups: this.allowedGroups,
       closed: this.closed,
       customFields: this.customFields,
-    };
-  }
-
-  #emitChange() {
-    this.args.onChange?.(this.currentState);
-  }
-
-  #configSnapshot(overrides = {}) {
-    return {
-      startsAt: overrides.startsAt ?? this.startsAt,
-      endsAt: overrides.endsAt ?? this.endsAt,
-      allDay: overrides.allDay ?? this.allDay,
     };
   }
 
@@ -255,20 +205,6 @@ export default class CompactEventEditor extends Component {
     return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
 
-  #formatDate(m) {
-    if (!m || typeof m.isValid !== "function" || !m.isValid()) {
-      return "";
-    }
-    return m.format("YYYY-MM-DD");
-  }
-
-  #formatTime(m) {
-    if (!m || typeof m.isValid !== "function" || !m.isValid()) {
-      return "";
-    }
-    return m.format("HH:mm");
-  }
-
   get formattedStartDate() {
     return this.#formatDate(this.startsAt);
   }
@@ -285,29 +221,48 @@ export default class CompactEventEditor extends Component {
     return this.#formatTime(this.endsAt);
   }
 
-  #combineDateTime(dateStr, timeStr) {
-    const date = (dateStr || "").trim();
-    if (!date) {
-      return null;
+  get livestreamDisabled() {
+    return !this.siteSettings.chat_enabled;
+  }
+
+  get rsvpsDisabled() {
+    return this.status === "standalone";
+  }
+
+  get maxAttendeesPlaceholder() {
+    if (this.rsvpsDisabled) {
+      return "";
     }
-    const time = (timeStr || "").trim();
-    return moment.tz(time ? `${date} ${time}` : date, this.timezone);
+    return i18n("discourse_post_event.composer.max_attendees_placeholder");
   }
 
-  #startTimeForDate() {
-    return this.allDay ? "" : this.formattedStartTime || "00:00";
+  get displayMaxAttendees() {
+    if (this._maxAttendeesOverride !== undefined) {
+      return this._maxAttendeesOverride;
+    }
+    return this.maxAttendees ?? "";
   }
 
-  #endTimeForDate() {
-    return this.allDay ? "" : this.formattedEndTime || "00:00";
+  get visibleReminders() {
+    return (this.reminders || []).map((reminder, index) => {
+      const isBump = reminder.type === "bumpTopic";
+      return {
+        reminder,
+        index,
+        label: this.#unitLabel(reminder),
+        icon: isBump ? "arrows-up-to-line" : "bell",
+        iconTitle: isBump
+          ? "discourse_post_event.composer.reminder.bump_topic_title"
+          : "discourse_post_event.composer.reminder.notification_title",
+      };
+    });
   }
 
-  #reconcileReminders(oldConfig, newConfig) {
-    this.reminders = reconcileDefaultReminder(
-      this.reminders,
-      oldConfig,
-      newConfig
-    );
+  @action
+  syncIfStateChanged() {
+    if (this.args.initialState !== this.#lastInitialStateRef) {
+      this.#syncFromInitialState();
+    }
   }
 
   @action
@@ -325,10 +280,6 @@ export default class CompactEventEditor extends Component {
       this.livestream = false;
     }
     this.#emitChange();
-  }
-
-  get livestreamDisabled() {
-    return !this.siteSettings.chat_enabled;
   }
 
   @action
@@ -456,46 +407,6 @@ export default class CompactEventEditor extends Component {
     this.#emitChange();
   }
 
-  get rsvpsDisabled() {
-    return this.status === "standalone";
-  }
-
-  get maxAttendeesPlaceholder() {
-    if (this.rsvpsDisabled) {
-      return "";
-    }
-    return i18n("discourse_post_event.composer.max_attendees_placeholder");
-  }
-
-  get displayMaxAttendees() {
-    if (this._maxAttendeesOverride !== undefined) {
-      return this._maxAttendeesOverride;
-    }
-    return this.maxAttendees ?? "";
-  }
-
-  #applyMaxAttendees(value) {
-    if (value === 0) {
-      if (this.status && this.status !== "standalone") {
-        this.#previousRsvpStatus = this.status;
-      }
-      this.status = "standalone";
-      this.maxAttendees = null;
-      this.reminders = this.reminders.map((r) =>
-        r.type === "notification" ? { ...r, type: "bumpTopic" } : r
-      );
-    } else if (this.status === "standalone" && value > 0) {
-      this.status = this.#previousRsvpStatus || "public";
-      this.maxAttendees = value;
-      this.reminders = this.reminders.map((r) =>
-        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-      );
-    } else {
-      this.maxAttendees = value;
-    }
-    this.#emitChange();
-  }
-
   @action
   onMaxAttendeesInput(event) {
     const raw = event.target.value;
@@ -529,34 +440,6 @@ export default class CompactEventEditor extends Component {
     if (parsed === 0) {
       this.#applyMaxAttendees(0);
     }
-  }
-
-  get visibleReminders() {
-    return (this.reminders || []).map((reminder, index) => {
-      const isBump = reminder.type === "bumpTopic";
-      return {
-        reminder,
-        index,
-        label: this.#unitLabel(reminder),
-        icon: isBump ? "arrows-up-to-line" : "bell",
-        iconTitle: isBump
-          ? "discourse_post_event.composer.reminder.bump_topic_title"
-          : "discourse_post_event.composer.reminder.notification_title",
-      };
-    });
-  }
-
-  #unitLabel(reminder) {
-    const unit = reminder.unit || "minutes";
-    const count = parseInt(reminder.value, 10) || 0;
-    const unitLabel = i18n(
-      `discourse_post_event.composer.reminder.units.${unit}`,
-      { count }
-    );
-    return i18n(
-      `discourse_post_event.composer.reminder.${reminder.period || "before"}`,
-      { unit: unitLabel }
-    );
   }
 
   @action
@@ -670,6 +553,123 @@ export default class CompactEventEditor extends Component {
     });
   }
 
+  #syncFromInitialState() {
+    const s = { ...defaultEventState(), ...(this.args.initialState || {}) };
+    this.name = s.name;
+    this.location = s.location;
+    this.description = s.description;
+    this.startsAt = s.startsAt;
+    this.endsAt = s.endsAt;
+    this.allDay = s.allDay;
+    this.maxAttendees = s.maxAttendees;
+    this.status = s.status;
+    this.timezone = s.timezone;
+    this.reminders = s.reminders;
+    this.recurrence = s.recurrence;
+    this.recurrenceUntil = s.recurrenceUntil;
+    this.showLocalTime = s.showLocalTime;
+    this.chatEnabled = s.chatEnabled;
+    this.livestream = s.livestream;
+    this.minimal = s.minimal;
+    this.url = s.url;
+    this.#startedWithUrl ||= !!s.url;
+    this.image = s.image;
+    this.allowedGroups = s.allowedGroups;
+    this.closed = s.closed;
+    this.customFields = { ...s.customFields };
+
+    if (this.status && this.status !== "standalone") {
+      this.#previousRsvpStatus = this.status;
+    }
+    this.#lastInitialStateRef = this.args.initialState;
+  }
+
+  #emitChange() {
+    this.args.onChange?.(this.currentState);
+  }
+
+  #configSnapshot(overrides = {}) {
+    return {
+      startsAt: overrides.startsAt ?? this.startsAt,
+      endsAt: overrides.endsAt ?? this.endsAt,
+      allDay: overrides.allDay ?? this.allDay,
+    };
+  }
+
+  #formatDate(m) {
+    if (!m || typeof m.isValid !== "function" || !m.isValid()) {
+      return "";
+    }
+    return m.format("YYYY-MM-DD");
+  }
+
+  #formatTime(m) {
+    if (!m || typeof m.isValid !== "function" || !m.isValid()) {
+      return "";
+    }
+    return m.format("HH:mm");
+  }
+
+  #combineDateTime(dateStr, timeStr) {
+    const date = (dateStr || "").trim();
+    if (!date) {
+      return null;
+    }
+    const time = (timeStr || "").trim();
+    return moment.tz(time ? `${date} ${time}` : date, this.timezone);
+  }
+
+  #startTimeForDate() {
+    return this.allDay ? "" : this.formattedStartTime || "00:00";
+  }
+
+  #endTimeForDate() {
+    return this.allDay ? "" : this.formattedEndTime || "00:00";
+  }
+
+  #reconcileReminders(oldConfig, newConfig) {
+    this.reminders = reconcileDefaultReminder(
+      this.reminders,
+      oldConfig,
+      newConfig
+    );
+  }
+
+  #applyMaxAttendees(value) {
+    if (value === 0) {
+      if (this.status && this.status !== "standalone") {
+        this.#previousRsvpStatus = this.status;
+      }
+      this.status = "standalone";
+      this.maxAttendees = null;
+      this.reminders = this.reminders.map((r) =>
+        r.type === "notification" ? { ...r, type: "bumpTopic" } : r
+      );
+    } else if (this.status === "standalone" && value > 0) {
+      this.status = this.#previousRsvpStatus || "public";
+      this.maxAttendees = value;
+      this.reminders = this.reminders.map((r) =>
+        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
+      );
+    } else {
+      this.maxAttendees = value;
+    }
+    this.#emitChange();
+  }
+
+  #unitLabel(reminder) {
+    const unit = reminder.unit || "minutes";
+    const count = parseInt(reminder.value, 10) || 0;
+    const unitLabel = i18n(
+      `discourse_post_event.composer.reminder.units.${unit}`,
+      { count }
+    );
+    return i18n(
+      `discourse_post_event.composer.reminder.${reminder.period || "before"}`,
+      { unit: unitLabel }
+    );
+  }
+
   <template>
     <header
       class="composer-event__header"
@@ -682,10 +682,10 @@ export default class CompactEventEditor extends Component {
 
       <div class="composer-event__info">
         <DExpandingTextArea
-          rows="1"
-          value={{this.name}}
           class="composer-event__name-input"
           placeholder={{this.eventNamePlaceholder}}
+          rows="1"
+          value={{this.name}}
           {{on "input" this.onNameInput}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -698,10 +698,10 @@ export default class CompactEventEditor extends Component {
       {{#unless @hideAdvanced}}
         <div class="composer-event__more-dropdown">
           <DButton
-            @icon="gear"
-            @action={{this.openAdvanced}}
-            @title="discourse_post_event.edit_event"
             class="btn-flat"
+            @action={{this.openAdvanced}}
+            @icon="gear"
+            @title="discourse_post_event.edit_event"
           />
         </div>
       {{/unless}}
@@ -718,8 +718,8 @@ export default class CompactEventEditor extends Component {
         <div class="composer-event__all-day-toggle">
           <DToggleSwitch
             class="composer-event__all-day-switch"
-            @state={{this.allDay}}
             @label="discourse_post_event.composer.all_day"
+            @state={{this.allDay}}
             {{on "click" this.toggleAllDay}}
           />
         </div>
@@ -732,9 +732,9 @@ export default class CompactEventEditor extends Component {
         >
           <div class="composer-event__date-wrapper">
             <input
+              class="composer-event__date-input"
               type="date"
               value={{this.formattedStartDate}}
-              class="composer-event__date-input"
               {{on "change" this.onStartDateChange}}
               {{on "focus" this.focusDateInput}}
             />
@@ -744,18 +744,18 @@ export default class CompactEventEditor extends Component {
           </div>
           {{#unless this.allDay}}
             <input
+              class="composer-event__time-input"
               type="time"
               value={{this.formattedStartTime}}
-              class="composer-event__time-input"
               {{on "change" this.onStartTimeChange}}
             />
           {{/unless}}
           {{#if this.showInlineEndTime}}
             {{dIcon "arrow-right" class="composer-event__date-arrow"}}
             <input
+              class="composer-event__time-input"
               type="time"
               value={{this.formattedEndTime}}
-              class="composer-event__time-input"
               {{on "change" this.onEndTimeChange}}
             />
           {{/if}}
@@ -773,9 +773,9 @@ export default class CompactEventEditor extends Component {
           >
             <div class="composer-event__date-wrapper">
               <input
+                class="composer-event__date-input"
                 type="date"
                 value={{this.formattedEndDate}}
-                class="composer-event__date-input"
                 {{on "change" this.onEndDateChange}}
                 {{on "focus" this.focusDateInput}}
               />
@@ -790,9 +790,9 @@ export default class CompactEventEditor extends Component {
             </div>
             {{#unless this.allDay}}
               <input
+                class="composer-event__time-input"
                 type="time"
                 value={{this.formattedEndTime}}
-                class="composer-event__time-input"
                 {{on "change" this.onEndTimeChange}}
               />
             {{/unless}}
@@ -805,10 +805,10 @@ export default class CompactEventEditor extends Component {
       {{dIcon this.locationIcon}}
       <div class="composer-event__location-content">
         <input
-          type="text"
-          value={{this.location}}
           class="composer-event__location-input"
           placeholder={{this.locationPlaceholder}}
+          type="text"
+          value={{this.location}}
           {{on "input" (fn this.onLinkFieldInput "location")}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -816,8 +816,8 @@ export default class CompactEventEditor extends Component {
           <a
             class="composer-event__location-external-link"
             href={{this.displayLocation}}
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
             title="Visit {{this.location}}"
           >
             {{dIcon "up-right-from-square"}}
@@ -830,10 +830,10 @@ export default class CompactEventEditor extends Component {
       <section class="composer-event__url">
         {{dIcon "link"}}
         <input
-          type="text"
-          value={{this.url}}
           class="composer-event__url-input"
           placeholder={{i18n "discourse_post_event.composer.url_placeholder"}}
+          type="text"
+          value={{this.url}}
           {{on "input" (fn this.onLinkFieldInput "url")}}
           {{on "focus" this.handleTextInputFocus}}
         />
@@ -844,15 +844,15 @@ export default class CompactEventEditor extends Component {
       <section class="composer-event__livestream">
         {{#if this.livestreamDisabled}}
           <DTooltip
-            @placement="top-start"
             class="composer-event__livestream-toggle"
+            @placement="top-start"
           >
             <:trigger>
               <DToggleSwitch
                 class="composer-event__livestream-switch"
-                @state={{this.livestream}}
-                @label="discourse_post_event.composer.livestream"
                 disabled
+                @label="discourse_post_event.composer.livestream"
+                @state={{this.livestream}}
               />
             </:trigger>
             <:content>
@@ -863,8 +863,8 @@ export default class CompactEventEditor extends Component {
           <div class="composer-event__livestream-toggle">
             <DToggleSwitch
               class="composer-event__livestream-switch"
-              @state={{this.livestream}}
               @label="discourse_post_event.composer.livestream"
+              @state={{this.livestream}}
               {{on "click" this.toggleLivestream}}
             />
           </div>
@@ -875,13 +875,13 @@ export default class CompactEventEditor extends Component {
     <section class="composer-event__attendees">
       {{dIcon "users"}}
       <input
-        type="number"
+        class="composer-event__max-attendees-input"
         inputmode="numeric"
         min="0"
-        step="1"
-        value={{this.displayMaxAttendees}}
         placeholder={{this.maxAttendeesPlaceholder}}
-        class="composer-event__max-attendees-input"
+        step="1"
+        type="number"
+        value={{this.displayMaxAttendees}}
         {{on "input" this.onMaxAttendeesInput}}
         {{on "blur" this.onMaxAttendeesBlur}}
       />
@@ -906,22 +906,22 @@ export default class CompactEventEditor extends Component {
           <:content>{{i18n entry.iconTitle}}</:content>
         </DTooltip>
         <input
-          type="number"
+          class="composer-event__reminder-value"
           inputmode="numeric"
           min="1"
           step="1"
+          type="number"
           value={{entry.reminder.value}}
-          class="composer-event__reminder-value"
           {{on "input" (fn this.onReminderValueInput entry.index)}}
         />
         <span class="composer-event__reminder-unit">
           {{entry.label}}
         </span>
         <DButton
-          @icon="xmark"
-          @action={{fn this.removeReminder entry.index}}
-          @title="discourse_post_event.composer.reminder.remove"
           class="btn-flat composer-event__reminder-remove"
+          @action={{fn this.removeReminder entry.index}}
+          @icon="xmark"
+          @title="discourse_post_event.composer.reminder.remove"
         />
       </section>
     {{/each}}
@@ -932,8 +932,8 @@ export default class CompactEventEditor extends Component {
         placeholder={{i18n
           "discourse_post_event.composer.description_placeholder"
         }}
-        value={{this.description}}
         rows="1"
+        value={{this.description}}
         {{on "input" this.onDescriptionInput}}
         {{on "focus" this.handleTextInputFocus}}
       />

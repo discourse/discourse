@@ -32,17 +32,17 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @min={{this.min}}
-          @max={{this.max}}
-          @isMultiple={{this.isMultiple}}
-          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isMultiple={{this.isMultiple}}
+          @isPublic={{this.isPublic}}
+          @max={{this.max}}
+          @min={{this.min}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>
@@ -82,17 +82,17 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @min={{this.min}}
-          @max={{this.max}}
-          @isMultiple={{this.isMultiple}}
-          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isMultiple={{this.isMultiple}}
+          @isPublic={{this.isPublic}}
+          @max={{this.max}}
+          @min={{this.min}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>
@@ -137,15 +137,15 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @closesAt={{this.closesAt}}
           @closed={{this.closed}}
           @closedBy={{this.closedBy}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isPublic={{this.isPublic}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>

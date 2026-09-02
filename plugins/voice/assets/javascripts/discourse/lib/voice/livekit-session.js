@@ -135,13 +135,6 @@ export default class LivekitRoomSession {
     this.#getQualityTiers = getQualityTiers;
   }
 
-  // Effective tiers already clamped by the service (user choice vs room and
-  // site caps). Read at publish time, so a changed preference applies on the
-  // next publish without renegotiating current ones.
-  #qualityTiers() {
-    return this.#getQualityTiers?.() ?? {};
-  }
-
   async connect(wsUrl, token) {
     this.#sdk ||= await this.#loadSdk();
 
@@ -360,6 +353,13 @@ export default class LivekitRoomSession {
     } finally {
       this.#reconnecting = false;
     }
+  }
+
+  // Effective tiers already clamped by the service (user choice vs room and
+  // site caps). Read at publish time, so a changed preference applies on the
+  // next publish without renegotiating current ones.
+  #qualityTiers() {
+    return this.#getQualityTiers?.() ?? {};
   }
 
   async #syncVideoPublication(track, kind) {

@@ -14,16 +14,16 @@ export default class ModalContainer extends Component {
 
   <template>
     <div
-      {{didInsert this.modal.setContainerElement}}
       class="modal-container"
+      {{didInsert this.modal.setContainerElement}}
     ></div>
 
     {{#if this.modal.activeModal}}
       {{#each (array this.modal.activeModal) as |activeModal|}}
         {{! #each ensures that the activeModal component/model are updated atomically }}
         <activeModal.component
-          @model={{activeModal.opts.model}}
           @closeModal={{this.closeModal}}
+          @model={{activeModal.opts.model}}
         />
       {{/each}}
     {{/if}}

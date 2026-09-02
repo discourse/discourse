@@ -117,8 +117,8 @@ export default class BlockInfo extends Component<BlockInfoSignature> {
       <DTooltip
         @identifier="block-debug-info"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{500}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "hover" "click")

@@ -38,38 +38,38 @@ export default class MathEditModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_math.edit_modal.title"}}
-      @closeModal={{@closeModal}}
       class="math-edit-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_math.edit_modal.title"}}
     >
       <:body>
         <Form
           @data={{this.initialData}}
-          @onSubmit={{this.onSubmit}}
           @onRegisterApi={{this.onRegisterApi}}
+          @onSubmit={{this.onSubmit}}
           as |form|
         >
           <form.Field
+            @format="full"
             @name="text"
             @title={{i18n "discourse_math.edit_modal.label"}}
-            @format="full"
             @type="textarea"
             as |field|
           >
             <field.Control
-              class="math-edit-modal__textarea"
               autofocus={{true}}
+              class="math-edit-modal__textarea"
             />
           </form.Field>
         </Form>
       </:body>
       <:footer>
         <DButton
+          class="btn-primary math-edit-modal__apply"
           @action={{this.submitForm}}
           @label="discourse_math.edit_modal.apply"
-          class="btn-primary math-edit-modal__apply"
         />
-        <DButton @action={{this.cancel}} @label="cancel" class="btn-default" />
+        <DButton class="btn-default" @action={{this.cancel}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

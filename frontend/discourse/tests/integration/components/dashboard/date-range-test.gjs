@@ -47,9 +47,9 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
     await render(
       <template>
         <DashboardDateRange
+          @endDate={{end}}
           @period="custom"
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );

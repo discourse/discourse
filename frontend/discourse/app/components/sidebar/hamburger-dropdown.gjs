@@ -17,6 +17,14 @@ export default class SidebarHamburgerDropdown extends Component {
   @service site;
   @service sidebarState;
 
+  get collapsableSections() {
+    if (this.site.mobileView || this.site.narrowDesktopView) {
+      return true;
+    } else {
+      return this.args.collapsableSections;
+    }
+  }
+
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("sidebar-hamburger-dropdown:rendered");
@@ -32,20 +40,12 @@ export default class SidebarHamburgerDropdown extends Component {
     });
   }
 
-  get collapsableSections() {
-    if (this.site.mobileView || this.site.narrowDesktopView) {
-      return true;
-    } else {
-      return this.args.collapsableSections;
-    }
-  }
-
   <template>
     <div class="hamburger-panel">
       <div
-        {{didInsert this.triggerRenderedAppEvent}}
-        data-max-width="320"
         class="revamped menu-panel drop-down"
+        data-max-width="320"
+        {{didInsert this.triggerRenderedAppEvent}}
       >
         <div class="panel-body">
           <div class="panel-body-contents">
@@ -64,16 +64,16 @@ export default class SidebarHamburgerDropdown extends Component {
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}
                   <Sections
-                    @currentUser={{this.currentUser}}
                     @collapsableSections={{this.collapsableSections}}
-                    @panel={{this.sidebarState.currentPanel}}
+                    @currentUser={{this.currentUser}}
                     @hideApiSections={{@forceMainSidebarPanel}}
+                    @panel={{this.sidebarState.currentPanel}}
                     @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{else}}
                   <ApiPanels
-                    @currentUser={{this.currentUser}}
                     @collapsableSections={{this.collapsableSections}}
+                    @currentUser={{this.currentUser}}
                   />
                 {{/if}}
                 <PluginOutlet @name="after-sidebar-sections" />

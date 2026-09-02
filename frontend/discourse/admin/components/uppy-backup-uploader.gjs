@@ -47,11 +47,11 @@ export default class UppyBackupUploader extends Component {
       >
         {{this.uploadButtonText}}
         <input
-          {{didInsert this.uppyUpload.setup}}
+          accept=".gz"
           class="hidden-upload-field"
           disabled={{this.uppyUpload.uploading}}
           type="file"
-          accept=".gz"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
     </span>

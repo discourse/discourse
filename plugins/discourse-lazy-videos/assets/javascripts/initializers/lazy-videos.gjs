@@ -30,8 +30,8 @@ function initLazyEmbed(api) {
             lazyVideo,
             <template>
               <LazyVideo
-                @videoAttributes={{@data.param}}
                 @onLoadedVideo={{@data.onLoadedVideo}}
+                @videoAttributes={{@data.param}}
               />
             </template>,
             { param: videoAttributes, onLoadedVideo }

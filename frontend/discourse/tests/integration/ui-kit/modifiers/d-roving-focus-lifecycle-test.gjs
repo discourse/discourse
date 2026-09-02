@@ -25,14 +25,14 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="first-controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <input
+            aria-controls="lifecycle-list"
             class="second-controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -96,14 +96,14 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="first-controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <input
+            aria-controls="lifecycle-list"
             class="second-controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -154,9 +154,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -171,7 +171,7 @@ module(
             }}
           >
             {{#each state.items key="id" as |item|}}
-              <button role="option" id={{item.id}}>{{item.id}}</button>
+              <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
         </template>
@@ -210,9 +210,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -227,7 +227,7 @@ module(
             }}
           >
             {{#each state.items key="id" as |item|}}
-              <button role="option" id={{item.id}}>{{item.id}}</button>
+              <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
         </template>
@@ -255,9 +255,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -270,9 +270,9 @@ module(
               entryFocus="first"
             }}
           >
-            <div role="option" class="first-item">A</div>
-            <div role="option" class="second-item">B</div>
-            <div role="option" class="author-item" id="author-id">C</div>
+            <div class="first-item" role="option">A</div>
+            <div class="second-item" role="option">B</div>
+            <div class="author-item" id="author-id" role="option">C</div>
           </div>
         </template>
       );
@@ -321,9 +321,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -339,7 +339,7 @@ module(
             }}
           >
             {{#each state.items key="id" as |item|}}
-              <button role="option" id={{item.id}}>{{item.id}}</button>
+              <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
         </template>
@@ -371,9 +371,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -422,9 +422,9 @@ module(
       await render(
         <template>
           <input
+            aria-controls="lifecycle-list"
             class="controller"
             role="combobox"
-            aria-controls="lifecycle-list"
           />
           <div
             id="lifecycle-list"
@@ -439,7 +439,7 @@ module(
             }}
           >
             <button class="minted" role="option">A</button>
-            <button class="authored" role="option" id="authored-id">B</button>
+            <button class="authored" id="authored-id" role="option">B</button>
           </div>
         </template>
       );
@@ -529,8 +529,8 @@ module(
             {{#each state.rows key="id" as |row|}}
               <button
                 class="opt-{{row.id}}"
-                role="option"
                 data-nav={{if row.nav "true"}}
+                role="option"
               >{{row.id}}</button>
             {{/each}}
           </div>

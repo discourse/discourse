@@ -9,12 +9,12 @@ export default class ChatNavbarFilter extends Component {
   <template>
     {{#unless this.chatStateManager.isDrawerCollapsed}}
       <DButton
-        @icon="discourse-chat-search"
-        @action={{@onToggleFilter}}
         class={{dConcatClass
           "btn-transparent c-navbar__filter"
           (if @isFiltering "active")
         }}
+        @action={{@onToggleFilter}}
+        @icon="discourse-chat-search"
       />
     {{/unless}}
   </template>

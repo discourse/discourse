@@ -180,12 +180,12 @@ class Discourse extends Application {
     loadInitializers(this);
   }
 
-  _registerPluginCode(version, code) {
-    _pluginCallbacks.push({ version, code });
-  }
-
   ready() {
     performance.mark("discourse-ready");
+  }
+
+  _registerPluginCode(version, code) {
+    _pluginCallbacks.push({ version, code });
   }
 }
 

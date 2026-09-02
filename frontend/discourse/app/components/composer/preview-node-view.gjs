@@ -118,12 +118,12 @@ export default class PreviewNodeView extends Component {
 
   <template>
     {{~! strip whitespace ~}}<div
+      aria-hidden={{if this.showingSource "true" "false"}}
       class="composer-preview-node__preview"
       contenteditable="false"
-      aria-hidden={{if this.showingSource "true" "false"}}
     >{{#let @options.preview as |Preview|}}<Preview
-          @source={{this.renderedSource}}
           @node={{this.renderedNode}}
+          @source={{this.renderedSource}}
         />{{/let}}</div>{{~! strip whitespace ~}}
   </template>
 }

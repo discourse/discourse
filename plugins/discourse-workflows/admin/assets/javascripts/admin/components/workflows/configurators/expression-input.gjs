@@ -186,6 +186,42 @@ export default class ExpressionInput extends Component {
     this.#armPickerDismiss();
   }
 
+  @action
+  handleChange(value) {
+    this.args.field.set(`=${value}`);
+  }
+
+  @action
+  handleFocusIn() {
+    cancel(this.#focusOutTimer);
+    this.isFocused = true;
+  }
+
+  @action
+  handleFocusOut() {
+    this.#focusOutTimer = discourseLater(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+      const editor = this.wrapperElement?.querySelector(".cm-editor");
+      if (editor?.contains(document.activeElement)) {
+        return;
+      }
+      const tooltip = document.querySelector(
+        '[data-identifier="expression-preview"]'
+      );
+      if (tooltip?.contains(document.activeElement)) {
+        return;
+      }
+      this.isFocused = false;
+    }, 150);
+  }
+
+  @action
+  registerWrapper(element) {
+    this.wrapperElement = element;
+  }
+
   // CodeMirror swallows pointerdowns before float-kit's outside-click detector
   // sees them, so dismiss on a capture listener instead.
   #armPickerDismiss() {
@@ -231,50 +267,14 @@ export default class ExpressionInput extends Component {
     this.#teardownPickerDismiss();
   }
 
-  @action
-  handleChange(value) {
-    this.args.field.set(`=${value}`);
-  }
-
-  @action
-  handleFocusIn() {
-    cancel(this.#focusOutTimer);
-    this.isFocused = true;
-  }
-
-  @action
-  handleFocusOut() {
-    this.#focusOutTimer = discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-      const editor = this.wrapperElement?.querySelector(".cm-editor");
-      if (editor?.contains(document.activeElement)) {
-        return;
-      }
-      const tooltip = document.querySelector(
-        '[data-identifier="expression-preview"]'
-      );
-      if (tooltip?.contains(document.activeElement)) {
-        return;
-      }
-      this.isFocused = false;
-    }, 150);
-  }
-
-  @action
-  registerWrapper(element) {
-    this.wrapperElement = element;
-  }
-
   <template>
     <div {{didInsert this.registerWrapper}}>
       <VariableInput
-        @value={{this.displayValue}}
-        @onChange={{this.handleChange}}
         @extensions={{this.buildExtensions}}
+        @onChange={{this.handleChange}}
         @onFocusIn={{this.handleFocusIn}}
         @onFocusOut={{this.handleFocusOut}}
+        @value={{this.displayValue}}
       />
     </div>
     <ExpressionPreview

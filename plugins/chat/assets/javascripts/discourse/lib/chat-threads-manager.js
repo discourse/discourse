@@ -24,10 +24,6 @@ export default class ChatThreadsManager {
     setOwner(this, owner);
   }
 
-  get unreadThreadCount() {
-    return this.unreadThreadOverview.size;
-  }
-
   get unreadThreadOverview() {
     return this._unreadThreadOverview;
   }
@@ -42,16 +38,20 @@ export default class ChatThreadsManager {
     }
   }
 
-  markThreadUnread(threadId, lastReplyCreatedAt) {
-    this.unreadThreadOverview.set(
-      parseInt(threadId, 10),
-      new Date(lastReplyCreatedAt)
-    );
+  get unreadThreadCount() {
+    return this.unreadThreadOverview.size;
   }
 
   @cached
   get threads() {
     return Object.values(this._cached);
+  }
+
+  markThreadUnread(threadId, lastReplyCreatedAt) {
+    this.unreadThreadOverview.set(
+      parseInt(threadId, 10),
+      new Date(lastReplyCreatedAt)
+    );
   }
 
   async find(channelId, threadId, options = { fetchIfNotFound: true }) {

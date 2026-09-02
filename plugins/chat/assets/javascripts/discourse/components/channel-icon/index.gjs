@@ -50,7 +50,7 @@ export default class ChatChannelIcon extends Component {
           </div>
         {{else if this.groupIsDuoOnly}}
           <div class="chat-channel-icon --avatar">
-            <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
+            <ChatUserAvatar @interactive={{false}} @user={{this.firstUser}} />
           </div>
         {{else}}
           <div class="chat-channel-icon --users-count">
@@ -59,7 +59,7 @@ export default class ChatChannelIcon extends Component {
         {{/if}}
       {{else}}
         <div class="chat-channel-icon --avatar">
-          <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
+          <ChatUserAvatar @interactive={{false}} @user={{this.firstUser}} />
         </div>
       {{/if}}
     {{else if @channel.isCategoryChannel}}
@@ -72,9 +72,9 @@ export default class ChatChannelIcon extends Component {
     {{else if this.isThreadsList}}
       <div class="chat-channel-icon --avatar">
         <ChatUserAvatar
-          @user={{@thread.preview.lastReplyUser}}
           @interactive={{true}}
           @showPresence={{false}}
+          @user={{@thread.preview.lastReplyUser}}
         />
         <div class="avatar-flair --threads">
           {{dIcon "discourse-threads"}}

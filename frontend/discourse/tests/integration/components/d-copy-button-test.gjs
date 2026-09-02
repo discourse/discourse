@@ -11,7 +11,7 @@ module("Integration | Component | DCopyButton", function (hooks) {
   test("renders a polite aria-live region so copy success can be announced", async function (assert) {
     await render(
       <template>
-        <input class="test-input" value="hello" readonly />
+        <input class="test-input" readonly value="hello" />
         <DCopyButton
           @selector="input.test-input"
           @translatedLabel="Copy"
@@ -34,10 +34,10 @@ module("Integration | Component | DCopyButton", function (hooks) {
     await render(
       <template>
         <DCopyButton
-          @value="direct payload"
           @selector=".missing-copy-source"
           @translatedLabel="Copy"
           @translatedLabelAfterCopy="Copied!"
+          @value="direct payload"
         />
       </template>
     );
@@ -57,12 +57,12 @@ module("Integration | Component | DCopyButton", function (hooks) {
 
     await render(
       <template>
-        <input class="test-input" value="hello" readonly />
+        <input class="test-input" readonly value="hello" />
         <DCopyButton
+          @isCopied={{state.isCopied}}
           @selector="input.test-input"
           @translatedLabel="Copy"
           @translatedLabelAfterCopy="Copied!"
-          @isCopied={{state.isCopied}}
         />
       </template>
     );

@@ -31,8 +31,8 @@ export default class AuthButtons extends Component {
         <DButton
           class="btn-primary btn-small login-button"
           @action={{@showLogin}}
-          @label="log_in"
           @icon="user"
+          @label="log_in"
         />
       {{/if}}
     </span>

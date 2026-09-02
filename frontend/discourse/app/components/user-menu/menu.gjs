@@ -214,11 +214,6 @@ export default class UserMenu extends Component {
     this.router.off("routeDidChange", this.onRouteChange);
   }
 
-  @bind
-  onRouteChange() {
-    this.args.closeUserMenu();
-  }
-
   get classNames() {
     let classes = ["user-menu", "revamped", "menu-panel", "drop-down"];
     if (this.siteSettings.show_user_menu_avatars) {
@@ -287,14 +282,9 @@ export default class UserMenu extends Component {
     });
   }
 
-  #notificationTypesForTheOtherTab(tabs) {
-    const usedNotificationTypes = tabs
-      .filter((tab) => tab.notificationTypes)
-      .map((tab) => tab.notificationTypes)
-      .flat();
-    return Object.keys(this.site.notification_types).filter(
-      (notificationType) => !usedNotificationTypes.includes(notificationType)
-    );
+  @bind
+  onRouteChange() {
+    this.args.closeUserMenu();
   }
 
   @action
@@ -330,36 +320,46 @@ export default class UserMenu extends Component {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
 
+  #notificationTypesForTheOtherTab(tabs) {
+    const usedNotificationTypes = tabs
+      .filter((tab) => tab.notificationTypes)
+      .map((tab) => tab.notificationTypes)
+      .flat();
+    return Object.keys(this.site.notification_types).filter(
+      (notificationType) => !usedNotificationTypes.includes(notificationType)
+    );
+  }
+
   <template>
     <div
       class={{this.classNames}}
-      data-tab-id={{this.currentTabId}}
       data-max-width="320"
+      data-tab-id={{this.currentTabId}}
       {{didInsert this.triggerRenderedAppEvent}}
     >
       <div class="panel-body">
         <div class="panel-body-contents">
           <div
+            aria-label={{i18n "user_menu.sr_menu_tabs"}}
+            aria-orientation="vertical"
             class="menu-tabs-container"
             role="tablist"
-            aria-orientation="vertical"
-            aria-label={{i18n "user_menu.sr_menu_tabs"}}
           >
             <div class="top-tabs tabs-list" {{didInsert this.focusFirstTab}}>
               {{#each this.topTabs as |tab|}}
                 <MenuTab
-                  @tab={{tab}}
                   @currentTabId={{this.currentTabId}}
                   @onTabClick={{fn this.handleTabClick tab}}
+                  @tab={{tab}}
                 />
               {{/each}}
             </div>
             <div class="bottom-tabs tabs-list">
               {{#each this.bottomTabs as |tab|}}
                 <MenuTab
-                  @tab={{tab}}
                   @currentTabId={{this.currentTabId}}
                   @onTabClick={{fn this.handleTabClick tab}}
+                  @tab={{tab}}
                 />
               {{/each}}
             </div>
@@ -370,14 +370,14 @@ export default class UserMenu extends Component {
             />
           </div>
           <div
-            id={{concat "quick-access-" this.currentTabId}}
             class="quick-access-panel"
+            id={{concat "quick-access-" this.currentTabId}}
           >
             <this.currentPanelComponent
-              @closeUserMenu={{@closeUserMenu}}
-              @filterByTypes={{this.currentNotificationTypes}}
               @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
               @class={{concat "user-menu-button-" this.currentTabId}}
+              @closeUserMenu={{@closeUserMenu}}
+              @filterByTypes={{this.currentNotificationTypes}}
             />
           </div>
         </div>

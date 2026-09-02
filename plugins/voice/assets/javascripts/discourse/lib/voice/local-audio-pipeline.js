@@ -72,6 +72,80 @@ export default class LocalAudioPipeline {
     return this.noiseSuppressionState === "on";
   }
 
+  acquireMicrophone() {
+    return this.#serialize(() => this.#acquireMicrophone());
+  }
+
+  setNoiseSuppressionMode(mode) {
+    return this.#serialize(() => this.#setNoiseSuppressionMode(mode));
+  }
+
+  setEchoCancellation(enabled) {
+    return this.#serialize(() => {
+      this.echoCancellation = enabled;
+      setEchoCancellationPreferred(enabled);
+      return this.#reacquireQuietly();
+    });
+  }
+
+  setAutoGainControl(enabled) {
+    return this.#serialize(() => {
+      this.autoGainControl = enabled;
+      setAutoGainControlPreferred(enabled);
+      return this.#reacquireQuietly();
+    });
+  }
+
+  setInputDevice(deviceId) {
+    return this.#serialize(() => this.#setInputDevice(deviceId));
+  }
+
+  async setGateThreshold(value) {
+    const clamped = Math.max(0, Math.min(100, Math.round(value)));
+    this.gateThreshold = clamped;
+    InputGateManager.storeSliderValue(clamped);
+
+    if (!this.#upstream) {
+      return;
+    }
+
+    // Adjusting an already-running gate is just a new compare value; only
+    // crossing zero (gate off ↔ on) restructures the pipeline and needs the
+    // peers' senders updated.
+    if (this.#inputGate.active && clamped > 0) {
+      this.#inputGate.setThreshold(sliderToRms(clamped));
+      return;
+    }
+    if (!this.#inputGate.active && clamped === 0) {
+      return;
+    }
+
+    this.#setOutgoingStream(this.#upstream);
+    await this.#replaceTrackOnPeers();
+  }
+
+  // Intentionally synchronous and not serialized: leaving the room must take
+  // effect immediately. teardown() bumps the suppression epoch, so any
+  // in-flight setup unwinds as superseded instead of publishing a stream.
+  stop() {
+    this.#noiseSuppression.teardown();
+    this.noiseSuppressionState = "off";
+    this.#inputGate.teardown();
+    this.#upstream = null;
+
+    if (this.#rawStream) {
+      this.#rawStream.getTracks().forEach((track) => track.stop());
+      this.#rawStream = null;
+    }
+
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
+    }
+
+    this.#onStreamChanged();
+  }
+
   #serialize(task) {
     const run = this.#queue.then(task, task);
     this.#queue = run.then(
@@ -79,10 +153,6 @@ export default class LocalAudioPipeline {
       () => {}
     );
     return run;
-  }
-
-  acquireMicrophone() {
-    return this.#serialize(() => this.#acquireMicrophone());
   }
 
   async #acquireMicrophone() {
@@ -116,10 +186,6 @@ export default class LocalAudioPipeline {
       console.warn("[voice] failed to obtain local stream", error);
       return false;
     }
-  }
-
-  setNoiseSuppressionMode(mode) {
-    return this.#serialize(() => this.#setNoiseSuppressionMode(mode));
   }
 
   async #setNoiseSuppressionMode(mode) {
@@ -175,26 +241,6 @@ export default class LocalAudioPipeline {
     }
   }
 
-  setEchoCancellation(enabled) {
-    return this.#serialize(() => {
-      this.echoCancellation = enabled;
-      setEchoCancellationPreferred(enabled);
-      return this.#reacquireQuietly();
-    });
-  }
-
-  setAutoGainControl(enabled) {
-    return this.#serialize(() => {
-      this.autoGainControl = enabled;
-      setAutoGainControlPreferred(enabled);
-      return this.#reacquireQuietly();
-    });
-  }
-
-  setInputDevice(deviceId) {
-    return this.#serialize(() => this.#setInputDevice(deviceId));
-  }
-
   async #setInputDevice(deviceId) {
     const previousDeviceId = this.inputDeviceId;
     this.inputDeviceId = deviceId;
@@ -217,52 +263,6 @@ export default class LocalAudioPipeline {
       setPreferredInputDeviceId(previousDeviceId);
       return false;
     }
-  }
-
-  async setGateThreshold(value) {
-    const clamped = Math.max(0, Math.min(100, Math.round(value)));
-    this.gateThreshold = clamped;
-    InputGateManager.storeSliderValue(clamped);
-
-    if (!this.#upstream) {
-      return;
-    }
-
-    // Adjusting an already-running gate is just a new compare value; only
-    // crossing zero (gate off ↔ on) restructures the pipeline and needs the
-    // peers' senders updated.
-    if (this.#inputGate.active && clamped > 0) {
-      this.#inputGate.setThreshold(sliderToRms(clamped));
-      return;
-    }
-    if (!this.#inputGate.active && clamped === 0) {
-      return;
-    }
-
-    this.#setOutgoingStream(this.#upstream);
-    await this.#replaceTrackOnPeers();
-  }
-
-  // Intentionally synchronous and not serialized: leaving the room must take
-  // effect immediately. teardown() bumps the suppression epoch, so any
-  // in-flight setup unwinds as superseded instead of publishing a stream.
-  stop() {
-    this.#noiseSuppression.teardown();
-    this.noiseSuppressionState = "off";
-    this.#inputGate.teardown();
-    this.#upstream = null;
-
-    if (this.#rawStream) {
-      this.#rawStream.getTracks().forEach((track) => track.stop());
-      this.#rawStream = null;
-    }
-
-    if (this.stream) {
-      this.stream.getTracks().forEach((track) => track.stop());
-      this.stream = null;
-    }
-
-    this.#onStreamChanged();
   }
 
   // Captures a fresh raw stream under the current constraints and rebuilds

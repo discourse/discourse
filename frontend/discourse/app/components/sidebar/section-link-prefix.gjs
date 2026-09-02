@@ -42,15 +42,15 @@ export default class SidebarSectionLinkPrefix extends Component {
   <template>
     {{#if @prefixType}}
       <span
-        style={{if @prefixColor (trustHTML (concat "color: " @prefixColor))}}
         class={{dConcatClass
           "sidebar-section-link-prefix"
           @prefixType
           @prefixCSSClass
         }}
+        style={{if @prefixColor (trustHTML (concat "color: " @prefixColor))}}
       >
         {{#if (eq @prefixType "image")}}
-          <img src={{this.prefixValue}} class="prefix-image" alt="" />
+          <img alt="" class="prefix-image" src={{this.prefixValue}} />
         {{else if (eq @prefixType "text")}}
           <span class="prefix-text">
             {{this.prefixValue}}
@@ -61,12 +61,12 @@ export default class SidebarSectionLinkPrefix extends Component {
           {{dReplaceEmoji this.prefixValue class="prefix-emoji"}}
         {{else if (eq @prefixType "square")}}
           <span
+            class="prefix-square"
             style={{trustHTML
               (concat
                 "background: linear-gradient(90deg, " this.prefixValue ")"
               )
             }}
-            class="prefix-square"
           ></span>
         {{/if}}
 

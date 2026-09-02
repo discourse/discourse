@@ -14,6 +14,12 @@ export default class AiAgentCollapsableExample extends Component {
     return this.collapsed ? "angle-right" : "angle-down";
   }
 
+  get exampleTitle() {
+    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
+      number: this.args.exampleNumber + 1,
+    });
+  }
+
   @action
   toggleExample() {
     this.collapsed = !this.collapsed;
@@ -25,12 +31,6 @@ export default class AiAgentCollapsableExample extends Component {
     this.args.examplesCollection.remove(this.args.exampleNumber);
   }
 
-  get exampleTitle() {
-    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
-      number: this.args.exampleNumber + 1,
-    });
-  }
-
   <template>
     <div role="button" {{on "click" this.toggleExample}}>
       <span>{{dIcon this.caretIcon}}</span>
@@ -39,15 +39,15 @@ export default class AiAgentCollapsableExample extends Component {
     {{#unless this.collapsed}}
       <@examplesCollection.Collection as |exPair pairIdx|>
         <exPair.Field
+          @disabled={{@system}}
           @title={{i18n
             (concat
               "discourse_ai.ai_agent.examples."
               (if (eq pairIdx 0) "user" "model")
             )
           }}
-          @validation="required|length:1,5000"
-          @disabled={{@system}}
           @type="textarea"
+          @validation="required|length:1,5000"
           as |field|
         >
           <field.Control />
@@ -57,9 +57,9 @@ export default class AiAgentCollapsableExample extends Component {
       {{#unless @system}}
         <@form.Container>
           <@form.Button
+            class="ai-agent-editor__delete_example btn-danger"
             @action={{this.deletePair}}
             @label="discourse_ai.ai_agent.examples.remove"
-            class="ai-agent-editor__delete_example btn-danger"
           />
         </@form.Container>
       {{/unless}}

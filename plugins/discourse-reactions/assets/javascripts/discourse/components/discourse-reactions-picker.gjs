@@ -16,24 +16,6 @@ export default class DiscourseReactionsPicker extends Component {
 
   emojiPickerIsOpen = false;
 
-  @action
-  pointerOut(event) {
-    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
-      return;
-    }
-
-    this.args.scheduleCollapse("collapseReactionsPicker");
-  }
-
-  @action
-  pointerOver(event) {
-    if (event.pointerType !== "mouse") {
-      return;
-    }
-
-    this.args.cancelCollapse();
-  }
-
   get reactionInfo() {
     const reactions = this.siteSettings.discourse_reactions_enabled_reactions
       .split("|")
@@ -134,6 +116,24 @@ export default class DiscourseReactionsPicker extends Component {
   }
 
   @action
+  pointerOut(event) {
+    if (event.pointerType !== "mouse" || this.emojiPickerIsOpen) {
+      return;
+    }
+
+    this.args.scheduleCollapse("collapseReactionsPicker");
+  }
+
+  @action
+  pointerOver(event) {
+    if (event.pointerType !== "mouse") {
+      return;
+    }
+
+    this.args.cancelCollapse();
+  }
+
+  @action
   onSelectEmoji(selected_emoji) {
     this.args.toggle({
       reaction: selected_emoji,
@@ -192,12 +192,12 @@ export default class DiscourseReactionsPicker extends Component {
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
-              @icon="discourse-emojis"
+              @btnClass="btn-icon btn-flat"
               @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
-              @onShow={{this.preventCollapse}}
+              @icon="discourse-emojis"
               @onClose={{this.reenableCollapse}}
-              @btnClass="btn-icon btn-flat"
+              @onShow={{this.preventCollapse}}
             />
           {{/if}}
         </div>

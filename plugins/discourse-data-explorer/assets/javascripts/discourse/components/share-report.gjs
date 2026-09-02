@@ -69,7 +69,7 @@ export default class ShareReport extends Component {
 
   <template>
     <div class="share-report">
-      <a href="#" {{on "click" this.open}} class="share-report-button">
+      <a class="share-report-button" href="#" {{on "click" this.open}}>
         {{dIcon "link"}}
         {{@group}}
       </a>
@@ -88,11 +88,11 @@ export default class ShareReport extends Component {
           />
 
           <DButton
-            @action={{this.close}}
-            @icon="xmark"
-            @aria-label="share.close"
-            @title="share.close"
             class="btn-flat close"
+            @action={{this.close}}
+            @aria-label="share.close"
+            @icon="xmark"
+            @title="share.close"
           />
         </div>
       {{/if}}

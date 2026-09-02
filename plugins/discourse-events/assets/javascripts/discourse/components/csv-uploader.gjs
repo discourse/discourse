@@ -49,11 +49,11 @@ export default class CsvUploader extends Component {
       <label class="btn" disabled={{this.uploadButtonDisabled}}>
         {{dIcon "upload"}}&nbsp;{{this.uploadButtonText}}
         <input
-          {{didInsert this.uppyUpload.setup}}
+          accept=".csv"
           class="hidden-upload-field"
           disabled={{this.uppyUpload.uploading}}
           type="file"
-          accept=".csv"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
       {{#if (or this.uppyUpload.uploading this.uppyUpload.processing)}}

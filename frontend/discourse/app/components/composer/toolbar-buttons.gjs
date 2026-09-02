@@ -7,11 +7,6 @@ import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToolbarButtons extends Component {
-  @action
-  tabIndex(button) {
-    return button === this.firstButton ? 0 : button.tabindex;
-  }
-
   // the tab stop must be a rendered button: the leading one may be hidden by its condition
   get firstButton() {
     const { isFirst = true } = this.args;
@@ -27,12 +22,17 @@ export default class ComposerToolbarButtons extends Component {
       .find((button) => this.isActionable(button) && button.condition(context));
   }
 
-  isActionable(button) {
-    return button.type !== "separator" && !button.disabled;
-  }
-
   get rovingButtonBar() {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
+  }
+
+  @action
+  tabIndex(button) {
+    return button === this.firstButton ? 0 : button.tabindex;
+  }
+
+  isActionable(button) {
+    return button.type !== "separator" && !button.disabled;
   }
 
   /** The title with the drawn shortcut appended, when one is shown. */
@@ -58,32 +58,32 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
-              @title={{button.title}}
-              @context={{@data.context}}
-              @content={{(button.popupMenu.options)}}
-              @header={{button.popupMenu.header}}
-              @onChange={{button.popupMenu.action}}
-              @onOpen={{button.action}}
-              @tabindex={{this.tabIndex button}}
-              @onKeydown={{this.rovingButtonBar}}
-              @icon={{button.icon}}
-              @triggerLabel={{button.popupMenu.triggerLabel}}
               @class={{dConcatClass
                 button.className
                 (if (this.isButtonActive button) "--active")
               }}
+              @content={{(button.popupMenu.options)}}
+              @context={{@data.context}}
+              @header={{button.popupMenu.header}}
+              @icon={{button.icon}}
+              @onChange={{button.popupMenu.action}}
+              @onKeydown={{this.rovingButtonBar}}
+              @onOpen={{button.action}}
+              @tabindex={{this.tabIndex button}}
+              @title={{button.title}}
+              @triggerLabel={{button.popupMenu.triggerLabel}}
             />
           {{else}}
             <DShortcut @keys={{button.shortcutKeys}} as |shortcut|>
               <DButton
+                aria-keyshortcuts={{shortcut.aria}}
                 class={{dConcatClass
                   "toolbar__button"
                   button.className
                   (if (this.isButtonActive button) "--active")
                 }}
-                aria-keyshortcuts={{shortcut.aria}}
-                tabindex={{this.tabIndex button}}
                 rel={{if button.href "noopener noreferrer"}}
+                tabindex={{this.tabIndex button}}
                 target={{if button.href "_blank"}}
                 @action={{unless button.href button.action}}
                 @disabled={{button.disabled}}

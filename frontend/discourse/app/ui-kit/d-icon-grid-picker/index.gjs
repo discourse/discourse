@@ -155,18 +155,18 @@ export default class DIconGridPicker extends Component {
       ...attributes
     >
       <DMenu
-        @title={{this.triggerTitle}}
-        @disabled={{@disabled}}
-        @triggerClass={{this.btnClass}}
-        @identifier="d-icon-grid-picker"
-        @groupIdentifier="d-icon-grid-picker"
-        @modalForMobile={{this.modalForMobile}}
-        @maxWidth={{490}}
         @autofocus={{true}}
-        @onShow={{@onShow}}
-        @onRegisterApi={{this.onRegisterMenu}}
-        @onClose={{@onClose}}
+        @disabled={{@disabled}}
+        @groupIdentifier="d-icon-grid-picker"
+        @identifier="d-icon-grid-picker"
         @inline={{@inline}}
+        @maxWidth={{490}}
+        @modalForMobile={{this.modalForMobile}}
+        @onClose={{@onClose}}
+        @onRegisterApi={{this.onRegisterMenu}}
+        @onShow={{@onShow}}
+        @title={{this.triggerTitle}}
+        @triggerClass={{this.btnClass}}
       >
         <:trigger>
           {{#if @value}}
@@ -185,12 +185,12 @@ export default class DIconGridPicker extends Component {
         </:trigger>
         <:content>
           <DIconGridPickerContent
-            @value={{@value}}
-            @onSelect={{this.selectIcon}}
             @favorites={{@favorites}}
-            @showSelectedName={{@showSelectedName}}
-            @onlyAvailable={{@onlyAvailable}}
             @iconColorStyle={{this.iconColorStyle}}
+            @onlyAvailable={{@onlyAvailable}}
+            @onSelect={{this.selectIcon}}
+            @showSelectedName={{@showSelectedName}}
+            @value={{@value}}
           />
         </:content>
       </DMenu>
@@ -198,10 +198,10 @@ export default class DIconGridPicker extends Component {
       {{#if this.showClearButton}}
         <DButton
           class="btn-default d-icon-grid-picker__clear"
-          @icon="xmark"
           @action={{this.clearIcon}}
-          @title={{this.clearTitle}}
           @disabled={{@disabled}}
+          @icon="xmark"
+          @title={{this.clearTitle}}
         />
       {{/if}}
     </div>

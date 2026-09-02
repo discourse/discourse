@@ -25,8 +25,8 @@ export default <template>
         <tbody>
           {{#each @controller.model as |template|}}
             <RowItem
-              @template={{template}}
               @refreshModel={{@controller.reload}}
+              @template={{template}}
             />
           {{/each}}
         </tbody>
@@ -34,11 +34,11 @@ export default <template>
     {{/if}}
 
     <DButton
+      class="btn-primary"
+      @action={{@controller.newTemplate}}
+      @icon="plus"
       @label="admin.form_templates.new_template"
       @title="admin.form_templates.new_template"
-      @icon="plus"
-      @action={{@controller.newTemplate}}
-      class="btn-primary"
     />
   </div>
 </template>

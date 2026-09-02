@@ -11,9 +11,9 @@ export default class FeaturedLink extends Component {
     {{#if this.meta}}
       <a
         class="topic-featured-link"
+        href={{this.meta.href}}
         rel={{this.meta.rel}}
         target={{this.meta.target}}
-        href={{this.meta.href}}
       >
         {{dIcon "up-right-from-square"}}
         {{this.meta.domain}}

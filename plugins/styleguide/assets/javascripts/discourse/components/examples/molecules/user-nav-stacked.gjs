@@ -3,14 +3,14 @@ import MobileNav from "discourse/components/mobile-nav";
 export default <template>
   <section class="user-navigation">
     <MobileNav
-      @desktopClass="preferences-list action-list nav-stacked"
       class="preferences-nav"
+      @desktopClass="preferences-list action-list nav-stacked"
     >
       {{#each @navItems key="name" as |navItem|}}
         <li>
           <a
-            href={{navItem.href}}
             class={{if navItem.styleGuideActive "active"}}
+            href={{navItem.href}}
           >
             {{navItem.displayName}}
           </a>

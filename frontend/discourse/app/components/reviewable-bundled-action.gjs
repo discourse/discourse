@@ -41,9 +41,14 @@ export default class ReviewableBundledAction extends Component {
   <template>
     {{#if this.multiple}}
       <DropdownSelectBox
-        @nameProperty="label"
-        @valueProperty="action_name"
+        class={{dConcatClass
+          "reviewable-action-dropdown"
+          "btn-icon-text"
+          (dasherize this.first.action_name)
+          this.first.button_class
+        }}
         @content={{@bundle.actions}}
+        @nameProperty="label"
         @onChange={{this.perform}}
         @options={{hash
           showCaret=true
@@ -51,24 +56,19 @@ export default class ReviewableBundledAction extends Component {
           placement=this.placement
           translatedNone=@bundle.label
         }}
-        class={{dConcatClass
-          "reviewable-action-dropdown"
-          "btn-icon-text"
-          (dasherize this.first.action_name)
-          this.first.button_class
-        }}
+        @valueProperty="action_name"
       />
     {{else}}
       <DButton
-        @action={{this.perform}}
-        @translatedLabel={{this.first.label}}
-        @disabled={{@reviewableUpdating}}
         class={{dConcatClass
           "btn-default"
           "reviewable-action"
           (dasherize this.first.action_name)
           this.first.button_class
         }}
+        @action={{this.perform}}
+        @disabled={{@reviewableUpdating}}
+        @translatedLabel={{this.first.label}}
       />
     {{/if}}
   </template>

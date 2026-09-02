@@ -490,14 +490,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
-          @node={{nodeView.node}}
-          @view={{nodeView.view}}
-          @getPos={{nodeView.getPos}}
-          @dom={{nodeView.dom}}
           @contentDOM={{nodeView.contentDOM}}
-          @pluginParams={{nodeView.pluginParams}}
-          @options={{nodeView.options}}
+          @dom={{nodeView.dom}}
+          @getPos={{nodeView.getPos}}
+          @node={{nodeView.node}}
           @onSetup={{nodeView.setComponentInstance}}
+          @options={{nodeView.options}}
+          @pluginParams={{nodeView.pluginParams}}
+          @view={{nodeView.view}}
         />
       {{~/in-element~}}
     {{/each}}

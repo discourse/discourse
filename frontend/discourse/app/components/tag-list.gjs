@@ -65,9 +65,9 @@ export default class TagList extends Component {
       {{/if}}
       {{#if this.tagGroupName}}
         <h3 id={{this.tagGroupNameSlug}}><a
-            href="#{{this.tagGroupNameSlug}}"
-            class="anchor"
             aria-label={{i18n "post.heading_anchor"}}
+            class="anchor"
+            href="#{{this.tagGroupNameSlug}}"
           ></a>{{this.tagGroupName}}</h3>
       {{/if}}
       {{#each this.sortedTags as |tag|}}

@@ -118,7 +118,7 @@ export default class AiToolApproval extends Component {
   }
 
   <template>
-    <div {{didInsert this.loadReviewable}} class="ai-tool-approval">
+    <div class="ai-tool-approval" {{didInsert this.loadReviewable}}>
       {{#if this.loading}}
         <span class="ai-tool-approval__status">{{i18n
             "discourse_ai.ai_tool_approval.loading"
@@ -135,9 +135,9 @@ export default class AiToolApproval extends Component {
         {{#if this.isResolved}}
           <DButton
             class="btn-flat ai-tool-approval__toggle"
+            @action={{this.toggleExpanded}}
             @icon={{if this.expanded "chevron-down" "chevron-right"}}
             @translatedLabel={{this.statusLabel}}
-            @action={{this.toggleExpanded}}
           />
         {{/if}}
 
@@ -178,17 +178,17 @@ export default class AiToolApproval extends Component {
             <div class="ai-tool-approval__actions">
               <DButton
                 class="btn-danger"
-                @icon="xmark"
-                @label="discourse_ai.ai_tool_approval.reject"
-                @isLoading={{this.performing}}
                 @action={{fn this.performAction "reject"}}
+                @icon="xmark"
+                @isLoading={{this.performing}}
+                @label="discourse_ai.ai_tool_approval.reject"
               />
               <DButton
                 class="btn-primary"
-                @icon="check"
-                @label="discourse_ai.ai_tool_approval.approve"
-                @isLoading={{this.performing}}
                 @action={{fn this.performAction "approve"}}
+                @icon="check"
+                @isLoading={{this.performing}}
+                @label="discourse_ai.ai_tool_approval.approve"
               />
             </div>
           {{else}}

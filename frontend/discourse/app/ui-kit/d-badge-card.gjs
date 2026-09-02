@@ -74,8 +74,8 @@ export default class DBadgeCard extends Component {
           @outletArgs={{lazyHash badge=@badge url=this.url}}
         />
         <span
-          class="badge-icon {{@badge.badgeTypeClassName}}"
           aria-hidden="true"
+          class="badge-icon {{@badge.badgeTypeClassName}}"
         >
           {{dIconOrImage @badge}}
         </span>
@@ -86,19 +86,19 @@ export default class DBadgeCard extends Component {
                 {{@badge.name}}
               {{else}}
                 <a
-                  href={{this.url}}
-                  class="badge-link"
                   aria-describedby={{this.ariaDescribedBy}}
+                  class="badge-link"
+                  href={{this.url}}
                 >
                   {{@badge.name}}
                 </a>
               {{/if}}
             </h3>
-            <div id="badge-summary-{{@badge.slug}}" class="badge-summary">
+            <div class="badge-summary" id="badge-summary-{{@badge.slug}}">
               {{trustHTML this.summary}}
             </div>
             {{#if this.displayCount}}
-              <div id="badge-granted-{{@badge.slug}}" class="badge-granted">
+              <div class="badge-granted" id="badge-granted-{{@badge.slug}}">
                 {{trustHTML
                   (i18n
                     "badges.awarded"
@@ -114,9 +114,9 @@ export default class DBadgeCard extends Component {
 
       {{#if @badge.has_badge}}
         <div
-          id="badge-awarded-{{@badge.slug}}"
-          class="check-display status-checked"
           aria-label={{i18n "notifications.titles.granted_badge"}}
+          class="check-display status-checked"
+          id="badge-awarded-{{@badge.slug}}"
         >
           {{dIcon "check"}}
         </div>
@@ -125,21 +125,21 @@ export default class DBadgeCard extends Component {
       {{#if @canFavorite}}
         {{#if @isFavorite}}
           <DButton
-            @icon="star"
-            @action={{@onFavoriteClick}}
             class="btn-default favorite-btn btn-small"
+            @action={{@onFavoriteClick}}
+            @icon="star"
           />
         {{else}}
           <DButton
-            @icon="far-star"
+            class="btn-default favorite-btn btn-small"
             @action={{@onFavoriteClick}}
+            @disabled={{not @canFavoriteMoreBadges}}
+            @icon="far-star"
             @title={{if
               @canFavoriteMoreBadges
               "badges.favorite_max_not_reached"
               "badges.favorite_max_reached"
             }}
-            @disabled={{not @canFavoriteMoreBadges}}
-            class="btn-default favorite-btn btn-small"
           />
         {{/if}}
       {{/if}}

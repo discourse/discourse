@@ -12,7 +12,7 @@ export default <template>
       <h1>{{i18n "badges.title"}}</h1>
 
       <span>
-        <PluginOutlet @name="below-badges-title" @connectorTagName="div" />
+        <PluginOutlet @connectorTagName="div" @name="below-badges-title" />
       </span>
 
       <div class="badge-groups">

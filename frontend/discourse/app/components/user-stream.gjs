@@ -31,13 +31,6 @@ export default class UserStreamComponent extends Component {
     this.updateBulkSelectPosts();
   }
 
-  @action
-  updateBulkSelectPosts() {
-    if (this.isDraftsRoute && this.args.stream?.content) {
-      this.bulkSelectHelper.updatePosts(this.args.stream.content);
-    }
-  }
-
   get isDraftsRoute() {
     return this.router.currentRouteName === "userActivity.drafts";
   }
@@ -81,6 +74,13 @@ export default class UserStreamComponent extends Component {
     }
 
     return "username";
+  }
+
+  @action
+  updateBulkSelectPosts() {
+    if (this.isDraftsRoute && this.args.stream?.content) {
+      this.bulkSelectHelper.updatePosts(this.args.stream.content);
+    }
   }
 
   @action
@@ -182,21 +182,21 @@ export default class UserStreamComponent extends Component {
 
   <template>
     <PostList
-      @posts={{@stream.content}}
-      @isLoading={{@stream.loading}}
-      @idPath="post_id"
-      @urlPath="postUrl"
-      @usernamePath={{this.usernamePath}}
-      @fetchMorePosts={{this.loadMore}}
-      @titlePath="titleHtml"
+      class={{dConcatClass "user-stream" this.filterClassName}}
       @additionalItemClasses="user-stream-item"
-      @showUserInfo={{false}}
-      @resumeDraft={{this.resumeDraft}}
-      @removeDraft={{this.removeDraft}}
+      @bulkActions={{this.bulkActions}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
       @bulkSelectHelper={{this.showBulkSelectHelper}}
-      @bulkActions={{this.bulkActions}}
-      class={{dConcatClass "user-stream" this.filterClassName}}
+      @fetchMorePosts={{this.loadMore}}
+      @idPath="post_id"
+      @isLoading={{@stream.loading}}
+      @posts={{@stream.content}}
+      @removeDraft={{this.removeDraft}}
+      @resumeDraft={{this.resumeDraft}}
+      @showUserInfo={{false}}
+      @titlePath="titleHtml"
+      @urlPath="postUrl"
+      @usernamePath={{this.usernamePath}}
       {{on "click" this.handleClick}}
       {{didUpdate this.updateBulkSelectPosts @stream.content}}
     >
@@ -209,8 +209,8 @@ export default class UserStreamComponent extends Component {
       <:belowPostItemMetaData as |post|>
         <span>
           <PluginOutlet
-            @name="user-stream-item-header"
             @connectorTagName="div"
+            @name="user-stream-item-header"
             @outletArgs={{lazyHash item=post}}
           />
         </span>
@@ -218,8 +218,8 @@ export default class UserStreamComponent extends Component {
       <:abovePostItemExcerpt as |post|>
         <PostActionDescription
           @actionCode={{post.action_code}}
-          @username={{post.action_code_who}}
           @path={{post.action_code_path}}
+          @username={{post.action_code_who}}
         />
 
         {{#each post.children as |child|}}
@@ -227,9 +227,9 @@ export default class UserStreamComponent extends Component {
             {{dIcon child.icon class="icon"}}
             {{#each child.items as |grandChild|}}
               <a
-                href={{grandChild.userUrl}}
-                data-user-card={{grandChild.username}}
                 class="avatar-link"
+                data-user-card={{grandChild.username}}
+                href={{grandChild.userUrl}}
               >
                 <div class="avatar-wrapper">
                   {{dAvatar

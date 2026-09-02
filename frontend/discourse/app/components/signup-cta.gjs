@@ -42,20 +42,20 @@ export default class SignupCta extends Component {
 
         <div class="buttons">
           <DButton
-            @action={{routeAction "showCreateAccount"}}
-            @label="signup_cta.sign_up"
-            @icon="user"
             class="btn-primary"
+            @action={{routeAction "showCreateAccount"}}
+            @icon="user"
+            @label="signup_cta.sign_up"
           />
           <DButton
+            class="btn-default no-icon"
             @action={{this.hideForSession}}
             @label="signup_cta.hide_session"
-            class="btn-default no-icon"
           />
           <DButton
+            class="no-icon btn-flat"
             @action={{this.hideForever}}
             @label="signup_cta.hide_forever"
-            class="no-icon btn-flat"
           />
         </div>
       {{/if}}

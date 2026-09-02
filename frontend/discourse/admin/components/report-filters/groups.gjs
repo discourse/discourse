@@ -19,10 +19,10 @@ export default class Groups extends FilterComponent {
 
   <template>
     <DButton
+      class="btn-default report-filter-groups__button"
       @action={{this.openCompareGroups}}
       @icon="plus"
       @label="admin.dashboard.sections.engagement.whos_posting.add_group"
-      class="btn-default report-filter-groups__button"
     />
   </template>
 }

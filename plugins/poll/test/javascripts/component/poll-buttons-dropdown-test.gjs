@@ -27,13 +27,13 @@ module("Component | PollButtonsDropdown", function (hooks) {
       <template>
         <PollButtonsDropdown
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
+          @isMe={{this.isMe}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </template>
     );
@@ -65,15 +65,15 @@ module("Component | PollButtonsDropdown", function (hooks) {
     await render(
       <template>
         <PollButtonsDropdown
+          @availableDisplayMode={{this.availableDisplayMode}}
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
-          @availableDisplayMode={{this.availableDisplayMode}}
+          @isMe={{this.isMe}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </template>
     );
@@ -105,13 +105,13 @@ module("Component | PollButtonsDropdown", function (hooks) {
       <template>
         <PollButtonsDropdown
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
+          @isMe={{this.isMe}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </template>
     );
@@ -142,13 +142,13 @@ module("Component | PollButtonsDropdown", function (hooks) {
       <template>
         <PollButtonsDropdown
           @closed={{this.closed}}
-          @voters={{this.voters}}
-          @isStaff={{this.isStaff}}
-          @isMe={{this.isMe}}
-          @topicArchived={{this.topicArchived}}
+          @dropDownClick={{this.dropDownClick}}
           @groupableUserFields={{this.groupableUserFields}}
           @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
-          @dropDownClick={{this.dropDownClick}}
+          @isMe={{this.isMe}}
+          @isStaff={{this.isStaff}}
+          @topicArchived={{this.topicArchived}}
+          @voters={{this.voters}}
         />
       </template>
     );

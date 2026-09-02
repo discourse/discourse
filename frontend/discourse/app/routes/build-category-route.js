@@ -91,34 +91,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
       : "latest";
   }
 
-  async _createSubcategoryList(category) {
-    if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.list(this.store, category);
-    }
-  }
-
-  async _retrieveTopicList(category, transition, modelParams) {
-    const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.historyStore.isPoppedState };
-
-    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
-    if (findOpts.no_subcategories) {
-      listFilter += "/none";
-    }
-    listFilter += `/l/${this.filter(category)}`;
-
-    const topicList = await findTopicList(
-      this.store,
-      this.topicTrackingState,
-      listFilter,
-      findOpts,
-      extras
-    );
-    TopicList.hideUniformCategory(topicList, category);
-
-    return topicList;
-  }
-
   titleToken() {
     const category = this.currentModel.category;
 
@@ -176,6 +148,34 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
+  }
+
+  async _createSubcategoryList(category) {
+    if (category.isParent && category.show_subcategory_list) {
+      return CategoryList.list(this.store, category);
+    }
+  }
+
+  async _retrieveTopicList(category, transition, modelParams) {
+    const findOpts = filterQueryParams(modelParams, this.routeConfig);
+    const extras = { cached: this.historyStore.isPoppedState };
+
+    let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
+    if (findOpts.no_subcategories) {
+      listFilter += "/none";
+    }
+    listFilter += `/l/${this.filter(category)}`;
+
+    const topicList = await findTopicList(
+      this.store,
+      this.topicTrackingState,
+      listFilter,
+      findOpts,
+      extras
+    );
+    TopicList.hideUniformCategory(topicList, category);
+
+    return topicList;
   }
 }
 

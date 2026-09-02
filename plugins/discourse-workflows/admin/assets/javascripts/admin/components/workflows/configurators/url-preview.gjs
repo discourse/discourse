@@ -136,6 +136,25 @@ export default class UrlPreview extends Component {
     return this.isTestMode && !this.canStartTestSession;
   }
 
+  get expiresInSeconds() {
+    const expiresAt = this.webhookTestListener?.expiresAt;
+    if (!expiresAt) {
+      return null;
+    }
+
+    return Math.max(0, Math.ceil((Date.parse(expiresAt) - this.now) / 1000));
+  }
+
+  get statusText() {
+    if (!this.isWebhookTrigger || !this.webhookTestListener) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.webhook.listening_seconds", {
+      seconds: this.expiresInSeconds,
+    });
+  }
+
   @action
   setMode(mode) {
     this.mode = mode;
@@ -211,25 +230,6 @@ export default class UrlPreview extends Component {
     await this.copy();
   }
 
-  get expiresInSeconds() {
-    const expiresAt = this.webhookTestListener?.expiresAt;
-    if (!expiresAt) {
-      return null;
-    }
-
-    return Math.max(0, Math.ceil((Date.parse(expiresAt) - this.now) / 1000));
-  }
-
-  get statusText() {
-    if (!this.isWebhookTrigger || !this.webhookTestListener) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.webhook.listening_seconds", {
-      seconds: this.expiresInSeconds,
-    });
-  }
-
   startCountdown() {
     if (isTesting()) {
       return;
@@ -259,29 +259,29 @@ export default class UrlPreview extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.isTestableTrigger}}
         <div class="workflows-url-preview-mode">
           <button
-            type="button"
             class={{dConcatClass
               "workflows-url-preview-mode__button"
               (if (eq this.mode "test") "is-active")
             }}
+            type="button"
             {{on "click" (fn this.setMode "test")}}
           >{{i18n "discourse_workflows.form.test_url"}}</button>
           <button
-            type="button"
             class={{dConcatClass
               "workflows-url-preview-mode__button"
               (if (eq this.mode "production") "is-active")
             }}
+            type="button"
             {{on "click" (fn this.setMode "production")}}
           >{{i18n "discourse_workflows.form.production_url"}}</button>
         </div>
@@ -306,8 +306,8 @@ export default class UrlPreview extends Component {
           <div class="workflows-url-preview__status">
             <span>{{this.statusText}}</span>
             <button
-              type="button"
               class="btn-link"
+              type="button"
               {{on "click" this.cancelTestSession}}
             >{{i18n
                 "discourse_workflows.webhook.cancel_test_listener"

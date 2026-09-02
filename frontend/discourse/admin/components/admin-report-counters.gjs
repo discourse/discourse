@@ -8,8 +8,8 @@ import dNumber from "discourse/ui-kit/helpers/d-number";
 export default class AdminReportCounters extends Component {
   <template>
     <div
-      title={{this.model.description}}
       class="admin-report-counters"
+      title={{this.model.description}}
       ...attributes
     >
       <div class="cell title">

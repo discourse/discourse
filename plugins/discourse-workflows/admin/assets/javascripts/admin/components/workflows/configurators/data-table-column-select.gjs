@@ -64,22 +64,22 @@ export default class DataTableColumnSelect extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.options.length}}
         <ComboBox
           class="workflows-data-table-column-select"
           @content={{this.options}}
           @nameProperty="name"
-          @value={{@field.value}}
-          @valueProperty="id"
           @onChange={{this.handleChange}}
           @options={{hash none=this.none}}
+          @value={{@field.value}}
+          @valueProperty="id"
         />
       {{/if}}
     </ExpressionWrapper>

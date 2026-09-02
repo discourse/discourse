@@ -21,8 +21,8 @@ module(
       await render(
         <template>
           <TopicResultComponent
-            @result={{hash topic=pmTopic}}
             @isPMOnly={{false}}
+            @result={{hash topic=pmTopic}}
           />
         </template>
       );
@@ -43,8 +43,8 @@ module(
       await render(
         <template>
           <TopicResultComponent
-            @result={{hash topic=pmTopic}}
             @isPMOnly={{true}}
+            @result={{hash topic=pmTopic}}
           />
         </template>
       );
@@ -65,8 +65,8 @@ module(
       await render(
         <template>
           <TopicResultComponent
-            @result={{hash topic=regularTopic}}
             @isPMOnly={{false}}
+            @result={{hash topic=regularTopic}}
           />
         </template>
       );

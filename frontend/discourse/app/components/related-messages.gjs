@@ -39,21 +39,21 @@ export default class RelatedMessages extends Component {
 
   <template>
     <div
-      role="complementary"
       aria-labelledby="related-messages-title"
-      id="related-messages"
       class="more-topics__list"
+      id="related-messages"
+      role="complementary"
     >
-      <h3 id="related-messages-title" class="more-topics__list-title">
+      <h3 class="more-topics__list-title" id="related-messages-title">
         {{i18n "related_messages.title"}}
       </h3>
 
       <div class="topics">
         <BasicTopicList
-          @topics={{@topic.relatedMessages}}
           @hideCategory={{true}}
-          @showPosters={{true}}
           @listContext="related"
+          @showPosters={{true}}
+          @topics={{@topic.relatedMessages}}
         />
       </div>
 

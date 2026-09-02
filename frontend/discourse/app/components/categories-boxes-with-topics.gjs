@@ -39,10 +39,10 @@ export default class CategoriesBoxesWithTopics extends Component {
     >
       {{#each this.categories as |c|}}
         <div
-          data-notification-level={{c.notificationLevelString}}
-          style={{categoryColorVariable c.color}}
           class="category category-box category-box-{{c.slug}}
             {{if c.isMuted 'muted'}}"
+          data-notification-level={{c.notificationLevelString}}
+          style={{categoryColorVariable c.color}}
         >
           <div class="category-box-inner">
             <div class="category-box-heading">

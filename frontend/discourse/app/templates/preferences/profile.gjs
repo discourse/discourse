@@ -29,10 +29,10 @@ export default <template>
         data-setting-name="user-hide-profile"
       >
         <PreferenceCheckbox
-          @labelKey="user.hide_profile"
-          @checked={{@controller.model.user_option.hide_profile}}
-          data-setting-name="user-hide-profile"
           class="pref-hide-profile"
+          data-setting-name="user-hide-profile"
+          @checked={{@controller.model.user_option.hide_profile}}
+          @labelKey="user.hide_profile"
         />
       </div>
     {{/if}}
@@ -49,15 +49,15 @@ export default <template>
     <div class="control-group pref-timezone" data-setting-name="user-timezone">
       <label class="control-label">{{i18n "user.timezone"}}</label>
       <TimezoneInput
-        @value={{@controller.model.user_option.timezone}}
-        @onChange={{fn (mut @controller.model.user_option.timezone)}}
         class="input-xxlarge"
+        @onChange={{fn (mut @controller.model.user_option.timezone)}}
+        @value={{@controller.model.user_option.timezone}}
       />
       <DButton
+        class="btn-default"
+        @action={{@controller.useCurrentTimezone}}
         @icon="globe"
         @label="user.use_current_timezone"
-        @action={{@controller.useCurrentTimezone}}
-        class="btn-default"
       />
     </div>
 
@@ -71,10 +71,10 @@ export default <template>
           }}</label>
         <div class="controls">
           <Input
-            @type="text"
-            @value={{@controller.model.location}}
             class="input-xxlarge"
             id="edit-location"
+            @type="text"
+            @value={{@controller.model.location}}
           />
         </div>
       </div>
@@ -87,10 +87,10 @@ export default <template>
           }}</label>
         <div class="controls">
           <Input
-            @type="text"
-            @value={{@controller.model.website}}
             class="input-xxlarge"
             id="edit-website"
+            @type="text"
+            @value={{@controller.model.website}}
           />
         </div>
       </div>
@@ -116,14 +116,14 @@ export default <template>
             }}</label>
           <div class="controls">
             <UppyImageUploader
+              @id="profile-background-uploader"
               @imageUrl={{@controller.model.profile_background_upload_url}}
-              @onUploadDone={{@controller.profileBackgroundUploadDone}}
               @onUploadDeleted={{fn
                 (mut @controller.model.profile_background_upload_url)
                 null
               }}
+              @onUploadDone={{@controller.profileBackgroundUploadDone}}
               @type="profile_background"
-              @id="profile-background-uploader"
             />
           </div>
           <div class="instructions">
@@ -141,14 +141,14 @@ export default <template>
             }}</label>
           <div class="controls">
             <UppyImageUploader
+              @id="profile-card-background-uploader"
               @imageUrl={{@controller.model.card_background_upload_url}}
-              @onUploadDone={{@controller.cardBackgroundUploadDone}}
               @onUploadDeleted={{fn
                 (mut @controller.model.card_background_upload_url)
                 null
               }}
+              @onUploadDone={{@controller.cardBackgroundUploadDone}}
               @type="card_background"
-              @id="profile-card-background-uploader"
             />
           </div>
           <div class="instructions">
@@ -164,11 +164,11 @@ export default <template>
         {{#if @controller.model.featured_topic}}
           <label class="featured-topic-link">
             <LinkTo
-              @route="topic"
               @models={{array
                 @controller.model.featured_topic.slug
                 @controller.model.featured_topic.id
               }}
+              @route="topic"
             >
               {{dReplaceEmoji
                 (trustHTML @controller.model.featured_topic.fancy_title)
@@ -179,15 +179,15 @@ export default <template>
 
         <div>
           <DButton
+            class="btn-default feature-topic-on-profile-btn"
             @action={{@controller.showFeaturedTopicModal}}
             @label="user.feature_topic_on_profile.open_search"
-            class="btn-default feature-topic-on-profile-btn"
           />
           {{#if @controller.model.featured_topic}}
             <DButton
+              class="btn-danger clear-feature-topic-on-profile-btn"
               @action={{@controller.clearFeaturedTopicFromProfile}}
               @label="user.feature_topic_on_profile.clear.title"
-              class="btn-danger clear-feature-topic-on-profile-btn"
             />
           {{/if}}
         </div>
@@ -204,13 +204,13 @@ export default <template>
           }}</label>
         <div>
           <ComboBox
-            @valueProperty="value"
             @content={{@controller.calendarOptions}}
-            @value={{@controller.model.user_option.default_calendar}}
             @id="user-default-calendar"
             @onChange={{fn
               (mut @controller.model.user_option.default_calendar)
             }}
+            @value={{@controller.model.user_option.default_calendar}}
+            @valueProperty="value"
           />
         </div>
         <div class="instructions">
@@ -220,27 +220,27 @@ export default <template>
     {{/if}}
 
     <PluginOutlet
-      @name="user-preferences-profile"
       @connectorTagName="div"
+      @name="user-preferences-profile"
       @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
     />
 
     <PluginOutlet
-      @name="user-custom-preferences"
       @connectorTagName="div"
+      @name="user-custom-preferences"
       @outletArgs={{lazyHash model=@controller.model}}
     />
 
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   {{/unless}}
 
   <DSaveControls
-    @model={{@controller.model}}
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

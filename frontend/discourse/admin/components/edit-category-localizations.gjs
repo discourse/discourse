@@ -28,10 +28,10 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
   <template>
     <@form.Section>
       <@form.Field
-        @name="locale"
-        @title={{i18n "category.localization.language"}}
         @description={{i18n "category.localization.language_description"}}
         @format="full"
+        @name="locale"
+        @title={{i18n "category.localization.language"}}
         @type="select"
         @validation="required"
         as |field|
@@ -57,11 +57,11 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
         <@form.Row as |row|>
           <row.Col @size={{2}}>
             <collection.Field
+              @format="full"
               @name="locale"
               @title={{i18n "category.localization.locale"}}
-              @format="full"
-              @validation="required"
               @type="select"
+              @validation="required"
               as |field|
             >
               <field.Control as |select|>
@@ -78,14 +78,14 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             <collection.Field
               @name="name"
               @title={{i18n "category.localization.name"}}
-              @validation="required|length:1,50"
               @type="input"
+              @validation="required|length:1,50"
               as |field|
             >
               <field.Control
+                class="category-name"
                 placeholder={{i18n "category.name_placeholder"}}
                 @maxlength="50"
-                class="category-name"
               />
             </collection.Field>
           </row.Col>
@@ -104,9 +104,9 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
           <row.Col @size={{1}}>
             <@form.Button
               class="btn-danger remove-localization"
+              @action={{fn collection.remove index}}
               @icon="trash-can"
               @title="category.localization.remove"
-              @action={{fn collection.remove index}}
             />
           </row.Col>
         </@form.Row>
@@ -114,13 +114,13 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
 
       <@form.Button
         class="btn-default add-localization"
-        @icon="plus"
-        @label="category.localization.add"
         @action={{fn
           @form.addItemToCollection
           "localizations"
           (hash category_id=this.category.id locale="" name="" description="")
         }}
+        @icon="plus"
+        @label="category.localization.add"
       />
     </@form.Section>
   </template>

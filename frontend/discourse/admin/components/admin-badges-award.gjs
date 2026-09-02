@@ -29,16 +29,6 @@ export default class AdminBadgesAward extends Component {
     return this.adminBadges.badges;
   }
 
-  resetState() {
-    this.saving = false;
-    this.unmatchedEntries = null;
-    this.resultsMessage = null;
-    this.success = false;
-    this.unmatchedEntriesCount = 0;
-
-    this.updateFileSelected();
-  }
-
   get massAwardButtonDisabled() {
     return !this.fileSelected || this.saving;
   }
@@ -47,6 +37,16 @@ export default class AdminBadgesAward extends Component {
     let count = this.unmatchedEntriesCount;
     let length = this.unmatchedEntries.length;
     return count && length && count > length;
+  }
+
+  resetState() {
+    this.saving = false;
+    this.unmatchedEntries = null;
+    this.resultsMessage = null;
+    this.success = false;
+    this.unmatchedEntriesCount = 0;
+
+    this.updateFileSelected();
   }
 
   @action
@@ -116,37 +116,37 @@ export default class AdminBadgesAward extends Component {
           <div class="control-group">
             <h4>{{i18n "admin.badges.mass_award.upload_csv"}}</h4>
             <input
-              type="file"
-              id="massAwardCSVUpload"
               accept=".csv"
+              id="massAwardCSVUpload"
               onchange={{this.updateFileSelected}}
+              type="file"
             />
           </div>
           <div class="control-group">
             <label class="checkbox-label">
-              <Input @type="checkbox" @checked={{this.replaceBadgeOwners}} />
+              <Input @checked={{this.replaceBadgeOwners}} @type="checkbox" />
               {{i18n "admin.badges.mass_award.replace_owners"}}
             </label>
             {{#if @badge.multiple_grant}}
               <label class="grant-existing-holders">
                 <Input
-                  @type="checkbox"
-                  @checked={{this.grantExistingHolders}}
                   class="grant-existing-holders-checkbox"
+                  @checked={{this.grantExistingHolders}}
+                  @type="checkbox"
                 />
                 {{i18n "admin.badges.mass_award.grant_existing_holders"}}
               </label>
             {{/if}}
           </div>
           <DButton
+            class="btn-primary"
+            type="submit"
             @action={{this.massAward}}
             @disabled={{this.massAwardButtonDisabled}}
             @icon="certificate"
             @label="admin.badges.mass_award.perform"
-            type="submit"
-            class="btn-primary"
           />
-          <LinkTo @route="adminBadges.index" class="btn btn-normal">
+          <LinkTo class="btn btn-normal" @route="adminBadges.index">
             {{dIcon "xmark"}}
             <span>{{i18n "cancel"}}</span>
           </LinkTo>

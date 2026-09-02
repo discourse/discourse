@@ -4,10 +4,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 const DResponsiveTable = <template>
   <HorizontalScrollSyncWrapper class="directory-table-container" ...attributes>
     <div
-      role="table"
       aria-label={{@ariaLabel}}
-      style={{@style}}
       class={{dConcatClass "directory-table" @className}}
+      role="table"
+      style={{@style}}
     >
       <div class="directory-table__header">
         {{yield to="header"}}

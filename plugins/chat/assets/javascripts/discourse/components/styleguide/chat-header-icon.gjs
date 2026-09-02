@@ -75,11 +75,11 @@ export default class ChatStyleguideChatHeaderIcon extends Component {
           <ul class="d-header-icons">
             <li class="header-dropdown-toggle chat-header-icon">
               <Icon
-                @isActive={{this.isActive}}
                 @currentUserInDnD={{this.currentUserInDnD}}
+                @indicatorPreference={{this.indicatorPreference}}
+                @isActive={{this.isActive}}
                 @unreadCount={{this.unreadCount}}
                 @urgentCount={{this.urgentCount}}
-                @indicatorPreference={{this.indicatorPreference}}
               />
             </li>
           </ul>
@@ -103,24 +103,24 @@ export default class ChatStyleguideChatHeaderIcon extends Component {
       <Row @name="Unread count">
         <input
           type="number"
-          {{on "input" this.updateUnreadCount}}
           value={{this.unreadCount}}
+          {{on "input" this.updateUnreadCount}}
         />
       </Row>
       <Row @name="Urgent count">
         <input
           type="number"
-          {{on "input" this.updateUrgentCount}}
           value={{this.urgentCount}}
+          {{on "input" this.updateUrgentCount}}
         />
       </Row>
       <Row @name="Indicator preference">
         <ComboBox
-          @value={{this.indicatorPreference}}
           @content={{this.indicatorPreferences}}
-          @onChange={{this.updateIndicatorPreference}}
-          @valueProperty={{null}}
           @nameProperty={{null}}
+          @onChange={{this.updateIndicatorPreference}}
+          @value={{this.indicatorPreference}}
+          @valueProperty={{null}}
         />
 
       </Row>

@@ -55,35 +55,35 @@ export default class ChatModalEditChannelDescription extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-edit-channel-description"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
       @inline={{@inline}}
       @title={{i18n "chat.channel_edit_description_modal.title"}}
-      @flash={{this.flash}}
     >
       <:body>
         <span class="chat-modal-edit-channel-description__description">{{i18n
             "chat.channel_edit_description_modal.description"
           }}</span>
         <DCharCounter
-          @value={{this.editedDescription}}
           @max={{this.descriptionMaxLength}}
+          @value={{this.editedDescription}}
         >
           <textarea
-            {{on "input" (withEventValue this.onChangeChatChannelDescription)}}
             class="chat-modal-edit-channel-description__description-input"
             placeholder={{i18n
               "chat.channel_edit_description_modal.input_placeholder"
             }}
+            {{on "input" (withEventValue this.onChangeChatChannelDescription)}}
           >{{this.editedDescription}}</textarea>
         </DCharCounter>
       </:body>
       <:footer>
         <DButton
-          @action={{this.onSaveChatChannelDescription}}
-          @label="save"
-          @disabled={{this.isSaveDisabled}}
           class="btn-primary create"
+          @action={{this.onSaveChatChannelDescription}}
+          @disabled={{this.isSaveDisabled}}
+          @label="save"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

@@ -168,13 +168,6 @@ export default class VoiceRoomPage extends Component {
     });
   }
 
-  #isPublishing(participant) {
-    if (participant.id === this.currentUser?.id) {
-      return !!this.voiceWebrtc.localVideoKind;
-    }
-    return participant.is_video_on || participant.is_screen_sharing;
-  }
-
   get ringingEntries() {
     return activeRingingEntries(this.room, this.ringingClock);
   }
@@ -203,6 +196,91 @@ export default class VoiceRoomPage extends Component {
 
   get presentationLayout() {
     return this.layoutMode === LAYOUT_PRESENTATION;
+  }
+
+  get layoutIcon() {
+    return this.presentationLayout ? "person-chalkboard" : "table-cells";
+  }
+
+  get gridFullscreenTitle() {
+    return this.gridFullscreen
+      ? i18n("voice.video.exit_fullscreen")
+      : i18n("voice.video.fullscreen_all");
+  }
+
+  get gridStyle() {
+    if (
+      !this.tiledLayout ||
+      !this.tiles.length ||
+      !this.gridWidth ||
+      !this.gridHeight
+    ) {
+      return null;
+    }
+
+    const aspects = [
+      ...this.tiles.map(
+        (tile) =>
+          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
+      ),
+      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
+    ];
+
+    const rowHeight = bestRowHeight(
+      this.gridWidth,
+      this.gridHeight,
+      aspects,
+      this.gridGap
+    );
+
+    if (rowHeight <= 0) {
+      return null;
+    }
+
+    return trustHTML(`--voice-tile-height: ${rowHeight}px;`);
+  }
+
+  get chatAvailable() {
+    return this.room.chat_available;
+  }
+
+  get chatVisible() {
+    return this.chatOpen && this.joined && this.chatAvailable;
+  }
+
+  get chatToggleTitle() {
+    return this.chatOpen ? i18n("voice.chat.close") : i18n("voice.chat.open");
+  }
+
+  get chatRendered() {
+    return this.chatVisible || this.chatClosing;
+  }
+
+  get transcriptAvailable() {
+    return this.voiceWebrtc.subtitlesAvailable;
+  }
+
+  get transcribing() {
+    return this.voiceWebrtc.isTranscribingRoom(this.room.id);
+  }
+
+  get transcriptToggleTitle() {
+    return this.transcribing
+      ? i18n("voice.transcript.stop")
+      : i18n("voice.transcript.start");
+  }
+
+  get transcriptDraftable() {
+    return (
+      this.voiceWebrtc.transcriptEntries.length > 0 &&
+      Number(this.voiceWebrtc.transcriptEntriesRoomId) === Number(this.room.id)
+    );
+  }
+
+  get transcriptDraftLabel() {
+    return this.transcribing
+      ? i18n("voice.transcript.stop_and_open")
+      : i18n("voice.transcript.draft_topic");
   }
 
   @action
@@ -284,16 +362,6 @@ export default class VoiceRoomPage extends Component {
     toggleFullscreen(this.gridElement);
   }
 
-  get layoutIcon() {
-    return this.presentationLayout ? "person-chalkboard" : "table-cells";
-  }
-
-  get gridFullscreenTitle() {
-    return this.gridFullscreen
-      ? i18n("voice.video.exit_fullscreen")
-      : i18n("voice.video.fullscreen_all");
-  }
-
   @action
   reportTileAspect(participantId, aspect) {
     const current = this.tileAspects.get(participantId) ?? null;
@@ -308,38 +376,6 @@ export default class VoiceRoomPage extends Component {
       nextAspects.delete(participantId);
     }
     this.tileAspects = nextAspects;
-  }
-
-  get gridStyle() {
-    if (
-      !this.tiledLayout ||
-      !this.tiles.length ||
-      !this.gridWidth ||
-      !this.gridHeight
-    ) {
-      return null;
-    }
-
-    const aspects = [
-      ...this.tiles.map(
-        (tile) =>
-          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
-      ),
-      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
-    ];
-
-    const rowHeight = bestRowHeight(
-      this.gridWidth,
-      this.gridHeight,
-      aspects,
-      this.gridGap
-    );
-
-    if (rowHeight <= 0) {
-      return null;
-    }
-
-    return trustHTML(`--voice-tile-height: ${rowHeight}px;`);
   }
 
   @action
@@ -385,18 +421,6 @@ export default class VoiceRoomPage extends Component {
     this.router.replaceWith(`discovery.${defaultHomepage()}`);
   }
 
-  get chatAvailable() {
-    return this.room.chat_available;
-  }
-
-  get chatVisible() {
-    return this.chatOpen && this.joined && this.chatAvailable;
-  }
-
-  get chatToggleTitle() {
-    return this.chatOpen ? i18n("voice.chat.close") : i18n("voice.chat.open");
-  }
-
   @action
   toggleChat() {
     this.setChatOpen(!this.chatOpen);
@@ -423,10 +447,6 @@ export default class VoiceRoomPage extends Component {
     }
     this.chatOpen = open;
     this.router.transitionTo({ queryParams: { chat: open } });
-  }
-
-  get chatRendered() {
-    return this.chatVisible || this.chatClosing;
   }
 
   @action
@@ -464,66 +484,16 @@ export default class VoiceRoomPage extends Component {
     this.toggleChat();
   }
 
-  get transcriptAvailable() {
-    return this.voiceWebrtc.subtitlesAvailable;
-  }
-
-  get transcribing() {
-    return this.voiceWebrtc.isTranscribingRoom(this.room.id);
-  }
-
-  get transcriptToggleTitle() {
-    return this.transcribing
-      ? i18n("voice.transcript.stop")
-      : i18n("voice.transcript.start");
-  }
-
   @action
   toggleTranscriptFromMenu(closeMenu) {
     closeMenu?.();
     this.voiceWebrtc.toggleTranscriptRecording(this.room.id);
   }
 
-  get transcriptDraftable() {
-    return (
-      this.voiceWebrtc.transcriptEntries.length > 0 &&
-      Number(this.voiceWebrtc.transcriptEntriesRoomId) === Number(this.room.id)
-    );
-  }
-
-  get transcriptDraftLabel() {
-    return this.transcribing
-      ? i18n("voice.transcript.stop_and_open")
-      : i18n("voice.transcript.draft_topic");
-  }
-
   @action
   draftTranscriptTopic(closeMenu) {
     closeMenu?.();
     this.voiceWebrtc.openTranscriptDraft();
-  }
-
-  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
-  // normal full-width menu item, matching core's channel context menu.
-  #openSubmenu(event, parentMenu, items, onSelect) {
-    // Anchor to the row button, not the clicked icon/label, so the submenu
-    // opens flush to the row's right edge.
-    const anchor = event.target.closest(".btn") ?? event.target;
-    this.menu.show(anchor, {
-      identifier: SUBMENU,
-      groupIdentifier: SUBMENU,
-      component: VoiceCallSubmenu,
-      placement: "right-start",
-      offset: { mainAxis: 8, crossAxis: -5 },
-      modalForMobile: true,
-      data: {
-        items,
-        onSelect: (id) => {
-          onSelect(id);
-          this.menu.close(parentMenu);
-        },
-      },
-    });
   }
 
   @action
@@ -547,6 +517,36 @@ export default class VoiceRoomPage extends Component {
       ],
       this.setLayoutMode
     );
+  }
+
+  #isPublishing(participant) {
+    if (participant.id === this.currentUser?.id) {
+      return !!this.voiceWebrtc.localVideoKind;
+    }
+    return participant.is_video_on || participant.is_screen_sharing;
+  }
+
+  // Opened programmatically (not a nested <DMenu>) so the trigger stays a
+  // normal full-width menu item, matching core's channel context menu.
+  #openSubmenu(event, parentMenu, items, onSelect) {
+    // Anchor to the row button, not the clicked icon/label, so the submenu
+    // opens flush to the row's right edge.
+    const anchor = event.target.closest(".btn") ?? event.target;
+    this.menu.show(anchor, {
+      identifier: SUBMENU,
+      groupIdentifier: SUBMENU,
+      component: VoiceCallSubmenu,
+      placement: "right-start",
+      offset: { mainAxis: 8, crossAxis: -5 },
+      modalForMobile: true,
+      data: {
+        items,
+        onSelect: (id) => {
+          onSelect(id);
+          this.menu.close(parentMenu);
+        },
+      },
+    });
   }
 
   <template>
@@ -582,13 +582,13 @@ export default class VoiceRoomPage extends Component {
                 <div class="voice-room-page__presentation">
                   <div class="voice-room-page__presentation-main">
                     <VoiceVideoTile
-                      @room={{this.room}}
-                      @participant={{this.presentationTile.participant}}
                       @isSelf={{this.presentationTile.isSelf}}
-                      @showVideo={{this.presentationTile.showVideo}}
-                      @onSpotlight={{this.toggleSpotlight}}
-                      @spotlighted={{this.presentationTile.spotlighted}}
                       @onAspect={{this.reportTileAspect}}
+                      @onSpotlight={{this.toggleSpotlight}}
+                      @participant={{this.presentationTile.participant}}
+                      @room={{this.room}}
+                      @showVideo={{this.presentationTile.showVideo}}
+                      @spotlighted={{this.presentationTile.spotlighted}}
                     />
                   </div>
 
@@ -604,13 +604,13 @@ export default class VoiceRoomPage extends Component {
                         as |tile|
                       }}
                         <VoiceVideoTile
-                          @room={{this.room}}
-                          @participant={{tile.participant}}
                           @isSelf={{tile.isSelf}}
-                          @showVideo={{tile.showVideo}}
-                          @onSpotlight={{this.toggleSpotlight}}
-                          @spotlighted={{tile.spotlighted}}
                           @onAspect={{this.reportTileAspect}}
+                          @onSpotlight={{this.toggleSpotlight}}
+                          @participant={{tile.participant}}
+                          @room={{this.room}}
+                          @showVideo={{tile.showVideo}}
+                          @spotlighted={{tile.spotlighted}}
                         />
                       {{/each}}
                       {{#each this.ringingEntries key="user.id" as |entry|}}
@@ -628,10 +628,10 @@ export default class VoiceRoomPage extends Component {
                   {{this.trackFullscreen this.setGridFullscreen}}
                 >
                   <button
-                    type="button"
+                    aria-label={{this.gridFullscreenTitle}}
                     class="btn btn-icon no-text voice-room-page__fullscreen"
                     title={{this.gridFullscreenTitle}}
-                    aria-label={{this.gridFullscreenTitle}}
+                    type="button"
                     {{on "click" this.toggleGridFullscreen}}
                   >
                     {{dIcon (if this.gridFullscreen "compress" "expand")}}
@@ -639,13 +639,13 @@ export default class VoiceRoomPage extends Component {
 
                   {{#each this.tiles key="participant.id" as |tile|}}
                     <VoiceVideoTile
-                      @room={{this.room}}
-                      @participant={{tile.participant}}
                       @isSelf={{tile.isSelf}}
-                      @showVideo={{tile.showVideo}}
-                      @onSpotlight={{this.toggleSpotlight}}
-                      @spotlighted={{tile.spotlighted}}
                       @onAspect={{this.reportTileAspect}}
+                      @onSpotlight={{this.toggleSpotlight}}
+                      @participant={{tile.participant}}
+                      @room={{this.room}}
+                      @showVideo={{tile.showVideo}}
+                      @spotlighted={{tile.spotlighted}}
                     />
                   {{/each}}
                   {{#each this.ringingEntries key="user.id" as |entry|}}
@@ -667,11 +667,11 @@ export default class VoiceRoomPage extends Component {
                 <VoiceCallControls @room={{this.room}} />
                 {{#if this.isStageRoom}}
                   <DMenu
-                    @identifier="voice-speak-queue-menu"
-                    @title={{i18n "voice.stage.queue_title"}}
                     @ariaLabel={{i18n "voice.stage.queue_title"}}
-                    @placement="top-end"
+                    @identifier="voice-speak-queue-menu"
                     @modalForMobile={{true}}
+                    @placement="top-end"
+                    @title={{i18n "voice.stage.queue_title"}}
                     @triggerClass="btn-default voice-speak-queue-trigger"
                   >
                     <:trigger>
@@ -688,12 +688,12 @@ export default class VoiceRoomPage extends Component {
                   </DMenu>
                 {{/if}}
                 <DMenu
-                  @identifier="voice-room-menu"
-                  @icon="ellipsis-vertical"
-                  @title={{i18n "voice.room.more"}}
                   @ariaLabel={{i18n "voice.room.more"}}
-                  @placement="top-end"
+                  @icon="ellipsis-vertical"
+                  @identifier="voice-room-menu"
                   @modalForMobile={{true}}
+                  @placement="top-end"
+                  @title={{i18n "voice.room.more"}}
                   @triggerClass="btn-default"
                 >
                   <:content as |roomMenu|>
@@ -701,6 +701,7 @@ export default class VoiceRoomPage extends Component {
                       {{#if this.chatAvailable}}
                         <dropdown.item>
                           <DButton
+                            class="btn-transparent"
                             @action={{fn
                               this.toggleChatFromMenu
                               roomMenu.close
@@ -711,41 +712,44 @@ export default class VoiceRoomPage extends Component {
                               "far-comment"
                             }}
                             @translatedLabel={{this.chatToggleTitle}}
-                            class="btn-transparent"
                           />
                         </dropdown.item>
                       {{/if}}
                       <dropdown.item>
                         <DButton
+                          class="btn-transparent voice-room-page__layout-trigger"
                           @action={{this.openLayoutMenu}}
                           @forwardEvent={{true}}
                           @icon={{this.layoutIcon}}
                           @label="voice.room.layout"
                           @suffixIcon="angle-right"
-                          class="btn-transparent voice-room-page__layout-trigger"
                         />
                       </dropdown.item>
                       <dropdown.item>
                         <DButton
+                          class="btn-transparent"
                           @action={{fn this.dockAndClose roomMenu.close}}
                           @icon="compress"
                           @label="voice.room.widget_mode"
-                          class="btn-transparent"
                         />
                       </dropdown.item>
                       {{#if this.room.can_invite}}
                         <dropdown.item>
                           <DButton
+                            class="btn-transparent"
                             @action={{fn this.openInviteModal roomMenu.close}}
                             @icon="user-plus"
                             @label="voice.invite.menu"
-                            class="btn-transparent"
                           />
                         </dropdown.item>
                       {{/if}}
                       {{#if this.transcriptAvailable}}
                         <dropdown.item>
                           <DButton
+                            class={{dConcatClass
+                              "btn-transparent voice-room-page__transcript-toggle"
+                              (if this.transcribing "--recording")
+                            }}
                             @action={{fn
                               this.toggleTranscriptFromMenu
                               roomMenu.close
@@ -756,51 +760,47 @@ export default class VoiceRoomPage extends Component {
                               "closed-captioning"
                             }}
                             @translatedLabel={{this.transcriptToggleTitle}}
-                            class={{dConcatClass
-                              "btn-transparent voice-room-page__transcript-toggle"
-                              (if this.transcribing "--recording")
-                            }}
                           />
                         </dropdown.item>
                         {{#if this.transcriptDraftable}}
                           <dropdown.item>
                             <DButton
+                              class="btn-transparent voice-room-page__transcript-draft"
                               @action={{fn
                                 this.draftTranscriptTopic
                                 roomMenu.close
                               }}
                               @icon="far-file-lines"
                               @translatedLabel={{this.transcriptDraftLabel}}
-                              class="btn-transparent voice-room-page__transcript-draft"
                             />
                           </dropdown.item>
                         {{/if}}
                       {{/if}}
                       <dropdown.item>
                         <DButton
+                          class="btn-transparent"
                           @action={{fn this.openRoomInfo roomMenu.close}}
                           @icon="circle-info"
                           @label="voice.room.info"
-                          class="btn-transparent"
                         />
                       </dropdown.item>
                     </DDropdownMenu>
                   </:content>
                 </DMenu>
                 <DButton
+                  class="btn-danger voice-room-page__leave"
                   @action={{this.leaveRoom}}
                   @icon="phone-slash"
                   @label="voice.room.leave"
-                  class="btn-danger voice-room-page__leave"
                 />
               {{else}}
                 <DButton
-                  @action={{this.joinRoom}}
-                  @icon="phone"
-                  @label="voice.room.join"
-                  @disabled={{this.connecting}}
-                  @isLoading={{this.connecting}}
                   class="btn-primary voice-room-page__join"
+                  @action={{this.joinRoom}}
+                  @disabled={{this.connecting}}
+                  @icon="phone"
+                  @isLoading={{this.connecting}}
+                  @label="voice.room.join"
                 />
               {{/if}}
             </footer>
@@ -815,7 +815,7 @@ export default class VoiceRoomPage extends Component {
             }}
             {{on "animationend" this.chatAnimationEnded}}
           >
-            <VoiceChatPanel @room={{this.room}} @onClose={{this.closeChat}} />
+            <VoiceChatPanel @onClose={{this.closeChat}} @room={{this.room}} />
           </aside>
         {{/if}}
       </div>

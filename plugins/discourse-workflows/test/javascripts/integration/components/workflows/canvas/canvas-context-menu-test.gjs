@@ -45,9 +45,9 @@ module(
           <CanvasContextMenu
             @canvasElement={{this.canvasElement}}
             @containerElement={{this.containerElement}}
-            @rete={{this.rete}}
-            @onRegister={{this.registerContextMenu}}
             @onCut={{this.cutSelection}}
+            @onRegister={{this.registerContextMenu}}
+            @rete={{this.rete}}
           />
         </template>
       );
