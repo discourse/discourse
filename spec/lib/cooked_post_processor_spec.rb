@@ -591,7 +591,7 @@ RSpec.describe CookedPostProcessor do
           end
 
           let(:secure_uploads_url) do
-            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png"
+            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png?base62_sha1=#{upload.base62_sha1}"
           end
 
           let(:cooked_html) { <<~HTML }
@@ -1770,7 +1770,7 @@ RSpec.describe CookedPostProcessor do
 
           expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
-            <p><img src="/secure-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+            <p><img src="/secure-uploads/#{stored_path}?base62_sha1=#{upload.base62_sha1}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
         end
 

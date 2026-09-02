@@ -668,6 +668,72 @@ RSpec.describe UploadsController do
 
         result = response.parsed_body
         expect(result[0]["url"]).to match("secure-uploads")
+        expect(result[0]["url"]).to end_with("?base62_sha1=#{upload.base62_sha1}")
+      end
+
+      context "with a storage-deduplicated upload" do
+        fab!(:allowed_group, :group)
+        fab!(:allowed_category) { Fabricate(:private_category, group: allowed_group) }
+        fab!(:allowed_post) do
+          Fabricate(:post, topic: Fabricate(:topic, category: allowed_category))
+        end
+        fab!(:blocked_post) do
+          Fabricate(
+            :post,
+            topic:
+              Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+          )
+        end
+        let!(:dependent_upload) do
+          Fabricate(
+            :secure_upload_s3,
+            original_sha1: "a" * 40,
+            primary_upload: upload,
+            url: upload.url,
+            access_control_post: allowed_post,
+          )
+        end
+
+        before do
+          allowed_group.add(user)
+          upload.update!(secure: true, original_sha1: "a" * 40, access_control_post: blocked_post)
+          sign_in(user)
+        end
+
+        it "authorizes against the logical upload while serving the primary storage path" do
+          get Upload.secure_uploads_url_from_upload_url(
+                upload.url,
+                base62_sha1: dependent_upload.base62_sha1,
+              )
+
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to match("Amz-Expires")
+        end
+
+        it "does not allow an upload identity to authorize a different storage path" do
+          other_upload =
+            Fabricate(:secure_upload_s3, secure: true, access_control_post: allowed_post)
+
+          get Upload.secure_uploads_url_from_upload_url(
+                upload.url,
+                base62_sha1: other_upload.base62_sha1,
+              )
+
+          expect(response.status).to eq(404)
+        end
+
+        it "continues serving the storage path after the original primary is deleted" do
+          secure_url =
+            Upload.secure_uploads_url_from_upload_url(
+              upload.url,
+              base62_sha1: dependent_upload.base62_sha1,
+            )
+          upload.destroy!
+
+          get secure_url
+
+          expect(response.status).to eq(302)
+        end
       end
 
       context "when the upload cannot be found from the URL" do

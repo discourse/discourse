@@ -104,7 +104,8 @@ module Jobs
       if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) ||
            src =~ %r{\A/[^/]}i
         if Upload.secure_uploads_url?(src)
-          upload = Upload.fetch_from(sha1: Upload.sha1_from_long_url(src), url: src)
+          sha1 = Upload.sha1_from_secure_uploads_url(src) || Upload.sha1_from_long_url(src)
+          upload = Upload.fetch_from(sha1:, url: src)
           return false if upload.nil?
           return false if !can_see_upload?(upload, guardian: post&.user&.guardian)
         elsif src.match?(%r{/uploads/})

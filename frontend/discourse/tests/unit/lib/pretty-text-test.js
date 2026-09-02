@@ -1026,6 +1026,7 @@ eviltrout</p>
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
+        base62_sha1: "o8iobpLcW3WSFvVH7YQmyGlKmGM",
       };
       return cache;
     }
@@ -1035,7 +1036,7 @@ eviltrout</p>
         siteSettings: { secure_uploads: false },
         lookupUploadUrls,
       },
-      `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
+      `<p><a class="attachment" href="/uploads/short-url/blah" data-base62-sha1="o8iobpLcW3WSFvVH7YQmyGlKmGM">test.pdf</a></p>`,
       "returns the correct attachment link HTML when the URL is mapped without secure uploads"
     );
   });
@@ -1047,6 +1048,7 @@ eviltrout</p>
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
+        base62_sha1: "o8iobpLcW3WSFvVH7YQmyGlKmGM",
       };
       return cache;
     }
@@ -1056,7 +1058,7 @@ eviltrout</p>
         siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><a class="attachment" href="/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+      `<p><a class="attachment" href="/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf" data-base62-sha1="o8iobpLcW3WSFvVH7YQmyGlKmGM">test.pdf</a></p>`,
       "returns the correct attachment link HTML when the URL is mapped with secure uploads"
     );
   });
@@ -1077,6 +1079,7 @@ eviltrout</p>
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4",
         url: "/secure-uploads/original/3X/c/b/test.mp4",
         short_path: "/uploads/short-url/blah",
+        base62_sha1: "eyPnj7UzkU0AkGkx2dx8G4YM1Jx",
       };
       return cache;
     }
@@ -1086,7 +1089,7 @@ eviltrout</p>
         siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4">
+      `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4" data-base62-sha1="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
   </div></p>`,
       "returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
@@ -1110,6 +1113,7 @@ eviltrout</p>
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3",
         url: "/secure-uploads/original/3X/c/b/test.mp3",
         short_path: "/uploads/short-url/blah",
+        base62_sha1: "eyPnj7UzkU0AkGkx2dx8G4YM1Jx",
       };
       return cache;
     }
@@ -1120,8 +1124,8 @@ eviltrout</p>
         lookupUploadUrls,
       },
       `<p><audio preload="metadata" controls>
-    <source src="/secure-uploads/original/3X/c/b/test.mp3">
-    <a href="/secure-uploads/original/3X/c/b/test.mp3">/secure-uploads/original/3X/c/b/test.mp3</a>
+    <source src="/secure-uploads/original/3X/c/b/test.mp3" data-base62-sha1="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
+    <a href="/secure-uploads/original/3X/c/b/test.mp3" data-base62-sha1="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">/secure-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,
       "returns the correct audio HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
