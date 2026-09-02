@@ -144,7 +144,15 @@ function extractKeymap(extensions, params) {
 
   const combined = {};
   keymaps.forEach((keymap) => {
-    Object.assign(combined, keymap);
+    for (const [key, command] of Object.entries(keymap)) {
+      // two extensions binding the same key both run rather than the later
+      // registration silently clobbering the earlier; the later one runs
+      // first, so extensions registered after the defaults can override them
+      // by handling the key
+      combined[key] = combined[key]
+        ? chainCommands(command, combined[key])
+        : command;
+    }
   });
 
   return combined;
