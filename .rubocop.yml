@@ -81,9 +81,6 @@ RSpec/InstanceVariable:
 RSpec/LetBeforeExamples:
   Enabled: true
 
-RSpec/LetSetup:
-  Enabled: true
-
 RSpec/MultipleDescribes:
   Enabled: true
 
