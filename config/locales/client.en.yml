@@ -5884,6 +5884,7 @@ en:
 
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
+    play_video: Play video
 
     keyboard_shortcuts_help:
       search_label: "Search shortcuts"
