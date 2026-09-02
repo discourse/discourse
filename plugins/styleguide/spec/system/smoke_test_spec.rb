@@ -46,6 +46,8 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
       { href: "/molecules/virtual-list", title: "Virtual list" },
+      { href: "/molecules/tabs", title: "Tabs" },
+      { href: "/molecules/overflow-controls", title: "Overflow controls" },
     ],
     "organisms" => [
       { href: "/organisms/post", title: "Post" },
@@ -185,6 +187,38 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-drag-and-drop-dwell-open")
   end
 
+  it "renders the tabs examples" do
+    visit "/styleguide/molecules/tabs"
+
+    expect(styleguide).to have_heading("Tabs")
+    expect(page).to have_css(".d-tabs [role='tablist']", count: 4)
+    expect(page).to have_css(".d-tabs [role='tab'][aria-selected='true']", count: 4)
+    expect(page).to have_css(".styleguide-tabs--vertical [aria-orientation='vertical']")
+    expect(page).to have_css(".styleguide-tabs--narrow .d-overflow-controls__btn.--right")
+    screenshot_marker(label: "styleguide-tabs")
+  end
+
+  it "renders the overflow controls examples" do
+    visit "/styleguide/molecules/overflow-controls"
+
+    expect(styleguide).to have_heading("Overflow controls")
+    expect(page).to have_css(".d-overflow-controls", count: 4)
+    expect(page).to have_css(".d-overflow-controls__btn.--right", minimum: 3)
+    expect(page).to have_css(".d-overflow-controls__btn.--down")
+    expect(page).to have_css(".d-overflow-controls.--owned-scroller ul[data-d-scroll-overflow]")
+    screenshot_marker(label: "styleguide-overflow-controls")
+  end
+
+  it "renders the overflowing navigation bar example" do
+    visit "/styleguide/molecules/navigation-bar"
+
+    expect(page).to have_css(
+      ".horizontal-overflow-nav .d-overflow-controls__btn.horizontal-overflow-nav__scroll-right",
+    )
+    expect(page).to have_css(".horizontal-overflow-nav .nav-pills[data-d-scroll-overflow]")
+    screenshot_marker(label: "styleguide-navigation-bar-overflow")
+  end
+
   it "renders the index page correctly on a site with no default color schemes" do
     SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
@@ -209,6 +243,19 @@ RSpec.describe "Styleguide Smoke Test" do
           expect(styleguide).to have_heading(item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is enabled for everyone" do
+    before do
+      Capybara.reset_sessions!
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+    end
+
+    it "renders a page using HighlightedCode for anonymous users" do
+      visit "/styleguide/atoms/font-scale"
+      expect(styleguide).to have_heading("Font System")
+      expect(page).to have_css("code.hljs")
     end
   end
 
