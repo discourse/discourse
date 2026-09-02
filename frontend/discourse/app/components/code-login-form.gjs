@@ -22,6 +22,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -276,10 +277,14 @@ export default class CodeLoginForm extends Component {
     }
 
     try {
-      const result = await ajax("/session/login-code/verify", {
-        type: "POST",
-        data,
-      });
+      const verify = () =>
+        ajax("/session/login-code/verify", {
+          type: "POST",
+          data,
+        });
+      const result = this.isSignup
+        ? await applyBehaviorTransformer("create-account", verify)
+        : await verify();
 
       if (
         (result?.user_fields_required || result?.name_required) &&
@@ -567,14 +572,20 @@ export default class CodeLoginForm extends Component {
 
     try {
       const honeypot = await ajax("/session/hp.json");
-      await ajax("/session/login-code", {
+      const result = await ajax("/session/login-code", {
         type: "POST",
         data: {
           email: this.email,
+          signup: this.isSignup,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
       });
+
+      if (result?.error) {
+        this.codeError = result.error;
+        return false;
+      }
 
       this.step = "code";
       this.startResendCooldown();
@@ -679,6 +690,12 @@ export default class CodeLoginForm extends Component {
             <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
 
+          {{#if this.codeError}}
+            <div class="code-login-form__error" aria-live="polite" role="alert">
+              {{this.codeError}}
+            </div>
+          {{/if}}
+
           <div class="code-login-form__email-actions">
             <form.Submit
               @label="code_login.continue_button"
@@ -704,6 +721,13 @@ export default class CodeLoginForm extends Component {
               {{this.codeInstructions}}
             </p>
           {{/unless}}
+
+          {{#if this.isSignup}}
+            <PluginOutlet
+              @name="code-login-after-code"
+              @outletArgs={{lazyHash context=@context}}
+            />
+          {{/if}}
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
