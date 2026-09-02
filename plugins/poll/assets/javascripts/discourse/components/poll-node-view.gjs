@@ -171,6 +171,9 @@ export default class PollNodeView extends Component {
         @icon="pencil"
         @label="poll.ui_builder.edit"
       />
+      <span class="composer-poll-node__hint">{{i18n
+          "poll.ui_builder.options_hint"
+        }}</span>
     </div>
   </template>
 }

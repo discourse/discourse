@@ -629,9 +629,21 @@ body.crawler {
     display: contents;
   }
 
+  &__hint {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
   // outranks the cooked option styles, which also apply inside the editor
   &.poll &__content > ul > li {
     cursor: text;
+  }
+
+  // a lone instruction is centred by the cooked styles, which lets the icon
+  // fall onto a line of its own here: centre the pair instead
+  &.poll &__info .poll-info_instructions li:first-child:last-child {
+    display: flex;
+    justify-content: center;
   }
 
   &.--untitled &__content > .poll-title::before {
