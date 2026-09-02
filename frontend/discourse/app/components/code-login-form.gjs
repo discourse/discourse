@@ -99,6 +99,14 @@ export default class CodeLoginForm extends Component {
     return this.args.context === "signup";
   }
 
+  get isInvite() {
+    return this.args.context === "invite";
+  }
+
+  get isInviteEmailLocked() {
+    return this.isInvite && this.args.emailLocked;
+  }
+
   get isEmailStep() {
     return this.step === "email";
   }
@@ -212,6 +220,17 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  async requestCode() {
+    if (this.verifying) {
+      return;
+    }
+
+    this.verifying = true;
+    await this.sendCode();
+    this.verifying = false;
+  }
+
+  @action
   async resendCode() {
     if (this.resendDisabled) {
       return;
@@ -260,6 +279,10 @@ export default class CodeLoginForm extends Component {
       code: this.code,
       timezone: moment.tz.guess(),
     };
+
+    if (this.isInvite) {
+      data.invite_key = this.args.inviteKey;
+    }
 
     if (this.isSecondFactorStep) {
       data.second_factor_token =
@@ -572,6 +595,7 @@ export default class CodeLoginForm extends Component {
         data: {
           email: this.email,
           signup: this.isSignup,
+          invite_key: this.isInvite ? this.args.inviteKey : undefined,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
@@ -661,51 +685,74 @@ export default class CodeLoginForm extends Component {
       {{/unless}}
 
       {{#if this.isEmailStep}}
-        {{#if this.isSignup}}
-          <p class="code-login-form__instructions">
-            {{i18n "code_login.signup_instructions"}}
-          </p>
-        {{/if}}
-
-        <Form
-          @data={{hash email=this.email}}
-          @onSubmit={{this.submitEmail}}
-          class="code-login-form__email-step"
-          as |form|
-        >
-          <form.Field
-            @name="email"
-            @title={{i18n "code_login.email_label"}}
-            @type="input-email"
-            @validation="required"
-            @validate={{this.validateEmail}}
-            @format="full"
-            as |field|
-          >
-            <field.Control autofocus="autofocus" autocomplete="username" />
-          </form.Field>
-
-          {{#if this.codeError}}
-            <div class="code-login-form__error" aria-live="polite" role="alert">
-              {{this.codeError}}
-            </div>
-          {{/if}}
-
-          <div class="code-login-form__email-actions">
-            <form.Submit
-              @label="code_login.continue_button"
+        {{#if this.isInviteEmailLocked}}
+          <div class="code-login-form__email-step">
+            <p class="code-login-form__instructions">
+              {{i18n "invites.code_instructions" email=this.email}}
+            </p>
+            <DButton
+              @action={{this.requestCode}}
+              @label="invites.send_code"
+              @isLoading={{this.verifying}}
               class="btn-primary code-login-form__continue"
             />
-
-            {{#if @onUsePassword}}
-              <DButton
-                @action={{@onUsePassword}}
-                @label="code_login.use_password_instead"
-                class="btn-flat code-login-form__password-toggle"
-              />
+            {{#if this.codeError}}
+              <div class="code-login-form__error" role="alert">
+                {{this.codeError}}
+              </div>
             {{/if}}
           </div>
-        </Form>
+        {{else}}
+          {{#if this.isSignup}}
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.signup_instructions"}}
+            </p>
+          {{/if}}
+
+          <Form
+            @data={{hash email=this.email}}
+            @onSubmit={{this.submitEmail}}
+            class="code-login-form__email-step"
+            as |form|
+          >
+            <form.Field
+              @name="email"
+              @title={{i18n "code_login.email_label"}}
+              @type="input-email"
+              @validation="required"
+              @validate={{this.validateEmail}}
+              @format="full"
+              as |field|
+            >
+              <field.Control autofocus="autofocus" autocomplete="username" />
+            </form.Field>
+
+            {{#if this.codeError}}
+              <div
+                class="code-login-form__error"
+                aria-live="polite"
+                role="alert"
+              >
+                {{this.codeError}}
+              </div>
+            {{/if}}
+
+            <div class="code-login-form__email-actions">
+              <form.Submit
+                @label="code_login.continue_button"
+                class="btn-primary code-login-form__continue"
+              />
+
+              {{#if @onUsePassword}}
+                <DButton
+                  @action={{@onUsePassword}}
+                  @label="code_login.use_password_instead"
+                  class="btn-flat code-login-form__password-toggle"
+                />
+              {{/if}}
+            </div>
+          </Form>
+        {{/if}}
       {{else if this.isCodeStep}}
         <div class="code-login-form__code-step">
           {{#unless this.isSignup}}
@@ -750,11 +797,13 @@ export default class CodeLoginForm extends Component {
               @disabled={{this.resendDisabled}}
               class="btn-flat code-login-form__resend"
             />
-            <DButton
-              @action={{this.changeEmail}}
-              @label="code_login.use_different_email"
-              class="btn-flat code-login-form__change-email"
-            />
+            {{#unless this.isInviteEmailLocked}}
+              <DButton
+                @action={{this.changeEmail}}
+                @label="code_login.use_different_email"
+                class="btn-flat code-login-form__change-email"
+              />
+            {{/unless}}
           </div>
         </div>
       {{else if this.isCompleteStep}}

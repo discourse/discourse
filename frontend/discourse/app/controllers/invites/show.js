@@ -270,6 +270,15 @@ export default class InvitesShowController extends Controller {
     );
   }
 
+  get showCodeInviteForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins &&
+      !this.authOptions
+    );
+  }
+
   @computed
   get showFullname() {
     return this.site.full_name_visible_in_signup;

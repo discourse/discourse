@@ -237,6 +237,7 @@ class Invite < ActiveRecord::Base
     ip_address: nil,
     session: nil,
     email_token: nil,
+    email_verified: false,
     redeeming_user: nil
   )
     return if !redeemable?
@@ -251,6 +252,7 @@ class Invite < ActiveRecord::Base
       ip_address: ip_address,
       session: session,
       email_token: email_token,
+      email_verified: email_verified,
       redeeming_user: redeeming_user,
     ).redeem
   end
