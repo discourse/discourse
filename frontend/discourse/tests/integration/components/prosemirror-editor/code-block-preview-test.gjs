@@ -501,6 +501,47 @@ module(
         .doesNotExist("flipping back settles to the preview's own height");
     });
 
+    test("a language change carries the pinned footprint", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+
+      const previewHeight = view.nodeDOM(pos).offsetHeight;
+      await toggleSource(view);
+
+      const held = getComputedStyle(document.querySelector("pre.--source"))
+        .getPropertyValue("--composer-preview-node-height")
+        .trim();
+      assert.strictEqual(held, `${Math.round(previewHeight)}px`);
+
+      // setNodeMarkup replaces the node, so its pin dies and is rebuilt
+      const select = document.querySelector(".code-language-select");
+      select.value = "chart";
+      await triggerEvent(select, "change");
+
+      assert.strictEqual(
+        getComputedStyle(document.querySelector("pre.--source"))
+          .getPropertyValue("--composer-preview-node-height")
+          .trim(),
+        held,
+        "the rebuilt pin still holds the footprint"
+      );
+    });
+
+    test("a previewing block exposes its language to CSS", async function (assert) {
+      await setupRichEditor(assert, MARKDOWN);
+
+      assert
+        .dom(".composer-code-block-preview-node")
+        .hasAttribute("data-language", "mermaid");
+    });
+
+    test("a language matches its preview regardless of case", async function (assert) {
+      await setupRichEditor(assert, "```MerMaid\nflowchart\n```");
+
+      assert.dom(".cb-preview-stub").hasText("flowchart");
+    });
+
     test("foreign DOM mounted into the code face is left alone", async function (assert) {
       // the preview toolbar portals into the block's dom; reading that
       // mutation back into the document looped redraw against re-portal
