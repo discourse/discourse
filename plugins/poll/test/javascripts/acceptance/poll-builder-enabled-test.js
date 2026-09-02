@@ -64,6 +64,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       .dom(`${poll} .poll-title`)
       .hasText("Question", "leaves the title untouched");
     assert
+      .dom(`${poll} .multiple-help-text`)
+      .doesNotExist("and the summary follows the edited setting");
+    assert
       .dom(`${poll} .composer-poll-node__content li`)
       .exists({ count: 2 }, "leaves the options untouched");
     assert

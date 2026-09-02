@@ -24,21 +24,21 @@ export default class PollNodeView extends Component {
     this.update(this.args.node);
   }
 
-  // the chrome mirrors what the post will show, from the settings alone:
-  // nothing here can know about votes
+  // only what the settings themselves say: a composer knows nothing about
+  // votes, and nothing about who will read the post
   get pollInfo() {
     const { attrs } = this.args.node;
+    const closesAt = attrs.close ? moment(attrs.close) : null;
 
     return {
       isMultiple: attrs.type === "multiple",
       isPublic: attrs.public === "true",
       isDynamic: attrs.dynamic === "true",
-      closed: attrs.status === "closed",
-      results: attrs.results,
       min: Number(attrs.min),
       max: Number(attrs.max),
-      closesAt: attrs.close ? moment(attrs.close) : null,
-      // read for its length only, to phrase the multiple choice hint
+      closesAt,
+      isAutomaticallyClosed: !!closesAt?.isBefore(moment()),
+      // read for its length, to phrase how many options can be picked
       options: new Array(
         this.#optionList(this.args.node)?.node.childCount ?? 0
       ),
@@ -147,18 +147,19 @@ export default class PollNodeView extends Component {
 
   <template>
     <div class="composer-poll-node__info" contenteditable="false">
-      <PollInfo
-        @voters={{0}}
-        @isMultiple={{this.pollInfo.isMultiple}}
-        @isPublic={{this.pollInfo.isPublic}}
-        @isDynamic={{this.pollInfo.isDynamic}}
-        @closed={{this.pollInfo.closed}}
-        @results={{this.pollInfo.results}}
-        @min={{this.pollInfo.min}}
-        @max={{this.pollInfo.max}}
-        @closesAt={{this.pollInfo.closesAt}}
-        @options={{this.pollInfo.options}}
-      />
+      {{#let this.pollInfo as |info|}}
+        <PollInfo
+          @voters={{0}}
+          @isMultiple={{info.isMultiple}}
+          @isPublic={{info.isPublic}}
+          @isDynamic={{info.isDynamic}}
+          @min={{info.min}}
+          @max={{info.max}}
+          @closesAt={{info.closesAt}}
+          @isAutomaticallyClosed={{info.isAutomaticallyClosed}}
+          @options={{info.options}}
+        />
+      {{/let}}
     </div>
     <div
       class="poll-buttons composer-poll-node__actions"

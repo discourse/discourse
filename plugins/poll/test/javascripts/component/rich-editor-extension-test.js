@@ -147,6 +147,55 @@ module(
           { count: 3 },
           "and leaves out what depends on who is reading the post"
         );
+      assert
+        .dom(".composer-poll-node__info .results-on-vote")
+        .doesNotExist(
+          "results visibility depends on the reader, not a setting"
+        );
+      assert
+        .dom(".composer-poll-node__info .poll-info_counts-count")
+        .exists({ count: 1 }, "claims no vote totals it cannot have");
+    });
+
+    test("a poll that has already closed does not say it will close", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll close=2021-01-01]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__info .d-icon-lock")
+        .exists("shows the close date as past");
+      assert
+        .dom(".composer-poll-node__info .d-icon-far-clock")
+        .doesNotExist("rather than as a countdown");
+    });
+
+    test("a closed multiple choice poll claims no totals", async function (assert) {
+      await setupRichEditor(
+        assert,
+        "[poll type=multiple min=1 max=2 status=closed]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
+      );
+
+      assert
+        .dom(".composer-poll-node__info .poll-info_counts-count")
+        .exists({ count: 1 }, "no total votes block");
+    });
+
+    test("a title keeps markdown that would start a block", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        "[poll]\n# - pick one\n* Option 1\n[/poll]"
+      );
+
+      assert
+        .dom(".composer-poll-node__content .poll-title")
+        .hasText("- pick one", "renders the title as written");
+      assert.strictEqual(
+        editor.value,
+        "[poll]\n# - pick one\n\n* Option 1\n\n[/poll]\n\n",
+        "and does not escape it on the way back"
+      );
     });
 
     test("an untitled poll carries an empty title to type into", async function (assert) {

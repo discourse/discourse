@@ -132,7 +132,7 @@ const extension = {
     },
     poll_title(state, node) {
       state.write("# ");
-      state.renderInline(node);
+      state.renderInline(node, false);
       state.closeBlock(node);
     },
     poll_info() {},
