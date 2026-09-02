@@ -53,12 +53,12 @@ module("Component | PollUiBuilder", function (hooks) {
       results[0],
       {
         name: "existing",
-        type: null,
+        type: "regular",
         results: null,
         min: null,
         max: null,
         step: null,
-        public: null,
+        public: "false",
         chartType: null,
         dynamic: null,
         groups: "custom_group",
@@ -66,7 +66,7 @@ module("Component | PollUiBuilder", function (hooks) {
         status: "closed",
         order: "desc",
       },
-      "keeps its identity, its closed state and the original close value"
+      "keeps what it carried and adds no default it lacked"
     );
   });
 

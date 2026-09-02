@@ -59,10 +59,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       .exists({ count: 2 }, "replaces rather than appends a poll");
     assert
       .dom(poll)
-      .doesNotHaveAttribute(
-        "data-poll-type",
-        "applies the edited setting, and regular needs no attribute"
-      );
+      .hasAttribute("data-poll-type", "regular", "applies the edited setting");
     assert.dom(`${poll} h1`).hasText("Question", "leaves the title untouched");
     assert
       .dom(`${poll} .composer-poll-node__content li`)
@@ -83,10 +80,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       );
     assert
       .dom(poll)
-      .doesNotHaveAttribute(
-        "data-poll-public",
-        "keeps voters private, which is the default"
-      );
+      .hasAttribute("data-poll-public", "false", "preserves voter privacy");
     assert
       .dom(poll)
       .hasAttribute("data-poll-dynamic", "true", "preserves dynamic voting");
@@ -105,13 +99,13 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     });
     assert
       .dom(poll)
-      .doesNotHaveAttribute("data-poll-type", "redo reapplies the edit");
+      .hasAttribute("data-poll-type", "regular", "redo reapplies the edit");
 
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll results=on_vote name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
+        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll type=regular results=on_vote public=false name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
         "preserves the other poll, the content and the surrounding text"
       );
   });
@@ -265,12 +259,12 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     assert
       .dom(".ProseMirror .poll")
-      .doesNotHaveAttribute("data-poll-type", "switches back to the default");
+      .hasAttribute("data-poll-type", "regular", "switches back");
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "[poll]\n* 1\n* 2\n* 3\n\n[/poll]\n\n",
+        "[poll type=regular]\n* 1\n* 2\n* 3\n\n[/poll]\n\n",
         "keeps the generated options as authored ones"
       );
   });

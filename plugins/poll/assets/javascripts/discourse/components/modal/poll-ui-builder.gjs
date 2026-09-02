@@ -246,10 +246,10 @@ export default class PollUiBuilderModal extends Component {
       order: poll?.order ?? null,
     };
 
-    // editing should not rewrite markdown it did not change, and these
-    // values are what the poll means without them
+    // a default is only worth writing if the poll already carried it, so
+    // editing settings neither adds defaults nor drops what the author wrote
     for (const [name, value] of Object.entries(IMPLIED_ATTRS)) {
-      if (poll && attrs[name] === value) {
+      if (poll && attrs[name] === value && !poll[name]) {
         attrs[name] = null;
       }
     }
