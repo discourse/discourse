@@ -42,6 +42,14 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
+// the values the poll model already defaults to when the attribute is absent
+const IMPLIED_ATTRS = {
+  type: REGULAR_POLL_TYPE,
+  results: ALWAYS_POLL_RESULT,
+  public: "false",
+  chartType: BAR_CHART_TYPE,
+};
+
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
   @service site;
@@ -171,6 +179,10 @@ export default class PollUiBuilderModal extends Component {
     return this.site.groups.filter((g) => g.id !== AUTO_GROUPS.everyone.id);
   }
 
+  get hasRange() {
+    return this.isMultiple || this.isNumber;
+  }
+
   get isPie() {
     return (
       this.pollType !== NUMBER_POLL_TYPE && this.chartType === PIE_CHART_TYPE
@@ -208,17 +220,20 @@ export default class PollUiBuilderModal extends Component {
           : this.pollAutoClose.toISOString();
     }
 
-    return {
+    const attrs = {
       name:
         poll?.name ??
         (existingPolls ? `poll${existingPolls.length + 1}` : null),
       type: this.pollType || null,
       results: this.pollResult || null,
       min:
-        !this.isRegular && this.pollMin !== null && this.pollMin !== ""
-          ? String(this.pollMin)
+        this.hasRange && Number.isFinite(Number(this.pollMin))
+          ? String(Number(this.pollMin))
           : null,
-      max: !this.isRegular && this.pollMax ? String(this.pollMax) : null,
+      max:
+        this.hasRange && Number(this.pollMax)
+          ? String(Number(this.pollMax))
+          : null,
       step: this.isNumber
         ? String(Math.max(Number(this.pollStep) || 1, 1))
         : null,
@@ -230,6 +245,16 @@ export default class PollUiBuilderModal extends Component {
       status: poll?.status ?? null,
       order: poll?.order ?? null,
     };
+
+    // editing should not rewrite markdown it did not change, and these
+    // values are what the poll means without them
+    for (const [name, value] of Object.entries(IMPLIED_ATTRS)) {
+      if (poll && attrs[name] === value) {
+        attrs[name] = null;
+      }
+    }
+
+    return attrs;
   }
 
   get minNumOfOptionsValidation() {
@@ -259,6 +284,10 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get minMaxValueValidation() {
+    if (!this.hasRange) {
+      return { ok: true };
+    }
+
     const pollMin = parseInt(this.pollMin, 10) || 0;
     const pollMax = parseInt(this.pollMax, 10) || 0;
     const pollStep = parseInt(this.pollStep, 10) || 0;

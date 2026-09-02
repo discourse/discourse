@@ -59,7 +59,10 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       .exists({ count: 2 }, "replaces rather than appends a poll");
     assert
       .dom(poll)
-      .hasAttribute("data-poll-type", "regular", "applies the edited setting");
+      .doesNotHaveAttribute(
+        "data-poll-type",
+        "applies the edited setting, and regular needs no attribute"
+      );
     assert.dom(`${poll} h1`).hasText("Question", "leaves the title untouched");
     assert
       .dom(`${poll} .composer-poll-node__content li`)
@@ -80,7 +83,10 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       );
     assert
       .dom(poll)
-      .hasAttribute("data-poll-public", "false", "preserves voter privacy");
+      .doesNotHaveAttribute(
+        "data-poll-public",
+        "keeps voters private, which is the default"
+      );
     assert
       .dom(poll)
       .hasAttribute("data-poll-dynamic", "true", "preserves dynamic voting");
@@ -99,13 +105,13 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     });
     assert
       .dom(poll)
-      .hasAttribute("data-poll-type", "regular", "redo reapplies the edit");
+      .doesNotHaveAttribute("data-poll-type", "redo reapplies the edit");
 
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll type=regular results=on_vote public=false name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
+        "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll results=on_vote name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
         "preserves the other poll, the content and the surrounding text"
       );
   });
@@ -229,8 +235,62 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "[poll type=number results=always public=false max=8 min=0 step=4]\n[/poll]\n\n",
+        "[poll type=number max=8 min=0 step=4]\n[/poll]\n\n",
         "serializes the numeric range without list items"
+      );
+  });
+
+  test("switching a poll to and from a numeric range", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "[poll]\n* First\n* Second\n[/poll]");
+    await click(".composer-toggle-switch");
+    await waitFor(".ProseMirror");
+    await settled();
+
+    await click(".composer-poll-node__edit");
+    await click(".poll-type-value-number");
+    await fillIn(".poll-options-min", "1");
+    await fillIn(".poll-options-max", "3");
+    await fillIn(".poll-options-step", "1");
+    await click(".insert-poll");
+
+    assert
+      .dom(".ProseMirror .composer-poll-node__content li")
+      .exists({ count: 3 }, "replaces the authored options with the range");
+
+    await click(".composer-poll-node__edit");
+    await click(".poll-type-value-regular");
+    await click(".insert-poll");
+
+    assert
+      .dom(".ProseMirror .poll")
+      .doesNotHaveAttribute("data-poll-type", "switches back to the default");
+    await click(".composer-toggle-switch");
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "[poll]\n* 1\n* 2\n* 3\n\n[/poll]\n\n",
+        "keeps the generated options as authored ones"
+      );
+  });
+
+  test("a poll title can be typed into a numeric poll", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "[poll type=number min=1 max=2]\n[/poll]");
+    await click(".composer-toggle-switch");
+    await waitFor(".ProseMirror");
+    await settled();
+
+    assert
+      .dom(".composer-poll-node")
+      .hasClass("--untitled", "offers an empty title slot");
+    assert
+      .dom(".composer-poll-node__content")
+      .doesNotHaveAttribute(
+        "contenteditable",
+        "the title is editable like any other content"
       );
   });
 

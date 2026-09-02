@@ -613,7 +613,6 @@ body.crawler {
         position: relative;
         padding: 0.5em 0;
         padding-inline-start: 1.5em;
-        cursor: text;
         overflow-wrap: anywhere;
 
         > p {
@@ -637,6 +636,11 @@ body.crawler {
 
   &__info {
     display: contents;
+  }
+
+  // outranks the cooked option styles, which also apply inside the editor
+  &.poll &__content > ul > li {
+    cursor: text;
   }
 
   &.--untitled &__content > :is(h1, h2, h3, h4, h5, h6)::before {

@@ -16,6 +16,10 @@ export default class PollNodeView extends Component {
       "poll-container",
       "composer-poll-node__content"
     );
+    this.args.dom.style.setProperty(
+      "--poll-title-placeholder",
+      JSON.stringify(i18n("poll.ui_builder.poll_title.placeholder"))
+    );
     this.args.onSetup(this);
     this.update(this.args.node);
   }
@@ -65,12 +69,6 @@ export default class PollNodeView extends Component {
         this.args.dom.setAttribute(name, value);
       }
     }
-    this.args.contentDOM.contentEditable =
-      node.attrs.type === "number" ? "false" : "true";
-    this.args.dom.style.setProperty(
-      "--poll-title-placeholder",
-      JSON.stringify(i18n("poll.ui_builder.poll_title.placeholder"))
-    );
     // :empty misses it: ProseMirror keeps a trailing break in an empty block
     this.args.dom.classList.toggle(
       "--untitled",
