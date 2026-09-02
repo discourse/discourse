@@ -4487,7 +4487,7 @@ CREATE TABLE public.discourse_post_event_hosts (
     id bigint NOT NULL,
     post_id bigint NOT NULL,
     user_id integer NOT NULL,
-    position integer DEFAULT 0 NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -24414,6 +24414,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260902150036'),
+('20260902150024'),
 ('20260901020329'),
 ('20260831162602'),
 ('20260828145150'),
