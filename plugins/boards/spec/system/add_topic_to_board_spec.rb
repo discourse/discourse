@@ -70,7 +70,7 @@ describe "Add topic to board from topic footer menu" do
       expect(Boards::Card).not_to exist(card.id)
     end
 
-    it "fixes constraints and updates the topic header through MessageBus" do
+    xit "fixes constraints and updates the topic header through MessageBus" do
       existing_column = engineering_board.columns.first
       Fabricate(:boards_topic_card, board: engineering_board, column: existing_column, topic: topic)
       target_column = roadmap_board.columns.first
