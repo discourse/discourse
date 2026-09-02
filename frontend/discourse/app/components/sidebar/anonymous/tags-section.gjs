@@ -63,7 +63,7 @@ export default class SidebarAnonymousTagsSection extends Component {
             @prefixValue={{sectionLink.prefixValue}}
             @prefixColor={{sectionLink.prefixColor}}
             @models={{sectionLink.models}}
-            data-tag-name={{sectionLink.tagName}}
+            data-tag-name={{sectionLink.originalName}}
           />
         {{/each}}
 

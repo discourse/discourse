@@ -6,6 +6,7 @@ import UserAutocompleteResults from "discourse/components/user-autocomplete-resu
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import getURL from "discourse/lib/get-url";
+import { tagUrl } from "discourse/lib/tag-identity";
 import { emojiUnescape } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
@@ -101,18 +102,13 @@ export function translateResults(results, opts) {
     })
     .filter((item) => item != null);
 
-  results.tags = results.tags
-    .map(function (tag) {
-      const id = tag.id;
-      const name = escapeExpression(tag.name);
-      const slug = tag.slug || `${id}-tag`;
-      return EmberObject.create({
-        id,
-        name,
-        url: getURL(`/tag/${slug}/${id}`),
-      });
+  results.tags = results.tags.map((tag) =>
+    EmberObject.create({
+      id: tag.id,
+      name: escapeExpression(tag.name),
+      url: tagUrl(tag),
     })
-    .filter((item) => item != null);
+  );
 
   return translateResultsCallbacks
     .reduce(

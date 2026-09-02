@@ -245,12 +245,23 @@ class UserUpdater
         )
       end
 
-      if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
-        SidebarSectionLinksUpdater.update_tag_section_links(
-          user,
-          tag_ids:
-            Tag.browsable(@user_guardian).where(name: attributes[:sidebar_tag_names]).pluck(:id),
-        )
+      if SiteSetting.tagging_enabled
+        browsable = Tag.browsable(@user_guardian)
+
+        tags =
+          if attributes.key?(:sidebar_tag_ids)
+            browsable.where(id: attributes[:sidebar_tag_ids])
+          elsif attributes.key?(:sidebar_tag_names)
+            Discourse.deprecate(
+              "`sidebar_tag_names` is deprecated. Use `sidebar_tag_ids` instead.",
+              since: "2026.9.0-latest",
+              drop_from: "2027.3.0-latest",
+            )
+
+            browsable.where_name(attributes[:sidebar_tag_names])
+          end
+
+        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_ids: tags.pluck(:id)) if tags
       end
 
       if SiteSetting.enable_user_status?

@@ -2956,7 +2956,9 @@ class _PluginApi {
    * ```
    *
    * @param {Object} arg - An object
-   * @param {string} arg.tagName - The name of the tag
+   * @param {string} arg.tagName - The name or the slug of the tag. A tag's name
+   *   and slug differ as soon as the name contains an underscore, uppercase or
+   *   non-ASCII character, and either identifies the tag here.
    * @param {string} arg.prefixValue - The name of a FontAwesome icon.
    * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */

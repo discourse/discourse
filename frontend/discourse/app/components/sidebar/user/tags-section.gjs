@@ -123,7 +123,7 @@ export default class SidebarUserTagsSection extends Component {
           @suffixCSSClass={{sectionLink.suffixCSSClass}}
           @suffixValue={{sectionLink.suffixValue}}
           @suffixType={{sectionLink.suffixType}}
-          data-tag-name={{sectionLink.tagName}}
+          data-tag-name={{sectionLink.originalName}}
         />
       {{/each}}
 

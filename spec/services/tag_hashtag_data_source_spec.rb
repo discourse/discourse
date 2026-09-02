@@ -107,6 +107,21 @@ RSpec.describe TagHashtagDataSource do
       end
     end
 
+    describe "#search" do
+      it "returns the untranslated tag name as the slug" do
+        tag2.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "要因")
+
+        I18n.with_locale(:ja) do
+          factor_result =
+            described_class.search(ja_guardian, "fact", 5).find { |r| r.id == tag2.id }
+
+          expect(factor_result.text).to eq("要因")
+          expect(factor_result.slug).to eq(tag2.name)
+        end
+      end
+    end
+
     describe "#search_without_term" do
       it "returns localized tag names" do
         tag2.update!(locale: "en")

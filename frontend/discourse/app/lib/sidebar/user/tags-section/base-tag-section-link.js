@@ -1,3 +1,5 @@
+import { originalTagName, tagIdentifiers } from "discourse/lib/tag-identity";
+
 let customTagSectionLinkPrefixIcons = {};
 
 export function registerCustomTagSectionLinkPrefixIcon({
@@ -30,6 +32,11 @@ export default class BaseTagSectionLink {
     return this.tagName;
   }
 
+  // `tagName` is a display string and holds a localization when one applies.
+  get originalName() {
+    return originalTagName(this.tag);
+  }
+
   get text() {
     return this.tagName;
   }
@@ -45,10 +52,18 @@ export default class BaseTagSectionLink {
   }
 
   get prefixValue() {
-    return customTagSectionLinkPrefixIcons[this.tagName]?.prefixValue || "tag";
+    return this.#customPrefixIcon?.prefixValue || "tag";
   }
 
   get prefixColor() {
-    return customTagSectionLinkPrefixIcons[this.tagName]?.prefixColor;
+    return this.#customPrefixIcon?.prefixColor;
+  }
+
+  get #customPrefixIcon() {
+    const identifier = tagIdentifiers(this.tag).find(
+      (candidate) => customTagSectionLinkPrefixIcons[candidate]
+    );
+
+    return customTagSectionLinkPrefixIcons[identifier];
   }
 }

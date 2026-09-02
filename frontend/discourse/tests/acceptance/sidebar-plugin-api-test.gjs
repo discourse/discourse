@@ -864,6 +864,77 @@ acceptance("Sidebar - Plugin API", function (needs) {
     }
   });
 
+  test("Customizing the prefix icon used in a tag section link by tag slug", async function (assert) {
+    try {
+      return await withPluginApi(async (api) => {
+        updateCurrentUser({
+          display_sidebar_tags: true,
+          sidebar_tags: [
+            { id: 1, name: "tag_1", slug: "tag-1", pm_only: false },
+            { id: 2, name: "tag_2", slug: "tag-2", pm_only: false },
+          ],
+        });
+
+        api.registerCustomTagSectionLinkPrefixIcon({
+          tagName: "tag-1",
+          prefixValue: "wrench",
+        });
+
+        await visit("/");
+
+        assert
+          .dom(
+            `.sidebar-section-link-wrapper[data-tag-name="tag_1"] .prefix-icon.d-icon-wrench`
+          )
+          .exists("wrench icon is displayed when matching on the tag's slug");
+
+        assert
+          .dom(
+            `.sidebar-section-link-wrapper[data-tag-name="tag_2"] .prefix-icon.d-icon-tag`
+          )
+          .exists("default tag icon is displayed for the unconfigured tag");
+      });
+    } finally {
+      resetCustomTagSectionLinkPrefixIcons();
+    }
+  });
+
+  test("Customizing the prefix icon used in a tag section link by untranslated tag name", async function (assert) {
+    try {
+      return await withPluginApi(async (api) => {
+        updateCurrentUser({
+          display_sidebar_tags: true,
+          sidebar_tags: [
+            {
+              id: 1,
+              name: "戦略",
+              slug: "strategic-access",
+              original_name: "strategic_access",
+              pm_only: false,
+            },
+          ],
+        });
+
+        api.registerCustomTagSectionLinkPrefixIcon({
+          tagName: "strategic_access",
+          prefixValue: "wrench",
+        });
+
+        await visit("/");
+
+        assert
+          .dom(
+            `.sidebar-section-link-wrapper[data-tag-name="strategic_access"] .prefix-icon.d-icon-wrench`
+          )
+          .exists(
+            "wrench icon is displayed when matching on the tag's untranslated name"
+          );
+      });
+    } finally {
+      resetCustomTagSectionLinkPrefixIcons();
+    }
+  });
+
   test("New custom sidebar panel and option to set default and show/hide switch buttons", async function (assert) {
     withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {

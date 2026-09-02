@@ -577,6 +577,47 @@ RSpec.describe Tag do
     end
   end
 
+  describe "#display_name and #display_description" do
+    fab!(:localized_tag, :tag) do
+      Fabricate(:tag, name: "strategic_access", description: "About access", locale: "en")
+    end
+    fab!(:localization) do
+      Fabricate(
+        :tag_localization,
+        tag: localized_tag,
+        locale: "ja",
+        name: "戦略",
+        description: "アクセスについて",
+      )
+    end
+
+    let(:guardian) { Guardian.new(Fabricate(:user)) }
+
+    it "returns the localization when the tag is not in the user's locale" do
+      SiteSetting.content_localization_enabled = true
+      I18n.locale = "ja"
+
+      expect(localized_tag.display_name(guardian)).to eq("戦略")
+      expect(localized_tag.display_description(guardian)).to eq("アクセスについて")
+    end
+
+    it "returns the original values when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      I18n.locale = "ja"
+
+      expect(localized_tag.display_name(guardian)).to eq("strategic_access")
+      expect(localized_tag.display_description(guardian)).to eq("About access")
+    end
+
+    it "returns the original values when the tag is already in the user's locale" do
+      SiteSetting.content_localization_enabled = true
+      I18n.locale = "en"
+
+      expect(localized_tag.display_name(guardian)).to eq("strategic_access")
+      expect(localized_tag.display_description(guardian)).to eq("About access")
+    end
+  end
+
   describe ".with_localizations" do
     fab!(:tag1) { Fabricate(:tag, name: "strategy", locale: "en") }
     fab!(:tag2) { Fabricate(:tag, name: "design", locale: "en") }

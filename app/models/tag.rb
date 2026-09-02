@@ -269,6 +269,22 @@ class Tag < ActiveRecord::Base
     slug.presence || "#{id}-tag"
   end
 
+  def localization_for(scope)
+    get_localization if ContentLocalization.show_translated_tag?(self, scope)
+  end
+
+  def display_name(scope)
+    localization_for(scope)&.name || name
+  end
+
+  def display_description(scope)
+    localization_for(scope)&.description || description
+  end
+
+  def display_description_cooked(scope)
+    localization_for(scope)&.description_cooked || description_cooked
+  end
+
   def index_search
     SearchIndexer.index(self)
   end

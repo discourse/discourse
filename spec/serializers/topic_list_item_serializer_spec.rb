@@ -254,7 +254,7 @@ RSpec.describe TopicListItemSerializer do
       I18n.locale = "ja"
 
       expect(serialize[:tags]).to include(
-        { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
+        { id: localized_tag.id, name: "猫", slug: localized_tag.slug, original_name: "cats" },
       )
     end
 

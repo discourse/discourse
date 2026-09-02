@@ -32,6 +32,7 @@ import discourseLater from "discourse/lib/later";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
+import { originalTagName } from "discourse/lib/tag-identity";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import {
@@ -94,6 +95,7 @@ let userFields = [
   "primary_group_id",
   "profile_background_upload_url",
   "sidebar_category_ids",
+  "sidebar_tag_ids",
   "sidebar_tag_names",
   "status",
   "title",
@@ -348,9 +350,20 @@ export default class User extends RestModel.extend(Evented) {
     this._location = value;
   }
 
+  @computed("sidebarTags.@each.id")
+  get sidebarTagIds() {
+    return this.sidebarTags?.map?.((item) => item.id) ?? [];
+  }
+
   @computed("sidebarTags.@each.name")
   get sidebarTagNames() {
-    return this.sidebarTags?.map?.((item) => item.name) ?? [];
+    deprecated("sidebarTagNames is deprecated. Use sidebarTagIds instead.", {
+      id: "discourse.user.sidebar-tag-names",
+      since: "2026.9.0-latest",
+      dropFrom: "2027.3.0-latest",
+    });
+
+    return this.sidebarTags?.map?.((item) => originalTagName(item)) ?? [];
   }
 
   @computed("visibleGroups.@each.has_messages")
@@ -725,7 +738,7 @@ export default class User extends RestModel.extend(Evented) {
       }
     });
 
-    ["sidebar_category_ids", "sidebar_tag_names"].forEach((prop) => {
+    ["sidebar_category_ids", "sidebar_tag_ids"].forEach((prop) => {
       if (data[prop]?.length === 0) {
         data[prop] = null;
       }

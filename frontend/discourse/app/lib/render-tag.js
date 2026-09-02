@@ -1,6 +1,11 @@
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
+import {
+  originalTagName,
+  tagPath,
+  tagRouteName,
+} from "discourse/lib/tag-identity";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 
@@ -15,10 +20,9 @@ export function defaultRenderTag(tag, params) {
   let siteSettings = helperContext().siteSettings;
 
   params = params || {};
-  const tagName = typeof tag === "string" ? tag : tag.name;
-  const visibleName = escapeExpression(tagName);
-  const tagNameLower = visibleName.toLowerCase();
-  const tagPathName = tagNameLower.replaceAll(".", "%2E");
+  const visibleName = escapeExpression(
+    typeof tag === "string" ? tag : tag.name
+  );
 
   const classes = ["discourse-tag"];
   const htmlTag = params.tagName || "a";
@@ -29,15 +33,12 @@ export function defaultRenderTag(tag, params) {
       const username = params.tagsForUser
         ? params.tagsForUser
         : User.current().username;
-      path = `/u/${username}/messages/tags/${tagPathName}`;
-    } else if (typeof tag === "object" && tag.id) {
-      const slugForUrl = tag.slug || `${tag.id}-tag`;
-      path = `/tag/${slugForUrl}/${tag.id}`;
+      path = `/u/${username}/messages/tags/${tagRouteName(tag)}`;
     } else {
-      path = `/tag/${tagPathName}`;
+      path = tagPath(tag);
     }
   }
-  const href = path ? ` href='${getURL(path)}' ` : "";
+  const href = path ? ` href='${escapeExpression(getURL(path))}' ` : "";
 
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
@@ -53,8 +54,9 @@ export function defaultRenderTag(tag, params) {
     "<" +
     htmlTag +
     href +
-    " data-tag-name=" +
-    tagNameLower +
+    " data-tag-name='" +
+    escapeExpression(originalTagName(tag).toLowerCase()) +
+    "'" +
     " class='" +
     classes.join(" ") +
     "'>" +

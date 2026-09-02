@@ -23,16 +23,20 @@ class TagHashtagDataSource
   def self.tag_to_hashtag_item(tag, guardian)
     topic_count_column = Tag.topic_count_column(guardian)
 
-    tag =
-      Tag.new(
-        tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
-      ) if tag.is_a?(Hash)
+    # `name` may hold a localization, but hashtags are looked up by the real name.
+    if tag.is_a?(Hash)
+      lookup_name = tag[:original_name] || tag[:name]
+      tag =
+        Tag.new(tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]))
+    else
+      lookup_name = tag.name
+    end
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = tag.name
       item.secondary_text = "x#{tag.public_send(topic_count_column)}"
       item.description = tag.description
-      item.slug = tag.name
+      item.slug = lookup_name
       item.relative_url = tag.url
       item.icon = icon
       item.style_type = style_type

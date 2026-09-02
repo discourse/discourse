@@ -3166,6 +3166,42 @@ RSpec.describe UsersController do
             )
           end
 
+          it "should allow user to add tag sidebar section links by id" do
+            SiteSetting.tagging_enabled = true
+
+            tag = Fabricate(:tag)
+            hidden_tag = Fabricate(:tag)
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_ids: [tag.id, hidden_tag.id, -1] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.map(&:linkable)).to eq([tag])
+          end
+
+          it "should allow user to remove all tag sidebar section links by id" do
+            SiteSetting.tagging_enabled = true
+
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_tag_ids: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it "should not allow user to add tag sidebar section links by id when tagging is disabled" do
+            SiteSetting.tagging_enabled = false
+
+            tag = Fabricate(:tag)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_ids: [tag.id] }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.sidebar_section_links.count).to eq(0)
+          end
+
           it "should allow user to remove all tag sidebar section links" do
             SiteSetting.tagging_enabled = true
 

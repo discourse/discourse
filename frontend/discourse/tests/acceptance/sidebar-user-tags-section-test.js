@@ -257,6 +257,30 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       .exists("the tag4 section link is marked as active");
   });
 
+  test("private message tag section link for a localized tag", async function (assert) {
+    updateCurrentUser({
+      sidebar_tags: [
+        {
+          id: 5,
+          name: "戦略",
+          slug: "strategic-access",
+          original_name: "strategic_access",
+          pm_only: true,
+        },
+      ],
+    });
+
+    await visit("/");
+
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=strategic_access] a`)
+      .hasAttribute(
+        "href",
+        "/u/eviltrout/messages/tags/strategic_access",
+        "the link filters on the untranslated tag name"
+      );
+  });
+
   test("visiting tag discovery top route", async function (assert) {
     await visit(`/tag/tag1/1/l/top`);
 

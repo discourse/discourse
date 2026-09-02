@@ -2192,7 +2192,7 @@ RSpec.describe TagsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["results"]).to include(
-            include("name" => "戦略", "id" => tag.id),
+            include("name" => "戦略", "original_name" => "strategy", "id" => tag.id),
           )
         end
 
@@ -2766,6 +2766,34 @@ RSpec.describe TagsController do
       expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
         "/tags/list.json?offset=1&filter=3",
       )
+    end
+
+    it "accepts a `only_tag_ids` param and filters the tags by the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { only_tag_ids: "#{tag1.id},#{tag3.id}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag3.name],
+      )
+
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(2)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&only_tag_ids=#{tag1.id}%2C#{tag3.id}",
+      )
+    end
+
+    it "accepts an `exclude_tag_ids` param and filters tags excluding the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { exclude_tag_ids: "#{tag1.id}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).not_to include(tag1.name)
     end
 
     it "accepts a `only_tags` param and filters the tags by the given tags" do

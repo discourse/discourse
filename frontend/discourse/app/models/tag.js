@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import getURL from "discourse/lib/get-url";
+import { tagUrl } from "discourse/lib/tag-identity";
 import RestModel from "discourse/models/rest";
 
 export default class Tag extends RestModel {
@@ -8,14 +8,9 @@ export default class Tag extends RestModel {
     return this.pm_only;
   }
 
-  @computed("slug", "id")
+  @computed("slug", "id", "name")
   get url() {
-    if (this.id) {
-      const slugForUrl = this.slug || `${this.id}-tag`;
-      return getURL(`/tag/${slugForUrl}/${this.id}`);
-    }
-    // fallback for tags without id (legacy)
-    return getURL(`/tag/${this.name.replaceAll(".", "%2E")}`);
+    return tagUrl(this);
   }
 
   @computed("count", "pm_count")
