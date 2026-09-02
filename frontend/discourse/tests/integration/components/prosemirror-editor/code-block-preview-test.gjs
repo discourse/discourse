@@ -295,6 +295,138 @@ module(
       assert.dom(".cb-preview-stub").hasText("flowchart");
     });
 
+    test("foreign DOM mounted into the code face is left alone", async function (assert) {
+      // the preview toolbar portals into the block's dom; reading that
+      // mutation back into the document looped redraw against re-portal
+      // until the editor hung
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+
+      await toggleSource(view);
+
+      const pre = document.querySelector("pre.--source");
+      const portal = document.createElement("div");
+      portal.className = "fake-toolbar";
+      portal.textContent = "portaled toolbar";
+      pre.appendChild(portal);
+
+      await settled();
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      assert
+        .dom("pre.--source .fake-toolbar")
+        .exists("the mounted element is not torn down by a redraw");
+      assert.strictEqual(
+        editorClass.value,
+        MARKDOWN,
+        "and nothing leaks into the document"
+      );
+
+      portal.remove();
+      await settled();
+    });
+
+    test("switching an empty block to a previewed language keeps a working code face", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, "```ruby\nx\n```");
+      const { view } = editorClass;
+      const { node, pos } = findCodeBlock(view);
+
+      // empty the block with the caret inside, like a user clearing it
+      const emptying = view.state.tr.delete(
+        pos + 1,
+        pos + 1 + node.content.size
+      );
+      emptying.setSelection(TextSelection.create(emptying.doc, pos + 1));
+      view.dispatch(emptying);
+      await settled();
+
+      const select = document.querySelector(".code-language-select");
+      select.value = "mermaid";
+      await triggerEvent(select, "change");
+
+      assert.dom("pre code").exists("still on the code face");
+      assert.dom(".cb-preview-stub").doesNotExist();
+
+      view.dispatch(view.state.tr.insertText("flowchart", pos + 1));
+      await settled();
+
+      assert
+        .dom("pre code")
+        .hasText("flowchart", "typing lands in the block and does not flip it");
+      assert.strictEqual(editorClass.value, "```mermaid\nflowchart\n```");
+
+      await toggleSource(view);
+      assert.dom(".cb-preview-stub").hasText("flowchart");
+    });
+
+    test("arrow keys select a previewing block instead of stalling at it", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, MARKDOWN);
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+
+      const isBlockSelected = () =>
+        view.state.selection instanceof NodeSelection &&
+        view.state.selection.from === pos;
+
+      // ArrowDown from anywhere on the last line of the paragraph above
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 2))
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "ArrowDown");
+      assert.true(isBlockSelected(), "ArrowDown selects the block");
+
+      // ArrowUp from the paragraph below
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(
+            view.state.doc,
+            pos + view.state.doc.nodeAt(pos).nodeSize + 2
+          )
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "ArrowUp");
+      assert.true(isBlockSelected(), "ArrowUp selects the block");
+
+      // ArrowRight from the end of the paragraph above
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, pos - 1)
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "ArrowRight");
+      assert.true(isBlockSelected(), "ArrowRight selects the block");
+
+      // ArrowLeft from the start of the paragraph below
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(
+            view.state.doc,
+            pos + view.state.doc.nodeAt(pos).nodeSize + 1
+          )
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "ArrowLeft");
+      assert.true(isBlockSelected(), "ArrowLeft selects the block");
+    });
+
+    test("arrow keys are untouched next to a plain code block", async function (assert) {
+      const [editorClass] = await setupRichEditor(
+        assert,
+        "before\n\n```ruby\nx\n```"
+      );
+      const { view } = editorClass;
+
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 2))
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "ArrowDown");
+
+      assert.false(
+        view.state.selection instanceof NodeSelection,
+        "no node selection is forced"
+      );
+    });
+
     test("an empty block starts on its code face and stays while typing", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, "");
       const { view } = editorClass;

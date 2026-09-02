@@ -270,6 +270,17 @@ class CodeBlockWithLangSelectorNodeView {
     );
   }
 
+  // the preview toolbar portals into this dom: reading its mount/unmount back
+  // into the document would loop redraw against re-portal until the editor
+  // hangs
+  ignoreMutation(mutation) {
+    if (mutation.type === "selection") {
+      return false;
+    }
+
+    return !this.contentDOM.contains(mutation.target);
+  }
+
   destroy() {
     this.dom.removeEventListener("change", (e) => this.changeListener(e));
   }
@@ -306,44 +317,99 @@ function codeBlockNodeView(pluginParams) {
     const preview = codeBlockPreviewComponent(node);
     const pos = getPos();
 
+    // empty blocks are pinned by the plugin before the view syncs, so the
+    // constructed face is always the settled one
     if (preview && pos !== undefined && !isSourceMode(view.state, pos)) {
-      if (node.content.size > 0) {
-        return new CodeBlockPreviewNodeView(
-          node,
-          view,
-          getPos,
-          pluginParams,
-          preview
-        );
-      }
-
-      // a block with nothing to preview starts on its code face, pinned so
-      // the first characters typed don't flip it
-      queueMicrotask(() => {
-        const currentPos = getPos();
-
-        if (currentPos !== undefined && !isSourceMode(view.state, currentPos)) {
-          view.dispatch(view.state.tr.setMeta(sourceModeKey, currentPos));
-        }
-      });
+      return new CodeBlockPreviewNodeView(
+        node,
+        view,
+        getPos,
+        pluginParams,
+        preview
+      );
     }
 
     return new CodeBlockWithLangSelectorNodeView(node, view, getPos);
   };
 }
 
-function previewingAncestor($pos, state) {
+function previewingAncestor($pos, state, pins = []) {
   for (let depth = $pos.depth; depth > 0; depth--) {
     const node = $pos.node(depth);
 
     if (node.type.name === "code_block") {
       const pos = $pos.before(depth);
 
-      return showsPreview(node, state, pos) ? { node, pos } : null;
+      return showsPreview(node, state, pos) && !pins.includes(pos)
+        ? { node, pos }
+        : null;
     }
   }
 
   return null;
+}
+
+// a text selection cannot stay in source that is not showing: there is no DOM
+// for it, and typing there would edit the document invisibly
+function containedSelection(state, pins) {
+  const { selection } = state;
+
+  if (!(selection instanceof TextSelection)) {
+    return null;
+  }
+
+  const head = previewingAncestor(selection.$head, state, pins);
+  const anchor = selection.empty
+    ? head
+    : previewingAncestor(selection.$anchor, state, pins);
+
+  if (!head && !anchor) {
+    return null;
+  }
+
+  if (head && anchor && head.pos === anchor.pos) {
+    return NodeSelection.create(state.doc, head.pos);
+  }
+
+  // an endpoint that fell inside moves just past the block instead
+  const anchorPos = anchor
+    ? selection.anchor <= selection.head
+      ? anchor.pos
+      : anchor.pos + anchor.node.nodeSize
+    : selection.anchor;
+  const headPos = head
+    ? selection.head < selection.anchor
+      ? head.pos
+      : head.pos + head.node.nodeSize
+    : selection.head;
+
+  return TextSelection.between(
+    state.doc.resolve(anchorPos),
+    state.doc.resolve(headPos)
+  );
+}
+
+function selectNeighborPreview(state, dispatch, dir) {
+  const { $cursor } = state.selection;
+  const boundary = dir === -1 ? $cursor.before() : $cursor.after();
+  const $boundary = state.doc.resolve(boundary);
+  const neighbor = dir === -1 ? $boundary.nodeBefore : $boundary.nodeAfter;
+
+  if (!neighbor) {
+    return false;
+  }
+
+  const pos = dir === -1 ? boundary - neighbor.nodeSize : boundary;
+
+  if (!showsPreview(neighbor, state, pos)) {
+    return false;
+  }
+
+  dispatch?.(
+    state.tr.setSelection(NodeSelection.create(state.doc, pos)).scrollIntoView()
+  );
+
+  return true;
 }
 
 // while a block previews, a caret next to it must select it rather than merge
@@ -364,28 +430,52 @@ function selectPreviewingNeighbor(dir) {
       return false;
     }
 
-    const boundary = dir === -1 ? $cursor.before() : $cursor.after();
-    const $boundary = state.doc.resolve(boundary);
-    const neighbor = dir === -1 ? $boundary.nodeBefore : $boundary.nodeAfter;
-
-    if (!neighbor) {
-      return false;
-    }
-
-    const pos = dir === -1 ? boundary - neighbor.nodeSize : boundary;
-
-    if (!showsPreview(neighbor, state, pos)) {
-      return false;
-    }
-
-    dispatch?.(
-      state.tr
-        .setSelection(NodeSelection.create(state.doc, pos))
-        .scrollIntoView()
-    );
-
-    return true;
+    return selectNeighborPreview(state, dispatch, dir);
   };
+}
+
+// a previewing block has no editable content the browser caret could step
+// through, so vertical arrows toward it stall without this
+function verticalArrowSelectsPreview(dir) {
+  return (state, dispatch, view) => {
+    const { $cursor } = state.selection;
+
+    if (!$cursor || $cursor.depth === 0) {
+      return false;
+    }
+
+    if (view && !view.endOfTextblock(dir === -1 ? "up" : "down", state)) {
+      return false;
+    }
+
+    return selectNeighborPreview(state, dispatch, dir);
+  };
+}
+
+// a block with nothing to preview belongs on its code face, so the author can
+// write the source in the first place
+function emptyPreviewablePins(state) {
+  const pins = [];
+
+  state.doc.descendants((node, pos) => {
+    if (node.type.name === "code_block") {
+      if (
+        node.content.size === 0 &&
+        codeBlockPreviewComponent(node) &&
+        !isSourceMode(state, pos)
+      ) {
+        pins.push(pos);
+      }
+
+      return false;
+    }
+
+    if (node.isTextblock) {
+      return false;
+    }
+  });
+
+  return pins;
 }
 
 function sourceModePlugin() {
@@ -393,7 +483,7 @@ function sourceModePlugin() {
     key: sourceModeKey,
 
     state: {
-      init: () => [],
+      init: (_, state) => emptyPreviewablePins(state),
 
       apply(tr, positions, _oldState, newState) {
         let next = positions;
@@ -405,12 +495,14 @@ function sourceModePlugin() {
             .map((result) => result.pos);
         }
 
-        const toggled = tr.getMeta(sourceModeKey);
+        const meta = tr.getMeta(sourceModeKey);
 
-        if (toggled !== undefined) {
-          next = next.includes(toggled)
-            ? next.filter((pos) => pos !== toggled)
-            : [...next, toggled];
+        if (typeof meta === "number") {
+          next = next.includes(meta)
+            ? next.filter((pos) => pos !== meta)
+            : [...next, meta];
+        } else if (meta?.pins) {
+          next = [...new Set([...next, ...meta.pins])];
         }
 
         // a pin is meaningless once its block is gone or stops previewing
@@ -439,50 +531,23 @@ function sourceModePlugin() {
       },
     },
 
-    // a text selection cannot land in source that is not showing: there is no
-    // DOM for it, and typing there would edit the document invisibly
     appendTransaction(transactions, _oldState, state) {
-      if (!transactions.some((tr) => tr.docChanged || tr.selectionSet)) {
+      const docChanged = transactions.some((tr) => tr.docChanged);
+
+      if (!docChanged && !transactions.some((tr) => tr.selectionSet)) {
         return null;
       }
 
-      const { selection } = state;
+      const pins = docChanged ? emptyPreviewablePins(state) : [];
+      let tr = pins.length ? state.tr.setMeta(sourceModeKey, { pins }) : null;
 
-      if (!(selection instanceof TextSelection)) {
-        return null;
+      const selection = containedSelection(state, pins);
+
+      if (selection) {
+        tr = (tr ?? state.tr).setSelection(selection);
       }
 
-      const head = previewingAncestor(selection.$head, state);
-      const anchor = selection.empty
-        ? head
-        : previewingAncestor(selection.$anchor, state);
-
-      if (!head && !anchor) {
-        return null;
-      }
-
-      if (head && anchor && head.pos === anchor.pos) {
-        return state.tr.setSelection(NodeSelection.create(state.doc, head.pos));
-      }
-
-      // an endpoint that fell inside moves just past the block instead
-      const anchorPos = anchor
-        ? selection.anchor <= selection.head
-          ? anchor.pos
-          : anchor.pos + anchor.node.nodeSize
-        : selection.anchor;
-      const headPos = head
-        ? selection.head < selection.anchor
-          ? head.pos
-          : head.pos + head.node.nodeSize
-        : selection.head;
-
-      return state.tr.setSelection(
-        TextSelection.between(
-          state.doc.resolve(anchorPos),
-          state.doc.resolve(headPos)
-        )
-      );
+      return tr;
     },
   });
 }
@@ -575,6 +640,10 @@ const extension = {
     "Shift-Tab": indentCodeBlock(true),
     Backspace: selectPreviewingNeighbor(-1),
     Delete: selectPreviewingNeighbor(1),
+    ArrowLeft: selectPreviewingNeighbor(-1),
+    ArrowRight: selectPreviewingNeighbor(1),
+    ArrowUp: verticalArrowSelectsPreview(-1),
+    ArrowDown: verticalArrowSelectsPreview(1),
   }),
   commands: ({ schema }) => ({
     formatCode() {
