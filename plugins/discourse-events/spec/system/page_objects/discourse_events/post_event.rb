@@ -70,12 +70,21 @@ module PageObjects
           host_label = cohosted ? "co_hosted_by" : "hosted_by"
 
           has_css?(".event-hosts", text: I18n.t("js.discourse_post_event.#{host_label}")) &&
-            hosts.all? do |host|
-              has_css?(
-                ".event-host [data-user-card='#{host.username}']",
-                text: host.name.presence || host.username,
-              )
-            end
+            hosts.all? { |host| has_host?(host) }
+        end
+
+        # Hosts collapse into a menu once their row would wrap, so a host may
+        # only be visible after opening it. Only positive waits are used here,
+        # since CI fails a spec that lets a negative check run out its wait.
+        def has_host?(host)
+          name = host.name.presence || host.username
+          inline = ".event-host [data-user-card='#{host.username}']"
+
+          return false unless has_css?("#{inline}, .event-hosts__toggle")
+          return true if has_css?(inline, text: name, wait: 0)
+
+          find(".event-hosts__toggle").click unless has_css?(".event-hosts-menu", wait: 0)
+          has_css?(".event-hosts-menu__host[data-user-card='#{host.username}']", text: name)
         end
 
         def has_creator_host?(user)
