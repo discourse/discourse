@@ -1,5 +1,9 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import {
+  applyDeferredClassModifications,
+  deferClassModification,
+} from "discourse/lib/deferred-class-modifications";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { buildResolver, expireModuleTrieCache } from "discourse/resolver";
@@ -666,6 +670,47 @@ module("Unit | Ember | resolver", function (hooks) {
       delete requirejs.entries[serviceModule];
       expireModuleTrieCache();
       DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+    }
+  });
+
+  test("addModules applies modifications deferred for a route bundle", function (assert) {
+    const routeModule =
+      "discourse/plugins/my-fake-plugin/discourse/routes/lazy-route";
+    const controllerModule =
+      "discourse/plugins/my-fake-plugin/discourse/controllers/lazy-route";
+
+    expireModuleTrieCache();
+    resolve("service:some-service-to-populate-the-trie");
+
+    let applied = [];
+    deferClassModification("route:lazy-route", () => applied.push("route"));
+    deferClassModification("controller:lazy-route", () =>
+      applied.push("controller")
+    );
+
+    assert.deepEqual(applied, [], "waits for the bundle");
+
+    try {
+      resolver.addModules({
+        [routeModule]: { default: "lazy-route-class" },
+        [controllerModule]: { default: "lazy-controller-class" },
+      });
+
+      assert.deepEqual(
+        applied.sort(),
+        ["controller", "route"],
+        "applies both once the bundle arrives"
+      );
+      assert.strictEqual(resolve("route:lazy-route"), "lazy-route-class");
+      assert.strictEqual(
+        resolve("controller:lazy-route"),
+        "lazy-controller-class"
+      );
+    } finally {
+      delete requirejs.entries[routeModule];
+      delete requirejs.entries[controllerModule];
+      expireModuleTrieCache();
+      applyDeferredClassModifications();
     }
   });
 });

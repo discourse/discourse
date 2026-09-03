@@ -1,5 +1,5 @@
-// A `modifyClass` call can name a component that has not been evaluated yet. Components are
-// reached by import, so the container cannot find one until its module runs and registers here.
+// A `modifyClass` call can name a class whose module has not loaded yet. Route bundles flush
+// these when they arrive; a component registers itself, because nothing else registers it.
 
 const pendingModifications = new Map();
 const lazyClasses = new Map();
