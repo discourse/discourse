@@ -61,11 +61,6 @@ window.moduleBroker = {
   },
 };
 
-// A bundle built before `compatModules` existed exports the same object as its default.
-function compatModulesOf(bundle) {
-  return bundle.compatModules ?? bundle.default;
-}
-
 // `Resolver#addModules` expects the same namespacing as the eager modules.
 function registerRouteBundles(bundle, prefix) {
   window._embroiderRouteBundles_ ??= [];
@@ -93,7 +88,7 @@ async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
     const bundle = await import(/* @vite-ignore */ link.href);
-    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
+    for (const [key, mod] of Object.entries(bundle.compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
     registerRouteBundles(bundle, `discourse/theme-${themeId}`);
@@ -116,7 +111,7 @@ async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
     const bundle = await import(/* @vite-ignore */ link.href);
-    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
+    for (const [key, mod] of Object.entries(bundle.compatModules)) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
     registerRouteBundles(bundle, `discourse/plugins/${pluginName}`);
